@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
@@ -331,10 +331,10 @@ namespace RendererRuntime
 		// Set the used graphics root signature
 		renderer.setGraphicsRootSignature(mRootSignaturePtr);
 
-		// Bind pass uniform buffer manager, if required
-		if (nullptr != mPassUniformBufferManager)
+		// Bind pass buffer manager, if required
+		if (nullptr != mPassBufferManager)
 		{
-			mPassUniformBufferManager->bindToRenderer();
+			mPassBufferManager->bindToRenderer();
 		}
 
 		{ // Graphics root descriptor table: Set our sampler states
@@ -347,9 +347,9 @@ namespace RendererRuntime
 		}
 
 		// It's valid if a material blueprint resource doesn't contain a material uniform buffer (usually the case for compositor material blueprint resources)
-		if (nullptr != mMaterialUniformBufferManager)
+		if (nullptr != mMaterialBufferManager)
 		{
-			mMaterialUniformBufferManager->resetLastBoundPool();
+			mMaterialBufferManager->resetLastBoundPool();
 		}
 	}
 
@@ -455,21 +455,21 @@ namespace RendererRuntime
 		mMaterialUniformBuffer(nullptr),
 		mInstanceUniformBuffer(nullptr),
 		mInstanceTextureBuffer(nullptr),
-		mPassUniformBufferManager(nullptr),
-		mMaterialUniformBufferManager(nullptr)
+		mPassBufferManager(nullptr),
+		mMaterialBufferManager(nullptr)
 	{
 		memset(mShaderBlueprintResourceId, static_cast<int>(getUninitialized<ShaderBlueprintResourceId>()), sizeof(ShaderBlueprintResourceId) * NUMBER_OF_SHADER_TYPES);
 	}
 
 	MaterialBlueprintResource::~MaterialBlueprintResource()
 	{
-		if (nullptr != mPassUniformBufferManager)
+		if (nullptr != mPassBufferManager)
 		{
-			delete mPassUniformBufferManager;
+			delete mPassBufferManager;
 		}
-		if (nullptr != mMaterialUniformBufferManager)
+		if (nullptr != mMaterialBufferManager)
 		{
-			delete mMaterialUniformBufferManager;
+			delete mMaterialBufferManager;
 		}
 
 		// TODO(co) Sanity checks

@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferSlot.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferSlot.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 
 
@@ -36,7 +36,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	MaterialUniformBufferSlot::MaterialUniformBufferSlot(MaterialResource& materialResource) :
+	MaterialBufferSlot::MaterialBufferSlot(MaterialResource& materialResource) :
 		mMaterialResourceManager(&materialResource.getResourceManager<MaterialResourceManager>()),
 		mMaterialResourceId(materialResource.getId()),
 		mAssignedMaterialPool(nullptr),
@@ -47,7 +47,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	const MaterialResource& MaterialUniformBufferSlot::getMaterialResource() const
+	const MaterialResource& MaterialBufferSlot::getMaterialResource() const
 	{
 		return mMaterialResourceManager->getMaterialResources().getElementById(mMaterialResourceId);
 	}

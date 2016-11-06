@@ -35,8 +35,8 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceUniformBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -58,7 +58,7 @@ namespace
 			const RendererRuntime::MaterialResources& materialResources = rendererRuntime.getMaterialResourceManager().getMaterialResources();
 			const RendererRuntime::MaterialBlueprintResourceManager& materialBlueprintResourceManager = rendererRuntime.getMaterialBlueprintResourceManager();
 			RendererRuntime::MaterialBlueprintResource* currentlyBoundMaterialBlueprintResource = nullptr;
-			RendererRuntime::InstanceUniformBufferManager& instanceUniformBufferManager = materialBlueprintResourceManager.getInstanceUniformBufferManager();
+			RendererRuntime::InstanceBufferManager& instanceBufferManager = materialBlueprintResourceManager.getInstanceBufferManager();
 
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
@@ -167,22 +167,22 @@ namespace
 													{
 														currentlyBoundMaterialBlueprintResource = materialBlueprintResource;
 
-														// Fill the pass uniform buffer
+														// Fill the pass buffer manager
 														{ // TODO(co) Just a dummy usage for now
-															RendererRuntime::PassUniformBufferManager* passUniformBufferManager = materialBlueprintResource->getPassUniformBufferManager();
-															if (nullptr != passUniformBufferManager)
+															RendererRuntime::PassBufferManager* passBufferManager = materialBlueprintResource->getPassBufferManager();
+															if (nullptr != passBufferManager)
 															{
-																passUniformBufferManager->resetCurrentPassBuffer();
+																passBufferManager->resetCurrentPassBuffer();
 
 																// TODO(co) Camera usage
 																const RendererRuntime::Transform worldSpaceToViewSpaceTransform;
-																passUniformBufferManager->fillBuffer(worldSpaceToViewSpaceTransform);
+																passBufferManager->fillBuffer(worldSpaceToViewSpaceTransform);
 															}
 														}
 
-														// Bind the material blueprint resource and instance uniform buffer manager to the used renderer
+														// Bind the material blueprint resource and instance buffer manager to the used renderer
 														materialBlueprintResource->bindToRenderer();
-														instanceUniformBufferManager.bindToRenderer(*materialBlueprintResource);
+														instanceBufferManager.bindToRenderer(*materialBlueprintResource);
 													}
 
 													// Cheap state change: Bind the material technique to the used renderer
@@ -191,13 +191,13 @@ namespace
 													// Set the used pipeline state object (PSO)
 													renderer.setPipelineState(pipelineStatePtr);
 
-													{ // Fill the instance uniform buffer
-														RendererRuntime::PassUniformBufferManager* passUniformBufferManager = materialBlueprintResource->getPassUniformBufferManager();
-														if (nullptr != passUniformBufferManager)
+													{ // Fill the instance buffer manager
+														RendererRuntime::PassBufferManager* passBufferManager = materialBlueprintResource->getPassBufferManager();
+														if (nullptr != passBufferManager)
 														{
 															const RendererRuntime::MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
 															const RendererRuntime::MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource->getInstanceTextureBuffer();
-															instanceUniformBufferManager.fillBuffer(*passUniformBufferManager, instanceUniformBuffer, instanceTextureBuffer, transform, *materialTechnique);
+															instanceBufferManager.fillBuffer(*passBufferManager, instanceUniformBuffer, instanceTextureBuffer, transform, *materialTechnique);
 														}
 													}
 

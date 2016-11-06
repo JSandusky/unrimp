@@ -27,18 +27,24 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class IUniformBuffer;
+	class IBufferManager;
+}
 namespace RendererRuntime
 {
-	class Transform;
 	class IRendererRuntime;
-	class MaterialTechnique;
-	class PassUniformBufferManager;
+	class MaterialBufferSlot;
+	class MaterialBlueprintResource;
 }
 
 
@@ -54,9 +60,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Instance uniform buffer manager
+	*    Material buffer manager
+	*
+	*  @note
+	*    - For material batching
+	*    - Concept basing on OGRE 2.1 "Ogre::ConstBufferPool", but more generic and simplified thanks to the material blueprint concept
 	*/
-	class InstanceUniformBufferManager : public NonCopyable
+	class MaterialBufferManager : public NonCopyable
 	{
 
 
@@ -70,67 +80,93 @@ namespace RendererRuntime
 		*
 		*  @param[in] rendererRuntime
 		*    Renderer runtime instance to use
+		*  @param[in] materialBlueprintResource
+		*    Material blueprint resource
 		*/
-		explicit InstanceUniformBufferManager(IRendererRuntime& rendererRuntime);
+		MaterialBufferManager(IRendererRuntime& rendererRuntime, const MaterialBlueprintResource& materialBlueprintResource);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		~InstanceUniformBufferManager();
+		~MaterialBufferManager();
 
 		/**
 		*  @brief
-		*    Fill the instance buffer
-		*
-		*  @param[in] passUniformBufferManager
-		*    Pass uniform buffer manager instance to use
-		*  @param[in] instanceUniformBuffer
-		*    Instance uniform buffer instance to use, can be a null pointer
-		*  @param[in] instanceTextureBuffer
-		*    Instance texture buffer instance to use, can be a null pointer
-		*  @param[in] objectSpaceToWorldSpaceTransform
-		*    Object space to world space transform
-		*  @param[in] materialTechnique
-		*    Used material technique
+		*    Request a slot and fill the material slot; automatically schedules for update
 		*/
-		void fillBuffer(PassUniformBufferManager& passUniformBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer,
-						const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique);
+		void requestSlot(MaterialBufferSlot& materialBufferSlot);
 
 		/**
 		*  @brief
-		*    Bind instance uniform buffer manager to renderer
-		*
-		*  @param[in] materialBlueprintResource
-		*    Material blueprint resource
+		*    Release a slot requested with "RendererRuntime::MaterialBufferManager::requestSlot()"
 		*/
-		void bindToRenderer(const MaterialBlueprintResource& materialBlueprintResource);
+		void releaseSlot(MaterialBufferSlot& materialBufferSlot);
+
+		/**
+		*  @brief
+		*    Schedule the slot of the given material slot for update
+		*/
+		void scheduleForUpdate(MaterialBufferSlot& materialBufferSlot);
+
+		/**
+		*  @brief
+		*    Reset last bound pool and update the dirty slots
+		*/
+		void resetLastBoundPool();
+
+		/**
+		*  @brief
+		*    Bind slot to renderer
+		*
+		*  @param[in] rendererRuntime
+		*    Renderer runtime to use
+		*  @param[in] materialBufferSlot
+		*    Slot to bind
+		*/
+		void bindToRenderer(const IRendererRuntime& rendererRuntime, MaterialBufferSlot& materialBufferSlot);
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		InstanceUniformBufferManager(const InstanceUniformBufferManager&) = delete;
-		InstanceUniformBufferManager& operator=(const InstanceUniformBufferManager&) = delete;
+		MaterialBufferManager(const MaterialBufferManager&) = delete;
+		MaterialBufferManager& operator=(const MaterialBufferManager&) = delete;
+		void uploadDirtySlots();
 
 
 	//[-------------------------------------------------------]
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		typedef std::vector<uint8_t> ScratchBuffer;
+		struct BufferPool
+		{
+			std::vector<uint32_t>	  freeSlots;
+			Renderer::IUniformBuffer* uniformBuffer;	///< Memory is managed by this buffer pool instance
+
+			BufferPool(size_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager);
+			~BufferPool();
+		};
+
+		typedef std::vector<BufferPool*>		 BufferPools;
+		typedef std::vector<MaterialBufferSlot*> MaterialBufferSlots;
+		typedef std::vector<uint8_t>			 ScratchBuffer;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		  mRendererRuntime;	///< Renderer runtime instance to use
-		Renderer::IUniformBuffer* mUniformBuffer;	///< Uniform buffer instance, always valid
-		Renderer::ITextureBuffer* mTextureBuffer;	///< Texture buffer instance, always valid
-		ScratchBuffer			  mUniformScratchBuffer;
-		ScratchBuffer			  mTextureScratchBuffer;
+		IRendererRuntime&				 mRendererRuntime;
+		const MaterialBlueprintResource& mMaterialBlueprintResource;
+		BufferPools						 mBufferPools;
+		uint32_t						 mSlotsPerPool;
+		size_t							 mBufferSize;
+		MaterialBufferSlots				 mDirtyMaterialBufferSlots;
+		MaterialBufferSlots				 mMaterialBufferSlots;
+		const BufferPool*				 mLastBoundPool;
+		ScratchBuffer					 mScratchBuffer;
 
 
 	};

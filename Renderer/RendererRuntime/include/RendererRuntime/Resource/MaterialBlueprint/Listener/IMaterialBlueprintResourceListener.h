@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
@@ -64,10 +64,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class PassUniformBufferManager;		///< Is calling the private interface methods
-		friend class MaterialBlueprintResource;		///< Is calling the private interface methods
-		friend class MaterialUniformBufferManager;	///< Is calling the private interface methods
-		friend class InstanceUniformBufferManager;	///< Is calling the private interface methods
+		friend class PassBufferManager;			///< Is calling the private interface methods
+		friend class MaterialBlueprintResource;	///< Is calling the private interface methods
+		friend class MaterialBufferManager;		///< Is calling the private interface methods
+		friend class InstanceBufferManager;		///< Is calling the private interface methods
 
 
 	//[-------------------------------------------------------]
@@ -106,13 +106,13 @@ namespace RendererRuntime
 	private:
 		virtual void beginFillUnknown() = 0;
 		virtual bool fillUnknownValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
-		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform, PassUniformBufferManager::PassData& passData) = 0;
+		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform, PassBufferManager::PassData& passData) = 0;
 		virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
 		virtual void beginFillMaterial() = 0;
 		virtual bool fillMaterialValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
 
 		// TODO(co) It might make sense to remove those instance methods from the interface and directly hard-code them for performance reasons. Profiling later on with real world scenes will show.
-		virtual void beginFillInstance(const PassUniformBufferManager::PassData& passData, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) = 0;
+		virtual void beginFillInstance(const PassBufferManager::PassData& passData, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) = 0;
 		virtual bool fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
 
 

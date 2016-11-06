@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -38,7 +38,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PassUniformBufferManager::PassUniformBufferManager(IRendererRuntime& rendererRuntime, const MaterialBlueprintResource& materialBlueprintResource) :
+	PassBufferManager::PassBufferManager(IRendererRuntime& rendererRuntime, const MaterialBlueprintResource& materialBlueprintResource) :
 		mRendererRuntime(rendererRuntime),
 		mBufferManager(rendererRuntime.getBufferManager()),
 		mMaterialBlueprintResource(materialBlueprintResource),
@@ -52,7 +52,7 @@ namespace RendererRuntime
 		}
 	}
 
-	PassUniformBufferManager::~PassUniformBufferManager()
+	PassBufferManager::~PassBufferManager()
 	{
 		// Destroy all uniform buffers
 		for (Renderer::IUniformBuffer* uniformBuffer : mUniformBuffers)
@@ -61,9 +61,9 @@ namespace RendererRuntime
 		}
 	}
 
-	void PassUniformBufferManager::fillBuffer(const Transform& worldSpaceToViewSpaceTransform)
+	void PassBufferManager::fillBuffer(const Transform& worldSpaceToViewSpaceTransform)
 	{
-		// Even if there's no pass uniform buffer, there must still be a pass uniform buffer manager filling "RendererRuntime::PassUniformBufferManager::PassData" which is used to fill the instances texture buffer
+		// Even if there's no pass uniform buffer, there must still be a pass buffer manager filling "RendererRuntime::PassBufferManager::PassData" which is used to fill the instances texture buffer
 
 		// Tell the material blueprint resource listener that we're about to fill a pass uniform buffer
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
@@ -103,7 +103,7 @@ namespace RendererRuntime
 						if (!materialBlueprintResourceListener.fillPassValue(uniformBufferElementProperty.getReferenceValue(), scratchBufferPointer, valueTypeNumberOfBytes))
 						{
 							// Error, can't resolve reference
-							assert(false);	// RendererRuntime::PassUniformBufferManager::fillBuffer(): Material blueprint resource listener failed to fill pass uniform buffer element " << i
+							assert(false);	// RendererRuntime::PassBufferManager::fillBuffer(): Material blueprint resource listener failed to fill pass uniform buffer element " << i
 						}
 					}
 					else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
@@ -118,7 +118,7 @@ namespace RendererRuntime
 						else
 						{
 							// Error, can't resolve reference
-							assert(false);	// RendererRuntime::PassUniformBufferManager::fillBuffer(): Failed to fill pass uniform buffer element " << i << " by using unknown global material property
+							assert(false);	// RendererRuntime::PassBufferManager::fillBuffer(): Failed to fill pass uniform buffer element " << i << " by using unknown global material property
 						}
 					}
 					else if (MaterialProperty::Usage::MATERIAL_REFERENCE == usage)
@@ -133,7 +133,7 @@ namespace RendererRuntime
 						else if (!materialBlueprintResourceListener.fillMaterialValue(uniformBufferElementProperty.getReferenceValue(), scratchBufferPointer, valueTypeNumberOfBytes))
 						{
 							// Error, can't resolve reference
-							assert(false);	// RendererRuntime::PassUniformBufferManager::uploadToConstBuffer(): Failed to resolve material property value reference
+							assert(false);	// RendererRuntime::PassBufferManager::uploadToConstBuffer(): Failed to resolve material property value reference
 						}
 					}
 					else if (!uniformBufferElementProperty.isReferenceUsage())
@@ -144,7 +144,7 @@ namespace RendererRuntime
 					else
 					{
 						// Error, invalid property
-						assert(false);	// RendererRuntime::PassUniformBufferManager::fillBuffer(): Failed to fill pass uniform buffer element " << i << " due to unsupported element property usage
+						assert(false);	// RendererRuntime::PassBufferManager::fillBuffer(): Failed to fill pass uniform buffer element " << i << " due to unsupported element property usage
 					}
 
 					// Next property
@@ -165,7 +165,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void PassUniformBufferManager::bindToRenderer() const
+	void PassBufferManager::bindToRenderer() const
 	{
 		if (!mUniformBuffers.empty())
 		{

@@ -34,23 +34,23 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialUniformBufferSlot::~MaterialUniformBufferSlot()
+	inline MaterialBufferSlot::~MaterialBufferSlot()
 	{
 		// Nothing here
 	}
 
-	inline MaterialResourceManager& MaterialUniformBufferSlot::getMaterialResourceManager() const
+	inline MaterialResourceManager& MaterialBufferSlot::getMaterialResourceManager() const
 	{
 		assert(nullptr != mMaterialResourceManager);
 		return *mMaterialResourceManager;
 	}
 
-	inline MaterialResourceId MaterialUniformBufferSlot::getMaterialResourceId() const
+	inline MaterialResourceId MaterialBufferSlot::getMaterialResourceId() const
 	{
 		return mMaterialResourceId;
 	}
 
-	inline uint32_t MaterialUniformBufferSlot::getAssignedMaterialSlot() const
+	inline uint32_t MaterialBufferSlot::getAssignedMaterialSlot() const
 	{
 		return mAssignedMaterialSlot;
 	}

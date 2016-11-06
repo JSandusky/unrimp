@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
@@ -78,7 +78,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	MaterialUniformBufferManager::MaterialUniformBufferManager(IRendererRuntime& rendererRuntime, const MaterialBlueprintResource& materialBlueprintResource) :
+	MaterialBufferManager::MaterialBufferManager(IRendererRuntime& rendererRuntime, const MaterialBlueprintResource& materialBlueprintResource) :
 		mRendererRuntime(rendererRuntime),
 		mMaterialBlueprintResource(materialBlueprintResource),
 		mSlotsPerPool(0),
@@ -97,7 +97,7 @@ namespace RendererRuntime
 		mSlotsPerPool = mBufferSize / numberOfBytesPerElement;
 	}
 
-	MaterialUniformBufferManager::~MaterialUniformBufferManager()
+	MaterialBufferManager::~MaterialBufferManager()
 	{
 		for (BufferPool* bufferPool : mBufferPools)
 		{
@@ -105,12 +105,12 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialUniformBufferManager::requestSlot(MaterialUniformBufferSlot& materialUniformBufferSlot)
+	void MaterialBufferManager::requestSlot(MaterialBufferSlot& materialBufferSlot)
 	{
 		// Release slot, if required
-		if (isInitialized(materialUniformBufferSlot.mAssignedMaterialPool))
+		if (isInitialized(materialBufferSlot.mAssignedMaterialPool))
 		{
-			releaseSlot(materialUniformBufferSlot);
+			releaseSlot(materialBufferSlot);
 		}
 
 		// Find a buffer pool with a free slot
@@ -128,72 +128,72 @@ namespace RendererRuntime
 
 		// Setup received slot
 		BufferPool* bufferPool = *iterator;
-		materialUniformBufferSlot.mAssignedMaterialPool = bufferPool;
-		materialUniformBufferSlot.mAssignedMaterialSlot = bufferPool->freeSlots.back();
-		materialUniformBufferSlot.mGlobalIndex			= static_cast<int>(mMaterialUniformBufferSlots.size());
-		mMaterialUniformBufferSlots.push_back(&materialUniformBufferSlot);
+		materialBufferSlot.mAssignedMaterialPool = bufferPool;
+		materialBufferSlot.mAssignedMaterialSlot = bufferPool->freeSlots.back();
+		materialBufferSlot.mGlobalIndex			 = static_cast<int>(mMaterialBufferSlots.size());
+		mMaterialBufferSlots.push_back(&materialBufferSlot);
 		bufferPool->freeSlots.pop_back();
-		scheduleForUpdate(materialUniformBufferSlot);
+		scheduleForUpdate(materialBufferSlot);
 	}
 
-	void MaterialUniformBufferManager::releaseSlot(MaterialUniformBufferSlot& materialUniformBufferSlot)
+	void MaterialBufferManager::releaseSlot(MaterialBufferSlot& materialBufferSlot)
 	{
-		BufferPool* bufferPool = static_cast<BufferPool*>(materialUniformBufferSlot.mAssignedMaterialPool);
+		BufferPool* bufferPool = static_cast<BufferPool*>(materialBufferSlot.mAssignedMaterialPool);
 
 		// Sanity checks
-		assert(isInitialized(materialUniformBufferSlot.mAssignedMaterialPool));
-		assert(materialUniformBufferSlot.mAssignedMaterialSlot < mSlotsPerPool);
-		assert(std::find(bufferPool->freeSlots.begin(), bufferPool->freeSlots.end(), materialUniformBufferSlot.mAssignedMaterialSlot) == bufferPool->freeSlots.end());
-		assert(materialUniformBufferSlot.mGlobalIndex < static_cast<int>(mMaterialUniformBufferSlots.size()));
-		assert(&materialUniformBufferSlot == *(mMaterialUniformBufferSlots.begin() + materialUniformBufferSlot.mGlobalIndex));
+		assert(isInitialized(materialBufferSlot.mAssignedMaterialPool));
+		assert(materialBufferSlot.mAssignedMaterialSlot < mSlotsPerPool);
+		assert(std::find(bufferPool->freeSlots.begin(), bufferPool->freeSlots.end(), materialBufferSlot.mAssignedMaterialSlot) == bufferPool->freeSlots.end());
+		assert(materialBufferSlot.mGlobalIndex < static_cast<int>(mMaterialBufferSlots.size()));
+		assert(&materialBufferSlot == *(mMaterialBufferSlots.begin() + materialBufferSlot.mGlobalIndex));
 
 		// If the slot is dirty, remove it from the list of dirty slots
-		if (materialUniformBufferSlot.mDirty)
+		if (materialBufferSlot.mDirty)
 		{
-			MaterialUniformBufferSlots::iterator iterator = std::find(mDirtyMaterialUniformBufferSlots.begin(), mDirtyMaterialUniformBufferSlots.end(), &materialUniformBufferSlot);
-			if (iterator != mDirtyMaterialUniformBufferSlots.end())
+			MaterialBufferSlots::iterator iterator = std::find(mDirtyMaterialBufferSlots.begin(), mDirtyMaterialBufferSlots.end(), &materialBufferSlot);
+			if (iterator != mDirtyMaterialBufferSlots.end())
 			{
-				::detail::efficientVectorRemove(mDirtyMaterialUniformBufferSlots, iterator);
+				::detail::efficientVectorRemove(mDirtyMaterialBufferSlots, iterator);
 			}
 		}
 
 		// Put the slot back to the list of free slots
-		bufferPool->freeSlots.push_back(materialUniformBufferSlot.mAssignedMaterialSlot);
-		materialUniformBufferSlot.mAssignedMaterialPool = nullptr;
-		materialUniformBufferSlot.mAssignedMaterialSlot = getUninitialized<uint32_t>();
-		materialUniformBufferSlot.mDirty				= false;
-		MaterialUniformBufferSlots::iterator iterator = mMaterialUniformBufferSlots.begin() + materialUniformBufferSlot.mGlobalIndex;
-		iterator = ::detail::efficientVectorRemove(mMaterialUniformBufferSlots, iterator);
-		if (iterator != mMaterialUniformBufferSlots.end())
+		bufferPool->freeSlots.push_back(materialBufferSlot.mAssignedMaterialSlot);
+		materialBufferSlot.mAssignedMaterialPool = nullptr;
+		materialBufferSlot.mAssignedMaterialSlot = getUninitialized<uint32_t>();
+		materialBufferSlot.mDirty				 = false;
+		MaterialBufferSlots::iterator iterator = mMaterialBufferSlots.begin() + materialBufferSlot.mGlobalIndex;
+		iterator = ::detail::efficientVectorRemove(mMaterialBufferSlots, iterator);
+		if (iterator != mMaterialBufferSlots.end())
 		{
 			// The node that was at the end got swapped and has now a different index
-			(*iterator)->mGlobalIndex = iterator - mMaterialUniformBufferSlots.begin();
+			(*iterator)->mGlobalIndex = iterator - mMaterialBufferSlots.begin();
 		}
 	}
 
-	void MaterialUniformBufferManager::scheduleForUpdate(MaterialUniformBufferSlot& materialUniformBufferSlot)
+	void MaterialBufferManager::scheduleForUpdate(MaterialBufferSlot& materialBufferSlot)
 	{
-		if (!materialUniformBufferSlot.mDirty)
+		if (!materialBufferSlot.mDirty)
 		{
-			mDirtyMaterialUniformBufferSlots.push_back(&materialUniformBufferSlot);
-			materialUniformBufferSlot.mDirty = true;
+			mDirtyMaterialBufferSlots.push_back(&materialBufferSlot);
+			materialBufferSlot.mDirty = true;
 		}
 	}
 
-	void MaterialUniformBufferManager::resetLastBoundPool()
+	void MaterialBufferManager::resetLastBoundPool()
 	{
 		mLastBoundPool = nullptr;
-		if (!mDirtyMaterialUniformBufferSlots.empty())
+		if (!mDirtyMaterialBufferSlots.empty())
 		{
 			uploadDirtySlots();
 		}
 	}
 
-	void MaterialUniformBufferManager::bindToRenderer(const IRendererRuntime& rendererRuntime, MaterialUniformBufferSlot& materialUniformBufferSlot)
+	void MaterialBufferManager::bindToRenderer(const IRendererRuntime& rendererRuntime, MaterialBufferSlot& materialBufferSlot)
 	{
-		if (mLastBoundPool != materialUniformBufferSlot.mAssignedMaterialPool)
+		if (mLastBoundPool != materialBufferSlot.mAssignedMaterialPool)
 		{
-			mLastBoundPool = static_cast<BufferPool*>(materialUniformBufferSlot.mAssignedMaterialPool);
+			mLastBoundPool = static_cast<BufferPool*>(materialBufferSlot.mAssignedMaterialPool);
 			const MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
 			assert(nullptr != materialUniformBuffer);
 			rendererRuntime.getRenderer().setGraphicsRootDescriptorTable(materialUniformBuffer->rootParameterIndex, mLastBoundPool->uniformBuffer);
@@ -204,9 +204,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void MaterialUniformBufferManager::uploadDirtySlots()
+	void MaterialBufferManager::uploadDirtySlots()
 	{
-		assert(!mDirtyMaterialUniformBufferSlots.empty());
+		assert(!mDirtyMaterialBufferSlots.empty());
 		const MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
 		assert(nullptr != materialUniformBuffer);
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mMaterialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>();
@@ -220,13 +220,13 @@ namespace RendererRuntime
 			const MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = materialUniformBuffer->uniformBufferElementProperties;
 			const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
 			const uint32_t numberOfBytesPerElement = materialUniformBuffer->uniformBufferNumberOfBytes / materialUniformBuffer->numberOfElements;
-			for (MaterialUniformBufferSlot* materialUniformBufferSlot : mDirtyMaterialUniformBufferSlots)
+			for (MaterialBufferSlot* materialBufferSlot : mDirtyMaterialBufferSlots)
 			{
-				const MaterialResource& materialResource = materialUniformBufferSlot->getMaterialResource();
-				uint8_t* scratchBufferPointer = mScratchBuffer.data() + numberOfBytesPerElement * materialUniformBufferSlot->mAssignedMaterialSlot;
+				const MaterialResource& materialResource = materialBufferSlot->getMaterialResource();
+				uint8_t* scratchBufferPointer = mScratchBuffer.data() + numberOfBytesPerElement * materialBufferSlot->mAssignedMaterialSlot;
 
 				// TODO(co) Implement proper uniform buffer handling and only update dirty sections
-				uniformBuffer = static_cast<BufferPool*>(materialUniformBufferSlot->mAssignedMaterialPool)->uniformBuffer;
+				uniformBuffer = static_cast<BufferPool*>(materialBufferSlot->mAssignedMaterialPool)->uniformBuffer;
 
 				for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
 				{
@@ -295,8 +295,8 @@ namespace RendererRuntime
 					scratchBufferPointer += valueTypeNumberOfBytes;
 				}
 
-				// The material uniform buffer slot is now clean
-				materialUniformBufferSlot->mDirty = false;
+				// The material buffer slot is now clean
+				materialBufferSlot->mDirty = false;
 			}
 		}
 
@@ -307,14 +307,14 @@ namespace RendererRuntime
 		}
 
 		// Done
-		mDirtyMaterialUniformBufferSlots.clear();
+		mDirtyMaterialBufferSlots.clear();
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::MaterialUniformBufferManager::BufferPool methods ]
+	//[ Public RendererRuntime::MaterialBufferManager::BufferPool methods ]
 	//[-------------------------------------------------------]
-	MaterialUniformBufferManager::BufferPool::BufferPool(size_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager) :
+	MaterialBufferManager::BufferPool::BufferPool(size_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager) :
 		uniformBuffer(bufferManager.createUniformBuffer(bufferSize, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW))
 	{
 		freeSlots.reserve(slotsPerPool);
@@ -324,7 +324,7 @@ namespace RendererRuntime
 		}
 	}
 
-	MaterialUniformBufferManager::BufferPool::~BufferPool()
+	MaterialBufferManager::BufferPool::~BufferPool()
 	{
 		uniformBuffer->release();
 	}

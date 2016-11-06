@@ -453,10 +453,10 @@
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorFramebuffer.inl">
       <Filter>Source Files\Resource\CompositorNode</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.inl">
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialBufferSlot.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferSlot.inl">
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassBufferManager.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </None>
   </ItemGroup>
@@ -888,16 +888,16 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorFramebuffer.h">
       <Filter>Source Files\Resource\CompositorNode</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.h">
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassBufferManager.h">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceUniformBufferManager.h">
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceBufferManager.h">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferManager.h">
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialBufferManager.h">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferSlot.h">
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialBufferSlot.h">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1148,16 +1148,16 @@
     <ClCompile Include="src\Core\Renderer\FramebufferSignature.cpp">
       <Filter>Source Files\Core\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.cpp">
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\MaterialBufferSlot.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferManager.cpp">
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\PassBufferManager.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\InstanceUniformBufferManager.cpp">
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\InstanceBufferManager.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferSlot.cpp">
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\MaterialBufferManager.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClCompile>
   </ItemGroup>

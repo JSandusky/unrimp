@@ -39,7 +39,7 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class IResourceListener;
-	class InstanceUniformBufferManager;
+	class InstanceBufferManager;
 	class IMaterialBlueprintResourceListener;
 }
 
@@ -92,7 +92,7 @@ namespace RendererRuntime
 		inline MaterialProperties& getGlobalMaterialProperties();
 		inline const MaterialProperties& getGlobalMaterialProperties() const;
 
-		inline InstanceUniformBufferManager& getInstanceUniformBufferManager() const;
+		inline InstanceBufferManager& getInstanceBufferManager() const;
 
 
 	//[-------------------------------------------------------]
@@ -124,7 +124,7 @@ namespace RendererRuntime
 		MaterialBlueprintResources			mMaterialBlueprintResources;
 		IMaterialBlueprintResourceListener*	mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
 		MaterialProperties					mGlobalMaterialProperties;			///< Global material properties
-		InstanceUniformBufferManager*		mInstanceUniformBufferManager;		///< Instance uniform buffer manager, always valid
+		InstanceBufferManager*				mInstanceBufferManager;				///< Instance buffer manager, always valid
 
 
 	};

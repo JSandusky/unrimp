@@ -60,16 +60,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Material uniform buffer slot
+	*    Material buffer slot
 	*/
-	class MaterialUniformBufferSlot : protected NonCopyable
+	class MaterialBufferSlot : protected NonCopyable
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class MaterialUniformBufferManager;	///< Manages the slot instances
+		friend class MaterialBufferManager;	///< Manages the slot instances
 
 
 	//[-------------------------------------------------------]
@@ -83,13 +83,13 @@ namespace RendererRuntime
 		*  @param[in] materialResource
 		*    Owner material resource, only material resource manager and material resource ID will internally be stored
 		*/
-		explicit MaterialUniformBufferSlot(MaterialResource& materialResource);
+		explicit MaterialBufferSlot(MaterialResource& materialResource);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		inline ~MaterialUniformBufferSlot();
+		inline ~MaterialBufferSlot();
 
 		/**
 		*  @brief
@@ -135,8 +135,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialUniformBufferSlot(const MaterialUniformBufferSlot&) = delete;
-		MaterialUniformBufferSlot& operator=(const MaterialUniformBufferSlot&) = delete;
+		MaterialBufferSlot(const MaterialBufferSlot&) = delete;
+		MaterialBufferSlot& operator=(const MaterialBufferSlot&) = delete;
 
 
 	//[-------------------------------------------------------]
@@ -145,7 +145,7 @@ namespace RendererRuntime
 	private:
 		MaterialResourceManager* mMaterialResourceManager;	///< Owner material resource manager, always valid
 		MaterialResourceId		 mMaterialResourceId;		///< Owner material resource ID, always valid
-		void*					 mAssignedMaterialPool;		///< "RendererRuntime::MaterialUniformBufferManager::BufferPool*", it's a private inner class which we can't forward declare, but we also don't want to expose too much details, so void* it is in here
+		void*					 mAssignedMaterialPool;		///< "RendererRuntime::MaterialBufferManager::BufferPool*", it's a private inner class which we can't forward declare, but we also don't want to expose too much details, so void* it is in here
 		uint32_t				 mAssignedMaterialSlot;
 		int						 mGlobalIndex;
 		bool					 mDirty;
@@ -163,4 +163,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferSlot.inl"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferSlot.inl"

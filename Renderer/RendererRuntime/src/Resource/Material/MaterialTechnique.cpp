@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -41,23 +41,23 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	MaterialTechnique::MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource, MaterialBlueprintResourceId materialBlueprintResourceId) :
-		MaterialUniformBufferSlot(materialResource),
+		MaterialBufferSlot(materialResource),
 		mMaterialTechniqueId(materialTechniqueId),
 		mMaterialBlueprintResourceId(materialBlueprintResourceId)
 	{
-		MaterialUniformBufferManager* materialUniformBufferManager = getMaterialUniformBufferManager();
-		if (nullptr != materialUniformBufferManager)
+		MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
+		if (nullptr != materialBufferManager)
 		{
-			materialUniformBufferManager->requestSlot(*this);
+			materialBufferManager->requestSlot(*this);
 		}
 	}
 
 	MaterialTechnique::~MaterialTechnique()
 	{
-		MaterialUniformBufferManager* materialUniformBufferManager = getMaterialUniformBufferManager();
-		if (nullptr != materialUniformBufferManager)
+		MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
+		if (nullptr != materialBufferManager)
 		{
-			materialUniformBufferManager->releaseSlot(*this);
+			materialBufferManager->releaseSlot(*this);
 		}
 	}
 
@@ -65,11 +65,11 @@ namespace RendererRuntime
 	{
 		assert(isInitialized(mMaterialBlueprintResourceId));
 
-		{ // Bind material uniform buffer
-			MaterialUniformBufferManager* materialUniformBufferManager = getMaterialUniformBufferManager();
-			if (nullptr != materialUniformBufferManager)
+		{ // Bind the material buffer manager
+			MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
+			if (nullptr != materialBufferManager)
 			{
-				materialUniformBufferManager->bindToRenderer(rendererRuntime, *this);
+				materialBufferManager->bindToRenderer(rendererRuntime, *this);
 			}
 		}
 
@@ -142,19 +142,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	MaterialUniformBufferManager* MaterialTechnique::getMaterialUniformBufferManager() const
+	MaterialBufferManager* MaterialTechnique::getMaterialBufferManager() const
 	{
 		// It's valid if a material blueprint resource doesn't contain a material uniform buffer (usually the case for compositor material blueprint resources)
 		const MaterialBlueprintResource* materialBlueprintResource = getMaterialResourceManager().getRendererRuntime().getMaterialBlueprintResourceManager().getMaterialBlueprintResources().tryGetElementById(mMaterialBlueprintResourceId);
-		return (nullptr != materialBlueprintResource) ? materialBlueprintResource->getMaterialUniformBufferManager() : nullptr;
+		return (nullptr != materialBlueprintResource) ? materialBlueprintResource->getMaterialBufferManager() : nullptr;
 	}
 
 	void MaterialTechnique::scheduleForShaderUniformUpdate()
 	{
-		MaterialUniformBufferManager* materialUniformBufferManager = getMaterialUniformBufferManager();
-		if (nullptr != materialUniformBufferManager)
+		MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
+		if (nullptr != materialBufferManager)
 		{
-			materialUniformBufferManager->scheduleForUpdate(*this);
+			materialBufferManager->scheduleForUpdate(*this);
 		}
 	}
 

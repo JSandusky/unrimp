@@ -67,12 +67,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Pass uniform buffer manager
-	*
-	*  @note
-	*    - Class name is singular, a pass is a pass is a pass
+	*    Pass buffer manager
 	*/
-	class PassUniformBufferManager : public NonCopyable
+	class PassBufferManager : public NonCopyable
 	{
 
 
@@ -101,17 +98,17 @@ namespace RendererRuntime
 		*  @param[in] materialBlueprintResource
 		*    Material blueprint resource
 		*/
-		PassUniformBufferManager(IRendererRuntime& rendererRuntime, const MaterialBlueprintResource& materialBlueprintResource);
+		PassBufferManager(IRendererRuntime& rendererRuntime, const MaterialBlueprintResource& materialBlueprintResource);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		~PassUniformBufferManager();
+		~PassBufferManager();
 
 		/**
 		*  @brief
-		*    Fill the pass uniform buffer
+		*    Fill the pass buffer
 		*
 		*  @param[in] worldSpaceToViewSpaceTransform
 		*    World space to view space transform matrix
@@ -123,13 +120,13 @@ namespace RendererRuntime
 		*    Return the pass data
 		*
 		*  @return
-		*    The pass data filled inside "RendererRuntime::PassUniformBufferManager::fillBuffer()"
+		*    The pass data filled inside "RendererRuntime::PassBufferManager::fillBuffer()"
 		*/
 		inline const PassData& getPassData() const;
 
 		/**
 		*  @brief
-		*    Bind the currently used pass uniform buffer to the renderer
+		*    Bind the currently used pass buffer to the renderer
 		*/
 		void bindToRenderer() const;
 
@@ -147,8 +144,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		PassUniformBufferManager(const PassUniformBufferManager&) = delete;
-		PassUniformBufferManager& operator=(const PassUniformBufferManager&) = delete;
+		PassBufferManager(const PassBufferManager&) = delete;
+		PassBufferManager& operator=(const PassBufferManager&) = delete;
 
 
 	//[-------------------------------------------------------]
@@ -185,4 +182,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.inl"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.inl"

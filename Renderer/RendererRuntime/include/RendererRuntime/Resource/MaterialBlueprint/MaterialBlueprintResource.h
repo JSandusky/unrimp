@@ -41,8 +41,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class PassUniformBufferManager;
-	class MaterialUniformBufferManager;
+	class PassBufferManager;
+	class MaterialBufferManager;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 }
 
@@ -88,7 +88,7 @@ namespace RendererRuntime
 		friend class MaterialBlueprintResourceManager;
 		friend class MaterialResourceLoader;		// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.) - remove this
 		friend class MaterialResourceManager;		// TODO(co) Remove
-		friend class MaterialUniformBufferManager;	// TODO(co) Remove. Decent material technique list management inside the material blueprint resource (link, unlink etc.)
+		friend class MaterialBufferManager;			// TODO(co) Remove. Decent material technique list management inside the material blueprint resource (link, unlink etc.)
 
 
 	//[-------------------------------------------------------]
@@ -358,21 +358,21 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    Return the pass uniform buffer manager
+		*    Return the pass buffer manager
 		*
 		*  @return
-		*    The pass uniform buffer manager, can be a null pointer, don't destroy the instance
+		*    The pass buffer manager, can be a null pointer, don't destroy the instance
 		*/
-		inline PassUniformBufferManager* getPassUniformBufferManager() const;
+		inline PassBufferManager* getPassBufferManager() const;
 
 		/**
 		*  @brief
-		*    Return the material uniform buffer manager
+		*    Return the material buffer manager
 		*
 		*  @return
-		*    The material uniform buffer manager, can be a null pointer, don't destroy the instance
+		*    The material buffer manager, can be a null pointer, don't destroy the instance
 		*/
-		inline MaterialUniformBufferManager* getMaterialUniformBufferManager() const;
+		inline MaterialBufferManager* getMaterialBufferManager() const;
 
 		//[-------------------------------------------------------]
 		//[ Misc                                                  ]
@@ -452,8 +452,8 @@ namespace RendererRuntime
 		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		TextureBuffer* mInstanceTextureBuffer;	///< Can be a null pointer, don't destroy the instance
 		// Buffer manager
-		PassUniformBufferManager*	  mPassUniformBufferManager;		///< Pass uniform buffer manager, can be a null pointer, destroy the instance if you no longer need it
-		MaterialUniformBufferManager* mMaterialUniformBufferManager;	///< Materials uniform buffer manager, can be a null pointer, destroy the instance if you no longer need it
+		PassBufferManager*	   mPassBufferManager;		///< Pass buffer manager, can be a null pointer, destroy the instance if you no longer need it
+		MaterialBufferManager* mMaterialBufferManager;	///< Material buffer manager, can be a null pointer, destroy the instance if you no longer need it
 
 
 	};

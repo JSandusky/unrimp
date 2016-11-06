@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Material/MaterialProperty.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferSlot.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferSlot.h"
 
 #include <vector>
 
@@ -39,7 +39,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
-	class MaterialUniformBufferManager;
+	class MaterialBufferManager;
 }
 
 
@@ -65,7 +65,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Material technique
 	*/
-	class MaterialTechnique : public MaterialUniformBufferSlot
+	class MaterialTechnique : public MaterialBufferSlot
 	{
 
 
@@ -145,7 +145,7 @@ namespace RendererRuntime
 	private:
 		MaterialTechnique(const MaterialTechnique&) = delete;
 		MaterialTechnique& operator=(const MaterialTechnique&) = delete;
-		MaterialUniformBufferManager* getMaterialUniformBufferManager() const;
+		MaterialBufferManager* getMaterialBufferManager() const;
 
 		/**
 		*  @brief

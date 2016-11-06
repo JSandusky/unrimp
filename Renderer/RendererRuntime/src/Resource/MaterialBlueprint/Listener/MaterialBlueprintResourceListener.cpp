@@ -77,7 +77,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
 	//[-------------------------------------------------------]
-	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform, PassUniformBufferManager::PassData& passData)
+	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform, PassBufferManager::PassData& passData)
 	{
 		// Remember the pass data memory address of the current scope
 		mPassData = &passData;

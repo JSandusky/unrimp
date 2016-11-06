@@ -24,8 +24,8 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -267,24 +267,24 @@ namespace RendererRuntime
 			}
 		}
 
-		// Create pass uniform buffer manager
-		if (nullptr != mMaterialBlueprintResource->mPassUniformBufferManager)
+		// Create pass buffer manager
+		if (nullptr != mMaterialBlueprintResource->mPassBufferManager)
 		{
-			delete mMaterialBlueprintResource->mPassUniformBufferManager;
+			delete mMaterialBlueprintResource->mPassBufferManager;
 		}
-		mMaterialBlueprintResource->mPassUniformBufferManager = new PassUniformBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
+		mMaterialBlueprintResource->mPassBufferManager = new PassBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
 
-		// Create material uniform buffer manager
-		if (nullptr != mMaterialBlueprintResource->mMaterialUniformBufferManager)
+		// Create material buffer manager
+		if (nullptr != mMaterialBlueprintResource->mMaterialBufferManager)
 		{
-			delete mMaterialBlueprintResource->mMaterialUniformBufferManager;
-			mMaterialBlueprintResource->mMaterialUniformBufferManager = nullptr;
+			delete mMaterialBlueprintResource->mMaterialBufferManager;
+			mMaterialBlueprintResource->mMaterialBufferManager = nullptr;
 		}
 		{ // It's valid if a material blueprint resource doesn't contain a material uniform buffer (usually the case for compositor material blueprint resources)
 			const MaterialBlueprintResource::UniformBuffer* uniformBuffer = mMaterialBlueprintResource->getMaterialUniformBuffer();
 			if (nullptr != uniformBuffer)
 			{
-				mMaterialBlueprintResource->mMaterialUniformBufferManager = new MaterialUniformBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
+				mMaterialBlueprintResource->mMaterialBufferManager = new MaterialBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
 			}
 		}
 

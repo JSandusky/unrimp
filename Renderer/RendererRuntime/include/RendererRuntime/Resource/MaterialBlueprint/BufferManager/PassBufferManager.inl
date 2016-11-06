@@ -28,12 +28,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const PassUniformBufferManager::PassData& PassUniformBufferManager::getPassData() const
+	inline const PassBufferManager::PassData& PassBufferManager::getPassData() const
 	{
 		return mPassData;
 	}
 
-	inline void PassUniformBufferManager::resetCurrentPassBuffer()
+	inline void PassBufferManager::resetCurrentPassBuffer()
 	{
 		mCurrentUniformBufferIndex = 0;
 	}

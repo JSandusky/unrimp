@@ -87,11 +87,11 @@ namespace RendererRuntime
 	private:
 		inline virtual void beginFillUnknown() override;
 		inline virtual bool fillUnknownValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform, PassUniformBufferManager::PassData& passData) override;
+		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform, PassBufferManager::PassData& passData) override;
 		virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
 		inline virtual void beginFillMaterial() override;
 		inline virtual bool fillMaterialValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-		inline virtual void beginFillInstance(const PassUniformBufferManager::PassData& passData, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) override;
+		inline virtual void beginFillInstance(const PassBufferManager::PassData& passData, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) override;
 		virtual bool fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
 
 
@@ -100,7 +100,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		// Pass
-		PassUniformBufferManager::PassData* mPassData;	///< Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be a null pointer outside the correct scope, don't destroy the memory
+		PassBufferManager::PassData* mPassData;	///< Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be a null pointer outside the correct scope, don't destroy the memory
 
 		// Instance
 		const Transform*   mObjectSpaceToWorldSpaceTransform;
