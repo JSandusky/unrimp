@@ -366,13 +366,18 @@ namespace OpenGLES2Renderer
 			}
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// TODO(co) Implement me
-				// return (S_OK == mD3D11DeviceContext->Map(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+				// OpenGL ES 2 has no uniform buffer
+				// TODO(co) Error handling
 				return false;
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// TODO(co) Implement me
-				// return (S_OK == mD3D11DeviceContext->Map(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+				// OpenGL ES 2 has no texture buffer
+				// TODO(co) Error handling
+				return false;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// OpenGL ES 2 has no indirect buffer
+				// TODO(co) Error handling
 				return false;
 
 			case Renderer::ResourceType::TEXTURE_2D:
@@ -504,13 +509,18 @@ namespace OpenGLES2Renderer
 			}
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// TODO(co) Implement me
-				// mD3D11DeviceContext->Unmap(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource);
+				// OpenGL ES 2 has no uniform buffer
+				// TODO(co) Error handling
 				break;
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// TODO(co) Implement me
-				// mD3D11DeviceContext->Unmap(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource);
+				// OpenGL ES 2 has no texture buffer
+				// TODO(co) Error handling
+				break;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// OpenGL ES 2 has no indirect buffer
+				// TODO(co) Error handling
 				break;
 
 			case Renderer::ResourceType::TEXTURE_2D:

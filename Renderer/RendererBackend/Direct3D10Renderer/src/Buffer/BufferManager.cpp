@@ -76,6 +76,12 @@ namespace Direct3D10Renderer
 		return new TextureBuffer(static_cast<Direct3D10Renderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
 	}
 
+	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t, const void*, Renderer::BufferUsage)
+	{
+		// DirectX 10 has no indirect buffer
+		return nullptr;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

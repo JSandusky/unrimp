@@ -81,6 +81,9 @@
     <None Include="include\Direct3D12Renderer\Buffer\TextureBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
+    <None Include="include\Direct3D12Renderer\Buffer\IndirectBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D12Renderer\Shader\ShaderLanguageHlsl.h">
@@ -164,6 +167,9 @@
     <ClInclude Include="include\Direct3D12Renderer\Buffer\TextureBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D12Renderer\Buffer\IndirectBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\ProgramHlsl.cpp">
@@ -236,6 +242,9 @@
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer\TextureBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\IndirectBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>

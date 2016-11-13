@@ -23,6 +23,9 @@
     <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBuffer.h" />
     <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBufferDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\IndirectBuffer.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\IndirectBufferBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\IndirectBufferDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\Buffer\TextureBuffer.h" />
     <ClInclude Include="include\OpenGLRenderer\Buffer\TextureBufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\Buffer\TextureBufferDsa.h" />
@@ -87,6 +90,9 @@
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffer\IndexBufferBind.cpp" />
     <ClCompile Include="src\Buffer\IndexBufferDsa.cpp" />
+    <ClCompile Include="src\Buffer\IndirectBuffer.cpp" />
+    <ClCompile Include="src\Buffer\IndirectBufferBind.cpp" />
+    <ClCompile Include="src\Buffer\IndirectBufferDsa.cpp" />
     <ClCompile Include="src\Buffer\TextureBuffer.cpp" />
     <ClCompile Include="src\Buffer\TextureBufferBind.cpp" />
     <ClCompile Include="src\Buffer\TextureBufferDsa.cpp" />
@@ -160,6 +166,7 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\OpenGLRenderer\Buffer\BufferManager.inl" />
     <None Include="include\OpenGLRenderer\Buffer\IndexBuffer.inl" />
+    <None Include="include\OpenGLRenderer\Buffer\IndirectBuffer.inl" />
     <None Include="include\OpenGLRenderer\Buffer\TextureBuffer.inl" />
     <None Include="include\OpenGLRenderer\Buffer\UniformBuffer.inl" />
     <None Include="include\OpenGLRenderer\Buffer\VertexArray.inl" />

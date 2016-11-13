@@ -22,6 +22,7 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\Direct3D12Renderer\Buffer\BufferManager.inl" />
     <None Include="include\Direct3D12Renderer\Buffer\IndexBuffer.inl" />
+    <None Include="include\Direct3D12Renderer\Buffer\IndirectBuffer.inl" />
     <None Include="include\Direct3D12Renderer\Buffer\TextureBuffer.inl" />
     <None Include="include\Direct3D12Renderer\Buffer\UniformBuffer.inl" />
     <None Include="include\Direct3D12Renderer\Buffer\VertexBuffer.inl" />
@@ -44,6 +45,7 @@
   <ItemGroup>
     <ClInclude Include="include\Direct3D12Renderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\Direct3D12Renderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\Direct3D12Renderer\Buffer\IndirectBuffer.h" />
     <ClInclude Include="include\Direct3D12Renderer\Buffer\TextureBuffer.h" />
     <ClInclude Include="include\Direct3D12Renderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\Direct3D12Renderer\Buffer\VertexArray.h" />
@@ -73,6 +75,7 @@
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\IndirectBuffer.cpp" />
     <ClCompile Include="src\Buffer\TextureBuffer.cpp" />
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />

@@ -401,6 +401,12 @@ namespace Direct3D10Renderer
 				mappedSubresource.depthPitch = 0;
 				return (S_OK == static_cast<TextureBuffer&>(resource).getD3D10Buffer()->Map(static_cast<D3D10_MAP>(mapType), mapFlags, &mappedSubresource.data));
 
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// DirectX 10 has no indirect buffer
+
+				// Error!
+				return false;
+
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
 				bool result = false;
@@ -541,6 +547,10 @@ namespace Direct3D10Renderer
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 				static_cast<TextureBuffer&>(resource).getD3D10Buffer()->Unmap();
+				break;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// DirectX 10 has no indirect buffer
 				break;
 
 			case Renderer::ResourceType::TEXTURE_2D:
@@ -1345,6 +1355,7 @@ namespace Direct3D10Renderer
 		mCapabilities.maximumTextureBufferSize = 128 * 1024 * 1024;	// TODO(co) http://msdn.microsoft.com/en-us/library/cc308052%28VS.85%29.aspx does not mention the texture buffer? Figure out the correct size! Currently the OpenGL 3 minimum is used: 128 MiB.
 
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+		// -> DirectX 10 has no indirect buffer
 		mCapabilities.maximumIndirectBufferSize = 0;
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.

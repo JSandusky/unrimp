@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="include\VulkanRenderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\VulkanRenderer\Buffer\IndirectBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\TextureBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\VertexArray.h" />
@@ -56,6 +57,7 @@
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\IndirectBuffer.cpp" />
     <ClCompile Include="src\Buffer\TextureBuffer.cpp" />
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
@@ -102,6 +104,7 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\VulkanRenderer\Buffer\BufferManager.inl" />
     <None Include="include\VulkanRenderer\Buffer\IndexBuffer.inl" />
+    <None Include="include\VulkanRenderer\Buffer\IndirectBuffer.inl" />
     <None Include="include\VulkanRenderer\Buffer\TextureBuffer.inl" />
     <None Include="include\VulkanRenderer\Buffer\UniformBuffer.inl" />
     <None Include="include\VulkanRenderer\Buffer\VertexArray.inl" />

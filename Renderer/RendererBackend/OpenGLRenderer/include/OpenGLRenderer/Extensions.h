@@ -181,6 +181,8 @@ namespace OpenGLRenderer
 		bool isGL_ARB_multisample() const;
 		bool isGL_ARB_uniform_buffer_object() const;
 		bool isGL_ARB_texture_buffer_object() const;
+		bool isGL_ARB_draw_indirect() const;
+		bool isGL_ARB_multi_draw_indirect() const;
 		bool isGL_ARB_half_float_vertex() const;
 		bool isGL_ARB_vertex_shader() const;
 		bool isGL_ARB_tessellation_shader() const;
@@ -350,6 +352,8 @@ namespace OpenGLRenderer
 		bool mGL_ARB_multisample;
 		bool mGL_ARB_uniform_buffer_object;
 		bool mGL_ARB_texture_buffer_object;
+		bool mGL_ARB_draw_indirect;
+		bool mGL_ARB_multi_draw_indirect;
 		bool mGL_ARB_half_float_vertex;
 		bool mGL_ARB_vertex_shader;
 		bool mGL_ARB_tessellation_shader;
@@ -695,6 +699,14 @@ namespace OpenGLRenderer
 
 	// GL_ARB_texture_buffer_object
 	FNDEF_EX(glTexBufferARB,	PFNGLTEXBUFFERARBPROC);
+
+	// GL_ARB_draw_indirect
+	FNDEF_EX(glDrawArraysIndirect,		PFNGLDRAWARRAYSINDIRECTPROC);
+	FNDEF_EX(glDrawElementsIndirect,	PFNGLDRAWELEMENTSINDIRECTPROC);
+
+	// GL_ARB_multi_draw_indirect
+	FNDEF_EX(glMultiDrawArraysIndirect,		PFNGLMULTIDRAWARRAYSINDIRECTPROC);
+	FNDEF_EX(glMultiDrawElementsIndirect,	PFNGLMULTIDRAWELEMENTSINDIRECTPROC);
 
 	// GL_ARB_vertex_shader
 	FNDEF_EX(glBindAttribLocationARB,	PFNGLBINDATTRIBLOCATIONARBPROC);

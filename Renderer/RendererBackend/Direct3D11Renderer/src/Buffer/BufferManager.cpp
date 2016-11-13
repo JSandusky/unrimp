@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/Buffer/BufferManager.h"
+#include "Direct3D11Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D11Renderer/Buffer/TextureBuffer.h"
 #include "Direct3D11Renderer/Buffer/UniformBuffer.h"
 #include "Direct3D11Renderer/Buffer/VertexBuffer.h"
@@ -74,6 +75,11 @@ namespace Direct3D11Renderer
 	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void* data, Renderer::BufferUsage bufferUsage)
 	{
 		return new TextureBuffer(static_cast<Direct3D11Renderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
+	}
+
+	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage)
+	{
+		return new IndirectBuffer(static_cast<Direct3D11Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 	}
 
 

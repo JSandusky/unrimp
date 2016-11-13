@@ -126,6 +126,8 @@ namespace OpenGLRenderer
 	bool Extensions::isGL_ARB_multisample()					const { return mGL_ARB_multisample;					}
 	bool Extensions::isGL_ARB_uniform_buffer_object()		const { return mGL_ARB_uniform_buffer_object;		}
 	bool Extensions::isGL_ARB_texture_buffer_object()		const { return mGL_ARB_texture_buffer_object;		}
+	bool Extensions::isGL_ARB_draw_indirect()				const { return mGL_ARB_draw_indirect;				}
+	bool Extensions::isGL_ARB_multi_draw_indirect()			const { return mGL_ARB_multi_draw_indirect;			}
 	bool Extensions::isGL_ARB_half_float_vertex()			const { return mGL_ARB_half_float_vertex;			}
 	bool Extensions::isGL_ARB_vertex_shader()				const { return mGL_ARB_vertex_shader;				}
 	bool Extensions::isGL_ARB_tessellation_shader()			const { return mGL_ARB_tessellation_shader;			}
@@ -354,6 +356,8 @@ namespace OpenGLRenderer
 		mGL_ARB_multisample					= false;
 		mGL_ARB_uniform_buffer_object		= false;
 		mGL_ARB_texture_buffer_object		= false;
+		mGL_ARB_draw_indirect				= false;
+		mGL_ARB_multi_draw_indirect			= false;
 		mGL_ARB_half_float_vertex			= false;
 		mGL_ARB_vertex_shader				= false;
 		mGL_ARB_tessellation_shader			= false;
@@ -969,6 +973,28 @@ namespace OpenGLRenderer
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glTexBufferARB)
 			mGL_ARB_texture_buffer_object = result;
+		}
+
+		// GL_ARB_draw_indirect
+		mGL_ARB_draw_indirect = isSupported("GL_ARB_draw_indirect");
+		if (mGL_ARB_draw_indirect)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glDrawArraysIndirect)
+			IMPORT_FUNC(glDrawElementsIndirect)
+			mGL_ARB_draw_indirect = result;
+		}
+
+		// GL_ARB_multi_draw_indirect
+		mGL_ARB_multi_draw_indirect = isSupported("GL_ARB_multi_draw_indirect");
+		if (mGL_ARB_multi_draw_indirect)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glMultiDrawArraysIndirect)
+			IMPORT_FUNC(glMultiDrawElementsIndirect)
+			mGL_ARB_multi_draw_indirect = result;
 		}
 
 		// GL_ARB_half_float_vertex

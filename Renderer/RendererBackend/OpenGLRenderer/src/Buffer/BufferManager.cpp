@@ -33,6 +33,8 @@
 #include "OpenGLRenderer/Buffer/IndexBufferBind.h"
 #include "OpenGLRenderer/Buffer/TextureBufferDsa.h"
 #include "OpenGLRenderer/Buffer/TextureBufferBind.h"
+#include "OpenGLRenderer/Buffer/IndirectBufferDsa.h"
+#include "OpenGLRenderer/Buffer/IndirectBufferBind.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
@@ -174,6 +176,30 @@ namespace OpenGLRenderer
 			{
 				// Traditional bind version
 				return new TextureBufferBind(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
+			}
+		}
+		else
+		{
+			// Error!
+			return nullptr;
+		}
+	}
+
+	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage)
+	{
+		// "GL_ARB_draw_indirect" required
+		if (mExtensions->isGL_ARB_draw_indirect())
+		{
+			// Is "GL_EXT_direct_state_access" there?
+			if (mExtensions->isGL_EXT_direct_state_access())
+			{
+				// Effective direct state access (DSA)
+				return new IndirectBufferDsa(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+			}
+			else
+			{
+				// Traditional bind version
+				return new IndirectBufferBind(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 			}
 		}
 		else

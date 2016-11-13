@@ -91,6 +91,12 @@ namespace OpenGLES2Renderer
 		return nullptr;
 	}
 
+	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t, const void*, Renderer::BufferUsage)
+	{
+		// OpenGL ES 2 has no indirect buffer support
+		return nullptr;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

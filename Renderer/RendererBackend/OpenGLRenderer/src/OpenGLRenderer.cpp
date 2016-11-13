@@ -579,6 +579,11 @@ namespace OpenGLRenderer
 				// return (S_OK == mD3D11DeviceContext->Map(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
 				return false;
 
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// TODO(co) Implement me
+				// return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+				return false;
+
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
 				bool result = false;
@@ -737,6 +742,11 @@ namespace OpenGLRenderer
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 				// TODO(co) Implement me
 				// mD3D11DeviceContext->Unmap(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// TODO(co) Implement me
+				// mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
 				break;
 
 			case Renderer::ResourceType::TEXTURE_2D:
@@ -1777,7 +1787,15 @@ namespace OpenGLRenderer
 		}
 
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-		mCapabilities.maximumIndirectBufferSize = 0;
+		if (mExtensions->isGL_ARB_draw_indirect())
+		{
+			glGetIntegerv(GL_DRAW_INDIRECT_LENGTH_NV, &openGLValue);
+			mCapabilities.maximumIndirectBufferSize = static_cast<uint32_t>(openGLValue);
+		}
+		else
+		{
+			mCapabilities.maximumIndirectBufferSize = 0;
+		}
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;

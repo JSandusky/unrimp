@@ -35,6 +35,7 @@
 #include "Direct3D11Renderer/Buffer/VertexBuffer.h"
 #include "Direct3D11Renderer/Buffer/UniformBuffer.h"
 #include "Direct3D11Renderer/Buffer/TextureBuffer.h"
+#include "Direct3D11Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D11Renderer/Texture/Texture2D.h"
 #include "Direct3D11Renderer/Texture/Texture2DArray.h"
 #include "Direct3D11Renderer/State/SamplerState.h"
@@ -411,6 +412,9 @@ namespace Direct3D11Renderer
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 				return (S_OK == mD3D11DeviceContext->Map(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
 
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
 				bool result = false;
@@ -505,6 +509,10 @@ namespace Direct3D11Renderer
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 				mD3D11DeviceContext->Unmap(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
 				break;
 
 			case Renderer::ResourceType::TEXTURE_2D:
@@ -1289,6 +1297,7 @@ namespace Direct3D11Renderer
 				mCapabilities.maximumTextureBufferSize = 0;
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = 0;
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
@@ -1321,6 +1330,7 @@ namespace Direct3D11Renderer
 				mCapabilities.maximumTextureBufferSize = 0;
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = 0;
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
@@ -1353,6 +1363,7 @@ namespace Direct3D11Renderer
 				mCapabilities.maximumTextureBufferSize = 0;
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = 0;
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
@@ -1385,6 +1396,7 @@ namespace Direct3D11Renderer
 				mCapabilities.maximumTextureBufferSize = 128 * 1024 * 1024;	// TODO(co) http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx does not mention the texture buffer? Currently the OpenGL 3 minimum is used: 128 MiB.
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = 0;
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
@@ -1417,6 +1429,7 @@ namespace Direct3D11Renderer
 				mCapabilities.maximumTextureBufferSize = 128 * 1024 * 1024;	// TODO(co) http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx does not mention the texture buffer? Currently the OpenGL 3 minimum is used: 128 MiB.
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = 0;
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
@@ -1449,6 +1462,7 @@ namespace Direct3D11Renderer
 				mCapabilities.maximumTextureBufferSize = 128 * 1024 * 1024;	// TODO(co) http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx does not mention the texture buffer? Currently the OpenGL 3 minimum is used: 128 MiB.
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = 0;
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
