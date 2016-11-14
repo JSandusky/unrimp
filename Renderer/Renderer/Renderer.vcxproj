@@ -25,6 +25,7 @@
     <ClInclude Include="include\Renderer\Buffer\IIndexBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IIndirectBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IndexBufferTypes.h" />
+    <ClInclude Include="include\Renderer\Buffer\IndirectBufferTypes.h" />
     <ClInclude Include="include\Renderer\Buffer\ITextureBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IUniformBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IVertexArray.h" />

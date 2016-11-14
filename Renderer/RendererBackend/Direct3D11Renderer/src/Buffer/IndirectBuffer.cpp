@@ -43,7 +43,7 @@ namespace Direct3D11Renderer
 		mD3D11Buffer(nullptr),
 		mD3D11ShaderResourceViewIndirect(nullptr)
 	{
-		// TODO(co) Implement indirect buffer support
+		// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
 		/*
 		{ // Buffer part
 			// Direct3D 11 buffer description

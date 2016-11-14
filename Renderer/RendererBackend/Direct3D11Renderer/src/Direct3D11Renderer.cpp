@@ -1134,6 +1134,12 @@ namespace Direct3D11Renderer
 		);
 	}
 
+	void Direct3D11Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	{
+		// TODO(co) Implement me
+		// "ID3D11DeviceContext::DrawInstancedIndirect()"
+	}
+
 	void Direct3D11Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t)
 	{
 		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 11
@@ -1158,6 +1164,12 @@ namespace Direct3D11Renderer
 			static_cast<INT>(baseVertexLocation),	// Base vertex location (INT)
 			0										// Start instance location (UINT)
 		);
+	}
+
+	void Direct3D11Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	{
+		// TODO(co) Implement me
+		// "ID3D11DeviceContext::DrawIndexedInstancedIndirect()"
 	}
 
 

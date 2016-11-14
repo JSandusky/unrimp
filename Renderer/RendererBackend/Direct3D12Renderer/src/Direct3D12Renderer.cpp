@@ -1117,6 +1117,11 @@ namespace Direct3D12Renderer
 			0);						// A value added to each index before reading per-instance data from a vertex buffer (UINT)
 	}
 
+	void Direct3D12Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	{
+		// TODO(co) Implement me
+	}
+
 	void Direct3D12Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t)
 	{
 		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 12
@@ -1141,6 +1146,11 @@ namespace Direct3D12Renderer
 			startIndexLocation,						// The location of the first index read by the GPU from the index buffer (UINT)
 			static_cast<INT>(baseVertexLocation),	// A value added to each index before reading a vertex from the vertex buffer (INT)
 			0);										// A value added to each index before reading per-instance data from a vertex buffer (UINT)
+	}
+
+	void Direct3D12Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	{
+		// TODO(co) Implement me
 	}
 
 

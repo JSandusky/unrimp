@@ -1127,6 +1127,26 @@ namespace Renderer
 		};
 	#endif
 
+	// Renderer/Buffer/IndirectBufferTypes.h
+	#ifndef __RENDERER_INDIRECTBUFFER_TYPES_H__
+	#define __RENDERER_INDIRECTBUFFER_TYPES_H__
+		struct DrawInstancedArguments
+		{
+			uint32_t vertexCountPerInstance;
+			uint32_t instanceCount;
+			uint32_t startVertexLocation;
+			uint32_t startInstanceLocation;
+		};
+		struct DrawIndexedInstancedArguments
+		{
+			uint32_t indexCountPerInstance;
+			uint32_t instanceCount;
+			uint32_t startIndexLocation;
+			int32_t  baseVertexLocation;
+			uint32_t startInstanceLocation;
+		};
+	#endif
+
 	// Renderer/State/RasterizerStateTypes.h
 	#ifndef __RENDERER_RASTERIZERSTATE_TYPES_H__
 	#define __RENDERER_RASTERIZERSTATE_TYPES_H__
@@ -1774,8 +1794,10 @@ namespace Renderer
 			virtual void endScene() = 0;
 			virtual void draw(uint32_t startVertexLocation, uint32_t numberOfVertices) = 0;
 			virtual void drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances) = 0;
+			virtual void drawInstancedIndirect(IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws) = 0;
 			virtual void drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices) = 0;
 			virtual void drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices, uint32_t numberOfInstances) = 0;
+			virtual void drawIndexedInstancedIndirect(IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws) = 0;
 			virtual void flush() = 0;
 			virtual void finish() = 0;
 			virtual bool isDebugEnabled() = 0;

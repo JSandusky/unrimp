@@ -73,6 +73,9 @@
     <Filter Include="Runtime\FirstScene">
       <UniqueIdentifier>{c5a02232-ac29-4332-a85f-aeadfdfa3ed1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Basics\FirstIndirectBuffer">
+      <UniqueIdentifier>{3249dc8b-2da1-4ba9-8967-e02803a43e41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Framework\IApplication.h">
@@ -465,6 +468,9 @@
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_GLSL_410.h">
       <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
     </ClInclude>
+    <ClInclude Include="src\Basics\FirstIndirectBuffer\FirstIndirectBuffer.h">
+      <Filter>Basics\FirstIndirectBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -584,6 +590,9 @@
     </ClCompile>
     <ClCompile Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.cpp">
       <Filter>Runtime\FirstCompositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Basics\FirstIndirectBuffer\FirstIndirectBuffer.cpp">
+      <Filter>Basics\FirstIndirectBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

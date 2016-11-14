@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRenderer.h"
+#include "Basics/FirstTriangle/FirstTriangle.h"
 
 
 //[-------------------------------------------------------]
@@ -35,19 +35,14 @@
 //[-------------------------------------------------------]
 /**
 *  @brief
-*    Shows how to bring the first triangle onto the screen
+*    Shows how to use indirect buffer
 *
 *  @remarks
 *    Demonstrates:
-*    - Vertex buffer object (VBO)
-*    - Vertex array object (VAO)
-*    - Vertex shader (VS) and fragment shader (FS)
-*    - Root signature
-*    - Pipeline state object (PSO)
-*    - Debug methods: When using Direct3D <11.1, those methods map to the Direct3D 9 PIX functions
-*      (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+*    - Everything from "FirstTriangle"
+*    - Indirect buffer
 */
-class FirstTriangle : public IApplicationRenderer
+class FirstIndirectBuffer : public FirstTriangle
 {
 
 
@@ -63,13 +58,13 @@ public:
 	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
 	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 	*/
-	explicit FirstTriangle(const char *rendererName);
+	explicit FirstIndirectBuffer(const char *rendererName);
 
 	/**
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstTriangle();
+	virtual ~FirstIndirectBuffer();
 
 
 //[-------------------------------------------------------]
@@ -82,13 +77,10 @@ public:
 
 
 //[-------------------------------------------------------]
-//[ Protected data                                        ]
+//[ Private data                                          ]
 //[-------------------------------------------------------]
-protected:
-	Renderer::IBufferManagerPtr mBufferManager;	///< Buffer manager, can be a null pointer
-	Renderer::IRootSignaturePtr mRootSignature;	///< Root signature, can be a null pointer
-	Renderer::IPipelineStatePtr mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
-	Renderer::IVertexArrayPtr   mVertexArray;	///< Vertex array object (VAO), can be a null pointer
+private:
+	Renderer::IIndirectBufferPtr mIndirectBuffer;	///< Indirect buffer, can be a null pointer
 
 
 };

@@ -1173,6 +1173,11 @@ namespace Direct3D9Renderer
 		// -> This document states that this is not supported by hardware acceleration on any device, and it's long winded anyway
 	}
 
+	void Direct3D9Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	{
+		// TODO(co) Implement me (emulation only without instancing since DirectX 9 doesn't support the required features)
+	}
+
 	void Direct3D9Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices)
 	{
 		// Get number of primitives
@@ -1256,6 +1261,11 @@ namespace Direct3D9Renderer
 			// Reset the stream source frequency
 			mDirect3DDevice9->SetStreamSourceFreq(0, 1);
 		}
+	}
+
+	void Direct3D9Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	{
+		// TODO(co) Implement me (emulation only without instancing since DirectX 9 doesn't support the required features)
 	}
 
 

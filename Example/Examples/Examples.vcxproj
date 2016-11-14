@@ -269,6 +269,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_GLSL_410.h" />
     <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_Null.h" />
+    <ClInclude Include="src\Basics\FirstIndirectBuffer\FirstIndirectBuffer.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_410.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11_D3D12.h" />
@@ -369,6 +370,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClCompile Include="src\Advanced\InstancedCubes\ICubeRenderer.cpp" />
     <ClCompile Include="src\Advanced\InstancedCubes\InstancedCubes.cpp" />
     <ClCompile Include="src\Basics\FirstGeometryShader\FirstGeometryShader.cpp" />
+    <ClCompile Include="src\Basics\FirstIndirectBuffer\FirstIndirectBuffer.cpp" />
     <ClCompile Include="src\Basics\FirstInstancing\FirstInstancing.cpp" />
     <ClCompile Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets.cpp" />
     <ClCompile Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains.cpp" />

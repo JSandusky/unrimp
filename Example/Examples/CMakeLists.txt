@@ -79,6 +79,8 @@ set(SOURCE_CODES
 	# Basics
 		# "FirstTriangle" source codes
 			src/FirstTriangle/FirstTriangle.cpp
+		# "FirstIndirectBuffer" source codes
+			src/FirstIndirectBuffer/FirstIndirectBuffer.cpp
 		# "VertexBuffer" source codes
 			src/VertexBuffer/VertexBuffer.cpp
 		# "FirstTexture" source codes

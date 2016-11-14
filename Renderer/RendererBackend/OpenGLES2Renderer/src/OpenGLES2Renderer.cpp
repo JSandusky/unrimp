@@ -1131,6 +1131,11 @@ namespace OpenGLES2Renderer
 		// Error! OpenGL ES 2 has no instancing support!
 	}
 
+	void OpenGLES2Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	{
+		// TODO(co) Implement me (emulation only without instancing since OpenGL ES 2 doesn't support the required features)
+	}
+
 	void OpenGLES2Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t, uint32_t, uint32_t)
 	{
 		// Is currently an vertex array?
@@ -1153,6 +1158,11 @@ namespace OpenGLES2Renderer
 	{
 		// OpenGL ES 2 has no "GL_ARB_draw_elements_base_vertex" equivalent, so, we can't support "baseVertexLocation" in here
 		// Error! OpenGL ES 2 has no instancing support!
+	}
+
+	void OpenGLES2Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	{
+		// TODO(co) Implement me (emulation only without instancing since OpenGL ES 2 doesn't support the required features)
 	}
 
 

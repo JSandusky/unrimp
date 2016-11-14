@@ -172,6 +172,9 @@
     <ClInclude Include="include\Renderer\Buffer\IIndirectBuffer.h">
       <Filter>Header Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\IndirectBufferTypes.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">

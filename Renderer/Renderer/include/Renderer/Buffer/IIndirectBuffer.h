@@ -43,6 +43,11 @@ namespace Renderer
 	/**
 	*  @brief
 	*    Abstract indirect buffer object interface
+	*
+	*  @note
+	*    - Contains instances of "Renderer::DrawInstancedArguments" and "Renderer::DrawIndexedInstancedArguments"
+	*    - Indirect buffers where originally introduced to be able to let the GPU have some more control over draw commands,
+	*      but with the introduction of multi indirect draw it became also interesting for reducing renderer API overhead (AZDO ("Almost Zero Driver Overhead"))
 	*/
 	class IIndirectBuffer : public IBuffer
 	{

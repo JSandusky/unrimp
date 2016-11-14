@@ -1191,6 +1191,11 @@ namespace Direct3D10Renderer
 		);
 	}
 
+	void Direct3D10Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	{
+		// TODO(co) Implement me (emulation only since DirectX 10 doesn't support the required features)
+	}
+
 	void Direct3D10Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t)
 	{
 		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 10
@@ -1215,6 +1220,11 @@ namespace Direct3D10Renderer
 			static_cast<INT>(baseVertexLocation),	// Base vertex location (INT)
 			0										// Start instance location (UINT)
 		);
+	}
+
+	void Direct3D10Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	{
+		// TODO(co) Implement me (emulation only since DirectX 10 doesn't support the required features)
 	}
 
 

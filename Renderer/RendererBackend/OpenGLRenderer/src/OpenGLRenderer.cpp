@@ -41,6 +41,7 @@
 #include "OpenGLRenderer/Buffer/VertexArrayNoVao.h"
 #include "OpenGLRenderer/Buffer/VertexArrayVaoDsa.h"
 #include "OpenGLRenderer/Buffer/VertexArrayVaoBind.h"
+#include "OpenGLRenderer/Buffer/IndirectBuffer.h"
 #include "OpenGLRenderer/Texture/Texture2DDsa.h"
 #include "OpenGLRenderer/Texture/Texture2DBind.h"
 #include "OpenGLRenderer/Texture/Texture2DArrayDsa.h"
@@ -59,6 +60,8 @@
 #elif defined LINUX
 	#include "OpenGLRenderer/Linux/ContextLinux.h"
 #endif
+
+#include <Renderer/Buffer/IndirectBufferTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -1509,6 +1512,39 @@ namespace OpenGLRenderer
 		}
 	}
 
+	void OpenGLRenderer::drawInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
+		if (mExtensions->isGL_ARB_draw_indirect())
+		{
+			if (numberOfDraws == 1)
+			{
+				// TODO(co) Optimization: Don't bind if it's already the currently bound thing
+				glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
+				glDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<const GLvoid*>(indirectBufferOffset));
+			}
+			else if (numberOfDraws > 1)
+			{
+				// TODO(co) Optimization: Don't bind if it's already the currently bound thing
+				glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
+				if (mExtensions->isGL_ARB_multi_draw_indirect())
+				{
+					glMultiDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<const GLvoid*>(indirectBufferOffset), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed
+				}
+				else
+				{
+					// TODO(co) Emulation (see specification for examples)
+				}
+			}
+		}
+		else
+		{
+			// TODO(co) Emulation (see specification for examples)
+		}
+	}
+
 	void OpenGLRenderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t)
 	{
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
@@ -1576,6 +1612,48 @@ namespace OpenGLRenderer
 				{
 					// Draw without base vertex location
 					glDrawElementsInstancedARB(mOpenGLPrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(startIndexLocation * indexBuffer->getIndexSizeInBytes()), static_cast<GLsizei>(numberOfInstances));
+				}
+			}
+		}
+	}
+
+	void OpenGLRenderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
+		// Is currently an vertex array set?
+		if (nullptr != mVertexArray)
+		{
+			// Get the used index buffer
+			IndexBuffer *indexBuffer = mVertexArray->getIndexBuffer();
+			if (nullptr != indexBuffer)
+			{
+				if (mExtensions->isGL_ARB_draw_indirect())
+				{
+					if (numberOfDraws == 1)
+					{
+						// TODO(co) Optimization: Don't bind if it's already the currently bound thing
+						glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
+						glDrawElementsIndirect(mOpenGLPrimitiveTopology, indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(indirectBufferOffset));
+					}
+					else if (numberOfDraws > 1)
+					{
+						// TODO(co) Optimization: Don't bind if it's already the currently bound thing
+						glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
+						if (mExtensions->isGL_ARB_multi_draw_indirect())
+						{
+							glMultiDrawElementsIndirect(mOpenGLPrimitiveTopology, indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(indirectBufferOffset), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed
+						}
+						else
+						{
+							// TODO(co) Emulation (see specification for examples)
+						}
+					}
+				}
+				else
+				{
+					// TODO(co) Emulation (see specification for examples)
 				}
 			}
 		}
@@ -1789,8 +1867,8 @@ namespace OpenGLRenderer
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 		if (mExtensions->isGL_ARB_draw_indirect())
 		{
-			glGetIntegerv(GL_DRAW_INDIRECT_LENGTH_NV, &openGLValue);
-			mCapabilities.maximumIndirectBufferSize = static_cast<uint32_t>(openGLValue);
+			// TODO(co) How to get the indirect buffer maximum size? Didn't find any information about this.
+			mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;
 		}
 		else
 		{

@@ -27,6 +27,7 @@
 #include "Framework/CmdLineArgs.h"
 // Basics
 #include "Basics/FirstTriangle/FirstTriangle.h"
+#include "Basics/FirstIndirectBuffer/FirstIndirectBuffer.h"
 #include "Basics/VertexBuffer/VertexBuffer.h"
 #include "Basics/FirstTexture/FirstTexture.h"
 #include "Basics/FirstRenderToTexture/FirstRenderToTexture.h"
@@ -95,6 +96,7 @@ ExampleRunner::ExampleRunner()
 	std::array<std::string, 5> onlyShaderModel5Plus = {{"Null", "OpenGL", "Direct3D11", "Direct3D12", "Vulkan"}};
 	// Basics
 	addExample("FirstTriangle",					&RunExample<FirstTriangle>,					supportsAllRenderer);
+	addExample("FirstIndirectBuffer",			&RunExample<FirstIndirectBuffer>,			supportsAllRenderer);
 	addExample("VertexBuffer",					&RunExample<VertexBuffer>,					supportsAllRenderer);
 	addExample("FirstTexture",					&RunExample<FirstTexture>,					supportsAllRenderer);
 	addExample("FirstRenderToTexture",			&RunExample<FirstRenderToTexture>,			supportsAllRenderer);
