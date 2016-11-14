@@ -22,6 +22,7 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\OpenGLES2Renderer\Buffer\BufferManager.inl" />
     <None Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.inl" />
+    <None Include="include\OpenGLES2Renderer\Buffer\IndirectBuffer.inl" />
     <None Include="include\OpenGLES2Renderer\Buffer\VertexArray.inl" />
     <None Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.inl" />
     <None Include="include\OpenGLES2Renderer\Buffer\VertexBuffer.inl" />
@@ -44,6 +45,7 @@
   <ItemGroup>
     <ClInclude Include="include\OpenGLES2Renderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\IndirectBuffer.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArray.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayNoVao.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.h" />
@@ -74,6 +76,7 @@
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\IndirectBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
     <ClCompile Include="src\Buffer\VertexArrayNoVao.cpp" />
     <ClCompile Include="src\Buffer\VertexArrayVao.cpp" />

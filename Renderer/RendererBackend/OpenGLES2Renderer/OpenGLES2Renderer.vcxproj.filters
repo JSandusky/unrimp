@@ -60,6 +60,9 @@
     <None Include="include\OpenGLES2Renderer\Buffer\BufferManager.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
+    <None Include="include\OpenGLES2Renderer\Buffer\IndirectBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -166,6 +169,9 @@
     <ClInclude Include="include\OpenGLES2Renderer\Buffer\BufferManager.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\IndirectBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\ProgramGlsl.cpp">
@@ -244,6 +250,9 @@
       <Filter>Source Files\State</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer\BufferManager.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\IndirectBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>

@@ -24,6 +24,7 @@
 #include "OpenGLES2Renderer/Buffer/BufferManager.h"
 #include "OpenGLES2Renderer/Buffer/VertexArrayNoVao.h"
 #include "OpenGLES2Renderer/Buffer/VertexArrayVao.h"
+#include "OpenGLES2Renderer/Buffer/IndirectBuffer.h"
 #include "OpenGLES2Renderer/Buffer/VertexBuffer.h"
 #include "OpenGLES2Renderer/Buffer/IndexBuffer.h"
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
@@ -91,10 +92,9 @@ namespace OpenGLES2Renderer
 		return nullptr;
 	}
 
-	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t, const void*, Renderer::BufferUsage)
+	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage)
 	{
-		// OpenGL ES 2 has no indirect buffer support
-		return nullptr;
+		return new IndirectBuffer(static_cast<OpenGLES2Renderer&>(getRenderer()), numberOfBytes, data);
 	}
 
 

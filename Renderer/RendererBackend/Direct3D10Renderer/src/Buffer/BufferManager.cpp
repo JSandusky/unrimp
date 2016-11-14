@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D10Renderer/Buffer/BufferManager.h"
+#include "Direct3D10Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D10Renderer/Buffer/TextureBuffer.h"
 #include "Direct3D10Renderer/Buffer/UniformBuffer.h"
 #include "Direct3D10Renderer/Buffer/VertexBuffer.h"
@@ -76,10 +77,9 @@ namespace Direct3D10Renderer
 		return new TextureBuffer(static_cast<Direct3D10Renderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
 	}
 
-	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t, const void*, Renderer::BufferUsage)
+	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage)
 	{
-		// DirectX 10 has no indirect buffer
-		return nullptr;
+		return new IndirectBuffer(static_cast<Direct3D10Renderer&>(getRenderer()), numberOfBytes, data);
 	}
 
 

@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D9Renderer/Buffer/BufferManager.h"
+#include "Direct3D9Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D9Renderer/Buffer/VertexBuffer.h"
 #include "Direct3D9Renderer/Buffer/VertexArray.h"
 #include "Direct3D9Renderer/Buffer/IndexBuffer.h"
@@ -78,10 +79,9 @@ namespace Direct3D9Renderer
 		return nullptr;
 	}
 
-	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t, const void*, Renderer::BufferUsage)
+	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage)
 	{
-		// Direct3D 9 has no indirect buffer support
-		return nullptr;
+		return new IndirectBuffer(static_cast<Direct3D9Renderer&>(getRenderer()), numberOfBytes, data);
 	}
 
 

@@ -34,12 +34,17 @@
 #include "OpenGLES2Renderer/Buffer/VertexBuffer.h"
 #include "OpenGLES2Renderer/Buffer/VertexArrayVao.h"
 #include "OpenGLES2Renderer/Buffer/VertexArrayNoVao.h"
+#include "OpenGLES2Renderer/Buffer/IndirectBuffer.h"
 #include "OpenGLES2Renderer/Texture/Texture2D.h"
 #include "OpenGLES2Renderer/Texture/Texture2DArray.h"
 #include "OpenGLES2Renderer/State/SamplerState.h"
 #include "OpenGLES2Renderer/State/PipelineState.h"
 #include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
 #include "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
+
+#include <Renderer/Buffer/IndirectBufferTypes.h>
+
+#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -376,9 +381,10 @@ namespace OpenGLES2Renderer
 				return false;
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// OpenGL ES 2 has no indirect buffer
-				// TODO(co) Error handling
-				return false;
+				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getData();
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return true;
 
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
@@ -519,8 +525,7 @@ namespace OpenGLES2Renderer
 				break;
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// OpenGL ES 2 has no indirect buffer
-				// TODO(co) Error handling
+				// Nothing here, it's a software emulated indirect buffer
 				break;
 
 			case Renderer::ResourceType::TEXTURE_2D:
@@ -1131,9 +1136,33 @@ namespace OpenGLES2Renderer
 		// Error! OpenGL ES 2 has no instancing support!
 	}
 
-	void OpenGLES2Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void OpenGLES2Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// TODO(co) Implement me (emulation only without instancing since OpenGL ES 2 doesn't support the required features)
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
+		if (nullptr != mVertexArray && numberOfDraws > 0)
+		{
+			// Get indirect buffer data and perform security checks
+			const IndirectBuffer& openGES2IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+			const uint8_t* data = openGES2IndirectBuffer.getData();
+			assert(openGES2IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawInstancedArguments) * numberOfDraws));
+			assert(nullptr != data);
+
+			// Emit the draw calls
+			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			{
+				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(data);
+
+				// No instancing supported here
+				assert(1 == drawInstancedArguments.instanceCount);
+				assert(0 == drawInstancedArguments.startInstanceLocation);
+
+				// Draw and advance
+				glDrawArrays(mOpenGLES2PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance));
+				data += sizeof(Renderer::DrawInstancedArguments);
+			}
+		}
 	}
 
 	void OpenGLES2Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t, uint32_t, uint32_t)
@@ -1160,9 +1189,42 @@ namespace OpenGLES2Renderer
 		// Error! OpenGL ES 2 has no instancing support!
 	}
 
-	void OpenGLES2Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void OpenGLES2Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// TODO(co) Implement me (emulation only without instancing since OpenGL ES 2 doesn't support the required features)
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
+		// Is currently an vertex array?
+		if (nullptr != mVertexArray && numberOfDraws > 0)
+		{
+			// Get the used index buffer
+			IndexBuffer *indexBuffer = mVertexArray->getIndexBuffer();
+			if (nullptr != indexBuffer)
+			{
+				// Get indirect buffer data and perform security checks
+				const IndirectBuffer& openGES2IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+				const uint8_t* data = openGES2IndirectBuffer.getData();
+				assert(openGES2IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawIndexedInstancedArguments) * numberOfDraws));
+				assert(nullptr != data);
+
+				// Emit the draw calls
+				for (uint32_t i = 0; i < numberOfDraws; ++i)
+				{
+					const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(data);
+
+					// No instancing supported here
+					assert(1 == drawIndexedInstancedArguments.instanceCount);
+					assert(0 == drawIndexedInstancedArguments.startInstanceLocation);
+
+					// OpenGL ES 2 has no "GL_ARB_draw_elements_base_vertex" equivalent, so, we can't support "baseVertexLocation" in here
+					assert(0 == drawIndexedInstancedArguments.baseVertexLocation);
+
+					// Draw and advance
+					glDrawElements(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES2Type(), reinterpret_cast<const GLvoid*>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes()));
+					data += sizeof(Renderer::DrawIndexedInstancedArguments);
+				}
+			}
+		}
 	}
 
 

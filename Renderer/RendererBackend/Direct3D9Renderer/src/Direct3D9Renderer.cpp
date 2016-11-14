@@ -32,6 +32,7 @@
 #include "Direct3D9Renderer/Buffer/VertexArray.h"
 #include "Direct3D9Renderer/Buffer/IndexBuffer.h"
 #include "Direct3D9Renderer/Buffer/VertexBuffer.h"
+#include "Direct3D9Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D9Renderer/Texture/Texture2D.h"
 #include "Direct3D9Renderer/State/SamplerState.h"
 #include "Direct3D9Renderer/State/PipelineState.h"
@@ -39,6 +40,10 @@
 #include "Direct3D9Renderer/Shader/VertexShaderHlsl.h"
 #include "Direct3D9Renderer/Shader/ShaderLanguageHlsl.h"
 #include "Direct3D9Renderer/Shader/FragmentShaderHlsl.h"
+
+#include <Renderer/Buffer/IndirectBufferTypes.h>
+
+#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -390,6 +395,12 @@ namespace Direct3D9Renderer
 				return (D3D_OK == static_cast<VertexBuffer&>(resource).getDirect3DVertexBuffer9()->Lock(0, 0, &mappedSubresource.data, flags));
 			}
 
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getData();
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return true;
+
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
 				bool result = false;
@@ -484,7 +495,6 @@ namespace Direct3D9Renderer
 			case Renderer::ResourceType::FRAMEBUFFER:
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-			case Renderer::ResourceType::INDIRECT_BUFFER:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:
@@ -517,6 +527,10 @@ namespace Direct3D9Renderer
 				static_cast<VertexBuffer&>(resource).getDirect3DVertexBuffer9()->Unlock();
 				break;
 
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// Nothing here, it's a software emulated indirect buffer
+				break;
+
 			case Renderer::ResourceType::TEXTURE_2D:
 				static_cast<Texture2D&>(resource).getDirect3DTexture9()->UnlockRect(subresource);
 				break;
@@ -528,7 +542,6 @@ namespace Direct3D9Renderer
 			case Renderer::ResourceType::FRAMEBUFFER:
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-			case Renderer::ResourceType::INDIRECT_BUFFER:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:
@@ -1173,9 +1186,36 @@ namespace Direct3D9Renderer
 		// -> This document states that this is not supported by hardware acceleration on any device, and it's long winded anyway
 	}
 
-	void Direct3D9Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void Direct3D9Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// TODO(co) Implement me (emulation only without instancing since DirectX 9 doesn't support the required features)
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
+		if (numberOfDraws > 0)
+		{
+			// Get indirect buffer data and perform security checks
+			const IndirectBuffer& direct3D9IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+			const uint8_t* data = direct3D9IndirectBuffer.getData();
+			assert(direct3D9IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawInstancedArguments) * numberOfDraws));
+			assert(nullptr != data);
+
+			// Emit the draw calls
+			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			{
+				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(data);
+
+				// No instancing supported here
+				// -> In Direct3D 9, instanced arrays is only possible when drawing indexed primitives, see
+				//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
+				// -> This document states that this is not supported by hardware acceleration on any device, and it's long winded anyway
+				assert(1 == drawInstancedArguments.instanceCount);
+				assert(0 == drawInstancedArguments.startInstanceLocation);
+
+				// Draw and advance
+				draw(drawInstancedArguments.startVertexLocation, drawInstancedArguments.vertexCountPerInstance);
+				data += sizeof(Renderer::DrawInstancedArguments);
+			}
+		}
 	}
 
 	void Direct3D9Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices)
@@ -1263,9 +1303,40 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void Direct3D9Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// TODO(co) Implement me (emulation only without instancing since DirectX 9 doesn't support the required features)
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
+		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
+		if (numberOfDraws > 0 && mCapabilities.instancedArrays)
+		{
+			// Get indirect buffer data and perform security checks
+			const IndirectBuffer& direct3D9IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+			const uint8_t* data = direct3D9IndirectBuffer.getData();
+			assert(direct3D9IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawIndexedInstancedArguments) * numberOfDraws));
+			assert(nullptr != data);
+
+			// Emit the draw calls
+			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			{
+				const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(data);
+				assert(0 == drawIndexedInstancedArguments.startInstanceLocation);	// Not supported by DirectX 9
+
+				// The "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
+				// states: "Note that D3DSTREAMSOURCE_INDEXEDDATA and the number of instances to draw must always be set in stream zero."
+				// -> "D3DSTREAMSOURCE_INSTANCEDATA" is set within "Direct3D9Renderer::VertexArray::enableDirect3DVertexDeclarationAndStreamSource()"
+				mDirect3DDevice9->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | drawIndexedInstancedArguments.instanceCount);
+
+				// Draw and advance
+				// TODO(co) Review "numberOfVertices", might be wrong
+				drawIndexed(drawIndexedInstancedArguments.startIndexLocation, drawIndexedInstancedArguments.indexCountPerInstance, static_cast<uint32_t>(drawIndexedInstancedArguments.baseVertexLocation), 0, drawIndexedInstancedArguments.indexCountPerInstance * 3);
+				data += sizeof(Renderer::DrawIndexedInstancedArguments);
+			}
+
+			// Reset the stream source frequency
+			mDirect3DDevice9->SetStreamSourceFreq(0, 1);
+		}
 	}
 
 

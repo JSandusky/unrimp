@@ -35,6 +35,7 @@
 #include "Direct3D10Renderer/Buffer/VertexBuffer.h"
 #include "Direct3D10Renderer/Buffer/UniformBuffer.h"
 #include "Direct3D10Renderer/Buffer/TextureBuffer.h"
+#include "Direct3D10Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D10Renderer/Texture/Texture2D.h"
 #include "Direct3D10Renderer/Texture/Texture2DArray.h"
 #include "Direct3D10Renderer/State/SamplerState.h"
@@ -44,6 +45,10 @@
 #include "Direct3D10Renderer/Shader/ShaderLanguageHlsl.h"
 #include "Direct3D10Renderer/Shader/GeometryShaderHlsl.h"
 #include "Direct3D10Renderer/Shader/FragmentShaderHlsl.h"
+
+#include <Renderer/Buffer/IndirectBufferTypes.h>
+
+#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -402,10 +407,10 @@ namespace Direct3D10Renderer
 				return (S_OK == static_cast<TextureBuffer&>(resource).getD3D10Buffer()->Map(static_cast<D3D10_MAP>(mapType), mapFlags, &mappedSubresource.data));
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// DirectX 10 has no indirect buffer
-
-				// Error!
-				return false;
+				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getData();
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return true;
 
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
@@ -550,7 +555,7 @@ namespace Direct3D10Renderer
 				break;
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// DirectX 10 has no indirect buffer
+				// Nothing here, it's a software emulated indirect buffer
 				break;
 
 			case Renderer::ResourceType::TEXTURE_2D:
@@ -1191,9 +1196,30 @@ namespace Direct3D10Renderer
 		);
 	}
 
-	void Direct3D10Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void Direct3D10Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// TODO(co) Implement me (emulation only since DirectX 10 doesn't support the required features)
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
+		if (numberOfDraws > 0)
+		{
+			// Get indirect buffer data and perform security checks
+			const IndirectBuffer& direct3D10IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+			const uint8_t* data = direct3D10IndirectBuffer.getData();
+			assert(direct3D10IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawInstancedArguments) * numberOfDraws));
+			assert(nullptr != data);
+
+			// Emit the draw calls
+			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			{
+				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(data);
+				assert(0 == drawInstancedArguments.startInstanceLocation);	// Not supported by DirectX 10
+
+				// Draw and advance
+				drawInstanced(drawInstancedArguments.startVertexLocation, drawInstancedArguments.vertexCountPerInstance, drawInstancedArguments.instanceCount);
+				data += sizeof(Renderer::DrawInstancedArguments);
+			}
+		}
 	}
 
 	void Direct3D10Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t)
@@ -1222,9 +1248,35 @@ namespace Direct3D10Renderer
 		);
 	}
 
-	void Direct3D10Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void Direct3D10Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// TODO(co) Implement me (emulation only since DirectX 10 doesn't support the required features)
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
+		if (numberOfDraws > 0)
+		{
+			// Get indirect buffer data and perform security checks
+			const IndirectBuffer& direct3D10IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+			const uint8_t* data = direct3D10IndirectBuffer.getData();
+			assert(direct3D10IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawIndexedInstancedArguments) * numberOfDraws));
+			assert(nullptr != data);
+
+			// Emit the draw calls
+			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			{
+				const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(data);
+
+				// Draw and advance
+				mD3D10Device->DrawIndexedInstanced(
+					drawIndexedInstancedArguments.indexCountPerInstance,	// Index count per instance (UINT)
+					drawIndexedInstancedArguments.instanceCount,			// Instance count (UINT)
+					drawIndexedInstancedArguments.startIndexLocation,		// Start index location (UINT)
+					drawIndexedInstancedArguments.baseVertexLocation,		// Base vertex location (INT)
+					drawIndexedInstancedArguments.startInstanceLocation		// Start instance location (UINT)
+				);
+				data += sizeof(Renderer::DrawIndexedInstancedArguments);
+			}
+		}
 	}
 
 
