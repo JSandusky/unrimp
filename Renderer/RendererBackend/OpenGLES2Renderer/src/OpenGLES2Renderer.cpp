@@ -1136,7 +1136,7 @@ namespace OpenGLES2Renderer
 		// Error! OpenGL ES 2 has no instancing support!
 	}
 
-	void OpenGLES2Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void OpenGLES2Renderer::drawInstancedIndirect(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 		OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
@@ -1144,7 +1144,7 @@ namespace OpenGLES2Renderer
 		if (nullptr != mVertexArray && numberOfDraws > 0)
 		{
 			// Get indirect buffer data and perform security checks
-			const IndirectBuffer& openGES2IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+			const IndirectBuffer& openGES2IndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer);
 			const uint8_t* data = openGES2IndirectBuffer.getData();
 			assert(openGES2IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawInstancedArguments) * numberOfDraws));
 			assert(nullptr != data);
@@ -1189,7 +1189,7 @@ namespace OpenGLES2Renderer
 		// Error! OpenGL ES 2 has no instancing support!
 	}
 
-	void OpenGLES2Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void OpenGLES2Renderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 		OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
@@ -1202,7 +1202,7 @@ namespace OpenGLES2Renderer
 			if (nullptr != indexBuffer)
 			{
 				// Get indirect buffer data and perform security checks
-				const IndirectBuffer& openGES2IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+				const IndirectBuffer& openGES2IndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer);
 				const uint8_t* data = openGES2IndirectBuffer.getData();
 				assert(openGES2IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawIndexedInstancedArguments) * numberOfDraws));
 				assert(nullptr != data);

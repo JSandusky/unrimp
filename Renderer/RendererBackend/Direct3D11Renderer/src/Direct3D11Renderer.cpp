@@ -1134,7 +1134,7 @@ namespace Direct3D11Renderer
 		);
 	}
 
-	void Direct3D11Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void Direct3D11Renderer::drawInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// TODO(co) Implement me
 		// "ID3D11DeviceContext::DrawInstancedIndirect()"
@@ -1166,7 +1166,7 @@ namespace Direct3D11Renderer
 		);
 	}
 
-	void Direct3D11Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void Direct3D11Renderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// TODO(co) Implement me
 		// "ID3D11DeviceContext::DrawIndexedInstancedIndirect()"

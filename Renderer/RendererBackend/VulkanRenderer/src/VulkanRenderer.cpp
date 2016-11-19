@@ -702,7 +702,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	void VulkanRenderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void VulkanRenderer::drawInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// Is currently an vertex array set?
 		if (nullptr != mVertexArray)
@@ -730,7 +730,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	void VulkanRenderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void VulkanRenderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// Is currently an vertex array set?
 		if (nullptr != mVertexArray)

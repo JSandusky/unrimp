@@ -1196,7 +1196,7 @@ namespace Direct3D10Renderer
 		);
 	}
 
-	void Direct3D10Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void Direct3D10Renderer::drawInstancedIndirect(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
@@ -1204,7 +1204,7 @@ namespace Direct3D10Renderer
 		if (numberOfDraws > 0)
 		{
 			// Get indirect buffer data and perform security checks
-			const IndirectBuffer& direct3D10IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+			const IndirectBuffer& direct3D10IndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer);
 			const uint8_t* data = direct3D10IndirectBuffer.getData();
 			assert(direct3D10IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawInstancedArguments) * numberOfDraws));
 			assert(nullptr != data);
@@ -1248,7 +1248,7 @@ namespace Direct3D10Renderer
 		);
 	}
 
-	void Direct3D10Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void Direct3D10Renderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
@@ -1256,7 +1256,7 @@ namespace Direct3D10Renderer
 		if (numberOfDraws > 0)
 		{
 			// Get indirect buffer data and perform security checks
-			const IndirectBuffer& direct3D10IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+			const IndirectBuffer& direct3D10IndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer);
 			const uint8_t* data = direct3D10IndirectBuffer.getData();
 			assert(direct3D10IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawIndexedInstancedArguments) * numberOfDraws));
 			assert(nullptr != data);

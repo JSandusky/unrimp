@@ -1512,7 +1512,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::drawInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void OpenGLRenderer::drawInstancedIndirect(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
@@ -1522,13 +1522,13 @@ namespace OpenGLRenderer
 			if (numberOfDraws == 1)
 			{
 				// TODO(co) Optimization: Don't bind if it's already the currently bound thing
-				glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
+				glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
 				glDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<const GLvoid*>(indirectBufferOffset));
 			}
 			else if (numberOfDraws > 1)
 			{
 				// TODO(co) Optimization: Don't bind if it's already the currently bound thing
-				glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
+				glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
 				if (mExtensions->isGL_ARB_multi_draw_indirect())
 				{
 					glMultiDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<const GLvoid*>(indirectBufferOffset), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed
@@ -1617,7 +1617,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void OpenGLRenderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
@@ -1634,13 +1634,13 @@ namespace OpenGLRenderer
 					if (numberOfDraws == 1)
 					{
 						// TODO(co) Optimization: Don't bind if it's already the currently bound thing
-						glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
+						glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
 						glDrawElementsIndirect(mOpenGLPrimitiveTopology, indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(indirectBufferOffset));
 					}
 					else if (numberOfDraws > 1)
 					{
 						// TODO(co) Optimization: Don't bind if it's already the currently bound thing
-						glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
+						glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
 						if (mExtensions->isGL_ARB_multi_draw_indirect())
 						{
 							glMultiDrawElementsIndirect(mOpenGLPrimitiveTopology, indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(indirectBufferOffset), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed

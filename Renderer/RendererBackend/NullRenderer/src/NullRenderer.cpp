@@ -490,7 +490,7 @@ namespace NullRenderer
 		// Nothing here
 	}
 
-	void NullRenderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void NullRenderer::drawInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// Nothing here
 	}
@@ -505,7 +505,7 @@ namespace NullRenderer
 		// Nothing here
 	}
 
-	void NullRenderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void NullRenderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// Nothing here
 	}

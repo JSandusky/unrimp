@@ -1117,7 +1117,7 @@ namespace Direct3D12Renderer
 			0);						// A value added to each index before reading per-instance data from a vertex buffer (UINT)
 	}
 
-	void Direct3D12Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void Direct3D12Renderer::drawInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// TODO(co) Implement me
 	}
@@ -1148,7 +1148,7 @@ namespace Direct3D12Renderer
 			0);										// A value added to each index before reading per-instance data from a vertex buffer (UINT)
 	}
 
-	void Direct3D12Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void Direct3D12Renderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// TODO(co) Implement me
 	}

@@ -652,7 +652,7 @@ namespace Renderer
 		*    - If the multi-draw indirect feature is not supported this parameter, multiple draw calls are emitted
 		*    - If the draw indirect feature is not supported, a software indirect buffer is used and multiple draw calls are emitted
 		*/
-		virtual void drawInstancedIndirect(IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws) = 0;
+		virtual void drawInstancedIndirect(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
 
 		/**
 		*  @brief
@@ -719,7 +719,7 @@ namespace Renderer
 		*    - If the multi-draw indirect feature is not supported this parameter, multiple draw calls are emitted
 		*    - If the draw indirect feature is not supported, a software indirect buffer is used and multiple draw calls are emitted
 		*/
-		virtual void drawIndexedInstancedIndirect(IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws) = 0;
+		virtual void drawIndexedInstancedIndirect(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Synchronization                                       ]

@@ -1186,7 +1186,7 @@ namespace Direct3D9Renderer
 		// -> This document states that this is not supported by hardware acceleration on any device, and it's long winded anyway
 	}
 
-	void Direct3D9Renderer::drawInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void Direct3D9Renderer::drawInstancedIndirect(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 		DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
@@ -1194,7 +1194,7 @@ namespace Direct3D9Renderer
 		if (numberOfDraws > 0)
 		{
 			// Get indirect buffer data and perform security checks
-			const IndirectBuffer& direct3D9IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+			const IndirectBuffer& direct3D9IndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer);
 			const uint8_t* data = direct3D9IndirectBuffer.getData();
 			assert(direct3D9IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawInstancedArguments) * numberOfDraws));
 			assert(nullptr != data);
@@ -1303,7 +1303,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::drawIndexedInstancedIndirect(Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void Direct3D9Renderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 		DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
@@ -1312,7 +1312,7 @@ namespace Direct3D9Renderer
 		if (numberOfDraws > 0 && mCapabilities.instancedArrays)
 		{
 			// Get indirect buffer data and perform security checks
-			const IndirectBuffer& direct3D9IndirectBuffer = static_cast<IndirectBuffer&>(indirectBuffer);
+			const IndirectBuffer& direct3D9IndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer);
 			const uint8_t* data = direct3D9IndirectBuffer.getData();
 			assert(direct3D9IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawIndexedInstancedArguments) * numberOfDraws));
 			assert(nullptr != data);
