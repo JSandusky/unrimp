@@ -359,7 +359,7 @@ void FirstGpgpu::generate2DTextureContent()
 		}
 
 		// Render the specified geometric primitive, based on indexing into an array of vertices
-		mRenderer->draw(0, 3);
+		mRenderer->draw(Renderer::IndirectBuffer(3));
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(mRenderer)
@@ -401,7 +401,7 @@ void FirstGpgpu::contentProcessing()
 		}
 
 		// Render the specified geometric primitive, based on indexing into an array of vertices
-		mRenderer->draw(0, 4);
+		mRenderer->draw(Renderer::IndirectBuffer(4));
 
 		// Restore the previously set render target
 		mRenderer->omSetRenderTarget(renderTarget);

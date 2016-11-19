@@ -45,12 +45,15 @@ namespace Direct3D9Renderer
 		// Create the Direct3D 9 vertex buffer
 		direct3D9Renderer.getDirect3DDevice9()->CreateVertexBuffer(numberOfBytes, Mapping::getDirect3D9Usage(bufferUsage), 0, D3DPOOL_DEFAULT, &mDirect3DVertexBuffer9, nullptr);
 
-		// Copy the data
-		void *vertices = nullptr;
-		if (SUCCEEDED(mDirect3DVertexBuffer9->Lock(0, numberOfBytes, static_cast<void**>(&vertices), 0)))
+		// Copy the data, if required
+		if (nullptr != data)
 		{
-			memcpy(vertices, data, numberOfBytes);
-			mDirect3DVertexBuffer9->Unlock();
+			void *vertices = nullptr;
+			if (SUCCEEDED(mDirect3DVertexBuffer9->Lock(0, numberOfBytes, static_cast<void**>(&vertices), 0)))
+			{
+				memcpy(vertices, data, numberOfBytes);
+				mDirect3DVertexBuffer9->Unlock();
+			}
 		}
 
 		// Assign a default name to the resource for debugging purposes

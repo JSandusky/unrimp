@@ -49,7 +49,7 @@ namespace RendererRuntime
 			realData->material->bind(renderer);
 
 			// Draw call specific
-			renderer.draw(realData->startVertexLocation, realData->numberOfVertices);
+			renderer.draw(Renderer::IndirectBuffer(realData->numberOfVertices, 1, realData->startVertexLocation));
 		}
 
 		void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
@@ -64,7 +64,7 @@ namespace RendererRuntime
 			realData->material->bind(renderer);
 
 			// Draw call specific
-			renderer.drawIndexed(realData->startIndexLocation, realData->numberOfIndices, realData->baseVertexLocation, 0, UINT32_MAX);
+			renderer.drawIndexed(Renderer::IndexedIndirectBuffer(realData->numberOfIndices, 1, realData->startIndexLocation, realData->baseVertexLocation));
 		}
 
 		void CopyUniformBufferData(const void* data, Renderer::IRenderer&)

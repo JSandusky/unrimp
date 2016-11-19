@@ -38,6 +38,8 @@
 #include "NullRenderer/Shader/Program.h"
 #include "NullRenderer/Shader/ShaderLanguage.h"
 
+#include <Renderer/Buffer/IndirectBufferTypes.h>
+
 #include <string.h>
 
 
@@ -480,32 +482,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void NullRenderer::draw(uint32_t, uint32_t)
+	void NullRenderer::draw(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// Nothing here
 	}
 
-	void NullRenderer::drawInstanced(uint32_t, uint32_t, uint32_t)
-	{
-		// Nothing here
-	}
-
-	void NullRenderer::drawInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
-	{
-		// Nothing here
-	}
-
-	void NullRenderer::drawIndexed(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
-	{
-		// Nothing here
-	}
-
-	void NullRenderer::drawIndexedInstanced(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
-	{
-		// Nothing here
-	}
-
-	void NullRenderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void NullRenderer::drawIndexed(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// Nothing here
 	}
@@ -578,7 +560,7 @@ namespace NullRenderer
 		mCapabilities.maximumTextureBufferSize = 42;
 
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-		mCapabilities.maximumIndirectBufferSize = 0;
+		mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;

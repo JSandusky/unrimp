@@ -27,22 +27,14 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Buffer/IIndirectBuffer.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace NullRenderer
-{
-	class NullRenderer;
-}
+#include "Renderer/Buffer/IIndirectBuffer.h"
+#include "Renderer/Buffer/IndirectBufferTypes.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace NullRenderer
+namespace Renderer
 {
 
 
@@ -51,9 +43,9 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Null indirect buffer object class
+	*    Indirect buffer object implementation for wrapping none indirect draw calls into the same uniform draw interface
 	*/
-	class IndirectBuffer : public Renderer::IIndirectBuffer
+	class IndirectBuffer : public IIndirectBuffer
 	{
 
 
@@ -65,24 +57,39 @@ namespace NullRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] nullRenderer
-		*    Owner null renderer instance
+		*  @param[in] renderer
+		*    Owner renderer instance
+		*  @param[in] vertexCountPerInstance
+		*    Vertex count per instance
+		*  @param[in] instanceCount
+		*    Instance count
+		*  @param[in] startVertexLocation
+		*    Start vertex location
+		*  @param[in] startInstanceLocation
+		*    Start instance location
 		*/
-		explicit IndirectBuffer(NullRenderer &nullRenderer);
+		inline IndirectBuffer(uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~IndirectBuffer();
+		inline virtual ~IndirectBuffer();
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IIndirectBuffer methods      ]
+	//[ Public virtual IIndirectBuffer methods                ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const uint8_t* getEmulationData() const override;
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+		inline virtual const uint8_t* getEmulationData() const override;
+		inline virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		DrawInstancedArguments mDrawInstancedArguments;
 
 
 	};
@@ -91,4 +98,10 @@ namespace NullRenderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // NullRenderer
+} // Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "Renderer/Buffer/IndirectBuffer.inl"

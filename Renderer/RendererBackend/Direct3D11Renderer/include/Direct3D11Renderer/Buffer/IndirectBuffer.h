@@ -87,6 +87,15 @@ namespace Direct3D11Renderer
 
 		/**
 		*  @brief
+		*    Return writable indirect buffer emulation data pointer
+		*
+		*  @return
+		*    Writable indirect buffer emulation data pointer, can be a null pointer, don't destroy the returned instance
+		*/
+		inline uint8_t* getWritableEmulationData() const;
+
+		/**
+		*  @brief
 		*    Return the Direct3D indirect buffer instance
 		*
 		*  @return
@@ -115,6 +124,7 @@ namespace Direct3D11Renderer
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]
 	//[-------------------------------------------------------]
 	public:
+		inline virtual const uint8_t* getEmulationData() const override;
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
 
 
@@ -122,8 +132,10 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11Buffer			 *mD3D11Buffer;						///< Direct3D indirect buffer instance, can be a null pointer
-		ID3D11ShaderResourceView *mD3D11ShaderResourceViewIndirect;	///< Direct3D 11 shader resource view, can be a null pointer
+		uint32_t				  mNumberOfBytes;
+		uint8_t*				  mData;							///< Indirect buffer data, can be a null pointer
+		ID3D11Buffer*			  mD3D11Buffer;						///< Direct3D indirect buffer instance, can be a null pointer
+		ID3D11ShaderResourceView* mD3D11ShaderResourceViewIndirect;	///< Direct3D 11 shader resource view, can be a null pointer
 
 
 	};

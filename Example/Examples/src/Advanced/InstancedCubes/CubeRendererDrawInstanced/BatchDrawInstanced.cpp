@@ -141,7 +141,7 @@ void BatchDrawInstanced::draw()
 
 		// Use instancing in order to draw multiple cubes with just a single draw call
 		// -> Draw calls are one of the most expensive rendering, avoid them if possible
-		mRenderer->drawIndexedInstanced(0, 36, 0, 0, 24, mNumberOfCubeInstances);
+		mRenderer->drawIndexed(Renderer::IndexedIndirectBuffer(36, mNumberOfCubeInstances));
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(mRenderer)

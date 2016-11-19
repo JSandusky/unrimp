@@ -157,7 +157,7 @@ namespace RendererRuntime
 			// Draw call specific
 			uint32_t startIndexLocation;
 			uint32_t numberOfIndices;
-			uint32_t baseVertexLocation;
+			int32_t  baseVertexLocation;
 		};
 		static_assert(std::is_pod<DrawIndexed>::value == true, "DrawIndexed must be a POD");
 

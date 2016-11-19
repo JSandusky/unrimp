@@ -34,6 +34,7 @@
 #include "Direct3D12Renderer/Buffer/IndexBuffer.h"
 #include "Direct3D12Renderer/Buffer/VertexBuffer.h"
 #include "Direct3D12Renderer/Buffer/UniformBuffer.h"
+#include "Direct3D12Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D12Renderer/Texture/Texture2D.h"
 #include "Direct3D12Renderer/Texture/Texture2DArray.h"
 #include "Direct3D12Renderer/State/SamplerState.h"
@@ -45,6 +46,8 @@
 #include "Direct3D12Renderer/Shader/FragmentShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/TessellationControlShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/TessellationEvaluationShaderHlsl.h"
+
+#include <Renderer/Buffer/IndirectBufferTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -1099,58 +1102,67 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::draw(uint32_t startVertexLocation, uint32_t numberOfVertices)
+	void Direct3D12Renderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		mD3D12GraphicsCommandList->DrawInstanced(
-			numberOfVertices,		// Number of vertices to draw (UINT)
-			1,						// Number of instances to draw (UINT)
-			startVertexLocation,	// Index of the first vertex (UINT)
-			0);						// A value added to each index before reading per-instance data from a vertex buffer (UINT)
+		// No resource owner security check in here, we only support emulated indirect buffer
+		// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
+
+		if (numberOfDraws > 0)
+		{
+			// Get indirect buffer data and perform security checks
+			const uint8_t* emulationData = indirectBuffer.getEmulationData();
+			assert(nullptr != emulationData);
+
+			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+			emulationData += indirectBufferOffset;
+
+			// Emit the draw calls
+			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			{
+				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
+
+				// Draw and advance
+				mD3D12GraphicsCommandList->DrawInstanced(
+					drawInstancedArguments.vertexCountPerInstance,	// Vertex count per instance (UINT)
+					drawInstancedArguments.instanceCount,			// Instance count (UINT)
+					drawInstancedArguments.startVertexLocation,		// Start vertex location (UINT)
+					drawInstancedArguments.startInstanceLocation	// Start instance location (UINT)
+				);
+				emulationData += sizeof(Renderer::DrawInstancedArguments);
+			}
+		}
 	}
 
-	void Direct3D12Renderer::drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances)
+	void Direct3D12Renderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		mD3D12GraphicsCommandList->DrawInstanced(
-			numberOfVertices,		// Number of vertices to draw (UINT)
-			numberOfInstances,		// Number of instances to draw (UINT)
-			startVertexLocation,	// Index of the first vertex (UINT)
-			0);						// A value added to each index before reading per-instance data from a vertex buffer (UINT)
-	}
+		// No resource owner security check in here, we only support emulated indirect buffer
+		// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
 
-	void Direct3D12Renderer::drawInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
-	{
-		// TODO(co) Implement me
-	}
+		if (numberOfDraws > 0)
+		{
+			// Get indirect buffer data and perform security checks
+			const uint8_t* emulationData = indirectBuffer.getEmulationData();
+			assert(nullptr != emulationData);
 
-	void Direct3D12Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t)
-	{
-		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 12
+			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+			emulationData += indirectBufferOffset;
 
-		// Draw
-		mD3D12GraphicsCommandList->DrawIndexedInstanced(
-			numberOfIndices,						// Number of indices read from the index buffer for each instance (UINT)
-			1,										// Number of instances to draw (UINT)
-			startIndexLocation,						// The location of the first index read by the GPU from the index buffer (UINT)
-			static_cast<INT>(baseVertexLocation),	// A value added to each index before reading a vertex from the vertex buffer (INT)
-			0);										// A value added to each index before reading per-instance data from a vertex buffer (UINT)
-	}
+			// Emit the draw calls
+			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			{
+				const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
 
-	void Direct3D12Renderer::drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t, uint32_t numberOfInstances)
-	{
-		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 12
-
-		// Draw
-		mD3D12GraphicsCommandList->DrawIndexedInstanced(
-			numberOfIndices,						// Number of indices read from the index buffer for each instance (UINT)
-			numberOfInstances,						// Number of instances to draw (UINT)
-			startIndexLocation,						// The location of the first index read by the GPU from the index buffer (UINT)
-			static_cast<INT>(baseVertexLocation),	// A value added to each index before reading a vertex from the vertex buffer (INT)
-			0);										// A value added to each index before reading per-instance data from a vertex buffer (UINT)
-	}
-
-	void Direct3D12Renderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
-	{
-		// TODO(co) Implement me
+				// Draw and advance
+				mD3D12GraphicsCommandList->DrawIndexedInstanced(
+					drawIndexedInstancedArguments.indexCountPerInstance,	// Index count per instance (UINT)
+					drawIndexedInstancedArguments.instanceCount,			// Instance count (UINT)
+					drawIndexedInstancedArguments.startIndexLocation,		// Start index location (UINT)
+					drawIndexedInstancedArguments.baseVertexLocation,		// Base vertex location (INT)
+					drawIndexedInstancedArguments.startInstanceLocation		// Start instance location (UINT)
+				);
+				emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
+			}
+		}
 	}
 
 
@@ -1278,7 +1290,7 @@ namespace Direct3D12Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = false;
@@ -1311,7 +1323,7 @@ namespace Direct3D12Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = false;
@@ -1344,7 +1356,7 @@ namespace Direct3D12Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
@@ -1381,7 +1393,7 @@ namespace Direct3D12Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
@@ -1418,7 +1430,7 @@ namespace Direct3D12Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
@@ -1456,7 +1468,7 @@ namespace Direct3D12Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;

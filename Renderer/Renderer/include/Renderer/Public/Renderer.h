@@ -1136,6 +1136,12 @@ namespace Renderer
 			uint32_t instanceCount;
 			uint32_t startVertexLocation;
 			uint32_t startInstanceLocation;
+			DrawInstancedArguments(uint32_t _vertexCountPerInstance, uint32_t _instanceCount = 1, uint32_t _startVertexLocation = 0, uint32_t _startInstanceLocation = 0) :
+				vertexCountPerInstance(_vertexCountPerInstance),
+				instanceCount(_instanceCount),
+				startVertexLocation(_startVertexLocation),
+				startInstanceLocation(_startInstanceLocation)
+			{};
 		};
 		struct DrawIndexedInstancedArguments
 		{
@@ -1144,6 +1150,13 @@ namespace Renderer
 			uint32_t startIndexLocation;
 			int32_t  baseVertexLocation;
 			uint32_t startInstanceLocation;
+			DrawIndexedInstancedArguments(uint32_t _indexCountPerInstance, uint32_t _instanceCount = 1, uint32_t _startIndexLocation = 0, int32_t _baseVertexLocation = 0, uint32_t _startInstanceLocation = 0) :
+				indexCountPerInstance(_indexCountPerInstance),
+				instanceCount(_instanceCount),
+				startIndexLocation(_startIndexLocation),
+				baseVertexLocation(_baseVertexLocation),
+				startInstanceLocation(_startInstanceLocation)
+			{};
 		};
 	#endif
 
@@ -1792,12 +1805,8 @@ namespace Renderer
 			virtual void clear(uint32_t flags, const float color[4], float z, uint32_t stencil) = 0;
 			virtual bool beginScene() = 0;
 			virtual void endScene() = 0;
-			virtual void draw(uint32_t startVertexLocation, uint32_t numberOfVertices) = 0;
-			virtual void drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances) = 0;
-			virtual void drawInstancedIndirect(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
-			virtual void drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices) = 0;
-			virtual void drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices, uint32_t numberOfInstances) = 0;
-			virtual void drawIndexedInstancedIndirect(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
+			virtual void draw(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
+			virtual void drawIndexed(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
 			virtual void flush() = 0;
 			virtual void finish() = 0;
 			virtual bool isDebugEnabled() = 0;
@@ -1889,7 +1898,7 @@ namespace Renderer
 		class IResource : public RefCount<IResource>
 		{
 		public:
-			virtual ~IResource();
+			inline virtual ~IResource() {};
 			inline ResourceType getResourceType() const
 			{
 				return mResourceType;
@@ -1907,7 +1916,10 @@ namespace Renderer
 				return nullptr;
 			}
 		protected:
-			IResource(ResourceType resourceType, IRenderer& renderer);
+			inline IResource(ResourceType resourceType, IRenderer& renderer) :
+				mResourceType(resourceType),
+				mRenderer(&renderer)
+			{};
 			explicit IResource(const IResource& source);
 			IResource& operator =(const IResource& source);
 		private:
@@ -2058,9 +2070,11 @@ namespace Renderer
 		class IBuffer : public IResource
 		{
 		public:
-			virtual ~IBuffer();
+			inline virtual ~IBuffer() {};
 		protected:
-			IBuffer(ResourceType resourceType, IRenderer& renderer);
+			inline IBuffer(ResourceType resourceType, IRenderer& renderer) :
+				IResource(resourceType, renderer)
+			{};
 			explicit IBuffer(const IBuffer& source);
 			IBuffer& operator =(const IBuffer& source);
 		};
@@ -2137,15 +2151,62 @@ namespace Renderer
 		class IIndirectBuffer : public IBuffer
 		{
 		public:
-			virtual ~IIndirectBuffer();
+			inline virtual ~IIndirectBuffer() {};
 		public:
+			virtual const uint8_t* getEmulationData() const = 0;
 			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
-			explicit IIndirectBuffer(IRenderer& renderer);
+			inline explicit IIndirectBuffer(IRenderer& renderer) :
+				IBuffer(ResourceType::INDIRECT_BUFFER, renderer)
+			{};
 			explicit IIndirectBuffer(const IIndirectBuffer& source);
 			IIndirectBuffer& operator =(const IIndirectBuffer& source);
 		};
 		typedef SmartRefCount<IIndirectBuffer> IIndirectBufferPtr;
+	#endif
+
+	// Renderer/Buffer/IndirectBuffer.h
+	#ifndef __RENDERER_INDIRECTBUFFER_H__
+	#define __RENDERER_INDIRECTBUFFER_H__
+		class IndirectBuffer : public IIndirectBuffer
+		{
+		public:
+			inline IndirectBuffer(uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0) :
+				IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
+				mDrawInstancedArguments(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation)
+			{};
+			inline virtual ~IndirectBuffer() {};
+		public:
+			inline virtual const uint8_t* getEmulationData() const override
+			{
+				return reinterpret_cast<const uint8_t*>(&mDrawInstancedArguments);
+			}
+			inline virtual void copyDataFrom(uint32_t, const void*) {};
+		private:
+			DrawInstancedArguments mDrawInstancedArguments;
+		};
+	#endif
+
+	// Renderer/Buffer/IndexedIndirectBuffer.h
+	#ifndef __RENDERER_INDEXEDINDIRECTBUFFER_H__
+	#define __RENDERER_INDEXEDINDIRECTBUFFER_H__
+		class IndexedIndirectBuffer : public IIndirectBuffer
+		{
+		public:
+			inline IndexedIndirectBuffer(uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0) :
+				IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
+				mDrawIndexedInstancedArguments(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation)
+			{};
+			inline virtual ~IndexedIndirectBuffer() {};
+		public:
+			inline virtual const uint8_t* getEmulationData() const override
+			{
+				return reinterpret_cast<const uint8_t*>(&mDrawIndexedInstancedArguments);
+			}
+			inline virtual void copyDataFrom(uint32_t, const void*) {};
+		private:
+			DrawIndexedInstancedArguments mDrawIndexedInstancedArguments;
+		};
 	#endif
 
 	// Renderer/Texture/ITexture.h

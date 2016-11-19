@@ -206,7 +206,7 @@ namespace
 													renderer.iaSetPrimitiveTopology(subMesh.getPrimitiveTopology());
 
 													// Render the specified geometric primitive, based on indexing into an array of vertices
-													renderer.drawIndexed(subMesh.getStartIndexLocation(), subMesh.getNumberOfIndices(), 0, 0, numberOfVertices);
+													renderer.drawIndexed(Renderer::IndexedIndirectBuffer(subMesh.getNumberOfIndices(), 1, subMesh.getStartIndexLocation()));
 												}
 											}
 										}

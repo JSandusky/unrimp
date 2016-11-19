@@ -275,7 +275,7 @@ namespace RendererRuntime
 							renderer.rsSetScissorRectangles(1, &scissorRectangle);
 
 							// Draw
-							renderer.drawIndexed(static_cast<uint32_t>(indexOffset), static_cast<uint32_t>(pcmd->ElemCount), static_cast<uint32_t>(vertexOffset), 0, static_cast<uint32_t>(imDrawData->TotalVtxCount));
+							renderer.drawIndexed(Renderer::IndexedIndirectBuffer(static_cast<uint32_t>(pcmd->ElemCount), 1, static_cast<uint32_t>(indexOffset), static_cast<int32_t>(vertexOffset)));
 						}
 						indexOffset += pcmd->ElemCount;
 					}

@@ -316,7 +316,7 @@ void IcosahedronTessellation::onDraw()
 		}
 
 		// Render the specified geometric primitive, based on indexing into an array of vertices
-		renderer->drawIndexed(0, 60, 0, 0, 12);
+		renderer->drawIndexed(Renderer::IndexedIndirectBuffer(60));
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)

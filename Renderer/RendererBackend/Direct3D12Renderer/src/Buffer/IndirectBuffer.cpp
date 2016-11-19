@@ -38,13 +38,28 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndirectBuffer::IndirectBuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t, const void*, Renderer::BufferUsage) :
-		IIndirectBuffer(direct3D12Renderer)
+	IndirectBuffer::IndirectBuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage) :
+		IIndirectBuffer(direct3D12Renderer),
+		mNumberOfBytes(numberOfBytes),
+		mData(nullptr)
 		// TODO(co) Direct3D 12 update
 	//	mD3D12Buffer(nullptr),
 	//	mD3D12ShaderResourceViewIndirect(nullptr)
 	{
 		// TODO(co) Direct3D 12 update
+		if (mNumberOfBytes > 0)
+		{
+			mData = new uint8_t[mNumberOfBytes];
+			if (nullptr != data)
+			{
+				memcpy(mData, data, mNumberOfBytes);
+			}
+		}
+		else
+		{
+			assert(nullptr == data);
+		}
+
 		/*
 		{ // Buffer part
 			// Direct3D 12 buffer description
@@ -97,6 +112,11 @@ namespace Direct3D12Renderer
 
 	IndirectBuffer::~IndirectBuffer()
 	{
+		if (nullptr != mData)
+		{
+			delete [] mData;
+		}
+
 		// TODO(co) Direct3D 12 update
 		/*
 		// Release the used resources
@@ -147,8 +167,12 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]
 	//[-------------------------------------------------------]
-	void IndirectBuffer::copyDataFrom(uint32_t, const void*)
+	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
+		assert(numberOfBytes <= mNumberOfBytes);
+		assert(nullptr != data);
+		memcpy(mData, data, numberOfBytes);
+
 		// TODO(co) Direct3D 12 update
 		/*
 		// Check resource pointers

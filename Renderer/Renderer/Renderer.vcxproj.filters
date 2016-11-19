@@ -175,6 +175,12 @@
     <ClInclude Include="include\Renderer\Buffer\IndirectBufferTypes.h">
       <Filter>Header Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\IndirectBuffer.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\IndexedIndirectBuffer.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -291,6 +297,12 @@
       <Filter>Header Files\Buffer</Filter>
     </None>
     <None Include="include\Renderer\Buffer\IIndirectBuffer.inl">
+      <Filter>Header Files\Buffer</Filter>
+    </None>
+    <None Include="include\Renderer\Buffer\IndirectBuffer.inl">
+      <Filter>Header Files\Buffer</Filter>
+    </None>
+    <None Include="include\Renderer\Buffer\IndexedIndirectBuffer.inl">
       <Filter>Header Files\Buffer</Filter>
     </None>
   </ItemGroup>

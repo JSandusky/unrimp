@@ -48,6 +48,10 @@
 #include "Direct3D11Renderer/Shader/TessellationControlShaderHlsl.h"
 #include "Direct3D11Renderer/Shader/TessellationEvaluationShaderHlsl.h"
 
+#include <Renderer/Buffer/IndirectBufferTypes.h>
+
+#include <cassert>
+
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -413,7 +417,12 @@ namespace Direct3D11Renderer
 				return (S_OK == mD3D11DeviceContext->Map(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-				return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+				// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
+				// return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return true;
 
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
@@ -512,7 +521,8 @@ namespace Direct3D11Renderer
 				break;
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-				mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
+				// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
+				// mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
 				break;
 
 			case Renderer::ResourceType::TEXTURE_2D:
@@ -1116,60 +1126,92 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::draw(uint32_t startVertexLocation, uint32_t numberOfVertices)
+	void Direct3D11Renderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		mD3D11DeviceContext->Draw(
-			numberOfVertices,	// Vertex count (UINT)
-			startVertexLocation	// Start index location (UINT)
-		);
+		// No resource owner security check in here, we only support emulated indirect buffer
+		// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
+
+		if (numberOfDraws > 0)
+		{
+			// Get indirect buffer data and perform security checks
+			const uint8_t* emulationData = indirectBuffer.getEmulationData();
+			assert(nullptr != emulationData);
+
+			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+			emulationData += indirectBufferOffset;
+
+			// Emit the draw calls
+			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			{
+				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
+
+				// Draw and advance
+				if (drawInstancedArguments.instanceCount > 1)
+				{
+					// With instancing
+					mD3D11DeviceContext->DrawInstanced(
+						drawInstancedArguments.vertexCountPerInstance,	// Vertex count per instance (UINT)
+						drawInstancedArguments.instanceCount,			// Instance count (UINT)
+						drawInstancedArguments.startVertexLocation,		// Start vertex location (UINT)
+						drawInstancedArguments.startInstanceLocation	// Start instance location (UINT)
+					);
+				}
+				else
+				{
+					// Without instancing
+					mD3D11DeviceContext->Draw(
+						drawInstancedArguments.vertexCountPerInstance,	// Vertex count (UINT)
+						drawInstancedArguments.startVertexLocation		// Start index location (UINT)
+					);
+				}
+				emulationData += sizeof(Renderer::DrawInstancedArguments);
+			}
+		}
 	}
 
-	void Direct3D11Renderer::drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances)
+	void Direct3D11Renderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		mD3D11DeviceContext->DrawInstanced(
-			numberOfVertices,		// Vertex count per instance (UINT)
-			numberOfInstances,		// Instance count (UINT)
-			startVertexLocation,	// Start vertex location (UINT)
-			0						// Start instance location (UINT)
-		);
-	}
+		// No resource owner security check in here, we only support emulated indirect buffer
+		// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
 
-	void Direct3D11Renderer::drawInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
-	{
-		// TODO(co) Implement me
-		// "ID3D11DeviceContext::DrawInstancedIndirect()"
-	}
+		if (numberOfDraws > 0)
+		{
+			// Get indirect buffer data and perform security checks
+			const uint8_t* emulationData = indirectBuffer.getEmulationData();
+			assert(nullptr != emulationData);
 
-	void Direct3D11Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t)
-	{
-		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 11
+			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+			emulationData += indirectBufferOffset;
 
-		// Draw
-		mD3D11DeviceContext->DrawIndexed(
-			numberOfIndices,						// Index count (UINT)
-			startIndexLocation,						// Start index location (UINT)
-			static_cast<INT>(baseVertexLocation)	// Base vertex location (INT)
-		);
-	}
+			// Emit the draw calls
+			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			{
+				const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
 
-	void Direct3D11Renderer::drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t, uint32_t numberOfInstances)
-	{
-		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 11
-
-		// Draw
-		mD3D11DeviceContext->DrawIndexedInstanced(
-			numberOfIndices,						// Index count per instance (UINT)
-			numberOfInstances,						// Instance count (UINT)
-			startIndexLocation,						// Start index location (UINT)
-			static_cast<INT>(baseVertexLocation),	// Base vertex location (INT)
-			0										// Start instance location (UINT)
-		);
-	}
-
-	void Direct3D11Renderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
-	{
-		// TODO(co) Implement me
-		// "ID3D11DeviceContext::DrawIndexedInstancedIndirect()"
+				// Draw and advance
+				if (drawIndexedInstancedArguments.instanceCount > 1)
+				{
+					// With instancing
+					mD3D11DeviceContext->DrawIndexedInstanced(
+						drawIndexedInstancedArguments.indexCountPerInstance,	// Index count per instance (UINT)
+						drawIndexedInstancedArguments.instanceCount,			// Instance count (UINT)
+						drawIndexedInstancedArguments.startIndexLocation,		// Start index location (UINT)
+						drawIndexedInstancedArguments.baseVertexLocation,		// Base vertex location (INT)
+						drawIndexedInstancedArguments.startInstanceLocation		// Start instance location (UINT)
+					);
+				}
+				else
+				{
+					// Without instancing
+					mD3D11DeviceContext->DrawIndexed(
+						drawIndexedInstancedArguments.indexCountPerInstance,	// Index count (UINT)
+						drawIndexedInstancedArguments.startIndexLocation,		// Start index location (UINT)
+						drawIndexedInstancedArguments.baseVertexLocation		// Base vertex location (INT)
+					);
+				}
+				emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
+			}
+		}
 	}
 
 
@@ -1310,7 +1352,7 @@ namespace Direct3D11Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = false;
@@ -1343,7 +1385,7 @@ namespace Direct3D11Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = false;
@@ -1376,7 +1418,7 @@ namespace Direct3D11Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
@@ -1409,7 +1451,7 @@ namespace Direct3D11Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
@@ -1442,7 +1484,7 @@ namespace Direct3D11Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
@@ -1475,7 +1517,7 @@ namespace Direct3D11Renderer
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
-				mCapabilities.maximumIndirectBufferSize = 0;
+				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;

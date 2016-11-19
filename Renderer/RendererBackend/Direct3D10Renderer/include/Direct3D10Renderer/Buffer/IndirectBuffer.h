@@ -82,27 +82,19 @@ namespace Direct3D10Renderer
 
 		/**
 		*  @brief
-		*    Return the number of bytes within the indirect buffer
+		*    Return writable indirect buffer emulation data pointer
 		*
 		*  @return
-		*    The number of bytes within the indirect buffer
+		*    Writable indirect buffer emulation data pointer, can be a null pointer, don't destroy the returned instance
 		*/
-		inline uint32_t getNumberOfBytes() const;
-
-		/**
-		*  @brief
-		*    Return the indirect buffer data
-		*
-		*  @return
-		*    The indirect buffer data, can be a null pointer, do not destroy the data
-		*/
-		inline uint8_t* getData() const;
+		inline uint8_t* getWritableEmulationData() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]
 	//[-------------------------------------------------------]
 	public:
+		inline virtual const uint8_t* getEmulationData() const override;
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 

@@ -78,6 +78,13 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IIndirectBuffer methods      ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual const uint8_t* getEmulationData() const override;
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:

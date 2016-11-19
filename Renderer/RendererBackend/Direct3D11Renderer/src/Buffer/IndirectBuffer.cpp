@@ -27,6 +27,8 @@
 #include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
+#include <cassert>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -38,11 +40,26 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndirectBuffer::IndirectBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t, const void *, Renderer::BufferUsage) :
+	IndirectBuffer::IndirectBuffer(Direct3D11Renderer& direct3D11Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage) :
 		IIndirectBuffer(direct3D11Renderer),
+		mNumberOfBytes(numberOfBytes),
+		mData(nullptr),
 		mD3D11Buffer(nullptr),
 		mD3D11ShaderResourceViewIndirect(nullptr)
 	{
+		if (mNumberOfBytes > 0)
+		{
+			mData = new uint8_t[mNumberOfBytes];
+			if (nullptr != data)
+			{
+				memcpy(mData, data, mNumberOfBytes);
+			}
+		}
+		else
+		{
+			assert(nullptr == data);
+		}
+
 		// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
 		/*
 		{ // Buffer part
@@ -96,6 +113,11 @@ namespace Direct3D11Renderer
 
 	IndirectBuffer::~IndirectBuffer()
 	{
+		if (nullptr != mData)
+		{
+			delete [] mData;
+		}
+
 		// Release the used resources
 		if (nullptr != mD3D11ShaderResourceViewIndirect)
 		{
@@ -142,6 +164,10 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
+		assert(numberOfBytes <= mNumberOfBytes);
+		assert(nullptr != data);
+		memcpy(mData, data, numberOfBytes);
+
 		// Check resource pointers
 		if (nullptr != mD3D11Buffer && nullptr != data)
 		{

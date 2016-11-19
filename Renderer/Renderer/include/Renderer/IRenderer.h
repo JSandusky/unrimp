@@ -602,39 +602,6 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    Render the specified geometric primitive, based on an array of vertices
-		*
-		*  @param[in] numberOfVertices
-		*    Number of vertices to draw
-		*  @param[in] startVertexLocation
-		*    Index of the first vertex, which is usually an offset in a vertex buffer (usually 0)
-		*
-		*  @note
-		*    - Fails if no vertex array is set
-		*/
-		virtual void draw(uint32_t startVertexLocation, uint32_t numberOfVertices) = 0;
-
-		/**
-		*  @brief
-		*    Render the specified geometric primitive, based on an array of vertices and instancing
-		*
-		*  @param[in] numberOfVertices
-		*    Number of vertices to draw
-		*  @param[in] startVertexLocation
-		*    Index of the first vertex, which is usually an offset in a vertex buffer (usually 0)
-		*  @param[in] numberOfInstances
-		*    Number of instances, must be >0
-		*
-		*  @note
-		*    - Draw instanced is a shader model 4 feature, only supported if "Renderer::Capabilities::drawInstanced" is true
-		*    - In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
-		*      "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
-		*    - Fails if no vertex array is set
-		*/
-		virtual void drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances) = 0;
-
-		/**
-		*  @brief
 		*    Render the specified geometric primitive, based on an array of vertices instancing and indirect draw
 		*
 		*  @param[in] indirectBuffer
@@ -652,53 +619,7 @@ namespace Renderer
 		*    - If the multi-draw indirect feature is not supported this parameter, multiple draw calls are emitted
 		*    - If the draw indirect feature is not supported, a software indirect buffer is used and multiple draw calls are emitted
 		*/
-		virtual void drawInstancedIndirect(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
-
-		/**
-		*  @brief
-		*    Render the specified geometric primitive, based on indexing into an array of vertices
-		*
-		*  @param[in] startIndexLocation
-		*    The location of the first index read by the GPU from the index buffer (usually 0)
-		*  @param[in] numberOfIndices
-		*    Number of indices to draw
-		*  @param[in] baseVertexLocation
-		*    A value added to each index before reading a vertex from the vertex buffer (usually 0), only supported if "Renderer::Capabilities::baseVertex" is true
-		*  @param[in] minimumIndex
-		*    Minimum vertex index for vertices used during this call (usually 0, relative to "baseVertexLocation")
-		*  @param[in] numberOfVertices
-		*    Number of vertices used during this call (usually equal to the number of vertices inside the used vertex buffer)
-		*
-		*  @note
-		*    - This method draws indexed primitives from the current set of data input streams
-		*    - Fails if no index and/or vertex array is set
-		*/
-		virtual void drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices) = 0;
-
-		/**
-		*  @brief
-		*    Render the specified geometric primitive, based on indexing into an array of vertices and instancing
-		*
-		*  @param[in] startIndexLocation
-		*    The location of the first index read by the GPU from the index buffer (usually 0)
-		*  @param[in] numberOfIndices
-		*    Number of indices to draw
-		*  @param[in] baseVertexLocation
-		*    A value added to each index before reading a vertex from the vertex buffer (usually 0), only supported if "Renderer::Capabilities::baseVertex" is true
-		*  @param[in] minimumIndex
-		*    Minimum vertex index for vertices used during this call (usually 0, relative to "baseVertexLocation")
-		*  @param[in] numberOfVertices
-		*    Number of vertices used during this call (usually equal to the number of vertices inside the used vertex buffer)
-		*  @param[in] numberOfInstances
-		*    Number of instances, must be >0
-		*
-		*  @note
-		*    - Instanced arrays is a shader model 3 feature, only supported if "Renderer::Capabilities::instancedArrays" is true
-		*    - Draw instanced is a shader model 4 feature, only supported if "Renderer::Capabilities::drawInstanced" is true
-		*    - This method draws indexed primitives from the current set of data input streams
-		*    - Fails if no index and/or vertex array is set
-		*/
-		virtual void drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices, uint32_t numberOfInstances) = 0;
+		virtual void draw(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
 
 		/**
 		*  @brief
@@ -719,7 +640,7 @@ namespace Renderer
 		*    - If the multi-draw indirect feature is not supported this parameter, multiple draw calls are emitted
 		*    - If the draw indirect feature is not supported, a software indirect buffer is used and multiple draw calls are emitted
 		*/
-		virtual void drawIndexedInstancedIndirect(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
+		virtual void drawIndexed(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Synchronization                                       ]

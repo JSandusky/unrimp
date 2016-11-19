@@ -34,6 +34,15 @@ namespace OpenGLRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IIndirectBuffer methods      ]
+	//[-------------------------------------------------------]
+	inline const uint8_t* IndirectBuffer::getEmulationData() const
+	{
+		return nullptr;
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

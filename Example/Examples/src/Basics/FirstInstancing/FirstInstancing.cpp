@@ -328,7 +328,7 @@ void FirstInstancing::onDraw()
 			// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
 			// -> In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
 			//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
-			renderer->drawIndexedInstanced(0, 3, 0, 0, 3, 2);
+			renderer->drawIndexed(Renderer::IndexedIndirectBuffer(3, 2));
 
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(renderer)
@@ -352,7 +352,7 @@ void FirstInstancing::onDraw()
 			}
 
 			// Render the specified geometric primitive, based on an array of vertices
-			renderer->drawInstanced(0, 3, 2);
+			renderer->draw(Renderer::IndirectBuffer(3, 2));
 
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(renderer)

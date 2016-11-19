@@ -28,12 +28,16 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t IndirectBuffer::getNumberOfBytes() const
+	inline uint8_t* IndirectBuffer::getWritableEmulationData() const
 	{
-		return mNumberOfBytes;
+		return mData;
 	}
 
-	inline uint8_t* IndirectBuffer::getData() const
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IIndirectBuffer methods      ]
+	//[-------------------------------------------------------]
+	inline const uint8_t* IndirectBuffer::getEmulationData() const
 	{
 		return mData;
 	}

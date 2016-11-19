@@ -52,7 +52,7 @@ namespace RendererRuntime
 			}
 
 			// Render the specified geometric primitive, based on indexing into an array of vertices
-			renderer.drawIndexed(0, mNumberOfIndices, 0, 0, mNumberOfVertices);
+			renderer.drawIndexed(Renderer::IndexedIndirectBuffer(mNumberOfIndices));
 		}
 	}
 

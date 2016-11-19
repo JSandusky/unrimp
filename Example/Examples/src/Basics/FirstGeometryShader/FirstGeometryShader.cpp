@@ -202,7 +202,7 @@ void FirstGeometryShader::onDraw()
 		// Render the specified geometric primitive, based on an array of vertices
 		// -> Emit a single point in order to generate a draw call, the geometry shader does the rest
 		// -> Attribute less rendering (aka "drawing without data")
-		renderer->draw(0, 1);
+		renderer->draw(Renderer::IndirectBuffer(1));
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)

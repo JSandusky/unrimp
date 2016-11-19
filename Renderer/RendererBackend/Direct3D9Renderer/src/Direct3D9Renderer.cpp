@@ -396,7 +396,7 @@ namespace Direct3D9Renderer
 			}
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getData();
+				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
 				mappedSubresource.rowPitch   = 0;
 				mappedSubresource.depthPitch = 0;
 				return true;
@@ -1111,98 +1111,23 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::draw(uint32_t startVertexLocation, uint32_t numberOfVertices)
+	void Direct3D9Renderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get number of primitives
-		uint32_t primitiveCount;
-		switch (mPrimitiveTopology)
-		{
-			case Renderer::PrimitiveTopology::POINT_LIST:
-				primitiveCount = numberOfVertices;
-				break;
-
-			case Renderer::PrimitiveTopology::LINE_LIST:
-				primitiveCount = numberOfVertices - 1;
-				break;
-
-			case Renderer::PrimitiveTopology::LINE_STRIP:
-				primitiveCount = numberOfVertices - 1;
-				break;
-
-			case Renderer::PrimitiveTopology::TRIANGLE_LIST:
-				primitiveCount = numberOfVertices / 3;
-				break;
-
-			case Renderer::PrimitiveTopology::TRIANGLE_STRIP:
-				primitiveCount = numberOfVertices - 2;
-				break;
-
-			case Renderer::PrimitiveTopology::UNKNOWN:
-			case Renderer::PrimitiveTopology::PATCH_LIST_1:
-			case Renderer::PrimitiveTopology::PATCH_LIST_2:
-			case Renderer::PrimitiveTopology::PATCH_LIST_3:
-			case Renderer::PrimitiveTopology::PATCH_LIST_4:
-			case Renderer::PrimitiveTopology::PATCH_LIST_5:
-			case Renderer::PrimitiveTopology::PATCH_LIST_6:
-			case Renderer::PrimitiveTopology::PATCH_LIST_7:
-			case Renderer::PrimitiveTopology::PATCH_LIST_8:
-			case Renderer::PrimitiveTopology::PATCH_LIST_9:
-			case Renderer::PrimitiveTopology::PATCH_LIST_10:
-			case Renderer::PrimitiveTopology::PATCH_LIST_11:
-			case Renderer::PrimitiveTopology::PATCH_LIST_12:
-			case Renderer::PrimitiveTopology::PATCH_LIST_13:
-			case Renderer::PrimitiveTopology::PATCH_LIST_14:
-			case Renderer::PrimitiveTopology::PATCH_LIST_15:
-			case Renderer::PrimitiveTopology::PATCH_LIST_16:
-			case Renderer::PrimitiveTopology::PATCH_LIST_17:
-			case Renderer::PrimitiveTopology::PATCH_LIST_18:
-			case Renderer::PrimitiveTopology::PATCH_LIST_19:
-			case Renderer::PrimitiveTopology::PATCH_LIST_20:
-			case Renderer::PrimitiveTopology::PATCH_LIST_21:
-			case Renderer::PrimitiveTopology::PATCH_LIST_22:
-			case Renderer::PrimitiveTopology::PATCH_LIST_23:
-			case Renderer::PrimitiveTopology::PATCH_LIST_24:
-			case Renderer::PrimitiveTopology::PATCH_LIST_25:
-			case Renderer::PrimitiveTopology::PATCH_LIST_26:
-			case Renderer::PrimitiveTopology::PATCH_LIST_27:
-			case Renderer::PrimitiveTopology::PATCH_LIST_28:
-			case Renderer::PrimitiveTopology::PATCH_LIST_29:
-			case Renderer::PrimitiveTopology::PATCH_LIST_30:
-			case Renderer::PrimitiveTopology::PATCH_LIST_31:
-			case Renderer::PrimitiveTopology::PATCH_LIST_32:
-			default:
-				return; // Error!
-		}
-
-		// The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
-		mDirect3DDevice9->DrawPrimitive(static_cast<D3DPRIMITIVETYPE>(mPrimitiveTopology), startVertexLocation, primitiveCount);
-	}
-
-	void Direct3D9Renderer::drawInstanced(uint32_t, uint32_t, uint32_t)
-	{
-		// Error!
-		// -> In Direct3D 9, instanced arrays is only possible when drawing indexed primitives, see
-		//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
-		// -> This document states that this is not supported by hardware acceleration on any device, and it's long winded anyway
-	}
-
-	void Direct3D9Renderer::drawInstancedIndirect(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
-	{
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+		// No resource owner security check in here, we only support emulated indirect buffer
 
 		if (numberOfDraws > 0)
 		{
 			// Get indirect buffer data and perform security checks
-			const IndirectBuffer& direct3D9IndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer);
-			const uint8_t* data = direct3D9IndirectBuffer.getData();
-			assert(direct3D9IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawInstancedArguments) * numberOfDraws));
-			assert(nullptr != data);
+			const uint8_t* emulationData = indirectBuffer.getEmulationData();
+			assert(nullptr != emulationData);
+
+			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+			emulationData += indirectBufferOffset;
 
 			// Emit the draw calls
 			for (uint32_t i = 0; i < numberOfDraws; ++i)
 			{
-				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(data);
+				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
 
 				// No instancing supported here
 				// -> In Direct3D 9, instanced arrays is only possible when drawing indexed primitives, see
@@ -1212,115 +1137,94 @@ namespace Direct3D9Renderer
 				assert(0 == drawInstancedArguments.startInstanceLocation);
 
 				// Draw and advance
-				draw(drawInstancedArguments.startVertexLocation, drawInstancedArguments.vertexCountPerInstance);
-				data += sizeof(Renderer::DrawInstancedArguments);
+				{
+					// Get number of primitives
+					uint32_t primitiveCount;
+					switch (mPrimitiveTopology)
+					{
+						case Renderer::PrimitiveTopology::POINT_LIST:
+							primitiveCount = drawInstancedArguments.vertexCountPerInstance;
+							break;
+
+						case Renderer::PrimitiveTopology::LINE_LIST:
+							primitiveCount = drawInstancedArguments.vertexCountPerInstance - 1;
+							break;
+
+						case Renderer::PrimitiveTopology::LINE_STRIP:
+							primitiveCount = drawInstancedArguments.vertexCountPerInstance - 1;
+							break;
+
+						case Renderer::PrimitiveTopology::TRIANGLE_LIST:
+							primitiveCount = drawInstancedArguments.vertexCountPerInstance / 3;
+							break;
+
+						case Renderer::PrimitiveTopology::TRIANGLE_STRIP:
+							primitiveCount = drawInstancedArguments.vertexCountPerInstance - 2;
+							break;
+
+						case Renderer::PrimitiveTopology::UNKNOWN:
+						case Renderer::PrimitiveTopology::PATCH_LIST_1:
+						case Renderer::PrimitiveTopology::PATCH_LIST_2:
+						case Renderer::PrimitiveTopology::PATCH_LIST_3:
+						case Renderer::PrimitiveTopology::PATCH_LIST_4:
+						case Renderer::PrimitiveTopology::PATCH_LIST_5:
+						case Renderer::PrimitiveTopology::PATCH_LIST_6:
+						case Renderer::PrimitiveTopology::PATCH_LIST_7:
+						case Renderer::PrimitiveTopology::PATCH_LIST_8:
+						case Renderer::PrimitiveTopology::PATCH_LIST_9:
+						case Renderer::PrimitiveTopology::PATCH_LIST_10:
+						case Renderer::PrimitiveTopology::PATCH_LIST_11:
+						case Renderer::PrimitiveTopology::PATCH_LIST_12:
+						case Renderer::PrimitiveTopology::PATCH_LIST_13:
+						case Renderer::PrimitiveTopology::PATCH_LIST_14:
+						case Renderer::PrimitiveTopology::PATCH_LIST_15:
+						case Renderer::PrimitiveTopology::PATCH_LIST_16:
+						case Renderer::PrimitiveTopology::PATCH_LIST_17:
+						case Renderer::PrimitiveTopology::PATCH_LIST_18:
+						case Renderer::PrimitiveTopology::PATCH_LIST_19:
+						case Renderer::PrimitiveTopology::PATCH_LIST_20:
+						case Renderer::PrimitiveTopology::PATCH_LIST_21:
+						case Renderer::PrimitiveTopology::PATCH_LIST_22:
+						case Renderer::PrimitiveTopology::PATCH_LIST_23:
+						case Renderer::PrimitiveTopology::PATCH_LIST_24:
+						case Renderer::PrimitiveTopology::PATCH_LIST_25:
+						case Renderer::PrimitiveTopology::PATCH_LIST_26:
+						case Renderer::PrimitiveTopology::PATCH_LIST_27:
+						case Renderer::PrimitiveTopology::PATCH_LIST_28:
+						case Renderer::PrimitiveTopology::PATCH_LIST_29:
+						case Renderer::PrimitiveTopology::PATCH_LIST_30:
+						case Renderer::PrimitiveTopology::PATCH_LIST_31:
+						case Renderer::PrimitiveTopology::PATCH_LIST_32:
+						default:
+							return; // Error!
+					}
+
+					// The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
+					mDirect3DDevice9->DrawPrimitive(static_cast<D3DPRIMITIVETYPE>(mPrimitiveTopology), drawInstancedArguments.startVertexLocation, primitiveCount);
+				}
+				emulationData += sizeof(Renderer::DrawInstancedArguments);
 			}
 		}
 	}
 
-	void Direct3D9Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices)
+	void Direct3D9Renderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get number of primitives
-		uint32_t primitiveCount;
-		switch (mPrimitiveTopology)
-		{
-			case Renderer::PrimitiveTopology::POINT_LIST:
-				primitiveCount = numberOfIndices;
-				break;
-
-			case Renderer::PrimitiveTopology::LINE_LIST:
-				primitiveCount = numberOfIndices - 1;
-				break;
-
-			case Renderer::PrimitiveTopology::LINE_STRIP:
-				primitiveCount = numberOfIndices - 1;
-				break;
-
-			case Renderer::PrimitiveTopology::TRIANGLE_LIST:
-				primitiveCount = numberOfIndices / 3;
-				break;
-
-			case Renderer::PrimitiveTopology::TRIANGLE_STRIP:
-				primitiveCount = numberOfIndices - 2;
-				break;
-
-			case Renderer::PrimitiveTopology::UNKNOWN:
-			case Renderer::PrimitiveTopology::PATCH_LIST_1:
-			case Renderer::PrimitiveTopology::PATCH_LIST_2:
-			case Renderer::PrimitiveTopology::PATCH_LIST_3:
-			case Renderer::PrimitiveTopology::PATCH_LIST_4:
-			case Renderer::PrimitiveTopology::PATCH_LIST_5:
-			case Renderer::PrimitiveTopology::PATCH_LIST_6:
-			case Renderer::PrimitiveTopology::PATCH_LIST_7:
-			case Renderer::PrimitiveTopology::PATCH_LIST_8:
-			case Renderer::PrimitiveTopology::PATCH_LIST_9:
-			case Renderer::PrimitiveTopology::PATCH_LIST_10:
-			case Renderer::PrimitiveTopology::PATCH_LIST_11:
-			case Renderer::PrimitiveTopology::PATCH_LIST_12:
-			case Renderer::PrimitiveTopology::PATCH_LIST_13:
-			case Renderer::PrimitiveTopology::PATCH_LIST_14:
-			case Renderer::PrimitiveTopology::PATCH_LIST_15:
-			case Renderer::PrimitiveTopology::PATCH_LIST_16:
-			case Renderer::PrimitiveTopology::PATCH_LIST_17:
-			case Renderer::PrimitiveTopology::PATCH_LIST_18:
-			case Renderer::PrimitiveTopology::PATCH_LIST_19:
-			case Renderer::PrimitiveTopology::PATCH_LIST_20:
-			case Renderer::PrimitiveTopology::PATCH_LIST_21:
-			case Renderer::PrimitiveTopology::PATCH_LIST_22:
-			case Renderer::PrimitiveTopology::PATCH_LIST_23:
-			case Renderer::PrimitiveTopology::PATCH_LIST_24:
-			case Renderer::PrimitiveTopology::PATCH_LIST_25:
-			case Renderer::PrimitiveTopology::PATCH_LIST_26:
-			case Renderer::PrimitiveTopology::PATCH_LIST_27:
-			case Renderer::PrimitiveTopology::PATCH_LIST_28:
-			case Renderer::PrimitiveTopology::PATCH_LIST_29:
-			case Renderer::PrimitiveTopology::PATCH_LIST_30:
-			case Renderer::PrimitiveTopology::PATCH_LIST_31:
-			case Renderer::PrimitiveTopology::PATCH_LIST_32:
-			default:
-				return; // Error!
-		}
-
-		// The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
-		mDirect3DDevice9->DrawIndexedPrimitive(static_cast<D3DPRIMITIVETYPE>(mPrimitiveTopology), static_cast<INT>(baseVertexLocation), minimumIndex, numberOfVertices, startIndexLocation, primitiveCount);
-	}
-
-	void Direct3D9Renderer::drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices, uint32_t numberOfInstances)
-	{
-		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
-		if (mCapabilities.instancedArrays)
-		{
-			// The "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
-			// states: "Note that D3DSTREAMSOURCE_INDEXEDDATA and the number of instances to draw must always be set in stream zero."
-			// -> "D3DSTREAMSOURCE_INSTANCEDATA" is set within "Direct3D9Renderer::VertexArray::enableDirect3DVertexDeclarationAndStreamSource()"
-			mDirect3DDevice9->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | numberOfInstances);
-
-			// Draw
-			drawIndexed(startIndexLocation, numberOfIndices, baseVertexLocation, minimumIndex, numberOfVertices);
-
-			// Reset the stream source frequency
-			mDirect3DDevice9->SetStreamSourceFreq(0, 1);
-		}
-	}
-
-	void Direct3D9Renderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
-	{
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+		// No resource owner security check in here, we only support emulated indirect buffer
 
 		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 		if (numberOfDraws > 0 && mCapabilities.instancedArrays)
 		{
 			// Get indirect buffer data and perform security checks
-			const IndirectBuffer& direct3D9IndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer);
-			const uint8_t* data = direct3D9IndirectBuffer.getData();
-			assert(direct3D9IndirectBuffer.getNumberOfBytes() <= (indirectBufferOffset + sizeof(Renderer::DrawIndexedInstancedArguments) * numberOfDraws));
-			assert(nullptr != data);
+			const uint8_t* emulationData = indirectBuffer.getEmulationData();
+			assert(nullptr != emulationData);
+
+			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+			emulationData += indirectBufferOffset;
 
 			// Emit the draw calls
 			for (uint32_t i = 0; i < numberOfDraws; ++i)
 			{
-				const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(data);
+				const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
 				assert(0 == drawIndexedInstancedArguments.startInstanceLocation);	// Not supported by DirectX 9
 
 				// The "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
@@ -1329,9 +1233,73 @@ namespace Direct3D9Renderer
 				mDirect3DDevice9->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | drawIndexedInstancedArguments.instanceCount);
 
 				// Draw and advance
-				// TODO(co) Review "numberOfVertices", might be wrong
-				drawIndexed(drawIndexedInstancedArguments.startIndexLocation, drawIndexedInstancedArguments.indexCountPerInstance, static_cast<uint32_t>(drawIndexedInstancedArguments.baseVertexLocation), 0, drawIndexedInstancedArguments.indexCountPerInstance * 3);
-				data += sizeof(Renderer::DrawIndexedInstancedArguments);
+				{
+					// Get number of primitives
+					uint32_t primitiveCount;
+					switch (mPrimitiveTopology)
+					{
+						case Renderer::PrimitiveTopology::POINT_LIST:
+							primitiveCount = drawIndexedInstancedArguments.indexCountPerInstance;
+							break;
+
+						case Renderer::PrimitiveTopology::LINE_LIST:
+							primitiveCount = drawIndexedInstancedArguments.indexCountPerInstance - 1;
+							break;
+
+						case Renderer::PrimitiveTopology::LINE_STRIP:
+							primitiveCount = drawIndexedInstancedArguments.indexCountPerInstance - 1;
+							break;
+
+						case Renderer::PrimitiveTopology::TRIANGLE_LIST:
+							primitiveCount = drawIndexedInstancedArguments.indexCountPerInstance / 3;
+							break;
+
+						case Renderer::PrimitiveTopology::TRIANGLE_STRIP:
+							primitiveCount = drawIndexedInstancedArguments.indexCountPerInstance - 2;
+							break;
+
+						case Renderer::PrimitiveTopology::UNKNOWN:
+						case Renderer::PrimitiveTopology::PATCH_LIST_1:
+						case Renderer::PrimitiveTopology::PATCH_LIST_2:
+						case Renderer::PrimitiveTopology::PATCH_LIST_3:
+						case Renderer::PrimitiveTopology::PATCH_LIST_4:
+						case Renderer::PrimitiveTopology::PATCH_LIST_5:
+						case Renderer::PrimitiveTopology::PATCH_LIST_6:
+						case Renderer::PrimitiveTopology::PATCH_LIST_7:
+						case Renderer::PrimitiveTopology::PATCH_LIST_8:
+						case Renderer::PrimitiveTopology::PATCH_LIST_9:
+						case Renderer::PrimitiveTopology::PATCH_LIST_10:
+						case Renderer::PrimitiveTopology::PATCH_LIST_11:
+						case Renderer::PrimitiveTopology::PATCH_LIST_12:
+						case Renderer::PrimitiveTopology::PATCH_LIST_13:
+						case Renderer::PrimitiveTopology::PATCH_LIST_14:
+						case Renderer::PrimitiveTopology::PATCH_LIST_15:
+						case Renderer::PrimitiveTopology::PATCH_LIST_16:
+						case Renderer::PrimitiveTopology::PATCH_LIST_17:
+						case Renderer::PrimitiveTopology::PATCH_LIST_18:
+						case Renderer::PrimitiveTopology::PATCH_LIST_19:
+						case Renderer::PrimitiveTopology::PATCH_LIST_20:
+						case Renderer::PrimitiveTopology::PATCH_LIST_21:
+						case Renderer::PrimitiveTopology::PATCH_LIST_22:
+						case Renderer::PrimitiveTopology::PATCH_LIST_23:
+						case Renderer::PrimitiveTopology::PATCH_LIST_24:
+						case Renderer::PrimitiveTopology::PATCH_LIST_25:
+						case Renderer::PrimitiveTopology::PATCH_LIST_26:
+						case Renderer::PrimitiveTopology::PATCH_LIST_27:
+						case Renderer::PrimitiveTopology::PATCH_LIST_28:
+						case Renderer::PrimitiveTopology::PATCH_LIST_29:
+						case Renderer::PrimitiveTopology::PATCH_LIST_30:
+						case Renderer::PrimitiveTopology::PATCH_LIST_31:
+						case Renderer::PrimitiveTopology::PATCH_LIST_32:
+						default:
+							return; // Error!
+					}
+
+					// The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
+					const UINT numberOfVertices = drawIndexedInstancedArguments.indexCountPerInstance * 3;	// TODO(co) Review "numberOfVertices", might be wrong
+					mDirect3DDevice9->DrawIndexedPrimitive(static_cast<D3DPRIMITIVETYPE>(mPrimitiveTopology), static_cast<INT>(drawIndexedInstancedArguments.baseVertexLocation), 0, numberOfVertices, drawIndexedInstancedArguments.startIndexLocation, primitiveCount);
+				}
+				emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
 			}
 
 			// Reset the stream source frequency
@@ -1454,7 +1422,7 @@ namespace Direct3D9Renderer
 		mCapabilities.maximumTextureBufferSize = 0;
 
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-		mCapabilities.maximumIndirectBufferSize = 0;
+		mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;

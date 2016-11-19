@@ -457,7 +457,7 @@ void Fxaa::sceneRendering()
 		}
 
 		// Render the specified geometric primitive, based on indexing into an array of vertices
-		renderer->draw(0, 3);
+		renderer->draw(Renderer::IndirectBuffer(3));
 
 		// Restore the previously set render target
 		renderer->omSetRenderTarget(renderTarget);
@@ -497,7 +497,7 @@ void Fxaa::postProcessing()
 		}
 
 		// Render the specified geometric primitive, based on indexing into an array of vertices
-		renderer->draw(0, 4);
+		renderer->draw(Renderer::IndirectBuffer(4));
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)

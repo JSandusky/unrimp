@@ -489,6 +489,6 @@ void FirstMultipleSwapChains::draw(const float color[4])
 		}
 
 		// Render the specified geometric primitive, based on an array of vertices
-		renderer->draw(0, 3);
+		renderer->draw(Renderer::IndirectBuffer(3));
 	}
 }

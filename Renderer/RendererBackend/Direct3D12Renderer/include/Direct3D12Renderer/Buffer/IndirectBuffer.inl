@@ -28,6 +28,11 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline uint8_t* IndirectBuffer::getWritableEmulationData() const
+	{
+		return mData;
+	}
+
 	// TODO(co) Direct3D 12 update
 	/*
 	inline ID3D12Buffer *IndirectBuffer::getD3D12Buffer() const
@@ -40,6 +45,15 @@ namespace Direct3D12Renderer
 		return mD3D12ShaderResourceViewIndirect;
 	}
 	*/
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IIndirectBuffer methods      ]
+	//[-------------------------------------------------------]
+	inline const uint8_t* IndirectBuffer::getEmulationData() const
+	{
+		return mData;
+	}
 
 
 //[-------------------------------------------------------]

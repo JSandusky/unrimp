@@ -70,6 +70,15 @@ namespace Renderer
 	public:
 		/**
 		*  @brief
+		*    Return indirect buffer emulation data pointer
+		*
+		*  @return
+		*    Indirect buffer emulation data pointer, can be a null pointer, don't destroy the returned instance
+		*/
+		virtual const uint8_t* getEmulationData() const = 0;
+
+		/**
+		*  @brief
 		*    Copy data into the indirect buffer object
 		*
 		*  @param[in] numberOfBytes

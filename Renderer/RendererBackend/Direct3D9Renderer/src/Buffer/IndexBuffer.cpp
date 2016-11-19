@@ -52,12 +52,15 @@ namespace Direct3D9Renderer
 			// Create the Direct3D 9 index buffer
 			direct3D9Renderer.getDirect3DDevice9()->CreateIndexBuffer(numberOfBytes, Mapping::getDirect3D9Usage(bufferUsage), static_cast<D3DFORMAT>(Mapping::getDirect3D9Format(indexBufferFormat)), D3DPOOL_DEFAULT, &mDirect3DIndexBuffer9, nullptr);
 
-			// Copy the data
-			void *vertices = nullptr;
-			if (SUCCEEDED(mDirect3DIndexBuffer9->Lock(0, numberOfBytes, static_cast<void**>(&vertices), 0)))
+			// Copy the data, if required
+			if (nullptr != data)
 			{
-				memcpy(vertices, data, numberOfBytes);
-				mDirect3DIndexBuffer9->Unlock();
+				void *indices = nullptr;
+				if (SUCCEEDED(mDirect3DIndexBuffer9->Lock(0, numberOfBytes, static_cast<void**>(&indices), 0)))
+				{
+					memcpy(indices, data, numberOfBytes);
+					mDirect3DIndexBuffer9->Unlock();
+				}
 			}
 		}
 

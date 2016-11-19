@@ -49,6 +49,11 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]
 	//[-------------------------------------------------------]
+	const uint8_t* IndirectBuffer::getEmulationData() const
+	{
+		return nullptr;
+	}
+
 	void IndirectBuffer::copyDataFrom(uint32_t, const void *)
 	{
 		// Nothing here

@@ -19,76 +19,44 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include <Renderer/Buffer/IIndirectBuffer.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace NullRenderer
-{
-	class NullRenderer;
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace NullRenderer
+namespace Renderer
 {
 
-
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Null indirect buffer object class
-	*/
-	class IndirectBuffer : public Renderer::IIndirectBuffer
-	{
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] nullRenderer
-		*    Owner null renderer instance
-		*/
-		explicit IndirectBuffer(NullRenderer &nullRenderer);
+	inline IndexedIndirectBuffer::IndexedIndirectBuffer(uint32_t indexCountPerInstance, uint32_t instanceCount, uint32_t startIndexLocation, int32_t baseVertexLocation, uint32_t startInstanceLocation) :
+		IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),	// Evil but does the trick in this special use case
+		mDrawIndexedInstancedArguments(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation)
+	{
+		// Nothing here
+	}
 
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~IndirectBuffer();
+	inline IndexedIndirectBuffer::~IndexedIndirectBuffer()
+	{
+		// Nothing here
+	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IIndirectBuffer methods      ]
+	//[ Public virtual IIndirectBuffer methods                ]
 	//[-------------------------------------------------------]
-	public:
-		virtual const uint8_t* getEmulationData() const override;
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+	inline const uint8_t* IndexedIndirectBuffer::getEmulationData() const
+	{
+		return reinterpret_cast<const uint8_t*>(&mDrawIndexedInstancedArguments);
+	}
 
-
-	};
+	inline void IndexedIndirectBuffer::copyDataFrom(uint32_t, const void*)
+	{
+		// Not required for this implementation
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // NullRenderer
+} // Renderer

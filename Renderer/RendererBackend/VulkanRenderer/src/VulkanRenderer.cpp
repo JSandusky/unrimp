@@ -668,27 +668,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::draw(uint32_t, uint32_t)
-	{
-		// Is currently a vertex array set?
-		if (nullptr != mVertexArray)
-		{
-			// Draw
-			// TODO(co) Implement me
-		}
-	}
-
-	void VulkanRenderer::drawInstanced(uint32_t, uint32_t, uint32_t)
-	{
-		// Is currently a vertex array set?
-		if (nullptr != mVertexArray)
-		{
-			// Draw
-			// TODO(co) Implement me
-		}
-	}
-
-	void VulkanRenderer::drawIndexed(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
+	void VulkanRenderer::draw(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// Is currently an vertex array set?
 		if (nullptr != mVertexArray)
@@ -702,35 +682,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	void VulkanRenderer::drawInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
-	{
-		// Is currently an vertex array set?
-		if (nullptr != mVertexArray)
-		{
-			// Get the used index buffer
-			IndexBuffer *indexBuffer = mVertexArray->getIndexBuffer();
-			if (nullptr != indexBuffer)
-			{
-				// TODO(co) Implement me
-			}
-		}
-	}
-
-	void VulkanRenderer::drawIndexedInstanced(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
-	{
-		// Is currently an vertex array set?
-		if (nullptr != mVertexArray)
-		{
-			// Get the used index buffer
-			IndexBuffer *indexBuffer = mVertexArray->getIndexBuffer();
-			if (nullptr != indexBuffer)
-			{
-				// TODO(co) Implement me
-			}
-		}
-	}
-
-	void VulkanRenderer::drawIndexedInstancedIndirect(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void VulkanRenderer::drawIndexed(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
 	{
 		// Is currently an vertex array set?
 		if (nullptr != mVertexArray)

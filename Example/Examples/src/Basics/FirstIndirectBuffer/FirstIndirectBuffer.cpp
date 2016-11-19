@@ -126,7 +126,7 @@ void FirstIndirectBuffer::onDraw()
 			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Drawing the fancy triangle")
 
 			// Render the specified geometric primitive, based on an array of vertices
-			renderer->drawInstancedIndirect(*mIndirectBuffer);
+			renderer->draw(*mIndirectBuffer);
 
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(renderer)
