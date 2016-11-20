@@ -21,7 +21,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <cassert>
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
+#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -34,20 +36,20 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const ISceneFactory& SceneResourceManager::getSceneFactory() const
+	void ISceneNode::attachSceneItem(ISceneItem& sceneItem)
 	{
-		// We know that this pointer is always valid
-		assert(nullptr != mSceneFactory);
-		return *mSceneFactory;
+		// TODO(co) Need to guarantee that one scene item is only attached to one scene node at the same time
+		mAttachedSceneItems.push_back(&sceneItem);
+		sceneItem.onAttachedToSceneNode(*this);
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline SceneResourceManager::~SceneResourceManager()
+	void ISceneNode::detachAllSceneItems()
 	{
-		// Nothing here
+		for (ISceneItem* sceneItem : mAttachedSceneItems)
+		{
+			sceneItem->onDetachedFromSceneNode(*this);
+		}
+		mAttachedSceneItems.clear();
 	}
 
 

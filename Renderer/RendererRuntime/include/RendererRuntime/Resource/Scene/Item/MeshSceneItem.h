@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 #include "RendererRuntime/Resource/IResourceListener.h"
+#include "RendererRuntime/RenderQueue/RenderableManager.h"
 
 
 //[-------------------------------------------------------]
@@ -41,9 +42,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
-	typedef uint32_t MeshResourceId;		///< POD mesh resource identifier
-	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
+	typedef StringId AssetId;			///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef uint32_t MeshResourceId;	///< POD mesh resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -76,6 +76,7 @@ namespace RendererRuntime
 		inline uint32_t getNumberOfSubMeshes() const;
 		inline MaterialResourceId getMaterialResourceIdOfSubMesh(uint32_t subMeshIndex) const;
 		inline void setMaterialResourceIdOfSubMesh(uint32_t subMeshIndex, MaterialResourceId materialResourceId);
+		inline const RenderableManager& getRenderableManager() const;
 
 
 	//[-------------------------------------------------------]
@@ -84,6 +85,8 @@ namespace RendererRuntime
 	public:
 		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
+		virtual void onAttachedToSceneNode(const ISceneNode& sceneNode) override;
+		inline virtual void onDetachedFromSceneNode(const ISceneNode& sceneNode) override;
 
 
 	//[-------------------------------------------------------]
@@ -104,18 +107,11 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::vector<MaterialResourceId> MaterialResourceIds;
-
-
-	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MeshResourceId		mMeshResourceId;		///< Mesh resource ID, can be set to uninitialized value
-		MaterialResourceIds mMaterialResourceIds;	///< Material resource ID of each sub-mesh
+		MeshResourceId	  mMeshResourceId;		///< Mesh resource ID, can be set to uninitialized value
+		RenderableManager mRenderableManager;
 
 
 	};

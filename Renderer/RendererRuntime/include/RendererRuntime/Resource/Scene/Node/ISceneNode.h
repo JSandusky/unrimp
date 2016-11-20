@@ -92,7 +92,8 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Attached scene items                                  ]
 		//[-------------------------------------------------------]
-		inline void attachSceneItem(ISceneItem& sceneItem);
+		void attachSceneItem(ISceneItem& sceneItem);
+		void detachAllSceneItems();
 		inline const AttachedSceneItems& getAttachedSceneItems() const;
 
 

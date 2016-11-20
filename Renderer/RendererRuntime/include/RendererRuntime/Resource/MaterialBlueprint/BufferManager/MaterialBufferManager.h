@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Core/Manager.h"
 
 #include <vector>
 
@@ -66,7 +66,7 @@ namespace RendererRuntime
 	*    - For material batching
 	*    - Concept basing on OGRE 2.1 "Ogre::ConstBufferPool", but more generic and simplified thanks to the material blueprint concept
 	*/
-	class MaterialBufferManager : public NonCopyable
+	class MaterialBufferManager : private Manager
 	{
 
 

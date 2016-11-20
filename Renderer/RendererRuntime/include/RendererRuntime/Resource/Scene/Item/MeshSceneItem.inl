@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/GetUninitialized.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -41,17 +35,24 @@ namespace RendererRuntime
 
 	inline uint32_t MeshSceneItem::getNumberOfSubMeshes() const
 	{
-		return static_cast<uint32_t>(mMaterialResourceIds.size());
+		return static_cast<uint32_t>(mRenderableManager.getRenderables().size());
 	}
 
 	inline MaterialResourceId MeshSceneItem::getMaterialResourceIdOfSubMesh(uint32_t subMeshIndex) const
 	{
-		return mMaterialResourceIds[subMeshIndex];
+		assert(subMeshIndex < mRenderableManager.getRenderables().size());
+		return mRenderableManager.getRenderables()[subMeshIndex].getMaterialResourceId();
 	}
 
 	inline void MeshSceneItem::setMaterialResourceIdOfSubMesh(uint32_t subMeshIndex, MaterialResourceId materialResourceId)
 	{
-		mMaterialResourceIds[subMeshIndex] = materialResourceId;
+		assert(subMeshIndex < mRenderableManager.getRenderables().size());
+		mRenderableManager.getRenderables()[subMeshIndex].setMaterialResourceId(materialResourceId);
+	}
+
+	inline const RenderableManager& MeshSceneItem::getRenderableManager() const
+	{
+		return mRenderableManager;
 	}
 
 
@@ -61,6 +62,11 @@ namespace RendererRuntime
 	inline SceneItemTypeId MeshSceneItem::getSceneItemTypeId() const
 	{
 		return TYPE_ID;
+	}
+
+	inline void MeshSceneItem::onDetachedFromSceneNode(const ISceneNode&)
+	{
+		mRenderableManager.setTransform(nullptr);
 	}
 
 

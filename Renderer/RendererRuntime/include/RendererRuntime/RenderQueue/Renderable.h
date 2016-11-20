@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
@@ -38,20 +38,46 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class Renderable : protected NonCopyable
+	class Renderable
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	protected:
+	public:
 		inline Renderable();
-		inline virtual ~Renderable();
-		Renderable(const Renderable&) = delete;
-		Renderable& operator=(const Renderable&) = delete;
+		inline Renderable(const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, MaterialResourceId materialResourceId);
+		inline ~Renderable();
+		inline Renderer::IVertexArrayPtr getVertexArrayPtr() const;
+		inline void setVertexArrayPtr(const Renderer::IVertexArrayPtr& vertexArrayPtr);
+		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
+		inline Renderer::PrimitiveTopology setPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
+		inline uint32_t getStartIndexLocation() const;
+		inline void setStartIndexLocation(uint32_t startIndexLocation);
+		inline uint32_t getNumberOfIndices() const;
+		inline void setNumberOfIndices(uint32_t numberOfIndices);
+		inline MaterialResourceId getMaterialResourceId() const;
+		inline void setMaterialResourceId(MaterialResourceId materialResourceId);
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		Renderer::IVertexArrayPtr	mVertexArrayPtr;		///< Vertex array object (VAO), can be a null pointer
+		Renderer::PrimitiveTopology	mPrimitiveTopology;
+		uint32_t					mStartIndexLocation;
+		uint32_t					mNumberOfIndices;
+		MaterialResourceId			mMaterialResourceId;
 
 
 	};
@@ -66,4 +92,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Renderable.inl"
+#include "RendererRuntime/RenderQueue/Renderable.inl"

@@ -24,8 +24,9 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
-#include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
+#include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -67,6 +68,11 @@ namespace RendererRuntime
 		setMeshResourceIdByAssetId(reinterpret_cast<const v1Scene::MeshItem*>(data)->meshAssetId);
 	}
 
+	void MeshSceneItem::onAttachedToSceneNode(const ISceneNode& sceneNode)
+	{
+		mRenderableManager.setTransform(&sceneNode.getTransform());
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::IResourceListener methods ]
@@ -75,13 +81,25 @@ namespace RendererRuntime
 	{
 		if (resource.getLoadingState() == IResource::LoadingState::LOADED)
 		{
-			// Set material resource ID of each sub-mesh
-			const SubMeshes& subMeshes = static_cast<const MeshResource&>(resource).getSubMeshes();
-			const size_t numberOfSubMeshes = subMeshes.size();
-			mMaterialResourceIds.resize(numberOfSubMeshes);
-			for (size_t subMeshIndex = 0; subMeshIndex < numberOfSubMeshes; ++subMeshIndex)
+			RenderableManager::Renderables& renderables = mRenderableManager.getRenderables();
+			renderables.clear();
+
+			// Get mesh resource instance
+			const MeshResource* meshResource = getSceneResource().getRendererRuntime().getMeshResourceManager().getMeshResources().tryGetElementById(mMeshResourceId);
+			if (nullptr != meshResource)
 			{
-				mMaterialResourceIds[subMeshIndex] = subMeshes[subMeshIndex].getMaterialResourceId();
+				// Get vertex array instance
+				const Renderer::IVertexArrayPtr vertexArrayPtr = meshResource->getVertexArrayPtr();
+
+				// Set material resource ID of each sub-mesh
+				const SubMeshes& subMeshes = static_cast<const MeshResource&>(resource).getSubMeshes();
+				const size_t numberOfSubMeshes = subMeshes.size();
+				renderables.reserve(numberOfSubMeshes);
+				for (size_t i = 0; i < numberOfSubMeshes; ++i)
+				{
+					const SubMesh& subMesh = subMeshes[i];
+					renderables.emplace_back(vertexArrayPtr, subMesh.getPrimitiveTopology(), subMesh.getStartIndexLocation(), subMesh.getNumberOfIndices(), subMesh.getMaterialResourceId());
+				}
 			}
 		}
 	}

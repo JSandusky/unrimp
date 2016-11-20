@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <cassert>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -26,16 +32,28 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline RenderQueue::RenderQueue()
+	inline RenderableManager::~RenderableManager()
 	{
 		// Nothing here
 	}
 
-	inline RenderQueue::~RenderQueue()
+	inline const RenderableManager::Renderables& RenderableManager::getRenderables() const
 	{
-		// Nothing here
+		return mRenderables;
+	}
+
+	inline RenderableManager::Renderables& RenderableManager::getRenderables()
+	{
+		return mRenderables;
+	}
+
+	inline const Transform& RenderableManager::getTransform() const
+	{
+		// We know that this pointer is always valid
+		assert(nullptr != mTransform);
+		return *mTransform;
 	}
 
 

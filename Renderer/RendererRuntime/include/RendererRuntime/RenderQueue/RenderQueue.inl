@@ -26,16 +26,22 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Renderable::Renderable()
+	inline RenderQueue::RenderQueue(const IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing here
 	}
 
-	inline Renderable::~Renderable()
+	inline RenderQueue::~RenderQueue()
 	{
 		// Nothing here
+	}
+
+	inline void RenderQueue::clear()
+	{
+		mQueuedRenderables.clear();
 	}
 
 

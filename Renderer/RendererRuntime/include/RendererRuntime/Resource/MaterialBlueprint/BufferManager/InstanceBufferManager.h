@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/Manager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 
 
@@ -56,7 +57,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Instance buffer manager
 	*/
-	class InstanceBufferManager : public NonCopyable
+	class InstanceBufferManager : private Manager
 	{
 
 

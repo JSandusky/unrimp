@@ -30,8 +30,6 @@
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]

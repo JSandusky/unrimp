@@ -27,8 +27,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/RenderQueue/Renderable.h"
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -36,8 +38,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class ISceneNode;
-	class ISceneResource;
+	class Transform;
 }
 
 
@@ -49,56 +50,49 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ISceneItem : protected NonCopyable
+	/**
+	*  @brief
+	*    Renderable collection management
+	*/
+	class RenderableManager : private Manager
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-		friend class ISceneResource;	// Needs to be able to destroy scene items
+	public:
+		typedef std::vector<Renderable> Renderables;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline ISceneResource& getSceneResource() const;
+		RenderableManager();
+		inline ~RenderableManager();
+		inline const Renderables& getRenderables() const;
+		inline Renderables& getRenderables();
+		inline const Transform& getTransform() const;
+		void setTransform(const Transform* transform);	// Can be a null pointer (internally a identity transform will be set), transform instance must stay valid as long as the renderable manager is referencing it
 
 
 	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	public:
-		virtual SceneItemTypeId getSceneItemTypeId() const = 0;
-		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) = 0;
-		inline virtual void onAttachedToSceneNode(const ISceneNode& sceneNode);
-		inline virtual void onDetachedFromSceneNode(const ISceneNode& sceneNode);
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		inline explicit ISceneItem(ISceneResource& sceneResource);
-		inline virtual ~ISceneItem();
-		ISceneItem(const ISceneItem&) = delete;
-		ISceneItem& operator=(const ISceneItem&) = delete;
+	private:
+		RenderableManager(const RenderableManager&) = delete;
+		RenderableManager& operator=(const RenderableManager&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ISceneResource& mSceneResource;
+		Renderables		 mRenderables;	///< Renderables
+		const Transform* mTransform;	///< Transform instance, always valid, just shared meaning doesn't own the instance so don't delete it
 
 
 	};
@@ -113,4 +107,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Item/ISceneItem.inl"
+#include "RendererRuntime/RenderQueue/RenderableManager.inl"

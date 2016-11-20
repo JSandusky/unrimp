@@ -21,7 +21,31 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <cassert>
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/RenderQueue/RenderableManager.h"
+#include "RendererRuntime/Core/Math/Transform.h"
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		const RendererRuntime::Transform IdentityTransform;
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -34,20 +58,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const ISceneFactory& SceneResourceManager::getSceneFactory() const
-	{
-		// We know that this pointer is always valid
-		assert(nullptr != mSceneFactory);
-		return *mSceneFactory;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline SceneResourceManager::~SceneResourceManager()
+	RenderableManager::RenderableManager() :
+		mTransform(&::detail::IdentityTransform)
 	{
 		// Nothing here
+	}
+
+	void RenderableManager::setTransform(const Transform* transform)
+	{
+		mTransform = (nullptr != transform) ? transform : &::detail::IdentityTransform;
 	}
 
 

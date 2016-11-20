@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Core/Manager.h"
 
 #include <Renderer/Public/Renderer.h>
 
@@ -69,7 +69,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Pass buffer manager
 	*/
-	class PassBufferManager : public NonCopyable
+	class PassBufferManager : private Manager
 	{
 
 

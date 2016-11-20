@@ -35,6 +35,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[-------------------------------------------------------]
+	inline void ISceneItem::onAttachedToSceneNode(const ISceneNode&)
+	{
+		// Nothing here
+	}
+
+	inline void ISceneItem::onDetachedFromSceneNode(const ISceneNode&)
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline ISceneItem::ISceneItem(ISceneResource& sceneResource) :

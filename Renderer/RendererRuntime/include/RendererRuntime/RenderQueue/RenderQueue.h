@@ -29,6 +29,21 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
 
+#include <vector>
+
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class Renderable;
+	class IRendererRuntime;
+	class RenderableManager;
+}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -45,13 +60,46 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	protected:
-		inline RenderQueue();
-		inline virtual ~RenderQueue();
+	public:
+		inline explicit RenderQueue(const IRendererRuntime& rendererRuntime);
+		inline ~RenderQueue();
+		inline void clear();
+		void addRenderablesFromRenderableManager(uint32_t threadIndex, const RenderableManager& renderableManager);
+		void draw();
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
 		RenderQueue(const RenderQueue&) = delete;
 		RenderQueue& operator=(const RenderQueue&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		struct QueuedRenderable
+		{
+			const Renderable*		 renderable;		///< Always valid, don't destroy the instance
+			const RenderableManager* renderableManager;	///< Always valid, don't destroy the instance
+			QueuedRenderable(const Renderable& _renderable, const RenderableManager& _renderableManager) :
+				renderable(&_renderable),
+				renderableManager(&_renderableManager)
+			{};
+		};
+		typedef std::vector<QueuedRenderable> QueuedRenderables;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		const IRendererRuntime&	mRendererRuntime;
+		QueuedRenderables		mQueuedRenderables;
 
 
 	};
@@ -66,4 +114,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/RenderQueue.inl"
+#include "RendererRuntime/RenderQueue/RenderQueue.inl"

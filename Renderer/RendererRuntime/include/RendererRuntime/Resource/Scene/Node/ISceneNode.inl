@@ -54,11 +54,6 @@ namespace RendererRuntime
 		mTransform.rotation = rotation;
 	}
 
-	inline void ISceneNode::attachSceneItem(ISceneItem& sceneItem)
-	{
-		mAttachedSceneItems.push_back(&sceneItem);
-	}
-
 	inline const ISceneNode::AttachedSceneItems& ISceneNode::getAttachedSceneItems() const
 	{
 		return mAttachedSceneItems;
@@ -76,7 +71,7 @@ namespace RendererRuntime
 
 	inline ISceneNode::~ISceneNode()
 	{
-		// Nothing here
+		detachAllSceneItems();
 	}
 
 

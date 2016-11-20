@@ -33,6 +33,9 @@
     <None Include="include\RendererRuntime\Core\Thread\ThreadManager.inl" />
     <None Include="include\RendererRuntime\Core\Thread\ThreadPool.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
+    <None Include="include\RendererRuntime\RenderQueue\Renderable.inl" />
+    <None Include="include\RendererRuntime\RenderQueue\RenderableManager.inl" />
+    <None Include="include\RendererRuntime\RenderQueue\RenderQueue.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorChannel.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorFramebuffer.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeInstance.inl" />
@@ -96,8 +99,6 @@
     <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneNodeMemoryManager.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Node\ISceneNode.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Node\SceneNode.inl" />
-    <None Include="include\RendererRuntime\Resource\Scene\Renderable.inl" />
-    <None Include="include\RendererRuntime\Resource\Scene\RenderQueue.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\SceneResource.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderCache.inl" />
@@ -159,6 +160,9 @@
     <ClInclude Include="include\RendererRuntime\PrecompiledHeader.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
+    <ClInclude Include="include\RendererRuntime\RenderQueue\Renderable.h" />
+    <ClInclude Include="include\RendererRuntime\RenderQueue\RenderableManager.h" />
+    <ClInclude Include="include\RendererRuntime\RenderQueue\RenderQueue.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorChannel.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorFramebuffer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeInstance.h" />
@@ -230,8 +234,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Memory\SceneNodeMemoryManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Node\ISceneNode.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Node\SceneNode.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Renderable.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\RenderQueue.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader.h" />
@@ -322,6 +324,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\RenderQueue\RenderableManager.cpp" />
+    <ClCompile Include="src\RenderQueue\RenderQueue.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\CompositorNodeInstance.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\CompositorNodeResource.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\CompositorNodeResourceManager.cpp" />
@@ -369,6 +373,7 @@
     <ClCompile Include="src\Resource\Scene\Item\CameraSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\MeshSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Loader\SceneResourceLoader.cpp" />
+    <ClCompile Include="src\Resource\Scene\Node\ISceneNode.cpp" />
     <ClCompile Include="src\Resource\Scene\Node\SceneNode.cpp" />
     <ClCompile Include="src\Resource\Scene\SceneResource.cpp" />
     <ClCompile Include="src\Resource\Scene\SceneResourceManager.cpp" />
