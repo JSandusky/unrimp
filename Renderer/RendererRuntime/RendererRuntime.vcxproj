@@ -136,6 +136,7 @@
     <ClInclude Include="include\RendererRuntime\Command\CommandBucket.h" />
     <ClInclude Include="include\RendererRuntime\Command\Material.h" />
     <ClInclude Include="include\RendererRuntime\Core\GetUninitialized.h" />
+    <ClInclude Include="include\RendererRuntime\Core\MakeId.h" />
     <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Math\Math.h" />
     <ClInclude Include="include\RendererRuntime\Core\Math\Quaternion.h" />

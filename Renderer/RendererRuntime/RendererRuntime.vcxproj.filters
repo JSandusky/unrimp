@@ -915,6 +915,9 @@
     <ClInclude Include="include\RendererRuntime\Core\SwizzleVectorElementRemove.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\MakeId.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
