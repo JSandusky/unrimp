@@ -42,6 +42,7 @@ namespace RendererRuntime
 	class Renderable;
 	class IRendererRuntime;
 	class RenderableManager;
+	class IndirectBufferManager;
 }
 
 
@@ -55,6 +56,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Render queue
+	*
+	*  @remarks
+	*    Using layered rendering (aka bucketized rendering) concept described in
+	*    - "realtimecollisiondetection.net – the blog" - "Order your graphics draw calls around!" - http://realtimecollisiondetection.net/blog/?p=86
+	*    - "Molecular Musings" - "Stateless, layered, multi-threaded rendering – Part 1" - https://blog.molecular-matters.com/2014/11/06/stateless-layered-multi-threaded-rendering-part-1/
+	*/
 	class RenderQueue : protected NonCopyable
 	{
 
@@ -63,8 +73,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline explicit RenderQueue(const IRendererRuntime& rendererRuntime);
-		inline ~RenderQueue();
+		explicit RenderQueue(const IRendererRuntime& rendererRuntime);
+		~RenderQueue();
 		inline void clear();
 		void addRenderablesFromRenderableManager(uint32_t threadIndex, const RenderableManager& renderableManager);
 		void draw();
@@ -99,6 +109,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		const IRendererRuntime&	mRendererRuntime;
+		IndirectBufferManager&  mIndirectBufferManager;
 		QueuedRenderables		mQueuedRenderables;
 
 

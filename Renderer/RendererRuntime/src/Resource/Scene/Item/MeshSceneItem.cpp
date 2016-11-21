@@ -79,6 +79,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void MeshSceneItem::onLoadingStateChange(const IResource& resource)
 	{
+		// If mesh resource loading has been finished, setup the renderable manager
 		if (resource.getLoadingState() == IResource::LoadingState::LOADED)
 		{
 			RenderableManager::Renderables& renderables = mRenderableManager.getRenderables();

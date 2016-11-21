@@ -909,6 +909,12 @@
     <ClInclude Include="include\RendererRuntime\RenderQueue\Renderable.h">
       <Filter>Source Files\RenderQueue</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\RenderQueue\IndirectBufferManager.h">
+      <Filter>Source Files\RenderQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\SwizzleVectorElementRemove.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -1177,6 +1183,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Node\ISceneNode.cpp">
       <Filter>Source Files\Resource\Scene\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderQueue\IndirectBufferManager.cpp">
+      <Filter>Source Files\RenderQueue</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

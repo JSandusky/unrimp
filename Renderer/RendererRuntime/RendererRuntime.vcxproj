@@ -151,6 +151,7 @@
     <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
     <ClInclude Include="include\RendererRuntime\Core\String.h" />
     <ClInclude Include="include\RendererRuntime\Core\StringId.h" />
+    <ClInclude Include="include\RendererRuntime\Core\SwizzleVectorElementRemove.h" />
     <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadPool.h" />
     <ClInclude Include="include\RendererRuntime\DebugGui\DebugGuiManager.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="include\RendererRuntime\PrecompiledHeader.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
+    <ClInclude Include="include\RendererRuntime\RenderQueue\IndirectBufferManager.h" />
     <ClInclude Include="include\RendererRuntime\RenderQueue\Renderable.h" />
     <ClInclude Include="include\RendererRuntime\RenderQueue\RenderableManager.h" />
     <ClInclude Include="include\RendererRuntime\RenderQueue\RenderQueue.h" />
@@ -324,6 +326,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\RenderQueue\IndirectBufferManager.cpp" />
     <ClCompile Include="src\RenderQueue\RenderableManager.cpp" />
     <ClCompile Include="src\RenderQueue\RenderQueue.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\CompositorNodeInstance.cpp" />

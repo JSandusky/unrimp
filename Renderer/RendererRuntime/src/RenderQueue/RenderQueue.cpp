@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/RenderQueue/RenderQueue.h"
 #include "RendererRuntime/RenderQueue/RenderableManager.h"
+#include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
@@ -42,6 +43,18 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	RenderQueue::RenderQueue(const IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime),
+		mIndirectBufferManager(*(new IndirectBufferManager(rendererRuntime)))
+	{
+		// Nothing here
+	}
+
+	RenderQueue::~RenderQueue()
+	{
+		delete &mIndirectBufferManager;
+	}
+
 	void RenderQueue::addRenderablesFromRenderableManager(uint32_t, const RenderableManager& renderableManager)
 	{
 		// TODO(co) Add hash for queued renderables sorting

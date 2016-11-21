@@ -26,46 +26,8 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Core/SwizzleVectorElementRemove.h"
 #include "RendererRuntime/IRendererRuntime.h"
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-namespace
-{
-	namespace detail
-	{
-
-
-		//[-------------------------------------------------------]
-		//[ Global functions                                      ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Efficient vector remove
-		*
-		*  @remarks
-		*    Used for efficient removal in "std::vector" and "std::deque" (like an std::list). However it assumes the order of
-		*    elements in container is not important or something external to the container holds the index of an element in it
-		*    (but still should be kept deterministically across machines). Basically it swaps the iterator with the last iterator,
-		*    and pops back. Returns the next iterator.
-		*/
-		template<typename T>
-		typename T::iterator efficientVectorRemove(T& container, typename T::iterator& iterator)
-		{
-			const int index = iterator - container.begin();
-			*iterator = container.back();
-			container.pop_back();
-			return container.begin() + index;
-		}
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-	} // detail
-}
 
 
 //[-------------------------------------------------------]
@@ -153,7 +115,7 @@ namespace RendererRuntime
 			MaterialBufferSlots::iterator iterator = std::find(mDirtyMaterialBufferSlots.begin(), mDirtyMaterialBufferSlots.end(), &materialBufferSlot);
 			if (iterator != mDirtyMaterialBufferSlots.end())
 			{
-				::detail::efficientVectorRemove(mDirtyMaterialBufferSlots, iterator);
+				::detail::swizzleVectorElementRemove(mDirtyMaterialBufferSlots, iterator);
 			}
 		}
 
@@ -163,7 +125,7 @@ namespace RendererRuntime
 		materialBufferSlot.mAssignedMaterialSlot = getUninitialized<uint32_t>();
 		materialBufferSlot.mDirty				 = false;
 		MaterialBufferSlots::iterator iterator = mMaterialBufferSlots.begin() + materialBufferSlot.mGlobalIndex;
-		iterator = ::detail::efficientVectorRemove(mMaterialBufferSlots, iterator);
+		iterator = ::detail::swizzleVectorElementRemove(mMaterialBufferSlots, iterator);
 		if (iterator != mMaterialBufferSlots.end())
 		{
 			// The node that was at the end got swapped and has now a different index
