@@ -328,6 +328,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\RenderQueue\IndirectBufferManager.cpp" />
+    <ClCompile Include="src\RenderQueue\Renderable.cpp" />
     <ClCompile Include="src\RenderQueue\RenderableManager.cpp" />
     <ClCompile Include="src\RenderQueue\RenderQueue.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\CompositorNodeInstance.cpp" />

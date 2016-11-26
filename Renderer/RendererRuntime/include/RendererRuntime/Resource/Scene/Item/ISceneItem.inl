@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <cassert>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -33,18 +39,36 @@ namespace RendererRuntime
 		return mSceneResource;
 	}
 
+	inline bool ISceneItem::hasParentSceneNode() const
+	{
+		return (nullptr != mParentSceneNode);
+	}
+
+	inline const ISceneNode* ISceneItem::getParentSceneNode() const
+	{
+		return mParentSceneNode;
+	}
+
+	inline const ISceneNode& ISceneItem::getParentSceneNodeSafe() const
+	{
+		assert(nullptr != mParentSceneNode);
+		return *mParentSceneNode;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	inline void ISceneItem::onAttachedToSceneNode(const ISceneNode&)
+	inline void ISceneItem::onAttachedToSceneNode(const ISceneNode& sceneNode)
 	{
-		// Nothing here
+		assert(nullptr == mParentSceneNode);
+		mParentSceneNode = &sceneNode;
 	}
 
 	inline void ISceneItem::onDetachedFromSceneNode(const ISceneNode&)
 	{
-		// Nothing here
+		assert(nullptr != mParentSceneNode);
+		mParentSceneNode = nullptr;
 	}
 
 
@@ -52,7 +76,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline ISceneItem::ISceneItem(ISceneResource& sceneResource) :
-		mSceneResource(sceneResource)
+		mSceneResource(sceneResource),
+		mParentSceneNode(nullptr)
 	{
 		// Nothing here
 	}

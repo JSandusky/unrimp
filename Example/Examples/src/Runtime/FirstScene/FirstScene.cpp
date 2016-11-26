@@ -70,6 +70,7 @@ FirstScene::FirstScene(const char *rendererName) :
 	mSceneResource(nullptr),
 	mMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
 	mCloneMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
+	mCustomMaterialResourceSet(false),
 	mCameraSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mGlobalTimer(0.0f),
@@ -312,7 +313,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 
 void FirstScene::trySetCustomMaterialResource()
 {
-	if (nullptr != mSceneNode && RendererRuntime::isInitialized(mCloneMaterialResourceId))
+	if (!mCustomMaterialResourceSet && nullptr != mSceneNode && RendererRuntime::isInitialized(mCloneMaterialResourceId))
 	{
 		for (RendererRuntime::ISceneItem* sceneItem : mSceneNode->getAttachedSceneItems())
 		{
@@ -326,5 +327,6 @@ void FirstScene::trySetCustomMaterialResource()
 				}
 			}
 		}
+		mCustomMaterialResourceSet = true;
 	}
 }

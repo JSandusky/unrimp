@@ -64,9 +64,12 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
-	inline void MeshSceneItem::onDetachedFromSceneNode(const ISceneNode&)
+	inline void MeshSceneItem::onDetachedFromSceneNode(const ISceneNode& sceneNode)
 	{
 		mRenderableManager.setTransform(nullptr);
+
+		// Call the base implementation
+		ISceneItem::onDetachedFromSceneNode(sceneNode);
 	}
 
 

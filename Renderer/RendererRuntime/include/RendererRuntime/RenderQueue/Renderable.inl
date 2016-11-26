@@ -38,7 +38,8 @@ namespace RendererRuntime
 		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
 		mStartIndexLocation(0),
 		mNumberOfIndices(0),
-		mMaterialResourceId(getUninitialized<MaterialResourceId>())
+		mMaterialResourceId(getUninitialized<MaterialResourceId>()),
+		mSortingKey(getUninitialized<uint64_t>())
 	{
 		// Nothing here
 	}
@@ -48,14 +49,20 @@ namespace RendererRuntime
 		mPrimitiveTopology(primitiveTopology),
 		mStartIndexLocation(startIndexLocation),
 		mNumberOfIndices(numberOfIndices),
-		mMaterialResourceId(materialResourceId)
+		mMaterialResourceId(materialResourceId),
+		mSortingKey(getUninitialized<uint64_t>())
 	{
-		// Nothing here
+		calculateKey();
 	}
 
 	inline Renderable::~Renderable()
 	{
 		// Nothing here
+	}
+
+	inline uint64_t Renderable::getSortingKey() const
+	{
+		return mSortingKey;
 	}
 
 	inline Renderer::IVertexArrayPtr Renderable::getVertexArrayPtr() const
@@ -66,6 +73,7 @@ namespace RendererRuntime
 	inline void Renderable::setVertexArrayPtr(const Renderer::IVertexArrayPtr& vertexArrayPtr)
 	{
 		mVertexArrayPtr = vertexArrayPtr;
+		calculateKey();
 	}
 
 	inline Renderer::PrimitiveTopology Renderable::getPrimitiveTopology() const
@@ -106,6 +114,7 @@ namespace RendererRuntime
 	inline void Renderable::setMaterialResourceId(MaterialResourceId materialResourceId)
 	{
 		mMaterialResourceId = materialResourceId;
+		calculateKey();
 	}
 
 

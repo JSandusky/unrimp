@@ -19,6 +19,13 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/RenderQueue/Renderable.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -26,12 +33,14 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline void RenderQueue::clear()
+	void Renderable::calculateKey()
 	{
-		mQueuedRenderables.clear();
-		mSorted = false;
+		// TODO(co) Implement me, "mVertexArrayPtr" and "mMaterialResourceId" have an influence
+
+		// The quantized depth is a dynamic part which can't be set inside the cached sorting key (see "RendererRuntime::RenderQueue::addRenderablesFromRenderableManager()")
+		mSortingKey = getUninitialized<uint64_t>();
 	}
 
 

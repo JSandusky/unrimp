@@ -1190,5 +1190,8 @@
     <ClCompile Include="src\RenderQueue\IndirectBufferManager.cpp">
       <Filter>Source Files\RenderQueue</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderQueue\Renderable.cpp">
+      <Filter>Source Files\RenderQueue</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

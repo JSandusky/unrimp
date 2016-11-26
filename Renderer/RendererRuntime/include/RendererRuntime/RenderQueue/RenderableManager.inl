@@ -56,6 +56,16 @@ namespace RendererRuntime
 		return *mTransform;
 	}
 
+	inline float RenderableManager::getCachedDistanceToCamera() const
+	{
+		return mCachedDistanceToCamera;
+	}
+
+	inline void RenderableManager::setCachedDistanceToCamera(float distanceToCamera)
+	{
+		mCachedDistanceToCamera = distanceToCamera;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

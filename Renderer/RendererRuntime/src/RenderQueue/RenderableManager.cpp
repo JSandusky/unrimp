@@ -59,7 +59,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	RenderableManager::RenderableManager() :
-		mTransform(&::detail::IdentityTransform)
+		mTransform(&::detail::IdentityTransform),
+		mCachedDistanceToCamera(getUninitialized<float>())
 	{
 		// Nothing here
 	}

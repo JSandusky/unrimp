@@ -47,6 +47,7 @@ namespace
 		void draw(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::CameraSceneItem& cameraSceneItem)
 		{
 			Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
+			const glm::vec3& cameraPosition = cameraSceneItem.getParentSceneNodeSafe().getTransform().position;
 			RendererRuntime::RenderQueue renderQueue(rendererRuntime);	// TODO(co) Just a first test, render queue instance will be managed in another way
 
 			// Begin debug event
@@ -59,6 +60,9 @@ namespace
 			{
 				const RendererRuntime::ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
 
+				// Calculate the distance to the camera
+				const float distanceToCamera = glm::distance(cameraPosition, sceneNode->getTransform().position);
+
 				// Loop through all scene items attached to the current scene node
 				const RendererRuntime::ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
 				const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
@@ -67,7 +71,9 @@ namespace
 					const RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
 					if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
 					{
-						renderQueue.addRenderablesFromRenderableManager(0, static_cast<const RendererRuntime::MeshSceneItem*>(sceneItem)->getRenderableManager());
+						RendererRuntime::RenderableManager& renderableManager = const_cast<RendererRuntime::RenderableManager&>(static_cast<const RendererRuntime::MeshSceneItem*>(sceneItem)->getRenderableManager());	// TODO(co) Get rid of the evil const-cast
+						renderableManager.setCachedDistanceToCamera(distanceToCamera);
+						renderQueue.addRenderablesFromRenderableManager(0, renderableManager);
 					}
 				}
 			}
@@ -100,7 +106,7 @@ namespace RendererRuntime
 	void CompositorInstancePassScene::execute(CameraSceneItem* cameraSceneItem)
 	{
 		// TODO(co) Just a first test
-		if (nullptr != cameraSceneItem)
+		if (nullptr != cameraSceneItem && cameraSceneItem->hasParentSceneNode())
 		{
 			::detail::draw(getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime(), *cameraSceneItem);
 		}

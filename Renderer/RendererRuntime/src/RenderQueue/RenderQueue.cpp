@@ -34,6 +34,52 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		const int DepthBits = 15;
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		// Flip the float to deal with negative & positive numbers
+		// - See "Rough sorting by depth" - http://aras-p.info/blog/2014/01/16/rough-sorting-by-depth/
+		inline uint32_t floatFlip(uint32_t f)
+		{
+			const uint32_t mask = -int(f >> 31) | 0x80000000;
+			return (f ^ mask);
+		}
+
+		// Taking highest 10 bits for rough sort of floats.
+		// - 0.01 maps to 752; 0.1 to 759; 1.0 to 766; 10.0 to 772;
+		// - 100.0 to 779 etc. Negative numbers go similarly in 0..511 range.
+		// - See "Rough sorting by depth" - http://aras-p.info/blog/2014/01/16/rough-sorting-by-depth/
+		inline uint32_t depthToBits(float depth)
+		{
+			union { float f; uint32_t i; } f2i;
+			f2i.f = depth;
+			f2i.i = floatFlip(f2i.i);			// Flip bits to be sortable
+			return (f2i.i >> (32 - DepthBits));	// Take highest n-bits
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -45,7 +91,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	RenderQueue::RenderQueue(const IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mIndirectBufferManager(*(new IndirectBufferManager(rendererRuntime)))
+		mIndirectBufferManager(*(new IndirectBufferManager(rendererRuntime))),
+		mDoSort(true),
+		mSorted(false)
 	{
 		// Nothing here
 	}
@@ -57,10 +105,24 @@ namespace RendererRuntime
 
 	void RenderQueue::addRenderablesFromRenderableManager(uint32_t, const RenderableManager& renderableManager)
 	{
-		// TODO(co) Add hash for queued renderables sorting
+		// Sanity checks
+		assert(!mSorted);	// Ensure render queue is still in filling state and not already in rendering state
+
+		// Quantize the cached distance to camera
+		const uint32_t quantizedDepth = ::detail::depthToBits(renderableManager.getCachedDistanceToCamera());
+
+		// Register the renderables inside our renderables queue
 		for (const Renderable& renderable : renderableManager.getRenderables())
 		{
-			mQueuedRenderables.emplace_back(renderable, renderableManager);
+			// Get the precalculated static part of the sorting key
+			uint64_t sortingKey = renderable.getSortingKey();
+
+			// The quantized depth is a dynamic part which is set now
+			// -> Sort renderables back-to-front (for transparency) or front-to-back (for occlusion efficiency)
+			sortingKey = quantizedDepth;	// TODO(co) Just bits influenced
+
+			// Register the renderable inside our renderables queue
+			mQueuedRenderables.emplace_back(renderable, renderableManager, sortingKey);
 		}
 	}
 
@@ -74,6 +136,22 @@ namespace RendererRuntime
 		InstanceBufferManager& instanceBufferManager = materialBlueprintResourceManager.getInstanceBufferManager();
 		const MaterialTechniqueId materialTechniqueId = "Default";
 
+		// Sort queued renderables
+		if (!mSorted && mDoSort)
+		{
+			// TODO(co) Exploit temporal coherence across frames then use insertion sorts as explained by L. Spiro in
+			// http://www.gamedev.net/topic/661114-temporal-coherence-and-render-queue-sorting/?view=findpost&p=5181408
+			// Keep a list of sorted indices from the previous frame (one per camera).
+			// If we have the sorted list "5, 1, 4, 3, 2, 0":
+			// * If it grew from last frame, append: 5, 1, 4, 3, 2, 0, 6, 7 and use insertion sort.
+			// * If it's the same, leave it as is, and use insertion sort just in case.
+			// * If it's shorter, reset the indices 0, 1, 2, 3, 4; probably use quicksort or other generic sort
+			// TODO(co) Use radix sort? ( https://www.quora.com/What-is-the-most-efficient-way-to-sort-a-million-32-bit-integers )
+			std::sort(mQueuedRenderables.begin(), mQueuedRenderables.end());
+			mSorted = true;
+		}
+
+		// Inject queued renderables into the renderer
 		for (const QueuedRenderable& queuedRenderable : mQueuedRenderables)
 		{
 			// Sanity checks

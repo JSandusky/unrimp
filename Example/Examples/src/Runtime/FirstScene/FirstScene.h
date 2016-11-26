@@ -127,6 +127,7 @@ private:
 	RendererRuntime::ISceneResource*			  mSceneResource;
 	RendererRuntime::MaterialResourceId			  mMaterialResourceId;
 	RendererRuntime::MaterialResourceId			  mCloneMaterialResourceId;
+	bool										  mCustomMaterialResourceSet;
 	// Crazy raw-pointers to point-of-interest scene stuff
 	RendererRuntime::CameraSceneItem* mCameraSceneItem;
 	RendererRuntime::ISceneNode*	  mSceneNode;

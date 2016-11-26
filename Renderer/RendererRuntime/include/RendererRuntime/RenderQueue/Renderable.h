@@ -27,6 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
+
 #include <Renderer/Public/Renderer.h>
 
 
@@ -46,6 +48,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Renderable
+	*/
 	class Renderable
 	{
 
@@ -57,6 +63,7 @@ namespace RendererRuntime
 		inline Renderable();
 		inline Renderable(const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, MaterialResourceId materialResourceId);
 		inline ~Renderable();
+		inline uint64_t getSortingKey() const;
 		inline Renderer::IVertexArrayPtr getVertexArrayPtr() const;
 		inline void setVertexArrayPtr(const Renderer::IVertexArrayPtr& vertexArrayPtr);
 		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
@@ -70,9 +77,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		RENDERERRUNTIME_API_EXPORT void calculateKey();
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		// Derived data
+		uint64_t					mSortingKey;			///< The sorting key is directly calculated after data change, no lazy evaluation since it's changed rarely but requested often (no branching)
+		// Data
 		Renderer::IVertexArrayPtr	mVertexArrayPtr;		///< Vertex array object (VAO), can be a null pointer
 		Renderer::PrimitiveTopology	mPrimitiveTopology;
 		uint32_t					mStartIndexLocation;

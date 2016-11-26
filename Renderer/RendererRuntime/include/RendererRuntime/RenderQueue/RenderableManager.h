@@ -73,10 +73,20 @@ namespace RendererRuntime
 	public:
 		RenderableManager();
 		inline ~RenderableManager();
+
+		//[-------------------------------------------------------]
+		//[ Data                                                  ]
+		//[-------------------------------------------------------]
 		inline const Renderables& getRenderables() const;
 		inline Renderables& getRenderables();
 		inline const Transform& getTransform() const;
 		void setTransform(const Transform* transform);	// Can be a null pointer (internally a identity transform will be set), transform instance must stay valid as long as the renderable manager is referencing it
+
+		//[-------------------------------------------------------]
+		//[ Cached data                                           ]
+		//[-------------------------------------------------------]
+		inline float getCachedDistanceToCamera() const;
+		inline void setCachedDistanceToCamera(float distanceToCamera);
 
 
 	//[-------------------------------------------------------]
@@ -91,8 +101,11 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		// Data
 		Renderables		 mRenderables;	///< Renderables
 		const Transform* mTransform;	///< Transform instance, always valid, just shared meaning doesn't own the instance so don't delete it
+		// Cached data
+		float			 mCachedDistanceToCamera;
 
 
 	};

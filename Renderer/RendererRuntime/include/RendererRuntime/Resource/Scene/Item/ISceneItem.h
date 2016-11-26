@@ -72,6 +72,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline ISceneResource& getSceneResource() const;
+		inline bool hasParentSceneNode() const;
+		inline const ISceneNode* getParentSceneNode() const;
+		inline const ISceneNode& getParentSceneNodeSafe() const;	// Just safe in context known as safe
 
 
 	//[-------------------------------------------------------]
@@ -98,7 +101,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ISceneResource& mSceneResource;
+		ISceneResource&   mSceneResource;
+		const ISceneNode* mParentSceneNode;	///< Parent scene node, can be a null pointer, don't destroy the instance
 
 
 	};
