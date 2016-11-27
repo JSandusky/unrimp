@@ -33,6 +33,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class MaterialResourceManager;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -64,7 +73,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline Renderable();
-		inline Renderable(const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, MaterialResourceId materialResourceId);
+		RENDERERRUNTIME_API_EXPORT Renderable(const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId);
 		inline ~Renderable();
 
 		//[-------------------------------------------------------]
@@ -84,7 +93,8 @@ namespace RendererRuntime
 		inline uint32_t getNumberOfIndices() const;
 		inline void setNumberOfIndices(uint32_t numberOfIndices);
 		inline MaterialResourceId getMaterialResourceId() const;
-		inline void setMaterialResourceId(MaterialResourceId materialResourceId);
+		RENDERERRUNTIME_API_EXPORT void setMaterialResourceId(const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId);
+		inline void unsetMaterialResourceId();
 
 		//[-------------------------------------------------------]
 		//[ Cached material data                                  ]
@@ -98,6 +108,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		RENDERERRUNTIME_API_EXPORT void calculateSortingKey();
+		RENDERERRUNTIME_API_EXPORT void unsetMaterialResourceIdInternal();
 
 
 	//[-------------------------------------------------------]
@@ -105,16 +116,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		// Derived data
-		uint64_t					mSortingKey;			///< The sorting key is directly calculated after data change, no lazy evaluation since it's changed rarely but requested often (no branching)
+		uint64_t						mSortingKey;			///< The sorting key is directly calculated after data change, no lazy evaluation since it's changed rarely but requested often (no branching)
 		// Data
-		Renderer::IVertexArrayPtr	mVertexArrayPtr;		///< Vertex array object (VAO), can be a null pointer
-		Renderer::PrimitiveTopology	mPrimitiveTopology;
-		uint32_t					mStartIndexLocation;
-		uint32_t					mNumberOfIndices;
-		MaterialResourceId			mMaterialResourceId;
+		Renderer::IVertexArrayPtr		mVertexArrayPtr;		///< Vertex array object (VAO), can be a null pointer
+		Renderer::PrimitiveTopology		mPrimitiveTopology;
+		uint32_t						mStartIndexLocation;
+		uint32_t						mNumberOfIndices;
+		MaterialResourceId				mMaterialResourceId;
 		// Cached material data
-		uint8_t						mRenderQueueIndex;
-		bool						mCastShadows;
+		uint8_t							mRenderQueueIndex;
+		bool							mCastShadows;
+		// Internal data
+		const MaterialResourceManager*	mMaterialResourceManager;
+		int								mMaterialResourceAttachmentIndex;
 
 
 	};

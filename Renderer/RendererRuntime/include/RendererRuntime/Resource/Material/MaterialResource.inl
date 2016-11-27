@@ -73,15 +73,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline MaterialResource::~MaterialResource()
-	{
-		// Sanity checks
-		assert(isUninitialized(mParentMaterialResourceId));
-		assert(mSortedChildMaterialResourceIds.empty());
-		assert(mSortedMaterialTechniqueVector.empty());
-		assert(mMaterialProperties.getSortedPropertyVector().empty());
-	}
-
 	inline void MaterialResource::initializeElement(MaterialResourceId materialResourceId)
 	{
 		// Sanity checks

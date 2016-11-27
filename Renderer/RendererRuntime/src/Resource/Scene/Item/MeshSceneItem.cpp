@@ -62,6 +62,16 @@ namespace RendererRuntime
 		mMeshResourceId = getSceneResource().getRendererRuntime().getMeshResourceManager().loadMeshResourceByAssetId(meshAssetId, this);
 	}
 
+	void MeshSceneItem::setMaterialResourceIdOfSubMesh(uint32_t subMeshIndex, MaterialResourceId materialResourceId)
+	{
+		assert(subMeshIndex < mRenderableManager.getRenderables().size());
+		mRenderableManager.getRenderables()[subMeshIndex].setMaterialResourceId(getSceneResource().getRendererRuntime().getMaterialResourceManager(), materialResourceId);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[-------------------------------------------------------]
 	void MeshSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
 		assert(sizeof(v1Scene::MeshItem) == numberOfBytes);
@@ -96,13 +106,14 @@ namespace RendererRuntime
 				const Renderer::IVertexArrayPtr vertexArrayPtr = meshResource->getVertexArrayPtr();
 
 				// Set material resource ID of each sub-mesh
+				const MaterialResourceManager& materialResourceManager = getSceneResource().getRendererRuntime().getMaterialResourceManager();
 				const SubMeshes& subMeshes = static_cast<const MeshResource&>(resource).getSubMeshes();
 				const size_t numberOfSubMeshes = subMeshes.size();
 				renderables.reserve(numberOfSubMeshes);
 				for (size_t i = 0; i < numberOfSubMeshes; ++i)
 				{
 					const SubMesh& subMesh = subMeshes[i];
-					renderables.emplace_back(vertexArrayPtr, subMesh.getPrimitiveTopology(), subMesh.getStartIndexLocation(), subMesh.getNumberOfIndices(), subMesh.getMaterialResourceId());
+					renderables.emplace_back(vertexArrayPtr, subMesh.getPrimitiveTopology(), subMesh.getStartIndexLocation(), subMesh.getNumberOfIndices(), materialResourceManager, subMesh.getMaterialResourceId());
 				}
 			}
 		}

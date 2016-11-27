@@ -44,30 +44,17 @@ namespace RendererRuntime
 		mMaterialResourceId(getUninitialized<MaterialResourceId>()),
 		// Cached material data
 		mRenderQueueIndex(0),
-		mCastShadows(false)
+		mCastShadows(false),
+		// Internal data
+		mMaterialResourceManager(nullptr),
+		mMaterialResourceAttachmentIndex(getUninitialized<int>())
 	{
 		// Nothing here
-	}
-
-	inline Renderable::Renderable(const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, MaterialResourceId materialResourceId) :
-		// Derived data
-		mSortingKey(getUninitialized<uint64_t>()),
-		// Data
-		mVertexArrayPtr(vertexArrayPtr),
-		mPrimitiveTopology(primitiveTopology),
-		mStartIndexLocation(startIndexLocation),
-		mNumberOfIndices(numberOfIndices),
-		mMaterialResourceId(materialResourceId),
-		// Cached material data
-		mRenderQueueIndex(0),
-		mCastShadows(false)
-	{
-		calculateSortingKey();
 	}
 
 	inline Renderable::~Renderable()
 	{
-		// Nothing here
+		unsetMaterialResourceIdInternal();
 	}
 
 	inline uint64_t Renderable::getSortingKey() const
@@ -121,9 +108,9 @@ namespace RendererRuntime
 		return mMaterialResourceId;
 	}
 
-	inline void Renderable::setMaterialResourceId(MaterialResourceId materialResourceId)
+	inline void Renderable::unsetMaterialResourceId()
 	{
-		mMaterialResourceId = materialResourceId;
+		unsetMaterialResourceIdInternal();
 		calculateSortingKey();
 	}
 

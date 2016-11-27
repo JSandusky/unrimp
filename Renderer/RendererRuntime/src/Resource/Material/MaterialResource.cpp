@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/RenderQueue/Renderable.h"
 
 #include <algorithm>
 
@@ -154,6 +155,22 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
+	MaterialResource::~MaterialResource()
+	{
+		// Sanity checks
+		assert(isUninitialized(mParentMaterialResourceId));
+		assert(mSortedChildMaterialResourceIds.empty());
+		assert(mSortedMaterialTechniqueVector.empty());
+		assert(mMaterialProperties.getSortedPropertyVector().empty());
+		assert(mAttachedRenderables.empty());
+
+		// Avoid crash in case of failed sanity check
+		while (!mAttachedRenderables.empty())
+		{
+			mAttachedRenderables[0]->unsetMaterialResourceId();
+		}
+	}
+
 	void MaterialResource::deinitializeElement()
 	{
 		setParentMaterialResourceId(getUninitialized<MaterialResourceId>());

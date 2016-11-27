@@ -37,6 +37,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class Renderable;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 }
 
@@ -69,6 +70,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
+		friend class Renderable;	// Must be able to attach/detach itself from the material resource
 		friend typedef MaterialResources;
 		friend class MaterialResourceLoader;
 		friend class MaterialResourceManager;
@@ -201,7 +203,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline MaterialResource();
-		inline virtual ~MaterialResource();
+		virtual ~MaterialResource();
 		MaterialResource(const MaterialResource&) = delete;
 		MaterialResource& operator=(const MaterialResource&) = delete;
 
@@ -235,6 +237,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		typedef std::vector<MaterialResourceId> SortedChildMaterialResourceIds;
+		typedef std::vector<Renderable*>		AttachedRenderables;
 
 
 	//[-------------------------------------------------------]
@@ -245,6 +248,7 @@ namespace RendererRuntime
 		SortedChildMaterialResourceIds mSortedChildMaterialResourceIds;
 		SortedMaterialTechniqueVector  mSortedMaterialTechniqueVector;
 		MaterialProperties			   mMaterialProperties;
+		AttachedRenderables			   mAttachedRenderables;
 
 
 	};

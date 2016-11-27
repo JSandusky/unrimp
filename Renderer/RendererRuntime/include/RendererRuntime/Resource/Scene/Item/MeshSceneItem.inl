@@ -44,12 +44,6 @@ namespace RendererRuntime
 		return mRenderableManager.getRenderables()[subMeshIndex].getMaterialResourceId();
 	}
 
-	inline void MeshSceneItem::setMaterialResourceIdOfSubMesh(uint32_t subMeshIndex, MaterialResourceId materialResourceId)
-	{
-		assert(subMeshIndex < mRenderableManager.getRenderables().size());
-		mRenderableManager.getRenderables()[subMeshIndex].setMaterialResourceId(materialResourceId);
-	}
-
 	inline const RenderableManager& MeshSceneItem::getRenderableManager() const
 	{
 		return mRenderableManager;
