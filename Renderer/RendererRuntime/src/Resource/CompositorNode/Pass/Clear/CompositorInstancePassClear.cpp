@@ -39,13 +39,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassClear::execute(CameraSceneItem*)
+	void CompositorInstancePassClear::onExecute(CameraSceneItem*)
 	{
-		// TODO(co) Just a test, backup instances later on
-		Renderer::IRenderer& renderer = getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getRenderer();
-
-		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-		renderer.clear(Renderer::ClearFlag::COLOR_DEPTH, static_cast<const CompositorResourcePassClear&>(mCompositorResourcePass).getClearColor(), 1.0f, 0);
+		// Clear the color buffer of the current render target, do also clear the depth buffer
+		// TODO(co) "RendererRuntime::CompositorInstancePassClear": Add the other properties like stencil or z-buffer
+		mRenderer.clear(Renderer::ClearFlag::COLOR_DEPTH, glm::value_ptr(static_cast<const CompositorResourcePassClear&>(mCompositorResourcePass).getClearColor()), 1.0f, 0);
 	}
 
 
@@ -53,7 +51,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	CompositorInstancePassClear::CompositorInstancePassClear(const CompositorResourcePassClear& compositorResourcePassClear, const CompositorNodeInstance& compositorNodeInstance) :
-		ICompositorInstancePass(compositorResourcePassClear, compositorNodeInstance)
+		ICompositorInstancePass(compositorResourcePassClear, compositorNodeInstance),
+		mRenderer(compositorNodeInstance.getCompositorWorkspaceInstance().getRendererRuntime().getRenderer())
 	{
 		// Nothing here
 	}

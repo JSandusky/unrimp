@@ -73,10 +73,24 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		explicit RenderQueue(const IRendererRuntime& rendererRuntime);
-		~RenderQueue();
-		inline void clear();
-		void addRenderablesFromRenderableManager(uint32_t threadIndex, const RenderableManager& renderableManager);
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] rendererRuntime
+		*    Indirect buffer manager to use, must stay valid as long as the indirect buffer manager instance exists
+		*  @param[in] minimumRenderQueueIndex
+		*    Minimum render queue index (inclusive)
+		*  @param[in] maximumRenderQueueIndex
+		*    Maximum render queue index (inclusive)
+		*  @param[in] transparentPass
+		*    "true" if this render queue is used for a transparent render pass, else "false" for opaque render pass (influences the renderables sorting)
+		*/
+		RenderQueue(IndirectBufferManager& indirectBufferManager, uint8_t minimumRenderQueueIndex, uint8_t maximumRenderQueueIndex, bool transparentPass);
+
+		inline ~RenderQueue();
+		void clear();
+		void addRenderablesFromRenderableManager(const RenderableManager& renderableManager);
 		void draw();
 
 
@@ -115,16 +129,29 @@ namespace RendererRuntime
 		};
 		typedef std::vector<QueuedRenderable> QueuedRenderables;
 
+		struct Queue
+		{
+			QueuedRenderables queuedRenderables;
+			bool			  sorted;
+
+			Queue() :
+				sorted(false)
+			{};
+		};
+		typedef std::vector<Queue> Queues;
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		const IRendererRuntime&	mRendererRuntime;
-		IndirectBufferManager&  mIndirectBufferManager;
-		QueuedRenderables		mQueuedRenderables;
+		const IRendererRuntime&	mRendererRuntime;			///< Renderer runtime instance, we don't own the instance so don't delete it
+		IndirectBufferManager&	mIndirectBufferManager;		///< Indirect buffer manager instance, we don't own the instance so don't delete it
+		Queues					mQueues;
+		uint8_t					mMinimumRenderQueueIndex;	///< Inclusive
+		uint8_t					mMaximumRenderQueueIndex;	///< Inclusive
+		bool					mTransparentPass;
 		bool					mDoSort;
-		bool					mSorted;
 
 
 	};

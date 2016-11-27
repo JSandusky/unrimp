@@ -33,6 +33,7 @@
     <None Include="include\RendererRuntime\Core\Thread\ThreadManager.inl" />
     <None Include="include\RendererRuntime\Core\Thread\ThreadPool.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
+    <None Include="include\RendererRuntime\RenderQueue\IndirectBufferManager.inl" />
     <None Include="include\RendererRuntime\RenderQueue\Renderable.inl" />
     <None Include="include\RendererRuntime\RenderQueue\RenderableManager.inl" />
     <None Include="include\RendererRuntime\RenderQueue\RenderQueue.inl" />

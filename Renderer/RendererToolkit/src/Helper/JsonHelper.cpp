@@ -86,7 +86,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonHelper::optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, int& value)
+	void JsonHelper::optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, bool& value)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -96,16 +96,40 @@ namespace RendererToolkit
 
 			if (strncmp(valueAsString, "FALSE", valueStringLength) == 0)
 			{
-				value = 0;
+				value = false;
 			}
 			else if (strncmp(valueAsString, "TRUE", valueStringLength) == 0)
 			{
-				value = 1;
+				value = true;
 			}
 			else
 			{
-				// TODO(co) Error handling
+				throw std::runtime_error(std::string("The value of property \"") + propertyName + "\" is \"" + valueAsString + "\", but it must be \"FALSE\" or \"TRUE\"");
 			}
+		}
+	}
+
+	void JsonHelper::optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, int& value)
+	{
+		bool booleanValue = (0 != value);
+		optionalBooleanProperty(rapidJsonValue, propertyName, booleanValue);
+		value = booleanValue;
+	}
+
+	void JsonHelper::optionalByteProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, uint8_t& value)
+	{
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			const int integerValue = std::atoi(rapidJsonValue[propertyName].GetString());
+			if (integerValue < 0)
+			{
+				throw std::runtime_error(std::string("The value of property \"") + propertyName + "\" can't be negative");
+			}
+			if (integerValue > 255)
+			{
+				throw std::runtime_error(std::string("The value of property \"") + propertyName + "\" can't be above 255");
+			}
+			value = static_cast<uint8_t>(integerValue);
 		}
 	}
 

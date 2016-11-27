@@ -249,6 +249,19 @@ namespace RendererToolkit
 						else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassScene passScene;
+
+							// Read properties
+							JsonHelper::optionalByteProperty(rapidJsonValuePass, "MinimumRenderQueueIndex", passScene.minimumRenderQueueIndex);
+							JsonHelper::optionalByteProperty(rapidJsonValuePass, "MaximumRenderQueueIndex", passScene.maximumRenderQueueIndex);
+							JsonHelper::optionalBooleanProperty(rapidJsonValuePass, "TransparentPass", passScene.transparentPass);
+
+							// Sanity check
+							if (passScene.maximumRenderQueueIndex < passScene.minimumRenderQueueIndex)
+							{
+								throw std::runtime_error("The maximum render queue index must be equal or greater as the minimum render queue index");
+							}
+
+							// Write down
 							outputFileStream.write(reinterpret_cast<const char*>(&passScene), sizeof(RendererRuntime::v1CompositorNode::PassScene));
 						}
 						else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == compositorPassTypeId)

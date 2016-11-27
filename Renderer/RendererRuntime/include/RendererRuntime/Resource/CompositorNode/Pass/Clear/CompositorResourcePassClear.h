@@ -30,6 +30,14 @@
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+	#include <glm/glm.hpp>
+#pragma warning(pop)
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -62,7 +70,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline const float* getClearColor() const;
+		inline const glm::vec4& getClearColor() const;
 
 
 	//[-------------------------------------------------------]
@@ -77,7 +85,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorResourcePassClear();
+		inline CompositorResourcePassClear();
 		inline virtual ~CompositorResourcePassClear();
 		CompositorResourcePassClear(const CompositorResourcePassClear&) = delete;
 		CompositorResourcePassClear& operator=(const CompositorResourcePassClear&) = delete;
@@ -87,7 +95,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		float mColor[4];
+		glm::vec4 mColor;
 
 
 	};

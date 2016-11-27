@@ -73,7 +73,16 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void execute(CameraSceneItem* cameraSceneItem) = 0;
+		virtual void onExecute(CameraSceneItem* cameraSceneItem) = 0;
+
+		/**
+		*  @brief
+		*    Method is called when all compositor passes have been executed and everything has been pushed into the renderer
+		*
+		*  @note
+		*    - The default implementation is empty
+		*/
+		inline virtual void onFrameEnded();
 
 
 	//[-------------------------------------------------------]

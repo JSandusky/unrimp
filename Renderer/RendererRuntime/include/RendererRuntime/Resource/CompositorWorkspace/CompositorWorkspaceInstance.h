@@ -42,6 +42,7 @@ namespace RendererRuntime
 {
 	class CameraSceneItem;
 	class IRendererRuntime;
+	class IndirectBufferManager;
 	class CompositorNodeInstance;
 }
 
@@ -72,8 +73,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT CompositorWorkspaceInstance(IRendererRuntime& rendererRuntime, AssetId compositorWorkspaceAssetId);
-		inline virtual ~CompositorWorkspaceInstance();
+		RENDERERRUNTIME_API_EXPORT virtual ~CompositorWorkspaceInstance();
 		inline const IRendererRuntime& getRendererRuntime() const;
+		inline IndirectBufferManager& getIndirectBufferManager() const;
 		RENDERERRUNTIME_API_EXPORT void execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem);
 		inline Renderer::IRenderTarget* getExecutionRenderTarget() const;	// Only valid during compositor workspace instance execution
 
@@ -107,6 +109,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&			  mRendererRuntime;
+		IndirectBufferManager&		  mIndirectBufferManager;
 		Renderer::IRenderTarget*	  mExecutionRenderTarget;				///< Only valid during compositor workspace instance execution
 		CompositorWorkspaceResourceId mCompositorWorkspaceResourceId;
 		CompositorNodeInstances		  mSequentialCompositorNodeInstances;	///< We're responsible to destroy the compositor node instances if we no longer need them

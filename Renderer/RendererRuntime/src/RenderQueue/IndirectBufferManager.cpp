@@ -38,6 +38,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	IndirectBufferManager::IndirectBufferManager(const IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime),
 		mBufferManager(rendererRuntime.getBufferManager())
 	{
 		// Nothing here

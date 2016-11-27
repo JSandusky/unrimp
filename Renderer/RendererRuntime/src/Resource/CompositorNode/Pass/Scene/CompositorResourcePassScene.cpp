@@ -44,11 +44,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorResourcePassScene::deserialize(uint32_t numberOfBytes, const uint8_t*)
+	void CompositorResourcePassScene::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
 		assert(sizeof(v1CompositorNode::PassScene) == numberOfBytes);
+		const v1CompositorNode::PassScene* passScene = reinterpret_cast<const v1CompositorNode::PassScene*>(data);
+		mMinimumRenderQueueIndex = passScene->minimumRenderQueueIndex;
+		mMaximumRenderQueueIndex = passScene->maximumRenderQueueIndex;
+		mTransparentPass		 = passScene->transparentPass;
 
-		// TODO(co)
+		// Sanity check
+		assert(mMaximumRenderQueueIndex >= mMinimumRenderQueueIndex);
 	}
 
 

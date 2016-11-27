@@ -73,9 +73,18 @@ namespace RendererRuntime
 		*    Constructor
 		*
 		*  @param[in] rendererRuntime
-		*    Renderer runtime instance to use
+		*    Renderer runtime instance to use, must stay valid as long as the indirect buffer manager instance exists
 		*/
 		explicit IndirectBufferManager(const IRendererRuntime& rendererRuntime);
+
+		/**
+		*  @brief
+		*    Return the renderer runtime instance to use
+		*
+		*  @return
+		*    The renderer runtime instance to use
+		*/
+		inline const IRendererRuntime& getRendererRuntime() const;
 
 		/**
 		*  @brief
@@ -130,6 +139,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		const IRendererRuntime&   mRendererRuntime;
 		Renderer::IBufferManager& mBufferManager;
 		IndirectBuffers			  mFreeIndirectBuffers;
 		IndirectBuffers			  mUsedIndirectBuffers;
@@ -142,3 +152,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/RenderQueue/IndirectBufferManager.inl"

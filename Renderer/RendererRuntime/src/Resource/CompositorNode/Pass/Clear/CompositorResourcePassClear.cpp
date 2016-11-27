@@ -48,16 +48,7 @@ namespace RendererRuntime
 	{
 		assert(sizeof(v1CompositorNode::PassClear) == numberOfBytes);
 		const v1CompositorNode::PassClear* passClear = reinterpret_cast<const v1CompositorNode::PassClear*>(data);
-		memcpy(mColor, passClear->color, sizeof(float) * 4);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	CompositorResourcePassClear::CompositorResourcePassClear()
-	{
-		memset(mColor, 0, sizeof(float) * 4);
+		memcpy(glm::value_ptr(mColor), passClear->color, sizeof(float) * 4);
 	}
 
 

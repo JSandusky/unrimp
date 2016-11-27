@@ -29,6 +29,7 @@
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorPassFactory.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
+#include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <Renderer/Public/Renderer.h>
@@ -51,10 +52,18 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorWorkspaceInstance::CompositorWorkspaceInstance(IRendererRuntime& rendererRuntime, AssetId compositorWorkspaceAssetId) :
 		mRendererRuntime(rendererRuntime),
+		mIndirectBufferManager(*(new IndirectBufferManager(rendererRuntime))),
 		mExecutionRenderTarget(nullptr),
 		mCompositorWorkspaceResourceId(rendererRuntime.getCompositorWorkspaceResourceManager().loadCompositorWorkspaceResourceByAssetId(compositorWorkspaceAssetId, this))
 	{
 		// Nothing here
+	}
+
+	CompositorWorkspaceInstance::~CompositorWorkspaceInstance()
+	{
+		// Cleanup
+		destroySequentialCompositorNodeInstances();
+		delete &mIndirectBufferManager;
 	}
 
 	void CompositorWorkspaceInstance::execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem)
@@ -89,19 +98,23 @@ namespace RendererRuntime
 					renderer.rsSetViewportAndScissorRectangle(0, 0, width, height);
 				}
 
-				{ // Draw
-					// TODO(co)
-					const size_t numberOfSequentialCompositorNodeInstances = mSequentialCompositorNodeInstances.size();
-					for (size_t i = 0; i < numberOfSequentialCompositorNodeInstances; ++i)
-					{
-						mSequentialCompositorNodeInstances[i]->execute(cameraSceneItem);
-					}
+				// Draw
+				for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
+				{
+					compositorNodeInstance->execute(cameraSceneItem);
 				}
 
 				// End scene rendering
 				// -> Required for Direct3D 9 and Direct3D 12
 				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 				renderer.endScene();
+
+				// The frame has ended, inform everyone who cares about this
+				for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
+				{
+					compositorNodeInstance->frameEnded();
+				}
+				mIndirectBufferManager.freeAllUsedIndirectBuffers();
 			}
 
 			// End debug event
@@ -184,10 +197,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorWorkspaceInstance::destroySequentialCompositorNodeInstances()
 	{
-		const size_t numberOfSequentialCompositorNodeInstances = mSequentialCompositorNodeInstances.size();
-		for (size_t i = 0; i < numberOfSequentialCompositorNodeInstances; ++i)
+		for (CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
 		{
-			delete mSequentialCompositorNodeInstances[i];
+			delete compositorNodeInstance;
 		}
 		mSequentialCompositorNodeInstances.clear();
 	}

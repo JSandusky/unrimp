@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
+#include "RendererRuntime/RenderQueue/RenderQueue.h"
 
 
 //[-------------------------------------------------------]
@@ -63,7 +64,8 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void execute(CameraSceneItem* cameraSceneItem) override;
+		virtual void onExecute(CameraSceneItem* cameraSceneItem) override;
+		inline virtual void onFrameEnded() override;
 
 
 	//[-------------------------------------------------------]
@@ -74,6 +76,13 @@ namespace RendererRuntime
 		inline virtual ~CompositorInstancePassScene();
 		CompositorInstancePassScene(const CompositorInstancePassScene&) = delete;
 		CompositorInstancePassScene& operator=(const CompositorInstancePassScene&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		RenderQueue mRenderQueue;
 
 
 	};

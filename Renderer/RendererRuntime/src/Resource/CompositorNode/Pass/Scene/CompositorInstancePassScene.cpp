@@ -30,67 +30,7 @@
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
-#include "RendererRuntime/RenderQueue/RenderQueue.h"
 #include "RendererRuntime/IRendererRuntime.h"
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-namespace
-{
-	namespace detail
-	{
-
-
-		// TODO(co) Just a first quick'n'dirty placeholder for the real implementation using spatial scene management and culling
-		void draw(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::CameraSceneItem& cameraSceneItem)
-		{
-			Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
-			const glm::vec3& cameraPosition = cameraSceneItem.getParentSceneNodeSafe().getTransform().position;
-			RendererRuntime::RenderQueue renderQueue(rendererRuntime);	// TODO(co) Just a first test, render queue instance will be managed in another way
-
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
-
-			// Loop through all scene nodes and add renderables to the render queue
-			const RendererRuntime::ISceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
-			const size_t numberOfSceneNodes = sceneNodes.size();
-			for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
-			{
-				const RendererRuntime::ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
-
-				// Calculate the distance to the camera
-				const float distanceToCamera = glm::distance(cameraPosition, sceneNode->getTransform().position);
-
-				// Loop through all scene items attached to the current scene node
-				const RendererRuntime::ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
-				const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
-				for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
-				{
-					const RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
-					if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
-					{
-						RendererRuntime::RenderableManager& renderableManager = const_cast<RendererRuntime::RenderableManager&>(static_cast<const RendererRuntime::MeshSceneItem*>(sceneItem)->getRenderableManager());	// TODO(co) Get rid of the evil const-cast
-						renderableManager.setCachedDistanceToCamera(distanceToCamera);
-						renderQueue.addRenderablesFromRenderableManager(0, renderableManager);
-					}
-				}
-			}
-
-			// Draw render queue
-			renderQueue.draw();
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(&renderer)
-		}
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-	} // detail
-}
 
 
 //[-------------------------------------------------------]
@@ -103,12 +43,48 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassScene::execute(CameraSceneItem* cameraSceneItem)
+	void CompositorInstancePassScene::onExecute(CameraSceneItem* cameraSceneItem)
 	{
 		// TODO(co) Just a first test
 		if (nullptr != cameraSceneItem && cameraSceneItem->hasParentSceneNode())
 		{
-			::detail::draw(getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime(), *cameraSceneItem);
+			const IRendererRuntime& rendererRuntime = getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime();
+			Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
+			const glm::vec3& cameraPosition = cameraSceneItem->getParentSceneNodeSafe().getTransform().position;
+
+			// Begin debug event
+			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
+
+			// Loop through all scene nodes and add renderables to the render queue
+			const ISceneResource::SceneNodes& sceneNodes = cameraSceneItem->getSceneResource().getSceneNodes();
+			const size_t numberOfSceneNodes = sceneNodes.size();
+			for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
+			{
+				const ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
+
+				// Calculate the distance to the camera
+				const float distanceToCamera = glm::distance(cameraPosition, sceneNode->getTransform().position);
+
+				// Loop through all scene items attached to the current scene node
+				const ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
+				const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
+				for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
+				{
+					const ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
+					if (sceneItem->getSceneItemTypeId() == MeshSceneItem::TYPE_ID)
+					{
+						RenderableManager& renderableManager = const_cast<RenderableManager&>(static_cast<const MeshSceneItem*>(sceneItem)->getRenderableManager());	// TODO(co) Get rid of the evil const-cast
+						renderableManager.setCachedDistanceToCamera(distanceToCamera);
+						mRenderQueue.addRenderablesFromRenderableManager(renderableManager);
+					}
+				}
+			}
+
+			// Draw render queue
+			mRenderQueue.draw();
+
+			// End debug event
+			RENDERER_END_DEBUG_EVENT(&renderer)
 		}
 	}
 
@@ -117,7 +93,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	CompositorInstancePassScene::CompositorInstancePassScene(const CompositorResourcePassScene& compositorResourcePassScene, const CompositorNodeInstance& compositorNodeInstance) :
-		ICompositorInstancePass(compositorResourcePassScene, compositorNodeInstance)
+		ICompositorInstancePass(compositorResourcePassScene, compositorNodeInstance),
+		mRenderQueue(compositorNodeInstance.getCompositorWorkspaceInstance().getIndirectBufferManager(), compositorResourcePassScene.getMinimumRenderQueueIndex(), compositorResourcePassScene.getMaximumRenderQueueIndex(), compositorResourcePassScene.isTransparentPass())
 	{
 		// Nothing here
 	}

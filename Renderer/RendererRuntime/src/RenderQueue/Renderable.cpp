@@ -35,7 +35,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void Renderable::calculateKey()
+	void Renderable::calculateSortingKey()
 	{
 		// TODO(co) Implement me, "mVertexArrayPtr" and "mMaterialResourceId" have an influence
 

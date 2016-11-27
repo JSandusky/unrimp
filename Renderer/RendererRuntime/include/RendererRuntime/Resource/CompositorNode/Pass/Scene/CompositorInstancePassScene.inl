@@ -34,6 +34,15 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[-------------------------------------------------------]
+	inline void CompositorInstancePassScene::onFrameEnded()
+	{
+		mRenderQueue.clear();
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

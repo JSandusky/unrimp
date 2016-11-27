@@ -465,6 +465,9 @@
     <None Include="include\RendererRuntime\RenderQueue\RenderQueue.inl">
       <Filter>Source Files\RenderQueue</Filter>
     </None>
+    <None Include="include\RendererRuntime\RenderQueue\IndirectBufferManager.inl">
+      <Filter>Source Files\RenderQueue</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">

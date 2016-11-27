@@ -32,6 +32,9 @@
 					},
 					"Scene":
 					{
+						"MinimumRenderQueueIndex": "0",
+						"MaximumRenderQueueIndex": "255",
+						"TransparentPass": "FALSE"
 					},
 					"DebugGui":
 					{

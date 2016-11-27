@@ -26,6 +26,25 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline uint8_t CompositorResourcePassScene::getMinimumRenderQueueIndex() const
+	{
+		return mMinimumRenderQueueIndex;
+	}
+
+	inline uint8_t CompositorResourcePassScene::getMaximumRenderQueueIndex() const
+	{
+		return mMaximumRenderQueueIndex;
+	}
+
+	inline bool CompositorResourcePassScene::isTransparentPass() const
+	{
+		return mTransparentPass;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
 	inline CompositorPassTypeId CompositorResourcePassScene::getTypeId() const
@@ -37,7 +56,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline CompositorResourcePassScene::CompositorResourcePassScene()
+	inline CompositorResourcePassScene::CompositorResourcePassScene() :
+		mMinimumRenderQueueIndex(0),
+		mMaximumRenderQueueIndex(255),
+		mTransparentPass(false)
 	{
 		// Nothing here
 	}

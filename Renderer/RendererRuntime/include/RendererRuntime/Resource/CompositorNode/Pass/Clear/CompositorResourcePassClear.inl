@@ -28,7 +28,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const float* CompositorResourcePassClear::getClearColor() const
+	inline const glm::vec4& CompositorResourcePassClear::getClearColor() const
 	{
 		return mColor;
 	}
@@ -46,6 +46,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
+	inline CompositorResourcePassClear::CompositorResourcePassClear() :
+		mColor(0.0f, 0.0f, 0.0f, 0.0f)
+	{
+		// Nothing here
+	}
+
 	inline CompositorResourcePassClear::~CompositorResourcePassClear()
 	{
 		// Nothing here

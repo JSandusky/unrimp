@@ -28,10 +28,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline void RenderQueue::clear()
+	inline RenderQueue::~RenderQueue()
 	{
-		mQueuedRenderables.clear();
-		mSorted = false;
+		// Nothing here
 	}
 
 

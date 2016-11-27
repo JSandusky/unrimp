@@ -19,14 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
-#include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -34,30 +26,11 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorNodeInstance::~CompositorNodeInstance()
+	inline const IRendererRuntime& IndirectBufferManager::getRendererRuntime() const
 	{
-		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
-		{
-			delete compositorInstancePass;
-		}
-	}
-
-	void CompositorNodeInstance::execute(CameraSceneItem* cameraSceneItem) const
-	{
-		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
-		{
-			compositorInstancePass->onExecute(cameraSceneItem);
-		}
-	}
-
-	void CompositorNodeInstance::frameEnded() const
-	{
-		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
-		{
-			compositorInstancePass->onFrameEnded();
-		}
+		return mRendererRuntime;
 	}
 
 

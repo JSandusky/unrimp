@@ -35,24 +35,34 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline Renderable::Renderable() :
+		// Derived data
+		mSortingKey(getUninitialized<uint64_t>()),
+		// Data
 		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
 		mStartIndexLocation(0),
 		mNumberOfIndices(0),
 		mMaterialResourceId(getUninitialized<MaterialResourceId>()),
-		mSortingKey(getUninitialized<uint64_t>())
+		// Cached material data
+		mRenderQueueIndex(0),
+		mCastShadows(false)
 	{
 		// Nothing here
 	}
 
 	inline Renderable::Renderable(const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, MaterialResourceId materialResourceId) :
+		// Derived data
+		mSortingKey(getUninitialized<uint64_t>()),
+		// Data
 		mVertexArrayPtr(vertexArrayPtr),
 		mPrimitiveTopology(primitiveTopology),
 		mStartIndexLocation(startIndexLocation),
 		mNumberOfIndices(numberOfIndices),
 		mMaterialResourceId(materialResourceId),
-		mSortingKey(getUninitialized<uint64_t>())
+		// Cached material data
+		mRenderQueueIndex(0),
+		mCastShadows(false)
 	{
-		calculateKey();
+		calculateSortingKey();
 	}
 
 	inline Renderable::~Renderable()
@@ -73,7 +83,7 @@ namespace RendererRuntime
 	inline void Renderable::setVertexArrayPtr(const Renderer::IVertexArrayPtr& vertexArrayPtr)
 	{
 		mVertexArrayPtr = vertexArrayPtr;
-		calculateKey();
+		calculateSortingKey();
 	}
 
 	inline Renderer::PrimitiveTopology Renderable::getPrimitiveTopology() const
@@ -114,7 +124,17 @@ namespace RendererRuntime
 	inline void Renderable::setMaterialResourceId(MaterialResourceId materialResourceId)
 	{
 		mMaterialResourceId = materialResourceId;
-		calculateKey();
+		calculateSortingKey();
+	}
+
+	inline uint8_t Renderable::getRenderQueueIndex() const
+	{
+		return mRenderQueueIndex;
+	}
+
+	inline bool Renderable::getCastShadows() const
+	{
+		return mCastShadows;
 	}
 
 

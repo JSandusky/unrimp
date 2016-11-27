@@ -89,25 +89,30 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RenderQueue::RenderQueue(const IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime),
-		mIndirectBufferManager(*(new IndirectBufferManager(rendererRuntime))),
-		mDoSort(true),
-		mSorted(false)
+	RenderQueue::RenderQueue(IndirectBufferManager& indirectBufferManager, uint8_t minimumRenderQueueIndex, uint8_t maximumRenderQueueIndex, bool transparentPass) :
+		mRendererRuntime(indirectBufferManager.getRendererRuntime()),
+		mIndirectBufferManager(indirectBufferManager),
+		mMinimumRenderQueueIndex(minimumRenderQueueIndex),
+		mMaximumRenderQueueIndex(maximumRenderQueueIndex),
+		mTransparentPass(transparentPass),
+		mDoSort(true)
 	{
-		// Nothing here
+		// Sanity check
+		assert(mMaximumRenderQueueIndex >= mMinimumRenderQueueIndex);
+		mQueues.resize(static_cast<size_t>(mMaximumRenderQueueIndex - mMinimumRenderQueueIndex + 1));
 	}
 
-	RenderQueue::~RenderQueue()
+	void RenderQueue::clear()
 	{
-		delete &mIndirectBufferManager;
+		for (Queue& queue : mQueues)
+		{
+			queue.queuedRenderables.clear();
+			queue.sorted = false;
+		}
 	}
 
-	void RenderQueue::addRenderablesFromRenderableManager(uint32_t, const RenderableManager& renderableManager)
+	void RenderQueue::addRenderablesFromRenderableManager(const RenderableManager& renderableManager)
 	{
-		// Sanity checks
-		assert(!mSorted);	// Ensure render queue is still in filling state and not already in rendering state
-
 		// Quantize the cached distance to camera
 		const uint32_t quantizedDepth = ::detail::depthToBits(renderableManager.getCachedDistanceToCamera());
 
@@ -115,14 +120,20 @@ namespace RendererRuntime
 		for (const Renderable& renderable : renderableManager.getRenderables())
 		{
 			// Get the precalculated static part of the sorting key
+			// -> Sort renderables back-to-front (for transparency) or front-to-back (for occlusion efficiency)
+			// TODO(co) Depending on "mTransparentPass" the sorting key is used
 			uint64_t sortingKey = renderable.getSortingKey();
 
 			// The quantized depth is a dynamic part which is set now
-			// -> Sort renderables back-to-front (for transparency) or front-to-back (for occlusion efficiency)
 			sortingKey = quantizedDepth;	// TODO(co) Just bits influenced
 
 			// Register the renderable inside our renderables queue
-			mQueuedRenderables.emplace_back(renderable, renderableManager, sortingKey);
+			const uint8_t renderQueueIndex = renderable.getRenderQueueIndex();
+			assert(renderQueueIndex >= mMinimumRenderQueueIndex);
+			assert(renderQueueIndex <= mMaximumRenderQueueIndex);
+			Queue& queue = mQueues[static_cast<size_t>(renderQueueIndex - mMinimumRenderQueueIndex)];
+			assert(!queue.sorted);	// Ensure render queue is still in filling state and not already in rendering state
+			queue.queuedRenderables.emplace_back(renderable, renderableManager, sortingKey);
 		}
 	}
 
@@ -136,147 +147,154 @@ namespace RendererRuntime
 		InstanceBufferManager& instanceBufferManager = materialBlueprintResourceManager.getInstanceBufferManager();
 		const MaterialTechniqueId materialTechniqueId = "Default";
 
-		// Sort queued renderables
-		if (!mSorted && mDoSort)
+		for (Queue& queue : mQueues)
 		{
-			// TODO(co) Exploit temporal coherence across frames then use insertion sorts as explained by L. Spiro in
-			// http://www.gamedev.net/topic/661114-temporal-coherence-and-render-queue-sorting/?view=findpost&p=5181408
-			// Keep a list of sorted indices from the previous frame (one per camera).
-			// If we have the sorted list "5, 1, 4, 3, 2, 0":
-			// * If it grew from last frame, append: 5, 1, 4, 3, 2, 0, 6, 7 and use insertion sort.
-			// * If it's the same, leave it as is, and use insertion sort just in case.
-			// * If it's shorter, reset the indices 0, 1, 2, 3, 4; probably use quicksort or other generic sort
-			// TODO(co) Use radix sort? ( https://www.quora.com/What-is-the-most-efficient-way-to-sort-a-million-32-bit-integers )
-			std::sort(mQueuedRenderables.begin(), mQueuedRenderables.end());
-			mSorted = true;
-		}
-
-		// Inject queued renderables into the renderer
-		for (const QueuedRenderable& queuedRenderable : mQueuedRenderables)
-		{
-			// Sanity checks
-			assert(nullptr != queuedRenderable.renderable);
-			assert(nullptr != queuedRenderable.renderableManager);
-			const Renderable&		 renderable		   = *queuedRenderable.renderable;
-			const RenderableManager& renderableManager = *queuedRenderable.renderableManager;
-
-			// Setup input assembly (IA): Set the used vertex array
-			Renderer::IVertexArrayPtr vertexArrayPtr = renderable.getVertexArrayPtr();
-			if (nullptr != vertexArrayPtr)
+			QueuedRenderables& queuedRenderables = queue.queuedRenderables;
+			if (!queuedRenderables.empty())
 			{
-				Renderer::IRenderer& renderer = vertexArrayPtr->getRenderer();
-				renderer.iaSetVertexArray(vertexArrayPtr);
-
-				// Material resource
-				const MaterialResource* materialResource = materialResources.tryGetElementById(renderable.getMaterialResourceId());
-				if (nullptr != materialResource)
+				// Sort queued renderables
+				if (!queue.sorted && mDoSort)
 				{
-					MaterialTechnique* materialTechnique = materialResource->getMaterialTechniqueById(materialTechniqueId);
-					if (nullptr != materialTechnique)
+					// TODO(co) Exploit temporal coherence across frames then use insertion sorts as explained by L. Spiro in
+					// http://www.gamedev.net/topic/661114-temporal-coherence-and-render-queue-sorting/?view=findpost&p=5181408
+					// Keep a list of sorted indices from the previous frame (one per camera).
+					// If we have the sorted list "5, 1, 4, 3, 2, 0":
+					// * If it grew from last frame, append: 5, 1, 4, 3, 2, 0, 6, 7 and use insertion sort.
+					// * If it's the same, leave it as is, and use insertion sort just in case.
+					// * If it's shorter, reset the indices 0, 1, 2, 3, 4; probably use quicksort or other generic sort
+					// TODO(co) Use radix sort? ( https://www.quora.com/What-is-the-most-efficient-way-to-sort-a-million-32-bit-integers )
+					std::sort(queuedRenderables.begin(), queuedRenderables.end());
+					queue.sorted = true;
+				}
+
+				// Inject queued renderables into the renderer
+				for (const QueuedRenderable& queuedRenderable : queuedRenderables)
+				{
+					// Sanity checks
+					assert(nullptr != queuedRenderable.renderable);
+					assert(nullptr != queuedRenderable.renderableManager);
+					const Renderable&		 renderable		   = *queuedRenderable.renderable;
+					const RenderableManager& renderableManager = *queuedRenderable.renderableManager;
+
+					// Setup input assembly (IA): Set the used vertex array
+					Renderer::IVertexArrayPtr vertexArrayPtr = renderable.getVertexArrayPtr();
+					if (nullptr != vertexArrayPtr)
 					{
-						MaterialBlueprintResource* materialBlueprintResource = static_cast<MaterialBlueprintResource*>(materialBlueprintResourceManager.tryGetResourceByResourceId(materialTechnique->getMaterialBlueprintResourceId()));
-						if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
+						Renderer::IRenderer& renderer = vertexArrayPtr->getRenderer();
+						renderer.iaSetVertexArray(vertexArrayPtr);
+
+						// Material resource
+						const MaterialResource* materialResource = materialResources.tryGetElementById(renderable.getMaterialResourceId());
+						if (nullptr != materialResource)
 						{
-							// TODO(co) Pass shader properties (later on we cache as much as possible of this work inside the renderable)
-							ShaderProperties shaderProperties;
-							DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES];
-							{ // Gather shader properties from static material properties generating shader combinations
-								const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialResource->getSortedPropertyVector();
-								const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
-								for (size_t i = 0; i < numberOfMaterialProperties; ++i)
-								{
-									const MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
-									if (materialProperty.getUsage() == MaterialProperty::Usage::SHADER_COMBINATION)
-									{
-										switch (materialProperty.getValueType())
-										{
-											case MaterialPropertyValue::ValueType::BOOLEAN:
-												shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
-												break;
-
-											case MaterialPropertyValue::ValueType::INTEGER:
-												shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getIntegerValue());
-												break;
-
-											case MaterialPropertyValue::ValueType::UNKNOWN:
-											case MaterialPropertyValue::ValueType::INTEGER_2:
-											case MaterialPropertyValue::ValueType::INTEGER_3:
-											case MaterialPropertyValue::ValueType::INTEGER_4:
-											case MaterialPropertyValue::ValueType::FLOAT:
-											case MaterialPropertyValue::ValueType::FLOAT_2:
-											case MaterialPropertyValue::ValueType::FLOAT_3:
-											case MaterialPropertyValue::ValueType::FLOAT_4:
-											case MaterialPropertyValue::ValueType::FLOAT_3_3:
-											case MaterialPropertyValue::ValueType::FLOAT_4_4:
-											case MaterialPropertyValue::ValueType::FILL_MODE:
-											case MaterialPropertyValue::ValueType::CULL_MODE:
-											case MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
-											case MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
-											case MaterialPropertyValue::ValueType::STENCIL_OP:
-											case MaterialPropertyValue::ValueType::COMPARISON_FUNC:
-											case MaterialPropertyValue::ValueType::BLEND:
-											case MaterialPropertyValue::ValueType::BLEND_OP:
-											case MaterialPropertyValue::ValueType::FILTER_MODE:
-											case MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
-											case MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
-											case MaterialPropertyValue::ValueType::COMPOSITOR_TEXTURE_REFERENCE:
-											default:
-												assert(false);	// TODO(co) Error handling
-												break;
-										}
-									}
-								}
-							}
-							materialBlueprintResource->optimizeShaderProperties(shaderProperties);
-
-							Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(shaderProperties, dynamicShaderPieces, false);
-							if (nullptr != pipelineStatePtr)
+							MaterialTechnique* materialTechnique = materialResource->getMaterialTechniqueById(materialTechniqueId);
+							if (nullptr != materialTechnique)
 							{
-								// Expensive state change: Handle material blueprint resource switches
-								// -> Render queue should be sorted by material blueprint resource first to reduce those expensive state changes
-								if (currentlyBoundMaterialBlueprintResource != materialBlueprintResource)
+								MaterialBlueprintResource* materialBlueprintResource = static_cast<MaterialBlueprintResource*>(materialBlueprintResourceManager.tryGetResourceByResourceId(materialTechnique->getMaterialBlueprintResourceId()));
+								if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
 								{
-									currentlyBoundMaterialBlueprintResource = materialBlueprintResource;
-
-									// Fill the pass buffer manager
-									{ // TODO(co) Just a dummy usage for now
-										PassBufferManager* passBufferManager = materialBlueprintResource->getPassBufferManager();
-										if (nullptr != passBufferManager)
+									// TODO(co) Pass shader properties (later on we cache as much as possible of this work inside the renderable)
+									ShaderProperties shaderProperties;
+									DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES];
+									{ // Gather shader properties from static material properties generating shader combinations
+										const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialResource->getSortedPropertyVector();
+										const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
+										for (size_t i = 0; i < numberOfMaterialProperties; ++i)
 										{
-											passBufferManager->resetCurrentPassBuffer();
+											const MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
+											if (materialProperty.getUsage() == MaterialProperty::Usage::SHADER_COMBINATION)
+											{
+												switch (materialProperty.getValueType())
+												{
+													case MaterialPropertyValue::ValueType::BOOLEAN:
+														shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
+														break;
 
-											// TODO(co) Camera usage
-											const Transform worldSpaceToViewSpaceTransform;
-											passBufferManager->fillBuffer(worldSpaceToViewSpaceTransform);
+													case MaterialPropertyValue::ValueType::INTEGER:
+														shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getIntegerValue());
+														break;
+
+													case MaterialPropertyValue::ValueType::UNKNOWN:
+													case MaterialPropertyValue::ValueType::INTEGER_2:
+													case MaterialPropertyValue::ValueType::INTEGER_3:
+													case MaterialPropertyValue::ValueType::INTEGER_4:
+													case MaterialPropertyValue::ValueType::FLOAT:
+													case MaterialPropertyValue::ValueType::FLOAT_2:
+													case MaterialPropertyValue::ValueType::FLOAT_3:
+													case MaterialPropertyValue::ValueType::FLOAT_4:
+													case MaterialPropertyValue::ValueType::FLOAT_3_3:
+													case MaterialPropertyValue::ValueType::FLOAT_4_4:
+													case MaterialPropertyValue::ValueType::FILL_MODE:
+													case MaterialPropertyValue::ValueType::CULL_MODE:
+													case MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
+													case MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
+													case MaterialPropertyValue::ValueType::STENCIL_OP:
+													case MaterialPropertyValue::ValueType::COMPARISON_FUNC:
+													case MaterialPropertyValue::ValueType::BLEND:
+													case MaterialPropertyValue::ValueType::BLEND_OP:
+													case MaterialPropertyValue::ValueType::FILTER_MODE:
+													case MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
+													case MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
+													case MaterialPropertyValue::ValueType::COMPOSITOR_TEXTURE_REFERENCE:
+													default:
+														assert(false);	// TODO(co) Error handling
+														break;
+												}
+											}
 										}
 									}
+									materialBlueprintResource->optimizeShaderProperties(shaderProperties);
 
-									// Bind the material blueprint resource and instance buffer manager to the used renderer
-									materialBlueprintResource->bindToRenderer();
-									instanceBufferManager.bindToRenderer(*materialBlueprintResource);
-								}
-
-								// Cheap state change: Bind the material technique to the used renderer
-								materialTechnique->bindToRenderer(mRendererRuntime);
-
-								// Set the used pipeline state object (PSO)
-								renderer.setPipelineState(pipelineStatePtr);
-
-								{ // Fill the instance buffer manager
-									PassBufferManager* passBufferManager = materialBlueprintResource->getPassBufferManager();
-									if (nullptr != passBufferManager)
+									Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(shaderProperties, dynamicShaderPieces, false);
+									if (nullptr != pipelineStatePtr)
 									{
-										const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
-										const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource->getInstanceTextureBuffer();
-										instanceBufferManager.fillBuffer(*passBufferManager, instanceUniformBuffer, instanceTextureBuffer, renderableManager.getTransform(), *materialTechnique);
+										// Expensive state change: Handle material blueprint resource switches
+										// -> Render queue should be sorted by material blueprint resource first to reduce those expensive state changes
+										if (currentlyBoundMaterialBlueprintResource != materialBlueprintResource)
+										{
+											currentlyBoundMaterialBlueprintResource = materialBlueprintResource;
+
+											// Fill the pass buffer manager
+											{ // TODO(co) Just a dummy usage for now
+												PassBufferManager* passBufferManager = materialBlueprintResource->getPassBufferManager();
+												if (nullptr != passBufferManager)
+												{
+													passBufferManager->resetCurrentPassBuffer();
+
+													// TODO(co) Camera usage
+													const Transform worldSpaceToViewSpaceTransform;
+													passBufferManager->fillBuffer(worldSpaceToViewSpaceTransform);
+												}
+											}
+
+											// Bind the material blueprint resource and instance buffer manager to the used renderer
+											materialBlueprintResource->bindToRenderer();
+											instanceBufferManager.bindToRenderer(*materialBlueprintResource);
+										}
+
+										// Cheap state change: Bind the material technique to the used renderer
+										materialTechnique->bindToRenderer(mRendererRuntime);
+
+										// Set the used pipeline state object (PSO)
+										renderer.setPipelineState(pipelineStatePtr);
+
+										{ // Fill the instance buffer manager
+											PassBufferManager* passBufferManager = materialBlueprintResource->getPassBufferManager();
+											if (nullptr != passBufferManager)
+											{
+												const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
+												const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource->getInstanceTextureBuffer();
+												instanceBufferManager.fillBuffer(*passBufferManager, instanceUniformBuffer, instanceTextureBuffer, renderableManager.getTransform(), *materialTechnique);
+											}
+										}
+
+										// Setup input assembly (IA): Set the primitive topology used for draw calls
+										renderer.iaSetPrimitiveTopology(renderable.getPrimitiveTopology());
+
+										// Render the specified geometric primitive, based on indexing into an array of vertices
+										renderer.drawIndexed(Renderer::IndexedIndirectBuffer(renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation()));
 									}
 								}
-
-								// Setup input assembly (IA): Set the primitive topology used for draw calls
-								renderer.iaSetPrimitiveTopology(renderable.getPrimitiveTopology());
-
-								// Render the specified geometric primitive, based on indexing into an array of vertices
-								renderer.drawIndexed(Renderer::IndexedIndirectBuffer(renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation()));
 							}
 						}
 					}

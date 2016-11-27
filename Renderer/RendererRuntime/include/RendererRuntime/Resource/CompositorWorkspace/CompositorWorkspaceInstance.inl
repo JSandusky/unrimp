@@ -28,15 +28,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline CompositorWorkspaceInstance::~CompositorWorkspaceInstance()
-	{
-		// Cleanup
-		destroySequentialCompositorNodeInstances();
-	}
-
 	inline const IRendererRuntime& CompositorWorkspaceInstance::getRendererRuntime() const
 	{
 		return mRendererRuntime;
+	}
+
+	inline IndirectBufferManager& CompositorWorkspaceInstance::getIndirectBufferManager() const
+	{
+		return mIndirectBufferManager;
 	}
 
 	inline Renderer::IRenderTarget* CompositorWorkspaceInstance::getExecutionRenderTarget() const

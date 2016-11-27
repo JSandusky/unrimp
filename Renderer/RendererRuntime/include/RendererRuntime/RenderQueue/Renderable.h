@@ -51,6 +51,9 @@ namespace RendererRuntime
 	/**
 	*  @brief
 	*    Renderable
+	*
+	*  @note
+	*    - Example: Abstract representation of a sub-mesh which is part of an mesh scene item
 	*/
 	class Renderable
 	{
@@ -63,7 +66,15 @@ namespace RendererRuntime
 		inline Renderable();
 		inline Renderable(const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, MaterialResourceId materialResourceId);
 		inline ~Renderable();
+
+		//[-------------------------------------------------------]
+		//[ Derived data                                          ]
+		//[-------------------------------------------------------]
 		inline uint64_t getSortingKey() const;
+
+		//[-------------------------------------------------------]
+		//[ Data                                                  ]
+		//[-------------------------------------------------------]
 		inline Renderer::IVertexArrayPtr getVertexArrayPtr() const;
 		inline void setVertexArrayPtr(const Renderer::IVertexArrayPtr& vertexArrayPtr);
 		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
@@ -75,12 +86,18 @@ namespace RendererRuntime
 		inline MaterialResourceId getMaterialResourceId() const;
 		inline void setMaterialResourceId(MaterialResourceId materialResourceId);
 
+		//[-------------------------------------------------------]
+		//[ Cached material data                                  ]
+		//[-------------------------------------------------------]
+		inline uint8_t getRenderQueueIndex() const;
+		inline bool getCastShadows() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		RENDERERRUNTIME_API_EXPORT void calculateKey();
+		RENDERERRUNTIME_API_EXPORT void calculateSortingKey();
 
 
 	//[-------------------------------------------------------]
@@ -95,6 +112,9 @@ namespace RendererRuntime
 		uint32_t					mStartIndexLocation;
 		uint32_t					mNumberOfIndices;
 		MaterialResourceId			mMaterialResourceId;
+		// Cached material data
+		uint8_t						mRenderQueueIndex;
+		bool						mCastShadows;
 
 
 	};
