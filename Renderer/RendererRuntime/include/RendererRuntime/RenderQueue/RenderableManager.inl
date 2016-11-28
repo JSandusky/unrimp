@@ -66,6 +66,21 @@ namespace RendererRuntime
 		mCachedDistanceToCamera = distanceToCamera;
 	}
 
+	inline uint8_t RenderableManager::getMinimumRenderQueueIndex() const
+	{
+		return mMinimumRenderQueueIndex;
+	}
+
+	inline uint8_t RenderableManager::getMaximumRenderQueueIndex() const
+	{
+		return mMaximumRenderQueueIndex;
+	}
+
+	inline bool RenderableManager::getCastShadows() const
+	{
+		return mCastShadows;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -76,6 +76,7 @@ namespace RendererRuntime
 		inline uint32_t getNumberOfSubMeshes() const;
 		inline MaterialResourceId getMaterialResourceIdOfSubMesh(uint32_t subMeshIndex) const;
 		RENDERERRUNTIME_API_EXPORT void setMaterialResourceIdOfSubMesh(uint32_t subMeshIndex, MaterialResourceId materialResourceId);
+		RENDERERRUNTIME_API_EXPORT void setMaterialResourceIdOfAllSubMeshes(MaterialResourceId materialResourceId);
 		inline const RenderableManager& getRenderableManager() const;
 
 

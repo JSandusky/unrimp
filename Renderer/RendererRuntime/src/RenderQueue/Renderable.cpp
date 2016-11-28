@@ -23,8 +23,31 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/RenderQueue/Renderable.h"
+#include "RendererRuntime/RenderQueue/RenderableManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Core/SwizzleVectorElementRemove.h"
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		RendererRuntime::RenderableManager NullRenderableManager;
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -37,10 +60,30 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Renderable::Renderable(const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId) :
+	Renderable::Renderable() :
 		// Derived data
 		mSortingKey(getUninitialized<uint64_t>()),
 		// Data
+		mRenderableManager(::detail::NullRenderableManager),
+		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
+		mStartIndexLocation(0),
+		mNumberOfIndices(0),
+		mMaterialResourceId(getUninitialized<MaterialResourceId>()),
+		// Cached material data
+		mRenderQueueIndex(0),
+		mCastShadows(false),
+		// Internal data
+		mMaterialResourceManager(nullptr),
+		mMaterialResourceAttachmentIndex(getUninitialized<int>())
+	{
+		// Nothing here
+	}
+
+	Renderable::Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId) :
+		// Derived data
+		mSortingKey(getUninitialized<uint64_t>()),
+		// Data
+		mRenderableManager(renderableManager),
 		mVertexArrayPtr(vertexArrayPtr),
 		mPrimitiveTopology(primitiveTopology),
 		mStartIndexLocation(startIndexLocation),

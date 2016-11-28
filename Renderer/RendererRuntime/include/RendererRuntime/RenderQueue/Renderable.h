@@ -37,6 +37,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class RenderableManager;
 	class MaterialResourceManager;
 }
 
@@ -78,8 +79,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline Renderable();
-		RENDERERRUNTIME_API_EXPORT Renderable(const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId);
+		RENDERERRUNTIME_API_EXPORT Renderable();
+		RENDERERRUNTIME_API_EXPORT Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId);
 		inline ~Renderable();
 
 		//[-------------------------------------------------------]
@@ -90,6 +91,7 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Data                                                  ]
 		//[-------------------------------------------------------]
+		inline RenderableManager& getRenderableManager() const;
 		inline Renderer::IVertexArrayPtr getVertexArrayPtr() const;
 		inline void setVertexArrayPtr(const Renderer::IVertexArrayPtr& vertexArrayPtr);
 		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
@@ -113,6 +115,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		Renderable& operator=(const Renderable&) = delete;
 		RENDERERRUNTIME_API_EXPORT void calculateSortingKey();
 		RENDERERRUNTIME_API_EXPORT void unsetMaterialResourceIdInternal();
 
@@ -124,6 +127,7 @@ namespace RendererRuntime
 		// Derived data
 		uint64_t						mSortingKey;			///< The sorting key is directly calculated after data change, no lazy evaluation since it's changed rarely but requested often (no branching)
 		// Data
+		RenderableManager&				mRenderableManager;
 		Renderer::IVertexArrayPtr		mVertexArrayPtr;		///< Vertex array object (VAO), can be a null pointer
 		Renderer::PrimitiveTopology		mPrimitiveTopology;
 		uint32_t						mStartIndexLocation;

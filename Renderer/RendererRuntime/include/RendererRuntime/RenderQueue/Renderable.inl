@@ -34,24 +34,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Renderable::Renderable() :
-		// Derived data
-		mSortingKey(getUninitialized<uint64_t>()),
-		// Data
-		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
-		mStartIndexLocation(0),
-		mNumberOfIndices(0),
-		mMaterialResourceId(getUninitialized<MaterialResourceId>()),
-		// Cached material data
-		mRenderQueueIndex(0),
-		mCastShadows(false),
-		// Internal data
-		mMaterialResourceManager(nullptr),
-		mMaterialResourceAttachmentIndex(getUninitialized<int>())
-	{
-		// Nothing here
-	}
-
 	inline Renderable::~Renderable()
 	{
 		unsetMaterialResourceIdInternal();
@@ -60,6 +42,11 @@ namespace RendererRuntime
 	inline uint64_t Renderable::getSortingKey() const
 	{
 		return mSortingKey;
+	}
+
+	inline RenderableManager& Renderable::getRenderableManager() const
+	{
+		return mRenderableManager;
 	}
 
 	inline Renderer::IVertexArrayPtr Renderable::getVertexArrayPtr() const

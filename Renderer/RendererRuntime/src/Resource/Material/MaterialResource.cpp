@@ -24,7 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
-#include "RendererRuntime/RenderQueue/Renderable.h"
+#include "RendererRuntime/RenderQueue/RenderableManager.h"
 
 #include <algorithm>
 
@@ -253,6 +253,11 @@ namespace RendererRuntime
 						for (Renderable* renderable : mAttachedRenderables)
 						{
 							renderable->mRenderQueueIndex = static_cast<uint8_t>(renderQueueIndex);
+
+							// In here we don't care about the fact that one and the same renderable manager instance might
+							// update cached renderables data. It's not performance critical in here and resolving this will
+							// require additional logic which itself has an performance impact. So keep it simple.
+							renderable->getRenderableManager().updateCachedRenderablesData();
 						}
 					}
 
@@ -264,6 +269,11 @@ namespace RendererRuntime
 						for (Renderable* renderable : mAttachedRenderables)
 						{
 							renderable->mCastShadows = castShadows;
+
+							// In here we don't care about the fact that one and the same renderable manager instance might
+							// update cached renderables data. It's not performance critical in here and resolving this will
+							// require additional logic which itself has an performance impact. So keep it simple.
+							renderable->getRenderableManager().updateCachedRenderablesData();
 						}
 					}
 					break;

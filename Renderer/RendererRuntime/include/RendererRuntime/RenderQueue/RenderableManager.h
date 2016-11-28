@@ -81,7 +81,7 @@ namespace RendererRuntime
 		//[ Data                                                  ]
 		//[-------------------------------------------------------]
 		inline const Renderables& getRenderables() const;
-		inline Renderables& getRenderables();
+		inline Renderables& getRenderables();			// Don't forget to call "RendererRuntime::RenderableManager::updateCachedRenderablesData()" if you changed something relevant in here
 		inline const Transform& getTransform() const;
 		void setTransform(const Transform* transform);	// Can be a null pointer (internally a identity transform will be set), transform instance must stay valid as long as the renderable manager is referencing it
 
@@ -90,6 +90,53 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		inline float getCachedDistanceToCamera() const;
 		inline void setCachedDistanceToCamera(float distanceToCamera);
+
+		/**
+		*  @brief
+		*    Return the minimum renderables render queue index (inclusive)
+		*
+		*  @return
+		*    The minimum renderables render queue index (inclusive)
+		*
+		*  @see
+		*    - "RendererRuntime::RenderableManager::updateCachedRenderablesData()"
+		*/
+		inline uint8_t getMinimumRenderQueueIndex() const;
+
+		/**
+		*  @brief
+		*    Return the maximum renderables render queue index (inclusive)
+		*
+		*  @return
+		*    The maximum renderables render queue index (inclusive)
+		*
+		*  @see
+		*    - "RendererRuntime::RenderableManager::updateCachedRenderablesData()"
+		*/
+		inline uint8_t getMaximumRenderQueueIndex() const;
+
+		/**
+		*  @brief
+		*    Return whether or not at least one of the renderables is casting shadows
+		*
+		*  @return
+		*    "true" if at least one of the renderables is casting shadows, else "false"
+		*
+		*  @see
+		*    - "RendererRuntime::RenderableManager::updateCachedRenderablesData()"
+		*/
+		inline bool getCastShadows() const;
+
+		/**
+		*  @brief
+		*    Update cached renderables data
+		*
+		*  @note
+		*    - Assumed to not be called frequently, optimally only during renderable manager initialization
+		*    - Usually only called by the renderable manager owner since renderables and the render queue index and shadow casting data is assumed to not change frequently
+		*    - Updates the minimum and maximum renderables render queue index (inclusive) as well as whether or not at least one of the renderables is casting shadows
+		*/
+		RENDERERRUNTIME_API_EXPORT void updateCachedRenderablesData();
 
 
 	//[-------------------------------------------------------]
@@ -105,10 +152,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		// Data
-		Renderables		 mRenderables;	///< Renderables
-		const Transform* mTransform;	///< Transform instance, always valid, just shared meaning doesn't own the instance so don't delete it
+		Renderables		 mRenderables;				///< Renderables
+		const Transform* mTransform;				///< Transform instance, always valid, just shared meaning doesn't own the instance so don't delete it
 		// Cached data
 		float			 mCachedDistanceToCamera;	///< Cached distance to camera is updated during the culling phase
+		uint8_t			 mMinimumRenderQueueIndex;	///< The minimum renderables render queue index (inclusive, set inside "RendererRuntime::RenderableManager::updateCachedRenderablesData()")
+		uint8_t			 mMaximumRenderQueueIndex;	///< The maximum renderables render queue index (inclusive, set inside "RendererRuntime::RenderableManager::updateCachedRenderablesData()")
+		bool			 mCastShadows;				///< "true" if at least one of the renderables is casting shadows, else "false" (set inside "RendererRuntime::RenderableManager::updateCachedRenderablesData()")
 
 
 	};

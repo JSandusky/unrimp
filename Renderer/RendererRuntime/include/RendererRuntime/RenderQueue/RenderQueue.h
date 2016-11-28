@@ -108,18 +108,15 @@ namespace RendererRuntime
 	private:
 		struct QueuedRenderable
 		{
-			const Renderable*		 renderable;		///< Always valid, don't destroy the instance
-			const RenderableManager* renderableManager;	///< Always valid, don't destroy the instance
-			uint64_t				 sortingKey;		///< Key used for sorting
+			const Renderable* renderable;	///< Always valid, don't destroy the instance
+			uint64_t		  sortingKey;	///< Key used for sorting
 
 			inline QueuedRenderable() :
 				renderable(nullptr),
-				renderableManager(nullptr),
 				sortingKey(0)
 			{};
-			inline QueuedRenderable(const Renderable& _renderable, const RenderableManager& _renderableManager, uint64_t _sortingKey) :
+			inline QueuedRenderable(const Renderable& _renderable, uint64_t _sortingKey) :
 				renderable(&_renderable),
-				renderableManager(&_renderableManager),
 				sortingKey(_sortingKey)
 			{};
 			inline bool operator < (const QueuedRenderable& queuedRenderable) const

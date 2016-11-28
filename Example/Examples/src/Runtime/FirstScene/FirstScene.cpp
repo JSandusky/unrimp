@@ -320,11 +320,7 @@ void FirstScene::trySetCustomMaterialResource()
 			if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
 			{
 				// Tell the mesh scene item about our custom material resource
-				RendererRuntime::MeshSceneItem* meshSceneItem = static_cast<RendererRuntime::MeshSceneItem*>(sceneItem);
-				for (uint32_t subMeshIndex = 0; subMeshIndex < meshSceneItem->getNumberOfSubMeshes(); ++subMeshIndex)
-				{
-					meshSceneItem->setMaterialResourceIdOfSubMesh(subMeshIndex, mCloneMaterialResourceId);
-				}
+				static_cast<RendererRuntime::MeshSceneItem*>(sceneItem)->setMaterialResourceIdOfAllSubMeshes(mCloneMaterialResourceId);
 			}
 		}
 		mCustomMaterialResourceSet = true;

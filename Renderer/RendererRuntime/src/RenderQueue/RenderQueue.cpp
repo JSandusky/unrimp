@@ -133,7 +133,7 @@ namespace RendererRuntime
 			assert(renderQueueIndex <= mMaximumRenderQueueIndex);
 			Queue& queue = mQueues[static_cast<size_t>(renderQueueIndex - mMinimumRenderQueueIndex)];
 			assert(!queue.sorted);	// Ensure render queue is still in filling state and not already in rendering state
-			queue.queuedRenderables.emplace_back(renderable, renderableManager, sortingKey);
+			queue.queuedRenderables.emplace_back(renderable, sortingKey);
 		}
 	}
 
@@ -170,11 +170,8 @@ namespace RendererRuntime
 				// Inject queued renderables into the renderer
 				for (const QueuedRenderable& queuedRenderable : queuedRenderables)
 				{
-					// Sanity checks
 					assert(nullptr != queuedRenderable.renderable);
-					assert(nullptr != queuedRenderable.renderableManager);
-					const Renderable&		 renderable		   = *queuedRenderable.renderable;
-					const RenderableManager& renderableManager = *queuedRenderable.renderableManager;
+					const Renderable& renderable = *queuedRenderable.renderable;
 
 					// Setup input assembly (IA): Set the used vertex array
 					Renderer::IVertexArrayPtr vertexArrayPtr = renderable.getVertexArrayPtr();
@@ -284,7 +281,7 @@ namespace RendererRuntime
 											{
 												const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
 												const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource->getInstanceTextureBuffer();
-												instanceBufferManager.fillBuffer(*passBufferManager, instanceUniformBuffer, instanceTextureBuffer, renderableManager.getTransform(), *materialTechnique);
+												instanceBufferManager.fillBuffer(*passBufferManager, instanceUniformBuffer, instanceTextureBuffer, renderable.getRenderableManager().getTransform(), *materialTechnique);
 											}
 										}
 

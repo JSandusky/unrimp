@@ -68,6 +68,15 @@ namespace RendererRuntime
 		mRenderableManager.getRenderables()[subMeshIndex].setMaterialResourceId(getSceneResource().getRendererRuntime().getMaterialResourceManager(), materialResourceId);
 	}
 
+	void MeshSceneItem::setMaterialResourceIdOfAllSubMeshes(MaterialResourceId materialResourceId)
+	{
+		const MaterialResourceManager& materialResourceManager = getSceneResource().getRendererRuntime().getMaterialResourceManager();
+		for (Renderable& renderable : mRenderableManager.getRenderables())
+		{
+			renderable.setMaterialResourceId(materialResourceManager, materialResourceId);
+		}
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
@@ -113,9 +122,12 @@ namespace RendererRuntime
 				for (size_t i = 0; i < numberOfSubMeshes; ++i)
 				{
 					const SubMesh& subMesh = subMeshes[i];
-					renderables.emplace_back(vertexArrayPtr, subMesh.getPrimitiveTopology(), subMesh.getStartIndexLocation(), subMesh.getNumberOfIndices(), materialResourceManager, subMesh.getMaterialResourceId());
+					renderables.emplace_back(mRenderableManager, vertexArrayPtr, subMesh.getPrimitiveTopology(), subMesh.getStartIndexLocation(), subMesh.getNumberOfIndices(), materialResourceManager, subMesh.getMaterialResourceId());
 				}
 			}
+
+			// Finalize the renderable manager by updating cached renderables data
+			mRenderableManager.updateCachedRenderablesData();
 		}
 	}
 
