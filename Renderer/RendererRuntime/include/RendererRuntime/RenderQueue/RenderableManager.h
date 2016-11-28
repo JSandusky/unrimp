@@ -108,7 +108,7 @@ namespace RendererRuntime
 		Renderables		 mRenderables;	///< Renderables
 		const Transform* mTransform;	///< Transform instance, always valid, just shared meaning doesn't own the instance so don't delete it
 		// Cached data
-		float			 mCachedDistanceToCamera;
+		float			 mCachedDistanceToCamera;	///< Cached distance to camera is updated during the culling phase
 
 
 	};

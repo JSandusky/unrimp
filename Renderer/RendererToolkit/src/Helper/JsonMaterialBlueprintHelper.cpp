@@ -631,6 +631,8 @@ namespace RendererToolkit
 			if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage && RendererRuntime::MaterialProperty::ValueType::INTEGER == valueType)
 			{
 				// TODO(co) Error handling
+
+				// "MaximumIntegerValue" (inclusive)
 				const bool hasMaximumIntegerValue = rapidJsonValueProperty.HasMember("MaximumIntegerValue");
 				assert(hasMaximumIntegerValue);
 				if (hasMaximumIntegerValue)

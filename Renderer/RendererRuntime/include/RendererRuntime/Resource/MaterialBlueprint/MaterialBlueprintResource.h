@@ -215,10 +215,10 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the maximum integer value of a shader property
+		*    Return the maximum integer value (inclusive) of a shader property
 		*
 		*  @return
-		*    The maximum integer value of the requested shader property
+		*    The maximum integer value (inclusive) of the requested shader property
 		*/
 		inline int32_t getMaximumIntegerValueOfShaderProperty(ShaderPropertyId shaderPropertyId) const;
 
@@ -435,10 +435,10 @@ namespace RendererRuntime
 	private:
 		PipelineStateCacheManager			 mPipelineStateCacheManager;
 		MaterialProperties					 mMaterialProperties;
-		ShaderProperties					 mVisualImportanceOfShaderProperties;	///< Every shader property known to the material blueprint has a visual importance entry in here
-		ShaderProperties					 mMaximumIntegerValueOfShaderProperties;
+		ShaderProperties					 mVisualImportanceOfShaderProperties;		///< Every shader property known to the material blueprint has a visual importance entry in here
+		ShaderProperties					 mMaximumIntegerValueOfShaderProperties;	///< The maximum integer value (inclusive) of a shader property
 		Renderer::VertexAttributes			 mVertexAttributes;
-		Renderer::IRootSignaturePtr			 mRootSignaturePtr;						///< Root signature, can be a null pointer
+		Renderer::IRootSignaturePtr			 mRootSignaturePtr;							///< Root signature, can be a null pointer
 		Renderer::PipelineState				 mPipelineState;
 		ShaderBlueprintResourceId			 mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
 		// Resource

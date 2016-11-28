@@ -8,6 +8,22 @@
 	{
 		"Properties":
 		{
+			"RenderQueueIndex":
+			{
+				"Usage": "STATIC",
+				"ValueType": "INTEGER",
+				"Value": "0",
+				"Description": "Render queue index [0, 255]",
+				"MinimumIntegerValue": "0",
+				"MaximumIntegerValue": "255"
+			},
+			"CastShadows":
+			{
+				"Usage": "STATIC",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Cast shadows?"
+			},
 			"Lighting":
 			{
 				"Usage": "SHADER_COMBINATION",

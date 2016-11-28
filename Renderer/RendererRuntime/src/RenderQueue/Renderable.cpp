@@ -84,6 +84,42 @@ namespace RendererRuntime
 				mMaterialResourceManager = &materialResourceManager;
 				mMaterialResourceAttachmentIndex = static_cast<int>(materialResource->mAttachedRenderables.size());
 				materialResource->mAttachedRenderables.push_back(this);
+
+				{ // Cached material data, incremental updates are handled inside "RendererRuntime::MaterialResource::setPropertyByIdInternal()"
+					// Optional "RenderQueueIndex" (e.g. compositor materials usually don't need this property)
+					const MaterialProperty* materialProperty = materialResource->getPropertyById(MaterialResource::RENDER_QUEUE_INDEX_PROPERTY_ID);
+					if (nullptr != materialProperty)
+					{
+						const int renderQueueIndex = materialProperty->getIntegerValue();
+
+						// Sanity checks
+						assert(materialProperty->getUsage() == MaterialProperty::Usage::STATIC);
+						assert(renderQueueIndex >= 0);
+						assert(renderQueueIndex <= 255);
+
+						// Set value
+						mRenderQueueIndex = static_cast<uint8_t>(renderQueueIndex);
+					}
+					else
+					{
+						mRenderQueueIndex = 0;
+					}
+
+					// Optional "CastShadows" (e.g. compositor materials usually don't need this property)
+					materialProperty = materialResource->getPropertyById(MaterialResource::CAST_SHADOWS_PROPERTY_ID);
+					if (nullptr != materialProperty)
+					{
+						// Sanity checks
+						assert(materialProperty->getUsage() == MaterialProperty::Usage::STATIC);
+
+						// Set value
+						mCastShadows = materialProperty->getBooleanValue();
+					}
+					else
+					{
+						mCastShadows = false;
+					}
+				}
 			}
 			else
 			{

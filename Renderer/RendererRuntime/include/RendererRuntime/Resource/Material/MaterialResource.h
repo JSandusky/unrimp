@@ -82,6 +82,10 @@ namespace RendererRuntime
 	public:
 		typedef std::vector<MaterialTechnique*> SortedMaterialTechniqueVector;
 
+		// Fixed build in material properties
+		static const MaterialPropertyId RENDER_QUEUE_INDEX_PROPERTY_ID;	///< "RenderQueueIndex", value type = "INTEGER", usage = "STATIC", value range = [0, 255]
+		static const MaterialPropertyId CAST_SHADOWS_PROPERTY_ID;		///< "CastShadows", value type = "BOOLEAN", usage = "STATIC"
+
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]

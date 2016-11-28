@@ -78,6 +78,13 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const MaterialPropertyId MaterialResource::RENDER_QUEUE_INDEX_PROPERTY_ID = "RenderQueueIndex";
+	const MaterialPropertyId MaterialResource::CAST_SHADOWS_PROPERTY_ID		  = "CastShadows";
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	void MaterialResource::setParentMaterialResourceId(MaterialResourceId parentMaterialResourceId)
@@ -230,8 +237,38 @@ namespace RendererRuntime
 					// TODO(co)
 					break;
 
-				case MaterialProperty::Usage::UNKNOWN:
 				case MaterialProperty::Usage::STATIC:
+					// Initial cached material data gathering is performed inside "RendererRuntime::Renderable::setMaterialResourceId()"
+
+					// Optional "RenderQueueIndex" (e.g. compositor materials usually don't need this property)
+					if (RENDER_QUEUE_INDEX_PROPERTY_ID == materialPropertyId)
+					{
+						const int renderQueueIndex = materialProperty->getIntegerValue();
+
+						// Sanity checks
+						assert(renderQueueIndex >= 0);
+						assert(renderQueueIndex <= 255);
+
+						// Update the cached material data of all attached renderables
+						for (Renderable* renderable : mAttachedRenderables)
+						{
+							renderable->mRenderQueueIndex = static_cast<uint8_t>(renderQueueIndex);
+						}
+					}
+
+					// Optional "CastShadows" (e.g. compositor materials usually don't need this property)
+					else if (CAST_SHADOWS_PROPERTY_ID == materialPropertyId)
+					{
+						// Update the cached material data of all attached renderables
+						const bool castShadows = materialProperty->getBooleanValue();
+						for (Renderable* renderable : mAttachedRenderables)
+						{
+							renderable->mCastShadows = castShadows;
+						}
+					}
+					break;
+
+				case MaterialProperty::Usage::UNKNOWN:
 				case MaterialProperty::Usage::SAMPLER_STATE:
 				case MaterialProperty::Usage::COMPOSITOR_TEXTURE_REFERENCE:
 				case MaterialProperty::Usage::SHADOW_TEXTURE_REFERENCE:
