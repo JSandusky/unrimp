@@ -37,7 +37,6 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class CameraSceneItem;
 	class ICompositorInstancePass;
 	class CompositorWorkspaceInstance;
 }
@@ -85,7 +84,8 @@ namespace RendererRuntime
 		virtual ~CompositorNodeInstance();
 		CompositorNodeInstance(const CompositorNodeInstance&) = delete;
 		CompositorNodeInstance& operator=(const CompositorNodeInstance&) = delete;
-		void execute(CameraSceneItem* cameraSceneItem) const;
+		void compositorWorkspaceInstanceLoadingFinished() const;
+		void execute() const;
 		void frameEnded() const;
 
 

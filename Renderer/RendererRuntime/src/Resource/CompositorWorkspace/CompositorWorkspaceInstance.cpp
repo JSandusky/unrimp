@@ -29,6 +29,10 @@
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorPassFactory.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
+#include "RendererRuntime/Resource/Scene/ISceneResource.h"
+#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
+#include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -66,8 +70,26 @@ namespace RendererRuntime
 		delete &mIndirectBufferManager;
 	}
 
+	const CompositorWorkspaceInstance::RenderQueueIndexRange* CompositorWorkspaceInstance::getRenderQueueIndexRangeByRenderQueueIndex(uint8_t renderQueueIndex) const
+	{
+		for (const RenderQueueIndexRange& renderQueueIndexRange : mRenderQueueIndexRanges)
+		{
+			if (renderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && renderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex)
+			{
+				return &renderQueueIndexRange;
+			}
+		}
+		return nullptr;
+	}
+
 	void CompositorWorkspaceInstance::execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem)
 	{
+		// We could directly clear the render queue index ranges renderable managers as soon as the frame rendering has been finished to avoid evil dangling pointers,
+		// but on the other hand a responsible user might be interested in the potentially on-screen renderable managers to perform work which should only be performed
+		// on potentially on-screen stuff
+		// -> Ensure that this clear step is really always performed when calling this execute method (evil dangling alert)
+		clearRenderQueueIndexRangesRenderableManagers();
+
 		// Is the compositor workspace resource ready?
 		const CompositorWorkspaceResource* compositorWorkspaceResource = mRendererRuntime.getCompositorWorkspaceResourceManager().getCompositorWorkspaceResources().tryGetElementById(mCompositorWorkspaceResourceId);
 		if (nullptr != compositorWorkspaceResource && compositorWorkspaceResource->getLoadingState() == IResource::LoadingState::LOADED)
@@ -82,6 +104,12 @@ namespace RendererRuntime
 			Renderer::IRenderer& renderer = renderTarget.getRenderer();
 			if (renderer.beginScene())
 			{
+				// Gather render queue index ranges renderable managers
+				if (nullptr != cameraSceneItem)
+				{
+					gatherRenderQueueIndexRangesRenderableManagers(*cameraSceneItem);
+				}
+
 				// Begin debug event
 				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
@@ -101,8 +129,11 @@ namespace RendererRuntime
 				// Draw
 				for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
 				{
-					compositorNodeInstance->execute(cameraSceneItem);
+					compositorNodeInstance->execute();
 				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(&renderer)
 
 				// End scene rendering
 				// -> Required for Direct3D 9 and Direct3D 12
@@ -116,9 +147,6 @@ namespace RendererRuntime
 				}
 				mIndirectBufferManager.freeAllUsedIndirectBuffers();
 			}
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(&renderer)
 
 			// In case the render target is a swap chain, present the content of the current back buffer
 			if (renderTarget.getResourceType() == Renderer::ResourceType::SWAP_CHAIN)
@@ -232,6 +260,12 @@ namespace RendererRuntime
 					mRenderQueueIndexRanges.emplace_back(localRenderQueueIndexRange.first, localRenderQueueIndexRange.second);
 				}
 			}
+
+			// Tell all compositor node instances that the compositor workspace instance loading has been finished
+			for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
+			{
+				compositorNodeInstance->compositorWorkspaceInstanceLoadingFinished();
+			}
 		}
 	}
 
@@ -247,6 +281,56 @@ namespace RendererRuntime
 		}
 		mSequentialCompositorNodeInstances.clear();
 		mRenderQueueIndexRanges.clear();
+	}
+
+	void CompositorWorkspaceInstance::clearRenderQueueIndexRangesRenderableManagers()
+	{
+		// Forget about all previously gathered renderable managers
+		for (RenderQueueIndexRange& renderQueueIndexRange : mRenderQueueIndexRanges)
+		{
+			renderQueueIndexRange.renderableManagers.clear();
+		}
+	}
+
+	void CompositorWorkspaceInstance::gatherRenderQueueIndexRangesRenderableManagers(CameraSceneItem& cameraSceneItem)
+	{
+		// TODO(co) This is just a dummy implementation, has to use high level culling including e.g. multi-threaded culling
+		const glm::vec3& cameraPosition = cameraSceneItem.getParentSceneNodeSafe().getTransform().position;
+
+		// Loop through all scene nodes and add renderables to the render queue
+		const ISceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
+		const size_t numberOfSceneNodes = sceneNodes.size();
+		for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
+		{
+			const ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
+
+			// Calculate the distance to the camera
+			const float distanceToCamera = glm::distance(cameraPosition, sceneNode->getTransform().position);
+
+			// Loop through all scene items attached to the current scene node
+			const ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
+			const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
+			for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
+			{
+				const ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
+				if (sceneItem->getSceneItemTypeId() == MeshSceneItem::TYPE_ID)
+				{
+					RenderableManager& renderableManager = const_cast<RenderableManager&>(static_cast<const MeshSceneItem*>(sceneItem)->getRenderableManager());	// TODO(co) Get rid of the evil const-cast
+					renderableManager.setCachedDistanceToCamera(distanceToCamera);
+
+					// A renderable manager can be inside multiple render queue index ranges
+					for (RenderQueueIndexRange& renderQueueIndexRange : mRenderQueueIndexRanges)
+					{
+						// We only need to check the minimum render queue index to figure out whether or not the renderable manager falls into this render queue index range
+						const uint8_t minimumRenderQueueIndex = renderableManager.getMinimumRenderQueueIndex();
+						if (minimumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && minimumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex)
+						{
+							renderQueueIndexRange.renderableManagers.push_back(&renderableManager);
+						}
+					}
+				}
+			}
+		}
 	}
 
 

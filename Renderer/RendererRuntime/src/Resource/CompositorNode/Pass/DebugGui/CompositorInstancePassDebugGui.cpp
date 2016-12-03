@@ -40,7 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassDebugGui::onExecute(CameraSceneItem*)
+	void CompositorInstancePassDebugGui::onExecute()
 	{
 		getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getDebugGuiManager().renderFrame();
 	}

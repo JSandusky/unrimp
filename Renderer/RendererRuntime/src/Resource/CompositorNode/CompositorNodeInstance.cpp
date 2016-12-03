@@ -44,11 +44,19 @@ namespace RendererRuntime
 		}
 	}
 
-	void CompositorNodeInstance::execute(CameraSceneItem* cameraSceneItem) const
+	void CompositorNodeInstance::compositorWorkspaceInstanceLoadingFinished() const
 	{
 		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
 		{
-			compositorInstancePass->onExecute(cameraSceneItem);
+			compositorInstancePass->onCompositorWorkspaceInstanceLoadingFinished();
+		}
+	}
+
+	void CompositorNodeInstance::execute() const
+	{
+		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
+		{
+			compositorInstancePass->onExecute();
 		}
 	}
 

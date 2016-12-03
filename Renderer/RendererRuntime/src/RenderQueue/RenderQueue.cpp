@@ -119,26 +119,32 @@ namespace RendererRuntime
 		// Register the renderables inside our renderables queue
 		for (const Renderable& renderable : renderableManager.getRenderables())
 		{
-			// Get the precalculated static part of the sorting key
-			// -> Sort renderables back-to-front (for transparency) or front-to-back (for occlusion efficiency)
-			// TODO(co) Depending on "mTransparentPass" the sorting key is used
-			uint64_t sortingKey = renderable.getSortingKey();
-
-			// The quantized depth is a dynamic part which is set now
-			sortingKey = quantizedDepth;	// TODO(co) Just bits influenced
-
-			// Register the renderable inside our renderables queue
+			// It's valid if one or more renderables inside a renderable manager don't fall into the range processed by this render queue
+			// -> At least one renderable should fall into the range processed by this render queue or the render queue is used wrong
 			const uint8_t renderQueueIndex = renderable.getRenderQueueIndex();
-			assert(renderQueueIndex >= mMinimumRenderQueueIndex);
-			assert(renderQueueIndex <= mMaximumRenderQueueIndex);
-			Queue& queue = mQueues[static_cast<size_t>(renderQueueIndex - mMinimumRenderQueueIndex)];
-			assert(!queue.sorted);	// Ensure render queue is still in filling state and not already in rendering state
-			queue.queuedRenderables.emplace_back(renderable, sortingKey);
+			if (renderQueueIndex >= mMinimumRenderQueueIndex && renderQueueIndex <= mMaximumRenderQueueIndex)
+			{
+				// Get the precalculated static part of the sorting key
+				// -> Sort renderables back-to-front (for transparency) or front-to-back (for occlusion efficiency)
+				// TODO(co) Depending on "mTransparentPass" the sorting key is used
+				uint64_t sortingKey = renderable.getSortingKey();
+
+				// The quantized depth is a dynamic part which is set now
+				sortingKey = quantizedDepth;	// TODO(co) Just bits influenced
+
+				// Register the renderable inside our renderables queue
+				Queue& queue = mQueues[static_cast<size_t>(renderQueueIndex - mMinimumRenderQueueIndex)];
+				assert(!queue.sorted);	// Ensure render queue is still in filling state and not already in rendering state
+				queue.queuedRenderables.emplace_back(renderable, sortingKey);
+			}
 		}
 	}
 
 	void RenderQueue::draw()
 	{
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&mRendererRuntime.getRenderer())
+
 		// TODO(co) This is just a dummy implementation
 
 		const MaterialResources& materialResources = mRendererRuntime.getMaterialResourceManager().getMaterialResources();
@@ -298,6 +304,9 @@ namespace RendererRuntime
 				}
 			}
 		}
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT(&mRendererRuntime.getRenderer())
 	}
 
 

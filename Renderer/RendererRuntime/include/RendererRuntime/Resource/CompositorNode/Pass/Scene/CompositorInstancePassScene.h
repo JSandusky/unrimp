@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
+#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/RenderQueue/RenderQueue.h"
 
 
@@ -64,7 +65,8 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void onExecute(CameraSceneItem* cameraSceneItem) override;
+		virtual void onCompositorWorkspaceInstanceLoadingFinished() override;
+		virtual void onExecute() override;
 		inline virtual void onFrameEnded() override;
 
 
@@ -82,7 +84,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RenderQueue mRenderQueue;
+		RenderQueue												  mRenderQueue;
+		const CompositorWorkspaceInstance::RenderQueueIndexRange* mRenderQueueIndexRange;	///< Cached render queue index range instance, can be a null pointer, don't destroy the instance
 
 
 	};

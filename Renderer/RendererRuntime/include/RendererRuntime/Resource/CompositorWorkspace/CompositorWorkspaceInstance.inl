@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return mIndirectBufferManager;
 	}
 
+	inline const CompositorWorkspaceInstance::RenderQueueIndexRanges& CompositorWorkspaceInstance::getRenderQueueIndexRanges() const
+	{
+		return mRenderQueueIndexRanges;
+	}
+
 	inline Renderer::IRenderTarget* CompositorWorkspaceInstance::getExecutionRenderTarget() const
 	{
 		return mExecutionRenderTarget;

@@ -39,7 +39,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassClear::onExecute(CameraSceneItem*)
+	void CompositorInstancePassClear::onExecute()
 	{
 		// Clear the color buffer of the current render target, do also clear the depth buffer
 		// TODO(co) "RendererRuntime::CompositorInstancePassClear": Add the other properties like stencil or z-buffer

@@ -35,7 +35,6 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class CameraSceneItem;
 	class CompositorNodeInstance;
 	class ICompositorResourcePass;
 }
@@ -73,7 +72,17 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void onExecute(CameraSceneItem* cameraSceneItem) = 0;
+		/**
+		*  @brief
+		*    Method is called when the owner compositor workspace instance loading has been finished
+		*
+		*  @note
+		*    - A compositor pass instance can e.g. prefetch a render queue index ranges instance in here to avoid repeating this during runtime
+		*    - The default implementation is empty
+		*/
+		inline virtual void onCompositorWorkspaceInstanceLoadingFinished();
+
+		virtual void onExecute() = 0;
 
 		/**
 		*  @brief

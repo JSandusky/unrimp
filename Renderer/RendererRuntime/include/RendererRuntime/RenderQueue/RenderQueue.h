@@ -89,6 +89,8 @@ namespace RendererRuntime
 		RenderQueue(IndirectBufferManager& indirectBufferManager, uint8_t minimumRenderQueueIndex, uint8_t maximumRenderQueueIndex, bool transparentPass);
 
 		inline ~RenderQueue();
+		inline uint8_t getMinimumRenderQueueIndex() const;
+		inline uint8_t getMaximumRenderQueueIndex() const;
 		void clear();
 		void addRenderablesFromRenderableManager(const RenderableManager& renderableManager);
 		void draw();

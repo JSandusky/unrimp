@@ -45,7 +45,7 @@
 //[-------------------------------------------------------]
 //[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 //[-------------------------------------------------------]
-void CompositorInstancePassFirst::onExecute(RendererRuntime::CameraSceneItem*)
+void CompositorInstancePassFirst::onExecute()
 {
 	// Well right now I'm not that creative and the purpose of this example is to show how to add custom compositor passes, so, draw a simple text
 	const RendererRuntime::CompositorWorkspaceInstance& compositorWorkspaceInstance = getCompositorNodeInstance().getCompositorWorkspaceInstance();

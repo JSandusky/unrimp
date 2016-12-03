@@ -39,6 +39,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline void CompositorInstancePassScene::onFrameEnded()
 	{
+		// Directly clear the render queue as soon as the frame rendering has been finished to avoid evil dangling pointers
 		mRenderQueue.clear();
 	}
 

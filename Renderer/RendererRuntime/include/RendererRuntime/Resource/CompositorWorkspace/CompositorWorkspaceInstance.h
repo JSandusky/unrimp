@@ -42,6 +42,7 @@ namespace RendererRuntime
 {
 	class CameraSceneItem;
 	class IRendererRuntime;
+	class RenderableManager;
 	class IndirectBufferManager;
 	class CompositorNodeInstance;
 }
@@ -82,6 +83,26 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<RenderableManager*> RenderableManagers;
+
+		struct RenderQueueIndexRange
+		{
+			uint8_t			   minimumRenderQueueIndex;	///< Fixed during runtime
+			uint8_t			   maximumRenderQueueIndex;	///< Fixed during runtime
+			RenderableManagers renderableManagers;		///< Dynamic during runtime
+
+			RenderQueueIndexRange(uint8_t _minimumRenderQueueIndex, uint8_t _maximumRenderQueueIndex) :
+				minimumRenderQueueIndex(_minimumRenderQueueIndex),
+				maximumRenderQueueIndex(_maximumRenderQueueIndex)
+			{};
+		};
+		typedef std::vector<RenderQueueIndexRange> RenderQueueIndexRanges;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -89,6 +110,8 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT virtual ~CompositorWorkspaceInstance();
 		inline const IRendererRuntime& getRendererRuntime() const;
 		inline IndirectBufferManager& getIndirectBufferManager() const;
+		inline const RenderQueueIndexRanges& getRenderQueueIndexRanges() const;	// Renderable manager pointers are only considered to be safe directly after the "RendererRuntime::CompositorWorkspaceInstance::execute()" call
+		RENDERERRUNTIME_API_EXPORT const RenderQueueIndexRange* getRenderQueueIndexRangeByRenderQueueIndex(uint8_t renderQueueIndex) const;	// Can be a null pointer, don't destroy the instance
 		RENDERERRUNTIME_API_EXPORT void execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem);
 		inline Renderer::IRenderTarget* getExecutionRenderTarget() const;	// Only valid during compositor workspace instance execution
 
@@ -108,6 +131,8 @@ namespace RendererRuntime
 		CompositorWorkspaceInstance(const CompositorWorkspaceInstance&) = delete;
 		CompositorWorkspaceInstance& operator=(const CompositorWorkspaceInstance&) = delete;
 		void destroySequentialCompositorNodeInstances();
+		void clearRenderQueueIndexRangesRenderableManagers();
+		void gatherRenderQueueIndexRangesRenderableManagers(CameraSceneItem& cameraSceneItem);	// A naive method name would be "culling", this is considered to be an expensive method call
 
 
 	//[-------------------------------------------------------]
@@ -115,18 +140,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		typedef std::vector<CompositorNodeInstance*> CompositorNodeInstances;
-
-		struct RenderQueueIndexRange
-		{
-			uint8_t minimumRenderQueueIndex;
-			uint8_t maximumRenderQueueIndex;
-
-			RenderQueueIndexRange(uint8_t _minimumRenderQueueIndex, uint8_t _maximumRenderQueueIndex) :
-				minimumRenderQueueIndex(_minimumRenderQueueIndex),
-				maximumRenderQueueIndex(_maximumRenderQueueIndex)
-			{};
-		};
-		typedef std::vector<RenderQueueIndexRange> RenderQueueIndexRanges;
 
 
 	//[-------------------------------------------------------]
@@ -138,7 +151,7 @@ namespace RendererRuntime
 		Renderer::IRenderTarget*	  mExecutionRenderTarget;				///< Only valid during compositor workspace instance execution
 		CompositorWorkspaceResourceId mCompositorWorkspaceResourceId;
 		CompositorNodeInstances		  mSequentialCompositorNodeInstances;	///< We're responsible to destroy the compositor node instances if we no longer need them
-		RenderQueueIndexRanges		  mRenderQueueIndexRanges;
+		RenderQueueIndexRanges		  mRenderQueueIndexRanges;				///< The render queue index ranges layout is fixed during runtime
 
 
 	};

@@ -42,6 +42,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
+	inline void ICompositorInstancePass::onCompositorWorkspaceInstanceLoadingFinished()
+	{
+		// Nothing here
+	}
+
 	inline void ICompositorInstancePass::onFrameEnded()
 	{
 		// Nothing here

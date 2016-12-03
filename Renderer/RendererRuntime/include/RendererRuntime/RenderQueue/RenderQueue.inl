@@ -33,6 +33,16 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline uint8_t RenderQueue::getMinimumRenderQueueIndex() const
+	{
+		return mMinimumRenderQueueIndex;
+	}
+
+	inline uint8_t RenderQueue::getMaximumRenderQueueIndex() const
+	{
+		return mMaximumRenderQueueIndex;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

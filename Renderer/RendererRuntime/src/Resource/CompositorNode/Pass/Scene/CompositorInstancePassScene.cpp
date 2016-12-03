@@ -25,12 +25,6 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/Scene/CompositorInstancePassScene.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Scene/CompositorResourcePassScene.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
-#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
-#include "RendererRuntime/Resource/Scene/ISceneResource.h"
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
-#include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
-#include "RendererRuntime/IRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -43,49 +37,26 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassScene::onExecute(CameraSceneItem* cameraSceneItem)
+	void CompositorInstancePassScene::onCompositorWorkspaceInstanceLoadingFinished()
 	{
-		// TODO(co) Just a first test
-		if (nullptr != cameraSceneItem && cameraSceneItem->hasParentSceneNode())
+		// Cache render queue index range instance, we know it must exist when we're in here
+		mRenderQueueIndexRange = getCompositorNodeInstance().getCompositorWorkspaceInstance().getRenderQueueIndexRangeByRenderQueueIndex(mRenderQueue.getMinimumRenderQueueIndex());
+		assert(nullptr != mRenderQueueIndexRange);
+		assert(mRenderQueueIndexRange->minimumRenderQueueIndex <= mRenderQueue.getMinimumRenderQueueIndex());
+		assert(mRenderQueueIndexRange->maximumRenderQueueIndex >= mRenderQueue.getMaximumRenderQueueIndex());
+	}
+
+	void CompositorInstancePassScene::onExecute()
+	{
+		assert(nullptr != mRenderQueueIndexRange);
+		for (const RenderableManager* renderableManager : mRenderQueueIndexRange->renderableManagers)
 		{
-			const IRendererRuntime& rendererRuntime = getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime();
-			Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
-			const glm::vec3& cameraPosition = cameraSceneItem->getParentSceneNodeSafe().getTransform().position;
-
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
-
-			// Loop through all scene nodes and add renderables to the render queue
-			const ISceneResource::SceneNodes& sceneNodes = cameraSceneItem->getSceneResource().getSceneNodes();
-			const size_t numberOfSceneNodes = sceneNodes.size();
-			for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
-			{
-				const ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
-
-				// Calculate the distance to the camera
-				const float distanceToCamera = glm::distance(cameraPosition, sceneNode->getTransform().position);
-
-				// Loop through all scene items attached to the current scene node
-				const ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
-				const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
-				for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
-				{
-					const ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
-					if (sceneItem->getSceneItemTypeId() == MeshSceneItem::TYPE_ID)
-					{
-						RenderableManager& renderableManager = const_cast<RenderableManager&>(static_cast<const MeshSceneItem*>(sceneItem)->getRenderableManager());	// TODO(co) Get rid of the evil const-cast
-						renderableManager.setCachedDistanceToCamera(distanceToCamera);
-						mRenderQueue.addRenderablesFromRenderableManager(renderableManager);
-					}
-				}
-			}
-
-			// Draw render queue
-			mRenderQueue.draw();
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(&renderer)
+			// The render queue index range covered by this compositor instance pass scene might be smaller than the range of the
+			// cached render queue index range. So, we could add a range check in here to reject renderable managers, but it's not
+			// really worth to do so since the render queue only considers renderables inside the render queue range anyway.
+			mRenderQueue.addRenderablesFromRenderableManager(*renderableManager);
 		}
+		mRenderQueue.draw();
 	}
 
 
@@ -94,7 +65,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorInstancePassScene::CompositorInstancePassScene(const CompositorResourcePassScene& compositorResourcePassScene, const CompositorNodeInstance& compositorNodeInstance) :
 		ICompositorInstancePass(compositorResourcePassScene, compositorNodeInstance),
-		mRenderQueue(compositorNodeInstance.getCompositorWorkspaceInstance().getIndirectBufferManager(), compositorResourcePassScene.getMinimumRenderQueueIndex(), compositorResourcePassScene.getMaximumRenderQueueIndex(), compositorResourcePassScene.isTransparentPass())
+		mRenderQueue(compositorNodeInstance.getCompositorWorkspaceInstance().getIndirectBufferManager(), compositorResourcePassScene.getMinimumRenderQueueIndex(), compositorResourcePassScene.getMaximumRenderQueueIndex(), compositorResourcePassScene.isTransparentPass()),
+		mRenderQueueIndexRange(nullptr)
 	{
 		// Nothing here
 	}
