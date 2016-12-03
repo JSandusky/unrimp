@@ -146,6 +146,11 @@ namespace RendererRuntime
 
 			destroySequentialCompositorNodeInstances();
 
+			// For render queue index ranges gathering and merging
+			typedef std::pair<uint8_t, uint8_t> LocalRenderQueueIndexRange;
+			typedef std::vector<LocalRenderQueueIndexRange> LocalRenderQueueIndexRanges;
+			LocalRenderQueueIndexRanges individualRenderQueueIndexRanges;
+
 			// Compositor node resources
 			const CompositorWorkspaceResource::CompositorNodeAssetIds& compositorNodeAssetIds = static_cast<const CompositorWorkspaceResource&>(resource).getCompositorNodeAssetIds();
 			const size_t numberOfCompositorResourceNodes = compositorNodeAssetIds.size();
@@ -182,10 +187,49 @@ namespace RendererRuntime
 								if (nullptr != compositorResourcePass)
 								{
 									compositorNodeInstance->mCompositorInstancePasses.push_back(compositorPassFactory.createCompositorInstancePass(*compositorResourcePass, *compositorNodeInstance));
+
+									// Gather render queue index range
+									uint8_t minimumRenderQueueIndex = 0;
+									uint8_t maximumRenderQueueIndex = 0;
+									if (compositorResourcePass->getRenderQueueIndexRange(minimumRenderQueueIndex, maximumRenderQueueIndex))
+									{
+										individualRenderQueueIndexRanges.emplace_back(minimumRenderQueueIndex, maximumRenderQueueIndex);
+									}
 								}
 							}
 						}
 					}
+				}
+			}
+
+			// Merge the render queue index ranges using the algorithm described at http://stackoverflow.com/a/5276789
+			if (!individualRenderQueueIndexRanges.empty())
+			{
+				LocalRenderQueueIndexRanges mergedRenderQueueIndexRanges;
+				mergedRenderQueueIndexRanges.reserve(individualRenderQueueIndexRanges.size());
+				std::sort(individualRenderQueueIndexRanges.begin(), individualRenderQueueIndexRanges.end());
+				LocalRenderQueueIndexRanges::iterator iterator = individualRenderQueueIndexRanges.begin();
+				LocalRenderQueueIndexRange current = *(iterator)++;
+				while (iterator != individualRenderQueueIndexRanges.end())
+				{
+					if (current.second >= iterator->first)
+					{
+						current.second = std::max(current.second, iterator->second);
+					}
+					else
+					{
+						mergedRenderQueueIndexRanges.push_back(current);
+						current = *iterator;
+					}
+					++iterator;
+				}
+				mergedRenderQueueIndexRanges.push_back(current);
+
+				// Fill our final render queue index ranges data structure
+				mRenderQueueIndexRanges.reserve(mergedRenderQueueIndexRanges.size());
+				for (const LocalRenderQueueIndexRange& localRenderQueueIndexRange : mergedRenderQueueIndexRanges)
+				{
+					mRenderQueueIndexRanges.emplace_back(localRenderQueueIndexRange.first, localRenderQueueIndexRange.second);
 				}
 			}
 		}
@@ -202,6 +246,7 @@ namespace RendererRuntime
 			delete compositorNodeInstance;
 		}
 		mSequentialCompositorNodeInstances.clear();
+		mRenderQueueIndexRanges.clear();
 	}
 
 

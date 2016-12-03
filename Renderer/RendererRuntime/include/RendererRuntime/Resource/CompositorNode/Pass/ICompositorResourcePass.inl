@@ -26,6 +26,16 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	inline bool ICompositorResourcePass::getRenderQueueIndexRange(uint8_t&, uint8_t&) const
+	{
+		// This compositor resource pass has no render queue range defined
+		return false;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline ICompositorResourcePass::ICompositorResourcePass()

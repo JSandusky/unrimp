@@ -64,6 +64,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Compositor workspace instance
+	*
+	*  @remarks
+	*    Compositors can get quite complex with a lot of individual compositor passes which several of them rendering portions of the scene.
+	*    We really only want to perform expensive culling once for a compositor workspace frame rendering. Some renderable managers might never
+	*    get rendered because none of the renderables is inside a render queue index range touched by the compositor passes. As a result,
+	*    an compositor workspace instance keeps a list of render queue index ranges covered by the compositor instance passes. Before compositor
+	*    instance passes are executed, a culling step is performed gathering all renderable managers which should currently be taken into account
+	*    during rendering. The result of this culling step is that each render queue index range has renderable managers to consider assigned to them.
+	*    Executed compositor instances passes only access this prepared render queue index information to fill their render queues.
+	*/
 	class CompositorWorkspaceInstance : protected IResourceListener
 	{
 
@@ -103,6 +116,18 @@ namespace RendererRuntime
 	private:
 		typedef std::vector<CompositorNodeInstance*> CompositorNodeInstances;
 
+		struct RenderQueueIndexRange
+		{
+			uint8_t minimumRenderQueueIndex;
+			uint8_t maximumRenderQueueIndex;
+
+			RenderQueueIndexRange(uint8_t _minimumRenderQueueIndex, uint8_t _maximumRenderQueueIndex) :
+				minimumRenderQueueIndex(_minimumRenderQueueIndex),
+				maximumRenderQueueIndex(_maximumRenderQueueIndex)
+			{};
+		};
+		typedef std::vector<RenderQueueIndexRange> RenderQueueIndexRanges;
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
@@ -113,6 +138,7 @@ namespace RendererRuntime
 		Renderer::IRenderTarget*	  mExecutionRenderTarget;				///< Only valid during compositor workspace instance execution
 		CompositorWorkspaceResourceId mCompositorWorkspaceResourceId;
 		CompositorNodeInstances		  mSequentialCompositorNodeInstances;	///< We're responsible to destroy the compositor node instances if we no longer need them
+		RenderQueueIndexRanges		  mRenderQueueIndexRanges;
 
 
 	};

@@ -64,6 +64,20 @@ namespace RendererRuntime
 		virtual CompositorPassTypeId getTypeId() const = 0;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) = 0;
 
+		/**
+		*  @brief
+		*    Return the render queue index range
+		*
+		*   @param[in] minimumRenderQueueIndex
+		*     If this compositor resource pass has a render queue range defined, this will receive the minimum render queue index (inclusive), if there's no range no value will be written at all
+		*   @param[in] maximumRenderQueueIndex
+		*     If this compositor resource pass has a render queue range defined, this will receive the maximum render queue index (inclusive), if there's no range no value will be written at all
+		*
+		*  @return
+		*    "true" if this compositor resource pass has a render queue range defined, else "false"
+		*/
+		inline virtual bool getRenderQueueIndexRange(uint8_t& minimumRenderQueueIndex, uint8_t& maximumRenderQueueIndex) const;
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]

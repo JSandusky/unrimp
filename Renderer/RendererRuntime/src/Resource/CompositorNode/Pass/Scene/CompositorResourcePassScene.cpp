@@ -56,6 +56,14 @@ namespace RendererRuntime
 		assert(mMaximumRenderQueueIndex >= mMinimumRenderQueueIndex);
 	}
 
+	bool CompositorResourcePassScene::getRenderQueueIndexRange(uint8_t& minimumRenderQueueIndex, uint8_t& maximumRenderQueueIndex) const
+	{
+		// This compositor resource pass has a render queue range defined
+		minimumRenderQueueIndex = mMinimumRenderQueueIndex;
+		maximumRenderQueueIndex = mMaximumRenderQueueIndex;
+		return true;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
