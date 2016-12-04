@@ -151,6 +151,7 @@ namespace Direct3D12Renderer
 	public:
 		inline virtual const char *getName() const override;
 		inline virtual bool isInitialized() const override;
+		virtual bool isDebugEnabled() override;
 		virtual Renderer::ISwapChain *getMainSwapChain() const override;
 		//[-------------------------------------------------------]
 		//[ Shader language                                       ]
@@ -213,7 +214,6 @@ namespace Direct3D12Renderer
 		//[-------------------------------------------------------]
 		//[ Debug                                                 ]
 		//[-------------------------------------------------------]
-		virtual bool isDebugEnabled() override;
 		virtual void setDebugMarker(const wchar_t *name) override;
 		virtual void beginDebugEvent(const wchar_t *name) override;
 		virtual void endDebugEvent() override;

@@ -287,6 +287,16 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
+	bool Direct3D11Renderer::isDebugEnabled()
+	{
+		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
+		// is disabled it has to be possible to use this function for an additional security check
+		// -> Maybe a debugger/profiler ignores the debug state
+		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
+		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
+		return (D3DPERF_GetStatus() != 0);
+	}
+
 	Renderer::ISwapChain *Direct3D11Renderer::getMainSwapChain() const
 	{
 		return static_cast<Renderer::ISwapChain*>(mMainSwapChain);
@@ -1255,16 +1265,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	bool Direct3D11Renderer::isDebugEnabled()
-	{
-		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
-		// is disabled it has to be possible to use this function for an additional security check
-		// -> Maybe a debugger/profiler ignores the debug state
-		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
-		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
-		return (D3DPERF_GetStatus() != 0);
-	}
-
 	void Direct3D11Renderer::setDebugMarker(const wchar_t *name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG

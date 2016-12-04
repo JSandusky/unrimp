@@ -291,6 +291,15 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
+	bool Direct3D12Renderer::isDebugEnabled()
+	{
+		#ifdef DIRECT3D12RENDERER_NO_DEBUG
+			return false;
+		#else
+			return true;
+		#endif
+	}
+
 	Renderer::ISwapChain *Direct3D12Renderer::getMainSwapChain() const
 	{
 		return static_cast<Renderer::ISwapChain*>(mMainSwapChain);
@@ -1210,15 +1219,6 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	bool Direct3D12Renderer::isDebugEnabled()
-	{
-		#ifdef DIRECT3D12RENDERER_NO_DEBUG
-			return false;
-		#else
-			return true;
-		#endif
-	}
-
 	void Direct3D12Renderer::setDebugMarker(const wchar_t *name)
 	{
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG

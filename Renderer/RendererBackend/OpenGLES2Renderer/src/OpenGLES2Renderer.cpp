@@ -187,6 +187,14 @@ namespace OpenGLES2Renderer
 		return (EGL_NO_CONTEXT != mContext->getEGLContext());
 	}
 
+	bool OpenGLES2Renderer::isDebugEnabled()
+	{
+		// OpenGL ES 2 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+
+		// Debug disabled
+		return false;
+	}
+
 	Renderer::ISwapChain *OpenGLES2Renderer::getMainSwapChain() const
 	{
 		return mMainSwapChain;
@@ -1201,14 +1209,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	bool OpenGLES2Renderer::isDebugEnabled()
-	{
-		// OpenGL ES 2 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
-
-		// Debug disabled
-		return false;
-	}
-
 	void OpenGLES2Renderer::setDebugMarker(const wchar_t *)
 	{
 		// OpenGL ES 2 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)

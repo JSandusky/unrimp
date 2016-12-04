@@ -202,6 +202,39 @@ namespace Renderer
 
 		/**
 		*  @brief
+		*    Return whether or not debug is enabled
+		*
+		*  @remarks
+		*    By using
+		*      "Renderer::IRenderer::isDebugEnabled();"
+		*    it is possible to check whether or not your application is currently running
+		*    within a known debug/profile tool like e.g. Direct3D PIX (also works directly within VisualStudio
+		*    2012 out-of-the-box). In case you want at least try to protect your asset, you might want to stop
+		*    the execution of your application when a debug/profile tool is used which can e.g. record your data.
+		*    Please be aware that this will only make it a little bit harder to debug and e.g. while doing so
+		*    reading out your asset data. Public articles like
+		*    "PIX: How to circumvent D3DPERF_SetOptions" at
+		*      http://www.gamedev.net/blog/1323/entry-2250952-pix-how-to-circumvent-d3dperf-setoptions/
+		*    describe how to "hack around" this security measurement, so, don't rely on it. Those debug
+		*    methods work fine when using a Direct3D renderer implementation. OpenGL on the other hand
+		*    has no Direct3D PIX like functions or extensions, use for instance "gDEBugger" (http://www.gremedy.com/)
+		*    instead.
+		*    -> When using Direct3D <11.1, those methods map to the Direct3D 9 PIX functions (D3DPERF_* functions)
+		*    -> The Direct3D 9 PIX functions are also used for Direct3D 10 and Direct3D 11. Lookout! As soon as using
+		*       the debug methods within this interface, the Direct3D 9 dll will be loaded.
+		*    -> Starting with Direct3D 11.1, the Direct3D 9 PIX functions no longer work. Instead, the new
+		*       "D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY"-flag (does not work with <Direct3D 11.1)
+		*       is used when creating the device instance, then the "ID3DUserDefinedAnnotation"-API is used.
+		*    -> Optimization: You might want to use those methods only via macros to make it easier to avoid using them
+		*       within e.g. a final release build
+		*
+		*  @return
+		*    "true" if debug is enabled, else "false"
+		*/
+		virtual bool isDebugEnabled() = 0;
+
+		/**
+		*  @brief
 		*    Return the main swap chain
 		*
 		*  @return
@@ -651,39 +684,6 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		//[ Debug                                                 ]
 		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Return whether or not debug is enabled
-		*
-		*  @remarks
-		*    By using
-		*      "Renderer::IRenderer::isDebugEnabled();"
-		*    it is possible to check whether or not your application is currently running
-		*    within a known debug/profile tool like e.g. Direct3D PIX (also works directly within VisualStudio
-		*    2012 out-of-the-box). In case you want at least try to protect your asset, you might want to stop
-		*    the execution of your application when a debug/profile tool is used which can e.g. record your data.
-		*    Please be aware that this will only make it a little bit harder to debug and e.g. while doing so
-		*    reading out your asset data. Public articles like
-		*    "PIX: How to circumvent D3DPERF_SetOptions" at
-		*      http://www.gamedev.net/blog/1323/entry-2250952-pix-how-to-circumvent-d3dperf-setoptions/
-		*    describe how to "hack around" this security measurement, so, don't rely on it. Those debug
-		*    methods work fine when using a Direct3D renderer implementation. OpenGL on the other hand
-		*    has no Direct3D PIX like functions or extensions, use for instance "gDEBugger" (http://www.gremedy.com/)
-		*    instead.
-		*    -> When using Direct3D <11.1, those methods map to the Direct3D 9 PIX functions (D3DPERF_* functions)
-		*    -> The Direct3D 9 PIX functions are also used for Direct3D 10 and Direct3D 11. Lookout! As soon as using
-		*       the debug methods within this interface, the Direct3D 9 dll will be loaded.
-		*    -> Starting with Direct3D 11.1, the Direct3D 9 PIX functions no longer work. Instead, the new
-		*       "D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY"-flag (does not work with <Direct3D 11.1)
-		*       is used when creating the device instance, then the "ID3DUserDefinedAnnotation"-API is used.
-		*    -> Optimization: You might want to use those methods only via macros to make it easier to avoid using them
-		*       within e.g. a final release build
-		*
-		*  @return
-		*    "true" if debug is enabled, else "false"
-		*/
-		virtual bool isDebugEnabled() = 0;
-
 		/**
 		*  @brief
 		*    Set a debug marker

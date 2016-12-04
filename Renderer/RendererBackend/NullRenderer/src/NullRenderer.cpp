@@ -148,6 +148,14 @@ namespace NullRenderer
 		return true;
 	}
 
+	bool NullRenderer::isDebugEnabled()
+	{
+		// Nothing here
+
+		// Debug disabled
+		return false;
+	}
+
 	Renderer::ISwapChain *NullRenderer::getMainSwapChain() const
 	{
 		return mMainSwapChain;
@@ -505,14 +513,6 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	bool NullRenderer::isDebugEnabled()
-	{
-		// Nothing here
-
-		// Debug disabled
-		return false;
-	}
-
 	void NullRenderer::setDebugMarker(const wchar_t *)
 	{
 		// Nothing here

@@ -1779,6 +1779,7 @@ namespace Renderer
 		public:
 			virtual const char* getName() const = 0;
 			virtual bool isInitialized() const = 0;
+			virtual bool isDebugEnabled() = 0;
 			virtual ISwapChain* getMainSwapChain() const = 0;
 			virtual uint32_t getNumberOfShaderLanguages() const = 0;
 			virtual const char* getShaderLanguageName(uint32_t index) const = 0;
@@ -1808,7 +1809,6 @@ namespace Renderer
 			virtual void drawIndexed(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
 			virtual void flush() = 0;
 			virtual void finish() = 0;
-			virtual bool isDebugEnabled() = 0;
 			virtual void setDebugMarker(const wchar_t* name) = 0;
 			virtual void beginDebugEvent(const wchar_t* name) = 0;
 			virtual void endDebugEvent() = 0;

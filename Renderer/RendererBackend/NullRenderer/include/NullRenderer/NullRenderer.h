@@ -91,6 +91,7 @@ namespace NullRenderer
 	public:
 		virtual const char *getName() const override;
 		virtual bool isInitialized() const override;
+		virtual bool isDebugEnabled() override;
 		virtual Renderer::ISwapChain *getMainSwapChain() const override;
 		//[-------------------------------------------------------]
 		//[ Shader language                                       ]
@@ -153,7 +154,6 @@ namespace NullRenderer
 		//[-------------------------------------------------------]
 		//[ Debug                                                 ]
 		//[-------------------------------------------------------]
-		virtual bool isDebugEnabled() override;
 		virtual void setDebugMarker(const wchar_t *name) override;
 		virtual void beginDebugEvent(const wchar_t *name) override;
 		virtual void endDebugEvent() override;

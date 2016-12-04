@@ -267,6 +267,14 @@ namespace OpenGLRenderer
 		return (nullptr != mContext && mContext->isInitialized());
 	}
 
+	bool OpenGLRenderer::isDebugEnabled()
+	{
+		// OpenGL has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+
+		// Debug disabled
+		return false;
+	}
+
 	Renderer::ISwapChain *OpenGLRenderer::getMainSwapChain() const
 	{
 		return mMainSwapChain;
@@ -1696,14 +1704,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	bool OpenGLRenderer::isDebugEnabled()
-	{
-		// OpenGL has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
-
-		// Debug disabled
-		return false;
-	}
-
 	void OpenGLRenderer::setDebugMarker(const wchar_t *)
 	{
 		// OpenGL has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)

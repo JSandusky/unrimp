@@ -231,6 +231,14 @@ namespace VulkanRenderer
 		return mContext->isInitialized();
 	}
 
+	bool VulkanRenderer::isDebugEnabled()
+	{
+		// TODO(co) Implement me
+
+		// Debug disabled
+		return false;
+	}
+
 	Renderer::ISwapChain *VulkanRenderer::getMainSwapChain() const
 	{
 		return mMainSwapChain;
@@ -709,14 +717,6 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	bool VulkanRenderer::isDebugEnabled()
-	{
-		// TODO(co) Implement me
-
-		// Debug disabled
-		return false;
-	}
-
 	void VulkanRenderer::setDebugMarker(const wchar_t *)
 	{
 		// TODO(co) Implement me
