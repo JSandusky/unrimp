@@ -32,7 +32,8 @@
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FirstTriangle::FirstTriangle(const char *rendererName) :
-	IApplicationRenderer(rendererName)
+	IApplicationRenderer(rendererName),
+	mCommandBucket(16)
 {
 	// Nothing here
 }
@@ -184,42 +185,45 @@ void FirstTriangle::onDraw()
 	if (nullptr != renderer && nullptr != mPipelineState)
 	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBucket)
 
 		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+		RendererRuntime::Command::Clear::create(mCommandBucket, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
 		// Set the used graphics root signature
-		renderer->setGraphicsRootSignature(mRootSignature);
+		RendererRuntime::Command::SetGraphicsRootSignature::create(mCommandBucket, mRootSignature);
 
 		// Set the used pipeline state object (PSO)
-		renderer->setPipelineState(mPipelineState);
+		RendererRuntime::Command::SetPipelineState::create(mCommandBucket, mPipelineState);
 
 		{ // Setup input assembly (IA)
 			// Set the used vertex array
-			renderer->iaSetVertexArray(mVertexArray);
+			RendererRuntime::Command::SetVertexArray::create(mCommandBucket, mVertexArray);
 
 			// Set the primitive topology used for draw calls
-			renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
+			RendererRuntime::Command::SetPrimitiveTopology::create(mCommandBucket, Renderer::PrimitiveTopology::TRIANGLE_LIST);
 		}
 
 		// Set debug marker
 		// -> Debug methods: When using Direct3D <11.1, these methods map to the Direct3D 9 PIX functions
 		//    (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
-		RENDERER_SET_DEBUG_MARKER(renderer, L"Everyone ready for the upcoming triangle?")
+		RENDERER_SET_DEBUG_MARKER2(mCommandBucket, L"Everyone ready for the upcoming triangle?")
 
 		{
 			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Drawing the fancy triangle")
+			RENDERER_BEGIN_DEBUG_EVENT2(mCommandBucket, L"Drawing the fancy triangle")
 
 			// Render the specified geometric primitive, based on an array of vertices
-			renderer->draw(Renderer::IndirectBuffer(3));
+			RendererRuntime::Command::Draw::create(mCommandBucket, 3);
 
 			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
+			RENDERER_END_DEBUG_EVENT2(mCommandBucket)
 		}
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
+		RENDERER_END_DEBUG_EVENT2(mCommandBucket)
+
+		// Submit command bucket to the renderer backend
+		mCommandBucket.submit(*renderer);
 	}
 }

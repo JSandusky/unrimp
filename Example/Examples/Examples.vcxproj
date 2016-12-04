@@ -339,13 +339,6 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Framework\X11Application.h" />
     <ClInclude Include="src\Framework\X11Window.h" />
     <ClInclude Include="src\PrecompiledHeader.h" />
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket.h" />
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_130.h" />
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_140.h" />
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_ES2.h" />
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D10_D3D11_D3D12.h" />
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D9.h" />
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_Null.h" />
     <ClInclude Include="src\Runtime\FirstCompositor\CompositorInstancePassFirst.h" />
     <ClInclude Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.h" />
     <ClInclude Include="src\Runtime\FirstCompositor\CompositorResourcePassFirst.h" />
@@ -415,7 +408,6 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Runtime\FirstCommandBucket\FirstCommandBucket.cpp" />
     <ClCompile Include="src\Runtime\FirstCompositor\CompositorInstancePassFirst.cpp" />
     <ClCompile Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.cpp" />
     <ClCompile Include="src\Runtime\FirstCompositor\CompositorResourcePassFirst.cpp" />

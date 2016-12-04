@@ -18,6 +18,12 @@
 \*********************************************************/
 
 
+//[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
 // TODO(co) Work in progress
 
 
@@ -26,12 +32,10 @@
 // http://molecularmusings.wordpress.com/2014/11/13/stateless-layered-multi-threaded-rendering-part-2-stateless-api-design/ - "Stateless, layered, multi-threaded rendering – Part 2"
 // http://molecularmusings.wordpress.com/2014/12/16/stateless-layered-multi-threaded-rendering-part-3-api-design-details/ - "Stateless, layered, multi-threaded rendering – Part 3"
 // http://realtimecollisiondetection.net/blog/?p=86 - "Order your graphics draw calls around!"
-
+// but without a key inside the more general command bucket. Sorting is a job of a more high level construct like a render queue which also automatically will perform batching and instancing.
 
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Command/Material.h"
-
-#include <type_traits>
 
 
 //[-------------------------------------------------------]
@@ -42,10 +46,8 @@ namespace RendererRuntime
 
 
 	typedef void (*BackendDispatchFunction)(const void*, Renderer::IRenderer& renderer);
-
-
-
 	typedef void* CommandPacket;
+
 
 	namespace commandPacket
 	{
@@ -56,6 +58,7 @@ namespace RendererRuntime
 		template <typename T>
 		CommandPacket Create(size_t auxMemorySize)
 		{
+			// TODO(co) Memory management: Only one large chunk of continuous and reused memory
 			return ::operator new(GetSize<T>(auxMemorySize));
 		}
 
@@ -128,86 +131,28 @@ namespace RendererRuntime
 
 
 
-	namespace Command
-	{
-		struct Draw
-		{
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
-
-			// Input-assembler (IA) stage
-			Renderer::IVertexArray*			  iaVertexArray;
-			Renderer::PrimitiveTopology iaPrimitiveTopology;
-			// Material
-			Material* material;
-			// Draw call specific
-			uint32_t startVertexLocation;
-			uint32_t numberOfVertices;
-		};
-		static_assert(std::is_pod<Draw>::value == true, "Draw must be a POD");
-
-		struct DrawIndexed
-		{
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
-
-			// Input-assembler (IA) stage
-			Renderer::IVertexArray*			  iaVertexArray;
-			Renderer::PrimitiveTopology iaPrimitiveTopology;
-			// Material
-			Material* material;
-			// Draw call specific
-			uint32_t startIndexLocation;
-			uint32_t numberOfIndices;
-			int32_t  baseVertexLocation;
-		};
-		static_assert(std::is_pod<DrawIndexed>::value == true, "DrawIndexed must be a POD");
-
-		struct CopyUniformBufferData
-		{
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
-
-			Renderer::IUniformBuffer* uniformBufferDynamicVs;
-			uint32_t size;
-			void* data;
-		};
-		static_assert(std::is_pod<CopyUniformBufferData>::value == true, "CopyUniformBufferData must be a POD");
-
-	}
-
-
-
-
-
-
-
-
-
-	template <typename T>
 	class CommandBucket
 	{
-		typedef T Key;
 	public:
-		CommandBucket(uint16_t maximumNumberOfCommandPackages) :
+		inline CommandBucket(uint16_t maximumNumberOfCommandPackages) :
 			mMaximumNumberOfCommandPackages(maximumNumberOfCommandPackages),
-			mKeys(new T[mMaximumNumberOfCommandPackages]),
 			mCommandPackets(new CommandPacket[mMaximumNumberOfCommandPackages]),
 			mCurrentNumberOfCommandPackages(0)
 		{
 		}
-		~CommandBucket()
+		inline ~CommandBucket()
 		{
-			delete [] mKeys;
 			delete [] mCommandPackets;
 		}
 		template <typename U>
-		U* addCommand(Key key, size_t auxMemorySize = 0)
+		U* addCommand(size_t auxMemorySize = 0)
 		{
 			CommandPacket packet = commandPacket::Create<U>(auxMemorySize);
 
-			// store key and pointer to the data
+			// store pointer to the data
 			{
 				// TODO: add some kind of lock or atomic operation here
 				const unsigned int current = mCurrentNumberOfCommandPackages++;
-				mKeys[current] = key;
 				mCommandPackets[current] = packet;
 			}
 
@@ -216,30 +161,8 @@ namespace RendererRuntime
 
 			return commandPacket::GetCommand<U>(packet);
 		}
-		template <typename U, typename V>
-		U* appendCommand(V* command, size_t auxMemorySize = 0)
+		inline void submit(Renderer::IRenderer& renderer)
 		{
-			CommandPacket packet = commandPacket::Create<U>(auxMemorySize);
-
-			// append this command to the given one
-			commandPacket::StoreNextCommandPacket<V>(command, packet);
-
-			commandPacket::StoreNextCommandPacket(packet, nullptr);
-			commandPacket::StoreBackendDispatchFunction(packet, U::DISPATCH_FUNCTION);
-
-			return commandPacket::GetCommand<U>(packet);
-		}
-		void sort()
-		{
-		}
-		void submit(Renderer::IRenderer& renderer)
-		{
-			/*
-			SetViewMatrix();
-			SetProjectionMatrix();
-			SetRenderTargets();
-			*/
-
 			for (unsigned int i=0; i < mCurrentNumberOfCommandPackages; ++i)
 			{
 				CommandPacket packet = mCommandPackets[i];
@@ -249,7 +172,7 @@ namespace RendererRuntime
 					CommandPacket previousPacket = packet;
 					packet = commandPacket::LoadNextCommandPacket(packet);
 
-					// TODO Memory management
+					// TODO(co) Memory management: Only one large chunk of continuous and reused memory
 					delete previousPacket;
 
 				} while (packet != nullptr);
@@ -258,7 +181,7 @@ namespace RendererRuntime
 			mCurrentNumberOfCommandPackages = 0;
 		}
 	private:
-		void submitPacket(const CommandPacket packet, Renderer::IRenderer& renderer)
+		inline void submitPacket(const CommandPacket packet, Renderer::IRenderer& renderer)
 		{
 			const BackendDispatchFunction function = commandPacket::LoadBackendDispatchFunction(packet);
 			const void* command = commandPacket::LoadCommand(packet);
@@ -266,7 +189,6 @@ namespace RendererRuntime
 		}
 	private:
 		uint16_t	   mMaximumNumberOfCommandPackages;
-		Key*		   mKeys;
 		CommandPacket* mCommandPackets;
 		uint16_t	   mCurrentNumberOfCommandPackages;
 
@@ -274,6 +196,373 @@ namespace RendererRuntime
 
 
 
+
+	namespace Command
+	{
+		//[-------------------------------------------------------]
+		//[ Graphics root                                         ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Set the used graphics root signature
+		*
+		*  @param[in] rootSignature
+		*    Graphics root signature to use, can be an null pointer (default: "nullptr")
+		*/
+		struct SetGraphicsRootSignature
+		{
+			// Static methods
+			inline static void create(CommandBucket& commandBucket, Renderer::IRootSignature* rootSignature)
+			{
+				*commandBucket.addCommand<SetGraphicsRootSignature>() = SetGraphicsRootSignature(rootSignature);
+			}
+			// Constructor
+			inline SetGraphicsRootSignature(Renderer::IRootSignature* _rootSignature) :
+				rootSignature(_rootSignature)
+			{};
+			// Data
+			Renderer::IRootSignature* rootSignature;
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+		//[-------------------------------------------------------]
+		//[ States                                                ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Set the used pipeline state
+		*
+		*  @param[in] pipelineState
+		*    Pipeline state to use, can be an null pointer (default: "nullptr")
+		*/
+		struct SetPipelineState
+		{
+			// Static methods
+			inline static void create(CommandBucket& commandBucket, Renderer::IPipelineState* pipelineState)
+			{
+				*commandBucket.addCommand<SetPipelineState>() = SetPipelineState(pipelineState);
+			}
+			// Constructor
+			inline SetPipelineState(Renderer::IPipelineState* _pipelineState) :
+				pipelineState(_pipelineState)
+			{};
+			// Data
+			Renderer::IPipelineState* pipelineState;
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+		//[-------------------------------------------------------]
+		//[ Input-assembler (IA) stage                            ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Set the used vertex array
+		*
+		*  @param[in] vertexArray
+		*    Vertex array to use, can be an null pointer (default: "nullptr")
+		*/
+		struct SetVertexArray
+		{
+			// Static methods
+			inline static void create(CommandBucket& commandBucket, Renderer::IVertexArray* vertexArray)
+			{
+				*commandBucket.addCommand<SetVertexArray>() = SetVertexArray(vertexArray);
+			}
+			// Constructor
+			inline SetVertexArray(Renderer::IVertexArray* _vertexArray) :
+				vertexArray(_vertexArray)
+			{};
+			// Data
+			Renderer::IVertexArray* vertexArray;
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+		/**
+		*  @brief
+		*    Set the primitive topology used for draw calls
+		*
+		*  @param[in] primitiveTopology
+		*    Member of the primitive topology enumerated type, describing the type of primitive to render (default: "Renderer::PrimitiveTopology::UNKNOWN")
+		*/
+		struct SetPrimitiveTopology
+		{
+			// Static methods
+			inline static void create(CommandBucket& commandBucket, Renderer::PrimitiveTopology primitiveTopology)
+			{
+				*commandBucket.addCommand<SetPrimitiveTopology>() = SetPrimitiveTopology(primitiveTopology);
+			}
+			// Constructor
+			inline SetPrimitiveTopology(Renderer::PrimitiveTopology _primitiveTopology) :
+				primitiveTopology(_primitiveTopology)
+			{};
+			// Data
+			Renderer::PrimitiveTopology primitiveTopology;
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+		//[-------------------------------------------------------]
+		//[ Operations                                            ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Clears the viewport to a specified RGBA color, clears the depth buffer,
+		*    and erases the stencil buffer
+		*
+		*  @param[in] flags
+		*    Flags that indicate what should be cleared. This parameter can be any
+		*    combination of the following flags, but at least one flag must be used:
+		*    "Renderer::ClearFlag::COLOR", "Renderer::ClearFlag::DEPTH" and "Renderer::ClearFlag::STENCIL, see "Renderer::ClearFlag"-flags
+		*  @param[in] color
+		*    RGBA clear color (used if "Renderer::ClearFlag::COLOR" is set)
+		*  @param[in] z
+		*    Z clear value. (if "Renderer::ClearFlag::DEPTH" is set)
+		*    This parameter can be in the range from 0.0 through 1.0. A value of 0.0
+		*    represents the nearest distance to the viewer, and 1.0 the farthest distance.
+		*  @param[in] stencil
+		*    Value to clear the stencil-buffer with. This parameter can be in the range from
+		*    0 through 2^n–1, where n is the bit depth of the stencil buffer.
+		*
+		*  @note
+		*    - The current viewport(s) (see "Renderer::IRenderer::rsSetViewports()") does not affect the clear operation
+		*    - The current scissor rectangle(s) (see "Renderer::IRenderer::rsSetScissorRectangles()") does not affect the clear operation
+		*    - In case there are multiple active render targets, all render targets are cleared
+		*/
+		struct Clear
+		{
+			// Static methods
+			inline static void create(CommandBucket& commandBucket, uint32_t flags, const float color[4], float z, uint32_t stencil)
+			{
+				*commandBucket.addCommand<Clear>() = Clear(flags, color, z, stencil);
+			}
+			// Constructor
+			inline Clear(uint32_t _flags, const float _color[4], float _z, uint32_t _stencil) :
+				flags(_flags),
+				color{_color[0], _color[1], _color[2], _color[3]},
+				z(_z),
+				stencil(_stencil)
+			{};
+			// Data
+			uint32_t flags;
+			float	 color[4];
+			float	 z;
+			uint32_t stencil;
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+		//[-------------------------------------------------------]
+		//[ Draw call                                             ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Render the specified geometric primitive, based on an array of vertices instancing and indirect draw
+		*
+		*  @param[in] indirectBuffer
+		*    Indirect buffer to use, the indirect buffer must contain at least "numberOfDraws" instances of "Renderer::DrawInstancedArguments" starting at "indirectBufferOffset"
+		*  @param[in] indirectBufferOffset
+		*    Indirect buffer offset
+		*  @param[in] numberOfDraws
+		*    Number of draws, can be 0
+		*
+		*  @note
+		*    - Draw instanced is a shader model 4 feature, only supported if "Renderer::Capabilities::drawInstanced" is true
+		*    - In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
+		*      "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
+		*    - Fails if no vertex array is set
+		*    - If the multi-draw indirect feature is not supported this parameter, multiple draw calls are emitted
+		*    - If the draw indirect feature is not supported, a software indirect buffer is used and multiple draw calls are emitted
+		*/
+		struct Draw
+		{
+			// Static methods
+			inline static void create(CommandBucket& commandBucket, const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+			{
+				*commandBucket.addCommand<Draw>() = Draw(indirectBuffer, indirectBufferOffset, numberOfDraws);
+			}
+			inline static void create(CommandBucket& commandBucket, uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0)
+			{
+				Draw* drawCommand = commandBucket.addCommand<Draw>(sizeof(Renderer::IndirectBuffer));
+
+				// TODO(co) I'am sure there's a more elegant way to do this
+				Renderer::IndirectBuffer* indirectBuffer = reinterpret_cast<Renderer::IndirectBuffer*>(commandPacket::GetAuxiliaryMemory(drawCommand));
+				Renderer::IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
+				memcpy(indirectBuffer, &indirectBufferData, sizeof(Renderer::IndirectBuffer));
+
+				*drawCommand = Draw(*indirectBuffer, 0, 1);
+			}
+
+			// Constructor
+			inline Draw(const Renderer::IIndirectBuffer& _indirectBuffer, uint32_t _indirectBufferOffset, uint32_t _numberOfDraws) :
+				indirectBuffer(&_indirectBuffer),
+				indirectBufferOffset(_indirectBufferOffset),
+				numberOfDraws(_numberOfDraws)
+			{};
+			// Data
+			const Renderer::IIndirectBuffer* indirectBuffer;
+			uint32_t						 indirectBufferOffset;
+			uint32_t						 numberOfDraws;
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+		/**
+		*  @brief
+		*    Render the specified geometric primitive, based on indexing into an array of vertices, instancing and indirect draw
+		*
+		*  @param[in] indirectBuffer
+		*    Indirect buffer to use, the indirect buffer must contain at least "numberOfDraws" instances of "Renderer::DrawIndexedInstancedArguments" starting at bindirectBufferOffset"
+		*  @param[in] indirectBufferOffset
+		*    Indirect buffer offset
+		*  @param[in] numberOfDraws
+		*    Number of draws, can be 0
+		*
+		*  @note
+		*    - Instanced arrays is a shader model 3 feature, only supported if "Renderer::Capabilities::instancedArrays" is true
+		*    - Draw instanced is a shader model 4 feature, only supported if "Renderer::Capabilities::drawInstanced" is true
+		*    - This method draws indexed primitives from the current set of data input streams
+		*    - Fails if no index and/or vertex array is set
+		*    - If the multi-draw indirect feature is not supported this parameter, multiple draw calls are emitted
+		*    - If the draw indirect feature is not supported, a software indirect buffer is used and multiple draw calls are emitted
+		*/
+		struct DrawIndexed
+		{
+			// Static methods
+			inline static void create(CommandBucket& commandBucket, const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+			{
+				*commandBucket.addCommand<DrawIndexed>() = DrawIndexed(indirectBuffer, indirectBufferOffset, numberOfDraws);
+			}
+			inline static void create(CommandBucket& commandBucket, uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0)
+			{
+				DrawIndexed* drawCommand = commandBucket.addCommand<DrawIndexed>(sizeof(Renderer::IndexedIndirectBuffer));
+
+				// TODO(co) I'am sure there's a more elegant way to do this
+				Renderer::IndexedIndirectBuffer* indexedIndirectBuffer = reinterpret_cast<Renderer::IndexedIndirectBuffer*>(commandPacket::GetAuxiliaryMemory(drawCommand));
+				Renderer::IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
+				memcpy(indexedIndirectBuffer, &indexedIndirectBufferData, sizeof(Renderer::IndexedIndirectBuffer));
+
+				*drawCommand = DrawIndexed(*indexedIndirectBuffer, 0, 1);
+			}
+			// Constructor
+			inline DrawIndexed(const Renderer::IIndirectBuffer& _indirectBuffer, uint32_t _indirectBufferOffset, uint32_t _numberOfDraws) :
+				indirectBuffer(&_indirectBuffer),
+				indirectBufferOffset(_indirectBufferOffset),
+				numberOfDraws(_numberOfDraws)
+			{};
+			// Data
+			const Renderer::IIndirectBuffer* indirectBuffer;
+			uint32_t						 indirectBufferOffset;
+			uint32_t						 numberOfDraws;
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+		//[-------------------------------------------------------]
+		//[ TODO(co)                                              ]
+		//[-------------------------------------------------------]
+		struct CopyUniformBufferData
+		{
+			Renderer::IUniformBuffer* uniformBufferDynamicVs;
+			uint32_t size;
+			void* data;
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+		//[-------------------------------------------------------]
+		//[ Debug                                                 ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Set a debug marker
+		*
+		*  @param[in] name
+		*    Unicode name of the debug marker, must be valid (there's no internal null pointer test)
+		*
+		*  @see
+		*    - "isDebugEnabled()"
+		*/
+		struct SetDebugMarker
+		{
+			// Static methods
+			inline static void create(CommandBucket& commandBucket, const wchar_t* name)
+			{
+				*commandBucket.addCommand<SetDebugMarker>() = SetDebugMarker(name);
+			}
+			// Constructor
+			inline SetDebugMarker(const wchar_t* _name)
+			{
+				assert(wcslen(_name) < 64);
+				wcsncpy(name, _name, 64);
+				name[63] = '\0';
+			};
+			// Data
+			wchar_t name[64];
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+		/**
+		*  @brief
+		*    Begin debug event
+		*
+		*  @param[in] name
+		*    Unicode name of the debug event, must be valid (there's no internal null pointer test)
+		*
+		*  @see
+		*    - "isDebugEnabled()"
+		*/
+		struct BeginDebugEvent
+		{
+			// Static methods
+			inline static void create(CommandBucket& commandBucket, const wchar_t* name)
+			{
+				*commandBucket.addCommand<BeginDebugEvent>() = BeginDebugEvent(name);
+			}
+			// Constructor
+			inline BeginDebugEvent(const wchar_t* _name)
+			{
+				assert(wcslen(_name) < 64);
+				wcsncpy(name, _name, 64);
+				name[63] = '\0';
+			};
+			// Data
+			wchar_t name[64];
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+		/**
+		*  @brief
+		*    End the last started debug event
+		*
+		*  @see
+		*    - "isDebugEnabled()"
+		*/
+		struct EndDebugEvent
+		{
+			// Static methods
+			inline static void create(CommandBucket& commandBucket)
+			{
+				commandBucket.addCommand<EndDebugEvent>();
+			}
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+
+	}
+
+
+	// TODO(co) Move the following macros into the right place when finishing the command bucket implementation
+	#define RENDERER_SET_DEBUG_MARKER2(commandBucket, name) RendererRuntime::Command::SetDebugMarker::create(commandBucket, name);
+	#define RENDERER_SET_DEBUG_MARKER_FUNCTION2(commandBucket) RendererRuntime::Command::SetDebugMarker::create(commandBucket, RENDERER_INTERNAL__WFUNCTION__);
+	#define RENDERER_BEGIN_DEBUG_EVENT2(commandBucket, name) RendererRuntime::Command::BeginDebugEvent::create(commandBucket, name);
+	#define RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBucket) RendererRuntime::Command::BeginDebugEvent::create(commandBucket, RENDERER_INTERNAL__WFUNCTION__);
+	#define RENDERER_END_DEBUG_EVENT2(commandBucket) RendererRuntime::Command::EndDebugEvent::create(commandBucket);
 
 
 //[-------------------------------------------------------]

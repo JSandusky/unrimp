@@ -135,7 +135,6 @@ if(RENDERER_RUNTIME)
 		${SOURCE_CODES}
 		src/Framework/IApplicationRendererRuntime.cpp
 		src/FirstMesh/FirstMesh.cpp
-		src/FirstCommandBucket/FirstCommandBucket.cpp
 		src/FirstCompositor/FirstCompositor.cpp
 		src/FirstScene/FirstScene.cpp
 	)

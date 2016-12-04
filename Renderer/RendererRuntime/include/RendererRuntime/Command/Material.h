@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/Public/Renderer.h>
@@ -36,12 +42,12 @@ namespace RendererRuntime
 	{
 		Renderer::IPipelineStatePtr pipelineState;
 
-		void clear()
+		inline void clear()
 		{
 			pipelineState = nullptr;
 		}
 
-		void bind(Renderer::IRenderer& renderer)
+		inline void bind(Renderer::IRenderer& renderer)
 		{
 			renderer.setPipelineState(pipelineState);
 		}

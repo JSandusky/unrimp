@@ -61,9 +61,6 @@
     <Filter Include="Advanced\FirstPostProcessing">
       <UniqueIdentifier>{2110a6fd-1981-462d-8618-8655f0d0062e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Runtime\FirstCommandBucket">
-      <UniqueIdentifier>{18b46f74-e7bf-4dd3-ab5e-4b2f3fd66d50}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Runtime\FirstCompositor">
       <UniqueIdentifier>{3e6f9886-5f21-4ffc-9771-cec656041522}</UniqueIdentifier>
     </Filter>
@@ -312,20 +309,8 @@
     <ClInclude Include="src\PrecompiledHeader.h" />
     <ClInclude Include="src\ConsoleExampleRunner.h" />
     <ClInclude Include="src\ExampleRunner.h" />
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
-    </ClInclude>
     <ClInclude Include="src\Runtime\FirstCompositor\FirstCompositor.h">
       <Filter>Runtime\FirstCompositor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_ES2.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_Null.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D9.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_ES2.h">
       <Filter>Runtime\FirstMesh</Filter>
@@ -390,9 +375,6 @@
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
     </ClInclude>
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D10_D3D11_D3D12.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Basics\FirstRenderToTexture</Filter>
     </ClInclude>
@@ -407,12 +389,6 @@
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.h">
       <Filter>Runtime\FirstCompositor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_130.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_140.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_130.h">
       <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
@@ -570,9 +546,6 @@
     <ClCompile Include="src\PrecompiledHeader.cpp" />
     <ClCompile Include="src\ExampleRunner.cpp" />
     <ClCompile Include="src\ConsoleExampleRunner.cpp" />
-    <ClCompile Include="src\Runtime\FirstCommandBucket\FirstCommandBucket.cpp">
-      <Filter>Runtime\FirstCommandBucket</Filter>
-    </ClCompile>
     <ClCompile Include="src\Runtime\FirstCompositor\FirstCompositor.cpp">
       <Filter>Runtime\FirstCompositor</Filter>
     </ClCompile>

@@ -156,6 +156,7 @@ namespace RendererRuntime
 		if (mLastBoundPool != materialBufferSlot.mAssignedMaterialPool)
 		{
 			mLastBoundPool = static_cast<BufferPool*>(materialBufferSlot.mAssignedMaterialPool);
+			assert(nullptr != mLastBoundPool);
 			const MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
 			assert(nullptr != materialUniformBuffer);
 			rendererRuntime.getRenderer().setGraphicsRootDescriptorTable(materialUniformBuffer->rootParameterIndex, mLastBoundPool->uniformBuffer);
