@@ -109,9 +109,11 @@ namespace RendererRuntime
 		mRenderer = &renderer;
 		mRenderer->addReference();
 
-		// Create the buffer manager instance and add our reference
+		// Create the buffer and texture manager instance and add our reference
 		mBufferManager = mRenderer->createBufferManager();
 		mBufferManager->addReference();
+		mTextureManager = mRenderer->createTextureManager();
+		mTextureManager->addReference();
 
 		// Create the core manager instances
 		mThreadManager = new ThreadManager();
@@ -179,7 +181,8 @@ namespace RendererRuntime
 		delete mAssetManager;
 		delete mThreadManager;
 
-		// Release the buffer manager instance
+		// Release the texture and buffer manager instance
+		mTextureManager->release();
 		mBufferManager->release();
 
 		// Release our renderer reference

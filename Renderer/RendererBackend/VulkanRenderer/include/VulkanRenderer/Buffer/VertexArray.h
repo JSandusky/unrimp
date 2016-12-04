@@ -33,6 +33,11 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	struct VertexAttributes;
+	struct VertexArrayVertexBuffer;
+}
 namespace VulkanRenderer
 {
 	class IndexBuffer;

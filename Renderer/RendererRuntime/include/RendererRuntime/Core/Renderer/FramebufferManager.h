@@ -34,6 +34,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -86,7 +95,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline explicit FramebufferManager(Renderer::IRenderer& renderer);
+		inline explicit FramebufferManager(IRendererRuntime& rendererRuntime);
 		inline ~FramebufferManager();
 		FramebufferManager(const FramebufferManager&) = delete;
 		FramebufferManager& operator=(const FramebufferManager&) = delete;
@@ -105,7 +114,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IRenderer&	mRenderer;
+		IRendererRuntime&		mRendererRuntime;
 		SortedFramebufferVector mSortedFramebufferVector;
 
 

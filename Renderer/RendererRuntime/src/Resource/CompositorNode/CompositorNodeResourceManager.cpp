@@ -178,7 +178,7 @@ namespace RendererRuntime
 	CompositorNodeResourceManager::CompositorNodeResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mCompositorPassFactory(&::detail::defaultCompositorPassFactory),
-		mFramebufferManager(new FramebufferManager(mRendererRuntime.getRenderer()))
+		mFramebufferManager(new FramebufferManager(mRendererRuntime))
 	{
 		// Nothing here
 	}

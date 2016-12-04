@@ -58,6 +58,7 @@ namespace Renderer
 			class IUniformBuffer;
 			class ITextureBuffer;
 			class IIndirectBuffer;
+		class ITextureManager;
 		class ITexture;
 			class ITexture2D;
 			class ITexture2DArray;
@@ -1787,8 +1788,7 @@ namespace Renderer
 			virtual ISwapChain* createSwapChain(handle nativeWindowHandle) = 0;
 			virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorTextures, ITexture** colorTextures, ITexture* depthStencilTexture = nullptr) = 0;
 			virtual IBufferManager *createBufferManager() = 0;
-			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
-			virtual ITexture2DArray* createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
+			virtual ITextureManager *createTextureManager() = 0;
 			virtual IRootSignature* createRootSignature(const RootSignature& rootSignature) = 0;
 			virtual IPipelineState* createPipelineState(const PipelineState& pipelineState) = 0;
 			virtual ISamplerState* createSamplerState(const SamplerState& samplerState) = 0;
@@ -2020,7 +2020,7 @@ namespace Renderer
 		typedef SmartRefCount<IFramebuffer> IFramebufferPtr;
 	#endif
 
-	// Renderer/RenderTarget/IBufferManager.h
+	// Renderer/Buffer/IBufferManager.h
 	#ifndef __RENDERER_IBUFFERMANAGER_H__
 	#define __RENDERER_IBUFFERMANAGER_H__
 		class IBufferManager : public RefCount<IBufferManager>
@@ -2206,6 +2206,30 @@ namespace Renderer
 		private:
 			DrawIndexedInstancedArguments mDrawIndexedInstancedArguments;
 		};
+	#endif
+
+	// Renderer/Texture/ITextureManager.h
+	#ifndef __RENDERER_ITEXTUREMANAGER_H__
+	#define __RENDERER_ITEXTUREMANAGER_H__
+		class ITextureManager : public RefCount<ITextureManager>
+		{
+		public:
+			inline virtual ~ITextureManager();
+			inline IRenderer& getRenderer() const
+			{
+				return mRenderer;
+			}
+		public:
+			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
+			virtual ITexture2DArray* createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
+		protected:
+			inline explicit ITextureManager(IRenderer& renderer);
+			inline explicit ITextureManager(const ITextureManager& source);
+			inline ITextureManager& operator =(const ITextureManager& source);
+		private:
+			IRenderer& mRenderer;
+		};
+		typedef SmartRefCount<ITextureManager> ITextureManagerPtr;
 	#endif
 
 	// Renderer/Texture/ITexture.h

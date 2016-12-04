@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 #include <algorithm>
 
@@ -75,11 +76,11 @@ namespace RendererRuntime
 			// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 			// -> Not required for OpenGL and OpenGL ES 2
 			// -> The optimized texture clear value is a Direct3D 12 related option
-			Renderer::ITexture* texture2D = mRenderer.createTexture2D(framebufferSignature.getWidth(), framebufferSignature.getHeight(), framebufferSignature.getTextureFormat(), nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT);
+			Renderer::ITexture* texture2D = mRendererRuntime.getTextureManager().createTexture2D(framebufferSignature.getWidth(), framebufferSignature.getHeight(), framebufferSignature.getTextureFormat(), nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT);
 
 			// Create the framebuffer object (FBO) instance
 			// -> The framebuffer automatically adds a reference to the provided textures
-			framebufferElement.framebuffer = mRenderer.createFramebuffer(1, &texture2D);
+			framebufferElement.framebuffer = mRendererRuntime.getRenderer().createFramebuffer(1, &texture2D);
 			framebufferElement.framebuffer->addReference();
 
 			// Register the new framebuffer element

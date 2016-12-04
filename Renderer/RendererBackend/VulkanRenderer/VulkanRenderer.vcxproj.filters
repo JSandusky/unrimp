@@ -130,6 +130,9 @@
     <ClInclude Include="include\VulkanRenderer\Buffer\IndirectBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Texture\TextureManager.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -234,6 +237,9 @@
     <ClCompile Include="src\Buffer\IndirectBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Texture\TextureManager.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -315,6 +321,9 @@
     </None>
     <None Include="include\VulkanRenderer\Buffer\IndirectBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Texture\TextureManager.inl">
+      <Filter>Source Files\Texture</Filter>
     </None>
   </ItemGroup>
 </Project>

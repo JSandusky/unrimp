@@ -34,6 +34,7 @@
     <None Include="include\Direct3D9Renderer\State\IState.inl" />
     <None Include="include\Direct3D9Renderer\State\PipelineState.inl" />
     <None Include="include\Direct3D9Renderer\Texture\Texture2D.inl" />
+    <None Include="include\Direct3D9Renderer\Texture\TextureManager.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +64,7 @@
     <ClInclude Include="include\Direct3D9Renderer\State\RasterizerState.h" />
     <ClInclude Include="include\Direct3D9Renderer\State\SamplerState.h" />
     <ClInclude Include="include\Direct3D9Renderer\Texture\Texture2D.h" />
+    <ClInclude Include="include\Direct3D9Renderer\Texture\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
@@ -87,6 +89,7 @@
     <ClCompile Include="src\State\RasterizerState.cpp" />
     <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
+    <ClCompile Include="src\Texture\TextureManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FBAF5E40-0077-4B00-A424-A7F169974A55}</ProjectGuid>

@@ -41,6 +41,7 @@
     <ClInclude Include="include\VulkanRenderer\State\SamplerState.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2D.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2DArray.h" />
+    <ClInclude Include="include\VulkanRenderer\Texture\TextureManager.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanDebug.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanRenderer.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanRuntimeLinking.h" />
@@ -87,6 +88,7 @@
     <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
+    <ClCompile Include="src\Texture\TextureManager.cpp" />
     <ClCompile Include="src\VulkanRenderer.cpp" />
     <ClCompile Include="src\VulkanRuntimeLinking.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
@@ -118,6 +120,7 @@
     <None Include="include\VulkanRenderer\State\RasterizerState.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture2D.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture2DArray.inl" />
+    <None Include="include\VulkanRenderer\Texture\TextureManager.inl" />
     <None Include="include\VulkanRenderer\VulkanRenderer.inl" />
     <None Include="include\VulkanRenderer\RootSignature.inl" />
     <None Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.inl" />

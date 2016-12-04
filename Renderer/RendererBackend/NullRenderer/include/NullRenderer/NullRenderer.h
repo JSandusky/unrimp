@@ -105,8 +105,7 @@ namespace NullRenderer
 		virtual Renderer::ISwapChain *createSwapChain(handle nativeWindowHandle) override;
 		virtual Renderer::IFramebuffer *createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture = nullptr) override;
 		virtual Renderer::IBufferManager *createBufferManager() override;
-		virtual Renderer::ITexture2D *createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, uint32_t flags = 0, Renderer::TextureUsage textureUsage = Renderer::TextureUsage::DEFAULT, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) override;
-		virtual Renderer::ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, uint32_t flags = 0, Renderer::TextureUsage textureUsage = Renderer::TextureUsage::DEFAULT) override;
+		virtual Renderer::ITextureManager *createTextureManager() override;
 		virtual Renderer::IRootSignature *createRootSignature(const Renderer::RootSignature &rootSignature) override;
 		virtual Renderer::IPipelineState *createPipelineState(const Renderer::PipelineState &pipelineState) override;
 		virtual Renderer::ISamplerState *createSamplerState(const Renderer::SamplerState &samplerState) override;

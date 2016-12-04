@@ -124,6 +124,15 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the used texture manager instance
+		*
+		*  @return
+		*    The used texture manager instance, do not release the returned instance unless you added an own reference to it
+		*/
+		inline Renderer::ITextureManager& getTextureManager() const;
+
+		/**
+		*  @brief
 		*    Return the thread manager instance
 		*
 		*  @return
@@ -348,10 +357,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		// Core
-		Renderer::IRenderer*	  mRenderer;		///< The used renderer instance (we keep a reference to it), always valid
-		Renderer::IBufferManager* mBufferManager;	///< The used buffer manager instance (we keep a reference to it), always valid
-		ThreadManager*			  mThreadManager;
-		AssetManager*			  mAssetManager;
+		Renderer::IRenderer*	   mRenderer;		///< The used renderer instance (we keep a reference to it), always valid
+		Renderer::IBufferManager*  mBufferManager;	///< The used buffer manager instance (we keep a reference to it), always valid
+		Renderer::ITextureManager* mTextureManager;	///< The used texture manager instance (we keep a reference to it), always valid
+		ThreadManager*			   mThreadManager;
+		AssetManager*			   mAssetManager;
 		// Resource
 		ResourceStreamer*					mResourceStreamer;
 		TextureResourceManager*				mTextureResourceManager;

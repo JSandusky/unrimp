@@ -42,10 +42,9 @@
 #include "OpenGLRenderer/Buffer/VertexArrayVaoDsa.h"
 #include "OpenGLRenderer/Buffer/VertexArrayVaoBind.h"
 #include "OpenGLRenderer/Buffer/IndirectBuffer.h"
-#include "OpenGLRenderer/Texture/Texture2DDsa.h"
-#include "OpenGLRenderer/Texture/Texture2DBind.h"
-#include "OpenGLRenderer/Texture/Texture2DArrayDsa.h"
-#include "OpenGLRenderer/Texture/Texture2DArrayBind.h"
+#include "OpenGLRenderer/Texture/TextureManager.h"
+#include "OpenGLRenderer/Texture/Texture2D.h"
+#include "OpenGLRenderer/Texture/Texture2DArray.h"
 #include "OpenGLRenderer/State/SamplerStateSo.h"
 #include "OpenGLRenderer/State/SamplerStateDsa.h"
 #include "OpenGLRenderer/State/SamplerStateBind.h"
@@ -409,54 +408,9 @@ namespace OpenGLRenderer
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITexture2D *OpenGLRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITextureManager *OpenGLRenderer::createTextureManager()
 	{
-		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
-
-		// Check whether or not the given texture dimension is valid
-		if (width > 0 && height > 0)
-		{
-			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
-			{
-				// Effective direct state access (DSA)
-				return new Texture2DDsa(*this, width, height, textureFormat, data, flags);
-			}
-			else
-			{
-				// Traditional bind version
-				return new Texture2DBind(*this, width, height, textureFormat, data, flags);
-			}
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	Renderer::ITexture2DArray *OpenGLRenderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
-	{
-		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
-
-		// Check whether or not the given texture dimension is valid, "GL_EXT_texture_array" required
-		if (width > 0 && height > 0 && numberOfSlices > 0 && mExtensions->isGL_EXT_texture_array())
-		{
-			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
-			{
-				// Effective direct state access (DSA)
-				return new Texture2DArrayDsa(*this, width, height, numberOfSlices, textureFormat, data, flags);
-			}
-			else
-			{
-				// Traditional bind version
-				return new Texture2DArrayBind(*this, width, height, numberOfSlices, textureFormat, data, flags);
-			}
-		}
-		else
-		{
-			return nullptr;
-		}
+		return new TextureManager(*this);
 	}
 
 	Renderer::IRootSignature *OpenGLRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)

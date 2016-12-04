@@ -176,7 +176,7 @@ namespace
 				}
 
 				// Create the renderer texture instance
-				Renderer::ITexture2D* texture2D = rendererRuntime.getRenderer().createTexture2D(vrRenderModelTextureMap->unWidth, vrRenderModelTextureMap->unHeight, Renderer::TextureFormat::R8G8B8A8, static_cast<const void*>(vrRenderModelTextureMap->rubTextureMapData), Renderer::TextureFlag::GENERATE_MIPMAPS);
+				Renderer::ITexture2D* texture2D = rendererRuntime.getTextureManager().createTexture2D(vrRenderModelTextureMap->unWidth, vrRenderModelTextureMap->unHeight, Renderer::TextureFormat::R8G8B8A8, static_cast<const void*>(vrRenderModelTextureMap->rubTextureMapData), Renderer::TextureFlag::GENERATE_MIPMAPS);
 
 				// We need to generate the runtime texture asset right now
 				// -> Takes over the given 2D texture
@@ -416,8 +416,8 @@ namespace RendererRuntime
 				uint32_t width = 0;
 				uint32_t height = 0;
 				mVrSystem->GetRecommendedRenderTargetSize(&width, &height);
-				Renderer::ITexture* colorTexture2D = mColorTexture2D = renderer.createTexture2D(width, height, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET);
-				Renderer::ITexture* depthStencilTexture2D = renderer.createTexture2D(width, height, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+				Renderer::ITexture* colorTexture2D = mColorTexture2D = mRendererRuntime.getTextureManager().createTexture2D(width, height, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+				Renderer::ITexture* depthStencilTexture2D = mRendererRuntime.getTextureManager().createTexture2D(width, height, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET);
 
 				// Create the framebuffer object (FBO) instance
 				mFramebuffer = renderer.createFramebuffer(1, &colorTexture2D, depthStencilTexture2D);

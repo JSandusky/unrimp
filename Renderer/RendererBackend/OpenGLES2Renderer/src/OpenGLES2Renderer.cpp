@@ -35,6 +35,7 @@
 #include "OpenGLES2Renderer/Buffer/VertexArrayVao.h"
 #include "OpenGLES2Renderer/Buffer/VertexArrayNoVao.h"
 #include "OpenGLES2Renderer/Buffer/IndirectBuffer.h"
+#include "OpenGLES2Renderer/Texture/TextureManager.h"
 #include "OpenGLES2Renderer/Texture/Texture2D.h"
 #include "OpenGLES2Renderer/Texture/Texture2DArray.h"
 #include "OpenGLES2Renderer/State/SamplerState.h"
@@ -270,34 +271,9 @@ namespace OpenGLES2Renderer
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITexture2D *OpenGLES2Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITextureManager *OpenGLES2Renderer::createTextureManager()
 	{
-		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 2 has no texture usage indication
-
-		// Check whether or not the given texture dimension is valid
-		if (width > 0 && height > 0)
-		{
-			return new Texture2D(*this, width, height, textureFormat, data, flags);
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	Renderer::ITexture2DArray *OpenGLES2Renderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
-	{
-		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 2 has no texture usage indication
-
-		// Check whether or not the given texture dimension is valid, "GL_EXT_texture_array" extension required
-		if (width > 0 && height > 0 && numberOfSlices > 0 && mContext->getExtensions().isGL_EXT_texture_array())
-		{
-			return new Texture2DArray(*this, width, height, numberOfSlices, textureFormat, data, flags);
-		}
-		else
-		{
-			return nullptr;
-		}
+		return new TextureManager(*this);
 	}
 
 	Renderer::IRootSignature *OpenGLES2Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)

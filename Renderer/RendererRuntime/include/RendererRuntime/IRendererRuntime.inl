@@ -43,6 +43,11 @@ namespace RendererRuntime
 		return *mBufferManager;
 	}
 
+	inline Renderer::ITextureManager& IRendererRuntime::getTextureManager() const
+	{
+		return *mTextureManager;
+	}
+
 	inline ThreadManager& IRendererRuntime::getThreadManager() const
 	{
 		return *mThreadManager;
@@ -136,6 +141,7 @@ namespace RendererRuntime
 		// Core
 		mRenderer(nullptr),
 		mBufferManager(nullptr),
+		mTextureManager(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
 		// Resource
@@ -163,6 +169,7 @@ namespace RendererRuntime
 		// Core
 		mRenderer(nullptr),
 		mBufferManager(nullptr),
+		mTextureManager(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
 		// Resource

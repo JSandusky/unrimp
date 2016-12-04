@@ -69,6 +69,7 @@
     <ClInclude Include="include\Renderer\Texture\ITexture.h" />
     <ClInclude Include="include\Renderer\Texture\ITexture2D.h" />
     <ClInclude Include="include\Renderer\Texture\ITexture2DArray.h" />
+    <ClInclude Include="include\Renderer\Texture\ITextureManager.h" />
     <ClInclude Include="include\Renderer\Texture\TextureTypes.h" />
     <ClInclude Include="include\Renderer\WindowsHeader.h" />
   </ItemGroup>
@@ -113,6 +114,7 @@
     <None Include="include\Renderer\Texture\ITexture.inl" />
     <None Include="include\Renderer\Texture\ITexture2D.inl" />
     <None Include="include\Renderer\Texture\ITexture2DArray.inl" />
+    <None Include="include\Renderer\Texture\ITextureManager.inl" />
     <None Include="include\Renderer\Texture\TextureTypes.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>

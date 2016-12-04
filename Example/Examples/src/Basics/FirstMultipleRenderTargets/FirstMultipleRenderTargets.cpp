@@ -59,8 +59,9 @@ void FirstMultipleRenderTargets::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Create the buffer manager
+		// Create the buffer and texture manager
 		mBufferManager = renderer->createBufferManager();
+		mTextureManager = renderer->createTextureManager();
 
 		// Check whether or not multiple simultaneous render targets are supported
 		if (renderer->getCapabilities().maximumNumberOfSimultaneousRenderTargets > 1)
@@ -73,7 +74,7 @@ void FirstMultipleRenderTargets::onInitialization()
 			Renderer::ITexture *texture2D[NUMBER_OF_TEXTURES];
 			for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 			{
-				texture2D[i] = mTexture2D[i] = renderer->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
+				texture2D[i] = mTexture2D[i] = mTextureManager->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
 			}
 
 			// Create the framebuffer object (FBO) instance
@@ -219,6 +220,7 @@ void FirstMultipleRenderTargets::onDeinitialization()
 		mTexture2D[i] = nullptr;
 	}
 	mBufferManager = nullptr;
+	mTextureManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

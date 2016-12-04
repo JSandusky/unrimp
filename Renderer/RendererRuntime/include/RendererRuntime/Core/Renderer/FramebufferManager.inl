@@ -28,8 +28,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline FramebufferManager::FramebufferManager(Renderer::IRenderer& renderer) :
-		mRenderer(renderer)
+	inline FramebufferManager::FramebufferManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing here
 	}

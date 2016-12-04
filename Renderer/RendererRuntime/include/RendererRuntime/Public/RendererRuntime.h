@@ -96,6 +96,10 @@ namespace RendererRuntime
 		{
 			return *mBufferManager;
 		}
+		inline Renderer::ITextureManager& getTextureManager() const
+		{
+			return *mTextureManager;
+		}
 		inline ThreadManager& getThreadManager() const
 		{
 			return *mThreadManager;
@@ -174,6 +178,7 @@ namespace RendererRuntime
 	private:
 		Renderer::IRenderer*				mRenderer;
 		Renderer::IBufferManager*			mBufferManager;
+		Renderer::ITextureManager*			mTextureManager;
 		ThreadManager*						mThreadManager;
 		AssetManager*						mAssetManager;
 		ResourceStreamer*					mResourceStreamer;

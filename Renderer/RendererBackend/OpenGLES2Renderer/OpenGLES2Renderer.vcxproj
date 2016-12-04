@@ -40,6 +40,7 @@
     <None Include="include\OpenGLES2Renderer\State\RasterizerState.inl" />
     <None Include="include\OpenGLES2Renderer\Texture\Texture2D.inl" />
     <None Include="include\OpenGLES2Renderer\Texture\Texture2DArray.inl" />
+    <None Include="include\OpenGLES2Renderer\Texture\TextureManager.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +73,7 @@
     <ClInclude Include="include\OpenGLES2Renderer\State\SamplerState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2D.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2DArray.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\Texture\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
@@ -101,6 +103,7 @@
     <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
+    <ClCompile Include="src\Texture\TextureManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{161E1929-E33D-4074-A059-54030DB947AA}</ProjectGuid>

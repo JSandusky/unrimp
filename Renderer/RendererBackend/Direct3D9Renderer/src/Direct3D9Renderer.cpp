@@ -33,6 +33,7 @@
 #include "Direct3D9Renderer/Buffer/IndexBuffer.h"
 #include "Direct3D9Renderer/Buffer/VertexBuffer.h"
 #include "Direct3D9Renderer/Buffer/IndirectBuffer.h"
+#include "Direct3D9Renderer/Texture/TextureManager.h"
 #include "Direct3D9Renderer/Texture/Texture2D.h"
 #include "Direct3D9Renderer/State/SamplerState.h"
 #include "Direct3D9Renderer/State/PipelineState.h"
@@ -331,23 +332,9 @@ namespace Direct3D9Renderer
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITexture2D *Direct3D9Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITextureManager *Direct3D9Renderer::createTextureManager()
 	{
-		// Check whether or not the given texture dimension is valid
-		if (width > 0 && height > 0)
-		{
-			return new Texture2D(*this, width, height, textureFormat, data, flags, textureUsage);
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	Renderer::ITexture2DArray *Direct3D9Renderer::createTexture2DArray(uint32_t, uint32_t, uint32_t, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
-	{
-		// Direct3D 9 has no 2D texture arrays
-		return nullptr;
+		return new TextureManager(*this);
 	}
 
 	Renderer::IRootSignature *Direct3D9Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)

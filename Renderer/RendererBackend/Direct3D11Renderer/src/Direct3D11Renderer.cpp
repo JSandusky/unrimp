@@ -36,6 +36,7 @@
 #include "Direct3D11Renderer/Buffer/UniformBuffer.h"
 #include "Direct3D11Renderer/Buffer/TextureBuffer.h"
 #include "Direct3D11Renderer/Buffer/IndirectBuffer.h"
+#include "Direct3D11Renderer/Texture/TextureManager.h"
 #include "Direct3D11Renderer/Texture/Texture2D.h"
 #include "Direct3D11Renderer/Texture/Texture2DArray.h"
 #include "Direct3D11Renderer/State/SamplerState.h"
@@ -377,14 +378,9 @@ namespace Direct3D11Renderer
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITexture2D *Direct3D11Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITextureManager *Direct3D11Renderer::createTextureManager()
 	{
-		return new Texture2D(*this, width, height, textureFormat, data, flags, textureUsage);
-	}
-
-	Renderer::ITexture2DArray *Direct3D11Renderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
-	{
-		return new Texture2DArray(*this, width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
+		return new TextureManager(*this);
 	}
 
 	Renderer::IRootSignature *Direct3D11Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)

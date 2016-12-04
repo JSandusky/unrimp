@@ -47,30 +47,22 @@ namespace Renderer
 	class IProgram;
 	class IResource;
 	struct Viewport;
-	class ITexture2D;
 	class ISwapChain;
 	struct BlendState;
-	class IIndexBuffer;
 	class IVertexArray;
 	class IFramebuffer;
 	class ISamplerState;
 	struct SamplerState;
-	class IVertexBuffer;
 	class IRenderTarget;
 	class IBufferManager;
 	class IRootSignature;
 	struct RootSignature;
 	class IPipelineState;
 	struct PipelineState;
-	class IUniformBuffer;
+	class ITextureManager;
 	class IShaderLanguage;
-	class ITexture2DArray;
 	class IIndirectBuffer;
-	struct RasterizerState;
-	struct VertexAttributes;
 	struct ScissorRectangle;
-	struct DepthStencilState;
-	struct VertexArrayVertexBuffer;
 }
 
 
@@ -337,67 +329,12 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Create a 2D texture instance
-		*
-		*  @param[in] width
-		*    Texture width, must be >1 else a null pointer is returned
-		*  @param[in] height
-		*    Texture height, must be >1 else a null pointer is returned
-		*  @param[in] textureFormat
-		*    Texture data format
-		*  @param[in] data
-		*    Texture data, can be a null pointer, the data is internally copied and you have to free your memory if you no longer need it
-		*  @param[in] flags
-		*    Texture flags, see "Renderer::TextureFlag::Enum"
-		*  @param[in] textureUsage
-		*    Indication of the texture usage (only relevant for Direct3D, OpenGL has no texture usage indication)
-		*  @param[in] optimizedTextureClearValue
-		*    Optional optimized texture clear value
+		*    Create a texture manager instance
 		*
 		*  @return
-		*    The created 2D texture instance, null pointer on error. Release the returned instance if you no longer need it.
-		*
-		*  @remarks
-		*    The texture data has to be in CRN-texture layout, which means organized in mip-major order, like this:
-		*    - Mip0: Face0, Face1, Face2, Face3, Face4, Face5
-		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
-		*    (DDS-texture layout is using face-major order)
-		*
-		*  @note
-		*    - Only supported if "Renderer::Capabilities::maximumNumberOf2DTextureArraySlices" is not 0
+		*    The created texture manager instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void *data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
-
-		/**
-		*  @brief
-		*    Create a 2D array texture instance
-		*
-		*  @param[in] width
-		*    Texture width, must be >1 else a null pointer is returned
-		*  @param[in] height
-		*    Texture height, must be >1 else a null pointer is returned
-		*  @param[in] numberOfSlices
-		*    Number of slices, must be >1 else a null pointer is returned
-		*  @param[in] textureFormat
-		*    Texture format
-		*  @param[in] data
-		*    Texture data, can be a null pointer, the data is internally copied and you have to free your memory if you no longer need it
-		*  @param[in] flags
-		*    Texture flags, see "Renderer::TextureFlag::Enum"
-		*  @param[in] textureUsage
-		*    Indication of the texture usage, (only relevant for Direct3D, OpenGL has no texture usage indication)
-		*
-		*  @return
-		*    The created 2D array texture instance, null pointer on error. Release the returned instance if you no longer need it.
-		*
-		*  @remarks
-		*    The texture array data consists of a sequence of texture slices. Each the texture slice data of a single texture slice has to
-		*    be in CRN-texture layout, which means organized in mip-major order, like this:
-		*    - Mip0: Face0, Face1, Face2, Face3, Face4, Face5
-		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
-		*    (DDS-texture layout is using face-major order)
-		*/
-		virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, const void *data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
+		virtual ITextureManager *createTextureManager() = 0;
 
 		/**
 		*  @brief

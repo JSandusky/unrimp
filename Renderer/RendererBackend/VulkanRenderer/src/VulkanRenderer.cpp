@@ -34,6 +34,7 @@
 #include "VulkanRenderer/Buffer/IndexBuffer.h"
 #include "VulkanRenderer/Buffer/VertexBuffer.h"
 #include "VulkanRenderer/Buffer/UniformBuffer.h"
+#include "VulkanRenderer/Texture/TextureManager.h"
 #include "VulkanRenderer/Texture/Texture2D.h"
 #include "VulkanRenderer/Texture/Texture2DArray.h"
 #include "VulkanRenderer/State/SamplerState.h"
@@ -299,34 +300,9 @@ namespace VulkanRenderer
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITexture2D *VulkanRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITextureManager *VulkanRenderer::createTextureManager()
 	{
-		// The indication of the texture usage is only relevant for Direct3D, Vulkan has no texture usage indication
-
-		// Check whether or not the given texture dimension is valid
-		if (width > 0 && height > 0)
-		{
-			return new Texture2D(*this, width, height, textureFormat, data, flags);
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	Renderer::ITexture2DArray *VulkanRenderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
-	{
-		// The indication of the texture usage is only relevant for Direct3D, Vulkan has no texture usage indication
-
-		// Check whether or not the given texture dimension is valid
-		if (width > 0 && height > 0 && numberOfSlices > 0)
-		{
-			return new Texture2DArray(*this, width, height, numberOfSlices, textureFormat, data, flags);
-		}
-		else
-		{
-			return nullptr;
-		}
+		return new TextureManager(*this);
 	}
 
 	Renderer::IRootSignature *VulkanRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)

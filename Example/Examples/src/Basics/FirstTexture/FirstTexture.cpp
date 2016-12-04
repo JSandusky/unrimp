@@ -61,8 +61,9 @@ void FirstTexture::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Create the buffer manager
+		// Create the buffer and texture manager
 		mBufferManager = renderer->createBufferManager();
+		mTextureManager = renderer->createTextureManager();
 
 		{ // Create the texture
 			static const uint32_t TEXTURE_WIDTH   = 128;
@@ -104,7 +105,7 @@ void FirstTexture::onInitialization()
 			}
 
 			// Create the texture instance
-			mTexture2D = renderer->createTexture2D(TEXTURE_WIDTH, TEXTURE_HEIGHT, Renderer::TextureFormat::R8G8B8A8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
+			mTexture2D = mTextureManager->createTexture2D(TEXTURE_WIDTH, TEXTURE_HEIGHT, Renderer::TextureFormat::R8G8B8A8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
 
 			// Free texture memory
 			delete [] data;
@@ -227,6 +228,7 @@ void FirstTexture::onDeinitialization()
 	mSamplerState = nullptr;
 	mTexture2D = nullptr;
 	mBufferManager = nullptr;
+	mTextureManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

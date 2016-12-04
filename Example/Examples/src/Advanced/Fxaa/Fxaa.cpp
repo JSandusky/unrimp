@@ -98,8 +98,9 @@ void Fxaa::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Create the buffer manager
+		// Create the buffer and texture manager
 		mBufferManager = renderer->createBufferManager();
+		mTextureManager = renderer->createTextureManager();
 
 		// Create the framebuffer object (FBO) instance by using the current window size
 		recreateFramebuffer();
@@ -237,6 +238,7 @@ void Fxaa::onDeinitialization()
 	mFramebuffer = nullptr;
 	mTexture2D = nullptr;
 	mBufferManager = nullptr;
+	mTextureManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -308,7 +310,7 @@ void Fxaa::recreateFramebuffer()
 		// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 		// -> Not required for OpenGL and OpenGL ES 2
 		// -> The optimized texture clear value is a Direct3D 12 related option
-		Renderer::ITexture *texture2D = mTexture2D = renderer->createTexture2D(static_cast<uint32_t>(width), static_cast<uint32_t>(height), Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
+		Renderer::ITexture *texture2D = mTexture2D = mTextureManager->createTexture2D(static_cast<uint32_t>(width), static_cast<uint32_t>(height), Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
 
 		// Create the framebuffer object (FBO) instance
 		mFramebuffer = renderer->createFramebuffer(1, &texture2D);

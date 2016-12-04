@@ -135,8 +135,9 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
-	// Create the buffer manager
+	// Create the buffer and texture manager
 	mBufferManager = mRenderer->createBufferManager();
+	mTextureManager = mRenderer->createTextureManager();
 
 	// Check number of textures (limit of this implementation and renderer limit)
 	if (mNumberOfTextures > MAXIMUM_NUMBER_OF_TEXTURES)
@@ -191,7 +192,7 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 		// Create the texture instance
 		// -> This implementation has to support Direct3D 9 which has no 2D array textures
 		// -> We simply create a single simple 2D texture atlas with the textures aligned along the vertical axis
-		mTexture2D = mRenderer->createTexture2D(TEXTURE_WIDTH, TEXTURE_HEIGHT * mNumberOfTextures, Renderer::TextureFormat::R8G8B8A8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
+		mTexture2D = mTextureManager->createTexture2D(TEXTURE_WIDTH, TEXTURE_HEIGHT * mNumberOfTextures, Renderer::TextureFormat::R8G8B8A8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
 
 		// Free texture memory
 		delete [] data;

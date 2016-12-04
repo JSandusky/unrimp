@@ -40,6 +40,7 @@
     <None Include="include\Direct3D12Renderer\State\SamplerState.inl" />
     <None Include="include\Direct3D12Renderer\Texture\Texture2D.inl" />
     <None Include="include\Direct3D12Renderer\Texture\Texture2DArray.inl" />
+    <None Include="include\Direct3D12Renderer\Texture\TextureManager.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +72,7 @@
     <ClInclude Include="include\Direct3D12Renderer\State\SamplerState.h" />
     <ClInclude Include="include\Direct3D12Renderer\Texture\Texture2D.h" />
     <ClInclude Include="include\Direct3D12Renderer\Texture\Texture2DArray.h" />
+    <ClInclude Include="include\Direct3D12Renderer\Texture\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
@@ -98,6 +100,7 @@
     <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
+    <ClCompile Include="src\Texture\TextureManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F5898A4D-8D1B-468E-8BD7-0C01516CE183}</ProjectGuid>

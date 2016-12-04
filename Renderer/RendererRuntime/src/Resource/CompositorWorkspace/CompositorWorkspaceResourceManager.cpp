@@ -127,7 +127,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorWorkspaceResourceManager::CompositorWorkspaceResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mFramebufferManager(new FramebufferManager(mRendererRuntime.getRenderer()))
+		mFramebufferManager(new FramebufferManager(mRendererRuntime))
 	{
 		// Nothing here
 	}

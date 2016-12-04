@@ -102,8 +102,9 @@ void FirstGpgpu::onInitialization()
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
 
-	// Create the buffer manager
+	// Create the buffer and texture manager
 	mBufferManager = mRenderer->createBufferManager();
+	mTextureManager = mRenderer->createTextureManager();
 
 	// Create the 2D texture and framebuffer object (FBO) instances
 	for (int i = 0; i < 2; ++i)
@@ -113,7 +114,7 @@ void FirstGpgpu::onInitialization()
 		// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 		// -> Not required for OpenGL and OpenGL ES 2
 		// -> The optimized texture clear value is a Direct3D 12 related option
-		Renderer::ITexture *texture2D = mTexture2D[i] = mRenderer->createTexture2D(64, 64, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLUE));
+		Renderer::ITexture *texture2D = mTexture2D[i] = mTextureManager->createTexture2D(64, 64, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLUE));
 
 		// Create the framebuffer object (FBO) instance
 		mFramebuffer[i] = mRenderer->createFramebuffer(1, &texture2D);
@@ -280,6 +281,7 @@ void FirstGpgpu::onDeinitialization()
 		mTexture2D[i] = nullptr;
 	}
 	mBufferManager = nullptr;
+	mTextureManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(mRenderer)
