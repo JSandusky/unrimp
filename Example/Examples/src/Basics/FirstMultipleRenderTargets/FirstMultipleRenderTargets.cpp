@@ -250,9 +250,6 @@ void FirstMultipleRenderTargets::onDraw()
 			//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
 			//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
 
-			// Backup the currently used render target
-			Renderer::IRenderTargetPtr renderTarget(renderer->omGetRenderTarget());
-
 			// Set the render target to render into
 			renderer->omSetRenderTarget(mFramebuffer);
 
@@ -279,8 +276,8 @@ void FirstMultipleRenderTargets::onDraw()
 			// Render the specified geometric primitive, based on an array of vertices
 			renderer->draw(Renderer::IndirectBuffer(3));
 
-			// Restore the previously set render target
-			renderer->omSetRenderTarget(renderTarget);
+			// Restore main swap chain as current render target
+			renderer->omSetRenderTarget(renderer->getMainSwapChain());
 
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(renderer)
@@ -294,7 +291,7 @@ void FirstMultipleRenderTargets::onDraw()
 				// Get the render target with and height
 				uint32_t width  = 1;
 				uint32_t height = 1;
-				Renderer::IRenderTarget *renderTarget = renderer->omGetRenderTarget();
+				Renderer::IRenderTarget *renderTarget = renderer->getMainSwapChain();
 				if (nullptr != renderTarget)
 				{
 					renderTarget->getWidthAndHeight(width, height);

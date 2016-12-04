@@ -531,15 +531,6 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    Get the render target to render into
-		*
-		*  @return
-		*    Render target currently bound to the output-merger state, a null pointer on error, do not release the returned instance unless you added an own reference to it
-		*/
-		virtual IRenderTarget *omGetRenderTarget() = 0;
-
-		/**
-		*  @brief
 		*    Set the render target to render into
 		*
 		*  @param[in] renderTarget

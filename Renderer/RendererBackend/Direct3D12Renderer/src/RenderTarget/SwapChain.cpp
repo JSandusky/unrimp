@@ -321,7 +321,7 @@ namespace Direct3D12Renderer
 		if (nullptr != mDxgiSwapChain3)
 		{
 			// Get the currently set render target
-			Renderer::IRenderTarget *renderTargetBackup = getRenderer().omGetRenderTarget();
+			Renderer::IRenderTarget *renderTargetBackup = static_cast<Direct3D12Renderer&>(getRenderer()).omGetRenderTarget();
 
 			// In case this swap chain is the current render target, we have to unset it before continuing
 			if (this == renderTargetBackup)

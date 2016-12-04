@@ -337,7 +337,7 @@ void FirstGpgpu::generate2DTextureContent()
 			// Get the render target with and height
 			uint32_t width  = 1;
 			uint32_t height = 1;
-			Renderer::IRenderTarget *renderTarget = mRenderer->omGetRenderTarget();
+			Renderer::IRenderTarget *renderTarget = mFramebuffer[0];
 			if (nullptr != renderTarget)
 			{
 				renderTarget->getWidthAndHeight(width, height);
@@ -374,9 +374,6 @@ void FirstGpgpu::contentProcessing()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT(mRenderer, L"Content processing")
 
-		// Backup the currently used render target
-		Renderer::IRenderTargetPtr renderTarget(mRenderer->omGetRenderTarget());
-
 		// Set the render target to render into
 		mRenderer->omSetRenderTarget(mFramebuffer[1]);
 
@@ -403,8 +400,8 @@ void FirstGpgpu::contentProcessing()
 		// Render the specified geometric primitive, based on indexing into an array of vertices
 		mRenderer->draw(Renderer::IndirectBuffer(4));
 
-		// Restore the previously set render target
-		mRenderer->omSetRenderTarget(renderTarget);
+		// Restore main swap chain as current render target
+		mRenderer->omSetRenderTarget(mRenderer->getMainSwapChain());
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(mRenderer)

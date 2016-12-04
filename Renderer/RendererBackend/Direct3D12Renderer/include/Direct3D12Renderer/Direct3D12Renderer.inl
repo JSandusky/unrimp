@@ -60,6 +60,11 @@ namespace Direct3D12Renderer
 		return mD3D12GraphicsCommandList;
 	}
 
+	inline Renderer::IRenderTarget *Direct3D12Renderer::omGetRenderTarget() const
+	{
+		return mRenderTarget;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]

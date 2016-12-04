@@ -38,6 +38,11 @@ namespace Direct3D11Renderer
 		return mD3D11DeviceContext;
 	}
 
+	inline Renderer::IRenderTarget *Direct3D11Renderer::omGetRenderTarget() const
+	{
+		return mRenderTarget;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]

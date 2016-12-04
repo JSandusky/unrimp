@@ -958,11 +958,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	Renderer::IRenderTarget *Direct3D10Renderer::omGetRenderTarget()
-	{
-		return mRenderTarget;
-	}
-
 	void Direct3D10Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
 	{
 		// New render target?

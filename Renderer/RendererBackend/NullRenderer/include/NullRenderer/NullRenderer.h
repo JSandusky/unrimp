@@ -133,7 +133,6 @@ namespace NullRenderer
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
-		virtual Renderer::IRenderTarget *omGetRenderTarget() override;
 		virtual void omSetRenderTarget(Renderer::IRenderTarget *renderTarget) override;
 		//[-------------------------------------------------------]
 		//[ Operations                                            ]

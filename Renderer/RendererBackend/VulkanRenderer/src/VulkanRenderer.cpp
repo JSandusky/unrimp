@@ -557,11 +557,6 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	Renderer::IRenderTarget *VulkanRenderer::omGetRenderTarget()
-	{
-		return mRenderTarget;
-	}
-
 	void VulkanRenderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
 	{
 		// New render target?

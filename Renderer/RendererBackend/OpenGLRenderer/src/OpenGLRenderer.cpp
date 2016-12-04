@@ -1294,11 +1294,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	Renderer::IRenderTarget *OpenGLRenderer::omGetRenderTarget()
-	{
-		return mRenderTarget;
-	}
-
 	void OpenGLRenderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
 	{
 		// New render target?

@@ -930,11 +930,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	Renderer::IRenderTarget *OpenGLES2Renderer::omGetRenderTarget()
-	{
-		return mRenderTarget;
-	}
-
 	void OpenGLES2Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
 	{
 		// New render target?

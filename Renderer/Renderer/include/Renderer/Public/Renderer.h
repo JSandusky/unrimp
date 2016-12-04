@@ -1800,7 +1800,6 @@ namespace Renderer
 			virtual void iaSetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;
 			virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport* viewports) = 0;
 			virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles) = 0;
-			virtual IRenderTarget* omGetRenderTarget() = 0;
 			virtual void omSetRenderTarget(IRenderTarget* renderTarget) = 0;
 			virtual void clear(uint32_t flags, const float color[4], float z, uint32_t stencil) = 0;
 			virtual bool beginScene() = 0;

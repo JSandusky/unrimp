@@ -413,11 +413,6 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	Renderer::IRenderTarget *NullRenderer::omGetRenderTarget()
-	{
-		return mRenderTarget;
-	}
-
 	void NullRenderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
 	{
 		// New render target?

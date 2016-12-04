@@ -33,6 +33,11 @@ namespace Direct3D10Renderer
 		return mD3D10Device;
 	}
 
+	inline Renderer::IRenderTarget *Direct3D10Renderer::omGetRenderTarget() const
+	{
+		return mRenderTarget;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]

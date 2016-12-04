@@ -103,6 +103,15 @@ namespace Direct3D10Renderer
 		*/
 		inline ID3D10Device *getD3D10Device() const;
 
+		/**
+		*  @brief
+		*    Get the render target to render into
+		*
+		*  @return
+		*    Render target currently bound to the output-merger state, a null pointer on error, do not release the returned instance unless you added an own reference to it
+		*/
+		inline Renderer::IRenderTarget *omGetRenderTarget() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
@@ -152,7 +161,6 @@ namespace Direct3D10Renderer
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
-		virtual Renderer::IRenderTarget *omGetRenderTarget() override;
 		virtual void omSetRenderTarget(Renderer::IRenderTarget *renderTarget) override;
 		//[-------------------------------------------------------]
 		//[ Operations                                            ]

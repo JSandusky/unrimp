@@ -38,6 +38,11 @@ namespace Direct3D9Renderer
 		return mDirect3DDevice9;
 	}
 
+	inline Renderer::IRenderTarget *Direct3D9Renderer::omGetRenderTarget() const
+	{
+		return mRenderTarget;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]

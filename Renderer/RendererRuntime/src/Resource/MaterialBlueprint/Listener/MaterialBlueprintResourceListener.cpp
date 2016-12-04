@@ -86,9 +86,10 @@ namespace RendererRuntime
 		float aspectRatio = 4.0f / 3.0f;
 		{
 			// Get the render target with and height
+			// TODO(co) Don't use the main swap chain in here, use e.g. the scene camera item
 			uint32_t width  = 1;
 			uint32_t height = 1;
-			Renderer::IRenderTarget *renderTarget = rendererRuntime.getRenderer().omGetRenderTarget();
+			Renderer::IRenderTarget *renderTarget = rendererRuntime.getRenderer().getMainSwapChain();
 			if (nullptr != renderTarget)
 			{
 				renderTarget->getWidthAndHeight(width, height);

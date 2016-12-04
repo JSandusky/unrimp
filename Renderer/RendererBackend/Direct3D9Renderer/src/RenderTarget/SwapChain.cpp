@@ -253,7 +253,7 @@ namespace Direct3D9Renderer
 			getSafeWidthAndHeight(width, height);
 
 			// Get the currently set render target
-			Renderer::IRenderTarget *renderTargetBackup = getRenderer().omGetRenderTarget();
+			Renderer::IRenderTarget *renderTargetBackup = static_cast<Direct3D9Renderer&>(getRenderer()).omGetRenderTarget();
 
 			// In case this swap chain is the current render target, we have to unset it before continuing
 			if (this == renderTargetBackup)

@@ -870,11 +870,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	Renderer::IRenderTarget *Direct3D9Renderer::omGetRenderTarget()
-	{
-		return mRenderTarget;
-	}
-
 	void Direct3D9Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
 	{
 		// New render target?
