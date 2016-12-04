@@ -97,7 +97,6 @@ namespace RendererRuntime
 		mTransparentPass(transparentPass),
 		mDoSort(true)
 	{
-		// Sanity check
 		assert(mMaximumRenderQueueIndex >= mMinimumRenderQueueIndex);
 		mQueues.resize(static_cast<size_t>(mMaximumRenderQueueIndex - mMinimumRenderQueueIndex + 1));
 	}
@@ -153,6 +152,10 @@ namespace RendererRuntime
 		InstanceBufferManager& instanceBufferManager = materialBlueprintResourceManager.getInstanceBufferManager();
 		const MaterialTechniqueId materialTechniqueId = "Default";
 
+		// Process all render queues
+		// -> When adding renderables from renderable manager we could build up a minimum/maximum used render queue index to sometimes reduce
+		//    the number of iterations. On the other hand, there are usually much more renderables added as iterations in here so this possible
+		//    optimization might be a fact a performance degeneration while at the same time increasing the code complexity. So, not implemented by intent.
 		for (Queue& queue : mQueues)
 		{
 			QueuedRenderables& queuedRenderables = queue.queuedRenderables;
