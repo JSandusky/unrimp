@@ -172,6 +172,9 @@ void FirstRenderToTexture::onInitialization()
 			}
 		}
 
+		// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
+		fillCommandBuffer();
+
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
@@ -183,6 +186,7 @@ void FirstRenderToTexture::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
+	mCommandBuffer.clear();
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
 	mSamplerState = nullptr;
@@ -203,71 +207,92 @@ void FirstRenderToTexture::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mPipelineState)
+	if (nullptr != renderer)
 	{
+		// Submit command buffer to the renderer backend
+		mCommandBuffer.submit(*renderer);
+	}
+}
+
+
+//[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+void FirstRenderToTexture::fillCommandBuffer()
+{
+	// Sanity checks
+	assert(nullptr != mFramebuffer);
+	assert(nullptr != getRenderer());
+	assert(nullptr != getRenderer()->getMainSwapChain());
+	assert(nullptr != mRootSignature);
+	assert(nullptr != mSamplerState);
+	assert(nullptr != mTexture2D);
+	assert(nullptr != mPipelineState);
+	assert(nullptr != mVertexArray);
+	assert(mCommandBuffer.isEmpty());
+
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
+
+	{ // Render to texture
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
+		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Render to texture")
 
-		{ // Render to texture
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Render to texture")
+		// This in here is of course just an example. In a real application
+		// there would be no point in constantly updating texture content
+		// without having any real change.
 
-			// This in here is of course just an example. In a real application
-			// there would be no point in constantly updating texture content
-			// without having any real change.
+		// TODO(co) Unbind our texture from the texture unit before rendering into it
+		// -> Direct3D 9, OpenGL and OpenGL ES 2 don't mind as long as the texture is not used inside the shader while rendering into it
+		// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
+		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
+		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
 
-			// TODO(co) Unbind our texture from the texture unit before rendering into it
-			// -> Direct3D 9, OpenGL and OpenGL ES 2 don't mind as long as the texture is not used inside the shader while rendering into it
-			// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
-			//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
-			//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
+		// Set the render target to render into
+		Renderer::Command::SetRenderTarget::create(mCommandBuffer, mFramebuffer);
 
-			// Set the render target to render into
-			renderer->omSetRenderTarget(mFramebuffer);
+		// Clear the color buffer of the current render target with green
+		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR, Color4::GREEN, 1.0f, 0);
 
-			// Clear the color buffer of the current render target with green
-			renderer->clear(Renderer::ClearFlag::COLOR, Color4::GREEN, 1.0f, 0);
-
-			// Restore main swap chain as current render target
-			renderer->omSetRenderTarget(renderer->getMainSwapChain());
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
-		}
-
-		{ // Use the render to texture result
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Use the render to texture result")
-
-			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
-
-			// Set the used graphics root signature
-			renderer->setGraphicsRootSignature(mRootSignature);
-
-			// Set diffuse map
-			renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
-			renderer->setGraphicsRootDescriptorTable(1, mTexture2D);
-
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineState);
-
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer->iaSetVertexArray(mVertexArray);
-
-				// Set the primitive topology used for draw calls
-				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Render the specified geometric primitive, based on an array of vertices
-			renderer->draw(Renderer::IndirectBuffer(3));
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
-		}
+		// Restore main swap chain as current render target
+		Renderer::Command::SetRenderTarget::create(mCommandBuffer, getRenderer()->getMainSwapChain());
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
+		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
 	}
+
+	{ // Use the render to texture result
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Use the render to texture result")
+
+		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+		// Set the used graphics root signature
+		Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
+
+		// Set diffuse map
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 0, mSamplerState);
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mTexture2D);
+
+		// Set the used pipeline state object (PSO)
+		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
+
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
+
+			// Set the primitive topology used for draw calls
+			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
+		}
+
+		// Render the specified geometric primitive, based on an array of vertices
+		Renderer::Command::Draw::create(mCommandBuffer, 3);
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+	}
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
 }

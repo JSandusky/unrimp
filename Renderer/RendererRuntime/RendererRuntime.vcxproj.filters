@@ -486,12 +486,6 @@
     <ClInclude Include="include\RendererRuntime\Core\Serializer.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Command\CommandBucket.h">
-      <Filter>Source Files\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Command\Material.h">
-      <Filter>Source Files\Command</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Core\StringId.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
@@ -921,11 +915,11 @@
     <ClInclude Include="include\RendererRuntime\Core\MakeId.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Command\CommandBuffer.h">
+      <Filter>Source Files\Command</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Command\CommandBucket.cpp">
-      <Filter>Source Files\Command</Filter>
-    </ClCompile>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
       <Filter>Source Files\Backend</Filter>
     </ClCompile>
@@ -1195,6 +1189,9 @@
     </ClCompile>
     <ClCompile Include="src\RenderQueue\Renderable.cpp">
       <Filter>Source Files\RenderQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Command\CommandBuffer.cpp">
+      <Filter>Source Files\Command</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

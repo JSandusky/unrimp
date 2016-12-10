@@ -18,20 +18,17 @@
 \*********************************************************/
 
 
-// TODO(co) Work in progress
-
-
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Command/CommandBucket.h"
+#include "RendererRuntime/Command/CommandBuffer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace Renderer
 {
 
 
@@ -44,6 +41,12 @@ namespace RendererRuntime
 		{
 			const Command::SetGraphicsRootSignature* realData = static_cast<const Command::SetGraphicsRootSignature*>(data);
 			renderer.setGraphicsRootSignature(realData->rootSignature);
+		}
+
+		void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+		{
+			const Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Command::SetGraphicsRootDescriptorTable*>(data);
+			renderer.setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
 		}
 
 		//[-------------------------------------------------------]
@@ -68,6 +71,30 @@ namespace RendererRuntime
 		{
 			const Command::SetPrimitiveTopology* realData = static_cast<const Command::SetPrimitiveTopology*>(data);
 			renderer.iaSetPrimitiveTopology(realData->primitiveTopology);
+		}
+
+		//[-------------------------------------------------------]
+		//[ Rasterizer (RS) stage                                 ]
+		//[-------------------------------------------------------]
+		void SetViewports(const void* data, Renderer::IRenderer& renderer)
+		{
+			const Command::SetViewports* realData = static_cast<const Command::SetViewports*>(data);
+			renderer.rsSetViewports(realData->numberOfViewports, realData->viewports);
+		}
+
+		void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
+		{
+			const Command::SetScissorRectangles* realData = static_cast<const Command::SetScissorRectangles*>(data);
+			renderer.rsSetScissorRectangles(realData->numberOfScissorRectangles, realData->scissorRectangles);
+		}
+
+		//[-------------------------------------------------------]
+		//[ Output-merger (OM) stage                              ]
+		//[-------------------------------------------------------]
+		void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
+		{
+			const Command::SetRenderTarget* realData = static_cast<const Command::SetRenderTarget*>(data);
+			renderer.omSetRenderTarget(realData->renderTarget);
 		}
 
 		//[-------------------------------------------------------]
@@ -126,27 +153,33 @@ namespace RendererRuntime
 	namespace Command
 	{
 		// Graphics root
-		const BackendDispatchFunction SetGraphicsRootSignature::DISPATCH_FUNCTION = &BackendDispatch::SetGraphicsRootSignature;
+		const BackendDispatchFunction SetGraphicsRootSignature::DISPATCH_FUNCTION		= &BackendDispatch::SetGraphicsRootSignature;
+		const BackendDispatchFunction SetGraphicsRootDescriptorTable::DISPATCH_FUNCTION = &BackendDispatch::SetGraphicsRootDescriptorTable;
 		// States
-		const BackendDispatchFunction SetPipelineState::DISPATCH_FUNCTION		  = &BackendDispatch::SetPipelineState;
+		const BackendDispatchFunction SetPipelineState::DISPATCH_FUNCTION = &BackendDispatch::SetPipelineState;
 		// Input-assembler (IA) stage
-		const BackendDispatchFunction SetVertexArray::DISPATCH_FUNCTION			  = &BackendDispatch::SetVertexArray;
-		const BackendDispatchFunction SetPrimitiveTopology::DISPATCH_FUNCTION	  = &BackendDispatch::SetPrimitiveTopology;
+		const BackendDispatchFunction SetVertexArray::DISPATCH_FUNCTION		  = &BackendDispatch::SetVertexArray;
+		const BackendDispatchFunction SetPrimitiveTopology::DISPATCH_FUNCTION = &BackendDispatch::SetPrimitiveTopology;
+		// Rasterizer (RS) stage
+		const BackendDispatchFunction SetViewports::DISPATCH_FUNCTION		  = &BackendDispatch::SetViewports;
+		const BackendDispatchFunction SetScissorRectangles::DISPATCH_FUNCTION = &BackendDispatch::SetScissorRectangles;
+		// Output-merger (OM) stage
+		const BackendDispatchFunction SetRenderTarget::DISPATCH_FUNCTION = &BackendDispatch::SetRenderTarget;
 		// Operations
-		const BackendDispatchFunction Clear::DISPATCH_FUNCTION					  = &BackendDispatch::Clear;
+		const BackendDispatchFunction Clear::DISPATCH_FUNCTION = &BackendDispatch::Clear;
 		// Draw call
-		const BackendDispatchFunction Draw::DISPATCH_FUNCTION					  = &BackendDispatch::Draw;
-		const BackendDispatchFunction DrawIndexed::DISPATCH_FUNCTION			  = &BackendDispatch::DrawIndexed;
+		const BackendDispatchFunction Draw::DISPATCH_FUNCTION		 = &BackendDispatch::Draw;
+		const BackendDispatchFunction DrawIndexed::DISPATCH_FUNCTION = &BackendDispatch::DrawIndexed;
 		// TODO(co)
-		const BackendDispatchFunction CopyUniformBufferData::DISPATCH_FUNCTION	  = &BackendDispatch::CopyUniformBufferData;
+		const BackendDispatchFunction CopyUniformBufferData::DISPATCH_FUNCTION = &BackendDispatch::CopyUniformBufferData;
 		// Debug
-		const BackendDispatchFunction SetDebugMarker::DISPATCH_FUNCTION			 = &BackendDispatch::SetDebugMarker;
-		const BackendDispatchFunction BeginDebugEvent::DISPATCH_FUNCTION		 = &BackendDispatch::BeginDebugEvent;
-		const BackendDispatchFunction EndDebugEvent::DISPATCH_FUNCTION			 = &BackendDispatch::EndDebugEvent;
+		const BackendDispatchFunction SetDebugMarker::DISPATCH_FUNCTION	 = &BackendDispatch::SetDebugMarker;
+		const BackendDispatchFunction BeginDebugEvent::DISPATCH_FUNCTION = &BackendDispatch::BeginDebugEvent;
+		const BackendDispatchFunction EndDebugEvent::DISPATCH_FUNCTION	 = &BackendDispatch::EndDebugEvent;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+} // Renderer

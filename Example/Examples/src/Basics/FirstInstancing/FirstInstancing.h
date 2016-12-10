@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRenderer.h"
 
+#include <RendererRuntime/Command/CommandBuffer.h>
+
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]
@@ -83,11 +85,19 @@ public:
 
 
 //[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	void fillCommandBuffer();
+
+
+//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
 	Renderer::IBufferManagerPtr mBufferManager;					///< Buffer manager, can be a null pointer
 	Renderer::IRootSignaturePtr mRootSignature;					///< Root signature, can be a null pointer
+	Renderer::CommandBuffer		mCommandBuffer;					///< Command buffer
 	// Left side (green): Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 	Renderer::IPipelineStatePtr mPipelineStateInstancedArrays;	///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr   mVertexArrayInstancedArrays;	///< Vertex array object (VAO), can be a null pointer

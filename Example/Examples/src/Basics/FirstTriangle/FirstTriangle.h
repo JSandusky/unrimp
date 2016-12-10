@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRenderer.h"
 
-#include <RendererRuntime/Command/CommandBucket.h>
+#include <RendererRuntime/Command/CommandBuffer.h>
 
 
 //[-------------------------------------------------------]
@@ -91,8 +91,14 @@ protected:
 	Renderer::IRootSignaturePtr mRootSignature;	///< Root signature, can be a null pointer
 	Renderer::IPipelineStatePtr mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr   mVertexArray;	///< Vertex array object (VAO), can be a null pointer
+	Renderer::CommandBuffer		mCommandBuffer;	///< Command buffer
 
-	RendererRuntime::CommandBucket mCommandBucket;
+
+//[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	void fillCommandBuffer();
 
 
 };

@@ -198,6 +198,9 @@ void FirstMultipleRenderTargets::onInitialization()
 			OUTPUT_DEBUG_STRING("Error: This example requires support for multiple simultaneous render targets\n")
 		}
 
+		// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
+		fillCommandBuffer();
+
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
@@ -209,6 +212,7 @@ void FirstMultipleRenderTargets::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
+	mCommandBuffer.clear();
 	mVertexArray = nullptr;
 	mPipelineStateMultipleRenderTargets = nullptr;
 	mPipelineState = nullptr;
@@ -233,108 +237,130 @@ void FirstMultipleRenderTargets::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mPipelineStateMultipleRenderTargets && nullptr != mPipelineState)
+	if (nullptr != renderer)
 	{
+		// Submit command buffer to the renderer backend
+		mCommandBuffer.submit(*renderer);
+	}
+}
+
+
+//[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+void FirstMultipleRenderTargets::fillCommandBuffer()
+{
+	// Sanity checks
+	assert(nullptr != mFramebuffer);
+	assert(nullptr != getRenderer());
+	assert(nullptr != getRenderer()->getMainSwapChain());
+	assert(nullptr != mRootSignature);
+	assert(nullptr != mPipelineStateMultipleRenderTargets);
+	assert(nullptr != mVertexArray);
+	assert(nullptr != mSamplerState);
+	assert(nullptr != mPipelineState);
+	assert(mCommandBuffer.isEmpty());
+
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
+
+	{ // Render to multiple render targets
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
+		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Render to multiple render targets")
 
-		{ // Render to multiple render targets
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Render to multiple render targets")
+		// This in here is of course just an example. In a real application
+		// there would be no point in constantly updating texture content
+		// without having any real change.
 
-			// This in here is of course just an example. In a real application
-			// there would be no point in constantly updating texture content
-			// without having any real change.
+		// TODO(co) Unbind our textures from the texture unit before rendering into it
+		// -> Direct3D 9, OpenGL and OpenGL ES 2 don't mind as long as the texture is not used inside the shader while rendering into it
+		// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
+		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
+		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
 
-			// TODO(co) Unbind our textures from the texture unit before rendering into it
-			// -> Direct3D 9, OpenGL and OpenGL ES 2 don't mind as long as the texture is not used inside the shader while rendering into it
-			// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
-			//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
-			//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
+		// Set the render target to render into
+		Renderer::Command::SetRenderTarget::create(mCommandBuffer, mFramebuffer);
 
-			// Set the render target to render into
-			renderer->omSetRenderTarget(mFramebuffer);
+		// Set the viewport and scissor rectangle
+		Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, TEXTURE_SIZE, TEXTURE_SIZE);
 
-			// Set the viewport and scissor rectangle
-			renderer->rsSetViewportAndScissorRectangle(0, 0, TEXTURE_SIZE, TEXTURE_SIZE);
+		// Clear the color buffer of the current render targets with black
+		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR, Color4::BLACK, 1.0f, 0);
 
-			// Clear the color buffer of the current render targets with black
-			renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLACK, 1.0f, 0);
+		// Set the used graphics root signature
+		Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
 
-			// Set the used graphics root signature
-			renderer->setGraphicsRootSignature(mRootSignature);
+		// Set the used pipeline state object (PSO)
+		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateMultipleRenderTargets);
 
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineStateMultipleRenderTargets);
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
 
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer->iaSetVertexArray(mVertexArray);
-
-				// Set the primitive topology used for draw calls
-				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Render the specified geometric primitive, based on an array of vertices
-			renderer->draw(Renderer::IndirectBuffer(3));
-
-			// Restore main swap chain as current render target
-			renderer->omSetRenderTarget(renderer->getMainSwapChain());
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
+			// Set the primitive topology used for draw calls
+			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
 		}
 
-		{ // Use the render to multiple render targets result
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Use the render to multiple render targets result")
+		// Render the specified geometric primitive, based on an array of vertices
+		Renderer::Command::Draw::create(mCommandBuffer, 3);
 
-			{ // Set the viewport
-				// Get the render target with and height
-				uint32_t width  = 1;
-				uint32_t height = 1;
-				Renderer::IRenderTarget *renderTarget = renderer->getMainSwapChain();
-				if (nullptr != renderTarget)
-				{
-					renderTarget->getWidthAndHeight(width, height);
-				}
-
-				// Set the viewport and scissor rectangle
-				renderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
-			}
-
-			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
-
-			// Set the used graphics root signature
-			renderer->setGraphicsRootSignature(mRootSignature);
-
-			// Set the textures
-			renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
-			for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
-			{
-				renderer->setGraphicsRootDescriptorTable(1 + i, mTexture2D[i]);
-			}
-
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineState);
-
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer->iaSetVertexArray(mVertexArray);
-
-				// Set the primitive topology used for draw calls
-				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Render the specified geometric primitive, based on an array of vertices
-			renderer->draw(Renderer::IndirectBuffer(3));
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
-		}
+		// Restore main swap chain as current render target
+		Renderer::Command::SetRenderTarget::create(mCommandBuffer, getRenderer()->getMainSwapChain());
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
+		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
 	}
+
+	{ // Use the render to multiple render targets result
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Use the render to multiple render targets result")
+
+		{ // Set the viewport
+			// Get the render target with and height
+			uint32_t width  = 1;
+			uint32_t height = 1;
+			Renderer::IRenderTarget *renderTarget = getRenderer()->getMainSwapChain();
+			if (nullptr != renderTarget)
+			{
+				renderTarget->getWidthAndHeight(width, height);
+			}
+
+			// Set the viewport and scissor rectangle
+			Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, width, height);
+		}
+
+		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+		// Set the used graphics root signature
+		Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
+
+		// Set the textures
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 0, mSamplerState);
+		for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
+		{
+			assert(nullptr != mTexture2D[i]);
+			Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1 + i, mTexture2D[i]);
+		}
+
+		// Set the used pipeline state object (PSO)
+		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
+
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
+
+			// Set the primitive topology used for draw calls
+			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
+		}
+
+		// Render the specified geometric primitive, based on an array of vertices
+		Renderer::Command::Draw::create(mCommandBuffer, 3);
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+	}
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
 }

@@ -73,7 +73,13 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
-	virtual void onDraw() override;
+
+
+//[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	void fillCommandBuffer();
 
 
 //[-------------------------------------------------------]

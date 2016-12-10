@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRenderer.h"
 
+#include <RendererRuntime/Command/CommandBuffer.h>
+
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]
@@ -82,11 +84,19 @@ public:
 
 
 //[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	void fillCommandBuffer();
+
+
+//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
 	Renderer::IBufferManagerPtr mBufferManager;		///< Buffer manager, can be a null pointer
 	Renderer::IRootSignaturePtr mRootSignature;		///< Root signature, can be a null pointer
+	Renderer::CommandBuffer		mCommandBuffer;		///< Command buffer
 	// Using one vertex buffer object (VBO)
 	Renderer::IPipelineStatePtr mPipelineStateVBO;	///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr   mVertexArrayVBO;	///< Vertex array object (VAO), can be a null pointer

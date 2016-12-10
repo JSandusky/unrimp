@@ -56,7 +56,7 @@ namespace RendererRuntime
 	*  @remarks
 	*    The renderer backend manager is responsible for
 	*    - Finalize resource streaming
-	*    - Dispatch command buckets
+	*    - Dispatch command buffers
 	*/
 	class RendererBackendManager : private Manager
 	{

@@ -267,6 +267,9 @@ void FirstInstancing::onInitialization()
 			}
 		}
 
+		// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
+		fillCommandBuffer();
+
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
@@ -278,6 +281,7 @@ void FirstInstancing::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
+	mCommandBuffer.clear();
 	mVertexArrayDrawInstanced = nullptr;
 	mPipelineStateDrawInstanced = nullptr;
 	mVertexArrayInstancedArrays = nullptr;
@@ -298,67 +302,86 @@ void FirstInstancing::onDraw()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
+		// Submit command buffer to the renderer backend
+		mCommandBuffer.submit(*renderer);
+	}
+}
+
+
+//[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+void FirstInstancing::fillCommandBuffer()
+{
+	// Sanity checks
+	assert(nullptr != mRootSignature);
+	assert(nullptr != getRenderer());
+	assert(nullptr != mPipelineStateInstancedArrays);
+	assert(nullptr != mVertexArrayInstancedArrays);
+	assert(nullptr != mPipelineStateDrawInstanced);
+	assert(nullptr != mVertexArrayDrawInstanced);
+	assert(mCommandBuffer.isEmpty());
+
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
+
+	// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+	Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+	// Set the used graphics root signature
+	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
+
+	// Left side (green): Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
+	if (getRenderer()->getCapabilities().instancedArrays)
+	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
+		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Draw using instanced arrays")
 
-		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+		// Set the used pipeline state object (PSO)
+		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateInstancedArrays);
 
-		// Set the used graphics root signature
-		renderer->setGraphicsRootSignature(mRootSignature);
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayInstancedArrays);
 
-		// Left side (green): Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
-		if (renderer->getCapabilities().instancedArrays)
-		{
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw using instanced arrays")
-
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineStateInstancedArrays);
-
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer->iaSetVertexArray(mVertexArrayInstancedArrays);
-
-				// Set the primitive topology used for draw calls
-				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Render the specified geometric primitive, based on an array of vertices
-			// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
-			// -> In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
-			//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
-			renderer->drawIndexed(Renderer::IndexedIndirectBuffer(3, 2));
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
+			// Set the primitive topology used for draw calls
+			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
 		}
 
-		// Right side (blue): Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
-		if (renderer->getCapabilities().drawInstanced)
-		{
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw instanced")
-
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineStateDrawInstanced);
-
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer->iaSetVertexArray(mVertexArrayDrawInstanced);
-
-				// Set the primitive topology used for draw calls
-				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Render the specified geometric primitive, based on an array of vertices
-			renderer->draw(Renderer::IndirectBuffer(3, 2));
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
-		}
+		// Render the specified geometric primitive, based on an array of vertices
+		// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
+		// -> In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
+		//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
+		Renderer::Command::DrawIndexed::create(mCommandBuffer, 3, 2);
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
+		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
 	}
+
+	// Right side (blue): Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
+	if (getRenderer()->getCapabilities().drawInstanced)
+	{
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Draw instanced")
+
+		// Set the used pipeline state object (PSO)
+		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateDrawInstanced);
+
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayDrawInstanced);
+
+			// Set the primitive topology used for draw calls
+			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
+		}
+
+		// Render the specified geometric primitive, based on an array of vertices
+		Renderer::Command::Draw::create(mCommandBuffer, 3, 2);
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+	}
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
 }

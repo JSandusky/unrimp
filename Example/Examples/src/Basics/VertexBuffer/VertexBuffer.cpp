@@ -240,6 +240,9 @@ void VertexBuffer::onInitialization()
 			}
 		}
 
+		// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
+		fillCommandBuffer();
+
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
@@ -251,6 +254,7 @@ void VertexBuffer::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
+	mCommandBuffer.clear();
 	mVertexArrayVBOs = nullptr;
 	mPipelineStateVBOs = nullptr;
 	mVertexArrayVBO = nullptr;
@@ -271,64 +275,82 @@ void VertexBuffer::onDraw()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
+		// Submit command buffer to the renderer backend
+		mCommandBuffer.submit(*renderer);
+	}
+}
+
+
+//[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+void VertexBuffer::fillCommandBuffer()
+{
+	// Sanity checks
+	assert(nullptr != mRootSignature);
+	assert(nullptr != mPipelineStateVBO);
+	assert(nullptr != mVertexArrayVBO);
+	assert(nullptr != mPipelineStateVBOs);
+	assert(nullptr != mVertexArrayVBOs);
+	assert(mCommandBuffer.isEmpty());
+
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
+
+	// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+	Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+	// Set the used graphics root signature
+	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
+
+	// First lower triangle using one vertex buffer object (VBO)
+	if (nullptr != mPipelineStateVBO)
+	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
+		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Draw using one VBO")
 
-		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+		// Set the used pipeline state object (PSO)
+		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateVBO);
 
-		// Set the used graphics root signature
-		renderer->setGraphicsRootSignature(mRootSignature);
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayVBO);
 
-		// First lower triangle using one vertex buffer object (VBO)
-		if (nullptr != mPipelineStateVBO)
-		{
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw using one VBO")
-
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineStateVBO);
-
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer->iaSetVertexArray(mVertexArrayVBO);
-
-				// Set the primitive topology used for draw calls
-				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Render the specified geometric primitive, based on an array of vertices
-			renderer->draw(Renderer::IndirectBuffer(3));
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
+			// Set the primitive topology used for draw calls
+			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
 		}
 
-		// Second upper triangle using multiple vertex buffer object (VBO)
-		if (nullptr != mPipelineStateVBOs)
-		{
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw using multiple VBOs")
-
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineStateVBOs);
-
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer->iaSetVertexArray(mVertexArrayVBOs);
-
-				// Set the primitive topology used for draw calls
-				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Render the specified geometric primitive, based on an array of vertices
-			renderer->draw(Renderer::IndirectBuffer(3));
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
-		}
+		// Render the specified geometric primitive, based on an array of vertices
+		Renderer::Command::Draw::create(mCommandBuffer, 3);
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
+		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
 	}
+
+	// Second upper triangle using multiple vertex buffer object (VBO)
+	if (nullptr != mPipelineStateVBOs)
+	{
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Draw using multiple VBOs")
+
+		// Set the used pipeline state object (PSO)
+		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateVBOs);
+
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayVBOs);
+
+			// Set the primitive topology used for draw calls
+			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
+		}
+
+		// Render the specified geometric primitive, based on an array of vertices
+		Renderer::Command::Draw::create(mCommandBuffer, 3);
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+	}
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
 }

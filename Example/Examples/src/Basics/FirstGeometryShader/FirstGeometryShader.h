@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRenderer.h"
 
+#include <RendererRuntime/Command/CommandBuffer.h>
+
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]
@@ -81,6 +83,13 @@ public:
 
 
 //[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	void fillCommandBuffer();
+
+
+//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
@@ -88,6 +97,7 @@ private:
 	Renderer::IRootSignaturePtr mRootSignature;	///< Root signature, can be a null pointer
 	Renderer::IPipelineStatePtr mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr   mVertexArray;	///< Vertex array object (VAO), can be a null pointer
+	Renderer::CommandBuffer		mCommandBuffer;	///< Command buffer
 
 
 };
