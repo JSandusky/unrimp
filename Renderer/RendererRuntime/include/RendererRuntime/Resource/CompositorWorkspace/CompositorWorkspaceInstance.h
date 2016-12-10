@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/Resource/IResourceListener.h"
 
 
@@ -152,6 +153,7 @@ namespace RendererRuntime
 		CompositorWorkspaceResourceId mCompositorWorkspaceResourceId;
 		CompositorNodeInstances		  mSequentialCompositorNodeInstances;	///< We're responsible to destroy the compositor node instances if we no longer need them
 		RenderQueueIndexRanges		  mRenderQueueIndexRanges;				///< The render queue index ranges layout is fixed during runtime
+		Renderer::CommandBuffer		  mCommandBuffer;						///< Command buffer
 
 
 	};

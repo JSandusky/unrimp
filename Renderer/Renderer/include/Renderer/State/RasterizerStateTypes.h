@@ -96,7 +96,7 @@ namespace Renderer
 	*    - This also means that "int" is used over "bool" because in Direct3D it's defined this way
 	*    - If you want to know how the default values were chosen, have a look into the "Renderer::RasterizerStateBuilder::getDefaultRasterizerState()"-implementation
 	*    - Lookout! In Direct3D 12 the scissor test can't be deactivated and hence one always needs to set a valid scissor rectangle.
-	*      Use the convenience method "Renderer::rsSetViewportAndScissorRectangle()" if possible to not walk into this Direct3D 12 trap.
+	*      Use the convenience "Renderer::Command::SetViewportAndScissorRectangle"-command if possible to not walk into this Direct3D 12 trap.
 	*
 	*  @see
 	*    - "D3D12_RASTERIZER_DESC"-documentation for details

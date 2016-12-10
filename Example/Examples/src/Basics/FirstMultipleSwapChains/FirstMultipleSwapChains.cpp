@@ -379,27 +379,32 @@ void FirstMultipleSwapChains::onDrawRequest()
 				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 				if (renderer->beginScene())
 				{
-					// Begin debug event
-					RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw into the main swap chain")
+					{ // Fill the command buffer
+						// Begin debug event
+						RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Draw into the main swap chain")
 
-					// Set the render target to render into
-					renderer->omSetRenderTarget(swapChain);
+						// Set the render target to render into
+						Renderer::Command::SetRenderTarget::create(mCommandBuffer, swapChain);
 
-					{ // Set the viewport
-						// Get the render target with and height
-						uint32_t width  = 1;
-						uint32_t height = 1;
-						swapChain->getWidthAndHeight(width, height);
+						{ // Set the viewport
+							// Get the render target with and height
+							uint32_t width  = 1;
+							uint32_t height = 1;
+							swapChain->getWidthAndHeight(width, height);
 
-						// Set the viewport and scissor rectangle
-						renderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
+							// Set the viewport and scissor rectangle
+							Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, width, height);
+						}
+
+						// Draw into the main swap chain
+						fillCommandBuffer(Color4::GRAY, mCommandBuffer);
+
+						// End debug event
+						RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
 					}
 
-					// Draw into the main swap chain
-					draw(Color4::GRAY);
-
-					// End debug event
-					RENDERER_END_DEBUG_EVENT(renderer)
+					// Submit command buffer to the renderer backend
+					mCommandBuffer.submitAndClear(*renderer);
 
 					// End scene rendering
 					// -> Required for Direct3D 9 and Direct3D 12
@@ -417,38 +422,43 @@ void FirstMultipleSwapChains::onDrawRequest()
 		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 		if (nullptr != mSwapChain && renderer->beginScene())
 		{
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Render to the swap chain created in this example")
+			{ // Fill the command buffer
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Render to the swap chain created in this example")
 
-			// Set the render target to render into
-			renderer->omSetRenderTarget(mSwapChain);
+				// Set the render target to render into
+				Renderer::Command::SetRenderTarget::create(mCommandBuffer, mSwapChain);
 
-			{ // Set the viewport
-				// Please note that for some graphics APIs its really important that the viewport
-				// is inside the bounds of the currently used render target
-				// -> For Direct3D 10 and Direct3D 11 TODO(co)(Check OpenGL and OpenGL ES 2 behaviour) it's OK
-				//    when using a viewport which is outside the bounds of the currently used render target.
-				//    Within this example you can intentionally set no new viewport in order to see what
-				//    happens when using a viewport other than one covering the whole native OS window.
-				// -> When using Direct3D 9 you will get a
-				//      "Direct3D9: (ERROR) :Viewport outside the render target surface"
-				//      "D3D9 Helper: IDirect3DDevice9::DrawPrimitive failed: D3DERR_INVALIDCAL"
-				//    in case the viewport is inside the bounds of the currently used render target
+				{ // Set the viewport
+					// Please note that for some graphics APIs its really important that the viewport
+					// is inside the bounds of the currently used render target
+					// -> For Direct3D 10 and Direct3D 11 TODO(co)(Check OpenGL and OpenGL ES 2 behaviour) it's OK
+					//    when using a viewport which is outside the bounds of the currently used render target.
+					//    Within this example you can intentionally set no new viewport in order to see what
+					//    happens when using a viewport other than one covering the whole native OS window.
+					// -> When using Direct3D 9 you will get a
+					//      "Direct3D9: (ERROR) :Viewport outside the render target surface"
+					//      "D3D9 Helper: IDirect3DDevice9::DrawPrimitive failed: D3DERR_INVALIDCAL"
+					//    in case the viewport is inside the bounds of the currently used render target
 
-				// Get the render target with and height
-				uint32_t width  = 1;
-				uint32_t height = 1;
-				mSwapChain->getWidthAndHeight(width, height);
+					// Get the render target with and height
+					uint32_t width  = 1;
+					uint32_t height = 1;
+					mSwapChain->getWidthAndHeight(width, height);
 
-				// Set the viewport and scissor rectangle
-				renderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
+					// Set the viewport and scissor rectangle
+					Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, width, height);
+				}
+
+				// Draw into the swap chain created in this example
+				fillCommandBuffer(Color4::GREEN, mCommandBuffer);
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
 			}
 
-			// Draw into the swap chain created in this example
-			draw(Color4::GREEN);
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
+			// Submit command buffer to the renderer backend
+			mCommandBuffer.submitAndClear(*renderer);
 
 			// End scene rendering
 			// -> Required for Direct3D 9 and Direct3D 12
@@ -465,30 +475,36 @@ void FirstMultipleSwapChains::onDrawRequest()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-void FirstMultipleSwapChains::draw(const float color[4])
+void FirstMultipleSwapChains::fillCommandBuffer(const float color[4], Renderer::CommandBuffer& commandBuffer) const
 {
-	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mPipelineState)
-	{
-		// Clear the color buffer of the current render target with the provided color, do also clear the depth buffer
-		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
+	// Sanity checks
+	assert(nullptr != mRootSignature);
+	assert(nullptr != mPipelineState);
+	assert(nullptr != mVertexArray);
 
-		// Set the used graphics root signature
-		renderer->setGraphicsRootSignature(mRootSignature);
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBuffer)
 
-		// Set the used pipeline state object (PSO)
-		renderer->setPipelineState(mPipelineState);
+	// Clear the color buffer of the current render target with the provided color, do also clear the depth buffer
+	Renderer::Command::Clear::create(commandBuffer, Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
 
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			renderer->iaSetVertexArray(mVertexArray);
+	// Set the used graphics root signature
+	Renderer::Command::SetGraphicsRootSignature::create(commandBuffer, mRootSignature);
 
-			// Set the primitive topology used for draw calls
-			renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-		}
+	// Set the used pipeline state object (PSO)
+	Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
 
-		// Render the specified geometric primitive, based on an array of vertices
-		renderer->draw(Renderer::IndirectBuffer(3));
+	{ // Setup input assembly (IA)
+		// Set the used vertex array
+		Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArray);
+
+		// Set the primitive topology used for draw calls
+		Renderer::Command::SetPrimitiveTopology::create(commandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
 	}
+
+	// Render the specified geometric primitive, based on an array of vertices
+	Renderer::Command::Draw::create(commandBuffer, 3);
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(commandBuffer)
 }

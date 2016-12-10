@@ -33,6 +33,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class CommandBuffer;
+}
 namespace RendererRuntime
 {
 	class CompositorNodeInstance;
@@ -82,7 +86,14 @@ namespace RendererRuntime
 		*/
 		inline virtual void onCompositorWorkspaceInstanceLoadingFinished();
 
-		virtual void onExecute() = 0;
+		/**
+		*  @brief
+		*    Fill the compositor pass into the given commando buffer
+		*
+		*  @param[out] commandBuffer
+		*    Command buffer to fill
+		*/
+		virtual void onFillCommandBuffer(Renderer::CommandBuffer& commandBuffer) = 0;
 
 		/**
 		*  @brief

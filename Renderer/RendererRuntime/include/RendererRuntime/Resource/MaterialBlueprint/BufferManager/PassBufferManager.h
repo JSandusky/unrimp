@@ -45,6 +45,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class CommandBuffer;
+}
 namespace RendererRuntime
 {
 	class Transform;
@@ -126,9 +130,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Bind the currently used pass buffer to the renderer
+		*    Bind the currently used pass buffer into the given commando buffer
+		*
+		*  @param[out] commandBuffer
+		*    Command buffer to fill
 		*/
-		void bindToRenderer() const;
+		void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const;
 
 		/**
 		*  @brief

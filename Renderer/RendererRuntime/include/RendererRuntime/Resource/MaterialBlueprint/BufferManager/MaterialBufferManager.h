@@ -37,6 +37,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
+	class CommandBuffer;
 	class IUniformBuffer;
 	class IBufferManager;
 }
@@ -117,14 +118,14 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Bind slot to renderer
+		*    Fill slot to command buffer
 		*
-		*  @param[in] rendererRuntime
-		*    Renderer runtime to use
 		*  @param[in] materialBufferSlot
 		*    Slot to bind
+		*  @param[out] commandBuffer
+		*    Command buffer to fill
 		*/
-		void bindToRenderer(const IRendererRuntime& rendererRuntime, MaterialBufferSlot& materialBufferSlot);
+		void fillCommandBuffer(MaterialBufferSlot& materialBufferSlot, Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]

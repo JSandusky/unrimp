@@ -29,6 +29,7 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
+#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <glm/detail/setup.hpp>	// For "glm::countof()"
@@ -324,17 +325,15 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialBlueprintResource::bindToRenderer() const
+	void MaterialBlueprintResource::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const
 	{
-		Renderer::IRenderer& renderer = mRootSignaturePtr->getRenderer();
-
 		// Set the used graphics root signature
-		renderer.setGraphicsRootSignature(mRootSignaturePtr);
+		Renderer::Command::SetGraphicsRootSignature::create(commandBuffer, mRootSignaturePtr);
 
 		// Bind pass buffer manager, if required
 		if (nullptr != mPassBufferManager)
 		{
-			mPassBufferManager->bindToRenderer();
+			mPassBufferManager->fillCommandBuffer(commandBuffer);
 		}
 
 		{ // Graphics root descriptor table: Set our sampler states
@@ -342,7 +341,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfSamplerStates; ++i)
 			{
 				const SamplerState& samplerState = mSamplerStates[i];
-				renderer.setGraphicsRootDescriptorTable(samplerState.rootParameterIndex, samplerState.samplerStatePtr);
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, samplerState.rootParameterIndex, samplerState.samplerStatePtr);
 			}
 		}
 

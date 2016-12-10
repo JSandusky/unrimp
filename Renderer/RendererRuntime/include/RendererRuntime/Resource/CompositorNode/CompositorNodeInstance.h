@@ -35,6 +35,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class CommandBuffer;
+}
 namespace RendererRuntime
 {
 	class ICompositorInstancePass;
@@ -85,7 +89,7 @@ namespace RendererRuntime
 		CompositorNodeInstance(const CompositorNodeInstance&) = delete;
 		CompositorNodeInstance& operator=(const CompositorNodeInstance&) = delete;
 		void compositorWorkspaceInstanceLoadingFinished() const;
-		void execute() const;
+		void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const;
 		void frameEnded() const;
 
 

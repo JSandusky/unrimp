@@ -33,10 +33,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderer;
-}
 namespace RendererRuntime
 {
 	class CompositorResourcePassClear;
@@ -67,7 +63,7 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void onExecute() override;
+		virtual void onFillCommandBuffer(Renderer::CommandBuffer& commandBuffer) override;
 
 
 	//[-------------------------------------------------------]
@@ -78,13 +74,6 @@ namespace RendererRuntime
 		inline virtual ~CompositorInstancePassClear();
 		CompositorInstancePassClear(const CompositorInstancePassClear&) = delete;
 		CompositorInstancePassClear& operator=(const CompositorInstancePassClear&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		Renderer::IRenderer& mRenderer;	///< Renderer instance to use, don't destroy the instance
 
 
 	};

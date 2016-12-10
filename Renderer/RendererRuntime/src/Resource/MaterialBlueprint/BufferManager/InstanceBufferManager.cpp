@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
+#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -184,15 +185,13 @@ namespace RendererRuntime
 		mTextureBuffer->copyDataFrom(mTextureScratchBuffer.size(), mTextureScratchBuffer.data());
 	}
 
-	void InstanceBufferManager::bindToRenderer(const MaterialBlueprintResource& materialBlueprintResource)
+	void InstanceBufferManager::fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer)
 	{
-		Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
-
 		{ // Instance uniform buffer
 			const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource.getInstanceUniformBuffer();
 			if (nullptr != instanceUniformBuffer)
 			{
-				renderer.setGraphicsRootDescriptorTable(instanceUniformBuffer->rootParameterIndex, mUniformBuffer);
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceUniformBuffer->rootParameterIndex, mUniformBuffer);
 			}
 		}
 
@@ -200,7 +199,7 @@ namespace RendererRuntime
 			const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource.getInstanceTextureBuffer();
 			if (nullptr != instanceTextureBuffer)
 			{
-				renderer.setGraphicsRootDescriptorTable(instanceTextureBuffer->rootParameterIndex, mTextureBuffer);
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceTextureBuffer->rootParameterIndex, mTextureBuffer);
 			}
 		}
 	}

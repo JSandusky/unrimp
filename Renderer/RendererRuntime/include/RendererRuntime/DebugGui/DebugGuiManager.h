@@ -36,6 +36,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class CommandBuffer;
+}
 namespace RendererRuntime
 {
 	class IRendererRuntime;
@@ -68,7 +72,7 @@ namespace RendererRuntime
 	public:
 		RENDERERRUNTIME_API_EXPORT void newFrame(Renderer::IRenderTarget& renderTarget);
 		RENDERERRUNTIME_API_EXPORT void drawText(const char* text, float x, float y, bool drawBackground = true);
-		RENDERERRUNTIME_API_EXPORT void renderFrame();
+		RENDERERRUNTIME_API_EXPORT void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]

@@ -448,7 +448,7 @@ namespace Renderer
 		*  @note
 		*    - The current viewport(s) does not affect the clear operation
 		*    - Lookout! In Direct3D 12 the scissor test can't be deactivated and hence one always needs to set a valid scissor rectangle.
-		*      Use the convenience method "Renderer::rsSetViewportAndScissorRectangle()" if possible to not walk into this Direct3D 12 trap.
+		*      Use the convenience "Renderer::Command::SetViewportAndScissorRectangle"-command if possible to not walk into this Direct3D 12 trap.
 		*/
 		struct SetViewports
 		{
@@ -456,6 +456,23 @@ namespace Renderer
 			inline static void create(CommandBuffer& commandBuffer, uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 			{
 				*commandBuffer.addCommand<SetViewports>() = SetViewports(numberOfViewports, viewports);
+			}
+			inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height)
+			{
+				SetViewports* setViewportsCommand = commandBuffer.addCommand<SetViewports>(sizeof(Renderer::Viewport));
+
+				// Set command data
+				Renderer::Viewport* viewport = reinterpret_cast<Renderer::Viewport*>(CommandPacketHelper::getAuxiliaryMemory(setViewportsCommand));
+				viewport->topLeftX = static_cast<float>(topLeftX);
+				viewport->topLeftY = static_cast<float>(topLeftY);
+				viewport->width	   = static_cast<float>(width);
+				viewport->height   = static_cast<float>(height);
+				viewport->minDepth = 0.0f;
+				viewport->maxDepth = 1.0f;
+
+				// Finalize command
+				setViewportsCommand->numberOfViewports = 1;
+				setViewportsCommand->viewports		   = viewport;
 			}
 			// Constructor
 			inline SetViewports(uint32_t _numberOfViewports, const Renderer::Viewport* _viewports) :
@@ -489,6 +506,21 @@ namespace Renderer
 			{
 				*commandBuffer.addCommand<SetScissorRectangles>() = SetScissorRectangles(numberOfScissorRectangles, scissorRectangles);
 			}
+			inline static void create(CommandBuffer& commandBuffer, long topLeftX, long topLeftY, long bottomRightX, long bottomRightY)
+			{
+				SetScissorRectangles* setScissorRectanglesCommand = commandBuffer.addCommand<SetScissorRectangles>(sizeof(Renderer::ScissorRectangle));
+
+				// Set command data
+				Renderer::ScissorRectangle* scissorRectangle = reinterpret_cast<Renderer::ScissorRectangle*>(CommandPacketHelper::getAuxiliaryMemory(setScissorRectanglesCommand));
+				scissorRectangle->topLeftX	   = topLeftX;
+				scissorRectangle->topLeftY	   = topLeftY;
+				scissorRectangle->bottomRightX = bottomRightX;
+				scissorRectangle->bottomRightY = bottomRightY;
+
+				// Finalize command
+				setScissorRectanglesCommand->numberOfScissorRectangles = 1;
+				setScissorRectanglesCommand->scissorRectangles		   = scissorRectangle;
+			}
 			// Constructor
 			inline SetScissorRectangles(uint32_t _numberOfScissorRectangles, const Renderer::ScissorRectangle* _scissorRectangles) :
 				numberOfScissorRectangles(_numberOfScissorRectangles),
@@ -510,50 +542,24 @@ namespace Renderer
 		*  @param[in] topLeftY
 		*    Top left y
 		*  @param[in] width
-		*    width
+		*    Width
 		*  @param[in] height
-		*    height
+		*    Height
 		*
 		*  @note
 		*    - Lookout! In Direct3D 12 the scissor test can't be deactivated and hence one always needs to set a valid scissor rectangle.
-		*      Use the convenience method "Renderer::rsSetViewportAndScissorRectangle()" if possible to not walk into this Direct3D 12 trap.
+		*      Use the convenience "Renderer::Command::SetViewportAndScissorRectangle"-command if possible to not walk into this Direct3D 12 trap.
 		*/
 		struct SetViewportAndScissorRectangle
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height)
 			{
-				{ // Set the viewport
-					SetViewports* setViewportsCommand = commandBuffer.addCommand<SetViewports>(sizeof(Renderer::Viewport));
+				// Set the viewport
+				SetViewports::create(commandBuffer, topLeftX, topLeftY, width, height);
 
-					// Set command data
-					Renderer::Viewport* viewport = reinterpret_cast<Renderer::Viewport*>(CommandPacketHelper::getAuxiliaryMemory(setViewportsCommand));
-					viewport->topLeftX = static_cast<float>(topLeftX);
-					viewport->topLeftY = static_cast<float>(topLeftY);
-					viewport->width	   = static_cast<float>(width);
-					viewport->height   = static_cast<float>(height);
-					viewport->minDepth = 0.0f;
-					viewport->maxDepth = 1.0f;
-
-					// Finalize command
-					setViewportsCommand->numberOfViewports = 1;
-					setViewportsCommand->viewports		   = viewport;
-				}
-
-				{ // Set the scissor rectangle
-					SetScissorRectangles* setScissorRectanglesCommand = commandBuffer.addCommand<SetScissorRectangles>(sizeof(Renderer::ScissorRectangle));
-
-					// Set command data
-					Renderer::ScissorRectangle* scissorRectangle = reinterpret_cast<Renderer::ScissorRectangle*>(CommandPacketHelper::getAuxiliaryMemory(setScissorRectanglesCommand));
-					scissorRectangle->topLeftX	   = static_cast<long>(topLeftX);
-					scissorRectangle->topLeftY	   = static_cast<long>(topLeftY);
-					scissorRectangle->bottomRightX = static_cast<long>(width);
-					scissorRectangle->bottomRightY = static_cast<long>(height);
-
-					// Finalize command
-					setScissorRectanglesCommand->numberOfScissorRectangles = 1;
-					setScissorRectanglesCommand->scissorRectangles		   = scissorRectangle;
-				}
+				// Set the scissor rectangle
+				SetScissorRectangles::create(commandBuffer, static_cast<long>(topLeftX), static_cast<long>(topLeftY), static_cast<long>(topLeftX + width), static_cast<long>(topLeftY + height));
 			}
 		};
 

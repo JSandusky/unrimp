@@ -30,6 +30,8 @@
 #include "Framework/Stopwatch.h"
 #include "Framework/IApplicationRendererRuntime.h"
 
+#include <RendererRuntime/Command/CommandBuffer.h>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -109,8 +111,9 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	ICubeRenderer* mCubeRenderer;			///< Cube renderer instance, can be a null pointer
-	uint32_t	   mNumberOfCubeInstances;	///< Number of cube instances
+	ICubeRenderer*			mCubeRenderer;			///< Cube renderer instance, can be a null pointer
+	uint32_t				mNumberOfCubeInstances;	///< Number of cube instances
+	Renderer::CommandBuffer mCommandBuffer;			///< Command buffer
 	// The rest is for timing and statistics
 	Stopwatch mStopwatch;			///< Stopwatch instance
 	float	  mGlobalTimer;			///< Global timer

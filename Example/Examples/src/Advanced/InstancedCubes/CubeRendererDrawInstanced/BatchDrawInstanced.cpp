@@ -27,6 +27,8 @@
 #include "Framework/Quaternion.h"
 #include "Framework/EulerAngles.h"
 
+#include <RendererRuntime/Command/CommandBuffer.h>
+
 #include <stdlib.h> // For rand()
 
 
@@ -125,27 +127,23 @@ void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Ren
 	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
-void BatchDrawInstanced::draw()
+void BatchDrawInstanced::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const
 {
-	// Is there a valid renderer owner instance?
-	if (nullptr != mRenderer)
-	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBuffer)
 
-		// Set the used texture
-		mRenderer->setGraphicsRootDescriptorTable(0, mTextureBufferPerInstanceData);
+	// Set the used texture
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 0, mTextureBufferPerInstanceData);
 
-		// Set the used pipeline state object (PSO)
-		mRenderer->setPipelineState(mPipelineState);
+	// Set the used pipeline state object (PSO)
+	Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
 
-		// Use instancing in order to draw multiple cubes with just a single draw call
-		// -> Draw calls are one of the most expensive rendering, avoid them if possible
-		mRenderer->drawIndexed(Renderer::IndexedIndirectBuffer(36, mNumberOfCubeInstances));
+	// Use instancing in order to draw multiple cubes with just a single draw call
+	// -> Draw calls are one of the most expensive rendering, avoid them if possible
+	Renderer::Command::DrawIndexed::create(commandBuffer, 36, mNumberOfCubeInstances);
 
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(mRenderer)
-	}
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(commandBuffer)
 }
 
 

@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplication.h"
 
-#include <Renderer/Public/Renderer.h>
+#include <RendererRuntime/Command/CommandBuffer.h>
 
 
 //[-------------------------------------------------------]
@@ -165,6 +165,7 @@ private:
 	char						mRendererName[32];	///< Case sensitive ASCII name of the renderer to instance
 	Renderer::RendererInstance* mRendererInstance;	///< Renderer instance, can be a null pointer
 	Renderer::IRenderer*		mRenderer;			///< Renderer instance, can be a null pointer, do not destroy the instance
+	Renderer::CommandBuffer		mCommandBuffer;		///< Command buffer
 
 
 };

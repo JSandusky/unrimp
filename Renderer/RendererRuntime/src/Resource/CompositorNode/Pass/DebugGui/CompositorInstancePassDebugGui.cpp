@@ -40,9 +40,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassDebugGui::onExecute()
+	void CompositorInstancePassDebugGui::onFillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
 	{
-		getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getDebugGuiManager().renderFrame();
+		getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getDebugGuiManager().fillCommandBuffer(commandBuffer);
 	}
 
 

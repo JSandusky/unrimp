@@ -24,9 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorInstancePassClear.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorResourcePassClear.h"
-#include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
-#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
-#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Command/CommandBuffer.h"
 
 
 //[-------------------------------------------------------]
@@ -39,11 +37,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassClear::onExecute()
+	void CompositorInstancePassClear::onFillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
 	{
 		// Clear the color buffer of the current render target, do also clear the depth buffer
 		// TODO(co) "RendererRuntime::CompositorInstancePassClear": Add the other properties like stencil or z-buffer
-		mRenderer.clear(Renderer::ClearFlag::COLOR_DEPTH, glm::value_ptr(static_cast<const CompositorResourcePassClear&>(mCompositorResourcePass).getClearColor()), 1.0f, 0);
+		Renderer::Command::Clear::create(commandBuffer, Renderer::ClearFlag::COLOR_DEPTH, glm::value_ptr(static_cast<const CompositorResourcePassClear&>(mCompositorResourcePass).getClearColor()), 1.0f, 0);
 	}
 
 
@@ -51,8 +49,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	CompositorInstancePassClear::CompositorInstancePassClear(const CompositorResourcePassClear& compositorResourcePassClear, const CompositorNodeInstance& compositorNodeInstance) :
-		ICompositorInstancePass(compositorResourcePassClear, compositorNodeInstance),
-		mRenderer(compositorNodeInstance.getCompositorWorkspaceInstance().getRendererRuntime().getRenderer())
+		ICompositorInstancePass(compositorResourcePassClear, compositorNodeInstance)
 	{
 		// Nothing here
 	}

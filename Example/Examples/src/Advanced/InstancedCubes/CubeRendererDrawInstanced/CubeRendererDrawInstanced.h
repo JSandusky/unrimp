@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "Advanced/InstancedCubes/ICubeRenderer.h"
 
-#include <Renderer/Public/Renderer.h>
+#include <RendererRuntime/Command/CommandBuffer.h>
 
 
 //[-------------------------------------------------------]
@@ -88,6 +88,13 @@ public:
 
 
 //[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	void fillCommandBuffer();
+
+
+//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
@@ -107,6 +114,7 @@ private:
 	Renderer::IVertexArrayPtr	  mVertexArray;							///< Vertex array object (VAO), can be a null pointer
 	uint32_t					  mNumberOfBatches;						///< Current number of batches
 	BatchDrawInstanced			 *mBatches;								///< Batches, can be a null pointer
+	Renderer::CommandBuffer		  mCommandBuffer;						///< Command buffer
 
 
 };

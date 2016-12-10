@@ -27,6 +27,8 @@
 #include "Framework/Quaternion.h"
 #include "Framework/EulerAngles.h"
 
+#include <RendererRuntime/Command/CommandBuffer.h>
+
 #include <stdlib.h> // For rand()
 
 
@@ -145,29 +147,25 @@ void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, R
 	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
-void BatchInstancedArrays::draw()
+void BatchInstancedArrays::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const
 {
-	// Is there a valid renderer owner instance?
-	if (nullptr != mRenderer)
-	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBuffer)
 
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			mRenderer->iaSetVertexArray(mVertexArray);
-		}
-
-		// Set the used pipeline state object (PSO)
-		mRenderer->setPipelineState(mPipelineState);
-
-		// Use instancing in order to draw multiple cubes with just a single draw call
-		// -> Draw calls are one of the most expensive rendering, avoid them if possible
-		mRenderer->drawIndexed(Renderer::IndexedIndirectBuffer(36, mNumberOfCubeInstances));
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(mRenderer)
+	{ // Setup input assembly (IA)
+		// Set the used vertex array
+		Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArray);
 	}
+
+	// Set the used pipeline state object (PSO)
+	Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
+
+	// Use instancing in order to draw multiple cubes with just a single draw call
+	// -> Draw calls are one of the most expensive rendering, avoid them if possible
+	Renderer::Command::DrawIndexed::create(commandBuffer, 36, mNumberOfCubeInstances);
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(commandBuffer)
 }
 
 

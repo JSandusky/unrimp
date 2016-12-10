@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -61,20 +62,19 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialTechnique::bindToRenderer(const IRendererRuntime& rendererRuntime)
+	void MaterialTechnique::fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer)
 	{
 		assert(isInitialized(mMaterialBlueprintResourceId));
+
+		// TODO(co) This is experimental and will certainly look different when everything is in place
 
 		{ // Bind the material buffer manager
 			MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
 			if (nullptr != materialBufferManager)
 			{
-				materialBufferManager->bindToRenderer(rendererRuntime, *this);
+				materialBufferManager->fillCommandBuffer(*this, commandBuffer);
 			}
 		}
-
-		// TODO(co) This is experimental and will certainly look different when everything is in place
-		Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
 
 		// Need for gathering the textures now?
 		if (mTextures.empty())
@@ -131,7 +131,7 @@ namespace RendererRuntime
 					Renderer::ITexturePtr texturePtr = textureResource->getTexture();
 					if (nullptr != texturePtr)
 					{
-						renderer.setGraphicsRootDescriptorTable(texture.rootParameterIndex, texturePtr);
+						Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, texture.rootParameterIndex, texturePtr);
 					}
 				}
 			}

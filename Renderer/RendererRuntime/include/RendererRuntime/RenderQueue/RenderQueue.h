@@ -37,6 +37,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class CommandBuffer;
+}
 namespace RendererRuntime
 {
 	class Renderable;
@@ -64,6 +68,8 @@ namespace RendererRuntime
 	*    Using layered rendering (aka bucketized rendering) concept described in
 	*    - "realtimecollisiondetection.net – the blog" - "Order your graphics draw calls around!" - http://realtimecollisiondetection.net/blog/?p=86
 	*    - "Molecular Musings" - "Stateless, layered, multi-threaded rendering – Part 1" - https://blog.molecular-matters.com/2014/11/06/stateless-layered-multi-threaded-rendering-part-1/
+	*
+	*    The sole purpose of the render queue is to fill sorted commands into a given command buffer.
 	*/
 	class RenderQueue : protected NonCopyable
 	{
@@ -93,7 +99,7 @@ namespace RendererRuntime
 		inline uint8_t getMaximumRenderQueueIndex() const;
 		void clear();
 		void addRenderablesFromRenderableManager(const RenderableManager& renderableManager);
-		void draw();
+		void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]

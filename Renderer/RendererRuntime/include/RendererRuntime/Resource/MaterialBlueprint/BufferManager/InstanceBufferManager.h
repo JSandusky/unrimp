@@ -34,6 +34,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class CommandBuffer;
+}
 namespace RendererRuntime
 {
 	class Transform;
@@ -100,12 +104,14 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Bind instance buffer manager to renderer
+		*    Bind the instance buffer manager into the given commando buffer
 		*
 		*  @param[in] materialBlueprintResource
 		*    Material blueprint resource
+		*  @param[out] commandBuffer
+		*    Command buffer to fill
 		*/
-		void bindToRenderer(const MaterialBlueprintResource& materialBlueprintResource);
+		void fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]

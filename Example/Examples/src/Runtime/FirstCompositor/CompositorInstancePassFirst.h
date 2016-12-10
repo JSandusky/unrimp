@@ -53,7 +53,7 @@ class CompositorInstancePassFirst : public RendererRuntime::ICompositorInstanceP
 //[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 //[-------------------------------------------------------]
 protected:
-	virtual void onExecute() override;
+	virtual void onFillCommandBuffer(Renderer::CommandBuffer& commandBuffer) override;
 
 
 //[-------------------------------------------------------]

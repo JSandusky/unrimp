@@ -25,6 +25,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
+#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -165,14 +166,14 @@ namespace RendererRuntime
 		}
 	}
 
-	void PassBufferManager::bindToRenderer() const
+	void PassBufferManager::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const
 	{
 		if (!mUniformBuffers.empty())
 		{
 			const MaterialBlueprintResource::UniformBuffer* passUniformBuffer = mMaterialBlueprintResource.getPassUniformBuffer();
 			if (nullptr != passUniformBuffer)
 			{
-				mRendererRuntime.getRenderer().setGraphicsRootDescriptorTable(passUniformBuffer->rootParameterIndex, mUniformBuffers[mCurrentUniformBufferIndex - 1]);
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, passUniformBuffer->rootParameterIndex, mUniformBuffers[mCurrentUniformBufferIndex - 1]);
 			}
 		}
 	}

@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Core/SwizzleVectorElementRemove.h"
+#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -151,7 +152,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialBufferManager::bindToRenderer(const IRendererRuntime& rendererRuntime, MaterialBufferSlot& materialBufferSlot)
+	void MaterialBufferManager::fillCommandBuffer(MaterialBufferSlot& materialBufferSlot, Renderer::CommandBuffer& commandBuffer)
 	{
 		if (mLastBoundPool != materialBufferSlot.mAssignedMaterialPool)
 		{
@@ -159,7 +160,7 @@ namespace RendererRuntime
 			assert(nullptr != mLastBoundPool);
 			const MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
 			assert(nullptr != materialUniformBuffer);
-			rendererRuntime.getRenderer().setGraphicsRootDescriptorTable(materialUniformBuffer->rootParameterIndex, mLastBoundPool->uniformBuffer);
+			Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, materialUniformBuffer->rootParameterIndex, mLastBoundPool->uniformBuffer);
 		}
 	}
 

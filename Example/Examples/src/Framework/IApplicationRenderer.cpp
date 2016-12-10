@@ -100,10 +100,10 @@ void IApplicationRenderer::onDrawRequest()
 			if (mRenderer->beginScene())
 			{
 				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
 
 				// Make the main swap chain to the current render target
-				mRenderer->omSetRenderTarget(swapChain);
+				Renderer::Command::SetRenderTarget::create(mCommandBuffer, swapChain);
 
 				{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle
 				  // must be set in every draw call to work with all supported renderer APIs
@@ -113,20 +113,26 @@ void IApplicationRenderer::onDrawRequest()
 					swapChain->getWidthAndHeight(width, height);
 
 					// Set the viewport and scissor rectangle
-					mRenderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
+					Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, width, height);
 				}
+
+				// Submit command buffer to the renderer backend
+				mCommandBuffer.submitAndClear(*mRenderer);
 
 				// Call the draw method
 				onDraw();
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+
+				// Submit command buffer to the renderer backend
+				mCommandBuffer.submitAndClear(*mRenderer);
 
 				// End scene rendering
 				// -> Required for Direct3D 9 and Direct3D 12
 				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 				mRenderer->endScene();
 			}
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(mRenderer)
 
 			// Present the content of the current back buffer
 			swapChain->present();

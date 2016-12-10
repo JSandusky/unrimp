@@ -68,33 +68,6 @@ namespace Renderer
 		return mStatistics;
 	}
 
-	inline void IRenderer::rsSetViewportAndScissorRectangle(uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height)
-	{
-		{ // Set the viewport
-			const Viewport viewport =
-			{
-				static_cast<float>(topLeftX),	// topLeftX (float)
-				static_cast<float>(topLeftY),	// topLeftY (float)
-				static_cast<float>(width),		// width (float)
-				static_cast<float>(height),		// height (float)
-				0.0f,							// minDepth (float)
-				1.0f							// maxDepth (float)
-			};
-			rsSetViewports(1, &viewport);
-		}
-
-		{ // Set the scissor rectangle
-			const ScissorRectangle scissorRectangle =
-			{
-				static_cast<long>(topLeftX),	// topLeftX (long)
-				static_cast<long>(topLeftY),	// topLeftY (long)
-				static_cast<long>(width),		// bottomRightX (long)
-				static_cast<long>(height)		// bottomRightY (long)
-			};
-			rsSetScissorRectangles(1, &scissorRectangle);
-		}
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

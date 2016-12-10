@@ -36,7 +36,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassQuad::onExecute()
+	void CompositorInstancePassQuad::onFillCommandBuffer(Renderer::CommandBuffer&)
 	{
 		// TODO(co)
 	}

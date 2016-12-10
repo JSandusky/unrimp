@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "Advanced/InstancedCubes/ICubeRenderer.h"
 
-#include <Renderer/Public/Renderer.h>
+#include <RendererRuntime/Command/CommandBuffer.h>
 
 
 //[-------------------------------------------------------]
@@ -86,6 +86,13 @@ public:
 
 
 //[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	void fillCommandBuffer();
+
+
+//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
@@ -106,6 +113,7 @@ private:
 	Renderer::IIndexBufferPtr	  mIndexBuffer;							///< Index buffer object (IBO), can be a null pointer
 	uint32_t					  mNumberOfBatches;						///< Current number of batches
 	BatchInstancedArrays		 *mBatches;								///< Batches, can be a null pointer
+	Renderer::CommandBuffer		  mCommandBuffer;						///< Command buffer
 
 
 };

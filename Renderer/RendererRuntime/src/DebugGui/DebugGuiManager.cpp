@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/DebugGui/DebugGuiManager.h"
+#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <imgui/imgui.h>
@@ -142,7 +143,7 @@ namespace RendererRuntime
 		++mDrawTextCounter;
 	}
 
-	void DebugGuiManager::renderFrame()
+	void DebugGuiManager::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
 	{
 		if (GImGui->Initialized)
 		{
@@ -153,7 +154,7 @@ namespace RendererRuntime
 			// Begin debug event
 			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
 			Renderer::IBufferManager& bufferManager = mRendererRuntime.getBufferManager();
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
+			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBuffer)
 
 			{ // Vertex and index buffers
 				// Create and grow vertex/index buffers if needed
@@ -236,22 +237,22 @@ namespace RendererRuntime
 
 			{ // Renderer configuration
 				// Set the used graphics root signature
-				renderer.setGraphicsRootSignature(mRootSignature);
+				Renderer::Command::SetGraphicsRootSignature::create(commandBuffer, mRootSignature);
 
 				// Set graphics root descriptors
-				renderer.setGraphicsRootDescriptorTable(0, mVertexShaderUniformBuffer);
-				renderer.setGraphicsRootDescriptorTable(1, mSamplerState);
-				renderer.setGraphicsRootDescriptorTable(2, mTexture2D);
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 0, mVertexShaderUniformBuffer);
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 1, mSamplerState);
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 2, mTexture2D);
 
 				// Set the used pipeline state object (PSO)
-				renderer.setPipelineState(mPipelineState);
+				Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
 
 				{ // Setup input assembly (IA)
 					// Set the used vertex array
-					renderer.iaSetVertexArray(mVertexArray);
+					Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArray);
 
 					// Set the primitive topology used for draw calls
-					renderer.iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
+					Renderer::Command::SetPrimitiveTopology::create(commandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
 				}
 			}
 
@@ -271,11 +272,10 @@ namespace RendererRuntime
 						else
 						{
 							// Set scissor rectangle
-							const Renderer::ScissorRectangle scissorRectangle = { static_cast<long>(pcmd->ClipRect.x), static_cast<long>(pcmd->ClipRect.y), static_cast<long>(pcmd->ClipRect.z), static_cast<long>(pcmd->ClipRect.w) };
-							renderer.rsSetScissorRectangles(1, &scissorRectangle);
+							Renderer::Command::SetScissorRectangles::create(commandBuffer, static_cast<long>(pcmd->ClipRect.x), static_cast<long>(pcmd->ClipRect.y), static_cast<long>(pcmd->ClipRect.z), static_cast<long>(pcmd->ClipRect.w));
 
 							// Draw
-							renderer.drawIndexed(Renderer::IndexedIndirectBuffer(static_cast<uint32_t>(pcmd->ElemCount), 1, static_cast<uint32_t>(indexOffset), static_cast<int32_t>(vertexOffset)));
+							Renderer::Command::DrawIndexed::create(commandBuffer, static_cast<uint32_t>(pcmd->ElemCount), 1, static_cast<uint32_t>(indexOffset), static_cast<int32_t>(vertexOffset));
 						}
 						indexOffset += pcmd->ElemCount;
 					}
@@ -284,7 +284,7 @@ namespace RendererRuntime
 			}
 
 			// End debug event
-			RENDERER_END_DEBUG_EVENT(&renderer)
+			RENDERER_END_DEBUG_EVENT2(commandBuffer)
 		}
 	}
 

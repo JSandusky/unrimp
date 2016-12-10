@@ -46,7 +46,7 @@ namespace RendererRuntime
 		assert(mRenderQueueIndexRange->maximumRenderQueueIndex >= mRenderQueue.getMaximumRenderQueueIndex());
 	}
 
-	void CompositorInstancePassScene::onExecute()
+	void CompositorInstancePassScene::onFillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
 	{
 		assert(nullptr != mRenderQueueIndexRange);
 		for (const RenderableManager* renderableManager : mRenderQueueIndexRange->renderableManagers)
@@ -56,7 +56,7 @@ namespace RendererRuntime
 			// really worth to do so since the render queue only considers renderables inside the render queue range anyway.
 			mRenderQueue.addRenderablesFromRenderableManager(*renderableManager);
 		}
-		mRenderQueue.draw();
+		mRenderQueue.fillCommandBuffer(commandBuffer);
 	}
 
 

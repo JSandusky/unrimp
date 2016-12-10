@@ -111,10 +111,10 @@ namespace RendererRuntime
 				}
 
 				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
 
 				// Make the main swap chain to the current render target
-				renderer.omSetRenderTarget(&renderTarget);
+				Renderer::Command::SetRenderTarget::create(mCommandBuffer, &renderTarget);
 
 				{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle must be set in every draw call to work with all supported renderer APIs
 					// Get the window size
@@ -123,17 +123,20 @@ namespace RendererRuntime
 					renderTarget.getWidthAndHeight(width, height);
 
 					// Set the viewport and scissor rectangle
-					renderer.rsSetViewportAndScissorRectangle(0, 0, width, height);
+					Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, width, height);
 				}
 
 				// Draw
 				for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
 				{
-					compositorNodeInstance->execute();
+					compositorNodeInstance->fillCommandBuffer(mCommandBuffer);
 				}
 
 				// End debug event
-				RENDERER_END_DEBUG_EVENT(&renderer)
+				RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+
+				// Submit command buffer to the renderer backend
+				mCommandBuffer.submitAndClear(renderer);
 
 				// End scene rendering
 				// -> Required for Direct3D 9 and Direct3D 12

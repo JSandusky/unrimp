@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRenderer.h"
 
+#include <RendererRuntime/Command/CommandBuffer.h>
+
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]
@@ -90,12 +92,14 @@ public:
 private:
 	/**
 	*  @brief
-	*    Draw
+	*    Fill the given commando buffer
 	*
 	*  @param[in] color
 	*    RGBA clear color
+	*  @param[out] commandBuffer
+	*    Command buffer to fill
 	*/
-	void draw(const float color[4]);
+	void fillCommandBuffer(const float color[4], Renderer::CommandBuffer& commandBuffer) const;
 
 
 //[-------------------------------------------------------]
@@ -107,6 +111,7 @@ private:
 	Renderer::IPipelineStatePtr mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr   mVertexArray;	///< Vertex array object (VAO), can be a null pointer
 	Renderer::ISwapChainPtr     mSwapChain;		///< Swap chain, can be a null pointer
+	Renderer::CommandBuffer		mCommandBuffer;	///< Command buffer
 
 
 };

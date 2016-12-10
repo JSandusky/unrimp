@@ -393,94 +393,122 @@ void CubeRendererInstancedArrays::setNumberOfCubes(uint32_t numberOfCubes)
 		batch->initialize(*mBufferManager, *mRootSignature, detail::VertexAttributes, *mVertexBuffer, *mIndexBuffer, *mProgram, currentNumberOfCubes, true, mNumberOfTextures, mSceneRadius);
 	}
 
+	// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
+	mCommandBuffer.clear();
+	fillCommandBuffer();
+
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
 void CubeRendererInstancedArrays::draw(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ)
 {
-	// Is there a valid pipeline state?
-	if (nullptr != mProgram)
-	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
+	// Sanity checks
+	assert(nullptr != mProgram);
 
-		{ // Update program uniform data
-			// Some counting timer, we don't want to touch the buffers on the GPU
-			const float timerAndGlobalScale[] = { globalTimer, globalScale };
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
 
-			// Animate the point light world space position
-			const float lightPosition[] = { lightPositionX, lightPositionY, lightPositionZ };
+	{ // Update program uniform data
+		// Some counting timer, we don't want to touch the buffers on the GPU
+		const float timerAndGlobalScale[] = { globalTimer, globalScale };
 
-			// Use uniform buffer?
-			if (nullptr != mUniformBufferDynamicVs)
+		// Animate the point light world space position
+		const float lightPosition[] = { lightPositionX, lightPositionY, lightPositionZ };
+
+		// Use uniform buffer?
+		if (nullptr != mUniformBufferDynamicVs)
+		{
+			// Copy data into the uniform buffer
+			mUniformBufferDynamicVs->copyDataFrom(sizeof(timerAndGlobalScale), timerAndGlobalScale);
+			if (nullptr != mUniformBufferDynamicFs)
 			{
 				// Copy data into the uniform buffer
-				mUniformBufferDynamicVs->copyDataFrom(sizeof(timerAndGlobalScale), timerAndGlobalScale);
-				if (nullptr != mUniformBufferDynamicFs)
-				{
-					// Copy data into the uniform buffer
-					mUniformBufferDynamicFs->copyDataFrom(sizeof(lightPosition), lightPosition);
-				}
-			}
-			else
-			{
-				// Set individual program uniforms
-				// -> Using uniform buffers (aka constant buffers in Direct3D) would be more efficient, but Direct3D 9 doesn't support it (neither does e.g. OpenGL ES 2.0)
-				// -> To keep it simple in here, I just use a less performant string to identity the uniform (does not really hurt in here)
-				// TODO(co) Update
-				// mProgram->setUniform2fv(mProgram->getUniformHandle("TimerAndGlobalScale"), timerAndGlobalScale);
-				// mProgram->setUniform3fv(mProgram->getUniformHandle("LightPosition"), lightPosition);
+				mUniformBufferDynamicFs->copyDataFrom(sizeof(lightPosition), lightPosition);
 			}
 		}
-
-		// Set constant program uniform
-		if (nullptr == mUniformBufferStaticVs)
+		else
 		{
-			// TODO(co) Ugly fixed hacked in model-view-projection matrix
-			// TODO(co) OpenGL matrix, Direct3D has minor differences within the projection matrix we have to compensate
-			static const float MVP[] =
-			{
-				 1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
-				 0.0f,			 1.9776078f,	-0.57472473f,	-0.573576453f,
-				-1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
-				 0.0f,			 0.0f,			 9.8198195f,	 10.0f
-			};
-
-			// There's no uniform buffer: We have to set individual uniforms
+			// Set individual program uniforms
+			// -> Using uniform buffers (aka constant buffers in Direct3D) would be more efficient, but Direct3D 9 doesn't support it (neither does e.g. OpenGL ES 2.0)
+			// -> To keep it simple in here, I just use a less performant string to identity the uniform (does not really hurt in here)
 			// TODO(co) Update
-			// mProgram->setUniformMatrix4fv(mProgram->getUniformHandle("MVP"), MVP);
+			// mProgram->setUniform2fv(mProgram->getUniformHandle("TimerAndGlobalScale"), timerAndGlobalScale);
+			// mProgram->setUniform3fv(mProgram->getUniformHandle("LightPosition"), lightPosition);
 		}
-
-		// Set the used graphics root signature
-		mRenderer->setGraphicsRootSignature(mRootSignature);
-
-		// Set diffuse map
-		mRenderer->setGraphicsRootDescriptorTable(0, mUniformBufferStaticVs);
-		mRenderer->setGraphicsRootDescriptorTable(1, mUniformBufferDynamicVs);
-		mRenderer->setGraphicsRootDescriptorTable(2, mSamplerState);
-		mRenderer->setGraphicsRootDescriptorTable(3, mTexture2D);
-		mRenderer->setGraphicsRootDescriptorTable(4, mUniformBufferDynamicFs);
-
-		{ // Setup input assembly (IA)
-			// Set the primitive topology used for draw calls
-			mRenderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-		}
-
-		// Draw the batches
-		if (nullptr != mBatches)
-		{
-			// Loop though all batches
-			BatchInstancedArrays *batch     = mBatches;
-			BatchInstancedArrays *lastBatch = mBatches + mNumberOfBatches;
-			for (; batch < lastBatch; ++batch)
-			{
-				// Draw this batch
-				batch->draw();
-			}
-		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(mRenderer)
 	}
+
+	// Set constant program uniform
+	if (nullptr == mUniformBufferStaticVs)
+	{
+		// TODO(co) Ugly fixed hacked in model-view-projection matrix
+		// TODO(co) OpenGL matrix, Direct3D has minor differences within the projection matrix we have to compensate
+		static const float MVP[] =
+		{
+				1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
+				0.0f,			 1.9776078f,	-0.57472473f,	-0.573576453f,
+			-1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
+				0.0f,			 0.0f,			 9.8198195f,	 10.0f
+		};
+
+		// There's no uniform buffer: We have to set individual uniforms
+		// TODO(co) Update
+		// mProgram->setUniformMatrix4fv(mProgram->getUniformHandle("MVP"), MVP);
+	}
+
+	// Submit command buffer to the renderer backend
+	mCommandBuffer.submit(*mRenderer);
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT(mRenderer)
+}
+
+
+//[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+void CubeRendererInstancedArrays::fillCommandBuffer()
+{
+	// Sanity checks
+	assert(nullptr != mRootSignature);
+	assert(nullptr != mUniformBufferStaticVs);
+	assert(nullptr != mUniformBufferDynamicVs);
+	assert(nullptr != mSamplerState);
+	assert(nullptr != mTexture2D);
+	assert(nullptr != mUniformBufferDynamicFs);
+	assert(mCommandBuffer.isEmpty());
+
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
+
+	// Set the used graphics root signature
+	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
+
+	// Set diffuse map
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 0, mUniformBufferStaticVs);
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mUniformBufferDynamicVs);
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, mSamplerState);
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 3, mTexture2D);
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, mUniformBufferDynamicFs);
+
+	{ // Setup input assembly (IA)
+		// Set the primitive topology used for draw calls
+		Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
+	}
+
+	// Draw the batches
+	if (nullptr != mBatches)
+	{
+		// Loop though all batches
+		BatchInstancedArrays *batch     = mBatches;
+		BatchInstancedArrays *lastBatch = mBatches + mNumberOfBatches;
+		for (; batch < lastBatch; ++batch)
+		{
+			// Draw this batch
+			batch->fillCommandBuffer(mCommandBuffer);
+		}
+	}
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
 }

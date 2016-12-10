@@ -39,6 +39,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class CommandBuffer;
+}
 namespace RendererRuntime
 {
 	class PassBufferManager;
@@ -383,9 +387,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Bind the material blueprint resource to the used renderer
+		*    Bind the material blueprint resource into the given commando buffer
+		*
+		*  @param[out] commandBuffer
+		*    Command buffer to fill
 		*/
-		RENDERERRUNTIME_API_EXPORT void bindToRenderer() const;
+		RENDERERRUNTIME_API_EXPORT void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const;
 
 		/**
 		*  @brief

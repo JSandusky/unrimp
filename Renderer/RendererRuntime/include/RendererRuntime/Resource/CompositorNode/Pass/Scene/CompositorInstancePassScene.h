@@ -66,7 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		virtual void onCompositorWorkspaceInstanceLoadingFinished() override;
-		virtual void onExecute() override;
+		virtual void onFillCommandBuffer(Renderer::CommandBuffer& commandBuffer) override;
 		inline virtual void onFrameEnded() override;
 
 

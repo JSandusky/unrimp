@@ -52,11 +52,11 @@ namespace RendererRuntime
 		}
 	}
 
-	void CompositorNodeInstance::execute() const
+	void CompositorNodeInstance::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const
 	{
 		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
 		{
-			compositorInstancePass->onExecute();
+			compositorInstancePass->onFillCommandBuffer(commandBuffer);
 		}
 	}
 

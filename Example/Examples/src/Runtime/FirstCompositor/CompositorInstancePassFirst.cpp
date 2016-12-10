@@ -45,14 +45,14 @@
 //[-------------------------------------------------------]
 //[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 //[-------------------------------------------------------]
-void CompositorInstancePassFirst::onExecute()
+void CompositorInstancePassFirst::onFillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
 {
 	// Well right now I'm not that creative and the purpose of this example is to show how to add custom compositor passes, so, draw a simple text
 	const RendererRuntime::CompositorWorkspaceInstance& compositorWorkspaceInstance = getCompositorNodeInstance().getCompositorWorkspaceInstance();
 	RendererRuntime::DebugGuiManager& debugGuiManager = compositorWorkspaceInstance.getRendererRuntime().getDebugGuiManager();
 	debugGuiManager.newFrame(*compositorWorkspaceInstance.getExecutionRenderTarget());	// We know that the render target must be valid if we're in here
 	debugGuiManager.drawText("42", 100.0f, 100.0f);
-	debugGuiManager.renderFrame();
+	debugGuiManager.fillCommandBuffer(commandBuffer);
 }
 
 

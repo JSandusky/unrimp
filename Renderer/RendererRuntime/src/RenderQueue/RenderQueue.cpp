@@ -25,11 +25,12 @@
 #include "RendererRuntime/RenderQueue/RenderQueue.h"
 #include "RendererRuntime/RenderQueue/RenderableManager.h"
 #include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
-#include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.h"
+#include "RendererRuntime/Command/CommandBuffer.h"
+#include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -139,10 +140,10 @@ namespace RendererRuntime
 		}
 	}
 
-	void RenderQueue::draw()
+	void RenderQueue::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
 	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&mRendererRuntime.getRenderer())
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBuffer)
 
 		// TODO(co) This is just a dummy implementation
 
@@ -186,8 +187,7 @@ namespace RendererRuntime
 					Renderer::IVertexArrayPtr vertexArrayPtr = renderable.getVertexArrayPtr();
 					if (nullptr != vertexArrayPtr)
 					{
-						Renderer::IRenderer& renderer = vertexArrayPtr->getRenderer();
-						renderer.iaSetVertexArray(vertexArrayPtr);
+						Renderer::Command::SetVertexArray::create(commandBuffer, vertexArrayPtr);
 
 						// Material resource
 						const MaterialResource* materialResource = materialResources.tryGetElementById(renderable.getMaterialResourceId());
@@ -274,15 +274,15 @@ namespace RendererRuntime
 											}
 
 											// Bind the material blueprint resource and instance buffer manager to the used renderer
-											materialBlueprintResource->bindToRenderer();
-											instanceBufferManager.bindToRenderer(*materialBlueprintResource);
+											materialBlueprintResource->fillCommandBuffer(commandBuffer);
+											instanceBufferManager.fillCommandBuffer(*materialBlueprintResource, commandBuffer);
 										}
 
 										// Cheap state change: Bind the material technique to the used renderer
-										materialTechnique->bindToRenderer(mRendererRuntime);
+										materialTechnique->fillCommandBuffer(mRendererRuntime, commandBuffer);
 
 										// Set the used pipeline state object (PSO)
-										renderer.setPipelineState(pipelineStatePtr);
+										Renderer::Command::SetPipelineState::create(commandBuffer, pipelineStatePtr);
 
 										{ // Fill the instance buffer manager
 											PassBufferManager* passBufferManager = materialBlueprintResource->getPassBufferManager();
@@ -295,10 +295,10 @@ namespace RendererRuntime
 										}
 
 										// Setup input assembly (IA): Set the primitive topology used for draw calls
-										renderer.iaSetPrimitiveTopology(renderable.getPrimitiveTopology());
+										Renderer::Command::SetPrimitiveTopology::create(commandBuffer, renderable.getPrimitiveTopology());
 
 										// Render the specified geometric primitive, based on indexing into an array of vertices
-										renderer.drawIndexed(Renderer::IndexedIndirectBuffer(renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation()));
+										Renderer::Command::DrawIndexed::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
 									}
 								}
 							}
@@ -309,7 +309,7 @@ namespace RendererRuntime
 		}
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT(&mRendererRuntime.getRenderer())
+		RENDERER_END_DEBUG_EVENT2(commandBuffer)
 	}
 
 

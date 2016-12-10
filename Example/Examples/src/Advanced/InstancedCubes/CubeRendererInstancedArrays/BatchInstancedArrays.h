@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class CommandBuffer;
+}
+
+
+//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -86,9 +95,12 @@ public:
 
 	/**
 	*  @brief
-	*    Draw the batch
+	*    Fill the batch into the given commando buffer
+	*
+	*  @param[out] commandBuffer
+	*    Command buffer to fill
 	*/
-	void draw();
+	void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const;
 
 
 //[-------------------------------------------------------]

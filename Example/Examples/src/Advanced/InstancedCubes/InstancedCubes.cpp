@@ -213,10 +213,13 @@ void InstancedCubes::onDraw()
 	if (nullptr != renderer)
 	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
 
 		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+		// Submit command buffer to the renderer backend
+		mCommandBuffer.submitAndClear(*renderer);
 
 		// Draw the cubes
 		if (nullptr != mCubeRenderer)
@@ -256,7 +259,10 @@ void InstancedCubes::onDraw()
 				{
 					debugGuiManager.drawText("No cube renderer instance", 10.0f, 10.0f);
 				}
-				debugGuiManager.renderFrame();
+				debugGuiManager.fillCommandBuffer(mCommandBuffer);
+
+				// Submit command buffer to the renderer backend
+				mCommandBuffer.submitAndClear(*renderer);
 			}
 		}
 

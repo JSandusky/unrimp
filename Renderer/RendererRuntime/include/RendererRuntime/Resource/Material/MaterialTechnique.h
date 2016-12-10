@@ -36,6 +36,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class CommandBuffer;
+}
 namespace RendererRuntime
 {
 	class IRendererRuntime;
@@ -131,12 +135,14 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Bind material technique to renderer
+		*    Bind the material technique into the given commando buffer
 		*
 		*  @param[in] rendererRuntime
 		*    Renderer runtime to use
+		*  @param[out] commandBuffer
+		*    Command buffer to fill
 		*/
-		void bindToRenderer(const IRendererRuntime& rendererRuntime);
+		void fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]
