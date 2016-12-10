@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRenderer.h"
 
+#include <RendererRuntime/Command/CommandBuffer.h>
+
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]
@@ -96,15 +98,15 @@ private:
 
 	/**
 	*  @brief
-	*    Scene rendering
+	*    Fill command buffer for scene rendering
 	*/
-	void sceneRendering();
+	void fillCommandBufferSceneRendering();
 
 	/**
 	*  @brief
-	*    Post-processing
+	*    Fill command buffer for post-processing
 	*/
-	void postProcessing();
+	void fillCommandBufferPostProcessing();
 
 
 //[-------------------------------------------------------]
@@ -120,9 +122,11 @@ private:
 	// Scene rendering
 	Renderer::IPipelineStatePtr  mPipelineStateSceneRendering;	///< Pipeline state object (PSO) for scene rendering, can be a null pointer
 	Renderer::IVertexArrayPtr    mVertexArraySceneRendering;	///< Vertex array object (VAO) for scene rendering, can be a null pointer
+	Renderer::CommandBuffer		 mCommandBufferSceneRendering;	///< Command buffer for scene rendering
 	// Post-processing
 	Renderer::IPipelineStatePtr  mPipelineStatePostProcessing;	///< Pipeline state object (PSO) for post-processing, can be a null pointer
 	Renderer::IVertexArrayPtr    mVertexArrayPostProcessing;	///< Vertex array object (VAO) for post-processing, can be a null pointer
+	Renderer::CommandBuffer		 mCommandBufferPostProcessing;	///< Command buffer for post processing
 
 
 };

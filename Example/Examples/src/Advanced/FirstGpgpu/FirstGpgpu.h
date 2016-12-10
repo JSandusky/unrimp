@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/Public/Renderer.h>
 
+#include <RendererRuntime/Command/CommandBuffer.h>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -116,30 +118,30 @@ private:
 
 	/**
 	*  @brief
+	*    Fill command buffer content generation
+	*
+	*  @note
+	*    - When this method is called it's ensured that the renderer instance "mRenderer" is valid
+	*/
+	void fillCommandBufferContentGeneration();
+
+	/**
+	*  @brief
+	*    Fill command buffer content processing
+	*
+	*  @note
+	*    - When this method is called it's ensured that the renderer instance "mRenderer" is valid
+	*/
+	void fillCommandBufferContentProcessing();
+
+	/**
+	*  @brief
 	*    Called on application should to it's job
 	*
 	*  @note
 	*    - When this method is called it's ensured that the renderer instance "mRenderer" is valid
 	*/
 	void onDoJob();
-
-	/**
-	*  @brief
-	*    Generate the content of the 2D texture to process later on
-	*
-	*  @note
-	*    - When this method is called it's ensured that the renderer instance "mRenderer" is valid
-	*/
-	void generate2DTextureContent();
-
-	/**
-	*  @brief
-	*    Content processing
-	*
-	*  @note
-	*    - When this method is called it's ensured that the renderer instance "mRenderer" is valid
-	*/
-	void contentProcessing();
 
 
 //[-------------------------------------------------------]
@@ -158,9 +160,11 @@ private:
 	// Content generation
 	Renderer::IPipelineStatePtr  mPipelineStateContentGeneration;	///< Pipeline state object (PSO) for content generation, can be a null pointer
 	Renderer::IVertexArrayPtr    mVertexArrayContentGeneration;		///< Vertex array object (VAO) for content generation, can be a null pointer
+	Renderer::CommandBuffer		 mCommandBufferContentGeneration;	///< Command buffer for content generation
 	// Content processing
 	Renderer::IPipelineStatePtr  mPipelineStateContentProcessing;	///< Pipeline state object (PSO) for content processing, can be a null pointer
 	Renderer::IVertexArrayPtr    mVertexArrayContentProcessing;		///< Vertex array object (VAO) for content processing, can be a null pointer
+	Renderer::CommandBuffer		 mCommandBufferContentProcessing;	///< Command buffer for content processing
 
 
 };

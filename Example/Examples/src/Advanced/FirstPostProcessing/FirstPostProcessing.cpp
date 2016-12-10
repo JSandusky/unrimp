@@ -63,9 +63,6 @@ void FirstPostProcessing::onInitialization()
 		mBufferManager = renderer->createBufferManager();
 		mTextureManager = renderer->createTextureManager();
 
-		// Create the framebuffer object (FBO) instance by using the current window size
-		recreateFramebuffer();
-
 		{ // Create sampler state: We don't use mipmaps
 			Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 			samplerState.maxLOD = 0.0f;
@@ -205,6 +202,9 @@ void FirstPostProcessing::onInitialization()
 			}
 		}
 
+		// Create the framebuffer object (FBO) instance by using the current window size
+		recreateFramebuffer();
+
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
@@ -216,6 +216,8 @@ void FirstPostProcessing::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
+	mCommandBufferSceneRendering.clear();
+	mCommandBufferPostProcessing.clear();
 	mVertexArrayPostProcessing = nullptr;
 	mPipelineStatePostProcessing = nullptr;
 	mVertexArraySceneRendering = nullptr;
@@ -258,11 +260,9 @@ void FirstPostProcessing::onDraw()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Scene rendering
-		sceneRendering();
-
-		// Post-processing
-		postProcessing();
+		// Submit command buffers to the renderer backend
+		mCommandBufferSceneRendering.submit(*renderer);
+		mCommandBufferPostProcessing.submit(*renderer);
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
@@ -299,94 +299,107 @@ void FirstPostProcessing::recreateFramebuffer()
 		// Create the framebuffer object (FBO) instance
 		mFramebuffer = renderer->createFramebuffer(1, &texture2D);
 
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
-	}
-}
-
-void FirstPostProcessing::sceneRendering()
-{
-	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mPipelineStateSceneRendering && nullptr != mPipelineStatePostProcessing)
-	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
-		// This in here is of course just an example. In a real application
-		// there would be no point in constantly updating texture content
-		// without having any real change.
-
-		// TODO(co) Unbind our texture from the texture unit before rendering into it
-		// -> Direct3D 9, OpenGL and OpenGL ES 2 don't mind as long as the texture is not used inside the shader while rendering into it
-		// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
-		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
-		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
-
-		// Set the render target to render into
-		renderer->omSetRenderTarget(mFramebuffer);
-
-		// Clear the color buffer of the current render target with blue
-		renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
-
-		// Set the used graphics root signature
-		renderer->setGraphicsRootSignature(mRootSignature);
-
-		// Set the used pipeline state object (PSO)
-		renderer->setPipelineState(mPipelineStateSceneRendering);
-
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			renderer->iaSetVertexArray(mVertexArraySceneRendering);
-
-			// Set the primitive topology used for draw calls
-			renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-		}
-
-		// Render the specified geometric primitive, based on indexing into an array of vertices
-		renderer->draw(Renderer::IndirectBuffer(3));
-
-		// Restore main swap chain as current render target
-		renderer->omSetRenderTarget(renderer->getMainSwapChain());
+		// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
+		mCommandBufferSceneRendering.clear();
+		mCommandBufferPostProcessing.clear();
+		fillCommandBufferSceneRendering();
+		fillCommandBufferPostProcessing();
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 
-void FirstPostProcessing::postProcessing()
+void FirstPostProcessing::fillCommandBufferSceneRendering()
 {
-	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && mPipelineStatePostProcessing)
-	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
+	// Sanity checks
+	assert(nullptr != mFramebuffer);
+	assert(nullptr != mRootSignature);
+	assert(nullptr != mPipelineStateSceneRendering);
+	assert(nullptr != mVertexArraySceneRendering);
+	assert(nullptr != getRenderer());
+	assert(nullptr != getRenderer()->getMainSwapChain());
+	assert(mCommandBufferSceneRendering.isEmpty());
 
-		// We don't need to clear the current render target because our fullscreen quad covers the full screen
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBufferSceneRendering)
 
-		// Set the used graphics root signature
-		renderer->setGraphicsRootSignature(mRootSignature);
+	// This in here is of course just an example. In a real application
+	// there would be no point in constantly updating texture content
+	// without having any real change.
 
-		// Set diffuse map
-		renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
-		renderer->setGraphicsRootDescriptorTable(1, mTexture2D);
+	// TODO(co) Unbind our texture from the texture unit before rendering into it
+	// -> Direct3D 9, OpenGL and OpenGL ES 2 don't mind as long as the texture is not used inside the shader while rendering into it
+	// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
+	//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
+	//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
 
-		// Set the used pipeline state object (PSO)
-		renderer->setPipelineState(mPipelineStatePostProcessing);
+	// Set the render target to render into
+	Renderer::Command::SetRenderTarget::create(mCommandBufferSceneRendering, mFramebuffer);
 
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			renderer->iaSetVertexArray(mVertexArrayPostProcessing);
+	// Clear the color buffer of the current render target with blue
+	Renderer::Command::Clear::create(mCommandBufferSceneRendering, Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
 
-			// Set the primitive topology used for draw calls
-			renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_STRIP);
-		}
+	// Set the used graphics root signature
+	Renderer::Command::SetGraphicsRootSignature::create(mCommandBufferSceneRendering, mRootSignature);
 
-		// Render the specified geometric primitive, based on indexing into an array of vertices
-		renderer->draw(Renderer::IndirectBuffer(4));
+	// Set the used pipeline state object (PSO)
+	Renderer::Command::SetPipelineState::create(mCommandBufferSceneRendering, mPipelineStateSceneRendering);
 
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
+	{ // Setup input assembly (IA)
+		// Set the used vertex array
+		Renderer::Command::SetVertexArray::create(mCommandBufferSceneRendering, mVertexArraySceneRendering);
+
+		// Set the primitive topology used for draw calls
+		Renderer::Command::SetPrimitiveTopology::create(mCommandBufferSceneRendering, Renderer::PrimitiveTopology::TRIANGLE_LIST);
 	}
+
+	// Render the specified geometric primitive, based on indexing into an array of vertices
+	Renderer::Command::Draw::create(mCommandBufferSceneRendering, 3);
+
+	// Restore main swap chain as current render target
+	Renderer::Command::SetRenderTarget::create(mCommandBufferSceneRendering, getRenderer()->getMainSwapChain());
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(mCommandBufferSceneRendering)
+}
+
+void FirstPostProcessing::fillCommandBufferPostProcessing()
+{
+	// Sanity checks
+	assert(nullptr != mRootSignature);
+	assert(nullptr != mSamplerState);
+	assert(nullptr != mTexture2D);
+	assert(nullptr != mPipelineStatePostProcessing);
+	assert(nullptr != mVertexArrayPostProcessing);
+	assert(mCommandBufferPostProcessing.isEmpty());
+
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBufferPostProcessing)
+
+	// We don't need to clear the current render target because our fullscreen quad covers the full screen
+
+	// Set the used graphics root signature
+	Renderer::Command::SetGraphicsRootSignature::create(mCommandBufferPostProcessing, mRootSignature);
+
+	// Set diffuse map
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBufferPostProcessing, 0, mSamplerState);
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBufferPostProcessing, 1, mTexture2D);
+
+	// Set the used pipeline state object (PSO)
+	Renderer::Command::SetPipelineState::create(mCommandBufferPostProcessing, mPipelineStatePostProcessing);
+
+	{ // Setup input assembly (IA)
+		// Set the used vertex array
+		Renderer::Command::SetVertexArray::create(mCommandBufferPostProcessing, mVertexArrayPostProcessing);
+
+		// Set the primitive topology used for draw calls
+		Renderer::Command::SetPrimitiveTopology::create(mCommandBufferPostProcessing, Renderer::PrimitiveTopology::TRIANGLE_STRIP);
+	}
+
+	// Render the specified geometric primitive, based on indexing into an array of vertices
+	Renderer::Command::Draw::create(mCommandBufferPostProcessing, 4);
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(mCommandBufferPostProcessing)
 }

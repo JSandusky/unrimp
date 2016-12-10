@@ -259,6 +259,10 @@ void FirstGpgpu::onInitialization()
 		}
 	}
 
+	// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
+	fillCommandBufferContentGeneration();
+	fillCommandBufferContentProcessing();
+
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
@@ -269,6 +273,8 @@ void FirstGpgpu::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
 
 	// Release the used resources
+	mCommandBufferContentGeneration.clear();
+	mCommandBufferContentProcessing.clear();
 	mVertexArrayContentProcessing = nullptr;
 	mPipelineStateContentProcessing = nullptr;
 	mVertexArrayContentGeneration = nullptr;
@@ -287,6 +293,105 @@ void FirstGpgpu::onDeinitialization()
 	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
+void FirstGpgpu::fillCommandBufferContentGeneration()
+{
+	// Sanity checks
+	assert(nullptr != mFramebuffer[0]);
+	assert(nullptr != mRootSignature);
+	assert(nullptr != mPipelineStateContentGeneration);
+	assert(nullptr != mVertexArrayContentGeneration);
+	assert(mCommandBufferContentGeneration.isEmpty());
+
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT2(mCommandBufferContentGeneration, L"Generate the content of the 2D texture to process later on")
+
+	// Set the render target to render into
+	Renderer::Command::SetRenderTarget::create(mCommandBufferContentGeneration, mFramebuffer[0]);
+
+	// Clear the color buffer of the current render target with blue
+	Renderer::Command::Clear::create(mCommandBufferContentGeneration, Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
+
+	// Set the used graphics root signature
+	Renderer::Command::SetGraphicsRootSignature::create(mCommandBufferContentGeneration, mRootSignature);
+
+	{ // Set the viewport and scissor rectangle
+		// Get the render target with and height
+		uint32_t width  = 1;
+		uint32_t height = 1;
+		Renderer::IRenderTarget *renderTarget = mFramebuffer[0];
+		if (nullptr != renderTarget)
+		{
+			renderTarget->getWidthAndHeight(width, height);
+		}
+
+		// Set the viewport and scissor rectangle
+		Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBufferContentGeneration, 0, 0, width, height);
+	}
+
+	// Set the used pipeline state object (PSO)
+	Renderer::Command::SetPipelineState::create(mCommandBufferContentGeneration, mPipelineStateContentGeneration);
+
+	{ // Setup input assembly (IA)
+		// Set the used vertex array
+		Renderer::Command::SetVertexArray::create(mCommandBufferContentGeneration, mVertexArrayContentGeneration);
+
+		// Set the primitive topology used for draw calls
+		Renderer::Command::SetPrimitiveTopology::create(mCommandBufferContentGeneration, Renderer::PrimitiveTopology::TRIANGLE_LIST);
+	}
+
+	// Render the specified geometric primitive, based on indexing into an array of vertices
+	Renderer::Command::Draw::create(mCommandBufferContentGeneration, 3);
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(mCommandBufferContentGeneration)
+}
+
+void FirstGpgpu::fillCommandBufferContentProcessing()
+{
+	// Sanity checks
+	assert(nullptr != mFramebuffer[1]);
+	assert(nullptr != mRootSignature);
+	assert(nullptr != mPipelineStateContentProcessing);
+	assert(nullptr != mSamplerState);
+	assert(nullptr != mTexture2D[0]);
+	assert(mCommandBufferContentProcessing.isEmpty());
+
+	// Begin debug event
+	RENDERER_BEGIN_DEBUG_EVENT2(mCommandBufferContentProcessing, L"Content processing")
+
+	// Set the render target to render into
+	Renderer::Command::SetRenderTarget::create(mCommandBufferContentProcessing, mFramebuffer[1]);
+
+	// We don't need to clear the current render target because our fullscreen quad covers the full screen
+
+	// Set the used graphics root signature
+	Renderer::Command::SetGraphicsRootSignature::create(mCommandBufferContentProcessing, mRootSignature);
+
+	// Set the used pipeline state object (PSO)
+	Renderer::Command::SetPipelineState::create(mCommandBufferContentProcessing, mPipelineStateContentProcessing);
+
+	// Set content map
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBufferContentProcessing, 0, mSamplerState);
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBufferContentProcessing, 1, mTexture2D[0]);
+
+	{ // Setup input assembly (IA)
+		// Set the used vertex array
+		Renderer::Command::SetVertexArray::create(mCommandBufferContentProcessing, mVertexArrayContentProcessing);
+
+		// Set the primitive topology used for draw calls
+		Renderer::Command::SetPrimitiveTopology::create(mCommandBufferContentProcessing, Renderer::PrimitiveTopology::TRIANGLE_STRIP);
+	}
+
+	// Render the specified geometric primitive, based on indexing into an array of vertices
+	Renderer::Command::Draw::create(mCommandBufferContentProcessing, 4);
+
+	// Restore main swap chain as current render target
+	Renderer::Command::SetRenderTarget::create(mCommandBufferContentProcessing, mRenderer->getMainSwapChain());
+
+	// End debug event
+	RENDERER_END_DEBUG_EVENT2(mCommandBufferContentProcessing)
+}
+
 void FirstGpgpu::onDoJob()
 {
 	// Begin debug event
@@ -294,11 +399,11 @@ void FirstGpgpu::onDoJob()
 
 	// Generate the content of the 2D texture to process later on
 	// -> After this step, "mTexture2D[0]" holds the content we want to process later on
-	generate2DTextureContent();
+	mCommandBufferContentGeneration.submit(*mRenderer);
 
 	// Content processing
 	// -> After this step, "mTexture2D[1]" holds the processed content
-	contentProcessing();
+	mCommandBufferContentProcessing.submit(*mRenderer);
 
 	// TODO(co) "Renderer::IRenderer::map()"/"Renderer::IRenderer::unmap()" are currently under construction
 	// Map the texture holding the processed content
@@ -316,96 +421,4 @@ void FirstGpgpu::onDoJob()
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(mRenderer)
-}
-
-void FirstGpgpu::generate2DTextureContent()
-{
-	// Get and check the program instances
-	if (nullptr != mPipelineStateContentGeneration && nullptr != mPipelineStateContentProcessing)
-	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT(mRenderer, L"Generate the content of the 2D texture to process later on")
-
-		// Set the render target to render into
-		mRenderer->omSetRenderTarget(mFramebuffer[0]);
-
-		// Clear the color buffer of the current render target with blue
-		mRenderer->clear(Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
-
-		// Set the used graphics root signature
-		mRenderer->setGraphicsRootSignature(mRootSignature);
-
-		{ // Set the viewport and scissor rectangle
-			// Get the render target with and height
-			uint32_t width  = 1;
-			uint32_t height = 1;
-			Renderer::IRenderTarget *renderTarget = mFramebuffer[0];
-			if (nullptr != renderTarget)
-			{
-				renderTarget->getWidthAndHeight(width, height);
-			}
-
-			// Set the viewport and scissor rectangle
-			mRenderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
-		}
-
-		// Set the used pipeline state object (PSO)
-		mRenderer->setPipelineState(mPipelineStateContentGeneration);
-
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			mRenderer->iaSetVertexArray(mVertexArrayContentGeneration);
-
-			// Set the primitive topology used for draw calls
-			mRenderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-		}
-
-		// Render the specified geometric primitive, based on indexing into an array of vertices
-		mRenderer->draw(Renderer::IndirectBuffer(3));
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(mRenderer)
-	}
-}
-
-void FirstGpgpu::contentProcessing()
-{
-	// Get and check the program instance
-	if (nullptr != mPipelineStateContentProcessing)
-	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT(mRenderer, L"Content processing")
-
-		// Set the render target to render into
-		mRenderer->omSetRenderTarget(mFramebuffer[1]);
-
-		// We don't need to clear the current render target because our fullscreen quad covers the full screen
-
-		// Set the used graphics root signature
-		mRenderer->setGraphicsRootSignature(mRootSignature);
-
-		// Set the used pipeline state object (PSO)
-		mRenderer->setPipelineState(mPipelineStateContentProcessing);
-
-		// Set content map
-		mRenderer->setGraphicsRootDescriptorTable(0, mSamplerState);
-		mRenderer->setGraphicsRootDescriptorTable(1, mTexture2D[0]);
-
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			mRenderer->iaSetVertexArray(mVertexArrayContentProcessing);
-
-			// Set the primitive topology used for draw calls
-			mRenderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_STRIP);
-		}
-
-		// Render the specified geometric primitive, based on indexing into an array of vertices
-		mRenderer->draw(Renderer::IndirectBuffer(4));
-
-		// Restore main swap chain as current render target
-		mRenderer->omSetRenderTarget(mRenderer->getMainSwapChain());
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(mRenderer)
-	}
 }
