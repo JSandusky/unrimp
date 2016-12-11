@@ -27,8 +27,6 @@
 #include "Framework/Quaternion.h"
 #include "Framework/EulerAngles.h"
 
-#include <RendererRuntime/Command/CommandBuffer.h>
-
 #include <stdlib.h> // For rand()
 
 
@@ -50,9 +48,6 @@ void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Ren
 {
 	// Set owner renderer instance
 	mRenderer = &program.getRenderer();
-
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
 
 	// Release previous data if required
 	mTextureBufferPerInstanceData = nullptr;
@@ -122,9 +117,6 @@ void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Ren
 		pipelineState.blendState.renderTarget[0].destBlend   = Renderer::Blend::ONE;
 		mPipelineState = mRenderer->createPipelineState(pipelineState);
 	}
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
 void BatchDrawInstanced::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const

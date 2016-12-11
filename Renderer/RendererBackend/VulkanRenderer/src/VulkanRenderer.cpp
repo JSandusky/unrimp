@@ -34,6 +34,8 @@
 #include "VulkanRenderer/Buffer/IndexBuffer.h"
 #include "VulkanRenderer/Buffer/VertexBuffer.h"
 #include "VulkanRenderer/Buffer/UniformBuffer.h"
+#include "VulkanRenderer/Buffer/TextureBuffer.h"
+#include "VulkanRenderer/Buffer/IndirectBuffer.h"
 #include "VulkanRenderer/Texture/TextureManager.h"
 #include "VulkanRenderer/Texture/Texture2D.h"
 #include "VulkanRenderer/Texture/Texture2DArray.h"
@@ -46,6 +48,8 @@
 #elif defined LINUX
 	#include "VulkanRenderer/Linux/ContextLinux.h"
 #endif
+
+#include <Renderer/Buffer/CommandBuffer.h>
 
 
 //[-------------------------------------------------------]
@@ -75,6 +79,188 @@ VULKANRENDERER_API_EXPORT Renderer::IRenderer *createVulkanRendererInstance(hand
 //[-------------------------------------------------------]
 namespace VulkanRenderer
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+	namespace
+	{
+		namespace detail
+		{
+
+
+			//[-------------------------------------------------------]
+			//[ Global functions                                      ]
+			//[-------------------------------------------------------]
+			namespace BackendDispatch
+			{
+
+
+				//[-------------------------------------------------------]
+				//[ Resource handling                                     ]
+				//[-------------------------------------------------------]
+				void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
+				{
+					const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
+					realData->uniformBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+				}
+
+				void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
+				{
+					const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
+					realData->textureBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Graphics root                                         ]
+				//[-------------------------------------------------------]
+				void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
+					static_cast<VulkanRenderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
+				}
+
+				void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
+					static_cast<VulkanRenderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				}
+
+				//[-------------------------------------------------------]
+				//[ States                                                ]
+				//[-------------------------------------------------------]
+				void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
+					static_cast<VulkanRenderer&>(renderer).setPipelineState(realData->pipelineState);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Input-assembler (IA) stage                            ]
+				//[-------------------------------------------------------]
+				void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
+					static_cast<VulkanRenderer&>(renderer).iaSetVertexArray(realData->vertexArray);
+				}
+
+				void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
+					static_cast<VulkanRenderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Rasterizer (RS) stage                                 ]
+				//[-------------------------------------------------------]
+				void SetViewports(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
+					static_cast<VulkanRenderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
+					static_cast<VulkanRenderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Output-merger (OM) stage                              ]
+				//[-------------------------------------------------------]
+				void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
+					static_cast<VulkanRenderer&>(renderer).omSetRenderTarget(realData->renderTarget);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Operations                                            ]
+				//[-------------------------------------------------------]
+				void Clear(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
+					static_cast<VulkanRenderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Draw call                                             ]
+				//[-------------------------------------------------------]
+				void Draw(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<VulkanRenderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<VulkanRenderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Debug                                                 ]
+				//[-------------------------------------------------------]
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<VulkanRenderer&>(renderer).setDebugMarker(realData->name);
+				}
+
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<VulkanRenderer&>(renderer).beginDebugEvent(realData->name);
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<VulkanRenderer&>(renderer).endDebugEvent();
+				}
+
+
+			}
+
+
+			//[-------------------------------------------------------]
+			//[ Global definitions                                    ]
+			//[-------------------------------------------------------]
+			static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
+			{
+				// Resource handling
+				&BackendDispatch::CopyUniformBufferData,
+				&BackendDispatch::CopyTextureBufferData,
+				// Graphics root
+				&BackendDispatch::SetGraphicsRootSignature,
+				&BackendDispatch::SetGraphicsRootDescriptorTable,
+				// States
+				&BackendDispatch::SetPipelineState,
+				// Input-assembler (IA) stage
+				&BackendDispatch::SetVertexArray,
+				&BackendDispatch::SetPrimitiveTopology,
+				// Rasterizer (RS) stage
+				&BackendDispatch::SetViewports,
+				&BackendDispatch::SetScissorRectangles,
+				// Output-merger (OM) stage
+				&BackendDispatch::SetRenderTarget,
+				// Operations
+				&BackendDispatch::Clear,
+				// Draw call
+				&BackendDispatch::Draw,
+				&BackendDispatch::DrawIndexed,
+				// Debug
+				&BackendDispatch::SetDebugMarker,
+				&BackendDispatch::BeginDebugEvent,
+				&BackendDispatch::EndDebugEvent
+			};
+
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+		} // detail
+	}
 
 
 	//[-------------------------------------------------------]
@@ -215,124 +401,6 @@ namespace VulkanRenderer
 
 		// Destroy the Vulkan runtime linking instance
 		delete mVulkanRuntimeLinking;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IRenderer methods            ]
-	//[-------------------------------------------------------]
-	const char *VulkanRenderer::getName() const
-	{
-		return "Vulkan";
-	}
-
-	bool VulkanRenderer::isInitialized() const
-	{
-		// Is the context initialized?
-		return mContext->isInitialized();
-	}
-
-	bool VulkanRenderer::isDebugEnabled()
-	{
-		// TODO(co) Implement me
-
-		// Debug disabled
-		return false;
-	}
-
-	Renderer::ISwapChain *VulkanRenderer::getMainSwapChain() const
-	{
-		return mMainSwapChain;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Shader language                                       ]
-	//[-------------------------------------------------------]
-	uint32_t VulkanRenderer::getNumberOfShaderLanguages() const
-	{
-		// Done, return the number of supported shader languages
-		return 1;
-	}
-
-	const char *VulkanRenderer::getShaderLanguageName(uint32_t) const
-	{
-		return ShaderLanguageGlsl::NAME;
-	}
-
-	Renderer::IShaderLanguage *VulkanRenderer::getShaderLanguage(const char *shaderLanguageName)
-	{
-		// Optimization: Check for shader language name pointer match, first
-		if (nullptr != shaderLanguageName && (shaderLanguageName == ShaderLanguageGlsl::NAME || !stricmp(shaderLanguageName, ShaderLanguageGlsl::NAME)))
-		{
-			// If required, create the GLSL shader language instance right now
-			if (nullptr == mShaderLanguageGlsl)
-			{
-				mShaderLanguageGlsl = new ShaderLanguageGlsl(*this);
-				mShaderLanguageGlsl->addReference();	// Internal renderer reference
-			}
-
-			// Return the shader language instance
-			return mShaderLanguageGlsl;
-		}
-
-		// Error!
-		return nullptr;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource creation                                     ]
-	//[-------------------------------------------------------]
-	Renderer::ISwapChain *VulkanRenderer::createSwapChain(handle nativeWindowHandle)
-	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
-	}
-
-	Renderer::IFramebuffer *VulkanRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
-	{
-		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
-	}
-
-	Renderer::IBufferManager *VulkanRenderer::createBufferManager()
-	{
-		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureManager *VulkanRenderer::createTextureManager()
-	{
-		return new TextureManager(*this);
-	}
-
-	Renderer::IRootSignature *VulkanRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)
-	{
-		return new RootSignature(*this, rootSignature);
-	}
-
-	Renderer::IPipelineState *VulkanRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
-	{
-		return new PipelineState(*this, pipelineState);
-	}
-
-	Renderer::ISamplerState *VulkanRenderer::createSamplerState(const Renderer::SamplerState &samplerState)
-	{
-		return new SamplerState(*this, samplerState);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource handling                                     ]
-	//[-------------------------------------------------------]
-	bool VulkanRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
-	{
-		// TODO(co) Implement me
-		return false;
-	}
-
-	void VulkanRenderer::unmap(Renderer::IResource &, uint32_t)
-	{
-		// TODO(co) Implement me
 	}
 
 
@@ -626,23 +694,6 @@ namespace VulkanRenderer
 		// TODO(co) Implement me
 	}
 
-	bool VulkanRenderer::beginScene()
-	{
-		// Not required when using Vulkan
-
-		// Done
-		return true;
-	}
-
-	void VulkanRenderer::endScene()
-	{
-		// We need to forget about the currently set render target
-		omSetRenderTarget(nullptr);
-
-		// We need to forget about the currently set vertex array
-		iaUnsetVertexArray();
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
@@ -677,20 +728,6 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Synchronization                                       ]
-	//[-------------------------------------------------------]
-	void VulkanRenderer::flush()
-	{
-		// TODO(co) Implement me
-	}
-
-	void VulkanRenderer::finish()
-	{
-		// TODO(co) Implement me
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
 	void VulkanRenderer::setDebugMarker(const wchar_t *)
@@ -704,6 +741,179 @@ namespace VulkanRenderer
 	}
 
 	void VulkanRenderer::endDebugEvent()
+	{
+		// TODO(co) Implement me
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderer methods            ]
+	//[-------------------------------------------------------]
+	const char *VulkanRenderer::getName() const
+	{
+		return "Vulkan";
+	}
+
+	bool VulkanRenderer::isInitialized() const
+	{
+		// Is the context initialized?
+		return mContext->isInitialized();
+	}
+
+	bool VulkanRenderer::isDebugEnabled()
+	{
+		// TODO(co) Implement me
+
+		// Debug disabled
+		return false;
+	}
+
+	Renderer::ISwapChain *VulkanRenderer::getMainSwapChain() const
+	{
+		return mMainSwapChain;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Shader language                                       ]
+	//[-------------------------------------------------------]
+	uint32_t VulkanRenderer::getNumberOfShaderLanguages() const
+	{
+		// Done, return the number of supported shader languages
+		return 1;
+	}
+
+	const char *VulkanRenderer::getShaderLanguageName(uint32_t) const
+	{
+		return ShaderLanguageGlsl::NAME;
+	}
+
+	Renderer::IShaderLanguage *VulkanRenderer::getShaderLanguage(const char *shaderLanguageName)
+	{
+		// Optimization: Check for shader language name pointer match, first
+		if (nullptr != shaderLanguageName && (shaderLanguageName == ShaderLanguageGlsl::NAME || !stricmp(shaderLanguageName, ShaderLanguageGlsl::NAME)))
+		{
+			// If required, create the GLSL shader language instance right now
+			if (nullptr == mShaderLanguageGlsl)
+			{
+				mShaderLanguageGlsl = new ShaderLanguageGlsl(*this);
+				mShaderLanguageGlsl->addReference();	// Internal renderer reference
+			}
+
+			// Return the shader language instance
+			return mShaderLanguageGlsl;
+		}
+
+		// Error!
+		return nullptr;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource creation                                     ]
+	//[-------------------------------------------------------]
+	Renderer::ISwapChain *VulkanRenderer::createSwapChain(handle nativeWindowHandle)
+	{
+		// The provided native window handle must not be a null handle
+		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+	}
+
+	Renderer::IFramebuffer *VulkanRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	{
+		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
+	}
+
+	Renderer::IBufferManager *VulkanRenderer::createBufferManager()
+	{
+		return new BufferManager(*this);
+	}
+
+	Renderer::ITextureManager *VulkanRenderer::createTextureManager()
+	{
+		return new TextureManager(*this);
+	}
+
+	Renderer::IRootSignature *VulkanRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	{
+		return new RootSignature(*this, rootSignature);
+	}
+
+	Renderer::IPipelineState *VulkanRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
+	{
+		return new PipelineState(*this, pipelineState);
+	}
+
+	Renderer::ISamplerState *VulkanRenderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	{
+		return new SamplerState(*this, samplerState);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource handling                                     ]
+	//[-------------------------------------------------------]
+	bool VulkanRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
+	{
+		// TODO(co) Implement me
+		return false;
+	}
+
+	void VulkanRenderer::unmap(Renderer::IResource &, uint32_t)
+	{
+		// TODO(co) Implement me
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Operations                                            ]
+	//[-------------------------------------------------------]
+	bool VulkanRenderer::beginScene()
+	{
+		// Not required when using Vulkan
+
+		// Done
+		return true;
+	}
+
+	void VulkanRenderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
+	{
+		// Loop through all commands
+		uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
+		Renderer::CommandPacket commandPacket = commandPacketBuffer;
+		while (nullptr != commandPacket)
+		{
+			{ // Submit command packet
+				const Renderer::CommandDispatchFunctionIndex commandDispatchFunctionIndex = Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(commandPacket);
+				const void* command = Renderer::CommandPacketHelper::loadCommand(commandPacket);
+				detail::DISPATCH_FUNCTIONS[commandDispatchFunctionIndex](command, *this);
+			}
+
+			{ // Next command
+				const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+				commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+			}
+		}
+	}
+
+	void VulkanRenderer::endScene()
+	{
+		// We need to forget about the currently set render target
+		omSetRenderTarget(nullptr);
+
+		// We need to forget about the currently set vertex array
+		iaUnsetVertexArray();
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Synchronization                                       ]
+	//[-------------------------------------------------------]
+	void VulkanRenderer::flush()
+	{
+		// TODO(co) Implement me
+	}
+
+	void VulkanRenderer::finish()
 	{
 		// TODO(co) Implement me
 	}

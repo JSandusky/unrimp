@@ -32,6 +32,9 @@
 //[-------------------------------------------------------]
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 #include <string.h>		// For strcpy
+#ifndef RENDERER_NO_DEBUG
+	#include <cassert>
+#endif
 #ifndef RENDERER_NO_STATISTICS
 	#include <atomic>	// For "std::atomic<>"
 #endif
@@ -51,6 +54,7 @@ namespace Renderer
 		class IRenderTarget;
 			class ISwapChain;
 			class IFramebuffer;
+		class CommandBuffer;
 		class IBufferManager;
 		class IBuffer;
 			class IIndexBuffer;
@@ -110,21 +114,11 @@ namespace Renderer
 			#error "Unsupported platform"
 		#endif
 		#ifdef RENDERER_NO_DEBUG
-			#define RENDERER_SET_DEBUG_MARKER(renderer, name)
-			#define RENDERER_SET_DEBUG_MARKER_FUNCTION(renderer)
-			#define RENDERER_BEGIN_DEBUG_EVENT(renderer, name)
-			#define RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-			#define RENDERER_END_DEBUG_EVENT(renderer)
 			#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name)
 		#else
 			#define RENDERER_INTERNAL__WFUNCTION__2(x) L ## x
 			#define RENDERER_INTERNAL__WFUNCTION__1(x) RENDERER_INTERNAL__WFUNCTION__2(x)
 			#define RENDERER_INTERNAL__WFUNCTION__ RENDERER_INTERNAL__WFUNCTION__1(__FUNCTION__)
-			#define RENDERER_SET_DEBUG_MARKER(renderer, name) if (nullptr != renderer) { (renderer)->setDebugMarker(name); }
-			#define RENDERER_SET_DEBUG_MARKER_FUNCTION(renderer) if (nullptr != renderer) { (renderer)->setDebugMarker(RENDERER_INTERNAL__WFUNCTION__); }
-			#define RENDERER_BEGIN_DEBUG_EVENT(renderer, name) if (nullptr != renderer) { (renderer)->beginDebugEvent(name); }
-			#define RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer) if (nullptr != renderer) { (renderer)->beginDebugEvent(RENDERER_INTERNAL__WFUNCTION__); }
-			#define RENDERER_END_DEBUG_EVENT(renderer) if (nullptr != renderer) { (renderer)->endDebugEvent(); }
 			#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name) if (nullptr != resource) { (resource)->setDebugName(name); }
 		#endif
 	#endif
@@ -1768,24 +1762,11 @@ namespace Renderer
 			virtual ISamplerState* createSamplerState(const SamplerState& samplerState) = 0;
 			virtual bool map(IResource& resource, uint32_t subresource, MapType mapType, uint32_t mapFlags, MappedSubresource& mappedSubresource) = 0;
 			virtual void unmap(IResource& resource, uint32_t subresource) = 0;
-			virtual void setGraphicsRootSignature(IRootSignature* rootSignature) = 0;
-			virtual void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, IResource* resource) = 0;
-			virtual void setPipelineState(IPipelineState* pipelineState) = 0;
-			virtual void iaSetVertexArray(IVertexArray* vertexArray) = 0;
-			virtual void iaSetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;
-			virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport* viewports) = 0;
-			virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles) = 0;
-			virtual void omSetRenderTarget(IRenderTarget* renderTarget) = 0;
-			virtual void clear(uint32_t flags, const float color[4], float z, uint32_t stencil) = 0;
 			virtual bool beginScene() = 0;
+			virtual void submitCommandBuffer(const CommandBuffer& commandBuffer) = 0;
 			virtual void endScene() = 0;
-			virtual void draw(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
-			virtual void drawIndexed(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
 			virtual void flush() = 0;
 			virtual void finish() = 0;
-			virtual void setDebugMarker(const wchar_t* name) = 0;
-			virtual void beginDebugEvent(const wchar_t* name) = 0;
-			virtual void endDebugEvent() = 0;
 		protected:
 			IRenderer();
 			explicit IRenderer(const IRenderer& source);
@@ -2436,6 +2417,452 @@ namespace Renderer
 			IFragmentShader& operator =(const IFragmentShader& source);
 		};
 		typedef SmartRefCount<IFragmentShader> IFragmentShaderPtr;
+	#endif
+
+	// Renderer/Buffer/CommandBuffer.h
+	#ifndef __RENDERER_COMMANDBUFFER_H__
+	#define __RENDERER_COMMANDBUFFER_H__
+		enum CommandDispatchFunctionIndex : uint8_t
+		{
+			CopyUniformBufferData = 0,
+			CopyTextureBufferData,
+			SetGraphicsRootSignature,
+			SetGraphicsRootDescriptorTable,
+			SetPipelineState,
+			SetVertexArray,
+			SetPrimitiveTopology,
+			SetViewports,
+			SetScissorRectangles,
+			SetRenderTarget,
+			Clear,
+			Draw,
+			DrawIndexed,
+			SetDebugMarker,
+			BeginDebugEvent,
+			EndDebugEvent,
+			NumberOfFunctions
+		};
+		typedef void (*BackendDispatchFunction)(const void*, IRenderer& renderer);
+		typedef void* CommandPacket;
+		namespace CommandPacketHelper
+		{
+			static const uint32_t OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX	= 0u;
+			static const uint32_t OFFSET_BACKEND_DISPATCH_FUNCTION		= OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX + sizeof(uint32_t);
+			static const uint32_t OFFSET_COMMAND						= OFFSET_BACKEND_DISPATCH_FUNCTION + sizeof(CommandDispatchFunctionIndex);
+			template <typename T>
+			uint32_t getNumberOfBytes(uint32_t numberOfAuxiliaryBytes)
+			{
+				return OFFSET_COMMAND + sizeof(T) + numberOfAuxiliaryBytes;
+			}
+			inline uint32_t getNextCommandPacketByteIndex(const CommandPacket commandPacket)
+			{
+				return *reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX);
+			}
+			inline void storeNextCommandPacketByteIndex(const CommandPacket commandPacket, uint32_t nextPacketByteIndex)
+			{
+				*reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX) = nextPacketByteIndex;
+			}
+			inline CommandDispatchFunctionIndex* getCommandDispatchFunctionIndex(const CommandPacket commandPacket)
+			{
+				return reinterpret_cast<CommandDispatchFunctionIndex*>(reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_BACKEND_DISPATCH_FUNCTION);
+			}
+			inline void storeBackendDispatchFunctionIndex(const CommandPacket commandPacket, CommandDispatchFunctionIndex commandDispatchFunctionIndex)
+			{
+				*getCommandDispatchFunctionIndex(commandPacket) = commandDispatchFunctionIndex;
+			}
+			inline CommandDispatchFunctionIndex loadCommandDispatchFunctionIndex(const CommandPacket commandPacket)
+			{
+				return *getCommandDispatchFunctionIndex(commandPacket);
+			}
+			template <typename T>
+			T* getCommand(const CommandPacket commandPacket)
+			{
+				return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_COMMAND);
+			}
+			inline const void* loadCommand(const CommandPacket commandPacket)
+			{
+				return reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_COMMAND;
+			}
+			template <typename T>
+			uint8_t* getAuxiliaryMemory(T* command)
+			{
+				return reinterpret_cast<uint8_t*>(command) + sizeof(T);
+			}
+			template <typename T>
+			const uint8_t* getAuxiliaryMemory(const T* command)
+			{
+				return reinterpret_cast<const uint8_t*>(command) + sizeof(T);
+			}
+		};
+		class CommandBuffer
+		{
+		public:
+			inline CommandBuffer() :
+				mCommandPacketBufferNumberOfBytes(0),
+				mCommandPacketBuffer(nullptr),
+				mPreviousCommandPacketByteIndex(~0u),
+				mCurrentCommandPacketByteIndex(0)
+			{}
+			inline ~CommandBuffer()
+			{
+				if (nullptr != mCommandPacketBuffer)
+				{
+					delete [] mCommandPacketBuffer;
+				}
+			}
+			inline bool isEmpty() const
+			{
+				return (~0u == mPreviousCommandPacketByteIndex);
+			}
+			inline void clear()
+			{
+				mPreviousCommandPacketByteIndex = ~0u;
+				mCurrentCommandPacketByteIndex = 0;
+			}
+			template <typename U>
+			U* addCommand(uint32_t numberOfAuxiliaryBytes = 0)
+			{
+				const uint32_t numberOfCommandBytes = CommandPacketHelper::getNumberOfBytes<U>(numberOfAuxiliaryBytes);
+				if (mCommandPacketBufferNumberOfBytes < mCurrentCommandPacketByteIndex + numberOfCommandBytes)
+				{
+					const uint32_t newCommandPacketBufferNumberOfBytes = mCommandPacketBufferNumberOfBytes + NUMBER_OF_BYTES_TO_GROW + numberOfCommandBytes;
+					uint8_t* newCommandPacketBuffer = new uint8_t[newCommandPacketBufferNumberOfBytes];
+					if (nullptr != mCommandPacketBuffer)
+					{
+						memcpy(newCommandPacketBuffer, mCommandPacketBuffer, mCommandPacketBufferNumberOfBytes);
+						delete [] mCommandPacketBuffer;
+					}
+					mCommandPacketBuffer = newCommandPacketBuffer;
+					mCommandPacketBufferNumberOfBytes = newCommandPacketBufferNumberOfBytes;
+				}
+				CommandPacket commandPacket = &mCommandPacketBuffer[mCurrentCommandPacketByteIndex];
+				if (~0u != mPreviousCommandPacketByteIndex)
+				{
+					CommandPacketHelper::storeNextCommandPacketByteIndex(&mCommandPacketBuffer[mPreviousCommandPacketByteIndex], mCurrentCommandPacketByteIndex);
+				}
+				CommandPacketHelper::storeNextCommandPacketByteIndex(commandPacket, ~0u);
+				CommandPacketHelper::storeBackendDispatchFunctionIndex(commandPacket, U::COMMAND_DISPATCH_FUNCTION_INDEX);
+				mPreviousCommandPacketByteIndex = mCurrentCommandPacketByteIndex;
+				mCurrentCommandPacketByteIndex += numberOfCommandBytes;
+				return CommandPacketHelper::getCommand<U>(commandPacket);
+			}
+			inline void submit(IRenderer& renderer) const
+			{
+				renderer.submitCommandBuffer(*this);
+			}
+			inline void submitAndClear(IRenderer& renderer)
+			{
+				renderer.submitCommandBuffer(*this);
+				clear();
+			}
+		private:
+			static const uint32_t NUMBER_OF_BYTES_TO_GROW = 8192;
+		private:
+			uint32_t mCommandPacketBufferNumberOfBytes;
+			uint8_t* mCommandPacketBuffer;
+			uint32_t mCurrentCommandPacketByteIndex;
+			uint32_t mPreviousCommandPacketByteIndex;
+		};
+		namespace Command
+		{
+			struct CopyUniformBufferData
+			{
+				inline static void create(CommandBuffer& commandBuffer, IUniformBuffer* uniformBuffer, uint32_t size, void* data)
+				{
+					Command::CopyUniformBufferData* copyUniformBufferDataCommand = commandBuffer.addCommand<Command::CopyUniformBufferData>(size);
+					copyUniformBufferDataCommand->uniformBuffer = uniformBuffer;
+					copyUniformBufferDataCommand->size			= size;
+					copyUniformBufferDataCommand->data			= nullptr;
+					memcpy(CommandPacketHelper::getAuxiliaryMemory(copyUniformBufferDataCommand), data, size);
+				}
+				inline CopyUniformBufferData(IUniformBuffer* _uniformBuffer, uint32_t _size, void* _data) :
+					uniformBuffer(_uniformBuffer),
+					size(_size),
+					data(_data)
+				{};
+				IUniformBuffer* uniformBuffer;
+				uint32_t		size;
+				void*			data;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyUniformBufferData;
+			};
+			struct CopyTextureBufferData
+			{
+				inline static void create(CommandBuffer& commandBuffer, ITextureBuffer* textureBuffer, uint32_t size, void* data)
+				{
+					Command::CopyTextureBufferData* copyTextureBufferDataCommand = commandBuffer.addCommand<Command::CopyTextureBufferData>(size);
+					copyTextureBufferDataCommand->textureBuffer = textureBuffer;
+					copyTextureBufferDataCommand->size			= size;
+					copyTextureBufferDataCommand->data			= nullptr;
+					memcpy(CommandPacketHelper::getAuxiliaryMemory(copyTextureBufferDataCommand), data, size);
+				}
+				inline CopyTextureBufferData(ITextureBuffer* _textureBuffer, uint32_t _size, void* _data) :
+					textureBuffer(_textureBuffer),
+					size(_size),
+					data(_data)
+				{};
+				ITextureBuffer* textureBuffer;
+				uint32_t		size;
+				void*			data;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyTextureBufferData;
+			};
+			struct SetGraphicsRootSignature
+			{
+				inline static void create(CommandBuffer& commandBuffer, IRootSignature* rootSignature)
+				{
+					*commandBuffer.addCommand<SetGraphicsRootSignature>() = SetGraphicsRootSignature(rootSignature);
+				}
+				inline SetGraphicsRootSignature(IRootSignature* _rootSignature) :
+					rootSignature(_rootSignature)
+				{};
+				IRootSignature* rootSignature;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsRootSignature;
+			};
+			struct SetGraphicsRootDescriptorTable
+			{
+				inline static void create(CommandBuffer& commandBuffer, uint32_t rootParameterIndex, IResource* resource)
+				{
+					*commandBuffer.addCommand<SetGraphicsRootDescriptorTable>() = SetGraphicsRootDescriptorTable(rootParameterIndex, resource);
+				}
+				inline SetGraphicsRootDescriptorTable(uint32_t _rootParameterIndex, IResource* _resource) :
+					rootParameterIndex(_rootParameterIndex),
+					resource(_resource)
+				{};
+				uint32_t   rootParameterIndex;
+				IResource* resource;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsRootDescriptorTable;
+			};
+			struct SetPipelineState
+			{
+				inline static void create(CommandBuffer& commandBuffer, IPipelineState* pipelineState)
+				{
+					*commandBuffer.addCommand<SetPipelineState>() = SetPipelineState(pipelineState);
+				}
+				inline SetPipelineState(IPipelineState* _pipelineState) :
+					pipelineState(_pipelineState)
+				{};
+				IPipelineState* pipelineState;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetPipelineState;
+			};
+			struct SetVertexArray
+			{
+				inline static void create(CommandBuffer& commandBuffer, IVertexArray* vertexArray)
+				{
+					*commandBuffer.addCommand<SetVertexArray>() = SetVertexArray(vertexArray);
+				}
+				inline SetVertexArray(IVertexArray* _vertexArray) :
+					vertexArray(_vertexArray)
+				{};
+				IVertexArray* vertexArray;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetVertexArray;
+			};
+			struct SetPrimitiveTopology
+			{
+				inline static void create(CommandBuffer& commandBuffer, PrimitiveTopology primitiveTopology)
+				{
+					*commandBuffer.addCommand<SetPrimitiveTopology>() = SetPrimitiveTopology(primitiveTopology);
+				}
+				inline SetPrimitiveTopology(PrimitiveTopology _primitiveTopology) :
+					primitiveTopology(_primitiveTopology)
+				{};
+				PrimitiveTopology primitiveTopology;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetPrimitiveTopology;
+			};
+			struct SetViewports
+			{
+				inline static void create(CommandBuffer& commandBuffer, uint32_t numberOfViewports, const Viewport* viewports)
+				{
+					*commandBuffer.addCommand<SetViewports>() = SetViewports(numberOfViewports, viewports);
+				}
+				inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height)
+				{
+					SetViewports* setViewportsCommand = commandBuffer.addCommand<SetViewports>(sizeof(Viewport));
+					Viewport* viewport = reinterpret_cast<Viewport*>(CommandPacketHelper::getAuxiliaryMemory(setViewportsCommand));
+					viewport->topLeftX = static_cast<float>(topLeftX);
+					viewport->topLeftY = static_cast<float>(topLeftY);
+					viewport->width	   = static_cast<float>(width);
+					viewport->height   = static_cast<float>(height);
+					viewport->minDepth = 0.0f;
+					viewport->maxDepth = 1.0f;
+					setViewportsCommand->numberOfViewports = 1;
+					setViewportsCommand->viewports		   = nullptr;
+				}
+				inline SetViewports(uint32_t _numberOfViewports, const Viewport* _viewports) :
+					numberOfViewports(_numberOfViewports),
+					viewports(_viewports)
+				{};
+				uint32_t		numberOfViewports;
+				const Viewport* viewports;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetViewports;
+			};
+			struct SetScissorRectangles
+			{
+				inline static void create(CommandBuffer& commandBuffer, uint32_t numberOfScissorRectangles, const ScissorRectangle* scissorRectangles)
+				{
+					*commandBuffer.addCommand<SetScissorRectangles>() = SetScissorRectangles(numberOfScissorRectangles, scissorRectangles);
+				}
+				inline static void create(CommandBuffer& commandBuffer, long topLeftX, long topLeftY, long bottomRightX, long bottomRightY)
+				{
+					SetScissorRectangles* setScissorRectanglesCommand = commandBuffer.addCommand<SetScissorRectangles>(sizeof(ScissorRectangle));
+					ScissorRectangle* scissorRectangle = reinterpret_cast<ScissorRectangle*>(CommandPacketHelper::getAuxiliaryMemory(setScissorRectanglesCommand));
+					scissorRectangle->topLeftX	   = topLeftX;
+					scissorRectangle->topLeftY	   = topLeftY;
+					scissorRectangle->bottomRightX = bottomRightX;
+					scissorRectangle->bottomRightY = bottomRightY;
+					setScissorRectanglesCommand->numberOfScissorRectangles = 1;
+					setScissorRectanglesCommand->scissorRectangles		   = nullptr;
+				}
+				inline SetScissorRectangles(uint32_t _numberOfScissorRectangles, const ScissorRectangle* _scissorRectangles) :
+					numberOfScissorRectangles(_numberOfScissorRectangles),
+					scissorRectangles(_scissorRectangles)
+				{};
+				uint32_t				numberOfScissorRectangles;
+				const ScissorRectangle* scissorRectangles;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetScissorRectangles;
+			};
+			struct SetViewportAndScissorRectangle
+			{
+				inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height)
+				{
+					SetViewports::create(commandBuffer, topLeftX, topLeftY, width, height);
+					SetScissorRectangles::create(commandBuffer, static_cast<long>(topLeftX), static_cast<long>(topLeftY), static_cast<long>(topLeftX + width), static_cast<long>(topLeftY + height));
+				}
+			};
+			struct SetRenderTarget
+			{
+				inline static void create(CommandBuffer& commandBuffer, IRenderTarget* renderTarget)
+				{
+					*commandBuffer.addCommand<SetRenderTarget>() = SetRenderTarget(renderTarget);
+				}
+				inline SetRenderTarget(IRenderTarget* _renderTarget) :
+					renderTarget(_renderTarget)
+				{};
+				IRenderTarget* renderTarget;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetRenderTarget;
+			};
+			struct Clear
+			{
+				inline static void create(CommandBuffer& commandBuffer, uint32_t flags, const float color[4], float z, uint32_t stencil)
+				{
+					*commandBuffer.addCommand<Clear>() = Clear(flags, color, z, stencil);
+				}
+				inline Clear(uint32_t _flags, const float _color[4], float _z, uint32_t _stencil) :
+					flags(_flags),
+					color{_color[0], _color[1], _color[2], _color[3]},
+					z(_z),
+					stencil(_stencil)
+				{};
+				uint32_t flags;
+				float	 color[4];
+				float	 z;
+				uint32_t stencil;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::Clear;
+			};
+			struct Draw
+			{
+				inline static void create(CommandBuffer& commandBuffer, const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1)
+				{
+					*commandBuffer.addCommand<Draw>() = Draw(indirectBuffer, indirectBufferOffset, numberOfDraws);
+				}
+				inline static void create(CommandBuffer& commandBuffer, uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0)
+				{
+					Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(IndirectBuffer));
+					IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
+					memcpy(reinterpret_cast<IndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indirectBufferData, sizeof(IndirectBuffer));
+					drawCommand->indirectBuffer		  = nullptr;
+					drawCommand->indirectBufferOffset = 0;
+					drawCommand->numberOfDraws		  = 1;
+				}
+				inline Draw(const IIndirectBuffer& _indirectBuffer, uint32_t _indirectBufferOffset, uint32_t _numberOfDraws) :
+					indirectBuffer(&_indirectBuffer),
+					indirectBufferOffset(_indirectBufferOffset),
+					numberOfDraws(_numberOfDraws)
+				{};
+				const IIndirectBuffer* indirectBuffer;
+				uint32_t			   indirectBufferOffset;
+				uint32_t			   numberOfDraws;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::Draw;
+			};
+			struct DrawIndexed
+			{
+				inline static void create(CommandBuffer& commandBuffer, const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1)
+				{
+					*commandBuffer.addCommand<DrawIndexed>() = DrawIndexed(indirectBuffer, indirectBufferOffset, numberOfDraws);
+				}
+				inline static void create(CommandBuffer& commandBuffer, uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0)
+				{
+					DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(IndexedIndirectBuffer));
+					IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
+					memcpy(reinterpret_cast<IndexedIndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
+					drawCommand->indirectBuffer		  = nullptr;
+					drawCommand->indirectBufferOffset = 0;
+					drawCommand->numberOfDraws		  = 1;
+				}
+				inline DrawIndexed(const IIndirectBuffer& _indirectBuffer, uint32_t _indirectBufferOffset, uint32_t _numberOfDraws) :
+					indirectBuffer(&_indirectBuffer),
+					indirectBufferOffset(_indirectBufferOffset),
+					numberOfDraws(_numberOfDraws)
+				{};
+				const IIndirectBuffer* indirectBuffer;
+				uint32_t			   indirectBufferOffset;
+				uint32_t			   numberOfDraws;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::DrawIndexed;
+			};
+			struct SetDebugMarker
+			{
+				inline static void create(CommandBuffer& commandBuffer, const wchar_t* name)
+				{
+					*commandBuffer.addCommand<SetDebugMarker>() = SetDebugMarker(name);
+				}
+				inline SetDebugMarker(const wchar_t* _name)
+				{
+					#ifndef RENDERER_NO_DEBUG
+						assert(wcslen(_name) < 64);
+					#endif
+					wcsncpy(name, _name, 64);
+					name[63] = '\0';
+				};
+				wchar_t name[64];
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetDebugMarker;
+			};
+			struct BeginDebugEvent
+			{
+				inline static void create(CommandBuffer& commandBuffer, const wchar_t* name)
+				{
+					*commandBuffer.addCommand<BeginDebugEvent>() = BeginDebugEvent(name);
+				}
+				inline BeginDebugEvent(const wchar_t* _name)
+				{
+					#ifndef RENDERER_NO_DEBUG
+						assert(wcslen(_name) < 64);
+					#endif
+					wcsncpy(name, _name, 64);
+					name[63] = '\0';
+				};
+				wchar_t name[64];
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::BeginDebugEvent;
+			};
+			struct EndDebugEvent
+			{
+				inline static void create(CommandBuffer& commandBuffer)
+				{
+					commandBuffer.addCommand<EndDebugEvent>();
+				}
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::EndDebugEvent;
+			};
+		}
+		#ifdef RENDERER_NO_DEBUG
+			#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name)
+			#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer)
+			#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name)
+			#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+			#define COMMAND_END_DEBUG_EVENT(commandBuffer)
+		#else
+			#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name) Renderer::Command::SetDebugMarker::create(commandBuffer, name);
+			#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer) Renderer::Command::SetDebugMarker::create(commandBuffer, RENDERER_INTERNAL__WFUNCTION__);
+			#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name) Renderer::Command::BeginDebugEvent::create(commandBuffer, name);
+			#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer) Renderer::Command::BeginDebugEvent::create(commandBuffer, RENDERER_INTERNAL__WFUNCTION__);
+			#define COMMAND_END_DEBUG_EVENT(commandBuffer) Renderer::Command::EndDebugEvent::create(commandBuffer);
+		#endif
 	#endif
 
 

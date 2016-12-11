@@ -44,7 +44,7 @@ namespace Direct3D12Renderer
 		mD3D12Resource(nullptr)
 	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&getRenderer())
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D12Renderer)
 
 		// TODO(co) This is only meant for the Direct3D 12 renderer backend kickoff.
 		// Note: using upload heaps to transfer static data like vert buffers is not 
@@ -92,7 +92,7 @@ namespace Direct3D12Renderer
 		#endif
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT(&getRenderer())
+		RENDERER_END_DEBUG_EVENT(&direct3D12Renderer)
 	}
 
 	VertexBuffer::~VertexBuffer()

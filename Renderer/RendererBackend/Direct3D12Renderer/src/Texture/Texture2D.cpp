@@ -49,7 +49,7 @@ namespace Direct3D12Renderer
 		mD3D12DescriptorHeap(nullptr)
 	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&getRenderer())
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D12Renderer)
 
 		ID3D12Device* d3d12Device = direct3D12Renderer.getD3D12Device();
 
@@ -210,7 +210,7 @@ namespace Direct3D12Renderer
 		#endif
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT(&getRenderer())
+		RENDERER_END_DEBUG_EVENT(&direct3D12Renderer)
 	}
 
 	Texture2D::~Texture2D()

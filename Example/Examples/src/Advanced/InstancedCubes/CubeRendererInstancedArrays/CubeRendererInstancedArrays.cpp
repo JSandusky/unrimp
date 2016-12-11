@@ -132,9 +132,6 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 	mNumberOfBatches(0),
 	mBatches(nullptr)
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
-
 	// Create the buffer and texture manager
 	mBufferManager = mRenderer->createBufferManager();
 	mTextureManager = mRenderer->createTextureManager();
@@ -329,9 +326,6 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 		};
 		mIndexBuffer = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
 	}
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(&renderer)
 }
 
 CubeRendererInstancedArrays::~CubeRendererInstancedArrays()
@@ -351,9 +345,6 @@ CubeRendererInstancedArrays::~CubeRendererInstancedArrays()
 //[-------------------------------------------------------]
 void CubeRendererInstancedArrays::setNumberOfCubes(uint32_t numberOfCubes)
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
-
 	// Destroy previous batches, in case there are any
 	if (nullptr != mBatches)
 	{
@@ -396,18 +387,12 @@ void CubeRendererInstancedArrays::setNumberOfCubes(uint32_t numberOfCubes)
 	// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
 	mCommandBuffer.clear();
 	fillCommandBuffer();
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
 void CubeRendererInstancedArrays::draw(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ)
 {
 	// Sanity checks
 	assert(nullptr != mProgram);
-
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
 
 	{ // Update program uniform data
 		// Some counting timer, we don't want to touch the buffers on the GPU
@@ -458,9 +443,6 @@ void CubeRendererInstancedArrays::draw(float globalTimer, float globalScale, flo
 
 	// Submit command buffer to the renderer backend
 	mCommandBuffer.submit(*mRenderer);
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
 

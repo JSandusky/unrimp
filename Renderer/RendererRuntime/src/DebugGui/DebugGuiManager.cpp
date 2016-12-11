@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/DebugGui/DebugGuiManager.h"
-#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <imgui/imgui.h>
@@ -297,10 +296,7 @@ namespace RendererRuntime
 	void DebugGuiManager::startup()
 	{
 		assert(!mIsRunning);
-
-		// Begin debug event
 		Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
 		{ // Create the root signature instance
 			// Create the root signature
@@ -393,9 +389,6 @@ namespace RendererRuntime
 			mTexture2D = mRendererRuntime.getTextureManager().createTexture2D(static_cast<uint32_t>(width), static_cast<uint32_t>(height), Renderer::TextureFormat::A8, pixels, Renderer::TextureFlag::GENERATE_MIPMAPS);
 			RENDERER_SET_RESOURCE_DEBUG_NAME(mTexture2D, "Debug GUI glyph texture atlas")
 		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(&renderer)
 	}
 
 

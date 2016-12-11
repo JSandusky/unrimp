@@ -36,10 +36,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class CommandBuffer;
-}
 namespace RendererRuntime
 {
 	class IRendererRuntime;

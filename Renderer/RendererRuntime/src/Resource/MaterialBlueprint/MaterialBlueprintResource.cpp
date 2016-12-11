@@ -29,7 +29,6 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
-#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <glm/detail/setup.hpp>	// For "glm::countof()"

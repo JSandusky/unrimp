@@ -184,6 +184,9 @@
     <ClInclude Include="include\Renderer\Texture\ITextureManager.h">
       <Filter>Header Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\CommandBuffer.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">

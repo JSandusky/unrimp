@@ -27,9 +27,28 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
+#include "Renderer/IRenderer.h"
+#include "Renderer/Buffer/IndirectBuffer.h"
+#include "Renderer/Buffer/IndexedIndirectBuffer.h"
 
-#include <Renderer/Public/Renderer.h>
+#include <cassert>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class IRenderer;
+	class IResource;
+	class IVertexArray;
+	class IRenderTarget;
+	class IUniformBuffer;
+	class ITextureBuffer;
+	class IRootSignature;
+	class IPipelineState;
+	class IIndirectBuffer;
+}
 
 
 //[-------------------------------------------------------]
@@ -92,40 +111,40 @@ namespace Renderer
 			return OFFSET_COMMAND + sizeof(T) + numberOfAuxiliaryBytes;
 		};
 
-		inline uint32_t getNextCommandPacketByteIndex(const CommandPacket packet)
+		inline uint32_t getNextCommandPacketByteIndex(const CommandPacket commandPacket)
 		{
-			return *reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(packet) + OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX);
+			return *reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX);
 		}
 
-		inline void storeNextCommandPacketByteIndex(const CommandPacket packet, uint32_t nextPacketByteIndex)
+		inline void storeNextCommandPacketByteIndex(const CommandPacket commandPacket, uint32_t nextPacketByteIndex)
 		{
-			*reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(packet) + OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX) = nextPacketByteIndex;
+			*reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX) = nextPacketByteIndex;
 		}
 
-		inline CommandDispatchFunctionIndex* getCommandDispatchFunctionIndex(const CommandPacket packet)
+		inline CommandDispatchFunctionIndex* getCommandDispatchFunctionIndex(const CommandPacket commandPacket)
 		{
-			return reinterpret_cast<CommandDispatchFunctionIndex*>(reinterpret_cast<uint8_t*>(packet) + OFFSET_BACKEND_DISPATCH_FUNCTION);
+			return reinterpret_cast<CommandDispatchFunctionIndex*>(reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_BACKEND_DISPATCH_FUNCTION);
 		}
 
-		inline void storeBackendDispatchFunctionIndex(const CommandPacket packet, CommandDispatchFunctionIndex commandDispatchFunctionIndex)
+		inline void storeBackendDispatchFunctionIndex(const CommandPacket commandPacket, CommandDispatchFunctionIndex commandDispatchFunctionIndex)
 		{
-			*getCommandDispatchFunctionIndex(packet) = commandDispatchFunctionIndex;
+			*getCommandDispatchFunctionIndex(commandPacket) = commandDispatchFunctionIndex;
 		}
 
-		inline CommandDispatchFunctionIndex loadCommandDispatchFunctionIndex(const CommandPacket packet)
+		inline CommandDispatchFunctionIndex loadCommandDispatchFunctionIndex(const CommandPacket commandPacket)
 		{
-			return *getCommandDispatchFunctionIndex(packet);
+			return *getCommandDispatchFunctionIndex(commandPacket);
 		}
 
 		template <typename T>
-		T* getCommand(const CommandPacket packet)
+		T* getCommand(const CommandPacket commandPacket)
 		{
-			return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(packet) + OFFSET_COMMAND);
+			return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_COMMAND);
 		}
 
-		inline const void* loadCommand(const CommandPacket packet)
+		inline const void* loadCommand(const CommandPacket commandPacket)
 		{
-			return reinterpret_cast<uint8_t*>(packet) + OFFSET_COMMAND;
+			return reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_COMMAND;
 		}
 
 		/**
@@ -288,13 +307,7 @@ namespace Renderer
 		*/
 		inline void submit(IRenderer& renderer) const
 		{
-			CommandPacket commandPacket = mCommandPacketBuffer;
-			while (nullptr != commandPacket)
-			{
-				submitCommandPacket(commandPacket, renderer);
-				const uint32_t nextCommandPacketByteIndex = CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
-				commandPacket = (~0u != nextCommandPacketByteIndex) ? &mCommandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
-			}
+			renderer.submitCommandBuffer(*this);
 		}
 
 		/**
@@ -306,20 +319,26 @@ namespace Renderer
 		*/
 		inline void submitAndClear(IRenderer& renderer)
 		{
-			submit(renderer);
+			renderer.submitCommandBuffer(*this);
 			clear();
 		}
 
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		inline void submitCommandPacket(const CommandPacket packet, IRenderer& renderer) const
+		//[-------------------------------------------------------]
+		//[ Internal                                              ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the command packet buffer
+		*
+		*  @return
+		*    The command packet buffer, can be a null pointer, don't destroy the instance
+		*
+		*  @note
+		*    - Don't put this method into the public interface, there's no need for public access
+		*/
+		const uint8_t* getCommandPacketBuffer() const
 		{
-			const CommandDispatchFunctionIndex commandDispatchFunctionIndex = CommandPacketHelper::loadCommandDispatchFunctionIndex(packet);
-			const void* command = CommandPacketHelper::loadCommand(packet);
-			DISPATCH_FUNCTIONS[commandDispatchFunctionIndex](command, renderer);
+			return mCommandPacketBuffer;
 		}
 
 
@@ -328,8 +347,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	private:
 		static const uint32_t NUMBER_OF_BYTES_TO_GROW = 8192;
-
-		RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTIONS[CommandDispatchFunctionIndex::NumberOfFunctions];
 
 
 	//[-------------------------------------------------------]

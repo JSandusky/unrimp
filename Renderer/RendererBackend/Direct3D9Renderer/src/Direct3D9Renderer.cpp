@@ -42,6 +42,7 @@
 #include "Direct3D9Renderer/Shader/ShaderLanguageHlsl.h"
 #include "Direct3D9Renderer/Shader/FragmentShaderHlsl.h"
 
+#include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
 #include <cassert>
@@ -68,6 +69,188 @@ DIRECT3D9RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D9RendererInstanc
 //[-------------------------------------------------------]
 namespace Direct3D9Renderer
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+	namespace
+	{
+		namespace detail
+		{
+
+
+			//[-------------------------------------------------------]
+			//[ Global functions                                      ]
+			//[-------------------------------------------------------]
+			namespace BackendDispatch
+			{
+
+
+				//[-------------------------------------------------------]
+				//[ Resource handling                                     ]
+				//[-------------------------------------------------------]
+				void CopyUniformBufferData(const void*, Renderer::IRenderer&)
+				{
+					// Not supported by Direct3D 9
+					assert(false);
+				}
+
+				void CopyTextureBufferData(const void*, Renderer::IRenderer&)
+				{
+					// Not supported by Direct3D 9
+					assert(false);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Graphics root                                         ]
+				//[-------------------------------------------------------]
+				void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
+				}
+
+				void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				}
+
+				//[-------------------------------------------------------]
+				//[ States                                                ]
+				//[-------------------------------------------------------]
+				void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).setPipelineState(realData->pipelineState);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Input-assembler (IA) stage                            ]
+				//[-------------------------------------------------------]
+				void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
+				}
+
+				void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Rasterizer (RS) stage                                 ]
+				//[-------------------------------------------------------]
+				void SetViewports(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Output-merger (OM) stage                              ]
+				//[-------------------------------------------------------]
+				void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).omSetRenderTarget(realData->renderTarget);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Operations                                            ]
+				//[-------------------------------------------------------]
+				void Clear(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Draw call                                             ]
+				//[-------------------------------------------------------]
+				void Draw(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Debug                                                 ]
+				//[-------------------------------------------------------]
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).setDebugMarker(realData->name);
+				}
+
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<Direct3D9Renderer&>(renderer).beginDebugEvent(realData->name);
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<Direct3D9Renderer&>(renderer).endDebugEvent();
+				}
+
+
+			}
+
+
+			//[-------------------------------------------------------]
+			//[ Global definitions                                    ]
+			//[-------------------------------------------------------]
+			static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
+			{
+				// Resource handling
+				&BackendDispatch::CopyUniformBufferData,
+				&BackendDispatch::CopyTextureBufferData,
+				// Graphics root
+				&BackendDispatch::SetGraphicsRootSignature,
+				&BackendDispatch::SetGraphicsRootDescriptorTable,
+				// States
+				&BackendDispatch::SetPipelineState,
+				// Input-assembler (IA) stage
+				&BackendDispatch::SetVertexArray,
+				&BackendDispatch::SetPrimitiveTopology,
+				// Rasterizer (RS) stage
+				&BackendDispatch::SetViewports,
+				&BackendDispatch::SetScissorRectangles,
+				// Output-merger (OM) stage
+				&BackendDispatch::SetRenderTarget,
+				// Operations
+				&BackendDispatch::Clear,
+				// Draw call
+				&BackendDispatch::Draw,
+				&BackendDispatch::DrawIndexed,
+				// Debug
+				&BackendDispatch::SetDebugMarker,
+				&BackendDispatch::BeginDebugEvent,
+				&BackendDispatch::EndDebugEvent
+			};
+
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+		} // detail
+	}
 
 
 	//[-------------------------------------------------------]
@@ -236,321 +419,6 @@ namespace Direct3D9Renderer
 
 		// Destroy the Direct3D 9 runtime linking instance
 		delete mDirect3D9RuntimeLinking;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IRenderer methods            ]
-	//[-------------------------------------------------------]
-	bool Direct3D9Renderer::isDebugEnabled()
-	{
-		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
-		// is disabled it has to be possible to use this function for an additional security check
-		// -> Maybe a debugger/profiler ignores the debug state
-		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
-		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
-		return (nullptr != D3DPERF_GetStatus && D3DPERF_GetStatus() != 0);
-	}
-
-	Renderer::ISwapChain *Direct3D9Renderer::getMainSwapChain() const
-	{
-		return mMainSwapChain;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Shader language                                       ]
-	//[-------------------------------------------------------]
-	uint32_t Direct3D9Renderer::getNumberOfShaderLanguages() const
-	{
-		uint32_t numberOfShaderLanguages = 1;	// HLSL support is always there
-
-		// Done, return the number of supported shader languages
-		return numberOfShaderLanguages;
-	}
-
-	const char *Direct3D9Renderer::getShaderLanguageName(uint32_t index) const
-	{
-		uint32_t currentIndex = 0;
-
-		// HLSL supported
-		if (currentIndex == index)
-		{
-			return ShaderLanguageHlsl::NAME;
-		}
-		++currentIndex;
-
-		// Error!
-		return nullptr;
-	}
-
-	Renderer::IShaderLanguage *Direct3D9Renderer::getShaderLanguage(const char *shaderLanguageName)
-	{
-		// In case "shaderLanguage" is a null pointer, use the default shader language
-		if (nullptr != shaderLanguageName)
-		{
-			// Optimization: Check for shader language name pointer match, first
-			if (ShaderLanguageHlsl::NAME == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguageHlsl::NAME))
-			{
-				// If required, create the HLSL shader language instance right now
-				if (nullptr == mShaderLanguageHlsl)
-				{
-					mShaderLanguageHlsl = new ShaderLanguageHlsl(*this);
-					mShaderLanguageHlsl->addReference();	// Internal renderer reference
-				}
-
-				// Return the shader language instance
-				return mShaderLanguageHlsl;
-			}
-
-			// Error!
-			return nullptr;
-		}
-
-		// Return the HLSL shader language instance as default
-		return getShaderLanguage(ShaderLanguageHlsl::NAME);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource creation                                     ]
-	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D9Renderer::createSwapChain(handle nativeWindowHandle)
-	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
-	}
-
-	Renderer::IFramebuffer *Direct3D9Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
-	{
-		// Validation is done inside the framebuffer implementation
-		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
-	}
-
-	Renderer::IBufferManager *Direct3D9Renderer::createBufferManager()
-	{
-		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureManager *Direct3D9Renderer::createTextureManager()
-	{
-		return new TextureManager(*this);
-	}
-
-	Renderer::IRootSignature *Direct3D9Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
-	{
-		return new RootSignature(*this, rootSignature);
-	}
-
-	Renderer::IPipelineState *Direct3D9Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
-	{
-		return new PipelineState(*this, pipelineState);
-	}
-
-	Renderer::ISamplerState *Direct3D9Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
-	{
-		return new SamplerState(*this, samplerState);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource handling                                     ]
-	//[-------------------------------------------------------]
-	bool Direct3D9Renderer::map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t, Renderer::MappedSubresource &mappedSubresource)
-	{
-		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 constants, do not change them
-		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
-
-		// Evaluate the resource type
-		switch (resource.getResourceType())
-		{
-			case Renderer::ResourceType::INDEX_BUFFER:
-			{
-				// Lock the Direct3D 9 resource
-				DWORD flags = 0;
-				// TODO(co) Map all flags correctly
-				if (Renderer::MapType::READ == mapType)
-				{
-					flags = D3DLOCK_READONLY;
-				}
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-				return (D3D_OK == static_cast<IndexBuffer&>(resource).getDirect3DIndexBuffer9()->Lock(0, 0, &mappedSubresource.data, flags));
-			}
-
-			case Renderer::ResourceType::VERTEX_BUFFER:
-			{
-				// Lock the Direct3D 9 resource
-				DWORD flags = 0;
-				// TODO(co) Map all flags correctly
-				if (Renderer::MapType::READ == mapType)
-				{
-					flags = D3DLOCK_READONLY;
-				}
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-				return (D3D_OK == static_cast<VertexBuffer&>(resource).getDirect3DVertexBuffer9()->Lock(0, 0, &mappedSubresource.data, flags));
-			}
-
-			case Renderer::ResourceType::INDIRECT_BUFFER:
-				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-				return true;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				bool result = false;
-
-				// TODO(co) In case this texture is a render target, we need to use "IDirect3DDevice9::GetRenderTargetData"-method http://msdn.microsoft.com/en-us/library/bb174405%28VS.85%29.aspx
-				// Possible implementation hints from http://stackoverflow.com/questions/120066/doing-readback-from-direct3d-textures-and-surfaces
-				/*
-					bool GfxDeviceD3D9::ReadbackImage(  params  )
-					{
-						HRESULT hr;
-						IDirect3DDevice9* dev = GetD3DDevice();
-						SurfacePointer renderTarget;
-						hr = dev->GetRenderTarget( 0, &renderTarget );
-						if( !renderTarget || FAILED(hr) )
-							return false;
-
-						D3DSURFACE_DESC rtDesc;
-						renderTarget->GetDesc( &rtDesc );
-
-						SurfacePointer resolvedSurface;
-						if( rtDesc.MultiSampleType != D3DMULTISAMPLE_NONE )
-						{
-							hr = dev->CreateRenderTarget( rtDesc.Width, rtDesc.Height, rtDesc.Format, D3DMULTISAMPLE_NONE, 0, FALSE, &resolvedSurface, NULL );
-							if( FAILED(hr) )
-								return false;
-							hr = dev->StretchRect( renderTarget, NULL, resolvedSurface, NULL, D3DTEXF_NONE );
-							if( FAILED(hr) )
-								return false;
-							renderTarget = resolvedSurface;
-						}
-
-						SurfacePointer offscreenSurface;
-						hr = dev->CreateOffscreenPlainSurface( rtDesc.Width, rtDesc.Height, rtDesc.Format, D3DPOOL_SYSTEMMEM, &offscreenSurface, NULL );
-						if( FAILED(hr) )
-							return false;
-
-						hr = dev->GetRenderTargetData( renderTarget, offscreenSurface );
-						bool ok = SUCCEEDED(hr);
-						if( ok )
-						{
-							// Here we have data in offscreenSurface.
-							D3DLOCKED_RECT lr;
-							RECT rect;
-							rect.left = 0;
-							rect.right = rtDesc.Width;
-							rect.top = 0;
-							rect.bottom = rtDesc.Height;
-							// Lock the surface to read pixels
-							hr = offscreenSurface->LockRect( &lr, &rect, D3DLOCK_READONLY );
-							if( SUCCEEDED(hr) )
-							{
-								// Pointer to data is lt.pBits, each row is
-								// lr.Pitch bytes apart (often it is the same as width*bpp, but
-								// can be larger if driver uses padding)
-
-								// Read the data here!
-								offscreenSurface->UnlockRect();
-							}
-							else
-							{
-								ok = false;
-							}
-						}
-
-						return ok;
-					}
-				*/
-
-				// Lock the Direct3D 9 resource
-				DWORD flags = 0;
-				// TODO(co) Map all flags correctly
-				if (Renderer::MapType::READ == mapType)
-				{
-					flags = D3DLOCK_READONLY;
-				}
-				D3DLOCKED_RECT d3dLockedRect;
-				result = (D3D_OK == static_cast<Texture2D&>(resource).getDirect3DTexture9()->LockRect(subresource, &d3dLockedRect, nullptr, flags));
-
-				// Copy over the data
-				mappedSubresource.data		 = d3dLockedRect.pBits;
-				mappedSubresource.rowPitch   = static_cast<UINT>(d3dLockedRect.Pitch);
-				mappedSubresource.depthPitch = 0;
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::ROOT_SIGNATURE:
-			case Renderer::ResourceType::PROGRAM:
-			case Renderer::ResourceType::VERTEX_ARRAY:
-			case Renderer::ResourceType::SWAP_CHAIN:
-			case Renderer::ResourceType::FRAMEBUFFER:
-			case Renderer::ResourceType::UNIFORM_BUFFER:
-			case Renderer::ResourceType::TEXTURE_BUFFER:
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::SAMPLER_STATE:
-			case Renderer::ResourceType::VERTEX_SHADER:
-			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-			case Renderer::ResourceType::GEOMETRY_SHADER:
-			case Renderer::ResourceType::FRAGMENT_SHADER:
-			default:
-				// Nothing we can map, set known return values
-				mappedSubresource.data		 = nullptr;
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-
-				// Error!
-				return false;
-		}
-	}
-
-	void Direct3D9Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
-	{
-		// Evaluate the resource type
-		switch (resource.getResourceType())
-		{
-			case Renderer::ResourceType::INDEX_BUFFER:
-				static_cast<IndexBuffer&>(resource).getDirect3DIndexBuffer9()->Unlock();
-				break;
-
-			case Renderer::ResourceType::VERTEX_BUFFER:
-				static_cast<VertexBuffer&>(resource).getDirect3DVertexBuffer9()->Unlock();
-				break;
-
-			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// Nothing here, it's a software emulated indirect buffer
-				break;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-				static_cast<Texture2D&>(resource).getDirect3DTexture9()->UnlockRect(subresource);
-				break;
-
-			case Renderer::ResourceType::ROOT_SIGNATURE:
-			case Renderer::ResourceType::PROGRAM:
-			case Renderer::ResourceType::VERTEX_ARRAY:
-			case Renderer::ResourceType::SWAP_CHAIN:
-			case Renderer::ResourceType::FRAMEBUFFER:
-			case Renderer::ResourceType::UNIFORM_BUFFER:
-			case Renderer::ResourceType::TEXTURE_BUFFER:
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::SAMPLER_STATE:
-			case Renderer::ResourceType::VERTEX_SHADER:
-			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-			case Renderer::ResourceType::GEOMETRY_SHADER:
-			case Renderer::ResourceType::FRAGMENT_SHADER:
-			default:
-				// Nothing we can unmap
-				break;
-		}
 	}
 
 
@@ -1086,19 +954,6 @@ namespace Direct3D9Renderer
 		RENDERER_END_DEBUG_EVENT(this)
 	}
 
-	bool Direct3D9Renderer::beginScene()
-	{
-		return SUCCEEDED(mDirect3DDevice9->BeginScene());
-	}
-
-	void Direct3D9Renderer::endScene()
-	{
-		// We need to forget about the currently set render target
-		omSetRenderTarget(nullptr);
-
-		mDirect3DDevice9->EndScene();
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
@@ -1301,6 +1156,392 @@ namespace Direct3D9Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Debug                                                 ]
+	//[-------------------------------------------------------]
+	void Direct3D9Renderer::setDebugMarker(const wchar_t *name)
+	{
+		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+			if (nullptr != D3DPERF_SetMarker)
+			{
+				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), name);
+			}
+		#endif
+	}
+
+	void Direct3D9Renderer::beginDebugEvent(const wchar_t *name)
+	{
+		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+			if (nullptr != D3DPERF_BeginEvent)
+			{
+				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), name);
+			}
+		#endif
+	}
+
+	void Direct3D9Renderer::endDebugEvent()
+	{
+		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+			if (nullptr != D3DPERF_EndEvent)
+			{
+				D3DPERF_EndEvent();
+			}
+		#endif
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderer methods            ]
+	//[-------------------------------------------------------]
+	bool Direct3D9Renderer::isDebugEnabled()
+	{
+		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
+		// is disabled it has to be possible to use this function for an additional security check
+		// -> Maybe a debugger/profiler ignores the debug state
+		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
+		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
+		return (nullptr != D3DPERF_GetStatus && D3DPERF_GetStatus() != 0);
+	}
+
+	Renderer::ISwapChain *Direct3D9Renderer::getMainSwapChain() const
+	{
+		return mMainSwapChain;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Shader language                                       ]
+	//[-------------------------------------------------------]
+	uint32_t Direct3D9Renderer::getNumberOfShaderLanguages() const
+	{
+		uint32_t numberOfShaderLanguages = 1;	// HLSL support is always there
+
+		// Done, return the number of supported shader languages
+		return numberOfShaderLanguages;
+	}
+
+	const char *Direct3D9Renderer::getShaderLanguageName(uint32_t index) const
+	{
+		uint32_t currentIndex = 0;
+
+		// HLSL supported
+		if (currentIndex == index)
+		{
+			return ShaderLanguageHlsl::NAME;
+		}
+		++currentIndex;
+
+		// Error!
+		return nullptr;
+	}
+
+	Renderer::IShaderLanguage *Direct3D9Renderer::getShaderLanguage(const char *shaderLanguageName)
+	{
+		// In case "shaderLanguage" is a null pointer, use the default shader language
+		if (nullptr != shaderLanguageName)
+		{
+			// Optimization: Check for shader language name pointer match, first
+			if (ShaderLanguageHlsl::NAME == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguageHlsl::NAME))
+			{
+				// If required, create the HLSL shader language instance right now
+				if (nullptr == mShaderLanguageHlsl)
+				{
+					mShaderLanguageHlsl = new ShaderLanguageHlsl(*this);
+					mShaderLanguageHlsl->addReference();	// Internal renderer reference
+				}
+
+				// Return the shader language instance
+				return mShaderLanguageHlsl;
+			}
+
+			// Error!
+			return nullptr;
+		}
+
+		// Return the HLSL shader language instance as default
+		return getShaderLanguage(ShaderLanguageHlsl::NAME);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource creation                                     ]
+	//[-------------------------------------------------------]
+	Renderer::ISwapChain *Direct3D9Renderer::createSwapChain(handle nativeWindowHandle)
+	{
+		// The provided native window handle must not be a null handle
+		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+	}
+
+	Renderer::IFramebuffer *Direct3D9Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	{
+		// Validation is done inside the framebuffer implementation
+		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
+	}
+
+	Renderer::IBufferManager *Direct3D9Renderer::createBufferManager()
+	{
+		return new BufferManager(*this);
+	}
+
+	Renderer::ITextureManager *Direct3D9Renderer::createTextureManager()
+	{
+		return new TextureManager(*this);
+	}
+
+	Renderer::IRootSignature *Direct3D9Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	{
+		return new RootSignature(*this, rootSignature);
+	}
+
+	Renderer::IPipelineState *Direct3D9Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
+	{
+		return new PipelineState(*this, pipelineState);
+	}
+
+	Renderer::ISamplerState *Direct3D9Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	{
+		return new SamplerState(*this, samplerState);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource handling                                     ]
+	//[-------------------------------------------------------]
+	bool Direct3D9Renderer::map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t, Renderer::MappedSubresource &mappedSubresource)
+	{
+		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 constants, do not change them
+		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
+
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+			{
+				// Lock the Direct3D 9 resource
+				DWORD flags = 0;
+				// TODO(co) Map all flags correctly
+				if (Renderer::MapType::READ == mapType)
+				{
+					flags = D3DLOCK_READONLY;
+				}
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (D3D_OK == static_cast<IndexBuffer&>(resource).getDirect3DIndexBuffer9()->Lock(0, 0, &mappedSubresource.data, flags));
+			}
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			{
+				// Lock the Direct3D 9 resource
+				DWORD flags = 0;
+				// TODO(co) Map all flags correctly
+				if (Renderer::MapType::READ == mapType)
+				{
+					flags = D3DLOCK_READONLY;
+				}
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (D3D_OK == static_cast<VertexBuffer&>(resource).getDirect3DVertexBuffer9()->Lock(0, 0, &mappedSubresource.data, flags));
+			}
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return true;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				bool result = false;
+
+				// TODO(co) In case this texture is a render target, we need to use "IDirect3DDevice9::GetRenderTargetData"-method http://msdn.microsoft.com/en-us/library/bb174405%28VS.85%29.aspx
+				// Possible implementation hints from http://stackoverflow.com/questions/120066/doing-readback-from-direct3d-textures-and-surfaces
+				/*
+					bool GfxDeviceD3D9::ReadbackImage(  params  )
+					{
+						HRESULT hr;
+						IDirect3DDevice9* dev = GetD3DDevice();
+						SurfacePointer renderTarget;
+						hr = dev->GetRenderTarget( 0, &renderTarget );
+						if( !renderTarget || FAILED(hr) )
+							return false;
+
+						D3DSURFACE_DESC rtDesc;
+						renderTarget->GetDesc( &rtDesc );
+
+						SurfacePointer resolvedSurface;
+						if( rtDesc.MultiSampleType != D3DMULTISAMPLE_NONE )
+						{
+							hr = dev->CreateRenderTarget( rtDesc.Width, rtDesc.Height, rtDesc.Format, D3DMULTISAMPLE_NONE, 0, FALSE, &resolvedSurface, NULL );
+							if( FAILED(hr) )
+								return false;
+							hr = dev->StretchRect( renderTarget, NULL, resolvedSurface, NULL, D3DTEXF_NONE );
+							if( FAILED(hr) )
+								return false;
+							renderTarget = resolvedSurface;
+						}
+
+						SurfacePointer offscreenSurface;
+						hr = dev->CreateOffscreenPlainSurface( rtDesc.Width, rtDesc.Height, rtDesc.Format, D3DPOOL_SYSTEMMEM, &offscreenSurface, NULL );
+						if( FAILED(hr) )
+							return false;
+
+						hr = dev->GetRenderTargetData( renderTarget, offscreenSurface );
+						bool ok = SUCCEEDED(hr);
+						if( ok )
+						{
+							// Here we have data in offscreenSurface.
+							D3DLOCKED_RECT lr;
+							RECT rect;
+							rect.left = 0;
+							rect.right = rtDesc.Width;
+							rect.top = 0;
+							rect.bottom = rtDesc.Height;
+							// Lock the surface to read pixels
+							hr = offscreenSurface->LockRect( &lr, &rect, D3DLOCK_READONLY );
+							if( SUCCEEDED(hr) )
+							{
+								// Pointer to data is lt.pBits, each row is
+								// lr.Pitch bytes apart (often it is the same as width*bpp, but
+								// can be larger if driver uses padding)
+
+								// Read the data here!
+								offscreenSurface->UnlockRect();
+							}
+							else
+							{
+								ok = false;
+							}
+						}
+
+						return ok;
+					}
+				*/
+
+				// Lock the Direct3D 9 resource
+				DWORD flags = 0;
+				// TODO(co) Map all flags correctly
+				if (Renderer::MapType::READ == mapType)
+				{
+					flags = D3DLOCK_READONLY;
+				}
+				D3DLOCKED_RECT d3dLockedRect;
+				result = (D3D_OK == static_cast<Texture2D&>(resource).getDirect3DTexture9()->LockRect(subresource, &d3dLockedRect, nullptr, flags));
+
+				// Copy over the data
+				mappedSubresource.data		 = d3dLockedRect.pBits;
+				mappedSubresource.rowPitch   = static_cast<UINT>(d3dLockedRect.Pitch);
+				mappedSubresource.depthPitch = 0;
+
+				// Done
+				return result;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can map, set known return values
+				mappedSubresource.data		 = nullptr;
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				// Error!
+				return false;
+		}
+	}
+
+	void Direct3D9Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
+	{
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+				static_cast<IndexBuffer&>(resource).getDirect3DIndexBuffer9()->Unlock();
+				break;
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+				static_cast<VertexBuffer&>(resource).getDirect3DVertexBuffer9()->Unlock();
+				break;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// Nothing here, it's a software emulated indirect buffer
+				break;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+				static_cast<Texture2D&>(resource).getDirect3DTexture9()->UnlockRect(subresource);
+				break;
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can unmap
+				break;
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Operations                                            ]
+	//[-------------------------------------------------------]
+	bool Direct3D9Renderer::beginScene()
+	{
+		return SUCCEEDED(mDirect3DDevice9->BeginScene());
+	}
+
+	void Direct3D9Renderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
+	{
+		// Loop through all commands
+		uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
+		Renderer::CommandPacket commandPacket = commandPacketBuffer;
+		while (nullptr != commandPacket)
+		{
+			{ // Submit command packet
+				const Renderer::CommandDispatchFunctionIndex commandDispatchFunctionIndex = Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(commandPacket);
+				const void* command = Renderer::CommandPacketHelper::loadCommand(commandPacket);
+				detail::DISPATCH_FUNCTIONS[commandDispatchFunctionIndex](command, *this);
+			}
+
+			{ // Next command
+				const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+				commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+			}
+		}
+	}
+
+	void Direct3D9Renderer::endScene()
+	{
+		// We need to forget about the currently set render target
+		omSetRenderTarget(nullptr);
+
+		mDirect3DDevice9->EndScene();
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Synchronization                                       ]
 	//[-------------------------------------------------------]
 	void Direct3D9Renderer::flush()
@@ -1338,40 +1579,6 @@ namespace Direct3D9Renderer
 				// Spin-wait
 			}
 		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Debug                                                 ]
-	//[-------------------------------------------------------]
-	void Direct3D9Renderer::setDebugMarker(const wchar_t *name)
-	{
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
-			if (nullptr != D3DPERF_SetMarker)
-			{
-				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), name);
-			}
-		#endif
-	}
-
-	void Direct3D9Renderer::beginDebugEvent(const wchar_t *name)
-	{
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
-			if (nullptr != D3DPERF_BeginEvent)
-			{
-				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), name);
-			}
-		#endif
-	}
-
-	void Direct3D9Renderer::endDebugEvent()
-	{
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
-			if (nullptr != D3DPERF_EndEvent)
-			{
-				D3DPERF_EndEvent();
-			}
-		#endif
 	}
 
 

@@ -47,6 +47,7 @@
 #include "Direct3D10Renderer/Shader/GeometryShaderHlsl.h"
 #include "Direct3D10Renderer/Shader/FragmentShaderHlsl.h"
 
+#include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
 #include <cassert>
@@ -111,6 +112,169 @@ namespace Direct3D10Renderer
 				// Error!
 				return false;
 			}
+
+
+			namespace BackendDispatch
+			{
+
+
+				//[-------------------------------------------------------]
+				//[ Resource handling                                     ]
+				//[-------------------------------------------------------]
+				void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
+				{
+					const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
+					realData->uniformBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+				}
+
+				void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
+				{
+					const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
+					realData->textureBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Graphics root                                         ]
+				//[-------------------------------------------------------]
+				void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
+				}
+
+				void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				}
+
+				//[-------------------------------------------------------]
+				//[ States                                                ]
+				//[-------------------------------------------------------]
+				void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).setPipelineState(realData->pipelineState);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Input-assembler (IA) stage                            ]
+				//[-------------------------------------------------------]
+				void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
+				}
+
+				void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Rasterizer (RS) stage                                 ]
+				//[-------------------------------------------------------]
+				void SetViewports(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Output-merger (OM) stage                              ]
+				//[-------------------------------------------------------]
+				void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).omSetRenderTarget(realData->renderTarget);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Operations                                            ]
+				//[-------------------------------------------------------]
+				void Clear(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Draw call                                             ]
+				//[-------------------------------------------------------]
+				void Draw(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Debug                                                 ]
+				//[-------------------------------------------------------]
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).setDebugMarker(realData->name);
+				}
+
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).beginDebugEvent(realData->name);
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<Direct3D10Renderer&>(renderer).endDebugEvent();
+				}
+
+
+			}
+
+
+			//[-------------------------------------------------------]
+			//[ Global definitions                                    ]
+			//[-------------------------------------------------------]
+			static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
+			{
+				// Resource handling
+				&BackendDispatch::CopyUniformBufferData,
+				&BackendDispatch::CopyTextureBufferData,
+				// Graphics root
+				&BackendDispatch::SetGraphicsRootSignature,
+				&BackendDispatch::SetGraphicsRootDescriptorTable,
+				// States
+				&BackendDispatch::SetPipelineState,
+				// Input-assembler (IA) stage
+				&BackendDispatch::SetVertexArray,
+				&BackendDispatch::SetPrimitiveTopology,
+				// Rasterizer (RS) stage
+				&BackendDispatch::SetViewports,
+				&BackendDispatch::SetScissorRectangles,
+				// Output-merger (OM) stage
+				&BackendDispatch::SetRenderTarget,
+				// Operations
+				&BackendDispatch::Clear,
+				// Draw call
+				&BackendDispatch::Draw,
+				&BackendDispatch::DrawIndexed,
+				// Debug
+				&BackendDispatch::SetDebugMarker,
+				&BackendDispatch::BeginDebugEvent,
+				&BackendDispatch::EndDebugEvent
+			};
 
 
 	//[-------------------------------------------------------]
@@ -263,368 +427,6 @@ namespace Direct3D10Renderer
 		if (nullptr != mDirect3D9RuntimeLinking)
 		{
 			delete mDirect3D9RuntimeLinking;
-		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IRenderer methods            ]
-	//[-------------------------------------------------------]
-	bool Direct3D10Renderer::isDebugEnabled()
-	{
-		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
-		// is disabled it has to be possible to use this function for an additional security check
-		// -> Maybe a debugger/profiler ignores the debug state
-		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
-		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
-		return (D3DPERF_GetStatus() != 0);
-	}
-
-	Renderer::ISwapChain *Direct3D10Renderer::getMainSwapChain() const
-	{
-		return mMainSwapChain;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Shader language                                       ]
-	//[-------------------------------------------------------]
-	uint32_t Direct3D10Renderer::getNumberOfShaderLanguages() const
-	{
-		uint32_t numberOfShaderLanguages = 1;	// HLSL support is always there
-
-		// Done, return the number of supported shader languages
-		return numberOfShaderLanguages;
-	}
-
-	const char *Direct3D10Renderer::getShaderLanguageName(uint32_t index) const
-	{
-		uint32_t currentIndex = 0;
-
-		// HLSL supported
-		if (currentIndex == index)
-		{
-			return ShaderLanguageHlsl::NAME;
-		}
-		++currentIndex;
-
-		// Error!
-		return nullptr;
-	}
-
-	Renderer::IShaderLanguage *Direct3D10Renderer::getShaderLanguage(const char *shaderLanguageName)
-	{
-		// In case "shaderLanguage" is a null pointer, use the default shader language
-		if (nullptr != shaderLanguageName)
-		{
-			// Optimization: Check for shader language name pointer match, first
-			if (ShaderLanguageHlsl::NAME == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguageHlsl::NAME))
-			{
-				// If required, create the HLSL shader language instance right now
-				if (nullptr == mShaderLanguageHlsl)
-				{
-					mShaderLanguageHlsl = new ShaderLanguageHlsl(*this);
-					mShaderLanguageHlsl->addReference();	// Internal renderer reference
-				}
-
-				// Return the shader language instance
-				return mShaderLanguageHlsl;
-			}
-
-			// Error!
-			return nullptr;
-		}
-
-		// Return the HLSL shader language instance as default
-		return getShaderLanguage(ShaderLanguageHlsl::NAME);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource creation                                     ]
-	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D10Renderer::createSwapChain(handle nativeWindowHandle)
-	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
-	}
-
-	Renderer::IFramebuffer *Direct3D10Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
-	{
-		// Validation is done inside the framebuffer implementation
-		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
-	}
-
-	Renderer::IBufferManager *Direct3D10Renderer::createBufferManager()
-	{
-		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureManager *Direct3D10Renderer::createTextureManager()
-	{
-		return new TextureManager(*this);
-	}
-
-	Renderer::IRootSignature *Direct3D10Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
-	{
-		return new RootSignature(*this, rootSignature);
-	}
-
-	Renderer::IPipelineState *Direct3D10Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
-	{
-		return new PipelineState(*this, pipelineState);
-	}
-
-	Renderer::ISamplerState *Direct3D10Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
-	{
-		return new SamplerState(*this, samplerState);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource handling                                     ]
-	//[-------------------------------------------------------]
-	bool Direct3D10Renderer::map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource)
-	{
-		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 constants, do not change them
-		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
-
-		// Evaluate the resource type
-		switch (resource.getResourceType())
-		{
-			case Renderer::ResourceType::INDEX_BUFFER:
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-				return (S_OK == static_cast<IndexBuffer&>(resource).getD3D10Buffer()->Map(static_cast<D3D10_MAP>(mapType), mapFlags, &mappedSubresource.data));
-
-			case Renderer::ResourceType::VERTEX_BUFFER:
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-				return (S_OK == static_cast<VertexBuffer&>(resource).getD3D10Buffer()->Map(static_cast<D3D10_MAP>(mapType), mapFlags, &mappedSubresource.data));
-
-			case Renderer::ResourceType::UNIFORM_BUFFER:
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-				return (S_OK == static_cast<UniformBuffer&>(resource).getD3D10Buffer()->Map(static_cast<D3D10_MAP>(mapType), mapFlags, &mappedSubresource.data));
-
-			case Renderer::ResourceType::TEXTURE_BUFFER:
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-				return (S_OK == static_cast<TextureBuffer&>(resource).getD3D10Buffer()->Map(static_cast<D3D10_MAP>(mapType), mapFlags, &mappedSubresource.data));
-
-			case Renderer::ResourceType::INDIRECT_BUFFER:
-				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-				return true;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				bool result = false;
-
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 10 resource instance
-				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
-				ID3D10Texture2D *d3d10Texture2D = nullptr;
-				D3D10_MAPPED_TEXTURE2D d3d10MappedTexture2D;
-				static_cast<Texture2D&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
-				if (nullptr != d3d10Texture2D)
-				{
-					// Map the Direct3D 10 resource
-					result = (S_OK == d3d10Texture2D->Map(subresource, static_cast<D3D10_MAP>(mapType), mapFlags, &d3d10MappedTexture2D));
-
-					// Release the Direct3D 10 resource instance
-					d3d10Texture2D->Release();
-				}
-				else
-				{
-					// Error!
-					memset(&d3d10MappedTexture2D, 0, sizeof(D3D10_MAPPED_TEXTURE2D));
-				}
-
-				// Set result
-				if (result)
-				{
-					// Copy over the data
-					mappedSubresource.data		 = d3d10MappedTexture2D.pData;
-					mappedSubresource.rowPitch   = d3d10MappedTexture2D.RowPitch;
-					mappedSubresource.depthPitch = 0;
-				}
-				else
-				{
-					// Set known return values in case of an error
-					mappedSubresource.data		 = nullptr;
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				bool result = false;
-
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 10 resource instance
-				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
-				ID3D10Texture2D *d3d10Texture2D = nullptr;
-				D3D10_MAPPED_TEXTURE2D d3d10MappedTexture2D;
-				static_cast<Texture2DArray&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
-				if (nullptr != d3d10Texture2D)
-				{
-					// Map the Direct3D 10 resource
-					result = (S_OK == d3d10Texture2D->Map(subresource, static_cast<D3D10_MAP>(mapType), mapFlags, &d3d10MappedTexture2D));
-
-					// Release the Direct3D 10 resource instance
-					d3d10Texture2D->Release();
-				}
-				else
-				{
-					// Error!
-					memset(&d3d10MappedTexture2D, 0, sizeof(D3D10_MAPPED_TEXTURE2D));
-				}
-
-				// Set result
-				if (result)
-				{
-					// Copy over the data
-					mappedSubresource.data		 = d3d10MappedTexture2D.pData;
-					mappedSubresource.rowPitch   = d3d10MappedTexture2D.RowPitch;
-					mappedSubresource.depthPitch = 0;
-				}
-				else
-				{
-					// Set known return values in case of an error
-					mappedSubresource.data		 = nullptr;
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::ROOT_SIGNATURE:
-			case Renderer::ResourceType::PROGRAM:
-			case Renderer::ResourceType::VERTEX_ARRAY:
-			case Renderer::ResourceType::SWAP_CHAIN:
-			case Renderer::ResourceType::FRAMEBUFFER:
-			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::SAMPLER_STATE:
-			case Renderer::ResourceType::VERTEX_SHADER:
-			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-			case Renderer::ResourceType::GEOMETRY_SHADER:
-			case Renderer::ResourceType::FRAGMENT_SHADER:
-			default:
-				// Nothing we can map, set known return values
-				mappedSubresource.data		 = nullptr;
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-
-				// Error!
-				return false;
-		}
-	}
-
-	void Direct3D10Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
-	{
-		// Evaluate the resource type
-		switch (resource.getResourceType())
-		{
-			case Renderer::ResourceType::INDEX_BUFFER:
-				static_cast<IndexBuffer&>(resource).getD3D10Buffer()->Unmap();
-				break;
-
-			case Renderer::ResourceType::VERTEX_BUFFER:
-				static_cast<VertexBuffer&>(resource).getD3D10Buffer()->Unmap();
-				break;
-
-			case Renderer::ResourceType::UNIFORM_BUFFER:
-				static_cast<UniformBuffer&>(resource).getD3D10Buffer()->Unmap();
-				break;
-
-			case Renderer::ResourceType::TEXTURE_BUFFER:
-				static_cast<TextureBuffer&>(resource).getD3D10Buffer()->Unmap();
-				break;
-
-			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// Nothing here, it's a software emulated indirect buffer
-				break;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 10 resource instance
-				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
-				ID3D10Texture2D *d3d10Texture2D = nullptr;
-				static_cast<Texture2D&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
-				if (nullptr != d3d10Texture2D)
-				{
-					// Unmap the Direct3D 10 resource
-					d3d10Texture2D->Unmap(subresource);
-
-					// Release the Direct3D 10 resource instance
-					d3d10Texture2D->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-				break;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 10 resource instance
-				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
-				ID3D10Texture2D *d3d10Texture2D = nullptr;
-				static_cast<Texture2DArray&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
-				if (nullptr != d3d10Texture2D)
-				{
-					// Unmap the Direct3D 10 resource
-					d3d10Texture2D->Unmap(subresource);
-
-					// Release the Direct3D 10 resource instance
-					d3d10Texture2D->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-				break;
-			}
-
-			case Renderer::ResourceType::ROOT_SIGNATURE:
-			case Renderer::ResourceType::PROGRAM:
-			case Renderer::ResourceType::VERTEX_ARRAY:
-			case Renderer::ResourceType::SWAP_CHAIN:
-			case Renderer::ResourceType::FRAMEBUFFER:
-			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::SAMPLER_STATE:
-			case Renderer::ResourceType::VERTEX_SHADER:
-			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-			case Renderer::ResourceType::GEOMETRY_SHADER:
-			case Renderer::ResourceType::FRAGMENT_SHADER:
-			default:
-				// Nothing we can unmap
-				break;
 		}
 	}
 
@@ -1161,20 +963,6 @@ namespace Direct3D10Renderer
 		RENDERER_END_DEBUG_EVENT(this)
 	}
 
-	bool Direct3D10Renderer::beginScene()
-	{
-		// Not required when using Direct3D 10
-
-		// Done
-		return true;
-	}
-
-	void Direct3D10Renderer::endScene()
-	{
-		// We need to forget about the currently set render target
-		omSetRenderTarget(nullptr);
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
@@ -1267,48 +1055,6 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Synchronization                                       ]
-	//[-------------------------------------------------------]
-	void Direct3D10Renderer::flush()
-	{
-		mD3D10Device->Flush();
-	}
-
-	void Direct3D10Renderer::finish()
-	{
-		// Create the Direct3D 10 query instance used for flush right now?
-		if (nullptr == mD3D10QueryFlush)
-		{
-			D3D10_QUERY_DESC d3d10QueryDesc;
-			d3d10QueryDesc.Query	  = D3D10_QUERY_EVENT;
-			d3d10QueryDesc.MiscFlags = 0;
-			mD3D10Device->CreateQuery(&d3d10QueryDesc, &mD3D10QueryFlush);
-
-			#ifndef DIRECT3D10RENDERER_NO_DEBUG
-				// Set the debug name
-				if (nullptr != mD3D10QueryFlush)
-				{
-					// No need to reset the previous private data, there shouldn't be any...
-					mD3D10QueryFlush->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(__FUNCTION__), __FUNCTION__);
-				}
-			#endif
-		}
-		if (nullptr != mD3D10QueryFlush)
-		{
-			// Perform the flush and wait
-			mD3D10QueryFlush->End();
-			mD3D10Device->Flush();
-			BOOL result = FALSE;
-			do
-			{
-				// Spin-wait
-				mD3D10QueryFlush->GetData(&result, sizeof(BOOL), 0);
-			} while (!result);
-		}
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
 	void Direct3D10Renderer::setDebugMarker(const wchar_t *name)
@@ -1360,6 +1106,448 @@ namespace Direct3D10Renderer
 				D3DPERF_EndEvent();
 			}
 		#endif
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderer methods            ]
+	//[-------------------------------------------------------]
+	bool Direct3D10Renderer::isDebugEnabled()
+	{
+		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
+		// is disabled it has to be possible to use this function for an additional security check
+		// -> Maybe a debugger/profiler ignores the debug state
+		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
+		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
+		return (D3DPERF_GetStatus() != 0);
+	}
+
+	Renderer::ISwapChain *Direct3D10Renderer::getMainSwapChain() const
+	{
+		return mMainSwapChain;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Shader language                                       ]
+	//[-------------------------------------------------------]
+	uint32_t Direct3D10Renderer::getNumberOfShaderLanguages() const
+	{
+		uint32_t numberOfShaderLanguages = 1;	// HLSL support is always there
+
+		// Done, return the number of supported shader languages
+		return numberOfShaderLanguages;
+	}
+
+	const char *Direct3D10Renderer::getShaderLanguageName(uint32_t index) const
+	{
+		uint32_t currentIndex = 0;
+
+		// HLSL supported
+		if (currentIndex == index)
+		{
+			return ShaderLanguageHlsl::NAME;
+		}
+		++currentIndex;
+
+		// Error!
+		return nullptr;
+	}
+
+	Renderer::IShaderLanguage *Direct3D10Renderer::getShaderLanguage(const char *shaderLanguageName)
+	{
+		// In case "shaderLanguage" is a null pointer, use the default shader language
+		if (nullptr != shaderLanguageName)
+		{
+			// Optimization: Check for shader language name pointer match, first
+			if (ShaderLanguageHlsl::NAME == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguageHlsl::NAME))
+			{
+				// If required, create the HLSL shader language instance right now
+				if (nullptr == mShaderLanguageHlsl)
+				{
+					mShaderLanguageHlsl = new ShaderLanguageHlsl(*this);
+					mShaderLanguageHlsl->addReference();	// Internal renderer reference
+				}
+
+				// Return the shader language instance
+				return mShaderLanguageHlsl;
+			}
+
+			// Error!
+			return nullptr;
+		}
+
+		// Return the HLSL shader language instance as default
+		return getShaderLanguage(ShaderLanguageHlsl::NAME);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource creation                                     ]
+	//[-------------------------------------------------------]
+	Renderer::ISwapChain *Direct3D10Renderer::createSwapChain(handle nativeWindowHandle)
+	{
+		// The provided native window handle must not be a null handle
+		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+	}
+
+	Renderer::IFramebuffer *Direct3D10Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	{
+		// Validation is done inside the framebuffer implementation
+		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
+	}
+
+	Renderer::IBufferManager *Direct3D10Renderer::createBufferManager()
+	{
+		return new BufferManager(*this);
+	}
+
+	Renderer::ITextureManager *Direct3D10Renderer::createTextureManager()
+	{
+		return new TextureManager(*this);
+	}
+
+	Renderer::IRootSignature *Direct3D10Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	{
+		return new RootSignature(*this, rootSignature);
+	}
+
+	Renderer::IPipelineState *Direct3D10Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
+	{
+		return new PipelineState(*this, pipelineState);
+	}
+
+	Renderer::ISamplerState *Direct3D10Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	{
+		return new SamplerState(*this, samplerState);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource handling                                     ]
+	//[-------------------------------------------------------]
+	bool Direct3D10Renderer::map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource)
+	{
+		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 constants, do not change them
+		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
+
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (S_OK == static_cast<IndexBuffer&>(resource).getD3D10Buffer()->Map(static_cast<D3D10_MAP>(mapType), mapFlags, &mappedSubresource.data));
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (S_OK == static_cast<VertexBuffer&>(resource).getD3D10Buffer()->Map(static_cast<D3D10_MAP>(mapType), mapFlags, &mappedSubresource.data));
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (S_OK == static_cast<UniformBuffer&>(resource).getD3D10Buffer()->Map(static_cast<D3D10_MAP>(mapType), mapFlags, &mappedSubresource.data));
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (S_OK == static_cast<TextureBuffer&>(resource).getD3D10Buffer()->Map(static_cast<D3D10_MAP>(mapType), mapFlags, &mappedSubresource.data));
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return true;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				bool result = false;
+
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 10 resource instance
+				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
+				ID3D10Texture2D *d3d10Texture2D = nullptr;
+				D3D10_MAPPED_TEXTURE2D d3d10MappedTexture2D;
+				static_cast<Texture2D&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
+				if (nullptr != d3d10Texture2D)
+				{
+					// Map the Direct3D 10 resource
+					result = (S_OK == d3d10Texture2D->Map(subresource, static_cast<D3D10_MAP>(mapType), mapFlags, &d3d10MappedTexture2D));
+
+					// Release the Direct3D 10 resource instance
+					d3d10Texture2D->Release();
+				}
+				else
+				{
+					// Error!
+					memset(&d3d10MappedTexture2D, 0, sizeof(D3D10_MAPPED_TEXTURE2D));
+				}
+
+				// Set result
+				if (result)
+				{
+					// Copy over the data
+					mappedSubresource.data		 = d3d10MappedTexture2D.pData;
+					mappedSubresource.rowPitch   = d3d10MappedTexture2D.RowPitch;
+					mappedSubresource.depthPitch = 0;
+				}
+				else
+				{
+					// Set known return values in case of an error
+					mappedSubresource.data		 = nullptr;
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+
+				// Done
+				return result;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				bool result = false;
+
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 10 resource instance
+				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
+				ID3D10Texture2D *d3d10Texture2D = nullptr;
+				D3D10_MAPPED_TEXTURE2D d3d10MappedTexture2D;
+				static_cast<Texture2DArray&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
+				if (nullptr != d3d10Texture2D)
+				{
+					// Map the Direct3D 10 resource
+					result = (S_OK == d3d10Texture2D->Map(subresource, static_cast<D3D10_MAP>(mapType), mapFlags, &d3d10MappedTexture2D));
+
+					// Release the Direct3D 10 resource instance
+					d3d10Texture2D->Release();
+				}
+				else
+				{
+					// Error!
+					memset(&d3d10MappedTexture2D, 0, sizeof(D3D10_MAPPED_TEXTURE2D));
+				}
+
+				// Set result
+				if (result)
+				{
+					// Copy over the data
+					mappedSubresource.data		 = d3d10MappedTexture2D.pData;
+					mappedSubresource.rowPitch   = d3d10MappedTexture2D.RowPitch;
+					mappedSubresource.depthPitch = 0;
+				}
+				else
+				{
+					// Set known return values in case of an error
+					mappedSubresource.data		 = nullptr;
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+
+				// Done
+				return result;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can map, set known return values
+				mappedSubresource.data		 = nullptr;
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				// Error!
+				return false;
+		}
+	}
+
+	void Direct3D10Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
+	{
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+				static_cast<IndexBuffer&>(resource).getD3D10Buffer()->Unmap();
+				break;
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+				static_cast<VertexBuffer&>(resource).getD3D10Buffer()->Unmap();
+				break;
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+				static_cast<UniformBuffer&>(resource).getD3D10Buffer()->Unmap();
+				break;
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+				static_cast<TextureBuffer&>(resource).getD3D10Buffer()->Unmap();
+				break;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// Nothing here, it's a software emulated indirect buffer
+				break;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 10 resource instance
+				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
+				ID3D10Texture2D *d3d10Texture2D = nullptr;
+				static_cast<Texture2D&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
+				if (nullptr != d3d10Texture2D)
+				{
+					// Unmap the Direct3D 10 resource
+					d3d10Texture2D->Unmap(subresource);
+
+					// Release the Direct3D 10 resource instance
+					d3d10Texture2D->Release();
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 10 resource instance
+				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
+				ID3D10Texture2D *d3d10Texture2D = nullptr;
+				static_cast<Texture2DArray&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
+				if (nullptr != d3d10Texture2D)
+				{
+					// Unmap the Direct3D 10 resource
+					d3d10Texture2D->Unmap(subresource);
+
+					// Release the Direct3D 10 resource instance
+					d3d10Texture2D->Release();
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can unmap
+				break;
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Operations                                            ]
+	//[-------------------------------------------------------]
+	bool Direct3D10Renderer::beginScene()
+	{
+		// Not required when using Direct3D 10
+
+		// Done
+		return true;
+	}
+
+	void Direct3D10Renderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
+	{
+		// Loop through all commands
+		uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
+		Renderer::CommandPacket commandPacket = commandPacketBuffer;
+		while (nullptr != commandPacket)
+		{
+			{ // Submit command packet
+				const Renderer::CommandDispatchFunctionIndex commandDispatchFunctionIndex = Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(commandPacket);
+				const void* command = Renderer::CommandPacketHelper::loadCommand(commandPacket);
+				detail::DISPATCH_FUNCTIONS[commandDispatchFunctionIndex](command, *this);
+			}
+
+			{ // Next command
+				const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+				commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+			}
+		}
+	}
+
+	void Direct3D10Renderer::endScene()
+	{
+		// We need to forget about the currently set render target
+		omSetRenderTarget(nullptr);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Synchronization                                       ]
+	//[-------------------------------------------------------]
+	void Direct3D10Renderer::flush()
+	{
+		mD3D10Device->Flush();
+	}
+
+	void Direct3D10Renderer::finish()
+	{
+		// Create the Direct3D 10 query instance used for flush right now?
+		if (nullptr == mD3D10QueryFlush)
+		{
+			D3D10_QUERY_DESC d3d10QueryDesc;
+			d3d10QueryDesc.Query	  = D3D10_QUERY_EVENT;
+			d3d10QueryDesc.MiscFlags = 0;
+			mD3D10Device->CreateQuery(&d3d10QueryDesc, &mD3D10QueryFlush);
+
+			#ifndef DIRECT3D10RENDERER_NO_DEBUG
+				// Set the debug name
+				if (nullptr != mD3D10QueryFlush)
+				{
+					// No need to reset the previous private data, there shouldn't be any...
+					mD3D10QueryFlush->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(__FUNCTION__), __FUNCTION__);
+				}
+			#endif
+		}
+		if (nullptr != mD3D10QueryFlush)
+		{
+			// Perform the flush and wait
+			mD3D10QueryFlush->End();
+			mD3D10Device->Flush();
+			BOOL result = FALSE;
+			do
+			{
+				// Spin-wait
+				mD3D10QueryFlush->GetData(&result, sizeof(BOOL), 0);
+			} while (!result);
+		}
 	}
 
 

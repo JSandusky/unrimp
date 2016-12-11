@@ -258,7 +258,7 @@ namespace Direct3D9Renderer
 			// In case this swap chain is the current render target, we have to unset it before continuing
 			if (this == renderTargetBackup)
 			{
-				getRenderer().omSetRenderTarget(nullptr);
+				static_cast<Direct3D9Renderer&>(getRenderer()).omSetRenderTarget(nullptr);
 			}
 			else
 			{

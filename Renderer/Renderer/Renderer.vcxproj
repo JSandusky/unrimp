@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Renderer\Buffer\BufferTypes.h" />
+    <ClInclude Include="include\Renderer\Buffer\CommandBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IBufferManager.h" />
     <ClInclude Include="include\Renderer\Buffer\IIndexBuffer.h" />

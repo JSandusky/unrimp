@@ -60,7 +60,6 @@ THE SOFTWARE.
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 
 #include <algorithm>
-#include <cassert>
 
 
 //[-------------------------------------------------------]

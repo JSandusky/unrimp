@@ -72,9 +72,6 @@ void FirstMesh::onInitialization()
 	{
 		Renderer::IRendererPtr renderer(getRenderer());
 
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Create uniform buffers
 		// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
 		// -> Direct3D 10, 11 and 12 do not support individual uniforms
@@ -213,17 +210,11 @@ void FirstMesh::onInitialization()
 				mSamplerState = renderer->createSamplerState(samplerStateSettings);
 			}
 		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 
 void FirstMesh::onDeinitialization()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
-
 	// Release the used renderer resources
 	mCommandBuffer.clear();
 	mSamplerState = nullptr;
@@ -236,9 +227,6 @@ void FirstMesh::onDeinitialization()
 	mProgram	   = nullptr;
 	mRootSignature = nullptr;
 	mUniformBuffer = nullptr;
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(getRenderer())
 
 	// Call the base implementation
 	IApplicationRendererRuntime::onDeinitialization();

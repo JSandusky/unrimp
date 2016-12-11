@@ -25,8 +25,6 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h"
 #include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h"
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

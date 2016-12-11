@@ -56,9 +56,6 @@ void FirstIndirectBuffer::onInitialization()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		{ // Create the indirect buffer
 			const Renderer::DrawInstancedArguments drawInstancedArguments =
 			{
@@ -73,22 +70,13 @@ void FirstIndirectBuffer::onInitialization()
 		// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
 		mCommandBuffer.clear();	// Throw away "FirstTriangle"-stuff
 		fillCommandBuffer();
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 
 void FirstIndirectBuffer::onDeinitialization()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
-
 	// Release the used resources
 	mIndirectBuffer = nullptr;
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(getRenderer())
 
 	// Call the base implementation
 	FirstTriangle::onDeinitialization();

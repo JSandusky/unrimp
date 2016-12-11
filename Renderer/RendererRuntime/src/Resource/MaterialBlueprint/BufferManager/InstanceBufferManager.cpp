@@ -26,9 +26,10 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
-#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/IRendererRuntime.h"
+
+#include <algorithm>
 
 
 //[-------------------------------------------------------]

@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include <Renderer/Public/Renderer.h>
 
-#include <RendererRuntime/Command/CommandBuffer.h>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]

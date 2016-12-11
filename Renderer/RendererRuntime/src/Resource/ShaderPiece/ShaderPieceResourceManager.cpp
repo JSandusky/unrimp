@@ -28,7 +28,6 @@
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-#include <cassert>
 #include <unordered_set>
 
 

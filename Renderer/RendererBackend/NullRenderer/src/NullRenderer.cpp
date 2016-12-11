@@ -31,6 +31,8 @@
 #include "NullRenderer/Buffer/IndexBuffer.h"
 #include "NullRenderer/Buffer/VertexBuffer.h"
 #include "NullRenderer/Buffer/UniformBuffer.h"
+#include "NullRenderer/Buffer/TextureBuffer.h"
+#include "NullRenderer/Buffer/IndirectBuffer.h"
 #include "NullRenderer/Texture/TextureManager.h"
 #include "NullRenderer/State/SamplerState.h"
 #include "NullRenderer/State/PipelineState.h"
@@ -38,6 +40,7 @@
 #include "NullRenderer/Shader/ShaderLanguage.h"
 
 #include <Renderer/Texture/ITexture.h>
+#include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
 #include <string.h>
@@ -64,6 +67,188 @@ NULLRENDERER_API_EXPORT Renderer::IRenderer *createNullRendererInstance(handle n
 //[-------------------------------------------------------]
 namespace NullRenderer
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+	namespace
+	{
+		namespace detail
+		{
+
+
+			//[-------------------------------------------------------]
+			//[ Global functions                                      ]
+			//[-------------------------------------------------------]
+			namespace BackendDispatch
+			{
+
+
+				//[-------------------------------------------------------]
+				//[ Resource handling                                     ]
+				//[-------------------------------------------------------]
+				void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
+				{
+					const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
+					realData->uniformBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+				}
+
+				void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
+				{
+					const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
+					realData->textureBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Graphics root                                         ]
+				//[-------------------------------------------------------]
+				void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
+					static_cast<NullRenderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
+				}
+
+				void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
+					static_cast<NullRenderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				}
+
+				//[-------------------------------------------------------]
+				//[ States                                                ]
+				//[-------------------------------------------------------]
+				void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
+					static_cast<NullRenderer&>(renderer).setPipelineState(realData->pipelineState);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Input-assembler (IA) stage                            ]
+				//[-------------------------------------------------------]
+				void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
+					static_cast<NullRenderer&>(renderer).iaSetVertexArray(realData->vertexArray);
+				}
+
+				void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
+					static_cast<NullRenderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Rasterizer (RS) stage                                 ]
+				//[-------------------------------------------------------]
+				void SetViewports(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
+					static_cast<NullRenderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
+					static_cast<NullRenderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Output-merger (OM) stage                              ]
+				//[-------------------------------------------------------]
+				void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
+					static_cast<NullRenderer&>(renderer).omSetRenderTarget(realData->renderTarget);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Operations                                            ]
+				//[-------------------------------------------------------]
+				void Clear(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
+					static_cast<NullRenderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Draw call                                             ]
+				//[-------------------------------------------------------]
+				void Draw(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<NullRenderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<NullRenderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Debug                                                 ]
+				//[-------------------------------------------------------]
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<NullRenderer&>(renderer).setDebugMarker(realData->name);
+				}
+
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<NullRenderer&>(renderer).beginDebugEvent(realData->name);
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<NullRenderer&>(renderer).endDebugEvent();
+				}
+
+
+			}
+
+
+			//[-------------------------------------------------------]
+			//[ Global definitions                                    ]
+			//[-------------------------------------------------------]
+			static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
+			{
+				// Resource handling
+				&BackendDispatch::CopyUniformBufferData,
+				&BackendDispatch::CopyTextureBufferData,
+				// Graphics root
+				&BackendDispatch::SetGraphicsRootSignature,
+				&BackendDispatch::SetGraphicsRootDescriptorTable,
+				// States
+				&BackendDispatch::SetPipelineState,
+				// Input-assembler (IA) stage
+				&BackendDispatch::SetVertexArray,
+				&BackendDispatch::SetPrimitiveTopology,
+				// Rasterizer (RS) stage
+				&BackendDispatch::SetViewports,
+				&BackendDispatch::SetScissorRectangles,
+				// Output-merger (OM) stage
+				&BackendDispatch::SetRenderTarget,
+				// Operations
+				&BackendDispatch::Clear,
+				// Draw call
+				&BackendDispatch::Draw,
+				&BackendDispatch::DrawIndexed,
+				// Debug
+				&BackendDispatch::SetDebugMarker,
+				&BackendDispatch::BeginDebugEvent,
+				&BackendDispatch::EndDebugEvent
+			};
+
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+		} // detail
+	}
 
 
 	//[-------------------------------------------------------]
@@ -132,168 +317,6 @@ namespace NullRenderer
 		{
 			mShaderLanguage->release();
 		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IRenderer methods            ]
-	//[-------------------------------------------------------]
-	const char *NullRenderer::getName() const
-	{
-		return "Null";
-	}
-
-	bool NullRenderer::isInitialized() const
-	{
-		return true;
-	}
-
-	bool NullRenderer::isDebugEnabled()
-	{
-		// Nothing here
-
-		// Debug disabled
-		return false;
-	}
-
-	Renderer::ISwapChain *NullRenderer::getMainSwapChain() const
-	{
-		return mMainSwapChain;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Shader language                                       ]
-	//[-------------------------------------------------------]
-	uint32_t NullRenderer::getNumberOfShaderLanguages() const
-	{
-		// Only one shader language supported in here
-		return 1;
-	}
-
-	const char *NullRenderer::getShaderLanguageName(uint32_t index) const
-	{
-		// Only one shader language supported in here
-		if (0 == index)
-		{
-			return ShaderLanguage::NAME;
-		}
-		else
-		{
-			// Error!
-			return nullptr;
-		}
-	}
-
-	Renderer::IShaderLanguage *NullRenderer::getShaderLanguage(const char *shaderLanguageName)
-	{
-		// In case "shaderLanguage" is a null pointer, use the default shader language
-		if (nullptr != shaderLanguageName)
-		{
-			// In case "shaderLanguage" is a null pointer, use the default shader language
-			// -> Only one shader language supported in here
-			if (nullptr == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguage::NAME))
-			{
-				// If required, create the null shader language instance right now
-				if (nullptr == mShaderLanguage)
-				{
-					mShaderLanguage = new ShaderLanguage(*this);
-					mShaderLanguage->addReference();	// Internal renderer reference
-				}
-
-				// Return the shader language instance
-				return mShaderLanguage;
-			}
-
-			// Error!
-			return nullptr;
-		}
-
-		// Return the null shader language instance as default
-		return getShaderLanguage(ShaderLanguage::NAME);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource creation                                     ]
-	//[-------------------------------------------------------]
-	Renderer::ISwapChain *NullRenderer::createSwapChain(handle nativeWindowHandle)
-	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
-	}
-
-	Renderer::IFramebuffer *NullRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
-	{
-		// We don't keep a reference to the provided textures in here
-		// -> Ensure a correct reference counter behaviour
-
-		// Are there any color textures?
-		if (numberOfColorTextures > 0)
-		{
-			// Loop through all color textures
-			Renderer::ITexture **colorTexturesEnd = colorTextures + numberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = colorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorTextures)
-			{
-				// Valid entry?
-				if (nullptr != *colorTextures)
-				{
-					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					(*colorTextures)->addReference();
-					(*colorTextures)->release();
-				}
-			}
-		}
-
-		// Add a reference to the used depth stencil texture
-		if (nullptr != depthStencilTexture)
-		{
-			depthStencilTexture->addReference();
-			depthStencilTexture->release();
-		}
-
-		// Create the framebuffer instance
-		return new Framebuffer(*this);
-	}
-
-	Renderer::IBufferManager *NullRenderer::createBufferManager()
-	{
-		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureManager *NullRenderer::createTextureManager()
-	{
-		return new TextureManager(*this);
-	}
-
-	Renderer::IRootSignature *NullRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)
-	{
-		return new RootSignature(*this, rootSignature);
-	}
-
-	Renderer::IPipelineState *NullRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)
-	{
-		return new PipelineState(*this, pipelineState);
-	}
-
-	Renderer::ISamplerState *NullRenderer::createSamplerState(const Renderer::SamplerState &)
-	{
-		return new SamplerState(*this);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource handling                                     ]
-	//[-------------------------------------------------------]
-	bool NullRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
-	{
-		// Not supported by the null renderer
-		return false;
-	}
-
-	void NullRenderer::unmap(Renderer::IResource &, uint32_t)
-	{
-		// Nothing here
 	}
 
 
@@ -462,20 +485,6 @@ namespace NullRenderer
 		// Nothing here
 	}
 
-	bool NullRenderer::beginScene()
-	{
-		// Nothing here
-
-		// Done
-		return true;
-	}
-
-	void NullRenderer::endScene()
-	{
-		// We need to forget about the currently set render target
-		omSetRenderTarget(nullptr);
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
@@ -486,20 +495,6 @@ namespace NullRenderer
 	}
 
 	void NullRenderer::drawIndexed(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
-	{
-		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Synchronization                                       ]
-	//[-------------------------------------------------------]
-	void NullRenderer::flush()
-	{
-		// Nothing here
-	}
-
-	void NullRenderer::finish()
 	{
 		// Nothing here
 	}
@@ -519,6 +514,220 @@ namespace NullRenderer
 	}
 
 	void NullRenderer::endDebugEvent()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderer methods            ]
+	//[-------------------------------------------------------]
+	const char *NullRenderer::getName() const
+	{
+		return "Null";
+	}
+
+	bool NullRenderer::isInitialized() const
+	{
+		return true;
+	}
+
+	bool NullRenderer::isDebugEnabled()
+	{
+		// Nothing here
+
+		// Debug disabled
+		return false;
+	}
+
+	Renderer::ISwapChain *NullRenderer::getMainSwapChain() const
+	{
+		return mMainSwapChain;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Shader language                                       ]
+	//[-------------------------------------------------------]
+	uint32_t NullRenderer::getNumberOfShaderLanguages() const
+	{
+		// Only one shader language supported in here
+		return 1;
+	}
+
+	const char *NullRenderer::getShaderLanguageName(uint32_t index) const
+	{
+		// Only one shader language supported in here
+		if (0 == index)
+		{
+			return ShaderLanguage::NAME;
+		}
+		else
+		{
+			// Error!
+			return nullptr;
+		}
+	}
+
+	Renderer::IShaderLanguage *NullRenderer::getShaderLanguage(const char *shaderLanguageName)
+	{
+		// In case "shaderLanguage" is a null pointer, use the default shader language
+		if (nullptr != shaderLanguageName)
+		{
+			// In case "shaderLanguage" is a null pointer, use the default shader language
+			// -> Only one shader language supported in here
+			if (nullptr == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguage::NAME))
+			{
+				// If required, create the null shader language instance right now
+				if (nullptr == mShaderLanguage)
+				{
+					mShaderLanguage = new ShaderLanguage(*this);
+					mShaderLanguage->addReference();	// Internal renderer reference
+				}
+
+				// Return the shader language instance
+				return mShaderLanguage;
+			}
+
+			// Error!
+			return nullptr;
+		}
+
+		// Return the null shader language instance as default
+		return getShaderLanguage(ShaderLanguage::NAME);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource creation                                     ]
+	//[-------------------------------------------------------]
+	Renderer::ISwapChain *NullRenderer::createSwapChain(handle nativeWindowHandle)
+	{
+		// The provided native window handle must not be a null handle
+		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+	}
+
+	Renderer::IFramebuffer *NullRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	{
+		// We don't keep a reference to the provided textures in here
+		// -> Ensure a correct reference counter behaviour
+
+		// Are there any color textures?
+		if (numberOfColorTextures > 0)
+		{
+			// Loop through all color textures
+			Renderer::ITexture **colorTexturesEnd = colorTextures + numberOfColorTextures;
+			for (Renderer::ITexture **colorTexture = colorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorTextures)
+			{
+				// Valid entry?
+				if (nullptr != *colorTextures)
+				{
+					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+					(*colorTextures)->addReference();
+					(*colorTextures)->release();
+				}
+			}
+		}
+
+		// Add a reference to the used depth stencil texture
+		if (nullptr != depthStencilTexture)
+		{
+			depthStencilTexture->addReference();
+			depthStencilTexture->release();
+		}
+
+		// Create the framebuffer instance
+		return new Framebuffer(*this);
+	}
+
+	Renderer::IBufferManager *NullRenderer::createBufferManager()
+	{
+		return new BufferManager(*this);
+	}
+
+	Renderer::ITextureManager *NullRenderer::createTextureManager()
+	{
+		return new TextureManager(*this);
+	}
+
+	Renderer::IRootSignature *NullRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	{
+		return new RootSignature(*this, rootSignature);
+	}
+
+	Renderer::IPipelineState *NullRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)
+	{
+		return new PipelineState(*this, pipelineState);
+	}
+
+	Renderer::ISamplerState *NullRenderer::createSamplerState(const Renderer::SamplerState &)
+	{
+		return new SamplerState(*this);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource handling                                     ]
+	//[-------------------------------------------------------]
+	bool NullRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
+	{
+		// Not supported by the null renderer
+		return false;
+	}
+
+	void NullRenderer::unmap(Renderer::IResource &, uint32_t)
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Operations                                            ]
+	//[-------------------------------------------------------]
+	bool NullRenderer::beginScene()
+	{
+		// Nothing here
+
+		// Done
+		return true;
+	}
+
+	void NullRenderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
+	{
+		// Loop through all commands
+		uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
+		Renderer::CommandPacket commandPacket = commandPacketBuffer;
+		while (nullptr != commandPacket)
+		{
+			{ // Submit command packet
+				const Renderer::CommandDispatchFunctionIndex commandDispatchFunctionIndex = Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(commandPacket);
+				const void* command = Renderer::CommandPacketHelper::loadCommand(commandPacket);
+				detail::DISPATCH_FUNCTIONS[commandDispatchFunctionIndex](command, *this);
+			}
+
+			{ // Next command
+				const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+				commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+			}
+		}
+	}
+
+	void NullRenderer::endScene()
+	{
+		// We need to forget about the currently set render target
+		omSetRenderTarget(nullptr);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Synchronization                                       ]
+	//[-------------------------------------------------------]
+	void NullRenderer::flush()
+	{
+		// Nothing here
+	}
+
+	void NullRenderer::finish()
 	{
 		// Nothing here
 	}

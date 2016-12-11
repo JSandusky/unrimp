@@ -49,6 +49,7 @@
 #include "Direct3D11Renderer/Shader/TessellationControlShaderHlsl.h"
 #include "Direct3D11Renderer/Shader/TessellationEvaluationShaderHlsl.h"
 
+#include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
 #include <cassert>
@@ -123,6 +124,169 @@ namespace Direct3D11Renderer
 				// Error!
 				return false;
 			}
+
+
+			namespace BackendDispatch
+			{
+
+
+				//[-------------------------------------------------------]
+				//[ Resource handling                                     ]
+				//[-------------------------------------------------------]
+				void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
+				{
+					const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
+					realData->uniformBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+				}
+
+				void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
+				{
+					const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
+					realData->textureBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Graphics root                                         ]
+				//[-------------------------------------------------------]
+				void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
+				}
+
+				void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				}
+
+				//[-------------------------------------------------------]
+				//[ States                                                ]
+				//[-------------------------------------------------------]
+				void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).setPipelineState(realData->pipelineState);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Input-assembler (IA) stage                            ]
+				//[-------------------------------------------------------]
+				void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
+				}
+
+				void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Rasterizer (RS) stage                                 ]
+				//[-------------------------------------------------------]
+				void SetViewports(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Output-merger (OM) stage                              ]
+				//[-------------------------------------------------------]
+				void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).omSetRenderTarget(realData->renderTarget);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Operations                                            ]
+				//[-------------------------------------------------------]
+				void Clear(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Draw call                                             ]
+				//[-------------------------------------------------------]
+				void Draw(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Debug                                                 ]
+				//[-------------------------------------------------------]
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).setDebugMarker(realData->name);
+				}
+
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).beginDebugEvent(realData->name);
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<Direct3D11Renderer&>(renderer).endDebugEvent();
+				}
+
+
+			}
+
+
+			//[-------------------------------------------------------]
+			//[ Global definitions                                    ]
+			//[-------------------------------------------------------]
+			static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
+			{
+				// Resource handling
+				&BackendDispatch::CopyUniformBufferData,
+				&BackendDispatch::CopyTextureBufferData,
+				// Graphics root
+				&BackendDispatch::SetGraphicsRootSignature,
+				&BackendDispatch::SetGraphicsRootDescriptorTable,
+				// States
+				&BackendDispatch::SetPipelineState,
+				// Input-assembler (IA) stage
+				&BackendDispatch::SetVertexArray,
+				&BackendDispatch::SetPrimitiveTopology,
+				// Rasterizer (RS) stage
+				&BackendDispatch::SetViewports,
+				&BackendDispatch::SetScissorRectangles,
+				// Output-merger (OM) stage
+				&BackendDispatch::SetRenderTarget,
+				// Operations
+				&BackendDispatch::Clear,
+				// Draw call
+				&BackendDispatch::Draw,
+				&BackendDispatch::DrawIndexed,
+				// Debug
+				&BackendDispatch::SetDebugMarker,
+				&BackendDispatch::BeginDebugEvent,
+				&BackendDispatch::EndDebugEvent
+			};
 
 
 	//[-------------------------------------------------------]
@@ -281,303 +445,6 @@ namespace Direct3D11Renderer
 		if (nullptr != mDirect3D9RuntimeLinking)
 		{
 			delete mDirect3D9RuntimeLinking;
-		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IRenderer methods            ]
-	//[-------------------------------------------------------]
-	bool Direct3D11Renderer::isDebugEnabled()
-	{
-		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
-		// is disabled it has to be possible to use this function for an additional security check
-		// -> Maybe a debugger/profiler ignores the debug state
-		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
-		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
-		return (D3DPERF_GetStatus() != 0);
-	}
-
-	Renderer::ISwapChain *Direct3D11Renderer::getMainSwapChain() const
-	{
-		return static_cast<Renderer::ISwapChain*>(mMainSwapChain);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Shader language                                       ]
-	//[-------------------------------------------------------]
-	uint32_t Direct3D11Renderer::getNumberOfShaderLanguages() const
-	{
-		uint32_t numberOfShaderLanguages = 1;	// HLSL support is always there
-
-		// Done, return the number of supported shader languages
-		return numberOfShaderLanguages;
-	}
-
-	const char *Direct3D11Renderer::getShaderLanguageName(uint32_t index) const
-	{
-		uint32_t currentIndex = 0;
-
-		// HLSL supported
-		if (currentIndex == index)
-		{
-			return ShaderLanguageHlsl::NAME;
-		}
-		++currentIndex;
-
-		// Error!
-		return nullptr;
-	}
-
-	Renderer::IShaderLanguage *Direct3D11Renderer::getShaderLanguage(const char *shaderLanguageName)
-	{
-		// In case "shaderLanguage" is a null pointer, use the default shader language
-		if (nullptr != shaderLanguageName)
-		{
-			// Optimization: Check for shader language name pointer match, first
-			if (ShaderLanguageHlsl::NAME == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguageHlsl::NAME))
-			{
-				// If required, create the HLSL shader language instance right now
-				if (nullptr == mShaderLanguageHlsl)
-				{
-					mShaderLanguageHlsl = new ShaderLanguageHlsl(*this);
-					mShaderLanguageHlsl->addReference();	// Internal renderer reference
-				}
-
-				// Return the shader language instance
-				return mShaderLanguageHlsl;
-			}
-
-			// Error!
-			return nullptr;
-		}
-
-		// Return the HLSL shader language instance as default
-		return getShaderLanguage(ShaderLanguageHlsl::NAME);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource creation                                     ]
-	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D11Renderer::createSwapChain(handle nativeWindowHandle)
-	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
-	}
-
-	Renderer::IFramebuffer *Direct3D11Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
-	{
-		// Validation is done inside the framebuffer implementation
-		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
-	}
-
-	Renderer::IBufferManager *Direct3D11Renderer::createBufferManager()
-	{
-		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureManager *Direct3D11Renderer::createTextureManager()
-	{
-		return new TextureManager(*this);
-	}
-
-	Renderer::IRootSignature *Direct3D11Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
-	{
-		return new RootSignature(*this, rootSignature);
-	}
-
-	Renderer::IPipelineState *Direct3D11Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
-	{
-		return new PipelineState(*this, pipelineState);
-	}
-
-	Renderer::ISamplerState *Direct3D11Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
-	{
-		return new SamplerState(*this, samplerState);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource handling                                     ]
-	//[-------------------------------------------------------]
-	bool Direct3D11Renderer::map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource)
-	{
-		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 constants, do not change them
-		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
-
-		// Evaluate the resource type
-		switch (resource.getResourceType())
-		{
-			case Renderer::ResourceType::INDEX_BUFFER:
-				return (S_OK == mD3D11DeviceContext->Map(static_cast<IndexBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-			case Renderer::ResourceType::VERTEX_BUFFER:
-				return (S_OK == mD3D11DeviceContext->Map(static_cast<VertexBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-			case Renderer::ResourceType::UNIFORM_BUFFER:
-				return (S_OK == mD3D11DeviceContext->Map(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-			case Renderer::ResourceType::TEXTURE_BUFFER:
-				return (S_OK == mD3D11DeviceContext->Map(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
-				// return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-				return true;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				bool result = false;
-
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Map the Direct3D 11 resource
-					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				bool result = false;
-
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Map the Direct3D 11 resource
-					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::ROOT_SIGNATURE:
-			case Renderer::ResourceType::PROGRAM:
-			case Renderer::ResourceType::VERTEX_ARRAY:
-			case Renderer::ResourceType::SWAP_CHAIN:
-			case Renderer::ResourceType::FRAMEBUFFER:
-			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::SAMPLER_STATE:
-			case Renderer::ResourceType::VERTEX_SHADER:
-			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-			case Renderer::ResourceType::GEOMETRY_SHADER:
-			case Renderer::ResourceType::FRAGMENT_SHADER:
-			default:
-				// Nothing we can map, set known return values
-				mappedSubresource.data		 = nullptr;
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-
-				// Error!
-				return false;
-		}
-	}
-
-	void Direct3D11Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
-	{
-		// Evaluate the resource type
-		switch (resource.getResourceType())
-		{
-			case Renderer::ResourceType::INDEX_BUFFER:
-				mD3D11DeviceContext->Unmap(static_cast<IndexBuffer&>(resource).getD3D11Buffer(), subresource);
-				break;
-
-			case Renderer::ResourceType::VERTEX_BUFFER:
-				mD3D11DeviceContext->Unmap(static_cast<VertexBuffer&>(resource).getD3D11Buffer(), subresource);
-				break;
-
-			case Renderer::ResourceType::UNIFORM_BUFFER:
-				mD3D11DeviceContext->Unmap(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource);
-				break;
-
-			case Renderer::ResourceType::TEXTURE_BUFFER:
-				mD3D11DeviceContext->Unmap(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource);
-				break;
-
-			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
-				// mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
-				break;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Unmap the Direct3D 11 resource
-					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-				break;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Unmap the Direct3D 11 resource
-					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-				break;
-			}
-
-			case Renderer::ResourceType::ROOT_SIGNATURE:
-			case Renderer::ResourceType::PROGRAM:
-			case Renderer::ResourceType::VERTEX_ARRAY:
-			case Renderer::ResourceType::SWAP_CHAIN:
-			case Renderer::ResourceType::FRAMEBUFFER:
-			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::SAMPLER_STATE:
-			case Renderer::ResourceType::VERTEX_SHADER:
-			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-			case Renderer::ResourceType::GEOMETRY_SHADER:
-			case Renderer::ResourceType::FRAGMENT_SHADER:
-			default:
-				// Nothing we can unmap
-				break;
 		}
 	}
 
@@ -1109,20 +976,6 @@ namespace Direct3D11Renderer
 		RENDERER_END_DEBUG_EVENT(this)
 	}
 
-	bool Direct3D11Renderer::beginScene()
-	{
-		// Not required when using Direct3D 11
-
-		// Done
-		return true;
-	}
-
-	void Direct3D11Renderer::endScene()
-	{
-		// We need to forget about the currently set render target
-		omSetRenderTarget(nullptr);
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
@@ -1217,48 +1070,6 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Synchronization                                       ]
-	//[-------------------------------------------------------]
-	void Direct3D11Renderer::flush()
-	{
-		mD3D11DeviceContext->Flush();
-	}
-
-	void Direct3D11Renderer::finish()
-	{
-		// Create the Direct3D 11 query instance used for flush right now?
-		if (nullptr == mD3D11QueryFlush)
-		{
-			D3D11_QUERY_DESC d3d11QueryDesc;
-			d3d11QueryDesc.Query	 = D3D11_QUERY_EVENT;
-			d3d11QueryDesc.MiscFlags = 0;
-			mD3D11Device->CreateQuery(&d3d11QueryDesc, &mD3D11QueryFlush);
-
-			#ifndef DIRECT3D11RENDERER_NO_DEBUG
-				// Set the debug name
-				if (nullptr != mD3D11QueryFlush)
-				{
-					// No need to reset the previous private data, there shouldn't be any...
-					mD3D11QueryFlush->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(__FUNCTION__), __FUNCTION__);
-				}
-			#endif
-		}
-		if (nullptr != mD3D11QueryFlush)
-		{
-			// Perform the flush and wait
-			mD3D11DeviceContext->End(mD3D11QueryFlush);
-			mD3D11DeviceContext->Flush();
-			BOOL result = FALSE;
-			do
-			{
-				// Spin-wait
-				mD3D11DeviceContext->GetData(mD3D11QueryFlush, &result, sizeof(BOOL), 0);
-			} while (!result);
-		}
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
 	void Direct3D11Renderer::setDebugMarker(const wchar_t *name)
@@ -1310,6 +1121,383 @@ namespace Direct3D11Renderer
 				D3DPERF_EndEvent();
 			}
 		#endif
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderer methods            ]
+	//[-------------------------------------------------------]
+	bool Direct3D11Renderer::isDebugEnabled()
+	{
+		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
+		// is disabled it has to be possible to use this function for an additional security check
+		// -> Maybe a debugger/profiler ignores the debug state
+		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
+		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
+		return (D3DPERF_GetStatus() != 0);
+	}
+
+	Renderer::ISwapChain *Direct3D11Renderer::getMainSwapChain() const
+	{
+		return static_cast<Renderer::ISwapChain*>(mMainSwapChain);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Shader language                                       ]
+	//[-------------------------------------------------------]
+	uint32_t Direct3D11Renderer::getNumberOfShaderLanguages() const
+	{
+		uint32_t numberOfShaderLanguages = 1;	// HLSL support is always there
+
+		// Done, return the number of supported shader languages
+		return numberOfShaderLanguages;
+	}
+
+	const char *Direct3D11Renderer::getShaderLanguageName(uint32_t index) const
+	{
+		uint32_t currentIndex = 0;
+
+		// HLSL supported
+		if (currentIndex == index)
+		{
+			return ShaderLanguageHlsl::NAME;
+		}
+		++currentIndex;
+
+		// Error!
+		return nullptr;
+	}
+
+	Renderer::IShaderLanguage *Direct3D11Renderer::getShaderLanguage(const char *shaderLanguageName)
+	{
+		// In case "shaderLanguage" is a null pointer, use the default shader language
+		if (nullptr != shaderLanguageName)
+		{
+			// Optimization: Check for shader language name pointer match, first
+			if (ShaderLanguageHlsl::NAME == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguageHlsl::NAME))
+			{
+				// If required, create the HLSL shader language instance right now
+				if (nullptr == mShaderLanguageHlsl)
+				{
+					mShaderLanguageHlsl = new ShaderLanguageHlsl(*this);
+					mShaderLanguageHlsl->addReference();	// Internal renderer reference
+				}
+
+				// Return the shader language instance
+				return mShaderLanguageHlsl;
+			}
+
+			// Error!
+			return nullptr;
+		}
+
+		// Return the HLSL shader language instance as default
+		return getShaderLanguage(ShaderLanguageHlsl::NAME);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource creation                                     ]
+	//[-------------------------------------------------------]
+	Renderer::ISwapChain *Direct3D11Renderer::createSwapChain(handle nativeWindowHandle)
+	{
+		// The provided native window handle must not be a null handle
+		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+	}
+
+	Renderer::IFramebuffer *Direct3D11Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	{
+		// Validation is done inside the framebuffer implementation
+		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
+	}
+
+	Renderer::IBufferManager *Direct3D11Renderer::createBufferManager()
+	{
+		return new BufferManager(*this);
+	}
+
+	Renderer::ITextureManager *Direct3D11Renderer::createTextureManager()
+	{
+		return new TextureManager(*this);
+	}
+
+	Renderer::IRootSignature *Direct3D11Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	{
+		return new RootSignature(*this, rootSignature);
+	}
+
+	Renderer::IPipelineState *Direct3D11Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
+	{
+		return new PipelineState(*this, pipelineState);
+	}
+
+	Renderer::ISamplerState *Direct3D11Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	{
+		return new SamplerState(*this, samplerState);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource handling                                     ]
+	//[-------------------------------------------------------]
+	bool Direct3D11Renderer::map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource)
+	{
+		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 constants, do not change them
+		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
+
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+				return (S_OK == mD3D11DeviceContext->Map(static_cast<IndexBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+				return (S_OK == mD3D11DeviceContext->Map(static_cast<VertexBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+				return (S_OK == mD3D11DeviceContext->Map(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+				return (S_OK == mD3D11DeviceContext->Map(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
+				// return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return true;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				bool result = false;
+
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Map the Direct3D 11 resource
+					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+
+				// Done
+				return result;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				bool result = false;
+
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Map the Direct3D 11 resource
+					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+
+				// Done
+				return result;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can map, set known return values
+				mappedSubresource.data		 = nullptr;
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				// Error!
+				return false;
+		}
+	}
+
+	void Direct3D11Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
+	{
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+				mD3D11DeviceContext->Unmap(static_cast<IndexBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+				mD3D11DeviceContext->Unmap(static_cast<VertexBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+				mD3D11DeviceContext->Unmap(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+				mD3D11DeviceContext->Unmap(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
+				// mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can unmap
+				break;
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Operations                                            ]
+	//[-------------------------------------------------------]
+	bool Direct3D11Renderer::beginScene()
+	{
+		// Not required when using Direct3D 11
+
+		// Done
+		return true;
+	}
+
+	void Direct3D11Renderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
+	{
+		// Loop through all commands
+		uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
+		Renderer::CommandPacket commandPacket = commandPacketBuffer;
+		while (nullptr != commandPacket)
+		{
+			{ // Submit command packet
+				const Renderer::CommandDispatchFunctionIndex commandDispatchFunctionIndex = Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(commandPacket);
+				const void* command = Renderer::CommandPacketHelper::loadCommand(commandPacket);
+				detail::DISPATCH_FUNCTIONS[commandDispatchFunctionIndex](command, *this);
+			}
+
+			{ // Next command
+				const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+				commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+			}
+		}
+	}
+
+	void Direct3D11Renderer::endScene()
+	{
+		// We need to forget about the currently set render target
+		omSetRenderTarget(nullptr);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Synchronization                                       ]
+	//[-------------------------------------------------------]
+	void Direct3D11Renderer::flush()
+	{
+		mD3D11DeviceContext->Flush();
+	}
+
+	void Direct3D11Renderer::finish()
+	{
+		// Create the Direct3D 11 query instance used for flush right now?
+		if (nullptr == mD3D11QueryFlush)
+		{
+			D3D11_QUERY_DESC d3d11QueryDesc;
+			d3d11QueryDesc.Query	 = D3D11_QUERY_EVENT;
+			d3d11QueryDesc.MiscFlags = 0;
+			mD3D11Device->CreateQuery(&d3d11QueryDesc, &mD3D11QueryFlush);
+
+			#ifndef DIRECT3D11RENDERER_NO_DEBUG
+				// Set the debug name
+				if (nullptr != mD3D11QueryFlush)
+				{
+					// No need to reset the previous private data, there shouldn't be any...
+					mD3D11QueryFlush->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(__FUNCTION__), __FUNCTION__);
+				}
+			#endif
+		}
+		if (nullptr != mD3D11QueryFlush)
+		{
+			// Perform the flush and wait
+			mD3D11DeviceContext->End(mD3D11QueryFlush);
+			mD3D11DeviceContext->Flush();
+			BOOL result = FALSE;
+			do
+			{
+				// Spin-wait
+				mD3D11DeviceContext->GetData(mD3D11QueryFlush, &result, sizeof(BOOL), 0);
+			} while (!result);
+		}
 	}
 
 

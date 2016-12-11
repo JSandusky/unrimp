@@ -8,9 +8,6 @@
     <Filter Include="Source Files\Public">
       <UniqueIdentifier>{5c89bd99-c16c-46cd-8799-19fb55e5d704}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Command">
-      <UniqueIdentifier>{7ce27996-466b-4990-87d2-4ac0aa7c0f7a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{90ad0410-66b6-4945-877c-8c6220003f5e}</UniqueIdentifier>
     </Filter>
@@ -915,9 +912,6 @@
     <ClInclude Include="include\RendererRuntime\Core\MakeId.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Command\CommandBuffer.h">
-      <Filter>Source Files\Command</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1186,9 +1180,6 @@
     </ClCompile>
     <ClCompile Include="src\RenderQueue\Renderable.cpp">
       <Filter>Source Files\RenderQueue</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Command\CommandBuffer.cpp">
-      <Filter>Source Files\Command</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

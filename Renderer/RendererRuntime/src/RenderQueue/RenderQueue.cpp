@@ -29,9 +29,10 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.h"
-#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/IRendererRuntime.h"
+
+#include <algorithm>
 
 
 //[-------------------------------------------------------]

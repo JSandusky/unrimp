@@ -57,9 +57,6 @@ void FirstGeometryShader::onInitialization()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && renderer->getCapabilities().maximumNumberOfGsOutputVertices)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Create the buffer manager
 		mBufferManager = renderer->createBufferManager();
 
@@ -149,26 +146,17 @@ void FirstGeometryShader::onInitialization()
 
 		// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
 		fillCommandBuffer();
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 
 void FirstGeometryShader::onDeinitialization()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
-
 	// Release the used resources
 	mCommandBuffer.clear();
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
 	mRootSignature = nullptr;
 	mBufferManager = nullptr;
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(getRenderer())
 
 	// Call the base implementation
 	IApplicationRenderer::onDeinitialization();

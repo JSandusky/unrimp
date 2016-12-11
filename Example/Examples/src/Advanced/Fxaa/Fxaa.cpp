@@ -95,9 +95,6 @@ void Fxaa::onInitialization()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Create the buffer and texture manager
 		mBufferManager = renderer->createBufferManager();
 		mTextureManager = renderer->createTextureManager();
@@ -217,17 +214,11 @@ void Fxaa::onInitialization()
 
 		// Create the framebuffer object (FBO) instance by using the current window size
 		recreateFramebuffer();
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 
 void Fxaa::onDeinitialization()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
-
 	// Release the used resources
 	mCommandBufferSceneRendering.clear();
 	mCommandBufferPostProcessing.clear();
@@ -242,18 +233,12 @@ void Fxaa::onDeinitialization()
 	mBufferManager = nullptr;
 	mTextureManager = nullptr;
 
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(getRenderer())
-
 	// Call the base implementation
 	IApplicationRenderer::onDeinitialization();
 }
 
 void Fxaa::onResize()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
-
 	// Call the base implementation
 	IApplicationRenderer::onResize();
 
@@ -262,9 +247,6 @@ void Fxaa::onResize()
 
 	// Recreate the post-processing program instance by using the current window size
 	recreatePostProcessingProgram();
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(getRenderer())
 }
 
 void Fxaa::onDraw()
@@ -273,15 +255,9 @@ void Fxaa::onDraw()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Submit command buffers to the renderer backend
 		mCommandBufferSceneRendering.submit(*renderer);
 		mCommandBufferPostProcessing.submit(*renderer);
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 
@@ -295,9 +271,6 @@ void Fxaa::recreateFramebuffer()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Get the window size
 		int width  = 0;
 		int height = 0;
@@ -320,9 +293,6 @@ void Fxaa::recreateFramebuffer()
 		mCommandBufferPostProcessing.clear();
 		fillCommandBufferSceneRendering();
 		fillCommandBufferPostProcessing();
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 
@@ -332,9 +302,6 @@ void Fxaa::recreatePostProcessingProgram()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
@@ -416,9 +383,6 @@ void Fxaa::recreatePostProcessingProgram()
 				mPipelineStatePostProcessing = renderer->createPipelineState(pipelineState);
 			}
 		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 

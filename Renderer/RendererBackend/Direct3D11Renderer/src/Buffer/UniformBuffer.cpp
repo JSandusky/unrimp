@@ -123,11 +123,13 @@ namespace Direct3D11Renderer
 		// Check resource pointers
 		if (nullptr != mD3D11Buffer && nullptr != data)
 		{
+			Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
+
 			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&getRenderer())
+			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)
 
 			// Get the Direct3D 11 device context
-			ID3D11DeviceContext *d3d11DeviceContext = static_cast<Direct3D11Renderer&>(getRenderer()).getD3D11DeviceContext();
+			ID3D11DeviceContext *d3d11DeviceContext = direct3D11Renderer.getD3D11DeviceContext();
 
 			// Update Direct3D 11 subresource data
 			// -> Don't use (might fail): d3d11DeviceContext->UpdateSubresource(mD3D11Buffer, 0, nullptr, data, 0, 0);
@@ -140,7 +142,7 @@ namespace Direct3D11Renderer
 			}
 
 			// End debug event
-			RENDERER_END_DEBUG_EVENT(&getRenderer())
+			RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
 		}
 	}
 

@@ -56,9 +56,6 @@ void FirstRenderToTexture::onInitialization()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Create the buffer and texture manager
 		mBufferManager = renderer->createBufferManager();
 		mTextureManager = renderer->createTextureManager();
@@ -174,17 +171,11 @@ void FirstRenderToTexture::onInitialization()
 
 		// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
 		fillCommandBuffer();
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 
 void FirstRenderToTexture::onDeinitialization()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
-
 	// Release the used resources
 	mCommandBuffer.clear();
 	mVertexArray = nullptr;
@@ -195,9 +186,6 @@ void FirstRenderToTexture::onDeinitialization()
 	mTexture2D = nullptr;
 	mBufferManager = nullptr;
 	mTextureManager = nullptr;
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(getRenderer())
 
 	// Call the base implementation
 	IApplicationRenderer::onDeinitialization();

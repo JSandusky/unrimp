@@ -28,17 +28,14 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Command/CommandBuffer.h"
 #include "RendererRuntime/Resource/IResourceListener.h"
+
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderTarget;
-}
 namespace RendererRuntime
 {
 	class CameraSceneItem;

@@ -38,7 +38,7 @@ struct ID3D11Device;
 struct ID3D11DeviceContext;
 namespace Renderer
 {
-	class RenderTarget;
+	class IRenderTarget;
 }
 namespace Direct3D11Renderer
 {
@@ -122,6 +122,42 @@ namespace Direct3D11Renderer
 		*/
 		inline Renderer::IRenderTarget *omGetRenderTarget() const;
 
+		//[-------------------------------------------------------]
+		//[ States                                                ]
+		//[-------------------------------------------------------]
+		void setGraphicsRootSignature(Renderer::IRootSignature *rootSignature);
+		void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource);
+		void setPipelineState(Renderer::IPipelineState *pipelineState);
+		//[-------------------------------------------------------]
+		//[ Input-assembler (IA) stage                            ]
+		//[-------------------------------------------------------]
+		void iaSetVertexArray(Renderer::IVertexArray *vertexArray);
+		void iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
+		//[-------------------------------------------------------]
+		//[ Rasterizer (RS) stage                                 ]
+		//[-------------------------------------------------------]
+		void rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports);
+		void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles);
+		//[-------------------------------------------------------]
+		//[ Output-merger (OM) stage                              ]
+		//[-------------------------------------------------------]
+		void omSetRenderTarget(Renderer::IRenderTarget *renderTarget);
+		//[-------------------------------------------------------]
+		//[ Operations                                            ]
+		//[-------------------------------------------------------]
+		void clear(uint32_t flags, const float color[4], float z, uint32_t stencil);
+		//[-------------------------------------------------------]
+		//[ Draw call                                             ]
+		//[-------------------------------------------------------]
+		void draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1);
+		void drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1);
+		//[-------------------------------------------------------]
+		//[ Debug                                                 ]
+		//[-------------------------------------------------------]
+		void setDebugMarker(const wchar_t *name);
+		void beginDebugEvent(const wchar_t *name);
+		void endDebugEvent();
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
@@ -153,47 +189,16 @@ namespace Direct3D11Renderer
 		virtual bool map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource) override;
 		virtual void unmap(Renderer::IResource &resource, uint32_t subresource) override;
 		//[-------------------------------------------------------]
-		//[ States                                                ]
-		//[-------------------------------------------------------]
-		virtual void setGraphicsRootSignature(Renderer::IRootSignature *rootSignature) override;
-		virtual void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource) override;
-		virtual void setPipelineState(Renderer::IPipelineState *pipelineState) override;
-		//[-------------------------------------------------------]
-		//[ Input-assembler (IA) stage                            ]
-		//[-------------------------------------------------------]
-		virtual void iaSetVertexArray(Renderer::IVertexArray *vertexArray) override;
-		virtual void iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology) override;
-		//[-------------------------------------------------------]
-		//[ Rasterizer (RS) stage                                 ]
-		//[-------------------------------------------------------]
-		virtual void rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports) override;
-		virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles) override;
-		//[-------------------------------------------------------]
-		//[ Output-merger (OM) stage                              ]
-		//[-------------------------------------------------------]
-		virtual void omSetRenderTarget(Renderer::IRenderTarget *renderTarget) override;
-		//[-------------------------------------------------------]
 		//[ Operations                                            ]
 		//[-------------------------------------------------------]
-		virtual void clear(uint32_t flags, const float color[4], float z, uint32_t stencil) override;
 		virtual bool beginScene() override;
+		virtual void submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer) override;
 		virtual void endScene() override;
-		//[-------------------------------------------------------]
-		//[ Draw call                                             ]
-		//[-------------------------------------------------------]
-		virtual void draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) override;
-		virtual void drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) override;
 		//[-------------------------------------------------------]
 		//[ Synchronization                                       ]
 		//[-------------------------------------------------------]
 		virtual void flush() override;
 		virtual void finish() override;
-		//[-------------------------------------------------------]
-		//[ Debug                                                 ]
-		//[-------------------------------------------------------]
-		virtual void setDebugMarker(const wchar_t *name) override;
-		virtual void beginDebugEvent(const wchar_t *name) override;
-		virtual void endDebugEvent() override;
 
 
 	//[-------------------------------------------------------]

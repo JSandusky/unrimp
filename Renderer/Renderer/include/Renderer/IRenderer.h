@@ -44,16 +44,12 @@
 namespace Renderer
 {
 	class ITexture;
-	class IProgram;
 	class IResource;
-	struct Viewport;
 	class ISwapChain;
-	struct BlendState;
-	class IVertexArray;
 	class IFramebuffer;
+	class CommandBuffer;
 	class ISamplerState;
 	struct SamplerState;
-	class IRenderTarget;
 	class IBufferManager;
 	class IRootSignature;
 	struct RootSignature;
@@ -61,8 +57,6 @@ namespace Renderer
 	struct PipelineState;
 	class ITextureManager;
 	class IShaderLanguage;
-	class IIndirectBuffer;
-	struct ScissorRectangle;
 }
 
 
@@ -388,136 +382,8 @@ namespace Renderer
 		virtual void unmap(IResource &resource, uint32_t subresource) = 0;
 
 		//[-------------------------------------------------------]
-		//[ Graphics root                                         ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the used graphics root signature
-		*
-		*  @param[in] rootSignature
-		*    Graphics root signature to use, can be an null pointer (default: "nullptr")
-		*/
-		virtual void setGraphicsRootSignature(IRootSignature *rootSignature) = 0;
-
-		/**
-		*  @brief
-		*    Set the graphics descriptor table
-		*
-		*  @param[in] rootParameterIndex
-		*    The slot number for binding
-		*  @param[in] resource
-		*    Resource to bind
-		*/
-		virtual void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, IResource* resource) = 0;
-
-		//[-------------------------------------------------------]
-		//[ States                                                ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the used pipeline state
-		*
-		*  @param[in] pipelineState
-		*    Pipeline state to use, can be an null pointer (default: "nullptr")
-		*/
-		virtual void setPipelineState(IPipelineState *pipelineState) = 0;
-
-		//[-------------------------------------------------------]
-		//[ Input-assembler (IA) stage                            ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the used vertex array
-		*
-		*  @param[in] vertexArray
-		*    Vertex array to use, can be an null pointer (default: "nullptr")
-		*/
-		virtual void iaSetVertexArray(IVertexArray *vertexArray) = 0;
-
-		/**
-		*  @brief
-		*    Set the primitive topology used for draw calls
-		*
-		*  @param[in] primitiveTopology
-		*    Member of the primitive topology enumerated type, describing the type of primitive to render (default: "Renderer::PrimitiveTopology::UNKNOWN")
-		*/
-		virtual void iaSetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;
-
-		//[-------------------------------------------------------]
-		//[ Rasterizer (RS) stage                                 ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the viewports
-		*
-		*  @param[in] numberOfViewports
-		*    Number of viewports, if <1 nothing happens, must be <="Renderer::Capabilities::maximumNumberOfViewports"
-		*  @param[in] viewports
-		*    C-array of viewports, there must be at least "numberOfViewports"-viewports, in case of a null pointer nothing happens
-		*
-		*  @note
-		*    - The current viewport(s) does not affect the clear operation
-		*    - Lookout! In Direct3D 12 the scissor test can't be deactivated and hence one always needs to set a valid scissor rectangle.
-		*      Use the convenience "Renderer::Command::SetViewportAndScissorRectangle"-command if possible to not walk into this Direct3D 12 trap.
-		*/
-		virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport *viewports) = 0;
-
-		/**
-		*  @brief
-		*    Set the scissor rectangles
-		*
-		*  @param[in] numberOfScissorRectangles
-		*    Number of scissor rectangles, if <1 nothing happens, must be <="Renderer::Capabilities::maximumNumberOfViewports"
-		*  @param[in] dcissorRectangles
-		*    C-array of scissor rectangles, there must be at least "numberOfScissorRectangles" scissor rectangles, in case of a null pointer nothing happens
-		*
-		*  @note
-		*    - Scissor rectangles are only used when "Renderer::RasterizerState::scissorEnable" is true
-		*    - The current scissor rectangle(s) does not affect the clear operation
-		*/
-		virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const ScissorRectangle *scissorRectangles) = 0;
-
-		//[-------------------------------------------------------]
-		//[ Output-merger (OM) stage                              ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the render target to render into
-		*
-		*  @param[in] renderTarget
-		*    Render target to render into by binding it to the output-merger state, can be an null pointer to render into the primary window
-		*/
-		virtual void omSetRenderTarget(IRenderTarget *renderTarget) = 0;
-
-		//[-------------------------------------------------------]
 		//[ Operations                                            ]
 		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Clears the viewport to a specified RGBA color, clears the depth buffer,
-		*    and erases the stencil buffer
-		*
-		*  @param[in] flags
-		*    Flags that indicate what should be cleared. This parameter can be any
-		*    combination of the following flags, but at least one flag must be used:
-		*    "Renderer::ClearFlag::COLOR", "Renderer::ClearFlag::DEPTH" and "Renderer::ClearFlag::STENCIL, see "Renderer::ClearFlag"-flags
-		*  @param[in] color
-		*    RGBA clear color (used if "Renderer::ClearFlag::COLOR" is set)
-		*  @param[in] z
-		*    Z clear value. (if "Renderer::ClearFlag::DEPTH" is set)
-		*    This parameter can be in the range from 0.0 through 1.0. A value of 0.0
-		*    represents the nearest distance to the viewer, and 1.0 the farthest distance.
-		*  @param[in] stencil
-		*    Value to clear the stencil-buffer with. This parameter can be in the range from
-		*    0 through 2^n–1, where n is the bit depth of the stencil buffer.
-		*
-		*  @note
-		*    - The current viewport(s) (see "Renderer::IRenderer::rsSetViewports()") does not affect the clear operation
-		*    - The current scissor rectangle(s) (see "Renderer::IRenderer::rsSetScissorRectangles()") does not affect the clear operation
-		*    - In case there are multiple active render targets, all render targets are cleared
-		*/
-		virtual void clear(uint32_t flags, const float color[4], float z, uint32_t stencil) = 0;
-
 		/**
 		*  @brief
 		*    Begin scene rendering
@@ -532,57 +398,21 @@ namespace Renderer
 
 		/**
 		*  @brief
+		*    Submit command buffer to renderer
+		*
+		*  @param[in] commandBuffer
+		*    Command buffer to submit
+		*/
+		virtual void submitCommandBuffer(const CommandBuffer& commandBuffer) = 0;
+
+		/**
+		*  @brief
 		*    End scene rendering
 		*
 		*  @note
 		*    - In order to be graphics API independent, call this method when you're done with rendering
 		*/
 		virtual void endScene() = 0;
-
-		//[-------------------------------------------------------]
-		//[ Draw call                                             ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Render the specified geometric primitive, based on an array of vertices instancing and indirect draw
-		*
-		*  @param[in] indirectBuffer
-		*    Indirect buffer to use, the indirect buffer must contain at least "numberOfDraws" instances of "Renderer::DrawInstancedArguments" starting at "indirectBufferOffset"
-		*  @param[in] indirectBufferOffset
-		*    Indirect buffer offset
-		*  @param[in] numberOfDraws
-		*    Number of draws, can be 0
-		*
-		*  @note
-		*    - Draw instanced is a shader model 4 feature, only supported if "Renderer::Capabilities::drawInstanced" is true
-		*    - In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
-		*      "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
-		*    - Fails if no vertex array is set
-		*    - If the multi-draw indirect feature is not supported this parameter, multiple draw calls are emitted
-		*    - If the draw indirect feature is not supported, a software indirect buffer is used and multiple draw calls are emitted
-		*/
-		virtual void draw(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
-
-		/**
-		*  @brief
-		*    Render the specified geometric primitive, based on indexing into an array of vertices, instancing and indirect draw
-		*
-		*  @param[in] indirectBuffer
-		*    Indirect buffer to use, the indirect buffer must contain at least "numberOfDraws" instances of "Renderer::DrawIndexedInstancedArguments" starting at bindirectBufferOffset"
-		*  @param[in] indirectBufferOffset
-		*    Indirect buffer offset
-		*  @param[in] numberOfDraws
-		*    Number of draws, can be 0
-		*
-		*  @note
-		*    - Instanced arrays is a shader model 3 feature, only supported if "Renderer::Capabilities::instancedArrays" is true
-		*    - Draw instanced is a shader model 4 feature, only supported if "Renderer::Capabilities::drawInstanced" is true
-		*    - This method draws indexed primitives from the current set of data input streams
-		*    - Fails if no index and/or vertex array is set
-		*    - If the multi-draw indirect feature is not supported this parameter, multiple draw calls are emitted
-		*    - If the draw indirect feature is not supported, a software indirect buffer is used and multiple draw calls are emitted
-		*/
-		virtual void drawIndexed(const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Synchronization                                       ]
@@ -598,42 +428,6 @@ namespace Renderer
 		*    Force the execution of render commands in finite time and wait until it's done (synchronization)
 		*/
 		virtual void finish() = 0;
-
-		//[-------------------------------------------------------]
-		//[ Debug                                                 ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set a debug marker
-		*
-		*  @param[in] name
-		*    Unicode name of the debug marker, must be valid (there's no internal null pointer test)
-		*
-		*  @see
-		*    - "isDebugEnabled()"
-		*/
-		virtual void setDebugMarker(const wchar_t *name) = 0;
-
-		/**
-		*  @brief
-		*    Begin debug event
-		*
-		*  @param[in] name
-		*    Unicode name of the debug event, must be valid (there's no internal null pointer test)
-		*
-		*  @see
-		*    - "isDebugEnabled()"
-		*/
-		virtual void beginDebugEvent(const wchar_t *name) = 0;
-
-		/**
-		*  @brief
-		*    End the last started debug event
-		*
-		*  @see
-		*    - "isDebugEnabled()"
-		*/
-		virtual void endDebugEvent() = 0;
 
 
 	//[-------------------------------------------------------]

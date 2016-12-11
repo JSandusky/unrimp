@@ -268,13 +268,15 @@ namespace Direct3D10Renderer
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain)
 		{
+			Direct3D10Renderer& direct3D10Renderer = static_cast<Direct3D10Renderer&>(getRenderer());
+
 			// Get the currently set render target
-			Renderer::IRenderTarget *renderTargetBackup = static_cast<Direct3D10Renderer&>(getRenderer()).omGetRenderTarget();
+			Renderer::IRenderTarget *renderTargetBackup = direct3D10Renderer.omGetRenderTarget();
 
 			// In case this swap chain is the current render target, we have to unset it before continuing
 			if (this == renderTargetBackup)
 			{
-				getRenderer().omSetRenderTarget(nullptr);
+				direct3D10Renderer.omSetRenderTarget(nullptr);
 			}
 			else
 			{
@@ -309,7 +311,7 @@ namespace Direct3D10Renderer
 				// If required, restore the previously set render target
 				if (nullptr != renderTargetBackup)
 				{
-					getRenderer().omSetRenderTarget(renderTargetBackup);
+					direct3D10Renderer.omSetRenderTarget(renderTargetBackup);
 				}
 			}
 		}

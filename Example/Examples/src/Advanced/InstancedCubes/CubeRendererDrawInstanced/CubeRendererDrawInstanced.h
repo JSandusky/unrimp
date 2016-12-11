@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include "Advanced/InstancedCubes/ICubeRenderer.h"
 
-#include <RendererRuntime/Command/CommandBuffer.h>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]

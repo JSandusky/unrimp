@@ -33,8 +33,6 @@
 #include "RendererRuntime/IRendererRuntime.h"
 #include "RendererRuntime/Core/Math/Math.h"
 
-#include <cassert>
-
 
 // Disable warnings
 // TODO(co) See "RendererRuntime::PipelineStateCompiler::PipelineStateCompiler()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)

@@ -36,7 +36,7 @@
 #include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-#include <Renderer/Public/Renderer.h>
+#include <algorithm>
 
 
 // Disable warnings

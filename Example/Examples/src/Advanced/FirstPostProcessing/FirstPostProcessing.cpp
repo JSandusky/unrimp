@@ -56,9 +56,6 @@ void FirstPostProcessing::onInitialization()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Create the buffer and texture manager
 		mBufferManager = renderer->createBufferManager();
 		mTextureManager = renderer->createTextureManager();
@@ -204,17 +201,11 @@ void FirstPostProcessing::onInitialization()
 
 		// Create the framebuffer object (FBO) instance by using the current window size
 		recreateFramebuffer();
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 
 void FirstPostProcessing::onDeinitialization()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
-
 	// Release the used resources
 	mCommandBufferSceneRendering.clear();
 	mCommandBufferPostProcessing.clear();
@@ -229,26 +220,17 @@ void FirstPostProcessing::onDeinitialization()
 	mBufferManager = nullptr;
 	mTextureManager = nullptr;
 
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(getRenderer())
-
 	// Call the base implementation
 	IApplicationRenderer::onDeinitialization();
 }
 
 void FirstPostProcessing::onResize()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
-
 	// Call the base implementation
 	IApplicationRenderer::onResize();
 
 	// Recreate the framebuffer object (FBO) instance by using the current window size
 	recreateFramebuffer();
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(getRenderer())
 }
 
 void FirstPostProcessing::onDraw()
@@ -257,15 +239,9 @@ void FirstPostProcessing::onDraw()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Submit command buffers to the renderer backend
 		mCommandBufferSceneRendering.submit(*renderer);
 		mCommandBufferPostProcessing.submit(*renderer);
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 
@@ -279,9 +255,6 @@ void FirstPostProcessing::recreateFramebuffer()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Get the window size
 		int width  = 0;
 		int height = 0;
@@ -304,9 +277,6 @@ void FirstPostProcessing::recreateFramebuffer()
 		mCommandBufferPostProcessing.clear();
 		fillCommandBufferSceneRendering();
 		fillCommandBufferPostProcessing();
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 

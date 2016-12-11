@@ -60,6 +60,7 @@
 	#include "OpenGLRenderer/Linux/ContextLinux.h"
 #endif
 
+#include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
 #include <cassert>
@@ -92,6 +93,188 @@ OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance(hand
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+	namespace
+	{
+		namespace detail
+		{
+
+
+			//[-------------------------------------------------------]
+			//[ Global functions                                      ]
+			//[-------------------------------------------------------]
+			namespace BackendDispatch
+			{
+
+
+				//[-------------------------------------------------------]
+				//[ Resource handling                                     ]
+				//[-------------------------------------------------------]
+				void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
+				{
+					const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
+					realData->uniformBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+				}
+
+				void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
+				{
+					const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
+					realData->textureBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Graphics root                                         ]
+				//[-------------------------------------------------------]
+				void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
+					static_cast<OpenGLRenderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
+				}
+
+				void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
+					static_cast<OpenGLRenderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				}
+
+				//[-------------------------------------------------------]
+				//[ States                                                ]
+				//[-------------------------------------------------------]
+				void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
+					static_cast<OpenGLRenderer&>(renderer).setPipelineState(realData->pipelineState);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Input-assembler (IA) stage                            ]
+				//[-------------------------------------------------------]
+				void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
+					static_cast<OpenGLRenderer&>(renderer).iaSetVertexArray(realData->vertexArray);
+				}
+
+				void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
+					static_cast<OpenGLRenderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Rasterizer (RS) stage                                 ]
+				//[-------------------------------------------------------]
+				void SetViewports(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
+					static_cast<OpenGLRenderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
+					static_cast<OpenGLRenderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Output-merger (OM) stage                              ]
+				//[-------------------------------------------------------]
+				void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
+					static_cast<OpenGLRenderer&>(renderer).omSetRenderTarget(realData->renderTarget);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Operations                                            ]
+				//[-------------------------------------------------------]
+				void Clear(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
+					static_cast<OpenGLRenderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Draw call                                             ]
+				//[-------------------------------------------------------]
+				void Draw(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<OpenGLRenderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<OpenGLRenderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Debug                                                 ]
+				//[-------------------------------------------------------]
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<OpenGLRenderer&>(renderer).setDebugMarker(realData->name);
+				}
+
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<OpenGLRenderer&>(renderer).beginDebugEvent(realData->name);
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<OpenGLRenderer&>(renderer).endDebugEvent();
+				}
+
+
+			}
+
+
+			//[-------------------------------------------------------]
+			//[ Global definitions                                    ]
+			//[-------------------------------------------------------]
+			static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
+			{
+				// Resource handling
+				&BackendDispatch::CopyUniformBufferData,
+				&BackendDispatch::CopyTextureBufferData,
+				// Graphics root
+				&BackendDispatch::SetGraphicsRootSignature,
+				&BackendDispatch::SetGraphicsRootDescriptorTable,
+				// States
+				&BackendDispatch::SetPipelineState,
+				// Input-assembler (IA) stage
+				&BackendDispatch::SetVertexArray,
+				&BackendDispatch::SetPrimitiveTopology,
+				// Rasterizer (RS) stage
+				&BackendDispatch::SetViewports,
+				&BackendDispatch::SetScissorRectangles,
+				// Output-merger (OM) stage
+				&BackendDispatch::SetRenderTarget,
+				// Operations
+				&BackendDispatch::Clear,
+				// Draw call
+				&BackendDispatch::Draw,
+				&BackendDispatch::DrawIndexed,
+				// Debug
+				&BackendDispatch::SetDebugMarker,
+				&BackendDispatch::BeginDebugEvent,
+				&BackendDispatch::EndDebugEvent
+			};
+
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+		} // detail
+	}
 
 
 	//[-------------------------------------------------------]
@@ -249,527 +432,6 @@ namespace OpenGLRenderer
 
 		// Destroy the OpenGL runtime linking instance
 		delete mOpenGLRuntimeLinking;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IRenderer methods            ]
-	//[-------------------------------------------------------]
-	const char *OpenGLRenderer::getName() const
-	{
-		return "OpenGL";
-	}
-
-	bool OpenGLRenderer::isInitialized() const
-	{
-		// Is the context initialized?
-		return (nullptr != mContext && mContext->isInitialized());
-	}
-
-	bool OpenGLRenderer::isDebugEnabled()
-	{
-		// OpenGL has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
-
-		// Debug disabled
-		return false;
-	}
-
-	Renderer::ISwapChain *OpenGLRenderer::getMainSwapChain() const
-	{
-		return mMainSwapChain;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Shader language                                       ]
-	//[-------------------------------------------------------]
-	uint32_t OpenGLRenderer::getNumberOfShaderLanguages() const
-	{
-		uint32_t numberOfShaderLanguages = 0;
-
-		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
-		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
-		{
-			// GLSL supported
-			++numberOfShaderLanguages;
-		}
-
-		// Done, return the number of supported shader languages
-		return numberOfShaderLanguages;
-	}
-
-	const char *OpenGLRenderer::getShaderLanguageName(uint32_t index) const
-	{
-		uint32_t currentIndex = 0;
-
-		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
-		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
-		{
-			// GLSL supported
-			if (currentIndex == index)
-			{
-				return ShaderLanguageMonolithic::NAME;	// "ShaderLanguageSeparate::NAME" has the same value
-			}
-			++currentIndex;
-		}
-
-		// Error!
-		return nullptr;
-	}
-
-	Renderer::IShaderLanguage *OpenGLRenderer::getShaderLanguage(const char *shaderLanguageName)
-	{
-		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
-		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
-		{
-			// In case "shaderLanguage" is a null pointer, use the default shader language
-			if (nullptr != shaderLanguageName)
-			{
-				// Optimization: Check for shader language name pointer match, first
-				// -> "ShaderLanguageSeparate::NAME" has the same value
-				if (shaderLanguageName == ShaderLanguageMonolithic::NAME || !stricmp(shaderLanguageName, ShaderLanguageMonolithic::NAME))
-				{
-					// Prefer "GL_ARB_separate_shader_objects" over "GL_ARB_shader_objects"
-					if (mExtensions->isGL_ARB_separate_shader_objects())
-					{
-						// If required, create the separate shader language instance right now
-						if (nullptr == mShaderLanguage)
-						{
-							mShaderLanguage = new ShaderLanguageSeparate(*this);
-							mShaderLanguage->addReference();	// Internal renderer reference
-						}
-
-						// Return the shader language instance
-						return mShaderLanguage;
-					}
-					else if (mExtensions->isGL_ARB_shader_objects())
-					{
-						// If required, create the monolithic shader language instance right now
-						if (nullptr == mShaderLanguage)
-						{
-							mShaderLanguage = new ShaderLanguageMonolithic(*this);
-							mShaderLanguage->addReference();	// Internal renderer reference
-						}
-
-						// Return the shader language instance
-						return mShaderLanguage;
-					}
-				}
-			}
-			else
-			{
-				// Return the shader language instance as default
-				return getShaderLanguage(ShaderLanguageMonolithic::NAME);
-			}
-		}
-
-		// Error!
-		return nullptr;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource creation                                     ]
-	//[-------------------------------------------------------]
-	Renderer::ISwapChain *OpenGLRenderer::createSwapChain(handle nativeWindowHandle)
-	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
-	}
-
-	Renderer::IFramebuffer *OpenGLRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
-	{
-		// "GL_ARB_framebuffer_object" required
-		if (mExtensions->isGL_ARB_framebuffer_object())
-		{
-			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
-			{
-				// Effective direct state access (DSA)
-				// -> Validation is done inside the framebuffer implementation
-				return new FramebufferDsa(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
-			}
-			else
-			{
-				// Traditional bind version
-				// -> Validation is done inside the framebuffer implementation
-				return new FramebufferBind(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
-			}
-		}
-		else
-		{
-			// Error!
-			return nullptr;
-		}
-	}
-
-	Renderer::IBufferManager *OpenGLRenderer::createBufferManager()
-	{
-		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureManager *OpenGLRenderer::createTextureManager()
-	{
-		return new TextureManager(*this);
-	}
-
-	Renderer::IRootSignature *OpenGLRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)
-	{
-		return new RootSignature(*this, rootSignature);
-	}
-
-	Renderer::IPipelineState *OpenGLRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
-	{
-		return new PipelineState(*this, pipelineState);
-	}
-
-	Renderer::ISamplerState *OpenGLRenderer::createSamplerState(const Renderer::SamplerState &samplerState)
-	{
-		// Is "GL_ARB_sampler_objects" there?
-		if (mExtensions->isGL_ARB_sampler_objects())
-		{
-			// Effective sampler object (SO)
-			return new SamplerStateSo(*this, samplerState);
-		}
-		else
-		{
-			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
-			{
-				// Direct state access (DSA) version to emulate a sampler object
-				return new SamplerStateDsa(*this, samplerState);
-			}
-			else
-			{
-				// Traditional bind version to emulate a sampler object
-				return new SamplerStateBind(*this, samplerState);
-			}
-		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource handling                                     ]
-	//[-------------------------------------------------------]
-	bool OpenGLRenderer::map(Renderer::IResource& resource, uint32_t, Renderer::MapType mapType, uint32_t, Renderer::MappedSubresource& mappedSubresource)
-	{
-		// Evaluate the resource type
-		switch (resource.getResourceType())
-		{
-			case Renderer::ResourceType::INDEX_BUFFER:
-			{
-				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
-
-				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					mappedSubresource.data		 = glMapNamedBufferEXT(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer(), Mapping::getOpenGLMapType(mapType));
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-				}
-				else
-				{
-					// Traditional bind version
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Backup the currently bound OpenGL array element buffer
-						GLint openGLArrayElementBufferBackup = 0;
-						glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, &openGLArrayElementBufferBackup);
-					#endif
-
-					// Bind this OpenGL element buffer and upload the data
-					glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
-
-					// Map
-					mappedSubresource.data		 = glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, Mapping::getOpenGLMapType(mapType));
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Be polite and restore the previous bound OpenGL array element buffer
-						glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, openGLArrayElementBufferBackup);
-					#endif
-				}
-
-				// Done
-				return true;
-			}
-
-			case Renderer::ResourceType::VERTEX_BUFFER:
-			{
-				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
-
-				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					mappedSubresource.data		 = glMapNamedBufferEXT(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer(), Mapping::getOpenGLMapType(mapType));
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-				}
-				else
-				{
-					// Traditional bind version
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Backup the currently bound OpenGL array buffer
-						GLint openGLArrayBufferBackup = 0;
-						glGetIntegerv(GL_ARRAY_BUFFER_BINDING_ARB, &openGLArrayBufferBackup);
-					#endif
-
-					// Bind this OpenGL array buffer and upload the data
-					glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
-
-					// Map
-					mappedSubresource.data		 = glMapBufferARB(GL_ARRAY_BUFFER_ARB, Mapping::getOpenGLMapType(mapType));
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Be polite and restore the previous bound OpenGL array buffer
-						glBindBufferARB(GL_ARRAY_BUFFER_ARB, openGLArrayBufferBackup);
-					#endif
-				}
-
-				// Done
-				return true;
-			}
-
-			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// TODO(co) Implement me
-				// return (S_OK == mD3D11DeviceContext->Map(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-				return false;
-
-			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// TODO(co) Implement me
-				// return (S_OK == mD3D11DeviceContext->Map(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-				return false;
-
-			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// TODO(co) Implement me
-				// return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-				return false;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				bool result = false;
-
-				// TODO(co) Implement me
-				/*
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Map the Direct3D 11 resource
-					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-				*/
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				bool result = false;
-
-				// TODO(co) Implement me
-				/*
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Map the Direct3D 11 resource
-					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-				*/
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::ROOT_SIGNATURE:
-			case Renderer::ResourceType::PROGRAM:
-			case Renderer::ResourceType::VERTEX_ARRAY:
-			case Renderer::ResourceType::SWAP_CHAIN:
-			case Renderer::ResourceType::FRAMEBUFFER:
-			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::SAMPLER_STATE:
-			case Renderer::ResourceType::VERTEX_SHADER:
-			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-			case Renderer::ResourceType::GEOMETRY_SHADER:
-			case Renderer::ResourceType::FRAGMENT_SHADER:
-			default:
-				// Nothing we can map, set known return values
-				mappedSubresource.data		 = nullptr;
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-
-				// Error!
-				return false;
-		}
-	}
-
-	void OpenGLRenderer::unmap(Renderer::IResource& resource, uint32_t)
-	{
-		// Evaluate the resource type
-		switch (resource.getResourceType())
-		{
-			case Renderer::ResourceType::INDEX_BUFFER:
-			{
-				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					glUnmapNamedBufferEXT(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
-				}
-				else
-				{
-					// Traditional bind version
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Backup the currently bound OpenGL array element buffer
-						GLint openGLArrayElementBufferBackup = 0;
-						glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, &openGLArrayElementBufferBackup);
-					#endif
-
-					// Bind this OpenGL element buffer and upload the data
-					glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
-
-					// Map
-					glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Be polite and restore the previous bound OpenGL array element buffer
-						glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, openGLArrayElementBufferBackup);
-					#endif
-				}
-				break;
-			}
-
-			case Renderer::ResourceType::VERTEX_BUFFER:
-			{
-				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					glUnmapNamedBufferEXT(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
-				}
-				else
-				{
-					// Traditional bind version
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Backup the currently bound OpenGL array buffer
-						GLint openGLArrayBufferBackup = 0;
-						glGetIntegerv(GL_ARRAY_BUFFER_BINDING_ARB, &openGLArrayBufferBackup);
-					#endif
-
-					// Bind this OpenGL array buffer and upload the data
-					glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
-
-					// Map
-					glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Be polite and restore the previous bound OpenGL array buffer
-						glBindBufferARB(GL_ARRAY_BUFFER_ARB, openGLArrayBufferBackup);
-					#endif
-				}
-				break;
-			}
-
-			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// TODO(co) Implement me
-				// mD3D11DeviceContext->Unmap(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource);
-				break;
-
-			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// TODO(co) Implement me
-				// mD3D11DeviceContext->Unmap(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource);
-				break;
-
-			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// TODO(co) Implement me
-				// mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
-				break;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				// TODO(co) Implement me
-				/*
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Unmap the Direct3D 11 resource
-					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-				*/
-				break;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				// TODO(co) Implement me
-				/*
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Unmap the Direct3D 11 resource
-					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-				*/
-				break;
-			}
-
-			case Renderer::ResourceType::ROOT_SIGNATURE:
-			case Renderer::ResourceType::PROGRAM:
-			case Renderer::ResourceType::VERTEX_ARRAY:
-			case Renderer::ResourceType::SWAP_CHAIN:
-			case Renderer::ResourceType::FRAMEBUFFER:
-			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::SAMPLER_STATE:
-			case Renderer::ResourceType::VERTEX_SHADER:
-			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-			case Renderer::ResourceType::GEOMETRY_SHADER:
-			case Renderer::ResourceType::FRAGMENT_SHADER:
-			default:
-				// Nothing we can unmap
-				break;
-		}
 	}
 
 
@@ -1426,23 +1088,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	bool OpenGLRenderer::beginScene()
-	{
-		// Not required when using OpenGL
-
-		// Done
-		return true;
-	}
-
-	void OpenGLRenderer::endScene()
-	{
-		// We need to forget about the currently set render target
-		omSetRenderTarget(nullptr);
-
-		// We need to forget about the currently set vertex array
-		iaUnsetVertexArray();
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
@@ -1642,20 +1287,6 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Synchronization                                       ]
-	//[-------------------------------------------------------]
-	void OpenGLRenderer::flush()
-	{
-		glFlush();
-	}
-
-	void OpenGLRenderer::finish()
-	{
-		glFinish();
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
 	void OpenGLRenderer::setDebugMarker(const wchar_t *)
@@ -1671,6 +1302,582 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::endDebugEvent()
 	{
 		// OpenGL has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderer methods            ]
+	//[-------------------------------------------------------]
+	const char *OpenGLRenderer::getName() const
+	{
+		return "OpenGL";
+	}
+
+	bool OpenGLRenderer::isInitialized() const
+	{
+		// Is the context initialized?
+		return (nullptr != mContext && mContext->isInitialized());
+	}
+
+	bool OpenGLRenderer::isDebugEnabled()
+	{
+		// OpenGL has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+
+		// Debug disabled
+		return false;
+	}
+
+	Renderer::ISwapChain *OpenGLRenderer::getMainSwapChain() const
+	{
+		return mMainSwapChain;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Shader language                                       ]
+	//[-------------------------------------------------------]
+	uint32_t OpenGLRenderer::getNumberOfShaderLanguages() const
+	{
+		uint32_t numberOfShaderLanguages = 0;
+
+		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
+		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
+		{
+			// GLSL supported
+			++numberOfShaderLanguages;
+		}
+
+		// Done, return the number of supported shader languages
+		return numberOfShaderLanguages;
+	}
+
+	const char *OpenGLRenderer::getShaderLanguageName(uint32_t index) const
+	{
+		uint32_t currentIndex = 0;
+
+		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
+		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
+		{
+			// GLSL supported
+			if (currentIndex == index)
+			{
+				return ShaderLanguageMonolithic::NAME;	// "ShaderLanguageSeparate::NAME" has the same value
+			}
+			++currentIndex;
+		}
+
+		// Error!
+		return nullptr;
+	}
+
+	Renderer::IShaderLanguage *OpenGLRenderer::getShaderLanguage(const char *shaderLanguageName)
+	{
+		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
+		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
+		{
+			// In case "shaderLanguage" is a null pointer, use the default shader language
+			if (nullptr != shaderLanguageName)
+			{
+				// Optimization: Check for shader language name pointer match, first
+				// -> "ShaderLanguageSeparate::NAME" has the same value
+				if (shaderLanguageName == ShaderLanguageMonolithic::NAME || !stricmp(shaderLanguageName, ShaderLanguageMonolithic::NAME))
+				{
+					// Prefer "GL_ARB_separate_shader_objects" over "GL_ARB_shader_objects"
+					if (mExtensions->isGL_ARB_separate_shader_objects())
+					{
+						// If required, create the separate shader language instance right now
+						if (nullptr == mShaderLanguage)
+						{
+							mShaderLanguage = new ShaderLanguageSeparate(*this);
+							mShaderLanguage->addReference();	// Internal renderer reference
+						}
+
+						// Return the shader language instance
+						return mShaderLanguage;
+					}
+					else if (mExtensions->isGL_ARB_shader_objects())
+					{
+						// If required, create the monolithic shader language instance right now
+						if (nullptr == mShaderLanguage)
+						{
+							mShaderLanguage = new ShaderLanguageMonolithic(*this);
+							mShaderLanguage->addReference();	// Internal renderer reference
+						}
+
+						// Return the shader language instance
+						return mShaderLanguage;
+					}
+				}
+			}
+			else
+			{
+				// Return the shader language instance as default
+				return getShaderLanguage(ShaderLanguageMonolithic::NAME);
+			}
+		}
+
+		// Error!
+		return nullptr;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource creation                                     ]
+	//[-------------------------------------------------------]
+	Renderer::ISwapChain *OpenGLRenderer::createSwapChain(handle nativeWindowHandle)
+	{
+		// The provided native window handle must not be a null handle
+		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+	}
+
+	Renderer::IFramebuffer *OpenGLRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	{
+		// "GL_ARB_framebuffer_object" required
+		if (mExtensions->isGL_ARB_framebuffer_object())
+		{
+			// Is "GL_EXT_direct_state_access" there?
+			if (mExtensions->isGL_EXT_direct_state_access())
+			{
+				// Effective direct state access (DSA)
+				// -> Validation is done inside the framebuffer implementation
+				return new FramebufferDsa(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
+			}
+			else
+			{
+				// Traditional bind version
+				// -> Validation is done inside the framebuffer implementation
+				return new FramebufferBind(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
+			}
+		}
+		else
+		{
+			// Error!
+			return nullptr;
+		}
+	}
+
+	Renderer::IBufferManager *OpenGLRenderer::createBufferManager()
+	{
+		return new BufferManager(*this);
+	}
+
+	Renderer::ITextureManager *OpenGLRenderer::createTextureManager()
+	{
+		return new TextureManager(*this);
+	}
+
+	Renderer::IRootSignature *OpenGLRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	{
+		return new RootSignature(*this, rootSignature);
+	}
+
+	Renderer::IPipelineState *OpenGLRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
+	{
+		return new PipelineState(*this, pipelineState);
+	}
+
+	Renderer::ISamplerState *OpenGLRenderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	{
+		// Is "GL_ARB_sampler_objects" there?
+		if (mExtensions->isGL_ARB_sampler_objects())
+		{
+			// Effective sampler object (SO)
+			return new SamplerStateSo(*this, samplerState);
+		}
+		else
+		{
+			// Is "GL_EXT_direct_state_access" there?
+			if (mExtensions->isGL_EXT_direct_state_access())
+			{
+				// Direct state access (DSA) version to emulate a sampler object
+				return new SamplerStateDsa(*this, samplerState);
+			}
+			else
+			{
+				// Traditional bind version to emulate a sampler object
+				return new SamplerStateBind(*this, samplerState);
+			}
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource handling                                     ]
+	//[-------------------------------------------------------]
+	bool OpenGLRenderer::map(Renderer::IResource& resource, uint32_t, Renderer::MapType mapType, uint32_t, Renderer::MappedSubresource& mappedSubresource)
+	{
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+			{
+				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
+
+				// Is "GL_EXT_direct_state_access" there?
+				if (mExtensions->isGL_EXT_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					mappedSubresource.data		 = glMapNamedBufferEXT(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer(), Mapping::getOpenGLMapType(mapType));
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+				}
+				else
+				{
+					// Traditional bind version
+
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Backup the currently bound OpenGL array element buffer
+						GLint openGLArrayElementBufferBackup = 0;
+						glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, &openGLArrayElementBufferBackup);
+					#endif
+
+					// Bind this OpenGL element buffer and upload the data
+					glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
+
+					// Map
+					mappedSubresource.data		 = glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, Mapping::getOpenGLMapType(mapType));
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Be polite and restore the previous bound OpenGL array element buffer
+						glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, openGLArrayElementBufferBackup);
+					#endif
+				}
+
+				// Done
+				return true;
+			}
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			{
+				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
+
+				// Is "GL_EXT_direct_state_access" there?
+				if (mExtensions->isGL_EXT_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					mappedSubresource.data		 = glMapNamedBufferEXT(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer(), Mapping::getOpenGLMapType(mapType));
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+				}
+				else
+				{
+					// Traditional bind version
+
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Backup the currently bound OpenGL array buffer
+						GLint openGLArrayBufferBackup = 0;
+						glGetIntegerv(GL_ARRAY_BUFFER_BINDING_ARB, &openGLArrayBufferBackup);
+					#endif
+
+					// Bind this OpenGL array buffer and upload the data
+					glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
+
+					// Map
+					mappedSubresource.data		 = glMapBufferARB(GL_ARRAY_BUFFER_ARB, Mapping::getOpenGLMapType(mapType));
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Be polite and restore the previous bound OpenGL array buffer
+						glBindBufferARB(GL_ARRAY_BUFFER_ARB, openGLArrayBufferBackup);
+					#endif
+				}
+
+				// Done
+				return true;
+			}
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+				// TODO(co) Implement me
+				// return (S_OK == mD3D11DeviceContext->Map(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+				return false;
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+				// TODO(co) Implement me
+				// return (S_OK == mD3D11DeviceContext->Map(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+				return false;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// TODO(co) Implement me
+				// return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+				return false;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				bool result = false;
+
+				// TODO(co) Implement me
+				/*
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Map the Direct3D 11 resource
+					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+				*/
+
+				// Done
+				return result;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				bool result = false;
+
+				// TODO(co) Implement me
+				/*
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Map the Direct3D 11 resource
+					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+				*/
+
+				// Done
+				return result;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can map, set known return values
+				mappedSubresource.data		 = nullptr;
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				// Error!
+				return false;
+		}
+	}
+
+	void OpenGLRenderer::unmap(Renderer::IResource& resource, uint32_t)
+	{
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+			{
+				// Is "GL_EXT_direct_state_access" there?
+				if (mExtensions->isGL_EXT_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					glUnmapNamedBufferEXT(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
+				}
+				else
+				{
+					// Traditional bind version
+
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Backup the currently bound OpenGL array element buffer
+						GLint openGLArrayElementBufferBackup = 0;
+						glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, &openGLArrayElementBufferBackup);
+					#endif
+
+					// Bind this OpenGL element buffer and upload the data
+					glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
+
+					// Map
+					glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
+
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Be polite and restore the previous bound OpenGL array element buffer
+						glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, openGLArrayElementBufferBackup);
+					#endif
+				}
+				break;
+			}
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			{
+				// Is "GL_EXT_direct_state_access" there?
+				if (mExtensions->isGL_EXT_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					glUnmapNamedBufferEXT(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
+				}
+				else
+				{
+					// Traditional bind version
+
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Backup the currently bound OpenGL array buffer
+						GLint openGLArrayBufferBackup = 0;
+						glGetIntegerv(GL_ARRAY_BUFFER_BINDING_ARB, &openGLArrayBufferBackup);
+					#endif
+
+					// Bind this OpenGL array buffer and upload the data
+					glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
+
+					// Map
+					glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
+
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Be polite and restore the previous bound OpenGL array buffer
+						glBindBufferARB(GL_ARRAY_BUFFER_ARB, openGLArrayBufferBackup);
+					#endif
+				}
+				break;
+			}
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+				// TODO(co) Implement me
+				// mD3D11DeviceContext->Unmap(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+				// TODO(co) Implement me
+				// mD3D11DeviceContext->Unmap(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// TODO(co) Implement me
+				// mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				// TODO(co) Implement me
+				/*
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				*/
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				// TODO(co) Implement me
+				/*
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				*/
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can unmap
+				break;
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Operations                                            ]
+	//[-------------------------------------------------------]
+	bool OpenGLRenderer::beginScene()
+	{
+		// Not required when using OpenGL
+
+		// Done
+		return true;
+	}
+
+	void OpenGLRenderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
+	{
+		// Loop through all commands
+		uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
+		Renderer::CommandPacket commandPacket = commandPacketBuffer;
+		while (nullptr != commandPacket)
+		{
+			{ // Submit command packet
+				const Renderer::CommandDispatchFunctionIndex commandDispatchFunctionIndex = Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(commandPacket);
+				const void* command = Renderer::CommandPacketHelper::loadCommand(commandPacket);
+				detail::DISPATCH_FUNCTIONS[commandDispatchFunctionIndex](command, *this);
+			}
+
+			{ // Next command
+				const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+				commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+			}
+		}
+	}
+
+	void OpenGLRenderer::endScene()
+	{
+		// We need to forget about the currently set render target
+		omSetRenderTarget(nullptr);
+
+		// We need to forget about the currently set vertex array
+		iaUnsetVertexArray();
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Synchronization                                       ]
+	//[-------------------------------------------------------]
+	void OpenGLRenderer::flush()
+	{
+		glFlush();
+	}
+
+	void OpenGLRenderer::finish()
+	{
+		glFinish();
 	}
 
 

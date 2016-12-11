@@ -43,6 +43,7 @@
 #include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
 #include "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
 
+#include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
 #include <cassert>
@@ -69,6 +70,186 @@ OPENGLES2RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES2RendererInstanc
 //[-------------------------------------------------------]
 namespace OpenGLES2Renderer
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+	namespace
+	{
+		namespace detail
+		{
+
+
+			//[-------------------------------------------------------]
+			//[ Global functions                                      ]
+			//[-------------------------------------------------------]
+			namespace BackendDispatch
+			{
+
+
+				//[-------------------------------------------------------]
+				//[ Resource handling                                     ]
+				//[-------------------------------------------------------]
+				void CopyUniformBufferData(const void*, Renderer::IRenderer&)
+				{
+					// Not supported by OpenGL ES 2
+				}
+
+				void CopyTextureBufferData(const void*, Renderer::IRenderer&)
+				{
+					// Not supported by OpenGL ES 2
+				}
+
+				//[-------------------------------------------------------]
+				//[ Graphics root                                         ]
+				//[-------------------------------------------------------]
+				void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
+				}
+
+				void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				}
+
+				//[-------------------------------------------------------]
+				//[ States                                                ]
+				//[-------------------------------------------------------]
+				void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).setPipelineState(realData->pipelineState);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Input-assembler (IA) stage                            ]
+				//[-------------------------------------------------------]
+				void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
+				}
+
+				void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Rasterizer (RS) stage                                 ]
+				//[-------------------------------------------------------]
+				void SetViewports(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				}
+
+				//[-------------------------------------------------------]
+				//[ Output-merger (OM) stage                              ]
+				//[-------------------------------------------------------]
+				void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).omSetRenderTarget(realData->renderTarget);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Operations                                            ]
+				//[-------------------------------------------------------]
+				void Clear(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Draw call                                             ]
+				//[-------------------------------------------------------]
+				void Draw(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+
+				//[-------------------------------------------------------]
+				//[ Debug                                                 ]
+				//[-------------------------------------------------------]
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).setDebugMarker(realData->name);
+				}
+
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).beginDebugEvent(realData->name);
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<OpenGLES2Renderer&>(renderer).endDebugEvent();
+				}
+
+
+			}
+
+
+			//[-------------------------------------------------------]
+			//[ Global definitions                                    ]
+			//[-------------------------------------------------------]
+			static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
+			{
+				// Resource handling
+				&BackendDispatch::CopyUniformBufferData,
+				&BackendDispatch::CopyTextureBufferData,
+				// Graphics root
+				&BackendDispatch::SetGraphicsRootSignature,
+				&BackendDispatch::SetGraphicsRootDescriptorTable,
+				// States
+				&BackendDispatch::SetPipelineState,
+				// Input-assembler (IA) stage
+				&BackendDispatch::SetVertexArray,
+				&BackendDispatch::SetPrimitiveTopology,
+				// Rasterizer (RS) stage
+				&BackendDispatch::SetViewports,
+				&BackendDispatch::SetScissorRectangles,
+				// Output-merger (OM) stage
+				&BackendDispatch::SetRenderTarget,
+				// Operations
+				&BackendDispatch::Clear,
+				// Draw call
+				&BackendDispatch::Draw,
+				&BackendDispatch::DrawIndexed,
+				// Debug
+				&BackendDispatch::SetDebugMarker,
+				&BackendDispatch::BeginDebugEvent,
+				&BackendDispatch::EndDebugEvent
+			};
+
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+		} // detail
+	}
 
 
 	//[-------------------------------------------------------]
@@ -171,401 +352,6 @@ namespace OpenGLES2Renderer
 
 		// Destroy the context instance
 		delete mContext;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IRenderer methods            ]
-	//[-------------------------------------------------------]
-	const char *OpenGLES2Renderer::getName() const
-	{
-		return "OpenGLES2";
-	}
-
-	bool OpenGLES2Renderer::isInitialized() const
-	{
-		// Is the context initialized?
-		return (EGL_NO_CONTEXT != mContext->getEGLContext());
-	}
-
-	bool OpenGLES2Renderer::isDebugEnabled()
-	{
-		// OpenGL ES 2 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
-
-		// Debug disabled
-		return false;
-	}
-
-	Renderer::ISwapChain *OpenGLES2Renderer::getMainSwapChain() const
-	{
-		return mMainSwapChain;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Shader language                                       ]
-	//[-------------------------------------------------------]
-	uint32_t OpenGLES2Renderer::getNumberOfShaderLanguages() const
-	{
-		return 1;
-	}
-
-	const char *OpenGLES2Renderer::getShaderLanguageName(uint32_t index) const
-	{
-		// Evaluate the provided index
-		switch (index)
-		{
-			case 0:
-				return ShaderLanguageGlsl::NAME;
-		}
-
-		// Error!
-		return nullptr;
-	}
-
-	Renderer::IShaderLanguage *OpenGLES2Renderer::getShaderLanguage(const char *shaderLanguageName)
-	{
-		// In case "shaderLanguage" is a null pointer, use the default shader language
-		if (nullptr != shaderLanguageName)
-		{
-			// Optimization: Check for shader language name pointer match, first
-			if (shaderLanguageName == ShaderLanguageGlsl::NAME || !stricmp(shaderLanguageName, ShaderLanguageGlsl::NAME))
-			{
-				// If required, create the GLSL shader language instance right now
-				if (nullptr == mShaderLanguageGlsl)
-				{
-					mShaderLanguageGlsl = new ShaderLanguageGlsl(*this);
-					mShaderLanguageGlsl->addReference();	// Internal renderer reference
-				}
-
-				// Return the shader language instance
-				return mShaderLanguageGlsl;
-			}
-
-			// Error!
-			return nullptr;
-		}
-
-		// Return the GLSL shader language instance as default
-		return getShaderLanguage(ShaderLanguageGlsl::NAME);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource creation                                     ]
-	//[-------------------------------------------------------]
-	Renderer::ISwapChain *OpenGLES2Renderer::createSwapChain(handle nativeWindowHandle)
-	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
-	}
-
-	Renderer::IFramebuffer *OpenGLES2Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
-	{
-		// Validation is done inside the framebuffer implementation
-		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
-	}
-
-	Renderer::IBufferManager *OpenGLES2Renderer::createBufferManager()
-	{
-		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureManager *OpenGLES2Renderer::createTextureManager()
-	{
-		return new TextureManager(*this);
-	}
-
-	Renderer::IRootSignature *OpenGLES2Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
-	{
-		return new RootSignature(*this, rootSignature);
-	}
-
-	Renderer::IPipelineState *OpenGLES2Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
-	{
-		return new PipelineState(*this, pipelineState);
-	}
-
-	Renderer::ISamplerState *OpenGLES2Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
-	{
-		return new SamplerState(*this, samplerState);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Resource handling                                     ]
-	//[-------------------------------------------------------]
-	bool OpenGLES2Renderer::map(Renderer::IResource& resource, uint32_t, Renderer::MapType mapType, uint32_t, Renderer::MappedSubresource& mappedSubresource)
-	{
-		// Evaluate the resource type
-		switch (resource.getResourceType())
-		{
-			case Renderer::ResourceType::INDEX_BUFFER:
-			{
-				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
-
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 2 array element buffer
-					GLint openGLES2ArrayElementBufferBackup = 0;
-					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
-				#endif
-
-				// Bind this OpenGL ES 2 element buffer and upload the data
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
-
-				// Map
-				mappedSubresource.data		 = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 2 array element buffer
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLES2ArrayElementBufferBackup);
-				#endif
-
-				// Done
-				return true;
-			}
-
-			case Renderer::ResourceType::VERTEX_BUFFER:
-			{
-				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
-
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 2 array buffer
-					GLint openGLES2ArrayBufferBackup = 0;
-					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
-				#endif
-
-				// Bind this OpenGL ES 2 array buffer and upload the data
-				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
-
-				// Map
-				mappedSubresource.data		 = glMapBufferOES(GL_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 2 array buffer
-					glBindBuffer(GL_ARRAY_BUFFER, openGLES2ArrayBufferBackup);
-				#endif
-
-				// Done
-				return true;
-			}
-
-			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// OpenGL ES 2 has no uniform buffer
-				// TODO(co) Error handling
-				return false;
-
-			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// OpenGL ES 2 has no texture buffer
-				// TODO(co) Error handling
-				return false;
-
-			case Renderer::ResourceType::INDIRECT_BUFFER:
-				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-				return true;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				bool result = false;
-
-				// TODO(co) Implement me
-				/*
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Map the Direct3D 11 resource
-					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-				*/
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				bool result = false;
-
-				// TODO(co) Implement me
-				/*
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Map the Direct3D 11 resource
-					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-				*/
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::ROOT_SIGNATURE:
-			case Renderer::ResourceType::PROGRAM:
-			case Renderer::ResourceType::VERTEX_ARRAY:
-			case Renderer::ResourceType::SWAP_CHAIN:
-			case Renderer::ResourceType::FRAMEBUFFER:
-			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::SAMPLER_STATE:
-			case Renderer::ResourceType::VERTEX_SHADER:
-			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-			case Renderer::ResourceType::GEOMETRY_SHADER:
-			case Renderer::ResourceType::FRAGMENT_SHADER:
-			default:
-				// Nothing we can map, set known return values
-				mappedSubresource.data		 = nullptr;
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-
-				// Error!
-				return false;
-		}
-	}
-
-	void OpenGLES2Renderer::unmap(Renderer::IResource& resource, uint32_t)
-	{
-		// Evaluate the resource type
-		switch (resource.getResourceType())
-		{
-			case Renderer::ResourceType::INDEX_BUFFER:
-			{
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 2 array element buffer
-					GLint openGLES2ArrayElementBufferBackup = 0;
-					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
-				#endif
-
-				// Bind this OpenGL ES 2 element buffer and upload the data
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
-
-				// Map
-				glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
-
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 2 array element buffer
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLES2ArrayElementBufferBackup);
-				#endif
-				break;
-			}
-
-			case Renderer::ResourceType::VERTEX_BUFFER:
-			{
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 2 array buffer
-					GLint openGLES2ArrayBufferBackup = 0;
-					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
-				#endif
-
-				// Bind this OpenGL ES 2 array buffer and upload the data
-				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
-
-				// Map
-				glUnmapBufferOES(GL_ARRAY_BUFFER);
-
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 2 array buffer
-					glBindBuffer(GL_ARRAY_BUFFER, openGLES2ArrayBufferBackup);
-				#endif
-				break;
-			}
-
-			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// OpenGL ES 2 has no uniform buffer
-				// TODO(co) Error handling
-				break;
-
-			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// OpenGL ES 2 has no texture buffer
-				// TODO(co) Error handling
-				break;
-
-			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// Nothing here, it's a software emulated indirect buffer
-				break;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				// TODO(co) Implement me
-				/*
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Unmap the Direct3D 11 resource
-					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-				*/
-				break;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				// TODO(co) Implement me
-				/*
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Unmap the Direct3D 11 resource
-					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-				*/
-				break;
-			}
-
-			case Renderer::ResourceType::ROOT_SIGNATURE:
-			case Renderer::ResourceType::PROGRAM:
-			case Renderer::ResourceType::VERTEX_ARRAY:
-			case Renderer::ResourceType::SWAP_CHAIN:
-			case Renderer::ResourceType::FRAMEBUFFER:
-			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::SAMPLER_STATE:
-			case Renderer::ResourceType::VERTEX_SHADER:
-			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-			case Renderer::ResourceType::GEOMETRY_SHADER:
-			case Renderer::ResourceType::FRAGMENT_SHADER:
-			default:
-				// Nothing we can unmap
-				break;
-		}
 	}
 
 
@@ -1079,23 +865,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	bool OpenGLES2Renderer::beginScene()
-	{
-		// Not required when using OpenGL ES 2
-
-		// Done
-		return true;
-	}
-
-	void OpenGLES2Renderer::endScene()
-	{
-		// We need to forget about the currently set render target
-		omSetRenderTarget(nullptr);
-
-		// We need to forget about the currently set vertex array
-		iaSetVertexArray(nullptr);
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
@@ -1169,20 +938,6 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Synchronization                                       ]
-	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::flush()
-	{
-		glFlush();
-	}
-
-	void OpenGLES2Renderer::finish()
-	{
-		glFinish();
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
 	void OpenGLES2Renderer::setDebugMarker(const wchar_t *)
@@ -1198,6 +953,456 @@ namespace OpenGLES2Renderer
 	void OpenGLES2Renderer::endDebugEvent()
 	{
 		// OpenGL ES 2 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderer methods            ]
+	//[-------------------------------------------------------]
+	const char *OpenGLES2Renderer::getName() const
+	{
+		return "OpenGLES2";
+	}
+
+	bool OpenGLES2Renderer::isInitialized() const
+	{
+		// Is the context initialized?
+		return (EGL_NO_CONTEXT != mContext->getEGLContext());
+	}
+
+	bool OpenGLES2Renderer::isDebugEnabled()
+	{
+		// OpenGL ES 2 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+
+		// Debug disabled
+		return false;
+	}
+
+	Renderer::ISwapChain *OpenGLES2Renderer::getMainSwapChain() const
+	{
+		return mMainSwapChain;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Shader language                                       ]
+	//[-------------------------------------------------------]
+	uint32_t OpenGLES2Renderer::getNumberOfShaderLanguages() const
+	{
+		return 1;
+	}
+
+	const char *OpenGLES2Renderer::getShaderLanguageName(uint32_t index) const
+	{
+		// Evaluate the provided index
+		switch (index)
+		{
+			case 0:
+				return ShaderLanguageGlsl::NAME;
+		}
+
+		// Error!
+		return nullptr;
+	}
+
+	Renderer::IShaderLanguage *OpenGLES2Renderer::getShaderLanguage(const char *shaderLanguageName)
+	{
+		// In case "shaderLanguage" is a null pointer, use the default shader language
+		if (nullptr != shaderLanguageName)
+		{
+			// Optimization: Check for shader language name pointer match, first
+			if (shaderLanguageName == ShaderLanguageGlsl::NAME || !stricmp(shaderLanguageName, ShaderLanguageGlsl::NAME))
+			{
+				// If required, create the GLSL shader language instance right now
+				if (nullptr == mShaderLanguageGlsl)
+				{
+					mShaderLanguageGlsl = new ShaderLanguageGlsl(*this);
+					mShaderLanguageGlsl->addReference();	// Internal renderer reference
+				}
+
+				// Return the shader language instance
+				return mShaderLanguageGlsl;
+			}
+
+			// Error!
+			return nullptr;
+		}
+
+		// Return the GLSL shader language instance as default
+		return getShaderLanguage(ShaderLanguageGlsl::NAME);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource creation                                     ]
+	//[-------------------------------------------------------]
+	Renderer::ISwapChain *OpenGLES2Renderer::createSwapChain(handle nativeWindowHandle)
+	{
+		// The provided native window handle must not be a null handle
+		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+	}
+
+	Renderer::IFramebuffer *OpenGLES2Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	{
+		// Validation is done inside the framebuffer implementation
+		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
+	}
+
+	Renderer::IBufferManager *OpenGLES2Renderer::createBufferManager()
+	{
+		return new BufferManager(*this);
+	}
+
+	Renderer::ITextureManager *OpenGLES2Renderer::createTextureManager()
+	{
+		return new TextureManager(*this);
+	}
+
+	Renderer::IRootSignature *OpenGLES2Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	{
+		return new RootSignature(*this, rootSignature);
+	}
+
+	Renderer::IPipelineState *OpenGLES2Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
+	{
+		return new PipelineState(*this, pipelineState);
+	}
+
+	Renderer::ISamplerState *OpenGLES2Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	{
+		return new SamplerState(*this, samplerState);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Resource handling                                     ]
+	//[-------------------------------------------------------]
+	bool OpenGLES2Renderer::map(Renderer::IResource& resource, uint32_t, Renderer::MapType mapType, uint32_t, Renderer::MappedSubresource& mappedSubresource)
+	{
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+			{
+				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Backup the currently bound OpenGL ES 2 array element buffer
+					GLint openGLES2ArrayElementBufferBackup = 0;
+					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
+				#endif
+
+				// Bind this OpenGL ES 2 element buffer and upload the data
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
+
+				// Map
+				mappedSubresource.data		 = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Be polite and restore the previous bound OpenGL ES 2 array element buffer
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLES2ArrayElementBufferBackup);
+				#endif
+
+				// Done
+				return true;
+			}
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			{
+				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Backup the currently bound OpenGL ES 2 array buffer
+					GLint openGLES2ArrayBufferBackup = 0;
+					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
+				#endif
+
+				// Bind this OpenGL ES 2 array buffer and upload the data
+				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
+
+				// Map
+				mappedSubresource.data		 = glMapBufferOES(GL_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Be polite and restore the previous bound OpenGL ES 2 array buffer
+					glBindBuffer(GL_ARRAY_BUFFER, openGLES2ArrayBufferBackup);
+				#endif
+
+				// Done
+				return true;
+			}
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+				// OpenGL ES 2 has no uniform buffer
+				// TODO(co) Error handling
+				return false;
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+				// OpenGL ES 2 has no texture buffer
+				// TODO(co) Error handling
+				return false;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return true;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				bool result = false;
+
+				// TODO(co) Implement me
+				/*
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Map the Direct3D 11 resource
+					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+				*/
+
+				// Done
+				return result;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				bool result = false;
+
+				// TODO(co) Implement me
+				/*
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Map the Direct3D 11 resource
+					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+				*/
+
+				// Done
+				return result;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can map, set known return values
+				mappedSubresource.data		 = nullptr;
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				// Error!
+				return false;
+		}
+	}
+
+	void OpenGLES2Renderer::unmap(Renderer::IResource& resource, uint32_t)
+	{
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+			{
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Backup the currently bound OpenGL ES 2 array element buffer
+					GLint openGLES2ArrayElementBufferBackup = 0;
+					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
+				#endif
+
+				// Bind this OpenGL ES 2 element buffer and upload the data
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
+
+				// Map
+				glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Be polite and restore the previous bound OpenGL ES 2 array element buffer
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLES2ArrayElementBufferBackup);
+				#endif
+				break;
+			}
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			{
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Backup the currently bound OpenGL ES 2 array buffer
+					GLint openGLES2ArrayBufferBackup = 0;
+					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
+				#endif
+
+				// Bind this OpenGL ES 2 array buffer and upload the data
+				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
+
+				// Map
+				glUnmapBufferOES(GL_ARRAY_BUFFER);
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Be polite and restore the previous bound OpenGL ES 2 array buffer
+					glBindBuffer(GL_ARRAY_BUFFER, openGLES2ArrayBufferBackup);
+				#endif
+				break;
+			}
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+				// OpenGL ES 2 has no uniform buffer
+				// TODO(co) Error handling
+				break;
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+				// OpenGL ES 2 has no texture buffer
+				// TODO(co) Error handling
+				break;
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+				// Nothing here, it's a software emulated indirect buffer
+				break;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				// TODO(co) Implement me
+				/*
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				*/
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				// TODO(co) Implement me
+				/*
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				*/
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can unmap
+				break;
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Operations                                            ]
+	//[-------------------------------------------------------]
+	bool OpenGLES2Renderer::beginScene()
+	{
+		// Not required when using OpenGL ES 2
+
+		// Done
+		return true;
+	}
+
+	void OpenGLES2Renderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
+	{
+		// Loop through all commands
+		uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
+		Renderer::CommandPacket commandPacket = commandPacketBuffer;
+		while (nullptr != commandPacket)
+		{
+			{ // Submit command packet
+				const Renderer::CommandDispatchFunctionIndex commandDispatchFunctionIndex = Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(commandPacket);
+				const void* command = Renderer::CommandPacketHelper::loadCommand(commandPacket);
+				detail::DISPATCH_FUNCTIONS[commandDispatchFunctionIndex](command, *this);
+			}
+
+			{ // Next command
+				const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+				commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+			}
+		}
+	}
+
+	void OpenGLES2Renderer::endScene()
+	{
+		// We need to forget about the currently set render target
+		omSetRenderTarget(nullptr);
+
+		// We need to forget about the currently set vertex array
+		iaSetVertexArray(nullptr);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Synchronization                                       ]
+	//[-------------------------------------------------------]
+	void OpenGLES2Renderer::flush()
+	{
+		glFlush();
+	}
+
+	void OpenGLES2Renderer::finish()
+	{
+		glFinish();
 	}
 
 

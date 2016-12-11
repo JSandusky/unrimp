@@ -123,7 +123,7 @@ namespace Direct3D10Renderer
 		if (nullptr != mD3D10Buffer && nullptr != data)
 		{
 			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&getRenderer())
+			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&static_cast<Direct3D10Renderer&>(getRenderer()))
 
 			// Update Direct3D 10 subresource data
 			void *direct3D10Data = nullptr;
@@ -135,7 +135,7 @@ namespace Direct3D10Renderer
 			}
 
 			// End debug event
-			RENDERER_END_DEBUG_EVENT(&getRenderer())
+			RENDERER_END_DEBUG_EVENT(&static_cast<Direct3D10Renderer&>(getRenderer()))
 		}
 	}
 

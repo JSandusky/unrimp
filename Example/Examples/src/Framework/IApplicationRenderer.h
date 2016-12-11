@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplication.h"
 
-#include <RendererRuntime/Command/CommandBuffer.h>
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]

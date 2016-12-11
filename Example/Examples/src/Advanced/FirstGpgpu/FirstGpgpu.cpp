@@ -99,9 +99,6 @@ int FirstGpgpu::run()
 //[-------------------------------------------------------]
 void FirstGpgpu::onInitialization()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
-
 	// Create the buffer and texture manager
 	mBufferManager = mRenderer->createBufferManager();
 	mTextureManager = mRenderer->createTextureManager();
@@ -262,16 +259,10 @@ void FirstGpgpu::onInitialization()
 	// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
 	fillCommandBufferContentGeneration();
 	fillCommandBufferContentProcessing();
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
 void FirstGpgpu::onDeinitialization()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
-
 	// Release the used resources
 	mCommandBufferContentGeneration.clear();
 	mCommandBufferContentProcessing.clear();
@@ -288,9 +279,6 @@ void FirstGpgpu::onDeinitialization()
 	}
 	mBufferManager = nullptr;
 	mTextureManager = nullptr;
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
 void FirstGpgpu::fillCommandBufferContentGeneration()
@@ -394,9 +382,6 @@ void FirstGpgpu::fillCommandBufferContentProcessing()
 
 void FirstGpgpu::onDoJob()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
-
 	// Generate the content of the 2D texture to process later on
 	// -> After this step, "mTexture2D[0]" holds the content we want to process later on
 	mCommandBufferContentGeneration.submit(*mRenderer);
@@ -418,7 +403,4 @@ void FirstGpgpu::onDoJob()
 		// Unmap the texture holding the processed content
 		mRenderer->unmap(*mTexture2D[1], 0);
 	}
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(mRenderer)
 }

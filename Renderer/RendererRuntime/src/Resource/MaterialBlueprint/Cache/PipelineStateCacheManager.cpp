@@ -29,8 +29,6 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

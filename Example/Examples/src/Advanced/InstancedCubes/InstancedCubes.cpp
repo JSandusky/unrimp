@@ -73,9 +73,6 @@ void InstancedCubes::onInitialization()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Create the cube renderer instance
 		// -> Evaluate the feature set of the used renderer
 		if (renderer->getCapabilities().drawInstanced && renderer->getCapabilities().maximumNumberOf2DTextureArraySlices > 0 && renderer->getCapabilities().maximumTextureBufferSize > 0)
@@ -94,26 +91,17 @@ void InstancedCubes::onInitialization()
 		{
 			mCubeRenderer->setNumberOfCubes(mNumberOfCubeInstances);
 		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 
 void InstancedCubes::onDeinitialization()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
-
 	// Destroy the cube renderer, in case there's one
 	if (nullptr != mCubeRenderer)
 	{
 		delete mCubeRenderer;
 		mCubeRenderer = nullptr;
 	}
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(getRenderer())
 
 	// Call the base implementation
 	IApplicationRendererRuntime::onDeinitialization();
@@ -212,9 +200,6 @@ void InstancedCubes::onDraw()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
-		// Begin debug event
-		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
-
 		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
@@ -265,8 +250,5 @@ void InstancedCubes::onDraw()
 				mCommandBuffer.submitAndClear(*renderer);
 			}
 		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }

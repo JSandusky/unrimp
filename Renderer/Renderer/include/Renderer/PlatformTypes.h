@@ -129,6 +129,9 @@
 	*    Pointer to the renderer instance to use, can be a null pointer
 	*  @param[in] name
 	*    Unicode name of the debug marker
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
 	#define RENDERER_SET_DEBUG_MARKER(renderer, name)
 
@@ -138,6 +141,9 @@
 	*
 	*  @param[in] renderer
 	*    Pointer to the renderer instance to use, can be a null pointer
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
 	#define RENDERER_SET_DEBUG_MARKER_FUNCTION(renderer)
 
@@ -149,6 +155,9 @@
 	*    Pointer to the renderer instance to use, can be a null pointer
 	*  @param[in] name
 	*    Unicode name of the debug event
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
 	#define RENDERER_BEGIN_DEBUG_EVENT(renderer, name)
 
@@ -158,6 +167,9 @@
 	*
 	*  @param[in] renderer
 	*    Pointer to the renderer instance to use, can be a null pointer
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
 	#define RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
@@ -167,6 +179,9 @@
 	*
 	*  @param[in] renderer
 	*    Pointer to the renderer instance to use, can be a null pointer
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
 	#define RENDERER_END_DEBUG_EVENT(renderer)
 
@@ -201,6 +216,9 @@
 	*    Pointer to the renderer instance to use, can be a null pointer
 	*  @param[in] name
 	*    Unicode name of the debug marker
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
 	#define RENDERER_SET_DEBUG_MARKER(renderer, name) if (nullptr != renderer) { (renderer)->setDebugMarker(name); }
 
@@ -210,6 +228,9 @@
 	*
 	*  @param[in] renderer
 	*    Pointer to the renderer instance to use, can be a null pointer
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
 	#define RENDERER_SET_DEBUG_MARKER_FUNCTION(renderer) if (nullptr != renderer) { (renderer)->setDebugMarker(RENDERER_INTERNAL__WFUNCTION__); }
 
@@ -221,6 +242,9 @@
 	*    Pointer to the renderer instance to use, can be a null pointer
 	*  @param[in] name
 	*    Unicode name of the debug event
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
 	#define RENDERER_BEGIN_DEBUG_EVENT(renderer, name) if (nullptr != renderer) { (renderer)->beginDebugEvent(name); }
 
@@ -230,6 +254,9 @@
 	*
 	*  @param[in] renderer
 	*    Pointer to the renderer instance to use, can be a null pointer
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
 	#define RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer) if (nullptr != renderer) { (renderer)->beginDebugEvent(RENDERER_INTERNAL__WFUNCTION__); }
 
@@ -239,6 +266,9 @@
 	*
 	*  @param[in] renderer
 	*    Pointer to the renderer instance to use, can be a null pointer
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
 	#define RENDERER_END_DEBUG_EVENT(renderer) if (nullptr != renderer) { (renderer)->endDebugEvent(); }
 
