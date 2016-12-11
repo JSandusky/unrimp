@@ -150,7 +150,7 @@ void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, R
 void BatchInstancedArrays::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const
 {
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBuffer)
+	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
 	{ // Setup input assembly (IA)
 		// Set the used vertex array
@@ -165,7 +165,7 @@ void BatchInstancedArrays::fillCommandBuffer(Renderer::CommandBuffer& commandBuf
 	Renderer::Command::DrawIndexed::create(commandBuffer, 36, mNumberOfCubeInstances);
 
 	// End debug event
-	RENDERER_END_DEBUG_EVENT2(commandBuffer)
+	COMMAND_END_DEBUG_EVENT(commandBuffer)
 }
 
 

@@ -39,10 +39,16 @@ namespace Renderer
 {
 
 
-	typedef void (*BackendDispatchFunction)(const void*, Renderer::IRenderer& renderer);
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef void (*BackendDispatchFunction)(const void*, IRenderer& renderer);
 	typedef void* CommandPacket;
 
 
+	//[-------------------------------------------------------]
+	//[ Global functions                                      ]
+	//[-------------------------------------------------------]
 	namespace CommandPacketHelper
 	{
 		static const uint32_t OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX	= 0u;
@@ -91,10 +97,24 @@ namespace Renderer
 			return reinterpret_cast<uint8_t*>(packet) + OFFSET_COMMAND;
 		}
 
+		/**
+		*  @brief
+		*    Return auxiliary memory address of the given command; returned memory address is considered unstable and might change as soon as another command is added
+		*/
 		template <typename T>
 		uint8_t* getAuxiliaryMemory(T* command)
 		{
 			return reinterpret_cast<uint8_t*>(command) + sizeof(T);
+		}
+
+		/**
+		*  @brief
+		*    Return auxiliary memory address of the given command; returned memory address is considered unstable and might change as soon as another command is added
+		*/
+		template <typename T>
+		const uint8_t* getAuxiliaryMemory(const T* command)
+		{
+			return reinterpret_cast<const uint8_t*>(command) + sizeof(T);
 		}
 
 	};
@@ -192,13 +212,12 @@ namespace Renderer
 		{
 			// How many command package buffer bytes are consumed by the command to add?
 			const uint32_t numberOfCommandBytes = CommandPacketHelper::getNumberOfBytes<U>(numberOfAuxiliaryBytes);
-			assert(numberOfCommandBytes < NUMBER_OF_BYTES_TO_GROW);
 
 			// Grow command packet buffer, if required
 			if (mCommandPacketBufferNumberOfBytes < mCurrentCommandPacketByteIndex + numberOfCommandBytes)
 			{
-				// Allocate new memory, grow using a known value
-				const uint32_t newCommandPacketBufferNumberOfBytes = mCommandPacketBufferNumberOfBytes + NUMBER_OF_BYTES_TO_GROW;
+				// Allocate new memory, grow using a known value but do also add the number of bytes consumed by the current command to add (many auxiliary bytes might be requested)
+				const uint32_t newCommandPacketBufferNumberOfBytes = mCommandPacketBufferNumberOfBytes + NUMBER_OF_BYTES_TO_GROW + numberOfCommandBytes;
 				uint8_t* newCommandPacketBuffer = new uint8_t[newCommandPacketBufferNumberOfBytes];
 
 				// Copy over current command package buffer content and free it, if required
@@ -237,7 +256,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Renderer to submit the command buffer to
 		*/
-		inline void submit(Renderer::IRenderer& renderer) const
+		inline void submit(IRenderer& renderer) const
 		{
 			CommandPacket commandPacket = mCommandPacketBuffer;
 			while (nullptr != commandPacket)
@@ -255,7 +274,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Renderer to submit the command buffer to
 		*/
-		inline void submitAndClear(Renderer::IRenderer& renderer)
+		inline void submitAndClear(IRenderer& renderer)
 		{
 			submit(renderer);
 			clear();
@@ -266,7 +285,7 @@ namespace Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline void submitCommandPacket(const CommandPacket packet, Renderer::IRenderer& renderer) const
+		inline void submitCommandPacket(const CommandPacket packet, IRenderer& renderer) const
 		{
 			const BackendDispatchFunction backendDispatchFunction = CommandPacketHelper::loadBackendDispatchFunction(packet);
 			const void* command = CommandPacketHelper::loadCommand(packet);
@@ -296,10 +315,66 @@ namespace Renderer
 	};
 
 
-
-
+	//[-------------------------------------------------------]
+	//[ Concrete commands                                     ]
+	//[-------------------------------------------------------]
 	namespace Command
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Resource handling                                     ]
+		//[-------------------------------------------------------]
+		struct CopyUniformBufferData
+		{
+			// Static methods
+			inline static void create(CommandBuffer& commandBuffer, IUniformBuffer* uniformBuffer, uint32_t size, void* data)
+			{
+				Command::CopyUniformBufferData* copyUniformBufferDataCommand = commandBuffer.addCommand<Command::CopyUniformBufferData>(size);
+				copyUniformBufferDataCommand->uniformBuffer = uniformBuffer;
+				copyUniformBufferDataCommand->size			= size;
+				copyUniformBufferDataCommand->data			= nullptr;
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(copyUniformBufferDataCommand), data, size);
+			}
+			// Constructor
+			inline CopyUniformBufferData(IUniformBuffer* _uniformBuffer, uint32_t _size, void* _data) :
+				uniformBuffer(_uniformBuffer),
+				size(_size),
+				data(_data)
+			{};
+			// Data
+			IUniformBuffer* uniformBuffer;
+			uint32_t		size;
+			void*			data;	///< If null pointer, command auxiliary memory is used instead
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
+		struct CopyTextureBufferData
+		{
+			// Static methods
+			inline static void create(CommandBuffer& commandBuffer, ITextureBuffer* textureBuffer, uint32_t size, void* data)
+			{
+				Command::CopyTextureBufferData* copyTextureBufferDataCommand = commandBuffer.addCommand<Command::CopyTextureBufferData>(size);
+				copyTextureBufferDataCommand->textureBuffer = textureBuffer;
+				copyTextureBufferDataCommand->size			= size;
+				copyTextureBufferDataCommand->data			= nullptr;
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(copyTextureBufferDataCommand), data, size);
+			}
+			// Constructor
+			inline CopyTextureBufferData(ITextureBuffer* _textureBuffer, uint32_t _size, void* _data) :
+				textureBuffer(_textureBuffer),
+				size(_size),
+				data(_data)
+			{};
+			// Data
+			ITextureBuffer* textureBuffer;
+			uint32_t		size;
+			void*			data;	///< If null pointer, command auxiliary memory is used instead
+			// Static data
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+		};
+
 		//[-------------------------------------------------------]
 		//[ Graphics root                                         ]
 		//[-------------------------------------------------------]
@@ -313,16 +388,16 @@ namespace Renderer
 		struct SetGraphicsRootSignature
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, Renderer::IRootSignature* rootSignature)
+			inline static void create(CommandBuffer& commandBuffer, IRootSignature* rootSignature)
 			{
 				*commandBuffer.addCommand<SetGraphicsRootSignature>() = SetGraphicsRootSignature(rootSignature);
 			}
 			// Constructor
-			inline SetGraphicsRootSignature(Renderer::IRootSignature* _rootSignature) :
+			inline SetGraphicsRootSignature(IRootSignature* _rootSignature) :
 				rootSignature(_rootSignature)
 			{};
 			// Data
-			Renderer::IRootSignature* rootSignature;
+			IRootSignature* rootSignature;
 			// Static data
 			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 		};
@@ -339,18 +414,18 @@ namespace Renderer
 		struct SetGraphicsRootDescriptorTable
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, uint32_t rootParameterIndex, Renderer::IResource* resource)
+			inline static void create(CommandBuffer& commandBuffer, uint32_t rootParameterIndex, IResource* resource)
 			{
 				*commandBuffer.addCommand<SetGraphicsRootDescriptorTable>() = SetGraphicsRootDescriptorTable(rootParameterIndex, resource);
 			}
 			// Constructor
-			inline SetGraphicsRootDescriptorTable(uint32_t _rootParameterIndex, Renderer::IResource* _resource) :
+			inline SetGraphicsRootDescriptorTable(uint32_t _rootParameterIndex, IResource* _resource) :
 				rootParameterIndex(_rootParameterIndex),
 				resource(_resource)
 			{};
 			// Data
-			uint32_t			 rootParameterIndex;
-			Renderer::IResource* resource;
+			uint32_t   rootParameterIndex;
+			IResource* resource;
 			// Static data
 			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 		};
@@ -368,16 +443,16 @@ namespace Renderer
 		struct SetPipelineState
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, Renderer::IPipelineState* pipelineState)
+			inline static void create(CommandBuffer& commandBuffer, IPipelineState* pipelineState)
 			{
 				*commandBuffer.addCommand<SetPipelineState>() = SetPipelineState(pipelineState);
 			}
 			// Constructor
-			inline SetPipelineState(Renderer::IPipelineState* _pipelineState) :
+			inline SetPipelineState(IPipelineState* _pipelineState) :
 				pipelineState(_pipelineState)
 			{};
 			// Data
-			Renderer::IPipelineState* pipelineState;
+			IPipelineState* pipelineState;
 			// Static data
 			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 		};
@@ -395,16 +470,16 @@ namespace Renderer
 		struct SetVertexArray
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, Renderer::IVertexArray* vertexArray)
+			inline static void create(CommandBuffer& commandBuffer, IVertexArray* vertexArray)
 			{
 				*commandBuffer.addCommand<SetVertexArray>() = SetVertexArray(vertexArray);
 			}
 			// Constructor
-			inline SetVertexArray(Renderer::IVertexArray* _vertexArray) :
+			inline SetVertexArray(IVertexArray* _vertexArray) :
 				vertexArray(_vertexArray)
 			{};
 			// Data
-			Renderer::IVertexArray* vertexArray;
+			IVertexArray* vertexArray;
 			// Static data
 			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 		};
@@ -419,16 +494,16 @@ namespace Renderer
 		struct SetPrimitiveTopology
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, Renderer::PrimitiveTopology primitiveTopology)
+			inline static void create(CommandBuffer& commandBuffer, PrimitiveTopology primitiveTopology)
 			{
 				*commandBuffer.addCommand<SetPrimitiveTopology>() = SetPrimitiveTopology(primitiveTopology);
 			}
 			// Constructor
-			inline SetPrimitiveTopology(Renderer::PrimitiveTopology _primitiveTopology) :
+			inline SetPrimitiveTopology(PrimitiveTopology _primitiveTopology) :
 				primitiveTopology(_primitiveTopology)
 			{};
 			// Data
-			Renderer::PrimitiveTopology primitiveTopology;
+			PrimitiveTopology primitiveTopology;
 			// Static data
 			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 		};
@@ -453,16 +528,16 @@ namespace Renderer
 		struct SetViewports
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, uint32_t numberOfViewports, const Renderer::Viewport* viewports)
+			inline static void create(CommandBuffer& commandBuffer, uint32_t numberOfViewports, const Viewport* viewports)
 			{
 				*commandBuffer.addCommand<SetViewports>() = SetViewports(numberOfViewports, viewports);
 			}
 			inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height)
 			{
-				SetViewports* setViewportsCommand = commandBuffer.addCommand<SetViewports>(sizeof(Renderer::Viewport));
+				SetViewports* setViewportsCommand = commandBuffer.addCommand<SetViewports>(sizeof(Viewport));
 
 				// Set command data
-				Renderer::Viewport* viewport = reinterpret_cast<Renderer::Viewport*>(CommandPacketHelper::getAuxiliaryMemory(setViewportsCommand));
+				Viewport* viewport = reinterpret_cast<Viewport*>(CommandPacketHelper::getAuxiliaryMemory(setViewportsCommand));
 				viewport->topLeftX = static_cast<float>(topLeftX);
 				viewport->topLeftY = static_cast<float>(topLeftY);
 				viewport->width	   = static_cast<float>(width);
@@ -472,16 +547,16 @@ namespace Renderer
 
 				// Finalize command
 				setViewportsCommand->numberOfViewports = 1;
-				setViewportsCommand->viewports		   = viewport;
+				setViewportsCommand->viewports		   = nullptr;
 			}
 			// Constructor
-			inline SetViewports(uint32_t _numberOfViewports, const Renderer::Viewport* _viewports) :
+			inline SetViewports(uint32_t _numberOfViewports, const Viewport* _viewports) :
 				numberOfViewports(_numberOfViewports),
 				viewports(_viewports)
 			{};
 			// Data
-			uint32_t				  numberOfViewports;
-			const Renderer::Viewport* viewports;
+			uint32_t		numberOfViewports;
+			const Viewport* viewports;	///< If null pointer, command auxiliary memory is used instead
 			// Static data
 			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 		};
@@ -502,16 +577,16 @@ namespace Renderer
 		struct SetScissorRectangles
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
+			inline static void create(CommandBuffer& commandBuffer, uint32_t numberOfScissorRectangles, const ScissorRectangle* scissorRectangles)
 			{
 				*commandBuffer.addCommand<SetScissorRectangles>() = SetScissorRectangles(numberOfScissorRectangles, scissorRectangles);
 			}
 			inline static void create(CommandBuffer& commandBuffer, long topLeftX, long topLeftY, long bottomRightX, long bottomRightY)
 			{
-				SetScissorRectangles* setScissorRectanglesCommand = commandBuffer.addCommand<SetScissorRectangles>(sizeof(Renderer::ScissorRectangle));
+				SetScissorRectangles* setScissorRectanglesCommand = commandBuffer.addCommand<SetScissorRectangles>(sizeof(ScissorRectangle));
 
 				// Set command data
-				Renderer::ScissorRectangle* scissorRectangle = reinterpret_cast<Renderer::ScissorRectangle*>(CommandPacketHelper::getAuxiliaryMemory(setScissorRectanglesCommand));
+				ScissorRectangle* scissorRectangle = reinterpret_cast<ScissorRectangle*>(CommandPacketHelper::getAuxiliaryMemory(setScissorRectanglesCommand));
 				scissorRectangle->topLeftX	   = topLeftX;
 				scissorRectangle->topLeftY	   = topLeftY;
 				scissorRectangle->bottomRightX = bottomRightX;
@@ -519,16 +594,16 @@ namespace Renderer
 
 				// Finalize command
 				setScissorRectanglesCommand->numberOfScissorRectangles = 1;
-				setScissorRectanglesCommand->scissorRectangles		   = scissorRectangle;
+				setScissorRectanglesCommand->scissorRectangles		   = nullptr;
 			}
 			// Constructor
-			inline SetScissorRectangles(uint32_t _numberOfScissorRectangles, const Renderer::ScissorRectangle* _scissorRectangles) :
+			inline SetScissorRectangles(uint32_t _numberOfScissorRectangles, const ScissorRectangle* _scissorRectangles) :
 				numberOfScissorRectangles(_numberOfScissorRectangles),
 				scissorRectangles(_scissorRectangles)
 			{};
 			// Data
-			uint32_t						  numberOfScissorRectangles;
-			const Renderer::ScissorRectangle* scissorRectangles;
+			uint32_t				numberOfScissorRectangles;
+			const ScissorRectangle* scissorRectangles;	///< If null pointer, command auxiliary memory is used instead
 			// Static data
 			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 		};
@@ -576,16 +651,16 @@ namespace Renderer
 		struct SetRenderTarget
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, Renderer::IRenderTarget* renderTarget)
+			inline static void create(CommandBuffer& commandBuffer, IRenderTarget* renderTarget)
 			{
 				*commandBuffer.addCommand<SetRenderTarget>() = SetRenderTarget(renderTarget);
 			}
 			// Constructor
-			inline SetRenderTarget(Renderer::IRenderTarget* _renderTarget) :
+			inline SetRenderTarget(IRenderTarget* _renderTarget) :
 				renderTarget(_renderTarget)
 			{};
 			// Data
-			Renderer::IRenderTarget* renderTarget;
+			IRenderTarget* renderTarget;
 			// Static data
 			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 		};
@@ -665,32 +740,34 @@ namespace Renderer
 		struct Draw
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1)
+			inline static void create(CommandBuffer& commandBuffer, const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1)
 			{
 				*commandBuffer.addCommand<Draw>() = Draw(indirectBuffer, indirectBufferOffset, numberOfDraws);
 			}
 			inline static void create(CommandBuffer& commandBuffer, uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0)
 			{
-				Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(Renderer::IndirectBuffer));
+				Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(IndirectBuffer));
 
-				// TODO(co) I'am sure there's a more elegant way to do this
-				Renderer::IndirectBuffer* indirectBuffer = reinterpret_cast<Renderer::IndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand));
-				Renderer::IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
-				memcpy(indirectBuffer, &indirectBufferData, sizeof(Renderer::IndirectBuffer));
+				// Set command data
+				IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
+				memcpy(reinterpret_cast<IndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indirectBufferData, sizeof(IndirectBuffer));
 
-				*drawCommand = Draw(*indirectBuffer, 0, 1);
+				// Finalize command
+				drawCommand->indirectBuffer		  = nullptr;
+				drawCommand->indirectBufferOffset = 0;
+				drawCommand->numberOfDraws		  = 1;
 			}
 
 			// Constructor
-			inline Draw(const Renderer::IIndirectBuffer& _indirectBuffer, uint32_t _indirectBufferOffset, uint32_t _numberOfDraws) :
+			inline Draw(const IIndirectBuffer& _indirectBuffer, uint32_t _indirectBufferOffset, uint32_t _numberOfDraws) :
 				indirectBuffer(&_indirectBuffer),
 				indirectBufferOffset(_indirectBufferOffset),
 				numberOfDraws(_numberOfDraws)
 			{};
 			// Data
-			const Renderer::IIndirectBuffer* indirectBuffer;
-			uint32_t						 indirectBufferOffset;
-			uint32_t						 numberOfDraws;
+			const IIndirectBuffer* indirectBuffer;	///< If null pointer, command auxiliary memory is used instead
+			uint32_t			   indirectBufferOffset;
+			uint32_t			   numberOfDraws;
 			// Static data
 			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 		};
@@ -717,43 +794,33 @@ namespace Renderer
 		struct DrawIndexed
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1)
+			inline static void create(CommandBuffer& commandBuffer, const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1)
 			{
 				*commandBuffer.addCommand<DrawIndexed>() = DrawIndexed(indirectBuffer, indirectBufferOffset, numberOfDraws);
 			}
 			inline static void create(CommandBuffer& commandBuffer, uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0)
 			{
-				DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(Renderer::IndexedIndirectBuffer));
+				DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(IndexedIndirectBuffer));
 
-				// TODO(co) I'am sure there's a more elegant way to do this
-				Renderer::IndexedIndirectBuffer* indexedIndirectBuffer = reinterpret_cast<Renderer::IndexedIndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand));
-				Renderer::IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
-				memcpy(indexedIndirectBuffer, &indexedIndirectBufferData, sizeof(Renderer::IndexedIndirectBuffer));
+				// Set command data
+				IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
+				memcpy(reinterpret_cast<IndexedIndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
 
-				*drawCommand = DrawIndexed(*indexedIndirectBuffer, 0, 1);
+				// Finalize command
+				drawCommand->indirectBuffer		  = nullptr;
+				drawCommand->indirectBufferOffset = 0;
+				drawCommand->numberOfDraws		  = 1;
 			}
 			// Constructor
-			inline DrawIndexed(const Renderer::IIndirectBuffer& _indirectBuffer, uint32_t _indirectBufferOffset, uint32_t _numberOfDraws) :
+			inline DrawIndexed(const IIndirectBuffer& _indirectBuffer, uint32_t _indirectBufferOffset, uint32_t _numberOfDraws) :
 				indirectBuffer(&_indirectBuffer),
 				indirectBufferOffset(_indirectBufferOffset),
 				numberOfDraws(_numberOfDraws)
 			{};
 			// Data
-			const Renderer::IIndirectBuffer* indirectBuffer;
-			uint32_t						 indirectBufferOffset;
-			uint32_t						 numberOfDraws;
-			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
-		};
-
-		//[-------------------------------------------------------]
-		//[ TODO(co)                                              ]
-		//[-------------------------------------------------------]
-		struct CopyUniformBufferData
-		{
-			Renderer::IUniformBuffer* uniformBufferDynamicVs;
-			uint32_t size;
-			void* data;
+			const IIndirectBuffer* indirectBuffer;	///< If null pointer, command auxiliary memory is used instead
+			uint32_t			   indirectBufferOffset;
+			uint32_t			   numberOfDraws;
 			// Static data
 			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 		};
@@ -843,15 +910,112 @@ namespace Renderer
 	}
 
 
-	// TODO(co) Move the following macros into the right place when finishing the command buffer implementation
-	#define RENDERER_SET_DEBUG_MARKER2(commandBuffer, name) Renderer::Command::SetDebugMarker::create(commandBuffer, name);
-	#define RENDERER_SET_DEBUG_MARKER_FUNCTION2(commandBuffer) Renderer::Command::SetDebugMarker::create(commandBuffer, RENDERER_INTERNAL__WFUNCTION__);
-	#define RENDERER_BEGIN_DEBUG_EVENT2(commandBuffer, name) Renderer::Command::BeginDebugEvent::create(commandBuffer, name);
-	#define RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBuffer) Renderer::Command::BeginDebugEvent::create(commandBuffer, RENDERER_INTERNAL__WFUNCTION__);
-	#define RENDERER_END_DEBUG_EVENT2(commandBuffer) Renderer::Command::EndDebugEvent::create(commandBuffer);
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Renderer
+
+
+//[-------------------------------------------------------]
+//[ Debug                                                 ]
+//[-------------------------------------------------------]
+// Debug macros
+#ifdef RENDERER_NO_DEBUG
+	/**
+	*  @brief
+	*    Set a debug marker
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*  @param[in] name
+	*    Unicode name of the debug marker
+	*/
+	#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name)
+
+	/**
+	*  @brief
+	*    Set a debug marker by using the current function name ("__FUNCTION__") as marker name
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*/
+	#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer)
+
+	/**
+	*  @brief
+	*    Begin debug event
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*  @param[in] name
+	*    Unicode name of the debug event
+	*/
+	#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name)
+
+	/**
+	*  @brief
+	*    Begin debug event by using the current function name ("__FUNCTION__") as event name
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*/
+	#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+
+	/**
+	*  @brief
+	*    End the last started debug event
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*/
+	#define COMMAND_END_DEBUG_EVENT(commandBuffer)
+#else
+	/**
+	*  @brief
+	*    Set a debug marker
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*  @param[in] name
+	*    Unicode name of the debug marker
+	*/
+	#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name) Renderer::Command::SetDebugMarker::create(commandBuffer, name);
+
+	/**
+	*  @brief
+	*    Set a debug marker by using the current function name ("__FUNCTION__") as marker name
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*/
+	#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer) Renderer::Command::SetDebugMarker::create(commandBuffer, RENDERER_INTERNAL__WFUNCTION__);
+
+	/**
+	*  @brief
+	*    Begin debug event
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*  @param[in] name
+	*    Unicode name of the debug event
+	*/
+	#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name) Renderer::Command::BeginDebugEvent::create(commandBuffer, name);
+
+	/**
+	*  @brief
+	*    Begin debug event by using the current function name ("__FUNCTION__") as event name
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*/
+	#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer) Renderer::Command::BeginDebugEvent::create(commandBuffer, RENDERER_INTERNAL__WFUNCTION__);
+
+	/**
+	*  @brief
+	*    End the last started debug event
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*/
+	#define COMMAND_END_DEBUG_EVENT(commandBuffer) Renderer::Command::EndDebugEvent::create(commandBuffer);
+#endif

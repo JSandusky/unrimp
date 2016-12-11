@@ -381,7 +381,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 				{
 					{ // Fill the command buffer
 						// Begin debug event
-						RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Draw into the main swap chain")
+						COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Draw into the main swap chain")
 
 						// Set the render target to render into
 						Renderer::Command::SetRenderTarget::create(mCommandBuffer, swapChain);
@@ -400,7 +400,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 						fillCommandBuffer(Color4::GRAY, mCommandBuffer);
 
 						// End debug event
-						RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+						COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 					}
 
 					// Submit command buffer to the renderer backend
@@ -424,7 +424,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 		{
 			{ // Fill the command buffer
 				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Render to the swap chain created in this example")
+				COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Render to the swap chain created in this example")
 
 				// Set the render target to render into
 				Renderer::Command::SetRenderTarget::create(mCommandBuffer, mSwapChain);
@@ -454,7 +454,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 				fillCommandBuffer(Color4::GREEN, mCommandBuffer);
 
 				// End debug event
-				RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+				COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 			}
 
 			// Submit command buffer to the renderer backend
@@ -483,7 +483,7 @@ void FirstMultipleSwapChains::fillCommandBuffer(const float color[4], Renderer::
 	assert(nullptr != mVertexArray);
 
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBuffer)
+	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
 	// Clear the color buffer of the current render target with the provided color, do also clear the depth buffer
 	Renderer::Command::Clear::create(commandBuffer, Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
@@ -506,5 +506,5 @@ void FirstMultipleSwapChains::fillCommandBuffer(const float color[4], Renderer::
 	Renderer::Command::Draw::create(commandBuffer, 3);
 
 	// End debug event
-	RENDERER_END_DEBUG_EVENT2(commandBuffer)
+	COMMAND_END_DEBUG_EVENT(commandBuffer)
 }

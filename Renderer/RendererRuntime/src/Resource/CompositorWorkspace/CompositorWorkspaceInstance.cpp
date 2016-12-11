@@ -111,7 +111,7 @@ namespace RendererRuntime
 				}
 
 				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
+				COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
 
 				// Make the main swap chain to the current render target
 				Renderer::Command::SetRenderTarget::create(mCommandBuffer, &renderTarget);
@@ -133,7 +133,7 @@ namespace RendererRuntime
 				}
 
 				// End debug event
-				RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+				COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 
 				// Submit command buffer to the renderer backend
 				mCommandBuffer.submitAndClear(renderer);

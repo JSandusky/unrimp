@@ -323,7 +323,7 @@ void FirstInstancing::fillCommandBuffer()
 	assert(mCommandBuffer.isEmpty());
 
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
+	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
 
 	// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 	Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
@@ -335,7 +335,7 @@ void FirstInstancing::fillCommandBuffer()
 	if (getRenderer()->getCapabilities().instancedArrays)
 	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Draw using instanced arrays")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Draw using instanced arrays")
 
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateInstancedArrays);
@@ -355,14 +355,14 @@ void FirstInstancing::fillCommandBuffer()
 		Renderer::Command::DrawIndexed::create(mCommandBuffer, 3, 2);
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+		COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 	}
 
 	// Right side (blue): Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
 	if (getRenderer()->getCapabilities().drawInstanced)
 	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Draw instanced")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Draw instanced")
 
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateDrawInstanced);
@@ -379,9 +379,9 @@ void FirstInstancing::fillCommandBuffer()
 		Renderer::Command::Draw::create(mCommandBuffer, 3, 2);
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+		COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 	}
 
 	// End debug event
-	RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+	COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 }

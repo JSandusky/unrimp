@@ -225,6 +225,7 @@ void FirstMesh::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used renderer resources
+	mCommandBuffer.clear();
 	mSamplerState = nullptr;
 	RendererRuntime::setUninitialized(mDiffuseTextureResourceId);
 	RendererRuntime::setUninitialized(mNormalTextureResourceId);
@@ -286,7 +287,7 @@ void FirstMesh::onDraw()
 	if (nullptr != renderer && nullptr != mPipelineState)
 	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
+		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
 
 		// Set the viewport and get the aspect ratio
 		float aspectRatio = 4.0f / 3.0f;
@@ -305,30 +306,30 @@ void FirstMesh::onDraw()
 		}
 
 		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
 		// Set the used graphics root signature
-		renderer->setGraphicsRootSignature(mRootSignature);
+		Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
 
 		// Set sampler and textures
-		renderer->setGraphicsRootDescriptorTable(0, mUniformBuffer);
-		renderer->setGraphicsRootDescriptorTable(1, mSamplerState);
-		renderer->setGraphicsRootDescriptorTable(2, diffuseTextureResource->getTexture());
-		renderer->setGraphicsRootDescriptorTable(3, normalTextureResource->getTexture());
-		renderer->setGraphicsRootDescriptorTable(4, specularTextureResource->getTexture());
-		renderer->setGraphicsRootDescriptorTable(5, emissiveTextureResource->getTexture());
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 0, mUniformBuffer);
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mSamplerState);
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, diffuseTextureResource->getTexture());
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 3, normalTextureResource->getTexture());
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, specularTextureResource->getTexture());
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 5, emissiveTextureResource->getTexture());
 
 		// Set the used pipeline state object (PSO)
-		renderer->setPipelineState(mPipelineState);
+		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
 
 		{ // Set uniform
 			// Calculate the object space to clip space matrix
-			glm::mat4 viewSpaceToClipSpace		= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);
-			glm::mat4 viewTranslate				= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -7.0f, -25.0f));
-			glm::mat4 worldSpaceToViewSpace		= glm::rotate(viewTranslate, mGlobalTimer, glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 objectSpaceToWorldSpace	= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-			glm::mat4 objectSpaceToViewSpace	= worldSpaceToViewSpace * objectSpaceToWorldSpace;
-			glm::mat4 objectSpaceToClipSpace	= viewSpaceToClipSpace * objectSpaceToViewSpace;
+			const glm::mat4 viewSpaceToClipSpace	= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);
+			const glm::mat4 viewTranslate			= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -7.0f, -25.0f));
+			const glm::mat4 worldSpaceToViewSpace	= glm::rotate(viewTranslate, mGlobalTimer, glm::vec3(0.0f, 1.0f, 0.0f));
+			const glm::mat4 objectSpaceToWorldSpace	= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+				  glm::mat4 objectSpaceToViewSpace	= worldSpaceToViewSpace * objectSpaceToWorldSpace;
+			const glm::mat4 objectSpaceToClipSpace	= viewSpaceToClipSpace * objectSpaceToViewSpace;
 
 			// Upload the uniform data
 			// -> Two versions: One using an uniform buffer and one setting an individual uniform
@@ -348,10 +349,11 @@ void FirstMesh::onDraw()
 				memcpy(uniformBlockDynamicVS.objectSpaceToViewSpaceMatrix, glm::value_ptr(objectSpaceToViewSpace), sizeof(float) * 4 * 4);
 
 				// Copy data
-				mUniformBuffer->copyDataFrom(sizeof(UniformBlockDynamicVs), &uniformBlockDynamicVS);
+				Renderer::Command::CopyUniformBufferData::create(mCommandBuffer, mUniformBuffer, sizeof(UniformBlockDynamicVs), &uniformBlockDynamicVS);
 			}
 			else
 			{
+				// TODO(co) Not compatible with command buffer: This certainly is going to be removed, we need to implement internal uniform buffer emulation
 				// Set uniforms
 				mProgram->setUniformMatrix4fv(mObjectSpaceToClipSpaceMatrixUniformHandle, glm::value_ptr(objectSpaceToClipSpace));
 				mProgram->setUniformMatrix3fv(mObjectSpaceToViewSpaceMatrixUniformHandle, glm::value_ptr(glm::mat3(objectSpaceToViewSpace)));
@@ -362,11 +364,23 @@ void FirstMesh::onDraw()
 			const RendererRuntime::MeshResource* meshResource = rendererRuntime->getMeshResourceManager().getMeshResources().tryGetElementById(mMeshResourceId);
 			if (nullptr != meshResource)
 			{
-				meshResource->draw();
+				{ // Setup input assembly (IA)
+					// Set the used vertex array
+					Renderer::Command::SetVertexArray::create(mCommandBuffer, meshResource->getVertexArrayPtr());
+
+					// Set the primitive topology used for draw calls
+					Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
+				}
+
+				// Render the specified geometric primitive, based on indexing into an array of vertices
+				Renderer::Command::DrawIndexed::create(mCommandBuffer, meshResource->getNumberOfIndices());
 			}
 		}
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
+		COMMAND_END_DEBUG_EVENT(mCommandBuffer)
+
+		// Submit command buffer to the renderer backend
+		mCommandBuffer.submitAndClear(*renderer);
 	}
 }

@@ -143,7 +143,7 @@ namespace RendererRuntime
 	void RenderQueue::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
 	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBuffer)
+		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
 		// TODO(co) This is just a dummy implementation
 
@@ -290,7 +290,7 @@ namespace RendererRuntime
 											{
 												const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
 												const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource->getInstanceTextureBuffer();
-												instanceBufferManager.fillBuffer(*passBufferManager, instanceUniformBuffer, instanceTextureBuffer, renderable.getRenderableManager().getTransform(), *materialTechnique);
+												instanceBufferManager.fillBuffer(*passBufferManager, instanceUniformBuffer, instanceTextureBuffer, renderable.getRenderableManager().getTransform(), *materialTechnique, commandBuffer);
 											}
 										}
 
@@ -309,7 +309,7 @@ namespace RendererRuntime
 		}
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT2(commandBuffer)
+		COMMAND_END_DEBUG_EVENT(commandBuffer)
 	}
 
 

@@ -81,12 +81,6 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Draw the mesh
-		*/
-		RENDERERRUNTIME_API_EXPORT void draw() const;
-
 		//[-------------------------------------------------------]
 		//[ Data                                                  ]
 		//[-------------------------------------------------------]

@@ -434,7 +434,7 @@ void Fxaa::fillCommandBufferSceneRendering()
 	assert(mCommandBufferSceneRendering.isEmpty());
 
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBufferSceneRendering)
+	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBufferSceneRendering)
 
 	// This in here is of course just an example. In a real application
 	// there would be no point in constantly updating texture content
@@ -473,7 +473,7 @@ void Fxaa::fillCommandBufferSceneRendering()
 	Renderer::Command::SetRenderTarget::create(mCommandBufferSceneRendering, getRenderer()->getMainSwapChain());
 
 	// End debug event
-	RENDERER_END_DEBUG_EVENT2(mCommandBufferSceneRendering)
+	COMMAND_END_DEBUG_EVENT(mCommandBufferSceneRendering)
 }
 
 void Fxaa::fillCommandBufferPostProcessing()
@@ -487,7 +487,7 @@ void Fxaa::fillCommandBufferPostProcessing()
 	assert(mCommandBufferPostProcessing.isEmpty());
 
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBufferPostProcessing)
+	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBufferPostProcessing)
 
 	// We don't need to clear the current render target because our fullscreen quad covers the full screen
 
@@ -513,5 +513,5 @@ void Fxaa::fillCommandBufferPostProcessing()
 	Renderer::Command::Draw::create(mCommandBufferPostProcessing, 4);
 
 	// End debug event
-	RENDERER_END_DEBUG_EVENT2(mCommandBufferPostProcessing)
+	COMMAND_END_DEBUG_EVENT(mCommandBufferPostProcessing)
 }

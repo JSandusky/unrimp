@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRenderer.h"
 
-#include <RendererRuntime/Command/CommandBuffer.h>
-
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]

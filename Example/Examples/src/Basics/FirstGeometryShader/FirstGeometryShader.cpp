@@ -198,7 +198,7 @@ void FirstGeometryShader::fillCommandBuffer()
 	assert(mCommandBuffer.isEmpty());
 
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
+	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
 
 	// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 	Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
@@ -223,5 +223,5 @@ void FirstGeometryShader::fillCommandBuffer()
 	Renderer::Command::Draw::create(mCommandBuffer, 1);
 
 	// End debug event
-	RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+	COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 }

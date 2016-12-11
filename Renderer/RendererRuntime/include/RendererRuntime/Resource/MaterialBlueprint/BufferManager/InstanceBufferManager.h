@@ -98,9 +98,12 @@ namespace RendererRuntime
 		*    Object space to world space transform
 		*  @param[in] materialTechnique
 		*    Used material technique
+		*  @param[out] commandBuffer
+		*    Command buffer to fill
 		*/
 		void fillBuffer(PassBufferManager& passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer,
-						const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique);
+						const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer, const Transform& objectSpaceToWorldSpaceTransform,
+						MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer);
 
 		/**
 		*  @brief

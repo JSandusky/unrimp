@@ -941,9 +941,6 @@
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp">
       <Filter>Source Files\Resource\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Mesh\MeshResource.cpp">
-      <Filter>Source Files\Resource\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Mesh\Loader\MeshResourceLoader.cpp">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
     </ClCompile>

@@ -130,7 +130,7 @@ void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Ren
 void BatchDrawInstanced::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const
 {
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBuffer)
+	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
 	// Set the used texture
 	Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 0, mTextureBufferPerInstanceData);
@@ -143,7 +143,7 @@ void BatchDrawInstanced::fillCommandBuffer(Renderer::CommandBuffer& commandBuffe
 	Renderer::Command::DrawIndexed::create(commandBuffer, 36, mNumberOfCubeInstances);
 
 	// End debug event
-	RENDERER_END_DEBUG_EVENT2(commandBuffer)
+	COMMAND_END_DEBUG_EVENT(commandBuffer)
 }
 
 

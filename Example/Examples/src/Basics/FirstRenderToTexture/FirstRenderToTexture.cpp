@@ -232,11 +232,11 @@ void FirstRenderToTexture::fillCommandBuffer()
 	assert(mCommandBuffer.isEmpty());
 
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
+	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
 
 	{ // Render to texture
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Render to texture")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Render to texture")
 
 		// This in here is of course just an example. In a real application
 		// there would be no point in constantly updating texture content
@@ -258,12 +258,12 @@ void FirstRenderToTexture::fillCommandBuffer()
 		Renderer::Command::SetRenderTarget::create(mCommandBuffer, getRenderer()->getMainSwapChain());
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+		COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 	}
 
 	{ // Use the render to texture result
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Use the render to texture result")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Use the render to texture result")
 
 		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
@@ -290,9 +290,9 @@ void FirstRenderToTexture::fillCommandBuffer()
 		Renderer::Command::Draw::create(mCommandBuffer, 3);
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+		COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 	}
 
 	// End debug event
-	RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+	COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 }

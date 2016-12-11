@@ -90,7 +90,7 @@ namespace RendererRuntime
 		mTextureBuffer->release();
 	}
 
-	void InstanceBufferManager::fillBuffer(PassBufferManager& passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer, const MaterialBlueprintResource::TextureBuffer*, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique)
+	void InstanceBufferManager::fillBuffer(PassBufferManager& passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer, const MaterialBlueprintResource::TextureBuffer*, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer)
 	{
 		// TODO(co) This is just a placeholder implementation until "RendererRuntime::InstanceBufferManager" is ready
 
@@ -181,8 +181,9 @@ namespace RendererRuntime
 		}
 
 		// Update the uniform and texture buffer by using our scratch buffer
-		mUniformBuffer->copyDataFrom(mUniformScratchBuffer.size(), mUniformScratchBuffer.data());
-		mTextureBuffer->copyDataFrom(mTextureScratchBuffer.size(), mTextureScratchBuffer.data());
+		// TODO(co) This is just a dummy implementation, so full uniform buffer size to stress the command buffer
+		Renderer::Command::CopyUniformBufferData::create(commandBuffer, mUniformBuffer, mUniformScratchBuffer.size(), mUniformScratchBuffer.data());
+		Renderer::Command::CopyTextureBufferData::create(commandBuffer, mTextureBuffer, mTextureScratchBuffer.size(), mTextureScratchBuffer.data());
 	}
 
 	void InstanceBufferManager::fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer)

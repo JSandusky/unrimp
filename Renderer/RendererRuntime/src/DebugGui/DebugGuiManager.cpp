@@ -154,7 +154,7 @@ namespace RendererRuntime
 			// Begin debug event
 			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
 			Renderer::IBufferManager& bufferManager = mRendererRuntime.getBufferManager();
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(commandBuffer)
+			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
 			{ // Vertex and index buffers
 				// Create and grow vertex/index buffers if needed
@@ -187,6 +187,7 @@ namespace RendererRuntime
 				}
 
 				{ // Copy and convert all vertices and indices into a single contiguous buffer
+					// TODO(co) Not compatible with command buffer: This certainly is going to be changed
 					Renderer::MappedSubresource vertexBufferMappedSubresource;
 					if (renderer.map(*mVertexBufferPtr, 0, Renderer::MapType::WRITE_DISCARD, 0, vertexBufferMappedSubresource))
 					{
@@ -227,10 +228,11 @@ namespace RendererRuntime
 				// Copy data
 				if (nullptr != mVertexShaderUniformBuffer)
 				{
-					mVertexShaderUniformBuffer->copyDataFrom(sizeof(objectSpaceToClipSpaceMatrix), objectSpaceToClipSpaceMatrix);
+					Renderer::Command::CopyUniformBufferData::create(commandBuffer, mVertexShaderUniformBuffer, sizeof(objectSpaceToClipSpaceMatrix), objectSpaceToClipSpaceMatrix);
 				}
 				else
 				{
+					// TODO(co) Not compatible with command buffer: This certainly is going to be removed, we need to implement internal uniform buffer emulation
 					mProgram->setUniformMatrix4fv(mObjectSpaceToClipSpaceMatrixUniformHandle, &objectSpaceToClipSpaceMatrix[0][0]);
 				}
 			}
@@ -284,7 +286,7 @@ namespace RendererRuntime
 			}
 
 			// End debug event
-			RENDERER_END_DEBUG_EVENT2(commandBuffer)
+			COMMAND_END_DEBUG_EVENT(commandBuffer)
 		}
 	}
 

@@ -30,8 +30,6 @@
 #include "Framework/Stopwatch.h"
 #include "Framework/IApplicationRendererRuntime.h"
 
-#include <RendererRuntime/Command/CommandBuffer.h>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]

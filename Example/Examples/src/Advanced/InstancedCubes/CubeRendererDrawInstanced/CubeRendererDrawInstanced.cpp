@@ -473,7 +473,7 @@ void CubeRendererDrawInstanced::fillCommandBuffer()
 	assert(mCommandBuffer.isEmpty());
 
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
+	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
 
 	// Set the used graphics root signature
 	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
@@ -508,5 +508,5 @@ void CubeRendererDrawInstanced::fillCommandBuffer()
 	}
 
 	// End debug event
-	RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+	COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 }

@@ -295,7 +295,7 @@ void VertexBuffer::fillCommandBuffer()
 	assert(mCommandBuffer.isEmpty());
 
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION2(mCommandBuffer)
+	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
 
 	// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 	Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
@@ -307,7 +307,7 @@ void VertexBuffer::fillCommandBuffer()
 	if (nullptr != mPipelineStateVBO)
 	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Draw using one VBO")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Draw using one VBO")
 
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateVBO);
@@ -324,14 +324,14 @@ void VertexBuffer::fillCommandBuffer()
 		Renderer::Command::Draw::create(mCommandBuffer, 3);
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+		COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 	}
 
 	// Second upper triangle using multiple vertex buffer object (VBO)
 	if (nullptr != mPipelineStateVBOs)
 	{
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT2(mCommandBuffer, L"Draw using multiple VBOs")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Draw using multiple VBOs")
 
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateVBOs);
@@ -348,9 +348,9 @@ void VertexBuffer::fillCommandBuffer()
 		Renderer::Command::Draw::create(mCommandBuffer, 3);
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+		COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 	}
 
 	// End debug event
-	RENDERER_END_DEBUG_EVENT2(mCommandBuffer)
+	COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 }
