@@ -162,38 +162,37 @@ namespace Renderer
 	}
 
 
-	namespace Command
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	const BackendDispatchFunction CommandBuffer::DISPATCH_FUNCTIONS[CommandDispatchFunctionIndex::NumberOfFunctions] =
 	{
-
-
 		// Resource handling
-		const BackendDispatchFunction CopyUniformBufferData::DISPATCH_FUNCTION = &BackendDispatch::CopyUniformBufferData;
-		const BackendDispatchFunction CopyTextureBufferData::DISPATCH_FUNCTION = &BackendDispatch::CopyTextureBufferData;
+		&BackendDispatch::CopyUniformBufferData,
+		&BackendDispatch::CopyTextureBufferData,
 		// Graphics root
-		const BackendDispatchFunction SetGraphicsRootSignature::DISPATCH_FUNCTION		= &BackendDispatch::SetGraphicsRootSignature;
-		const BackendDispatchFunction SetGraphicsRootDescriptorTable::DISPATCH_FUNCTION = &BackendDispatch::SetGraphicsRootDescriptorTable;
+		&BackendDispatch::SetGraphicsRootSignature,
+		&BackendDispatch::SetGraphicsRootDescriptorTable,
 		// States
-		const BackendDispatchFunction SetPipelineState::DISPATCH_FUNCTION = &BackendDispatch::SetPipelineState;
+		&BackendDispatch::SetPipelineState,
 		// Input-assembler (IA) stage
-		const BackendDispatchFunction SetVertexArray::DISPATCH_FUNCTION		  = &BackendDispatch::SetVertexArray;
-		const BackendDispatchFunction SetPrimitiveTopology::DISPATCH_FUNCTION = &BackendDispatch::SetPrimitiveTopology;
+		&BackendDispatch::SetVertexArray,
+		&BackendDispatch::SetPrimitiveTopology,
 		// Rasterizer (RS) stage
-		const BackendDispatchFunction SetViewports::DISPATCH_FUNCTION		  = &BackendDispatch::SetViewports;
-		const BackendDispatchFunction SetScissorRectangles::DISPATCH_FUNCTION = &BackendDispatch::SetScissorRectangles;
+		&BackendDispatch::SetViewports,
+		&BackendDispatch::SetScissorRectangles,
 		// Output-merger (OM) stage
-		const BackendDispatchFunction SetRenderTarget::DISPATCH_FUNCTION = &BackendDispatch::SetRenderTarget;
+		&BackendDispatch::SetRenderTarget,
 		// Operations
-		const BackendDispatchFunction Clear::DISPATCH_FUNCTION = &BackendDispatch::Clear;
+		&BackendDispatch::Clear,
 		// Draw call
-		const BackendDispatchFunction Draw::DISPATCH_FUNCTION		 = &BackendDispatch::Draw;
-		const BackendDispatchFunction DrawIndexed::DISPATCH_FUNCTION = &BackendDispatch::DrawIndexed;
+		&BackendDispatch::Draw,
+		&BackendDispatch::DrawIndexed,
 		// Debug
-		const BackendDispatchFunction SetDebugMarker::DISPATCH_FUNCTION	 = &BackendDispatch::SetDebugMarker;
-		const BackendDispatchFunction BeginDebugEvent::DISPATCH_FUNCTION = &BackendDispatch::BeginDebugEvent;
-		const BackendDispatchFunction EndDebugEvent::DISPATCH_FUNCTION	 = &BackendDispatch::EndDebugEvent;
-
-
-	}
+		&BackendDispatch::SetDebugMarker,
+		&BackendDispatch::BeginDebugEvent,
+		&BackendDispatch::EndDebugEvent
+	};
 
 
 //[-------------------------------------------------------]

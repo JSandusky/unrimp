@@ -42,6 +42,37 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
+	enum CommandDispatchFunctionIndex : uint8_t
+	{
+		// Resource handling
+		CopyUniformBufferData = 0,
+		CopyTextureBufferData,
+		// Graphics root
+		SetGraphicsRootSignature,
+		SetGraphicsRootDescriptorTable,
+		// States
+		SetPipelineState,
+		// Input-assembler (IA) stage
+		SetVertexArray,
+		SetPrimitiveTopology,
+		// Rasterizer (RS) stage
+		SetViewports,
+		SetScissorRectangles,
+		// Output-merger (OM) stage
+		SetRenderTarget,
+		// Operations
+		Clear,
+		// Draw call
+		Draw,
+		DrawIndexed,
+		// Debug
+		SetDebugMarker,
+		BeginDebugEvent,
+		EndDebugEvent,
+		// Done
+		NumberOfFunctions
+	};
+
 	typedef void (*BackendDispatchFunction)(const void*, IRenderer& renderer);
 	typedef void* CommandPacket;
 
@@ -53,7 +84,7 @@ namespace Renderer
 	{
 		static const uint32_t OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX	= 0u;
 		static const uint32_t OFFSET_BACKEND_DISPATCH_FUNCTION		= OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX + sizeof(uint32_t);
-		static const uint32_t OFFSET_COMMAND						= OFFSET_BACKEND_DISPATCH_FUNCTION + sizeof(BackendDispatchFunction);
+		static const uint32_t OFFSET_COMMAND						= OFFSET_BACKEND_DISPATCH_FUNCTION + sizeof(CommandDispatchFunctionIndex);
 
 		template <typename T>
 		uint32_t getNumberOfBytes(uint32_t numberOfAuxiliaryBytes)
@@ -71,19 +102,19 @@ namespace Renderer
 			*reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(packet) + OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX) = nextPacketByteIndex;
 		}
 
-		inline BackendDispatchFunction* getBackendDispatchFunction(const CommandPacket packet)
+		inline CommandDispatchFunctionIndex* getCommandDispatchFunctionIndex(const CommandPacket packet)
 		{
-			return reinterpret_cast<BackendDispatchFunction*>(reinterpret_cast<uint8_t*>(packet) + OFFSET_BACKEND_DISPATCH_FUNCTION);
+			return reinterpret_cast<CommandDispatchFunctionIndex*>(reinterpret_cast<uint8_t*>(packet) + OFFSET_BACKEND_DISPATCH_FUNCTION);
 		}
 
-		inline void storeBackendDispatchFunction(const CommandPacket packet, BackendDispatchFunction dispatchFunction)
+		inline void storeBackendDispatchFunctionIndex(const CommandPacket packet, CommandDispatchFunctionIndex commandDispatchFunctionIndex)
 		{
-			*CommandPacketHelper::getBackendDispatchFunction(packet) = dispatchFunction;
+			*getCommandDispatchFunctionIndex(packet) = commandDispatchFunctionIndex;
 		}
 
-		inline const BackendDispatchFunction loadBackendDispatchFunction(const CommandPacket packet)
+		inline CommandDispatchFunctionIndex loadCommandDispatchFunctionIndex(const CommandPacket packet)
 		{
-			return *getBackendDispatchFunction(packet);
+			return *getCommandDispatchFunctionIndex(packet);
 		}
 
 		template <typename T>
@@ -118,7 +149,6 @@ namespace Renderer
 		}
 
 	};
-
 
 
 	//[-------------------------------------------------------]
@@ -241,7 +271,7 @@ namespace Renderer
 				CommandPacketHelper::storeNextCommandPacketByteIndex(&mCommandPacketBuffer[mPreviousCommandPacketByteIndex], mCurrentCommandPacketByteIndex);
 			}
 			CommandPacketHelper::storeNextCommandPacketByteIndex(commandPacket, ~0u);
-			CommandPacketHelper::storeBackendDispatchFunction(commandPacket, U::DISPATCH_FUNCTION);
+			CommandPacketHelper::storeBackendDispatchFunctionIndex(commandPacket, U::COMMAND_DISPATCH_FUNCTION_INDEX);
 			mPreviousCommandPacketByteIndex = mCurrentCommandPacketByteIndex;
 			mCurrentCommandPacketByteIndex += numberOfCommandBytes;
 
@@ -287,9 +317,9 @@ namespace Renderer
 	private:
 		inline void submitCommandPacket(const CommandPacket packet, IRenderer& renderer) const
 		{
-			const BackendDispatchFunction backendDispatchFunction = CommandPacketHelper::loadBackendDispatchFunction(packet);
+			const CommandDispatchFunctionIndex commandDispatchFunctionIndex = CommandPacketHelper::loadCommandDispatchFunctionIndex(packet);
 			const void* command = CommandPacketHelper::loadCommand(packet);
-			backendDispatchFunction(command, renderer);
+			DISPATCH_FUNCTIONS[commandDispatchFunctionIndex](command, renderer);
 		}
 
 
@@ -298,6 +328,8 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	private:
 		static const uint32_t NUMBER_OF_BYTES_TO_GROW = 8192;
+
+		RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTIONS[CommandDispatchFunctionIndex::NumberOfFunctions];
 
 
 	//[-------------------------------------------------------]
@@ -347,7 +379,7 @@ namespace Renderer
 			uint32_t		size;
 			void*			data;	///< If null pointer, command auxiliary memory is used instead
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyUniformBufferData;
 		};
 
 		struct CopyTextureBufferData
@@ -372,7 +404,7 @@ namespace Renderer
 			uint32_t		size;
 			void*			data;	///< If null pointer, command auxiliary memory is used instead
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyTextureBufferData;
 		};
 
 		//[-------------------------------------------------------]
@@ -399,7 +431,7 @@ namespace Renderer
 			// Data
 			IRootSignature* rootSignature;
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsRootSignature;
 		};
 
 		/**
@@ -427,7 +459,7 @@ namespace Renderer
 			uint32_t   rootParameterIndex;
 			IResource* resource;
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsRootDescriptorTable;
 		};
 
 		//[-------------------------------------------------------]
@@ -454,7 +486,7 @@ namespace Renderer
 			// Data
 			IPipelineState* pipelineState;
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetPipelineState;
 		};
 
 		//[-------------------------------------------------------]
@@ -481,7 +513,7 @@ namespace Renderer
 			// Data
 			IVertexArray* vertexArray;
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetVertexArray;
 		};
 
 		/**
@@ -505,7 +537,7 @@ namespace Renderer
 			// Data
 			PrimitiveTopology primitiveTopology;
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetPrimitiveTopology;
 		};
 
 		//[-------------------------------------------------------]
@@ -558,7 +590,7 @@ namespace Renderer
 			uint32_t		numberOfViewports;
 			const Viewport* viewports;	///< If null pointer, command auxiliary memory is used instead
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetViewports;
 		};
 
 		/**
@@ -605,7 +637,7 @@ namespace Renderer
 			uint32_t				numberOfScissorRectangles;
 			const ScissorRectangle* scissorRectangles;	///< If null pointer, command auxiliary memory is used instead
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetScissorRectangles;
 		};
 
 		/**
@@ -662,7 +694,7 @@ namespace Renderer
 			// Data
 			IRenderTarget* renderTarget;
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetRenderTarget;
 		};
 
 		//[-------------------------------------------------------]
@@ -712,7 +744,7 @@ namespace Renderer
 			float	 z;
 			uint32_t stencil;
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::Clear;
 		};
 
 		//[-------------------------------------------------------]
@@ -769,7 +801,7 @@ namespace Renderer
 			uint32_t			   indirectBufferOffset;
 			uint32_t			   numberOfDraws;
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::Draw;
 		};
 
 		/**
@@ -822,7 +854,7 @@ namespace Renderer
 			uint32_t			   indirectBufferOffset;
 			uint32_t			   numberOfDraws;
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::DrawIndexed;
 		};
 
 		//[-------------------------------------------------------]
@@ -855,7 +887,7 @@ namespace Renderer
 			// Data
 			wchar_t name[64];
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetDebugMarker;
 		};
 
 		/**
@@ -885,7 +917,7 @@ namespace Renderer
 			// Data
 			wchar_t name[64];
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::BeginDebugEvent;
 		};
 
 		/**
@@ -903,7 +935,7 @@ namespace Renderer
 				commandBuffer.addCommand<EndDebugEvent>();
 			}
 			// Static data
-			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::EndDebugEvent;
 		};
 
 
