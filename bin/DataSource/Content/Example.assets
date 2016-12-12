@@ -7,12 +7,12 @@
 	"Assets":
 	{
 		"0": "MaterialBlueprint/DepthOnly.asset",
-		"1": "Material/Imrod.asset",
-		"2": "Mesh/Imrod.asset",
-		"4": "Texture/ImrodDiffuseMap.asset",
-		"5": "Texture/ImrodEmissiveMap.asset",
-		"6": "Texture/ImrodNormalMap.asset",
-		"7": "Texture/ImrodSpecularMap.asset",
+		"1": "Material/Imrod/Imrod.asset",
+		"2": "Mesh/Imrod/Imrod.asset",
+		"4": "Texture/Imrod/ImrodDiffuseMap.asset",
+		"5": "Texture/Imrod/ImrodEmissiveMap.asset",
+		"6": "Texture/Imrod/ImrodNormalMap.asset",
+		"7": "Texture/Imrod/ImrodSpecularMap.asset",
 		"8": "Scene/FirstScene.asset",
 		"9": "CompositorNode/First.asset",
 		"10": "CompositorWorkspace/First.asset",
