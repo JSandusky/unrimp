@@ -62,7 +62,7 @@ message(STATUS "Operation system + architecture: ${OS_ARCHITECTURE}")
 
 # Ouput paths and create the directories
 set(OUTPUT_BIN_DIR "${CMAKE_SOURCE_DIR}/bin/${OS_ARCHITECTURE}")
-message(STATUS "Output binary directory: "${OUTPUT_BIN_DIR})
+message(STATUS "Output binary directory: ${OUTPUT_BIN_DIR}")
 file(MAKE_DIRECTORY ${OUTPUT_BIN_DIR})
 set(OUTPUT_LIB_DIR "${CMAKE_SOURCE_DIR}/lib/${OS_ARCHITECTURE}")
 message(STATUS "Output library directory: ${OUTPUT_LIB_DIR}")
@@ -142,5 +142,5 @@ endif()
 ##################################################
 add_subdirectory(Renderer)
 if(EXAMPLES)
-	add_subdirectory(Examples)
+	add_subdirectory(Example/Examples)
 endif()
