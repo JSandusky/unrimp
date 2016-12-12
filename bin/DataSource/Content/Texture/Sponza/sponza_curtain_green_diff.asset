@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "85",
+			"AssetType": "Texture",
+			"AssetCategory": "Scene",
+			"AssetName": "sponza_curtain_green_diff",
+			"FileDependencies": [ "sponza_curtain_green_diff.tga" ],
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"TextureAssetCompiler":
+		{
+			"InputFile": "sponza_curtain_green_diff.tga",
+			"TextureSemantic": "DiffuseMap"
+		}
+	}
+}

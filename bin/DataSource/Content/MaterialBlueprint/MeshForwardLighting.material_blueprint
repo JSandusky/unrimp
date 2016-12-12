@@ -477,9 +477,9 @@
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_LINEAR",
-					"AddressU": "CLAMP",
-					"AddressV": "CLAMP",
-					"AddressW": "CLAMP",
+					"AddressU": "WRAP",
+					"AddressV": "WRAP",
+					"AddressW": "WRAP",
 					"MipLODBias": "0.0",
 					"MaxAnisotropy": "16",
 					"ComparisonFunc": "NEVER",

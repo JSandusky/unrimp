@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "28",
+			"AssetType": "Texture",
+			"AssetCategory": "Scene",
+			"AssetName": "vase_round",
+			"FileDependencies": [ "vase_round.tga" ],
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"TextureAssetCompiler":
+		{
+			"InputFile": "vase_round.tga",
+			"TextureSemantic": "DiffuseMap"
+		}
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "36",
+			"AssetType": "Texture",
+			"AssetCategory": "Scene",
+			"AssetName": "background",
+			"FileDependencies": [ "background.tga" ],
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"TextureAssetCompiler":
+		{
+			"InputFile": "background.tga",
+			"TextureSemantic": "DiffuseMap"
+		}
+	}
+}
