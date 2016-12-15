@@ -39,26 +39,6 @@ namespace RendererRuntime
 
 	/**
 	*  @brief
-	*    Check whether or not the given variable has not the uninitialized default value
-	*/
-	template <typename TYPE>
-	bool isInitialized(const TYPE& value)
-	{
-		return (getUninitialized<TYPE>() != value);
-	}
-
-	/**
-	*  @brief
-	*    Check whether or not the given variable has the uninitialized default value
-	*/
-	template <typename TYPE>
-	bool isUninitialized(const TYPE& value)
-	{
-		return (getUninitialized<TYPE>() == value);
-	}
-
-	/**
-	*  @brief
 	*    Return uninitialized default value for a given type
 	*/
 	template <typename TYPE>
@@ -85,6 +65,25 @@ namespace RendererRuntime
 	void setUninitialized(TYPE& value)
 	{
 		value = getUninitialized<TYPE>();
+	}
+/**
+	*  @brief
+	*    Check whether or not the given variable has not the uninitialized default value
+	*/
+	template <typename TYPE>
+	bool isInitialized(const TYPE& value)
+	{
+		return (getUninitialized<TYPE>() != value);
+	}
+
+	/**
+	*  @brief
+	*    Check whether or not the given variable has the uninitialized default value
+	*/
+	template <typename TYPE>
+	bool isUninitialized(const TYPE& value)
+	{
+		return (getUninitialized<TYPE>() == value);
 	}
 
 
