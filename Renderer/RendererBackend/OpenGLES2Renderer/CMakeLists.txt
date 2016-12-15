@@ -48,34 +48,34 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/OpenGLES2/incl
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
+	src/Buffer/BufferManager.cpp
+	src/Buffer/IndexBuffer.cpp
+	src/Buffer/IndirectBuffer.cpp
+	src/Buffer/VertexArray.cpp
+	src/Buffer/VertexArrayNoVao.cpp
+	src/Buffer/VertexArrayVao.cpp
+	src/Buffer/VertexBuffer.cpp
 	src/ContextRuntimeLinking.cpp
 	src/ExtensionsRuntimeLinking.cpp
-	src/Framebuffer.cpp
 	src/IContext.cpp
 	src/IExtensions.cpp
-	src/IndexBuffer.cpp
 	src/Mapping.cpp
 	src/OpenGLES2Renderer.cpp
-	src/PipelineState.cpp
-	src/SamplerState.cpp
-	src/SwapChain.cpp
-	src/Texture2D.cpp
-	src/Texture2DArray.cpp
-	src/VertexArray.cpp
-	src/VertexArrayNoVao.cpp
-	src/VertexArrayVao.cpp
-	src/VertexBuffer.cpp
+	src/RenderTarget/Framebuffer.cpp
+	src/RenderTarget/SwapChain.cpp
+	src/RootSignature.cpp
+	src/Shader/FragmentShaderGlsl.cpp
+	src/Shader/ProgramGlsl.cpp
+	src/Shader/ShaderLanguageGlsl.cpp
+	src/Shader/VertexShaderGlsl.cpp
 	src/State/BlendState.cpp
 	src/State/DepthStencilState.cpp
+	src/State/PipelineState.cpp
 	src/State/RasterizerState.cpp
-	src/Shader/FragmentShader.cpp
-	src/Shader/FragmentShaderGlsl.cpp
-	src/Shader/Program.cpp
-	src/Shader/ProgramGlsl.cpp
-	src/Shader/ShaderLanguage.cpp
-	src/Shader/ShaderLanguageGlsl.cpp
-	src/Shader/VertexShader.cpp
-	src/Shader/VertexShaderGlsl.cpp
+	src/State/SamplerState.cpp
+	src/Texture/Texture2D.cpp
+	src/Texture/Texture2DArray.cpp
+	src/Texture/TextureManager.cpp
 )
 
 
