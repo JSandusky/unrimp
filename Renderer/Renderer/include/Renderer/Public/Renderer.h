@@ -881,11 +881,11 @@ namespace Renderer
 			union
 			{
 				float color[4];
-				struct DepthStencil
+				struct
 				{
 					float depth;
 					uint8_t stencil;
-				};
+				} DepthStencil;
 			};
 		};
 	#endif
