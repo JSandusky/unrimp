@@ -36,6 +36,9 @@
 namespace Renderer
 {
 	class IRenderTarget;
+    class IProgram;
+    class IIndirectBuffer;
+    class IVertexArray;
 }
 namespace OpenGLRenderer
 {

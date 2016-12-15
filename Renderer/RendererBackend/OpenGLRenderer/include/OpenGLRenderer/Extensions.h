@@ -39,6 +39,10 @@
 	#ifdef LINUX
 		#include <GL/glx.h>
 		#include <GL/glxext.h>
+		// Undefine None, this name is used inside enums defined by unrimp (Which gets defined inside Xlib.h pulled in by glx.h) 
+		#ifdef None
+			#undef None
+		#endif
 	#endif
 	#include <GL/gl.h>
 	#include <GL/glext.h>	// Requires definitions from "gl.h"

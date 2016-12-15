@@ -27,6 +27,11 @@
 
 #include <iostream>	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 
+// Needed to redefine None makro (which got undefined in Extensions.h due name clashes used in enums)
+#ifndef None
+	#define None                 0L	/* universal null resource or null atom */
+#endif
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
