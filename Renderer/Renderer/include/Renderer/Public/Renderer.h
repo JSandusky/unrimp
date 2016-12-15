@@ -38,6 +38,9 @@
 #ifndef RENDERER_NO_STATISTICS
 	#include <atomic>	// For "std::atomic<>"
 #endif
+#ifdef LINUX
+	#include <wchar.h>	// for wcsncpy
+#endif
 
 
 //[-------------------------------------------------------]
