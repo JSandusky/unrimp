@@ -46,5 +46,6 @@ endif()
 ##################################################
 # Copy header
 add_custom_command(TARGET Renderer
-	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/Renderer/Renderer.h" ${OUTPUT_INCLUDE_DIR}
+	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/Renderer/Public/Renderer.h" ${OUTPUT_INCLUDE_DIR}
+	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/Renderer/Public/RendererInstance.h" ${OUTPUT_INCLUDE_DIR}
 )
