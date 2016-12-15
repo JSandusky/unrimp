@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "38",
+			"AssetType": "Material",
+			"AssetCategory": "Scene",
+			"AssetName": "gi_flag",
+			"AssetDependencies": [ "39" ],
+			"FileDependencies": [ "gi_flag.material" ],
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"MaterialAssetCompiler":
+		{
+			"InputFile": "gi_flag.material"
+		}
+	}
+}

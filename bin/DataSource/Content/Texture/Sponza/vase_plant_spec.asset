@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "34",
+			"AssetType": "Texture",
+			"AssetCategory": "Scene",
+			"AssetName": "vase_plant_spec",
+			"FileDependencies": [ "vase_plant_spec.tga" ],
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"TextureAssetCompiler":
+		{
+			"InputFile": "vase_plant_spec.tga",
+			"TextureSemantic": "SpecularMap"
+		}
+	}
+}

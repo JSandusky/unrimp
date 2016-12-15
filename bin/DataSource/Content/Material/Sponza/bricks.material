@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "MaterialAsset",
+		"Version": "1"
+	},
+	"MaterialAsset":
+	{
+		"Techniques":
+		{
+			"Default": "14",
+			"DepthOnly": "0"
+		},
+		"Properties":
+		{
+			"UseDiffuseMap": "TRUE",
+			"DiffuseMap": "41",
+			"UseNormalMap": "TRUE",
+			"NormalMap": "42",
+			"UseSpecularMap": "TRUE",
+			"SpecularMap": "43"
+		}
+	}
+}

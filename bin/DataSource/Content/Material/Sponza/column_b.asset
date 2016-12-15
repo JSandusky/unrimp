@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "65",
+			"AssetType": "Material",
+			"AssetCategory": "Scene",
+			"AssetName": "column_b",
+			"AssetDependencies": [ "66", "67", "68" ],
+			"FileDependencies": [ "column_b.material" ],
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"MaterialAssetCompiler":
+		{
+			"InputFile": "column_b.material"
+		}
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "43",
+			"AssetType": "Texture",
+			"AssetCategory": "Scene",
+			"AssetName": "spnza_bricks_a_spec",
+			"FileDependencies": [ "spnza_bricks_a_spec.tga" ],
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"TextureAssetCompiler":
+		{
+			"InputFile": "spnza_bricks_a_spec.tga",
+			"TextureSemantic": "SpecularMap"
+		}
+	}
+}

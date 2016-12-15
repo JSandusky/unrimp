@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "95",
+			"AssetType": "Material",
+			"AssetCategory": "Scene",
+			"AssetName": "lion",
+			"AssetDependencies": [ "96", "97" ],
+			"FileDependencies": [ "lion.material" ],
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"MaterialAssetCompiler":
+		{
+			"InputFile": "lion.material"
+		}
+	}
+}

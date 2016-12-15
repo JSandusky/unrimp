@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "22",
+			"AssetType": "Material",
+			"AssetCategory": "Scene",
+			"AssetName": "leaf",
+			"AssetDependencies": [ "23", "24", "25", "26" ],
+			"FileDependencies": [ "leaf.material" ],
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"MaterialAssetCompiler":
+		{
+			"InputFile": "leaf.material"
+		}
+	}
+}

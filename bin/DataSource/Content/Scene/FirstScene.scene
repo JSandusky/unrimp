@@ -46,6 +46,21 @@
 						"MeshAssetId": "2"
 					}
 				}
+			},
+			"3":
+			{
+				"Properties":
+				{
+					"Position": "0.0 -10.0 -50.0",
+					"Scale": "0.1 0.1 0.1"
+				},
+				"Items":
+				{
+					"MeshSceneItem":
+					{
+						"MeshAssetId": "21"
+					}
+				}
 			}
 		}
 	}

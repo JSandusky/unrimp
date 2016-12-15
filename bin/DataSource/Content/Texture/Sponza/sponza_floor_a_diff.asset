@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "56",
+			"AssetType": "Texture",
+			"AssetCategory": "Scene",
+			"AssetName": "sponza_floor_a_diff",
+			"FileDependencies": [ "sponza_floor_a_diff.tga" ],
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"TextureAssetCompiler":
+		{
+			"InputFile": "sponza_floor_a_diff.tga",
+			"TextureSemantic": "DiffuseMap"
+		}
+	}
+}

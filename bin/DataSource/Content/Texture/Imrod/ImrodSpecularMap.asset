@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "7",
+			"AssetType": "Texture",
+			"AssetCategory": "Character",
+			"AssetName": "ImrodSpecularMap",
+			"FileDependencies": [ "ImrodSpecularMap.tga" ],
+			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/gallery/imrod_dw.html ) by Dmitry Parkin: http://www.parkparkin.com"
+		},
+		"TextureAssetCompiler":
+		{
+			"InputFile": "ImrodSpecularMap.tga",
+			"TextureSemantic": "SpecularMap"
+		}
+	}
+}
