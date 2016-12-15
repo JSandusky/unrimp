@@ -41,25 +41,29 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
-	src/Framebuffer.cpp
-	src/IndexBuffer.cpp
-	src/NullRenderer.cpp
-	src/PipelineState.cpp
-	src/SamplerState.cpp
-	src/SwapChain.cpp
-	src/Texture2D.cpp
-	src/Texture2DArray.cpp
-	src/TextureBuffer.cpp
-	src/VertexArray.cpp
-	src/VertexBuffer.cpp
-	src/UniformBuffer.cpp
-	src/Shader/FragmentShader.cpp
-	src/Shader/GeometryShader.cpp
-	src/Shader/Program.cpp
-	src/Shader/ShaderLanguage.cpp
-	src/Shader/TessellationControlShader.cpp
-	src/Shader/TessellationEvaluationShader.cpp
-	src/Shader/VertexShader.cpp
+	src/Buffer/BufferManager.cpp
+    src/Buffer/IndexBuffer.cpp
+    src/Buffer/IndirectBuffer.cpp
+    src/Buffer/TextureBuffer.cpp
+    src/Buffer/UniformBuffer.cpp
+    src/Buffer/VertexArray.cpp
+    src/Buffer/VertexBuffer.cpp
+    src/NullRenderer.cpp
+    src/RenderTarget/Framebuffer.cpp
+    src/RenderTarget/SwapChain.cpp
+    src/RootSignature.cpp
+    src/Shader/FragmentShader.cpp
+    src/Shader/GeometryShader.cpp
+    src/Shader/Program.cpp
+    src/Shader/ShaderLanguage.cpp
+    src/Shader/TessellationControlShader.cpp
+    src/Shader/TessellationEvaluationShader.cpp
+    src/Shader/VertexShader.cpp
+    src/State/PipelineState.cpp
+    src/State/SamplerState.cpp
+    src/Texture/Texture2D.cpp
+    src/Texture/Texture2DArray.cpp
+    src/Texture/TextureManager.cpp
 )
 
 
