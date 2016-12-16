@@ -33,9 +33,12 @@ endif()
 ## Includes
 ##################################################
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendererRuntime/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/Assimp/include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/${OS_ARCHITECTURE}/Assimp/lib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/RapidJSON/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/${OS_ARCHITECTURE}/Assimp/lib)
 
 
 ##################################################
@@ -43,8 +46,40 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/${OS_ARCHITECTURE}/Assi
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/FileWatcher/FileWatcher.cpp
+	src/AssetCompiler/CompositorNodeAssetCompiler.cpp
+	src/AssetCompiler/CompositorWorkspaceAssetCompiler.cpp
+	src/AssetCompiler/MaterialAssetCompiler.cpp
+	src/AssetCompiler/MaterialBlueprintAssetCompiler.cpp
+	src/AssetCompiler/MeshAssetCompiler.cpp
+	src/AssetCompiler/SceneAssetCompiler.cpp
+	src/AssetCompiler/ShaderBlueprintAssetCompiler.cpp
+	src/AssetCompiler/ShaderPieceAssetCompiler.cpp
+	src/AssetCompiler/SkeletonAssetCompiler.cpp
+	src/AssetCompiler/TextureAssetCompiler.cpp
+	src/Helper/JsonHelper.cpp
+	src/Helper/JsonMaterialBlueprintHelper.cpp
+	src/Helper/JsonMaterialHelper.cpp
+	src/Helper/StringHelper.cpp
+	src/Project/ProjectAssetMonitor.cpp
+	src/Project/ProjectImpl.cpp
 	src/RendererToolkitImpl.cpp
 )
+
+if(WIN32)
+	# Windows source codes
+	set(SOURCE_CODES
+		${SOURCE_CODES}
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/FileWatcher/FileWatcherWin32.cpp
+	)
+endif()
+if(UNIX)
+	# Linux source codes
+	set(SOURCE_CODES
+		${SOURCE_CODES}
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/FileWatcher/FileWatcherLinux.cpp
+	)
+endif()
 
 
 ##################################################
@@ -62,9 +97,9 @@ if(SHARED_LIBRARY)
 	add_library(RendererToolkit SHARED ${SOURCE_CODES})
 	set_target_properties(RendererToolkit PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DRENDERERTOOLKIT_EXPORTS")
 	if(WIN32)
-		target_link_libraries(Examples assimp.lib)
+		target_link_libraries(RendererToolkit assimp.lib)
 	else()
-		target_link_libraries(Examples ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} minizip)
+		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} minizip)
 	endif()
 endif()
 
@@ -104,10 +139,12 @@ endif()
 # Copy header
 if(SHARED_LIBRARY)
 	add_custom_command(TARGET RendererToolkit
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererToolkit/RendererToolkit.h" ${OUTPUT_INCLUDE_DIR}
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererToolkit/Public/RendererToolkit.h" ${OUTPUT_INCLUDE_DIR}
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererToolkit/Public/RendererToolkitInstance.h" ${OUTPUT_INCLUDE_DIR}
 	)
 elseif(STATIC_LIBRARY)
 	add_custom_command(TARGET RendererToolkitStatic
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererToolkit/RendererToolkit.h" ${OUTPUT_INCLUDE_DIR}
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererToolkit/Public/RendererToolkit.h" ${OUTPUT_INCLUDE_DIR}
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererToolkit/Public/RendererToolkitInstance.h" ${OUTPUT_INCLUDE_DIR}
 	)
 endif()
