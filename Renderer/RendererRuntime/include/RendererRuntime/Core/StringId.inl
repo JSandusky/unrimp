@@ -126,43 +126,43 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FORCEINLINE StringId::StringId() :
+	inline FORCEINLINE StringId::StringId() :
 		mId(MAXIMUM_UINT32_T_VALUE)
 	{
 		// Nothing here
 	}
 
 	template <uint32_t N>
-	FORCEINLINE StringId::StringId(const char (&string)[N]) :
+	inline FORCEINLINE StringId::StringId(const char (&string)[N]) :
 		mId(detail::StringIdTemplate::FnvHash<N, N>::hash(string))
 	{
 		// Nothing here
 	}
 
-	FORCEINLINE StringId::StringId(const ConstCharWrapper& string) :
+	inline FORCEINLINE StringId::StringId(const ConstCharWrapper& string) :
 		mId(calculateFNV(string.mString))
 	{
 		// Nothing here
 	}
 
-	FORCEINLINE StringId::StringId(uint32_t id) :
+	inline FORCEINLINE StringId::StringId(uint32_t id) :
 		mId(id)
 	{
 		// Nothing do to in here
 	}
 
-	FORCEINLINE StringId::StringId(const StringId& stringId) :
+	inline FORCEINLINE StringId::StringId(const StringId& stringId) :
 		mId(stringId.mId)
 	{
 		// Nothing here
 	}
 
-	FORCEINLINE uint32_t StringId::getId() const
+	inline FORCEINLINE uint32_t StringId::getId() const
 	{
 		return mId;
 	}
 
-	FORCEINLINE StringId::operator uint32_t() const
+	inline FORCEINLINE StringId::operator uint32_t() const
 	{
 		return mId;
 	}
