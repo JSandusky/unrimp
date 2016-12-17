@@ -2526,7 +2526,8 @@ namespace crnd
          return NULL;
       }
 
-      CRND_ASSERT(((uint32)p_new & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
+      // TODO(sw) The first cast to uintptr_t is needed otherwise clang issues an error: cast from pointer to smaller type 'uint32' (aka 'unsigned int') loses information. I guess the information loss is indented here
+      CRND_ASSERT(((uint32)((uintptr_t)p_new) & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
 
       return p_new;
    }
@@ -2551,7 +2552,8 @@ namespace crnd
       if (pActual_size)
          *pActual_size = actual_size;
 
-      CRND_ASSERT(((uint32)p_new & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
+      // TODO(sw) The first cast to uintptr_t is needed otherwise clang issues an error: cast from pointer to smaller type 'uint32' (aka 'unsigned int') loses information. I guess the information loss is indented here
+      CRND_ASSERT(((uint32)((uintptr_t)p_new) & (CRND_MIN_ALLOC_ALIGNMENT - 1)) == 0);
 
       return p_new;
    }
