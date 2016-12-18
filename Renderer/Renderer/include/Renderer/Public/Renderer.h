@@ -2108,7 +2108,11 @@ namespace Renderer
 		{
 		public:
 			inline IndirectBuffer(uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0) :
+				// TODO(sw) to silence clang warning : warning: binding dereferenced null pointer to reference has undefined behavior [-Wnull-dereference]
+				#pragma clang diagnostic push
+				#pragma clang diagnostic ignored "-Wnull-dereference"
 				IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
+				#pragma clang diagnostic pop
 				mDrawInstancedArguments(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation)
 			{}
 			inline virtual ~IndirectBuffer()
@@ -2132,7 +2136,11 @@ namespace Renderer
 		{
 		public:
 			inline IndexedIndirectBuffer(uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0) :
+				// TODO(sw) to silence clang warning : warning: binding dereferenced null pointer to reference has undefined behavior [-Wnull-dereference]
+				#pragma clang diagnostic push
+				#pragma clang diagnostic ignored "-Wnull-dereference"
 				IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
+				#pragma clang diagnostic pop
 				mDrawIndexedInstancedArguments(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation)
 			{}
 			inline virtual ~IndexedIndirectBuffer()
@@ -2753,7 +2761,12 @@ namespace Renderer
 				{
 					Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(IndirectBuffer));
 					IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
+
+					// TODO(sw) to silence clang warning: warning: destination for this 'memcpy' call is a pointer to dynamic class 'IndirectBuffer'; vtable pointer will be overwritten [-Wdynamic-class-memaccess]
+					#pragma clang diagnostic push
+					#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
 					memcpy(reinterpret_cast<IndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indirectBufferData, sizeof(IndirectBuffer));
+					#pragma clang diagnostic pop
 					drawCommand->indirectBuffer		  = nullptr;
 					drawCommand->indirectBufferOffset = 0;
 					drawCommand->numberOfDraws		  = 1;
@@ -2778,7 +2791,12 @@ namespace Renderer
 				{
 					DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(IndexedIndirectBuffer));
 					IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
+
+					// TODO(sw) to silence clang warning: warning: destination for this 'memcpy' call is a pointer to dynamic class 'IndirectBuffer'; vtable pointer will be overwritten [-Wdynamic-class-memaccess]
+					#pragma clang diagnostic push
+					#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
 					memcpy(reinterpret_cast<IndexedIndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
+					#pragma clang diagnostic pop
 					drawCommand->indirectBuffer		  = nullptr;
 					drawCommand->indirectBufferOffset = 0;
 					drawCommand->numberOfDraws		  = 1;
