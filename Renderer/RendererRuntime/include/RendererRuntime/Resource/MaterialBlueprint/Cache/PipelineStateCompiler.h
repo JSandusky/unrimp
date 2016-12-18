@@ -104,7 +104,7 @@ namespace RendererRuntime
 		inline void flushBuilderQueue();
 		inline void flushCompilerQueue();
 		inline void flushAllQueues();
-		void rendererBackendDispatch();
+		void dispatch();
 
 
 	//[-------------------------------------------------------]

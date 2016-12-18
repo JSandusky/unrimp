@@ -76,7 +76,7 @@ namespace RendererRuntime
 	*    A resource must master the following stages in order to archive the inner wisdom:
 	*    1. Asynchronous deserialization
 	*    2. Asynchronous processing
-	*    3. Synchronous renderer backend dispatch TODO(co) Asynchronous renderer backend dispatch if supported by the renderer API
+	*    3. Synchronous dispatch, e.g. to the renderer backend TODO(co) Asynchronous renderer backend dispatch if supported by the renderer API
 	*/
 	class ResourceStreamer : private NonCopyable
 	{
@@ -108,12 +108,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Resource streamer update performing renderer backend dispatch
+		*    Resource streamer update performing dispatch to e.g. the renderer backend
 		*
 		*  @note
 		*    - Call this once per frame
 		*/
-		void rendererBackendDispatch();
+		void dispatch();
 
 
 	//[-------------------------------------------------------]
@@ -145,9 +145,9 @@ namespace RendererRuntime
 		std::condition_variable	  mProcessingConditionVariable;
 		std::queue<LoadRequest>	  mProcessingQueue;
 		std::thread				  mProcessingThread;
-		// Resource streamer stage: 3. Synchronous renderer backend dispatch
-		std::mutex				  mRendererBackendDispatchMutex;
-		std::queue<LoadRequest>	  mRendererBackendDispatchQueue;
+		// Resource streamer stage: 3. Synchronous dispatch to e.g. the renderer backend
+		std::mutex				  mDispatchMutex;
+		std::queue<LoadRequest>	  mDispatchQueue;
 
 
 	};

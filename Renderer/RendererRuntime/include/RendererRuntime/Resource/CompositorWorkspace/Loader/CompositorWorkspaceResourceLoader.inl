@@ -38,7 +38,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void CompositorWorkspaceResourceLoader::onRendererBackendDispatch()
+	inline void CompositorWorkspaceResourceLoader::onDispatch()
 	{
 		// Nothing here
 	}

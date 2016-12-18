@@ -210,7 +210,7 @@ namespace RendererRuntime
 		crnd::crnd_unpack_end(crndUnpackContext);
 	}
 
-	void CrnTextureResourceLoader::onRendererBackendDispatch()
+	void CrnTextureResourceLoader::onDispatch()
 	{
 		// Create the renderer texture instance
 		mTextureResource->mTexture = mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);

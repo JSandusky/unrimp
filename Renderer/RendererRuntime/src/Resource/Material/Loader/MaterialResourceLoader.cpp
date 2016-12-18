@@ -86,7 +86,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialResourceLoader::onRendererBackendDispatch()
+	void MaterialResourceLoader::onDispatch()
 	{
 		// TODO(co) Material resource update
 		mMaterialResource->releaseTextures();

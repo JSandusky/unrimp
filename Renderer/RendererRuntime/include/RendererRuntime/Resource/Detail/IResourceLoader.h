@@ -104,9 +104,9 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Called when the resource loader has to dispatch the data to the renderer backend
+		*    Called when the resource loader has to dispatch the data (e.g. to the renderer backend)
 		*/
-		virtual void onRendererBackendDispatch() = 0;
+		virtual void onDispatch() = 0;
 
 
 	//[-------------------------------------------------------]

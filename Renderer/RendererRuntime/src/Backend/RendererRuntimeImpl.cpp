@@ -220,8 +220,8 @@ namespace RendererRuntime
 		}
 
 		// Pipeline state compiler and resource streamer update
-		mPipelineStateCompiler->rendererBackendDispatch();
-		mResourceStreamer->rendererBackendDispatch();
+		mPipelineStateCompiler->dispatch();
+		mResourceStreamer->dispatch();
 
 		// Inform the individual resource manager instances
 		const size_t numberOfResourceManagers = mResourceManagers.size();

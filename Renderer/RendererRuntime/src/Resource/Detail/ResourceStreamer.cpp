@@ -73,14 +73,14 @@ namespace RendererRuntime
 					everythingFlushed = mProcessingQueue.empty();
 				}
 
-				// Resource streamer stage: 3. Synchronous renderer backend dispatch
+				// Resource streamer stage: 3. Synchronous dispatch to e.g. the renderer backend
 				if (everythingFlushed)
 				{
-					std::lock_guard<std::mutex> rendererBackendDispatchMutexLock(mRendererBackendDispatchMutex);
-					everythingFlushed = mRendererBackendDispatchQueue.empty();
+					std::lock_guard<std::mutex> dispatchMutexLock(mDispatchMutex);
+					everythingFlushed = mDispatchQueue.empty();
 				}
 			}
-			rendererBackendDispatch();
+			dispatch();
 
 			// Wait for a moment to not totally pollute the CPU
 			if (!everythingFlushed)
@@ -91,27 +91,27 @@ namespace RendererRuntime
 		} while (!everythingFlushed);
 	}
 
-	void ResourceStreamer::rendererBackendDispatch()
+	void ResourceStreamer::dispatch()
 	{
-		// Resource streamer stage: 3. Synchronous renderer backend dispatch
+		// Resource streamer stage: 3. Synchronous dispatch to e.g. the renderer backend
 
 		// Continue as long as there's a load request left inside the queue
 		bool stillInTimeBudget = true;	// TODO(co) Add a maximum time budget so we're not blocking too long (the show must go on)
 		while (stillInTimeBudget)
 		{
 			// Get the load request
-			std::unique_lock<std::mutex> rendererBackendDispatchMutexLock(mRendererBackendDispatchMutex);
-			if (mRendererBackendDispatchQueue.empty())
+			std::unique_lock<std::mutex> dispatchMutexLock(mDispatchMutex);
+			if (mDispatchQueue.empty())
 			{
 				break;
 			}
-			LoadRequest loadRequest = mRendererBackendDispatchQueue.front();
-			mRendererBackendDispatchQueue.pop();
-			rendererBackendDispatchMutexLock.unlock();
+			LoadRequest loadRequest = mDispatchQueue.front();
+			mDispatchQueue.pop();
+			dispatchMutexLock.unlock();
 
 			// Do the work
 			IResourceLoader* resourceLoader = loadRequest.resourceLoader;
-			resourceLoader->onRendererBackendDispatch();
+			resourceLoader->onDispatch();
 
 			// Update the resource loading state
 			loadRequest.resource->setLoadingState(IResource::LoadingState::LOADED);
@@ -201,9 +201,9 @@ namespace RendererRuntime
 				loadRequest.resourceLoader->onProcessing();
 
 				{ // Push the load request into the queue of the next resource streamer pipeline stage
-				  // -> Resource streamer stage: 3. Synchronous renderer backend dispatch
-					std::lock_guard<std::mutex> rendererBackendDispatchMutexLock(mRendererBackendDispatchMutex);
-					mRendererBackendDispatchQueue.push(loadRequest);
+				  // -> Resource streamer stage: 3. Synchronous dispatch to e.g. the renderer backend
+					std::lock_guard<std::mutex> dispatchMutexLock(mDispatchMutex);
+					mDispatchQueue.push(loadRequest);
 				}
 
 				// We're ready for the next round

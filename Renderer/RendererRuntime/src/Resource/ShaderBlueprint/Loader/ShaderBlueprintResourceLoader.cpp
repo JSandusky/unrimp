@@ -95,7 +95,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void ShaderBlueprintResourceLoader::onRendererBackendDispatch()
+	void ShaderBlueprintResourceLoader::onDispatch()
 	{
 		{ // Read the shader piece resources to include
 			ShaderPieceResourceManager& shaderPieceResourceManager = mRendererRuntime.getShaderPieceResourceManager();

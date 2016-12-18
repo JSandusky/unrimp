@@ -38,7 +38,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void SceneResourceLoader::onRendererBackendDispatch()
+	inline void SceneResourceLoader::onDispatch()
 	{
 		// Nothing here
 	}

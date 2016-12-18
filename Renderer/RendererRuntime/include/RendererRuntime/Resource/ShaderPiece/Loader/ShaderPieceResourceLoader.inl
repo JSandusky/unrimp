@@ -38,7 +38,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void ShaderPieceResourceLoader::onRendererBackendDispatch()
+	inline void ShaderPieceResourceLoader::onDispatch()
 	{
 		// Nothing here
 	}

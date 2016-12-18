@@ -111,7 +111,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void MeshResourceLoader::onRendererBackendDispatch()
+	void MeshResourceLoader::onDispatch()
 	{
 		{ // Create vertex array object (VAO)
 			// Create the vertex buffer object (VBO)
