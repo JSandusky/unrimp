@@ -70,7 +70,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend typedef ShaderPieceResources;
+		friend ShaderPieceResources;	// Type definition of template class
 		friend class ShaderPieceResourceLoader;
 		friend class ShaderPieceResourceManager;
 

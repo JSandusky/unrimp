@@ -66,7 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend typedef CompositorWorkspaceResources;
+		friend CompositorWorkspaceResources;	// Type definition of template class
 		friend class CompositorWorkspaceResourceLoader;
 		friend class CompositorWorkspaceResourceManager;
 

@@ -70,7 +70,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend typedef TextureResources;
+		friend TextureResources;				// Type definition of template class
 		friend class TextureResourceLoader;
 		friend class TextureResourceManager;
 		friend class CrnTextureResourceLoader;	// TODO(co) Get rid of this
