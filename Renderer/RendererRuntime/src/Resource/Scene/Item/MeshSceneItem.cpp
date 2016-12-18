@@ -83,7 +83,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void MeshSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
+		// Sanity check
 		assert(sizeof(v1Scene::MeshItem) == numberOfBytes);
+		std::ignore = numberOfBytes;
+
+		// Read data
 		setMeshResourceIdByAssetId(reinterpret_cast<const v1Scene::MeshItem*>(data)->meshAssetId);
 	}
 

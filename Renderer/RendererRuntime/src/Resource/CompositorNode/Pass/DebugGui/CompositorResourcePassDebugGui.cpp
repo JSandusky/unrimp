@@ -45,6 +45,7 @@ namespace RendererRuntime
 	void CompositorResourcePassDebugGui::deserialize(uint32_t numberOfBytes, const uint8_t*)
 	{
 		assert(sizeof(v1CompositorNode::PassDebugGui) == numberOfBytes);
+		std::ignore = numberOfBytes;
 	}
 
 

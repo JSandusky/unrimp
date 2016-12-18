@@ -105,14 +105,14 @@ namespace RendererRuntime
 
 		// Platform specific part
 		#ifdef WIN32
-			// Ignore short name
+			std::ignore = shortName;
 			::detail::setThreadName(::GetCurrentThreadId(), descriptiveName);
 		#elif LINUX
-			// Ignore descriptive name
+			std::ignore = descriptiveName;
 			#warning "Linux: RendererRuntime::PlatformManager::setCurrentThreadName() is untested"	// TODO(co) Not tested
 			::prctl(PR_SET_NAME, shortName, 0, 0, 0);
 		#elif __APPLE__
-			// Ignore descriptive name
+			std::ignore = descriptiveName;
 			#warning "Mac OS X: RendererRuntime::PlatformManager::setCurrentThreadName() is untested"	// TODO(co) Not tested
 			::pthread_setname_np(shortName);
 		#else

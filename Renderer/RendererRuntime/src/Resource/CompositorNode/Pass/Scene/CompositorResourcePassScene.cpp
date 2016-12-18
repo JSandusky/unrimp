@@ -44,7 +44,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorResourcePassScene::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
+		// Sanity check
 		assert(sizeof(v1CompositorNode::PassScene) == numberOfBytes);
+		std::ignore = numberOfBytes;
+
+		// Read data
 		const v1CompositorNode::PassScene* passScene = reinterpret_cast<const v1CompositorNode::PassScene*>(data);
 		mMinimumRenderQueueIndex = passScene->minimumRenderQueueIndex;
 		mMaximumRenderQueueIndex = passScene->maximumRenderQueueIndex;
