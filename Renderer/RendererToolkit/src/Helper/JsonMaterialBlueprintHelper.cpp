@@ -992,7 +992,7 @@ namespace RendererToolkit
 							RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
 							if (iterator != sortedMaterialPropertyVector.end())
 							{
-								RendererRuntime::MaterialProperty* materialProperty = iterator._Ptr;
+								const RendererRuntime::MaterialProperty* materialProperty = &(*iterator);
 								if (materialProperty->getMaterialPropertyId() == materialPropertyId)
 								{
 									// TODO(co) Error handling: Usage mismatch etc.

@@ -137,7 +137,7 @@ namespace RendererRuntime
 	MaterialTechnique* MaterialResource::getMaterialTechniqueById(MaterialTechniqueId materialTechniqueId) const
 	{
 		SortedMaterialTechniqueVector::const_iterator iterator = std::lower_bound(mSortedMaterialTechniqueVector.cbegin(), mSortedMaterialTechniqueVector.cend(), materialTechniqueId, ::detail::OrderByMaterialTechniqueId());
-		return (iterator != mSortedMaterialTechniqueVector.end() && (*iterator._Ptr)->getMaterialTechniqueId() == materialTechniqueId) ? *iterator._Ptr : nullptr;
+		return (iterator != mSortedMaterialTechniqueVector.end() && (*iterator)->getMaterialTechniqueId() == materialTechniqueId) ? *iterator : nullptr;
 	}
 	
 	void MaterialResource::destroyAllMaterialTechniques()

@@ -186,7 +186,7 @@ namespace RendererToolkit
 				{
 					const RendererRuntime::MaterialPropertyId materialPropertyId = materialProperty.getMaterialPropertyId();
 					RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
-					if (iterator == sortedMaterialPropertyVector.end() || iterator._Ptr->getMaterialPropertyId() != materialPropertyId)
+					if (iterator == sortedMaterialPropertyVector.end() || iterator->getMaterialPropertyId() != materialPropertyId)
 					{
 						// Add new material property
 						sortedMaterialPropertyVector.insert(iterator, materialProperty);
@@ -219,10 +219,10 @@ namespace RendererToolkit
 					const RendererRuntime::MaterialPropertyId materialPropertyId(propertyName);
 
 					// Figure out the material property value type by using the material blueprint
-					RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
+					RendererRuntime::MaterialProperties::SortedPropertyVector::iterator iterator = std::lower_bound(sortedMaterialPropertyVector.begin(), sortedMaterialPropertyVector.end(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
 					if (iterator != sortedMaterialPropertyVector.end())
 					{
-						RendererRuntime::MaterialProperty* materialProperty = iterator._Ptr;
+						RendererRuntime::MaterialProperty* materialProperty = &(*iterator);
 						if (materialProperty->getMaterialPropertyId() == materialPropertyId)
 						{
 							// Set the material own property value

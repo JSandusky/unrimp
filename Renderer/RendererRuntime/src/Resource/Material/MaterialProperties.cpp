@@ -40,7 +40,7 @@ namespace RendererRuntime
 	const MaterialProperty* MaterialProperties::getPropertyById(MaterialPropertyId materialPropertyId) const
 	{
 		SortedPropertyVector::const_iterator iterator = std::lower_bound(mSortedPropertyVector.cbegin(), mSortedPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
-		return (iterator != mSortedPropertyVector.end() && iterator._Ptr->getMaterialPropertyId() == materialPropertyId) ? iterator._Ptr : nullptr;
+		return (iterator != mSortedPropertyVector.end() && iterator->getMaterialPropertyId() == materialPropertyId) ? &(*iterator) : nullptr;
 	}
 
 	MaterialProperty* MaterialProperties::setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage, bool changeOverwrittenState)
