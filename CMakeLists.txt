@@ -115,6 +115,8 @@ set(STATIC_LIBRARY			"1"	CACHE BOOL "Build static library?")
 set(SHARED_LIBRARY			"1"	CACHE BOOL "Build shared library?")
 # Renderer toolkit
 set(RENDERER_TOOLKIT		"1"	CACHE BOOL "Build renderer toolkit?")
+# Renderer runtime
+set(RENDERER_RUNTIME		"1"	CACHE BOOL "Build renderer runtime?")
 # Examples
 set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
 	# Advanced examples options
