@@ -235,7 +235,7 @@ namespace
 							const float threshold = 1.0f / SHRT_MAX; // 16 bit quantization QTangent
 							const float renomalization = sqrt(1.0f - threshold * threshold);
 
-							if (abs(tangentFrameQuaternion.w) < threshold)
+							if (std::abs(tangentFrameQuaternion.w) < threshold)
 							{
 								tangentFrameQuaternion.x *= renomalization;
 								tangentFrameQuaternion.y *= renomalization;
@@ -467,7 +467,7 @@ namespace RendererToolkit
 		}
 		else
 		{
-			throw std::exception("ASSIMP failed to load in the given mesh");
+			throw std::logic_error("ASSIMP failed to load in the given mesh");
 		}
 
 		{ // Update the output asset package

@@ -992,13 +992,13 @@ namespace RendererToolkit
 							RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
 							if (iterator != sortedMaterialPropertyVector.end())
 							{
-								RendererRuntime::MaterialProperty* materialProperty = iterator._Ptr;
-								if (materialProperty->getMaterialPropertyId() == materialPropertyId)
+								const RendererRuntime::MaterialProperty& materialProperty = *iterator;
+								if (materialProperty.getMaterialPropertyId() == materialPropertyId)
 								{
 									// TODO(co) Error handling: Usage mismatch etc.
 
 									// Write down the texture
-									const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, *materialProperty));
+									const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, materialProperty));
 									outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 								}
 							}
