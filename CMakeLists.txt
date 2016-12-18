@@ -122,10 +122,18 @@ set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
 	mark_as_advanced(EXAMPLES_ASSIMP)
 
 
-# We need c++0x/c++11 support:
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	message(STATUS "enable c++11 support")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+	# We need c++1z/c++17 support:
+	include(CheckCXXCompilerFlag)
+	CHECK_CXX_COMPILER_FLAG("-std=c++1z" COMPILER_SUPPORTS_CXX1z)
+	CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
+	if(COMPILER_SUPPORTS_CXX17)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+	elseif(COMPILER_SUPPORTS_CXX1z)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
+	else()
+		message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
+	endif()
 endif()
 # At first we treat UNIX = Linux
 if(UNIX)
