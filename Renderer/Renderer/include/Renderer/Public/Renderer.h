@@ -1045,7 +1045,7 @@ namespace Renderer
 	// Renderer/Buffer/VertexArrayTypes.h
 	#ifndef __RENDERER_VERTEXARRAY_TYPES_H__
 	#define __RENDERER_VERTEXARRAY_TYPES_H__
-		enum class VertexAttributeFormat
+		enum class VertexAttributeFormat : uint8_t
 		{
 			FLOAT_1			= 0,
 			FLOAT_2			= 1,

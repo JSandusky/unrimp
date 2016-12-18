@@ -53,7 +53,7 @@ namespace Renderer
 	*  @brief
 	*    Vertex attribute format
 	*/
-	enum class VertexAttributeFormat
+	enum class VertexAttributeFormat : uint8_t
 	{
 		FLOAT_1			= 0,	///< Float 1 (one component per element, 32 bit floating point per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
 		FLOAT_2			= 1,	///< Float 2 (two components per element, 32 bit floating point per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
@@ -104,6 +104,8 @@ namespace Renderer
 	*  @see
 	*    - "Renderer::IVertexArray" class documentation
 	*/
+	#pragma pack(push)
+	#pragma pack(1)
 	struct VertexAttributes
 	{
 			  uint32_t		   numberOfAttributes;	///< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
@@ -118,6 +120,7 @@ namespace Renderer
 		{
 		}
 	};
+	#pragma pack(pop)
 
 	/**
 	*  @brief
