@@ -184,7 +184,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	void ProjectAssetMonitor::threadWorker()
 	{
-		RendererRuntime::PlatformManager::setCurrentThreadName("Renderer toolkit: Project asset monitor");
+		RendererRuntime::PlatformManager::setCurrentThreadName("Asset monitor", "Renderer toolkit: Project asset monitor");
 
 		// Create the file watcher object
 		FW::FileWatcher fileWatcher;

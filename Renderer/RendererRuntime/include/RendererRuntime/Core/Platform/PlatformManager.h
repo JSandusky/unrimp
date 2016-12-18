@@ -57,10 +57,12 @@ namespace RendererRuntime
 		*  @brief
 		*    Set the name of the current thread
 		*
-		*  @param[in] name
-		*    ASCII name to set
+		*  @param[in] shortName
+		*    Short ASCII name to set, up to 16 characters (including the terminating zero)
+		*  @param[in] descriptiveName
+		*    Descriptive ASCII name to set, not supported on some platforms, preferred name
 		*/
-		RENDERERRUNTIME_API_EXPORT static void setCurrentThreadName(const char* name);
+		RENDERERRUNTIME_API_EXPORT static void setCurrentThreadName(const char* shortName, const char* descriptiveName);
 
 
 	//[-------------------------------------------------------]

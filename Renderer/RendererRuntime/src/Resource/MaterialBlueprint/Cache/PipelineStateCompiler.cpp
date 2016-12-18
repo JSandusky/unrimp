@@ -222,7 +222,7 @@ namespace RendererRuntime
 		const ShaderPieceResourceManager& shaderPieceResourceManager = mRendererRuntime.getShaderPieceResourceManager();
 		ShaderBuilder shaderBuilder;
 
-		PlatformManager::setCurrentThreadName("Renderer runtime: Pipeline state compiler stage: 1. Asynchronous shader building");
+		PlatformManager::setCurrentThreadName("PSC: Stage 1", "Renderer runtime: Pipeline state compiler stage: 1. Asynchronous shader building");
 		while (!mShutdownBuilderThread)
 		{
 			// Continue as long as there's a compiler request left inside the queue, if it's empty go to sleep
@@ -324,7 +324,7 @@ namespace RendererRuntime
 		if (nullptr != shaderLanguage)
 		{
 			const MaterialBlueprintResources& materialBlueprintResources = mRendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources();
-			PlatformManager::setCurrentThreadName("Renderer runtime: Pipeline state compiler stage: 2. Asynchronous shader compilation");
+			PlatformManager::setCurrentThreadName("PSC: Stage 2", "Renderer runtime: Pipeline state compiler stage: 2. Asynchronous shader compilation");
 			while (!mShutdownCompilerThread)
 			{
 				// Continue as long as there's a compiler request left inside the queue, if it's empty go to sleep
