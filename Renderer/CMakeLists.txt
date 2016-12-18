@@ -26,6 +26,7 @@ cmake_minimum_required(VERSION 2.8.8)
 ##################################################
 add_subdirectory(Renderer)
 add_subdirectory(RendererBackend)
+add_subdirectory(RendererRuntime)
 if(RENDERER_TOOLKIT)
 	add_subdirectory(RendererToolkit)
 endif()
