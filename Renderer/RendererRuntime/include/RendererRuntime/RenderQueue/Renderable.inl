@@ -68,6 +68,9 @@ namespace RendererRuntime
 	inline Renderer::PrimitiveTopology Renderable::setPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
 	{
 		mPrimitiveTopology = primitiveTopology;
+
+		// TODO(sw) this method should return something, for now return the given value
+		return primitiveTopology;
 	}
 
 	inline uint32_t Renderable::getStartIndexLocation() const
