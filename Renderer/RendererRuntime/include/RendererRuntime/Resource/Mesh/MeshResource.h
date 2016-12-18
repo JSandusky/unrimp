@@ -72,7 +72,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend typedef MeshResources;
+		friend MeshResources;	// Type definition of template class
 		friend class MeshResourceLoader;
 		friend class MeshResourceManager;
 

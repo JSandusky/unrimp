@@ -72,7 +72,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend typedef ShaderBlueprintResources;
+		friend ShaderBlueprintResources;	// Type definition of template class
 		friend class ShaderBlueprintResourceLoader;
 		friend class ShaderBlueprintResourceManager;
 

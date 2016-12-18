@@ -420,7 +420,7 @@ namespace RendererToolkit
 
 	void ProjectImpl::threadWorker()
 	{
-		RendererRuntime::PlatformManager::setCurrentThreadName("Renderer toolkit: Project worker");
+		RendererRuntime::PlatformManager::setCurrentThreadName("Project worker", "Renderer toolkit: Project worker");
 
 		while (!mShutdownThread)
 		{

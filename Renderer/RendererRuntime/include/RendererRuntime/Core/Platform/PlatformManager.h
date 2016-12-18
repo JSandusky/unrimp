@@ -57,10 +57,12 @@ namespace RendererRuntime
 		*  @brief
 		*    Set the name of the current thread
 		*
-		*  @param[in] name
-		*    ASCII name to set
+		*  @param[in] shortName
+		*    Short ASCII name to set, up to 16 characters (including the terminating zero)
+		*  @param[in] descriptiveName
+		*    Descriptive ASCII name to set, not supported on some platforms, preferred name
 		*/
-		RENDERERRUNTIME_API_EXPORT static void setCurrentThreadName(const char* name);
+		RENDERERRUNTIME_API_EXPORT static void setCurrentThreadName(const char* shortName, const char* descriptiveName);
 
 
 	//[-------------------------------------------------------]
@@ -78,3 +80,38 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Debug                                                 ]
+//[-------------------------------------------------------]
+// Debug macros
+#ifdef RENDERER_NO_DEBUG
+	/**
+	*  @brief
+	*    Set the name of the current thread
+	*
+	*  @param[in] shortName
+	*    Short ASCII name to set, up to 16 characters (including the terminating zero)
+	*  @param[in] descriptiveName
+	*    Descriptive ASCII name to set, not supported on some platforms, preferred name
+	*
+	*  @note
+	*    - Use this macro for debugging helpers only to make it possible to optimize it out in retail builds
+	*/
+	#define RENDERER_RUNTIME_SET_CURRENT_THREAD_DEBUG_NAME(shortName, descriptiveName)
+#else
+	/**
+	*  @brief
+	*    Set the name of the current thread
+	*
+	*  @param[in] shortName
+	*    Short ASCII name to set, up to 16 characters (including the terminating zero)
+	*  @param[in] descriptiveName
+	*    Descriptive ASCII name to set, not supported on some platforms, preferred name
+	*
+	*  @note
+	*    - Use this macro for debugging helpers only to make it possible to optimize it out in retail builds
+	*/
+	#define RENDERER_RUNTIME_SET_CURRENT_THREAD_DEBUG_NAME(shortName, descriptiveName) RendererRuntime::PlatformManager::setCurrentThreadName(shortName, descriptiveName);
+#endif

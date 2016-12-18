@@ -71,7 +71,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class Renderable;	// Must be able to attach/detach itself from the material resource
-		friend typedef MaterialResources;
+		friend MaterialResources;	// Type definition of template class
 		friend class MaterialResourceLoader;
 		friend class MaterialResourceManager;
 
