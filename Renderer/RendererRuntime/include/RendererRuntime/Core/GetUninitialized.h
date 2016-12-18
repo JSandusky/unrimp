@@ -66,7 +66,8 @@ namespace RendererRuntime
 	{
 		value = getUninitialized<TYPE>();
 	}
-/**
+
+	/**
 	*  @brief
 	*    Check whether or not the given variable has not the uninitialized default value
 	*/

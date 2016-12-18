@@ -67,7 +67,7 @@ namespace Renderer
 			instanceCount(_instanceCount),
 			startVertexLocation(_startVertexLocation),
 			startInstanceLocation(_startInstanceLocation)
-		{};
+		{}
 	};
 
 	/**
@@ -99,7 +99,7 @@ namespace Renderer
 			startIndexLocation(_startIndexLocation),
 			baseVertexLocation(_baseVertexLocation),
 			startInstanceLocation(_startInstanceLocation)
-		{};
+		{}
 	};
 
 

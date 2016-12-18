@@ -49,14 +49,14 @@ namespace Renderer
 	//[ Public virtual IProgram methods                       ]
 	//[-------------------------------------------------------]
 	// TODO(co) Cleanup
-	inline handle IProgram::getUniformHandle(const char *) { return NULL_HANDLE; };
-	inline void IProgram::setUniform1i(handle, int) {};
-	inline void IProgram::setUniform1f(handle, float) {};
-	inline void IProgram::setUniform2fv(handle, const float *) {};
-	inline void IProgram::setUniform3fv(handle, const float *) {};
-	inline void IProgram::setUniform4fv(handle, const float *) {};
-	inline void IProgram::setUniformMatrix3fv(handle, const float *) {};
-	inline void IProgram::setUniformMatrix4fv(handle, const float *) {};
+	inline handle IProgram::getUniformHandle(const char *) { return NULL_HANDLE; }
+	inline void IProgram::setUniform1i(handle, int) {}
+	inline void IProgram::setUniform1f(handle, float) {}
+	inline void IProgram::setUniform2fv(handle, const float *) {}
+	inline void IProgram::setUniform3fv(handle, const float *) {}
+	inline void IProgram::setUniform4fv(handle, const float *) {}
+	inline void IProgram::setUniformMatrix3fv(handle, const float *) {}
+	inline void IProgram::setUniformMatrix4fv(handle, const float *) {}
 
 
 	//[-------------------------------------------------------]

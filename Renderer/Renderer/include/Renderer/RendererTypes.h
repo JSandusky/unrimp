@@ -80,9 +80,9 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			COLOR       = 1<<0,			///< Clear color buffer
-			DEPTH       = 1<<1,			///< Clear depth buffer
-			STENCIL     = 1<<2,			///< Clear stencil buffer
+			COLOR       = 1 << 0,		///< Clear color buffer
+			DEPTH       = 1 << 1,		///< Clear depth buffer
+			STENCIL     = 1 << 2,		///< Clear stencil buffer
 			COLOR_DEPTH = COLOR | DEPTH	///< Clear color and depth buffer
 		};
 	};

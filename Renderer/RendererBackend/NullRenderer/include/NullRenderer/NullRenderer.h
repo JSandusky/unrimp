@@ -35,8 +35,8 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	class IRenderTarget;
 	class IVertexArray;
+	class IRenderTarget;
 	class IIndirectBuffer;
 }
 namespace NullRenderer

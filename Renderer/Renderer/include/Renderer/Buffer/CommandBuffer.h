@@ -393,7 +393,7 @@ namespace Renderer
 				uniformBuffer(_uniformBuffer),
 				size(_size),
 				data(_data)
-			{};
+			{}
 			// Data
 			IUniformBuffer* uniformBuffer;
 			uint32_t		size;
@@ -418,7 +418,7 @@ namespace Renderer
 				textureBuffer(_textureBuffer),
 				size(_size),
 				data(_data)
-			{};
+			{}
 			// Data
 			ITextureBuffer* textureBuffer;
 			uint32_t		size;
@@ -447,7 +447,7 @@ namespace Renderer
 			// Constructor
 			inline SetGraphicsRootSignature(IRootSignature* _rootSignature) :
 				rootSignature(_rootSignature)
-			{};
+			{}
 			// Data
 			IRootSignature* rootSignature;
 			// Static data
@@ -474,7 +474,7 @@ namespace Renderer
 			inline SetGraphicsRootDescriptorTable(uint32_t _rootParameterIndex, IResource* _resource) :
 				rootParameterIndex(_rootParameterIndex),
 				resource(_resource)
-			{};
+			{}
 			// Data
 			uint32_t   rootParameterIndex;
 			IResource* resource;
@@ -502,7 +502,7 @@ namespace Renderer
 			// Constructor
 			inline SetPipelineState(IPipelineState* _pipelineState) :
 				pipelineState(_pipelineState)
-			{};
+			{}
 			// Data
 			IPipelineState* pipelineState;
 			// Static data
@@ -529,7 +529,7 @@ namespace Renderer
 			// Constructor
 			inline SetVertexArray(IVertexArray* _vertexArray) :
 				vertexArray(_vertexArray)
-			{};
+			{}
 			// Data
 			IVertexArray* vertexArray;
 			// Static data
@@ -553,7 +553,7 @@ namespace Renderer
 			// Constructor
 			inline SetPrimitiveTopology(PrimitiveTopology _primitiveTopology) :
 				primitiveTopology(_primitiveTopology)
-			{};
+			{}
 			// Data
 			PrimitiveTopology primitiveTopology;
 			// Static data
@@ -605,7 +605,7 @@ namespace Renderer
 			inline SetViewports(uint32_t _numberOfViewports, const Viewport* _viewports) :
 				numberOfViewports(_numberOfViewports),
 				viewports(_viewports)
-			{};
+			{}
 			// Data
 			uint32_t		numberOfViewports;
 			const Viewport* viewports;	///< If null pointer, command auxiliary memory is used instead
@@ -652,7 +652,7 @@ namespace Renderer
 			inline SetScissorRectangles(uint32_t _numberOfScissorRectangles, const ScissorRectangle* _scissorRectangles) :
 				numberOfScissorRectangles(_numberOfScissorRectangles),
 				scissorRectangles(_scissorRectangles)
-			{};
+			{}
 			// Data
 			uint32_t				numberOfScissorRectangles;
 			const ScissorRectangle* scissorRectangles;	///< If null pointer, command auxiliary memory is used instead
@@ -710,7 +710,7 @@ namespace Renderer
 			// Constructor
 			inline SetRenderTarget(IRenderTarget* _renderTarget) :
 				renderTarget(_renderTarget)
-			{};
+			{}
 			// Data
 			IRenderTarget* renderTarget;
 			// Static data
@@ -757,7 +757,7 @@ namespace Renderer
 				color{_color[0], _color[1], _color[2], _color[3]},
 				z(_z),
 				stencil(_stencil)
-			{};
+			{}
 			// Data
 			uint32_t flags;
 			float	 color[4];
@@ -815,7 +815,7 @@ namespace Renderer
 				indirectBuffer(&_indirectBuffer),
 				indirectBufferOffset(_indirectBufferOffset),
 				numberOfDraws(_numberOfDraws)
-			{};
+			{}
 			// Data
 			const IIndirectBuffer* indirectBuffer;	///< If null pointer, command auxiliary memory is used instead
 			uint32_t			   indirectBufferOffset;
@@ -868,7 +868,7 @@ namespace Renderer
 				indirectBuffer(&_indirectBuffer),
 				indirectBufferOffset(_indirectBufferOffset),
 				numberOfDraws(_numberOfDraws)
-			{};
+			{}
 			// Data
 			const IIndirectBuffer* indirectBuffer;	///< If null pointer, command auxiliary memory is used instead
 			uint32_t			   indirectBufferOffset;

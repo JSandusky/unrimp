@@ -100,7 +100,7 @@ namespace RendererRuntime
 
 				PassClear() :
 					color{ 0.0f, 0.0f, 0.0f, 0.0f }
-				{};
+				{}
 			};
 
 			struct PassQuad
@@ -117,7 +117,7 @@ namespace RendererRuntime
 					minimumRenderQueueIndex(0),
 					maximumRenderQueueIndex(255),
 					transparentPass(false)
-				{};
+				{}
 			};
 
 			struct PassDebugGui

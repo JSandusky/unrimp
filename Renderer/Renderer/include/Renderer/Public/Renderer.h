@@ -30,8 +30,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
-#include <string.h>		// For strcpy
+#include <inttypes.h>	// For "uint32_t", "uint64_t" etc.
+#include <string.h>		// For "strcpy"
 #ifndef RENDERER_NO_DEBUG
 	#include <cassert>
 #endif
@@ -39,7 +39,7 @@
 	#include <atomic>	// For "std::atomic<>"
 #endif
 #ifdef LINUX
-	#include <wchar.h>	// for wcsncpy
+	#include <wchar.h>	// For "wcsncpy"
 #endif
 
 
@@ -148,9 +148,9 @@ namespace Renderer
 		{
 			enum Enum
 			{
-				COLOR       = 1<<0,
-				DEPTH       = 1<<1,
-				STENCIL     = 1<<2,
+				COLOR       = 1 << 0,
+				DEPTH       = 1 << 1,
+				STENCIL     = 1 << 2,
 				COLOR_DEPTH = COLOR | DEPTH
 			};
 		};
@@ -340,16 +340,14 @@ namespace Renderer
 		{
 			static const uint32_t OFFSET_APPEND	= 0xffffffff;
 			DescriptorRangeBuilder()
-			{
-			}
+			{}
 			explicit DescriptorRangeBuilder(const DescriptorRangeBuilder&)
-			{
-			}
+			{}
 			DescriptorRangeBuilder(
-				DescriptorRangeType _rangeType,
+				DescriptorRangeType	_rangeType,
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
-				const char	 _baseShaderRegisterName[NAME_LENGTH],
+				const char _baseShaderRegisterName[NAME_LENGTH],
 				uint32_t _samplerRootParameterIndex,
 				uint32_t _registerSpace = 0,
 				uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
@@ -365,10 +363,10 @@ namespace Renderer
 				initialize(*this, DescriptorRangeType::SAMPLER, _numberOfDescriptors, _baseShaderRegister, "", 0, _registerSpace, _offsetInDescriptorsFromTableStart);
 			}
 			inline void initialize(
-				DescriptorRangeType _rangeType,
+				DescriptorRangeType	_rangeType,
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
-				const char	 _baseShaderRegisterName[NAME_LENGTH],
+				const char _baseShaderRegisterName[NAME_LENGTH],
 				uint32_t _samplerRootParameterIndex,
 				uint32_t _registerSpace = 0,
 				uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
@@ -380,7 +378,7 @@ namespace Renderer
 				DescriptorRangeType _rangeType,
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
-				const char	 _baseShaderRegisterName[NAME_LENGTH],
+				const char _baseShaderRegisterName[NAME_LENGTH],
 				uint32_t _samplerRootParameterIndex,
 				uint32_t _registerSpace = 0,
 				uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
@@ -402,11 +400,9 @@ namespace Renderer
 		struct RootDescriptorTableBuilder : public RootDescriptorTable
 		{
 			RootDescriptorTableBuilder()
-			{
-			}
+			{}
 			explicit RootDescriptorTableBuilder(const RootDescriptorTableBuilder&)
-			{
-			}
+			{}
 			RootDescriptorTableBuilder(
 				uint32_t _numberOfDescriptorRanges,
 				const DescriptorRange* _descriptorRanges)
@@ -445,11 +441,9 @@ namespace Renderer
 		struct RootConstantsBuilder : public RootConstants
 		{
 			RootConstantsBuilder()
-			{
-			}
+			{}
 			explicit RootConstantsBuilder(const RootConstantsBuilder&)
-			{
-			}
+			{}
 			RootConstantsBuilder(
 				uint32_t _numberOf32BitValues,
 				uint32_t _shaderRegister,
@@ -483,11 +477,9 @@ namespace Renderer
 		struct RootDescriptorBuilder : public RootDescriptor
 		{
 			RootDescriptorBuilder()
-			{
-			}
+			{}
 			explicit RootDescriptorBuilder(const RootDescriptorBuilder&)
-			{
-			}
+			{}
 			RootDescriptorBuilder(
 				uint32_t _shaderRegister,
 				uint32_t _registerSpace = 0)
@@ -529,11 +521,9 @@ namespace Renderer
 		struct RootParameterBuilder : public RootParameter
 		{
 			RootParameterBuilder()
-			{
-			}
+			{}
 			explicit RootParameterBuilder(const RootParameterBuilder&)
-			{
-			}
+			{}
 			static inline void initializeAsDescriptorTable(
 				RootParameter& rootParam,
 				uint32_t numberOfDescriptorRanges,
@@ -669,11 +659,9 @@ namespace Renderer
 		struct RootSignatureBuilder : public RootSignature
 		{
 			RootSignatureBuilder()
-			{
-			}
+			{}
 			explicit RootSignatureBuilder(const RootSignatureBuilder&)
-			{
-			}
+			{}
 			RootSignatureBuilder(
 				uint32_t _numberOfParameters,
 				const RootParameter* _parameters,
@@ -867,9 +855,9 @@ namespace Renderer
 		{
 			enum Enum
 			{
-				DATA_CONTAINS_MIPMAPS = 1<<0,
-				GENERATE_MIPMAPS      = 1<<1,
-				RENDER_TARGET         = 1<<2
+				DATA_CONTAINS_MIPMAPS = 1 << 0,
+				GENERATE_MIPMAPS      = 1 << 1,
+				RENDER_TARGET         = 1 << 2
 			};
 		};
 		enum class TextureUsage
@@ -1085,13 +1073,11 @@ namespace Renderer
 				uint32_t				numberOfAttributes;
 				const VertexAttribute*	attributes;
 				VertexAttributes()
-				{
-				}
-				VertexAttributes(uint32_t _numberOfAttributes, const VertexAttribute*	_attributes) :
+				{}
+				VertexAttributes(uint32_t _numberOfAttributes, const VertexAttribute* _attributes) :
 					numberOfAttributes(_numberOfAttributes),
 					attributes(_attributes)
-				{
-				}
+				{}
 			};
 		#pragma pack(pop)
 		struct VertexArrayVertexBuffer
@@ -1139,7 +1125,7 @@ namespace Renderer
 				instanceCount(_instanceCount),
 				startVertexLocation(_startVertexLocation),
 				startInstanceLocation(_startInstanceLocation)
-			{};
+			{}
 		};
 		struct DrawIndexedInstancedArguments
 		{
@@ -1154,7 +1140,7 @@ namespace Renderer
 				startIndexLocation(_startIndexLocation),
 				baseVertexLocation(_baseVertexLocation),
 				startInstanceLocation(_startInstanceLocation)
-			{};
+			{}
 		};
 	#endif
 
@@ -1385,11 +1371,9 @@ namespace Renderer
 		public:
 			RefCount() :
 				mRefCount(0)
-			{
-			}
+			{}
 			virtual ~RefCount()
-			{
-			}
+			{}
 			virtual const AType* getPointer() const
 			{
 				return static_cast<const AType*>(this);
@@ -1434,8 +1418,7 @@ namespace Renderer
 		public:
 			SmartRefCount() :
 				mPtr(nullptr)
-			{
-			}
+			{}
 			explicit SmartRefCount(AType* ptr) :
 				mPtr(nullptr)
 			{
@@ -1557,13 +1540,11 @@ namespace Renderer
 				vertexShader(false),
 				maximumNumberOfPatchVertices(0),
 				maximumNumberOfGsOutputVertices(0)
-			{
-			}
+			{}
 			inline ~Capabilities()
-			{
-			}
+			{}
 		private:
-			inline explicit Capabilities(const Capabilities& ) :
+			inline explicit Capabilities(const Capabilities&) :
 				maximumNumberOfViewports(0),
 				maximumNumberOfSimultaneousRenderTargets(0),
 				maximumTextureDimension(0),
@@ -1578,8 +1559,7 @@ namespace Renderer
 				vertexShader(false),
 				maximumNumberOfPatchVertices(0),
 				maximumNumberOfGsOutputVertices(0)
-			{
-			}
+			{}
 			inline Capabilities& operator =(const Capabilities&)
 			{
 				return *this;
@@ -1672,11 +1652,9 @@ namespace Renderer
 				numberOfCreatedGeometryShaders(0),
 				currentNumberOfFragmentShaders(0),
 				numberOfCreatedFragmentShaders(0)
-			{
-			}
+			{}
 			inline ~Statistics()
-			{
-			}
+			{}
 		private:
 			inline explicit Statistics(const Statistics&) :
 				currentNumberOfRootSignatures(0),
@@ -1717,8 +1695,7 @@ namespace Renderer
 				numberOfCreatedGeometryShaders(0),
 				currentNumberOfFragmentShaders(0),
 				numberOfCreatedFragmentShaders(0)
-			{
-			}
+			{}
 			inline Statistics& operator =(const Statistics&)
 			{
 				return *this;
@@ -1855,7 +1832,8 @@ namespace Renderer
 		class IResource : public RefCount<IResource>
 		{
 		public:
-			inline virtual ~IResource() {};
+			inline virtual ~IResource()
+			{}
 			inline ResourceType getResourceType() const
 			{
 				return mResourceType;
@@ -1866,8 +1844,7 @@ namespace Renderer
 			}
 		public:
 			virtual void setDebugName(const char*)
-			{
-			}
+			{}
 			virtual void* getInternalResourceHandle() const
 			{
 				return nullptr;
@@ -1876,7 +1853,7 @@ namespace Renderer
 			inline IResource(ResourceType resourceType, IRenderer& renderer) :
 				mResourceType(resourceType),
 				mRenderer(&renderer)
-			{};
+			{}
 			explicit IResource(const IResource& source);
 			IResource& operator =(const IResource& source);
 		private:
@@ -2027,11 +2004,12 @@ namespace Renderer
 		class IBuffer : public IResource
 		{
 		public:
-			inline virtual ~IBuffer() {};
+			inline virtual ~IBuffer()
+			{}
 		protected:
 			inline IBuffer(ResourceType resourceType, IRenderer& renderer) :
 				IResource(resourceType, renderer)
-			{};
+			{}
 			explicit IBuffer(const IBuffer& source);
 			IBuffer& operator =(const IBuffer& source);
 		};
@@ -2108,14 +2086,15 @@ namespace Renderer
 		class IIndirectBuffer : public IBuffer
 		{
 		public:
-			inline virtual ~IIndirectBuffer() {};
+			inline virtual ~IIndirectBuffer()
+			{}
 		public:
 			virtual const uint8_t* getEmulationData() const = 0;
 			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
 			inline explicit IIndirectBuffer(IRenderer& renderer) :
 				IBuffer(ResourceType::INDIRECT_BUFFER, renderer)
-			{};
+			{}
 			explicit IIndirectBuffer(const IIndirectBuffer& source);
 			IIndirectBuffer& operator =(const IIndirectBuffer& source);
 		};
@@ -2131,14 +2110,16 @@ namespace Renderer
 			inline IndirectBuffer(uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0) :
 				IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
 				mDrawInstancedArguments(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation)
-			{};
-			inline virtual ~IndirectBuffer() {};
+			{}
+			inline virtual ~IndirectBuffer()
+			{}
 		public:
 			inline virtual const uint8_t* getEmulationData() const override
 			{
 				return reinterpret_cast<const uint8_t*>(&mDrawInstancedArguments);
 			}
-			inline virtual void copyDataFrom(uint32_t, const void*) {};
+			inline virtual void copyDataFrom(uint32_t, const void*)
+			{}
 		private:
 			DrawInstancedArguments mDrawInstancedArguments;
 		};
@@ -2153,14 +2134,16 @@ namespace Renderer
 			inline IndexedIndirectBuffer(uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0) :
 				IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
 				mDrawIndexedInstancedArguments(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation)
-			{};
-			inline virtual ~IndexedIndirectBuffer() {};
+			{}
+			inline virtual ~IndexedIndirectBuffer()
+			{}
 		public:
 			inline virtual const uint8_t* getEmulationData() const override
 			{
 				return reinterpret_cast<const uint8_t*>(&mDrawIndexedInstancedArguments);
 			}
-			inline virtual void copyDataFrom(uint32_t, const void*) {};
+			inline virtual void copyDataFrom(uint32_t, const void*)
+			{}
 		private:
 			DrawIndexedInstancedArguments mDrawIndexedInstancedArguments;
 		};
@@ -2582,7 +2565,7 @@ namespace Renderer
 					uniformBuffer(_uniformBuffer),
 					size(_size),
 					data(_data)
-				{};
+				{}
 				IUniformBuffer* uniformBuffer;
 				uint32_t		size;
 				void*			data;
@@ -2602,7 +2585,7 @@ namespace Renderer
 					textureBuffer(_textureBuffer),
 					size(_size),
 					data(_data)
-				{};
+				{}
 				ITextureBuffer* textureBuffer;
 				uint32_t		size;
 				void*			data;
@@ -2616,7 +2599,7 @@ namespace Renderer
 				}
 				inline SetGraphicsRootSignature(IRootSignature* _rootSignature) :
 					rootSignature(_rootSignature)
-				{};
+				{}
 				IRootSignature* rootSignature;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsRootSignature;
 			};
@@ -2629,7 +2612,7 @@ namespace Renderer
 				inline SetGraphicsRootDescriptorTable(uint32_t _rootParameterIndex, IResource* _resource) :
 					rootParameterIndex(_rootParameterIndex),
 					resource(_resource)
-				{};
+				{}
 				uint32_t   rootParameterIndex;
 				IResource* resource;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsRootDescriptorTable;
@@ -2642,7 +2625,7 @@ namespace Renderer
 				}
 				inline SetPipelineState(IPipelineState* _pipelineState) :
 					pipelineState(_pipelineState)
-				{};
+				{}
 				IPipelineState* pipelineState;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetPipelineState;
 			};
@@ -2654,7 +2637,7 @@ namespace Renderer
 				}
 				inline SetVertexArray(IVertexArray* _vertexArray) :
 					vertexArray(_vertexArray)
-				{};
+				{}
 				IVertexArray* vertexArray;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetVertexArray;
 			};
@@ -2666,7 +2649,7 @@ namespace Renderer
 				}
 				inline SetPrimitiveTopology(PrimitiveTopology _primitiveTopology) :
 					primitiveTopology(_primitiveTopology)
-				{};
+				{}
 				PrimitiveTopology primitiveTopology;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetPrimitiveTopology;
 			};
@@ -2692,7 +2675,7 @@ namespace Renderer
 				inline SetViewports(uint32_t _numberOfViewports, const Viewport* _viewports) :
 					numberOfViewports(_numberOfViewports),
 					viewports(_viewports)
-				{};
+				{}
 				uint32_t		numberOfViewports;
 				const Viewport* viewports;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetViewports;
@@ -2717,7 +2700,7 @@ namespace Renderer
 				inline SetScissorRectangles(uint32_t _numberOfScissorRectangles, const ScissorRectangle* _scissorRectangles) :
 					numberOfScissorRectangles(_numberOfScissorRectangles),
 					scissorRectangles(_scissorRectangles)
-				{};
+				{}
 				uint32_t				numberOfScissorRectangles;
 				const ScissorRectangle* scissorRectangles;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetScissorRectangles;
@@ -2738,7 +2721,7 @@ namespace Renderer
 				}
 				inline SetRenderTarget(IRenderTarget* _renderTarget) :
 					renderTarget(_renderTarget)
-				{};
+				{}
 				IRenderTarget* renderTarget;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetRenderTarget;
 			};
@@ -2753,7 +2736,7 @@ namespace Renderer
 					color{_color[0], _color[1], _color[2], _color[3]},
 					z(_z),
 					stencil(_stencil)
-				{};
+				{}
 				uint32_t flags;
 				float	 color[4];
 				float	 z;
@@ -2779,7 +2762,7 @@ namespace Renderer
 					indirectBuffer(&_indirectBuffer),
 					indirectBufferOffset(_indirectBufferOffset),
 					numberOfDraws(_numberOfDraws)
-				{};
+				{}
 				const IIndirectBuffer* indirectBuffer;
 				uint32_t			   indirectBufferOffset;
 				uint32_t			   numberOfDraws;
@@ -2804,7 +2787,7 @@ namespace Renderer
 					indirectBuffer(&_indirectBuffer),
 					indirectBufferOffset(_indirectBufferOffset),
 					numberOfDraws(_numberOfDraws)
-				{};
+				{}
 				const IIndirectBuffer* indirectBuffer;
 				uint32_t			   indirectBufferOffset;
 				uint32_t			   numberOfDraws;

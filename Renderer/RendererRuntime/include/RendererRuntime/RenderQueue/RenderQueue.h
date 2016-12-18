@@ -122,11 +122,11 @@ namespace RendererRuntime
 			inline QueuedRenderable() :
 				renderable(nullptr),
 				sortingKey(0)
-			{};
+			{}
 			inline QueuedRenderable(const Renderable& _renderable, uint64_t _sortingKey) :
 				renderable(&_renderable),
 				sortingKey(_sortingKey)
-			{};
+			{}
 			inline bool operator < (const QueuedRenderable& queuedRenderable) const
 			{
 				return (sortingKey < queuedRenderable.sortingKey);
@@ -141,7 +141,7 @@ namespace RendererRuntime
 
 			Queue() :
 				sorted(false)
-			{};
+			{}
 		};
 		typedef std::vector<Queue> Queues;
 
