@@ -37,7 +37,11 @@
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.h"
-#include "RendererRuntime/DebugGui/Detail/DebugGuiManagerWindows.h"
+#ifdef WIN32
+	#include "RendererRuntime/DebugGui/Detail/DebugGuiManagerWindows.h"
+#elif LINUX
+	#include "RendererRuntime/DebugGui/Detail/DebugGuiManagerLinux.h"
+#endif
 #include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h"
 
 #include <glm/detail/setup.hpp>	// For "glm::countof()"
@@ -150,6 +154,9 @@ namespace RendererRuntime
 		// Create the optional manager instances
 		#ifdef WIN32
 			mDebugGuiManager = new DebugGuiManagerWindows(*this);
+		#elif LINUX
+			mDebugGuiManager = new DebugGuiManagerLinux(*this);
+			// TODO(sw) Implement an linux manager for this (or we use generally sdl?)
 		#else
 			#error "Unsupported platform"
 		#endif

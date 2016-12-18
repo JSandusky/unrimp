@@ -28,12 +28,19 @@ if(NOT RENDERER_DEBUG)
 	add_definitions(-DRENDERER_NO_DEBUG)
 endif()
 
+if(UNIX)
+	# Needed for openvr
+	add_definitions(-DCOMPILER_GCC)
+endif()
 
 ##################################################
 ## Includes
 ##################################################
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenVR/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
 
 
 ##################################################
@@ -41,8 +48,111 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
-	src/RendererRuntimeImpl.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/src/imgui.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/src/imgui_draw.cpp
+	src/Asset/AssetManager.cpp
+	src/Asset/AssetPackage.cpp
+	src/Asset/Serializer/AssetPackageSerializer.cpp
+	src/Backend/RendererRuntimeImpl.cpp
+	src/Core/Math/Math.cpp
+	src/Core/Math/Quaternion.cpp
+	src/Core/Math/Transform.cpp
+	src/Core/Math/Vector3.cpp
+	src/Core/Platform/PlatformManager.cpp
+	src/Core/Renderer/FramebufferManager.cpp
+	src/Core/Renderer/FramebufferSignature.cpp
+	src/Core/String.cpp
+	src/DebugGui/DebugGuiManager.cpp
+	src/RenderQueue/IndirectBufferManager.cpp
+	src/RenderQueue/Renderable.cpp
+	src/RenderQueue/RenderableManager.cpp
+	src/RenderQueue/RenderQueue.cpp
+	src/Resource/CompositorNode/CompositorNodeInstance.cpp
+	src/Resource/CompositorNode/CompositorNodeResource.cpp
+	src/Resource/CompositorNode/CompositorNodeResourceManager.cpp
+	src/Resource/CompositorNode/CompositorTarget.cpp
+	src/Resource/CompositorNode/Loader/CompositorNodeResourceLoader.cpp
+	src/Resource/CompositorNode/Pass/Clear/CompositorInstancePassClear.cpp
+	src/Resource/CompositorNode/Pass/Clear/CompositorResourcePassClear.cpp
+	src/Resource/CompositorNode/Pass/CompositorPassFactory.cpp
+	src/Resource/CompositorNode/Pass/DebugGui/CompositorInstancePassDebugGui.cpp
+	src/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.cpp
+	src/Resource/CompositorNode/Pass/Quad/CompositorInstancePassQuad.cpp
+	src/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.cpp
+	src/Resource/CompositorNode/Pass/Scene/CompositorInstancePassScene.cpp
+	src/Resource/CompositorNode/Pass/Scene/CompositorResourcePassScene.cpp
+	src/Resource/CompositorWorkspace/CompositorWorkspaceInstance.cpp
+	src/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.cpp
+	src/Resource/CompositorWorkspace/Loader/CompositorWorkspaceResourceLoader.cpp
+	src/Resource/Detail/IResource.cpp
+	src/Resource/Detail/IResourceManager.cpp
+	src/Resource/Detail/ResourceStreamer.cpp
+	src/Resource/IResourceListener.cpp
+	src/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.cpp
+	src/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.cpp
+	src/Resource/MaterialBlueprint/BufferManager/MaterialBufferSlot.cpp
+	src/Resource/MaterialBlueprint/BufferManager/PassBufferManager.cpp
+	src/Resource/MaterialBlueprint/Cache/PipelineStateCacheManager.cpp
+	src/Resource/MaterialBlueprint/Cache/PipelineStateCompiler.cpp
+	src/Resource/MaterialBlueprint/Cache/PipelineStateSignature.cpp
+	src/Resource/MaterialBlueprint/Cache/ProgramCacheManager.cpp
+	src/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.cpp
+	src/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.cpp
+	src/Resource/MaterialBlueprint/MaterialBlueprintResource.cpp
+	src/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.cpp
+	src/Resource/Material/Loader/MaterialResourceLoader.cpp
+	src/Resource/Material/MaterialProperties.cpp
+	src/Resource/Material/MaterialPropertyValue.cpp
+	src/Resource/Material/MaterialResource.cpp
+	src/Resource/Material/MaterialResourceManager.cpp
+	src/Resource/Material/MaterialTechnique.cpp
+	src/Resource/Mesh/Loader/MeshResourceLoader.cpp
+	src/Resource/Mesh/MeshResourceManager.cpp
+	src/Resource/Scene/Factory/SceneFactory.cpp
+	src/Resource/Scene/ISceneResource.cpp
+	src/Resource/Scene/Item/CameraSceneItem.cpp
+	src/Resource/Scene/Item/MeshSceneItem.cpp
+	src/Resource/Scene/Loader/SceneResourceLoader.cpp
+	src/Resource/Scene/Node/ISceneNode.cpp
+	src/Resource/Scene/Node/SceneNode.cpp
+	src/Resource/Scene/SceneResource.cpp
+	src/Resource/Scene/SceneResourceManager.cpp
+	src/Resource/ShaderBlueprint/Cache/Preprocessor/mojoshader_common.cpp
+	src/Resource/ShaderBlueprint/Cache/Preprocessor/mojoshader_lexer.cpp
+	src/Resource/ShaderBlueprint/Cache/Preprocessor/mojoshader_preprocessor.cpp
+	src/Resource/ShaderBlueprint/Cache/Preprocessor/Preprocessor.cpp
+	src/Resource/ShaderBlueprint/Cache/ShaderBuilder.cpp
+	src/Resource/ShaderBlueprint/Cache/ShaderCacheManager.cpp
+	src/Resource/ShaderBlueprint/Cache/ShaderProperties.cpp
+	src/Resource/ShaderBlueprint/Loader/ShaderBlueprintResourceLoader.cpp
+	src/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.cpp
+	src/Resource/ShaderPiece/Loader/ShaderPieceResourceLoader.cpp
+	src/Resource/ShaderPiece/ShaderPieceResourceManager.cpp
+	src/Resource/Skeleton/SkeletonResourceManager.cpp
+	src/Resource/Texture/Loader/CrnTextureResourceLoader.cpp
+	src/Resource/Texture/Loader/DdsTextureResourceLoader.cpp
+	src/Resource/Texture/Loader/KtxTextureResourceLoader.cpp
+	src/Resource/Texture/TextureResourceManager.cpp
+	src/Vr/OpenVR/OpenVRRuntimeLinking.cpp
+	src/Vr/OpenVR/VrManagerOpenVR.cpp
 )
+
+if(UNIX)
+	# Windows source codes
+	set(SOURCE_CODES
+		${SOURCE_CODES}
+		src/DebugGui/Detail/DebugGuiManagerLinux.cpp
+	)
+endif()
+
+if(WIN32)
+	# Windows source codes
+	set(SOURCE_CODES
+		${SOURCE_CODES}
+		src/DebugGui/Detail/DebugGuiManagerWindows.cpp
+		src/PrecompiledHeader.cpp
+	)
+endif()
 
 
 ##################################################
@@ -55,7 +165,7 @@ if(SHARED_LIBRARY)
 	add_library(RendererRuntime SHARED ${SOURCE_CODES})
 	set_target_properties(RendererRuntime PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DRENDERERRUNTIME_EXPORTS")
 	if(UNIX)
-		target_link_libraries(RendererRuntime X11 dl)
+		target_link_libraries(RendererRuntime dl)
 	endif()
 endif()
 
@@ -87,10 +197,12 @@ endif()
 # Copy header
 if(SHARED_LIBRARY)
 	add_custom_command(TARGET RendererRuntime
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererRuntime/RendererRuntime.h" ${OUTPUT_INCLUDE_DIR}
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererRuntime/Public/RendererRuntime.h" ${OUTPUT_INCLUDE_DIR}
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererRuntime/Public/RendererRuntimeInstance.h" ${OUTPUT_INCLUDE_DIR}
 	)
 elseif(STATIC_LIBRARY)
 	add_custom_command(TARGET RendererRuntimeStatic
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererRuntime/RendererRuntime.h" ${OUTPUT_INCLUDE_DIR}
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererRuntime/Public/RendererRuntime.h" ${OUTPUT_INCLUDE_DIR}
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererRuntime/Public/RendererRuntimeInstance.h" ${OUTPUT_INCLUDE_DIR}
 	)
 endif()

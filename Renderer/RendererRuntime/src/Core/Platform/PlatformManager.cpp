@@ -73,6 +73,8 @@ namespace
 					// Nothing here
 				}
 			}
+		#elif LINUX
+			// Nothing special here
 		#else
 			#error "Unsupported platform"
 		#endif
