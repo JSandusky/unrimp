@@ -161,6 +161,7 @@ namespace RendererRuntime
 	bool MaterialBlueprintResourceListener::fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes)
 	{
 		bool valueFilled = true;
+		std::ignore = numberOfBytes;
 
 		// Resolve the reference value
 		if (::detail::INSTANCE_INDICES == referenceValue)

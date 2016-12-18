@@ -47,6 +47,7 @@ namespace RendererRuntime
 	void CameraSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t*)
 	{
 		assert(sizeof(v1Scene::CameraItem) == numberOfBytes);
+		std::ignore = numberOfBytes;
 	}
 
 

@@ -45,6 +45,7 @@ namespace RendererRuntime
 	void CompositorResourcePassQuad::deserialize(uint32_t numberOfBytes, const uint8_t*)
 	{
 		assert(sizeof(v1CompositorNode::PassQuad) == numberOfBytes);
+		std::ignore = numberOfBytes;
 
 		// TODO(co)
 	}

@@ -44,7 +44,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorResourcePassClear::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
+		// Sanity check
 		assert(sizeof(v1CompositorNode::PassClear) == numberOfBytes);
+		std::ignore = numberOfBytes;
+
+		// Read data
 		const v1CompositorNode::PassClear* passClear = reinterpret_cast<const v1CompositorNode::PassClear*>(data);
 		memcpy(glm::value_ptr(mColor), passClear->color, sizeof(float) * 4);
 	}
