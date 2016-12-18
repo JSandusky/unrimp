@@ -122,7 +122,7 @@ set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
 	mark_as_advanced(EXAMPLES_ASSIMP)
 
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if("${CMAKE_CXX_COMPILER_ID}"	 STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	# We need c++1z/c++17 support:
 	include(CheckCXXCompilerFlag)
 	CHECK_CXX_COMPILER_FLAG("-std=c++1z" COMPILER_SUPPORTS_CXX1z)
@@ -135,6 +135,14 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQ
 		message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
 	endif()
 endif()
+
+INCLUDE (CheckIncludeFileCXX)
+CHECK_INCLUDE_FILE_CXX("filesystem" HAVE_CXX17_FILESYSTEM)
+CHECK_INCLUDE_FILE_CXX("experimental/filesystem" HAVE_CXX1z_FILESYSTEM)
+IF(NOT HAVE_CXX17_FILESYSTEM AND NOT HAVE_CXX1z_FILESYSTEM)
+  message( FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} doesn't support c++ filesystem TS. Please use a different C++ compiler." )
+ENDIF()
+
 # At first we treat UNIX = Linux
 if(UNIX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -DRENDERER_NO_DEBUG")
