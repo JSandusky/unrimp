@@ -143,6 +143,10 @@ namespace OpenGLES2Renderer
 		*    "EGL_TRUE" if all went fine, else "EGL_FALSE"
 		*/
 		EGLBoolean makeCurrent(EGLSurface eglSurface);
+		
+#ifdef LINUX
+		inline ::Display* getX11Display() const { return mX11Display; }
+#endif
 
 
 	//[-------------------------------------------------------]
