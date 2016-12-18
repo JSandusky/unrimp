@@ -95,7 +95,7 @@ namespace RendererRuntime
 			RenderQueueIndexRange(uint8_t _minimumRenderQueueIndex, uint8_t _maximumRenderQueueIndex) :
 				minimumRenderQueueIndex(_minimumRenderQueueIndex),
 				maximumRenderQueueIndex(_maximumRenderQueueIndex)
-			{};
+			{}
 		};
 		typedef std::vector<RenderQueueIndexRange> RenderQueueIndexRanges;
 

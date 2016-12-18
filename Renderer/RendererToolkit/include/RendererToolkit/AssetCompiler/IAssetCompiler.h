@@ -132,8 +132,8 @@ namespace RendererToolkit
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline IAssetCompiler() {};
-		inline virtual ~IAssetCompiler() {};
+		inline IAssetCompiler() {}
+		inline virtual ~IAssetCompiler() {}
 
 
 	};

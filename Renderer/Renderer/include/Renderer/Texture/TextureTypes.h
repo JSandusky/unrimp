@@ -144,9 +144,9 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			DATA_CONTAINS_MIPMAPS = 1<<0,	///< The user provided data containing mipmaps from 0-n down to 1x1 linearly in memory
-			GENERATE_MIPMAPS      = 1<<1,	///< Automatically generate mipmaps (avoid this if you can, will be ignored in case the "DATA_CONTAINS_MIPMAPS"-flag is set)
-			RENDER_TARGET         = 1<<2	///< This texture can be used as render target
+			DATA_CONTAINS_MIPMAPS = 1 << 0,	///< The user provided data containing mipmaps from 0-n down to 1x1 linearly in memory
+			GENERATE_MIPMAPS      = 1 << 1,	///< Automatically generate mipmaps (avoid this if you can, will be ignored in case the "DATA_CONTAINS_MIPMAPS"-flag is set)
+			RENDER_TARGET         = 1 << 2	///< This texture can be used as render target
 		};
 	};
 

@@ -130,7 +130,7 @@ namespace RendererRuntime
 			IndirectBuffer(Renderer::IIndirectBuffer* _indirectBuffer, uint32_t _numberOfBytes) :
 				indirectBuffer(_indirectBuffer),
 				numberOfBytes(_numberOfBytes)
-			{};
+			{}
 		};
 		typedef std::vector<IndirectBuffer> IndirectBuffers;
 

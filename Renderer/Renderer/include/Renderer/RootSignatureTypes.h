@@ -97,7 +97,7 @@ namespace Renderer
 			DescriptorRangeType _rangeType,
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
-			const char	 _baseShaderRegisterName[NAME_LENGTH],
+			const char _baseShaderRegisterName[NAME_LENGTH],
 			uint32_t _samplerRootParameterIndex,
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
@@ -116,7 +116,7 @@ namespace Renderer
 			DescriptorRangeType _rangeType,
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
-			const char	 _baseShaderRegisterName[NAME_LENGTH],
+			const char _baseShaderRegisterName[NAME_LENGTH],
 			uint32_t _samplerRootParameterIndex,
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
@@ -128,7 +128,7 @@ namespace Renderer
 			DescriptorRangeType _rangeType,
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
-			const char	 _baseShaderRegisterName[NAME_LENGTH],
+			const char _baseShaderRegisterName[NAME_LENGTH],
 			uint32_t _samplerRootParameterIndex,
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)

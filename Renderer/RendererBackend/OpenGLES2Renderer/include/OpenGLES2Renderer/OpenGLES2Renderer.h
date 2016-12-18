@@ -35,10 +35,10 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
+	class IProgram;
+	class IVertexArray;
 	class IRenderTarget;
-    class IProgram;
-    class IIndirectBuffer;
-    class IVertexArray;
+	class IIndirectBuffer;
 }
 namespace OpenGLES2Renderer
 {
