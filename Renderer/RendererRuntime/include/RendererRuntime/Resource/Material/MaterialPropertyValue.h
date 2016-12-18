@@ -261,7 +261,7 @@ namespace RendererRuntime
 			Renderer::TextureAddressMode			TextureAddressMode;
 			// For texture property usage
 			uint32_t								TextureAssetId;
-			CompositorTextureReference				CompositorTextureReference;
+			MaterialPropertyValue::CompositorTextureReference				CompositorTextureReference;
 		} mValue;
 
 
