@@ -126,7 +126,7 @@ namespace RendererRuntime
 						if (nullptr != symbol)
 						{
 							// "createRendererRuntimeInstance()" signature
-							typedef RendererRuntime::IRendererRuntime *(__cdecl *createRendererRuntimeInstance)(Renderer::IRenderer &renderer);
+							typedef RendererRuntime::IRendererRuntime *(*createRendererRuntimeInstance)(Renderer::IRenderer &renderer);
 
 							// Create the renderer runtime instance
 							mRendererRuntime = reinterpret_cast<createRendererRuntimeInstance>(symbol)(renderer);
