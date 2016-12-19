@@ -2122,7 +2122,7 @@ namespace Renderer
 			{
 				return reinterpret_cast<const uint8_t*>(&mDrawInstancedArguments);
 			}
-			inline virtual void copyDataFrom(uint32_t, const void*)
+			inline virtual void copyDataFrom(uint32_t, const void*) override
 			{}
 		private:
 			DrawInstancedArguments mDrawInstancedArguments;
@@ -2150,7 +2150,7 @@ namespace Renderer
 			{
 				return reinterpret_cast<const uint8_t*>(&mDrawIndexedInstancedArguments);
 			}
-			inline virtual void copyDataFrom(uint32_t, const void*)
+			inline virtual void copyDataFrom(uint32_t, const void*) override
 			{}
 		private:
 			DrawIndexedInstancedArguments mDrawIndexedInstancedArguments;
