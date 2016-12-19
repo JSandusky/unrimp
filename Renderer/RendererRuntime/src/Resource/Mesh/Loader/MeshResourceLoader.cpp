@@ -111,7 +111,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void MeshResourceLoader::onRendererBackendDispatch()
+	bool MeshResourceLoader::onDispatch()
 	{
 		{ // Create vertex array object (VAO)
 			// Create the vertex buffer object (VBO)
@@ -152,8 +152,33 @@ namespace RendererRuntime
 				subMesh.mPrimitiveTopology  = static_cast<Renderer::PrimitiveTopology>(v1SubMesh.primitiveTopology);
 				subMesh.mStartIndexLocation = v1SubMesh.startIndexLocation;
 				subMesh.mNumberOfIndices	= v1SubMesh.numberOfIndices;
+
+				// Sanity check
+				assert(isInitialized(subMesh.mMaterialResourceId));
 			}
 		}
+
+		// Fully loaded?
+		return isFullyLoaded();
+	}
+
+	bool MeshResourceLoader::isFullyLoaded()
+	{
+		{ // Fully loaded?
+			const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
+			const SubMeshes& subMeshes = mMeshResource->mSubMeshes;
+			for (uint32_t i = 0; i < mNumberOfUsedSubMeshes; ++i)
+			{
+				if (IResource::LoadingState::LOADED != materialResourceManager.getResourceByResourceId(subMeshes[i].mMaterialResourceId).getLoadingState())
+				{
+					// Not fully loaded
+					return false;
+				}
+			}
+		}
+
+		// Fully loaded
+		return true;
 	}
 
 

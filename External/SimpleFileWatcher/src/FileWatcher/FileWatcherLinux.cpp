@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <sys/inotify.h>
-#include <unistd.h> // For read
+#include <unistd.h> // For "read()"
 
 #define BUFF_SIZE ((sizeof(struct inotify_event)+FILENAME_MAX)*1024)
 
@@ -146,7 +146,7 @@ namespace FW
 			char buff[BUFF_SIZE] = {0};
 
 			len = read (mFD, buff, BUFF_SIZE);
-		   
+
 			while (i < len)
 			{
 				struct inotify_event *pevent = (struct inotify_event *)&buff[i];

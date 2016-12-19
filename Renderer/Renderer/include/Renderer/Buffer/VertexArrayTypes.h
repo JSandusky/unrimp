@@ -106,20 +106,22 @@ namespace Renderer
 	*/
 	#pragma pack(push)
 	#pragma pack(1)
-	struct VertexAttributes
-	{
-			  uint32_t		   numberOfAttributes;	///< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
-		const VertexAttribute* attributes;			///< At least "numberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes, the data is internally copied and you have to free your memory if you no longer need it
+		struct VertexAttributes
+		{
+				  uint32_t		   numberOfAttributes;	///< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
+			const VertexAttribute* attributes;			///< At least "numberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes, the data is internally copied and you have to free your memory if you no longer need it
 
-		VertexAttributes()
-		{
-		}
-		VertexAttributes(uint32_t _numberOfAttributes, const VertexAttribute*	_attributes) :
-			numberOfAttributes(_numberOfAttributes),
-			attributes(_attributes)
-		{
-		}
-	};
+			VertexAttributes()
+			{
+				// Nothing here
+			}
+			VertexAttributes(uint32_t _numberOfAttributes, const VertexAttribute* _attributes) :
+				numberOfAttributes(_numberOfAttributes),
+				attributes(_attributes)
+			{
+				// Nothing here
+			}
+		};
 	#pragma pack(pop)
 
 	/**

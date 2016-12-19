@@ -123,7 +123,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void PipelineStateCompiler::rendererBackendDispatch()
+	void PipelineStateCompiler::dispatch()
 	{
 		// Synchronous dispatch
 		// TODO(co) Add maximum dispatch time budget
@@ -201,7 +201,7 @@ namespace RendererRuntime
 				std::lock_guard<std::mutex> compilerMutexLock(mutex);
 				everythingFlushed = compilerRequests.empty();
 			}
-			rendererBackendDispatch();
+			dispatch();
 
 			// Wait for a moment to not totally pollute the CPU
 			if (!everythingFlushed)

@@ -107,10 +107,10 @@ namespace OpenGLES2Renderer
 
 		/**
 		*  @brief
-		*    Return the used EGL config
+		*    Return the used EGL configuration
 		*
 		*  @return
-		*    The used EGL config, null pointer on error
+		*    The used EGL configuration, null pointer on error
 		*/
 		inline EGLConfig getEGLConfig() const;
 
@@ -143,10 +143,13 @@ namespace OpenGLES2Renderer
 		*    "EGL_TRUE" if all went fine, else "EGL_FALSE"
 		*/
 		EGLBoolean makeCurrent(EGLSurface eglSurface);
-		
-#ifdef LINUX
-		inline ::Display* getX11Display() const { return mX11Display; }
-#endif
+
+		//[-------------------------------------------------------]
+		//[ Platform specific                                     ]
+		//[-------------------------------------------------------]
+		#ifdef LINUX
+			inline ::Display* getX11Display() const;
+		#endif
 
 
 	//[-------------------------------------------------------]

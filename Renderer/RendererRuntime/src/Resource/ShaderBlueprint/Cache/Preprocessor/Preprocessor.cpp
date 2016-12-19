@@ -26,7 +26,7 @@
 #define MOJOSHADER_NO_VERSION_INCLUDE
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/Preprocessor/mojoshader.h"
 
-#include <cstring> // For strlen
+#include <cstring>	// For "strlen()"
 
 
 //[-------------------------------------------------------]

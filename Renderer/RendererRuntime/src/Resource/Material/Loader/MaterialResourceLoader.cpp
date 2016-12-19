@@ -86,21 +86,52 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialResourceLoader::onRendererBackendDispatch()
+	bool MaterialResourceLoader::onDispatch()
 	{
 		// TODO(co) Material resource update
 		mMaterialResource->releaseTextures();
 		mMaterialResource->destroyAllMaterialTechniques();
 
-		{ // Create the material techniques (list is already sorted)
-			MaterialResource::SortedMaterialTechniqueVector& sortedMaterialTechniqueVector = mMaterialResource->mSortedMaterialTechniqueVector;
+		{ // Request all referenced material blueprint resources to be loaded now
 			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
+			const v1Material::Technique* v1MaterialTechnique = mMaterialTechniques;
+			mMaterialBlueprintResourceIds.resize(mNumberOfTechniques);
+			for (size_t i = 0; i < mNumberOfTechniques; ++i, ++v1MaterialTechnique)
+			{
+				mMaterialBlueprintResourceIds[i] = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(v1MaterialTechnique->materialBlueprintAssetId);
+			}
+		}
+
+		// Fully loaded?
+		return isFullyLoaded();
+	}
+
+	bool MaterialResourceLoader::isFullyLoaded()
+	{
+		{ // Fully loaded?
+			const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 			const v1Material::Technique* v1MaterialTechnique = mMaterialTechniques;
 			for (size_t i = 0; i < mNumberOfTechniques; ++i, ++v1MaterialTechnique)
 			{
-				sortedMaterialTechniqueVector.push_back(new MaterialTechnique(v1MaterialTechnique->materialTechniqueId, *mMaterialResource, materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(v1MaterialTechnique->materialBlueprintAssetId)));
+				if (IResource::LoadingState::LOADED != materialBlueprintResourceManager.getResourceByResourceId(mMaterialBlueprintResourceIds[i]).getLoadingState())
+				{
+					// Not fully loaded
+					return false;
+				}
 			}
 		}
+
+		{ // Create the material techniques (list is already sorted)
+			MaterialResource::SortedMaterialTechniqueVector& sortedMaterialTechniqueVector = mMaterialResource->mSortedMaterialTechniqueVector;
+			const v1Material::Technique* v1MaterialTechnique = mMaterialTechniques;
+			for (size_t i = 0; i < mNumberOfTechniques; ++i, ++v1MaterialTechnique)
+			{
+				sortedMaterialTechniqueVector.push_back(new MaterialTechnique(v1MaterialTechnique->materialTechniqueId, *mMaterialResource, mMaterialBlueprintResourceIds[i]));
+			}
+		}
+
+		// Fully loaded
+		return true;
 	}
 
 

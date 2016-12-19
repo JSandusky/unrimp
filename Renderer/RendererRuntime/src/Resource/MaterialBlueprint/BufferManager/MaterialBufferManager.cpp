@@ -106,6 +106,7 @@ namespace RendererRuntime
 
 		// Sanity checks
 		assert(isInitialized(materialBufferSlot.mAssignedMaterialPool));
+		assert(isInitialized(materialBufferSlot.mAssignedMaterialSlot));
 		assert(materialBufferSlot.mAssignedMaterialSlot < mSlotsPerPool);
 		assert(std::find(bufferPool->freeSlots.begin(), bufferPool->freeSlots.end(), materialBufferSlot.mAssignedMaterialSlot) == bufferPool->freeSlots.end());
 		assert(materialBufferSlot.mGlobalIndex < static_cast<int>(mMaterialBufferSlots.size()));

@@ -38,9 +38,16 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void CompositorWorkspaceResourceLoader::onRendererBackendDispatch()
+	inline bool CompositorWorkspaceResourceLoader::onDispatch()
 	{
-		// Nothing here
+		// Fully loaded
+		return true;
+	}
+
+	inline bool CompositorWorkspaceResourceLoader::isFullyLoaded()
+	{
+		// Fully loaded
+		return true;
 	}
 
 

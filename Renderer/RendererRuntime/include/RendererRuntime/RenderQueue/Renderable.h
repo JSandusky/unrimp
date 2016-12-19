@@ -95,7 +95,7 @@ namespace RendererRuntime
 		inline Renderer::IVertexArrayPtr getVertexArrayPtr() const;
 		inline void setVertexArrayPtr(const Renderer::IVertexArrayPtr& vertexArrayPtr);
 		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
-		inline Renderer::PrimitiveTopology setPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
+		inline void setPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
 		inline uint32_t getStartIndexLocation() const;
 		inline void setStartIndexLocation(uint32_t startIndexLocation);
 		inline uint32_t getNumberOfIndices() const;

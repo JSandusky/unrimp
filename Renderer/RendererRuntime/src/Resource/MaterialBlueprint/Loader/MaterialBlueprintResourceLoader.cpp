@@ -212,7 +212,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialBlueprintResourceLoader::onRendererBackendDispatch()
+	bool MaterialBlueprintResourceLoader::onDispatch()
 	{
 		Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
 
@@ -316,6 +316,9 @@ namespace RendererRuntime
 				}
 			}
 		}
+
+		// Fully loaded
+		return true;
 	}
 
 

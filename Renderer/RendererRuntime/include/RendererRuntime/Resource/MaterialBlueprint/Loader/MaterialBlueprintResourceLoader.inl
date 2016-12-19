@@ -44,6 +44,12 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline bool MaterialBlueprintResourceLoader::isFullyLoaded()
+	{
+		// Fully loaded
+		return true;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

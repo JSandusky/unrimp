@@ -36,7 +36,7 @@
 
 	#elif defined LINUX
 		#include <dlfcn.h>
-		#include <iostream> // For std::cerr
+		#include <iostream>	// For "std::cerr"
 	#else
 		#error "Unsupported platform"
 	#endif
@@ -169,7 +169,6 @@ namespace Renderer
 						// Create the renderer instance
 						mRenderer = createNullRendererInstance(nativeWindowHandle);
 					}
-					else
 				#endif
 
 				// OpenGL
@@ -182,7 +181,6 @@ namespace Renderer
 						// Create the renderer instance
 						mRenderer = createOpenGLRendererInstance(nativeWindowHandle);
 					}
-					else
 				#endif
 
 				// OpenGLES2
@@ -195,11 +193,7 @@ namespace Renderer
 						// Create the renderer instance
 						mRenderer = createOpenGLES2RendererInstance(nativeWindowHandle);
 					}
-				#ifdef WIN32
-					else
 				#endif
-				#endif
-
 
 				// Direct3D 9
 				#ifndef RENDERER_NO_DIRECT3D9
@@ -211,7 +205,6 @@ namespace Renderer
 						// Create the renderer instance
 						mRenderer = createDirect3D9RendererInstance(nativeWindowHandle);
 					}
-					else
 				#endif
 
 				// Direct3D 10
@@ -224,7 +217,6 @@ namespace Renderer
 						// Create the renderer instance
 						mRenderer = createDirect3D10RendererInstance(nativeWindowHandle);
 					}
-					else
 				#endif
 
 				// Direct3D 11

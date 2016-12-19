@@ -18,63 +18,43 @@
 \*********************************************************/
 
 
+// TODO(co) The C++17 filesystem is still experimental and hence not handled in an uniform way cross platform. Until C++17 has been released, we need to use those helper.
+
+
+//[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#ifdef WIN32
+	#include <filesystem>
+#else
+	#include <experimental/filesystem>
+#endif
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace RendererToolkit
 {
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[ Macros                                                ]
 	//[-------------------------------------------------------]
-	inline ResourceLoaderTypeId ShaderBlueprintResourceLoader::getResourceLoaderTypeId() const
-	{
-		return TYPE_ID;
-	}
-
-	inline void ShaderBlueprintResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
-	inline bool ShaderBlueprintResourceLoader::isFullyLoaded()
-	{
-		// Fully loaded
-		return true;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline ShaderBlueprintResourceLoader::ShaderBlueprintResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		IResourceLoader(resourceManager),
-		mRendererRuntime(rendererRuntime),
-		mShaderBlueprintResource(nullptr),
-		mMaximumNumberOfIncludeShaderPieceAssetIds(0),
-		mIncludeShaderPieceAssetIds(nullptr),
-		mMaximumNumberOfShaderSourceCodeBytes(0),
-		mShaderSourceCode(nullptr)
-	{
-		// Nothing here
-	}
-
-	inline ShaderBlueprintResourceLoader::~ShaderBlueprintResourceLoader()
-	{
-		// Free temporary data
-		delete [] mIncludeShaderPieceAssetIds;
-		delete [] mShaderSourceCode;
-	}
-
-	inline void ShaderBlueprintResourceLoader::initialize(const Asset& asset, ShaderBlueprintResource& shaderBlueprintResource)
-	{
-		mAsset					 = asset;
-		mShaderBlueprintResource = &shaderBlueprintResource;
-	}
+	#ifdef WIN32
+		#define STD_FILESYSTEM_PATH std::tr2::sys::path
+	#else
+		#define STD_FILESYSTEM_PATH std::experimental::filesystem::path
+	#endif
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+} // RendererToolkit

@@ -233,35 +233,35 @@ namespace RendererRuntime
 		*/
 		union Value
 		{
-			bool									Boolean;
-			int										Integer;
-			int										Integer2[2];
-			int										Integer3[3];
-			int										Integer4[4];
-			float									Float;
-			float									Float2[2];
-			float									Float3[3];
-			float									Float4[4];
-			// float								Float3_3[9];	// Declaration property only
-			// float								Float4_4[16];	// Declaration property only
+			bool											  Boolean;
+			int												  Integer;
+			int												  Integer2[2];
+			int												  Integer3[3];
+			int												  Integer4[4];
+			float											  Float;
+			float											  Float2[2];
+			float											  Float3[3];
+			float											  Float4[4];
+			// float										  Float3_3[9];	// Declaration property only
+			// float										  Float4_4[16];	// Declaration property only
 			// For pipeline rasterizer state property usage
-			Renderer::FillMode						FillMode;
-			Renderer::CullMode						CullMode;
-			Renderer::ConservativeRasterizationMode	ConservativeRasterizationMode;
+			Renderer::FillMode								  FillMode;
+			Renderer::CullMode								  CullMode;
+			Renderer::ConservativeRasterizationMode			  ConservativeRasterizationMode;
 			// For pipeline depth stencil state property usage
-			Renderer::DepthWriteMask				DepthWriteMask;
-			Renderer::StencilOp						StencilOp;
+			Renderer::DepthWriteMask						  DepthWriteMask;
+			Renderer::StencilOp								  StencilOp;
 			// For pipeline depth stencil state and sampler state property usage
-			Renderer::ComparisonFunc				ComparisonFunc;
+			Renderer::ComparisonFunc						  ComparisonFunc;
 			// // For pipeline blend state property usage
-			Renderer::Blend							Blend;
-			Renderer::BlendOp						BlendOp;
+			Renderer::Blend									  Blend;
+			Renderer::BlendOp								  BlendOp;
 			// For sampler state property usage
-			Renderer::FilterMode					FilterMode;
-			Renderer::TextureAddressMode			TextureAddressMode;
+			Renderer::FilterMode							  FilterMode;
+			Renderer::TextureAddressMode					  TextureAddressMode;
 			// For texture property usage
-			uint32_t								TextureAssetId;
-			MaterialPropertyValue::CompositorTextureReference				CompositorTextureReference;
+			uint32_t										  TextureAssetId;
+			MaterialPropertyValue::CompositorTextureReference CompositorTextureReference;
 		} mValue;
 
 
