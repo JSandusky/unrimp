@@ -44,6 +44,7 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderPieceAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SkeletonAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\Helper\FileSystemHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonMaterialBlueprintHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonMaterialHelper.h" />

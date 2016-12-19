@@ -33,7 +33,7 @@
 
 #include <cassert>
 #ifndef WIN32
-#include <wchar.h>
+	#include <wchar.h>	// For "wcsncpy()"
 #endif
 
 

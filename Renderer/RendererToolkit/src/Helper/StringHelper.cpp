@@ -254,7 +254,8 @@ namespace RendererToolkit
 		// Append the rest to the target code, if there's a rest
 		if (currentPosition < endPosition)
 		{
-			// TODO(sw) in c++14 it exists an overload: "append (const string& str, size_t subpos, size_t sublen = npos)" but it seems gcc 6.2.0 doesn't specifies the default value for the last parameter -> thus specify it explicitely
+			// In C++14 exists an overload "append(const string& str, size_t subpos, size_t sublen = npos)" but it seems GCC 6.2.0 doesn't specifies the default value for the last parameter
+			// -> Thus specify it explicitly
 			targetCode.append(sourceCode, currentPosition, std::string::npos);
 		}
 	}

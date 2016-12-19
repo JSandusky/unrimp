@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
@@ -42,11 +43,6 @@
 
 #include <fstream>
 #include <algorithm>
-#ifdef WIN32 // TODO(sw) For now the filesystem header is only windows only
-	#include <filesystem>
-#else // TODO(sw) GCC 6.2.0 has the filesyestem TS under experimental
-	#include <experimental/filesystem>
-#endif
 
 
 //[-------------------------------------------------------]
@@ -176,11 +172,7 @@ namespace RendererToolkit
 				}
 
 				// Parse material blueprint JSON
-				#ifdef WIN32
-					const std::string absoluteMaterialBlueprintFilename = std::tr2::sys::path(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
-				#else
-					const std::string absoluteMaterialBlueprintFilename = std::experimental::filesystem::path(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
-				#endif
+				const std::string absoluteMaterialBlueprintFilename = STD_FILESYSTEM_PATH(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
 				std::ifstream materialBlueprintInputFileStream(absoluteMaterialBlueprintFilename, std::ios::binary);
 				rapidjson::Document rapidJsonDocumentMaterialBlueprint;
 				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocumentMaterialBlueprint, materialBlueprintInputFileStream, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "1");
@@ -227,7 +219,6 @@ namespace RendererToolkit
 					const RendererRuntime::MaterialPropertyId materialPropertyId(propertyName);
 
 					// Figure out the material property value type by using the material blueprint
-					// TODO(sw) Why was here an const iterator used when we want to change the content?
 					RendererRuntime::MaterialProperties::SortedPropertyVector::iterator iterator = std::lower_bound(sortedMaterialPropertyVector.begin(), sortedMaterialPropertyVector.end(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
 					if (iterator != sortedMaterialPropertyVector.end())
 					{

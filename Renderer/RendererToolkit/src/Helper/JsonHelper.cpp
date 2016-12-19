@@ -39,7 +39,7 @@
 #pragma warning(pop)
 
 #include <fstream>
-#include <algorithm> // For std::count
+#include <algorithm> // For "std::count()"
 
 
 //[-------------------------------------------------------]

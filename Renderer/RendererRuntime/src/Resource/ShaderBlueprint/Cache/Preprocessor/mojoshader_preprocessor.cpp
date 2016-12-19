@@ -22,7 +22,6 @@
 	#include "RendererRuntime/Core/Platform/WindowsHeader.h"
 #else
 	#pragma clang diagnostic ignored "-Wswitch" // warning: case value not in enumerated type 'Token' [-Wswitch]
-
 #endif
 
 #define MOJOSHADER_NO_VERSION_INCLUDE

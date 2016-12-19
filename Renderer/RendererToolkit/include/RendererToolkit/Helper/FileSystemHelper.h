@@ -18,101 +18,43 @@
 \*********************************************************/
 
 
+// TODO(co) The C++17 filesystem is still experimental and hence not handled in an uniform way cross platform. Until C++17 has been released, we need to use those helper.
+
+
+//[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/GetUninitialized.h"
+#ifdef WIN32
+	#include <filesystem>
+#else
+	#include <experimental/filesystem>
+#endif
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace RendererToolkit
 {
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Macros                                                ]
 	//[-------------------------------------------------------]
-	inline Renderable::~Renderable()
-	{
-		unsetMaterialResourceIdInternal();
-	}
-
-	inline uint64_t Renderable::getSortingKey() const
-	{
-		return mSortingKey;
-	}
-
-	inline RenderableManager& Renderable::getRenderableManager() const
-	{
-		return mRenderableManager;
-	}
-
-	inline Renderer::IVertexArrayPtr Renderable::getVertexArrayPtr() const
-	{
-		return mVertexArrayPtr;
-	}
-
-	inline void Renderable::setVertexArrayPtr(const Renderer::IVertexArrayPtr& vertexArrayPtr)
-	{
-		mVertexArrayPtr = vertexArrayPtr;
-		calculateSortingKey();
-	}
-
-	inline Renderer::PrimitiveTopology Renderable::getPrimitiveTopology() const
-	{
-		return mPrimitiveTopology;
-	}
-
-	inline void Renderable::setPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		mPrimitiveTopology = primitiveTopology;
-	}
-
-	inline uint32_t Renderable::getStartIndexLocation() const
-	{
-		return mStartIndexLocation;
-	}
-
-	inline void Renderable::setStartIndexLocation(uint32_t startIndexLocation)
-	{
-		mStartIndexLocation = startIndexLocation;
-	}
-
-	inline uint32_t Renderable::getNumberOfIndices() const
-	{
-		return mNumberOfIndices;
-	}
-
-	inline void Renderable::setNumberOfIndices(uint32_t numberOfIndices)
-	{
-		mNumberOfIndices = numberOfIndices;
-	}
-
-	inline MaterialResourceId Renderable::getMaterialResourceId() const
-	{
-		return mMaterialResourceId;
-	}
-
-	inline void Renderable::unsetMaterialResourceId()
-	{
-		unsetMaterialResourceIdInternal();
-		calculateSortingKey();
-	}
-
-	inline uint8_t Renderable::getRenderQueueIndex() const
-	{
-		return mRenderQueueIndex;
-	}
-
-	inline bool Renderable::getCastShadows() const
-	{
-		return mCastShadows;
-	}
+	#ifdef WIN32
+		#define STD_FILESYSTEM_PATH std::tr2::sys::path
+	#else
+		#define STD_FILESYSTEM_PATH std::experimental::filesystem::path
+	#endif
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+} // RendererToolkit

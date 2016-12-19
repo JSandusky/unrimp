@@ -53,6 +53,13 @@ namespace OpenGLES2Renderer
 		return mDummySurface;
 	}
 
+	#ifdef LINUX
+		inline ::Display* IContext::getX11Display() const
+		{
+			return mX11Display;
+		}
+	#endif
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
