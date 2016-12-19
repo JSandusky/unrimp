@@ -32,6 +32,7 @@
 #include <RendererRuntime/Resource/Scene/Node/ISceneNode.h>
 #include <RendererRuntime/Resource/Scene/Item/MeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
+#include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
 #include <RendererRuntime/Resource/Material/MaterialResourceManager.h>
@@ -315,14 +316,22 @@ void FirstScene::trySetCustomMaterialResource()
 {
 	if (!mCustomMaterialResourceSet && nullptr != mSceneNode && RendererRuntime::isInitialized(mCloneMaterialResourceId))
 	{
-		for (RendererRuntime::ISceneItem* sceneItem : mSceneNode->getAttachedSceneItems())
+		const RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+		if (nullptr != rendererRuntime)
 		{
-			if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
+			for (RendererRuntime::ISceneItem* sceneItem : mSceneNode->getAttachedSceneItems())
 			{
-				// Tell the mesh scene item about our custom material resource
-				static_cast<RendererRuntime::MeshSceneItem*>(sceneItem)->setMaterialResourceIdOfAllSubMeshes(mCloneMaterialResourceId);
+				if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
+				{
+					// Tell the mesh scene item about our custom material resource
+					RendererRuntime::MeshSceneItem* meshSceneItem = static_cast<RendererRuntime::MeshSceneItem*>(sceneItem);
+					if (RendererRuntime::IResource::LoadingState::LOADED == rendererRuntime->getMeshResourceManager().getResourceByResourceId(meshSceneItem->getMeshResourceId()).getLoadingState())
+					{
+						meshSceneItem->setMaterialResourceIdOfAllSubMeshes(mCloneMaterialResourceId);
+						mCustomMaterialResourceSet = true;
+					}
+				}
 			}
 		}
-		mCustomMaterialResourceSet = true;
 	}
 }
