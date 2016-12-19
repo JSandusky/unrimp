@@ -38,6 +38,12 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline bool KtxTextureResourceLoader::isFullyLoaded()
+	{
+		// Fully loaded
+		return true;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

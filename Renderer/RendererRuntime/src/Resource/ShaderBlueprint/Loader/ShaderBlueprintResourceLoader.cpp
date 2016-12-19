@@ -95,7 +95,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void ShaderBlueprintResourceLoader::onDispatch()
+	bool ShaderBlueprintResourceLoader::onDispatch()
 	{
 		{ // Read the shader piece resources to include
 			ShaderPieceResourceManager& shaderPieceResourceManager = mRendererRuntime.getShaderPieceResourceManager();
@@ -135,6 +135,9 @@ namespace RendererRuntime
 			// TODO(co) Do only clear the influenced shader cache entries
 			mRendererRuntime.getShaderBlueprintResourceManager().getShaderCacheManager().clearCache();
 		}
+
+		// Fully loaded
+		return true;
 	}
 
 

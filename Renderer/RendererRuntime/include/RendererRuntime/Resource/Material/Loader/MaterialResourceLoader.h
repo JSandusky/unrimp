@@ -30,6 +30,8 @@
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
 #include "RendererRuntime/Asset/Asset.h"
 
+#include <vector>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -50,6 +52,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -79,7 +87,8 @@ namespace RendererRuntime
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization() override;
 		inline virtual void onProcessing() override;
-		virtual void onDispatch() override;
+		virtual bool onDispatch() override;
+		virtual bool isFullyLoaded() override;
 
 
 	//[-------------------------------------------------------]
@@ -97,14 +106,22 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		typedef std::vector<MaterialBlueprintResourceId> MaterialBlueprintResourceIds;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		// Resource source and destination
 		Asset			  mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
 		MaterialResource* mMaterialResource;
 		// Temporary data: Techniques
-		uint32_t			   mMaximumNumberOfMaterialTechniques;
-		uint32_t			   mNumberOfTechniques;
-		v1Material::Technique* mMaterialTechniques;
+		uint32_t					 mMaximumNumberOfMaterialTechniques;
+		uint32_t					 mNumberOfTechniques;
+		v1Material::Technique*		 mMaterialTechniques;
+		MaterialBlueprintResourceIds mMaterialBlueprintResourceIds;
 
 
 	};

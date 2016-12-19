@@ -38,9 +38,16 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void SceneResourceLoader::onDispatch()
+	inline bool SceneResourceLoader::onDispatch()
 	{
-		// Nothing here
+		// Fully loaded
+		return true;
+	}
+
+	inline bool SceneResourceLoader::isFullyLoaded()
+	{
+		// Fully loaded
+		return true;
 	}
 
 

@@ -122,10 +122,13 @@ namespace RendererRuntime
 		}
 	}
 
-	void KtxTextureResourceLoader::onDispatch()
+	bool KtxTextureResourceLoader::onDispatch()
 	{
 		// Create the renderer texture instance
 		mTextureResource->mTexture = mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+
+		// Fully loaded
+		return true;
 	}
 
 

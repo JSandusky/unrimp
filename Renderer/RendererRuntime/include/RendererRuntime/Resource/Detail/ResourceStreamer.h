@@ -30,7 +30,7 @@
 #include "RendererRuntime/Core/NonCopyable.h"
 
 // Disable warnings in external headers, we can't fix them
-#include <queue>
+#include <deque>
 #include <atomic>
 #pragma warning(push)
 	#pragma warning(disable: 4265)	// warning C4265: '<x>': class has virtual functions, but destructor is not virtual
@@ -129,6 +129,13 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::deque<LoadRequest> LoadRequests;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
@@ -137,17 +144,18 @@ namespace RendererRuntime
 		std::atomic<bool>		  mShutdownDeserializationThread;
 		std::mutex				  mDeserializationMutex;
 		std::condition_variable	  mDeserializationConditionVariable;
-		std::queue<LoadRequest>	  mDeserializationQueue;
+		LoadRequests			  mDeserializationQueue;
 		std::thread				  mDeserializationThread;
 		// Resource streamer stage: 2. Asynchronous processing
 		std::atomic<bool>		  mShutdownProcessingThread;
 		std::mutex				  mProcessingMutex;
 		std::condition_variable	  mProcessingConditionVariable;
-		std::queue<LoadRequest>	  mProcessingQueue;
+		LoadRequests			  mProcessingQueue;
 		std::thread				  mProcessingThread;
 		// Resource streamer stage: 3. Synchronous dispatch to e.g. the renderer backend
 		std::mutex				  mDispatchMutex;
-		std::queue<LoadRequest>	  mDispatchQueue;
+		LoadRequests			  mDispatchQueue;
+		LoadRequests			  mFullyLoadedWaitingQueue;
 
 
 	};

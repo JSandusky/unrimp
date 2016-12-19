@@ -50,7 +50,7 @@ namespace RendererRuntime
 		// Push the load request into the queue of the first resource streamer pipeline stage
 		// -> Resource streamer stage: 1. Asynchronous deserialization
 		std::unique_lock<std::mutex> deserializationMutexLock(mDeserializationMutex);
-		mDeserializationQueue.push(loadRequest);
+		mDeserializationQueue.push_back(loadRequest);
 		deserializationMutexLock.unlock();
 		mDeserializationConditionVariable.notify_one();
 	}
@@ -106,18 +106,50 @@ namespace RendererRuntime
 				break;
 			}
 			LoadRequest loadRequest = mDispatchQueue.front();
-			mDispatchQueue.pop();
+			mDispatchQueue.pop_front();
 			dispatchMutexLock.unlock();
 
 			// Do the work
 			IResourceLoader* resourceLoader = loadRequest.resourceLoader;
-			resourceLoader->onDispatch();
+			if (resourceLoader->onDispatch())
+			{
+				// Load request is finished now
 
-			// Update the resource loading state
-			loadRequest.resource->setLoadingState(IResource::LoadingState::LOADED);
+				// Update the resource loading state
+				loadRequest.resource->setLoadingState(IResource::LoadingState::LOADED);
 
-			// Release the resource loader instance
-			resourceLoader->getResourceManager().releaseResourceLoaderInstance(*resourceLoader);
+				// Release the resource loader instance
+				resourceLoader->getResourceManager().releaseResourceLoaderInstance(*resourceLoader);
+			}
+			else
+			{
+				mFullyLoadedWaitingQueue.push_back(loadRequest);
+			}
+		}
+
+		// Check fully loaded waiting queue
+		for (LoadRequests::iterator iterator = mFullyLoadedWaitingQueue.begin(); iterator != mFullyLoadedWaitingQueue.end();)
+		{
+			const LoadRequest& loadRequest = *iterator;
+			IResourceLoader* resourceLoader = loadRequest.resourceLoader;
+			if (resourceLoader->isFullyLoaded())
+			{
+				// Load request is finished now
+
+				// Update the resource loading state
+				loadRequest.resource->setLoadingState(IResource::LoadingState::LOADED);
+
+				// Release the resource loader instance
+				resourceLoader->getResourceManager().releaseResourceLoaderInstance(*resourceLoader);
+
+				// Remove from queue
+				iterator = mFullyLoadedWaitingQueue.erase(iterator);
+			}
+			else
+			{
+				// Next, please
+				++iterator;
+			}
 		}
 	}
 
@@ -160,7 +192,7 @@ namespace RendererRuntime
 			{
 				// Get the load request
 				LoadRequest loadRequest = mDeserializationQueue.front();
-				mDeserializationQueue.pop();
+				mDeserializationQueue.pop_front();
 				deserializationMutexLock.unlock();
 
 				// Do the work
@@ -169,7 +201,7 @@ namespace RendererRuntime
 				{ // Push the load request into the queue of the next resource streamer pipeline stage
 				  // -> Resource streamer stage: 2. Asynchronous processing
 					std::unique_lock<std::mutex> processingMutexLock(mProcessingMutex);
-					mProcessingQueue.push(loadRequest);
+					mProcessingQueue.push_back(loadRequest);
 					processingMutexLock.unlock();
 					mProcessingConditionVariable.notify_one();
 				}
@@ -194,7 +226,7 @@ namespace RendererRuntime
 			{
 				// Get the load request
 				LoadRequest loadRequest = mProcessingQueue.front();
-				mProcessingQueue.pop();
+				mProcessingQueue.pop_front();
 				processingMutexLock.unlock();
 
 				// Do the work
@@ -203,7 +235,7 @@ namespace RendererRuntime
 				{ // Push the load request into the queue of the next resource streamer pipeline stage
 				  // -> Resource streamer stage: 3. Synchronous dispatch to e.g. the renderer backend
 					std::lock_guard<std::mutex> dispatchMutexLock(mDispatchMutex);
-					mDispatchQueue.push(loadRequest);
+					mDispatchQueue.push_back(loadRequest);
 				}
 
 				// We're ready for the next round

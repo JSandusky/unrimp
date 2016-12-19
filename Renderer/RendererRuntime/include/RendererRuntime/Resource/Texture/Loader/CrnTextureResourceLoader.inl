@@ -33,6 +33,12 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool CrnTextureResourceLoader::isFullyLoaded()
+	{
+		// Fully loaded
+		return true;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

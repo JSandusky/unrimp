@@ -105,8 +105,20 @@ namespace RendererRuntime
 		/**
 		*  @brief
 		*    Called when the resource loader has to dispatch the data (e.g. to the renderer backend)
+		*
+		*  @return
+		*    "true" if the resource is fully loaded, else "false" (e.g. asset dependencies are not fully loaded, yet) meaning this method will be called later on again
 		*/
-		virtual void onDispatch() = 0;
+		virtual bool onDispatch() = 0;
+
+		/**
+		*  @brief
+		*    Called when the resource loader is about to switch the resource into the loaded state
+		*
+		*  @return
+		*    "true" if the resource is fully loaded, else "false" (e.g. asset dependencies are not fully loaded, yet) meaning this method will be called later on again
+		*/
+		virtual bool isFullyLoaded() = 0;
 
 
 	//[-------------------------------------------------------]
