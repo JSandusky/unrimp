@@ -36,6 +36,7 @@
 
 	#elif defined LINUX
 		#include <dlfcn.h>
+		#include <iostream> // For std::cerr
 	#else
 		#error "Unsupported platform"
 	#endif
@@ -194,8 +195,11 @@ namespace Renderer
 						// Create the renderer instance
 						mRenderer = createOpenGLES2RendererInstance(nativeWindowHandle);
 					}
+				#ifdef WIN32
 					else
 				#endif
+				#endif
+
 
 				// Direct3D 9
 				#ifndef RENDERER_NO_DIRECT3D9

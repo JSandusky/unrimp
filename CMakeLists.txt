@@ -115,6 +115,8 @@ set(STATIC_LIBRARY			"1"	CACHE BOOL "Build static library?")
 set(SHARED_LIBRARY			"1"	CACHE BOOL "Build shared library?")
 # Renderer toolkit
 set(RENDERER_TOOLKIT		"1"	CACHE BOOL "Build renderer toolkit?")
+# Renderer runtime
+set(RENDERER_RUNTIME		"1"	CACHE BOOL "Build renderer runtime?")
 # Examples
 set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
 	# Advanced examples options
@@ -122,11 +124,27 @@ set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
 	mark_as_advanced(EXAMPLES_ASSIMP)
 
 
-# We need c++0x/c++11 support:
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	message(STATUS "enable c++11 support")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+if("${CMAKE_CXX_COMPILER_ID}"	 STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	# We need c++1z/c++17 support:
+	include(CheckCXXCompilerFlag)
+	CHECK_CXX_COMPILER_FLAG("-std=c++1z" COMPILER_SUPPORTS_CXX1z)
+	CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
+	if(COMPILER_SUPPORTS_CXX17)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+	elseif(COMPILER_SUPPORTS_CXX1z)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
+	else()
+		message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
+	endif()
 endif()
+
+INCLUDE (CheckIncludeFileCXX)
+CHECK_INCLUDE_FILE_CXX("filesystem" HAVE_CXX17_FILESYSTEM)
+CHECK_INCLUDE_FILE_CXX("experimental/filesystem" HAVE_CXX1z_FILESYSTEM)
+IF(NOT HAVE_CXX17_FILESYSTEM AND NOT HAVE_CXX1z_FILESYSTEM)
+  message( FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} doesn't support c++ filesystem TS. Please use a different C++ compiler." )
+ENDIF()
+
 # At first we treat UNIX = Linux
 if(UNIX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -DRENDERER_NO_DEBUG")

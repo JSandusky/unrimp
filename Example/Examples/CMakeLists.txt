@@ -48,15 +48,22 @@ if(EXAMPLE_RUNNER_QT4)
 	ADD_DEFINITIONS(${QT_DEFINITIONS})
 endif()
 
+if(UNIX)
+	add_definitions(-DRENDERER_NO_DIRECT3D10 -DRENDERER_NO_DIRECT3D11 -DRENDERER_NO_DIRECT3D9)
+endif()
+
 
 ##################################################
 ## Includes
 ##################################################
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/${OS_ARCHITECTURE})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/glm/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/utf8cpp)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Renderer/Renderer/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Renderer/RendererRuntime/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Renderer/RendererToolkit/include)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${OS_ARCHITECTURE})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/utf8cpp)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/include/)
 
 
 ##################################################
@@ -65,7 +72,22 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/utf8cpp)
 # Cross-platform source codes
 set(SOURCE_CODES
 	# Cross-platform source codes
-	src/Main.cpp
+	src/Advanced/FirstGpgpu/FirstGpgpu.cpp
+	src/Advanced/FirstPostProcessing/FirstPostProcessing.cpp
+	src/Advanced/Fxaa/Fxaa.cpp
+	src/Advanced/IcosahedronTessellation/IcosahedronTessellation.cpp
+	src/Basics/FirstGeometryShader/FirstGeometryShader.cpp
+	src/Basics/FirstIndirectBuffer/FirstIndirectBuffer.cpp
+	src/Basics/FirstInstancing/FirstInstancing.cpp
+	src/Basics/FirstMultipleRenderTargets/FirstMultipleRenderTargets.cpp
+	src/Basics/FirstMultipleSwapChains/FirstMultipleSwapChains.cpp
+	src/Basics/FirstRenderToTexture/FirstRenderToTexture.cpp
+	src/Basics/FirstTessellation/FirstTessellation.cpp
+	src/Basics/FirstTexture/FirstTexture.cpp
+	src/Basics/FirstTriangle/FirstTriangle.cpp
+	src/Basics/VertexBuffer/VertexBuffer.cpp
+	src/ConsoleExampleRunner.cpp
+	src/ExampleRunner.cpp
 	src/Framework/CmdLineArgs.cpp
 	src/Framework/Color4.cpp
 	src/Framework/EulerAngles.cpp
@@ -73,52 +95,14 @@ set(SOURCE_CODES
 	src/Framework/IApplicationImpl.cpp
 	src/Framework/IApplicationRenderer.cpp
 	src/Framework/Stopwatch.cpp
-	src/Framework/TGALoader.cpp
-	src/Framework/ExampleRunner.cpp
-	src/Framework/ConsoleExampleRunner.cpp
-	# Basics
-		# "FirstTriangle" source codes
-			src/FirstTriangle/FirstTriangle.cpp
-		# "FirstIndirectBuffer" source codes
-			src/FirstIndirectBuffer/FirstIndirectBuffer.cpp
-		# "VertexBuffer" source codes
-			src/VertexBuffer/VertexBuffer.cpp
-		# "FirstTexture" source codes
-			src/FirstTexture/FirstTexture.cpp
-		# "FirstRenderToTexture" source codes
-			src/FirstRenderToTexture/FirstRenderToTexture.cpp
-		# "FirstMultipleRenderTargets" source codes
-			src/FirstMultipleRenderTargets/FirstMultipleRenderTargets.cpp
-		# "FirstMultipleSwapChains" source codes
-			src/FirstMultipleSwapChains/FirstMultipleSwapChains.cpp
-		# "FirstInstancing" source codes
-			src/FirstInstancing/FirstInstancing.cpp
-		# "FirstGeometryShader" source codes
-			src/FirstGeometryShader/FirstGeometryShader.cpp
-		# "FirstTessellation" source codes
-			src/FirstTessellation/FirstTessellation.cpp
-	# Advanced
-		# "FirstPostProcessing" source codes
-			src/FirstPostProcessing/FirstPostProcessing.cpp
-		# "FXAA" source codes
-			src/Fxaa/Fxaa.cpp
-		# "FirstGpgpu" source codes
-			src/FirstGpgpu/FirstGpgpu.cpp
-		# "InstancedCubes" source codes
-			src/InstancedCubes/InstancedCubes.cpp
-			src/InstancedCubes/ICubeRenderer.cpp
-			src/InstancedCubes/CubeRendererDrawInstanced/BatchDrawInstanced.cpp
-			src/InstancedCubes/CubeRendererDrawInstanced/CubeRendererDrawInstanced.cpp
-			src/InstancedCubes/CubeRendererInstancedArrays/BatchInstancedArrays.cpp
-			src/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.cpp
-		# "IcosahedronTessellation" source codes
-			src/IcosahedronTessellation/IcosahedronTessellation.cpp
+	src/Main.cpp
 )
 if(WIN32)
 	# Windows source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
 		src/Framework/ApplicationImplWindows.cpp
+		src/PrecompiledHeader.cpp
 	)
 elseif(UNIX)
 	# Linux source codes
@@ -134,9 +118,17 @@ if(RENDERER_RUNTIME)
 	set(SOURCE_CODES
 		${SOURCE_CODES}
 		src/Framework/IApplicationRendererRuntime.cpp
-		src/FirstMesh/FirstMesh.cpp
-		src/FirstCompositor/FirstCompositor.cpp
-		src/FirstScene/FirstScene.cpp
+		src/Runtime/FirstMesh/FirstMesh.cpp
+		src/Runtime/FirstScene/FirstScene.cpp
+		src/Runtime/FirstCompositor/CompositorInstancePassFirst.cpp
+		src/Runtime/FirstCompositor/CompositorPassFactoryFirst.cpp
+		src/Runtime/FirstCompositor/CompositorResourcePassFirst.cpp
+		src/Advanced/InstancedCubes/CubeRendererDrawInstanced/BatchDrawInstanced.cpp
+		src/Advanced/InstancedCubes/CubeRendererDrawInstanced/CubeRendererDrawInstanced.cpp
+		src/Advanced/InstancedCubes/CubeRendererInstancedArrays/BatchInstancedArrays.cpp
+		src/Advanced/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.cpp
+		src/Advanced/InstancedCubes/ICubeRenderer.cpp
+		src/Advanced/InstancedCubes/InstancedCubes.cpp
 	)
 endif()
 
@@ -187,8 +179,14 @@ if(STATIC_LIBRARY)
 	if(RENDERER_RUNTIME)
 		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}RendererRuntimeStatic${CMAKE_STATIC_LIBRARY_SUFFIX})
 	endif()
+	message (STATUS "static libs: ${LIBRARIES}")
 	target_link_libraries(ExamplesStatic ${LIBRARIES})
-	add_dependencies(ExamplesStatic Renderer NullRendererStatic OpenGLRendererStatic OpenGLES2RendererStatic Direct3D9RendererStatic Direct3D10RendererStatic Direct3D11RendererStatic Direct3D12RendererStatic)
+	
+	if(WIN32)
+		add_dependencies(ExamplesStatic Renderer NullRendererStatic OpenGLRendererStatic OpenGLES2RendererStatic Direct3D9RendererStatic Direct3D10RendererStatic Direct3D11RendererStatic Direct3D12RendererStatic)
+	else()
+		add_dependencies(ExamplesStatic Renderer NullRendererStatic OpenGLRendererStatic OpenGLES2RendererStatic)
+	endif()
 endif()
 if(SHARED_LIBRARY)
 	# Shared
@@ -208,6 +206,7 @@ if(SHARED_LIBRARY)
 		TARGET_LINK_LIBRARIES(Examples ${QT_LIBRARIES})
 	endif()
 	set_target_properties(Examples PROPERTIES COMPILE_FLAGS -DSHARED_LIBRARIES)
+	target_link_libraries(Examples X11 dl)
 	add_dependencies(Examples Renderer)
 endif()
 

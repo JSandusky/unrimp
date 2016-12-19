@@ -51,7 +51,11 @@
 #include <cassert>
 #include <fstream>
 #include <algorithm>
-#include <filesystem>
+#ifdef WIN32 // TODO(sw) For now the filesystem header is only windows only
+	#include <filesystem>
+#else // TODO(sw) GCC 6.2.0 has the filesyestem TS under experimental
+	#include <experimental/filesystem>
+#endif
 
 
 //[-------------------------------------------------------]
@@ -131,20 +135,31 @@ namespace RendererToolkit
 		if (assetId != asset.assetId)
 		{
 			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\": According to the asset package it should be asset ID " + std::to_string(asset.assetId) + " but inside the asset file it's asset ID " + std::to_string(assetId);
-			throw std::exception(message.c_str());
+			// TODO(sw) Don't use non standard MSVC extension of std::exception with an string as parameter!
+			throw std::logic_error(message);
 		}
 
 		// Dispatch asset compiler
 		// TODO(co) Add multithreading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
 
 		// Get the asset input directory and asset output directory
-		const std::string assetInputDirectory = std::tr2::sys::path(absoluteAssetFilename).parent_path().generic_string() + '/';
+		#ifdef WIN32
+			const std::string assetInputDirectory = std::tr2::sys::path(absoluteAssetFilename).parent_path().generic_string() + '/';
+		#else
+			const std::string assetInputDirectory = std::experimental::filesystem::path(absoluteAssetFilename).parent_path().generic_string() + '/';
+		#endif
+		
 		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
 		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
 		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + assetType + '/' + assetCategory + '/';
 
 		// Ensure that the asset output directory exists, else creating output file streams will fail
-		std::tr2::sys::create_directories(assetOutputDirectory);
+		#ifdef WIN32
+			std::tr2::sys::create_directories(assetOutputDirectory);
+		#else
+			std::experimental::filesystem::create_directories(assetOutputDirectory);
+		#endif
+		
 
 		// Asset compiler input
 		IAssetCompiler::Input input(mProjectName, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
@@ -203,7 +218,8 @@ namespace RendererToolkit
 		else
 		{
 			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\" and ID " + std::to_string(asset.assetId) + ": Asset type \"" + assetType + "\" is unknown";
-			throw std::exception(message.c_str());
+			// TODO(sw) Don't use non standard MSVC extension of std::exception with an string as parameter!
+			throw std::logic_error(message);
 		}
 	}
 
@@ -228,7 +244,11 @@ namespace RendererToolkit
 		mProjectName = rapidJsonValueProject["ProjectMetadata"]["Name"].GetString();
 
 		{ // Read project data
-			mProjectDirectory = std::tr2::sys::path(filename).parent_path().generic_string() + '/';
+			#ifdef WIN32
+				mProjectDirectory = std::tr2::sys::path(filename).parent_path().generic_string() + '/';
+			#else
+				mProjectDirectory = std::experimental::filesystem::path(filename).parent_path().generic_string() + '/';
+			#endif
 			readAssetsByFilename(rapidJsonValueProject["AssetsFilename"].GetString());
 			readTargetsByFilename(rapidJsonValueProject["TargetsFilename"].GetString());
 		}
@@ -326,7 +346,12 @@ namespace RendererToolkit
 		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, absoluteFilename, "Assets", "1");
 
 		// Get the asset package name (includes "/" at the end)
-		mAssetPackageDirectoryName = std::tr2::sys::path(filename).parent_path().generic_string() + '/';
+			#ifdef WIN32
+				mAssetPackageDirectoryName = std::tr2::sys::path(filename).parent_path().generic_string() + '/';
+			#else
+				mAssetPackageDirectoryName = std::experimental::filesystem::path(filename).parent_path().generic_string() + '/';
+			#endif
+
 
 		// Read project data
 		const rapidjson::Value& rapidJsonValueAssets = rapidJsonDocument["Assets"];
@@ -342,7 +367,8 @@ namespace RendererToolkit
 			if (assetFilename.length() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
 			{
 				const std::string message = "Asset filename \"" + assetFilename + "\" of asset ID " + std::to_string(assetId) + " is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
-				throw std::exception(message.c_str());
+				// TODO(sw) Don't use non standard MSVC extension of std::exception with an string as parameter!
+				throw std::logic_error(message);
 			}
 
 			// Copy asset data

@@ -40,12 +40,12 @@
 #include "Advanced/FirstPostProcessing/FirstPostProcessing.h"
 #include "Advanced/Fxaa/Fxaa.h"
 #include "Advanced/FirstGpgpu/FirstGpgpu.h"
-#include "Advanced/InstancedCubes/InstancedCubes.h"
 #include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
 #ifndef RENDERER_NO_RUNTIME
 	#include "Runtime/FirstMesh/FirstMesh.h"
 	#include "Runtime/FirstCompositor/FirstCompositor.h"
 	#include "Runtime/FirstScene/FirstScene.h"
+	#include "Advanced/InstancedCubes/InstancedCubes.h"
 #endif
 #include <algorithm>
 #include <array>
@@ -108,13 +108,13 @@ ExampleRunner::ExampleRunner()
 	addExample("FirstPostProcessing",			&RunExample<FirstPostProcessing>,			supportsAllRenderer);
 	addExample("Fxaa",							&RunExample<Fxaa>,							supportsAllRenderer);
 	addExample("FirstGpgpu",					&RunExample<FirstGpgpu>,					supportsAllRenderer);
-	addExample("InstancedCubes",				&RunExample<InstancedCubes>,				doesNotSupportOpenGLES2);
 	addExample("IcosahedronTessellation",		&RunExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
 	#ifndef RENDERER_NO_RUNTIME
 		// Renderer runtime
 		addExample("FirstMesh",					&RunExample<FirstMesh>,						supportsAllRenderer);
 		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);
 		addExample("FirstScene",				&RunExample<FirstScene>,					supportsAllRenderer);
+		addExample("InstancedCubes",				&RunExample<InstancedCubes>,				doesNotSupportOpenGLES2);
 	#endif
 
 	#ifndef RENDERER_NO_NULL

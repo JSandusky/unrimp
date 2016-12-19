@@ -96,13 +96,14 @@ namespace OpenGLES2Renderer
 		#elif defined LINUX
 			if (mNativeWindowHandle)
 			{
-				// TODO(sw) Resue X11 display from "Frontend"
-				Display *display = XOpenDisplay(0);
+				IContext &context = static_cast<OpenGLES2Renderer&>(getRenderer()).getContext();
+
+				// TODO(sw) Resue X11 display from "Frontend" -> for now reuse it from the context
+				Display *display = context.getX11Display();
 				::Window rootWindow = 0;
 				int positionX = 0, positionY = 0;
 				unsigned int unsignedWidth = 0, unsignedHeight = 0, border = 0, depth = 0;
 				XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
-				XCloseDisplay(display);
 				width = unsignedWidth;
 				height = unsignedHeight;
 			}

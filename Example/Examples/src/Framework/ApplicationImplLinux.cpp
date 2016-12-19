@@ -42,6 +42,10 @@ public:
 	virtual bool HandleEvent(XEvent &event)
 	{
 		X11Window::HandleEvent(event);
+		
+		if (isDestroyed())
+			return true;
+		
 		switch (event.type)
 		{
 			case Expose:

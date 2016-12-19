@@ -34,8 +34,11 @@
 	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
 	#pragma warning(disable: 4555)	// warning C4555: expression has no effect; expected expression with side-effect
 	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '<y>' for '<z>'
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-value" // warning: expression result unused [-Wunused-value]
 	#include <crunch/crn_decomp.h>
 	#include <crunch/dds_defs.h>
+#pragma clang diagnostic pop
 #pragma warning(pop)
 
 #include <fstream>

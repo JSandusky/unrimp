@@ -118,7 +118,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Default constructor
 		*/
-		FORCEINLINE StringId();
+		inline FORCEINLINE StringId();
 
 		/**
 		*  @brief
@@ -128,7 +128,7 @@ namespace RendererRuntime
 		*    Static string to calculate the hash value for, must be valid
 		*/
 		template <uint32_t N>
-		FORCEINLINE StringId(const char (&string)[N]);
+		inline FORCEINLINE StringId(const char (&string)[N]);
 
 		/**
 		*  @brief
@@ -137,7 +137,7 @@ namespace RendererRuntime
 		*  @param[in] string
 		*    Dynamic string to calculate the hash value for, must be valid
 		*/
-		FORCEINLINE explicit StringId(const ConstCharWrapper& string);
+		inline FORCEINLINE explicit StringId(const ConstCharWrapper& string);
 
 		/**
 		*  @brief
@@ -149,7 +149,7 @@ namespace RendererRuntime
 		*  @note
 		*    - By intent not explicit for best possible usability
 		*/
-		FORCEINLINE StringId(uint32_t id);
+		inline FORCEINLINE StringId(uint32_t id);
 
 		/**
 		*  @brief
@@ -158,7 +158,7 @@ namespace RendererRuntime
 		*  @param[in] stringId
 		*    String ID instance to copy from
 		*/
-		FORCEINLINE explicit StringId(const StringId& stringId);
+		inline FORCEINLINE explicit StringId(const StringId& stringId);
 
 		/**
 		*  @brief
@@ -167,7 +167,7 @@ namespace RendererRuntime
 		*  @return
 		*    The generated FNV-1a hash value used as identifier
 		*/
-		FORCEINLINE uint32_t getId() const;
+		inline FORCEINLINE uint32_t getId() const;
 
 		/**
 		*  @brief
@@ -176,7 +176,7 @@ namespace RendererRuntime
 		*  @return
 		*    The generated FNV-1a hash value used as identifier
 		*/
-		FORCEINLINE operator uint32_t() const;
+		inline FORCEINLINE operator uint32_t() const;
 
 
 	//[-------------------------------------------------------]

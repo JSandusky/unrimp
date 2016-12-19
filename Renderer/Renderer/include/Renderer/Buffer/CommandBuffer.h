@@ -32,6 +32,9 @@
 #include "Renderer/Buffer/IndexedIndirectBuffer.h"
 
 #include <cassert>
+#ifndef WIN32
+#include <wchar.h>
+#endif
 
 
 //[-------------------------------------------------------]

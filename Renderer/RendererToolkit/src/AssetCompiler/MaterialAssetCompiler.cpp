@@ -42,7 +42,11 @@
 
 #include <fstream>
 #include <algorithm>
-#include <filesystem>
+#ifdef WIN32 // TODO(sw) For now the filesystem header is only windows only
+	#include <filesystem>
+#else // TODO(sw) GCC 6.2.0 has the filesyestem TS under experimental
+	#include <experimental/filesystem>
+#endif
 
 
 //[-------------------------------------------------------]
@@ -172,7 +176,11 @@ namespace RendererToolkit
 				}
 
 				// Parse material blueprint JSON
-				const std::string absoluteMaterialBlueprintFilename = std::tr2::sys::path(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
+				#ifdef WIN32
+					const std::string absoluteMaterialBlueprintFilename = std::tr2::sys::path(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
+				#else
+					const std::string absoluteMaterialBlueprintFilename = std::experimental::filesystem::path(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
+				#endif
 				std::ifstream materialBlueprintInputFileStream(absoluteMaterialBlueprintFilename, std::ios::binary);
 				rapidjson::Document rapidJsonDocumentMaterialBlueprint;
 				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocumentMaterialBlueprint, materialBlueprintInputFileStream, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "1");
@@ -219,14 +227,15 @@ namespace RendererToolkit
 					const RendererRuntime::MaterialPropertyId materialPropertyId(propertyName);
 
 					// Figure out the material property value type by using the material blueprint
+					// TODO(sw) Why was here an const iterator used when we want to change the content?
 					RendererRuntime::MaterialProperties::SortedPropertyVector::iterator iterator = std::lower_bound(sortedMaterialPropertyVector.begin(), sortedMaterialPropertyVector.end(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
 					if (iterator != sortedMaterialPropertyVector.end())
 					{
-						RendererRuntime::MaterialProperty* materialProperty = &(*iterator);
-						if (materialProperty->getMaterialPropertyId() == materialPropertyId)
+						RendererRuntime::MaterialProperty& materialProperty = *iterator;
+						if (materialProperty.getMaterialPropertyId() == materialPropertyId)
 						{
 							// Set the material own property value
-							static_cast<RendererRuntime::MaterialPropertyValue&>(*materialProperty) = JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(input, rapidJsonValueProperties, propertyName, materialProperty->getValueType());
+							static_cast<RendererRuntime::MaterialPropertyValue&>(materialProperty) = JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(input, rapidJsonValueProperties, propertyName, materialProperty.getValueType());
 						}
 					}
 				}

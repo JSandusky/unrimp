@@ -59,7 +59,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MaterialResourceManager : private IResourceManager
+	class MaterialResourceManager : public IResourceManager
 	{
 
 
