@@ -152,7 +152,10 @@ IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
 	// Copy the given renderer name
 	if (nullptr != rendererName)
 	{
-		strncpy(mRendererName, rendererName, 64);
+		strncpy(mRendererName, rendererName, 32);
+
+		// In case the source string is longer then 32 bytes (including null terminator) make sure that the string is null terminated
+		mRendererName[31] = '\0';
 	}
 	else
 	{
