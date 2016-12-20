@@ -86,7 +86,7 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
 				default:
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The type of the given color texture at index %d is not supported", colorTexture - colorTextures)
+					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The type of the given color texture at index %ld is not supported", colorTexture - colorTextures)
 					break;
 			}
 		}
