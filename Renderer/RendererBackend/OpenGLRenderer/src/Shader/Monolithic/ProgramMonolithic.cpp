@@ -31,6 +31,7 @@
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/RootSignature.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
