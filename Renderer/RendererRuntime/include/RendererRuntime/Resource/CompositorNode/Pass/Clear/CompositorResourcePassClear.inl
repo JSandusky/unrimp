@@ -46,7 +46,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline CompositorResourcePassClear::CompositorResourcePassClear() :
+	inline CompositorResourcePassClear::CompositorResourcePassClear(const CompositorTarget& compositorTarget) :
+		ICompositorResourcePass(compositorTarget),
 		mColor(0.0f, 0.0f, 0.0f, 0.0f)
 	{
 		// Nothing here

@@ -42,26 +42,34 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	TextureResource* TextureResourceManager::getTextureResourceByAssetId(AssetId assetId) const
+	{
+		TextureResource* textureResource = nullptr;
+
+		// TODO(co) Just a quick'n'dirty implementation
+		const uint32_t numberOfElements = mTextureResources.getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
+		{
+			TextureResource& currentTextureResource = mTextureResources.getElementByIndex(i);
+			if (currentTextureResource.getAssetId() == assetId)
+			{
+				textureResource = &currentTextureResource;
+
+				// Get us out of the loop
+				i = numberOfElements;
+			}
+		}
+
+		// Done
+		return textureResource;
+	}
+
 	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
 
-		// Get or create the instance
-		TextureResource* textureResource = nullptr;
-		{
-			const uint32_t numberOfElements = mTextureResources.getNumberOfElements();
-			for (uint32_t i = 0; i < numberOfElements; ++i)
-			{
-				TextureResource& currentTextureResource = mTextureResources.getElementByIndex(i);
-				if (currentTextureResource.getAssetId() == assetId)
-				{
-					textureResource = &currentTextureResource;
-
-					// Get us out of the loop
-					i = numberOfElements;
-				}
-			}
-		}
+		// Check whether or not the texture resource already exists
+		TextureResource* textureResource = getTextureResourceByAssetId(assetId);
 
 		// Create the resource instance
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);

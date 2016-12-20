@@ -108,6 +108,8 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT virtual ~CompositorWorkspaceInstance();
 		inline const IRendererRuntime& getRendererRuntime() const;
 		inline IndirectBufferManager& getIndirectBufferManager() const;
+		inline float getResolutionScale() const;
+		RENDERERRUNTIME_API_EXPORT void setResolutionScale(float resolutionScale);	// Changes are considered to be expensive
 		inline const RenderQueueIndexRanges& getRenderQueueIndexRanges() const;	// Renderable manager pointers are only considered to be safe directly after the "RendererRuntime::CompositorWorkspaceInstance::execute()" call
 		RENDERERRUNTIME_API_EXPORT const RenderQueueIndexRange* getRenderQueueIndexRangeByRenderQueueIndex(uint8_t renderQueueIndex) const;	// Can be a null pointer, don't destroy the instance
 		RENDERERRUNTIME_API_EXPORT void execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem);
@@ -129,6 +131,8 @@ namespace RendererRuntime
 		CompositorWorkspaceInstance(const CompositorWorkspaceInstance&) = delete;
 		CompositorWorkspaceInstance& operator=(const CompositorWorkspaceInstance&) = delete;
 		void destroySequentialCompositorNodeInstances();
+		void createFramebuffersAndRenderTargetTextures(const Renderer::IRenderTarget& mainRenderTarget);
+		void destroyFramebuffersAndRenderTargetTextures();
 		void clearRenderQueueIndexRangesRenderableManagers();
 		void gatherRenderQueueIndexRangesRenderableManagers(CameraSceneItem& cameraSceneItem);	// A naive method name would be "culling", this is considered to be an expensive method call
 
@@ -146,9 +150,11 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime&			  mRendererRuntime;
 		IndirectBufferManager&		  mIndirectBufferManager;
+		float						  mResolutionScale;
 		Renderer::IRenderTarget*	  mExecutionRenderTarget;				///< Only valid during compositor workspace instance execution
 		CompositorWorkspaceResourceId mCompositorWorkspaceResourceId;
 		CompositorNodeInstances		  mSequentialCompositorNodeInstances;	///< We're responsible to destroy the compositor node instances if we no longer need them
+		bool						  mFramebufferManagerInitialized;
 		RenderQueueIndexRanges		  mRenderQueueIndexRanges;				///< The render queue index ranges layout is fixed during runtime
 		Renderer::CommandBuffer		  mCommandBuffer;						///< Command buffer
 

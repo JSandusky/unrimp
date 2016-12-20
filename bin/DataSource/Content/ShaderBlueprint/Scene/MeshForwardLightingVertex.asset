@@ -10,7 +10,7 @@
 		{
 			"AssetId": "12",
 			"AssetType": "ShaderBlueprint",
-			"AssetCategory": "Default",
+			"AssetCategory": "Scene",
 			"AssetName": "MeshForwardLightingVertex",
 			"AssetDependencies": [ "15", "16" ],
 			"FileDependencies": [ "MeshForwardLightingVertex.shader_blueprint" ],

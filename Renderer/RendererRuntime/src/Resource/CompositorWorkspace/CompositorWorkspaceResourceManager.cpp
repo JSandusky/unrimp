@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/CompositorWorkspace/Loader/CompositorWorkspaceResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
+#include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -127,7 +128,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorWorkspaceResourceManager::CompositorWorkspaceResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mFramebufferManager(new FramebufferManager(mRendererRuntime))
+		mRenderTargetTextureManager(new RenderTargetTextureManager(mRendererRuntime)),
+		mFramebufferManager(new FramebufferManager(*mRenderTargetTextureManager))
 	{
 		// Nothing here
 	}
@@ -135,6 +137,7 @@ namespace RendererRuntime
 	CompositorWorkspaceResourceManager::~CompositorWorkspaceResourceManager()
 	{
 		delete mFramebufferManager;
+		delete mRenderTargetTextureManager;
 	}
 
 	IResourceLoader* CompositorWorkspaceResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)

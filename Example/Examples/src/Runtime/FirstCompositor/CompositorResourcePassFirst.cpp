@@ -59,7 +59,8 @@ void CompositorResourcePassFirst::deserialize(uint32_t, const uint8_t*)
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-CompositorResourcePassFirst::CompositorResourcePassFirst()
+CompositorResourcePassFirst::CompositorResourcePassFirst(const RendererRuntime::CompositorTarget& compositorTarget) :
+	RendererRuntime::ICompositorResourcePass(compositorTarget)
 {
 	// Nothing here
 }

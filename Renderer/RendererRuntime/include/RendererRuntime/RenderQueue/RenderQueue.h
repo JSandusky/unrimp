@@ -39,6 +39,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
+	class IRenderTarget;
 	class CommandBuffer;
 }
 namespace RendererRuntime
@@ -101,7 +102,7 @@ namespace RendererRuntime
 		inline uint8_t getMaximumRenderQueueIndex() const;
 		void clear();
 		void addRenderablesFromRenderableManager(const RenderableManager& renderableManager);
-		void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer);
+		void fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]

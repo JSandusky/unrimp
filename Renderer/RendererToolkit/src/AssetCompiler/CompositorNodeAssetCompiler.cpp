@@ -42,6 +42,7 @@
 	#include <rapidjson/document.h>
 #pragma warning(pop)
 
+#include <string>
 #include <fstream>
 #include <unordered_set>
 
@@ -120,12 +121,13 @@ namespace RendererToolkit
 
 			{ // Write down the compositor node resource header
 				RendererRuntime::v1CompositorNode::Header compositorNodeHeader;
-				compositorNodeHeader.formatType			   = RendererRuntime::v1CompositorNode::FORMAT_TYPE;
-				compositorNodeHeader.formatVersion		   = RendererRuntime::v1CompositorNode::FORMAT_VERSION;
-				compositorNodeHeader.numberOfInputChannels = rapidJsonValueInputChannels.MemberCount();
-				compositorNodeHeader.numberOfFramebuffers  = rapidJsonValueCompositorNodeAsset.HasMember("Framebuffers") ? rapidJsonValueCompositorNodeAsset["Framebuffers"].MemberCount() : 0;
-				compositorNodeHeader.numberOfTargets	   = rapidJsonValueTargets.MemberCount();
-				compositorNodeHeader.numberOfOutputChannels	= rapidJsonValueOutputChannels.MemberCount();
+				compositorNodeHeader.formatType					  = RendererRuntime::v1CompositorNode::FORMAT_TYPE;
+				compositorNodeHeader.formatVersion				  = RendererRuntime::v1CompositorNode::FORMAT_VERSION;
+				compositorNodeHeader.numberOfInputChannels		  = rapidJsonValueInputChannels.MemberCount();
+				compositorNodeHeader.numberOfRenderTargetTextures = rapidJsonValueCompositorNodeAsset.HasMember("RenderTargetTextures") ? rapidJsonValueCompositorNodeAsset["RenderTargetTextures"].MemberCount() : 0;
+				compositorNodeHeader.numberOfFramebuffers		  = rapidJsonValueCompositorNodeAsset.HasMember("Framebuffers") ? rapidJsonValueCompositorNodeAsset["Framebuffers"].MemberCount() : 0;
+				compositorNodeHeader.numberOfTargets			  = rapidJsonValueTargets.MemberCount();
+				compositorNodeHeader.numberOfOutputChannels		  = rapidJsonValueOutputChannels.MemberCount();
 				outputFileStream.write(reinterpret_cast<const char*>(&compositorNodeHeader), sizeof(RendererRuntime::v1CompositorNode::Header));
 			}
 
@@ -141,6 +143,48 @@ namespace RendererToolkit
 				compositorChannelIds.insert(channel.id);
 			}
 
+			// Write down the compositor render target textures
+			std::unordered_set<uint32_t> renderTargetTextureAssetIds;	// "RendererRuntime::AssetId"-type
+			if (rapidJsonValueCompositorNodeAsset.HasMember("RenderTargetTextures"))
+			{
+				const rapidjson::Value& rapidJsonValueRenderTargetTextures = rapidJsonValueCompositorNodeAsset["RenderTargetTextures"];
+				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorRenderTargetTextures = rapidJsonValueRenderTargetTextures.MemberBegin(); rapidJsonMemberIteratorRenderTargetTextures != rapidJsonValueRenderTargetTextures.MemberEnd(); ++rapidJsonMemberIteratorRenderTargetTextures)
+				{
+					RendererRuntime::v1CompositorNode::RenderTargetTexture renderTargetTexture;
+					renderTargetTexture.assetId = RendererRuntime::StringId(rapidJsonMemberIteratorRenderTargetTextures->name.GetString());
+					{ // Render target texture signature
+						const rapidjson::Value& rapidJsonValueRenderTargetTexture = rapidJsonMemberIteratorRenderTargetTextures->value;
+
+						// Width
+						uint32_t width = RendererRuntime::getUninitialized<uint32_t>();
+						const char* valueAsString = rapidJsonValueRenderTargetTexture["Width"].GetString();
+						if (strcmp(valueAsString, "TARGET_WIDTH") != 0)
+						{
+							width = static_cast<uint32_t>(std::atoi(valueAsString));
+						}
+
+						// Height
+						uint32_t height = RendererRuntime::getUninitialized<uint32_t>();
+						valueAsString = rapidJsonValueRenderTargetTexture["Height"].GetString();
+						if (strcmp(valueAsString, "TARGET_HEIGHT") != 0)
+						{
+							height = static_cast<uint32_t>(std::atoi(valueAsString));
+						}
+
+						// Texture format
+						const Renderer::TextureFormat::Enum textureFormat = JsonHelper::mandatoryTextureFormat(rapidJsonValueRenderTargetTexture);
+
+						// Write render target texture signature
+						// TODO(co) Add sanity checks to be able to detect editing errors (compressed formats are not supported nor unknown formats, check for name conflicts with channels, unused render target textures etc.)
+						renderTargetTexture.renderTargetTextureSignature = RendererRuntime::RenderTargetTextureSignature(width, height, textureFormat);
+					}
+					outputFileStream.write(reinterpret_cast<const char*>(&renderTargetTexture), sizeof(RendererRuntime::v1CompositorNode::RenderTargetTexture));
+
+					// Remember that there's a render target texture with this asset ID
+					renderTargetTextureAssetIds.insert(renderTargetTexture.assetId);
+				}
+			}
+
 			// Write down the compositor framebuffers
 			std::unordered_set<uint32_t> compositorFramebufferIds;	// "RendererRuntime::CompositorFramebufferId"-type
 			if (rapidJsonValueCompositorNodeAsset.HasMember("Framebuffers"))
@@ -153,28 +197,34 @@ namespace RendererToolkit
 					{ // Framebuffer signature
 						const rapidjson::Value& rapidJsonValueFramebuffer = rapidJsonMemberIteratorFramebuffers->value;
 
-						// Width
-						uint32_t width = RendererRuntime::getUninitialized<uint32_t>();
-						const char* valueAsString = rapidJsonValueFramebuffer["Width"].GetString();
-						if (strcmp(valueAsString, "TARGET_WIDTH") != 0)
+						// Optional color textures
+						uint8_t numberOfColorTextures = 0;
+						RendererRuntime::AssetId colorTextureAssetIds[8];
+						memset(colorTextureAssetIds, static_cast<int>(RendererRuntime::getUninitialized<RendererRuntime::AssetId>()), sizeof(RendererRuntime::AssetId) * 8);
+						if (rapidJsonValueFramebuffer.HasMember("ColorTextures"))
 						{
-							width = static_cast<uint32_t>(std::atoi(valueAsString));
+							const rapidjson::Value& rapidJsonValueFramebufferColorTextures = rapidJsonValueFramebuffer["ColorTextures"];
+							numberOfColorTextures = static_cast<uint8_t>(rapidJsonValueFramebufferColorTextures.Size());
+							for (uint8_t i = 0; i < numberOfColorTextures; ++i)
+							{
+								colorTextureAssetIds[i] = RendererRuntime::StringId(rapidJsonValueFramebufferColorTextures[i].GetString());
+								if (RendererRuntime::isInitialized(colorTextureAssetIds[i]) && renderTargetTextureAssetIds.find(colorTextureAssetIds[i]) == renderTargetTextureAssetIds.end())
+								{
+									throw std::runtime_error(std::string("Color texture \"") + rapidJsonValueFramebufferColorTextures[i].GetString() + "\" at index " + std::to_string(i) + " of framebuffer \"" + rapidJsonMemberIteratorFramebuffers->name.GetString() + "\" is unknown");
+								}
+							}
 						}
 
-						// Height
-						uint32_t height = RendererRuntime::getUninitialized<uint32_t>();
-						valueAsString = rapidJsonValueFramebuffer["Height"].GetString();
-						if (strcmp(valueAsString, "TARGET_HEIGHT") != 0)
+						// Optional depth stencil texture
+						const uint32_t depthStencilTexture = rapidJsonValueFramebuffer.HasMember("DepthStencilTexture") ? RendererRuntime::StringId(rapidJsonValueFramebuffer["DepthStencilTexture"].GetString()) : RendererRuntime::getUninitialized<RendererRuntime::AssetId>();
+						if (RendererRuntime::isInitialized(depthStencilTexture) && renderTargetTextureAssetIds.find(depthStencilTexture) == renderTargetTextureAssetIds.end())
 						{
-							height = static_cast<uint32_t>(std::atoi(valueAsString));
+							throw std::runtime_error(std::string("Depth stencil texture \"") + rapidJsonValueFramebuffer["DepthStencilTexture"].GetString() + "\" of framebuffer \"" + rapidJsonMemberIteratorFramebuffers->name.GetString() + "\" is unknown");
 						}
-
-						// Texture format
-						const Renderer::TextureFormat::Enum textureFormat = JsonHelper::mandatoryTextureFormat(rapidJsonValueFramebuffer);
 
 						// Write framebuffer signature
-						// TODO(co) Add sanity checks to be able to detect editing errors (compressed formats are not supported nor unknown formats, check for name conflicts with channels, unused framebuffers etc.)
-						framebuffer.framebufferSignature = RendererRuntime::FramebufferSignature(width, height, textureFormat);
+						// TODO(co) Add sanity checks to be able to detect editing errors (check for name conflicts with channels, unused framebuffers etc.)
+						framebuffer.framebufferSignature = RendererRuntime::FramebufferSignature(numberOfColorTextures, colorTextureAssetIds, depthStencilTexture);
 					}
 					outputFileStream.write(reinterpret_cast<const char*>(&framebuffer), sizeof(RendererRuntime::v1CompositorNode::Framebuffer));
 

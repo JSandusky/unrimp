@@ -40,6 +40,7 @@ namespace RendererRuntime
 	class IRendererRuntime;
 	class FramebufferManager;
 	class ICompositorPassFactory;
+	class RenderTargetTextureManager;
 }
 
 
@@ -82,6 +83,7 @@ namespace RendererRuntime
 		inline const ICompositorPassFactory& getCompositorPassFactory() const;
 		RENDERERRUNTIME_API_EXPORT void setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory);
 
+		inline RenderTargetTextureManager& getRenderTargetTextureManager();
 		inline FramebufferManager& getFramebufferManager();
 
 
@@ -110,10 +112,11 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&			  mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
+		IRendererRuntime&			  mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
 		CompositorNodeResources		  mCompositorNodeResources;
-		const ICompositorPassFactory* mCompositorPassFactory;	///< Compositor pass factory, always valid, do not destroy the instance
-		FramebufferManager*			  mFramebufferManager;		///< Framebuffer manager, always valid, we're responsible for destroying it if we no longer need it
+		const ICompositorPassFactory* mCompositorPassFactory;		///< Compositor pass factory, always valid, do not destroy the instance
+		RenderTargetTextureManager*	  mRenderTargetTextureManager;	///< Render target texture manager, always valid, we're responsible for destroying it if we no longer need it
+		FramebufferManager*			  mFramebufferManager;			///< Framebuffer manager, always valid, we're responsible for destroying it if we no longer need it
 
 
 	};

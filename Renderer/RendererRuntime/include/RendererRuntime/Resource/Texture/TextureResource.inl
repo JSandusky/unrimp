@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return mTexture;
 	}
 
+	inline void TextureResource::setTexture(Renderer::ITexture& texture)
+	{
+		mTexture = &texture;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

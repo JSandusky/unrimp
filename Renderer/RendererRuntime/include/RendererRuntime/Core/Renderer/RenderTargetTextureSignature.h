@@ -28,7 +28,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
@@ -39,60 +41,89 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t RenderTargetTextureSignatureId;	///< Render target texture signature identifier, result of hashing render target texture properties
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorResourcePassScene : public ICompositorResourcePass
+	/**
+	*  @brief
+	*    Render target texture signature
+	*/
+	class RenderTargetTextureSignature : private NonCopyable
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class CompositorPassFactory;	// The only one allowed to create instances of this class
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		RENDERERRUNTIME_API_EXPORT static const CompositorPassTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline uint8_t getMinimumRenderQueueIndex() const;	///< Inclusive
-		inline uint8_t getMaximumRenderQueueIndex() const;	///< Inclusive
-		inline bool isTransparentPass() const;
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		inline RenderTargetTextureSignature();
 
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] width
+		*    Width
+		*  @param[in] height
+		*    Height
+		*  @param[in] textureFormat
+		*    Texture format
+		*/
+		RENDERERRUNTIME_API_EXPORT RenderTargetTextureSignature(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat);
 
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
-	//[-------------------------------------------------------]
-	public:
-		inline virtual CompositorPassTypeId getTypeId() const override;
-		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
-		virtual bool getRenderQueueIndexRange(uint8_t& minimumRenderQueueIndex, uint8_t& maximumRenderQueueIndex) const override;
+		/**
+		*  @brief
+		*    Copy constructor
+		*
+		*  @param[in] renderTargetTextureSignature
+		*    Render target texture signature to copy from
+		*/
+		inline explicit RenderTargetTextureSignature(const RenderTargetTextureSignature& renderTargetTextureSignature);
 
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline ~RenderTargetTextureSignature();
 
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		inline explicit CompositorResourcePassScene(const CompositorTarget& compositorTarget);
-		inline virtual ~CompositorResourcePassScene();
-		CompositorResourcePassScene(const CompositorResourcePassScene&) = delete;
-		CompositorResourcePassScene& operator=(const CompositorResourcePassScene&) = delete;
+		/**
+		*  @brief
+		*    Copy operator
+		*/
+		inline RenderTargetTextureSignature& operator=(const RenderTargetTextureSignature& renderTargetTextureSignature);
+
+		//[-------------------------------------------------------]
+		//[ Getter for input data                                 ]
+		//[-------------------------------------------------------]
+		inline uint32_t getWidth() const;
+		inline uint32_t getHeight() const;
+		inline Renderer::TextureFormat::Enum getTextureFormat() const;
+
+		//[-------------------------------------------------------]
+		//[ Getter for derived data                               ]
+		//[-------------------------------------------------------]
+		inline RenderTargetTextureSignatureId getRenderTargetTextureSignatureId() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint8_t	mMinimumRenderQueueIndex;	///< Inclusive
-		uint8_t	mMaximumRenderQueueIndex;	///< Inclusive
-		bool	mTransparentPass;
+		// Input data
+		uint32_t					  mWidth;
+		uint32_t					  mHeight;
+		Renderer::TextureFormat::Enum mTextureFormat;
+		// Derived data
+		RenderTargetTextureSignatureId mRenderTargetTextureSignatureId;
 
 
 	};
@@ -107,4 +138,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/CompositorNode/Pass/Scene/CompositorResourcePassScene.inl"
+#include "RendererRuntime/Core/Renderer/RenderTargetTextureSignature.inl"

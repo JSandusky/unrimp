@@ -35,6 +35,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
+	class IRenderTarget;
 	class CommandBuffer;
 }
 namespace RendererRuntime
@@ -61,7 +62,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class CompositorNodeInstance;	// Needs to execute compositor node instances
+		friend class CompositorNodeInstance;		// Needs to execute compositor node instances
+		friend class CompositorWorkspaceInstance;	// Needs to be able to set the render target
 
 
 	//[-------------------------------------------------------]
@@ -70,6 +72,7 @@ namespace RendererRuntime
 	public:
 		inline const ICompositorResourcePass& getCompositorResourcePass() const;
 		inline const CompositorNodeInstance& getCompositorNodeInstance() const;
+		inline Renderer::IRenderTarget* getRenderTarget() const;
 
 
 	//[-------------------------------------------------------]
@@ -90,10 +93,12 @@ namespace RendererRuntime
 		*  @brief
 		*    Fill the compositor pass into the given commando buffer
 		*
+		*  @param[in] renderTarget
+		*    Render target
 		*  @param[out] commandBuffer
 		*    Command buffer to fill
 		*/
-		virtual void onFillCommandBuffer(Renderer::CommandBuffer& commandBuffer) = 0;
+		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer) = 0;
 
 		/**
 		*  @brief
@@ -116,11 +121,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected data                                        ]
+	//[ Private data                                          ]
 	//[-------------------------------------------------------]
-	protected:
+	private:
 		const ICompositorResourcePass& mCompositorResourcePass;
 		const CompositorNodeInstance&  mCompositorNodeInstance;
+		Renderer::IRenderTarget*	   mRenderTarget;	/// Render target, can be a null pointer, don't destroy the instance
 
 
 	};

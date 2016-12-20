@@ -110,10 +110,12 @@ namespace RendererRuntime
 		*  @brief
 		*    Fill the pass buffer
 		*
+		*  @param[in] renderTarget
+		*    Render target
 		*  @param[in] worldSpaceToViewSpaceTransform
 		*    World space to view space transform matrix
 		*/
-		void fillBuffer(const Transform& worldSpaceToViewSpaceTransform);
+		void fillBuffer(const Renderer::IRenderTarget& renderTarget, const Transform& worldSpaceToViewSpaceTransform);
 
 		/**
 		*  @brief

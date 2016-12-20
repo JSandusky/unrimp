@@ -94,7 +94,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline CompositorResourcePassQuad();
+		inline explicit CompositorResourcePassQuad(const CompositorTarget& compositorTarget);
 		inline virtual ~CompositorResourcePassQuad();
 		CompositorResourcePassQuad(const CompositorResourcePassQuad&) = delete;
 		CompositorResourcePassQuad& operator=(const CompositorResourcePassQuad&) = delete;

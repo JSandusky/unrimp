@@ -29,6 +29,8 @@
     <None Include="include\RendererRuntime\Core\PackedElementManager.inl" />
     <None Include="include\RendererRuntime\Core\Renderer\FramebufferManager.inl" />
     <None Include="include\RendererRuntime\Core\Renderer\FramebufferSignature.inl" />
+    <None Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureManager.inl" />
+    <None Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureSignature.inl" />
     <None Include="include\RendererRuntime\Core\StringId.inl" />
     <None Include="include\RendererRuntime\Core\Thread\ThreadManager.inl" />
     <None Include="include\RendererRuntime\Core\Thread\ThreadPool.inl" />
@@ -42,6 +44,7 @@
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeInstance.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResource.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResourceManager.inl" />
+    <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorRenderTargetTexture.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorTarget.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Loader\CompositorNodeResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Clear\CompositorInstancePassClear.inl" />
@@ -148,6 +151,8 @@
     <ClInclude Include="include\RendererRuntime\Core\Platform\WindowsHeader.h" />
     <ClInclude Include="include\RendererRuntime\Core\Renderer\FramebufferManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Renderer\FramebufferSignature.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureManager.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureSignature.h" />
     <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
     <ClInclude Include="include\RendererRuntime\Core\String.h" />
     <ClInclude Include="include\RendererRuntime\Core\StringId.h" />
@@ -170,6 +175,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeInstance.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorRenderTargetTexture.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorTarget.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Loader\CompositorNodeFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Loader\CompositorNodeResourceLoader.h" />
@@ -312,6 +318,8 @@
     <ClCompile Include="src\Core\Platform\PlatformManager.cpp" />
     <ClCompile Include="src\Core\Renderer\FramebufferManager.cpp" />
     <ClCompile Include="src\Core\Renderer\FramebufferSignature.cpp" />
+    <ClCompile Include="src\Core\Renderer\RenderTargetTextureManager.cpp" />
+    <ClCompile Include="src\Core\Renderer\RenderTargetTextureSignature.cpp" />
     <ClCompile Include="src\Core\String.cpp" />
     <ClCompile Include="src\DebugGui\DebugGuiManager.cpp" />
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerWindows.cpp" />

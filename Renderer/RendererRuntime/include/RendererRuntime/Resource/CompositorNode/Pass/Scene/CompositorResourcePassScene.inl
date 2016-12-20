@@ -56,7 +56,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline CompositorResourcePassScene::CompositorResourcePassScene() :
+	inline CompositorResourcePassScene::CompositorResourcePassScene(const CompositorTarget& compositorTarget) :
+		ICompositorResourcePass(compositorTarget),
 		mMinimumRenderQueueIndex(0),
 		mMaximumRenderQueueIndex(255),
 		mTransparentPass(false)

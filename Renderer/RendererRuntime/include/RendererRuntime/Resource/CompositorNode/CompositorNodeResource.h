@@ -30,6 +30,7 @@
 #include "RendererRuntime/Resource/Detail/IResource.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorTarget.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorFramebuffer.h"
+#include "RendererRuntime/Resource/CompositorNode/CompositorRenderTargetTexture.h"
 
 
 //[-------------------------------------------------------]
@@ -75,9 +76,10 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<CompositorChannelId>   CompositorChannels;	// TODO(co) Get rid of "std::vector" and dynamic memory handling in here? (need to introduce a maximum number of input channels for this)
-		typedef std::vector<CompositorFramebuffer> CompositorFramebuffers;
-		typedef std::vector<CompositorTarget>	   CompositorTargets;
+		typedef std::vector<CompositorChannelId>		   CompositorChannels;	// TODO(co) Get rid of "std::vector" and dynamic memory handling in here? (need to introduce a maximum number of input channels for this)
+		typedef std::vector<CompositorRenderTargetTexture> CompositorRenderTargetTextures;
+		typedef std::vector<CompositorFramebuffer>		   CompositorFramebuffers;
+		typedef std::vector<CompositorTarget>			   CompositorTargets;
 
 
 	//[-------------------------------------------------------]
@@ -93,6 +95,13 @@ namespace RendererRuntime
 		inline void reserveInputChannels(uint32_t numberOfInputChannels);
 		inline void addInputChannel(CompositorChannelId compositorChannelId);
 		inline const CompositorChannels& getInputChannels() const;
+
+		//[-------------------------------------------------------]
+		//[ Render target textures                                ]
+		//[-------------------------------------------------------]
+		inline void reserveRenderTargetTextures(uint32_t numberOfRenderTargetTextures);
+		inline void addRenderTargetTexture(AssetId assetId, const RenderTargetTextureSignature& renderTargetTextureSignature);
+		inline const CompositorRenderTargetTextures& getRenderTargetTextures() const;
 
 		//[-------------------------------------------------------]
 		//[ Framebuffers                                          ]
@@ -136,10 +145,11 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		CompositorChannels		mInputChannels;
-		CompositorFramebuffers	mCompositorFramebuffers;
-		CompositorTargets		mCompositorTargets;
-		CompositorChannels		mOutputChannels;
+		CompositorChannels			   mInputChannels;
+		CompositorRenderTargetTextures mCompositorRenderTargetTextures;
+		CompositorFramebuffers		   mCompositorFramebuffers;
+		CompositorTargets			   mCompositorTargets;
+		CompositorChannels			   mOutputChannels;
 
 
 	};

@@ -51,7 +51,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline CompositorResourcePassQuad::CompositorResourcePassQuad()
+	inline CompositorResourcePassQuad::CompositorResourcePassQuad(const CompositorTarget& compositorTarget) :
+		ICompositorResourcePass(compositorTarget)
 	{
 		// Nothing here
 	}

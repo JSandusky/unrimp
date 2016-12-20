@@ -141,7 +141,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void RenderQueue::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
+	void RenderQueue::fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer)
 	{
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
@@ -270,7 +270,7 @@ namespace RendererRuntime
 
 													// TODO(co) Camera usage
 													const Transform worldSpaceToViewSpaceTransform;
-													passBufferManager->fillBuffer(worldSpaceToViewSpaceTransform);
+													passBufferManager->fillBuffer(renderTarget, worldSpaceToViewSpaceTransform);
 												}
 											}
 

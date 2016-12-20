@@ -32,6 +32,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class CompositorTarget;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -55,6 +64,13 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class CompositorTarget;	// Needs to destroy compositor resource pass instances
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline const CompositorTarget& getCompositorTarget() const;
 
 
 	//[-------------------------------------------------------]
@@ -83,10 +99,17 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline ICompositorResourcePass();
+		inline explicit ICompositorResourcePass(const CompositorTarget& compositorTarget);
 		inline virtual ~ICompositorResourcePass();
 		ICompositorResourcePass(const ICompositorResourcePass&) = delete;
 		ICompositorResourcePass& operator=(const ICompositorResourcePass&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		const CompositorTarget& mCompositorTarget;
 
 
 	};

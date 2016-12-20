@@ -43,26 +43,26 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorPassFactory methods ]
 	//[-------------------------------------------------------]
-	ICompositorResourcePass* CompositorPassFactory::createCompositorResourcePass(CompositorPassTypeId compositorPassTypeId) const
+	ICompositorResourcePass* CompositorPassFactory::createCompositorResourcePass(const CompositorTarget& compositorTarget, CompositorPassTypeId compositorPassTypeId) const
 	{
 		ICompositorResourcePass* compositorResourcePass = nullptr;
 
 		// Evaluate the compositor pass type
 		if (compositorPassTypeId == CompositorResourcePassClear::TYPE_ID)
 		{
-			compositorResourcePass = new CompositorResourcePassClear();
+			compositorResourcePass = new CompositorResourcePassClear(compositorTarget);
 		}
 		else if (compositorPassTypeId == CompositorResourcePassQuad::TYPE_ID)
 		{
-			compositorResourcePass = new CompositorResourcePassQuad();
+			compositorResourcePass = new CompositorResourcePassQuad(compositorTarget);
 		}
 		else if (compositorPassTypeId == CompositorResourcePassScene::TYPE_ID)
 		{
-			compositorResourcePass = new CompositorResourcePassScene();
+			compositorResourcePass = new CompositorResourcePassScene(compositorTarget);
 		}
 		else if (compositorPassTypeId == CompositorResourcePassDebugGui::TYPE_ID)
 		{
-			compositorResourcePass = new CompositorResourcePassDebugGui();
+			compositorResourcePass = new CompositorResourcePassDebugGui(compositorTarget);
 		}
 
 		// Done

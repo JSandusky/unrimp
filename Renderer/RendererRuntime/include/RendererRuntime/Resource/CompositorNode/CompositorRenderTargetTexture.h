@@ -19,13 +19,16 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/CompositorNode/CompositorNodeResource.h"
-#include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
-#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
-#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Core/Renderer/RenderTargetTextureSignature.h"
 
 
 //[-------------------------------------------------------]
@@ -36,38 +39,52 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId AssetId;		///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+
+
+	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Compositor render target texture; used as part of compositor framebuffers
+	*/
+	class CompositorRenderTargetTexture : protected NonCopyable
+	{
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void CompositorNodeResource::enforceFullyLoaded()
-	{
-		// TODO(co) Implement more efficient solution: We need to extend "Runtime::ResourceStreamer" to request emergency immediate processing of requested resources
-		ResourceStreamer& resourceStreamer = getResourceManager<CompositorNodeResourceManager>().getRendererRuntime().getResourceStreamer();
-		while (IResource::LoadingState::LOADED != getLoadingState())
-		{
-			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(1ms);
-			resourceStreamer.dispatch();
-		}
-	}
+	public:
+		inline CompositorRenderTargetTexture(AssetId assetId, const RenderTargetTextureSignature& renderTargetTextureSignature);
+		inline explicit CompositorRenderTargetTexture(const CompositorRenderTargetTexture& compositorRenderTargetTexture);
+		inline ~CompositorRenderTargetTexture();
+		inline CompositorRenderTargetTexture& operator=(const CompositorRenderTargetTexture& compositorRenderTargetTexture);
+		inline AssetId getAssetId() const;
+		inline const RenderTargetTextureSignature& getRenderTargetTextureSignature() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Private data                                          ]
 	//[-------------------------------------------------------]
-	void CompositorNodeResource::deinitializeElement()
-	{
-		mInputChannels.clear();
-		mCompositorRenderTargetTextures.clear();
-		mCompositorFramebuffers.clear();
-		mCompositorTargets.clear();
-		mOutputChannels.clear();
+	private:
+		AssetId						 mAssetId;
+		RenderTargetTextureSignature mRenderTargetTextureSignature;
 
-		// Call base implementation
-		IResource::deinitializeElement();
-	}
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/CompositorNode/CompositorRenderTargetTexture.inl"

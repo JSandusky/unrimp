@@ -8,17 +8,17 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "18",
+			"AssetId": "13",
 			"AssetType": "ShaderBlueprint",
-			"AssetCategory": "Default",
-			"AssetName": "DepthOnlyFragment",
+			"AssetCategory": "Scene",
+			"AssetName": "MeshForwardLightingFragment",
 			"AssetDependencies": [ "15" ],
-			"FileDependencies": [ "DepthOnlyFragment.shader_blueprint" ],
+			"FileDependencies": [ "MeshForwardLightingFragment.shader_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
 		},
 		"ShaderBlueprintAssetCompiler":
 		{
-			"InputFile": "DepthOnlyFragment.shader_blueprint"
+			"InputFile": "MeshForwardLightingFragment.shader_blueprint"
 		}
 	}
 }

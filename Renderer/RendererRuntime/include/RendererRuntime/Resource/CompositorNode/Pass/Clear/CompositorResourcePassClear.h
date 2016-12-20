@@ -85,7 +85,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline CompositorResourcePassClear();
+		inline explicit CompositorResourcePassClear(const CompositorTarget& compositorTarget);
 		inline virtual ~CompositorResourcePassClear();
 		CompositorResourcePassClear(const CompositorResourcePassClear&) = delete;
 		CompositorResourcePassClear& operator=(const CompositorResourcePassClear&) = delete;

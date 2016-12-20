@@ -36,15 +36,18 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FramebufferSignature::FramebufferSignature(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat) :
-		mWidth(width),
-		mHeight(height),
-		mTextureFormat(textureFormat),
+	FramebufferSignature::FramebufferSignature(uint8_t numberOfColorTextures, AssetId colorTextureAssetIds[8], AssetId depthStencilTextureAssetId) :
+		mNumberOfColorTextures(numberOfColorTextures),
+		mColorTextureAssetIds{colorTextureAssetIds[0], colorTextureAssetIds[1], colorTextureAssetIds[2], colorTextureAssetIds[3], colorTextureAssetIds[4], colorTextureAssetIds[5], colorTextureAssetIds[6], colorTextureAssetIds[7]},
+		mDepthStencilTextureAssetId(depthStencilTextureAssetId),
 		mFramebufferSignatureId(Math::FNV1a_INITIAL_HASH)
 	{
-		mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mWidth), sizeof(uint32_t), mFramebufferSignatureId);
-		mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mHeight), sizeof(uint32_t), mFramebufferSignatureId);
-		mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mTextureFormat), sizeof(Renderer::TextureFormat::Enum), mFramebufferSignatureId);
+		mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mNumberOfColorTextures), sizeof(AssetId), mFramebufferSignatureId);
+		for (uint8_t i = 0; i < mNumberOfColorTextures; ++i)
+		{
+			mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mColorTextureAssetIds[i]), sizeof(AssetId), mFramebufferSignatureId);
+		}
+		mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mDepthStencilTextureAssetId), sizeof(AssetId), mFramebufferSignatureId);
 	}
 
 

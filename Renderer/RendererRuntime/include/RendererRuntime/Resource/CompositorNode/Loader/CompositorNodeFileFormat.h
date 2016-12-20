@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/Renderer/FramebufferSignature.h"
+#include "RendererRuntime/Core/Renderer/RenderTargetTextureSignature.h"
 
 
 //[-------------------------------------------------------]
@@ -66,6 +67,7 @@ namespace RendererRuntime
 				uint32_t formatType;
 				uint16_t formatVersion;
 				uint32_t numberOfInputChannels;
+				uint32_t numberOfRenderTargetTextures;
 				uint32_t numberOfFramebuffers;
 				uint32_t numberOfTargets;
 				uint32_t numberOfOutputChannels;
@@ -74,6 +76,12 @@ namespace RendererRuntime
 			struct Channel
 			{
 				CompositorChannelId id;
+			};
+
+			struct RenderTargetTexture
+			{
+				AssetId						 assetId;
+				RenderTargetTextureSignature renderTargetTextureSignature;
 			};
 
 			struct Framebuffer

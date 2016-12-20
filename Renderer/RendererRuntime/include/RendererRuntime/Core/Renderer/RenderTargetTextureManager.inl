@@ -26,26 +26,22 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline CompositorPassTypeId CompositorResourcePassDebugGui::getTypeId() const
-	{
-		return TYPE_ID;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	inline CompositorResourcePassDebugGui::CompositorResourcePassDebugGui(const CompositorTarget& compositorTarget) :
-		ICompositorResourcePass(compositorTarget)
+	inline RenderTargetTextureManager::RenderTargetTextureManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing here
 	}
 
-	inline CompositorResourcePassDebugGui::~CompositorResourcePassDebugGui()
+	inline RenderTargetTextureManager::~RenderTargetTextureManager()
 	{
 		// Nothing here
+	}
+
+	inline IRendererRuntime& RenderTargetTextureManager::getRendererRuntime() const
+	{
+		return mRendererRuntime;
 	}
 
 

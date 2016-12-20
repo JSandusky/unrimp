@@ -25,6 +25,8 @@
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
 
+#include <Renderer/Public/Renderer.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -52,12 +54,42 @@ namespace RendererRuntime
 		}
 	}
 
-	void CompositorNodeInstance::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const
+	Renderer::IRenderTarget& CompositorNodeInstance::fillCommandBuffer(Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer) const
 	{
+		Renderer::IRenderTarget* currentRenderTarget = &renderTarget;
 		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
 		{
-			compositorInstancePass->onFillCommandBuffer(commandBuffer);
+			{ // Set the current render target
+				Renderer::IRenderTarget* newRenderTarget = compositorInstancePass->getRenderTarget();
+				if (nullptr == newRenderTarget)
+				{
+					// TODO(co) This in here is just a temporary solution
+					newRenderTarget = &renderTarget;
+				}
+				if (newRenderTarget != currentRenderTarget)
+				{
+					currentRenderTarget = newRenderTarget;
+					Renderer::Command::SetRenderTarget::create(commandBuffer, currentRenderTarget);
+
+					{ // Set the viewport and scissor rectangle
+						// Get the window size
+						uint32_t width  = 0;
+						uint32_t height = 0;
+						currentRenderTarget->getWidthAndHeight(width, height);
+
+						// Set the viewport and scissor rectangle
+						Renderer::Command::SetViewportAndScissorRectangle::create(commandBuffer, 0, 0, width, height);
+					}
+				}
+			}
+
+			// Let the compositor instance pass fill the command buffer
+			compositorInstancePass->onFillCommandBuffer(*currentRenderTarget, commandBuffer);
 		}
+
+		// Done
+		assert(nullptr != currentRenderTarget);
+		return *currentRenderTarget;
 	}
 
 	void CompositorNodeInstance::frameEnded() const

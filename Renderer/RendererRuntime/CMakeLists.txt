@@ -61,6 +61,8 @@ set(SOURCE_CODES
 	src/Core/Platform/PlatformManager.cpp
 	src/Core/Renderer/FramebufferManager.cpp
 	src/Core/Renderer/FramebufferSignature.cpp
+	src/Core/Renderer/RenderTargetTextureManager.cpp
+	src/Core/Renderer/RenderTargetTextureSignature.cpp
 	src/Core/String.cpp
 	src/DebugGui/DebugGuiManager.cpp
 	src/RenderQueue/IndirectBufferManager.cpp

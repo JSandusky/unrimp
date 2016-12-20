@@ -19,6 +19,14 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Core/Renderer/RenderTargetTextureSignature.h"
+#include "RendererRuntime/Core/Math/Math.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -26,26 +34,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline CompositorPassTypeId CompositorResourcePassDebugGui::getTypeId() const
+	RenderTargetTextureSignature::RenderTargetTextureSignature(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat) :
+		mWidth(width),
+		mHeight(height),
+		mTextureFormat(textureFormat),
+		mRenderTargetTextureSignatureId(Math::FNV1a_INITIAL_HASH)
 	{
-		return TYPE_ID;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	inline CompositorResourcePassDebugGui::CompositorResourcePassDebugGui(const CompositorTarget& compositorTarget) :
-		ICompositorResourcePass(compositorTarget)
-	{
-		// Nothing here
-	}
-
-	inline CompositorResourcePassDebugGui::~CompositorResourcePassDebugGui()
-	{
-		// Nothing here
+		mRenderTargetTextureSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mWidth), sizeof(uint32_t), mRenderTargetTextureSignatureId);
+		mRenderTargetTextureSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mHeight), sizeof(uint32_t), mRenderTargetTextureSignatureId);
+		mRenderTargetTextureSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mTextureFormat), sizeof(Renderer::TextureFormat::Enum), mRenderTargetTextureSignatureId);
 	}
 
 

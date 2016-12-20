@@ -135,6 +135,7 @@ private:
 	Stopwatch mStopwatch;	///< Stopwatch instance
 	float	  mGlobalTimer;	///< Global timer
 	// States for runtime-fun
+	float mResolutionScale;
 	float mRotationSpeed;
 	float mSunLightColor[3];
 	float mWetness;

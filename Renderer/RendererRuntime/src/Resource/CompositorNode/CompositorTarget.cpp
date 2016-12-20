@@ -39,7 +39,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	ICompositorResourcePass* CompositorTarget::addCompositorResourcePass(const ICompositorPassFactory& compositorPassFactory, CompositorPassTypeId compositorPassTypeId)
 	{
-		ICompositorResourcePass* compositorResourcePass = compositorPassFactory.createCompositorResourcePass(compositorPassTypeId);
+		ICompositorResourcePass* compositorResourcePass = compositorPassFactory.createCompositorResourcePass(*this, compositorPassTypeId);
 		mCompositorResourcePasses.push_back(compositorResourcePass);
 		return compositorResourcePass;
 	}

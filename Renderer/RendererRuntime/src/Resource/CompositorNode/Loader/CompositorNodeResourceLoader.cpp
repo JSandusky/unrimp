@@ -101,6 +101,15 @@ namespace
 				compositorNodeResource.addInputChannel(channelId);
 			}
 
+			// TODO(co) Read all render target textures in a single burst?
+			compositorNodeResource.reserveRenderTargetTextures(compositorNodeHeader.numberOfRenderTargetTextures);
+			for (uint32_t i = 0; i < compositorNodeHeader.numberOfRenderTargetTextures; ++i)
+			{
+				RendererRuntime::v1CompositorNode::RenderTargetTexture renderTargetTexture;
+				inputStream.read(reinterpret_cast<char*>(&renderTargetTexture), sizeof(RendererRuntime::v1CompositorNode::RenderTargetTexture));
+				compositorNodeResource.addRenderTargetTexture(renderTargetTexture.assetId, renderTargetTexture.renderTargetTextureSignature);
+			}
+
 			// TODO(co) Read all framebuffers in a single burst?
 			compositorNodeResource.reserveFramebuffers(compositorNodeHeader.numberOfFramebuffers);
 			for (uint32_t i = 0; i < compositorNodeHeader.numberOfFramebuffers; ++i)

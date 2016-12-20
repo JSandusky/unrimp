@@ -83,6 +83,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline Renderer::ITexturePtr getTexture() const;
+		inline void setTexture(Renderer::ITexture& texture);
 
 
 	//[-------------------------------------------------------]

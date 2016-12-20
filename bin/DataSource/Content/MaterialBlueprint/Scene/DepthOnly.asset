@@ -10,7 +10,7 @@
 		{
 			"AssetId": "0",
 			"AssetType": "MaterialBlueprint",
-			"AssetCategory": "Default",
+			"AssetCategory": "Scene",
 			"AssetName": "DepthOnly",
 			"AssetDependencies": [ "17", "18" ],
 			"FileDependencies": [ "DepthOnly.material_blueprint" ],

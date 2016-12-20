@@ -28,9 +28,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/NonCopyable.h"
-
-#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
@@ -43,6 +42,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
+	typedef StringId AssetId;					///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
 	typedef uint32_t FramebufferSignatureId;	///< Framebuffer signature identifier, result of hashing framebuffer properties
 
 
@@ -71,14 +71,14 @@ namespace RendererRuntime
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] width
-		*    Width
-		*  @param[in] height
-		*    Height
-		*  @param[in] textureFormat
-		*    Texture format
+		*  @param[in] numberOfColorTextures
+		*    Number of color textures [0, 7]
+		*  @param[in] colorTextureAssetIds
+		*    Color texture asset IDs
+		*  @param[in] depthStencilTextureAssetId
+		*    Depth stencil texture assetID
 		*/
-		RENDERERRUNTIME_API_EXPORT FramebufferSignature(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat);
+		RENDERERRUNTIME_API_EXPORT FramebufferSignature(uint8_t numberOfColorTextures, AssetId colorTextureAssetIds[8], AssetId depthStencilTextureAssetId);
 
 		/**
 		*  @brief
@@ -104,9 +104,9 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Getter for input data                                 ]
 		//[-------------------------------------------------------]
-		inline uint32_t getWidth() const;
-		inline uint32_t getHeight() const;
-		inline Renderer::TextureFormat::Enum getTextureFormat() const;
+		inline uint8_t getNumberOfColorTextures() const;
+		inline AssetId getColorTextureAssetId(uint8_t index) const;
+		inline AssetId getDepthStencilTextureAssetId() const;
 
 		//[-------------------------------------------------------]
 		//[ Getter for derived data                               ]
@@ -119,9 +119,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		// Input data
-		uint32_t					  mWidth;
-		uint32_t					  mHeight;
-		Renderer::TextureFormat::Enum mTextureFormat;
+		uint8_t mNumberOfColorTextures;
+		AssetId mColorTextureAssetIds[8];
+		AssetId mDepthStencilTextureAssetId;
 		// Derived data
 		FramebufferSignatureId mFramebufferSignatureId;
 

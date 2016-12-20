@@ -31,14 +31,20 @@
 #include "RendererRuntime/Core/Renderer/FramebufferSignature.h"
 
 #include <vector>
+#include <unordered_map>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class IFramebuffer;
+	class IRenderTarget;
+}
 namespace RendererRuntime
 {
-	class IRendererRuntime;
+	class RenderTargetTextureManager;
 }
 
 
@@ -47,6 +53,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId CompositorFramebufferId;	///< Compositor framebuffer identifier, internally just a POD "uint32_t"
 
 
 	//[-------------------------------------------------------]
@@ -63,7 +75,7 @@ namespace RendererRuntime
 		struct FramebufferElement
 		{
 			FramebufferSignature    framebufferSignature;
-			Renderer::IFramebuffer* framebuffer;		///< Always valid for valid elements, no "Renderer::IFramebufferPtr" to not have overhead when internally reallocating
+			Renderer::IFramebuffer* framebuffer;		///< Can be a null pointer, no "Renderer::IFramebufferPtr" to not have overhead when internally reallocating
 			uint32_t				numberOfReferences;	///< Number of framebuffer references (don't misuse the renderer framebuffer reference counter for this)
 
 			inline FramebufferElement() :
@@ -95,11 +107,14 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline explicit FramebufferManager(IRendererRuntime& rendererRuntime);
+		inline explicit FramebufferManager(RenderTargetTextureManager& renderTargetTextureManager);
 		inline ~FramebufferManager();
 		FramebufferManager(const FramebufferManager&) = delete;
 		FramebufferManager& operator=(const FramebufferManager&) = delete;
-		Renderer::IFramebufferPtr addFramebufferBySignature(const FramebufferSignature& framebufferSignature);
+		void clear();
+		void clearRendererResources();
+		void addFramebuffer(CompositorFramebufferId compositorFramebufferId, const FramebufferSignature& framebufferSignature);
+		Renderer::IFramebuffer* getFramebufferByCompositorFramebufferId(CompositorFramebufferId compositorFramebufferId, const Renderer::IRenderTarget& mainRenderTarget, float resolutionScale);
 		void releaseFramebufferBySignature(const FramebufferSignature& framebufferSignature);
 
 
@@ -108,14 +123,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		typedef std::vector<FramebufferElement> SortedFramebufferVector;
+		typedef std::unordered_map<uint32_t, FramebufferSignatureId> CompositorFramebufferIdToFramebufferSignatureId;	///< Key = "RendererRuntime::CompositorFramebufferId"
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		mRendererRuntime;
-		SortedFramebufferVector mSortedFramebufferVector;
+		RenderTargetTextureManager&						mRenderTargetTextureManager;	///< Render target texture manager, just shared so don't destroy the instance
+		SortedFramebufferVector							mSortedFramebufferVector;
+		CompositorFramebufferIdToFramebufferSignatureId	mCompositorFramebufferIdToFramebufferSignatureId;
 
 
 	};

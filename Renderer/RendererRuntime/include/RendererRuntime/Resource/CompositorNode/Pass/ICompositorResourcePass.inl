@@ -26,6 +26,15 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline const CompositorTarget& ICompositorResourcePass::getCompositorTarget() const
+	{
+		return mCompositorTarget;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
 	inline bool ICompositorResourcePass::getRenderQueueIndexRange(uint8_t&, uint8_t&) const
@@ -38,7 +47,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ICompositorResourcePass::ICompositorResourcePass()
+	inline ICompositorResourcePass::ICompositorResourcePass(const CompositorTarget& compositorTarget) :
+		mCompositorTarget(compositorTarget)
 	{
 		// Nothing here
 	}

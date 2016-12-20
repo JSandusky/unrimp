@@ -39,6 +39,7 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class FramebufferManager;
+	class RenderTargetTextureManager;
 }
 
 
@@ -75,6 +76,7 @@ namespace RendererRuntime
 	public:
 		inline const CompositorWorkspaceResources& getCompositorWorkspaceResources() const;
 		RENDERERRUNTIME_API_EXPORT CompositorWorkspaceResourceId loadCompositorWorkspaceResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		inline RenderTargetTextureManager& getRenderTargetTextureManager();
 		inline FramebufferManager& getFramebufferManager();
 
 
@@ -105,6 +107,7 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime&			 mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
 		CompositorWorkspaceResources mCompositorWorkspaceResources;
+		RenderTargetTextureManager*	 mRenderTargetTextureManager;	///< Render target texture manager, always valid, we're responsible for destroying it if we no longer need it
 		FramebufferManager*			 mFramebufferManager;			///< Framebuffer manager, always valid, we're responsible for destroying it if we no longer need it
 
 
