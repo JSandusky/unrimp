@@ -46,6 +46,46 @@
 
 #include <string.h>
 
+// Statically linked libraries create renderer instance signatures
+// This is needed to do here because the methods in the libaries are also defined in global namespace
+#ifndef SHARED_LIBRARIES
+	// Null
+	#ifndef RENDERER_NO_NULL
+		// "createNullRendererInstance()" signature
+		extern Renderer::IRenderer *createNullRendererInstance(Renderer::handle);
+	#endif
+
+	// OpenGL
+	#ifndef RENDERER_NO_OPENGL
+		// "createOpenGLRendererInstance()" signature
+		extern Renderer::IRenderer *createOpenGLRendererInstance(Renderer::handle);
+	#endif
+
+	// OpenGLES2
+	#ifndef RENDERER_NO_OPENGLES2
+		// "createOpenGLES2RendererInstance()" signature
+		extern Renderer::IRenderer *createOpenGLES2RendererInstance(Renderer::handle);
+	#endif
+
+	// Direct3D 9
+	#ifndef RENDERER_NO_DIRECT3D9
+		// "createDirect3D9RendererInstance()" signature
+		extern Renderer::IRenderer *createDirect3D9RendererInstance(Renderer::handle);
+	#endif
+
+	// Direct3D 10
+	#ifndef RENDERER_NO_DIRECT3D10
+		// "createDirect3D10RendererInstance()" signature
+		extern Renderer::IRenderer *createDirect3D10RendererInstance(Renderer::handle);
+	#endif
+
+	// Direct3D 11
+	#ifndef RENDERER_NO_DIRECT3D11
+		// "createDirect3D11RendererInstance()" signature
+		extern Renderer::IRenderer *createDirect3D11RendererInstance(Renderer::handle);
+	#endif
+#endif
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -163,9 +203,6 @@ namespace Renderer
 				#ifndef RENDERER_NO_NULL
 					if (0 == strcmp(rendererName, "Null"))
 					{
-						// "createNullRendererInstance()" signature
-						extern Renderer::IRenderer *createNullRendererInstance(Renderer::handle);
-
 						// Create the renderer instance
 						mRenderer = createNullRendererInstance(nativeWindowHandle);
 					}
@@ -175,9 +212,6 @@ namespace Renderer
 				#ifndef RENDERER_NO_OPENGL
 					if (0 == strcmp(rendererName, "OpenGL"))
 					{
-						// "createOpenGLRendererInstance()" signature
-						extern Renderer::IRenderer *createOpenGLRendererInstance(Renderer::handle);
-
 						// Create the renderer instance
 						mRenderer = createOpenGLRendererInstance(nativeWindowHandle);
 					}
@@ -187,9 +221,6 @@ namespace Renderer
 				#ifndef RENDERER_NO_OPENGLES2
 					if (0 == strcmp(rendererName, "OpenGLES2"))
 					{
-						// "createOpenGLES2RendererInstance()" signature
-						extern Renderer::IRenderer *createOpenGLES2RendererInstance(Renderer::handle);
-
 						// Create the renderer instance
 						mRenderer = createOpenGLES2RendererInstance(nativeWindowHandle);
 					}
@@ -199,9 +230,6 @@ namespace Renderer
 				#ifndef RENDERER_NO_DIRECT3D9
 					if (0 == strcmp(rendererName, "Direct3D9"))
 					{
-						// "createDirect3D9RendererInstance()" signature
-						extern Renderer::IRenderer *createDirect3D9RendererInstance(Renderer::handle);
-
 						// Create the renderer instance
 						mRenderer = createDirect3D9RendererInstance(nativeWindowHandle);
 					}
@@ -211,9 +239,6 @@ namespace Renderer
 				#ifndef RENDERER_NO_DIRECT3D10
 					if (0 == strcmp(rendererName, "Direct3D10"))
 					{
-						// "createDirect3D10RendererInstance()" signature
-						extern Renderer::IRenderer *createDirect3D10RendererInstance(Renderer::handle);
-
 						// Create the renderer instance
 						mRenderer = createDirect3D10RendererInstance(nativeWindowHandle);
 					}
@@ -223,9 +248,6 @@ namespace Renderer
 				#ifndef RENDERER_NO_DIRECT3D11
 					if (0 == strcmp(rendererName, "Direct3D11"))
 					{
-						// "createDirect3D11RendererInstance()" signature
-						extern Renderer::IRenderer *createDirect3D11RendererInstance(Renderer::handle);
-
 						// Create the renderer instance
 						mRenderer = createDirect3D11RendererInstance(nativeWindowHandle);
 					}
