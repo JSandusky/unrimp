@@ -45,6 +45,14 @@
 
 #include <string.h>
 
+#ifndef SHARED_LIBRARIES
+	// Statically linked library create renderer runtime instance signatures
+	// This is needed to do here because the methods in the libary are also defined in global namespace
+
+	// "createRendererRuntimeInstance()" signature
+	extern RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer);
+#endif
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -114,9 +122,9 @@ namespace RendererRuntime
 				#elif defined LINUX
 					// Load in the shared library
 					#ifdef _DEBUG
-						static const char RENDERER_RUNTIME_FILENAME[] = "RendererRuntimeD.so";
+						static const char RENDERER_RUNTIME_FILENAME[] = "libRendererRuntimeD.so";
 					#else
-						static const char RENDERER_RUNTIME_FILENAME[] = "RendererRuntime.so";
+						static const char RENDERER_RUNTIME_FILENAME[] = "libRendererRuntime.so";
 					#endif
 					mRendererRuntimeSharedLibrary = dlopen(RENDERER_RUNTIME_FILENAME, RTLD_NOW);
 					if (nullptr != mRendererRuntimeSharedLibrary)
@@ -148,9 +156,6 @@ namespace RendererRuntime
 				#endif
 			#else
 				// Statically linked libraries
-
-				// "createRendererRuntimeInstance()" signature
-				extern RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer);
 
 				// Create the renderer runtime instance
 				mRendererRuntime = createRendererRuntimeInstance(renderer);

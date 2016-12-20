@@ -165,7 +165,7 @@ if(SHARED_LIBRARY)
 	add_library(RendererRuntime SHARED ${SOURCE_CODES})
 	set_target_properties(RendererRuntime PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DRENDERERRUNTIME_EXPORTS")
 	if(UNIX)
-		target_link_libraries(RendererRuntime dl)
+		target_link_libraries(RendererRuntime dl pthread)
 	endif()
 endif()
 
