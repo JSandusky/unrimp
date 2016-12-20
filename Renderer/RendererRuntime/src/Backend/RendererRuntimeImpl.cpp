@@ -60,44 +60,6 @@ RENDERERRUNTIME_FUNCTION_EXPORT RendererRuntime::IRendererRuntime *createRendere
 
 
 //[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-namespace
-{
-	namespace detail
-	{
-
-
-		//[-------------------------------------------------------]
-		//[ Global definitions                                    ]
-		//[-------------------------------------------------------]
-		// Vertex input layout
-		const Renderer::VertexAttribute VertexAttributesLayout[] =
-		{
-			{ // Attribute 0
-				// Data destination
-				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-				"Position",									// name[32] (char)
-				"POSITION",									// semanticName[32] (char)
-				0,											// semanticIndex (uint32_t)
-				// Data source
-				0,											// inputSlot (uint32_t)
-				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
-				0											// instancesPerElement (uint32_t)
-			}
-		};
-		const Renderer::VertexAttributes VertexAttributes(glm::countof(VertexAttributesLayout), VertexAttributesLayout);
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-	} // detail
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime

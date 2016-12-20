@@ -369,6 +369,7 @@
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialTechnique.cpp" />
     <ClCompile Include="src\Resource\Mesh\Loader\MeshResourceLoader.cpp" />
+    <ClCompile Include="src\Resource\Mesh\MeshResource.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
     <ClCompile Include="src\Resource\Scene\Factory\SceneFactory.cpp" />
     <ClCompile Include="src\Resource\Scene\ISceneResource.cpp" />

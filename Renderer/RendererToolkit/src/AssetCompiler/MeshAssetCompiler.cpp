@@ -24,6 +24,7 @@
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/Mesh/MeshResource.h>
 #include <RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -373,9 +374,6 @@ namespace RendererToolkit
 			::detail::SubMeshes subMeshes;
 			::detail::getNumberOfVerticesAndIndicesRecursive(input, *assimpScene, *assimpScene->mRootNode, numberOfVertices, numberOfIndices, subMeshes);
 
-			// TODO(co) Will change when skinned
-			uint8_t numberOfVertexAttributes = 3;
-
 			{ // Mesh header
 				RendererRuntime::v1Mesh::Header meshHeader;
 				meshHeader.formatType				= RendererRuntime::v1Mesh::FORMAT_TYPE;
@@ -384,7 +382,7 @@ namespace RendererToolkit
 				meshHeader.numberOfVertices			= numberOfVertices;
 				meshHeader.indexBufferFormat		= Renderer::IndexBufferFormat::UNSIGNED_SHORT;
 				meshHeader.numberOfIndices			= numberOfIndices;
-				meshHeader.numberOfVertexAttributes = numberOfVertexAttributes;
+				meshHeader.numberOfVertexAttributes = static_cast<uint8_t>(RendererRuntime::MeshResource::VERTEX_ATTRIBUTES.numberOfAttributes);
 				meshHeader.numberOfSubMeshes		= static_cast<uint8_t>(subMeshes.size());
 
 				// Write down the mesh header
@@ -415,52 +413,8 @@ namespace RendererToolkit
 				delete [] indexBufferData;
 			}
 
-			{ // Vertex attributes
-				// TODO(co) We need a central vertex input layout management
-				// Vertex input layout
-				const Renderer::VertexAttribute vertexAttributes[] =
-				{
-					{ // Attribute 0
-						// Data destination
-						Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-						"Position",									// name[32] (char)
-						"POSITION",									// semanticName[32] (char)
-						0,											// semanticIndex (uint32_t)
-						// Data source
-						0,											// inputSlot (uint32_t)
-						0,											// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0											// instancesPerElement (uint32_t)
-					},
-					{ // Attribute 1
-						// Data destination
-						Renderer::VertexAttributeFormat::SHORT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-						"TexCoord",									// name[32] (char)
-						"TEXCOORD",									// semanticName[32] (char)
-						0,											// semanticIndex (uint32_t)
-						// Data source
-						0,											// inputSlot (uint32_t)
-						sizeof(float) * 3,							// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0											// instancesPerElement (uint32_t)
-					},
-					{ // Attribute 2
-						// Data destination
-						Renderer::VertexAttributeFormat::SHORT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-						"QTangent",									// name[32] (char)
-						"TEXCOORD",									// semanticName[32] (char)
-						1,											// semanticIndex (uint32_t)
-						// Data source
-						0,											// inputSlot (uint32_t)
-						sizeof(float) * 3 + sizeof(short) * 2,		// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0											// instancesPerElement (uint32_t)
-					}
-				};
-
-				// Write down the vertex array attributes
-				outputFileStream.write(reinterpret_cast<const char*>(vertexAttributes), sizeof(Renderer::VertexAttribute) * numberOfVertexAttributes);
-			}
+			// Write down the vertex array attributes
+			outputFileStream.write(reinterpret_cast<const char*>(RendererRuntime::MeshResource::VERTEX_ATTRIBUTES.attributes), sizeof(Renderer::VertexAttribute) * RendererRuntime::MeshResource::VERTEX_ATTRIBUTES.numberOfAttributes);
 
 			// Write down the sub-meshes
 			outputFileStream.write(reinterpret_cast<const char*>(subMeshes.data()), sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size());

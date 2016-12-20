@@ -28,6 +28,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
+#include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -55,52 +56,6 @@ namespace
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		typedef std::vector<RendererRuntime::ShaderPropertyId> ShaderPropertyIds;
-
-
-		//[-------------------------------------------------------]
-		//[ Global variables                                      ]
-		//[-------------------------------------------------------]
-		// TODO(co) We need a central vertex input layout management
-		// Vertex input layout
-		const Renderer::VertexAttribute vertexAttributesLayout[] =
-		{
-			{ // Attribute 0
-				// Data destination
-				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-				"Position",									// name[32] (char)
-				"POSITION",									// semanticName[32] (char)
-				0,											// semanticIndex (uint32_t)
-				// Data source
-				0,											// inputSlot (uint32_t)
-				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
-				0											// instancesPerElement (uint32_t)
-			},
-			{ // Attribute 1
-				// Data destination
-				Renderer::VertexAttributeFormat::SHORT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-				"TexCoord",									// name[32] (char)
-				"TEXCOORD",									// semanticName[32] (char)
-				0,											// semanticIndex (uint32_t)
-				// Data source
-				0,											// inputSlot (uint32_t)
-				sizeof(float) * 3,							// alignedByteOffset (uint32_t)
-				// Data source, instancing part
-				0											// instancesPerElement (uint32_t)
-			},
-			{ // Attribute 2
-				// Data destination
-				Renderer::VertexAttributeFormat::SHORT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-				"QTangent",									// name[32] (char)
-				"TEXCOORD",									// semanticName[32] (char)
-				1,											// semanticIndex (uint32_t)
-				// Data source
-				0,											// inputSlot (uint32_t)
-				sizeof(float) * 3 + sizeof(short) * 2,		// alignedByteOffset (uint32_t)
-				// Data source, instancing part
-				0											// instancesPerElement (uint32_t)
-			}
-		};
 
 
 		//[-------------------------------------------------------]
@@ -394,7 +349,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MaterialBlueprintResource::MaterialBlueprintResource() :
 		mPipelineStateCacheManager(*this),
-		mVertexAttributes(glm::countof(::detail::vertexAttributesLayout), ::detail::vertexAttributesLayout),
+		mVertexAttributes(MeshResource::VERTEX_ATTRIBUTES.numberOfAttributes, MeshResource::VERTEX_ATTRIBUTES.attributes),
 		mPipelineState(Renderer::PipelineStateBuilder()),
 		mPassUniformBuffer(nullptr),
 		mMaterialUniformBuffer(nullptr),

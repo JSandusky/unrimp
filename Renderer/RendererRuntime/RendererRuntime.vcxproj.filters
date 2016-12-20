@@ -1181,5 +1181,8 @@
     <ClCompile Include="src\RenderQueue\Renderable.cpp">
       <Filter>Source Files\RenderQueue</Filter>
     </ClCompile>
+    <ClCompile Include="src\Resource\Mesh\MeshResource.cpp">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

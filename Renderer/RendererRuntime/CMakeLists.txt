@@ -108,6 +108,7 @@ set(SOURCE_CODES
 	src/Resource/Material/MaterialTechnique.cpp
 	src/Resource/Mesh/Loader/MeshResourceLoader.cpp
 	src/Resource/Mesh/MeshResourceManager.cpp
+	src/Resource/Mesh/MeshResource.cpp
 	src/Resource/Scene/Factory/SceneFactory.cpp
 	src/Resource/Scene/ISceneResource.cpp
 	src/Resource/Scene/Item/CameraSceneItem.cpp

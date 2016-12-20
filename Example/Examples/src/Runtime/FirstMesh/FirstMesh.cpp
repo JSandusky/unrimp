@@ -86,7 +86,6 @@ void FirstMesh::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			// TODO(co) We need a central vertex input layout management
 			// Vertex input layout
 			const Renderer::VertexAttribute vertexAttributesLayout[] =
 			{
