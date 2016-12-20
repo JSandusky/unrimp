@@ -120,6 +120,7 @@ if(RENDERER_RUNTIME)
 		src/Framework/IApplicationRendererRuntime.cpp
 		src/Runtime/FirstMesh/FirstMesh.cpp
 		src/Runtime/FirstScene/FirstScene.cpp
+		src/Runtime/FirstCompositor/FirstCompositor.cpp
 		src/Runtime/FirstCompositor/CompositorInstancePassFirst.cpp
 		src/Runtime/FirstCompositor/CompositorPassFactoryFirst.cpp
 		src/Runtime/FirstCompositor/CompositorResourcePassFirst.cpp
@@ -178,7 +179,10 @@ if(STATIC_LIBRARY)
 		set(LIBRARIES ${LIBRARIES} Direct3D9RendererStatic Direct3D10RendererStatic Direct3D11RendererStatic Direct3D12RendererStatic)
 	endif()
 	if(RENDERER_RUNTIME)
-		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}RendererRuntimeStatic${CMAKE_STATIC_LIBRARY_SUFFIX})
+		set(LIBRARIES ${LIBRARIES} RendererRuntimeStatic)
+		if(UNIX)
+			set(LIBRARIES ${LIBRARIES} pthread)
+		endif()
 	endif()
 	target_link_libraries(ExamplesStatic ${LIBRARIES})
 	
