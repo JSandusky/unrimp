@@ -91,8 +91,10 @@ namespace RendererRuntime
 		*    Maximum render queue index (inclusive)
 		*  @param[in] transparentPass
 		*    "true" if this render queue is used for a transparent render pass, else "false" for opaque render pass (influences the renderables sorting)
+		*  @param[in] doSort
+		*    Sort renderables?
 		*/
-		RenderQueue(IndirectBufferManager& indirectBufferManager, uint8_t minimumRenderQueueIndex, uint8_t maximumRenderQueueIndex, bool transparentPass);
+		RenderQueue(IndirectBufferManager& indirectBufferManager, uint8_t minimumRenderQueueIndex, uint8_t maximumRenderQueueIndex, bool transparentPass, bool doSort);
 
 		inline ~RenderQueue();
 		inline uint8_t getMinimumRenderQueueIndex() const;

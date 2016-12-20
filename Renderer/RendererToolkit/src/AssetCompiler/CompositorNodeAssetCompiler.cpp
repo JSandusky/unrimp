@@ -244,6 +244,26 @@ namespace RendererToolkit
 						else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassQuad passQuad;
+
+							// Set data
+							RendererRuntime::AssetId materialAssetId;
+							RendererRuntime::AssetId materialBlueprintAssetId;
+							JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialAssetId", materialAssetId);
+							JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialBlueprintAssetId", materialBlueprintAssetId);
+							passQuad.materialAssetId = materialAssetId;
+							passQuad.materialBlueprintAssetId = materialBlueprintAssetId;
+
+							// Sanity checks
+							if (RendererRuntime::isUninitialized(passQuad.materialAssetId) && RendererRuntime::isUninitialized(passQuad.materialBlueprintAssetId))
+							{
+								throw std::runtime_error("Material asset ID or material blueprint asset ID must be defined");
+							}
+							if (RendererRuntime::isInitialized(passQuad.materialAssetId) && RendererRuntime::isInitialized(passQuad.materialBlueprintAssetId))
+							{
+								throw std::runtime_error("Material asset ID is defined, but material blueprint asset ID is defined as well. Only one asset ID is allowed.");
+							}
+
+							// Write down
 							outputFileStream.write(reinterpret_cast<const char*>(&passQuad), sizeof(RendererRuntime::v1CompositorNode::PassQuad));
 						}
 						else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)

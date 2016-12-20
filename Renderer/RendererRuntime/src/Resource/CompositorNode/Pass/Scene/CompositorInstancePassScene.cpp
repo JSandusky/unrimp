@@ -65,7 +65,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorInstancePassScene::CompositorInstancePassScene(const CompositorResourcePassScene& compositorResourcePassScene, const CompositorNodeInstance& compositorNodeInstance) :
 		ICompositorInstancePass(compositorResourcePassScene, compositorNodeInstance),
-		mRenderQueue(compositorNodeInstance.getCompositorWorkspaceInstance().getIndirectBufferManager(), compositorResourcePassScene.getMinimumRenderQueueIndex(), compositorResourcePassScene.getMaximumRenderQueueIndex(), compositorResourcePassScene.isTransparentPass()),
+		mRenderQueue(compositorNodeInstance.getCompositorWorkspaceInstance().getIndirectBufferManager(), compositorResourcePassScene.getMinimumRenderQueueIndex(), compositorResourcePassScene.getMaximumRenderQueueIndex(), compositorResourcePassScene.isTransparentPass(), true),
 		mRenderQueueIndexRange(nullptr)
 	{
 		// Nothing here

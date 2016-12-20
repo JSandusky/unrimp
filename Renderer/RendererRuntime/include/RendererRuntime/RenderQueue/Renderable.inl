@@ -70,6 +70,16 @@ namespace RendererRuntime
 		mPrimitiveTopology = primitiveTopology;
 	}
 
+	inline bool Renderable::getDrawIndexed() const
+	{
+		return mDrawIndexed;
+	}
+
+	inline void Renderable::setDrawIndexed(bool drawIndexed)
+	{
+		mDrawIndexed = drawIndexed;
+	}
+
 	inline uint32_t Renderable::getStartIndexLocation() const
 	{
 		return mStartIndexLocation;

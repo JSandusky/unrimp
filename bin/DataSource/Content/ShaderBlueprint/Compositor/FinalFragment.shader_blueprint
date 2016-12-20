@@ -19,32 +19,39 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Includes                                              ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
-{
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	inline MaterialResourceId CompositorInstancePassQuad::getMaterialResourceId() const
-	{
-		return mMaterialResourceId;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
-	//[-------------------------------------------------------]
-	inline void CompositorInstancePassQuad::onFrameEnded()
-	{
-		// Directly clear the render queue as soon as the frame rendering has been finished to avoid evil dangling pointers
-		mRenderQueue.clear();
-	}
+@includepiece(15)	// "Core.shader_piece"
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Definitions                                           ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_COLOR(0)
+OUTPUT_END
+
+// Samplers
+SAMPLER_STATE(SamplerLinear, 0)
+
+// Textures
+TEXTURE_2D(ColorMap, 0)
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	// Done
+	MAIN_OUTPUT_COLOR(0) = SAMPLE_2D(ColorMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgba;
+MAIN_END

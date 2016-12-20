@@ -39,8 +39,24 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Compositor resource pass quad
+	*
+	*  @remarks
+	*    A compositor resource pass quad instance is using a material resource for rendering. This material resource
+	*    can be defined by providing an material asset ID. Since compositor material blueprints are usually highly
+	*    specialized for a certain task, it would be annoying to have to define a material asset for each and every
+	*    compositor material. So, it's also supported to define a material blueprint asset directly.
+	*/
 	class CompositorResourcePassQuad : public ICompositorResourcePass
 	{
 
@@ -59,6 +75,14 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline AssetId getMaterialAssetId() const;
+		inline AssetId getMaterialBlueprintAssetId() const;
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
 	public:
@@ -74,6 +98,14 @@ namespace RendererRuntime
 		inline virtual ~CompositorResourcePassQuad();
 		CompositorResourcePassQuad(const CompositorResourcePassQuad&) = delete;
 		CompositorResourcePassQuad& operator=(const CompositorResourcePassQuad&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		AssetId mMaterialAssetId;
+		AssetId mMaterialBlueprintAssetId;
 
 
 	};

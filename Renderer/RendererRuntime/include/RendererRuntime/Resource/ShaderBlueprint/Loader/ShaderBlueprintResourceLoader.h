@@ -76,7 +76,7 @@ namespace RendererRuntime
 		virtual void onDeserialization() override;
 		inline virtual void onProcessing() override;
 		virtual bool onDispatch() override;
-		inline virtual bool isFullyLoaded() override;
+		virtual bool isFullyLoaded() override;
 
 
 	//[-------------------------------------------------------]

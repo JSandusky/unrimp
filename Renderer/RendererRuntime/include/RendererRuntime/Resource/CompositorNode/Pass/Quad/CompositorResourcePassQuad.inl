@@ -26,6 +26,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline AssetId CompositorResourcePassQuad::getMaterialAssetId() const
+	{
+		return mMaterialAssetId;
+	}
+
+	inline AssetId CompositorResourcePassQuad::getMaterialBlueprintAssetId() const
+	{
+		return mMaterialBlueprintAssetId;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
 	inline CompositorPassTypeId CompositorResourcePassQuad::getTypeId() const

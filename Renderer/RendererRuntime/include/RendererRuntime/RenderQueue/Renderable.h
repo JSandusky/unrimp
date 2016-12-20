@@ -80,7 +80,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT Renderable();
-		RENDERERRUNTIME_API_EXPORT Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId);
+		RENDERERRUNTIME_API_EXPORT Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, bool drawIndexed, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId);
 		inline ~Renderable();
 
 		//[-------------------------------------------------------]
@@ -96,6 +96,8 @@ namespace RendererRuntime
 		inline void setVertexArrayPtr(const Renderer::IVertexArrayPtr& vertexArrayPtr);
 		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
 		inline void setPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
+		inline bool getDrawIndexed() const;
+		inline void setDrawIndexed(bool drawIndexed);
 		inline uint32_t getStartIndexLocation() const;
 		inline void setStartIndexLocation(uint32_t startIndexLocation);
 		inline uint32_t getNumberOfIndices() const;
@@ -133,6 +135,7 @@ namespace RendererRuntime
 		uint32_t						mStartIndexLocation;
 		uint32_t						mNumberOfIndices;
 		MaterialResourceId				mMaterialResourceId;
+		bool							mDrawIndexed;			///< Placed at this location due to padding
 		// Cached material data
 		uint8_t							mRenderQueueIndex;
 		bool							mCastShadows;

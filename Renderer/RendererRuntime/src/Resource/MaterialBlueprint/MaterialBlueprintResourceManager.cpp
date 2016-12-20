@@ -120,6 +120,30 @@ namespace RendererRuntime
 				// -> Runtime hiccups would also be there without fallback pipeline state caches, so there's no real way around
 				// -> We must enforce fully loaded material blueprint resource state for this
 				materialBlueprintResource->enforceFullyLoaded();
+
+				// TODO(co) We need a central vertex input layout management
+				if (20431079 == assetId) // "MaterialBlueprint/Compositor/Final.asset"
+				{
+					Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(materialBlueprintResource->getVertexAttributes());
+					static const Renderer::VertexAttribute vertexAttributesLayout[] =
+					{
+						{ // Attribute 0
+							// Data destination
+							Renderer::VertexAttributeFormat::FLOAT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+							"PositionTexCoord",							// name[32] (char)
+							"POSITION",									// semanticName[32] (char)
+							0,											// semanticIndex (uint32_t)
+							// Data source
+							0,											// inputSlot (size_t)
+							0,											// alignedByteOffset (uint32_t)
+							// Data source, instancing part
+							0											// instancesPerElement (uint32_t)
+						}
+					};
+					vertexAttributes.numberOfAttributes = 1;
+					vertexAttributes.attributes = vertexAttributesLayout;
+				}
+
 				materialBlueprintResource->createPipelineStateCaches(true);
 			}
 

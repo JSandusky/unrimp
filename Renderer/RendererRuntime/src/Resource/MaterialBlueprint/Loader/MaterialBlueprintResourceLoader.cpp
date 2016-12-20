@@ -317,6 +317,24 @@ namespace RendererRuntime
 			}
 		}
 
+		// Fully loaded?
+		return isFullyLoaded();
+	}
+
+	bool MaterialBlueprintResourceLoader::isFullyLoaded()
+	{
+		// We only demand that all referenced shader blueprint resources are loaded, not yet loaded texture resources can be handled during runtime
+		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
+		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+		{
+			const ShaderBlueprintResourceId shaderBlueprintResourceId = mMaterialBlueprintResource->mShaderBlueprintResourceId[i];
+			if (isInitialized(shaderBlueprintResourceId) && IResource::LoadingState::LOADED != shaderBlueprintResourceManager.getResourceByResourceId(shaderBlueprintResourceId).getLoadingState())
+			{
+				// Not fully loaded
+				return false;
+			}
+		}
+
 		// Fully loaded
 		return true;
 	}

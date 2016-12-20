@@ -95,8 +95,11 @@ namespace RendererRuntime
 	{
 		// TODO(co) This is just a placeholder implementation until "RendererRuntime::InstanceBufferManager" is ready
 
-		// TODO(co) Currently uniform buffer is required
-		assert(nullptr != instanceUniformBuffer);
+		// TODO(co) Currently uniform buffer is required, but some material blueprints (usually compositor related) don't have uniform buffers
+		if (nullptr == instanceUniformBuffer)
+		{
+			return;
+		}
 
 		// TODO(co) Implement automatic instancing
 		assert(1 == instanceUniformBuffer->numberOfElements);

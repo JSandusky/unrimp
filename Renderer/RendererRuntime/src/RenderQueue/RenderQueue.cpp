@@ -91,13 +91,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RenderQueue::RenderQueue(IndirectBufferManager& indirectBufferManager, uint8_t minimumRenderQueueIndex, uint8_t maximumRenderQueueIndex, bool transparentPass) :
+	RenderQueue::RenderQueue(IndirectBufferManager& indirectBufferManager, uint8_t minimumRenderQueueIndex, uint8_t maximumRenderQueueIndex, bool transparentPass, bool doSort) :
 		mRendererRuntime(indirectBufferManager.getRendererRuntime()),
 		mIndirectBufferManager(indirectBufferManager),
 		mMinimumRenderQueueIndex(minimumRenderQueueIndex),
 		mMaximumRenderQueueIndex(maximumRenderQueueIndex),
 		mTransparentPass(transparentPass),
-		mDoSort(true)
+		mDoSort(doSort)
 	{
 		assert(mMaximumRenderQueueIndex >= mMinimumRenderQueueIndex);
 		mQueues.resize(static_cast<size_t>(mMaximumRenderQueueIndex - mMinimumRenderQueueIndex + 1));
@@ -198,7 +198,7 @@ namespace RendererRuntime
 							if (nullptr != materialTechnique)
 							{
 								MaterialBlueprintResource* materialBlueprintResource = static_cast<MaterialBlueprintResource*>(materialBlueprintResourceManager.tryGetResourceByResourceId(materialTechnique->getMaterialBlueprintResourceId()));
-								if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
+								if (nullptr != materialBlueprintResource && IResource::LoadingState::LOADED == materialBlueprintResource->getLoadingState())
 								{
 									// TODO(co) Pass shader properties (later on we cache as much as possible of this work inside the renderable)
 									ShaderProperties shaderProperties;
@@ -299,7 +299,14 @@ namespace RendererRuntime
 										Renderer::Command::SetPrimitiveTopology::create(commandBuffer, renderable.getPrimitiveTopology());
 
 										// Render the specified geometric primitive, based on indexing into an array of vertices
-										Renderer::Command::DrawIndexed::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
+										if (renderable.getDrawIndexed())
+										{
+											Renderer::Command::DrawIndexed::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
+										}
+										else
+										{
+											Renderer::Command::Draw::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
+										}
 									}
 								}
 							}

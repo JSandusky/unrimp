@@ -21,44 +21,47 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.h"
-#include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h"
+@includepiece(15)	// "Core.shader_piece"
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Definitions                                           ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
-{
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	const CompositorPassTypeId CompositorResourcePassQuad::TYPE_ID("Quad");
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
-	//[-------------------------------------------------------]
-	void CompositorResourcePassQuad::deserialize(uint32_t numberOfBytes, const uint8_t* data)
-	{
-		assert(sizeof(v1CompositorNode::PassQuad) == numberOfBytes);
-		std::ignore = numberOfBytes;
-
-		// Read data
-		const v1CompositorNode::PassQuad* passQuad = reinterpret_cast<const v1CompositorNode::PassQuad*>(data);
-		mMaterialAssetId = passQuad->materialAssetId;
-		mMaterialBlueprintAssetId = passQuad->materialBlueprintAssetId;
-
-		// Sanity checks
-		assert(isInitialized(mMaterialAssetId) || isInitialized(mMaterialBlueprintAssetId));
-		assert(!(isInitialized(mMaterialAssetId) && isInitialized(mMaterialBlueprintAssetId)));
-	}
+@insertpiece(SetCrossPlatformSettings)
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Input / output                                        ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_VERTEX_POSITION(float4, PositionTexCoord)		// xy = position, zw = texture coordinate
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+	OUTPUT_POSITION										// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+OUTPUT_END
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	// Transform the object space vertex into clip space, convert depth range
+	// -> OpenGL z inside range [-1;1]
+	// -> Direct3D z inside range [0;1]
+	@property(GLSL)
+		@property(IsFinalCopy)
+			MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).x, MAIN_INPUT(PositionTexCoord).y, -1.0f, 1.0f);
+		@end
+		@property(!IsFinalCopy)
+			MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).x, -MAIN_INPUT(PositionTexCoord).y, -1.0f, 1.0f);
+		@end
+	@end
+	@property(!GLSL)
+		MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).xy, -1.0f * 0.5f + 0.5f, 1.0f);
+	@end
+
+	// Pass through the texture coordinates
+	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(PositionTexCoord.zw);
+MAIN_END

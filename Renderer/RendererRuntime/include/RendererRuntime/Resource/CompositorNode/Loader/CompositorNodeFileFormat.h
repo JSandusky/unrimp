@@ -41,6 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
+	typedef StringId AssetId;					///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
 	typedef StringId CompositorChannelId;		///< Compositor channel identifier, internally just a POD "uint32_t"
 	typedef StringId CompositorFramebufferId;	///< Compositor framebuffer identifier, internally just a POD "uint32_t"
 	typedef StringId CompositorPassTypeId;		///< Compositor pass type identifier, internally just a POD "uint32_t"
@@ -105,6 +106,8 @@ namespace RendererRuntime
 
 			struct PassQuad
 			{
+				AssetId materialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
+				AssetId materialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized
 			};
 
 			struct PassScene

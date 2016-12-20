@@ -184,39 +184,6 @@ namespace
 
 
 		//[-------------------------------------------------------]
-		//[ Global functions                                      ]
-		//[-------------------------------------------------------]
-		bool isFullyLoaded(const RendererRuntime::ShaderPieceResourceManager& shaderPieceResourceManager, const RendererRuntime::ShaderBlueprintResourceManager& shaderBlueprintResourceManager, const RendererRuntime::ShaderBlueprintResourceId shaderBlueprintResourceId)
-		{
-			// Check shader blueprint
-			const RendererRuntime::ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResourceManager.getShaderBlueprintResources().tryGetElementById(shaderBlueprintResourceId);
-			if (nullptr == shaderBlueprintResource || RendererRuntime::IResource::LoadingState::LOADED != shaderBlueprintResource->getLoadingState())
-			{
-				// Not fully loaded
-				return false;
-			}
-
-			{ // Check included shader piece resources
-				const RendererRuntime::ShaderBlueprintResource::IncludeShaderPieceResourceIds& includeShaderPieceResources = shaderBlueprintResource->getIncludeShaderPieceResourceIds();
-				const RendererRuntime::ShaderPieceResources& shaderPieceResources = shaderPieceResourceManager.getShaderPieceResources();
-				const size_t numberOfShaderPieces = includeShaderPieceResources.size();
-				for (size_t i = 0; i < numberOfShaderPieces; ++i)
-				{
-					const RendererRuntime::ShaderPieceResource* shaderPieceResource = shaderPieceResources.tryGetElementById(includeShaderPieceResources[i]);
-					if (nullptr == shaderPieceResource || RendererRuntime::IResource::LoadingState::LOADED != shaderPieceResource->getLoadingState())
-					{
-						// Not fully loaded
-						return false;
-					}
-				}
-			}
-
-			// Fully loaded
-			return true;
-		}
-
-
-		//[-------------------------------------------------------]
 		//[ Global variables                                      ]
 		//[-------------------------------------------------------]
 		// Optimization: To avoid constant allocations/deallocations, use a static instance (not multi-threading safe, of course)
@@ -292,31 +259,11 @@ namespace RendererRuntime
 		shaderProperties = optimizedShaderProperties;
 	}
 
-	bool MaterialBlueprintResource::isFullyLoaded() const
-	{
-		// Check uniform buffers
-		// TODO(co) Has to be handled in another way later on, it's valid that there are no instance buffers
-		if (nullptr == mPassUniformBuffer || nullptr == mMaterialUniformBuffer || nullptr == mInstanceUniformBuffer || nullptr == mInstanceTextureBuffer)
-		{
-			// Not fully loaded
-			return false;
-		}
-
-		// Get the shader piece resource manager instance
-		const IRendererRuntime& rendererRuntime = getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime();
-		const ShaderPieceResourceManager& shaderPieceResourceManager = rendererRuntime.getShaderPieceResourceManager();
-		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = rendererRuntime.getShaderBlueprintResourceManager();
-
-		// Check the rest
-		// TODO(co) Handle the other shader types
-		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignaturePtr && ::detail::isFullyLoaded(shaderPieceResourceManager, shaderBlueprintResourceManager, mShaderBlueprintResourceId[static_cast<uint8_t>(ShaderType::Vertex)]) && ::detail::isFullyLoaded(shaderPieceResourceManager, shaderBlueprintResourceManager, mShaderBlueprintResourceId[static_cast<uint8_t>(ShaderType::Fragment)]));
-	}
-
 	void MaterialBlueprintResource::enforceFullyLoaded()
 	{
 		// TODO(co) Implement more efficient solution: We need to extend "Runtime::ResourceStreamer" to request emergency immediate processing of requested resources
 		ResourceStreamer& resourceStreamer = getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getResourceStreamer();
-		while (!isFullyLoaded())
+		while (LoadingState::LOADED != getLoadingState())
 		{
 			using namespace std::chrono_literals;
 			std::this_thread::sleep_for(1ms);
@@ -354,7 +301,7 @@ namespace RendererRuntime
 	void MaterialBlueprintResource::createPipelineStateCaches(bool mandatoryOnly)
 	{
 		// Material blueprint resource must be fully loaded, meaning also all referenced shader resources
-		assert(isFullyLoaded());
+		assert(LoadingState::LOADED == getLoadingState());
 
 		// TODO(co) Fill dynamic shader pieces
 		DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES];

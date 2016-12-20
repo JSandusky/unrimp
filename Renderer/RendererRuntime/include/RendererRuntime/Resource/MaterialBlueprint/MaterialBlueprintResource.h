@@ -378,7 +378,6 @@ namespace RendererRuntime
 		//[ Misc                                                  ]
 		//[-------------------------------------------------------]
 		// TODO(co) Asynchronous loading completion, we might want to move this into "RendererRuntime::IResource"
-		RENDERERRUNTIME_API_EXPORT bool isFullyLoaded() const;
 		RENDERERRUNTIME_API_EXPORT void enforceFullyLoaded();
 
 		/**

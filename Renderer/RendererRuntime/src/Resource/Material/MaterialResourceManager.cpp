@@ -41,6 +41,23 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
+	MaterialResourceId MaterialResourceManager::getMaterialResourceByAssetId(AssetId assetId) const
+	{
+		const uint32_t numberOfElements = mMaterialResources.getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
+		{
+			const MaterialResource& materialResource = mMaterialResources.getElementByIndex(i);
+			if (materialResource.getAssetId() == assetId)
+			{
+				return materialResource.getId();
+			}
+		}
+
+		// There's no material resource using the given asset ID
+		return getUninitialized<MaterialResourceId>();
+	}
+
+	// TODO(co) Work-in-progress
 	MaterialResourceId MaterialResourceManager::loadMaterialResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		MaterialResourceId materialResourceId = getUninitialized<MaterialResourceId>();
@@ -102,7 +119,7 @@ namespace RendererRuntime
 	MaterialResourceId MaterialResourceManager::createMaterialResourceByAssetId(AssetId assetId, AssetId materialBlueprintAssetId)
 	{
 		// Material resource is not allowed to exist, yet
-		assert(isUninitialized(loadMaterialResourceByAssetId(assetId)));
+		assert(isUninitialized(getMaterialResourceByAssetId(assetId)));
 
 		// Create the material resource instance
 		MaterialResource& materialResource = mMaterialResources.addElement();

@@ -38,12 +38,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline bool ShaderBlueprintResourceLoader::isFullyLoaded()
-	{
-		// Fully loaded
-		return true;
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

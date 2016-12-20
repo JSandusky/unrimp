@@ -43,7 +43,7 @@ namespace RendererRuntime
 	Renderer::IPipelineStatePtr PipelineStateCacheManager::getPipelineStateCacheByCombination(const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES], bool allowEmergencySynchronousCompilation)
 	{
 		// TODO(co) Asserts whether or not e.g. the material resource is using the owning material resource blueprint
-		assert(mMaterialBlueprintResource.isFullyLoaded());
+		assert(IResource::LoadingState::LOADED == mMaterialBlueprintResource.getLoadingState());
 
 		// Generate the pipeline state signature
 		const PipelineStateSignature pipelineStateSignature(mMaterialBlueprintResource, shaderProperties, dynamicShaderPieces);	// TODO(co) Optimization: There are allocations for vector and map involved in here, we might want to get rid of those

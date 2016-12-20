@@ -69,6 +69,7 @@ namespace RendererRuntime
 		mStartIndexLocation(0),
 		mNumberOfIndices(0),
 		mMaterialResourceId(getUninitialized<MaterialResourceId>()),
+		mDrawIndexed(false),
 		// Cached material data
 		mRenderQueueIndex(0),
 		mCastShadows(false),
@@ -79,7 +80,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	Renderable::Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId) :
+	Renderable::Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, bool drawIndexed, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId) :
 		// Derived data
 		mSortingKey(getUninitialized<uint64_t>()),
 		// Data
@@ -89,6 +90,7 @@ namespace RendererRuntime
 		mStartIndexLocation(startIndexLocation),
 		mNumberOfIndices(numberOfIndices),
 		mMaterialResourceId(getUninitialized<MaterialResourceId>()),
+		mDrawIndexed(drawIndexed),
 		// Cached material data
 		mRenderQueueIndex(0),
 		mCastShadows(false),

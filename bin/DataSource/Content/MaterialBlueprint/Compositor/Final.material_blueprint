@@ -1,0 +1,94 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "1"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"IsFinalCopy":
+			{
+				"Usage": "STATIC",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Is this the final copy step writing into the operation system window?"
+			},
+			"ColorMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "4",
+				"Description": "Color map"
+			}
+		},
+		"RootSignature":
+		{
+			"RootParameters":
+			{
+				"0":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "ColorMap",
+							"SamplerRootParameterIndex": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				}
+			}
+		},
+		"PipelineState":
+		{
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprintAssetId": "100",
+				"FragmentShaderBlueprintAssetId": "101"
+			},
+			"DepthStencilState":
+			{
+				"DepthEnable": "FALSE",
+				"DepthWriteMask": "ZERO"
+			}
+		},
+		"Resources":
+		{
+			"SamplerStates":
+			{
+				"SamplerLinear":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)"
+				}
+			},
+			"Textures":
+			{
+				"ColorMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@ColorMap"
+				}
+			}
+		}
+	}
+}

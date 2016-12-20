@@ -136,6 +136,22 @@ namespace RendererRuntime
 			mRendererRuntime.getShaderBlueprintResourceManager().getShaderCacheManager().clearCache();
 		}
 
+		// Fully loaded?
+		return isFullyLoaded();
+	}
+
+	bool ShaderBlueprintResourceLoader::isFullyLoaded()
+	{
+		const ShaderPieceResourceManager& shaderPieceResourceManager = mRendererRuntime.getShaderPieceResourceManager();
+		for (ShaderPieceResourceId shaderPieceResourceId : mShaderBlueprintResource->mIncludeShaderPieceResourceIds)
+		{
+			if (isInitialized(shaderPieceResourceId) && IResource::LoadingState::LOADED != shaderPieceResourceManager.getResourceByResourceId(shaderPieceResourceId).getLoadingState())
+			{
+				// Not fully loaded
+				return false;
+			}
+		}
+
 		// Fully loaded
 		return true;
 	}

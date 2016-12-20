@@ -126,7 +126,7 @@ namespace RendererRuntime
 				for (size_t i = 0; i < numberOfSubMeshes; ++i)
 				{
 					const SubMesh& subMesh = subMeshes[i];
-					renderables.emplace_back(mRenderableManager, vertexArrayPtr, subMesh.getPrimitiveTopology(), subMesh.getStartIndexLocation(), subMesh.getNumberOfIndices(), materialResourceManager, subMesh.getMaterialResourceId());
+					renderables.emplace_back(mRenderableManager, vertexArrayPtr, subMesh.getPrimitiveTopology(), true, subMesh.getStartIndexLocation(), subMesh.getNumberOfIndices(), materialResourceManager, subMesh.getMaterialResourceId());
 				}
 			}
 

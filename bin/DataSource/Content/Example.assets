@@ -104,6 +104,9 @@
 		"96": "Texture/Sponza/lion.asset",
 		"97": "Texture/Sponza/lion_ddn.asset",
 		"98": "Material/Sponza/roof.asset",
-		"99": "Texture/Sponza/sponza_roof_diff.asset"
+		"99": "Texture/Sponza/sponza_roof_diff.asset",
+		"100": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
+		"101": "ShaderBlueprint/Compositor/FinalFragment.asset",
+		"102": "MaterialBlueprint/Compositor/Final.asset"
 	}
 }

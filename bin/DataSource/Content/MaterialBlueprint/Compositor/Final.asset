@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "102",
+			"AssetType": "MaterialBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "Final",
+			"AssetDependencies": [ "100", "101" ],
+			"FileDependencies": [ "Final.material_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"MaterialBlueprintAssetCompiler":
+		{
+			"InputFile": "Final.material_blueprint"
+		}
+	}
+}

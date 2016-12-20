@@ -30,6 +30,10 @@
 					{
 						"Color": "0.5 0.5 0.5 1.0"
 					},
+					"Quad":
+					{
+						"MaterialBlueprintAssetId": "102"
+					},
 					"Scene":
 					{
 						"MinimumRenderQueueIndex": "0",
