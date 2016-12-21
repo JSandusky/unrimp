@@ -447,6 +447,9 @@ namespace OpenGLRenderer
 					}																																		\
 				}
 		#endif
+		GLint profile = 0;
+		glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
+		const bool isCoreProfile = profile & GL_CONTEXT_CORE_PROFILE_BIT;
 
 
 		//[-------------------------------------------------------]
@@ -555,7 +558,7 @@ namespace OpenGLRenderer
 
 		// GL_EXT_texture3D
 		mGL_EXT_texture3D = isSupported("GL_EXT_texture3D");
-		if (mGL_EXT_texture3D)
+		if (mGL_EXT_texture3D || isCoreProfile) // This extension is listed as supported in a non core context but not listed for an core context -> assumption it must be promoted to core and thus exists always
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
@@ -749,7 +752,7 @@ namespace OpenGLRenderer
 
 		// GL_ARB_vertex_buffer_object
 		mGL_ARB_vertex_buffer_object = isSupported("GL_ARB_vertex_buffer_object");
-		if (mGL_ARB_vertex_buffer_object)
+		if (mGL_ARB_vertex_buffer_object || isCoreProfile) // This extension is listed as supported in a non core context but not listed for an core context -> assumption it must be promoted to core and thus exists always
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
@@ -800,7 +803,7 @@ namespace OpenGLRenderer
 
 		// GL_ARB_texture_compression
 		mGL_ARB_texture_compression = isSupported("GL_ARB_texture_compression");
-		if (mGL_ARB_texture_compression)
+		if (mGL_ARB_texture_compression || isCoreProfile) // This extension is listed as supported in a non core context but not listed for an core context -> assumption it must be promoted to core and thus exists always
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
@@ -836,7 +839,7 @@ namespace OpenGLRenderer
 
 		// GL_ARB_vertex_program
 		mGL_ARB_vertex_program = isSupported("GL_ARB_vertex_program");
-		if (mGL_ARB_vertex_program)
+		if (mGL_ARB_vertex_program || isCoreProfile) // This extension is listed as supported in a non core context but not listed for an core context -> assumption it must be promoted to core and thus exists always
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
