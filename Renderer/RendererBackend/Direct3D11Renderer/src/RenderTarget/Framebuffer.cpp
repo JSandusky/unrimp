@@ -99,6 +99,7 @@ namespace Direct3D11Renderer
 
 							// Create the Direct3D 11 render target view instance
 							D3D11_RENDER_TARGET_VIEW_DESC d3d11RenderTargetViewDesc;
+							::ZeroMemory(&d3d11RenderTargetViewDesc, sizeof(D3D11_RENDER_TARGET_VIEW_DESC));
 							d3d11RenderTargetViewDesc.Format			 = d3d11Texture2DDesc.Format;
 							d3d11RenderTargetViewDesc.ViewDimension		 = D3D11_RTV_DIMENSION_TEXTURE2D;
 							d3d11RenderTargetViewDesc.Texture2D.MipSlice = 0;
@@ -171,6 +172,7 @@ namespace Direct3D11Renderer
 
 					// Create the Direct3D 11 render target view instance
 					D3D11_DEPTH_STENCIL_VIEW_DESC d3d11DepthStencilViewDesc;
+					::ZeroMemory(&d3d11DepthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 					d3d11DepthStencilViewDesc.Format			 = d3d11Texture2DDesc.Format;
 					d3d11DepthStencilViewDesc.ViewDimension		 = D3D11_DSV_DIMENSION_TEXTURE2D;
 					d3d11DepthStencilViewDesc.Texture2D.MipSlice = 0;
