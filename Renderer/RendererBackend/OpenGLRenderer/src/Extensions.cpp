@@ -447,9 +447,14 @@ namespace OpenGLRenderer
 					}																																		\
 				}
 		#endif
+
+		// One thing about OpenGL versions and extensions: In case we're using a certain OpenGL core profile, graphics driver implementations might
+		// decide to not list OpenGL extensions which are a part of this OpenGL core profile. Such a behavior was first noted using Linux Mesa 3D.
+		// When not taking this into account, horrible things will happen.
+		// TODO(co) "OpenGLRenderer::Extensions::initializeUniversal()": Check which extensions have to be checked with the core profile as well
 		GLint profile = 0;
 		glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
-		const bool isCoreProfile = profile & GL_CONTEXT_CORE_PROFILE_BIT;
+		const bool isCoreProfile = (profile & GL_CONTEXT_CORE_PROFILE_BIT);
 
 
 		//[-------------------------------------------------------]
@@ -557,8 +562,8 @@ namespace OpenGLRenderer
 		mGL_EXT_texture_rectangle = isSupported("GL_EXT_texture_rectangle");
 
 		// GL_EXT_texture3D
-		mGL_EXT_texture3D = isSupported("GL_EXT_texture3D");
-		if (mGL_EXT_texture3D || isCoreProfile) // This extension is listed as supported in a non core context but not listed for an core context -> assumption it must be promoted to core and thus exists always
+		mGL_EXT_texture3D = isCoreProfile ? true : isSupported("GL_EXT_texture3D");
+		if (mGL_EXT_texture3D)
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
@@ -751,8 +756,8 @@ namespace OpenGLRenderer
 		}
 
 		// GL_ARB_vertex_buffer_object
-		mGL_ARB_vertex_buffer_object = isSupported("GL_ARB_vertex_buffer_object");
-		if (mGL_ARB_vertex_buffer_object || isCoreProfile) // This extension is listed as supported in a non core context but not listed for an core context -> assumption it must be promoted to core and thus exists always
+		mGL_ARB_vertex_buffer_object = isCoreProfile ? true : isSupported("GL_ARB_vertex_buffer_object");
+		if (mGL_ARB_vertex_buffer_object)
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
@@ -802,8 +807,8 @@ namespace OpenGLRenderer
 		}
 
 		// GL_ARB_texture_compression
-		mGL_ARB_texture_compression = isSupported("GL_ARB_texture_compression");
-		if (mGL_ARB_texture_compression || isCoreProfile) // This extension is listed as supported in a non core context but not listed for an core context -> assumption it must be promoted to core and thus exists always
+		mGL_ARB_texture_compression = isCoreProfile ? true : isSupported("GL_ARB_texture_compression");
+		if (mGL_ARB_texture_compression)
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
@@ -838,8 +843,8 @@ namespace OpenGLRenderer
 		mGL_ARB_shading_language_100 = isSupported("GL_ARB_shading_language_100");
 
 		// GL_ARB_vertex_program
-		mGL_ARB_vertex_program = isSupported("GL_ARB_vertex_program");
-		if (mGL_ARB_vertex_program || isCoreProfile) // This extension is listed as supported in a non core context but not listed for an core context -> assumption it must be promoted to core and thus exists always
+		mGL_ARB_vertex_program = isCoreProfile ? true : isSupported("GL_ARB_vertex_program");
+		if (mGL_ARB_vertex_program)
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
