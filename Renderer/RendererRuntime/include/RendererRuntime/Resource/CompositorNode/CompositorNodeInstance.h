@@ -37,6 +37,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
+	class IRenderTarget;
 	class CommandBuffer;
 }
 namespace RendererRuntime
@@ -89,7 +90,7 @@ namespace RendererRuntime
 		CompositorNodeInstance(const CompositorNodeInstance&) = delete;
 		CompositorNodeInstance& operator=(const CompositorNodeInstance&) = delete;
 		void compositorWorkspaceInstanceLoadingFinished() const;
-		void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const;
+		Renderer::IRenderTarget& fillCommandBuffer(Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer) const;
 		void frameEnded() const;
 
 

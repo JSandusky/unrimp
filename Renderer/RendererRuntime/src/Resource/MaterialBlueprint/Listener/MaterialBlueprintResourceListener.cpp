@@ -77,7 +77,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
 	//[-------------------------------------------------------]
-	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform, PassBufferManager::PassData& passData)
+	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const Transform& worldSpaceToViewSpaceTransform, PassBufferManager::PassData& passData)
 	{
 		// Remember the pass data memory address of the current scope
 		mPassData = &passData;
@@ -86,17 +86,12 @@ namespace RendererRuntime
 		float aspectRatio = 4.0f / 3.0f;
 		{
 			// Get the render target with and height
-			// TODO(co) Don't use the main swap chain in here, use e.g. the scene camera item
 			uint32_t width  = 1;
 			uint32_t height = 1;
-			Renderer::IRenderTarget *renderTarget = rendererRuntime.getRenderer().getMainSwapChain();
-			if (nullptr != renderTarget)
-			{
-				renderTarget->getWidthAndHeight(width, height);
+			renderTarget.getWidthAndHeight(width, height);
 
-				// Get the aspect ratio
-				aspectRatio = static_cast<float>(width) / height;
-			}
+			// Get the aspect ratio
+			aspectRatio = static_cast<float>(width) / height;
 		}
 
 		// TODO(co) Use dynamic values

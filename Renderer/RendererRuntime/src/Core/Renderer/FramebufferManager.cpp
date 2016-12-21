@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
+#include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <algorithm>
@@ -63,7 +64,26 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Renderer::IFramebufferPtr FramebufferManager::addFramebufferBySignature(const FramebufferSignature& framebufferSignature)
+	void FramebufferManager::clear()
+	{
+		clearRendererResources();
+		mSortedFramebufferVector.clear();
+		mCompositorFramebufferIdToFramebufferSignatureId.clear();
+	}
+
+	void FramebufferManager::clearRendererResources()
+	{
+		for (FramebufferElement& framebufferElement : mSortedFramebufferVector)
+		{
+			if (nullptr != framebufferElement.framebuffer)
+			{
+				framebufferElement.framebuffer->release();
+				framebufferElement.framebuffer = nullptr;
+			}
+		}
+	}
+
+	void FramebufferManager::addFramebuffer(CompositorFramebufferId compositorFramebufferId, const FramebufferSignature& framebufferSignature)
 	{
 		FramebufferElement framebufferElement(framebufferSignature);
 		SortedFramebufferVector::iterator iterator = std::lower_bound(mSortedFramebufferVector.begin(), mSortedFramebufferVector.end(), framebufferElement, ::detail::orderFramebufferElementByFramebufferSignatureId);
@@ -71,31 +91,65 @@ namespace RendererRuntime
 		{
 			// Add new framebuffer
 
-			// Create the texture instance, but without providing texture data (we use the texture as render target)
-			// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
-			// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
-			// -> Not required for OpenGL and OpenGL ES 2
-			// -> The optimized texture clear value is a Direct3D 12 related option
-			Renderer::ITexture* texture2D = mRendererRuntime.getTextureManager().createTexture2D(framebufferSignature.getWidth(), framebufferSignature.getHeight(), framebufferSignature.getTextureFormat(), nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT);
-
-			// Create the framebuffer object (FBO) instance
-			// -> The framebuffer automatically adds a reference to the provided textures
-			framebufferElement.framebuffer = mRendererRuntime.getRenderer().createFramebuffer(1, &texture2D);
-			framebufferElement.framebuffer->addReference();
-
 			// Register the new framebuffer element
 			++framebufferElement.numberOfReferences;
 			mSortedFramebufferVector.insert(iterator, framebufferElement);
-
-			// Done
-			return Renderer::IFramebufferPtr(framebufferElement.framebuffer);
 		}
 		else
 		{
 			// Just increase the number of references
 			++iterator->numberOfReferences;
-			return Renderer::IFramebufferPtr(iterator->framebuffer);
 		}
+		mCompositorFramebufferIdToFramebufferSignatureId.emplace(compositorFramebufferId, framebufferSignature.getFramebufferSignatureId());
+	}
+
+	Renderer::IFramebuffer* FramebufferManager::getFramebufferByCompositorFramebufferId(CompositorFramebufferId compositorFramebufferId, const Renderer::IRenderTarget& renderTarget, float resolutionScale)
+	{
+		Renderer::IFramebuffer* framebuffer = nullptr;
+
+		// Map compositor framebuffer ID to framebuffer signature ID
+		CompositorFramebufferIdToFramebufferSignatureId::const_iterator iterator = mCompositorFramebufferIdToFramebufferSignatureId.find(compositorFramebufferId);
+		if (mCompositorFramebufferIdToFramebufferSignatureId.cend() != iterator)
+		{
+			// TODO(co) Is there need for a more efficient search?
+			const FramebufferSignatureId framebufferSignatureId = iterator->second;
+			for (FramebufferElement& framebufferElement : mSortedFramebufferVector)
+			{
+				const FramebufferSignature& framebufferSignature = framebufferElement.framebufferSignature;
+				if (framebufferSignature.getFramebufferSignatureId() == framebufferSignatureId)
+				{
+					// Do we need to create the renderer framebuffer instance right now?
+					if (nullptr == framebufferElement.framebuffer)
+					{
+						// Get the texture instances
+						const uint8_t numberOfColorTextures = framebufferSignature.getNumberOfColorTextures();
+						Renderer::ITexture* colorTextures[8] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+						for (uint8_t i = 0; i < numberOfColorTextures; ++i)
+						{
+							const AssetId colorTextureAssetId = framebufferSignature.getColorTextureAssetId(i);
+							colorTextures[i] = isInitialized(colorTextureAssetId) ? mRenderTargetTextureManager.getTextureByAssetId(colorTextureAssetId, renderTarget, resolutionScale) : nullptr;
+						}
+						Renderer::ITexture* depthStencilTexture = isInitialized(framebufferSignature.getDepthStencilTextureAssetId()) ? mRenderTargetTextureManager.getTextureByAssetId(framebufferSignature.getDepthStencilTextureAssetId(), renderTarget, resolutionScale) : nullptr;
+
+						// Create the framebuffer object (FBO) instance
+						// -> The framebuffer automatically adds a reference to the provided textures
+						framebufferElement.framebuffer = mRenderTargetTextureManager.getRendererRuntime().getRenderer().createFramebuffer(numberOfColorTextures, colorTextures, depthStencilTexture);
+						framebufferElement.framebuffer->addReference();
+					}
+					framebuffer = framebufferElement.framebuffer;
+					break;
+				}
+			}
+			assert(nullptr != framebuffer);
+		}
+		else
+		{
+			// Error! Unknown compositor framebuffer ID, this shouldn't have happened.
+			assert(false);
+		}
+
+		// Done
+		return framebuffer;
 	}
 
 	void FramebufferManager::releaseFramebufferBySignature(const FramebufferSignature& framebufferSignature)
@@ -107,7 +161,10 @@ namespace RendererRuntime
 			// Was this the last reference?
 			if (1 == iterator->numberOfReferences)
 			{
-				iterator->framebuffer->release();
+				if (nullptr != iterator->framebuffer)
+				{
+					iterator->framebuffer->release();
+				}
 				mSortedFramebufferVector.erase(iterator);
 			}
 			else

@@ -10,7 +10,7 @@
 		{
 			"AssetId": "14",
 			"AssetType": "MaterialBlueprint",
-			"AssetCategory": "Default",
+			"AssetCategory": "Scene",
 			"AssetName": "MeshForwardLighting",
 			"AssetDependencies": [ "12", "13" ],
 			"FileDependencies": [ "MeshForwardLighting.material_blueprint" ],

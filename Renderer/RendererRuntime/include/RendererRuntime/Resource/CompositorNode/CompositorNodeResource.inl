@@ -43,6 +43,21 @@ namespace RendererRuntime
 		return mInputChannels;
 	}
 
+	inline void CompositorNodeResource::reserveRenderTargetTextures(uint32_t numberOfRenderTargetTextures)
+	{
+		mCompositorRenderTargetTextures.reserve(numberOfRenderTargetTextures);
+	}
+
+	inline void CompositorNodeResource::addRenderTargetTexture(AssetId assetId, const RenderTargetTextureSignature& renderTargetTextureSignature)
+	{
+		mCompositorRenderTargetTextures.emplace_back(assetId, renderTargetTextureSignature);
+	}
+
+	inline const CompositorNodeResource::CompositorRenderTargetTextures& CompositorNodeResource::getRenderTargetTextures() const
+	{
+		return mCompositorRenderTargetTextures;
+	}
+
 	inline void CompositorNodeResource::reserveFramebuffers(uint32_t numberOfFramebuffers)
 	{
 		mCompositorFramebuffers.reserve(numberOfFramebuffers);
@@ -102,6 +117,7 @@ namespace RendererRuntime
 	{
 		// Sanity checks
 		assert(mInputChannels.empty());
+		assert(mCompositorRenderTargetTextures.empty());
 		assert(mCompositorFramebuffers.empty());
 		assert(mCompositorTargets.empty());
 		assert(mOutputChannels.empty());
@@ -111,6 +127,7 @@ namespace RendererRuntime
 	{
 		// Sanity checks
 		assert(mInputChannels.empty());
+		assert(mCompositorRenderTargetTextures.empty());
 		assert(mCompositorFramebuffers.empty());
 		assert(mCompositorTargets.empty());
 		assert(mOutputChannels.empty());

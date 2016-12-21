@@ -26,26 +26,42 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline CompositorPassTypeId CompositorResourcePassDebugGui::getTypeId() const
-	{
-		return TYPE_ID;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	inline CompositorResourcePassDebugGui::CompositorResourcePassDebugGui(const CompositorTarget& compositorTarget) :
-		ICompositorResourcePass(compositorTarget)
+	inline CompositorRenderTargetTexture::CompositorRenderTargetTexture(AssetId assetId, const RenderTargetTextureSignature& renderTargetTextureSignature) :
+		mAssetId(assetId),
+		mRenderTargetTextureSignature(renderTargetTextureSignature)
 	{
 		// Nothing here
 	}
 
-	inline CompositorResourcePassDebugGui::~CompositorResourcePassDebugGui()
+	inline CompositorRenderTargetTexture::CompositorRenderTargetTexture(const CompositorRenderTargetTexture& compositorRenderTargetTexture) :
+		mAssetId(compositorRenderTargetTexture.mAssetId),
+		mRenderTargetTextureSignature(compositorRenderTargetTexture.mRenderTargetTextureSignature)
 	{
 		// Nothing here
+	}
+
+	inline CompositorRenderTargetTexture::~CompositorRenderTargetTexture()
+	{
+		// Nothing here
+	}
+
+	inline CompositorRenderTargetTexture& CompositorRenderTargetTexture::operator=(const CompositorRenderTargetTexture& compositorRenderTargetTexture)
+	{
+		mAssetId					  = compositorRenderTargetTexture.mAssetId;
+		mRenderTargetTextureSignature = compositorRenderTargetTexture.mRenderTargetTextureSignature;
+		return *this;
+	}
+
+	inline AssetId CompositorRenderTargetTexture::getAssetId() const
+	{
+		return mAssetId;
+	}
+
+	inline const RenderTargetTextureSignature& CompositorRenderTargetTexture::getRenderTargetTextureSignature() const
+	{
+		return mRenderTargetTextureSignature;
 	}
 
 

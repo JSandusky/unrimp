@@ -142,6 +142,9 @@ namespace RendererRuntime
 					};
 					vertexAttributes.numberOfAttributes = 1;
 					vertexAttributes.attributes = vertexAttributesLayout;
+
+					// TODO(co) First compositor render target texture test
+					materialBlueprintResource->mMaterialProperties.setPropertyById("ColorMap", MaterialPropertyValue::fromTextureAssetId(2949439104));
 				}
 
 				materialBlueprintResource->createPipelineStateCaches(true);

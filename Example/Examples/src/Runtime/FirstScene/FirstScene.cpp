@@ -75,6 +75,7 @@ FirstScene::FirstScene(const char *rendererName) :
 	mCameraSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mGlobalTimer(0.0f),
+	mResolutionScale(1.0f),
 	mRotationSpeed(1.0f),
 	mSunLightColor{1.0f, 1.0f, 1.0f},
 	mWetness(1.0f),
@@ -270,45 +271,50 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 {
 	if (nullptr != mCompositorWorkspaceInstance && nullptr != mSceneResource)
 	{
+		// Setup GUI
 		mSceneResource->getRendererRuntime().getDebugGuiManager().newFrame(renderTarget);
 		ImGui::Begin("Options");
 			// Scene
+			ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
 			ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
 
 			// Global material properties
 			ImGui::ColorEdit3("Sun Light Color", mSunLightColor);
 			ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
 
-			{ // Material properties
-				ImGui::Checkbox("Perform Lighting", &mPerformLighting);
-				ImGui::Checkbox("Use Diffuse Map", &mUseDiffuseMap);
-				ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
-				ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
-				ImGui::Checkbox("Use Specular Map", &mUseSpecularMap);
-				ImGui::ColorEdit3("Diffuse Color", mDiffuseColor);
+			// Material properties
+			ImGui::Checkbox("Perform Lighting", &mPerformLighting);
+			ImGui::Checkbox("Use Diffuse Map", &mUseDiffuseMap);
+			ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
+			ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
+			ImGui::Checkbox("Use Specular Map", &mUseSpecularMap);
+			ImGui::ColorEdit3("Diffuse Color", mDiffuseColor);
+		ImGui::End();
 
-				// Tell the material resource instance
-				RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
-				if (nullptr != rendererRuntime)
+		// Update compositor workspace
+		mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
+
+		{ // Update the material resource instance
+			RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+			if (nullptr != rendererRuntime)
+			{
+				const RendererRuntime::MaterialResources& materialResources = rendererRuntime->getMaterialResourceManager().getMaterialResources();
+				RendererRuntime::MaterialResource* materialResource = materialResources.tryGetElementById(mMaterialResourceId);
+				if (nullptr != materialResource)
 				{
-					const RendererRuntime::MaterialResources& materialResources = rendererRuntime->getMaterialResourceManager().getMaterialResources();
-					RendererRuntime::MaterialResource* materialResource = materialResources.tryGetElementById(mMaterialResourceId);
-					if (nullptr != materialResource)
-					{
-						materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
-					}
-					materialResource = materialResources.tryGetElementById(mCloneMaterialResourceId);
-					if (nullptr != materialResource)
-					{
-						materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));
-						materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
-						materialResource->setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
-						materialResource->setPropertyById("UseSpecularMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseSpecularMap));
-						materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
-					}
+					materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
+				}
+				materialResource = materialResources.tryGetElementById(mCloneMaterialResourceId);
+				if (nullptr != materialResource)
+				{
+					materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));
+					materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
+					materialResource->setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
+					materialResource->setPropertyById("UseSpecularMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseSpecularMap));
+					materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
 				}
 			}
-		ImGui::End();
+		}
 	}
 }
 

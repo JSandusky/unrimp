@@ -11,18 +11,32 @@
 			"0": "InputRenderTarget",
 			"1": "OutputRenderTarget"
 		},
-		"Framebuffers":
+		"RenderTargetTextures":
 		{
-			"FramebufferRenderTarget0":
+			"ColorRenderTargetTexture0":
 			{
 				"Width": "TARGET_WIDTH",
 				"Height": "TARGET_HEIGHT",
 				"TextureFormat": "R8G8B8A8"
+			},
+			"DepthStencilRenderTargetTexture0":
+			{
+				"Width": "TARGET_WIDTH",
+				"Height": "TARGET_HEIGHT",
+				"TextureFormat": "D32_FLOAT"
+			}			
+		},
+		"Framebuffers":
+		{
+			"Framebuffer0":
+			{
+				"ColorTextures": [ "ColorRenderTargetTexture0" ],
+				"DepthStencilTexture": "DepthStencilRenderTargetTexture0"
 			}
 		},
 		"Targets":
 		{
-			"OutputRenderTarget":
+			"Framebuffer0":
 			{
 				"Passes":
 				{
@@ -30,15 +44,25 @@
 					{
 						"Color": "0.5 0.5 0.5 1.0"
 					},
-					"Quad":
-					{
-						"MaterialBlueprintAssetId": "102"
-					},
 					"Scene":
 					{
 						"MinimumRenderQueueIndex": "0",
 						"MaximumRenderQueueIndex": "255",
 						"TransparentPass": "FALSE"
+					}
+				}
+			},
+			"OutputRenderTarget":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"MaterialBlueprintAssetId": "102",
+						"SetMaterialProperties":
+						{
+							"ColorMap": "ColorRenderTargetTexture0"
+						}
 					},
 					"DebugGui":
 					{

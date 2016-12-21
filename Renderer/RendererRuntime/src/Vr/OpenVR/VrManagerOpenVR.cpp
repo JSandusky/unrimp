@@ -58,53 +58,6 @@ namespace
 
 
 		//[-------------------------------------------------------]
-		//[ Global variables                                      ]
-		//[-------------------------------------------------------]
-		// TODO(co) We need a central vertex input layout management
-		// Vertex input layout
-		const Renderer::VertexAttribute VertexAttributesLayout[] =
-		{
-			{ // Attribute 0
-				// Data destination
-				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-				"Position",									// name[32] (char)
-				"POSITION",									// semanticName[32] (char)
-				0,											// semanticIndex (uint32_t)
-				// Data source
-				0,											// inputSlot (uint32_t)
-				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
-				0											// instancesPerElement (uint32_t)
-			},
-			{ // Attribute 1
-				// Data destination
-				Renderer::VertexAttributeFormat::SHORT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-				"TexCoord",									// name[32] (char)
-				"TEXCOORD",									// semanticName[32] (char)
-				0,											// semanticIndex (uint32_t)
-				// Data source
-				0,											// inputSlot (uint32_t)
-				sizeof(float) * 3,							// alignedByteOffset (uint32_t)
-				// Data source, instancing part
-				0											// instancesPerElement (uint32_t)
-			},
-			{ // Attribute 2
-				// Data destination
-				Renderer::VertexAttributeFormat::SHORT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-				"QTangent",									// name[32] (char)
-				"TEXCOORD",									// semanticName[32] (char)
-				1,											// semanticIndex (uint32_t)
-				// Data source
-				0,											// inputSlot (uint32_t)
-				sizeof(float) * 3 + sizeof(short) * 2,		// alignedByteOffset (uint32_t)
-				// Data source, instancing part
-				0											// instancesPerElement (uint32_t)
-			}
-		};
-		const Renderer::VertexAttributes VertexAttributes(glm::countof(VertexAttributesLayout), VertexAttributesLayout);
-
-
-		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
 		std::string getTrackedDeviceString(vr::IVRSystem& vrSystem, vr::TrackedDeviceIndex_t trackedDeviceIndex, vr::TrackedDeviceProperty trackedDeviceProperty, vr::TrackedPropertyError* trackedPropertyError = nullptr)
@@ -321,7 +274,7 @@ namespace
 							numberOfBytesPerVertex	// strideInBytes (uint32_t)
 						}
 					};
-					meshResource.setVertexArray(bufferManager.createVertexArray(::detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer));
+					meshResource.setVertexArray(bufferManager.createVertexArray(RendererRuntime::MeshResource::VERTEX_ATTRIBUTES, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer));
 				}
 
 				// Tell the mesh resource about the sub-mesh

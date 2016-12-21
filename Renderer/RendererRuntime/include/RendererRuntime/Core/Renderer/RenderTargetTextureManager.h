@@ -27,8 +27,12 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/Manager.h"
 #include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Core/Renderer/RenderTargetTextureSignature.h"
+
+#include <vector>
+#include <unordered_map>
 
 
 //[-------------------------------------------------------]
@@ -36,10 +40,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class CompositorTarget;
-	class CompositorNodeInstance;
-	class ICompositorResourcePass;
-	class ICompositorInstancePass;
+	class IRendererRuntime;
 }
 
 
@@ -53,39 +54,82 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId CompositorPassTypeId;	///< Compositor pass type identifier, internally just a POD "uint32_t"
+	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
 
 
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ICompositorPassFactory : protected NonCopyable
+	class RenderTargetTextureManager : private Manager
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-		friend class CompositorWorkspaceInstance;	// Needs to create compositor pass instances // TODO(co) Remove this
-		friend class CompositorTarget;				// Needs to create compositor pass instances
+	public:
+		struct RenderTargetTextureElement
+		{
+			RenderTargetTextureSignature renderTargetTextureSignature;
+			Renderer::ITexture*			 texture;				///< Can be a null pointer, no "Renderer::ITexturePtr" to not have overhead when internally reallocating
+			uint32_t					 numberOfReferences;	///< Number of texture references (don't misuse the renderer texture reference counter for this)
+
+			inline RenderTargetTextureElement() :
+				texture(nullptr),
+				numberOfReferences(0)
+			{
+				// Nothing here
+			}
+
+			inline explicit RenderTargetTextureElement(const RenderTargetTextureSignature& _renderTargetTextureSignature) :
+				renderTargetTextureSignature(_renderTargetTextureSignature),
+				texture(nullptr),
+				numberOfReferences(0)
+			{
+				// Nothing here
+			}
+
+			inline RenderTargetTextureElement(const RenderTargetTextureSignature& _renderTargetTextureSignature, Renderer::ITexture& _texture) :
+				renderTargetTextureSignature(_renderTargetTextureSignature),
+				texture(&_texture),
+				numberOfReferences(0)
+			{
+				// Nothing here
+			}
+		};
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorPassFactory methods ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	protected:
-		virtual ICompositorResourcePass* createCompositorResourcePass(const CompositorTarget& compositorTarget, CompositorPassTypeId compositorPassTypeId) const = 0;
-		virtual ICompositorInstancePass* createCompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorNodeInstance& compositorNodeInstance) const = 0;
+	public:
+		inline explicit RenderTargetTextureManager(IRendererRuntime& rendererRuntime);
+		inline ~RenderTargetTextureManager();
+		RenderTargetTextureManager(const RenderTargetTextureManager&) = delete;
+		RenderTargetTextureManager& operator=(const RenderTargetTextureManager&) = delete;
+		inline IRendererRuntime& getRendererRuntime() const;
+		void clear();
+		void clearRendererResources();
+		void addRenderTargetTexture(AssetId assetId, const RenderTargetTextureSignature& renderTargetTextureSignature);
+		Renderer::ITexture* getTextureByAssetId(AssetId assetId, const Renderer::IRenderTarget& renderTarget, float resolutionScale);
+		void releaseRenderTargetTextureBySignature(const RenderTargetTextureSignature& renderTargetTextureSignature);
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
-	protected:
-		inline ICompositorPassFactory();
-		inline virtual ~ICompositorPassFactory();
-		ICompositorPassFactory(const ICompositorPassFactory&) = delete;
-		ICompositorPassFactory& operator=(const ICompositorPassFactory&) = delete;
+	private:
+		typedef std::vector<RenderTargetTextureElement> SortedRenderTargetTextureVector;
+		typedef std::unordered_map<uint32_t, RenderTargetTextureSignatureId> AssetIdToRenderTargetTextureSignatureId;	///< Key = "RendererRuntime::AssetId"
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		IRendererRuntime&						mRendererRuntime;
+		SortedRenderTargetTextureVector			mSortedRenderTargetTextureVector;
+		AssetIdToRenderTargetTextureSignatureId mAssetIdToRenderTargetTextureSignatureId;
 
 
 	};
@@ -100,4 +144,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorPassFactory.inl"
+#include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.inl"

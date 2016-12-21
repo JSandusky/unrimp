@@ -10,7 +10,7 @@
 		{
 			"AssetId": "17",
 			"AssetType": "ShaderBlueprint",
-			"AssetCategory": "Default",
+			"AssetCategory": "Scene",
 			"AssetName": "DepthOnlyVertex",
 			"AssetDependencies": [ "15", "16" ],
 			"FileDependencies": [ "DepthOnlyVertex.shader_blueprint" ],

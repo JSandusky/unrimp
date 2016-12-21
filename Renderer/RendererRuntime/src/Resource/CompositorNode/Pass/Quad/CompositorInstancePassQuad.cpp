@@ -114,10 +114,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassQuad::onFillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
+	void CompositorInstancePassQuad::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer)
 	{
 		mRenderQueue.addRenderablesFromRenderableManager(::detail::RenderableManager);
-		mRenderQueue.fillCommandBuffer(commandBuffer);
+		mRenderQueue.fillCommandBuffer(renderTarget, commandBuffer);
 	}
 
 

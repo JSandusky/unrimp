@@ -70,7 +70,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline CompositorResourcePassDebugGui();
+		inline explicit CompositorResourcePassDebugGui(const CompositorTarget& compositorTarget);
 		inline virtual ~CompositorResourcePassDebugGui();
 		CompositorResourcePassDebugGui(const CompositorResourcePassDebugGui&) = delete;
 		CompositorResourcePassDebugGui& operator=(const CompositorResourcePassDebugGui&) = delete;

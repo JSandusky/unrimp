@@ -465,6 +465,15 @@
     <None Include="include\RendererRuntime\RenderQueue\IndirectBufferManager.inl">
       <Filter>Source Files\RenderQueue</Filter>
     </None>
+    <None Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureManager.inl">
+      <Filter>Source Files\Core\Renderer</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureSignature.inl">
+      <Filter>Source Files\Core\Renderer</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorRenderTargetTexture.inl">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -912,6 +921,15 @@
     <ClInclude Include="include\RendererRuntime\Core\MakeId.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureSignature.h">
+      <Filter>Source Files\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureManager.h">
+      <Filter>Source Files\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorRenderTargetTexture.h">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1180,6 +1198,15 @@
     </ClCompile>
     <ClCompile Include="src\RenderQueue\Renderable.cpp">
       <Filter>Source Files\RenderQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Mesh\MeshResource.cpp">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Renderer\RenderTargetTextureSignature.cpp">
+      <Filter>Source Files\Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Renderer\RenderTargetTextureManager.cpp">
+      <Filter>Source Files\Core\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

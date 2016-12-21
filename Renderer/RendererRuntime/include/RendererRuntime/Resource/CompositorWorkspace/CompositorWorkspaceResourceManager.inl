@@ -39,6 +39,12 @@ namespace RendererRuntime
 		return mCompositorWorkspaceResources;
 	}
 
+	inline RenderTargetTextureManager& CompositorWorkspaceResourceManager::getRenderTargetTextureManager()
+	{
+		assert(nullptr != mRenderTargetTextureManager);
+		return *mRenderTargetTextureManager;
+	}
+
 	inline FramebufferManager& CompositorWorkspaceResourceManager::getFramebufferManager()
 	{
 		assert(nullptr != mFramebufferManager);

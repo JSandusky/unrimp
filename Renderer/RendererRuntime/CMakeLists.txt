@@ -61,6 +61,8 @@ set(SOURCE_CODES
 	src/Core/Platform/PlatformManager.cpp
 	src/Core/Renderer/FramebufferManager.cpp
 	src/Core/Renderer/FramebufferSignature.cpp
+	src/Core/Renderer/RenderTargetTextureManager.cpp
+	src/Core/Renderer/RenderTargetTextureSignature.cpp
 	src/Core/String.cpp
 	src/DebugGui/DebugGuiManager.cpp
 	src/RenderQueue/IndirectBufferManager.cpp
@@ -108,6 +110,7 @@ set(SOURCE_CODES
 	src/Resource/Material/MaterialTechnique.cpp
 	src/Resource/Mesh/Loader/MeshResourceLoader.cpp
 	src/Resource/Mesh/MeshResourceManager.cpp
+	src/Resource/Mesh/MeshResource.cpp
 	src/Resource/Scene/Factory/SceneFactory.cpp
 	src/Resource/Scene/ISceneResource.cpp
 	src/Resource/Scene/Item/CameraSceneItem.cpp

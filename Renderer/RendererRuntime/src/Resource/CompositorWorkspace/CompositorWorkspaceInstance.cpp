@@ -29,11 +29,14 @@
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorPassFactory.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
+#include "RendererRuntime/Core/Renderer/FramebufferManager.h"
+#include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <algorithm>
@@ -57,8 +60,10 @@ namespace RendererRuntime
 	CompositorWorkspaceInstance::CompositorWorkspaceInstance(IRendererRuntime& rendererRuntime, AssetId compositorWorkspaceAssetId) :
 		mRendererRuntime(rendererRuntime),
 		mIndirectBufferManager(*(new IndirectBufferManager(rendererRuntime))),
+		mResolutionScale(1.0f),
 		mExecutionRenderTarget(nullptr),
-		mCompositorWorkspaceResourceId(rendererRuntime.getCompositorWorkspaceResourceManager().loadCompositorWorkspaceResourceByAssetId(compositorWorkspaceAssetId, this))
+		mCompositorWorkspaceResourceId(rendererRuntime.getCompositorWorkspaceResourceManager().loadCompositorWorkspaceResourceByAssetId(compositorWorkspaceAssetId, this)),
+		mFramebufferManagerInitialized(false)
 	{
 		// Nothing here
 	}
@@ -68,6 +73,18 @@ namespace RendererRuntime
 		// Cleanup
 		destroySequentialCompositorNodeInstances();
 		delete &mIndirectBufferManager;
+	}
+
+	void CompositorWorkspaceInstance::setResolutionScale(float resolutionScale)
+	{
+		// Since resolution scale changes are considered to be expensive, lets ensure there's really a state change
+		if (mResolutionScale != resolutionScale)
+		{
+			mResolutionScale = resolutionScale;
+
+			// Destroy framebuffers and render target textures
+			destroyFramebuffersAndRenderTargetTextures();
+		}
 	}
 
 	const CompositorWorkspaceInstance::RenderQueueIndexRange* CompositorWorkspaceInstance::getRenderQueueIndexRangeByRenderQueueIndex(uint8_t renderQueueIndex) const
@@ -98,6 +115,12 @@ namespace RendererRuntime
 			renderTarget.addReference();
 			mExecutionRenderTarget = &renderTarget;
 
+			// Create framebuffers and render target textures, if required
+			if (!mFramebufferManagerInitialized)
+			{
+				createFramebuffersAndRenderTargetTextures(renderTarget);
+			}
+
 			// Begin scene rendering
 			// -> Required for Direct3D 9 and Direct3D 12
 			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
@@ -113,7 +136,7 @@ namespace RendererRuntime
 				// Begin debug event
 				COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
 
-				// Make the main swap chain to the current render target
+				// Set the current render target
 				Renderer::Command::SetRenderTarget::create(mCommandBuffer, &renderTarget);
 
 				{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle must be set in every draw call to work with all supported renderer APIs
@@ -126,10 +149,12 @@ namespace RendererRuntime
 					Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, width, height);
 				}
 
-				// Draw
-				for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
-				{
-					compositorNodeInstance->fillCommandBuffer(mCommandBuffer);
+				{ // Fill command buffer
+					Renderer::IRenderTarget* currentRenderTarget = &renderTarget;
+					for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
+					{
+						currentRenderTarget = &compositorNodeInstance->fillCommandBuffer(*currentRenderTarget, mCommandBuffer);
+					}
 				}
 
 				// End debug event
@@ -171,10 +196,13 @@ namespace RendererRuntime
 	{
 		if (resource.getLoadingState() == IResource::LoadingState::LOADED)
 		{
-			// TODO(co) Just a first test
+			// TODO(co) Just a first test, need to complete and refine the implementation
 			CompositorNodeResourceManager& compositorNodeResourceManager = mRendererRuntime.getCompositorNodeResourceManager();
 			const ICompositorPassFactory& compositorPassFactory = compositorNodeResourceManager.getCompositorPassFactory();
+			RenderTargetTextureManager& renderTargetTextureManager = mRendererRuntime.getCompositorWorkspaceResourceManager().getRenderTargetTextureManager();
+			FramebufferManager& framebufferManager = mRendererRuntime.getCompositorWorkspaceResourceManager().getFramebufferManager();
 
+			// Destroy the previous stuff
 			destroySequentialCompositorNodeInstances();
 
 			// For render queue index ranges gathering and merging
@@ -193,6 +221,16 @@ namespace RendererRuntime
 
 				// TODO(co) Ensure compositor node resource loading is done. Such blocking waiting is no good thing.
 				compositorNodeResource.enforceFullyLoaded();
+
+				// Add render target textures and framebuffers (doesn't directly allocate renderer resources, just announces them)
+				for (const CompositorRenderTargetTexture& compositorRenderTargetTexture : compositorNodeResource.getRenderTargetTextures())
+				{
+					renderTargetTextureManager.addRenderTargetTexture(compositorRenderTargetTexture.getAssetId(), compositorRenderTargetTexture.getRenderTargetTextureSignature());
+				}
+				for (const CompositorFramebuffer& compositorFramebuffer : compositorNodeResource.getFramebuffers())
+				{
+					framebufferManager.addFramebuffer(compositorFramebuffer.getCompositorFramebufferId(), compositorFramebuffer.getFramebufferSignature());
+				}
 
 				// Create the compositor node instance
 				CompositorNodeInstance* compositorNodeInstance = new CompositorNodeInstance(compositorNodeResourceId, *this);
@@ -217,6 +255,7 @@ namespace RendererRuntime
 								// Create the compositor instance pass
 								if (nullptr != compositorResourcePass)
 								{
+									// Create the compositor instance pass
 									compositorNodeInstance->mCompositorInstancePasses.push_back(compositorPassFactory.createCompositorInstancePass(*compositorResourcePass, *compositorNodeInstance));
 
 									// Gather render queue index range
@@ -284,6 +323,45 @@ namespace RendererRuntime
 		}
 		mSequentialCompositorNodeInstances.clear();
 		mRenderQueueIndexRanges.clear();
+
+		// Destroy framebuffers and render target textures
+		destroyFramebuffersAndRenderTargetTextures();
+	}
+
+	void CompositorWorkspaceInstance::createFramebuffersAndRenderTargetTextures(const Renderer::IRenderTarget& mainRenderTarget)
+	{
+		assert(!mFramebufferManagerInitialized);
+		FramebufferManager& framebufferManager = mRendererRuntime.getCompositorWorkspaceResourceManager().getFramebufferManager();
+		for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
+		{
+			for (ICompositorInstancePass* compositorInstancePass : compositorNodeInstance->mCompositorInstancePasses)
+			{
+				const CompositorFramebufferId compositorFramebufferId = compositorInstancePass->getCompositorResourcePass().getCompositorTarget().getCompositorFramebufferId();
+				if (isInitialized(compositorFramebufferId))
+				{
+					compositorInstancePass->mRenderTarget = framebufferManager.getFramebufferByCompositorFramebufferId(compositorFramebufferId, mainRenderTarget, mResolutionScale);
+				}
+			}
+		}
+		mFramebufferManagerInitialized = true;
+	}
+
+	void CompositorWorkspaceInstance::destroyFramebuffersAndRenderTargetTextures()
+	{
+		// All compositor instance passes need to forget about the render targets
+		for (CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
+		{
+			for (ICompositorInstancePass* compositorInstancePass : compositorNodeInstance->mCompositorInstancePasses)
+			{
+				compositorInstancePass->mRenderTarget = nullptr;
+			}
+		}
+
+		// Destroy renderer resources of framebuffers and render target textures
+		CompositorWorkspaceResourceManager& compositorWorkspaceResourceManager = mRendererRuntime.getCompositorWorkspaceResourceManager();
+		compositorWorkspaceResourceManager.getFramebufferManager().clearRendererResources();
+		compositorWorkspaceResourceManager.getRenderTargetTextureManager().clearRendererResources();
+		mFramebufferManagerInitialized = false;
 	}
 
 	void CompositorWorkspaceInstance::clearRenderQueueIndexRangesRenderableManagers()

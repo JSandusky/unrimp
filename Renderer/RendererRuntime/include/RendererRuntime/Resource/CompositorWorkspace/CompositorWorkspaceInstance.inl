@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return mIndirectBufferManager;
 	}
 
+	inline float CompositorWorkspaceInstance::getResolutionScale() const
+	{
+		return mResolutionScale;
+	}
+
 	inline const CompositorWorkspaceInstance::RenderQueueIndexRanges& CompositorWorkspaceInstance::getRenderQueueIndexRanges() const
 	{
 		return mRenderQueueIndexRanges;

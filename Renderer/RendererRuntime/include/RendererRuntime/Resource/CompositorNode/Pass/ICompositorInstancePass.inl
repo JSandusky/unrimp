@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return mCompositorNodeInstance;
 	}
 
+	inline Renderer::IRenderTarget* ICompositorInstancePass::getRenderTarget() const
+	{
+		return mRenderTarget;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
@@ -58,7 +63,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline ICompositorInstancePass::ICompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorNodeInstance& compositorNodeInstance) :
 		mCompositorResourcePass(compositorResourcePass),
-		mCompositorNodeInstance(compositorNodeInstance)
+		mCompositorNodeInstance(compositorNodeInstance),
+		mRenderTarget(nullptr)
 	{
 		// Nothing here
 	}

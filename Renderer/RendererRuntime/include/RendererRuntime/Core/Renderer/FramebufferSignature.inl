@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/GetUninitialized.h"
 
+#include <cassert>
+#include <cstring>	// For "memcpy()"
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -35,17 +38,17 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline FramebufferSignature::FramebufferSignature() :
-		mWidth(getUninitialized<uint32_t>()),
-		mHeight(getUninitialized<uint32_t>()),
-		mTextureFormat(Renderer::TextureFormat::UNKNOWN)
+		mNumberOfColorTextures(0),
+		mColorTextureAssetIds{getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>()},
+		mDepthStencilTextureAssetId(getUninitialized<AssetId>())
 	{
 		// Nothing here
 	}
 
 	inline FramebufferSignature::FramebufferSignature(const FramebufferSignature& framebufferSignature) :
-		mWidth(framebufferSignature.mWidth),
-		mHeight(framebufferSignature.mHeight),
-		mTextureFormat(framebufferSignature.mTextureFormat),
+		mNumberOfColorTextures(framebufferSignature.mNumberOfColorTextures),
+		mColorTextureAssetIds{framebufferSignature.mColorTextureAssetIds[0], framebufferSignature.mColorTextureAssetIds[1], framebufferSignature.mColorTextureAssetIds[2], framebufferSignature.mColorTextureAssetIds[3], framebufferSignature.mColorTextureAssetIds[4], framebufferSignature.mColorTextureAssetIds[5], framebufferSignature.mColorTextureAssetIds[6], framebufferSignature.mColorTextureAssetIds[7]},
+		mDepthStencilTextureAssetId(framebufferSignature.mDepthStencilTextureAssetId),
 		mFramebufferSignatureId(framebufferSignature.mFramebufferSignatureId)
 	{
 		// Nothing here
@@ -58,28 +61,28 @@ namespace RendererRuntime
 
 	inline FramebufferSignature& FramebufferSignature::operator=(const FramebufferSignature& framebufferSignature)
 	{
-		mWidth					= framebufferSignature.mWidth;
-		mHeight					= framebufferSignature.mHeight;
-		mTextureFormat			= framebufferSignature.mTextureFormat;
-		mFramebufferSignatureId	= framebufferSignature.mFramebufferSignatureId;
+		mNumberOfColorTextures = framebufferSignature.mNumberOfColorTextures;
+		memcpy(mColorTextureAssetIds, framebufferSignature.mColorTextureAssetIds, sizeof(AssetId) * 8);
+		mDepthStencilTextureAssetId = framebufferSignature.mDepthStencilTextureAssetId;
 
 		// Done
 		return *this;
 	}
 
-	inline uint32_t FramebufferSignature::getWidth() const
+	inline uint8_t FramebufferSignature::getNumberOfColorTextures() const
 	{
-		return mWidth;
+		return mNumberOfColorTextures;
 	}
 
-	inline uint32_t FramebufferSignature::getHeight() const
+	inline AssetId FramebufferSignature::getColorTextureAssetId(uint8_t index) const
 	{
-		return mHeight;
+		assert(index < mNumberOfColorTextures);
+		return mColorTextureAssetIds[index];
 	}
 
-	inline Renderer::TextureFormat::Enum FramebufferSignature::getTextureFormat() const
+	inline AssetId FramebufferSignature::getDepthStencilTextureAssetId() const
 	{
-		return mTextureFormat;
+		return mDepthStencilTextureAssetId;
 	}
 
 	inline FramebufferSignatureId FramebufferSignature::getFramebufferSignatureId() const

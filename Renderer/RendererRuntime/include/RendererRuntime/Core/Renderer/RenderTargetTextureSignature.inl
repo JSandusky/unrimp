@@ -21,11 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/CompositorNode/CompositorNodeResource.h"
-#include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
-#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
-#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Core/GetUninitialized.h"
 
 
 //[-------------------------------------------------------]
@@ -38,32 +34,57 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void CompositorNodeResource::enforceFullyLoaded()
+	inline RenderTargetTextureSignature::RenderTargetTextureSignature() :
+		mWidth(getUninitialized<uint32_t>()),
+		mHeight(getUninitialized<uint32_t>()),
+		mTextureFormat(Renderer::TextureFormat::UNKNOWN)
 	{
-		// TODO(co) Implement more efficient solution: We need to extend "Runtime::ResourceStreamer" to request emergency immediate processing of requested resources
-		ResourceStreamer& resourceStreamer = getResourceManager<CompositorNodeResourceManager>().getRendererRuntime().getResourceStreamer();
-		while (IResource::LoadingState::LOADED != getLoadingState())
-		{
-			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(1ms);
-			resourceStreamer.dispatch();
-		}
+		// Nothing here
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	void CompositorNodeResource::deinitializeElement()
+	inline RenderTargetTextureSignature::RenderTargetTextureSignature(const RenderTargetTextureSignature& renderTargetTextureSignature) :
+		mWidth(renderTargetTextureSignature.mWidth),
+		mHeight(renderTargetTextureSignature.mHeight),
+		mTextureFormat(renderTargetTextureSignature.mTextureFormat),
+		mRenderTargetTextureSignatureId(renderTargetTextureSignature.mRenderTargetTextureSignatureId)
 	{
-		mInputChannels.clear();
-		mCompositorRenderTargetTextures.clear();
-		mCompositorFramebuffers.clear();
-		mCompositorTargets.clear();
-		mOutputChannels.clear();
+		// Nothing here
+	}
 
-		// Call base implementation
-		IResource::deinitializeElement();
+	inline RenderTargetTextureSignature::~RenderTargetTextureSignature()
+	{
+		// Nothing here
+	}
+
+	inline RenderTargetTextureSignature& RenderTargetTextureSignature::operator=(const RenderTargetTextureSignature& renderTargetTextureSignature)
+	{
+		mWidth							= renderTargetTextureSignature.mWidth;
+		mHeight							= renderTargetTextureSignature.mHeight;
+		mTextureFormat					= renderTargetTextureSignature.mTextureFormat;
+		mRenderTargetTextureSignatureId	= renderTargetTextureSignature.mRenderTargetTextureSignatureId;
+
+		// Done
+		return *this;
+	}
+
+	inline uint32_t RenderTargetTextureSignature::getWidth() const
+	{
+		return mWidth;
+	}
+
+	inline uint32_t RenderTargetTextureSignature::getHeight() const
+	{
+		return mHeight;
+	}
+
+	inline Renderer::TextureFormat::Enum RenderTargetTextureSignature::getTextureFormat() const
+	{
+		return mTextureFormat;
+	}
+
+	inline RenderTargetTextureSignatureId RenderTargetTextureSignature::getRenderTargetTextureSignatureId() const
+	{
+		return mRenderTargetTextureSignatureId;
 	}
 
 
