@@ -1,5 +1,5 @@
 // File: crn_decomp.h - Fast CRN->DXTc texture transcoder header file library
-// Copyright (c) 2010-2012 Rich Geldreich and Tenacious Software LLC
+// Copyright (c) 2010-2016 Richard Geldreich, Jr. and Binomial LLC
 // See Copyright Notice and license at the end of this file.
 //
 // This single header file contains *all* of the code necessary to unpack .CRN files to raw DXTn bits.
@@ -374,10 +374,14 @@ namespace crnd
 
    const uint32 cIntBits = 32U;
 
-#if defined(_WIN64) || defined(__x86_64__)
+#ifdef _WIN64
    typedef uint64 ptr_bits;
 #else
-   typedef uint32 ptr_bits;
+   #ifdef __x86_64__
+     typedef uint64 ptr_bits;
+   #else
+      typedef uint32 ptr_bits;
+   #endif
 #endif
 
    template<typename T> struct int_traits { enum { cMin = crnd::cINT32_MIN, cMax = crnd::cINT32_MAX, cSigned = true }; };
@@ -4814,7 +4818,7 @@ namespace crnd
 // crn_decomp.h uses the ZLIB license:
 // http://opensource.org/licenses/Zlib
 //
-// Copyright (c) 2010-2012 Rich Geldreich and Tenacious Software LLC
+// Copyright (c) 2010-2016 Richard Geldreich, Jr. and Binomial LLC
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages

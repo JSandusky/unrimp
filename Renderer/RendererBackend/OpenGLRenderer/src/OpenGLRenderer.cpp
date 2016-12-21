@@ -406,7 +406,7 @@ namespace OpenGLRenderer
 				// Error!
 				if (numberOfCurrentResources > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: Renderer is going to be destroyed, but there are still %d resource instances left (memory leak)\n", numberOfCurrentResources)
+					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: Renderer is going to be destroyed, but there are still %lu resource instances left (memory leak)\n", numberOfCurrentResources)
 				}
 				else
 				{
@@ -1887,89 +1887,93 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char *message, const void *)
 	{
 		// Source to string
-		char debugSource[16];
+		char debugSource[20]{0};
 		switch (source)
 		{
 			case GL_DEBUG_SOURCE_API_ARB:
-				strncpy(debugSource, "OpenGL", 7);
+				strncpy(debugSource, "OpenGL", 20);
 				break;
 
 			case GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB:
-				strncpy(debugSource, "Windows", 8);
+				strncpy(debugSource, "Windows", 20);
 				break;
 
 			case GL_DEBUG_SOURCE_SHADER_COMPILER_ARB:
-				strncpy(debugSource, "Shader compiler", 16);
+				strncpy(debugSource, "Shader compiler", 20);
 				break;
 
 			case GL_DEBUG_SOURCE_THIRD_PARTY_ARB:
-				strncpy(debugSource, "Third party", 12);
+				strncpy(debugSource, "Third party", 20);
 				break;
 
 			case GL_DEBUG_SOURCE_APPLICATION_ARB:
-				strncpy(debugSource, "Application", 12);
+				strncpy(debugSource, "Application", 20);
 				break;
 
 			case GL_DEBUG_SOURCE_OTHER_ARB:
-				strncpy(debugSource, "Other", 6);
+				strncpy(debugSource, "Other", 20);
 				break;
 
 			default:
-				strncpy(debugSource, "?", 1);
+				strncpy(debugSource, "?", 20);
 				break;
 		}
 
 		// Debug type to string
-		char debugType[20];
+		char debugType[25]{0};
 		switch (type)
 		{
 			case GL_DEBUG_TYPE_ERROR_ARB:
-				strncpy(debugType, "Error", 6);
+				strncpy(debugType, "Error", 25);
 				break;
 
 			case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB:
-				strncpy(debugType, "Deprecated behavior", 20);
+				strncpy(debugType, "Deprecated behavior", 25);
 				break;
 
 			case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB:
-				strncpy(debugType, "Undefined behavior", 19);
+				strncpy(debugType, "Undefined behavior", 25);
 				break;
 
 			case GL_DEBUG_TYPE_PORTABILITY_ARB:
-				strncpy(debugType, "Portability", 12);
+				strncpy(debugType, "Portability", 25);
 				break;
 
 			case GL_DEBUG_TYPE_PERFORMANCE_ARB:
-				strncpy(debugType, "Performance", 12);
+				strncpy(debugType, "Performance", 25);
 				break;
 
 			case GL_DEBUG_TYPE_OTHER_ARB:
-				strncpy(debugType, "Other", 6);
+				strncpy(debugType, "Other", 25);
 				break;
 
 			default:
-				strncpy(debugType, "?", 1);
+				strncpy(debugType, "?", 25);
 				break;
 		}
 
 		// Debug severity to string
-		char debugSeverity[7];
+		char debugSeverity[20]{0};
 		switch (severity)
 		{
 			case GL_DEBUG_SEVERITY_HIGH_ARB:
-				strncpy(debugSeverity, "High", 5);
+				strncpy(debugSeverity, "High", 20);
 				break;
 
 			case GL_DEBUG_SEVERITY_MEDIUM_ARB:
-				strncpy(debugSeverity, "Medium", 7);
+				strncpy(debugSeverity, "Medium", 20);
 				break;
 
 			case GL_DEBUG_SEVERITY_LOW_ARB:
-				strncpy(debugSeverity, "Low", 3);
+				strncpy(debugSeverity, "Low", 20);
+				break;
+
+			case GL_DEBUG_SEVERITY_NOTIFICATION:
+				strncpy(debugSeverity, "Notification", 20);
 				break;
 
 			default:
-				strncpy(debugType, "?", 1);
+				strncpy(debugSeverity, "?", 20);
 				break;
 		}
 

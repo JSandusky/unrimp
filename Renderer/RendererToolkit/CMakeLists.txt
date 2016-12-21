@@ -97,8 +97,13 @@ if(STATIC_LIBRARY)
 	if (WIN32)
 		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX} zlibStatic.lib)
 	elseif(UNIX)
-		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimp${CMAKE_STATIC_LIBRARY_SUFFIX} tiff minizip)
+		#set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimp${CMAKE_STATIC_LIBRARY_SUFFIX} tiff minizip crunch)
+		set(LIBRARIES ${LIBRARIES} assimp tiff minizip crunch stdc++fs)
 	endif()
+	
+	target_link_libraries(RendererToolkitStatic ${LIBRARIES})
+
+	add_dependencies(RendererToolkitStatic crunch)
 endif()
 if(SHARED_LIBRARY)
 	add_library(RendererToolkit SHARED ${SOURCE_CODES})
@@ -106,8 +111,10 @@ if(SHARED_LIBRARY)
 	if(WIN32)
 		target_link_libraries(RendererToolkit assimp.lib libtiff.lib crnlib.lib)
 	else()
-		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} tiff minizip)
+		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} tiff minizip crunch stdc++fs)
 	endif()
+
+	add_dependencies(RendererToolkit crunch)
 endif()
 
 

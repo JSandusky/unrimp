@@ -2502,8 +2502,8 @@ namespace Renderer
 			inline CommandBuffer() :
 				mCommandPacketBufferNumberOfBytes(0),
 				mCommandPacketBuffer(nullptr),
-				mPreviousCommandPacketByteIndex(~0u),
-				mCurrentCommandPacketByteIndex(0)
+				mCurrentCommandPacketByteIndex(0),
+				mPreviousCommandPacketByteIndex(~0u)
 			{}
 			inline ~CommandBuffer()
 			{

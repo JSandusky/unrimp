@@ -159,6 +159,13 @@ endif()
 ## Subdirectories
 ##################################################
 add_subdirectory(Renderer)
+if(RENDERER_TOOLKIT)
+	add_subdirectory(External/crunch/crunch)
+endif()
 if(EXAMPLES)
 	add_subdirectory(Example/Examples)
+	if(RENDERER_RUNTIME)
+		add_subdirectory(Example/ExampleProjectCompiler)
+	endif()
 endif()
+

@@ -83,7 +83,7 @@
 	#endif
 
 	// To export functions
-	#define GENERIC_FUNCTION_EXPORT	__attribute__ ((visibility("default")))
+	#define GENERIC_FUNCTION_EXPORT extern "C"  __attribute__ ((visibility("default")))
 #else
 	#error "Unsupported platform"
 #endif
