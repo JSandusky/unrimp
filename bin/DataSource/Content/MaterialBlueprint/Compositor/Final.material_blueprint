@@ -76,7 +76,10 @@
 			{
 				"SamplerLinear":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)"
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"AddressU": "WRAP",
+					"AddressV": "WRAP",
+					"MaxLOD": "0.0"
 				}
 			},
 			"Textures":

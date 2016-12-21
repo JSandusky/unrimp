@@ -53,5 +53,5 @@ TEXTURE_2D(ColorMap, 0)
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	// Done
-	MAIN_OUTPUT_COLOR(0) = SAMPLE_2D(ColorMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgba;
+	MAIN_OUTPUT_COLOR(0) = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).rgba;
 MAIN_END

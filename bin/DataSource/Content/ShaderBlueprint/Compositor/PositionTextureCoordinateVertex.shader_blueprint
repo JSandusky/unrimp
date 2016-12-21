@@ -47,21 +47,12 @@ OUTPUT_END
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	// Transform the object space vertex into clip space, convert depth range
-	// -> OpenGL z inside range [-1;1]
-	// -> Direct3D z inside range [0;1]
-	@property(GLSL)
-		@property(IsFinalCopy)
-			MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).x, MAIN_INPUT(PositionTexCoord).y, -1.0f, 1.0f);
-		@end
-		@property(!IsFinalCopy)
-			MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).x, -MAIN_INPUT(PositionTexCoord).y, -1.0f, 1.0f);
-		@end
-	@end
-	@property(!GLSL)
-		MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).xy, -1.0f * 0.5f + 0.5f, 1.0f);
-	@end
+	// Transform the object space vertex into clip space
+	MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).xy, 0.0f, 1.0f);
 
 	// Pass through the texture coordinates
 	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(PositionTexCoord.zw);
+	@property(GLSL && !IsFinalCopy)
+		MAIN_OUTPUT(TexCoordVS).y = -MAIN_OUTPUT(TexCoordVS).y;
+	@end
 MAIN_END
