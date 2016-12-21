@@ -45,9 +45,13 @@
 
 #include <string.h>
 
+
+//[-------------------------------------------------------]
+//[ Global functions                                      ]
+//[-------------------------------------------------------]
 #ifndef SHARED_LIBRARIES
 	// Statically linked library create renderer runtime instance signatures
-	// This is needed to do here because the methods in the libary are also defined in global namespace
+	// This is needed to do here because the methods in the library are also defined in global namespace
 
 	// "createRendererRuntimeInstance()" signature
 	extern RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer);

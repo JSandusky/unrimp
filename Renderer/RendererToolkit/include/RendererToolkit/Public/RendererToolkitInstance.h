@@ -45,9 +45,13 @@
 
 #include <string.h>
 
+
+//[-------------------------------------------------------]
+//[ Global functions                                      ]
+//[-------------------------------------------------------]
 #ifndef SHARED_LIBRARIES
 	// Statically linked library create renderer runtime instance signatures
-	// This is needed to do here because the methods in the libary are also defined in global namespace
+	// This is needed to do here because the methods in the library are also defined in global namespace
 
 	// "createRendererToolkitInstance()" signature
 	extern RendererToolkit::IRendererToolkit *createRendererToolkitInstance();
@@ -132,7 +136,6 @@ namespace RendererToolkit
 					#else
 						static const char RENDERER_TOOLKIT_FILENAME[] = "libRendererToolkit.so";
 					#endif
-						const char* tt = RENDERER_TOOLKIT_FILENAME;
 					mRendererToolkitSharedLibrary = dlopen(RENDERER_TOOLKIT_FILENAME, RTLD_NOW);
 					if (nullptr != mRendererToolkitSharedLibrary)
 					{
