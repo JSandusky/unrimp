@@ -44,13 +44,21 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorResourcePassQuad::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
-		assert(sizeof(v1CompositorNode::PassQuad) == numberOfBytes);
+		assert(sizeof(v1CompositorNode::PassQuad) <= numberOfBytes);
 		std::ignore = numberOfBytes;
 
 		// Read data
 		const v1CompositorNode::PassQuad* passQuad = reinterpret_cast<const v1CompositorNode::PassQuad*>(data);
+		assert(sizeof(v1CompositorNode::PassQuad) + sizeof(MaterialProperty) * passQuad->numberOfMaterialProperties == numberOfBytes);
 		mMaterialAssetId = passQuad->materialAssetId;
 		mMaterialBlueprintAssetId = passQuad->materialBlueprintAssetId;
+
+		{ // Read material properties
+			// TODO(co) Get rid of the evil const-cast
+			MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialProperties.getSortedPropertyVector());
+			sortedPropertyVector.resize(passQuad->numberOfMaterialProperties);
+			memcpy(reinterpret_cast<char*>(sortedPropertyVector.data()), data + sizeof(v1CompositorNode::PassQuad), sizeof(MaterialProperty) * passQuad->numberOfMaterialProperties);
+		}
 
 		// Sanity checks
 		assert(isInitialized(mMaterialAssetId) || isInitialized(mMaterialBlueprintAssetId));

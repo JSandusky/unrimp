@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return mMaterialBlueprintAssetId;
 	}
 
+	inline const MaterialProperties& CompositorResourcePassQuad::getMaterialProperties() const
+	{
+		return mMaterialProperties;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]

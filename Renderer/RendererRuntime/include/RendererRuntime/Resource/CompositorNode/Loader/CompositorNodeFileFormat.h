@@ -114,8 +114,9 @@ namespace RendererRuntime
 
 			struct PassQuad
 			{
-				AssetId materialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
-				AssetId materialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized
+				AssetId  materialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
+				AssetId  materialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized
+				uint32_t numberOfMaterialProperties;
 			};
 
 			struct PassScene

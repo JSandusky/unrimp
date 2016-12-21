@@ -121,7 +121,7 @@ namespace RendererRuntime
 					// Do we need to create the renderer texture instance right now?
 					if (nullptr == renderTargetTextureElement.texture)
 					{
-						// Get the texture width and height
+						// Get the texture width and height and apply resolution scale in case the main compositor workspace render target is used
 						uint32_t width = renderTargetTextureSignature.getWidth();
 						uint32_t height = renderTargetTextureSignature.getHeight();
 						if (isUninitialized(width) || isUninitialized(height))

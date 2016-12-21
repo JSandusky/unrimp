@@ -152,6 +152,19 @@ namespace RendererRuntime
 			}
 		}
 
+		{ // Set compositor resource pass quad material properties
+			// TODO(co) "CompositorInstancePassQuad": Probably need to ensure that each pass has it's own material instance with own material property values
+			const MaterialProperties::SortedPropertyVector& sortedPropertyVector = compositorResourcePassQuad.getMaterialProperties().getSortedPropertyVector();
+			if (!sortedPropertyVector.empty())
+			{
+				MaterialResource& materialResource = materialResourceManager.getMaterialResources().getElementById(mMaterialResourceId);
+				for (const MaterialProperty& materialProperty : sortedPropertyVector)
+				{
+					materialResource.setPropertyById(materialProperty.getMaterialPropertyId(), materialProperty);
+				}
+			}
+		}
+
 		// Add reference to vertex array object (VAO) shared between all compositor instance pass quad instances
 		if (nullptr == ::detail::VertexArrayPtr)
 		{

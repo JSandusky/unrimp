@@ -22,6 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/CompositorNodeAssetCompiler.h"
+#include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
+#include "RendererToolkit/Helper/JsonMaterialHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
@@ -258,13 +260,61 @@ namespace RendererToolkit
 					// Get the compositor resource node target pass type specific data number of bytes
 					// TODO(co) Make this more generic via compositor pass factory
 					uint32_t numberOfBytes = 0;
+					RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
 					if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == compositorPassTypeId)
 					{
 						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassClear);
 					}
 					else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 					{
-						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassQuad);
+						// Check whether or not material properties should be set
+						if (rapidJsonMemberIteratorPasses->value.HasMember("SetMaterialProperties"))
+						{
+							if (rapidJsonValuePass.HasMember("MaterialAssetId"))
+							{
+								JsonMaterialHelper::getPropertiesByMaterialAssetId(input, static_cast<uint32_t>(std::atoi(rapidJsonValuePass["MaterialAssetId"].GetString())), sortedMaterialPropertyVector);
+							}
+							else if (rapidJsonValuePass.HasMember("MaterialBlueprintAssetId"))
+							{
+								JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, static_cast<uint32_t>(std::atoi(rapidJsonValuePass["MaterialBlueprintAssetId"].GetString())), sortedMaterialPropertyVector);
+							}
+							if (!sortedMaterialPropertyVector.empty())
+							{
+								// Update material property values were required
+								const rapidjson::Value& rapidJsonValueProperties = rapidJsonMemberIteratorPasses->value["SetMaterialProperties"];
+								JsonMaterialHelper::readMaterialPropertyValues(input, rapidJsonValueProperties, sortedMaterialPropertyVector);
+
+								{ // Need a second round for referenced render target textures so we can write e.g. "ColorMap": "ColorRenderTargetTexture0" ("ColorRenderTargetTexture0" = render target texture)
+									// Collect all material property IDs explicitly defined inside the compositor node asset
+									typedef std::unordered_map<uint32_t, std::string> DefinedMaterialPropertyIds;	// Key = "RendererRuntime::RendererRuntime::MaterialPropertyId"
+									DefinedMaterialPropertyIds definedMaterialPropertyIds;
+									for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorProperties = rapidJsonValueProperties.MemberBegin(); rapidJsonMemberIteratorProperties != rapidJsonValueProperties.MemberEnd(); ++rapidJsonMemberIteratorProperties)
+									{
+										definedMaterialPropertyIds.emplace(RendererRuntime::MaterialPropertyId(rapidJsonMemberIteratorProperties->name.GetString()), rapidJsonMemberIteratorProperties->value.GetString());
+									}
+
+									// Look for referenced render target textures
+									for (RendererRuntime::MaterialProperty& materialProperty : sortedMaterialPropertyVector)
+									{
+										if (materialProperty.getValueType() == RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
+										{
+											DefinedMaterialPropertyIds::const_iterator iterator = definedMaterialPropertyIds.find(materialProperty.getMaterialPropertyId());
+											if (iterator!= definedMaterialPropertyIds.end())
+											{
+												const RendererRuntime::AssetId assetId = RendererRuntime::StringId(iterator->second.c_str());
+												if (renderTargetTextureAssetIds.find(assetId) != renderTargetTextureAssetIds.end())
+												{
+													static_cast<RendererRuntime::MaterialPropertyValue&>(materialProperty) = RendererRuntime::MaterialPropertyValue::fromTextureAssetId(assetId);
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+
+						// Get number of bytes
+						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassQuad) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size();
 					}
 					else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)
 					{
@@ -302,6 +352,7 @@ namespace RendererToolkit
 							JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialBlueprintAssetId", materialBlueprintAssetId);
 							passQuad.materialAssetId = materialAssetId;
 							passQuad.materialBlueprintAssetId = materialBlueprintAssetId;
+							passQuad.numberOfMaterialProperties = sortedMaterialPropertyVector.size();
 
 							// Sanity checks
 							if (RendererRuntime::isUninitialized(passQuad.materialAssetId) && RendererRuntime::isUninitialized(passQuad.materialBlueprintAssetId))
@@ -315,6 +366,11 @@ namespace RendererToolkit
 
 							// Write down
 							outputFileStream.write(reinterpret_cast<const char*>(&passQuad), sizeof(RendererRuntime::v1CompositorNode::PassQuad));
+							if (!sortedMaterialPropertyVector.empty())
+							{
+								// Write down all material properties
+								outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
+							}
 						}
 						else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)
 						{

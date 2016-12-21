@@ -22,6 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/JsonMaterialHelper.h"
+#include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h>
@@ -39,6 +41,32 @@
 #pragma warning(pop)
 
 #include <fstream>
+#include <algorithm>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		bool orderByMaterialTechniqueId(const RendererRuntime::v1Material::Technique& left, const RendererRuntime::v1Material::Technique& right)
+		{
+			return (left.materialTechniqueId < right.materialTechniqueId);
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -359,6 +387,97 @@ namespace RendererToolkit
 			#undef IF_VALUE
 			#undef ELSE_IF_VALUE
 		}
+	}
+
+	void JsonMaterialHelper::readMaterialPropertyValues(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+	{
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorProperties = rapidJsonValueProperties.MemberBegin(); rapidJsonMemberIteratorProperties != rapidJsonValueProperties.MemberEnd(); ++rapidJsonMemberIteratorProperties)
+		{
+			// Material property ID
+			const char* propertyName = rapidJsonMemberIteratorProperties->name.GetString();
+			const RendererRuntime::MaterialPropertyId materialPropertyId(propertyName);
+
+			// Figure out the material property value type by using the material blueprint
+			RendererRuntime::MaterialProperties::SortedPropertyVector::iterator iterator = std::lower_bound(sortedMaterialPropertyVector.begin(), sortedMaterialPropertyVector.end(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
+			if (iterator != sortedMaterialPropertyVector.end())
+			{
+				RendererRuntime::MaterialProperty& materialProperty = *iterator;
+				if (materialProperty.getMaterialPropertyId() == materialPropertyId)
+				{
+					// Set the material own property value
+					static_cast<RendererRuntime::MaterialPropertyValue&>(materialProperty) = JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(input, rapidJsonValueProperties, propertyName, materialProperty.getValueType());
+				}
+			}
+		}
+	}
+
+	void JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId(const IAssetCompiler::Input& input, rapidjson::Document& rapidJsonDocument, std::vector<RendererRuntime::v1Material::Technique>& techniques, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+	{
+		// Mandatory main sections of the material
+		const rapidjson::Value& rapidJsonValueMaterialAsset = rapidJsonDocument["MaterialAsset"];
+		const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
+		const rapidjson::Value& rapidJsonValueProperties = rapidJsonValueMaterialAsset["Properties"];
+
+		// Gather the asset IDs of all used material blueprints (one material blueprint per material technique)
+		techniques.reserve(rapidJsonValueTechniques.MemberCount());
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
+		{
+			// Add technique
+			RendererRuntime::v1Material::Technique technique;
+			technique.materialTechniqueId	   = RendererRuntime::StringId(rapidJsonMemberIteratorTechniques->name.GetString());
+			technique.materialBlueprintAssetId = static_cast<uint32_t>(std::atoi(rapidJsonMemberIteratorTechniques->value.GetString()));
+			techniques.push_back(technique);
+		}
+		std::sort(techniques.begin(), techniques.end(), detail::orderByMaterialTechniqueId);
+
+		// Gather all material blueprint properties of all referenced material blueprints
+		for (RendererRuntime::v1Material::Technique& technique : techniques)
+		{
+			RendererRuntime::MaterialProperties::SortedPropertyVector newSortedMaterialPropertyVector;
+			JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, technique.materialBlueprintAssetId, newSortedMaterialPropertyVector);
+
+			// Add properties and avoid duplicates while doing so
+			for (const RendererRuntime::MaterialProperty& materialProperty : newSortedMaterialPropertyVector)
+			{
+				const RendererRuntime::MaterialPropertyId materialPropertyId = materialProperty.getMaterialPropertyId();
+				RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
+				if (iterator == sortedMaterialPropertyVector.end() || iterator->getMaterialPropertyId() != materialPropertyId)
+				{
+					// Add new material property
+					sortedMaterialPropertyVector.insert(iterator, materialProperty);
+				}
+			}
+
+			// Transform the source asset ID into a local asset ID
+			technique.materialBlueprintAssetId = input.getCompiledAssetIdBySourceAssetId(technique.materialBlueprintAssetId);
+		}
+
+		// Properties: Update material property values were required
+		JsonMaterialHelper::readMaterialPropertyValues(input, rapidJsonValueProperties, sortedMaterialPropertyVector);
+	}
+
+	void JsonMaterialHelper::getPropertiesByMaterialAssetId(const IAssetCompiler::Input& input, RendererRuntime::AssetId materialAssetId, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+	{
+		// TODO(co) Error handling and simplification
+
+		// Read material asset compiler configuration
+		std::string materialInputFile;
+		const std::string absoluteMaterialAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialAssetId);
+		{
+			// Parse material asset JSON
+			std::ifstream materialAssetInputFileStream(absoluteMaterialAssetFilename, std::ios::binary);
+			rapidjson::Document rapidJsonDocumentMaterialAsset;
+			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocumentMaterialAsset, materialAssetInputFileStream, absoluteMaterialAssetFilename, "Asset", "1");
+			materialInputFile = rapidJsonDocumentMaterialAsset["Asset"]["MaterialAssetCompiler"]["InputFile"].GetString();
+		}
+
+		// Parse material JSON
+		const std::string absoluteMaterialFilename = STD_FILESYSTEM_PATH(absoluteMaterialAssetFilename).parent_path().generic_string() + '/' + materialInputFile;
+		std::ifstream materialInputFileStream(absoluteMaterialFilename, std::ios::binary);
+		rapidjson::Document rapidJsonDocument;
+		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, materialInputFileStream, absoluteMaterialFilename, "MaterialAsset", "1");
+		std::vector<RendererRuntime::v1Material::Technique> techniques;
+		getTechniquesAndPropertiesByMaterialAssetId(input, rapidJsonDocument, techniques, sortedMaterialPropertyVector);
 	}
 
 

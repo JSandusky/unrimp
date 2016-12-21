@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
+#include "RendererRuntime/Resource/Material/MaterialProperties.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
 
 
@@ -80,6 +81,7 @@ namespace RendererRuntime
 	public:
 		inline AssetId getMaterialAssetId() const;
 		inline AssetId getMaterialBlueprintAssetId() const;
+		inline const MaterialProperties& getMaterialProperties() const;
 
 
 	//[-------------------------------------------------------]
@@ -104,8 +106,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		AssetId mMaterialAssetId;
-		AssetId mMaterialBlueprintAssetId;
+		AssetId			   mMaterialAssetId;
+		AssetId			   mMaterialBlueprintAssetId;
+		MaterialProperties mMaterialProperties;
 
 
 	};
