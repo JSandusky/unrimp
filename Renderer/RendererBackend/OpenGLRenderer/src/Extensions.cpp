@@ -472,7 +472,7 @@ namespace OpenGLRenderer
 		}
 
 		// GL_EXT_draw_range_elements
-		mGL_EXT_draw_range_elements = isSupported("GL_EXT_draw_range_elements");
+		mGL_EXT_draw_range_elements = isCoreProfile ? true : isSupported("GL_EXT_draw_range_elements"); // Is core feature since opengl 1.2
 		if (mGL_EXT_draw_range_elements)
 		{
 			// Load the entry points
@@ -491,7 +491,7 @@ namespace OpenGLRenderer
 		}
 
 		// GL_EXT_fog_coord
-		mGL_EXT_fog_coord = isSupported("GL_EXT_fog_coord");
+		mGL_EXT_fog_coord = isCoreProfile ? true : isSupported("GL_EXT_fog_coord"); // Is core feature since opengl 1.4
 		if (mGL_EXT_fog_coord)
 		{
 			// Load the entry points
@@ -505,7 +505,7 @@ namespace OpenGLRenderer
 		}
 
 		// GL_EXT_secondary_color
-		mGL_EXT_secondary_color = isSupported("GL_EXT_secondary_color");
+		mGL_EXT_secondary_color = isCoreProfile ? true : isSupported("GL_EXT_secondary_color"); // Is core feature since opengl 1.4
 		if (mGL_EXT_secondary_color)
 		{
 			// Load the entry points
@@ -544,13 +544,13 @@ namespace OpenGLRenderer
 		}
 
 		// GL_EXT_texture_lod_bias
-		mGL_EXT_texture_lod_bias = isSupported("GL_EXT_texture_lod_bias");
+		mGL_EXT_texture_lod_bias = isCoreProfile ? true : isSupported("GL_EXT_texture_lod_bias"); // Is core feature since opengl 1.4
 
 		// GL_EXT_texture_filter_anisotropic
 		mGL_EXT_texture_filter_anisotropic = isSupported("GL_EXT_texture_filter_anisotropic");
 
 		// GL_EXT_separate_specular_color
-		mGL_EXT_separate_specular_color = isSupported("GL_EXT_separate_specular_color");
+		mGL_EXT_separate_specular_color = isCoreProfile ? true : isSupported("GL_EXT_separate_specular_color"); // Is core feature since opengl 1.2
 
 		// GL_EXT_texture_edge_clamp
 		mGL_EXT_texture_edge_clamp = isSupported("GL_EXT_texture_edge_clamp");
@@ -562,7 +562,7 @@ namespace OpenGLRenderer
 		mGL_EXT_texture_rectangle = isSupported("GL_EXT_texture_rectangle");
 
 		// GL_EXT_texture3D
-		mGL_EXT_texture3D = isCoreProfile ? true : isSupported("GL_EXT_texture3D");
+		mGL_EXT_texture3D = isCoreProfile ? true : isSupported("GL_EXT_texture3D"); // Is core feature since opengl 1.2
 		if (mGL_EXT_texture3D)
 		{
 			// Load the entry points
@@ -576,10 +576,10 @@ namespace OpenGLRenderer
 		mGL_EXT_texture_cube_map = isSupported("GL_EXT_texture_cube_map");
 
 		// GL_EXT_stencil_wrap
-		mGL_EXT_stencil_wrap = isSupported("GL_EXT_stencil_wrap");
+		mGL_EXT_stencil_wrap = isCoreProfile ? true : isSupported("GL_EXT_stencil_wrap"); // Is core feature since opengl 1.4
 
 		// GL_EXT_stencil_two_side
-		mGL_EXT_stencil_two_side = isSupported("GL_EXT_stencil_two_side");
+		mGL_EXT_stencil_two_side = isCoreProfile ? true : isSupported("GL_EXT_stencil_two_side"); // Is core feature since opengl 2.0
 		if (mGL_EXT_stencil_two_side)
 		{
 			// Load the entry points
@@ -713,7 +713,7 @@ namespace OpenGLRenderer
 		}
 
 		// GL_ARB_multitexture
-		mGL_ARB_multitexture = isSupported("GL_ARB_multitexture");
+		mGL_ARB_multitexture = isCoreProfile ? true :  isSupported("GL_ARB_multitexture"); // Is core feature since opengl 1.3
 		if (mGL_ARB_multitexture)
 		{
 			// Load the entry points
@@ -756,7 +756,7 @@ namespace OpenGLRenderer
 		}
 
 		// GL_ARB_vertex_buffer_object
-		mGL_ARB_vertex_buffer_object = isCoreProfile ? true : isSupported("GL_ARB_vertex_buffer_object");
+		mGL_ARB_vertex_buffer_object = isCoreProfile ? true : isSupported("GL_ARB_vertex_buffer_object"); // Is core feature since opengl 1.5
 		if (mGL_ARB_vertex_buffer_object)
 		{
 			// Load the entry points
@@ -775,22 +775,22 @@ namespace OpenGLRenderer
 		}
 
 		// GL_ARB_texture_border_clamp
-		mGL_ARB_texture_border_clamp = isSupported("GL_ARB_texture_border_clamp");
+		mGL_ARB_texture_border_clamp = isCoreProfile ? true : isSupported("GL_ARB_texture_border_clamp"); // Is core feature since opengl 1.3
 
 		// GL_ARB_texture_mirrored_repeat 
-		mGL_ARB_texture_mirrored_repeat = isSupported("GL_ARB_texture_mirrored_repeat");
+		mGL_ARB_texture_mirrored_repeat = isCoreProfile ? true : isSupported("GL_ARB_texture_mirrored_repeat"); // Is core feature since opengl 1.4
 
 		// GL_ARB_texture_cube_map
-		mGL_ARB_texture_cube_map = isSupported("GL_ARB_texture_cube_map");
+		mGL_ARB_texture_cube_map = isCoreProfile ? true : isSupported("GL_ARB_texture_cube_map"); // Is core feature since opengl 1.3
 
 		// GL_ARB_texture_env_combine
-		mGL_ARB_texture_env_combine = isSupported("GL_ARB_texture_env_combine");
+		mGL_ARB_texture_env_combine = isCoreProfile ? true : isSupported("GL_ARB_texture_env_combine"); // Is core feature since opengl 1.3
 
 		// GL_ARB_texture_env_dot3
-		mGL_ARB_texture_env_dot3 = isSupported("GL_ARB_texture_env_dot3");
+		mGL_ARB_texture_env_dot3 = isCoreProfile ? true : isSupported("GL_ARB_texture_env_dot3"); // Is core feature since opengl 1.3
 
 		// GL_ARB_occlusion_query
-		mGL_ARB_occlusion_query = isSupported("GL_ARB_occlusion_query");
+		mGL_ARB_occlusion_query = isCoreProfile ? true : isSupported("GL_ARB_occlusion_query"); // Is core feature since opengl 1.5
 		if (mGL_ARB_occlusion_query)
 		{
 			// Load the entry points
@@ -807,7 +807,7 @@ namespace OpenGLRenderer
 		}
 
 		// GL_ARB_texture_compression
-		mGL_ARB_texture_compression = isCoreProfile ? true : isSupported("GL_ARB_texture_compression");
+		mGL_ARB_texture_compression = isCoreProfile ? true : isSupported("GL_ARB_texture_compression"); // Is core since opengl 1.3
 		if (mGL_ARB_texture_compression)
 		{
 			// Load the entry points
@@ -823,13 +823,13 @@ namespace OpenGLRenderer
 		}
 
 		// GL_ARB_depth_texture
-		mGL_ARB_depth_texture = isSupported("GL_ARB_depth_texture");
+		mGL_ARB_depth_texture = isCoreProfile ? true : isSupported("GL_ARB_depth_texture"); // Is core since opengl 1.4
 
 		// GL_ARB_point_sprite
 		mGL_ARB_point_sprite = isSupported("GL_ARB_point_sprite");
 
 		// GL_ARB_point_parameters
-		mGL_ARB_point_parameters = isSupported("GL_ARB_point_parameters");
+		mGL_ARB_point_parameters = isCoreProfile ? true : isSupported("GL_ARB_point_parameters"); // Is core since opengl 1.4
 		if (mGL_ARB_point_parameters)
 		{
 			// Load the entry points
@@ -840,7 +840,7 @@ namespace OpenGLRenderer
 		}
 
 		// GL_ARB_shading_language_100
-		mGL_ARB_shading_language_100 = isSupported("GL_ARB_shading_language_100");
+		mGL_ARB_shading_language_100 = isCoreProfile ? true : isSupported("GL_ARB_shading_language_100"); // Is core since opengl 2.0
 
 		// GL_ARB_vertex_program
 		mGL_ARB_vertex_program = isCoreProfile ? true : isSupported("GL_ARB_vertex_program");
@@ -954,7 +954,7 @@ namespace OpenGLRenderer
 		mGL_ARB_texture_rectangle = isSupported("GL_ARB_texture_rectangle");
 
 		// GL_ARB_multisample
-		mGL_ARB_multisample = isSupported("GL_ARB_multisample");
+		mGL_ARB_multisample = isCoreProfile ? true : isSupported("GL_ARB_multisample"); // Is core feature since opengl 1.3
 
 		// GL_ARB_uniform_buffer_object
 		mGL_ARB_uniform_buffer_object = isSupported("GL_ARB_uniform_buffer_object");
@@ -1035,6 +1035,8 @@ namespace OpenGLRenderer
 		mGL_ARB_fragment_shader = isSupported("GL_ARB_fragment_shader");
 
 		// GL_ARB_geometry_shader4
+		// TODO(sw) This extension was promoted to core feature but heavily modified source: https://www.khronos.org/opengl/wiki/History_of_OpenGL#OpenGL_3.2_.282009.29
+		// TODO(sw) But this extension doesn't show up with mesa 3D either with an old opengl context (max opengl3.3) or with an profile context (with opengl 4.3)
 		mGL_ARB_geometry_shader4 = isSupported("GL_ARB_geometry_shader4");
 		if (mGL_ARB_geometry_shader4)
 		{
@@ -1114,6 +1116,7 @@ namespace OpenGLRenderer
 			// Load the entry points
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glDebugMessageCallbackARB)
+			IMPORT_FUNC(glDebugMessageControlARB)
 			mGL_ARB_debug_output = result;
 		}
 
@@ -1125,7 +1128,7 @@ namespace OpenGLRenderer
 		mGL_ATI_meminfo = isSupported("GL_ATI_meminfo");
 
 		// GL_ATI_separate_stencil
-		mGL_ATI_separate_stencil = isSupported("GL_ATI_separate_stencil");
+		mGL_ATI_separate_stencil = isCoreProfile ? true : isSupported("GL_ATI_separate_stencil"); // Is core since opengl 2.0
 		if (mGL_ATI_separate_stencil)
 		{
 			// Load the entry points
@@ -1202,7 +1205,7 @@ namespace OpenGLRenderer
 		//[ SGIS                                                  ]
 		//[-------------------------------------------------------]
 		// GL_SGIS_generate_mipmap
-		mGL_SGIS_generate_mipmap = isSupported("GL_SGIS_generate_mipmap");
+		mGL_SGIS_generate_mipmap = isCoreProfile ? true : isSupported("GL_SGIS_generate_mipmap");  // Is core feature since opengl 1.4
 
 
 		//[-------------------------------------------------------]
