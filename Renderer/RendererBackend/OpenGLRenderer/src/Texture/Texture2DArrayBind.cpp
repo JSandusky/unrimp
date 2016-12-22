@@ -49,7 +49,7 @@ namespace OpenGLRenderer
 
 			// Backup the currently bound OpenGL texture
 			GLint openGLTextureBackup = 0;
-			glGetIntegerv(GL_TEXTURE_2D_ARRAY_EXT, &openGLTextureBackup);
+			glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY_EXT, &openGLTextureBackup);
 		#endif
 
 		// Set correct alignment

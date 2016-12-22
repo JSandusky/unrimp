@@ -62,7 +62,7 @@ namespace OpenGLRenderer
 			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 				// Backup the currently bound OpenGL texture
 				GLint openGLTextureBackup = 0;
-				glGetIntegerv(GL_TEXTURE_BUFFER_ARB, &openGLTextureBackup);
+				glGetIntegerv(GL_TEXTURE_BINDING_BUFFER_ARB, &openGLTextureBackup);
 			#endif
 
 			// Make this OpenGL texture instance to the currently used one

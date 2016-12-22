@@ -55,7 +55,7 @@ namespace OpenGLES2Renderer
 
 			// Backup the currently bound OpenGL ES 2 element array buffer
 			GLint openGLES2ElementArrayBufferBackup = 0;
-			glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER, &openGLES2ElementArrayBufferBackup);
+			glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ElementArrayBufferBackup);
 
 			// Backup the currently bound OpenGL ES 2 vertex array
 			GLint openGLES2VertexArrayBackup = 0;

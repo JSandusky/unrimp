@@ -50,7 +50,7 @@ namespace OpenGLES2Renderer
 
 			// Backup the currently bound OpenGL ES 2 texture
 			GLint openGLES2TextureBackup = 0;
-			glGetIntegerv(GL_TEXTURE_2D_ARRAY_EXT, &openGLES2TextureBackup);
+			glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY_EXT, &openGLES2TextureBackup);
 		#endif
 
 		// Set correct alignment
