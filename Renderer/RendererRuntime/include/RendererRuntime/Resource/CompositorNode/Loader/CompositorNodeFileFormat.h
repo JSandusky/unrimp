@@ -105,10 +105,16 @@ namespace RendererRuntime
 
 			struct PassClear
 			{
-				float color[4];
+				uint32_t flags;		///< Combination of "Renderer::ClearFlag"
+				float	 color[4];
+				float	 z;
+				uint32_t stencil;
 
 				PassClear() :
-					color{ 0.0f, 0.0f, 0.0f, 0.0f }
+					flags(0),
+					color{ 0.0f, 0.0f, 0.0f, 0.0f },
+					z(1.0f),
+					stencil(0)
 				{}
 			};
 

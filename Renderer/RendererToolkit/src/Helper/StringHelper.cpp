@@ -36,6 +36,12 @@ namespace
 
 
 		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		static const char* WHITESPACE_CHARACTERS = " \t\n\r\f\v";
+
+
+		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
 		// This method searches only three kind of white spaces (spaces, tabs(\t) and carriage return(\r))
@@ -115,6 +121,26 @@ namespace RendererToolkit
 			// Find next "non-delimiter"
 			position = stringToSplit.find_first_of(separators, lastPosition);
 		}
+	}
+
+	std::string& StringHelper::trimRightWhitespaceCharacters(std::string& s)
+	{
+		// Trim from end of string (right)
+		s.erase(s.find_last_not_of(::detail::WHITESPACE_CHARACTERS) + 1);
+		return s;
+	}
+
+	std::string& StringHelper::trimLeftWhitespaceCharacters(std::string& s)
+	{
+		// Trim from beginning of string (left)
+		s.erase(0, s.find_first_not_of(::detail::WHITESPACE_CHARACTERS));
+		return s;
+	}
+
+	std::string& StringHelper::trimWhitespaceCharacters(std::string& s)
+	{
+		// Trim from both ends of string (left & right)
+		return trimLeftWhitespaceCharacters(trimRightWhitespaceCharacters(s));
 	}
 
 	void StringHelper::stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode)

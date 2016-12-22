@@ -339,7 +339,14 @@ namespace RendererToolkit
 						if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassClear passClear;
+
+							// Read properties
+							JsonHelper::optionalClearFlagsProperty(rapidJsonValuePass, "Flags", passClear.flags);
 							JsonHelper::optionalFloatNProperty(rapidJsonValuePass, "Color", passClear.color, 4);
+							JsonHelper::optionalFloatProperty(rapidJsonValuePass, "Z", passClear.z);
+							JsonHelper::optionalIntegerProperty(rapidJsonValuePass, "Stencil", passClear.stencil);
+
+							// Write down
 							outputFileStream.write(reinterpret_cast<const char*>(&passClear), sizeof(RendererRuntime::v1CompositorNode::PassClear));
 						}
 						else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)

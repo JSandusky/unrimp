@@ -70,7 +70,10 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		inline uint32_t getFlags() const;	// Combination of "Renderer::ClearFlag"
 		inline const glm::vec4& getClearColor() const;
+		inline float getZ() const;
+		inline uint32_t getStencil() const;
 
 
 	//[-------------------------------------------------------]
@@ -95,7 +98,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		uint32_t  mFlags;	///< Combination of "Renderer::ClearFlag"
 		glm::vec4 mColor;
+		float	  mZ;
+		uint32_t  mStencil;
 
 
 	};

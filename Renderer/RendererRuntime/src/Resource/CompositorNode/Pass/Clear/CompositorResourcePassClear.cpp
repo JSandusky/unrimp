@@ -50,7 +50,10 @@ namespace RendererRuntime
 
 		// Read data
 		const v1CompositorNode::PassClear* passClear = reinterpret_cast<const v1CompositorNode::PassClear*>(data);
+		mFlags = passClear->flags;
 		memcpy(glm::value_ptr(mColor), passClear->color, sizeof(float) * 4);
+		mZ = passClear->z;
+		mStencil = passClear->stencil;
 	}
 
 

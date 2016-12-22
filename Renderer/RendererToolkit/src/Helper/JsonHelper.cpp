@@ -239,6 +239,49 @@ namespace RendererToolkit
 		}
 	}
 
+	void JsonHelper::optionalClearFlagsProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, uint32_t& clearFlags)
+	{
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			clearFlags = 0;
+			std::vector<std::string> flagsAsString;
+			RendererToolkit::StringHelper::splitString(rapidJsonValue[propertyName].GetString(), '|', flagsAsString);
+			if (!flagsAsString.empty())
+			{
+				// Define helper macros
+				#define IF_VALUE(name)			 if (flagAsString == #name) value = Renderer::ClearFlag::name;
+				#define ELSE_IF_VALUE(name) else if (flagAsString == #name) value = Renderer::ClearFlag::name;
+
+				// Evaluate flags
+				const size_t numberOfFlags = flagsAsString.size();
+				for (size_t i = 0; i < numberOfFlags; ++i)
+				{
+					// Get flag as string
+					std::string flagAsString = flagsAsString[i];
+					StringHelper::trimWhitespaceCharacters(flagAsString);
+
+					// Evaluate value
+					uint32_t value = 0;
+					IF_VALUE(COLOR)
+					ELSE_IF_VALUE(DEPTH)
+					ELSE_IF_VALUE(STENCIL)
+					// ELSE_IF_VALUE(COLOR_DEPTH)	// Not added by intent, one has to write "COLOR | DEPTH"
+					else
+					{
+						// TODO(co) Error handling
+					}
+
+					// Apply value
+					clearFlags |= value;
+				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
+			}
+		}
+	}
+
 	void JsonHelper::optionalCompiledAssetId(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererRuntime::AssetId& compiledAssetId)
 	{
 		if (rapidJsonValue.HasMember(propertyName))

@@ -41,8 +41,8 @@ namespace RendererRuntime
 	void CompositorInstancePassClear::onFillCommandBuffer(const Renderer::IRenderTarget&, Renderer::CommandBuffer& commandBuffer)
 	{
 		// Clear the color buffer of the current render target, do also clear the depth buffer
-		// TODO(co) "RendererRuntime::CompositorInstancePassClear": Add the other properties like stencil or z-buffer
-		Renderer::Command::Clear::create(commandBuffer, Renderer::ClearFlag::COLOR_DEPTH, glm::value_ptr(static_cast<const CompositorResourcePassClear&>(getCompositorResourcePass()).getClearColor()), 1.0f, 0);
+		const CompositorResourcePassClear& compositorResourcePassClear = static_cast<const CompositorResourcePassClear&>(getCompositorResourcePass());
+		Renderer::Command::Clear::create(commandBuffer, compositorResourcePassClear.getFlags(), glm::value_ptr(compositorResourcePassClear.getClearColor()), compositorResourcePassClear.getZ(), compositorResourcePassClear.getStencil());
 	}
 
 

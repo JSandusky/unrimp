@@ -53,6 +53,9 @@ namespace RendererToolkit
 	public:
 		static void splitString(const std::string& stringToSplit, char separator, std::vector<std::string>& elements);
 		static void splitString(const std::string& stringToSplit, const std::string& separators, std::vector<std::string>& elements);
+		static std::string& trimRightWhitespaceCharacters(std::string& s);
+		static std::string& trimLeftWhitespaceCharacters(std::string& s);
+		static std::string& trimWhitespaceCharacters(std::string& s);
 		static void stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode);
 
 

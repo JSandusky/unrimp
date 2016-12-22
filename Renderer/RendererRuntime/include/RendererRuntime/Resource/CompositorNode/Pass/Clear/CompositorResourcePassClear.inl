@@ -28,9 +28,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline uint32_t CompositorResourcePassClear::getFlags() const
+	{
+		return mFlags;
+	}
+
 	inline const glm::vec4& CompositorResourcePassClear::getClearColor() const
 	{
 		return mColor;
+	}
+
+	inline float CompositorResourcePassClear::getZ() const
+	{
+		return mZ;
+	}
+
+	inline uint32_t CompositorResourcePassClear::getStencil() const
+	{
+		return mStencil;
 	}
 
 
@@ -48,7 +63,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline CompositorResourcePassClear::CompositorResourcePassClear(const CompositorTarget& compositorTarget) :
 		ICompositorResourcePass(compositorTarget),
-		mColor(0.0f, 0.0f, 0.0f, 0.0f)
+		mFlags(0),
+		mColor(0.0f, 0.0f, 0.0f, 0.0f),
+		mZ(1.0f),
+		mStencil(0)
 	{
 		// Nothing here
 	}
