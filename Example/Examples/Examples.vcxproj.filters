@@ -25,9 +25,6 @@
     <Filter Include="Advanced\InstancedCubes\CubeRendererInstancedArrays">
       <UniqueIdentifier>{941758c6-fb92-4f75-9ab3-1eeb034462e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Advanced\Fxaa">
-      <UniqueIdentifier>{c367cf4a-5fc9-4e95-a255-8c0588fb6847}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Basics\FirstGeometryShader">
       <UniqueIdentifier>{aeb3cc1a-0239-47e5-b2bd-d195509466b1}</UniqueIdentifier>
     </Filter>
@@ -57,9 +54,6 @@
     </Filter>
     <Filter Include="Advanced\FirstGpgpu">
       <UniqueIdentifier>{85b032da-a251-4708-91d6-d23bc4ca2cb4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Advanced\FirstPostProcessing">
-      <UniqueIdentifier>{2110a6fd-1981-462d-8618-8655f0d0062e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Runtime\FirstCompositor">
       <UniqueIdentifier>{3e6f9886-5f21-4ffc-9771-cec656041522}</UniqueIdentifier>
@@ -237,39 +231,6 @@
     <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu.h">
       <Filter>Advanced\FirstGpgpu</Filter>
     </ClInclude>
-    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_GLSL_ES2.h">
-      <Filter>Advanced\FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_HLSL_D3D9.h">
-      <Filter>Advanced\FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_Null.h">
-      <Filter>Advanced\FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing.h">
-      <Filter>Advanced\FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_GLSL_ES2.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_HLSL_D3D9.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_Null.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_ES2.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_Null.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
     <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_Null.h">
       <Filter>Advanced\IcosahedronTessellation</Filter>
     </ClInclude>
@@ -357,15 +318,6 @@
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Basics\FirstMultipleRenderTargets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_HLSL_D3D10_D3D11_D3D12.h">
-      <Filter>Advanced\FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11_D3D12.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_HLSL_D3D10_D3D11_D3D12.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
     <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Advanced\FirstGpgpu</Filter>
     </ClInclude>
@@ -419,15 +371,6 @@
     </ClInclude>
     <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_410.h">
       <Filter>Advanced\FirstGpgpu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_GLSL_410.h">
-      <Filter>Advanced\FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_410.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_GLSL_410.h">
-      <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_410.h">
       <Filter>Runtime\FirstMesh</Filter>
@@ -515,12 +458,6 @@
     </ClCompile>
     <ClCompile Include="src\Advanced\FirstGpgpu\FirstGpgpu.cpp">
       <Filter>Advanced\FirstGpgpu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Advanced\FirstPostProcessing\FirstPostProcessing.cpp">
-      <Filter>Advanced\FirstPostProcessing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Advanced\Fxaa\Fxaa.cpp">
-      <Filter>Advanced\Fxaa</Filter>
     </ClCompile>
     <ClCompile Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation.cpp">
       <Filter>Advanced\IcosahedronTessellation</Filter>

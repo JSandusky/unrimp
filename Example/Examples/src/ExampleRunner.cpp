@@ -37,8 +37,6 @@
 #include "Basics/FirstGeometryShader/FirstGeometryShader.h"
 #include "Basics/FirstTessellation/FirstTessellation.h"
 // Advanced
-#include "Advanced/FirstPostProcessing/FirstPostProcessing.h"
-#include "Advanced/Fxaa/Fxaa.h"
 #include "Advanced/FirstGpgpu/FirstGpgpu.h"
 #include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
 #ifndef RENDERER_NO_RUNTIME
@@ -105,8 +103,6 @@ ExampleRunner::ExampleRunner()
 	addExample("FirstGeometryShader",			&RunExample<FirstGeometryShader>,			onlyShaderModel4Plus);
 	addExample("FirstTessellation",				&RunExample<FirstTessellation>,				onlyShaderModel5Plus);
 	// Advanced
-	addExample("FirstPostProcessing",			&RunExample<FirstPostProcessing>,			supportsAllRenderer);
-	addExample("Fxaa",							&RunExample<Fxaa>,							supportsAllRenderer);
 	addExample("FirstGpgpu",					&RunExample<FirstGpgpu>,					supportsAllRenderer);
 	addExample("IcosahedronTessellation",		&RunExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
 	#ifndef RENDERER_NO_RUNTIME

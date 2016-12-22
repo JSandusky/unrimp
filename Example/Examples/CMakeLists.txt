@@ -73,8 +73,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/include/)
 set(SOURCE_CODES
 	# Cross-platform source codes
 	src/Advanced/FirstGpgpu/FirstGpgpu.cpp
-	src/Advanced/FirstPostProcessing/FirstPostProcessing.cpp
-	src/Advanced/Fxaa/Fxaa.cpp
 	src/Advanced/IcosahedronTessellation/IcosahedronTessellation.cpp
 	src/Basics/FirstGeometryShader/FirstGeometryShader.cpp
 	src/Basics/FirstIndirectBuffer/FirstIndirectBuffer.cpp
