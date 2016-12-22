@@ -54,39 +54,6 @@ namespace OpenGLRenderer
 			return true;
 		}
 
-
-		//[-------------------------------------------------------]
-		//[ GLX (Linux only) definitions                          ]
-		//[-------------------------------------------------------]
-
-		// WGL_EXT_swap_control
-		if (isSupported("GLX_SGI_swap_control"))
-		{
-			glXSwapIntervalSGI = reinterpret_cast<PFNGLXSWAPINTERVALSGIPROC>(glXGetProcAddressARB(reinterpret_cast<const GLubyte*>("glXSwapIntervalSGI")));
-			if (nullptr == glXSwapIntervalSGI)
-			{
-				mGLX_SGI_swap_control = false;
-			}
-			else
-			{
-				mGLX_SGI_swap_control = true;
-			}
-		}
-		else
-		{
-			mGLX_SGI_swap_control = false;
-		}
-
-		// WGL_ARB_multisample
-		mWGL_ARB_multisample = isSupported("GLX_ARB_multisample");
-
-		// WGL_ATI_pixel_format_float
-		mWGL_ATI_pixel_format_float = isSupported("GLX_ATI_pixel_format_float");
-
-		// WGL_NV_float_buffer
-		mWGL_NV_float_buffer = isSupported("GLX_NV_float_buffer");
-
-
 		// Initialize the supported universal extensions
 		return initializeUniversal();
 	}
