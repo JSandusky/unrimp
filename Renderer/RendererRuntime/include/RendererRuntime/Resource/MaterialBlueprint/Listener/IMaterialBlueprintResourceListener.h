@@ -64,10 +64,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class PassBufferManager;			///< Is calling the private interface methods
-		friend class MaterialBlueprintResource;	///< Is calling the private interface methods
-		friend class MaterialBufferManager;		///< Is calling the private interface methods
-		friend class InstanceBufferManager;		///< Is calling the private interface methods
+		friend class PassBufferManager;			// Is calling the private interface methods
+		friend class MaterialBlueprintResource;	// Is calling the private interface methods
+		friend class MaterialBufferManager;		// Is calling the private interface methods
+		friend class InstanceBufferManager;		// Is calling the private interface methods
 
 
 	//[-------------------------------------------------------]

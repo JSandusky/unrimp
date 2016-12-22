@@ -69,7 +69,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class MaterialBufferManager;	///< Manages the slot instances
+		friend class MaterialBufferManager;	// Manages the slot instances
 
 
 	//[-------------------------------------------------------]

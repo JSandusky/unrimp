@@ -78,8 +78,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class PipelineStateCacheManager;	///< Is creating and using a program cache manager instance
-		friend class PipelineStateCompiler;		///< Is tightly interacting with the program cache manager
+		friend class PipelineStateCacheManager;	// Is creating and using a program cache manager instance
+		friend class PipelineStateCompiler;		// Is tightly interacting with the program cache manager
 
 
 	//[-------------------------------------------------------]

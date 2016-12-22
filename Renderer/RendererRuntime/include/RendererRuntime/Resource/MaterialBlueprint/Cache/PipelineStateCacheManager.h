@@ -110,7 +110,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class MaterialBlueprintResource;	///< Is creating and using a program cache manager instance
+		friend class MaterialBlueprintResource;	// Is creating and using a program cache manager instance
 
 
 	//[-------------------------------------------------------]

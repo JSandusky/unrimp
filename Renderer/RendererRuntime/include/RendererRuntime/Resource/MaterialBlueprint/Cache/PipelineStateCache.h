@@ -58,8 +58,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class PipelineStateCompiler;		///< Needs to be able to set "mPipelineStateObjectPtr"
-		friend class PipelineStateCacheManager;	///< Is creating and managing pipeline state cache instances
+		friend class PipelineStateCompiler;		// Needs to be able to set "mPipelineStateObjectPtr"
+		friend class PipelineStateCacheManager;	// Is creating and managing pipeline state cache instances
 
 
 	//[-------------------------------------------------------]

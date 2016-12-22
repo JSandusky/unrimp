@@ -90,7 +90,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
-		friend class PipelineStateCacheManager;	///< Only the pipeline state cache manager is allowed to commit compiler requests
+		friend class PipelineStateCacheManager;	// Only the pipeline state cache manager is allowed to commit compiler requests
 
 
 	//[-------------------------------------------------------]
