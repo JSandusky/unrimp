@@ -326,25 +326,21 @@ namespace OpenGLRenderer
 	void ProgramSeparate::setUniform1i(handle uniformHandle, int value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUniform1iARB(static_cast<GLint>(uniformHandle), value);
-			}
-			else
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
-				glUniform1iARB(static_cast<GLint>(uniformHandle), value);
+			// Backup the currently used OpenGL program pipeline
+			GLint openGLProgramPipelineBackup = 0;
+			glGetIntegerv(GL_PROGRAM_PIPELINE_BINDING, &openGLProgramPipelineBackup);
 
-				// Be polite and restore the previous used OpenGL program
-				glUseProgramObjectARB(openGLProgramBackup);
-			}
+			// Set uniform, please note that for this our program must be the currently used one
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
+			glUniform1iARB(static_cast<GLint>(uniformHandle), value);
+
+			// Be polite and restore the previous used OpenGL program pipeline
+			glBindProgramPipeline(static_cast<GLuint>(openGLProgramPipelineBackup));
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniform1iARB(static_cast<GLint>(uniformHandle), value);
 		#endif
 	}
@@ -352,25 +348,21 @@ namespace OpenGLRenderer
 	void ProgramSeparate::setUniform1f(handle uniformHandle, float value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUniform1fARB(static_cast<GLint>(uniformHandle), value);
-			}
-			else
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
-				glUniform1fARB(static_cast<GLint>(uniformHandle), value);
+			// Backup the currently used OpenGL program pipeline
+			GLint openGLProgramPipelineBackup = 0;
+			glGetIntegerv(GL_PROGRAM_PIPELINE_BINDING, &openGLProgramPipelineBackup);
 
-				// Be polite and restore the previous used OpenGL program
-				glUseProgramObjectARB(openGLProgramBackup);
-			}
+			// Set uniform, please note that for this our program must be the currently used one
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
+			glUniform1fARB(static_cast<GLint>(uniformHandle), value);
+
+			// Be polite and restore the previous used OpenGL program pipeline
+			glBindProgramPipeline(static_cast<GLuint>(openGLProgramPipelineBackup));
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniform1fARB(static_cast<GLint>(uniformHandle), value);
 		#endif
 	}
@@ -378,25 +370,21 @@ namespace OpenGLRenderer
 	void ProgramSeparate::setUniform2fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUniform2fvARB(static_cast<GLint>(uniformHandle), 1, value);
-			}
-			else
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
-				glUniform2fvARB(static_cast<GLint>(uniformHandle), 1, value);
+			// Backup the currently used OpenGL program pipeline
+			GLint openGLProgramPipelineBackup = 0;
+			glGetIntegerv(GL_PROGRAM_PIPELINE_BINDING, &openGLProgramPipelineBackup);
 
-				// Be polite and restore the previous used OpenGL program
-				glUseProgramObjectARB(openGLProgramBackup);
-			}
+			// Set uniform, please note that for this our program must be the currently used one
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
+			glUniform2fvARB(static_cast<GLint>(uniformHandle), 1, value);
+
+			// Be polite and restore the previous used OpenGL program pipeline
+			glBindProgramPipeline(static_cast<GLuint>(openGLProgramPipelineBackup));
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniform2fvARB(static_cast<GLint>(uniformHandle), 1, value);
 		#endif
 	}
@@ -404,25 +392,21 @@ namespace OpenGLRenderer
 	void ProgramSeparate::setUniform3fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUniform3fvARB(static_cast<GLint>(uniformHandle), 1, value);
-			}
-			else
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
-				glUniform3fvARB(static_cast<GLint>(uniformHandle), 1, value);
+			// Backup the currently used OpenGL program pipeline
+			GLint openGLProgramPipelineBackup = 0;
+			glGetIntegerv(GL_PROGRAM_PIPELINE_BINDING, &openGLProgramPipelineBackup);
 
-				// Be polite and restore the previous used OpenGL program
-				glUseProgramObjectARB(openGLProgramBackup);
-			}
+			// Set uniform, please note that for this our program must be the currently used one
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
+			glUniform3fvARB(static_cast<GLint>(uniformHandle), 1, value);
+
+			// Be polite and restore the previous used OpenGL program pipeline
+			glBindProgramPipeline(static_cast<GLuint>(openGLProgramPipelineBackup));
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniform3fvARB(static_cast<GLint>(uniformHandle), 1, value);
 		#endif
 	}
@@ -430,25 +414,21 @@ namespace OpenGLRenderer
 	void ProgramSeparate::setUniform4fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUniform4fvARB(static_cast<GLint>(uniformHandle), 1, value);
-			}
-			else
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
-				glUniform4fvARB(static_cast<GLint>(uniformHandle), 1, value);
+			// Backup the currently used OpenGL program pipeline
+			GLint openGLProgramPipelineBackup = 0;
+			glGetIntegerv(GL_PROGRAM_PIPELINE_BINDING, &openGLProgramPipelineBackup);
 
-				// Be polite and restore the previous used OpenGL program
-				glUseProgramObjectARB(openGLProgramBackup);
-			}
+			// Set uniform, please note that for this our program must be the currently used one
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
+			glUniform4fvARB(static_cast<GLint>(uniformHandle), 1, value);
+
+			// Be polite and restore the previous used OpenGL program pipeline
+			glBindProgramPipeline(static_cast<GLuint>(openGLProgramPipelineBackup));
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniform4fvARB(static_cast<GLint>(uniformHandle), 1, value);
 		#endif
 	}
@@ -456,25 +436,21 @@ namespace OpenGLRenderer
 	void ProgramSeparate::setUniformMatrix3fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUniformMatrix3fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
-			}
-			else
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
-				glUniformMatrix3fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+			// Backup the currently used OpenGL program pipeline
+			GLint openGLProgramPipelineBackup = 0;
+			glGetIntegerv(GL_PROGRAM_PIPELINE_BINDING, &openGLProgramPipelineBackup);
 
-				// Be polite and restore the previous used OpenGL program
-				glUseProgramObjectARB(openGLProgramBackup);
-			}
+			// Set uniform, please note that for this our program must be the currently used one
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
+			glUniformMatrix3fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+
+			// Be polite and restore the previous used OpenGL program pipeline
+			glBindProgramPipeline(static_cast<GLuint>(openGLProgramPipelineBackup));
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniformMatrix3fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 		#endif
 	}
@@ -482,25 +458,21 @@ namespace OpenGLRenderer
 	void ProgramSeparate::setUniformMatrix4fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUniformMatrix4fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
-			}
-			else
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
-				glUniformMatrix4fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+			// Backup the currently used OpenGL program pipeline
+			GLint openGLProgramPipelineBackup = 0;
+			glGetIntegerv(GL_PROGRAM_PIPELINE_BINDING, &openGLProgramPipelineBackup);
 
-				// Be polite and restore the previous used OpenGL program
-				glUseProgramObjectARB(openGLProgramBackup);
-			}
+			// Set uniform, please note that for this our program must be the currently used one
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
+			glUniformMatrix4fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+
+			// Be polite and restore the previous used OpenGL program pipeline
+			glBindProgramPipeline(static_cast<GLuint>(openGLProgramPipelineBackup));
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+			glActiveShaderProgram(mOpenGLProgramPipeline, mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniformMatrix4fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 		#endif
 	}
