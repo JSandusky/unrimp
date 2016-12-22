@@ -25,7 +25,6 @@
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
-#include "RendererRuntime/Resource/Detail/IResource.h"
 #include "RendererRuntime/Core/Platform/PlatformManager.h"
 
 // TODO(co) Can we do something about the warning which does not involve using "std::thread"-pointers?

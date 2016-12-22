@@ -33,6 +33,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline void IResourceManager::setResourceLoadingState(IResource& resource, IResource::LoadingState loadingState)
+	{
+		resource.setLoadingState(loadingState);
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

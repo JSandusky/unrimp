@@ -69,6 +69,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class ResourceStreamer;	// Is changing the resource loading state
+		friend class IResourceManager;	// Is changing the resource loading state
 
 
 	//[-------------------------------------------------------]

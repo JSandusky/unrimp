@@ -305,6 +305,7 @@ namespace RendererToolkit
 												if (renderTargetTextureAssetIds.find(assetId) != renderTargetTextureAssetIds.end())
 												{
 													static_cast<RendererRuntime::MaterialPropertyValue&>(materialProperty) = RendererRuntime::MaterialPropertyValue::fromTextureAssetId(assetId);
+													materialProperty.setOverwritten(true);
 												}
 											}
 										}

@@ -107,6 +107,7 @@
 		"99": "Texture/Sponza/sponza_roof_diff.asset",
 		"100": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
 		"101": "ShaderBlueprint/Compositor/FinalFragment.asset",
-		"102": "MaterialBlueprint/Compositor/Final.asset"
+		"102": "MaterialBlueprint/Compositor/Final.asset",
+		"103": "ShaderPiece/Compositor/Fxaa.asset"
 	}
 }

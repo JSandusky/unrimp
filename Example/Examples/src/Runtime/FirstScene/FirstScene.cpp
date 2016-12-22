@@ -52,7 +52,8 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
-		static const RendererRuntime::AssetId MaterialAssetId("Example/Material/Character/Imrod");
+		static const RendererRuntime::AssetId ImrodMaterialAssetId("Example/Material/Character/Imrod");
+		static const RendererRuntime::AssetId FinalMaterialAssetId("Example/MaterialBlueprint/Compositor/Final");
 
 
 //[-------------------------------------------------------]
@@ -80,6 +81,7 @@ FirstScene::FirstScene(const char *rendererName) :
 	mSunLightColor{1.0f, 1.0f, 1.0f},
 	mWetness(1.0f),
 	mPerformLighting(true),
+	mPerformFxaa(false),
 	mUseDiffuseMap(true),
 	mUseEmissiveMap(true),
 	mUseNormalMap(true),
@@ -115,7 +117,7 @@ void FirstScene::onInitialization()
 		mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId("Example/Scene/Default/FirstScene", this);
 
 		// Load the material resource we're going to clone
-		mMaterialResourceId = rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::MaterialAssetId, this);
+		mMaterialResourceId = rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::ImrodMaterialAssetId, this);
 	}
 
 	{ // Startup the VR-manager
@@ -251,7 +253,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 			mSceneNode = nullptr;
 		}
 	}
-	else if (RendererRuntime::IResource::LoadingState::LOADED == loadingState && resource.getAssetId() == ::detail::MaterialAssetId)
+	else if (RendererRuntime::IResource::LoadingState::LOADED == loadingState && resource.getAssetId() == ::detail::ImrodMaterialAssetId)
 	{
 		// Create our material resource clone
 		RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
@@ -284,6 +286,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 
 			// Material properties
 			ImGui::Checkbox("Perform Lighting", &mPerformLighting);
+			ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
 			ImGui::Checkbox("Use Diffuse Map", &mUseDiffuseMap);
 			ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
 			ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
@@ -298,12 +301,24 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 			RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 			if (nullptr != rendererRuntime)
 			{
-				const RendererRuntime::MaterialResources& materialResources = rendererRuntime->getMaterialResourceManager().getMaterialResources();
+				const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
+				const RendererRuntime::MaterialResources& materialResources = materialResourceManager.getMaterialResources();
+
+				// Imrod material
 				RendererRuntime::MaterialResource* materialResource = materialResources.tryGetElementById(mMaterialResourceId);
 				if (nullptr != materialResource)
 				{
 					materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
 				}
+
+				// Final compositor material
+				materialResource = materialResources.tryGetElementById(materialResourceManager.getMaterialResourceIdByAssetId(::detail::FinalMaterialAssetId));
+				if (nullptr != materialResource)
+				{
+					materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
+				}
+
+				// Imrod material clone
 				materialResource = materialResources.tryGetElementById(mCloneMaterialResourceId);
 				if (nullptr != materialResource)
 				{

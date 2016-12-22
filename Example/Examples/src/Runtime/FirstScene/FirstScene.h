@@ -140,6 +140,7 @@ private:
 	float mSunLightColor[3];
 	float mWetness;
 	bool  mPerformLighting;
+	bool  mPerformFxaa;
 	bool  mUseDiffuseMap;
 	bool  mUseEmissiveMap;
 	bool  mUseNormalMap;

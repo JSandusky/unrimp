@@ -89,6 +89,11 @@ namespace RendererRuntime
 		return mOverwritten;
 	}
 
+	inline void MaterialProperty::setOverwritten(bool overwritten)
+	{
+		mOverwritten = overwritten;
+	}
+
 	inline bool MaterialProperty::isReferenceUsage() const
 	{
 		return isReferenceUsage(mUsage);

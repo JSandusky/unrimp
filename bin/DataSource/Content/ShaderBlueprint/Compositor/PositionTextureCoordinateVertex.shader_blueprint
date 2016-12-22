@@ -52,7 +52,7 @@ MAIN_BEGIN
 
 	// Pass through the texture coordinates
 	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(PositionTexCoord.zw);
-	@property(GLSL && !IsFinalCopy)
+	@property(GLSL && IsFinalCopy)
 		MAIN_OUTPUT(TexCoordVS).y = -MAIN_OUTPUT(TexCoordVS).y;
 	@end
 MAIN_END

@@ -111,6 +111,7 @@ namespace RendererRuntime
 		meshResource.setAssetId(assetId);
 
 		// Done
+		setResourceLoadingState(meshResource, IResource::LoadingState::LOADED);
 		return meshResource.getId();
 	}
 

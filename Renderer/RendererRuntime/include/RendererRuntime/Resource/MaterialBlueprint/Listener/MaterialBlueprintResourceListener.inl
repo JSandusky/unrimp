@@ -30,6 +30,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline MaterialBlueprintResourceListener::MaterialBlueprintResourceListener() :
 		mPassData(nullptr),
+		mRenderTargetWidth(1),
+		mRenderTargetHeight(1),
 		mObjectSpaceToWorldSpaceTransform(nullptr),
 		mMaterialTechnique(nullptr)
 	{

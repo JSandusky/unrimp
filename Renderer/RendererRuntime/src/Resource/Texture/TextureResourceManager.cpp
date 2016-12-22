@@ -64,6 +64,7 @@ namespace RendererRuntime
 		return textureResource;
 	}
 
+	// TODO(co) Work-in-progress
 	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
@@ -132,6 +133,7 @@ namespace RendererRuntime
 		textureResource.mTexture = &texture;
 
 		// Done
+		setResourceLoadingState(textureResource, IResource::LoadingState::LOADED);
 		return textureResource.getId();
 	}
 

@@ -145,7 +145,7 @@ namespace RendererRuntime
 		{
 			// Get or create material resource
 			const AssetId materialBlueprintAssetId = compositorResourcePassQuad.getMaterialBlueprintAssetId();
-			mMaterialResourceId = materialResourceManager.getMaterialResourceByAssetId(materialBlueprintAssetId);
+			mMaterialResourceId = materialResourceManager.getMaterialResourceIdByAssetId(materialBlueprintAssetId);
 			if (isUninitialized(mMaterialResourceId))
 			{
 				mMaterialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialBlueprintAssetId, materialBlueprintAssetId);
@@ -160,7 +160,10 @@ namespace RendererRuntime
 				MaterialResource& materialResource = materialResourceManager.getMaterialResources().getElementById(mMaterialResourceId);
 				for (const MaterialProperty& materialProperty : sortedPropertyVector)
 				{
-					materialResource.setPropertyById(materialProperty.getMaterialPropertyId(), materialProperty);
+					if (materialProperty.isOverwritten())
+					{
+						materialResource.setPropertyById(materialProperty.getMaterialPropertyId(), materialProperty);
+					}
 				}
 			}
 		}

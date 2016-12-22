@@ -169,6 +169,18 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Set whether or not this is an overwritten property
+		*
+		*  @param[in] overwritten
+		*    "true" if this is an overwritten property, else "false"
+		*
+		*  @note
+		*    - Usually you might not want to manually change the overwritten state
+		*/
+		inline void setOverwritten(bool overwritten);
+
+		/**
+		*  @brief
 		*    Return whether or not the material blueprint property is a reference to something else
 		*
 		*  @return

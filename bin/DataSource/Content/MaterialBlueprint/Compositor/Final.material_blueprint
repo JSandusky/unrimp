@@ -10,10 +10,19 @@
 		{
 			"IsFinalCopy":
 			{
-				"Usage": "STATIC",
+				"Usage": "SHADER_COMBINATION",
 				"ValueType": "BOOLEAN",
 				"Value": "TRUE",
-				"Description": "Is this the final copy step writing into the operation system window?"
+				"Description": "Is this the final copy step writing into the operation system window?",
+				"VisualImportance": "MANDATORY"
+			},
+			"Fxaa":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Enable Fast Approximate Anti-Aliasing (FXAA)?",
+				"VisualImportance": "100"
 			},
 			"ColorMap":
 			{
@@ -34,13 +43,27 @@
 					{
 						"0":
 						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "PassUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "ALL"
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
 							"RangeType": "SAMPLER",
 							"BaseShaderRegister": "0"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
 				},
-				"1":
+				"2":
 				{
 					"ParameterType": "DESCRIPTOR_TABLE",
 					"DescriptorRanges":
@@ -50,7 +73,7 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "ColorMap",
-							"SamplerRootParameterIndex": "0"
+							"SamplerRootParameterIndex": "1"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -72,6 +95,24 @@
 		},
 		"Resources":
 		{
+			"UniformBuffers":
+			{
+				"PassUniformBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"InverseViewportSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@INVERSE_VIEWPORT_SIZE"
+						}
+					}
+				}
+			},
 			"SamplerStates":
 			{
 				"SamplerLinear":

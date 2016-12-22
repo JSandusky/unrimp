@@ -21,13 +21,28 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-@includepiece(15)	// "Core.shader_piece"
+@includepiece(15)		// "Core.shader_piece"
+@property(Fxaa)
+	@includepiece(103)	// "Fxaa.shader_piece"
+@end
 
 
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
 @insertpiece(SetCrossPlatformSettings)
+@property(Fxaa)
+	#define FXAA_PC				 1
+	@property(HLSL)
+		#define FXAA_HLSL_5		 1
+	@end
+	@property(GLSL)
+		#define FXAA_GLSL_130	 1
+	@end
+	#define FXAA_QUALITY__PRESET 39
+	#define FXAA_GREEN_AS_LUMA	 1
+	@insertpiece(FxaaFunction)
+@end
 
 
 //[-------------------------------------------------------]
@@ -41,6 +56,15 @@ OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
 OUTPUT_END
 
+// Uniform buffers
+struct PassDataStruct
+{
+	float2 InverseViewportSize;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
+
 // Samplers
 SAMPLER_STATE(SamplerLinear, 0)
 
@@ -52,6 +76,45 @@ TEXTURE_2D(ColorMap, 0)
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
+	float4 color = float4(0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Fast Approximate Anti-Aliasing (FXAA)
+	@property(Fxaa)
+		// Shader language dependent texture handling
+		@property(HLSL)
+			FxaaTex fxaaTex;
+			fxaaTex.smpl = SamplerLinear;
+			fxaaTex.tex = ColorMap;
+		@end
+		@property(GLSL)
+			#define fxaaTex ColorMap
+		@end
+
+		// Set values to calculate the amount of anti aliasing applied
+		color = FxaaPixelShader(
+			MAIN_INPUT(TexCoordVS),				// pos
+			float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsolePosPos (?)
+			fxaaTex,							// tex
+			fxaaTex,							// fxaaConsole360TexExpBiasNegOne
+			fxaaTex,							// fxaaConsole360TexExpBiasNegTwo
+			float2(PassData.InverseViewportSize.x, PassData.InverseViewportSize.y),	// fxaaQualityRcpFrame
+			float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsoleRcpFrameOpt
+			float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsoleRcpFrameOpt2
+			float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsole360RcpFrameOpt2
+			0.75f,								// fxaaQualitySubpix
+			0.166f,								// fxaaQualityEdgeThreshold
+			0.0833f,							// fxaaQualityEdgeThresholdMin
+			0.0f,								// fxaaConsoleEdgeSharpness
+			0.0f,								// fxaaConsoleEdgeThreshold
+			0.0f,								// fxaaConsoleEdgeThresholdMin
+			float4(0.0f, 0.0f, 0.0f, 0.0f)		// fxaaConsole360ConstDir
+		);
+		color.w = 1.0f;
+	@end
+	@property(!Fxaa)
+		color = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).rgba;
+	@end
+
 	// Done
-	MAIN_OUTPUT_COLOR(0) = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).rgba;
+	MAIN_OUTPUT_COLOR(0) = SATURATE(color);
 MAIN_END

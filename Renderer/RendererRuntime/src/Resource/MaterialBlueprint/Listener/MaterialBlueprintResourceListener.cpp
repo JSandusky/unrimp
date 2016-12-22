@@ -53,8 +53,13 @@ namespace
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		#define DEFINE_CONSTANT(name) static const RendererRuntime::StringId name(#name);
+			// Pass
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
+			DEFINE_CONSTANT(VIEW_SPACE_SUN_LIGHT_DIRECTION)
+			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
+
+			// Instance
 			DEFINE_CONSTANT(INSTANCE_INDICES)
 			DEFINE_CONSTANT(WORLD_POSITION_MATERIAL_INDEX)
 		#undef DEFINE_CONSTANT
@@ -82,17 +87,13 @@ namespace RendererRuntime
 		// Remember the pass data memory address of the current scope
 		mPassData = &passData;
 
-		// Get the aspect ratio
-		float aspectRatio = 4.0f / 3.0f;
-		{
-			// Get the render target with and height
-			uint32_t width  = 1;
-			uint32_t height = 1;
-			renderTarget.getWidthAndHeight(width, height);
+		// Get the render target with and height
+		renderTarget.getWidthAndHeight(mRenderTargetWidth, mRenderTargetHeight);
+		assert(0 != mRenderTargetWidth);
+		assert(0 != mRenderTargetHeight);
 
-			// Get the aspect ratio
-			aspectRatio = static_cast<float>(width) / height;
-		}
+		// Get the aspect ratio
+		const float aspectRatio = static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight;
 
 		// TODO(co) Use dynamic values
 		float fovY = 45.0f;
@@ -135,13 +136,21 @@ namespace RendererRuntime
 		{
 			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix), numberOfBytes);
 		}
-
-		// TODO(co) This is just a test, remove later on
-		else if (StringId("VIEW_SPACE_SUN_LIGHT_DIRECTION") == referenceValue)
+		else if (::detail::VIEW_SPACE_SUN_LIGHT_DIRECTION == referenceValue)
 		{
-			glm::vec3 viewSpaceLightDirection(0.5f, 0.5f, 1.0f);
+			glm::vec3 viewSpaceLightDirection(0.5f, 0.5f, 1.0f);	// TODO(co) This is just a test, needs to be filled from the outside
 			viewSpaceLightDirection = glm::normalize(viewSpaceLightDirection);
 			memcpy(buffer, glm::value_ptr(viewSpaceLightDirection), numberOfBytes);
+		}
+		else if (::detail::INVERSE_VIEWPORT_SIZE == referenceValue)
+		{
+			assert(sizeof(float) * 2 == numberOfBytes);
+			float* floatBuffer = reinterpret_cast<float*>(buffer);
+
+			// 0 = Inverse viewport width
+			// 1 = Inverse viewport height
+			floatBuffer[0] = 1.0f / static_cast<float>(mRenderTargetWidth);
+			floatBuffer[1] = 1.0f / static_cast<float>(mRenderTargetHeight);
 		}
 		else
 		{

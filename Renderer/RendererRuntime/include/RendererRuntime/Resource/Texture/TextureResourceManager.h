@@ -75,7 +75,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline const TextureResources& getTextureResources() const;
-		TextureResource* getTextureResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
+		RENDERERRUNTIME_API_EXPORT TextureResource* getTextureResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
 		RENDERERRUNTIME_API_EXPORT TextureResourceId loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 		RENDERERRUNTIME_API_EXPORT TextureResourceId createTextureResourceByAssetId(AssetId assetId, Renderer::ITexture& texture);	// Texture resource is not allowed to exist, yet
 

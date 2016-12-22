@@ -29,17 +29,9 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
+#include "RendererRuntime/Resource/Detail/IResource.h"
 
 #include <vector>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class IResource;
-}
 
 
 //[-------------------------------------------------------]
@@ -95,6 +87,7 @@ namespace RendererRuntime
 		IResourceManager(const IResourceManager&) = delete;
 		IResourceManager& operator=(const IResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
+		inline void setResourceLoadingState(IResource& resource, IResource::LoadingState loadingState);
 
 
 	//[-------------------------------------------------------]

@@ -101,6 +101,8 @@ namespace RendererRuntime
 	private:
 		// Pass
 		PassBufferManager::PassData* mPassData;	///< Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be a null pointer outside the correct scope, don't destroy the memory
+		uint32_t					 mRenderTargetWidth;
+		uint32_t					 mRenderTargetHeight;
 
 		// Instance
 		const Transform*   mObjectSpaceToWorldSpaceTransform;
