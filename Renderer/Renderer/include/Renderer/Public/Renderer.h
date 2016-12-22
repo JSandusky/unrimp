@@ -2834,12 +2834,12 @@ namespace Renderer
 				inline SetDebugMarker(const wchar_t* _name)
 				{
 					#ifndef RENDERER_NO_DEBUG
-						assert(wcslen(_name) < 64);
+						assert(wcslen(_name) < 128);
 					#endif
-					wcsncpy(name, _name, 64);
-					name[63] = '\0';
+					wcsncpy(name, _name, 128);
+					name[127] = '\0';
 				};
-				wchar_t name[64];
+				wchar_t name[128];
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetDebugMarker;
 			};
 			struct BeginDebugEvent
@@ -2851,12 +2851,12 @@ namespace Renderer
 				inline BeginDebugEvent(const wchar_t* _name)
 				{
 					#ifndef RENDERER_NO_DEBUG
-						assert(wcslen(_name) < 64);
+						assert(wcslen(_name) < 128);
 					#endif
-					wcsncpy(name, _name, 64);
-					name[63] = '\0';
+					wcsncpy(name, _name, 128);
+					name[127] = '\0';
 				};
-				wchar_t name[64];
+				wchar_t name[128];
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::BeginDebugEvent;
 			};
 			struct EndDebugEvent

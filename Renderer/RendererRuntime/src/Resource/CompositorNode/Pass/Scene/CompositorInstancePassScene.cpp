@@ -48,6 +48,10 @@ namespace RendererRuntime
 
 	void CompositorInstancePassScene::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer)
 	{
+		// Begin debug event
+		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+
+		// Fill command buffer
 		assert(nullptr != mRenderQueueIndexRange);
 		for (const RenderableManager* renderableManager : mRenderQueueIndexRange->renderableManagers)
 		{
@@ -57,6 +61,9 @@ namespace RendererRuntime
 			mRenderQueue.addRenderablesFromRenderableManager(*renderableManager);
 		}
 		mRenderQueue.fillCommandBuffer(renderTarget, commandBuffer);
+
+		// End debug event
+		COMMAND_END_DEBUG_EVENT(commandBuffer)
 	}
 
 

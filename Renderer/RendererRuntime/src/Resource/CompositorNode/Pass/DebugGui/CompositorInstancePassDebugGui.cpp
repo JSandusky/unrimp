@@ -42,7 +42,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorInstancePassDebugGui::onFillCommandBuffer(const Renderer::IRenderTarget&, Renderer::CommandBuffer& commandBuffer)
 	{
+		// Begin debug event
+		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+
+		// Fill command buffer
 		getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getDebugGuiManager().fillCommandBuffer(commandBuffer);
+
+		// End debug event
+		COMMAND_END_DEBUG_EVENT(commandBuffer)
 	}
 
 

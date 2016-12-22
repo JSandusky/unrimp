@@ -900,12 +900,12 @@ namespace Renderer
 			// Constructor
 			inline SetDebugMarker(const wchar_t* _name)
 			{
-				assert(wcslen(_name) < 64);
-				wcsncpy(name, _name, 64);
-				name[63] = '\0';
+				assert(wcslen(_name) < 128);
+				wcsncpy(name, _name, 128);
+				name[127] = '\0';
 			};
 			// Data
-			wchar_t name[64];
+			wchar_t name[128];
 			// Static data
 			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetDebugMarker;
 		};
@@ -930,12 +930,12 @@ namespace Renderer
 			// Constructor
 			inline BeginDebugEvent(const wchar_t* _name)
 			{
-				assert(wcslen(_name) < 64);
-				wcsncpy(name, _name, 64);
-				name[63] = '\0';
+				assert(wcslen(_name) < 128);
+				wcsncpy(name, _name, 128);
+				name[127] = '\0';
 			};
 			// Data
-			wchar_t name[64];
+			wchar_t name[128];
 			// Static data
 			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::BeginDebugEvent;
 		};

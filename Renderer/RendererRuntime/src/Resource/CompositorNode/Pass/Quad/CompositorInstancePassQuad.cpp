@@ -116,8 +116,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorInstancePassQuad::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer)
 	{
+		// Begin debug event
+		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+
+		// Fill command buffer
 		mRenderQueue.addRenderablesFromRenderableManager(::detail::RenderableManager);
 		mRenderQueue.fillCommandBuffer(renderTarget, commandBuffer);
+
+		// End debug event
+		COMMAND_END_DEBUG_EVENT(commandBuffer)
 	}
 
 

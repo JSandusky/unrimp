@@ -40,9 +40,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorInstancePassClear::onFillCommandBuffer(const Renderer::IRenderTarget&, Renderer::CommandBuffer& commandBuffer)
 	{
+		// Begin debug event
+		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+
 		// Clear the color buffer of the current render target, do also clear the depth buffer
 		const CompositorResourcePassClear& compositorResourcePassClear = static_cast<const CompositorResourcePassClear&>(getCompositorResourcePass());
 		Renderer::Command::Clear::create(commandBuffer, compositorResourcePassClear.getFlags(), glm::value_ptr(compositorResourcePassClear.getClearColor()), compositorResourcePassClear.getZ(), compositorResourcePassClear.getStencil());
+
+		// End debug event
+		COMMAND_END_DEBUG_EVENT(commandBuffer)
 	}
 
 
