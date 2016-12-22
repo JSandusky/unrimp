@@ -21,10 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-@includepiece(15)		// "Core.shader_piece"
-@property(Fxaa)
-	@includepiece(103)	// "Fxaa.shader_piece"
-@end
+@includepiece(15)	// "Core.shader_piece"
+@includepiece(103)	// "Fxaa.shader_piece"
 
 
 //[-------------------------------------------------------]

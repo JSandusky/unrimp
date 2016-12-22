@@ -87,6 +87,10 @@
 				"VertexShaderBlueprintAssetId": "100",
 				"FragmentShaderBlueprintAssetId": "101"
 			},
+			"RasterizerState":
+			{
+				"CullMode": "NONE"
+			},
 			"DepthStencilState":
 			{
 				"DepthEnable": "FALSE",
@@ -118,8 +122,6 @@
 				"SamplerLinear":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"AddressU": "WRAP",
-					"AddressV": "WRAP",
 					"MaxLOD": "0.0"
 				}
 			},
