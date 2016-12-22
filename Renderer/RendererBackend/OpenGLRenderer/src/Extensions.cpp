@@ -322,7 +322,6 @@ namespace OpenGLRenderer
 		// One thing about OpenGL versions and extensions: In case we're using a certain OpenGL core profile, graphics driver implementations might
 		// decide to not list OpenGL extensions which are a part of this OpenGL core profile. Such a behavior was first noted using Linux Mesa 3D.
 		// When not taking this into account, horrible things will happen.
-		// TODO(co) "OpenGLRenderer::Extensions::initializeUniversal()": Check which extensions have to be checked with the core profile as well
 		GLint profile = 0;
 		glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
 		const bool isCoreProfile = (profile & GL_CONTEXT_CORE_PROFILE_BIT);
@@ -333,7 +332,7 @@ namespace OpenGLRenderer
 		//[-------------------------------------------------------]
 
 		// GL_EXT_texture_lod_bias
-		mGL_EXT_texture_lod_bias = isSupported("GL_EXT_texture_lod_bias");
+		mGL_EXT_texture_lod_bias = isCoreProfile ? true : isSupported("GL_EXT_texture_lod_bias");	// Is core feature since OpenGL 1.4
 
 		// GL_EXT_texture_filter_anisotropic
 		mGL_EXT_texture_filter_anisotropic = isSupported("GL_EXT_texture_filter_anisotropic");
@@ -342,7 +341,7 @@ namespace OpenGLRenderer
 		mGL_EXT_texture_array = isSupported("GL_EXT_texture_array");
 
 		// GL_EXT_texture3D
-		mGL_EXT_texture3D = isCoreProfile ? true : isSupported("GL_EXT_texture3D");
+		mGL_EXT_texture3D = isCoreProfile ? true : isSupported("GL_EXT_texture3D");	// Is core feature since OpenGL 1.2
 		if (mGL_EXT_texture3D)
 		{
 			// Load the entry points
@@ -407,7 +406,7 @@ namespace OpenGLRenderer
 		}
 
 		// GL_ARB_multitexture
-		mGL_ARB_multitexture = isSupported("GL_ARB_multitexture");
+		mGL_ARB_multitexture = isCoreProfile ? true : isSupported("GL_ARB_multitexture");	// Is core feature since OpenGL 1.3
 		if (mGL_ARB_multitexture)
 		{
 			// Load the entry points
@@ -417,7 +416,7 @@ namespace OpenGLRenderer
 		}
 
 		// GL_ARB_vertex_buffer_object
-		mGL_ARB_vertex_buffer_object = isCoreProfile ? true : isSupported("GL_ARB_vertex_buffer_object");
+		mGL_ARB_vertex_buffer_object = isCoreProfile ? true : isSupported("GL_ARB_vertex_buffer_object");	// Is core feature since OpenGL 1.5
 		if (mGL_ARB_vertex_buffer_object)
 		{
 			// Load the entry points
@@ -433,7 +432,7 @@ namespace OpenGLRenderer
 		}
 
 		// GL_ARB_texture_compression
-		mGL_ARB_texture_compression = isCoreProfile ? true : isSupported("GL_ARB_texture_compression");
+		mGL_ARB_texture_compression = isCoreProfile ? true : isSupported("GL_ARB_texture_compression");	// Is core since OpenGL 1.3
 		if (mGL_ARB_texture_compression)
 		{
 			// Load the entry points
@@ -596,6 +595,8 @@ namespace OpenGLRenderer
 		mGL_ARB_fragment_shader = isSupported("GL_ARB_fragment_shader");
 
 		// GL_ARB_geometry_shader4
+		// TODO(sw) This extension was promoted to core feature but heavily modified source: https://www.khronos.org/opengl/wiki/History_of_OpenGL#OpenGL_3.2_.282009.29
+		// TODO(sw) But this extension doesn't show up with mesa 3D either with an old OpenGL context (max OpenGL 3.3) or with an profile context (with OpenGL 4.3)
 		mGL_ARB_geometry_shader4 = isSupported("GL_ARB_geometry_shader4");
 		if (mGL_ARB_geometry_shader4)
 		{
