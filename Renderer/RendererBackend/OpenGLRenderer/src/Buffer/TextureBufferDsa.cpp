@@ -62,7 +62,7 @@ namespace OpenGLRenderer
 
 			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous bound OpenGL texture
-				glBindTexture(GL_TEXTURE_BUFFER_ARB, openGLTextureBackup);
+				glBindTexture(GL_TEXTURE_BUFFER_ARB, static_cast<GLuint>(openGLTextureBackup));
 			#endif
 		}
 	}

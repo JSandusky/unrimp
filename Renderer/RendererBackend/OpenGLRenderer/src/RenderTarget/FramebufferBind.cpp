@@ -161,7 +161,7 @@ namespace OpenGLRenderer
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL framebuffer
-			glBindFramebuffer(GL_FRAMEBUFFER, openGLFramebufferBackup);
+			glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLFramebufferBackup));
 		#endif
 	}
 

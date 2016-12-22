@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL uniform buffer
-			glBindBufferARB(GL_UNIFORM_BUFFER, openGLUniformBufferBackup);
+			glBindBufferARB(GL_UNIFORM_BUFFER, static_cast<GLuint>(openGLUniformBufferBackup));
 		#endif
 	}
 
@@ -82,7 +82,7 @@ namespace OpenGLRenderer
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL uniform buffer
-			glBindBufferARB(GL_UNIFORM_BUFFER, openGLUniformBufferBackup);
+			glBindBufferARB(GL_UNIFORM_BUFFER, static_cast<GLuint>(openGLUniformBufferBackup));
 		#endif
 	}
 

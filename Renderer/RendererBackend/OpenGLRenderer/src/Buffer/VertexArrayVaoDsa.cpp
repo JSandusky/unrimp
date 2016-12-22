@@ -85,7 +85,7 @@ namespace OpenGLRenderer
 
 			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous bound OpenGL vertex array
-				glBindVertexArray(openGLVertexArrayBackup);
+				glBindVertexArray(static_cast<GLuint>(openGLVertexArrayBackup));
 			#endif
 			}
 
@@ -118,10 +118,10 @@ namespace OpenGLRenderer
 
 			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous bound OpenGL vertex array
-				glBindVertexArray(openGLVertexArrayBackup);
+				glBindVertexArray(static_cast<GLuint>(openGLVertexArrayBackup));
 
 				// Be polite and restore the previous bound OpenGL element array buffer
-				glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, openGLElementArrayBufferBackup);
+				glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLElementArrayBufferBackup));
 			#endif
 		}
 	}

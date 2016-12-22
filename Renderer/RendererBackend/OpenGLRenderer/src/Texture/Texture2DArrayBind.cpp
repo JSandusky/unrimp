@@ -75,7 +75,7 @@ namespace OpenGLRenderer
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL texture
-			glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, openGLTextureBackup);
+			glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<GLuint>(openGLTextureBackup));
 
 			// Restore previous alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, openGLAlignmentBackup);

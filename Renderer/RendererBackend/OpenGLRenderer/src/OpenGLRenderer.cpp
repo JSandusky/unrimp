@@ -605,7 +605,7 @@ namespace OpenGLRenderer
 
 								#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 									// Be polite and restore the previous active OpenGL texture
-									glActiveTextureARB(openGLActiveTextureBackup);
+									glActiveTextureARB(static_cast<GLenum>(openGLActiveTextureBackup));
 								#endif
 							}
 						}
@@ -690,7 +690,7 @@ namespace OpenGLRenderer
 
 							#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 								// Be polite and restore the previous active OpenGL texture
-								glActiveTextureARB(openGLActiveTextureBackup);
+								glActiveTextureARB(static_cast<GLenum>(openGLActiveTextureBackup));
 							#endif
 						}
 					}
@@ -1543,7 +1543,7 @@ namespace OpenGLRenderer
 
 					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 						// Be polite and restore the previous bound OpenGL array element buffer
-						glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, openGLArrayElementBufferBackup);
+						glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLArrayElementBufferBackup));
 					#endif
 				}
 
@@ -1583,7 +1583,7 @@ namespace OpenGLRenderer
 
 					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 						// Be polite and restore the previous bound OpenGL array buffer
-						glBindBufferARB(GL_ARRAY_BUFFER_ARB, openGLArrayBufferBackup);
+						glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLArrayBufferBackup));
 					#endif
 				}
 
@@ -1718,7 +1718,7 @@ namespace OpenGLRenderer
 
 					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 						// Be polite and restore the previous bound OpenGL array element buffer
-						glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, openGLArrayElementBufferBackup);
+						glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLArrayElementBufferBackup));
 					#endif
 				}
 				break;
@@ -1750,7 +1750,7 @@ namespace OpenGLRenderer
 
 					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 						// Be polite and restore the previous bound OpenGL array buffer
-						glBindBufferARB(GL_ARRAY_BUFFER_ARB, openGLArrayBufferBackup);
+						glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLArrayBufferBackup));
 					#endif
 				}
 				break;

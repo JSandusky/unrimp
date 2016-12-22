@@ -172,7 +172,7 @@ namespace OpenGLRenderer
 									// Backup the currently used OpenGL program
 									GLint openGLProgramBackup = 0;
 									glGetIntegerv(GL_CURRENT_PROGRAM, &openGLProgramBackup);
-									if (openGLProgramBackup == mOpenGLProgram)
+									if (static_cast<GLuint>(openGLProgramBackup) == mOpenGLProgram)
 									{
 										// Set uniform, please note that for this our program must be the currently used one
 										glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
@@ -184,7 +184,7 @@ namespace OpenGLRenderer
 										glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
 
 										// Be polite and restore the previous used OpenGL program
-										glUseProgramObjectARB(openGLProgramBackup);
+										glUseProgramObjectARB(static_cast<GLhandleARB>(openGLProgramBackup));
 									}
 								#else
 									// Set uniform, please note that for this our program must be the currently used one
@@ -242,7 +242,7 @@ namespace OpenGLRenderer
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
+			const GLhandleARB openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 			if (openGLProgramBackup == mOpenGLProgram)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
@@ -268,7 +268,7 @@ namespace OpenGLRenderer
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
+			const GLhandleARB openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 			if (openGLProgramBackup == mOpenGLProgram)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
@@ -294,7 +294,7 @@ namespace OpenGLRenderer
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
+			const GLhandleARB openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 			if (openGLProgramBackup == mOpenGLProgram)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
@@ -320,7 +320,7 @@ namespace OpenGLRenderer
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
+			const GLhandleARB openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 			if (openGLProgramBackup == mOpenGLProgram)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
@@ -346,7 +346,7 @@ namespace OpenGLRenderer
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
+			const GLhandleARB openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 			if (openGLProgramBackup == mOpenGLProgram)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
@@ -372,7 +372,7 @@ namespace OpenGLRenderer
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
+			const GLhandleARB openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 			if (openGLProgramBackup == mOpenGLProgram)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
@@ -398,7 +398,7 @@ namespace OpenGLRenderer
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
+			const GLhandleARB openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
 			if (openGLProgramBackup == mOpenGLProgram)
 			{
 				// Set uniform, please note that for this our program must be the currently used one

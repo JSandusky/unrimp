@@ -52,7 +52,7 @@ namespace OpenGLRenderer
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL indirect buffer
-			glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, openGLIndirectBufferBackup);
+			glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<GLuint>(openGLIndirectBufferBackup));
 		#endif
 	}
 
@@ -79,7 +79,7 @@ namespace OpenGLRenderer
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL indirect buffer
-			glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, openGLIndirectBufferBackup);
+			glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<GLuint>(openGLIndirectBufferBackup));
 		#endif
 	}
 

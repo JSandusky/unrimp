@@ -133,7 +133,7 @@ namespace OpenGLRenderer
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL array buffer
-			glBindBufferARB(GL_ARRAY_BUFFER_ARB, openGLArrayBufferBackup);
+			glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLArrayBufferBackup));
 		#endif
 
 		// Get the used index buffer
