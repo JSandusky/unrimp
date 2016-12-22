@@ -170,8 +170,8 @@ namespace Direct3D12Renderer
 		}
 
 		// Release the root signature and program reference
-		mRootSignature->release();
-		mProgram->release();
+		mRootSignature->releaseReference();
+		mProgram->releaseReference();
 	}
 
 

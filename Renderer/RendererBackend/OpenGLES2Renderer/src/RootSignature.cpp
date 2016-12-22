@@ -142,7 +142,7 @@ namespace OpenGLES2Renderer
 				SamplerState* samplerState = mSamplerStates[i];
 				if (nullptr != samplerState)
 				{
-					samplerState->release();
+					samplerState->releaseReference();
 				}
 			}
 			delete [] mSamplerStates;
@@ -180,7 +180,7 @@ namespace OpenGLES2Renderer
 		{
 			if (nullptr != *samplerStateSlot)
 			{
-				(*samplerStateSlot)->release();
+				(*samplerStateSlot)->releaseReference();
 			}
 			(*samplerStateSlot) = samplerState;
 			if (nullptr != *samplerStateSlot)

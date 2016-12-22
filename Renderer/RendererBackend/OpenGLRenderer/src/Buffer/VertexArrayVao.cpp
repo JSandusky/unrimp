@@ -51,7 +51,7 @@ namespace OpenGLRenderer
 			VertexBuffer **vertexBuffersEnd = mVertexBuffers + mNumberOfVertexBuffers;
 			for (VertexBuffer **vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
 			{
-				(*vertexBuffer)->release();
+				(*vertexBuffer)->releaseReference();
 			}
 
 			// Cleanup

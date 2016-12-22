@@ -229,17 +229,17 @@ namespace Direct3D10Renderer
 		if (nullptr != vertexShader)
 		{
 			vertexShader->addReference();
-			vertexShader->release();
+			vertexShader->releaseReference();
 		}
 		if (nullptr != geometryShader)
 		{
 			geometryShader->addReference();
-			geometryShader->release();
+			geometryShader->releaseReference();
 		}
 		if (nullptr != fragmentShader)
 		{
 			fragmentShader->addReference();
-			fragmentShader->release();
+			fragmentShader->releaseReference();
 		}
 
 		// Error!

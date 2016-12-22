@@ -243,27 +243,27 @@ namespace Direct3D12Renderer
 		if (nullptr != vertexShader)
 		{
 			vertexShader->addReference();
-			vertexShader->release();
+			vertexShader->releaseReference();
 		}
 		if (nullptr != tessellationControlShader)
 		{
 			tessellationControlShader->addReference();
-			tessellationControlShader->release();
+			tessellationControlShader->releaseReference();
 		}
 		if (nullptr != tessellationEvaluationShader)
 		{
 			tessellationEvaluationShader->addReference();
-			tessellationEvaluationShader->release();
+			tessellationEvaluationShader->releaseReference();
 		}
 		if (nullptr != geometryShader)
 		{
 			geometryShader->addReference();
-			geometryShader->release();
+			geometryShader->releaseReference();
 		}
 		if (nullptr != fragmentShader)
 		{
 			fragmentShader->addReference();
-			fragmentShader->release();
+			fragmentShader->releaseReference();
 		}
 
 		// Error!

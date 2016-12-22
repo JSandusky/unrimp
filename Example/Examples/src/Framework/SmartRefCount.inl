@@ -132,7 +132,7 @@ void SmartRefCount<AType>::setPtr(AType *ptr)
 	// Release old pointer
 	if (nullptr != mPtr)
 	{
-		mPtr->release();
+		mPtr->releaseReference();
 	}
 
 	// Assign new pointer

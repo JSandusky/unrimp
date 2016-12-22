@@ -77,7 +77,7 @@ namespace RendererRuntime
 		{
 			if (nullptr != renderTargetTextureElement.texture)
 			{
-				renderTargetTextureElement.texture->release();
+				renderTargetTextureElement.texture->releaseReference();
 				renderTargetTextureElement.texture = nullptr;
 			}
 		}
@@ -189,7 +189,7 @@ namespace RendererRuntime
 			{
 				if (nullptr != iterator->texture)
 				{
-					iterator->texture->release();
+					iterator->texture->releaseReference();
 				}
 				mSortedRenderTargetTextureVector.erase(iterator);
 			}

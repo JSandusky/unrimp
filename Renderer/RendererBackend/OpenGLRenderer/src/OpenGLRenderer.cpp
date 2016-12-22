@@ -378,24 +378,24 @@ namespace OpenGLRenderer
 		// Release instances
 		if (nullptr != mMainSwapChain)
 		{
-			mMainSwapChain->release();
+			mMainSwapChain->releaseReference();
 			mMainSwapChain = nullptr;
 		}
 		if (nullptr != mRenderTarget)
 		{
-			mRenderTarget->release();
+			mRenderTarget->releaseReference();
 			mRenderTarget = nullptr;
 		}
 		if (nullptr != mDefaultSamplerState)
 		{
-			mDefaultSamplerState->release();
+			mDefaultSamplerState->releaseReference();
 			mDefaultSamplerState = nullptr;
 		}
 
 		// Release the graphics root signature instance, in case we have one
 		if (nullptr != mGraphicsRootSignature)
 		{
-			mGraphicsRootSignature->release();
+			mGraphicsRootSignature->releaseReference();
 		}
 
 		{ // For debugging: At this point there should be no resource instances left, validate this!
@@ -421,7 +421,7 @@ namespace OpenGLRenderer
 		// Release the shader language instance, in case we have one
 		if (nullptr != mShaderLanguage)
 		{
-			mShaderLanguage->release();
+			mShaderLanguage->releaseReference();
 		}
 
 		// Destroy the extensions instance
@@ -442,7 +442,7 @@ namespace OpenGLRenderer
 	{
 		if (nullptr != mGraphicsRootSignature)
 		{
-			mGraphicsRootSignature->release();
+			mGraphicsRootSignature->releaseReference();
 		}
 		mGraphicsRootSignature = static_cast<RootSignature*>(rootSignature);
 		if (nullptr != mGraphicsRootSignature)
@@ -756,7 +756,7 @@ namespace OpenGLRenderer
 				// Set new pipeline state and add a reference to it
 				if (nullptr != mPipelineState)
 				{
-					mPipelineState->release();
+					mPipelineState->releaseReference();
 				}
 				mPipelineState = static_cast<PipelineState*>(pipelineState);
 				mPipelineState->addReference();
@@ -767,7 +767,7 @@ namespace OpenGLRenderer
 			else if (nullptr != mPipelineState)
 			{
 				// TODO(co) Handle this situation by resetting OpenGL states?
-				mPipelineState->release();
+				mPipelineState->releaseReference();
 				mPipelineState = nullptr;
 			}
 		}
@@ -940,7 +940,7 @@ namespace OpenGLRenderer
 					}
 
 					// Release
-					mRenderTarget->release();
+					mRenderTarget->releaseReference();
 				}
 
 				// Set new render target and add a reference to it
@@ -1015,7 +1015,7 @@ namespace OpenGLRenderer
 				// Release the render target reference, in case we have one
 				if (nullptr != mRenderTarget)
 				{
-					mRenderTarget->release();
+					mRenderTarget->releaseReference();
 					mRenderTarget = nullptr;
 				}
 			}
@@ -2124,7 +2124,7 @@ namespace OpenGLRenderer
 			}
 
 			// Release reference
-			mVertexArray->release();
+			mVertexArray->releaseReference();
 			mVertexArray = nullptr;
 		}
 	}

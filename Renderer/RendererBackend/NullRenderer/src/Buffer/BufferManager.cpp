@@ -71,7 +71,7 @@ namespace NullRenderer
 		for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
 		{
 			vertexBuffer->vertexBuffer->addReference();
-			vertexBuffer->vertexBuffer->release();
+			vertexBuffer->vertexBuffer->releaseReference();
 		}
 
 		// We don't keep a reference to the index buffer in here
@@ -79,7 +79,7 @@ namespace NullRenderer
 		if (nullptr != indexBuffer)
 		{
 			indexBuffer->addReference();
-			indexBuffer->release();
+			indexBuffer->releaseReference();
 		}
 
 		// Create the vertex array instance

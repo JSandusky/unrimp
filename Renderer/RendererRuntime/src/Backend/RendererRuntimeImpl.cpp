@@ -155,11 +155,11 @@ namespace RendererRuntime
 		delete mThreadManager;
 
 		// Release the texture and buffer manager instance
-		mTextureManager->release();
-		mBufferManager->release();
+		mTextureManager->releaseReference();
+		mBufferManager->releaseReference();
 
 		// Release our renderer reference
-		mRenderer->release();
+		mRenderer->releaseReference();
 	}
 
 

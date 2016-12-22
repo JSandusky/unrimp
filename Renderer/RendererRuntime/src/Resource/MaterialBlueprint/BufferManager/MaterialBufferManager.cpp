@@ -292,7 +292,7 @@ namespace RendererRuntime
 
 	MaterialBufferManager::BufferPool::~BufferPool()
 	{
-		uniformBuffer->release();
+		uniformBuffer->releaseReference();
 	}
 
 

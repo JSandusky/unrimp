@@ -99,7 +99,7 @@ namespace Renderer
 		*  @note
 		*    - When the last reference was released, the instance is destroyed automatically
 		*/
-		inline uint32_t release();
+		inline uint32_t releaseReference();
 
 		/**
 		*  @brief

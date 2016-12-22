@@ -184,7 +184,7 @@ namespace RendererRuntime
 
 			// Release reference from the render target
 			mExecutionRenderTarget = nullptr;
-			renderTarget.release();
+			renderTarget.releaseReference();
 		}
 	}
 

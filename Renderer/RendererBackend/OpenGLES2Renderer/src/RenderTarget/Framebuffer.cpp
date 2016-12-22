@@ -226,7 +226,7 @@ namespace OpenGLES2Renderer
 				// Valid entry?
 				if (nullptr != *colorTexture)
 				{
-					(*colorTexture)->release();
+					(*colorTexture)->releaseReference();
 				}
 			}
 
@@ -238,7 +238,7 @@ namespace OpenGLES2Renderer
 		if (nullptr != mDepthStencilTexture)
 		{
 			// Release reference
-			mDepthStencilTexture->release();
+			mDepthStencilTexture->releaseReference();
 		}
 	}
 

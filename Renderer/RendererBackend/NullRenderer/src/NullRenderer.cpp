@@ -278,17 +278,17 @@ namespace NullRenderer
 		// Release instances
 		if (nullptr != mMainSwapChain)
 		{
-			mMainSwapChain->release();
+			mMainSwapChain->releaseReference();
 			mMainSwapChain = nullptr;
 		}
 		if (nullptr != mRenderTarget)
 		{
-			mRenderTarget->release();
+			mRenderTarget->releaseReference();
 			mRenderTarget = nullptr;
 		}
 		if (nullptr != mGraphicsRootSignature)
 		{
-			mGraphicsRootSignature->release();
+			mGraphicsRootSignature->releaseReference();
 			mGraphicsRootSignature = nullptr;
 		}
 
@@ -315,7 +315,7 @@ namespace NullRenderer
 		// Release the null shader language instance, in case we have one
 		if (nullptr != mShaderLanguage)
 		{
-			mShaderLanguage->release();
+			mShaderLanguage->releaseReference();
 		}
 	}
 
@@ -327,7 +327,7 @@ namespace NullRenderer
 	{
 		if (nullptr != mGraphicsRootSignature)
 		{
-			mGraphicsRootSignature->release();
+			mGraphicsRootSignature->releaseReference();
 		}
 		mGraphicsRootSignature = static_cast<RootSignature*>(rootSignature);
 		if (nullptr != mGraphicsRootSignature)
@@ -453,7 +453,7 @@ namespace NullRenderer
 				// Release the render target reference, in case we have one
 				if (nullptr != mRenderTarget)
 				{
-					mRenderTarget->release();
+					mRenderTarget->releaseReference();
 				}
 
 				// Set new render target and add a reference to it
@@ -467,7 +467,7 @@ namespace NullRenderer
 				// Release the render target reference, in case we have one
 				if (nullptr != mRenderTarget)
 				{
-					mRenderTarget->release();
+					mRenderTarget->releaseReference();
 					mRenderTarget = nullptr;
 				}
 
@@ -624,7 +624,7 @@ namespace NullRenderer
 				{
 					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 					(*colorTextures)->addReference();
-					(*colorTextures)->release();
+					(*colorTextures)->releaseReference();
 				}
 			}
 		}
@@ -633,7 +633,7 @@ namespace NullRenderer
 		if (nullptr != depthStencilTexture)
 		{
 			depthStencilTexture->addReference();
-			depthStencilTexture->release();
+			depthStencilTexture->releaseReference();
 		}
 
 		// Create the framebuffer instance

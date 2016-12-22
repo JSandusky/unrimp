@@ -185,7 +185,7 @@ namespace RendererRuntime
 	{
 		// Release reference to vertex array object (VAO) shared between all compositor instance pass quad instances
 		assert(nullptr != ::detail::VertexArrayPtr);
-		if (2 == ::detail::VertexArrayPtr->release())	// 2 due to +1 for global shared pointer and +1 for renderable shared pointer
+		if (2 == ::detail::VertexArrayPtr->releaseReference())	// 2 due to +1 for global shared pointer and +1 for renderable shared pointer
 		{
 			{ // Clear renderable manager
 				RenderableManager::Renderables& renderables = ::detail::RenderableManager.getRenderables();

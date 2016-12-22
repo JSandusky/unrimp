@@ -56,19 +56,19 @@ namespace OpenGLRenderer
 		{
 			vertexShaderMonolithic->addReference();
 			glAttachObjectARB(mOpenGLProgram, vertexShaderMonolithic->getOpenGLShader());
-			vertexShaderMonolithic->release();
+			vertexShaderMonolithic->releaseReference();
 		}
 		if (nullptr != tessellationControlShaderMonolithic)
 		{
 			tessellationControlShaderMonolithic->addReference();
 			glAttachObjectARB(mOpenGLProgram, tessellationControlShaderMonolithic->getOpenGLShader());
-			tessellationControlShaderMonolithic->release();
+			tessellationControlShaderMonolithic->releaseReference();
 		}
 		if (nullptr != tessellationEvaluationShaderMonolithic)
 		{
 			tessellationEvaluationShaderMonolithic->addReference();
 			glAttachObjectARB(mOpenGLProgram, tessellationEvaluationShaderMonolithic->getOpenGLShader());
-			tessellationEvaluationShaderMonolithic->release();
+			tessellationEvaluationShaderMonolithic->releaseReference();
 		}
 		if (nullptr != geometryShaderMonolithic)
 		{
@@ -93,13 +93,13 @@ namespace OpenGLRenderer
 			glProgramParameteriARB(mOpenGLProgram, GL_GEOMETRY_VERTICES_OUT_ARB, static_cast<GLint>(geometryShaderMonolithic->getNumberOfOutputVertices()));
 
 			// Release the shader
-			geometryShaderMonolithic->release();
+			geometryShaderMonolithic->releaseReference();
 		}
 		if (nullptr != fragmentShaderMonolithic)
 		{
 			fragmentShaderMonolithic->addReference();
 			glAttachObjectARB(mOpenGLProgram, fragmentShaderMonolithic->getOpenGLShader());
-			fragmentShaderMonolithic->release();
+			fragmentShaderMonolithic->releaseReference();
 		}
 
 		{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 & 12 terminology)

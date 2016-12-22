@@ -142,7 +142,7 @@ namespace VulkanRenderer
 				SamplerState* samplerState = mSamplerStates[i];
 				if (nullptr != samplerState)
 				{
-					samplerState->release();
+					samplerState->releaseReference();
 				}
 			}
 			delete [] mSamplerStates;
@@ -194,7 +194,7 @@ namespace VulkanRenderer
 		{
 			if (nullptr != *samplerStateSlot)
 			{
-				(*samplerStateSlot)->release();
+				(*samplerStateSlot)->releaseReference();
 			}
 			(*samplerStateSlot) = samplerState;
 			if (nullptr != *samplerStateSlot)

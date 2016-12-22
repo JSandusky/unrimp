@@ -64,7 +64,7 @@ namespace Renderer
 	}
 
 	template <class AType>
-	inline uint32_t RefCount<AType>::release()
+	inline uint32_t RefCount<AType>::releaseReference()
 	{
 		// Decrement reference count
 		if (mRefCount > 1)

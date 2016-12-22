@@ -99,7 +99,7 @@ namespace Direct3D9Renderer
 		// Release the index buffer reference
 		if (nullptr != mIndexBuffer)
 		{
-			mIndexBuffer->release();
+			mIndexBuffer->releaseReference();
 		}
 
 		// Cleanup Direct3D 9 input slot data
@@ -117,7 +117,7 @@ namespace Direct3D9Renderer
 			VertexBuffer **vertexBuffersEnd = mVertexBuffers + mNumberOfSlots;
 			for (VertexBuffer **vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
 			{
-				(*vertexBuffer)->release();
+				(*vertexBuffer)->releaseReference();
 			}
 
 			// Cleanup

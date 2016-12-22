@@ -248,7 +248,7 @@ namespace Direct3D11Renderer
 				// Valid entry?
 				if (nullptr != *colorTexture)
 				{
-					(*colorTexture)->release();
+					(*colorTexture)->releaseReference();
 				}
 			}
 
@@ -265,7 +265,7 @@ namespace Direct3D11Renderer
 		if (nullptr != mDepthStencilTexture)
 		{
 			// Release reference
-			mDepthStencilTexture->release();
+			mDepthStencilTexture->releaseReference();
 		}
 	}
 

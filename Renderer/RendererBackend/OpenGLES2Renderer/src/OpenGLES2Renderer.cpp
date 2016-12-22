@@ -298,17 +298,17 @@ namespace OpenGLES2Renderer
 		// Release instances
 		if (nullptr != mMainSwapChain)
 		{
-			mMainSwapChain->release();
+			mMainSwapChain->releaseReference();
 			mMainSwapChain = nullptr;
 		}
 		if (nullptr != mRenderTarget)
 		{
-			mRenderTarget->release();
+			mRenderTarget->releaseReference();
 			mRenderTarget = nullptr;
 		}
 		if (nullptr != mDefaultSamplerState)
 		{
-			mDefaultSamplerState->release();
+			mDefaultSamplerState->releaseReference();
 			mDefaultSamplerState = nullptr;
 		}
 
@@ -321,7 +321,7 @@ namespace OpenGLES2Renderer
 		// Release the graphics root signature instance, in case we have one
 		if (nullptr != mGraphicsRootSignature)
 		{
-			mGraphicsRootSignature->release();
+			mGraphicsRootSignature->releaseReference();
 		}
 
 		{ // For debugging: At this point there should be no resource instances left, validate this!
@@ -347,7 +347,7 @@ namespace OpenGLES2Renderer
 		// Release the GLSL shader language instance, in case we have one
 		if (nullptr != mShaderLanguageGlsl)
 		{
-			mShaderLanguageGlsl->release();
+			mShaderLanguageGlsl->releaseReference();
 		}
 
 		// Destroy the context instance
@@ -362,7 +362,7 @@ namespace OpenGLES2Renderer
 	{
 		if (nullptr != mGraphicsRootSignature)
 		{
-			mGraphicsRootSignature->release();
+			mGraphicsRootSignature->releaseReference();
 		}
 		mGraphicsRootSignature = static_cast<RootSignature*>(rootSignature);
 		if (nullptr != mGraphicsRootSignature)
@@ -573,7 +573,7 @@ namespace OpenGLES2Renderer
 					if (nullptr != mVertexArray)
 					{
 						// Release reference
-						mVertexArray->release();
+						mVertexArray->releaseReference();
 					}
 
 					// Set new vertex array and add a reference to it
@@ -592,7 +592,7 @@ namespace OpenGLES2Renderer
 						static_cast<VertexArrayNoVao*>(mVertexArray)->disableOpenGLES2VertexAttribArrays();
 
 						// Release reference
-						mVertexArray->release();
+						mVertexArray->releaseReference();
 					}
 
 					// Set new vertex array and add a reference to it
@@ -621,7 +621,7 @@ namespace OpenGLES2Renderer
 					}
 
 					// Release reference
-					mVertexArray->release();
+					mVertexArray->releaseReference();
 					mVertexArray = nullptr;
 				}
 			}
@@ -722,7 +722,7 @@ namespace OpenGLES2Renderer
 					}
 
 					// Release the reference
-					mRenderTarget->release();
+					mRenderTarget->releaseReference();
 				}
 
 				// Set new render target and add a reference to it
@@ -798,7 +798,7 @@ namespace OpenGLES2Renderer
 				// Release the render target reference, in case we have one
 				if (nullptr != mRenderTarget)
 				{
-					mRenderTarget->release();
+					mRenderTarget->releaseReference();
 					mRenderTarget = nullptr;
 				}
 			}

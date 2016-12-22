@@ -85,7 +85,7 @@ namespace OpenGLES2Renderer
 			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = mVertexBuffers + mNumberOfVertexBuffers;
 			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = mVertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
 			{
-				vertexBuffer->vertexBuffer->release();
+				vertexBuffer->vertexBuffer->releaseReference();
 			}
 
 			// Cleanup

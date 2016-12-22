@@ -122,7 +122,7 @@ namespace Direct3D11Renderer
 		// Release the program reference
 		if (nullptr != mProgram)
 		{
-			mProgram->release();
+			mProgram->releaseReference();
 		}
 
 		// Release the Direct3D 11 input layout

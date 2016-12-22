@@ -1387,7 +1387,7 @@ namespace Renderer
 				++mRefCount;
 				return mRefCount;
 			}
-			uint32_t release()
+			uint32_t releaseReference()
 			{
 				if (mRefCount > 1)
 				{
@@ -1486,7 +1486,7 @@ namespace Renderer
 			{
 				if (nullptr != mPtr)
 				{
-					mPtr->release();
+					mPtr->releaseReference();
 				}
 				if (nullptr != ptr)
 				{

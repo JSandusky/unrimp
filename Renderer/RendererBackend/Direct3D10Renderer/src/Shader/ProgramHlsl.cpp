@@ -65,15 +65,15 @@ namespace Direct3D10Renderer
 		// Release the shader references
 		if (nullptr != mVertexShaderHlsl)
 		{
-			mVertexShaderHlsl->release();
+			mVertexShaderHlsl->releaseReference();
 		}
 		if (nullptr != mGeometryShaderHlsl)
 		{
-			mGeometryShaderHlsl->release();
+			mGeometryShaderHlsl->releaseReference();
 		}
 		if (nullptr != mFragmentShaderHlsl)
 		{
-			mFragmentShaderHlsl->release();
+			mFragmentShaderHlsl->releaseReference();
 		}
 	}
 

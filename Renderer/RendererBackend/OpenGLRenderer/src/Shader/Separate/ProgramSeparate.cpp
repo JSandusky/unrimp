@@ -286,23 +286,23 @@ namespace OpenGLRenderer
 		// Release the shader references
 		if (nullptr != mVertexShaderSeparate)
 		{
-			mVertexShaderSeparate->release();
+			mVertexShaderSeparate->releaseReference();
 		}
 		if (nullptr != mTessellationControlShaderSeparate)
 		{
-			mTessellationControlShaderSeparate->release();
+			mTessellationControlShaderSeparate->releaseReference();
 		}
 		if (nullptr != mTessellationEvaluationShaderSeparate)
 		{
-			mTessellationEvaluationShaderSeparate->release();
+			mTessellationEvaluationShaderSeparate->releaseReference();
 		}
 		if (nullptr != mGeometryShaderSeparate)
 		{
-			mGeometryShaderSeparate->release();
+			mGeometryShaderSeparate->releaseReference();
 		}
 		if (nullptr != mFragmentShaderSeparate)
 		{
-			mFragmentShaderSeparate->release();
+			mFragmentShaderSeparate->releaseReference();
 		}
 	}
 

@@ -184,7 +184,7 @@ namespace VulkanRenderer
 				// Valid entry?
 				if (nullptr != *colorTexture)
 				{
-					(*colorTexture)->release();
+					(*colorTexture)->releaseReference();
 				}
 			}
 
@@ -196,7 +196,7 @@ namespace VulkanRenderer
 		if (nullptr != mDepthStencilTexture)
 		{
 			// Release reference
-			mDepthStencilTexture->release();
+			mDepthStencilTexture->releaseReference();
 		}
 	}
 

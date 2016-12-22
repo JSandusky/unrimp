@@ -64,13 +64,13 @@ namespace OpenGLES2Renderer
 		{
 			vertexShaderGlsl->addReference();
 			glAttachShader(mOpenGLES2Program, vertexShaderGlsl->getOpenGLES2Shader());
-			vertexShaderGlsl->release();
+			vertexShaderGlsl->releaseReference();
 		}
 		if (nullptr != fragmentShaderGlsl)
 		{
 			fragmentShaderGlsl->addReference();
 			glAttachShader(mOpenGLES2Program, fragmentShaderGlsl->getOpenGLES2Shader());
-			fragmentShaderGlsl->release();
+			fragmentShaderGlsl->releaseReference();
 		}
 
 		// Link the program

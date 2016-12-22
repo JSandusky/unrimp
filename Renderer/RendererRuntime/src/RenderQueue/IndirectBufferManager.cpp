@@ -52,11 +52,11 @@ namespace RendererRuntime
 		// Destroy all indirect buffers
 		for (IndirectBuffer& indirectBuffer : mFreeIndirectBuffers)
 		{
-			indirectBuffer.indirectBuffer->release();
+			indirectBuffer.indirectBuffer->releaseReference();
 		}
 		for (IndirectBuffer& indirectBuffer : mUsedIndirectBuffers)
 		{
-			indirectBuffer.indirectBuffer->release();
+			indirectBuffer.indirectBuffer->releaseReference();
 		}
 	}
 

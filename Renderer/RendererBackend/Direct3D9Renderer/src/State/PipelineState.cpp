@@ -98,7 +98,7 @@ namespace Direct3D9Renderer
 		delete mBlendState;
 
 		// Release the program reference
-		mProgram->release();
+		mProgram->releaseReference();
 
 		// Release the Direct3D 9 vertex declaration
 		if (nullptr != mDirect3DVertexDeclaration9)

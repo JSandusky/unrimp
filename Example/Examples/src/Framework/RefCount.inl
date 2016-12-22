@@ -57,7 +57,7 @@ uint32_t RefCount<AType>::addReference()
 }
 
 template <class AType>
-uint32_t RefCount<AType>::release()
+uint32_t RefCount<AType>::releaseReference()
 {
 	// Decrement reference count
 	if (mRefCount > 1)

@@ -77,7 +77,7 @@ namespace RendererRuntime
 		{
 			if (nullptr != framebufferElement.framebuffer)
 			{
-				framebufferElement.framebuffer->release();
+				framebufferElement.framebuffer->releaseReference();
 				framebufferElement.framebuffer = nullptr;
 			}
 		}
@@ -163,7 +163,7 @@ namespace RendererRuntime
 			{
 				if (nullptr != iterator->framebuffer)
 				{
-					iterator->framebuffer->release();
+					iterator->framebuffer->releaseReference();
 				}
 				mSortedFramebufferVector.erase(iterator);
 			}

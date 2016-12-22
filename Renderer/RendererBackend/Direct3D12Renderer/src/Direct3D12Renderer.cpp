@@ -390,12 +390,12 @@ namespace Direct3D12Renderer
 		// Release instances
 		if (nullptr != mMainSwapChain)
 		{
-			mMainSwapChain->release();
+			mMainSwapChain->releaseReference();
 			mMainSwapChain = nullptr;
 		}
 		if (nullptr != mRenderTarget)
 		{
-			mRenderTarget->release();
+			mRenderTarget->releaseReference();
 			mRenderTarget = nullptr;
 		}
 
@@ -431,7 +431,7 @@ namespace Direct3D12Renderer
 		// Release the HLSL shader language instance, in case we have one
 		if (nullptr != mShaderLanguageHlsl)
 		{
-			mShaderLanguageHlsl->release();
+			mShaderLanguageHlsl->releaseReference();
 		}
 
 		// Release the Direct3D 12 command queue we've created
@@ -720,7 +720,7 @@ namespace Direct3D12Renderer
 				}
 
 				// Release the render target reference, in case we have one
-				mRenderTarget->release();
+				mRenderTarget->releaseReference();
 				mRenderTarget = nullptr;
 			}
 

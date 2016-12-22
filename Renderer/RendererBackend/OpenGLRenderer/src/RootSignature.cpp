@@ -142,7 +142,7 @@ namespace OpenGLRenderer
 				SamplerState* samplerState = mSamplerStates[i];
 				if (nullptr != samplerState)
 				{
-					samplerState->release();
+					samplerState->releaseReference();
 				}
 			}
 			delete [] mSamplerStates;
@@ -194,7 +194,7 @@ namespace OpenGLRenderer
 		{
 			if (nullptr != *samplerStateSlot)
 			{
-				(*samplerStateSlot)->release();
+				(*samplerStateSlot)->releaseReference();
 			}
 			(*samplerStateSlot) = samplerState;
 			if (nullptr != *samplerStateSlot)

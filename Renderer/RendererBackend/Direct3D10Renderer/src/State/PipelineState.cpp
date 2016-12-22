@@ -121,7 +121,7 @@ namespace Direct3D10Renderer
 		// Release the program reference
 		if (nullptr != mProgram)
 		{
-			mProgram->release();
+			mProgram->releaseReference();
 		}
 
 		// Release the Direct3D 10 input layout

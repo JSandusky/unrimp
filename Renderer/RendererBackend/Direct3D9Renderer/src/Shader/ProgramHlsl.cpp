@@ -105,11 +105,11 @@ namespace Direct3D9Renderer
 		// Release the shader references
 		if (nullptr != mVertexShaderHlsl)
 		{
-			mVertexShaderHlsl->release();
+			mVertexShaderHlsl->releaseReference();
 		}
 		if (nullptr != mFragmentShaderHlsl)
 		{
-			mFragmentShaderHlsl->release();
+			mFragmentShaderHlsl->releaseReference();
 		}
 
 		// Release our Direct3D 9 device reference

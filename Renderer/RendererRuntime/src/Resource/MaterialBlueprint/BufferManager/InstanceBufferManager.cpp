@@ -87,8 +87,8 @@ namespace RendererRuntime
 	InstanceBufferManager::~InstanceBufferManager()
 	{
 		// Release uniform and texture buffer instances
-		mUniformBuffer->release();
-		mTextureBuffer->release();
+		mUniformBuffer->releaseReference();
+		mTextureBuffer->releaseReference();
 	}
 
 	void InstanceBufferManager::fillBuffer(PassBufferManager& passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer, const MaterialBlueprintResource::TextureBuffer*, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer)

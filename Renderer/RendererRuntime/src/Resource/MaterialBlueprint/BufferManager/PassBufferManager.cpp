@@ -57,7 +57,7 @@ namespace RendererRuntime
 		// Destroy all uniform buffers
 		for (Renderer::IUniformBuffer* uniformBuffer : mUniformBuffers)
 		{
-			uniformBuffer->release();
+			uniformBuffer->releaseReference();
 		}
 	}
 

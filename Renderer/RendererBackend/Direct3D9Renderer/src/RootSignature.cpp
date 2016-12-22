@@ -142,7 +142,7 @@ namespace Direct3D9Renderer
 				SamplerState* samplerState = mSamplerStates[i];
 				if (nullptr != samplerState)
 				{
-					samplerState->release();
+					samplerState->releaseReference();
 				}
 			}
 			delete [] mSamplerStates;
@@ -194,7 +194,7 @@ namespace Direct3D9Renderer
 		{
 			if (nullptr != *samplerStateSlot)
 			{
-				(*samplerStateSlot)->release();
+				(*samplerStateSlot)->releaseReference();
 			}
 			(*samplerStateSlot) = samplerState;
 			if (nullptr != *samplerStateSlot)

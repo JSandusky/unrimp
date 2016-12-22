@@ -84,7 +84,7 @@ public:
 	*  @note
 	*    - When the last reference was released, the instance is destroyed automatically
 	*/
-	uint32_t release();
+	uint32_t releaseReference();
 
 	/**
 	*  @brief

@@ -217,12 +217,12 @@ namespace OpenGLES2Renderer
 		if (nullptr != vertexShader)
 		{
 			vertexShader->addReference();
-			vertexShader->release();
+			vertexShader->releaseReference();
 		}
 		if (nullptr != fragmentShader)
 		{
 			fragmentShader->addReference();
-			fragmentShader->release();
+			fragmentShader->releaseReference();
 		}
 
 		// Error!

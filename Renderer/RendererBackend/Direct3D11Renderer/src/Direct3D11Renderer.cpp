@@ -377,17 +377,17 @@ namespace Direct3D11Renderer
 		// Release instances
 		if (nullptr != mMainSwapChain)
 		{
-			mMainSwapChain->release();
+			mMainSwapChain->releaseReference();
 			mMainSwapChain = nullptr;
 		}
 		if (nullptr != mRenderTarget)
 		{
-			mRenderTarget->release();
+			mRenderTarget->releaseReference();
 			mRenderTarget = nullptr;
 		}
 		if (nullptr != mGraphicsRootSignature)
 		{
-			mGraphicsRootSignature->release();
+			mGraphicsRootSignature->releaseReference();
 			mGraphicsRootSignature = nullptr;
 		}
 
@@ -420,7 +420,7 @@ namespace Direct3D11Renderer
 		// Release the HLSL shader language instance, in case we have one
 		if (nullptr != mShaderLanguageHlsl)
 		{
-			mShaderLanguageHlsl->release();
+			mShaderLanguageHlsl->releaseReference();
 		}
 
 		// Release the Direct3D 11 device we've created
@@ -456,7 +456,7 @@ namespace Direct3D11Renderer
 	{
 		if (nullptr != mGraphicsRootSignature)
 		{
-			mGraphicsRootSignature->release();
+			mGraphicsRootSignature->releaseReference();
 		}
 		mGraphicsRootSignature = static_cast<RootSignature*>(rootSignature);
 		if (nullptr != mGraphicsRootSignature)
@@ -793,7 +793,7 @@ namespace Direct3D11Renderer
 				// Release the render target reference, in case we have one
 				if (nullptr != mRenderTarget)
 				{
-					mRenderTarget->release();
+					mRenderTarget->releaseReference();
 				}
 
 				// Set new render target and add a reference to it
@@ -854,7 +854,7 @@ namespace Direct3D11Renderer
 				// Release the render target reference, in case we have one
 				if (nullptr != mRenderTarget)
 				{
-					mRenderTarget->release();
+					mRenderTarget->releaseReference();
 					mRenderTarget = nullptr;
 				}
 			}

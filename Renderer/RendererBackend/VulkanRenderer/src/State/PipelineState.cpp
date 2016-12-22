@@ -60,7 +60,7 @@ namespace VulkanRenderer
 		// Release the program reference
 		if (nullptr != mProgram)
 		{
-			mProgram->release();
+			mProgram->releaseReference();
 		}
 	}
 

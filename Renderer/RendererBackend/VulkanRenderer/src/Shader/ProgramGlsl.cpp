@@ -55,31 +55,31 @@ namespace VulkanRenderer
 		{
 			vertexShaderGlsl->addReference();
 			// TODO(co) Implement me
-			vertexShaderGlsl->release();
+			vertexShaderGlsl->releaseReference();
 		}
 		if (nullptr != tessellationControlShaderGlsl)
 		{
 			tessellationControlShaderGlsl->addReference();
 			// TODO(co) Implement me
-			tessellationControlShaderGlsl->release();
+			tessellationControlShaderGlsl->releaseReference();
 		}
 		if (nullptr != tessellationEvaluationShaderGlsl)
 		{
 			tessellationEvaluationShaderGlsl->addReference();
 			// TODO(co) Implement me
-			tessellationEvaluationShaderGlsl->release();
+			tessellationEvaluationShaderGlsl->releaseReference();
 		}
 		if (nullptr != geometryShaderGlsl)
 		{
 			geometryShaderGlsl->addReference();
 			// TODO(co) Implement me
-			geometryShaderGlsl->release();
+			geometryShaderGlsl->releaseReference();
 		}
 		if (nullptr != fragmentShaderGlsl)
 		{
 			fragmentShaderGlsl->addReference();
 			// TODO(co) Implement me
-			fragmentShaderGlsl->release();
+			fragmentShaderGlsl->releaseReference();
 		}
 	}
 

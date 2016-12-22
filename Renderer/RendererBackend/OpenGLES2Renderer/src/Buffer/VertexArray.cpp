@@ -40,7 +40,7 @@ namespace OpenGLES2Renderer
 		// Release the index buffer reference
 		if (nullptr != mIndexBuffer)
 		{
-			mIndexBuffer->release();
+			mIndexBuffer->releaseReference();
 		}
 	}
 
