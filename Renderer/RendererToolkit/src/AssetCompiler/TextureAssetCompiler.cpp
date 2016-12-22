@@ -928,7 +928,7 @@ namespace RendererToolkit
 		if (!pSrc_image)
 		{
 			free(pSrc_file_data);
-			throw std::logic_error("Failed reading image file");
+			throw std::runtime_error("Failed reading image file");
 		}*/
 
 			/*
@@ -1018,7 +1018,7 @@ comp_params.m_quality_level = cCRNMinQualityLevel;
 		{
 			stbi_image_free(pSrc_image);
 //			free(pSrc_file_data);
-			throw std::logic_error("Compression failed");
+			throw std::runtime_error("Compression failed");
 		}
 
 		// Write the output file.

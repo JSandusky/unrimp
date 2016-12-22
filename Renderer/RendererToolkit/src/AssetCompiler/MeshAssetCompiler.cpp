@@ -421,7 +421,7 @@ namespace RendererToolkit
 		}
 		else
 		{
-			throw std::logic_error("ASSIMP failed to load in the given mesh");
+			throw std::runtime_error("ASSIMP failed to load in the given mesh");
 		}
 
 		{ // Update the output asset package

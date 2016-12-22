@@ -131,7 +131,7 @@ namespace RendererToolkit
 		if (assetId != asset.assetId)
 		{
 			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\": According to the asset package it should be asset ID " + std::to_string(asset.assetId) + " but inside the asset file it's asset ID " + std::to_string(assetId);
-			throw std::logic_error(message);
+			throw std::runtime_error(message);
 		}
 
 		// Dispatch asset compiler
@@ -207,7 +207,7 @@ namespace RendererToolkit
 		else
 		{
 			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\" and ID " + std::to_string(asset.assetId) + ": Asset type \"" + assetType + "\" is unknown";
-			throw std::logic_error(message);
+			throw std::runtime_error(message);
 		}
 	}
 
@@ -346,7 +346,7 @@ namespace RendererToolkit
 			if (assetFilename.length() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
 			{
 				const std::string message = "Asset filename \"" + assetFilename + "\" of asset ID " + std::to_string(assetId) + " is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
-				throw std::logic_error(message);
+				throw std::runtime_error(message);
 			}
 
 			// Copy asset data
