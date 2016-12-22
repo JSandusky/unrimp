@@ -664,7 +664,9 @@ namespace OpenGLRenderer
 									break;
 							}
 
-							{ // Set the OpenGL sampler states
+							// Set the OpenGL sampler states, if required (texture buffer has no sampler state)
+							if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
+							{
 								const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
 
 								// Is "GL_ARB_sampler_objects" there?
