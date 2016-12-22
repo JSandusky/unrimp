@@ -150,7 +150,7 @@ layout(triangle_strip, max_vertices = 3) out;
 in gl_PerVertex
 {
 	vec4 gl_Position;
-} gl_in[gl_MaxPatchVertices];
+} gl_in[3];
 in  vec3 tePosition[3];			// Interpolated object space vertex position inside the patch we received from the tessellation evaluation shader (TES) as input
 in  vec3 tePatchDistance[3];	// The barycentric coordinate inside the patch from the tessellator we received from the tessellation evaluation shader (TES) as input
 out gl_PerVertex
