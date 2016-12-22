@@ -125,24 +125,28 @@ set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
 
 
 if("${CMAKE_CXX_COMPILER_ID}"	 STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	# We need c++1z/c++17 support:
+	# We need c++1z/c++17 support but only for the renderer toolkit part, runtime currently should be only uses c++11 features
 	include(CheckCXXCompilerFlag)
 	CHECK_CXX_COMPILER_FLAG("-std=c++1z" COMPILER_SUPPORTS_CXX1z)
 	CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
-	if(COMPILER_SUPPORTS_CXX17)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-	elseif(COMPILER_SUPPORTS_CXX1z)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
+	CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+	
+	if(RENDERER_TOOLKIT AND NOT (COMPILER_SUPPORTS_CXX17) AND NOT COMPILER_SUPPORTS_CXX1z)
+		message(FATAL_ERROR "Renderer toolkit needs c++17 support but the compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
+	endif()
+	
+	if(COMPILER_SUPPORTS_CXX14)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 	else()
-		message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
+		message(FATAL_ERROR "Unrimp needs at least c++14 support but the compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
 	endif()
 endif()
 
 INCLUDE (CheckIncludeFileCXX)
 CHECK_INCLUDE_FILE_CXX("filesystem" HAVE_CXX17_FILESYSTEM)
 CHECK_INCLUDE_FILE_CXX("experimental/filesystem" HAVE_CXX1z_FILESYSTEM)
-IF(NOT HAVE_CXX17_FILESYSTEM AND NOT HAVE_CXX1z_FILESYSTEM)
-  message( FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} doesn't support c++ filesystem TS. Please use a different C++ compiler." )
+IF(RENDERER_TOOLKIT AND NOT HAVE_CXX17_FILESYSTEM AND NOT HAVE_CXX1z_FILESYSTEM)
+  message( FATAL_ERROR "Renderer toolkit needs c++ filesystem TS support but the compiler ${CMAKE_CXX_COMPILER} doesn't support c++ filesystem TS. Please use a different C++ compiler." )
 ENDIF()
 
 # At first we treat UNIX = Linux
@@ -164,7 +168,7 @@ if(RENDERER_TOOLKIT)
 endif()
 if(EXAMPLES)
 	add_subdirectory(Example/Examples)
-	if(RENDERER_RUNTIME)
+	if(RENDERER_RUNTIME AND RENDERER_TOOLKIT)
 		add_subdirectory(Example/ExampleProjectCompiler)
 	endif()
 endif()
