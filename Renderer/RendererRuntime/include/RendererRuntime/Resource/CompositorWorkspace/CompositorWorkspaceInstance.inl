@@ -43,6 +43,11 @@ namespace RendererRuntime
 		return mResolutionScale;
 	}
 
+	inline void CompositorWorkspaceInstance::setResolutionScale(float resolutionScale)
+	{
+		mResolutionScale = resolutionScale;
+	}
+
 	inline const CompositorWorkspaceInstance::RenderQueueIndexRanges& CompositorWorkspaceInstance::getRenderQueueIndexRanges() const
 	{
 		return mRenderQueueIndexRanges;

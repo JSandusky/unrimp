@@ -111,7 +111,7 @@ namespace RendererRuntime
 		inline const IRendererRuntime& getRendererRuntime() const;
 		inline IndirectBufferManager& getIndirectBufferManager() const;
 		inline float getResolutionScale() const;
-		RENDERERRUNTIME_API_EXPORT void setResolutionScale(float resolutionScale);	// Changes are considered to be expensive
+		inline void setResolutionScale(float resolutionScale);	// Changes are considered to be expensive since internal renderer resources might need to be updated when rendering the next time
 		inline const RenderQueueIndexRanges& getRenderQueueIndexRanges() const;	// Renderable manager pointers are only considered to be safe directly after the "RendererRuntime::CompositorWorkspaceInstance::execute()" call
 		RENDERERRUNTIME_API_EXPORT const RenderQueueIndexRange* getRenderQueueIndexRangeByRenderQueueIndex(uint8_t renderQueueIndex) const;	// Can be a null pointer, don't destroy the instance
 		RENDERERRUNTIME_API_EXPORT const ICompositorInstancePass* getFirstCompositorInstancePassByCompositorPassTypeId(CompositorPassTypeId compositorPassTypeId) const;
@@ -154,6 +154,8 @@ namespace RendererRuntime
 		IRendererRuntime&			  mRendererRuntime;
 		IndirectBufferManager&		  mIndirectBufferManager;
 		float						  mResolutionScale;
+		uint32_t					  mRenderTargetWidth;
+		uint32_t					  mRenderTargetHeight;
 		Renderer::IRenderTarget*	  mExecutionRenderTarget;				///< Only valid during compositor workspace instance execution
 		CompositorWorkspaceResourceId mCompositorWorkspaceResourceId;
 		CompositorNodeInstances		  mSequentialCompositorNodeInstances;	///< We're responsible to destroy the compositor node instances if we no longer need them

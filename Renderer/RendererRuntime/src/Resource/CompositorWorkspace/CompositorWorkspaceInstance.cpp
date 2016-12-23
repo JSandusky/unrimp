@@ -61,6 +61,8 @@ namespace RendererRuntime
 		mRendererRuntime(rendererRuntime),
 		mIndirectBufferManager(*(new IndirectBufferManager(rendererRuntime))),
 		mResolutionScale(1.0f),
+		mRenderTargetWidth(getUninitialized<uint32_t>()),
+		mRenderTargetHeight(getUninitialized<uint32_t>()),
 		mExecutionRenderTarget(nullptr),
 		mCompositorWorkspaceResourceId(rendererRuntime.getCompositorWorkspaceResourceManager().loadCompositorWorkspaceResourceByAssetId(compositorWorkspaceAssetId, this)),
 		mFramebufferManagerInitialized(false)
@@ -73,18 +75,6 @@ namespace RendererRuntime
 		// Cleanup
 		destroySequentialCompositorNodeInstances();
 		delete &mIndirectBufferManager;
-	}
-
-	void CompositorWorkspaceInstance::setResolutionScale(float resolutionScale)
-	{
-		// Since resolution scale changes are considered to be expensive, lets ensure there's really a state change
-		if (mResolutionScale != resolutionScale)
-		{
-			mResolutionScale = resolutionScale;
-
-			// Destroy framebuffers and render target textures
-			destroyFramebuffersAndRenderTargetTextures();
-		}
 	}
 
 	const CompositorWorkspaceInstance::RenderQueueIndexRange* CompositorWorkspaceInstance::getRenderQueueIndexRangeByRenderQueueIndex(uint8_t renderQueueIndex) const
@@ -132,6 +122,22 @@ namespace RendererRuntime
 			renderTarget.addReference();
 			mExecutionRenderTarget = &renderTarget;
 
+			// Get the main render target size
+			uint32_t renderTargetWidth  = 0;
+			uint32_t renderTargetHeight = 0;
+			renderTarget.getWidthAndHeight(renderTargetWidth, renderTargetHeight);
+
+			{ // Do we need to destroy previous framebuffers and render target textures?
+				const uint32_t currentRenderTargetWidth  = static_cast<uint32_t>(static_cast<float>(renderTargetWidth) * mResolutionScale);
+				const uint32_t currentRenderTargetHeight = static_cast<uint32_t>(static_cast<float>(renderTargetHeight) * mResolutionScale);
+				if (mRenderTargetWidth != currentRenderTargetWidth || mRenderTargetHeight != currentRenderTargetHeight)
+				{
+					mRenderTargetWidth  = currentRenderTargetWidth;
+					mRenderTargetHeight = currentRenderTargetHeight;
+					destroyFramebuffersAndRenderTargetTextures();
+				}
+			}
+
 			// Create framebuffers and render target textures, if required
 			if (!mFramebufferManagerInitialized)
 			{
@@ -156,15 +162,9 @@ namespace RendererRuntime
 				// Set the current render target
 				Renderer::Command::SetRenderTarget::create(mCommandBuffer, &renderTarget);
 
-				{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle must be set in every draw call to work with all supported renderer APIs
-					// Get the window size
-					uint32_t width  = 0;
-					uint32_t height = 0;
-					renderTarget.getWidthAndHeight(width, height);
-
-					// Set the viewport and scissor rectangle
-					Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, width, height);
-				}
+				// Set the viewport and scissor rectangle
+				// -> Since Direct3D 12 is command list based, the viewport and scissor rectangle must be set in every draw call to work with all supported renderer APIs
+				Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, renderTargetWidth, renderTargetHeight);
 
 				{ // Fill command buffer
 					Renderer::IRenderTarget* currentRenderTarget = &renderTarget;
