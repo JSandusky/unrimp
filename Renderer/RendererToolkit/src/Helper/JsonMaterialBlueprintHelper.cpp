@@ -211,8 +211,6 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(BLEND_STATE)
 		ELSE_IF_VALUE(SAMPLER_STATE)
 		ELSE_IF_VALUE(TEXTURE_REFERENCE)
-		ELSE_IF_VALUE(COMPOSITOR_TEXTURE_REFERENCE)
-		ELSE_IF_VALUE(SHADOW_TEXTURE_REFERENCE)
 		ELSE_IF_VALUE(GLOBAL_REFERENCE)
 		ELSE_IF_VALUE(UNKNOWN_REFERENCE)
 		ELSE_IF_VALUE(PASS_REFERENCE)
@@ -266,7 +264,6 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(FILTER_MODE)
 		ELSE_IF_VALUE(TEXTURE_ADDRESS_MODE)
 		ELSE_IF_VALUE(TEXTURE_ASSET_ID)
-		ELSE_IF_VALUE(COMPOSITOR_TEXTURE_REFERENCE)
 		else
 		{
 			// TODO(co) Error handling
@@ -464,18 +461,6 @@ namespace RendererToolkit
 			case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
 			{
 				return RendererRuntime::MaterialPropertyValue::fromTextureAssetId(JsonHelper::getCompiledAssetId(input, rapidJsonValue, propertyName));
-			}
-
-			case RendererRuntime::MaterialPropertyValue::ValueType::COMPOSITOR_TEXTURE_REFERENCE:
-			{
-				// Value string content: "@<texture name>@<MRT-index>"
-				// -> Three values because the first will be an empty string
-				std::string values[3];
-				JsonHelper::optionalStringNProperty(rapidJsonValue, propertyName, values, 3, '@');
-				RendererRuntime::MaterialPropertyValue::CompositorTextureReference compositorTextureReference;
-				compositorTextureReference.compositorTextureId = RendererRuntime::StringId(values[1].c_str()).getId();
-				compositorTextureReference.mrtIndex			   = static_cast<uint32_t>(std::atoi(values[2].c_str()));
-				return RendererRuntime::MaterialPropertyValue::fromCompositorTextureReference(compositorTextureReference);
 			}
 		}
 
@@ -970,36 +955,6 @@ namespace RendererToolkit
 					{
 						// TODO(co) Error handling
 					}
-				}
-
-				case RendererRuntime::MaterialProperty::Usage::COMPOSITOR_TEXTURE_REFERENCE:
-				{
-					if (RendererRuntime::MaterialProperty::ValueType::INTEGER == valueType || RendererRuntime::MaterialProperty::ValueType::COMPOSITOR_TEXTURE_REFERENCE == valueType)
-					{
-						// Write down the texture
-						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, mandatoryMaterialPropertyValue(input, rapidJsonValueTexture, "Value", valueType)));
-						outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
-					}
-					else
-					{
-						// TODO(co) Error handling
-					}
-					break;
-				}
-
-				case RendererRuntime::MaterialProperty::Usage::SHADOW_TEXTURE_REFERENCE:
-				{
-					if (RendererRuntime::MaterialProperty::ValueType::INTEGER == valueType)
-					{
-						// Write down the texture
-						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, mandatoryMaterialPropertyValue(input, rapidJsonValueTexture, "Value", valueType)));
-						outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
-					}
-					else
-					{
-						// TODO(co) Error handling
-					}
-					break;
 				}
 
 				case RendererRuntime::MaterialProperty::Usage::MATERIAL_REFERENCE:

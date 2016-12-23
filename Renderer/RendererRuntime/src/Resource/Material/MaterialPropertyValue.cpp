@@ -107,9 +107,6 @@ namespace RendererRuntime
 
 			case ValueType::TEXTURE_ASSET_ID:
 				return sizeof(AssetId);
-
-			case ValueType::COMPOSITOR_TEXTURE_REFERENCE:
-				return sizeof(CompositorTextureReference);
 		}
 
 		// Error, we should never ever end up in here
@@ -214,10 +211,6 @@ namespace RendererRuntime
 
 			case ValueType::TEXTURE_ASSET_ID:
 				return (mValue.TextureAssetId == materialPropertyValue.mValue.TextureAssetId);
-
-			case ValueType::COMPOSITOR_TEXTURE_REFERENCE:
-				return (mValue.CompositorTextureReference.compositorTextureId == materialPropertyValue.mValue.CompositorTextureReference.compositorTextureId &&
-						mValue.CompositorTextureReference.mrtIndex == materialPropertyValue.mValue.CompositorTextureReference.mrtIndex);
 		}
 
 		// Not identical

@@ -280,8 +280,6 @@ namespace RendererRuntime
 
 				case MaterialProperty::Usage::UNKNOWN:
 				case MaterialProperty::Usage::SAMPLER_STATE:
-				case MaterialProperty::Usage::COMPOSITOR_TEXTURE_REFERENCE:
-				case MaterialProperty::Usage::SHADOW_TEXTURE_REFERENCE:
 				case MaterialProperty::Usage::GLOBAL_REFERENCE:
 				case MaterialProperty::Usage::UNKNOWN_REFERENCE:
 				case MaterialProperty::Usage::PASS_REFERENCE:

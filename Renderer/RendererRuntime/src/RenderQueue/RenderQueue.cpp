@@ -242,7 +242,6 @@ namespace RendererRuntime
 													case MaterialPropertyValue::ValueType::FILTER_MODE:
 													case MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
 													case MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
-													case MaterialPropertyValue::ValueType::COMPOSITOR_TEXTURE_REFERENCE:
 													default:
 														assert(false);	// TODO(co) Error handling
 														break;

@@ -289,14 +289,6 @@ namespace RendererRuntime
 		return materialPropertyValue;
 	}
 
-	inline MaterialPropertyValue MaterialPropertyValue::fromCompositorTextureReference(const CompositorTextureReference& value)
-	{
-		MaterialPropertyValue materialPropertyValue;
-		materialPropertyValue.mValueType						= ValueType::COMPOSITOR_TEXTURE_REFERENCE;
-		materialPropertyValue.mValue.CompositorTextureReference = value;
-		return materialPropertyValue;
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
@@ -434,12 +426,6 @@ namespace RendererRuntime
 	{
 		assert(ValueType::TEXTURE_ASSET_ID == mValueType);
 		return mValue.TextureAssetId;
-	}
-
-	inline const MaterialPropertyValue::CompositorTextureReference& MaterialPropertyValue::getCompositorTextureReference() const
-	{
-		assert(ValueType::COMPOSITOR_TEXTURE_REFERENCE == mValueType);
-		return mValue.CompositorTextureReference;
 	}
 
 	inline bool MaterialPropertyValue::operator !=(const MaterialPropertyValue& materialPropertyValue) const

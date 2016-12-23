@@ -308,7 +308,6 @@ namespace RendererRuntime
 						case MaterialProperty::ValueType::FILTER_MODE:
 						case MaterialProperty::ValueType::TEXTURE_ADDRESS_MODE:
 						case MaterialProperty::ValueType::TEXTURE_ASSET_ID:
-						case MaterialProperty::ValueType::COMPOSITOR_TEXTURE_REFERENCE:
 						default:
 							// Unsupported shader combination material property value type
 							assert(false);
