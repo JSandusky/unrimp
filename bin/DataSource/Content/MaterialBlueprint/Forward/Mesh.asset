@@ -10,15 +10,15 @@
 		{
 			"AssetId": "14",
 			"AssetType": "MaterialBlueprint",
-			"AssetCategory": "Scene",
-			"AssetName": "MeshForwardLighting",
+			"AssetCategory": "Forward",
+			"AssetName": "Mesh",
 			"AssetDependencies": [ "12", "13" ],
-			"FileDependencies": [ "MeshForwardLighting.material_blueprint" ],
+			"FileDependencies": [ "Mesh.material_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
 		},
 		"MaterialBlueprintAssetCompiler":
 		{
-			"InputFile": "MeshForwardLighting.material_blueprint"
+			"InputFile": "Mesh.material_blueprint"
 		}
 	}
 }

@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 
 #include <vector>
@@ -56,6 +57,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
 
 
 	//[-------------------------------------------------------]
@@ -102,7 +109,7 @@ namespace RendererRuntime
 		inline uint8_t getMaximumRenderQueueIndex() const;
 		void clear();
 		void addRenderablesFromRenderableManager(const RenderableManager& renderableManager);
-		void fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer);
+		void fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, MaterialTechniqueId materialTechniqueId, Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]

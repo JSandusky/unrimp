@@ -53,6 +53,7 @@ namespace RendererRuntime
 		mMinimumRenderQueueIndex = passScene->minimumRenderQueueIndex;
 		mMaximumRenderQueueIndex = passScene->maximumRenderQueueIndex;
 		mTransparentPass		 = passScene->transparentPass;
+		mMaterialTechniqueId	 = passScene->materialTechniqueId;
 
 		// Sanity check
 		assert(mMaximumRenderQueueIndex >= mMinimumRenderQueueIndex);

@@ -1,0 +1,25 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "106",
+			"AssetType": "CompositorNode",
+			"AssetCategory": "Default",
+			"AssetName": "Deferred",
+			"AssetDependencies": [ "102" ],
+			"FileDependencies": [ "Deferred.compositor_node" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg",
+			"Description": "Deferred rendering compositor node"
+		},
+		"CompositorNodeAssetCompiler":
+		{
+			"InputFile": "Deferred.compositor_node"
+		}
+	}
+}

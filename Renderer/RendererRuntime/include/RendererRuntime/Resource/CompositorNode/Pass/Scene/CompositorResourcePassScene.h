@@ -39,6 +39,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	class CompositorResourcePassScene : public ICompositorResourcePass
@@ -65,6 +71,7 @@ namespace RendererRuntime
 		inline uint8_t getMinimumRenderQueueIndex() const;	///< Inclusive
 		inline uint8_t getMaximumRenderQueueIndex() const;	///< Inclusive
 		inline bool isTransparentPass() const;
+		inline MaterialTechniqueId getMaterialTechniqueId() const;
 
 
 	//[-------------------------------------------------------]
@@ -90,9 +97,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint8_t	mMinimumRenderQueueIndex;	///< Inclusive
-		uint8_t	mMaximumRenderQueueIndex;	///< Inclusive
-		bool	mTransparentPass;
+		uint8_t				mMinimumRenderQueueIndex;	///< Inclusive
+		uint8_t				mMaximumRenderQueueIndex;	///< Inclusive
+		bool				mTransparentPass;
+		MaterialTechniqueId	mMaterialTechniqueId;
 
 
 	};

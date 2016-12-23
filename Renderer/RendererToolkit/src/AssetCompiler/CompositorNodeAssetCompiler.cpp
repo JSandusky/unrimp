@@ -27,6 +27,7 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/Material/MaterialResourceManager.h>
 #include <RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorResourcePassClear.h>
@@ -357,6 +358,7 @@ namespace RendererToolkit
 							RendererRuntime::AssetId materialAssetId;
 							RendererRuntime::AssetId materialBlueprintAssetId;
 							JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialAssetId", materialAssetId);
+							JsonHelper::optionalStringIdProperty(rapidJsonValuePass, "MaterialTechnique", passQuad.materialTechniqueId);
 							JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialBlueprintAssetId", materialBlueprintAssetId);
 							passQuad.materialAssetId = materialAssetId;
 							passQuad.materialBlueprintAssetId = materialBlueprintAssetId;
@@ -370,6 +372,14 @@ namespace RendererToolkit
 							if (RendererRuntime::isInitialized(passQuad.materialAssetId) && RendererRuntime::isInitialized(passQuad.materialBlueprintAssetId))
 							{
 								throw std::runtime_error("Material asset ID is defined, but material blueprint asset ID is defined as well. Only one asset ID is allowed.");
+							}
+							if (RendererRuntime::isInitialized(passQuad.materialAssetId) && RendererRuntime::isUninitialized(passQuad.materialTechniqueId))
+							{
+								throw std::runtime_error("Material asset ID is defined, but material technique is not defined");
+							}
+							if (RendererRuntime::isInitialized(passQuad.materialBlueprintAssetId) && RendererRuntime::isUninitialized(passQuad.materialTechniqueId))
+							{
+								passQuad.materialTechniqueId = RendererRuntime::MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID;
 							}
 
 							// Write down
@@ -388,8 +398,13 @@ namespace RendererToolkit
 							JsonHelper::optionalByteProperty(rapidJsonValuePass, "MinimumRenderQueueIndex", passScene.minimumRenderQueueIndex);
 							JsonHelper::optionalByteProperty(rapidJsonValuePass, "MaximumRenderQueueIndex", passScene.maximumRenderQueueIndex);
 							JsonHelper::optionalBooleanProperty(rapidJsonValuePass, "TransparentPass", passScene.transparentPass);
+							JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "MaterialTechnique", passScene.materialTechniqueId);
 
 							// Sanity check
+							if (passScene.maximumRenderQueueIndex < passScene.minimumRenderQueueIndex)
+							{
+								throw std::runtime_error("The maximum render queue index must be equal or greater as the minimum render queue index");
+							}
 							if (passScene.maximumRenderQueueIndex < passScene.minimumRenderQueueIndex)
 							{
 								throw std::runtime_error("The maximum render queue index must be equal or greater as the minimum render queue index");

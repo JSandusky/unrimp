@@ -54,7 +54,7 @@ namespace RendererRuntime
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
 	typedef uint32_t TextureResourceId;				///< POD texture resource identifier
-	typedef StringId MaterialTechniqueId;			///< Material technique identifier, internally just a POD "uint32_t", result of hashing the property name
+	typedef StringId MaterialTechniqueId;			///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
 	typedef uint32_t MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
 
 

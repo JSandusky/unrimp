@@ -1,0 +1,25 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "20",
+			"AssetType": "CompositorWorkspace",
+			"AssetCategory": "Default",
+			"AssetName": "Forward",
+			"AssetDependencies": [ "19" ],
+			"FileDependencies": [ "Forward.compositor_workspace" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg",
+			"Description": "Forward rendering compositor workspace"
+		},
+		"CompositorWorkspaceAssetCompiler":
+		{
+			"InputFile": "Forward.compositor_workspace"
+		}
+	}
+}

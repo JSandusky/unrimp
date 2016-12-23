@@ -64,7 +64,6 @@ struct PassDataStruct
 	float3	 ViewSpaceSunLightDirection;
 	float	 Wetness;
 	float3	 SunLightColor;
-	float	 StaticPropertyTest;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -101,7 +100,7 @@ MAIN_BEGIN
 	float4x4 objectSpaceToWorldSpaceMatrix = ROW_MATRIX_4x4(row0, row1, row2, row3);
 
 	// Calculate the world space vertex position
-	float4 worldSpacePosition = MATRIX_MUL(objectSpaceToWorldSpaceMatrix, float4(MAIN_INPUT(Position) * PassData.StaticPropertyTest, 1.0f));
+	float4 worldSpacePosition = MATRIX_MUL(objectSpaceToWorldSpaceMatrix, float4(MAIN_INPUT(Position), 1.0f));
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, worldSpacePosition);

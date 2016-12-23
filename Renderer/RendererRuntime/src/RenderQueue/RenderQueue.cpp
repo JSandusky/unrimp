@@ -141,7 +141,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void RenderQueue::fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer)
+	void RenderQueue::fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, MaterialTechniqueId materialTechniqueId, Renderer::CommandBuffer& commandBuffer)
 	{
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
@@ -152,7 +152,6 @@ namespace RendererRuntime
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 		MaterialBlueprintResource* currentlyBoundMaterialBlueprintResource = nullptr;
 		InstanceBufferManager& instanceBufferManager = materialBlueprintResourceManager.getInstanceBufferManager();
-		const MaterialTechniqueId materialTechniqueId = "Default";
 
 		// Process all render queues
 		// -> When adding renderables from renderable manager we could build up a minimum/maximum used render queue index to sometimes reduce

@@ -42,11 +42,6 @@
 #include <algorithm>
 
 
-// Disable warnings
-// TODO(co) See "RendererRuntime::CompositorWorkspaceInstance::CompositorWorkspaceInstance()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
-#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
@@ -64,10 +59,10 @@ namespace RendererRuntime
 		mRenderTargetWidth(getUninitialized<uint32_t>()),
 		mRenderTargetHeight(getUninitialized<uint32_t>()),
 		mExecutionRenderTarget(nullptr),
-		mCompositorWorkspaceResourceId(rendererRuntime.getCompositorWorkspaceResourceManager().loadCompositorWorkspaceResourceByAssetId(compositorWorkspaceAssetId, this)),
+		mCompositorWorkspaceResourceId(getUninitialized<CompositorWorkspaceResourceId>()),
 		mFramebufferManagerInitialized(false)
 	{
-		// Nothing here
+		mCompositorWorkspaceResourceId = rendererRuntime.getCompositorWorkspaceResourceManager().loadCompositorWorkspaceResourceByAssetId(compositorWorkspaceAssetId, this);
 	}
 
 	CompositorWorkspaceInstance::~CompositorWorkspaceInstance()

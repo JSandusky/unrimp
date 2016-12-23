@@ -1,0 +1,238 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "1"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"RenderQueueIndex":
+			{
+				"Usage": "STATIC",
+				"ValueType": "INTEGER",
+				"Value": "0",
+				"Description": "Render queue index [0, 255]",
+				"MinimumIntegerValue": "0",
+				"MaximumIntegerValue": "255"
+			},
+			"CastShadows":
+			{
+				"Usage": "STATIC",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Cast shadows?"
+			},
+			"DiffuseColor":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT_3",
+				"Value": "1.0 1.0 1.0",
+				"Description": "Material diffuse color"
+			},
+			"UseDiffuseMap":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use diffuse map?",
+				"VisualImportance": "100"
+			},
+			"DiffuseMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "4",
+				"Description": "Material diffuse map"
+			}
+		},
+		"RootSignature":
+		{
+			"RootParameters":
+			{
+				"0":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "PassUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "ALL"
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "MaterialUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"2":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "2",
+							"BaseShaderRegisterName": "InstanceUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "VERTEX"
+				},
+				"3":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "InstanceTextureBuffer"
+						}
+					},
+					"ShaderVisibility": "VERTEX"
+				},
+				"4":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"5":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "DiffuseMap",
+							"SamplerRootParameterIndex": "4"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				}
+			},
+			"Flags": "NONE"
+		},
+		"PipelineState":
+		{
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprintAssetId": "108",
+				"FragmentShaderBlueprintAssetId": "109"
+			}
+		},
+		"Resources":
+		{
+			"UniformBuffers":
+			{
+				"PassUniformBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"WorldSpaceToClipSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
+						}
+					}
+				},
+				"MaterialUniformBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "MATERIAL",
+					"NumberOfElements": "2",
+					"ElementProperties":
+					{
+						"DiffuseColor":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@DiffuseColor"
+						}
+					}
+				},
+				"InstanceUniformBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "INSTANCE",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"InstanceIndicesArray":
+						{
+							"Usage": "INSTANCE_REFERENCE",
+							"ValueType": "INTEGER_4",
+							"Value": "@INSTANCE_INDICES"
+						}
+					}
+				}
+			},
+			"TextureBuffers":
+			{
+				"InstanceTextureBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "INSTANCE",
+					"ValueType": "FLOAT_4",
+					"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
+				}
+			},
+			"SamplerStates":
+			{
+				"SamplerLinear":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Filter": "MIN_MAG_MIP_LINEAR",
+					"AddressU": "WRAP",
+					"AddressV": "WRAP",
+					"AddressW": "WRAP",
+					"MipLODBias": "0.0",
+					"MaxAnisotropy": "16",
+					"ComparisonFunc": "NEVER",
+					"BorderColor": "0.0 0.0 0.0 0.0",
+					"MinLOD": "-3.402823466e+38",
+					"MaxLOD": "3.402823466e+38"
+				}
+			},
+			"Textures":
+			{
+				"DiffuseMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@DiffuseMap"
+				}
+			}
+		}
+	}
+}

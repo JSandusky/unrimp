@@ -121,7 +121,7 @@ namespace RendererRuntime
 
 		// Fill command buffer
 		mRenderQueue.addRenderablesFromRenderableManager(::detail::RenderableManager);
-		mRenderQueue.fillCommandBuffer(renderTarget, commandBuffer);
+		mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialTechniqueId(), commandBuffer);
 
 		// End debug event
 		COMMAND_END_DEBUG_EVENT(commandBuffer)
@@ -155,7 +155,7 @@ namespace RendererRuntime
 			mMaterialResourceId = materialResourceManager.getMaterialResourceIdByAssetId(materialBlueprintAssetId);
 			if (isUninitialized(mMaterialResourceId))
 			{
-				mMaterialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialBlueprintAssetId, materialBlueprintAssetId);
+				mMaterialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialBlueprintAssetId, materialBlueprintAssetId, compositorResourcePassQuad.getMaterialTechniqueId());
 			}
 		}
 

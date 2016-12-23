@@ -154,7 +154,7 @@ namespace
 			if (RendererRuntime::isUninitialized(materialResourceId))
 			{
 				// We need to generate the runtime material asset right now
-				materialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialAssetId, RendererRuntime::StringId("Example/MaterialBlueprint/Default/MeshForwardLighting"));	// TODO(co) It must be possible to set the material blueprint ID from the outside
+				materialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialAssetId, RendererRuntime::StringId("Example/MaterialBlueprint/Default/MeshForwardLighting"), RendererRuntime::MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID);	// TODO(co) It must be possible to set the material blueprint ID from the outside
 				if (RendererRuntime::isInitialized(materialResourceId))
 				{
 					RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResources().tryGetElementById(materialResourceId);

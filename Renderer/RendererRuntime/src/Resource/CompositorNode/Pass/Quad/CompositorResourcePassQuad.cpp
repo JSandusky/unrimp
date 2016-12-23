@@ -51,6 +51,7 @@ namespace RendererRuntime
 		const v1CompositorNode::PassQuad* passQuad = reinterpret_cast<const v1CompositorNode::PassQuad*>(data);
 		assert(sizeof(v1CompositorNode::PassQuad) + sizeof(MaterialProperty) * passQuad->numberOfMaterialProperties == numberOfBytes);
 		mMaterialAssetId = passQuad->materialAssetId;
+		mMaterialTechniqueId = passQuad->materialTechniqueId;
 		mMaterialBlueprintAssetId = passQuad->materialBlueprintAssetId;
 
 		{ // Read material properties

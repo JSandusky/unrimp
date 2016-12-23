@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "109",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Debug",
+			"AssetName": "MeshFragment",
+			"AssetDependencies": [ "15" ],
+			"FileDependencies": [ "MeshFragment.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "MeshFragment.shader_blueprint"
+		}
+	}
+}

@@ -43,6 +43,11 @@ namespace RendererRuntime
 		return mTransparentPass;
 	}
 
+	inline MaterialTechniqueId CompositorResourcePassScene::getMaterialTechniqueId() const
+	{
+		return mMaterialTechniqueId;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]

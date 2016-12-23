@@ -42,7 +42,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
 
 
 	//[-------------------------------------------------------]
@@ -80,6 +81,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline AssetId getMaterialAssetId() const;
+		inline MaterialTechniqueId getMaterialTechniqueId() const;
 		inline AssetId getMaterialBlueprintAssetId() const;
 		inline const MaterialProperties& getMaterialProperties() const;
 
@@ -106,9 +108,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		AssetId			   mMaterialAssetId;
-		AssetId			   mMaterialBlueprintAssetId;
-		MaterialProperties mMaterialProperties;
+		AssetId				mMaterialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
+		MaterialTechniqueId	mMaterialTechniqueId;		///< Must always be valid
+		AssetId				mMaterialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized
+		MaterialProperties	mMaterialProperties;
 
 
 	};

@@ -12,7 +12,7 @@
 			"AssetType": "Material",
 			"AssetCategory": "Scene",
 			"AssetName": "column_b",
-			"AssetDependencies": [ "66", "67", "68" ],
+			"AssetDependencies": [ "0", "4", "66", "67", "68", "110", "113" ],
 			"FileDependencies": [ "column_b.material" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},

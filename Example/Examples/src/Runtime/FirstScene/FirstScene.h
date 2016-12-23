@@ -115,8 +115,22 @@ protected:
 private:
 	FirstScene(const FirstScene&) = delete;
 	FirstScene& operator=(const FirstScene&) = delete;
+	void createCompositorWorkspace();
 	void createDebugGui(Renderer::IRenderTarget& mainRenderTarget);
 	void trySetCustomMaterialResource();
+
+
+//[-------------------------------------------------------]
+//[ Private definitions                                   ]
+//[-------------------------------------------------------]
+private:
+	enum Compositor
+	{
+		DEBUG,
+		FORWARD,
+		DEFERRED,
+		NumberOfCompositors
+	};
 
 
 //[-------------------------------------------------------]
@@ -135,17 +149,19 @@ private:
 	Stopwatch mStopwatch;	///< Stopwatch instance
 	float	  mGlobalTimer;	///< Global timer
 	// States for runtime-fun
-	float mResolutionScale;
-	float mRotationSpeed;
-	float mSunLightColor[3];
-	float mWetness;
-	bool  mPerformLighting;
-	bool  mPerformFxaa;
-	bool  mUseDiffuseMap;
-	bool  mUseEmissiveMap;
-	bool  mUseNormalMap;
-	bool  mUseSpecularMap;
-	float mDiffuseColor[3];
+	Compositor mInstancedCompositor;
+	int		   mCurrentCompositor;
+	float	   mResolutionScale;
+	bool	   mPerformFxaa;
+	float	   mRotationSpeed;
+	float	   mSunLightColor[3];
+	float	   mWetness;
+	bool	   mPerformLighting;
+	bool	   mUseDiffuseMap;
+	bool	   mUseEmissiveMap;
+	bool	   mUseNormalMap;
+	bool	   mUseSpecularMap;
+	float	   mDiffuseColor[3];
 
 
 };

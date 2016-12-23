@@ -60,7 +60,6 @@ struct PassDataStruct
 	float3	 ViewSpaceSunLightDirection;
 	float	 Wetness;
 	float3	 SunLightColor;
-	float	 StaticPropertyTest;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -68,7 +67,6 @@ UNIFORM_BUFFER_END
 struct Material
 {
 	float3 DiffuseColor;
-	float  StaticPropertyTest;
 };
 UNIFORM_BUFFER_BEGIN(MaterialUniformBuffer, 1)
 	Material Materials[@insertpiece(MaximumNumberOfMaterials)];
@@ -166,5 +164,5 @@ MAIN_BEGIN
 	@end
 
 	// Done
-	MAIN_OUTPUT_COLOR(0) = min(float4(color * material.StaticPropertyTest, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
+	MAIN_OUTPUT_COLOR(0) = min(float4(color, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
 MAIN_END

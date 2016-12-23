@@ -1,0 +1,94 @@
+/*********************************************************\
+ * Copyright (c) 2012-2016 Christian Ofenberg
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+@includepiece(15)	// "Core.shader_piece"
+
+
+//[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Define pieces                                         ]
+//[-------------------------------------------------------]
+// TODO(co) Define this outside
+@piece(MaximumNumberOfMaterials)2@end
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(uint,   AssignedMaterialSlotVS, 0)	// The assigned material slot inside the material uniform buffer
+	INPUT_TEXTURE_COORDINATE				(float2, TexCoordVS,			 1)	// Texture coordinate
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_COLOR(0)
+OUTPUT_END
+
+// Uniform buffers
+struct PassDataStruct
+{
+	float4x4 WorldSpaceToClipSpaceMatrix;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
+struct Material
+{
+	float3 DiffuseColor;
+};
+UNIFORM_BUFFER_BEGIN(MaterialUniformBuffer, 1)
+	Material Materials[@insertpiece(MaximumNumberOfMaterials)];
+UNIFORM_BUFFER_END
+
+// Samplers
+SAMPLER_STATE(SamplerLinear, 0)
+
+// Textures
+@property(UseDiffuseMap)
+	TEXTURE_2D(DiffuseMap, 0)
+@end
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	// Get the used material
+	Material material = Materials[MAIN_INPUT(AssignedMaterialSlotVS)];
+
+	// Diffuse term
+	@property(UseDiffuseMap)
+		float3 color = material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+	@end
+	@property(!UseDiffuseMap)
+		float3 color = material.DiffuseColor;
+	@end
+
+	// Done
+	MAIN_OUTPUT_COLOR(0) = min(float4(color, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
+MAIN_END

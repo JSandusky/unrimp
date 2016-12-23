@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return mMaterialAssetId;
 	}
 
+	inline MaterialTechniqueId CompositorResourcePassQuad::getMaterialTechniqueId() const
+	{
+		return mMaterialTechniqueId;
+	}
+
 	inline AssetId CompositorResourcePassQuad::getMaterialBlueprintAssetId() const
 	{
 		return mMaterialBlueprintAssetId;

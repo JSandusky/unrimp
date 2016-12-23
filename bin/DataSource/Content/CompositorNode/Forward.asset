@@ -1,0 +1,25 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "19",
+			"AssetType": "CompositorNode",
+			"AssetCategory": "Default",
+			"AssetName": "Forward",
+			"AssetDependencies": [ "102" ],
+			"FileDependencies": [ "Forward.compositor_node" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg",
+			"Description": "Forward rendering compositor node"
+		},
+		"CompositorNodeAssetCompiler":
+		{
+			"InputFile": "Forward.compositor_node"
+		}
+	}
+}

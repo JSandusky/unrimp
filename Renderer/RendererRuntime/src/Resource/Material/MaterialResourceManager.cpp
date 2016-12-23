@@ -38,23 +38,29 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const MaterialTechniqueId MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID = "Default";
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	MaterialResourceId MaterialResourceManager::getMaterialResourceIdByAssetId(AssetId assetId) const
+	MaterialResource* MaterialResourceManager::getMaterialResourceByAssetId(AssetId assetId) const
 	{
 		const uint32_t numberOfElements = mMaterialResources.getNumberOfElements();
 		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			const MaterialResource& materialResource = mMaterialResources.getElementByIndex(i);
+			MaterialResource& materialResource = mMaterialResources.getElementByIndex(i);
 			if (materialResource.getAssetId() == assetId)
 			{
-				return materialResource.getId();
+				return &materialResource;
 			}
 		}
 
 		// There's no material resource using the given asset ID
-		return getUninitialized<MaterialResourceId>();
+		return nullptr;
 	}
 
 	// TODO(co) Work-in-progress
@@ -116,7 +122,7 @@ namespace RendererRuntime
 		return materialResourceId;
 	}
 
-	MaterialResourceId MaterialResourceManager::createMaterialResourceByAssetId(AssetId assetId, AssetId materialBlueprintAssetId)
+	MaterialResourceId MaterialResourceManager::createMaterialResourceByAssetId(AssetId assetId, AssetId materialBlueprintAssetId, MaterialTechniqueId materialTechniqueId)
 	{
 		// Material resource is not allowed to exist, yet
 		assert(isUninitialized(getMaterialResourceIdByAssetId(assetId)));
@@ -136,7 +142,7 @@ namespace RendererRuntime
 				materialResource.mMaterialProperties = materialBlueprintResource->mMaterialProperties;
 
 				// Create default material technique
-				materialResource.mSortedMaterialTechniqueVector.push_back(new MaterialTechnique("Default", materialResource, materialBlueprintResourceId));
+				materialResource.mSortedMaterialTechniqueVector.push_back(new MaterialTechnique(materialTechniqueId, materialResource, materialBlueprintResourceId));
 			}
 		}
 

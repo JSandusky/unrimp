@@ -1,0 +1,25 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "104",
+			"AssetType": "CompositorNode",
+			"AssetCategory": "Default",
+			"AssetName": "Debug",
+			"AssetDependencies": [ "102" ],
+			"FileDependencies": [ "Debug.compositor_node" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg",
+			"Description": "Debug compositor node with the most simple rendering. Useful for performance tests or when focusing on gameplay programming."
+		},
+		"CompositorNodeAssetCompiler":
+		{
+			"InputFile": "Debug.compositor_node"
+		}
+	}
+}

@@ -60,7 +60,7 @@ namespace RendererRuntime
 			// really worth to do so since the render queue only considers renderables inside the render queue range anyway.
 			mRenderQueue.addRenderablesFromRenderableManager(*renderableManager);
 		}
-		mRenderQueue.fillCommandBuffer(renderTarget, commandBuffer);
+		mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassScene&>(getCompositorResourcePass()).getMaterialTechniqueId(), commandBuffer);
 
 		// End debug event
 		COMMAND_END_DEBUG_EVENT(commandBuffer)

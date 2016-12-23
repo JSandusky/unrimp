@@ -38,6 +38,12 @@ namespace RendererRuntime
 		return mMaterialResources;
 	}
 
+	inline MaterialResourceId MaterialResourceManager::getMaterialResourceIdByAssetId(AssetId assetId) const
+	{
+		const MaterialResource* materialResource = getMaterialResourceByAssetId(assetId);
+		return (nullptr != materialResource) ? materialResource->getId() : getUninitialized<MaterialResourceId>();
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]

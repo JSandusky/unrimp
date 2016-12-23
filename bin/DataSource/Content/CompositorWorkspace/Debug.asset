@@ -1,0 +1,25 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "105",
+			"AssetType": "CompositorWorkspace",
+			"AssetCategory": "Default",
+			"AssetName": "Debug",
+			"AssetDependencies": [ "104" ],
+			"FileDependencies": [ "Debug.compositor_workspace" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg",
+			"Description": "Debug compositor workspace with the most simple rendering. Useful for performance tests or when focusing on gameplay programming."
+		},
+		"CompositorWorkspaceAssetCompiler":
+		{
+			"InputFile": "Debug.compositor_workspace"
+		}
+	}
+}

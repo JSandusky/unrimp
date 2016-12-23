@@ -8,7 +8,10 @@
 	{
 		"Techniques":
 		{
-			"Default": "14",
+			"Default": "110",
+			"Debug": "110",
+			"Forward": "14",
+			"Deferred": "113",
 			"DepthOnly": "0"
 		},
 		"Properties":

@@ -54,6 +54,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	typedef uint32_t														 MaterialResourceId;	///< POD material resource identifier
 	typedef PackedElementManager<MaterialResource, MaterialResourceId, 4096> MaterialResources;
+	typedef StringId														 MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
 
 
 	//[-------------------------------------------------------]
@@ -70,14 +71,22 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		RENDERERRUNTIME_API_EXPORT static const MaterialTechniqueId DEFAULT_MATERIAL_TECHNIQUE_ID;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
 		inline IRendererRuntime& getRendererRuntime() const;
 		inline const MaterialResources& getMaterialResources() const;
-		RENDERERRUNTIME_API_EXPORT MaterialResourceId getMaterialResourceIdByAssetId(AssetId assetId) const;
+		RENDERERRUNTIME_API_EXPORT MaterialResource* getMaterialResourceByAssetId(AssetId assetId) const;
+		inline MaterialResourceId getMaterialResourceIdByAssetId(AssetId assetId) const;
 		RENDERERRUNTIME_API_EXPORT MaterialResourceId loadMaterialResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
-		RENDERERRUNTIME_API_EXPORT MaterialResourceId createMaterialResourceByAssetId(AssetId assetId, AssetId materialBlueprintAssetId);	// Material resource is not allowed to exist, yet
+		RENDERERRUNTIME_API_EXPORT MaterialResourceId createMaterialResourceByAssetId(AssetId assetId, AssetId materialBlueprintAssetId, MaterialTechniqueId materialTechniqueId);	// Material resource is not allowed to exist, yet
 		RENDERERRUNTIME_API_EXPORT MaterialResourceId createMaterialResourceByCloning(MaterialResourceId parentMaterialResourceId);	// Parent material resource must be fully loaded
 
 

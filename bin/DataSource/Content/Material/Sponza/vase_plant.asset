@@ -12,7 +12,7 @@
 			"AssetType": "Material",
 			"AssetCategory": "Scene",
 			"AssetName": "vase_plant",
-			"AssetDependencies": [ "32", "33", "34" ],
+			"AssetDependencies": [ "0", "4", "32", "33", "34", "110", "113" ],
 			"FileDependencies": [ "vase_plant.material" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},

@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "110",
+			"AssetType": "MaterialBlueprint",
+			"AssetCategory": "Debug",
+			"AssetName": "Mesh",
+			"AssetDependencies": [ "108", "109" ],
+			"FileDependencies": [ "Mesh.material_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"MaterialBlueprintAssetCompiler":
+		{
+			"InputFile": "Mesh.material_blueprint"
+		}
+	}
+}

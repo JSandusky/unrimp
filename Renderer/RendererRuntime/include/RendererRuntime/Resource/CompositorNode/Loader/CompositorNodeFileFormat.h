@@ -46,6 +46,7 @@ namespace RendererRuntime
 	typedef StringId CompositorChannelId;		///< Compositor channel identifier, internally just a POD "uint32_t"
 	typedef StringId CompositorFramebufferId;	///< Compositor framebuffer identifier, internally just a POD "uint32_t"
 	typedef StringId CompositorPassTypeId;		///< Compositor pass type identifier, internally just a POD "uint32_t"
+	typedef StringId MaterialTechniqueId;		///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
 
 
 	// -> Compositor node file format content:
@@ -120,16 +121,22 @@ namespace RendererRuntime
 
 			struct PassQuad
 			{
-				AssetId  materialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
-				AssetId  materialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized
-				uint32_t numberOfMaterialProperties;
+				AssetId				materialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
+				MaterialTechniqueId	materialTechniqueId;		///< Must always be valid
+				AssetId				materialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized
+				uint32_t			numberOfMaterialProperties;
+
+				PassQuad() :
+					numberOfMaterialProperties(0)
+				{}
 			};
 
 			struct PassScene
 			{
-				uint8_t	minimumRenderQueueIndex;	///< Inclusive
-				uint8_t	maximumRenderQueueIndex;	///< Inclusive
-				bool	transparentPass;
+				uint8_t				minimumRenderQueueIndex;	///< Inclusive
+				uint8_t				maximumRenderQueueIndex;	///< Inclusive
+				bool				transparentPass;
+				MaterialTechniqueId	materialTechniqueId;
 
 				PassScene() :
 					minimumRenderQueueIndex(0),

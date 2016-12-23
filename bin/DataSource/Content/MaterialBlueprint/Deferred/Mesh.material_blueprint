@@ -240,139 +240,8 @@
 		{
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "12",
-				"FragmentShaderBlueprintAssetId": "13"
-			},
-			"RasterizerState":
-			{
-				"FillMode": "SOLID",
-				"CullMode": "BACK",
-				"FrontCounterClockwise": "FALSE",
-				"DepthBias": "0",
-				"DepthBiasClamp": "0.0",
-				"SlopeScaledDepthBias": "0.0",
-				"DepthClipEnable": "TRUE",
-				"MultisampleEnable": "FALSE",
-				"AntialiasedLineEnable": "FALSE",
-				"ForcedSampleCount": "0",
-				"ConservativeRasterizationMode": "OFF",
-				"ScissorEnable": "FALSE"
-			},
-			"DepthStencilState":
-			{
-				"DepthEnable": "TRUE",
-				"DepthWriteMask": "ALL",
-				"DepthFunc": "LESS",
-				"StencilEnable": "FALSE",
-				"StencilReadMask": "255",
-				"StencilWriteMask": "255",
-				"FrontFace":
-				{
-					"StencilFailOp": "KEEP",
-					"StencilDepthFailOp": "KEEP",
-					"StencilPassOp": "KEEP",
-					"StencilFunc": "ALWAYS"
-				},
-				"BackFace":
-				{
-					"StencilFailOp": "KEEP",
-					"StencilDepthFailOp": "KEEP",
-					"StencilPassOp": "KEEP",
-					"StencilFunc": "ALWAYS"
-				}
-			},
-			"BlendState":
-			{
-				"AlphaToCoverageEnable": "FALSE",
-				"IndependentBlendEnable": "FALSE",
-				"RenderTarget[0]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[1]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[2]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[3]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[4]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[5]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[6]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[7]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				}
+				"VertexShaderBlueprintAssetId": "111",
+				"FragmentShaderBlueprintAssetId": "112"
 			}
 		},
 		"Resources":
@@ -415,12 +284,6 @@
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@SunLightColor"
-						},
-						"StaticPropertyTest":
-						{
-							"Usage": "STATIC",
-							"ValueType": "FLOAT",
-							"Value": "1.0"
 						}
 					}
 				},
@@ -436,12 +299,6 @@
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@DiffuseColor"
-						},
-						"StaticPropertyTest":
-						{
-							"Usage": "STATIC",
-							"ValueType": "FLOAT",
-							"Value": "1.0"
 						}
 					}
 				},

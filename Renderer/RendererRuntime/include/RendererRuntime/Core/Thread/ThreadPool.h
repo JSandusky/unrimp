@@ -29,7 +29,6 @@
 
 // Disable warnings
 #pragma warning(push)
-#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
 #pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
 #pragma warning(disable: 4625)	// warning C4625: 'Concurrency::details::_ExceptionHolder': copy constructor was implicitly defined as deleted
 #pragma warning(disable: 4626)	// warning C4626: 'Concurrency::details::_ExceptionHolder': assignment operator was implicitly defined as deleted

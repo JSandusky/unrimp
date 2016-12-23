@@ -54,6 +54,8 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
+		static const RendererRuntime::AssetId CompositorWorkspaceAssetId[3] = { "Example/CompositorWorkspace/Default/Debug", "Example/CompositorWorkspace/Default/Forward", "Example/CompositorWorkspace/Default/Deferred" };
+		static const RendererRuntime::AssetId SceneAssetId("Example/Scene/Default/FirstScene");
 		static const RendererRuntime::AssetId ImrodMaterialAssetId("Example/Material/Character/Imrod");
 		static const RendererRuntime::AssetId FinalMaterialAssetId("Example/MaterialBlueprint/Compositor/Final");
 
@@ -78,12 +80,14 @@ FirstScene::FirstScene(const char *rendererName) :
 	mCameraSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mGlobalTimer(0.0f),
+	mInstancedCompositor(Compositor::FORWARD),
+	mCurrentCompositor(mInstancedCompositor),
 	mResolutionScale(1.0f),
+	mPerformFxaa(false),
 	mRotationSpeed(1.0f),
 	mSunLightColor{1.0f, 1.0f, 1.0f},
 	mWetness(1.0f),
 	mPerformLighting(true),
-	mPerformFxaa(false),
 	mUseDiffuseMap(true),
 	mUseEmissiveMap(true),
 	mUseNormalMap(true),
@@ -113,10 +117,10 @@ void FirstScene::onInitialization()
 	if (nullptr != rendererRuntime)
 	{
 		// Create the compositor workspace instance
-		mCompositorWorkspaceInstance = new RendererRuntime::CompositorWorkspaceInstance(*rendererRuntime, "Example/CompositorWorkspace/Default/FirstScene");
+		createCompositorWorkspace();
 
 		// Create the scene resource
-		mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId("Example/Scene/Default/FirstScene", this);
+		mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId(::detail::SceneAssetId, this);
 
 		// Load the material resource we're going to clone
 		mMaterialResourceId = rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::ImrodMaterialAssetId, this);
@@ -271,6 +275,20 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
+void FirstScene::createCompositorWorkspace()
+{
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+	if (nullptr != rendererRuntime)
+	{
+		// Create the compositor workspace instance
+		if (nullptr != mCompositorWorkspaceInstance)
+		{
+			delete mCompositorWorkspaceInstance;
+		}
+		mCompositorWorkspaceInstance = new RendererRuntime::CompositorWorkspaceInstance(*rendererRuntime, ::detail::CompositorWorkspaceAssetId[mInstancedCompositor]);
+	}
+}
+
 void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 {
 	if (nullptr != mCompositorWorkspaceInstance && nullptr != mSceneResource)
@@ -282,8 +300,15 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			// Setup GUI
 			mSceneResource->getRendererRuntime().getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
 			ImGui::Begin("Options");
-				// Scene
+				// Compositing
+				{
+					const char* items[] = { "Debug", "Forward", "Deferred" };
+					ImGui::ListBox("Compositor", &mCurrentCompositor, items, static_cast<int>(glm::countof(items)));
+				}
 				ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
+				ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
+
+				// Scene
 				ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
 
 				// Global material properties
@@ -292,13 +317,19 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 
 				// Material properties
 				ImGui::Checkbox("Perform Lighting", &mPerformLighting);
-				ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
 				ImGui::Checkbox("Use Diffuse Map", &mUseDiffuseMap);
 				ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
 				ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
 				ImGui::Checkbox("Use Specular Map", &mUseSpecularMap);
 				ImGui::ColorEdit3("Diffuse Color", mDiffuseColor);
 			ImGui::End();
+
+			// Recreate the compositor workspace instance, if required
+			if (mInstancedCompositor != mCurrentCompositor)
+			{
+				mInstancedCompositor = static_cast<Compositor>(mCurrentCompositor);
+				createCompositorWorkspace();
+			}
 
 			// Update compositor workspace
 			mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
@@ -310,18 +341,18 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
 					const RendererRuntime::MaterialResources& materialResources = materialResourceManager.getMaterialResources();
 
-					// Imrod material
-					RendererRuntime::MaterialResource* materialResource = materialResources.tryGetElementById(mMaterialResourceId);
-					if (nullptr != materialResource)
-					{
-						materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
-					}
-
 					// Final compositor material
-					materialResource = materialResources.tryGetElementById(materialResourceManager.getMaterialResourceIdByAssetId(::detail::FinalMaterialAssetId));
+					RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId(::detail::FinalMaterialAssetId);
 					if (nullptr != materialResource)
 					{
 						materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
+					}
+
+					// Imrod material
+					materialResource = materialResources.tryGetElementById(mMaterialResourceId);
+					if (nullptr != materialResource)
+					{
+						materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
 					}
 
 					// Imrod material clone

@@ -12,7 +12,7 @@
 			"AssetType": "Material",
 			"AssetCategory": "Scene",
 			"AssetName": "ceiling",
-			"AssetDependencies": [ "49", "50" ],
+			"AssetDependencies": [ "0", "4", "49", "50", "110", "113" ],
 			"FileDependencies": [ "ceiling.material" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
