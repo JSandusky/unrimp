@@ -33,7 +33,9 @@
 #include <RendererRuntime/Resource/Scene/Item/MeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
+#include <RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h>
 #include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h>
+#include <RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
 #include <RendererRuntime/Resource/Material/MaterialResourceManager.h>
 
@@ -269,64 +271,69 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
+void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 {
 	if (nullptr != mCompositorWorkspaceInstance && nullptr != mSceneResource)
 	{
-		// Setup GUI
-		mSceneResource->getRendererRuntime().getDebugGuiManager().newFrame(renderTarget);
-		ImGui::Begin("Options");
-			// Scene
-			ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
-			ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
+		// Get the render target the debug GUI is rendered into, use the provided main render target as fallback
+		const RendererRuntime::ICompositorInstancePass* compositorInstancePass = mCompositorWorkspaceInstance->getFirstCompositorInstancePassByCompositorPassTypeId(RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID);
+		if (nullptr != compositorInstancePass)
+		{
+			// Setup GUI
+			mSceneResource->getRendererRuntime().getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
+			ImGui::Begin("Options");
+				// Scene
+				ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
+				ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
 
-			// Global material properties
-			ImGui::ColorEdit3("Sun Light Color", mSunLightColor);
-			ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
+				// Global material properties
+				ImGui::ColorEdit3("Sun Light Color", mSunLightColor);
+				ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
 
-			// Material properties
-			ImGui::Checkbox("Perform Lighting", &mPerformLighting);
-			ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
-			ImGui::Checkbox("Use Diffuse Map", &mUseDiffuseMap);
-			ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
-			ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
-			ImGui::Checkbox("Use Specular Map", &mUseSpecularMap);
-			ImGui::ColorEdit3("Diffuse Color", mDiffuseColor);
-		ImGui::End();
+				// Material properties
+				ImGui::Checkbox("Perform Lighting", &mPerformLighting);
+				ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
+				ImGui::Checkbox("Use Diffuse Map", &mUseDiffuseMap);
+				ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
+				ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
+				ImGui::Checkbox("Use Specular Map", &mUseSpecularMap);
+				ImGui::ColorEdit3("Diffuse Color", mDiffuseColor);
+			ImGui::End();
 
-		// Update compositor workspace
-		mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
+			// Update compositor workspace
+			mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
 
-		{ // Update the material resource instance
-			RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
-			if (nullptr != rendererRuntime)
-			{
-				const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
-				const RendererRuntime::MaterialResources& materialResources = materialResourceManager.getMaterialResources();
-
-				// Imrod material
-				RendererRuntime::MaterialResource* materialResource = materialResources.tryGetElementById(mMaterialResourceId);
-				if (nullptr != materialResource)
+			{ // Update the material resource instance
+				RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+				if (nullptr != rendererRuntime)
 				{
-					materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
-				}
+					const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
+					const RendererRuntime::MaterialResources& materialResources = materialResourceManager.getMaterialResources();
 
-				// Final compositor material
-				materialResource = materialResources.tryGetElementById(materialResourceManager.getMaterialResourceIdByAssetId(::detail::FinalMaterialAssetId));
-				if (nullptr != materialResource)
-				{
-					materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
-				}
+					// Imrod material
+					RendererRuntime::MaterialResource* materialResource = materialResources.tryGetElementById(mMaterialResourceId);
+					if (nullptr != materialResource)
+					{
+						materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
+					}
 
-				// Imrod material clone
-				materialResource = materialResources.tryGetElementById(mCloneMaterialResourceId);
-				if (nullptr != materialResource)
-				{
-					materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));
-					materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
-					materialResource->setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
-					materialResource->setPropertyById("UseSpecularMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseSpecularMap));
-					materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
+					// Final compositor material
+					materialResource = materialResources.tryGetElementById(materialResourceManager.getMaterialResourceIdByAssetId(::detail::FinalMaterialAssetId));
+					if (nullptr != materialResource)
+					{
+						materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
+					}
+
+					// Imrod material clone
+					materialResource = materialResources.tryGetElementById(mCloneMaterialResourceId);
+					if (nullptr != materialResource)
+					{
+						materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));
+						materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
+						materialResource->setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
+						materialResource->setPropertyById("UseSpecularMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseSpecularMap));
+						materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
+					}
 				}
 			}
 		}

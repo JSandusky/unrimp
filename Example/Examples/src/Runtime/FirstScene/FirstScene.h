@@ -115,7 +115,7 @@ protected:
 private:
 	FirstScene(const FirstScene&) = delete;
 	FirstScene& operator=(const FirstScene&) = delete;
-	void createDebugGui(Renderer::IRenderTarget& renderTarget);
+	void createDebugGui(Renderer::IRenderTarget& mainRenderTarget);
 	void trySetCustomMaterialResource();
 
 

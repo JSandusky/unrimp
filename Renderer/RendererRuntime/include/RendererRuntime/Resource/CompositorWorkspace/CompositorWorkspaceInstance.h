@@ -43,6 +43,7 @@ namespace RendererRuntime
 	class RenderableManager;
 	class IndirectBufferManager;
 	class CompositorNodeInstance;
+	class ICompositorInstancePass;
 }
 
 
@@ -58,6 +59,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	typedef StringId AssetId;						///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
 	typedef uint32_t CompositorWorkspaceResourceId;	///< POD compositor workspace resource identifier
+	typedef StringId CompositorPassTypeId;			///< Compositor pass type identifier, internally just a POD "uint32_t"
 
 
 	//[-------------------------------------------------------]
@@ -112,6 +114,7 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT void setResolutionScale(float resolutionScale);	// Changes are considered to be expensive
 		inline const RenderQueueIndexRanges& getRenderQueueIndexRanges() const;	// Renderable manager pointers are only considered to be safe directly after the "RendererRuntime::CompositorWorkspaceInstance::execute()" call
 		RENDERERRUNTIME_API_EXPORT const RenderQueueIndexRange* getRenderQueueIndexRangeByRenderQueueIndex(uint8_t renderQueueIndex) const;	// Can be a null pointer, don't destroy the instance
+		RENDERERRUNTIME_API_EXPORT const ICompositorInstancePass* getFirstCompositorInstancePassByCompositorPassTypeId(CompositorPassTypeId compositorPassTypeId) const;
 		RENDERERRUNTIME_API_EXPORT void execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem);
 		inline Renderer::IRenderTarget* getExecutionRenderTarget() const;	// Only valid during compositor workspace instance execution
 

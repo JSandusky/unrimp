@@ -37,7 +37,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	LRESULT DebugGuiManagerWindows::wndProc(HWND, UINT message, WPARAM wParam, LPARAM lParam)
+	LRESULT DebugGuiManagerWindows::wndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		ImGuiIO& imGuiIo = ImGui::GetIO();
 		switch (message)
@@ -71,9 +71,35 @@ namespace RendererRuntime
 				return true;
 
 			case WM_MOUSEMOVE:
-				imGuiIo.MousePos.x = static_cast<signed short>(lParam);
-				imGuiIo.MousePos.y = static_cast<signed short>(lParam >> 16);
+			{
+				// Get the operation system window width and height
+				float windowWidth  = 1.0f;
+				float windowHeight = 1.0f;
+				{
+					// Get the client rectangle of the native output window
+					RECT rect;
+					::GetClientRect(hwnd, &rect);
+
+					// Get the width and height...
+					windowWidth  = static_cast<float>(rect.right  - rect.left);
+					windowHeight = static_cast<float>(rect.bottom - rect.top);
+
+					// ... and ensure that none of them is ever zero
+					if (windowWidth < 1.0f)
+					{
+						windowWidth = 1.0f;
+					}
+					if (windowHeight < 1.0f)
+					{
+						windowHeight = 1.0f;
+					}
+				}
+
+				// Tell imGui about the mouse position and while doing so take into account that the GUI might not render into the window directly but in a lower/higher resolution render target texture
+				imGuiIo.MousePos.x = static_cast<unsigned short>(lParam) * (imGuiIo.DisplaySize.x / windowWidth);
+				imGuiIo.MousePos.y = static_cast<unsigned short>(lParam >> 16) * (imGuiIo.DisplaySize.y / windowHeight);
 				return true;
+			}
 
 			case WM_KEYDOWN:
 				if (wParam < 256)

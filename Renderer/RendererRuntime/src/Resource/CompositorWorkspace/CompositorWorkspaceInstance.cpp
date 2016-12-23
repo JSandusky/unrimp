@@ -99,6 +99,23 @@ namespace RendererRuntime
 		return nullptr;
 	}
 
+	const ICompositorInstancePass* CompositorWorkspaceInstance::getFirstCompositorInstancePassByCompositorPassTypeId(CompositorPassTypeId compositorPassTypeId) const
+	{
+		for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
+		{
+			for (const ICompositorInstancePass* compositorInstancePass : compositorNodeInstance->mCompositorInstancePasses)
+			{
+				if (compositorInstancePass->getCompositorResourcePass().getTypeId() == compositorPassTypeId)
+				{
+					return compositorInstancePass;
+				}
+			}
+		}
+
+		// No compositor instance pass with the provided compositor pass type ID found
+		return nullptr;
+	}
+
 	void CompositorWorkspaceInstance::execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem)
 	{
 		// We could directly clear the render queue index ranges renderable managers as soon as the frame rendering has been finished to avoid evil dangling pointers,
