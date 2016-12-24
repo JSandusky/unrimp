@@ -43,7 +43,6 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "4",
 				"Description": "Material diffuse map"
 			}
 		},

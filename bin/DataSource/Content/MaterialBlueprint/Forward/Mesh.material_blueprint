@@ -51,7 +51,6 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "4",
 				"Description": "Material diffuse map"
 			},
 			"UseEmissiveMap":
@@ -66,7 +65,6 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "5",
 				"Description": "Material emissive map"
 			},
 			"UseNormalMap":
@@ -81,7 +79,6 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "6",
 				"Description": "Material normal map"
 			},
 			"UseSpecularMap":
@@ -96,7 +93,6 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "7",
 				"Description": "Material specular map"
 			}
 		},

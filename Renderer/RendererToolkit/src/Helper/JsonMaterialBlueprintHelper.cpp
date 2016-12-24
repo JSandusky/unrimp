@@ -460,7 +460,7 @@ namespace RendererToolkit
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
 			{
-				return RendererRuntime::MaterialPropertyValue::fromTextureAssetId(JsonHelper::getCompiledAssetId(input, rapidJsonValue, propertyName));
+				return RendererRuntime::MaterialPropertyValue::fromTextureAssetId(rapidJsonValue.HasMember(propertyName) ? JsonHelper::getCompiledAssetId(input, rapidJsonValue, propertyName) : RendererRuntime::getUninitialized<RendererRuntime::AssetId>());
 			}
 		}
 
