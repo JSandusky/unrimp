@@ -211,16 +211,8 @@
 				"SamplerLinear":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Filter": "MIN_MAG_MIP_LINEAR",
 					"AddressU": "WRAP",
-					"AddressV": "WRAP",
-					"AddressW": "WRAP",
-					"MipLODBias": "0.0",
-					"MaxAnisotropy": "16",
-					"ComparisonFunc": "NEVER",
-					"BorderColor": "0.0 0.0 0.0 0.0",
-					"MinLOD": "-3.402823466e+38",
-					"MaxLOD": "3.402823466e+38"
+					"AddressV": "WRAP"
 				}
 			},
 			"Textures":

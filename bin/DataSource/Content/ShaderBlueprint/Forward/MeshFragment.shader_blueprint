@@ -102,8 +102,11 @@ SAMPLER_STATE(SamplerLinear, 0)
 		float diffuseLightFactor = max(dot(normal, PassData.ViewSpaceSunLightDirection), 0.0f);
 		float3 diffuseLightColor = PassData.SunLightColor * diffuseLightFactor;
 
+		// Build in variables
+		float3 ViewSpaceCameraDirection = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
+
 		// Calculate the specular lighting
-		float3 viewSpaceHalfVector = normalize(PassData.ViewSpaceSunLightDirection + ViewSpaceViewVector);
+		float3 viewSpaceHalfVector = normalize(PassData.ViewSpaceSunLightDirection + ViewSpaceCameraDirection);
 		float specularLightFactor = (diffuseLightFactor > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
 		float3 specularLightColor = PassData.Wetness * PassData.SunLightColor * specularLightFactor;
 	@end
@@ -122,10 +125,6 @@ SAMPLER_STATE(SamplerLinear, 0)
 MAIN_BEGIN
 	// Get the used material
 	Material material = Materials[MAIN_INPUT(AssignedMaterialSlotVS)];
-
-	// TODO(co) Pass in "ViewSpaceViewVector" from outside
-	// Build in variables
-	float3 ViewSpaceViewVector = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
 
 	// Get the per fragment normal [0..1] by using a tangent space normal map
 	@property(UseNormalMap)

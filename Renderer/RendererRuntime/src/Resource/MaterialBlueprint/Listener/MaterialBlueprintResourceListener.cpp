@@ -138,9 +138,9 @@ namespace RendererRuntime
 		}
 		else if (::detail::VIEW_SPACE_SUN_LIGHT_DIRECTION == referenceValue)
 		{
-			glm::vec3 viewSpaceLightDirection(0.5f, 0.5f, 1.0f);	// TODO(co) This is just a test, needs to be filled from the outside
-			viewSpaceLightDirection = glm::normalize(viewSpaceLightDirection);
-			memcpy(buffer, glm::value_ptr(viewSpaceLightDirection), numberOfBytes);
+			glm::vec3 viewSpaceSunLightDirection(0.5f, 0.5f, 1.0f);	// TODO(co) This is just a test, needs to be filled from the outside
+			viewSpaceSunLightDirection = glm::normalize(viewSpaceSunLightDirection);
+			memcpy(buffer, glm::value_ptr(viewSpaceSunLightDirection), numberOfBytes);
 		}
 		else if (::detail::INVERSE_VIEWPORT_SIZE == referenceValue)
 		{
