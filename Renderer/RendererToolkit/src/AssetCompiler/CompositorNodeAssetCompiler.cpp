@@ -177,9 +177,49 @@ namespace RendererToolkit
 						// Texture format
 						const Renderer::TextureFormat::Enum textureFormat = JsonHelper::mandatoryTextureFormat(rapidJsonValueRenderTargetTexture);
 
+						// Allow resolution scale
+						bool allowResolutionScale = true;
+						if (RendererRuntime::isInitialized(width) && RendererRuntime::isInitialized(height) && rapidJsonValueRenderTargetTexture.HasMember("AllowResolutionScale"))
+						{
+							throw std::runtime_error(std::string("Render target texture \"") + rapidJsonMemberIteratorRenderTargetTextures->name.GetString() + "\" has a fixed defined width and height, usage of \"AllowResolutionScale\" is not allowed for this use-case");
+						}
+						JsonHelper::optionalBooleanProperty(rapidJsonValueRenderTargetTexture, "AllowResolutionScale", allowResolutionScale);
+
+						// Width scale
+						float widthScale = 1.0f;
+						if (RendererRuntime::isInitialized(width) && rapidJsonValueRenderTargetTexture.HasMember("WidthScale"))
+						{
+							throw std::runtime_error(std::string("Render target texture \"") + rapidJsonMemberIteratorRenderTargetTextures->name.GetString() + "\" has a fixed defined width, usage of \"WidthScale\" is not allowed for this use-case");
+						}
+						JsonHelper::optionalFloatProperty(rapidJsonValueRenderTargetTexture, "WidthScale", widthScale);
+
+						// Height scale
+						float heightScale = 1.0f;
+						if (RendererRuntime::isInitialized(height) && rapidJsonValueRenderTargetTexture.HasMember("HeightScale"))
+						{
+							throw std::runtime_error(std::string("Render target texture \"") + rapidJsonMemberIteratorRenderTargetTextures->name.GetString() + "\" has a fixed defined height, usage of \"HeightScale\" is not allowed for this use-case");
+						}
+						JsonHelper::optionalFloatProperty(rapidJsonValueRenderTargetTexture, "HeightScale", heightScale);
+
+						// Ease of use scale for width as well as height
+						if (rapidJsonValueRenderTargetTexture.HasMember("Scale") && (rapidJsonValueRenderTargetTexture.HasMember("WidthScale") || rapidJsonValueRenderTargetTexture.HasMember("WidthScale")))
+						{
+							throw std::runtime_error(std::string("Render target texture \"") + rapidJsonMemberIteratorRenderTargetTextures->name.GetString() + "\" has an already defined width and/or height scale, usage of \"Scale\" is not allowed for this use-case");
+						}
+						float scale = 1.0f;
+						JsonHelper::optionalFloatProperty(rapidJsonValueRenderTargetTexture, "Scale", scale);
+						if (!rapidJsonValueRenderTargetTexture.HasMember("WidthScale"))
+						{
+							widthScale = scale;
+						}
+						if (!rapidJsonValueRenderTargetTexture.HasMember("HeightScale"))
+						{
+							heightScale = scale;
+						}
+
 						// Write render target texture signature
 						// TODO(co) Add sanity checks to be able to detect editing errors (compressed formats are not supported nor unknown formats, check for name conflicts with channels, unused render target textures etc.)
-						renderTargetTexture.renderTargetTextureSignature = RendererRuntime::RenderTargetTextureSignature(width, height, textureFormat);
+						renderTargetTexture.renderTargetTextureSignature = RendererRuntime::RenderTargetTextureSignature(width, height, textureFormat, allowResolutionScale, widthScale, heightScale);
 					}
 					outputFileStream.write(reinterpret_cast<const char*>(&renderTargetTexture), sizeof(RendererRuntime::v1CompositorNode::RenderTargetTexture));
 
@@ -294,19 +334,19 @@ namespace RendererToolkit
 										definedMaterialPropertyIds.emplace(RendererRuntime::MaterialPropertyId(rapidJsonMemberIteratorProperties->name.GetString()), rapidJsonMemberIteratorProperties->value.GetString());
 									}
 
-									// Look for referenced render target textures
+									// Mark material properties as overwritten and update texture asset IDs if necessary
 									for (RendererRuntime::MaterialProperty& materialProperty : sortedMaterialPropertyVector)
 									{
-										if (materialProperty.getValueType() == RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
+										DefinedMaterialPropertyIds::const_iterator iterator = definedMaterialPropertyIds.find(materialProperty.getMaterialPropertyId());
+										if (iterator!= definedMaterialPropertyIds.end())
 										{
-											DefinedMaterialPropertyIds::const_iterator iterator = definedMaterialPropertyIds.find(materialProperty.getMaterialPropertyId());
-											if (iterator!= definedMaterialPropertyIds.end())
+											materialProperty.setOverwritten(true);
+											if (materialProperty.getValueType() == RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
 											{
 												const RendererRuntime::AssetId assetId = RendererRuntime::StringId(iterator->second.c_str());
 												if (renderTargetTextureAssetIds.find(assetId) != renderTargetTextureAssetIds.end())
 												{
 													static_cast<RendererRuntime::MaterialPropertyValue&>(materialProperty) = RendererRuntime::MaterialPropertyValue::fromTextureAssetId(assetId);
-													materialProperty.setOverwritten(true);
 												}
 											}
 										}

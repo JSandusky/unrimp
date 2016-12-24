@@ -38,6 +38,9 @@ namespace RendererRuntime
 		mWidth(getUninitialized<uint32_t>()),
 		mHeight(getUninitialized<uint32_t>()),
 		mTextureFormat(Renderer::TextureFormat::UNKNOWN),
+		mAllowResolutionScale(true),
+		mWidthScale(1.0f),
+		mHeightScale(1.0f),
 		mRenderTargetTextureSignatureId(getUninitialized<RenderTargetTextureSignatureId>())
 	{
 		// Nothing here
@@ -47,6 +50,9 @@ namespace RendererRuntime
 		mWidth(renderTargetTextureSignature.mWidth),
 		mHeight(renderTargetTextureSignature.mHeight),
 		mTextureFormat(renderTargetTextureSignature.mTextureFormat),
+		mAllowResolutionScale(renderTargetTextureSignature.mAllowResolutionScale),
+		mWidthScale(renderTargetTextureSignature.mWidthScale),
+		mHeightScale(renderTargetTextureSignature.mHeightScale),
 		mRenderTargetTextureSignatureId(renderTargetTextureSignature.mRenderTargetTextureSignatureId)
 	{
 		// Nothing here
@@ -62,6 +68,9 @@ namespace RendererRuntime
 		mWidth							= renderTargetTextureSignature.mWidth;
 		mHeight							= renderTargetTextureSignature.mHeight;
 		mTextureFormat					= renderTargetTextureSignature.mTextureFormat;
+		mAllowResolutionScale			= renderTargetTextureSignature.mAllowResolutionScale;
+		mWidthScale						= renderTargetTextureSignature.mWidthScale;
+		mHeightScale					= renderTargetTextureSignature.mHeightScale;
 		mRenderTargetTextureSignatureId	= renderTargetTextureSignature.mRenderTargetTextureSignatureId;
 
 		// Done
@@ -81,6 +90,21 @@ namespace RendererRuntime
 	inline Renderer::TextureFormat::Enum RenderTargetTextureSignature::getTextureFormat() const
 	{
 		return mTextureFormat;
+	}
+
+	inline bool RenderTargetTextureSignature::getAllowResolutionScale() const
+	{
+		return mAllowResolutionScale;
+	}
+
+	inline float RenderTargetTextureSignature::getWidthScale() const
+	{
+		return mWidthScale;
+	}
+
+	inline float RenderTargetTextureSignature::getHeightScale() const
+	{
+		return mHeightScale;
 	}
 
 	inline RenderTargetTextureSignatureId RenderTargetTextureSignature::getRenderTargetTextureSignatureId() const

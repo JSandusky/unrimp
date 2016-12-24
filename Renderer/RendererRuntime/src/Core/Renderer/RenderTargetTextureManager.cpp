@@ -147,13 +147,17 @@ namespace RendererRuntime
 							uint32_t renderTargetWidth = 0;
 							uint32_t renderTargetHeight = 0;
 							renderTarget.getWidthAndHeight(renderTargetWidth, renderTargetHeight);
+							if (!renderTargetTextureSignature.getAllowResolutionScale())
+							{
+								resolutionScale = 1.0f;
+							}
 							if (isUninitialized(width))
 							{
-								width = static_cast<uint32_t>(static_cast<float>(renderTargetWidth) * resolutionScale);
+								width = static_cast<uint32_t>(static_cast<float>(renderTargetWidth) * resolutionScale * renderTargetTextureSignature.getWidthScale());
 							}
 							if (isUninitialized(height))
 							{
-								height = static_cast<uint32_t>(static_cast<float>(renderTargetHeight) * resolutionScale);
+								height = static_cast<uint32_t>(static_cast<float>(renderTargetHeight) * resolutionScale * renderTargetTextureSignature.getHeightScale());
 							}
 						}
 

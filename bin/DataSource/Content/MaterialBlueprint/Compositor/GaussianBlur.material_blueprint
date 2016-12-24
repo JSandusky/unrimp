@@ -1,0 +1,131 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "1"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"VerticalBlur":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Perform vertical blur?",
+				"VisualImportance": "MANDATORY"
+			},
+			"ColorMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Description": "Color map"
+			}
+		},
+		"RootSignature":
+		{
+			"RootParameters":
+			{
+				"0":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "PassUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "ALL"
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"2":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "ColorMap",
+							"SamplerRootParameterIndex": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				}
+			}
+		},
+		"PipelineState":
+		{
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprintAssetId": "100",
+				"FragmentShaderBlueprintAssetId": "116"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "NONE"
+			},
+			"DepthStencilState":
+			{
+				"DepthEnable": "FALSE",
+				"DepthWriteMask": "ZERO"
+			}
+		},
+		"Resources":
+		{
+			"UniformBuffers":
+			{
+				"PassUniformBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"InverseViewportSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@INVERSE_VIEWPORT_SIZE"
+						}
+					}
+				}
+			},
+			"SamplerStates":
+			{
+				"SamplerLinear":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"MaxLOD": "0.0"
+				}
+			},
+			"Textures":
+			{
+				"ColorMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@ColorMap"
+				}
+			}
+		}
+	}
+}

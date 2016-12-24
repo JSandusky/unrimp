@@ -122,8 +122,9 @@ namespace RendererRuntime
 				materialBlueprintResource->enforceFullyLoaded();
 
 				// TODO(co) We need a central vertex input layout management
-				if (20431079 == assetId ||	// "MaterialBlueprint/Compositor/Final"
-					2351022722 == assetId)	// "MaterialBlueprint/Deferred/AmbientCompositor"
+				if (20431079 == assetId ||		// "MaterialBlueprint/Compositor/Final"
+					2351022722 == assetId ||	// "MaterialBlueprint/Deferred/AmbientCompositor"
+					643992955 == assetId)		// "MaterialBlueprint/Compositor/GaussianBlur"
 				{
 					Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(materialBlueprintResource->getVertexAttributes());
 					static const Renderer::VertexAttribute vertexAttributesLayout[] =

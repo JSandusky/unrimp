@@ -77,8 +77,14 @@ namespace RendererRuntime
 		*    Height
 		*  @param[in] textureFormat
 		*    Texture format
+		*  @param[in] allowResolutionScale
+		*    Allow resolution scale?
+		*  @param[in] widthScale
+		*    Width scale
+		*  @param[in] heightScale
+		*    Height scale
 		*/
-		RENDERERRUNTIME_API_EXPORT RenderTargetTextureSignature(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat);
+		RENDERERRUNTIME_API_EXPORT RenderTargetTextureSignature(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, bool allowResolutionScale, float widthScale, float heightScale);
 
 		/**
 		*  @brief
@@ -107,6 +113,9 @@ namespace RendererRuntime
 		inline uint32_t getWidth() const;
 		inline uint32_t getHeight() const;
 		inline Renderer::TextureFormat::Enum getTextureFormat() const;
+		inline bool getAllowResolutionScale() const;
+		inline float getWidthScale() const;
+		inline float getHeightScale() const;
 
 		//[-------------------------------------------------------]
 		//[ Getter for derived data                               ]
@@ -122,6 +131,9 @@ namespace RendererRuntime
 		uint32_t					  mWidth;
 		uint32_t					  mHeight;
 		Renderer::TextureFormat::Enum mTextureFormat;
+		bool						  mAllowResolutionScale;
+		float						  mWidthScale;
+		float						  mHeightScale;
 		// Derived data
 		RenderTargetTextureSignatureId mRenderTargetTextureSignatureId;
 

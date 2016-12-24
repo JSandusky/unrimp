@@ -120,6 +120,8 @@
 		"112": "ShaderBlueprint/Deferred/MeshFragment.asset",
 		"113": "MaterialBlueprint/Deferred/Mesh.asset",
 		"114": "ShaderBlueprint/Deferred/AmbientCompositorFragment.asset",
-		"115": "MaterialBlueprint/Deferred/AmbientCompositor.asset"
+		"115": "MaterialBlueprint/Deferred/AmbientCompositor.asset",
+		"116": "ShaderBlueprint/Compositor/GaussianBlurFragment.asset",
+		"117": "MaterialBlueprint/Compositor/GaussianBlur.asset"
 	}
 }
