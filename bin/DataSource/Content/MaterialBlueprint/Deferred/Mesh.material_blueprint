@@ -266,24 +266,6 @@
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
 							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
-						},
-						"ViewSpaceSunLightDirection":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@VIEW_SPACE_SUN_LIGHT_DIRECTION"
-						},
-						"Wetness":
-						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT",
-							"Value": "@Wetness"
-						},
-						"SunLightColor":
-						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@SunLightColor"
 						}
 					}
 				},

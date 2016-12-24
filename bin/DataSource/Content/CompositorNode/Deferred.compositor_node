@@ -19,35 +19,84 @@
 				"Height": "TARGET_HEIGHT",
 				"TextureFormat": "R8G8B8A8"
 			},
-			"DepthStencilRenderTargetTexture0":
+			"DepthStencilRenderTargetTexture":
 			{
 				"Width": "TARGET_WIDTH",
 				"Height": "TARGET_HEIGHT",
 				"TextureFormat": "D32_FLOAT"
-			}			
+			},
+			"GBufferRenderTargetTexture0":
+			{
+				"Width": "TARGET_WIDTH",
+				"Height": "TARGET_HEIGHT",
+				"TextureFormat": "R8G8B8A8",
+				"Description": "GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)"
+			},
+			"GBufferRenderTargetTexture1":
+			{
+				"Width": "TARGET_WIDTH",
+				"Height": "TARGET_HEIGHT",
+				"TextureFormat": "R16G16B16A16F",
+				"Description": "GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic"
+			},
+			"GBufferRenderTargetTexture2":
+			{
+				"Width": "TARGET_WIDTH",
+				"Height": "TARGET_HEIGHT",
+				"TextureFormat": "R8G8B8A8",
+				"Description": "GBuffer 2: rgb = emissive color, a = glossiness"
+			}
 		},
 		"Framebuffers":
 		{
 			"Framebuffer0":
 			{
-				"ColorTextures": [ "ColorRenderTargetTexture0" ],
-				"DepthStencilTexture": "DepthStencilRenderTargetTexture0"
+				"ColorTextures": [ "ColorRenderTargetTexture0" ]
+			},
+			"GBufferFramebuffer":
+			{
+				"Description": "GBuffer render target",
+				"ColorTextures": [ "GBufferRenderTargetTexture0", "GBufferRenderTargetTexture1", "GBufferRenderTargetTexture2" ],
+				"DepthStencilTexture": "DepthStencilRenderTargetTexture"
 			}
 		},
 		"Targets":
 		{
+			"GBufferFramebuffer":
+			{
+				"Description": "Render scene into GBuffer",
+				"Passes":
+				{
+					"Clear":
+					{
+						"Flags": "DEPTH"
+					},
+					"Scene":
+					{
+						"MaterialTechnique": "Deferred"
+					}
+				}
+			},
 			"Framebuffer0":
 			{
 				"Passes":
 				{
 					"Clear":
 					{
-						"Flags": "COLOR | DEPTH",
+						"Flags": "COLOR",
 						"Color": "0.5 0.5 0.5 1.0"
 					},
-					"Scene":
+					"Quad":
 					{
-						"MaterialTechnique": "Deferred"
+						"Description": "Render ambient pass using GBuffer data",
+						"MaterialBlueprintAssetId": "115",
+						"SetMaterialProperties":
+						{
+							"GBufferMap0": "GBufferRenderTargetTexture0",
+							"GBufferMap1": "GBufferRenderTargetTexture1",
+							"GBufferMap2": "GBufferRenderTargetTexture2",
+							"DepthMap": "DepthStencilRenderTargetTexture"
+						}
 					}
 				}
 			},

@@ -44,6 +44,12 @@ namespace RendererRuntime
 		return (nullptr != materialResource) ? materialResource->getId() : getUninitialized<MaterialResourceId>();
 	}
 
+	inline void MaterialResourceManager::destroyMaterialResource(MaterialResourceId)
+	{
+		// TODO(co) Implement this method
+		// mMaterialResources.removeElement(materialResourceId);
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]

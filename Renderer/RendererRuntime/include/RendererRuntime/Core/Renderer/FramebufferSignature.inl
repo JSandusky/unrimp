@@ -40,7 +40,8 @@ namespace RendererRuntime
 	inline FramebufferSignature::FramebufferSignature() :
 		mNumberOfColorTextures(0),
 		mColorTextureAssetIds{getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>(), getUninitialized<AssetId>()},
-		mDepthStencilTextureAssetId(getUninitialized<AssetId>())
+		mDepthStencilTextureAssetId(getUninitialized<AssetId>()),
+		mFramebufferSignatureId(getUninitialized<FramebufferSignatureId>())
 	{
 		// Nothing here
 	}
@@ -64,6 +65,7 @@ namespace RendererRuntime
 		mNumberOfColorTextures = framebufferSignature.mNumberOfColorTextures;
 		memcpy(mColorTextureAssetIds, framebufferSignature.mColorTextureAssetIds, sizeof(AssetId) * 8);
 		mDepthStencilTextureAssetId = framebufferSignature.mDepthStencilTextureAssetId;
+		mFramebufferSignatureId = framebufferSignature.mFramebufferSignatureId;
 
 		// Done
 		return *this;

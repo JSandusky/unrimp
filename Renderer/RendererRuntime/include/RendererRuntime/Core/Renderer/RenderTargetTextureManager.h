@@ -121,6 +121,7 @@ namespace RendererRuntime
 	private:
 		typedef std::vector<RenderTargetTextureElement> SortedRenderTargetTextureVector;
 		typedef std::unordered_map<uint32_t, RenderTargetTextureSignatureId> AssetIdToRenderTargetTextureSignatureId;	///< Key = "RendererRuntime::AssetId"
+		typedef std::unordered_map<uint32_t, uint32_t> AssetIdToIndex;	///< Key = "RendererRuntime::AssetId"
 
 
 	//[-------------------------------------------------------]
@@ -129,7 +130,8 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime&						mRendererRuntime;
 		SortedRenderTargetTextureVector			mSortedRenderTargetTextureVector;
-		AssetIdToRenderTargetTextureSignatureId mAssetIdToRenderTargetTextureSignatureId;
+		AssetIdToRenderTargetTextureSignatureId	mAssetIdToRenderTargetTextureSignatureId;
+		AssetIdToIndex							mAssetIdToIndex;
 
 
 	};

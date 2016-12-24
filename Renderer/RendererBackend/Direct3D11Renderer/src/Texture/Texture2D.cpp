@@ -42,6 +42,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	Texture2D::Texture2D(Direct3D11Renderer &direct3D11Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2D(direct3D11Renderer, width, height),
+		mTextureFormat(textureFormat),
 		mD3D11Texture2D(nullptr),
 		mD3D11ShaderResourceViewTexture(nullptr)
 	{
@@ -54,12 +55,13 @@ namespace Direct3D11Renderer
 		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
 
 		// Direct3D 11 2D texture description
+		DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
 		D3D11_TEXTURE2D_DESC d3d11Texture2DDesc;
 		d3d11Texture2DDesc.Width			  = width;
 		d3d11Texture2DDesc.Height			  = height;
 		d3d11Texture2DDesc.MipLevels		  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 11 allocate the complete mipmap chain for us
 		d3d11Texture2DDesc.ArraySize		  = 1;
-		d3d11Texture2DDesc.Format			  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
+		d3d11Texture2DDesc.Format			  = dxgiFormat;
 		d3d11Texture2DDesc.SampleDesc.Count	  = 1;
 		d3d11Texture2DDesc.SampleDesc.Quality = 0;
 		d3d11Texture2DDesc.Usage			  = static_cast<D3D11_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
@@ -73,7 +75,11 @@ namespace Direct3D11Renderer
 		{
 			if (isDepthFormat)
 			{
-				d3d11Texture2DDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+				d3d11Texture2DDesc.BindFlags |= D3D11_BIND_DEPTH_STENCIL;
+
+				// See "Direct3D11Renderer::Texture2D::getTextureFormat()" for details
+				d3d11Texture2DDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+				dxgiFormat = DXGI_FORMAT_R32_FLOAT;
 			}
 			else
 			{
@@ -144,12 +150,12 @@ namespace Direct3D11Renderer
 		}
 
 		// Create the Direct3D 11 shader resource view instance
-		if (nullptr != mD3D11Texture2D && !isDepthFormat)
+		if (nullptr != mD3D11Texture2D)
 		{
 			// Direct3D 11 shader resource view description
 			D3D11_SHADER_RESOURCE_VIEW_DESC d3d11ShaderResourceViewDesc;
 			::ZeroMemory(&d3d11ShaderResourceViewDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
-			d3d11ShaderResourceViewDesc.Format					  = d3d11Texture2DDesc.Format;
+			d3d11ShaderResourceViewDesc.Format					  = dxgiFormat;
 			d3d11ShaderResourceViewDesc.ViewDimension			  = D3D11_SRV_DIMENSION_TEXTURE2D;
 			d3d11ShaderResourceViewDesc.Texture2D.MipLevels		  = numberOfMipmaps;
 			d3d11ShaderResourceViewDesc.Texture2D.MostDetailedMip = 0;

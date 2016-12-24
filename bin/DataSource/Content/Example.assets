@@ -118,6 +118,8 @@
 		"110": "MaterialBlueprint/Debug/Mesh.asset",
 		"111": "ShaderBlueprint/Deferred/MeshVertex.asset",
 		"112": "ShaderBlueprint/Deferred/MeshFragment.asset",
-		"113": "MaterialBlueprint/Deferred/Mesh.asset"
+		"113": "MaterialBlueprint/Deferred/Mesh.asset",
+		"114": "ShaderBlueprint/Deferred/AmbientCompositorFragment.asset",
+		"115": "MaterialBlueprint/Deferred/AmbientCompositor.asset"
 	}
 }

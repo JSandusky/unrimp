@@ -93,6 +93,7 @@ SAMPLER_STATE(SamplerLinear, 0)
 //[-------------------------------------------------------]
 //[ Pieces                                                ]
 //[-------------------------------------------------------]
+// TODO(co) Just a first test, need reusable shader piece for this
 @property(Lighting)
 	@piece(CalculateLighting)
 		// Perform standard Blinn-Phong diffuse and specular lighting
@@ -122,6 +123,7 @@ MAIN_BEGIN
 	// Get the used material
 	Material material = Materials[MAIN_INPUT(AssignedMaterialSlotVS)];
 
+	// TODO(co) Pass in "ViewSpaceViewVector" from outside
 	// Build in variables
 	float3 ViewSpaceViewVector = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
 

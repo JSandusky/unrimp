@@ -1,0 +1,122 @@
+/*********************************************************\
+ * Copyright (c) 2012-2016 Christian Ofenberg
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+@includepiece(15)	// "Core.shader_piece"
+
+
+//[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_COLOR(0)
+OUTPUT_END
+
+// Uniform buffers
+struct PassDataStruct
+{
+	float3 ViewSpaceSunLightDirection;
+	float  Wetness;
+	float3 SunLightColor;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
+
+// Samplers
+SAMPLER_STATE(SamplerPoint, 0)
+
+// Textures
+TEXTURE_2D(GBufferMap0, 0)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
+TEXTURE_2D(GBufferMap1, 1)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
+TEXTURE_2D(GBufferMap2, 2)	// GBuffer 2: rgb = emissive color, a = glossiness
+TEXTURE_2D(DepthMap, 3)
+
+
+//[-------------------------------------------------------]
+//[ Pieces                                                ]
+//[-------------------------------------------------------]
+// TODO(co) Just a first test, need reusable shader piece for this
+@piece(CalculateLighting)
+	// Perform standard Blinn-Phong diffuse and specular lighting
+
+	// Calculate the diffuse lighting
+	float diffuseLightFactor = max(dot(normal, PassData.ViewSpaceSunLightDirection), 0.0f);
+	float3 diffuseLightColor = PassData.SunLightColor * diffuseLightFactor;
+
+	// Calculate the specular lighting
+	float3 viewSpaceHalfVector = normalize(PassData.ViewSpaceSunLightDirection + ViewSpaceViewVector);
+	float specularLightFactor = (diffuseLightFactor > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
+	float3 specularLightColor = PassData.Wetness * PassData.SunLightColor * specularLightFactor;
+@end
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
+	float4 textureCoordinate = float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f);
+	float depthValue = SAMPLE_2D_LOD(DepthMap, SamplerPoint, textureCoordinate).r;
+	if (1.0f == depthValue)
+	{
+		discard;
+	}
+
+	// Read GBuffer data
+	float4 gbuffer0Value = SAMPLE_2D_LOD(GBufferMap0, SamplerPoint, textureCoordinate);
+	float4 gbuffer1Value = SAMPLE_2D_LOD(GBufferMap1, SamplerPoint, textureCoordinate);
+	float4 gbuffer2Value = SAMPLE_2D_LOD(GBufferMap2, SamplerPoint, textureCoordinate);
+	float3 diffuseValue = gbuffer0Value.rgb;
+	float3 normal = gbuffer1Value.rgb;
+	float specularValue = gbuffer1Value.a;
+	float3 emissiveValue = gbuffer2Value.rgb;
+
+	// TODO(co) Pass in "ViewSpaceViewVector" from outside
+	// Build in variables
+	float3 ViewSpaceViewVector = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
+
+	// Calculate lighting
+	@insertpiece(CalculateLighting)
+
+	// Diffuse term
+	float3 color = diffuseLightColor * diffuseValue;
+
+	// Specular term
+	color += specularLightColor * specularValue;
+
+	// Emissive term
+	color += emissiveValue;
+
+	// Done
+	MAIN_OUTPUT_COLOR(0) = min(float4(color, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
+MAIN_END

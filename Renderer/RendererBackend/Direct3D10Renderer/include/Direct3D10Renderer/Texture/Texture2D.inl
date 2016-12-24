@@ -28,6 +28,11 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline Renderer::TextureFormat::Enum Texture2D::getTextureFormat() const
+	{
+		return mTextureFormat;
+	}
+
 	inline ID3D10Texture2D *Texture2D::getD3D10Texture2D() const
 	{
 		return mD3D10Texture2D;

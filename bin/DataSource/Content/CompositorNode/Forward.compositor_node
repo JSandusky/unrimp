@@ -13,13 +13,13 @@
 		},
 		"RenderTargetTextures":
 		{
-			"ColorRenderTargetTexture0":
+			"ColorRenderTargetTexture":
 			{
 				"Width": "TARGET_WIDTH",
 				"Height": "TARGET_HEIGHT",
 				"TextureFormat": "R8G8B8A8"
 			},
-			"DepthStencilRenderTargetTexture0":
+			"DepthStencilRenderTargetTexture":
 			{
 				"Width": "TARGET_WIDTH",
 				"Height": "TARGET_HEIGHT",
@@ -30,8 +30,8 @@
 		{
 			"Framebuffer0":
 			{
-				"ColorTextures": [ "ColorRenderTargetTexture0" ],
-				"DepthStencilTexture": "DepthStencilRenderTargetTexture0"
+				"ColorTextures": [ "ColorRenderTargetTexture" ],
+				"DepthStencilTexture": "DepthStencilRenderTargetTexture"
 			}
 		},
 		"Targets":
@@ -60,7 +60,7 @@
 						"MaterialBlueprintAssetId": "102",
 						"SetMaterialProperties":
 						{
-							"ColorMap": "ColorRenderTargetTexture0"
+							"ColorMap": "ColorRenderTargetTexture"
 						}
 					},
 					"DebugGui":

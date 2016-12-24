@@ -42,6 +42,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	Texture2D::Texture2D(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2D(direct3D10Renderer, width, height),
+		mTextureFormat(textureFormat),
 		mD3D10Texture2D(nullptr),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
@@ -54,12 +55,13 @@ namespace Direct3D10Renderer
 		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
 
 		// Direct3D 10 2D texture description
+		DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(textureFormat));
 		D3D10_TEXTURE2D_DESC d3d10Texture2DDesc;
 		d3d10Texture2DDesc.Width			  = width;
 		d3d10Texture2DDesc.Height			  = height;
 		d3d10Texture2DDesc.MipLevels		  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 10 allocate the complete mipmap chain for us
 		d3d10Texture2DDesc.ArraySize		  = 1;
-		d3d10Texture2DDesc.Format			  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(textureFormat));
+		d3d10Texture2DDesc.Format			  = dxgiFormat;
 		d3d10Texture2DDesc.SampleDesc.Count	  = 1;
 		d3d10Texture2DDesc.SampleDesc.Quality = 0;
 		d3d10Texture2DDesc.Usage			  = static_cast<D3D10_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
@@ -73,7 +75,11 @@ namespace Direct3D10Renderer
 		{
 			if (isDepthFormat)
 			{
-				d3d10Texture2DDesc.BindFlags = D3D10_BIND_DEPTH_STENCIL;
+				d3d10Texture2DDesc.BindFlags |= D3D10_BIND_DEPTH_STENCIL;
+
+				// See "Direct3D10Renderer::Texture2D::getTextureFormat()" for details
+				d3d10Texture2DDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+				dxgiFormat = DXGI_FORMAT_R32_FLOAT;
 			}
 			else
 			{
@@ -144,12 +150,12 @@ namespace Direct3D10Renderer
 		}
 
 		// Create the Direct3D 10 shader resource view instance
-		if (nullptr != mD3D10Texture2D && !isDepthFormat)
+		if (nullptr != mD3D10Texture2D)
 		{
 			// Direct3D 10 shader resource view description
 			D3D10_SHADER_RESOURCE_VIEW_DESC d3d10ShaderResourceViewDesc;
 			::ZeroMemory(&d3d10ShaderResourceViewDesc, sizeof(D3D10_SHADER_RESOURCE_VIEW_DESC));
-			d3d10ShaderResourceViewDesc.Format					  = d3d10Texture2DDesc.Format;
+			d3d10ShaderResourceViewDesc.Format					  = dxgiFormat;
 			d3d10ShaderResourceViewDesc.ViewDimension			  = D3D10_SRV_DIMENSION_TEXTURE2D;
 			d3d10ShaderResourceViewDesc.Texture2D.MipLevels		  = numberOfMipmaps;
 			d3d10ShaderResourceViewDesc.Texture2D.MostDetailedMip = 0;

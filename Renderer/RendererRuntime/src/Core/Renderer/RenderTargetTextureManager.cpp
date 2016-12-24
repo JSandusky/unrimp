@@ -69,6 +69,7 @@ namespace RendererRuntime
 		clearRendererResources();
 		mSortedRenderTargetTextureVector.clear();
 		mAssetIdToRenderTargetTextureSignatureId.clear();
+		mAssetIdToIndex.clear();
 	}
 
 	void RenderTargetTextureManager::clearRendererResources()
@@ -86,6 +87,15 @@ namespace RendererRuntime
 	void RenderTargetTextureManager::addRenderTargetTexture(AssetId assetId, const RenderTargetTextureSignature& renderTargetTextureSignature)
 	{
 		RenderTargetTextureElement renderTargetTextureElement(renderTargetTextureSignature);
+
+		// TODO(co) The render target texture and framebuffer handling is still under construction regarding recycling renderer resources etc. - so for now, just add render target textures to have something to start with
+		{ // Add new render target texture
+			// Register the new render target texture element
+			++renderTargetTextureElement.numberOfReferences;
+			mSortedRenderTargetTextureVector.push_back(renderTargetTextureElement);
+			mAssetIdToIndex.emplace(assetId, mSortedRenderTargetTextureVector.size() - 1);
+		}
+		/*
 		SortedRenderTargetTextureVector::iterator iterator = std::lower_bound(mSortedRenderTargetTextureVector.begin(), mSortedRenderTargetTextureVector.end(), renderTargetTextureElement, ::detail::orderRenderTargetTextureElementByRenderTargetTextureSignatureId);
 		if (iterator == mSortedRenderTargetTextureVector.end() || iterator->renderTargetTextureSignature.getRenderTargetTextureSignatureId() != renderTargetTextureElement.renderTargetTextureSignature.getRenderTargetTextureSignatureId())
 		{
@@ -101,6 +111,7 @@ namespace RendererRuntime
 			++iterator->numberOfReferences;
 		}
 		mAssetIdToRenderTargetTextureSignatureId.emplace(assetId, renderTargetTextureSignature.getRenderTargetTextureSignatureId());
+		*/
 	}
 
 	Renderer::ITexture* RenderTargetTextureManager::getTextureByAssetId(AssetId assetId, const Renderer::IRenderTarget& renderTarget, float resolutionScale)
@@ -108,15 +119,22 @@ namespace RendererRuntime
 		Renderer::ITexture* texture = nullptr;
 
 		// Map asset ID to render target texture signature ID
+		// TODO(co) The render target texture and framebuffer handling is still under construction regarding recycling renderer resources etc. - so for now, just add render target textures to have something to start with
+		/*
 		AssetIdToRenderTargetTextureSignatureId::const_iterator iterator = mAssetIdToRenderTargetTextureSignatureId.find(assetId);
 		if (mAssetIdToRenderTargetTextureSignatureId.cend() != iterator)
 		{
 			// TODO(co) Is there need for a more efficient search?
 			const RenderTargetTextureSignatureId renderTargetTextureSignatureId = iterator->second;
 			for (RenderTargetTextureElement& renderTargetTextureElement : mSortedRenderTargetTextureVector)
+			*/
+		AssetIdToIndex::const_iterator iterator = mAssetIdToIndex.find(assetId);
+		if (mAssetIdToIndex.cend() != iterator)
+		{
+			RenderTargetTextureElement& renderTargetTextureElement = mSortedRenderTargetTextureVector[iterator->second];
 			{
 				const RenderTargetTextureSignature& renderTargetTextureSignature = renderTargetTextureElement.renderTargetTextureSignature;
-				if (renderTargetTextureSignature.getRenderTargetTextureSignatureId() == renderTargetTextureSignatureId)
+				// if (renderTargetTextureSignature.getRenderTargetTextureSignatureId() == renderTargetTextureSignatureId)	// TODO(co) The render target texture and framebuffer handling is still under construction regarding recycling renderer resources etc. - so for now, just add render target textures to have something to start with
 				{
 					// Do we need to create the renderer texture instance right now?
 					if (nullptr == renderTargetTextureElement.texture)
@@ -163,7 +181,7 @@ namespace RendererRuntime
 						}
 					}
 					texture = renderTargetTextureElement.texture;
-					break;
+					// break;	// TODO(co) The render target texture and framebuffer handling is still under construction regarding recycling renderer resources etc. - so for now, just add render target textures to have something to start with
 				}
 			}
 			assert(nullptr != texture);

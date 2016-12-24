@@ -25,6 +25,7 @@
 #include "Direct3D11Renderer/Texture/Texture2D.h"
 #include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D11Renderer/D3D11.h"
+#include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
 #include <stdio.h>	// For "sprintf_s()"
@@ -89,24 +90,13 @@ namespace Direct3D11Renderer
 								mHeight = texture2D->getHeight();
 							}
 
-							// Get the Direct3D 11 resource
-							ID3D11Resource *d3d11Resource = nullptr;
-							texture2D->getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-
-							// Get the DXGI format of the 2D texture
-							D3D11_TEXTURE2D_DESC d3d11Texture2DDesc;
-							static_cast<ID3D11Texture2D*>(d3d11Resource)->GetDesc(&d3d11Texture2DDesc);
-
 							// Create the Direct3D 11 render target view instance
 							D3D11_RENDER_TARGET_VIEW_DESC d3d11RenderTargetViewDesc;
 							::ZeroMemory(&d3d11RenderTargetViewDesc, sizeof(D3D11_RENDER_TARGET_VIEW_DESC));
-							d3d11RenderTargetViewDesc.Format			 = d3d11Texture2DDesc.Format;
+							d3d11RenderTargetViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(texture2D->getTextureFormat()));
 							d3d11RenderTargetViewDesc.ViewDimension		 = D3D11_RTV_DIMENSION_TEXTURE2D;
 							d3d11RenderTargetViewDesc.Texture2D.MipSlice = 0;
-							direct3D11Renderer.getD3D11Device()->CreateRenderTargetView(d3d11Resource, &d3d11RenderTargetViewDesc, d3d11RenderTargetView);
-
-							// Release our Direct3D 11 resource reference
-							d3d11Resource->Release();
+							direct3D11Renderer.getD3D11Device()->CreateRenderTargetView(texture2D->getD3D11Texture2D(), &d3d11RenderTargetViewDesc, d3d11RenderTargetView);
 							break;
 						}
 
@@ -163,20 +153,13 @@ namespace Direct3D11Renderer
 						mHeight = texture2D->getHeight();
 					}
 
-					// Get the Direct3D 11 resource
-					ID3D11Resource *d3d11Resource = texture2D->getD3D11Texture2D();
-
-					// Get the DXGI format of the 2D texture
-					D3D11_TEXTURE2D_DESC d3d11Texture2DDesc;
-					static_cast<ID3D11Texture2D*>(d3d11Resource)->GetDesc(&d3d11Texture2DDesc);
-
 					// Create the Direct3D 11 render target view instance
 					D3D11_DEPTH_STENCIL_VIEW_DESC d3d11DepthStencilViewDesc;
 					::ZeroMemory(&d3d11DepthStencilViewDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
-					d3d11DepthStencilViewDesc.Format			 = d3d11Texture2DDesc.Format;
+					d3d11DepthStencilViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(texture2D->getTextureFormat()));
 					d3d11DepthStencilViewDesc.ViewDimension		 = D3D11_DSV_DIMENSION_TEXTURE2D;
 					d3d11DepthStencilViewDesc.Texture2D.MipSlice = 0;
-					direct3D11Renderer.getD3D11Device()->CreateDepthStencilView(d3d11Resource, &d3d11DepthStencilViewDesc, &mD3D11DepthStencilView);
+					direct3D11Renderer.getD3D11Device()->CreateDepthStencilView(texture2D->getD3D11Texture2D(), &d3d11DepthStencilViewDesc, &mD3D11DepthStencilView);
 					break;
 				}
 

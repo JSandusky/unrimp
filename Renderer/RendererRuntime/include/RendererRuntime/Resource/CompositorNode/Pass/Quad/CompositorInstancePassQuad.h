@@ -27,7 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Resource/IResourceListener.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
+#include "RendererRuntime/RenderQueue/RenderableManager.h"
 #include "RendererRuntime/RenderQueue/RenderQueue.h"
 
 
@@ -69,7 +71,7 @@ namespace RendererRuntime
 	*  @todo
 	*    - TODO(co) "gl_VertexID" is not available in OpenGL ES 2, so we have to use a vertex array buffer there. Add vertex array buffer less rendering for renderer backends supporting "gl_VertexID" or similar (see e.g. https://web.archive.org/web/20140719063725/http://www.altdev.co/2011/08/08/interesting-vertex-shader-trick/ ).
 	*/
-	class CompositorInstancePassQuad : public ICompositorInstancePass
+	class CompositorInstancePassQuad : public ICompositorInstancePass, public IResourceListener
 	{
 
 
@@ -87,21 +89,29 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[ Private virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	protected:
+	private:
 		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer) override;
 		inline virtual void onFrameEnded() override;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private virtual RendererRuntime::IResourceListener methods ]
 	//[-------------------------------------------------------]
-	protected:
+	private:
+		virtual void onLoadingStateChange(const IResource& resource) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
 		CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorNodeInstance& compositorNodeInstance);
 		virtual ~CompositorInstancePassQuad();
 		CompositorInstancePassQuad(const CompositorInstancePassQuad&) = delete;
 		CompositorInstancePassQuad& operator=(const CompositorInstancePassQuad&) = delete;
+		void createMaterialResource(MaterialResourceId parentMaterialResourceId);
 
 
 	//[-------------------------------------------------------]
@@ -110,6 +120,7 @@ namespace RendererRuntime
 	private:
 		RenderQueue		   mRenderQueue;
 		MaterialResourceId mMaterialResourceId;
+		RenderableManager  mRenderableManager;
 
 
 	};

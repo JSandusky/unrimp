@@ -49,7 +49,9 @@ INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame2VS,		 4)	// Tangent frame
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_COLOR(0)
+	OUTPUT_COLOR(0)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
+	OUTPUT_COLOR(1)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
+	OUTPUT_COLOR(2)	// GBuffer 2: rgb = emissive color, a = glossiness
 OUTPUT_END
 
 // Uniform buffers
@@ -57,9 +59,6 @@ struct PassDataStruct
 {
 	float4x4 WorldSpaceToViewSpaceMatrix;
 	float4x4 WorldSpaceToClipSpaceMatrix;
-	float3	 ViewSpaceSunLightDirection;
-	float	 Wetness;
-	float3	 SunLightColor;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -91,39 +90,11 @@ SAMPLER_STATE(SamplerLinear, 0)
 
 
 //[-------------------------------------------------------]
-//[ Pieces                                                ]
-//[-------------------------------------------------------]
-@property(Lighting)
-	@piece(CalculateLighting)
-		// Perform standard Blinn-Phong diffuse and specular lighting
-
-		// Calculate the diffuse lighting
-		float diffuseLightFactor = max(dot(normal, PassData.ViewSpaceSunLightDirection), 0.0f);
-		float3 diffuseLightColor = PassData.SunLightColor * diffuseLightFactor;
-
-		// Calculate the specular lighting
-		float3 viewSpaceHalfVector = normalize(PassData.ViewSpaceSunLightDirection + ViewSpaceViewVector);
-		float specularLightFactor = (diffuseLightFactor > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
-		float3 specularLightColor = PassData.Wetness * PassData.SunLightColor * specularLightFactor;
-	@end
-@end
-@property(!Lighting)
-	@piece(CalculateLighting)
-		float diffuseLightColor = 1.0f;
-		float specularLightColor = 0.0f;
-	@end
-@end
-
-
-//[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	// Get the used material
 	Material material = Materials[MAIN_INPUT(AssignedMaterialSlotVS)];
-
-	// Build in variables
-	float3 ViewSpaceViewVector = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
 
 	// Get the per fragment normal [0..1] by using a tangent space normal map
 	@property(UseNormalMap)
@@ -139,30 +110,26 @@ MAIN_BEGIN
 	// Transform the tangent space normal into view space
 	normal = normalize(normal.x * MAIN_INPUT(TangentFrame0VS) + normal.y * MAIN_INPUT(TangentFrame1VS) + normal.z * MAIN_INPUT(TangentFrame2VS));
 
-	// Calculate lighting
-	@insertpiece(CalculateLighting)
-
-	// Diffuse term
+	// Diffuse value
+	float3 diffuseValue = material.DiffuseColor;
 	@property(UseDiffuseMap)
-		float3 color = diffuseLightColor * material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
-	@end
-	@property(!UseDiffuseMap)
-		float3 color = diffuseLightColor * material.DiffuseColor;
+		diffuseValue *= SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
 	@end
 
-	// Specular term
+	// Specular value
+	float specularValue = 1.0f;
 	@property(UseSpecularMap)
-		color += specularLightColor * SAMPLE_2D(SpecularMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
-	@end
-	@property(!UseSpecularMap)
-		color += specularLightColor;
+		specularValue *= SAMPLE_2D(SpecularMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r;
 	@end
 
-	// Emissive term
+	// Emissive value
+	float3 emissiveValue = float3(0.0f, 0.0f, 0.0f);
 	@property(UseEmissiveMap)
-		color += SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+		emissiveValue = SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
 	@end
 
 	// Done
-	MAIN_OUTPUT_COLOR(0) = min(float4(color, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
+	MAIN_OUTPUT_COLOR(0) = float4(diffuseValue, 1.0f);
+	MAIN_OUTPUT_COLOR(1) = float4(normal, specularValue);
+	MAIN_OUTPUT_COLOR(2) = float4(emissiveValue, 0.0f);
 MAIN_END

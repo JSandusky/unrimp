@@ -37,7 +37,8 @@ namespace RendererRuntime
 	inline RenderTargetTextureSignature::RenderTargetTextureSignature() :
 		mWidth(getUninitialized<uint32_t>()),
 		mHeight(getUninitialized<uint32_t>()),
-		mTextureFormat(Renderer::TextureFormat::UNKNOWN)
+		mTextureFormat(Renderer::TextureFormat::UNKNOWN),
+		mRenderTargetTextureSignatureId(getUninitialized<RenderTargetTextureSignatureId>())
 	{
 		// Nothing here
 	}

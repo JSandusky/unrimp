@@ -27,7 +27,6 @@
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
-#include "RendererRuntime/RenderQueue/RenderableManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -43,8 +42,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global variables                                      ]
 		//[-------------------------------------------------------]
-		static Renderer::IVertexArrayPtr		  VertexArrayPtr;		///< Vertex array object (VAO), can be a null pointer, shared between all compositor instance pass quad instances
-		static RendererRuntime::RenderableManager RenderableManager;	///< Renderable manager, shared between all compositor instance pass quad instances
+		static Renderer::IVertexArrayPtr VertexArrayPtr;	///< Vertex array object (VAO), can be a null pointer, shared between all compositor instance pass quad instances
 
 
 		//[-------------------------------------------------------]
@@ -112,24 +110,27 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[ Private virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	void CompositorInstancePassQuad::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer)
 	{
-		// Begin debug event
-		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+		if (!mRenderableManager.getRenderables().empty())
+		{
+			// Begin debug event
+			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
-		// Fill command buffer
-		mRenderQueue.addRenderablesFromRenderableManager(::detail::RenderableManager);
-		mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialTechniqueId(), commandBuffer);
+			// Fill command buffer
+			mRenderQueue.addRenderablesFromRenderableManager(mRenderableManager);
+			mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialTechniqueId(), commandBuffer);
 
-		// End debug event
-		COMMAND_END_DEBUG_EVENT(commandBuffer)
+			// End debug event
+			COMMAND_END_DEBUG_EVENT(commandBuffer)
+		}
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	CompositorInstancePassQuad::CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorNodeInstance& compositorNodeInstance) :
 		ICompositorInstancePass(compositorResourcePassQuad, compositorNodeInstance),
@@ -140,28 +141,67 @@ namespace RendererRuntime
 		assert(isInitialized(compositorResourcePassQuad.getMaterialAssetId()) || isInitialized(compositorResourcePassQuad.getMaterialBlueprintAssetId()));
 		assert(!(isInitialized(compositorResourcePassQuad.getMaterialAssetId()) && isInitialized(compositorResourcePassQuad.getMaterialBlueprintAssetId())));
 
-		// Get material resource
-		const IRendererRuntime& rendererRuntime = compositorNodeInstance.getCompositorWorkspaceInstance().getRendererRuntime();
-		MaterialResourceManager& materialResourceManager = rendererRuntime.getMaterialResourceManager();
+		// Get parent material resource ID and initiate creating the compositor instance pass quad material resource
+		MaterialResourceManager& materialResourceManager = compositorNodeInstance.getCompositorWorkspaceInstance().getRendererRuntime().getMaterialResourceManager();
 		if (isInitialized(compositorResourcePassQuad.getMaterialAssetId()))
 		{
 			// Get or load material resource
-			mMaterialResourceId = materialResourceManager.loadMaterialResourceByAssetId(compositorResourcePassQuad.getMaterialAssetId());
+			materialResourceManager.loadMaterialResourceByAssetId(compositorResourcePassQuad.getMaterialAssetId(), this);
 		}
 		else
 		{
-			// Get or create material resource
+			// Get or load material blueprint resource
 			const AssetId materialBlueprintAssetId = compositorResourcePassQuad.getMaterialBlueprintAssetId();
-			mMaterialResourceId = materialResourceManager.getMaterialResourceIdByAssetId(materialBlueprintAssetId);
-			if (isUninitialized(mMaterialResourceId))
+			MaterialResourceId parentMaterialResourceId = materialResourceManager.getMaterialResourceIdByAssetId(materialBlueprintAssetId);
+			if (isUninitialized(parentMaterialResourceId))
 			{
-				mMaterialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialBlueprintAssetId, materialBlueprintAssetId, compositorResourcePassQuad.getMaterialTechniqueId());
+				parentMaterialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialBlueprintAssetId, materialBlueprintAssetId, compositorResourcePassQuad.getMaterialTechniqueId());
+			}
+			createMaterialResource(parentMaterialResourceId);
+		}
+	}
+
+	CompositorInstancePassQuad::~CompositorInstancePassQuad()
+	{
+		if (isInitialized(mMaterialResourceId))
+		{
+			// Destroy the material resource the compositor instance pass quad created
+			getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getMaterialResourceManager().destroyMaterialResource(mMaterialResourceId);
+
+			// Clear the renderable manager right now so we have no more references to the shared vertex array
+			mRenderableManager.getRenderables().clear();
+
+			// Release reference to vertex array object (VAO) shared between all compositor instance pass quad instances
+			if (nullptr != ::detail::VertexArrayPtr && 1 == ::detail::VertexArrayPtr->releaseReference())	// +1 for reference to global shared pointer
+			{
+				::detail::VertexArrayPtr = nullptr;
 			}
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	void CompositorInstancePassQuad::onLoadingStateChange(const IResource& resource)
+	{
+		assert(resource.getId() == mMaterialResourceId);
+		createMaterialResource(resource.getId());
+	}
+
+	void CompositorInstancePassQuad::createMaterialResource(MaterialResourceId parentMaterialResourceId)
+	{
+		// Sanity checks
+		assert(isUninitialized(mMaterialResourceId));
+		assert(isInitialized(parentMaterialResourceId));
+
+		// Each compositor instance pass quad must have its own material resource since material property values might vary
+		const IRendererRuntime& rendererRuntime = getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime();
+		MaterialResourceManager& materialResourceManager = rendererRuntime.getMaterialResourceManager();
+		mMaterialResourceId = materialResourceManager.createMaterialResourceByCloning(parentMaterialResourceId);
 
 		{ // Set compositor resource pass quad material properties
-			// TODO(co) "CompositorInstancePassQuad": Probably need to ensure that each pass has it's own material instance with own material property values
-			const MaterialProperties::SortedPropertyVector& sortedPropertyVector = compositorResourcePassQuad.getMaterialProperties().getSortedPropertyVector();
+			const MaterialProperties::SortedPropertyVector& sortedPropertyVector = static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialProperties().getSortedPropertyVector();
 			if (!sortedPropertyVector.empty())
 			{
 				MaterialResource& materialResource = materialResourceManager.getMaterialResources().getElementById(mMaterialResourceId);
@@ -180,30 +220,11 @@ namespace RendererRuntime
 		{
 			::detail::VertexArrayPtr = ::detail::createVertexArray(rendererRuntime.getBufferManager());
 			assert(nullptr != ::detail::VertexArrayPtr);
-
-			// Setup renderable manager, shared between all compositor instance pass quad instances
-			assert(::detail::RenderableManager.getRenderables().empty());
-			::detail::RenderableManager.getRenderables().emplace_back(::detail::RenderableManager, ::detail::VertexArrayPtr, Renderer::PrimitiveTopology::TRIANGLE_LIST, false, 0, 3, materialResourceManager, mMaterialResourceId);
 		}
 		::detail::VertexArrayPtr->addReference();
-	}
 
-	CompositorInstancePassQuad::~CompositorInstancePassQuad()
-	{
-		// Release reference to vertex array object (VAO) shared between all compositor instance pass quad instances
-		assert(nullptr != ::detail::VertexArrayPtr);
-		if (2 == ::detail::VertexArrayPtr->releaseReference())	// 2 due to +1 for global shared pointer and +1 for renderable shared pointer
-		{
-			{ // Clear renderable manager
-				RenderableManager::Renderables& renderables = ::detail::RenderableManager.getRenderables();
-				renderables.clear();
-
-				// Try to free memory allocated by the renderable manager so memory leak functions like "_CrtMemDumpAllObjectsSince()" from Windows don't report false-positives
-				// -> Just a request, the Visual Studio 2015 STD implementation fulfills it
-				renderables.shrink_to_fit();
-			}
-			::detail::VertexArrayPtr = nullptr;
-		}
+		// Setup renderable manager, shared between all compositor instance pass quad instances
+		mRenderableManager.getRenderables().emplace_back(mRenderableManager, ::detail::VertexArrayPtr, Renderer::PrimitiveTopology::TRIANGLE_LIST, false, 0, 3, materialResourceManager, mMaterialResourceId);
 	}
 
 
