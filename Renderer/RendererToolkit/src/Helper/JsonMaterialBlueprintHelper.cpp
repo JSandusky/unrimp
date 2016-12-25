@@ -593,7 +593,7 @@ namespace RendererToolkit
 			// Material property usage
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(rapidJsonValueProperty);
 			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValueProperty);
-			if (RendererRuntime::MaterialProperty::Usage::TEXTURE_REFERENCE != usage && RendererRuntime::MaterialProperty::isReferenceUsage(usage))
+			if (RendererRuntime::MaterialProperty::isReferenceUsage(usage))
 			{
 				// Get the reference value as string
 				static const uint32_t NAME_LENGTH = 128;
@@ -610,7 +610,8 @@ namespace RendererToolkit
 				}
 				else
 				{
-					// TODO(co) Error handling
+					// Write down the material property
+					sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, mandatoryMaterialPropertyValue(input, rapidJsonValueProperty, "Value", valueType)));
 				}
 			}
 			else

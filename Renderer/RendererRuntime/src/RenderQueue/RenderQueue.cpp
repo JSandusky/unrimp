@@ -283,15 +283,8 @@ namespace RendererRuntime
 										// Set the used pipeline state object (PSO)
 										Renderer::Command::SetPipelineState::create(commandBuffer, pipelineStatePtr);
 
-										{ // Fill the instance buffer manager
-											PassBufferManager* passBufferManager = materialBlueprintResource->getPassBufferManager();
-											if (nullptr != passBufferManager)
-											{
-												const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
-												const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource->getInstanceTextureBuffer();
-												instanceBufferManager.fillBuffer(*passBufferManager, instanceUniformBuffer, instanceTextureBuffer, renderable.getRenderableManager().getTransform(), *materialTechnique, commandBuffer);
-											}
-										}
+										// Fill the instance buffer manager
+										instanceBufferManager.fillBuffer(materialBlueprintResource->getPassBufferManager(), materialBlueprintResource->getInstanceUniformBuffer(), materialBlueprintResource->getInstanceTextureBuffer(), renderable.getRenderableManager().getTransform(), *materialTechnique, commandBuffer);
 
 										// Setup input assembly (IA): Set the primitive topology used for draw calls
 										Renderer::Command::SetPrimitiveTopology::create(commandBuffer, renderable.getPrimitiveTopology());

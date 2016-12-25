@@ -32,8 +32,6 @@
 
 #include <vector>
 
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]

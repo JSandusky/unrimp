@@ -12,7 +12,7 @@
 			"AssetType": "MaterialBlueprint",
 			"AssetCategory": "Compositor",
 			"AssetName": "GaussianBlur",
-			"AssetDependencies": [ "100", "116" ],
+			"AssetDependencies": [ "118", "116" ],
 			"FileDependencies": [ "GaussianBlur.material_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg",
 			"Description": "The Gaussian blur implementation is basing on http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/"

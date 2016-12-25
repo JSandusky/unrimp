@@ -131,6 +131,18 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the textures
+		*
+		*  @param[in] rendererRuntime
+		*    Renderer runtime to use
+		*
+		*  @return
+		*    The textures
+		*/
+		const Textures& getTextures(const IRendererRuntime& rendererRuntime) const;
+
+		/**
+		*  @brief
 		*    Bind the material technique into the given commando buffer
 		*
 		*  @param[in] rendererRuntime
@@ -162,7 +174,7 @@ namespace RendererRuntime
 	private:
 		MaterialTechniqueId			mMaterialTechniqueId;			///< Material technique ID
 		MaterialBlueprintResourceId	mMaterialBlueprintResourceId;	///< Material blueprint resource ID, can be set to uninitialized value
-		Textures					mTextures;
+		mutable Textures			mTextures;
 
 
 	};

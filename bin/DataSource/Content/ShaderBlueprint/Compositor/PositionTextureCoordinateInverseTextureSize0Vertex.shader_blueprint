@@ -35,15 +35,14 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE				(float2, TexCoordVS, 0)				// Texture coordinate
-	INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(float2, InverseTextureSize0VS, 1)	// Inverse texture size 0
+	INPUT_VERTEX_POSITION(float4, PositionTexCoord)		// xy = position, zw = texture coordinate
+	INPUT_VERTEX_DRAW_ID								// Draw ID
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_COLOR(0)
+	OUTPUT_TEXTURE_COORDINATE				 (float2, TexCoordVS, 0)			// Texture coordinate
+	OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(float2, InverseTextureSize0VS, 1)	// Inverse texture size 0
+	OUTPUT_POSITION																// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
 OUTPUT_END
-
-// Samplers
-SAMPLER_STATE(SamplerLinear, 0)
 
 // Textures
 TEXTURE_2D(ColorMap, 0)
@@ -53,30 +52,22 @@ TEXTURE_2D(ColorMap, 0)
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	// Constants
-	float offset[3];
-	offset[0] = 0.0f;
-	offset[1] = 1.3846153846f;
-	offset[2] = 3.2307692308f;
-	float weight[3];
-	weight[0] = 0.227027027f;
-	weight[1] = 0.3162162162f;
-	weight[2] = 0.0702702703f;
+	// Transform the object space vertex into clip space
+	MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).xy, 0.0f, 1.0f);
+	@property(GLSL && IsFinalCopy)
+		MAIN_OUTPUT_POSITION.y = -MAIN_OUTPUT_POSITION.y;
+	@end
 
-	// Gather values
-	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)) * weight[0];
-	for (int i = 1; i < 3; ++i)
-	{
-		@property(VerticalBlur)
-			float2 texelOffset = float2(offset[i], 0.0f) * MAIN_INPUT(InverseTextureSize0VS);
-		@end
-		@property(!VerticalBlur)
-			float2 texelOffset = float2(0.0f, offset[i]) * MAIN_INPUT(InverseTextureSize0VS);
-		@end
-		color += SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS) + texelOffset, 0.0f, 0.0f)) * weight[i];
-		color += SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS) - texelOffset, 0.0f, 0.0f)) * weight[i];
-	}
+	// Pass through the texture coordinates
+	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(PositionTexCoord.zw);
 
-	// Done
-	MAIN_OUTPUT_COLOR(0) = color;
+	// Pass through the inverse texture size 0
+	// Background: Modern shader languages provide functionality to get the texture size. See e.g.
+	// - HLSL "GetDimensions()" ( https://msdn.microsoft.com/de-de/library/windows/desktop/bb509693(v=vs.85).aspx )
+	// - GLSL "textureSize()" ( https://www.opengl.org/sdk/docs/man4/html/textureSize.xhtml )
+	// On the other hand, there are indications that usage of this functionality is not recommenced performance wise. See e.g.
+	// - http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2013/05/GCNPerformanceTweets.pdf
+	// - http://www.gamedev.net/topic/605580-performance-comparison-hlsl-texturegetdimension/
+	// So, you might want to perform this inside the vertex shader and then pass the result into the fragment shader (except the vertes shader is your bottleneck).
+	MAIN_OUTPUT(InverseTextureSize0VS) = 1.0f / GET_TEXTURE_SIZE(ColorMap);
 MAIN_END

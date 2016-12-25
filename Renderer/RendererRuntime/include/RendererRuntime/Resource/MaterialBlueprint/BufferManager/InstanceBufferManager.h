@@ -85,7 +85,7 @@ namespace RendererRuntime
 		*    Fill the instance buffer
 		*
 		*  @param[in] passBufferManager
-		*    Pass buffer manager instance to use
+		*    Pass buffer manager instance to use, can be a null pointer
 		*  @param[in] instanceUniformBuffer
 		*    Instance uniform buffer instance to use, can be a null pointer
 		*  @param[in] instanceTextureBuffer
@@ -97,7 +97,7 @@ namespace RendererRuntime
 		*  @param[out] commandBuffer
 		*    Command buffer to fill
 		*/
-		void fillBuffer(PassBufferManager& passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer,
+		void fillBuffer(PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer,
 						const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer, const Transform& objectSpaceToWorldSpaceTransform,
 						MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer);
 

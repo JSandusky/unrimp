@@ -91,7 +91,7 @@ namespace RendererRuntime
 		mTextureBuffer->releaseReference();
 	}
 
-	void InstanceBufferManager::fillBuffer(PassBufferManager& passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer, const MaterialBlueprintResource::TextureBuffer*, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer)
+	void InstanceBufferManager::fillBuffer(PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer, const MaterialBlueprintResource::TextureBuffer*, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer)
 	{
 		// TODO(co) This is just a placeholder implementation until "RendererRuntime::InstanceBufferManager" is ready
 
@@ -108,7 +108,8 @@ namespace RendererRuntime
 		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
 
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = materialBlueprintResourceManager.getMaterialBlueprintResourceListener();
-		materialBlueprintResourceListener.beginFillInstance(passBufferManager.getPassData(), objectSpaceToWorldSpaceTransform, materialTechnique);
+		static const PassBufferManager::PassData passData;
+		materialBlueprintResourceListener.beginFillInstance((nullptr != passBufferManager) ? passBufferManager->getPassData() : passData, objectSpaceToWorldSpaceTransform, materialTechnique);
 
 		{ // Update the uniform scratch buffer
 			uint8_t* scratchBufferPointer = mUniformScratchBuffer.data();

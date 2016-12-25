@@ -61,20 +61,8 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialTechnique::fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer)
+	const MaterialTechnique::Textures& MaterialTechnique::getTextures(const IRendererRuntime& rendererRuntime) const
 	{
-		assert(isInitialized(mMaterialBlueprintResourceId));
-
-		// TODO(co) This is experimental and will certainly look different when everything is in place
-
-		{ // Bind the material buffer manager
-			MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
-			if (nullptr != materialBufferManager)
-			{
-				materialBufferManager->fillCommandBuffer(*this, commandBuffer);
-			}
-		}
-
 		// Need for gathering the textures now?
 		if (mTextures.empty())
 		{
@@ -114,13 +102,30 @@ namespace RendererRuntime
 				}
 			}
 		}
+		return mTextures;
+	}
+
+	void MaterialTechnique::fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer)
+	{
+		assert(isInitialized(mMaterialBlueprintResourceId));
+
+		// TODO(co) This is experimental and will certainly look different when everything is in place
+
+		{ // Bind the material buffer manager
+			MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
+			if (nullptr != materialBufferManager)
+			{
+				materialBufferManager->fillCommandBuffer(*this, commandBuffer);
+			}
+		}
 
 		{ // Graphics root descriptor table: Set textures
-			const size_t numberOfTextures = mTextures.size();
+			const Textures& textures = getTextures(rendererRuntime);
+			const size_t numberOfTextures = textures.size();
 			const TextureResources& textureResources = rendererRuntime.getTextureResourceManager().getTextureResources();
 			for (size_t i = 0; i < numberOfTextures; ++i)
 			{
-				const Texture& texture = mTextures[i];
+				const Texture& texture = textures[i];
 
 				// Due to background texture loading, some textures might not be ready, yet
 				// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
