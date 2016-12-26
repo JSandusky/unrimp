@@ -52,6 +52,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Debug GUI manager
+	*
+	*  @remarks
+	*    Supports two command buffer fill modes:
+	*    - Using fixed build in renderer configuration, including shaders
+	*    - Using a material resource blueprint set by the caller
+	*/
 	class DebugGuiManager : private Manager
 	{
 
@@ -68,7 +77,7 @@ namespace RendererRuntime
 	public:
 		RENDERERRUNTIME_API_EXPORT void newFrame(Renderer::IRenderTarget& renderTarget);
 		RENDERERRUNTIME_API_EXPORT void drawText(const char* text, float x, float y, bool drawBackground = true);
-		RENDERERRUNTIME_API_EXPORT void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer);
+		RENDERERRUNTIME_API_EXPORT void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer, bool useFixedBuildInRendererConfiguration);
 
 
 	//[-------------------------------------------------------]
@@ -87,6 +96,8 @@ namespace RendererRuntime
 		virtual ~DebugGuiManager();
 		DebugGuiManager(const DebugGuiManager&) = delete;
 		DebugGuiManager& operator=(const DebugGuiManager&) = delete;
+		void createFixedBuildInRendererConfigurationResources();
+		void fillVertexArray();
 
 
 	//[-------------------------------------------------------]
@@ -96,16 +107,14 @@ namespace RendererRuntime
 		IRendererRuntime&			mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		bool						mIsRunning;			///< The debug GUI manager will be initialized lazy when "RendererRuntime::DebugGuiManager::newFrame()" is called for the first time
 		uint32_t					mDrawTextCounter;
-		// Root signature and pipeline state
+		Renderer::ITexture2DPtr		mTexture2D;
+		// Fixed build in renderer configuration resources
 		Renderer::IRootSignaturePtr	mRootSignature;
 		Renderer::IProgramPtr		mProgram;
 		Renderer::IPipelineStatePtr	mPipelineState;
-		// Uniform buffers
 		Renderer::IUniformBufferPtr	mVertexShaderUniformBuffer;
 		Renderer::handle			mObjectSpaceToClipSpaceMatrixUniformHandle;
-		// Sampler and texture
 		Renderer::ISamplerStatePtr	mSamplerState;
-		Renderer::ITexture2DPtr		mTexture2D;
 		// Vertex and index buffer
 		Renderer::IVertexBufferPtr	mVertexBufferPtr;
 		uint32_t					mNumberOfAllocatedVertices;

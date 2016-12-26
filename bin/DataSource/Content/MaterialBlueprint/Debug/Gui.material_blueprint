@@ -1,0 +1,133 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "1"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"GlyphMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Description": "Glyph map"
+			}
+		},
+		"RootSignature":
+		{
+			"RootParameters":
+			{
+				"0":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "PassUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "VERTEX"
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"2":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "GlyphMap",
+							"SamplerRootParameterIndex": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				}
+			}
+		},
+		"PipelineState":
+		{
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprintAssetId": "119",
+				"FragmentShaderBlueprintAssetId": "120"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "NONE"
+			},
+			"DepthStencilState":
+			{
+				"DepthEnable": "FALSE",
+				"DepthWriteMask": "ZERO"
+			},
+			"BlendState":
+			{
+				"RenderTarget[0]":
+				{
+					"BlendEnable": "TRUE",
+					"SrcBlend": "SRC_ALPHA",
+					"DestBlend": "INV_SRC_ALPHA",
+					"SrcBlendAlpha": "INV_SRC_ALPHA"
+				}
+			}
+		},
+		"Resources":
+		{
+			"UniformBuffers":
+			{
+				"PassUniformBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"ObjectSpaceToClipSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX"
+						}
+					}
+				}
+			},
+			"SamplerStates":
+			{
+				"SamplerLinear":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"MaxLOD": "0.0"
+				}
+			},
+			"Textures":
+			{
+				"GlyphMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@GlyphMap"
+				}
+			}
+		}
+	}
+}

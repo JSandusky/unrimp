@@ -89,35 +89,41 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	private:
+	protected:
 		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer) override;
 		inline virtual void onFrameEnded() override;
 
 
 	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::IResourceListener methods ]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
 	//[-------------------------------------------------------]
-	private:
+	protected:
 		virtual void onLoadingStateChange(const IResource& resource) override;
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected virtual RendererRuntime::CompositorInstancePassQuad methods ]
 	//[-------------------------------------------------------]
-	private:
+	protected:
+		virtual void createMaterialResource(MaterialResourceId parentMaterialResourceId);
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
 		CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorNodeInstance& compositorNodeInstance);
 		virtual ~CompositorInstancePassQuad();
 		CompositorInstancePassQuad(const CompositorInstancePassQuad&) = delete;
 		CompositorInstancePassQuad& operator=(const CompositorInstancePassQuad&) = delete;
-		void createMaterialResource(MaterialResourceId parentMaterialResourceId);
 
 
 	//[-------------------------------------------------------]
-	//[ Private data                                          ]
+	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
-	private:
+	protected:
 		RenderQueue		   mRenderQueue;
 		MaterialResourceId mMaterialResourceId;
 		RenderableManager  mRenderableManager;

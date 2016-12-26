@@ -290,13 +290,17 @@ namespace RendererRuntime
 										Renderer::Command::SetPrimitiveTopology::create(commandBuffer, renderable.getPrimitiveTopology());
 
 										// Render the specified geometric primitive, based on indexing into an array of vertices
-										if (renderable.getDrawIndexed())
+										// -> Please note that it's valid that there are no indices, for example "RendererRuntime::CompositorInstancePassDebugGui" is using the render queue only to set the material resource blueprint
+										if (0 != renderable.getNumberOfIndices())
 										{
-											Renderer::Command::DrawIndexed::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
-										}
-										else
-										{
-											Renderer::Command::Draw::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
+											if (renderable.getDrawIndexed())
+											{
+												Renderer::Command::DrawIndexed::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
+											}
+											else
+											{
+												Renderer::Command::Draw::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
+											}
 										}
 									}
 								}

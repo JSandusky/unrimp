@@ -145,7 +145,7 @@ namespace RendererRuntime
 				{}
 			};
 
-			struct PassDebugGui
+			struct PassDebugGui : public PassQuad
 			{
 			};
 		#pragma pack(pop)

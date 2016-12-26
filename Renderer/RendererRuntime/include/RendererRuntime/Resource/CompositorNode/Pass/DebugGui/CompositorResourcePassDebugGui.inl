@@ -38,7 +38,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline CompositorResourcePassDebugGui::CompositorResourcePassDebugGui(const CompositorTarget& compositorTarget) :
-		ICompositorResourcePass(compositorTarget)
+		CompositorResourcePassQuad(compositorTarget)
 	{
 		// Nothing here
 	}

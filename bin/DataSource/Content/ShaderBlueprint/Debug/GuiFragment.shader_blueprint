@@ -19,32 +19,46 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Includes                                              ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
-{
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	inline MaterialResourceId CompositorInstancePassQuad::getMaterialResourceId() const
-	{
-		return mMaterialResourceId;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
-	//[-------------------------------------------------------]
-	inline void CompositorInstancePassQuad::onFrameEnded()
-	{
-		// Directly clear the render queue as soon as the frame rendering has been finished to avoid evil dangling pointers
-		mRenderQueue.clear();
-	}
+@includepiece(15)	// "Core.shader_piece"
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Definitions                                           ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(float4, ColorVS, 1)	// Vertex color
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_COLOR(0)
+OUTPUT_END
+
+// Samplers
+SAMPLER_STATE(SamplerLinear, 0)
+
+// Textures
+TEXTURE_2D(GlyphMap, 0)
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	// Fetch the texel at the given texture coordinate and return it's color
+	float4 glyphMapValue = SAMPLE_2D(GlyphMap, SamplerLinear, MAIN_INPUT(TexCoordVS));
+	@property(HLSL)
+		MAIN_OUTPUT_COLOR(0) = MAIN_INPUT(ColorVS) * glyphMapValue.aaaa;
+	@end
+	@property(GLSL)
+		MAIN_OUTPUT_COLOR(0) = MAIN_INPUT(ColorVS) * glyphMapValue.rrrr;
+	@end
+MAIN_END

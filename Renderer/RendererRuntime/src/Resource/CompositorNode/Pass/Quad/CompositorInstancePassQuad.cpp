@@ -110,7 +110,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	void CompositorInstancePassQuad::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer)
 	{
@@ -130,7 +130,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	CompositorInstancePassQuad::CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorNodeInstance& compositorNodeInstance) :
 		ICompositorInstancePass(compositorResourcePassQuad, compositorNodeInstance),
@@ -181,7 +181,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::IResourceListener methods ]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
 	//[-------------------------------------------------------]
 	void CompositorInstancePassQuad::onLoadingStateChange(const IResource& resource)
 	{
@@ -189,6 +189,10 @@ namespace RendererRuntime
 		createMaterialResource(resource.getId());
 	}
 
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::CompositorInstancePassQuad methods ]
+	//[-------------------------------------------------------]
 	void CompositorInstancePassQuad::createMaterialResource(MaterialResourceId parentMaterialResourceId)
 	{
 		// Sanity checks

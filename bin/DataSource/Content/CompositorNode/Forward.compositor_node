@@ -65,6 +65,11 @@
 					},
 					"DebugGui":
 					{
+						"MaterialBlueprintAssetId": "121",
+						"SetMaterialProperties":
+						{
+							"GlyphMap": "ImGuiGlyphMap"
+						}
 					}
 				}
 			}

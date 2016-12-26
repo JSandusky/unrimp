@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "120",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Debug",
+			"AssetName": "GuiFragment",
+			"AssetDependencies": [ "15" ],
+			"FileDependencies": [ "GuiFragment.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "GuiFragment.shader_blueprint"
+		}
+	}
+}

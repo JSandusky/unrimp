@@ -21,35 +21,50 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h"
-#include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h"
+@includepiece(15)	// "Core.shader_piece"
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Definitions                                           ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_VERTEX_POSITION	(float2, Position)		// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+	INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)	// 32 bit texture coordinate
+	INPUT_VERTEX_COLOR	 	(float4, Color)			// Vertex color
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+	OUTPUT_TEXTURE_COORDINATE(float4, ColorVS, 1)		// Vertex color
+	OUTPUT_POSITION										// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+OUTPUT_END
+
+// Uniform buffers
+struct PassDataStruct
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	const CompositorPassTypeId CompositorResourcePassDebugGui::TYPE_ID("DebugGui");
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
-	//[-------------------------------------------------------]
-	void CompositorResourcePassDebugGui::deserialize(uint32_t numberOfBytes, const uint8_t* data)
-	{
-		// Call the base implementation
-		CompositorResourcePassQuad::deserialize(numberOfBytes, data);
-	}
+	float4x4 ObjectSpaceToClipSpaceMatrix;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Main                                                  ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+MAIN_BEGIN
+	// Calculate the clip space vertex position, lower/left is (-1,-1) and upper/right is (1,1)
+	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.ObjectSpaceToClipSpaceMatrix, float4(MAIN_INPUT(Position), 0.0f, 1.0f));
+
+	// Pass through the texture coordinates
+	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(TexCoord);
+
+	// Pass through the vertex color
+	MAIN_OUTPUT(ColorVS) = MAIN_INPUT(Color);
+MAIN_END
