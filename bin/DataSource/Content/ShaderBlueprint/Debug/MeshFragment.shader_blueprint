@@ -50,13 +50,6 @@ OUTPUT_BEGIN
 OUTPUT_END
 
 // Uniform buffers
-struct PassDataStruct
-{
-	float4x4 WorldSpaceToClipSpaceMatrix;
-};
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
-	PassDataStruct PassData;
-UNIFORM_BUFFER_END
 struct Material
 {
 	float3 DiffuseColor;

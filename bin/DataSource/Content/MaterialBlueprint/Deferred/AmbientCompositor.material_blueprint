@@ -49,7 +49,7 @@
 							"BaseShaderRegisterName": "PassUniformBuffer"
 						}
 					},
-					"ShaderVisibility": "ALL"
+					"ShaderVisibility": "FRAGMENT"
 				},
 				"1":
 				{
