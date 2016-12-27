@@ -113,7 +113,7 @@ namespace
 			}
 		}
 
-		void readPassQuad(const RendererToolkit::IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValuePass, RendererRuntime::v1CompositorNode::PassQuad& passQuad)
+		void readPassQuad(const RendererToolkit::IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValuePass, bool materialDefinitionMandatory, RendererRuntime::v1CompositorNode::PassQuad& passQuad)
 		{
 			// Set data
 			RendererRuntime::AssetId materialAssetId;
@@ -126,7 +126,7 @@ namespace
 			passQuad.numberOfMaterialProperties = sortedMaterialPropertyVector.size();
 
 			// Sanity checks
-			if (RendererRuntime::isUninitialized(passQuad.materialAssetId) && RendererRuntime::isUninitialized(passQuad.materialBlueprintAssetId))
+			if (materialDefinitionMandatory && RendererRuntime::isUninitialized(passQuad.materialAssetId) && RendererRuntime::isUninitialized(passQuad.materialBlueprintAssetId))
 			{
 				throw std::runtime_error("Material asset ID or material blueprint asset ID must be defined");
 			}
@@ -142,6 +142,20 @@ namespace
 			{
 				passQuad.materialTechniqueId = RendererRuntime::MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID;
 			}
+		}
+
+		uint32_t getRenderTargetTextureSize(const rapidjson::Value& rapidJsonValueRenderTargetTexture, const char* propertyName, const char* defaultValue)
+		{
+			uint32_t size = RendererRuntime::getUninitialized<uint32_t>();
+			if (rapidJsonValueRenderTargetTexture.HasMember(propertyName))
+			{
+				const char* valueAsString = rapidJsonValueRenderTargetTexture[propertyName].GetString();
+				if (strcmp(valueAsString, defaultValue) != 0)
+				{
+					size = static_cast<uint32_t>(std::atoi(valueAsString));
+				}
+			}
+			return size;
 		}
 
 
@@ -261,21 +275,9 @@ namespace RendererToolkit
 					{ // Render target texture signature
 						const rapidjson::Value& rapidJsonValueRenderTargetTexture = rapidJsonMemberIteratorRenderTargetTextures->value;
 
-						// Width
-						uint32_t width = RendererRuntime::getUninitialized<uint32_t>();
-						const char* valueAsString = rapidJsonValueRenderTargetTexture["Width"].GetString();
-						if (strcmp(valueAsString, "TARGET_WIDTH") != 0)
-						{
-							width = static_cast<uint32_t>(std::atoi(valueAsString));
-						}
-
-						// Height
-						uint32_t height = RendererRuntime::getUninitialized<uint32_t>();
-						valueAsString = rapidJsonValueRenderTargetTexture["Height"].GetString();
-						if (strcmp(valueAsString, "TARGET_HEIGHT") != 0)
-						{
-							height = static_cast<uint32_t>(std::atoi(valueAsString));
-						}
+						// Width and height
+						const uint32_t width = ::detail::getRenderTargetTextureSize(rapidJsonValueRenderTargetTexture, "Width", "TARGET_WIDTH");
+						const uint32_t height = ::detail::getRenderTargetTextureSize(rapidJsonValueRenderTargetTexture, "Height", "TARGET_HEIGHT");
 
 						// Texture format
 						const Renderer::TextureFormat::Enum textureFormat = JsonHelper::mandatoryTextureFormat(rapidJsonValueRenderTargetTexture);
@@ -450,7 +452,7 @@ namespace RendererToolkit
 						else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassQuad passQuad;
-							::detail::readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, passQuad);
+							::detail::readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, true, passQuad);
 
 							// Write down
 							outputFileStream.write(reinterpret_cast<const char*>(&passQuad), sizeof(RendererRuntime::v1CompositorNode::PassQuad));
@@ -485,8 +487,9 @@ namespace RendererToolkit
 						}
 						else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == compositorPassTypeId)
 						{
+							// The material definition is not mandatory for the debug GUI, if nothing is defined the fixed build in renderer configuration resources will be used instead
 							RendererRuntime::v1CompositorNode::PassDebugGui passDebugGui;
-							::detail::readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, passDebugGui);
+							::detail::readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, false, passDebugGui);
 
 							// Write down
 							outputFileStream.write(reinterpret_cast<const char*>(&passDebugGui), sizeof(RendererRuntime::v1CompositorNode::PassDebugGui));

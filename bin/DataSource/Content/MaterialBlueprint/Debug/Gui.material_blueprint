@@ -13,6 +13,12 @@
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Description": "Glyph map"
+			},
+			"BackgroundMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Description": "Background map"
 			}
 		},
 		"RootSignature":
@@ -53,10 +59,38 @@
 					{
 						"0":
 						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"3":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "GlyphMap",
 							"SamplerRootParameterIndex": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"4":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "BackgroundMap",
+							"SamplerRootParameterIndex": "2"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -72,7 +106,8 @@
 			},
 			"RasterizerState":
 			{
-				"CullMode": "NONE"
+				"CullMode": "NONE",
+				"ScissorEnable": "TRUE"
 			},
 			"DepthStencilState":
 			{
@@ -112,9 +147,14 @@
 			},
 			"SamplerStates":
 			{
-				"SamplerLinear":
+				"GlyphSampler":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)"
+				},
+				"BackgroundSampler":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
 					"MaxLOD": "0.0"
 				}
 			},
@@ -126,6 +166,13 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@GlyphMap"
+				},
+				"BackgroundMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@BackgroundMap"
 				}
 			}
 		}

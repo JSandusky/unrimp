@@ -81,6 +81,7 @@
 				"SamplerLinear":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
 					"MaxLOD": "0.0"
 				}
 			},

@@ -244,7 +244,7 @@ void InstancedCubes::onDraw()
 				{
 					debugGuiManager.drawText("No cube renderer instance", 10.0f, 10.0f);
 				}
-				debugGuiManager.fillCommandBuffer(mCommandBuffer, true);
+				debugGuiManager.fillCommandBufferUsingFixedBuildInRendererConfiguration(mCommandBuffer);
 
 				// Submit command buffer to the renderer backend
 				mCommandBuffer.submitAndClear(*renderer);

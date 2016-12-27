@@ -182,12 +182,14 @@ namespace RendererRuntime
 				{
 					assert(nullptr != queuedRenderable.renderable);
 					const Renderable& renderable = *queuedRenderable.renderable;
-
-					// Setup input assembly (IA): Set the used vertex array
 					Renderer::IVertexArrayPtr vertexArrayPtr = renderable.getVertexArrayPtr();
 					if (nullptr != vertexArrayPtr)
 					{
+						// Setup input assembly (IA): Set the used vertex array
 						Renderer::Command::SetVertexArray::create(commandBuffer, vertexArrayPtr);
+
+						// Setup input assembly (IA): Set the primitive topology used for draw calls
+						Renderer::Command::SetPrimitiveTopology::create(commandBuffer, renderable.getPrimitiveTopology());
 
 						// Material resource
 						const MaterialResource* materialResource = materialResources.tryGetElementById(renderable.getMaterialResourceId());
@@ -285,9 +287,6 @@ namespace RendererRuntime
 
 										// Fill the instance buffer manager
 										instanceBufferManager.fillBuffer(materialBlueprintResource->getPassBufferManager(), materialBlueprintResource->getInstanceUniformBuffer(), materialBlueprintResource->getInstanceTextureBuffer(), renderable.getRenderableManager().getTransform(), *materialTechnique, commandBuffer);
-
-										// Setup input assembly (IA): Set the primitive topology used for draw calls
-										Renderer::Command::SetPrimitiveTopology::create(commandBuffer, renderable.getPrimitiveTopology());
 
 										// Render the specified geometric primitive, based on indexing into an array of vertices
 										// -> Please note that it's valid that there are no indices, for example "RendererRuntime::CompositorInstancePassDebugGui" is using the render queue only to set the material resource blueprint

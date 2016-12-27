@@ -138,7 +138,7 @@ namespace RendererRuntime
 		mMaterialResourceId(getUninitialized<MaterialResourceId>())
 	{
 		// Sanity checks
-		assert(isInitialized(compositorResourcePassQuad.getMaterialAssetId()) || isInitialized(compositorResourcePassQuad.getMaterialBlueprintAssetId()));
+		assert(!compositorResourcePassQuad.isMaterialDefinitionMandatory() || isInitialized(compositorResourcePassQuad.getMaterialAssetId()) || isInitialized(compositorResourcePassQuad.getMaterialBlueprintAssetId()));
 		assert(!(isInitialized(compositorResourcePassQuad.getMaterialAssetId()) && isInitialized(compositorResourcePassQuad.getMaterialBlueprintAssetId())));
 
 		// Get parent material resource ID and initiate creating the compositor instance pass quad material resource
@@ -152,12 +152,15 @@ namespace RendererRuntime
 		{
 			// Get or load material blueprint resource
 			const AssetId materialBlueprintAssetId = compositorResourcePassQuad.getMaterialBlueprintAssetId();
-			MaterialResourceId parentMaterialResourceId = materialResourceManager.getMaterialResourceIdByAssetId(materialBlueprintAssetId);
-			if (isUninitialized(parentMaterialResourceId))
+			if (isInitialized(materialBlueprintAssetId))
 			{
-				parentMaterialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialBlueprintAssetId, materialBlueprintAssetId, compositorResourcePassQuad.getMaterialTechniqueId());
+				MaterialResourceId parentMaterialResourceId = materialResourceManager.getMaterialResourceIdByAssetId(materialBlueprintAssetId);
+				if (isUninitialized(parentMaterialResourceId))
+				{
+					parentMaterialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialBlueprintAssetId, materialBlueprintAssetId, compositorResourcePassQuad.getMaterialTechniqueId());
+				}
+				createMaterialResource(parentMaterialResourceId);
 			}
-			createMaterialResource(parentMaterialResourceId);
 		}
 	}
 

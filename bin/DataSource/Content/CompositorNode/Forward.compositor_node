@@ -15,14 +15,22 @@
 		{
 			"ColorRenderTargetTexture":
 			{
-				"Width": "TARGET_WIDTH",
-				"Height": "TARGET_HEIGHT",
 				"TextureFormat": "R8G8B8A8"
+			},
+			"GaussianBlurRenderTargetTexture0":
+			{
+				"TextureFormat": "R8G8B8A8",
+				"AllowResolutionScale": "FALSE",
+				"Scale": "0.25"
+			},
+			"GaussianBlurRenderTargetTexture1":
+			{
+				"TextureFormat": "R8G8B8A8",
+				"AllowResolutionScale": "FALSE",
+				"Scale": "0.25"
 			},
 			"DepthStencilRenderTargetTexture":
 			{
-				"Width": "TARGET_WIDTH",
-				"Height": "TARGET_HEIGHT",
 				"TextureFormat": "D32_FLOAT"
 			}			
 		},
@@ -32,6 +40,14 @@
 			{
 				"ColorTextures": [ "ColorRenderTargetTexture" ],
 				"DepthStencilTexture": "DepthStencilRenderTargetTexture"
+			},
+			"GaussianBlurFramebuffer0":
+			{
+				"ColorTextures": [ "GaussianBlurRenderTargetTexture0" ]
+			},
+			"GaussianBlurFramebuffer1":
+			{
+				"ColorTextures": [ "GaussianBlurRenderTargetTexture1" ]
 			}
 		},
 		"Targets":
@@ -48,6 +64,66 @@
 					"Scene":
 					{
 						"MaterialTechnique": "Forward"
+					}
+				}
+			},
+			"GaussianBlurFramebuffer0":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"MaterialBlueprintAssetId": "117",
+						"SetMaterialProperties":
+						{
+							"VerticalBlur": "TRUE", 
+							"ColorMap": "ColorRenderTargetTexture"
+						}
+					}
+				}
+			},
+			"GaussianBlurFramebuffer1":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"MaterialBlueprintAssetId": "117",
+						"SetMaterialProperties":
+						{
+							"VerticalBlur": "FALSE", 
+							"ColorMap": "GaussianBlurRenderTargetTexture0"
+						}
+					}
+				}
+			},
+			"GaussianBlurFramebuffer0":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"MaterialBlueprintAssetId": "117",
+						"SetMaterialProperties":
+						{
+							"VerticalBlur": "TRUE", 
+							"ColorMap": "GaussianBlurRenderTargetTexture1"
+						}
+					}
+				}
+			},
+			"GaussianBlurFramebuffer1":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"MaterialBlueprintAssetId": "117",
+						"SetMaterialProperties":
+						{
+							"VerticalBlur": "TRUE", 
+							"ColorMap": "GaussianBlurRenderTargetTexture0"
+						}
 					}
 				}
 			},
@@ -68,7 +144,8 @@
 						"MaterialBlueprintAssetId": "121",
 						"SetMaterialProperties":
 						{
-							"GlyphMap": "ImGuiGlyphMap"
+							"GlyphMap": "ImGuiGlyphMap",
+							"BackgroundMap": "GaussianBlurRenderTargetTexture1"
 						}
 					}
 				}

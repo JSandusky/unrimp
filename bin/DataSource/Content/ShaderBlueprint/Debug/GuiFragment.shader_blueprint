@@ -35,7 +35,7 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(float4, TexCoordVS, 0)	// xy = glyph texture coordinate, zw = background texture coordinate
 	INPUT_TEXTURE_COORDINATE(float4, ColorVS, 1)	// Vertex color
 INPUT_END
 OUTPUT_BEGIN
@@ -43,22 +43,28 @@ OUTPUT_BEGIN
 OUTPUT_END
 
 // Samplers
-SAMPLER_STATE(SamplerLinear, 0)
+SAMPLER_STATE(GlyphSampler, 0)
+SAMPLER_STATE(BackgroundSampler, 1)
 
 // Textures
 TEXTURE_2D(GlyphMap, 0)
+TEXTURE_2D(BackgroundMap, 1)
 
 
 //[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	// Fetch the texel at the given texture coordinate and return it's color
-	float4 glyphMapValue = SAMPLE_2D(GlyphMap, SamplerLinear, MAIN_INPUT(TexCoordVS));
+	// Get source and destination color
 	@property(HLSL)
-		MAIN_OUTPUT_COLOR(0) = MAIN_INPUT(ColorVS) * glyphMapValue.aaaa;
+		float glyphMapValue = SAMPLE_2D(GlyphMap, GlyphSampler, MAIN_INPUT(TexCoordVS).xy).a;
 	@end
 	@property(GLSL)
-		MAIN_OUTPUT_COLOR(0) = MAIN_INPUT(ColorVS) * glyphMapValue.rrrr;
+		float glyphMapValue = SAMPLE_2D(GlyphMap, GlyphSampler, MAIN_INPUT(TexCoordVS).xy).r;
 	@end
+	float4 sourceColor = MAIN_INPUT(ColorVS) * glyphMapValue;
+	float4 destinationColor = SAMPLE_2D(BackgroundMap, BackgroundSampler, MAIN_INPUT(TexCoordVS).zw);
+
+	// Blend
+	MAIN_OUTPUT_COLOR(0) = float4(sourceColor.rgb * sourceColor.a + destinationColor.rgb * (1.0f - sourceColor.a), glyphMapValue);
 MAIN_END

@@ -143,93 +143,177 @@ namespace RendererRuntime
 		++mDrawTextCounter;
 	}
 
-	void DebugGuiManager::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer, bool useFixedBuildInRendererConfiguration)
+	Renderer::IVertexArrayPtr DebugGuiManager::getFillVertexArrayPtr()
+	{
+		if (GImGui->Initialized)
+		{
+			// Ask ImGui to render into the internal command buffer and then request the resulting draw data
+			ImGui::Render();
+			const ImDrawData* imDrawData = ImGui::GetDrawData();
+			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+			Renderer::IBufferManager& bufferManager = mRendererRuntime.getBufferManager();
+
+			{ // Vertex and index buffers
+				// Create and grow vertex/index buffers if needed
+				if (nullptr == mVertexBufferPtr || mNumberOfAllocatedVertices < static_cast<uint32_t>(imDrawData->TotalVtxCount))
+				{
+					mNumberOfAllocatedVertices = static_cast<uint32_t>(imDrawData->TotalVtxCount + 5000);	// Add some reserve to reduce reallocations
+					mVertexBufferPtr = bufferManager.createVertexBuffer(mNumberOfAllocatedVertices * sizeof(ImDrawVert), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+					mVertexArrayPtr = nullptr;
+				}
+				if (nullptr == mIndexBufferPtr || mNumberOfAllocatedIndices < static_cast<uint32_t>(imDrawData->TotalIdxCount))
+				{
+					mNumberOfAllocatedIndices = static_cast<uint32_t>(imDrawData->TotalIdxCount + 10000);	// Add some reserve to reduce reallocations
+					mIndexBufferPtr = bufferManager.createIndexBuffer(mNumberOfAllocatedIndices * sizeof(ImDrawIdx), Renderer::IndexBufferFormat::UNSIGNED_SHORT, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+					mVertexArrayPtr = nullptr;
+				}
+				if (nullptr == mVertexArrayPtr)
+				{
+					assert(nullptr != mVertexBufferPtr);
+					assert(nullptr != mIndexBufferPtr);
+
+					// Create vertex array object (VAO)
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+					{
+						{ // Vertex buffer 0
+							mVertexBufferPtr,	// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(ImDrawVert)	// strideInBytes (uint32_t)
+						}
+					};
+					mVertexArrayPtr = bufferManager.createVertexArray(::detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, mIndexBufferPtr);
+				}
+
+				{ // Copy and convert all vertices and indices into a single contiguous buffer
+					// TODO(co) Not compatible with command buffer: This certainly is going to be changed
+					Renderer::MappedSubresource vertexBufferMappedSubresource;
+					if (renderer.map(*mVertexBufferPtr, 0, Renderer::MapType::WRITE_DISCARD, 0, vertexBufferMappedSubresource))
+					{
+						Renderer::MappedSubresource indexBufferMappedSubresource;
+						if (renderer.map(*mIndexBufferPtr, 0, Renderer::MapType::WRITE_DISCARD, 0, indexBufferMappedSubresource))
+						{
+							ImDrawVert* imDrawVert = static_cast<ImDrawVert*>(vertexBufferMappedSubresource.data);
+							ImDrawIdx* imDrawIdx = static_cast<ImDrawIdx*>(indexBufferMappedSubresource.data);
+							for (int i = 0; i < imDrawData->CmdListsCount; ++i)
+							{
+								const ImDrawList* imDrawList = imDrawData->CmdLists[i];
+								memcpy(imDrawVert, &imDrawList->VtxBuffer[0], imDrawList->VtxBuffer.size() * sizeof(ImDrawVert));
+								memcpy(imDrawIdx, &imDrawList->IdxBuffer[0], imDrawList->IdxBuffer.size() * sizeof(ImDrawIdx));
+								imDrawVert += imDrawList->VtxBuffer.size();
+								imDrawIdx += imDrawList->IdxBuffer.size();
+							}
+
+							// Unmap the index buffer
+							renderer.unmap(*mIndexBufferPtr, 0);
+						}
+
+						// Unmap the vertex buffer
+						renderer.unmap(*mVertexBufferPtr, 0);
+					}
+				}
+			}
+		}
+
+		// Done
+		return mVertexArrayPtr;
+	}
+
+	void DebugGuiManager::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
 	{
 		if (GImGui->Initialized)
 		{
 			// Begin debug event
 			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
-			fillVertexArray();
 
-			// Use fixed build in renderer configuration? (no material blueprint resource is used by the caller)
-			if (useFixedBuildInRendererConfiguration)
+			// Render command lists
+			int vertexOffset = 0;
+			int indexOffset = 0;
+			const ImDrawData* imDrawData = ImGui::GetDrawData();
+			for (int commandListIndex = 0; commandListIndex < imDrawData->CmdListsCount; ++commandListIndex)
 			{
-				if (nullptr == mRootSignature)
+				const ImDrawList* imDrawList = imDrawData->CmdLists[commandListIndex];
+				for (int commandIndex = 0; commandIndex < imDrawList->CmdBuffer.size(); ++commandIndex)
 				{
-					createFixedBuildInRendererConfigurationResources();
-				}
-
-				{ // Setup orthographic projection matrix into our vertex shader uniform buffer
-					const ImGuiIO& imGuiIo = ImGui::GetIO();
-					float objectSpaceToClipSpaceMatrix[4][4] =
+					const ImDrawCmd* pcmd = &imDrawList->CmdBuffer[commandIndex];
+					if (nullptr != pcmd->UserCallback)
 					{
-						{  2.0f / imGuiIo.DisplaySize.x, 0.0f,                          0.0f, 0.0f },
-						{  0.0f,                         2.0f / -imGuiIo.DisplaySize.y, 0.0f, 0.0f },
-						{  0.0f,                         0.0f,                          0.5f, 0.0f },
-						{ -1.0f,                         1.0f,                          0.5f, 1.0f }
-					};
-
-					// Copy data
-					if (nullptr != mVertexShaderUniformBuffer)
-					{
-						Renderer::Command::CopyUniformBufferData::create(commandBuffer, mVertexShaderUniformBuffer, sizeof(objectSpaceToClipSpaceMatrix), objectSpaceToClipSpaceMatrix);
+						pcmd->UserCallback(imDrawList, pcmd);
 					}
 					else
 					{
-						// TODO(co) Not compatible with command buffer: This certainly is going to be removed, we need to implement internal uniform buffer emulation
-						mProgram->setUniformMatrix4fv(mObjectSpaceToClipSpaceMatrixUniformHandle, &objectSpaceToClipSpaceMatrix[0][0]);
+						// Set scissor rectangle
+						Renderer::Command::SetScissorRectangles::create(commandBuffer, static_cast<long>(pcmd->ClipRect.x), static_cast<long>(pcmd->ClipRect.y), static_cast<long>(pcmd->ClipRect.z), static_cast<long>(pcmd->ClipRect.w));
+
+						// Draw
+						Renderer::Command::DrawIndexed::create(commandBuffer, static_cast<uint32_t>(pcmd->ElemCount), 1, static_cast<uint32_t>(indexOffset), static_cast<int32_t>(vertexOffset));
 					}
+					indexOffset += pcmd->ElemCount;
 				}
+				vertexOffset += imDrawList->VtxBuffer.size();
+			}
 
-				{ // Renderer configuration
-					// Set the used graphics root signature
-					Renderer::Command::SetGraphicsRootSignature::create(commandBuffer, mRootSignature);
+			// End debug event
+			COMMAND_END_DEBUG_EVENT(commandBuffer)
+		}
+	}
 
-					// Set graphics root descriptors
-					Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 0, mVertexShaderUniformBuffer);
-					Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 1, mSamplerState);
-					Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 2, mTexture2D);
+	void DebugGuiManager::fillCommandBufferUsingFixedBuildInRendererConfiguration(Renderer::CommandBuffer& commandBuffer)
+	{
+		if (GImGui->Initialized)
+		{
+			// Begin debug event
+			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
-					// Set the used pipeline state object (PSO)
-					Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
+			// Create fixed build in renderer configuration resources, if required
+			if (nullptr == mRootSignature)
+			{
+				createFixedBuildInRendererConfigurationResources();
+			}
+
+			{ // Setup orthographic projection matrix into our vertex shader uniform buffer
+				const ImGuiIO& imGuiIo = ImGui::GetIO();
+				float objectSpaceToClipSpaceMatrix[4][4] =
+				{
+					{  2.0f / imGuiIo.DisplaySize.x, 0.0f,                          0.0f, 0.0f },
+					{  0.0f,                         2.0f / -imGuiIo.DisplaySize.y, 0.0f, 0.0f },
+					{  0.0f,                         0.0f,                          0.5f, 0.0f },
+					{ -1.0f,                         1.0f,                          0.5f, 1.0f }
+				};
+
+				// Copy data
+				if (nullptr != mVertexShaderUniformBuffer)
+				{
+					Renderer::Command::CopyUniformBufferData::create(commandBuffer, mVertexShaderUniformBuffer, sizeof(objectSpaceToClipSpaceMatrix), objectSpaceToClipSpaceMatrix);
 				}
+				else
+				{
+					// TODO(co) Not compatible with command buffer: This certainly is going to be removed, we need to implement internal uniform buffer emulation
+					mProgram->setUniformMatrix4fv(mObjectSpaceToClipSpaceMatrixUniformHandle, &objectSpaceToClipSpaceMatrix[0][0]);
+				}
+			}
+
+			{ // Renderer configuration
+				// Set the used graphics root signature
+				Renderer::Command::SetGraphicsRootSignature::create(commandBuffer, mRootSignature);
+
+				// Set graphics root descriptors
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 0, mVertexShaderUniformBuffer);
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 1, mSamplerState);
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 2, mTexture2D);
+
+				// Set the used pipeline state object (PSO)
+				Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
 			}
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array
-				Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArray);
+				Renderer::Command::SetVertexArray::create(commandBuffer, getFillVertexArrayPtr());
 
 				// Set the primitive topology used for draw calls
 				Renderer::Command::SetPrimitiveTopology::create(commandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
 			}
 
-			{ // Render command lists
-				int vertexOffset = 0;
-				int indexOffset = 0;
-				const ImDrawData* imDrawData = ImGui::GetDrawData();
-				for (int commandListIndex = 0; commandListIndex < imDrawData->CmdListsCount; ++commandListIndex)
-				{
-					const ImDrawList* imDrawList = imDrawData->CmdLists[commandListIndex];
-					for (int commandIndex = 0; commandIndex < imDrawList->CmdBuffer.size(); ++commandIndex)
-					{
-						const ImDrawCmd* pcmd = &imDrawList->CmdBuffer[commandIndex];
-						if (nullptr != pcmd->UserCallback)
-						{
-							pcmd->UserCallback(imDrawList, pcmd);
-						}
-						else
-						{
-							// Set scissor rectangle
-							Renderer::Command::SetScissorRectangles::create(commandBuffer, static_cast<long>(pcmd->ClipRect.x), static_cast<long>(pcmd->ClipRect.y), static_cast<long>(pcmd->ClipRect.z), static_cast<long>(pcmd->ClipRect.w));
-
-							// Draw
-							Renderer::Command::DrawIndexed::create(commandBuffer, static_cast<uint32_t>(pcmd->ElemCount), 1, static_cast<uint32_t>(indexOffset), static_cast<int32_t>(vertexOffset));
-						}
-						indexOffset += pcmd->ElemCount;
-					}
-					vertexOffset += imDrawList->VtxBuffer.size();
-				}
-			}
+			// Render command lists
+			fillCommandBuffer(commandBuffer);
 
 			// End debug event
 			COMMAND_END_DEBUG_EVENT(commandBuffer)
@@ -367,77 +451,6 @@ namespace RendererRuntime
 			samplerState.addressU = Renderer::TextureAddressMode::WRAP;
 			samplerState.addressV = Renderer::TextureAddressMode::WRAP;
 			mSamplerState = renderer.createSamplerState(samplerState);
-		}
-	}
-
-	void DebugGuiManager::fillVertexArray()
-	{
-		if (GImGui->Initialized)
-		{
-			// Ask ImGui to render into the internal command buffer and then request the resulting draw data
-			ImGui::Render();
-			const ImDrawData* imDrawData = ImGui::GetDrawData();
-			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
-			Renderer::IBufferManager& bufferManager = mRendererRuntime.getBufferManager();
-
-			{ // Vertex and index buffers
-				// Create and grow vertex/index buffers if needed
-				if (nullptr == mVertexBufferPtr || mNumberOfAllocatedVertices < static_cast<uint32_t>(imDrawData->TotalVtxCount))
-				{
-					mNumberOfAllocatedVertices = static_cast<uint32_t>(imDrawData->TotalVtxCount + 5000);	// Add some reserve to reduce reallocations
-					mVertexBufferPtr = bufferManager.createVertexBuffer(mNumberOfAllocatedVertices * sizeof(ImDrawVert), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-					mVertexArray = nullptr;
-				}
-				if (nullptr == mIndexBufferPtr || mNumberOfAllocatedIndices < static_cast<uint32_t>(imDrawData->TotalIdxCount))
-				{
-					mNumberOfAllocatedIndices = static_cast<uint32_t>(imDrawData->TotalIdxCount + 10000);	// Add some reserve to reduce reallocations
-					mIndexBufferPtr = bufferManager.createIndexBuffer(mNumberOfAllocatedIndices * sizeof(ImDrawIdx), Renderer::IndexBufferFormat::UNSIGNED_SHORT, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-					mVertexArray = nullptr;
-				}
-				if (nullptr == mVertexArray)
-				{
-					assert(nullptr != mVertexBufferPtr);
-					assert(nullptr != mIndexBufferPtr);
-
-					// Create vertex array object (VAO)
-					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-					{
-						{ // Vertex buffer 0
-							mVertexBufferPtr,	// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(ImDrawVert)	// strideInBytes (uint32_t)
-						}
-					};
-					mVertexArray = bufferManager.createVertexArray(::detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, mIndexBufferPtr);
-				}
-
-				{ // Copy and convert all vertices and indices into a single contiguous buffer
-					// TODO(co) Not compatible with command buffer: This certainly is going to be changed
-					Renderer::MappedSubresource vertexBufferMappedSubresource;
-					if (renderer.map(*mVertexBufferPtr, 0, Renderer::MapType::WRITE_DISCARD, 0, vertexBufferMappedSubresource))
-					{
-						Renderer::MappedSubresource indexBufferMappedSubresource;
-						if (renderer.map(*mIndexBufferPtr, 0, Renderer::MapType::WRITE_DISCARD, 0, indexBufferMappedSubresource))
-						{
-							ImDrawVert* imDrawVert = static_cast<ImDrawVert*>(vertexBufferMappedSubresource.data);
-							ImDrawIdx* imDrawIdx = static_cast<ImDrawIdx*>(indexBufferMappedSubresource.data);
-							for (int i = 0; i < imDrawData->CmdListsCount; ++i)
-							{
-								const ImDrawList* imDrawList = imDrawData->CmdLists[i];
-								memcpy(imDrawVert, &imDrawList->VtxBuffer[0], imDrawList->VtxBuffer.size() * sizeof(ImDrawVert));
-								memcpy(imDrawIdx, &imDrawList->IdxBuffer[0], imDrawList->IdxBuffer.size() * sizeof(ImDrawIdx));
-								imDrawVert += imDrawList->VtxBuffer.size();
-								imDrawIdx += imDrawList->IdxBuffer.size();
-							}
-
-							// Unmap the index buffer
-							renderer.unmap(*mIndexBufferPtr, 0);
-						}
-
-						// Unmap the vertex buffer
-						renderer.unmap(*mVertexBufferPtr, 0);
-					}
-				}
-			}
 		}
 	}
 

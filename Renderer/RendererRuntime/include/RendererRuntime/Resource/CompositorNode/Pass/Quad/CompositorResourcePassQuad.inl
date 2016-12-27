@@ -28,6 +28,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline bool CompositorResourcePassQuad::isMaterialDefinitionMandatory() const
+	{
+		return mMaterialDefinitionMandatory;
+	}
+
 	inline AssetId CompositorResourcePassQuad::getMaterialAssetId() const
 	{
 		return mMaterialAssetId;
@@ -62,7 +67,15 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline CompositorResourcePassQuad::CompositorResourcePassQuad(const CompositorTarget& compositorTarget) :
-		ICompositorResourcePass(compositorTarget)
+		ICompositorResourcePass(compositorTarget),
+		mMaterialDefinitionMandatory(true)
+	{
+		// Nothing here
+	}
+
+	inline CompositorResourcePassQuad::CompositorResourcePassQuad(const CompositorTarget& compositorTarget, bool materialDefinitionMandatory) :
+		ICompositorResourcePass(compositorTarget),
+		mMaterialDefinitionMandatory(materialDefinitionMandatory)
 	{
 		// Nothing here
 	}

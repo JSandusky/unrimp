@@ -148,7 +148,7 @@ namespace RendererRuntime
 				else if (1042371778 == assetId)	// "MaterialBlueprint/Debug/Gui"
 				{
 					Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(materialBlueprintResource->getVertexAttributes());
-					const Renderer::VertexAttribute vertexAttributesLayout[] =
+					static const Renderer::VertexAttribute vertexAttributesLayout[] =
 					{
 						{ // Attribute 0
 							// Data destination
