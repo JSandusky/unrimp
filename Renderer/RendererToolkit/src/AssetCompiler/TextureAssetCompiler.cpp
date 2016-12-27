@@ -911,6 +911,7 @@ namespace RendererToolkit
 				}
 				TIFFClose(tif);
 			}
+	*/
 
 
 		// Load the source image file into memory
@@ -931,7 +932,7 @@ namespace RendererToolkit
 			throw std::runtime_error("Failed reading image file");
 		}*/
 
-			/*
+		/*
 
 
 		// Fill in compression parameters struct.
