@@ -420,6 +420,7 @@ namespace RendererToolkit
 
 		// Gather the asset IDs of all used material blueprints (one material blueprint per material technique)
 		techniques.reserve(rapidJsonValueTechniques.MemberCount());
+		std::unordered_map<uint32_t, std::string> materialTechniqueIdToName;	// Key = "RendererRuntime::MaterialTechniqueId"
 		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
 		{
 			// Add technique
@@ -427,6 +428,7 @@ namespace RendererToolkit
 			technique.materialTechniqueId	   = RendererRuntime::StringId(rapidJsonMemberIteratorTechniques->name.GetString());
 			technique.materialBlueprintAssetId = static_cast<uint32_t>(std::atoi(rapidJsonMemberIteratorTechniques->value.GetString()));
 			techniques.push_back(technique);
+			materialTechniqueIdToName.emplace(technique.materialTechniqueId, rapidJsonMemberIteratorTechniques->name.GetString());
 		}
 		std::sort(techniques.begin(), techniques.end(), detail::orderByMaterialTechniqueId);
 
@@ -434,7 +436,8 @@ namespace RendererToolkit
 		for (RendererRuntime::v1Material::Technique& technique : techniques)
 		{
 			RendererRuntime::MaterialProperties::SortedPropertyVector newSortedMaterialPropertyVector;
-			JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, technique.materialBlueprintAssetId, newSortedMaterialPropertyVector);
+			MaterialPropertyIdToName materialPropertyIdToName;
+			JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, technique.materialBlueprintAssetId, newSortedMaterialPropertyVector, &materialPropertyIdToName);
 
 			// Add properties and avoid duplicates while doing so
 			for (const RendererRuntime::MaterialProperty& materialProperty : newSortedMaterialPropertyVector)
@@ -445,6 +448,18 @@ namespace RendererToolkit
 				{
 					// Add new material property
 					sortedMaterialPropertyVector.insert(iterator, materialProperty);
+				}
+				else
+				{
+					// Sanity checks
+					const RendererRuntime::MaterialProperty& otherMaterialProperty = *iterator;
+					const bool valueTypeMatch = (materialProperty.getValueType() != otherMaterialProperty.getValueType());
+					const bool usageMatch = (materialProperty.getUsage() != otherMaterialProperty.getUsage());
+					if (valueTypeMatch | usageMatch)
+					{
+						const std::string mismatch = valueTypeMatch ? "value type" : "usage";
+						throw std::runtime_error(std::string("Material blueprint asset ") + std::to_string(technique.materialBlueprintAssetId) + " referenced by material technique \"" + materialTechniqueIdToName[technique.materialTechniqueId] + "\" has material property \"" + materialPropertyIdToName[materialProperty.getMaterialPropertyId()] + "\" which differs in " + mismatch + " to another already registered material property");
+					}
 				}
 			}
 
