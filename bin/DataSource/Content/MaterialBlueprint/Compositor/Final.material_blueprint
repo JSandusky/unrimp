@@ -8,14 +8,6 @@
 	{
 		"Properties":
 		{
-			"IsFinalCopy":
-			{
-				"Usage": "SHADER_COMBINATION",
-				"ValueType": "BOOLEAN",
-				"Value": "TRUE",
-				"Description": "Is this the final copy step writing into the operation system window?",
-				"VisualImportance": "MANDATORY"
-			},
 			"Fxaa":
 			{
 				"Usage": "SHADER_COMBINATION",
