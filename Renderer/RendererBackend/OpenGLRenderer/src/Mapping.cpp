@@ -295,7 +295,7 @@ namespace OpenGLRenderer
 			GL_COMPRESSED_LUMINANCE_LATC1_EXT,			// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
 			GL_COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)
 			0,											// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - not supported in OpenGL
-			GL_FLOAT,									// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format	TODO(co) Check this
+			GL_DEPTH_COMPONENT32,						// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 			0											// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[indexBufferFormat];
@@ -305,19 +305,19 @@ namespace OpenGLRenderer
 	{
 		static const GLuint MAPPING[] =
 		{
-			GL_RED,		// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha" (please note that "GL_ALPHA" is no valid OpenGL format)
-			GL_RGB,		// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
-			GL_RGBA,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
-			GL_RGBA,	// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
-			GL_RGBA,	// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
-			0,			// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block)
-			0,			// Renderer::TextureFormat::BC2           - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
-			0,			// Renderer::TextureFormat::BC3           - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
-			0,			// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
-			0,			// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)
-			0,			// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - not supported in OpenGL
-			0,			// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format	TODO(co) Check this
-			0			// Renderer::TextureFormat::UNKNOWN       - Unknown
+			GL_RED,				// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha" (please note that "GL_ALPHA" is no valid OpenGL format)
+			GL_RGB,				// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
+			GL_RGBA,			// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
+			GL_RGBA,			// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
+			GL_RGBA,			// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
+			0,					// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block)
+			0,					// Renderer::TextureFormat::BC2           - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
+			0,					// Renderer::TextureFormat::BC3           - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
+			0,					// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
+			0,					// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)
+			0,					// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - not supported in OpenGL
+			GL_DEPTH_COMPONENT,	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			0					// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];
 	}
@@ -337,7 +337,7 @@ namespace OpenGLRenderer
 			0,					// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
 			0,					// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)
 			0,					// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - not supported in OpenGL
-			0,					// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format	TODO(co) Check this
+			GL_FLOAT,			// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 			0					// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];

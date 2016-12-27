@@ -36,11 +36,16 @@
 // Attribute input / output
 INPUT_BEGIN
 	INPUT_VERTEX_POSITION(float4, PositionTexCoord)		// xy = position, zw = texture coordinate
+	INPUT_VERTEX_DRAW_ID								// Draw ID
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
-	OUTPUT_POSITION										// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	OUTPUT_TEXTURE_COORDINATE				 (float2, TexCoordVS, 0)			// Texture coordinate
+	OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(float2, InverseTextureSize0VS, 1)	// Inverse texture size 0
+	OUTPUT_POSITION																// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
 OUTPUT_END
+
+// Textures
+TEXTURE_2D(ColorMap, 0)
 
 
 //[-------------------------------------------------------]
@@ -55,4 +60,14 @@ MAIN_BEGIN
 
 	// Pass through the texture coordinates
 	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(PositionTexCoord.zw);
+
+	// Pass through the inverse texture size 0
+	// Background: Modern shader languages provide functionality to get the texture size. See e.g.
+	// - HLSL "GetDimensions()" ( https://msdn.microsoft.com/de-de/library/windows/desktop/bb509693(v=vs.85).aspx )
+	// - GLSL "textureSize()" ( https://www.opengl.org/sdk/docs/man4/html/textureSize.xhtml )
+	// On the other hand, there are indications that usage of this functionality is not recommenced performance wise. See e.g.
+	// - http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2013/05/GCNPerformanceTweets.pdf
+	// - http://www.gamedev.net/topic/605580-performance-comparison-hlsl-texturegetdimension/
+	// So, you might want to perform this inside the vertex shader and then pass the result into the fragment shader (except the vertes shader is your bottleneck).
+	MAIN_OUTPUT(InverseTextureSize0VS) = 1.0f / GET_TEXTURE_SIZE(ColorMap);
 MAIN_END

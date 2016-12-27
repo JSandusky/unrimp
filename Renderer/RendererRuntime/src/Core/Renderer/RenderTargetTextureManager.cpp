@@ -169,7 +169,7 @@ namespace RendererRuntime
 						renderTargetTextureElement.texture = mRendererRuntime.getTextureManager().createTexture2D(width, height, renderTargetTextureSignature.getTextureFormat(), nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT);
 						renderTargetTextureElement.texture->addReference();
 
-						{ // Tell the texture resource manager about our render target texture
+						{ // Tell the texture resource manager about our render target texture so it can be referenced inside e.g. compositor nodes
 							TextureResourceManager& textureResourceManager = mRendererRuntime.getTextureResourceManager();
 							TextureResource* textureResource = textureResourceManager.getTextureResourceByAssetId(assetId);
 							if (nullptr == textureResource)

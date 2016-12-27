@@ -8,29 +8,17 @@
 	{
 		"Properties":
 		{
-			"GBufferMap0":
+			"GlyphMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Description": "GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)"
+				"Description": "Glyph map"
 			},
-			"GBufferMap1":
+			"BackgroundMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Description": "GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic"
-			},
-			"GBufferMap2":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Description": "GBuffer 2: rgb = emissive color, a = glossiness"
-			},
-			"DepthMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Description": "Depth map"
+				"Description": "Background map"
 			}
 		},
 		"RootSignature":
@@ -49,7 +37,7 @@
 							"BaseShaderRegisterName": "PassUniformBuffer"
 						}
 					},
-					"ShaderVisibility": "FRAGMENT"
+					"ShaderVisibility": "VERTEX"
 				},
 				"1":
 				{
@@ -71,10 +59,8 @@
 					{
 						"0":
 						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "GBufferMap0",
-							"SamplerRootParameterIndex": "1"
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "1"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -87,8 +73,8 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "GBufferMap1",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "GlyphMap",
 							"SamplerRootParameterIndex": "1"
 						}
 					},
@@ -102,24 +88,9 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "GBufferMap2",
-							"SamplerRootParameterIndex": "1"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"5":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "3",
-							"BaseShaderRegisterName": "DepthMap",
-							"SamplerRootParameterIndex": "1"
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "BackgroundMap",
+							"SamplerRootParameterIndex": "2"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -130,17 +101,28 @@
 		{
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "100",
-				"FragmentShaderBlueprintAssetId": "114"
+				"VertexShaderBlueprintAssetId": "119",
+				"FragmentShaderBlueprintAssetId": "120"
 			},
 			"RasterizerState":
 			{
-				"CullMode": "NONE"
+				"CullMode": "NONE",
+				"ScissorEnable": "TRUE"
 			},
 			"DepthStencilState":
 			{
 				"DepthEnable": "FALSE",
 				"DepthWriteMask": "ZERO"
+			},
+			"BlendState":
+			{
+				"RenderTarget[0]":
+				{
+					"BlendEnable": "TRUE",
+					"SrcBlend": "SRC_ALPHA",
+					"DestBlend": "INV_SRC_ALPHA",
+					"SrcBlendAlpha": "INV_SRC_ALPHA"
+				}
 			}
 		},
 		"Resources":
@@ -154,65 +136,43 @@
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
-						"ViewSpaceSunLightDirection":
+						"ObjectSpaceToClipSpaceMatrix":
 						{
 							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@VIEW_SPACE_SUN_LIGHT_DIRECTION"
-						},
-						"Wetness":
-						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT",
-							"Value": "@Wetness"
-						},
-						"SunLightColor":
-						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@SunLightColor"
+							"ValueType": "FLOAT_4_4",
+							"Value": "@IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX"
 						}
 					}
 				}
 			},
 			"SamplerStates":
 			{
-				"SamplerPoint":
+				"GlyphSampler":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)"
+				},
+				"BackgroundSampler":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Filter": "MIN_MAG_MIP_POINT",
+					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
 					"MaxLOD": "0.0"
 				}
 			},
 			"Textures":
 			{
-				"GBufferMap0":
+				"GlyphMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@GBufferMap0"
+					"Value": "@GlyphMap"
 				},
-				"GBufferMap1":
+				"BackgroundMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@GBufferMap1"
-				},
-				"GBufferMap2":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@GBufferMap2"
-				},
-				"DepthMap":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DepthMap"
+					"Value": "@BackgroundMap"
 				}
 			}
 		}

@@ -182,12 +182,14 @@ namespace RendererRuntime
 				{
 					assert(nullptr != queuedRenderable.renderable);
 					const Renderable& renderable = *queuedRenderable.renderable;
-
-					// Setup input assembly (IA): Set the used vertex array
 					Renderer::IVertexArrayPtr vertexArrayPtr = renderable.getVertexArrayPtr();
 					if (nullptr != vertexArrayPtr)
 					{
+						// Setup input assembly (IA): Set the used vertex array
 						Renderer::Command::SetVertexArray::create(commandBuffer, vertexArrayPtr);
+
+						// Setup input assembly (IA): Set the primitive topology used for draw calls
+						Renderer::Command::SetPrimitiveTopology::create(commandBuffer, renderable.getPrimitiveTopology());
 
 						// Material resource
 						const MaterialResource* materialResource = materialResources.tryGetElementById(renderable.getMaterialResourceId());
@@ -283,27 +285,21 @@ namespace RendererRuntime
 										// Set the used pipeline state object (PSO)
 										Renderer::Command::SetPipelineState::create(commandBuffer, pipelineStatePtr);
 
-										{ // Fill the instance buffer manager
-											PassBufferManager* passBufferManager = materialBlueprintResource->getPassBufferManager();
-											if (nullptr != passBufferManager)
-											{
-												const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
-												const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource->getInstanceTextureBuffer();
-												instanceBufferManager.fillBuffer(*passBufferManager, instanceUniformBuffer, instanceTextureBuffer, renderable.getRenderableManager().getTransform(), *materialTechnique, commandBuffer);
-											}
-										}
-
-										// Setup input assembly (IA): Set the primitive topology used for draw calls
-										Renderer::Command::SetPrimitiveTopology::create(commandBuffer, renderable.getPrimitiveTopology());
+										// Fill the instance buffer manager
+										instanceBufferManager.fillBuffer(materialBlueprintResource->getPassBufferManager(), materialBlueprintResource->getInstanceUniformBuffer(), materialBlueprintResource->getInstanceTextureBuffer(), renderable.getRenderableManager().getTransform(), *materialTechnique, commandBuffer);
 
 										// Render the specified geometric primitive, based on indexing into an array of vertices
-										if (renderable.getDrawIndexed())
+										// -> Please note that it's valid that there are no indices, for example "RendererRuntime::CompositorInstancePassDebugGui" is using the render queue only to set the material resource blueprint
+										if (0 != renderable.getNumberOfIndices())
 										{
-											Renderer::Command::DrawIndexed::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
-										}
-										else
-										{
-											Renderer::Command::Draw::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
+											if (renderable.getDrawIndexed())
+											{
+												Renderer::Command::DrawIndexed::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
+											}
+											else
+											{
+												Renderer::Command::Draw::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
+											}
 										}
 									}
 								}

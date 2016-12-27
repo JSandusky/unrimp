@@ -30,6 +30,8 @@
 
 #include <Renderer/Public/Renderer.h>
 
+#include <imgui/imgui.h>
+
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
 	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
@@ -56,6 +58,7 @@ namespace
 			// Pass
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
+			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_SUN_LIGHT_DIRECTION)
 			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
 
@@ -130,14 +133,30 @@ namespace RendererRuntime
 		// TODO(co) Add more of those standard property values
 		if (::detail::WORLD_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
 		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceMatrix), numberOfBytes);
 		}
 		else if (::detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix), numberOfBytes);
+		}
+		else if (::detail::IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			const ImGuiIO& imGuiIo = ImGui::GetIO();
+			const float objectSpaceToClipSpaceMatrix[4][4] =
+			{
+				{  2.0f / imGuiIo.DisplaySize.x, 0.0f,                          0.0f, 0.0f },
+				{  0.0f,                         2.0f / -imGuiIo.DisplaySize.y, 0.0f, 0.0f },
+				{  0.0f,                         0.0f,                          0.5f, 0.0f },
+				{ -1.0f,                         1.0f,                          0.5f, 1.0f }
+			};
+			memcpy(buffer, objectSpaceToClipSpaceMatrix, numberOfBytes);
 		}
 		else if (::detail::VIEW_SPACE_SUN_LIGHT_DIRECTION == referenceValue)
 		{
+			assert(sizeof(float) * 3 == numberOfBytes);
 			glm::vec3 viewSpaceSunLightDirection(0.5f, 0.5f, 1.0f);	// TODO(co) This is just a test, needs to be filled from the outside
 			viewSpaceSunLightDirection = glm::normalize(viewSpaceSunLightDirection);
 			memcpy(buffer, glm::value_ptr(viewSpaceSunLightDirection), numberOfBytes);

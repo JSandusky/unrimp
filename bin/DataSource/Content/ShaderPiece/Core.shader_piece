@@ -87,6 +87,14 @@
 		#define TEXTURE_2D(name, index) Texture2D name : register(t##index);
 		#define TEXTURE_3D(name, index) Texture3D name : register(t##index);
 		#define TEXTURE_CUBE(name, index) TextureCube name : register(t##index);
+		float2 getDirect3DTextureSize(Texture2D textureObject)
+		{
+			uint width;
+			uint height;
+			textureObject.GetDimensions(width, height);
+			return float2(width, height);
+		}
+		#define GET_TEXTURE_SIZE(tex) getDirect3DTextureSize(tex)
 
 		// Sampler
 		#define SAMPLER_STATE(name, index) SamplerState name : register(s##index);
@@ -171,6 +179,7 @@
 		#define TEXTURE_2D(name, index) uniform sampler2D name;
 		#define TEXTURE_3D(name, index) uniform sampler3D name;
 		#define TEXTURE_CUBE(name, index) uniform samplerCube name;
+		#define GET_TEXTURE_SIZE(tex) textureSize(tex, 0)
 
 		// Sampler
 		#define SAMPLER_STATE(name, index) int name = index;	// We need something to pass into functions

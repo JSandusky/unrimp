@@ -35,24 +35,36 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_VERTEX_POSITION(float4, PositionTexCoord)		// xy = position, zw = texture coordinate
+	INPUT_TEXTURE_COORDINATE(float4, TexCoordVS, 0)	// xy = glyph texture coordinate, zw = background texture coordinate
+	INPUT_TEXTURE_COORDINATE(float4, ColorVS, 1)	// Vertex color
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
-	OUTPUT_POSITION										// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	OUTPUT_COLOR(0)
 OUTPUT_END
+
+// Samplers
+SAMPLER_STATE(GlyphSampler, 0)
+SAMPLER_STATE(BackgroundSampler, 1)
+
+// Textures
+TEXTURE_2D(GlyphMap, 0)
+TEXTURE_2D(BackgroundMap, 1)
 
 
 //[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	// Transform the object space vertex into clip space
-	MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).xy, 0.0f, 1.0f);
-	@property(GLSL)
-		MAIN_OUTPUT_POSITION.y = -MAIN_OUTPUT_POSITION.y;
+	// Get source and destination color
+	@property(HLSL)
+		float glyphMapValue = SAMPLE_2D(GlyphMap, GlyphSampler, MAIN_INPUT(TexCoordVS).xy).a;
 	@end
+	@property(GLSL)
+		float glyphMapValue = SAMPLE_2D(GlyphMap, GlyphSampler, MAIN_INPUT(TexCoordVS).xy).r;
+	@end
+	float4 sourceColor = MAIN_INPUT(ColorVS) * glyphMapValue;
+	float4 destinationColor = SAMPLE_2D(BackgroundMap, BackgroundSampler, MAIN_INPUT(TexCoordVS).zw);
 
-	// Pass through the texture coordinates
-	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(PositionTexCoord.zw);
+	// Blend
+	MAIN_OUTPUT_COLOR(0) = float4(sourceColor.rgb * sourceColor.a + destinationColor.rgb * (1.0f - sourceColor.a), glyphMapValue);
 MAIN_END

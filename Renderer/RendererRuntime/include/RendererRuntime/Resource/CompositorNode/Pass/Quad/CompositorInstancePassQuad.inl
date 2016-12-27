@@ -35,7 +35,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	inline void CompositorInstancePassQuad::onFrameEnded()
 	{

@@ -8,14 +8,6 @@
 	{
 		"Properties":
 		{
-			"IsFinalCopy":
-			{
-				"Usage": "SHADER_COMBINATION",
-				"ValueType": "BOOLEAN",
-				"Value": "TRUE",
-				"Description": "Is this the final copy step writing into the operation system window?",
-				"VisualImportance": "MANDATORY"
-			},
 			"Fxaa":
 			{
 				"Usage": "SHADER_COMBINATION",
@@ -47,7 +39,7 @@
 							"BaseShaderRegisterName": "PassUniformBuffer"
 						}
 					},
-					"ShaderVisibility": "ALL"
+					"ShaderVisibility": "FRAGMENT"
 				},
 				"1":
 				{
@@ -121,6 +113,7 @@
 				"SamplerLinear":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
 					"MaxLOD": "0.0"
 				}
 			},

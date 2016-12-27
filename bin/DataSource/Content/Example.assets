@@ -122,6 +122,10 @@
 		"114": "ShaderBlueprint/Deferred/AmbientCompositorFragment.asset",
 		"115": "MaterialBlueprint/Deferred/AmbientCompositor.asset",
 		"116": "ShaderBlueprint/Compositor/GaussianBlurFragment.asset",
-		"117": "MaterialBlueprint/Compositor/GaussianBlur.asset"
+		"117": "MaterialBlueprint/Compositor/GaussianBlur.asset",
+		"118": "ShaderBlueprint/Compositor/PositionTextureCoordinateInverseTextureSize0Vertex.asset",
+		"119": "ShaderBlueprint/Debug/GuiVertex.asset",
+		"120": "ShaderBlueprint/Debug/GuiFragment.asset",
+		"121": "MaterialBlueprint/Debug/Gui.asset"
 	}
 }

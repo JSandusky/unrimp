@@ -34,27 +34,13 @@
 					{
 						"0":
 						{
-							"RangeType": "UBV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "PassUniformBuffer"
-						}
-					},
-					"ShaderVisibility": "ALL"
-				},
-				"1":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
 							"RangeType": "SAMPLER",
 							"BaseShaderRegister": "0"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
 				},
-				"2":
+				"1":
 				{
 					"ParameterType": "DESCRIPTOR_TABLE",
 					"DescriptorRanges":
@@ -64,10 +50,9 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "ColorMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "0"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				}
 			}
 		},
@@ -75,7 +60,7 @@
 		{
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "100",
+				"VertexShaderBlueprintAssetId": "118",
 				"FragmentShaderBlueprintAssetId": "116"
 			},
 			"RasterizerState":
@@ -90,29 +75,12 @@
 		},
 		"Resources":
 		{
-			"UniformBuffers":
-			{
-				"PassUniformBuffer":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"BufferUsage": "PASS",
-					"NumberOfElements": "1",
-					"ElementProperties":
-					{
-						"InverseViewportSize":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_2",
-							"Value": "@INVERSE_VIEWPORT_SIZE"
-						}
-					}
-				}
-			},
 			"SamplerStates":
 			{
 				"SamplerLinear":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
 					"MaxLOD": "0.0"
 				}
 			},

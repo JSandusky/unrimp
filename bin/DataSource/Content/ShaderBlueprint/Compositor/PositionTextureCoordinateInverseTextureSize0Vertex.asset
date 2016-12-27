@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "118",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "PositionTextureCoordinateInverseTextureSize0Vertex",
+			"AssetDependencies": [ "15" ],
+			"FileDependencies": [ "PositionTextureCoordinateInverseTextureSize0Vertex.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "PositionTextureCoordinateInverseTextureSize0Vertex.shader_blueprint"
+		}
+	}
+}

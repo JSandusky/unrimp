@@ -40,13 +40,35 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassDebugGui::onFillCommandBuffer(const Renderer::IRenderTarget&, Renderer::CommandBuffer& commandBuffer)
+	void CompositorInstancePassDebugGui::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer)
 	{
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
 		// Fill command buffer
-		getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getDebugGuiManager().fillCommandBuffer(commandBuffer);
+		DebugGuiManager& debugGuiManager = getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getDebugGuiManager();
+		RenderableManager::Renderables& renderables = mRenderableManager.getRenderables();
+		if (renderables.empty())
+		{
+			// Fill command buffer using fixed build in renderer configuration resources
+			debugGuiManager.fillCommandBufferUsingFixedBuildInRendererConfiguration(commandBuffer);
+		}
+		else
+		{
+			// Fill command buffer, this sets the material resource blueprint
+			{
+				Renderer::IVertexArrayPtr vertexArrayPtr = debugGuiManager.getFillVertexArrayPtr();
+				if (vertexArrayPtr != renderables[0].getVertexArrayPtr())
+				{
+					renderables[0].setVertexArrayPtr(vertexArrayPtr);
+				}
+			}
+			mRenderQueue.addRenderablesFromRenderableManager(mRenderableManager);
+			mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassDebugGui&>(getCompositorResourcePass()).getMaterialTechniqueId(), commandBuffer);
+
+			// Fill command buffer using custom material blueprint resource
+			debugGuiManager.fillCommandBuffer(commandBuffer);
+		}
 
 		// End debug event
 		COMMAND_END_DEBUG_EVENT(commandBuffer)
@@ -54,12 +76,30 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::CompositorInstancePassQuad methods ]
+	//[-------------------------------------------------------]
+	void CompositorInstancePassDebugGui::createMaterialResource(MaterialResourceId parentMaterialResourceId)
+	{
+		// Call the base implementation
+		CompositorInstancePassQuad::createMaterialResource(parentMaterialResourceId);
+
+		// Inside this compositor pass implementation, the renderable only exists to set the material blueprint
+		mRenderableManager.getRenderables()[0].setNumberOfIndices(0);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	CompositorInstancePassDebugGui::CompositorInstancePassDebugGui(const CompositorResourcePassDebugGui& compositorResourcePassDebugGui, const CompositorNodeInstance& compositorNodeInstance) :
-		ICompositorInstancePass(compositorResourcePassDebugGui, compositorNodeInstance)
+		CompositorInstancePassQuad(compositorResourcePassDebugGui, compositorNodeInstance)
 	{
-		// Nothing here
+		// Inside this compositor pass implementation, the renderable only exists to set the material blueprint
+		RenderableManager::Renderables& renderables = mRenderableManager.getRenderables();
+		if (!renderables.empty())
+		{
+			renderables[0].setNumberOfIndices(0);
+		}
 	}
 
 

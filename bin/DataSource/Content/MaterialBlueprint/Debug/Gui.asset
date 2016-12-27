@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "121",
+			"AssetType": "MaterialBlueprint",
+			"AssetCategory": "Debug",
+			"AssetName": "Gui",
+			"AssetDependencies": [ "119", "120" ],
+			"FileDependencies": [ "Gui.material_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"MaterialBlueprintAssetCompiler":
+		{
+			"InputFile": "Gui.material_blueprint"
+		}
+	}
+}

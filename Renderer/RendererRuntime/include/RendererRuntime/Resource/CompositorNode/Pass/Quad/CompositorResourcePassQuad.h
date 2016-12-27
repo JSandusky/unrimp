@@ -80,6 +80,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		inline bool isMaterialDefinitionMandatory() const;
 		inline AssetId getMaterialAssetId() const;
 		inline MaterialTechniqueId getMaterialTechniqueId() const;
 		inline AssetId getMaterialBlueprintAssetId() const;
@@ -99,6 +100,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline explicit CompositorResourcePassQuad(const CompositorTarget& compositorTarget);
+		inline CompositorResourcePassQuad(const CompositorTarget& compositorTarget, bool materialDefinitionMandatory);
 		inline virtual ~CompositorResourcePassQuad();
 		CompositorResourcePassQuad(const CompositorResourcePassQuad&) = delete;
 		CompositorResourcePassQuad& operator=(const CompositorResourcePassQuad&) = delete;
@@ -108,6 +110,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		bool				mMaterialDefinitionMandatory;
 		AssetId				mMaterialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
 		MaterialTechniqueId	mMaterialTechniqueId;		///< Must always be valid
 		AssetId				mMaterialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized

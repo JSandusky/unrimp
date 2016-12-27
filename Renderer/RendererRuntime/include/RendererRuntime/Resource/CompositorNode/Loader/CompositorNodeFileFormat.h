@@ -145,7 +145,8 @@ namespace RendererRuntime
 				{}
 			};
 
-			struct PassDebugGui
+			// The material definition is not mandatory for the debug GUI, if nothing is defined the fixed build in renderer configuration resources will be used instead
+			struct PassDebugGui : public PassQuad
 			{
 			};
 		#pragma pack(pop)

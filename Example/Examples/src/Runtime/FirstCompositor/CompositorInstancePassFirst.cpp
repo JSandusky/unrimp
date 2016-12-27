@@ -52,7 +52,7 @@ void CompositorInstancePassFirst::onFillCommandBuffer(const Renderer::IRenderTar
 	RendererRuntime::DebugGuiManager& debugGuiManager = compositorWorkspaceInstance.getRendererRuntime().getDebugGuiManager();
 	debugGuiManager.newFrame(*compositorWorkspaceInstance.getExecutionRenderTarget());	// We know that the render target must be valid if we're in here
 	debugGuiManager.drawText("42", 100.0f, 100.0f);
-	debugGuiManager.fillCommandBuffer(commandBuffer);
+	debugGuiManager.fillCommandBufferUsingFixedBuildInRendererConfiguration(commandBuffer);
 }
 
 

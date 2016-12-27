@@ -51,6 +51,122 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void fillSortedMaterialPropertyVector(const RendererToolkit::IAssetCompiler::Input& input, const std::unordered_set<uint32_t>& renderTargetTextureAssetIds, const rapidjson::Value::ConstMemberIterator& rapidJsonMemberIteratorPasses, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+		{
+			// Check whether or not material properties should be set
+			if (rapidJsonMemberIteratorPasses->value.HasMember("SetMaterialProperties"))
+			{
+				const rapidjson::Value& rapidJsonValuePass = rapidJsonMemberIteratorPasses->value;
+				if (rapidJsonValuePass.HasMember("MaterialAssetId"))
+				{
+					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, static_cast<uint32_t>(std::atoi(rapidJsonValuePass["MaterialAssetId"].GetString())), sortedMaterialPropertyVector);
+				}
+				else if (rapidJsonValuePass.HasMember("MaterialBlueprintAssetId"))
+				{
+					RendererToolkit::JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, static_cast<uint32_t>(std::atoi(rapidJsonValuePass["MaterialBlueprintAssetId"].GetString())), sortedMaterialPropertyVector);
+				}
+				if (!sortedMaterialPropertyVector.empty())
+				{
+					// Update material property values were required
+					const rapidjson::Value& rapidJsonValueProperties = rapidJsonMemberIteratorPasses->value["SetMaterialProperties"];
+					RendererToolkit::JsonMaterialHelper::readMaterialPropertyValues(input, rapidJsonValueProperties, sortedMaterialPropertyVector);
+
+					{ // Need a second round for referenced render target textures so we can write e.g. "ColorMap": "ColorRenderTargetTexture0" ("ColorRenderTargetTexture0" = render target texture)
+						// Collect all material property IDs explicitly defined inside the compositor node asset
+						typedef std::unordered_map<uint32_t, std::string> DefinedMaterialPropertyIds;	// Key = "RendererRuntime::RendererRuntime::MaterialPropertyId"
+						DefinedMaterialPropertyIds definedMaterialPropertyIds;
+						for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorProperties = rapidJsonValueProperties.MemberBegin(); rapidJsonMemberIteratorProperties != rapidJsonValueProperties.MemberEnd(); ++rapidJsonMemberIteratorProperties)
+						{
+							definedMaterialPropertyIds.emplace(RendererRuntime::MaterialPropertyId(rapidJsonMemberIteratorProperties->name.GetString()), rapidJsonMemberIteratorProperties->value.GetString());
+						}
+
+						// Mark material properties as overwritten and update texture asset IDs if necessary
+						for (RendererRuntime::MaterialProperty& materialProperty : sortedMaterialPropertyVector)
+						{
+							DefinedMaterialPropertyIds::const_iterator iterator = definedMaterialPropertyIds.find(materialProperty.getMaterialPropertyId());
+							if (iterator!= definedMaterialPropertyIds.end())
+							{
+								materialProperty.setOverwritten(true);
+								if (materialProperty.getValueType() == RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
+								{
+									const RendererRuntime::AssetId assetId = RendererRuntime::StringId(iterator->second.c_str());
+									if (renderTargetTextureAssetIds.find(assetId) != renderTargetTextureAssetIds.end())
+									{
+										static_cast<RendererRuntime::MaterialPropertyValue&>(materialProperty) = RendererRuntime::MaterialPropertyValue::fromTextureAssetId(assetId);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		void readPassQuad(const RendererToolkit::IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValuePass, bool materialDefinitionMandatory, RendererRuntime::v1CompositorNode::PassQuad& passQuad)
+		{
+			// Set data
+			RendererRuntime::AssetId materialAssetId;
+			RendererRuntime::AssetId materialBlueprintAssetId;
+			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialAssetId", materialAssetId);
+			RendererToolkit::JsonHelper::optionalStringIdProperty(rapidJsonValuePass, "MaterialTechnique", passQuad.materialTechniqueId);
+			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialBlueprintAssetId", materialBlueprintAssetId);
+			passQuad.materialAssetId = materialAssetId;
+			passQuad.materialBlueprintAssetId = materialBlueprintAssetId;
+			passQuad.numberOfMaterialProperties = sortedMaterialPropertyVector.size();
+
+			// Sanity checks
+			if (materialDefinitionMandatory && RendererRuntime::isUninitialized(passQuad.materialAssetId) && RendererRuntime::isUninitialized(passQuad.materialBlueprintAssetId))
+			{
+				throw std::runtime_error("Material asset ID or material blueprint asset ID must be defined");
+			}
+			if (RendererRuntime::isInitialized(passQuad.materialAssetId) && RendererRuntime::isInitialized(passQuad.materialBlueprintAssetId))
+			{
+				throw std::runtime_error("Material asset ID is defined, but material blueprint asset ID is defined as well. Only one asset ID is allowed.");
+			}
+			if (RendererRuntime::isInitialized(passQuad.materialAssetId) && RendererRuntime::isUninitialized(passQuad.materialTechniqueId))
+			{
+				throw std::runtime_error("Material asset ID is defined, but material technique is not defined");
+			}
+			if (RendererRuntime::isInitialized(passQuad.materialBlueprintAssetId) && RendererRuntime::isUninitialized(passQuad.materialTechniqueId))
+			{
+				passQuad.materialTechniqueId = RendererRuntime::MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID;
+			}
+		}
+
+		uint32_t getRenderTargetTextureSize(const rapidjson::Value& rapidJsonValueRenderTargetTexture, const char* propertyName, const char* defaultValue)
+		{
+			uint32_t size = RendererRuntime::getUninitialized<uint32_t>();
+			if (rapidJsonValueRenderTargetTexture.HasMember(propertyName))
+			{
+				const char* valueAsString = rapidJsonValueRenderTargetTexture[propertyName].GetString();
+				if (strcmp(valueAsString, defaultValue) != 0)
+				{
+					size = static_cast<uint32_t>(std::atoi(valueAsString));
+				}
+			}
+			return size;
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -148,6 +264,7 @@ namespace RendererToolkit
 
 			// Write down the compositor render target textures
 			std::unordered_set<uint32_t> renderTargetTextureAssetIds;	// "RendererRuntime::AssetId"-type
+			renderTargetTextureAssetIds.insert(RendererRuntime::StringId("ImGuiGlyphMap"));	// TODO(co) Make this somehow more generic
 			if (rapidJsonValueCompositorNodeAsset.HasMember("RenderTargetTextures"))
 			{
 				const rapidjson::Value& rapidJsonValueRenderTargetTextures = rapidJsonValueCompositorNodeAsset["RenderTargetTextures"];
@@ -158,21 +275,9 @@ namespace RendererToolkit
 					{ // Render target texture signature
 						const rapidjson::Value& rapidJsonValueRenderTargetTexture = rapidJsonMemberIteratorRenderTargetTextures->value;
 
-						// Width
-						uint32_t width = RendererRuntime::getUninitialized<uint32_t>();
-						const char* valueAsString = rapidJsonValueRenderTargetTexture["Width"].GetString();
-						if (strcmp(valueAsString, "TARGET_WIDTH") != 0)
-						{
-							width = static_cast<uint32_t>(std::atoi(valueAsString));
-						}
-
-						// Height
-						uint32_t height = RendererRuntime::getUninitialized<uint32_t>();
-						valueAsString = rapidJsonValueRenderTargetTexture["Height"].GetString();
-						if (strcmp(valueAsString, "TARGET_HEIGHT") != 0)
-						{
-							height = static_cast<uint32_t>(std::atoi(valueAsString));
-						}
+						// Width and height
+						const uint32_t width = ::detail::getRenderTargetTextureSize(rapidJsonValueRenderTargetTexture, "Width", "TARGET_WIDTH");
+						const uint32_t height = ::detail::getRenderTargetTextureSize(rapidJsonValueRenderTargetTexture, "Height", "TARGET_HEIGHT");
 
 						// Texture format
 						const Renderer::TextureFormat::Enum textureFormat = JsonHelper::mandatoryTextureFormat(rapidJsonValueRenderTargetTexture);
@@ -308,54 +413,7 @@ namespace RendererToolkit
 					}
 					else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 					{
-						// Check whether or not material properties should be set
-						if (rapidJsonMemberIteratorPasses->value.HasMember("SetMaterialProperties"))
-						{
-							if (rapidJsonValuePass.HasMember("MaterialAssetId"))
-							{
-								JsonMaterialHelper::getPropertiesByMaterialAssetId(input, static_cast<uint32_t>(std::atoi(rapidJsonValuePass["MaterialAssetId"].GetString())), sortedMaterialPropertyVector);
-							}
-							else if (rapidJsonValuePass.HasMember("MaterialBlueprintAssetId"))
-							{
-								JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, static_cast<uint32_t>(std::atoi(rapidJsonValuePass["MaterialBlueprintAssetId"].GetString())), sortedMaterialPropertyVector);
-							}
-							if (!sortedMaterialPropertyVector.empty())
-							{
-								// Update material property values were required
-								const rapidjson::Value& rapidJsonValueProperties = rapidJsonMemberIteratorPasses->value["SetMaterialProperties"];
-								JsonMaterialHelper::readMaterialPropertyValues(input, rapidJsonValueProperties, sortedMaterialPropertyVector);
-
-								{ // Need a second round for referenced render target textures so we can write e.g. "ColorMap": "ColorRenderTargetTexture0" ("ColorRenderTargetTexture0" = render target texture)
-									// Collect all material property IDs explicitly defined inside the compositor node asset
-									typedef std::unordered_map<uint32_t, std::string> DefinedMaterialPropertyIds;	// Key = "RendererRuntime::RendererRuntime::MaterialPropertyId"
-									DefinedMaterialPropertyIds definedMaterialPropertyIds;
-									for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorProperties = rapidJsonValueProperties.MemberBegin(); rapidJsonMemberIteratorProperties != rapidJsonValueProperties.MemberEnd(); ++rapidJsonMemberIteratorProperties)
-									{
-										definedMaterialPropertyIds.emplace(RendererRuntime::MaterialPropertyId(rapidJsonMemberIteratorProperties->name.GetString()), rapidJsonMemberIteratorProperties->value.GetString());
-									}
-
-									// Mark material properties as overwritten and update texture asset IDs if necessary
-									for (RendererRuntime::MaterialProperty& materialProperty : sortedMaterialPropertyVector)
-									{
-										DefinedMaterialPropertyIds::const_iterator iterator = definedMaterialPropertyIds.find(materialProperty.getMaterialPropertyId());
-										if (iterator!= definedMaterialPropertyIds.end())
-										{
-											materialProperty.setOverwritten(true);
-											if (materialProperty.getValueType() == RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
-											{
-												const RendererRuntime::AssetId assetId = RendererRuntime::StringId(iterator->second.c_str());
-												if (renderTargetTextureAssetIds.find(assetId) != renderTargetTextureAssetIds.end())
-												{
-													static_cast<RendererRuntime::MaterialPropertyValue&>(materialProperty) = RendererRuntime::MaterialPropertyValue::fromTextureAssetId(assetId);
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-
-						// Get number of bytes
+						::detail::fillSortedMaterialPropertyVector(input, renderTargetTextureAssetIds, rapidJsonMemberIteratorPasses, sortedMaterialPropertyVector);
 						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassQuad) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size();
 					}
 					else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)
@@ -364,7 +422,8 @@ namespace RendererToolkit
 					}
 					else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == compositorPassTypeId)
 					{
-						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassDebugGui);
+						::detail::fillSortedMaterialPropertyVector(input, renderTargetTextureAssetIds, rapidJsonMemberIteratorPasses, sortedMaterialPropertyVector);
+						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassDebugGui) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size();
 					}
 
 					{ // Write down the compositor resource node target pass header
@@ -393,34 +452,7 @@ namespace RendererToolkit
 						else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassQuad passQuad;
-
-							// Set data
-							RendererRuntime::AssetId materialAssetId;
-							RendererRuntime::AssetId materialBlueprintAssetId;
-							JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialAssetId", materialAssetId);
-							JsonHelper::optionalStringIdProperty(rapidJsonValuePass, "MaterialTechnique", passQuad.materialTechniqueId);
-							JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialBlueprintAssetId", materialBlueprintAssetId);
-							passQuad.materialAssetId = materialAssetId;
-							passQuad.materialBlueprintAssetId = materialBlueprintAssetId;
-							passQuad.numberOfMaterialProperties = sortedMaterialPropertyVector.size();
-
-							// Sanity checks
-							if (RendererRuntime::isUninitialized(passQuad.materialAssetId) && RendererRuntime::isUninitialized(passQuad.materialBlueprintAssetId))
-							{
-								throw std::runtime_error("Material asset ID or material blueprint asset ID must be defined");
-							}
-							if (RendererRuntime::isInitialized(passQuad.materialAssetId) && RendererRuntime::isInitialized(passQuad.materialBlueprintAssetId))
-							{
-								throw std::runtime_error("Material asset ID is defined, but material blueprint asset ID is defined as well. Only one asset ID is allowed.");
-							}
-							if (RendererRuntime::isInitialized(passQuad.materialAssetId) && RendererRuntime::isUninitialized(passQuad.materialTechniqueId))
-							{
-								throw std::runtime_error("Material asset ID is defined, but material technique is not defined");
-							}
-							if (RendererRuntime::isInitialized(passQuad.materialBlueprintAssetId) && RendererRuntime::isUninitialized(passQuad.materialTechniqueId))
-							{
-								passQuad.materialTechniqueId = RendererRuntime::MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID;
-							}
+							::detail::readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, true, passQuad);
 
 							// Write down
 							outputFileStream.write(reinterpret_cast<const char*>(&passQuad), sizeof(RendererRuntime::v1CompositorNode::PassQuad));
@@ -455,8 +487,17 @@ namespace RendererToolkit
 						}
 						else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == compositorPassTypeId)
 						{
+							// The material definition is not mandatory for the debug GUI, if nothing is defined the fixed build in renderer configuration resources will be used instead
 							RendererRuntime::v1CompositorNode::PassDebugGui passDebugGui;
+							::detail::readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, false, passDebugGui);
+
+							// Write down
 							outputFileStream.write(reinterpret_cast<const char*>(&passDebugGui), sizeof(RendererRuntime::v1CompositorNode::PassDebugGui));
+							if (!sortedMaterialPropertyVector.empty())
+							{
+								// Write down all material properties
+								outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
+							}
 						}
 					}
 				}

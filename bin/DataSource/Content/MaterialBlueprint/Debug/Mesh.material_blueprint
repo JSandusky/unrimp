@@ -62,7 +62,7 @@
 							"BaseShaderRegisterName": "PassUniformBuffer"
 						}
 					},
-					"ShaderVisibility": "ALL"
+					"ShaderVisibility": "VERTEX"
 				},
 				"1":
 				{

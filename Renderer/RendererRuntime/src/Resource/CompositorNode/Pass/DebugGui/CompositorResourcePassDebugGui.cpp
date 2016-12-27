@@ -42,10 +42,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorResourcePassDebugGui::deserialize(uint32_t numberOfBytes, const uint8_t*)
+	void CompositorResourcePassDebugGui::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
-		assert(sizeof(v1CompositorNode::PassDebugGui) == numberOfBytes);
-		std::ignore = numberOfBytes;
+		// Call the base implementation
+		CompositorResourcePassQuad::deserialize(numberOfBytes, data);
 	}
 
 

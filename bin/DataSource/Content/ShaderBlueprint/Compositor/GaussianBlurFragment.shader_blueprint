@@ -35,20 +35,12 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE				(float2, TexCoordVS, 0)				// Texture coordinate
+	INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(float2, InverseTextureSize0VS, 1)	// Inverse texture size 0
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
 OUTPUT_END
-
-// Uniform buffers
-struct PassDataStruct
-{
-	float2 InverseViewportSize;
-};
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
-	PassDataStruct PassData;
-UNIFORM_BUFFER_END
 
 // Samplers
 SAMPLER_STATE(SamplerLinear, 0)
@@ -62,18 +54,24 @@ TEXTURE_2D(ColorMap, 0)
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	// Constants
-	float offset[3] = { 0.0f, 1.3846153846f, 3.2307692308f };
-	float weight[3] = { 0.227027027f, 0.3162162162f, 0.0702702703f };
+	float offset[3];
+	offset[0] = 0.0f;
+	offset[1] = 1.3846153846f;
+	offset[2] = 3.2307692308f;
+	float weight[3];
+	weight[0] = 0.227027027f;
+	weight[1] = 0.3162162162f;
+	weight[2] = 0.0702702703f;
 
 	// Gather values
 	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)) * weight[0];
 	for (int i = 1; i < 3; ++i)
 	{
 		@property(VerticalBlur)
-			float2 texelOffset = float2(offset[i], 0.0f) * PassData.InverseViewportSize;
+			float2 texelOffset = float2(offset[i], 0.0f) * MAIN_INPUT(InverseTextureSize0VS);
 		@end
 		@property(!VerticalBlur)
-			float2 texelOffset = float2(0.0f, offset[i]) * PassData.InverseViewportSize;
+			float2 texelOffset = float2(0.0f, offset[i]) * MAIN_INPUT(InverseTextureSize0VS);
 		@end
 		color += SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS) + texelOffset, 0.0f, 0.0f)) * weight[i];
 		color += SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS) - texelOffset, 0.0f, 0.0f)) * weight[i];

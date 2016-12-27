@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/DebugGui/DebugGuiManager.h"
+#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <imgui/imgui.h>
@@ -142,18 +143,15 @@ namespace RendererRuntime
 		++mDrawTextCounter;
 	}
 
-	void DebugGuiManager::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
+	Renderer::IVertexArrayPtr DebugGuiManager::getFillVertexArrayPtr()
 	{
 		if (GImGui->Initialized)
 		{
 			// Ask ImGui to render into the internal command buffer and then request the resulting draw data
 			ImGui::Render();
 			const ImDrawData* imDrawData = ImGui::GetDrawData();
-
-			// Begin debug event
 			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
 			Renderer::IBufferManager& bufferManager = mRendererRuntime.getBufferManager();
-			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
 			{ // Vertex and index buffers
 				// Create and grow vertex/index buffers if needed
@@ -161,15 +159,15 @@ namespace RendererRuntime
 				{
 					mNumberOfAllocatedVertices = static_cast<uint32_t>(imDrawData->TotalVtxCount + 5000);	// Add some reserve to reduce reallocations
 					mVertexBufferPtr = bufferManager.createVertexBuffer(mNumberOfAllocatedVertices * sizeof(ImDrawVert), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-					mVertexArray = nullptr;
+					mVertexArrayPtr = nullptr;
 				}
 				if (nullptr == mIndexBufferPtr || mNumberOfAllocatedIndices < static_cast<uint32_t>(imDrawData->TotalIdxCount))
 				{
 					mNumberOfAllocatedIndices = static_cast<uint32_t>(imDrawData->TotalIdxCount + 10000);	// Add some reserve to reduce reallocations
 					mIndexBufferPtr = bufferManager.createIndexBuffer(mNumberOfAllocatedIndices * sizeof(ImDrawIdx), Renderer::IndexBufferFormat::UNSIGNED_SHORT, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-					mVertexArray = nullptr;
+					mVertexArrayPtr = nullptr;
 				}
-				if (nullptr == mVertexArray)
+				if (nullptr == mVertexArrayPtr)
 				{
 					assert(nullptr != mVertexBufferPtr);
 					assert(nullptr != mIndexBufferPtr);
@@ -182,7 +180,7 @@ namespace RendererRuntime
 							sizeof(ImDrawVert)	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArray = bufferManager.createVertexArray(::detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, mIndexBufferPtr);
+					mVertexArrayPtr = bufferManager.createVertexArray(::detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, mIndexBufferPtr);
 				}
 
 				{ // Copy and convert all vertices and indices into a single contiguous buffer
@@ -212,6 +210,63 @@ namespace RendererRuntime
 						renderer.unmap(*mVertexBufferPtr, 0);
 					}
 				}
+			}
+		}
+
+		// Done
+		return mVertexArrayPtr;
+	}
+
+	void DebugGuiManager::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
+	{
+		if (GImGui->Initialized)
+		{
+			// Begin debug event
+			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+
+			// Render command lists
+			int vertexOffset = 0;
+			int indexOffset = 0;
+			const ImDrawData* imDrawData = ImGui::GetDrawData();
+			for (int commandListIndex = 0; commandListIndex < imDrawData->CmdListsCount; ++commandListIndex)
+			{
+				const ImDrawList* imDrawList = imDrawData->CmdLists[commandListIndex];
+				for (int commandIndex = 0; commandIndex < imDrawList->CmdBuffer.size(); ++commandIndex)
+				{
+					const ImDrawCmd* pcmd = &imDrawList->CmdBuffer[commandIndex];
+					if (nullptr != pcmd->UserCallback)
+					{
+						pcmd->UserCallback(imDrawList, pcmd);
+					}
+					else
+					{
+						// Set scissor rectangle
+						Renderer::Command::SetScissorRectangles::create(commandBuffer, static_cast<long>(pcmd->ClipRect.x), static_cast<long>(pcmd->ClipRect.y), static_cast<long>(pcmd->ClipRect.z), static_cast<long>(pcmd->ClipRect.w));
+
+						// Draw
+						Renderer::Command::DrawIndexed::create(commandBuffer, static_cast<uint32_t>(pcmd->ElemCount), 1, static_cast<uint32_t>(indexOffset), static_cast<int32_t>(vertexOffset));
+					}
+					indexOffset += pcmd->ElemCount;
+				}
+				vertexOffset += imDrawList->VtxBuffer.size();
+			}
+
+			// End debug event
+			COMMAND_END_DEBUG_EVENT(commandBuffer)
+		}
+	}
+
+	void DebugGuiManager::fillCommandBufferUsingFixedBuildInRendererConfiguration(Renderer::CommandBuffer& commandBuffer)
+	{
+		if (GImGui->Initialized)
+		{
+			// Begin debug event
+			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+
+			// Create fixed build in renderer configuration resources, if required
+			if (nullptr == mRootSignature)
+			{
+				createFixedBuildInRendererConfigurationResources();
 			}
 
 			{ // Setup orthographic projection matrix into our vertex shader uniform buffer
@@ -247,42 +302,18 @@ namespace RendererRuntime
 
 				// Set the used pipeline state object (PSO)
 				Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
-
-				{ // Setup input assembly (IA)
-					// Set the used vertex array
-					Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArray);
-
-					// Set the primitive topology used for draw calls
-					Renderer::Command::SetPrimitiveTopology::create(commandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-				}
 			}
 
-			{ // Render command lists
-				int vertexOffset = 0;
-				int indexOffset = 0;
-				for (int commandListIndex = 0; commandListIndex < imDrawData->CmdListsCount; ++commandListIndex)
-				{
-					const ImDrawList* imDrawList = imDrawData->CmdLists[commandListIndex];
-					for (int commandIndex = 0; commandIndex < imDrawList->CmdBuffer.size(); ++commandIndex)
-					{
-						const ImDrawCmd* pcmd = &imDrawList->CmdBuffer[commandIndex];
-						if (nullptr != pcmd->UserCallback)
-						{
-							pcmd->UserCallback(imDrawList, pcmd);
-						}
-						else
-						{
-							// Set scissor rectangle
-							Renderer::Command::SetScissorRectangles::create(commandBuffer, static_cast<long>(pcmd->ClipRect.x), static_cast<long>(pcmd->ClipRect.y), static_cast<long>(pcmd->ClipRect.z), static_cast<long>(pcmd->ClipRect.w));
+			{ // Setup input assembly (IA)
+				// Set the used vertex array
+				Renderer::Command::SetVertexArray::create(commandBuffer, getFillVertexArrayPtr());
 
-							// Draw
-							Renderer::Command::DrawIndexed::create(commandBuffer, static_cast<uint32_t>(pcmd->ElemCount), 1, static_cast<uint32_t>(indexOffset), static_cast<int32_t>(vertexOffset));
-						}
-						indexOffset += pcmd->ElemCount;
-					}
-					vertexOffset += imDrawList->VtxBuffer.size();
-				}
+				// Set the primitive topology used for draw calls
+				Renderer::Command::SetPrimitiveTopology::create(commandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
 			}
+
+			// Render command lists
+			fillCommandBuffer(commandBuffer);
 
 			// End debug event
 			COMMAND_END_DEBUG_EVENT(commandBuffer)
@@ -296,7 +327,51 @@ namespace RendererRuntime
 	void DebugGuiManager::startup()
 	{
 		assert(!mIsRunning);
+
+		{ // Create texture instance
+			// Build texture atlas
+			unsigned char* pixels = nullptr;
+			int width = 0;
+			int height = 0;
+			ImGui::GetIO().Fonts->GetTexDataAsAlpha8(&pixels, &width, &height);
+
+			// Upload texture to renderer
+			mTexture2D = mRendererRuntime.getTextureManager().createTexture2D(static_cast<uint32_t>(width), static_cast<uint32_t>(height), Renderer::TextureFormat::A8, pixels, Renderer::TextureFlag::GENERATE_MIPMAPS);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(mTexture2D, "Debug GUI glyph texture atlas")
+
+			// Tell the texture resource manager about our render target texture so it can be referenced inside e.g. compositor nodes
+			mRendererRuntime.getTextureResourceManager().createTextureResourceByAssetId(StringId("ImGuiGlyphMap"), *mTexture2D);
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	DebugGuiManager::DebugGuiManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime),
+		mIsRunning(false),
+		mDrawTextCounter(0),
+		mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
+		mNumberOfAllocatedVertices(0),
+		mNumberOfAllocatedIndices(0)
+	{
+		// Change ImGui filenames so one is able to guess where those files come from when using Unrimp
+		// TODO(co) Maybe it makes sense to collect such filenames somewhere so one doesn't need to find those one after another when trying to e.g. keep all files inside the user application directory?
+		ImGuiIO& imGuiIo = ImGui::GetIO();
+		imGuiIo.IniFilename = "UnrimpDebugGuiLayout.ini";
+		imGuiIo.LogFilename = "UnrimpDebugGuiLog.txt";
+	}
+
+	DebugGuiManager::~DebugGuiManager()
+	{
+		ImGui::Shutdown();
+	}
+
+	void DebugGuiManager::createFixedBuildInRendererConfigurationResources()
+	{
 		Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+		assert(nullptr == mRootSignature);
 
 		{ // Create the root signature instance
 			// Create the root signature
@@ -377,42 +452,6 @@ namespace RendererRuntime
 			samplerState.addressV = Renderer::TextureAddressMode::WRAP;
 			mSamplerState = renderer.createSamplerState(samplerState);
 		}
-
-		{ // Create texture instance
-			// Build texture atlas
-			unsigned char* pixels = nullptr;
-			int width = 0;
-			int height = 0;
-			ImGui::GetIO().Fonts->GetTexDataAsAlpha8(&pixels, &width, &height);
-
-			// Upload texture to renderer
-			mTexture2D = mRendererRuntime.getTextureManager().createTexture2D(static_cast<uint32_t>(width), static_cast<uint32_t>(height), Renderer::TextureFormat::A8, pixels, Renderer::TextureFlag::GENERATE_MIPMAPS);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(mTexture2D, "Debug GUI glyph texture atlas")
-		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	DebugGuiManager::DebugGuiManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime),
-		mIsRunning(false),
-		mDrawTextCounter(0),
-		mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
-		mNumberOfAllocatedVertices(0),
-		mNumberOfAllocatedIndices(0)
-	{
-		// Change ImGui filenames so one is able to guess where those files come from when using Unrimp
-		// TODO(co) Maybe it makes sense to collect such filenames somewhere so one doesn't need to find those one after another when trying to e.g. keep all files inside the user application directory?
-		ImGuiIO& imGuiIo = ImGui::GetIO();
-		imGuiIo.IniFilename = "UnrimpDebugGuiLayout.ini";
-		imGuiIo.LogFilename = "UnrimpDebugGuiLog.txt";
-	}
-
-	DebugGuiManager::~DebugGuiManager()
-	{
-		ImGui::Shutdown();
 	}
 
 
