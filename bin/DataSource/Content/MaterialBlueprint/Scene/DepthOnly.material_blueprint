@@ -62,8 +62,7 @@
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "PassUniformBuffer"
 						}
-					},
-					"ShaderVisibility": "ALL"
+					}
 				},
 				"1":
 				{

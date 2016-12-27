@@ -52,8 +52,7 @@
 							"BaseShaderRegisterName": "ColorMap",
 							"SamplerRootParameterIndex": "0"
 						}
-					},
-					"ShaderVisibility": "ALL"
+					}
 				}
 			}
 		},

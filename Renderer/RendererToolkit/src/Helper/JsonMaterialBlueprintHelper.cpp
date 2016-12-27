@@ -495,6 +495,7 @@ namespace RendererToolkit
 						Renderer::RootParameter rootParameter;
 						rootParameter.parameterType = Renderer::RootParameterType::DESCRIPTOR_TABLE;
 						rootParameter.descriptorTable.numberOfDescriptorRanges = rapidJsonValueDescriptorRanges.MemberCount();
+						rootParameter.shaderVisibility = Renderer::ShaderVisibility::ALL;
 						optionalShaderVisibilityProperty(rapidJsonValueRootParameter, "ShaderVisibility", rootParameter.shaderVisibility);
 						rootParameters.push_back(rootParameter);
 					}
