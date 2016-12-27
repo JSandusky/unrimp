@@ -37,8 +37,8 @@ namespace RendererRuntime
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
 	inline PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::PackedElementManager() :
 		mNumberOfElements(0),
-		mFreeListDequeue(0),
-		mFreeListEnqueue(MAXIMUM_NUMBER_OF_ELEMENTS - 1)
+		mFreeListEnqueue(MAXIMUM_NUMBER_OF_ELEMENTS - 1),
+		mFreeListDequeue(0)
 	{
 		for (uint32_t i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS; ++i)
 		{
