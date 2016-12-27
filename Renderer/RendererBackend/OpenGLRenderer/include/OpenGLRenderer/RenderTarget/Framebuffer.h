@@ -126,7 +126,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	protected:
 		uint32_t			 mOpenGLFramebuffer;		///< OpenGL framebuffer ("container" object, not shared between OpenGL contexts), can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		uint32_t			 mOpenGLDepthRenderbuffer;	///< OpenGL render buffer for the depth component, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t			 mNumberOfColorTextures;	///< Number of color render target textures
 		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
 		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer

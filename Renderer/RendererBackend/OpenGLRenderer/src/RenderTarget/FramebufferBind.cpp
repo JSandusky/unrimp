@@ -101,13 +101,21 @@ namespace OpenGLRenderer
 			}
 		}
 
-		// TODO(co) Depth texture support
-		glBindRenderbuffer(GL_RENDERBUFFER, mOpenGLDepthRenderbuffer);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, static_cast<GLsizei>(mWidth), static_cast<GLsizei>(mHeight));
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		// Depth stencil texture
+		if (nullptr != depthStencilTexture)
+		{
+			// Security check: Is the given resource owned by this renderer?
+			#ifndef OPENGLRENDERER_NO_RENDERERMATCHCHECK
+				if (&openGLRenderer != &depthStencilTexture->getRenderer())
+				{
+					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
+					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The given depth stencil texture is owned by another renderer instance")
+				}
+			#endif
 
-		// Attach a render buffer to depth attachment point
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mOpenGLDepthRenderbuffer);
+			// Bind the depth stencil texture to framebuffer
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, static_cast<Texture2D*>(depthStencilTexture)->getOpenGLTexture(), 0);
+		}
 
 		#ifdef RENDERER_OUTPUT_DEBUG
 			// Check the status of the OpenGL framebuffer

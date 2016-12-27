@@ -43,7 +43,6 @@ namespace OpenGLRenderer
 		// Destroy the OpenGL framebuffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteFramebuffers(1, &mOpenGLFramebuffer);
-		glDeleteRenderbuffers(1, &mOpenGLDepthRenderbuffer);
 
 		// Release the reference to the used color textures
 		if (nullptr != mColorTextures)
@@ -78,7 +77,6 @@ namespace OpenGLRenderer
 	Framebuffer::Framebuffer(OpenGLRenderer &openGLRenderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
 		IFramebuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLFramebuffer(0),
-		mOpenGLDepthRenderbuffer(0),
 		mNumberOfColorTextures(numberOfColorTextures),
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(depthStencilTexture),
@@ -203,7 +201,6 @@ namespace OpenGLRenderer
 
 		// Create the OpenGL framebuffer
 		glGenFramebuffers(1, &mOpenGLFramebuffer);
-		glGenRenderbuffers(1, &mOpenGLDepthRenderbuffer);
 
 		// Validate the framebuffer width and height
 		if (UINT_MAX == mWidth)
