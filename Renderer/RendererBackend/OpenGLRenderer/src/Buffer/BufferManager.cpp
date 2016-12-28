@@ -66,7 +66,7 @@ namespace OpenGLRenderer
 		if (mExtensions->isGL_ARB_vertex_buffer_object())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new VertexBufferDsa(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
@@ -90,7 +90,7 @@ namespace OpenGLRenderer
 		if (mExtensions->isGL_ARB_vertex_buffer_object())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new IndexBufferDsa(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, indexBufferFormat, data, bufferUsage);
@@ -120,6 +120,7 @@ namespace OpenGLRenderer
 			{
 				// Effective direct state access (DSA)
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+				// TODO(sw) Not ARB DSA compatible. Uses glVertexArrayVertexAttribOffsetEXT which is not part of the ARB DSA version
 				return new VertexArrayVaoDsa(static_cast<OpenGLRenderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 			}
 			else
@@ -143,7 +144,7 @@ namespace OpenGLRenderer
 		if (mExtensions->isGL_ARB_uniform_buffer_object())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new UniformBufferDsa(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
@@ -167,7 +168,7 @@ namespace OpenGLRenderer
 		if (mExtensions->isGL_ARB_texture_buffer_object())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new TextureBufferDsa(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
@@ -191,7 +192,7 @@ namespace OpenGLRenderer
 		if (mExtensions->isGL_ARB_draw_indirect())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new IndirectBufferDsa(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);

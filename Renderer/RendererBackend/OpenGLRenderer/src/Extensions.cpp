@@ -97,6 +97,7 @@ namespace OpenGLRenderer
 	bool Extensions::isGL_ARB_sampler_objects()				const { return mGL_ARB_sampler_objects;				}
 	bool Extensions::isGL_ARB_draw_elements_base_vertex()	const { return mGL_ARB_draw_elements_base_vertex;	}
 	bool Extensions::isGL_ARB_debug_output()				const { return mGL_ARB_debug_output;				}
+	bool Extensions::isGL_ARB_direct_state_access()			const { return mGL_ARB_direct_state_access;			}
 
 
 	//[-------------------------------------------------------]
@@ -260,6 +261,7 @@ namespace OpenGLRenderer
 		mGL_ARB_sampler_objects				= false;
 		mGL_ARB_draw_elements_base_vertex	= false;
 		mGL_ARB_debug_output				= false;
+		mGL_ARB_direct_state_access			= false;
 	}
 
 	bool Extensions::initializeUniversal()
@@ -675,6 +677,33 @@ namespace OpenGLRenderer
 			mGL_ARB_debug_output = result;
 		}
 
+		// GL_ARB_direct_state_access
+		mGL_ARB_direct_state_access = isSupported("GL_ARB_direct_state_access");
+		if (mGL_ARB_direct_state_access)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glNamedBufferData)
+			IMPORT_FUNC(glNamedBufferSubData)
+			IMPORT_FUNC(glMapNamedBuffer)
+			IMPORT_FUNC(glUnmapNamedBuffer)
+			IMPORT_FUNC(glProgramUniform1f)
+			IMPORT_FUNC(glProgramUniform2fv)
+			IMPORT_FUNC(glProgramUniform3fv)
+			IMPORT_FUNC(glProgramUniform4fv)
+			IMPORT_FUNC(glProgramUniformMatrix3fv)
+			IMPORT_FUNC(glProgramUniformMatrix4fv)
+			IMPORT_FUNC(glTextureParameteri)
+			IMPORT_FUNC(glGenerateTextureMipmap)
+			IMPORT_FUNC(glEnableVertexArrayAttrib)
+			IMPORT_FUNC(glCheckNamedFramebufferStatus)
+			IMPORT_FUNC(glNamedRenderbufferStorage)
+			IMPORT_FUNC(glNamedFramebufferRenderbuffer)
+			IMPORT_FUNC(glNamedFramebufferTexture)
+			IMPORT_FUNC(glTextureBuffer)
+			IMPORT_FUNC(glBindTextureUnit)
+			mGL_ARB_direct_state_access = result;
+		}
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC

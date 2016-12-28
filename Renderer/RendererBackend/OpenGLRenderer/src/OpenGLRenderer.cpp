@@ -518,6 +518,21 @@ namespace OpenGLRenderer
 					break;
 
 				case Renderer::ResourceType::TEXTURE_BUFFER:
+				{
+					// In OpenGL, all shaders share the same texture units (= "Renderer::RootParameter::shaderVisibility" stays unused)
+					// Is "GL_ARB_direct_state_access" there?
+					if (mExtensions->isGL_ARB_direct_state_access())
+					{
+						// Effective direct state access (DSA)
+
+						// GL_TEXTURE0_ARB is the first texture unit, while nUnit we received is zero based
+						const GLenum unit = GL_TEXTURE0_ARB + descriptorRange->baseShaderRegister;
+
+						glBindTextureUnit(unit, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
+						break;
+					}
+					// Fall through by design so that the non DSA part is handled as well
+				}
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
@@ -592,7 +607,7 @@ namespace OpenGLRenderer
 								glActiveTextureARB(unit);
 
 								// Is "GL_EXT_direct_state_access" there?
-								if (mExtensions->isGL_EXT_direct_state_access())
+								if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 								{
 									// Direct state access (DSA) version to emulate a sampler object
 									static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
@@ -676,7 +691,7 @@ namespace OpenGLRenderer
 									glBindSampler(descriptorRange->baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
 								}
 								// Is "GL_EXT_direct_state_access" there?
-								else if (mExtensions->isGL_EXT_direct_state_access())
+								else if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 								{
 									// Direct state access (DSA) version to emulate a sampler object
 									static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
@@ -1438,7 +1453,7 @@ namespace OpenGLRenderer
 		if (mExtensions->isGL_ARB_framebuffer_object())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				// -> Validation is done inside the framebuffer implementation
@@ -1489,7 +1504,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Direct state access (DSA) version to emulate a sampler object
 				return new SamplerStateDsa(*this, samplerState);
@@ -1515,8 +1530,16 @@ namespace OpenGLRenderer
 			{
 				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
 
+				// Is "GL_ARB_direct_state_access" there?
+				if (mExtensions->isGL_ARB_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					mappedSubresource.data		 = glMapNamedBuffer(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer(), Mapping::getOpenGLMapType(mapType));
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+				}
 				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
+				else if (mExtensions->isGL_EXT_direct_state_access())
 				{
 					// Effective direct state access (DSA)
 					mappedSubresource.data		 = glMapNamedBufferEXT(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer(), Mapping::getOpenGLMapType(mapType));
@@ -1555,8 +1578,16 @@ namespace OpenGLRenderer
 			{
 				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
 
+				// Is "GL_ARB_direct_state_access" there?
+				if (mExtensions->isGL_ARB_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					mappedSubresource.data		 = glMapNamedBuffer(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer(), Mapping::getOpenGLMapType(mapType));
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+				}
 				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
+				else if (mExtensions->isGL_EXT_direct_state_access())
 				{
 					// Effective direct state access (DSA)
 					mappedSubresource.data		 = glMapNamedBufferEXT(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer(), Mapping::getOpenGLMapType(mapType));
@@ -1694,8 +1725,14 @@ namespace OpenGLRenderer
 		{
 			case Renderer::ResourceType::INDEX_BUFFER:
 			{
+				// Is "GL_ARB_direct_state_access" there?
+				if (mExtensions->isGL_ARB_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					glUnmapNamedBuffer(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
+				}
 				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
+				else if (mExtensions->isGL_EXT_direct_state_access())
 				{
 					// Effective direct state access (DSA)
 					glUnmapNamedBufferEXT(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
@@ -1726,8 +1763,14 @@ namespace OpenGLRenderer
 
 			case Renderer::ResourceType::VERTEX_BUFFER:
 			{
+				// Is "GL_ARB_direct_state_access" there?
+				if (mExtensions->isGL_ARB_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					glUnmapNamedBuffer(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
+				}
 				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
+				else if (mExtensions->isGL_EXT_direct_state_access())
 				{
 					// Effective direct state access (DSA)
 					glUnmapNamedBufferEXT(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());

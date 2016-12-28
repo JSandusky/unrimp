@@ -41,6 +41,7 @@ namespace OpenGLRenderer
 		Framebuffer(openGLRenderer, numberOfColorTextures, colorTextures, depthStencilTexture)
 	{
 		// Texture reference handling is done within the base class "Framebuffer"
+		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
 
 		// Loop through all framebuffer color attachments
 		Renderer::ITexture **colorTexture    = colorTextures;
@@ -63,9 +64,19 @@ namespace OpenGLRenderer
 			switch ((*colorTexture)->getResourceType())
 			{
 				case Renderer::ResourceType::TEXTURE_2D:
-					// Set the OpenGL framebuffer color attachment
-					glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, openGLAttachment, GL_TEXTURE_2D, static_cast<Texture2D*>(*colorTexture)->getOpenGLTexture(), 0);
+				{
+					if (isARB_DSA)
+					{
+						// Set the OpenGL framebuffer color attachment
+						glNamedFramebufferTexture(mOpenGLFramebuffer, openGLAttachment, static_cast<Texture2D*>(*colorTexture)->getOpenGLTexture(), 0);
+					}
+					else
+					{
+						// Set the OpenGL framebuffer color attachment
+						glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, openGLAttachment, GL_TEXTURE_2D, static_cast<Texture2D*>(*colorTexture)->getOpenGLTexture(), 0);
+					}
 					break;
+				}
 
 				case Renderer::ResourceType::ROOT_SIGNATURE:
 				case Renderer::ResourceType::PROGRAM:
@@ -103,13 +114,21 @@ namespace OpenGLRenderer
 				}
 			#endif
 
-			// Bind the depth stencil texture to framebuffer
-			glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, static_cast<Texture2D*>(depthStencilTexture)->getOpenGLTexture(), 0);
+			if (isARB_DSA)
+			{
+				// Bind the depth stencil texture to framebuffer
+				glNamedFramebufferTexture(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, static_cast<Texture2D*>(depthStencilTexture)->getOpenGLTexture(), 0);
+			}
+			else
+			{
+				// Bind the depth stencil texture to framebuffer
+				glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, static_cast<Texture2D*>(depthStencilTexture)->getOpenGLTexture(), 0);
+			}
 		}
 
 		#ifdef RENDERER_OUTPUT_DEBUG
 			// Check the status of the OpenGL framebuffer
-			const GLenum openGLStatus = glCheckNamedFramebufferStatusEXT(mOpenGLFramebuffer, GL_FRAMEBUFFER);
+			const GLenum openGLStatus = isARB_DSA ? glCheckNamedFramebufferStatus(mOpenGLFramebuffer, GL_FRAMEBUFFER) : glCheckNamedFramebufferStatusEXT(mOpenGLFramebuffer, GL_FRAMEBUFFER);
 			switch (openGLStatus)
 			{
 				case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:

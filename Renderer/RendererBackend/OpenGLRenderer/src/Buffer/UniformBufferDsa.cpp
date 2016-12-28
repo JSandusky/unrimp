@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Buffer/UniformBufferDsa.h"
 #include "OpenGLRenderer/Extensions.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
@@ -40,9 +42,32 @@ namespace OpenGLRenderer
 	{
 		// TODO(co) Review OpenGL uniform buffer alignment topic
 
-		// Upload the data
-		// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
-		glNamedBufferDataEXT(mOpenGLUniformBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
+		if(openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
+		{
+			{ // For ARB DSA version the buffer object must be initialized.
+				// TODO(sw) The base class uses glGenBuffersARB to create only the name for it, but the glNamedBufferData methods expects an initialized object
+				// In OpenGL 4.5 there exists glCreateBuffers which also initializes the object. But we want support OpenGL 4.1 where the glCreateBuffers method doesn't exits
+				// Backup the currently bound OpenGL buffer
+				GLint openGLBufferBackup = 0;
+				glGetIntegerv(GL_UNIFORM_BUFFER_BINDING, &openGLBufferBackup);
+
+				// Initialize our buffer
+				glBindBufferARB(GL_UNIFORM_BUFFER, mOpenGLUniformBuffer);
+
+				// Restore old binding because we needed the bind only to initialize the buffer object
+				glBindBufferARB(GL_UNIFORM_BUFFER, static_cast<GLuint>(openGLBufferBackup));
+			}
+
+			// Upload the data
+			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
+			glNamedBufferData(mOpenGLUniformBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
+		}
+		else
+		{
+			// Upload the data
+			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
+			glNamedBufferDataEXT(mOpenGLUniformBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
+		}
 	}
 
 	UniformBufferDsa::~UniformBufferDsa()
@@ -56,9 +81,18 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	void UniformBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
-		// Upload the data
-		// -> Subdata is quite optimized for uniform buffers, see http://on-demand.gputechconf.com/siggraph/2014/presentation/SG4117-OpenGL-Scene-Rendering-Techniques.pdf
-		glNamedBufferSubDataEXT(mOpenGLUniformBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
+		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
+		{
+			// Upload the data
+			// -> Subdata is quite optimized for uniform buffers, see http://on-demand.gputechconf.com/siggraph/2014/presentation/SG4117-OpenGL-Scene-Rendering-Techniques.pdf
+			glNamedBufferSubData(mOpenGLUniformBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
+		}
+		else
+		{
+			// Upload the data
+			// -> Subdata is quite optimized for uniform buffers, see http://on-demand.gputechconf.com/siggraph/2014/presentation/SG4117-OpenGL-Scene-Rendering-Techniques.pdf
+			glNamedBufferSubDataEXT(mOpenGLUniformBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
+		}
 	}
 
 

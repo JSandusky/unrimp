@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Buffer/IndexBufferDsa.h"
 #include "OpenGLRenderer/Extensions.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
@@ -38,9 +40,32 @@ namespace OpenGLRenderer
 	IndexBufferDsa::IndexBufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
 		IndexBuffer(openGLRenderer, indexBufferFormat)
 	{
-		// Upload the data
-		// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
-		glNamedBufferDataEXT(mOpenGLElementArrayBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
+		if(openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
+		{
+			{ // For ARB DSA version the buffer object must be initialized.
+				// TODO(sw) The base class uses glGenBuffersARB to create only the name for it, but the glNamedBufferData methods expects an initialized object
+				// In OpenGL 4.5 there exists glCreateBuffers which also initializes the object. But we want support OpenGL 4.1 where the glCreateBuffers method doesn't exits
+				// Backup the currently bound OpenGL array buffer
+				GLint openGLBufferBackup = 0;
+				glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, &openGLBufferBackup);
+
+				// Initialize our buffer
+				glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, mOpenGLElementArrayBuffer);
+
+				// Restore old binding because we needed the bind only to initialize the buffer object
+				glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLBufferBackup));
+			}
+
+			// Upload the data
+			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
+			glNamedBufferData(mOpenGLElementArrayBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
+		}
+		else
+		{
+			// Upload the data
+			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
+			glNamedBufferDataEXT(mOpenGLElementArrayBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
+		}
 	}
 
 	IndexBufferDsa::~IndexBufferDsa()

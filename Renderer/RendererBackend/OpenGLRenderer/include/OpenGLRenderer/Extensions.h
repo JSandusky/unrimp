@@ -153,6 +153,7 @@ namespace OpenGLRenderer
 		bool isGL_ARB_sampler_objects() const;
 		bool isGL_ARB_draw_elements_base_vertex() const;
 		bool isGL_ARB_debug_output() const;
+		bool isGL_ARB_direct_state_access() const;
 
 
 	//[-------------------------------------------------------]
@@ -258,6 +259,7 @@ namespace OpenGLRenderer
 		bool mGL_ARB_sampler_objects;
 		bool mGL_ARB_draw_elements_base_vertex;
 		bool mGL_ARB_debug_output;
+		bool mGL_ARB_direct_state_access;
 
 
 	};
@@ -443,6 +445,27 @@ namespace OpenGLRenderer
 
 	// GL_ARB_debug_output
 	FNDEF_EX(glDebugMessageCallbackARB,	PFNGLDEBUGMESSAGECALLBACKARBPROC);
+
+	// GL_ARB_direct_state_access
+	FNDEF_EX(glNamedBufferData,					PFNGLNAMEDBUFFERDATAPROC);
+	FNDEF_EX(glNamedBufferSubData,				PFNGLNAMEDBUFFERSUBDATAPROC);
+	FNDEF_EX(glMapNamedBuffer,					PFNGLMAPNAMEDBUFFERPROC);
+	FNDEF_EX(glUnmapNamedBuffer,				PFNGLUNMAPNAMEDBUFFERPROC);
+	FNDEF_EX(glProgramUniform1f,				PFNGLPROGRAMUNIFORM1FPROC);
+	FNDEF_EX(glProgramUniform2fv,				PFNGLPROGRAMUNIFORM2FVPROC);
+	FNDEF_EX(glProgramUniform3fv,				PFNGLPROGRAMUNIFORM3FVPROC);
+	FNDEF_EX(glProgramUniform4fv,				PFNGLPROGRAMUNIFORM4FVPROC);
+	FNDEF_EX(glProgramUniformMatrix3fv,			PFNGLPROGRAMUNIFORMMATRIX3FVPROC);
+	FNDEF_EX(glProgramUniformMatrix4fv,			PFNGLPROGRAMUNIFORMMATRIX4FVPROC);
+	FNDEF_EX(glTextureParameteri,				PFNGLTEXTUREPARAMETERIPROC);
+	FNDEF_EX(glGenerateTextureMipmap,			PFNGLGENERATETEXTUREMIPMAPPROC);
+	FNDEF_EX(glEnableVertexArrayAttrib,			PFNGLENABLEVERTEXARRAYATTRIBPROC);
+	FNDEF_EX(glCheckNamedFramebufferStatus,		PFNGLCHECKNAMEDFRAMEBUFFERSTATUSPROC);
+	FNDEF_EX(glNamedRenderbufferStorage,		PFNGLNAMEDRENDERBUFFERSTORAGEPROC);
+	FNDEF_EX(glNamedFramebufferRenderbuffer,	PFNGLNAMEDFRAMEBUFFERRENDERBUFFERPROC);
+	FNDEF_EX(glNamedFramebufferTexture,			PFNGLNAMEDFRAMEBUFFERTEXTUREPROC);
+	FNDEF_EX(glTextureBuffer,					PFNGLTEXTUREBUFFERPROC);
+	FNDEF_EX(glBindTextureUnit,					PFNGLBINDTEXTUREUNITPROC);
 
 
 	//[-------------------------------------------------------]
