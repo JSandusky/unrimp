@@ -518,22 +518,95 @@ namespace OpenGLRenderer
 					break;
 
 				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::TEXTURE_2D:
 				{
 					// In OpenGL, all shaders share the same texture units (= "Renderer::RootParameter::shaderVisibility" stays unused)
+
 					// Is "GL_ARB_direct_state_access" there?
 					if (mExtensions->isGL_ARB_direct_state_access())
 					{
 						// Effective direct state access (DSA)
 
-						// GL_TEXTURE0_ARB is the first texture unit, while nUnit we received is zero based
-						const GLenum unit = GL_TEXTURE0_ARB + descriptorRange->baseShaderRegister;
+						// glBindTextureUnit unit paramter is zero based so we can simply use the value we received
+						const GLuint unit = descriptorRange->baseShaderRegister;
+						
+						// Evaluate the texture type
+						switch (resourceType)
+						{
+							case Renderer::ResourceType::TEXTURE_BUFFER:
+								glBindTextureUnit(unit, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
+								break;
+							case Renderer::ResourceType::TEXTURE_2D:
+								glBindTextureUnit(unit, static_cast<Texture2D*>(resource)->getOpenGLTexture());
+								break;
 
-						glBindTextureUnit(unit, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
+							case Renderer::ResourceType::ROOT_SIGNATURE:
+							case Renderer::ResourceType::PROGRAM:
+							case Renderer::ResourceType::VERTEX_ARRAY:
+							case Renderer::ResourceType::SWAP_CHAIN:
+							case Renderer::ResourceType::FRAMEBUFFER:
+							case Renderer::ResourceType::INDEX_BUFFER:
+							case Renderer::ResourceType::VERTEX_BUFFER:
+							case Renderer::ResourceType::UNIFORM_BUFFER:
+							case Renderer::ResourceType::INDIRECT_BUFFER:
+							case Renderer::ResourceType::PIPELINE_STATE:
+							case Renderer::ResourceType::SAMPLER_STATE:
+							case Renderer::ResourceType::VERTEX_SHADER:
+							case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+							case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+							case Renderer::ResourceType::GEOMETRY_SHADER:
+							case Renderer::ResourceType::FRAGMENT_SHADER:
+								RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Invalid resource type")
+								break;
+						}
+
+						// Set the OpenGL sampler states, if required (texture buffer has no sampler state)
+						if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
+						{
+							const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
+
+							// Is "GL_ARB_sampler_objects" there?
+							if (mExtensions->isGL_ARB_sampler_objects())
+							{
+								// Effective sampler object (SO)
+								glBindSampler(descriptorRange->baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
+							}
+							else
+							{
+								#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+									// Backup the currently active OpenGL texture
+									GLint openGLActiveTextureBackup = 0;
+									glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLActiveTextureBackup);
+								#endif
+
+								// TODO(co) Some security checks might be wise *maximum number of texture units*
+								// Activate the texture unit we want to manipulate
+								glActiveTextureARB(unit);
+
+								// TODO(sw) Why is here an check for dsa support? we are already in an path for DSA
+								// Is "GL_EXT_direct_state_access" there?
+								if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
+								{
+									// Direct state access (DSA) version to emulate a sampler object
+									static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
+								}
+								else
+								{
+									// Traditional bind version to emulate a sampler object
+									static_cast<const SamplerStateBind*>(samplerState)->setOpenGLSamplerStates();
+								}
+
+								#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+									// Be polite and restore the previous active OpenGL texture
+									glActiveTextureARB(static_cast<GLenum>(openGLActiveTextureBackup));
+								#endif
+							}
+						}
+						// TODO(sw) remove this break when TEXTURE_2D_ARRAY is also converted to DSA and the GL_EXT_direct_state_access is only another path
 						break;
 					}
 					// Fall through by design so that the non DSA part is handled as well
 				}
-				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
 					// In OpenGL, all shaders share the same texture units (= "Renderer::RootParameter::shaderVisibility" stays unused)
@@ -606,6 +679,7 @@ namespace OpenGLRenderer
 								// Activate the texture unit we want to manipulate
 								glActiveTextureARB(unit);
 
+								// TODO(sw) Why is here an check for dsa support? we are already in an path for DSA
 								// Is "GL_EXT_direct_state_access" there?
 								if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 								{

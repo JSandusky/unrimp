@@ -56,6 +56,13 @@ namespace OpenGLRenderer
 
 					// Restore old binding because we needed the bind only to initialize the buffer object
 					glBindBufferARB(GL_TEXTURE_BUFFER_ARB, static_cast<GLuint>(openGLBufferBackup));
+
+					// TODO(sw) Better we would use glCreateTextures but this needs opengl 4.5
+					// Also initialize the texture object to which the buffer gets bound to
+					glBindTexture(GL_TEXTURE_BUFFER_ARB, mOpenGLTexture);
+
+					// Reset texture binding because we needed it only for initialization
+					glBindTexture(GL_TEXTURE_BUFFER_ARB, 0);
 				}
 				// Upload the data
 				// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
