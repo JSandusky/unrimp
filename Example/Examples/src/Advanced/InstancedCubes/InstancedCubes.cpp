@@ -43,7 +43,7 @@
 InstancedCubes::InstancedCubes(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
 	mCubeRenderer(nullptr),
-	mNumberOfCubeInstances(1000),
+	mNumberOfCubeInstances(20),
 	mGlobalTimer(0.0f),
 	mGlobalScale(1.0f),
 	mDisplayStatistics(true),

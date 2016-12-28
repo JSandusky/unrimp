@@ -853,12 +853,16 @@ namespace Renderer
 			inline static void create(CommandBuffer& commandBuffer, uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0)
 			{
 				DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(IndexedIndirectBuffer));
-
-				// Set command data
 				IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
-				memcpy(reinterpret_cast<IndexedIndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
-
-				// Finalize command
+				#if defined(__clang__)
+					// TODO(sw) to silence clang warning: warning: destination for this 'memcpy' call is a pointer to dynamic class 'IndirectBuffer'; vtable pointer will be overwritten [-Wdynamic-class-memaccess]
+					#pragma clang diagnostic push
+					#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
+					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), reinterpret_cast<unsigned char*>(&indexedIndirectBufferData), sizeof(IndexedIndirectBuffer));
+					#pragma clang diagnostic pop
+				#else
+					memcpy(reinterpret_cast<IndexedIndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
+				#endif
 				drawCommand->indirectBuffer		  = nullptr;
 				drawCommand->indirectBufferOffset = 0;
 				drawCommand->numberOfDraws		  = 1;
