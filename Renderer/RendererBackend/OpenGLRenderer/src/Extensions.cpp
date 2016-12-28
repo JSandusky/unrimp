@@ -704,7 +704,9 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glBindTextureUnit)
 			IMPORT_FUNC(glCompressedTextureSubImage2D)
 			IMPORT_FUNC(glTextureSubImage2D)
+			IMPORT_FUNC(glTextureSubImage3D)
 			IMPORT_FUNC(glTextureStorage2D)
+			IMPORT_FUNC(glTextureStorage3D)
 			mGL_ARB_direct_state_access = result;
 		}
 

@@ -468,8 +468,10 @@ namespace OpenGLRenderer
 	FNDEF_EX(glBindTextureUnit,					PFNGLBINDTEXTUREUNITPROC);
 	FNDEF_EX(glCompressedTextureSubImage2D,		PFNGLCOMPRESSEDTEXTURESUBIMAGE2DPROC);
 	FNDEF_EX(glTextureSubImage2D,				PFNGLTEXTURESUBIMAGE2DPROC);
+	FNDEF_EX(glTextureSubImage3D,				PFNGLTEXTURESUBIMAGE3DPROC);
 	// Following methods are not direcly related to this extension but needed for implementation
 	FNDEF_EX(glTextureStorage2D,				PFNGLTEXTURESTORAGE2DPROC);
+	FNDEF_EX(glTextureStorage3D,				PFNGLTEXTURESTORAGE3DPROC);
 
 
 	//[-------------------------------------------------------]

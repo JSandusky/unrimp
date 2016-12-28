@@ -50,7 +50,7 @@ namespace OpenGLRenderer
 
 		// Set correct alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		
+
 		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
 		if (isARB_DSA)
 		{

@@ -51,20 +51,65 @@ namespace OpenGLRenderer
 		// Set correct alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
+		if (isARB_DSA)
+		{
+			// For ARB DSA version the buffer object must be initialized.
+			// TODO(sw) The base class uses glGenTextures to create only the name for it, but the glTextureStorage3D and glCompressedTextureSubImage3D methods expects an initialized object
+			// In OpenGL 4.5 there exists glCreateTextures which also initializes the object. But we want support OpenGL 4.1 where the glCreateTextures method doesn't exits. So we use glBind to initialize the object
+
+			// Initialize our texture object
+			glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, mOpenGLTexture);
+
+			// Unbind the texture object because we need the bind only to initialize the texture object
+			glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, 0);
+		}
+
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
-		glTextureImage3DEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, 0, static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat)), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+		if (isARB_DSA)
+		{
+			glTextureStorage3D( mOpenGLTexture, 1, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices));
+			glTextureSubImage3D(mOpenGLTexture, 0, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+		}
+		else
+		{
+			glTextureImage3DEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, 0, static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat)), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+		}
 
 		// Build mipmaps automatically on the GPU? (or GPU driver)
 		if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
 		{
-			glGenerateTextureMipmapEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT);
-			glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			if (isARB_DSA)
+			{
+				glGenerateTextureMipmap(mOpenGLTexture);
+				glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			}
+			else
+			{
+				glGenerateTextureMipmapEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT);
+				glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			}
 		}
 		else
 		{
-			glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			if (isARB_DSA)
+			{
+				glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			}
+			else
+			{
+				glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			}
 		}
-		glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		if (isARB_DSA)
+		{
+			glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+		else
+		{
+			glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Restore previous alignment
