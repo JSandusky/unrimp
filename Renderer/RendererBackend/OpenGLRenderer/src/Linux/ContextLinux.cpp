@@ -26,6 +26,7 @@
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 #include <iostream>	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+#include <GL/glext.h>
 
 // Need to redefine "None"-macro (which got undefined in "Extensions.h" due name clashes used in enums)
 #ifndef None
@@ -116,12 +117,14 @@ namespace OpenGLRenderer
 			// Get an appropriate visual
 			int attributeList[] =
 			{
-				GLX_RGBA,
-				GLX_DOUBLEBUFFER,
-				GLX_RED_SIZE,	4,
-				GLX_GREEN_SIZE,	4,
-				GLX_BLUE_SIZE,	4,
-				GLX_DEPTH_SIZE,	16,
+				GLX_RENDER_TYPE     , GLX_RGBA_BIT,
+				GLX_DOUBLEBUFFER, True,
+				GLX_RED_SIZE        , 8,
+				GLX_GREEN_SIZE      , 8,
+				GLX_BLUE_SIZE       , 8,
+				GLX_ALPHA_SIZE      , 8,
+				GLX_DEPTH_SIZE      , 24,
+				GLX_STENCIL_SIZE    , 8,
 				0	// = "None"
 			};
 
@@ -167,7 +170,27 @@ namespace OpenGLRenderer
 							// Make the OpenGL context to the current one
 							const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
 							std::cout << "Make new context current: " << result << "\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
-							std::cout << "Supported extensions: " << glGetString(GL_EXTENSIONS) << "\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+							// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+							{
+								int major = 0;
+								glGetIntegerv(GL_MAJOR_VERSION, &major);
+
+								int minor = 0;
+								glGetIntegerv(GL_MINOR_VERSION, &minor);
+								
+								GLint profile = 0;
+								glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
+								const bool isCoreProfile = profile & GL_CONTEXT_CORE_PROFILE_BIT;
+								
+								std::cout << "Opengl context version: "<<major<<'.'<<minor<< ' ' << (isCoreProfile ? "core" : "noncore") <<'\n';
+								int numberOfExtensions = 0;
+								glGetIntegerv(GL_NUM_EXTENSIONS, &numberOfExtensions);
+								std::cout << "Supported extensions: "<<numberOfExtensions<<" \n";
+								for (GLuint extensionIndex = 0; extensionIndex < static_cast<GLuint>(numberOfExtensions); ++extensionIndex)
+								{
+									std::cout << "\t"<<glGetStringi(GL_EXTENSIONS, extensionIndex)<<'\n';
+								}
+							}
 						}
 					}
 					else
@@ -235,9 +258,12 @@ namespace OpenGLRenderer
 				{
 					GLX_RENDER_TYPE, GLX_RGBA_BIT,
 					GLX_DOUBLEBUFFER, true,
-					GLX_RED_SIZE, 1,
-					GLX_GREEN_SIZE, 1,
-					GLX_BLUE_SIZE, 1,
+					GLX_RED_SIZE        , 8,
+					GLX_GREEN_SIZE      , 8,
+					GLX_BLUE_SIZE       , 8,
+					GLX_ALPHA_SIZE      , 8,
+					GLX_DEPTH_SIZE      , 24,
+					GLX_STENCIL_SIZE    , 8,
 					None
 				};
 				GLXFBConfig *fbc = glXChooseFBConfig(mDisplay, DefaultScreen(mDisplay), visualAttributes, &numberOfElements);
