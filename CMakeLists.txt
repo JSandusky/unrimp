@@ -186,6 +186,8 @@ endif()
 
 # We treat android also as linux
 if (ANDROID)
+		# We use exceptions so enable exception feature, is disabled by default by the android NDK
+		set(ANDROID_CPP_FEATURES "exceptions" CACHE STRING "")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DANDROID -DLINUX -DRENDERER_NO_DEBUG")
 endif()
 
