@@ -612,7 +612,6 @@ namespace OpenGLRenderer
 							{
 								// Direct state access (DSA) version to emulate a sampler object
 								static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
-
 							}
 						}
 					}
