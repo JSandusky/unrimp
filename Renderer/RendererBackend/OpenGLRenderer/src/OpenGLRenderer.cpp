@@ -519,6 +519,7 @@ namespace OpenGLRenderer
 
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
 					// In OpenGL, all shaders share the same texture units (= "Renderer::RootParameter::shaderVisibility" stays unused)
 
@@ -538,6 +539,9 @@ namespace OpenGLRenderer
 								break;
 							case Renderer::ResourceType::TEXTURE_2D:
 								glBindTextureUnit(unit, static_cast<Texture2D*>(resource)->getOpenGLTexture());
+								break;
+							case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+								glBindTextureUnit(unit, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
 								break;
 
 							case Renderer::ResourceType::ROOT_SIGNATURE:
@@ -602,17 +606,9 @@ namespace OpenGLRenderer
 								#endif
 							}
 						}
-						// TODO(sw) remove this break when TEXTURE_2D_ARRAY is also converted to DSA and the GL_EXT_direct_state_access is only another path
-						break;
 					}
-					// Fall through by design so that the non DSA part is handled as well
-				}
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// In OpenGL, all shaders share the same texture units (= "Renderer::RootParameter::shaderVisibility" stays unused)
-
 					// Is "GL_EXT_direct_state_access" there?
-					if (mExtensions->isGL_EXT_direct_state_access())
+					else if (mExtensions->isGL_EXT_direct_state_access())
 					{
 						// Effective direct state access (DSA)
 
