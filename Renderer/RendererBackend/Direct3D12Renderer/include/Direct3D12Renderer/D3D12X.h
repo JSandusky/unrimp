@@ -130,8 +130,7 @@ struct CD3DX12_RESOURCE_BARRIER : public D3D12_RESOURCE_BARRIER
 		UINT subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES,
 		D3D12_RESOURCE_BARRIER_FLAGS flags = D3D12_RESOURCE_BARRIER_FLAG_NONE)
 	{
-		CD3DX12_RESOURCE_BARRIER result;
-		ZeroMemory(&result, sizeof(result));
+		CD3DX12_RESOURCE_BARRIER result = {};
 		D3D12_RESOURCE_BARRIER &barrier = result;
 		result.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		result.Flags = flags;
@@ -146,8 +145,7 @@ struct CD3DX12_RESOURCE_BARRIER : public D3D12_RESOURCE_BARRIER
 		_In_ ID3D12Resource* pResourceBefore,
 		_In_ ID3D12Resource* pResourceAfter)
 	{
-		CD3DX12_RESOURCE_BARRIER result;
-		ZeroMemory(&result, sizeof(result));
+		CD3DX12_RESOURCE_BARRIER result = {};
 		D3D12_RESOURCE_BARRIER &barrier = result;
 		result.Type = D3D12_RESOURCE_BARRIER_TYPE_ALIASING;
 		barrier.Aliasing.pResourceBefore = pResourceBefore;
@@ -157,8 +155,7 @@ struct CD3DX12_RESOURCE_BARRIER : public D3D12_RESOURCE_BARRIER
 
 	static inline CD3DX12_RESOURCE_BARRIER UAV(_In_ ID3D12Resource* pResource)
 	{
-		CD3DX12_RESOURCE_BARRIER result;
-		ZeroMemory(&result, sizeof(result));
+		CD3DX12_RESOURCE_BARRIER result = {};
 		D3D12_RESOURCE_BARRIER &barrier = result;
 		result.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
 		barrier.UAV.pResource = pResource;

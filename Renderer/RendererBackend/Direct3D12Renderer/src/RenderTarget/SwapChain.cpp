@@ -82,8 +82,7 @@ namespace Direct3D12Renderer
 		}
 
 		// Create the swap chain
-		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
-		::ZeroMemory(&dxgiSwapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
+		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc = {};
 		dxgiSwapChainDesc.BufferCount							= NUMBER_OF_FRAMES;
 		dxgiSwapChainDesc.BufferDesc.Width						= static_cast<UINT>(width);
 		dxgiSwapChainDesc.BufferDesc.Height						= static_cast<UINT>(height);
@@ -433,8 +432,7 @@ namespace Direct3D12Renderer
 		if (nullptr != d3d12Device)
 		{
 			{ // Describe and create a render target view (RTV) descriptor heap
-				D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc;
-				::ZeroMemory(&d3d12DescriptorHeapDesc, sizeof(D3D12_DESCRIPTOR_HEAP_DESC));
+				D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
 				d3d12DescriptorHeapDesc.NumDescriptors	= NUMBER_OF_FRAMES;
 				d3d12DescriptorHeapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 				d3d12DescriptorHeapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
@@ -469,8 +467,7 @@ namespace Direct3D12Renderer
 			}
 
 			{ // Describe and create a depth stencil view (DSV) descriptor heap
-				D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc;
-				::ZeroMemory(&d3d12DescriptorHeapDesc, sizeof(D3D12_DESCRIPTOR_HEAP_DESC));
+				D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
 				d3d12DescriptorHeapDesc.NumDescriptors	= 1;
 				d3d12DescriptorHeapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 				d3d12DescriptorHeapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_NONE;

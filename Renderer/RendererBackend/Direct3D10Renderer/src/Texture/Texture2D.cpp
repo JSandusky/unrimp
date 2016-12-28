@@ -153,8 +153,7 @@ namespace Direct3D10Renderer
 		if (nullptr != mD3D10Texture2D)
 		{
 			// Direct3D 10 shader resource view description
-			D3D10_SHADER_RESOURCE_VIEW_DESC d3d10ShaderResourceViewDesc;
-			::ZeroMemory(&d3d10ShaderResourceViewDesc, sizeof(D3D10_SHADER_RESOURCE_VIEW_DESC));
+			D3D10_SHADER_RESOURCE_VIEW_DESC d3d10ShaderResourceViewDesc = {};
 			d3d10ShaderResourceViewDesc.Format					  = dxgiFormat;
 			d3d10ShaderResourceViewDesc.ViewDimension			  = D3D10_SRV_DIMENSION_TEXTURE2D;
 			d3d10ShaderResourceViewDesc.Texture2D.MipLevels		  = numberOfMipmaps;

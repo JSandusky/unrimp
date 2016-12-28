@@ -98,8 +98,7 @@ namespace Direct3D10Renderer
 			}
 
 			// Direct3D 10 shader resource view description
-			D3D10_SHADER_RESOURCE_VIEW_DESC d3d10ShaderResourceViewDesc;
-			::ZeroMemory(&d3d10ShaderResourceViewDesc, sizeof(D3D10_SHADER_RESOURCE_VIEW_DESC));
+			D3D10_SHADER_RESOURCE_VIEW_DESC d3d10ShaderResourceViewDesc = {};
 			d3d10ShaderResourceViewDesc.Format						   = d3d10Texture2DDesc.Format;
 			d3d10ShaderResourceViewDesc.ViewDimension				   = D3D10_SRV_DIMENSION_TEXTURE2DARRAY;
 			d3d10ShaderResourceViewDesc.Texture2DArray.MipLevels	   = numberOfMipmaps;

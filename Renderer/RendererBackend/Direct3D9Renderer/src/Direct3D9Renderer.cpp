@@ -281,8 +281,7 @@ namespace Direct3D9Renderer
 			{
 				// Set up the structure used to create the D3DDevice instance
 				// -> It appears that receiving and manually accessing the automatic depth stencil surface instance is not possible, so, we don't use the automatic depth stencil thing
-				D3DPRESENT_PARAMETERS d3dPresentParameters;
-				::ZeroMemory(&d3dPresentParameters, sizeof(D3DPRESENT_PARAMETERS));
+				D3DPRESENT_PARAMETERS d3dPresentParameters = {};
 				d3dPresentParameters.BackBufferWidth		= 1;
 				d3dPresentParameters.BackBufferHeight		= 1;
 				d3dPresentParameters.BackBufferCount		= 1;
@@ -293,7 +292,7 @@ namespace Direct3D9Renderer
 				// Create the Direct3D 9 device instance
 				// -> In Direct3D 9, there is always at least one swap chain for each device, known as the implicit swap chain
 				// -> The size of the swap chain can be changed by using "IDirect3DDevice9::Reset()"...but this results in a
-				//    loss of ALL resources and EVERYTHING has to be rebuild and configured from scatch!
+				//    loss of ALL resources and EVERYTHING has to be rebuild and configured from scratch!
 				// -> We really don't want to use the implicit swap chain, so we're creating a tiny one (because we have to!)
 				//    and then using "IDirect3DDevice9::CreateAdditionalSwapChain()" later on for the real main swap chain
 				mDirect3D9->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, NULL_HANDLE, D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dPresentParameters, &mDirect3DDevice9);
