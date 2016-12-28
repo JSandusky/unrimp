@@ -188,6 +188,13 @@ endif()
 if (ANDROID)
 		# We use exceptions so enable exception feature, is disabled by default by the android NDK
 		set(ANDROID_CPP_FEATURES "exceptions" CACHE STRING "")
+
+		# We only support android 5.1+
+		set(ANDROID_PLATFORM "android-22" CACHE STRING "")
+		
+		# We want also the llvm libc++ which is fully c++11 compatible
+		set(ANDROID_STL "c++_shared" CACHE STRING "")
+
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DANDROID -DLINUX -DRENDERER_NO_DEBUG")
 endif()
 
