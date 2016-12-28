@@ -705,6 +705,10 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glCompressedTextureSubImage2D)
 			IMPORT_FUNC(glTextureSubImage2D)
 			IMPORT_FUNC(glTextureSubImage3D)
+			IMPORT_FUNC(glVertexArrayAttribFormat)
+			IMPORT_FUNC(glVertexArrayVertexBuffer)
+			IMPORT_FUNC(glVertexArrayBindingDivisor)
+			IMPORT_FUNC(glVertexArrayElementBuffer)
 			IMPORT_FUNC(glTextureStorage2D)
 			IMPORT_FUNC(glTextureStorage3D)
 			mGL_ARB_direct_state_access = result;

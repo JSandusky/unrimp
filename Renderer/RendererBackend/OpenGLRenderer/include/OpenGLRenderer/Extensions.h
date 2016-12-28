@@ -469,6 +469,10 @@ namespace OpenGLRenderer
 	FNDEF_EX(glCompressedTextureSubImage2D,		PFNGLCOMPRESSEDTEXTURESUBIMAGE2DPROC);
 	FNDEF_EX(glTextureSubImage2D,				PFNGLTEXTURESUBIMAGE2DPROC);
 	FNDEF_EX(glTextureSubImage3D,				PFNGLTEXTURESUBIMAGE3DPROC);
+	FNDEF_EX(glVertexArrayAttribFormat,			PFNGLVERTEXARRAYATTRIBFORMATPROC);
+	FNDEF_EX(glVertexArrayVertexBuffer,			PFNGLVERTEXARRAYVERTEXBUFFERPROC);
+	FNDEF_EX(glVertexArrayBindingDivisor,		PFNGLVERTEXARRAYBINDINGDIVISORPROC);
+	FNDEF_EX(glVertexArrayElementBuffer,		PFNGLVERTEXARRAYELEMENTBUFFERPROC);
 	// Following methods are not direcly related to this extension but needed for implementation
 	FNDEF_EX(glTextureStorage2D,				PFNGLTEXTURESTORAGE2DPROC);
 	FNDEF_EX(glTextureStorage3D,				PFNGLTEXTURESTORAGE3DPROC);

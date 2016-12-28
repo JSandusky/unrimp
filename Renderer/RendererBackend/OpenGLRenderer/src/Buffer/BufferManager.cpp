@@ -116,7 +116,7 @@ namespace OpenGLRenderer
 			// Effective vertex array object (VAO)
 
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
