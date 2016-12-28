@@ -1250,3 +1250,120 @@ struct ID3D10Query : public ID3D10Asynchronous
 	public:
 		virtual void STDMETHODCALLTYPE GetDesc(__out D3D10_QUERY_DESC *pDesc) = 0;
 };
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10SDKLayers.h"
+MIDL_INTERFACE("9B7E4E01-342C-4106-A19F-4F2704F689F0")
+ID3D10Debug : public IUnknown
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE SetFeatureMask(UINT Mask) = 0;
+		virtual UINT STDMETHODCALLTYPE GetFeatureMask(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetPresentPerRenderOpDelay(UINT Milliseconds) = 0;
+		virtual UINT STDMETHODCALLTYPE GetPresentPerRenderOpDelay(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetSwapChain(__in_opt IDXGISwapChain *pSwapChain) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetSwapChain(__out IDXGISwapChain **ppSwapChain) = 0;
+		virtual HRESULT STDMETHODCALLTYPE Validate(void) = 0;
+};
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10SDKLayers.h"
+typedef enum D3D10_MESSAGE_CATEGORY
+{
+	D3D10_MESSAGE_CATEGORY_APPLICATION_DEFINED		= 0,
+	D3D10_MESSAGE_CATEGORY_MISCELLANEOUS			= D3D10_MESSAGE_CATEGORY_APPLICATION_DEFINED + 1,
+	D3D10_MESSAGE_CATEGORY_INITIALIZATION			= D3D10_MESSAGE_CATEGORY_MISCELLANEOUS + 1,
+	D3D10_MESSAGE_CATEGORY_CLEANUP					= D3D10_MESSAGE_CATEGORY_INITIALIZATION + 1,
+	D3D10_MESSAGE_CATEGORY_COMPILATION				= D3D10_MESSAGE_CATEGORY_CLEANUP + 1,
+	D3D10_MESSAGE_CATEGORY_STATE_CREATION			= D3D10_MESSAGE_CATEGORY_COMPILATION + 1,
+	D3D10_MESSAGE_CATEGORY_STATE_SETTING			= D3D10_MESSAGE_CATEGORY_STATE_CREATION + 1,
+	D3D10_MESSAGE_CATEGORY_STATE_GETTING			= D3D10_MESSAGE_CATEGORY_STATE_SETTING + 1,
+	D3D10_MESSAGE_CATEGORY_RESOURCE_MANIPULATION	= D3D10_MESSAGE_CATEGORY_STATE_GETTING + 1,
+	D3D10_MESSAGE_CATEGORY_EXECUTION				= D3D10_MESSAGE_CATEGORY_RESOURCE_MANIPULATION + 1
+} D3D10_MESSAGE_CATEGORY;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10SDKLayers.h"
+typedef enum D3D10_MESSAGE_SEVERITY
+{
+	D3D10_MESSAGE_SEVERITY_CORRUPTION	= 0,
+	D3D10_MESSAGE_SEVERITY_ERROR		= D3D10_MESSAGE_SEVERITY_CORRUPTION + 1,
+	D3D10_MESSAGE_SEVERITY_WARNING		= D3D10_MESSAGE_SEVERITY_ERROR + 1,
+	D3D10_MESSAGE_SEVERITY_INFO			= D3D10_MESSAGE_SEVERITY_WARNING + 1
+} D3D10_MESSAGE_SEVERITY;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10SDKLayers.h" -> But only the few definitions we need
+typedef enum D3D10_MESSAGE_ID
+{
+	D3D10_MESSAGE_ID_DEVICE_OMSETRENDERTARGETS_HAZARD	= 9,
+	D3D10_MESSAGE_ID_DEVICE_VSSETSHADERRESOURCES_HAZARD	= 3,
+	D3D10_MESSAGE_ID_DEVICE_GSSETSHADERRESOURCES_HAZARD	= 5,
+	D3D10_MESSAGE_ID_DEVICE_PSSETSHADERRESOURCES_HAZARD	= 7
+} D3D10_MESSAGE_ID;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10SDKLayers.h"
+typedef struct D3D10_MESSAGE
+{
+	D3D10_MESSAGE_CATEGORY Category;
+	D3D10_MESSAGE_SEVERITY Severity;
+	D3D10_MESSAGE_ID ID;
+	const char *pDescription;
+	SIZE_T DescriptionByteLength;
+} D3D10_MESSAGE;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10SDKLayers.h"
+typedef struct D3D10_INFO_QUEUE_FILTER_DESC
+{
+	UINT NumCategories;
+	D3D10_MESSAGE_CATEGORY *pCategoryList;
+	UINT NumSeverities;
+	D3D10_MESSAGE_SEVERITY *pSeverityList;
+	UINT NumIDs;
+	D3D10_MESSAGE_ID *pIDList;
+} D3D10_INFO_QUEUE_FILTER_DESC;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10SDKLayers.h"
+typedef struct D3D10_INFO_QUEUE_FILTER
+{
+	D3D10_INFO_QUEUE_FILTER_DESC AllowList;
+	D3D10_INFO_QUEUE_FILTER_DESC DenyList;
+} D3D10_INFO_QUEUE_FILTER;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10SDKLayers.h"
+MIDL_INTERFACE("1b940b17-2642-4d1f-ab1f-b99bad0c395f")
+ID3D10InfoQueue : public IUnknown
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE SetMessageCountLimit(__in UINT64 MessageCountLimit) = 0;
+		virtual void STDMETHODCALLTYPE ClearStoredMessages(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetMessage(__in UINT64 MessageIndex, __out_bcount_opt(*pMessageByteLength) D3D10_MESSAGE *pMessage, __inout SIZE_T *pMessageByteLength) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetNumMessagesAllowedByStorageFilter(void) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetNumMessagesDeniedByStorageFilter(void) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetNumStoredMessages(void) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetNumStoredMessagesAllowedByRetrievalFilter(void) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetNumMessagesDiscardedByMessageCountLimit(void) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetMessageCountLimit(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE AddStorageFilterEntries(__in D3D10_INFO_QUEUE_FILTER *pFilter) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetStorageFilter(__out_bcount_opt(*pFilterByteLength) D3D10_INFO_QUEUE_FILTER *pFilter, __inout SIZE_T *pFilterByteLength) = 0;
+		virtual void STDMETHODCALLTYPE ClearStorageFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushEmptyStorageFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushCopyOfStorageFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushStorageFilter(__in D3D10_INFO_QUEUE_FILTER *pFilter) = 0;
+		virtual void STDMETHODCALLTYPE PopStorageFilter(void) = 0;
+		virtual UINT STDMETHODCALLTYPE GetStorageFilterStackSize(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE AddRetrievalFilterEntries(__in D3D10_INFO_QUEUE_FILTER *pFilter) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetRetrievalFilter(__out_bcount_opt(*pFilterByteLength) D3D10_INFO_QUEUE_FILTER *pFilter, __inout SIZE_T *pFilterByteLength) = 0;
+		virtual void STDMETHODCALLTYPE ClearRetrievalFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushEmptyRetrievalFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushCopyOfRetrievalFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushRetrievalFilter(__in D3D10_INFO_QUEUE_FILTER *pFilter) = 0;
+		virtual void STDMETHODCALLTYPE PopRetrievalFilter(void) = 0;
+		virtual UINT STDMETHODCALLTYPE GetRetrievalFilterStackSize(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE AddMessage(__in D3D10_MESSAGE_CATEGORY Category, __in D3D10_MESSAGE_SEVERITY Severity, __in D3D10_MESSAGE_ID ID, __in LPCSTR pDescription) = 0;
+		virtual HRESULT STDMETHODCALLTYPE AddApplicationMessage(__in D3D10_MESSAGE_SEVERITY Severity, __in LPCSTR pDescription) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetBreakOnCategory(__in D3D10_MESSAGE_CATEGORY Category, __in BOOL bEnable) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetBreakOnSeverity(__in D3D10_MESSAGE_SEVERITY Severity, __in BOOL bEnable) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetBreakOnID(__in D3D10_MESSAGE_ID ID, __in BOOL bEnable) = 0;
+		virtual BOOL STDMETHODCALLTYPE GetBreakOnCategory(__in D3D10_MESSAGE_CATEGORY Category) = 0;
+		virtual BOOL STDMETHODCALLTYPE GetBreakOnSeverity(__in D3D10_MESSAGE_SEVERITY Severity) = 0;
+		virtual BOOL STDMETHODCALLTYPE GetBreakOnID(__in D3D10_MESSAGE_ID ID) = 0;
+		virtual void STDMETHODCALLTYPE SetMuteDebugOutput(__in BOOL bMute) = 0;
+		virtual BOOL STDMETHODCALLTYPE GetMuteDebugOutput(void) = 0;
+};

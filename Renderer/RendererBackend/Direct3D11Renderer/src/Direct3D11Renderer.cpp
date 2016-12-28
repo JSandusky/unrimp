@@ -316,20 +316,18 @@ namespace Direct3D11Renderer
 		// Is Direct3D 11 available?
 		if (mDirect3D11RuntimeLinking->isDirect3D11Avaiable())
 		{
-			{ // Create the Direct3D 11 device
-				// Flags
-				UINT flags = 0;
+			// Flags
+			UINT flags = 0;
 			#ifdef _DEBUG
 				flags |= D3D11_CREATE_DEVICE_DEBUG;
 			#endif
 
-				// Create the Direct3D 11 device
-				if (!detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext) && (flags & D3D11_CREATE_DEVICE_DEBUG))
-				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Failed to create device instance, retrying without debug flag (maybe no Windows SDK is installed)")
-					flags &= ~D3D11_CREATE_DEVICE_DEBUG;
-					detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext);
-				}
+			// Create the Direct3D 11 device
+			if (!detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext) && (flags & D3D11_CREATE_DEVICE_DEBUG))
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Failed to create device instance, retrying without debug flag (maybe no Windows SDK is installed)")
+				flags &= ~D3D11_CREATE_DEVICE_DEBUG;
+				detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext);
 			}
 
 			// Is there a valid Direct3D 11 device and device context?
@@ -346,6 +344,54 @@ namespace Direct3D11Renderer
 						D3DPERF_SetOptions(1);
 					}
 				#endif
+
+				// Direct3D 11 debug settings
+				if (flags & D3D11_CREATE_DEVICE_DEBUG)
+				{
+					ID3D11Debug* d3d11Debug = nullptr;
+					if (SUCCEEDED(mD3D11Device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<LPVOID*>(&d3d11Debug))))
+					{
+						ID3D11InfoQueue* d3d11InfoQueue = nullptr;
+						if (SUCCEEDED(d3d11Debug->QueryInterface(__uuidof(ID3D11InfoQueue), reinterpret_cast<LPVOID*>(&d3d11InfoQueue))))
+						{
+							// When using render-to-texture, Direct3D 11 will quickly spam the log with
+							//   "
+							//   D3D11 WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD]
+							//   D3D11 WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing VS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #3: DEVICE_VSSETSHADERRESOURCES_HAZARD]
+							//   D3D11 WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing HS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #2097173: DEVICE_HSSETSHADERRESOURCES_HAZARD]
+							//   D3D11 WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing DS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #2097189: DEVICE_DSSETSHADERRESOURCES_HAZARD]
+							//   D3D11 WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing GS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #5: DEVICE_GSSETSHADERRESOURCES_HAZARD]
+							//   D3D11 WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD]
+							//   "
+							// When not unbinding render targets from shader resources, even if shaders never access the render target by reading. We could add extra
+							// logic to avoid this situation, but on the other hand, the renderer backend should be as slim as possible. Since those Direct3D 11 warnings
+							// are pretty annoying and introduce the risk of missing relevant warnings, let's suppress those warnings. Thought about this for a while, feels
+							// like the best solution considering the alternatives even if suppressing warnings is not always the best idea.
+							D3D11_MESSAGE_ID d3d11MessageIds[] =
+							{
+								D3D11_MESSAGE_ID_DEVICE_OMSETRENDERTARGETS_HAZARD,
+								D3D11_MESSAGE_ID_DEVICE_VSSETSHADERRESOURCES_HAZARD,
+								D3D11_MESSAGE_ID_DEVICE_GSSETSHADERRESOURCES_HAZARD,
+								D3D11_MESSAGE_ID_DEVICE_PSSETSHADERRESOURCES_HAZARD,
+								D3D11_MESSAGE_ID_DEVICE_HSSETSHADERRESOURCES_HAZARD,
+								D3D11_MESSAGE_ID_DEVICE_DSSETSHADERRESOURCES_HAZARD
+							};
+							D3D11_INFO_QUEUE_FILTER d3d11InfoQueueFilter = {};
+							d3d11InfoQueueFilter.DenyList.NumIDs = _countof(d3d11MessageIds);
+							d3d11InfoQueueFilter.DenyList.pIDList = d3d11MessageIds;
+							d3d11InfoQueue->AddStorageFilterEntries(&d3d11InfoQueueFilter);
+
+							// TODO(co) If would be nice to break by default on everything, on the other hand there's no usable callstack then which renders this somewhat useless
+							// d3d11InfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
+							// d3d11InfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+							// d3d11InfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, true);
+							// d3d11InfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_INFO, true);
+
+							d3d11InfoQueue->Release();
+						}
+						d3d11Debug->Release();
+					}
+				}
 
 				// Initialize the capabilities
 				initializeCapabilities();
