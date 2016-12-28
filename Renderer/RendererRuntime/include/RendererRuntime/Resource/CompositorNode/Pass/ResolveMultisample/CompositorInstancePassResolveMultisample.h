@@ -27,73 +27,53 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Texture/ITexture2D.h>
+#include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace RendererRuntime
 {
-	class VulkanRenderer;
+	class CompositorResourcePassResolveMultisample;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Vulkan 2D texture interface
-	*/
-	class Texture2D : public Renderer::ITexture2D
+	class CompositorInstancePassResolveMultisample : public ICompositorInstancePass
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] vulkanRenderer
-		*    Owner Vulkan renderer instance
-		*  @param[in] width
-		*    Texture width, must be >1
-		*  @param[in] height
-		*    Texture height, must be >1
-		*  @param[in] textureFormat
-		*    Texture format
-		*  @param[in] data
-		*    Texture data, can be a null pointer
-		*  @param[in] flags
-		*    Texture flags, see "Renderer::TextureFlag::Enum"
-		*  @param[in] numberOfMultisamples
-		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
-		*/
-		Texture2D(VulkanRenderer &vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, uint8_t numberOfMultisamples);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~Texture2D();
+		friend class CompositorPassFactory;	// The only one allowed to create instances of this class
 
 
 	//[-------------------------------------------------------]
-	//[ Private data                                          ]
+	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	private:
-		// TODO(co) Implement me
+	protected:
+		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		CompositorInstancePassResolveMultisample(const CompositorResourcePassResolveMultisample& compositorResourcePassResolveMultisample, const CompositorNodeInstance& compositorNodeInstance);
+		inline virtual ~CompositorInstancePassResolveMultisample();
+		CompositorInstancePassResolveMultisample(const CompositorInstancePassResolveMultisample&) = delete;
+		CompositorInstancePassResolveMultisample& operator=(const CompositorInstancePassResolveMultisample&) = delete;
 
 
 	};
@@ -102,10 +82,10 @@ namespace VulkanRenderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+} // RendererRuntime
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/Texture/Texture2D.inl"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ResolveMultisample/CompositorInstancePassResolveMultisample.inl"

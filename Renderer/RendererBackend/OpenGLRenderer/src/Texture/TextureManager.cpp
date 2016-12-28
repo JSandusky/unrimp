@@ -51,7 +51,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
-	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, uint8_t numberOfMultisamples, const Renderer::OptimizedTextureClearValue*)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 
@@ -62,12 +62,12 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_EXT_direct_state_access())
 			{
 				// Effective direct state access (DSA)
-				return new Texture2DDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
+				return new Texture2DDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags, numberOfMultisamples);
 			}
 			else
 			{
 				// Traditional bind version
-				return new Texture2DBind(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
+				return new Texture2DBind(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags, numberOfMultisamples);
 			}
 		}
 		else

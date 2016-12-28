@@ -55,6 +55,8 @@ namespace RendererRuntime
 	CompositorWorkspaceInstance::CompositorWorkspaceInstance(IRendererRuntime& rendererRuntime, AssetId compositorWorkspaceAssetId) :
 		mRendererRuntime(rendererRuntime),
 		mIndirectBufferManager(*(new IndirectBufferManager(rendererRuntime))),
+		mNumberOfMultisamples(1),
+		mCurrentlyUsedNumberOfMultisamples(1),
 		mResolutionScale(1.0f),
 		mRenderTargetWidth(getUninitialized<uint32_t>()),
 		mRenderTargetHeight(getUninitialized<uint32_t>()),
@@ -70,6 +72,16 @@ namespace RendererRuntime
 		// Cleanup
 		destroySequentialCompositorNodeInstances();
 		delete &mIndirectBufferManager;
+	}
+
+	void CompositorWorkspaceInstance::setNumberOfMultisamples(uint8_t numberOfMultisamples)
+	{
+		// Sanity checks
+		assert(numberOfMultisamples == 1 || numberOfMultisamples == 2 || numberOfMultisamples == 4 || numberOfMultisamples == 8);
+		assert(numberOfMultisamples <= mRendererRuntime.getRenderer().getCapabilities().maximumNumberOfMultisamples);
+
+		// Set the value
+		mNumberOfMultisamples = numberOfMultisamples;
 	}
 
 	const CompositorWorkspaceInstance::RenderQueueIndexRange* CompositorWorkspaceInstance::getRenderQueueIndexRangeByRenderQueueIndex(uint8_t renderQueueIndex) const
@@ -123,12 +135,24 @@ namespace RendererRuntime
 			renderTarget.getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 
 			{ // Do we need to destroy previous framebuffers and render target textures?
-				const uint32_t currentRenderTargetWidth  = static_cast<uint32_t>(static_cast<float>(renderTargetWidth) * mResolutionScale);
-				const uint32_t currentRenderTargetHeight = static_cast<uint32_t>(static_cast<float>(renderTargetHeight) * mResolutionScale);
-				if (mRenderTargetWidth != currentRenderTargetWidth || mRenderTargetHeight != currentRenderTargetHeight)
+				bool destroy = false;
+				if (mCurrentlyUsedNumberOfMultisamples != mNumberOfMultisamples)
 				{
-					mRenderTargetWidth  = currentRenderTargetWidth;
-					mRenderTargetHeight = currentRenderTargetHeight;
+					mCurrentlyUsedNumberOfMultisamples = mNumberOfMultisamples;
+					destroy = true;
+				}
+				{
+					const uint32_t currentRenderTargetWidth  = static_cast<uint32_t>(static_cast<float>(renderTargetWidth) * mResolutionScale);
+					const uint32_t currentRenderTargetHeight = static_cast<uint32_t>(static_cast<float>(renderTargetHeight) * mResolutionScale);
+					if (mRenderTargetWidth != currentRenderTargetWidth || mRenderTargetHeight != currentRenderTargetHeight)
+					{
+						mRenderTargetWidth  = currentRenderTargetWidth;
+						mRenderTargetHeight = currentRenderTargetHeight;
+						destroy = true;
+					}
+				}
+				if (destroy)
+				{
 					destroyFramebuffersAndRenderTargetTextures();
 				}
 			}
@@ -351,7 +375,7 @@ namespace RendererRuntime
 				const CompositorFramebufferId compositorFramebufferId = compositorInstancePass->getCompositorResourcePass().getCompositorTarget().getCompositorFramebufferId();
 				if (isInitialized(compositorFramebufferId))
 				{
-					compositorInstancePass->mRenderTarget = framebufferManager.getFramebufferByCompositorFramebufferId(compositorFramebufferId, mainRenderTarget, mResolutionScale);
+					compositorInstancePass->mRenderTarget = framebufferManager.getFramebufferByCompositorFramebufferId(compositorFramebufferId, mainRenderTarget, mCurrentlyUsedNumberOfMultisamples, mResolutionScale);
 				}
 			}
 		}

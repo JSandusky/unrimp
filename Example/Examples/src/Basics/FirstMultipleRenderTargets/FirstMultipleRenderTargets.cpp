@@ -71,7 +71,7 @@ void FirstMultipleRenderTargets::onInitialization()
 			Renderer::ITexture *texture2D[NUMBER_OF_TEXTURES];
 			for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 			{
-				texture2D[i] = mTexture2D[i] = mTextureManager->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
+				texture2D[i] = mTexture2D[i] = mTextureManager->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
 			}
 
 			// Create the framebuffer object (FBO) instance

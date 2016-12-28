@@ -42,12 +42,19 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D12Renderer& direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue) :
+	Texture2D::Texture2D(Direct3D12Renderer& direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage, uint8_t numberOfMultisamples, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue) :
 		ITexture2D(direct3D12Renderer, width, height),
 		mDxgiFormat(Mapping::getDirect3D12Format(textureFormat)),
 		mD3D12Resource(nullptr),
 		mD3D12DescriptorHeap(nullptr)
 	{
+		// Sanity checks
+		assert(numberOfMultisamples == 1 || numberOfMultisamples == 2 || numberOfMultisamples == 4 || numberOfMultisamples == 8);
+		assert(numberOfMultisamples == 1 || nullptr == data);
+		assert(numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS));
+		assert(numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
+		assert(numberOfMultisamples == 1 || 0 != (flags & Renderer::TextureFlag::RENDER_TARGET));
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D12Renderer)
 
@@ -69,7 +76,7 @@ namespace Direct3D12Renderer
 		d3d12ResourceDesc.Height = height;
 		d3d12ResourceDesc.Flags = (flags & Renderer::TextureFlag::RENDER_TARGET) ? D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET : D3D12_RESOURCE_FLAG_NONE;
 		d3d12ResourceDesc.DepthOrArraySize = 1;
-		d3d12ResourceDesc.SampleDesc.Count = 1;
+		d3d12ResourceDesc.SampleDesc.Count = numberOfMultisamples;
 		d3d12ResourceDesc.SampleDesc.Quality = 0;
 		d3d12ResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 

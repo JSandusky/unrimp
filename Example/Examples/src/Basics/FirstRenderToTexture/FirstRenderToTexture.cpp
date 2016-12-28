@@ -65,7 +65,7 @@ void FirstRenderToTexture::onInitialization()
 		// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 		// -> Not required for OpenGL and OpenGL ES 2
 		// -> The optimized texture clear value is a Direct3D 12 related option
-		Renderer::ITexture *texture2D = mTexture2D = mTextureManager->createTexture2D(16, 16, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::GREEN));
+		Renderer::ITexture *texture2D = mTexture2D = mTextureManager->createTexture2D(16, 16, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::GREEN));
 
 		// Create the framebuffer object (FBO) instance
 		mFramebuffer = renderer->createFramebuffer(1, &texture2D);

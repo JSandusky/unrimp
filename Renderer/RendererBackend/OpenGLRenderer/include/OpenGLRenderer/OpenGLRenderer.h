@@ -165,6 +165,7 @@ namespace OpenGLRenderer
 		//[ Operations                                            ]
 		//[-------------------------------------------------------]
 		void clear(uint32_t flags, const float color[4], float z, uint32_t stencil);
+		void resolveMultisampleFramebuffer(Renderer::IRenderTarget& destinationRenderTarget, Renderer::IFramebuffer& sourceMultisampleFramebuffer);
 		//[-------------------------------------------------------]
 		//[ Draw call                                             ]
 		//[-------------------------------------------------------]

@@ -93,7 +93,7 @@ namespace Direct3D11Renderer
 							// Create the Direct3D 11 render target view instance
 							D3D11_RENDER_TARGET_VIEW_DESC d3d11RenderTargetViewDesc = {};
 							d3d11RenderTargetViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(texture2D->getTextureFormat()));
-							d3d11RenderTargetViewDesc.ViewDimension		 = D3D11_RTV_DIMENSION_TEXTURE2D;
+							d3d11RenderTargetViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
 							d3d11RenderTargetViewDesc.Texture2D.MipSlice = 0;
 							direct3D11Renderer.getD3D11Device()->CreateRenderTargetView(texture2D->getD3D11Texture2D(), &d3d11RenderTargetViewDesc, d3d11RenderTargetView);
 							break;
@@ -155,7 +155,7 @@ namespace Direct3D11Renderer
 					// Create the Direct3D 11 render target view instance
 					D3D11_DEPTH_STENCIL_VIEW_DESC d3d11DepthStencilViewDesc = {};
 					d3d11DepthStencilViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(texture2D->getTextureFormat()));
-					d3d11DepthStencilViewDesc.ViewDimension		 = D3D11_DSV_DIMENSION_TEXTURE2D;
+					d3d11DepthStencilViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D11_DSV_DIMENSION_TEXTURE2DMS : D3D11_DSV_DIMENSION_TEXTURE2D;
 					d3d11DepthStencilViewDesc.Texture2D.MipSlice = 0;
 					direct3D11Renderer.getD3D11Device()->CreateDepthStencilView(texture2D->getD3D11Texture2D(), &d3d11DepthStencilViewDesc, &mD3D11DepthStencilView);
 					break;

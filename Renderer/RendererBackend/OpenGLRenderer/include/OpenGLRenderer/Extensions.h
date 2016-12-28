@@ -131,6 +131,7 @@ namespace OpenGLRenderer
 		// ARB
 		bool isGL_ARB_framebuffer_object() const;
 		bool isGL_ARB_multitexture() const;
+		bool isGL_ARB_texture_multisample() const;
 		bool isGL_ARB_vertex_buffer_object() const;
 		bool isGL_ARB_texture_compression() const;
 		bool isGL_ARB_vertex_program() const;
@@ -236,6 +237,7 @@ namespace OpenGLRenderer
 		// ARB
 		bool mGL_ARB_framebuffer_object;
 		bool mGL_ARB_multitexture;
+		bool mGL_ARB_texture_multisample;
 		bool mGL_ARB_vertex_buffer_object;
 		bool mGL_ARB_texture_compression;
 		bool mGL_ARB_vertex_program;
@@ -327,10 +329,14 @@ namespace OpenGLRenderer
 	FNDEF_EX(glCheckFramebufferStatus,	PFNGLCHECKFRAMEBUFFERSTATUSPROC);
 	FNDEF_EX(glFramebufferTexture2D,	PFNGLFRAMEBUFFERTEXTURE2DPROC);
 	FNDEF_EX(glFramebufferRenderbuffer,	PFNGLFRAMEBUFFERRENDERBUFFERPROC);
+	FNDEF_EX(glBlitFramebuffer,			PFNGLBLITFRAMEBUFFERPROC);
 	FNDEF_EX(glGenerateMipmap,			PFNGLGENERATEMIPMAPPROC);
 
 	// GL_ARB_multitexture
 	FNDEF_EX(glActiveTextureARB,	PFNGLACTIVETEXTUREARBPROC);
+
+	// GL_ARB_texture_multisample
+	FNDEF_EX(glTexImage2DMultisample,	PFNGLTEXIMAGE2DMULTISAMPLEPROC);
 
 	// GL_ARB_vertex_buffer_object
 	FNDEF_EX(glBindBufferARB,		PFNGLBINDBUFFERARBPROC);

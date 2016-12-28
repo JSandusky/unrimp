@@ -179,6 +179,12 @@ namespace Direct3D12Renderer
 					static_cast<Direct3D12Renderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
 				}
 
+				void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
+					static_cast<Direct3D12Renderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
+				}
+
 				//[-------------------------------------------------------]
 				//[ Draw call                                             ]
 				//[-------------------------------------------------------]
@@ -241,6 +247,7 @@ namespace Direct3D12Renderer
 				&BackendDispatch::SetRenderTarget,
 				// Operations
 				&BackendDispatch::Clear,
+				&BackendDispatch::ResolveMultisampleFramebuffer,
 				// Draw call
 				&BackendDispatch::Draw,
 				&BackendDispatch::DrawIndexed,
@@ -946,6 +953,11 @@ namespace Direct3D12Renderer
 		RENDERER_END_DEBUG_EVENT(this)
 	}
 
+	void Direct3D12Renderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget&, Renderer::IFramebuffer&)
+	{
+		// TODO(co) Implement me
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
@@ -1491,6 +1503,9 @@ namespace Direct3D12Renderer
 				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy DirectX 9 multisample support
+
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = false;
 
@@ -1524,6 +1539,9 @@ namespace Direct3D12Renderer
 				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy DirectX 9 multisample support
+
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = false;
 
@@ -1556,6 +1574,9 @@ namespace Direct3D12Renderer
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy DirectX 9 multisample support
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
@@ -1594,6 +1615,9 @@ namespace Direct3D12Renderer
 				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 8;
+
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
 
@@ -1631,6 +1655,9 @@ namespace Direct3D12Renderer
 				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 8;
+
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
 
@@ -1664,6 +1691,9 @@ namespace Direct3D12Renderer
 
 				// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 				mCapabilities.maximumTextureBufferSize = 128 * 1024 * 1024;	// TODO(co) http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx does not mention the texture buffer? Currently the OpenGL 3 minimum is used: 128 MiB.
+
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 8;
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support

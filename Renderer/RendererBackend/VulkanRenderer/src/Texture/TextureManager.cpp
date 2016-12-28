@@ -47,14 +47,14 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
-	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, uint8_t numberOfMultisamples, const Renderer::OptimizedTextureClearValue*)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, Vulkan has no texture usage indication
 
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
 		{
-			return new Texture2D(static_cast<VulkanRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
+			return new Texture2D(static_cast<VulkanRenderer&>(getRenderer()), width, height, textureFormat, data, flags, numberOfMultisamples);
 		}
 		else
 		{

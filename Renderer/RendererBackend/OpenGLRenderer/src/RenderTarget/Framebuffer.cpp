@@ -81,7 +81,8 @@ namespace OpenGLRenderer
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(depthStencilTexture),
 		mWidth(UINT_MAX),
-		mHeight(UINT_MAX)
+		mHeight(UINT_MAX),
+		mMultisampleRenderTarget(false)
 	{
 		// The "GL_ARB_framebuffer_object"-extension documentation says the following about the framebuffer width and height
 		//   "If the attachment sizes are not all identical, rendering will be limited to the largest area that can fit in

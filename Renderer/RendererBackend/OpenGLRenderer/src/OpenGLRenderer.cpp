@@ -198,6 +198,12 @@ namespace OpenGLRenderer
 					static_cast<OpenGLRenderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
 				}
 
+				void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
+					static_cast<OpenGLRenderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
+				}
+
 				//[-------------------------------------------------------]
 				//[ Draw call                                             ]
 				//[-------------------------------------------------------]
@@ -260,6 +266,7 @@ namespace OpenGLRenderer
 				&BackendDispatch::SetRenderTarget,
 				// Operations
 				&BackendDispatch::Clear,
+				&BackendDispatch::ResolveMultisampleFramebuffer,
 				// Draw call
 				&BackendDispatch::Draw,
 				&BackendDispatch::DrawIndexed,
@@ -937,6 +944,12 @@ namespace OpenGLRenderer
 					// Unbind OpenGL framebuffer?
 					if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType() && Renderer::ResourceType::FRAMEBUFFER != renderTarget->getResourceType())
 					{
+						// Do we need to disable multisample?
+						if (static_cast<Framebuffer*>(mRenderTarget)->isMultisampleRenderTarget())
+						{
+							glDisable(GL_MULTISAMPLE);
+						}
+
 						// We do not render into a OpenGL framebuffer
 						glBindFramebuffer(GL_FRAMEBUFFER, 0);
 					}
@@ -977,6 +990,12 @@ namespace OpenGLRenderer
 								GL_COLOR_ATTACHMENT12, GL_COLOR_ATTACHMENT13, GL_COLOR_ATTACHMENT14, GL_COLOR_ATTACHMENT15
 							};
 							glDrawBuffersARB(static_cast<GLsizei>(framebuffer->getNumberOfColorTextures()), OPENGL_DRAW_BUFFER);
+						}
+
+						// Do we need to enable multisample?
+						if (framebuffer->isMultisampleRenderTarget())
+						{
+							glEnable(GL_MULTISAMPLE);
 						}
 						break;
 					}
@@ -1087,6 +1106,70 @@ namespace OpenGLRenderer
 			{
 				glDepthMask(GL_FALSE);
 			}
+		}
+	}
+
+	void OpenGLRenderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget& destinationRenderTarget, Renderer::IFramebuffer& sourceMultisampleFramebuffer)
+	{
+		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
+		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationRenderTarget)
+		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceMultisampleFramebuffer)
+
+		// Evaluate the render target type
+		switch (destinationRenderTarget.getResourceType())
+		{
+			case Renderer::ResourceType::SWAP_CHAIN:
+			{
+				// Get the OpenGL swap chain instance
+				// TODO(co) Implement me, not that important in practice so not directly implemented
+				// SwapChain& swapChain = static_cast<SwapChain&>(destinationRenderTarget);
+				break;
+			}
+
+			case Renderer::ResourceType::FRAMEBUFFER:
+			{
+				// Get the OpenGL framebuffer instances
+				const Framebuffer& openGLDestinationFramebuffer = static_cast<const Framebuffer&>(destinationRenderTarget);
+				const Framebuffer& openGLSourceMultisampleFramebuffer = static_cast<const Framebuffer&>(sourceMultisampleFramebuffer);
+
+				// Get the width and height of the destination and source framebuffer
+				uint32_t destinationWidth = 0;
+				uint32_t destinationHeight = 0;
+				openGLDestinationFramebuffer.getWidthAndHeight(destinationWidth, destinationHeight);
+				uint32_t sourceWidth = 0;
+				uint32_t sourceHeight = 0;
+				openGLSourceMultisampleFramebuffer.getWidthAndHeight(sourceWidth, sourceHeight);
+
+				// Resolve multisample
+				glBindFramebuffer(GL_READ_FRAMEBUFFER, openGLSourceMultisampleFramebuffer.getOpenGLFramebuffer());
+				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, openGLDestinationFramebuffer.getOpenGLFramebuffer());
+				glBlitFramebuffer(
+					0, 0, static_cast<GLint>(sourceWidth), static_cast<GLint>(sourceHeight),			// Source
+					0, 0, static_cast<GLint>(destinationWidth), static_cast<GLint>(destinationHeight),	// Destination
+					GL_COLOR_BUFFER_BIT, GL_NEAREST);
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::INDEX_BUFFER:
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_2D:
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Not handled in here
+				break;
 		}
 	}
 
@@ -2059,6 +2142,22 @@ namespace OpenGLRenderer
 		else
 		{
 			mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+		}
+
+		// Maximum number of multisamples (always at least 1, usually 8)
+		if (mExtensions->isGL_ARB_texture_multisample())
+		{
+			glGetIntegerv(GL_MAX_SAMPLES, &openGLValue);
+			if (openGLValue > 8)
+			{
+				// Limit to known maximum we can test, even if e.g. GeForce 980m reports 32 here
+				openGLValue = 8;
+			}
+			mCapabilities.maximumNumberOfMultisamples = static_cast<uint8_t>(openGLValue);
+		}
+		else
+		{
+			mCapabilities.maximumNumberOfMultisamples = 1;
 		}
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.

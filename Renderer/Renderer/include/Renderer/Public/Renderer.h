@@ -1516,6 +1516,7 @@ namespace Renderer
 			uint32_t maximumUniformBufferSize;
 			uint32_t maximumTextureBufferSize;
 			uint32_t maximumIndirectBufferSize;
+			uint8_t  maximumNumberOfMultisamples;
 			bool	 individualUniforms;
 			bool	 instancedArrays;
 			bool	 drawInstanced;
@@ -1533,6 +1534,7 @@ namespace Renderer
 				maximumUniformBufferSize(0),
 				maximumTextureBufferSize(0),
 				maximumIndirectBufferSize(0),
+				maximumNumberOfMultisamples(1),
 				individualUniforms(false),
 				instancedArrays(false),
 				drawInstanced(false),
@@ -1552,6 +1554,7 @@ namespace Renderer
 				maximumUniformBufferSize(0),
 				maximumTextureBufferSize(0),
 				maximumIndirectBufferSize(0),
+				maximumNumberOfMultisamples(1),
 				individualUniforms(false),
 				instancedArrays(false),
 				drawInstanced(false),
@@ -2177,7 +2180,7 @@ namespace Renderer
 				return mRenderer;
 			}
 		public:
-			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
+			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, uint8_t numberOfMultisamples = 1, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
 			virtual ITexture2DArray* createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
 		protected:
 			inline explicit ITextureManager(IRenderer& renderer);
@@ -2437,6 +2440,7 @@ namespace Renderer
 			SetScissorRectangles,
 			SetRenderTarget,
 			Clear,
+			ResolveMultisampleFramebuffer,
 			Draw,
 			DrawIndexed,
 			SetDebugMarker,
@@ -2758,6 +2762,20 @@ namespace Renderer
 				float	 z;
 				uint32_t stencil;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::Clear;
+			};
+			struct ResolveMultisampleFramebuffer
+			{
+				inline static void create(CommandBuffer& commandBuffer, IRenderTarget& destinationRenderTarget, IFramebuffer& sourceMultisampleFramebuffer)
+				{
+					*commandBuffer.addCommand<ResolveMultisampleFramebuffer>() = ResolveMultisampleFramebuffer(destinationRenderTarget, sourceMultisampleFramebuffer);
+				}
+				inline ResolveMultisampleFramebuffer(IRenderTarget& _destinationRenderTarget, IFramebuffer& _sourceMultisampleFramebuffer) :
+					destinationRenderTarget(&_destinationRenderTarget),
+					sourceMultisampleFramebuffer(&_sourceMultisampleFramebuffer)
+				{}
+				IRenderTarget* destinationRenderTarget;
+				IFramebuffer* sourceMultisampleFramebuffer;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ResolveMultisampleFramebuffer;
 			};
 			struct Draw
 			{

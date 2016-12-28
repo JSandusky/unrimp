@@ -111,7 +111,7 @@ namespace RendererRuntime
 		void clear();
 		void clearRendererResources();
 		void addRenderTargetTexture(AssetId assetId, const RenderTargetTextureSignature& renderTargetTextureSignature);
-		Renderer::ITexture* getTextureByAssetId(AssetId assetId, const Renderer::IRenderTarget& renderTarget, float resolutionScale);
+		Renderer::ITexture* getTextureByAssetId(AssetId assetId, const Renderer::IRenderTarget& renderTarget, uint8_t numberOfMultisamples, float resolutionScale);
 		void releaseRenderTargetTextureBySignature(const RenderTargetTextureSignature& renderTargetTextureSignature);
 
 

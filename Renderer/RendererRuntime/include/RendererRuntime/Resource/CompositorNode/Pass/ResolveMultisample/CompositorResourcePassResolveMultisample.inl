@@ -28,39 +28,33 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const IRendererRuntime& CompositorWorkspaceInstance::getRendererRuntime() const
+	inline CompositorFramebufferId CompositorResourcePassResolveMultisample::getSourceMultisampleCompositorFramebufferId() const
 	{
-		return mRendererRuntime;
+		return mSourceMultisampleCompositorFramebufferId;
 	}
 
-	inline IndirectBufferManager& CompositorWorkspaceInstance::getIndirectBufferManager() const
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	inline CompositorPassTypeId CompositorResourcePassResolveMultisample::getTypeId() const
 	{
-		return mIndirectBufferManager;
+		return TYPE_ID;
 	}
 
-	inline uint8_t CompositorWorkspaceInstance::getNumberOfMultisamples() const
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline CompositorResourcePassResolveMultisample::CompositorResourcePassResolveMultisample(const CompositorTarget& compositorTarget) :
+		ICompositorResourcePass(compositorTarget)
 	{
-		return mNumberOfMultisamples;
+		// Nothing here
 	}
 
-	inline float CompositorWorkspaceInstance::getResolutionScale() const
+	inline CompositorResourcePassResolveMultisample::~CompositorResourcePassResolveMultisample()
 	{
-		return mResolutionScale;
-	}
-
-	inline void CompositorWorkspaceInstance::setResolutionScale(float resolutionScale)
-	{
-		mResolutionScale = resolutionScale;
-	}
-
-	inline const CompositorWorkspaceInstance::RenderQueueIndexRanges& CompositorWorkspaceInstance::getRenderQueueIndexRanges() const
-	{
-		return mRenderQueueIndexRanges;
-	}
-
-	inline Renderer::IRenderTarget* CompositorWorkspaceInstance::getExecutionRenderTarget() const
-	{
-		return mExecutionRenderTarget;
+		// Nothing here
 	}
 
 

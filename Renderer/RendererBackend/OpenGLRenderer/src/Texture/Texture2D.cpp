@@ -55,8 +55,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height) :
+	Texture2D::Texture2D(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint8_t numberOfMultisamples) :
 		ITexture2D(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height),
+		mNumberOfMultisamples(numberOfMultisamples),
 		mOpenGLTexture(0)
 	{
 		// Create the OpenGL texture instance

@@ -82,8 +82,10 @@ namespace Direct3D11Renderer
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*  @param[in] textureUsage
 		*    Indication of the texture usage (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*  @param[in] numberOfMultisamples
+		*    The number of multisamples per pixel (valid values: 1, 2, 4, 6, 8)
 		*/
-		Texture2D(Direct3D11Renderer &direct3D11Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage = Renderer::TextureUsage::DEFAULT);
+		Texture2D(Direct3D11Renderer &direct3D11Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, uint8_t numberOfMultisamples);
 
 		/**
 		*  @brief
@@ -106,6 +108,15 @@ namespace Direct3D11Renderer
 		*    - Direct3D 11 depth stencil view format is "DXGI_FORMAT_D32_FLOAT"
 		*/
 		inline Renderer::TextureFormat::Enum getTextureFormat() const;
+
+		/**
+		*  @brief
+		*    Return the number of multisamples
+		*
+		*  @return
+		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
+		*/
+		inline uint8_t getNumberOfMultisamples() const;
 
 		/**
 		*  @brief
@@ -143,6 +154,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	private:
 		Renderer::TextureFormat::Enum  mTextureFormat;
+		uint8_t						   mNumberOfMultisamples;
 		ID3D11Texture2D				  *mD3D11Texture2D;					///< Direct3D 11 texture 2D resource, can be a null pointer
 		ID3D11ShaderResourceView	  *mD3D11ShaderResourceViewTexture;	///< Direct3D 11 shader resource view, can be a null pointer
 

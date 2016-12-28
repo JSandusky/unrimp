@@ -45,6 +45,7 @@ namespace Renderer
 	class IRenderer;
 	class IResource;
 	class IVertexArray;
+	class IFramebuffer;
 	class IRenderTarget;
 	class IUniformBuffer;
 	class ITextureBuffer;
@@ -84,6 +85,7 @@ namespace Renderer
 		SetRenderTarget,
 		// Operations
 		Clear,
+		ResolveMultisampleFramebuffer,
 		// Draw call
 		Draw,
 		DrawIndexed,
@@ -765,6 +767,34 @@ namespace Renderer
 			uint32_t stencil;
 			// Static data
 			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::Clear;
+		};
+
+		/**
+		*  @brief
+		*    Resolve multisample framebuffer
+		*
+		*  @param[in] destinationRenderTarget
+		*    None multisample destination render target
+		*  @param[in] sourceMultisampleFramebuffer
+		*    Source multisample framebuffer
+		*/
+		struct ResolveMultisampleFramebuffer
+		{
+			// Static methods
+			inline static void create(CommandBuffer& commandBuffer, IRenderTarget& destinationRenderTarget, IFramebuffer& sourceMultisampleFramebuffer)
+			{
+				*commandBuffer.addCommand<ResolveMultisampleFramebuffer>() = ResolveMultisampleFramebuffer(destinationRenderTarget, sourceMultisampleFramebuffer);
+			}
+			// Constructor
+			inline ResolveMultisampleFramebuffer(IRenderTarget& _destinationRenderTarget, IFramebuffer& _sourceMultisampleFramebuffer) :
+				destinationRenderTarget(&_destinationRenderTarget),
+				sourceMultisampleFramebuffer(&_sourceMultisampleFramebuffer)
+			{}
+			// Data
+			IRenderTarget* destinationRenderTarget;
+			IFramebuffer* sourceMultisampleFramebuffer;
+			// Static data
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ResolveMultisampleFramebuffer;
 		};
 
 		//[-------------------------------------------------------]

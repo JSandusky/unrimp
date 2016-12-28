@@ -13,6 +13,16 @@
 		},
 		"RenderTargetTextures":
 		{
+			"MultisampleColorRenderTargetTexture":
+			{
+				"TextureFormat": "R8G8B8A8",
+				"AllowMultisample": "TRUE"
+			},
+			"MultisampleDepthStencilRenderTargetTexture":
+			{
+				"TextureFormat": "D32_FLOAT",
+				"AllowMultisample": "TRUE"
+			},
 			"ColorRenderTargetTexture":
 			{
 				"TextureFormat": "R8G8B8A8"
@@ -28,18 +38,18 @@
 				"TextureFormat": "R8G8B8A8",
 				"AllowResolutionScale": "FALSE",
 				"Scale": "0.25"
-			},
-			"DepthStencilRenderTargetTexture":
-			{
-				"TextureFormat": "D32_FLOAT"
-			}			
+			}
 		},
 		"Framebuffers":
 		{
+			"MultisampleFramebuffer":
+			{
+				"ColorTextures": [ "MultisampleColorRenderTargetTexture" ],
+				"DepthStencilTexture": "MultisampleDepthStencilRenderTargetTexture"
+			},
 			"Framebuffer0":
 			{
-				"ColorTextures": [ "ColorRenderTargetTexture" ],
-				"DepthStencilTexture": "DepthStencilRenderTargetTexture"
+				"ColorTextures": [ "ColorRenderTargetTexture" ]
 			},
 			"GaussianBlurFramebuffer0":
 			{
@@ -52,7 +62,7 @@
 		},
 		"Targets":
 		{
-			"Framebuffer0":
+			"MultisampleFramebuffer":
 			{
 				"Passes":
 				{
@@ -64,6 +74,16 @@
 					"Scene":
 					{
 						"MaterialTechnique": "Forward"
+					}
+				}
+			},
+			"Framebuffer0":
+			{
+				"Passes":
+				{
+					"ResolveMultisample":
+					{
+						"SourceMultisampleFramebuffer": "MultisampleFramebuffer"
 					}
 				}
 			},

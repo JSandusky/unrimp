@@ -40,12 +40,20 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
+	Texture2D::Texture2D(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, uint8_t numberOfMultisamples) :
 		ITexture2D(direct3D10Renderer, width, height),
 		mTextureFormat(textureFormat),
+		mNumberOfMultisamples(numberOfMultisamples),
 		mD3D10Texture2D(nullptr),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
+		// Sanity checks
+		assert(numberOfMultisamples == 1 || numberOfMultisamples == 2 || numberOfMultisamples == 4 || numberOfMultisamples == 8);
+		assert(numberOfMultisamples == 1 || nullptr == data);
+		assert(numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS));
+		assert(numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
+		assert(numberOfMultisamples == 1 || 0 != (flags & Renderer::TextureFlag::RENDER_TARGET));
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D10Renderer)
 
@@ -62,7 +70,7 @@ namespace Direct3D10Renderer
 		d3d10Texture2DDesc.MipLevels		  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 10 allocate the complete mipmap chain for us
 		d3d10Texture2DDesc.ArraySize		  = 1;
 		d3d10Texture2DDesc.Format			  = dxgiFormat;
-		d3d10Texture2DDesc.SampleDesc.Count	  = 1;
+		d3d10Texture2DDesc.SampleDesc.Count	  = numberOfMultisamples;
 		d3d10Texture2DDesc.SampleDesc.Quality = 0;
 		d3d10Texture2DDesc.Usage			  = static_cast<D3D10_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
 		d3d10Texture2DDesc.BindFlags		  = D3D10_BIND_SHADER_RESOURCE;
@@ -155,7 +163,7 @@ namespace Direct3D10Renderer
 			// Direct3D 10 shader resource view description
 			D3D10_SHADER_RESOURCE_VIEW_DESC d3d10ShaderResourceViewDesc = {};
 			d3d10ShaderResourceViewDesc.Format					  = dxgiFormat;
-			d3d10ShaderResourceViewDesc.ViewDimension			  = D3D10_SRV_DIMENSION_TEXTURE2D;
+			d3d10ShaderResourceViewDesc.ViewDimension			  = (numberOfMultisamples > 1) ? D3D10_SRV_DIMENSION_TEXTURE2DMS : D3D10_SRV_DIMENSION_TEXTURE2D;
 			d3d10ShaderResourceViewDesc.Texture2D.MipLevels		  = numberOfMipmaps;
 			d3d10ShaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
 

@@ -89,6 +89,15 @@ namespace OpenGLRenderer
 		*/
 		inline uint32_t getNumberOfColorTextures() const;
 
+		/**
+		*  @brief
+		*    Return whether or not the framebuffer is a multisample render target
+		*
+		*  @return
+		*    "true" if the framebuffer is a multisample render target, else "false"
+		*/
+		inline bool isMultisampleRenderTarget() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
@@ -131,6 +140,7 @@ namespace OpenGLRenderer
 		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
+		bool				 mMultisampleRenderTarget;	///< Multisample render target?
 
 
 	};

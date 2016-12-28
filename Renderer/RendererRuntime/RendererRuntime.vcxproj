@@ -57,6 +57,8 @@
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ICompositorResourcePass.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Quad\CompositorInstancePassQuad.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Quad\CompositorResourcePassQuad.inl" />
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ResolveMultisample\CompositorInstancePassResolveMultisample.inl" />
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ResolveMultisample\CompositorResourcePassResolveMultisample.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorInstancePassScene.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorResourcePassScene.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceInstance.inl" />
@@ -189,6 +191,8 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ICompositorResourcePass.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Quad\CompositorInstancePassQuad.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Quad\CompositorResourcePassQuad.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ResolveMultisample\CompositorInstancePassResolveMultisample.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ResolveMultisample\CompositorResourcePassResolveMultisample.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorInstancePassScene.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorResourcePassScene.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceInstance.h" />
@@ -349,6 +353,8 @@
     <ClCompile Include="src\Resource\CompositorNode\Pass\DebugGui\CompositorResourcePassDebugGui.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\Quad\CompositorInstancePassQuad.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\Quad\CompositorResourcePassQuad.cpp" />
+    <ClCompile Include="src\Resource\CompositorNode\Pass\ResolveMultisample\CompositorInstancePassResolveMultisample.cpp" />
+    <ClCompile Include="src\Resource\CompositorNode\Pass\ResolveMultisample\CompositorResourcePassResolveMultisample.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\Scene\CompositorInstancePassScene.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\Scene\CompositorResourcePassScene.cpp" />
     <ClCompile Include="src\Resource\CompositorWorkspace\CompositorWorkspaceInstance.cpp" />

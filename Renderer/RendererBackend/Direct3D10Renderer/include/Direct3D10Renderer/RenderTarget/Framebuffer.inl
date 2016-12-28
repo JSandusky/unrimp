@@ -28,9 +28,19 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t Framebuffer::getNumberOfD3D10RenderTargetViews() const
+	inline uint32_t Framebuffer::getNumberOfColorTextures() const
 	{
 		return mNumberOfColorTextures;
+	}
+
+	inline Renderer::ITexture **Framebuffer::getColorTextures() const
+	{
+		return mColorTextures;
+	}
+
+	inline Renderer::ITexture *Framebuffer::getDepthStencilTexture() const
+	{
+		return mDepthStencilTexture;
 	}
 
 	inline ID3D10RenderTargetView **Framebuffer::getD3D10RenderTargetViews() const

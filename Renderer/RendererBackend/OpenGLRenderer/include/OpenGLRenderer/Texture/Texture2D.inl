@@ -28,6 +28,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline uint8_t Texture2D::getNumberOfMultisamples() const
+	{
+		return mNumberOfMultisamples;
+	}
+
 	inline uint32_t Texture2D::getOpenGLTexture() const
 	{
 		return mOpenGLTexture;

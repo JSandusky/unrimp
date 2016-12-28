@@ -75,6 +75,7 @@ namespace OpenGLRenderer
 	// ARB
 	bool Extensions::isGL_ARB_framebuffer_object()			const { return mGL_ARB_framebuffer_object;			}
 	bool Extensions::isGL_ARB_multitexture()				const { return mGL_ARB_multitexture;				}
+	bool Extensions::isGL_ARB_texture_multisample()			const { return mGL_ARB_texture_multisample;			}
 	bool Extensions::isGL_ARB_vertex_buffer_object()		const { return mGL_ARB_vertex_buffer_object;		}
 	bool Extensions::isGL_ARB_texture_compression()			const { return mGL_ARB_texture_compression;			}
 	bool Extensions::isGL_ARB_vertex_program()				const { return mGL_ARB_vertex_program;				}
@@ -238,6 +239,7 @@ namespace OpenGLRenderer
 		// ARB
 		mGL_ARB_framebuffer_object			= false;
 		mGL_ARB_multitexture				= false;
+		mGL_ARB_texture_multisample			= false;
 		mGL_ARB_vertex_buffer_object		= false;
 		mGL_ARB_texture_compression			= false;
 		mGL_ARB_vertex_program				= false;
@@ -401,6 +403,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glCheckFramebufferStatus)
 			IMPORT_FUNC(glFramebufferTexture2D)
 			IMPORT_FUNC(glFramebufferRenderbuffer)
+			IMPORT_FUNC(glBlitFramebuffer)
 			IMPORT_FUNC(glGenerateMipmap)
 			mGL_ARB_framebuffer_object = result;
 		}
@@ -413,6 +416,16 @@ namespace OpenGLRenderer
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glActiveTextureARB)
 			mGL_ARB_multitexture = result;
+		}
+
+		// GL_ARB_texture_multisample
+		mGL_ARB_texture_multisample = isCoreProfile ? true : isSupported("GL_ARB_texture_multisample");	// Is core feature since OpenGL 3.2
+		if (mGL_ARB_texture_multisample)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glTexImage2DMultisample)
+			mGL_ARB_texture_multisample = result;
 		}
 
 		// GL_ARB_vertex_buffer_object

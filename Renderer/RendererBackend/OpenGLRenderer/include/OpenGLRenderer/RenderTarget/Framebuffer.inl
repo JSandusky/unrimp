@@ -38,6 +38,11 @@ namespace OpenGLRenderer
 		return mNumberOfColorTextures;
 	}
 
+	inline bool Framebuffer::isMultisampleRenderTarget() const
+	{
+		return mMultisampleRenderTarget;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

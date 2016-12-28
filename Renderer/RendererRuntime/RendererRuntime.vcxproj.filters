@@ -164,6 +164,9 @@
     <Filter Include="Source Files\RenderQueue">
       <UniqueIdentifier>{0757bc75-e76d-4008-b47e-13782c4a6083}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode\Pass\ResolveMultisample">
+      <UniqueIdentifier>{11733ee7-12fc-4daf-95c5-09836152e9e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -473,6 +476,12 @@
     </None>
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorRenderTargetTexture.inl">
       <Filter>Source Files\Resource\CompositorNode</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ResolveMultisample\CompositorInstancePassResolveMultisample.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ResolveMultisample</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ResolveMultisample\CompositorResourcePassResolveMultisample.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ResolveMultisample</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -930,6 +939,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorRenderTargetTexture.h">
       <Filter>Source Files\Resource\CompositorNode</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ResolveMultisample\CompositorResourcePassResolveMultisample.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ResolveMultisample</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ResolveMultisample\CompositorInstancePassResolveMultisample.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ResolveMultisample</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1207,6 +1222,12 @@
     </ClCompile>
     <ClCompile Include="src\Core\Renderer\RenderTargetTextureManager.cpp">
       <Filter>Source Files\Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\ResolveMultisample\CompositorInstancePassResolveMultisample.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ResolveMultisample</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\ResolveMultisample\CompositorResourcePassResolveMultisample.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ResolveMultisample</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
