@@ -1418,3 +1418,132 @@ struct ID3D11Query : public ID3D11Asynchronous
 	public:
 		virtual void STDMETHODCALLTYPE GetDesc(__out D3D11_QUERY_DESC *pDesc) = 0;
 };
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11SDKLayers.h"
+typedef enum D3D11_RLDO_FLAGS
+{
+	D3D11_RLDO_SUMMARY	= 0x1,
+	D3D11_RLDO_DETAIL	= 0x2
+} D3D11_RLDO_FLAGS;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11SDKLayers.h"
+MIDL_INTERFACE("79cf2233-7536-4948-9d36-1e4692dc5760")
+ID3D11Debug : public IUnknown
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE SetFeatureMask(UINT Mask) = 0;
+		virtual UINT STDMETHODCALLTYPE GetFeatureMask(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetPresentPerRenderOpDelay(UINT Milliseconds) = 0;
+		virtual UINT STDMETHODCALLTYPE GetPresentPerRenderOpDelay(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetSwapChain(__in_opt IDXGISwapChain *pSwapChain) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetSwapChain(__out IDXGISwapChain **ppSwapChain) = 0;
+		virtual HRESULT STDMETHODCALLTYPE ValidateContext(__in ID3D11DeviceContext *pContext) = 0;
+		virtual HRESULT STDMETHODCALLTYPE ReportLiveDeviceObjects(D3D11_RLDO_FLAGS Flags) = 0;
+		virtual HRESULT STDMETHODCALLTYPE ValidateContextForDispatch(__in ID3D11DeviceContext *pContext) = 0;
+};
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11SDKLayers.h"
+typedef enum D3D11_MESSAGE_CATEGORY
+{
+	D3D11_MESSAGE_CATEGORY_APPLICATION_DEFINED		= 0,
+	D3D11_MESSAGE_CATEGORY_MISCELLANEOUS			= D3D11_MESSAGE_CATEGORY_APPLICATION_DEFINED + 1,
+	D3D11_MESSAGE_CATEGORY_INITIALIZATION			= D3D11_MESSAGE_CATEGORY_MISCELLANEOUS + 1,
+	D3D11_MESSAGE_CATEGORY_CLEANUP					= D3D11_MESSAGE_CATEGORY_INITIALIZATION + 1,
+	D3D11_MESSAGE_CATEGORY_COMPILATION				= D3D11_MESSAGE_CATEGORY_CLEANUP + 1,
+	D3D11_MESSAGE_CATEGORY_STATE_CREATION			= D3D11_MESSAGE_CATEGORY_COMPILATION + 1,
+	D3D11_MESSAGE_CATEGORY_STATE_SETTING			= D3D11_MESSAGE_CATEGORY_STATE_CREATION + 1,
+	D3D11_MESSAGE_CATEGORY_STATE_GETTING			= D3D11_MESSAGE_CATEGORY_STATE_SETTING + 1,
+	D3D11_MESSAGE_CATEGORY_RESOURCE_MANIPULATION	= D3D11_MESSAGE_CATEGORY_STATE_GETTING + 1,
+	D3D11_MESSAGE_CATEGORY_EXECUTION				= D3D11_MESSAGE_CATEGORY_RESOURCE_MANIPULATION + 1,
+	D3D11_MESSAGE_CATEGORY_SHADER					= D3D11_MESSAGE_CATEGORY_EXECUTION + 1
+} D3D11_MESSAGE_CATEGORY;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11SDKLayers.h"
+typedef enum D3D11_MESSAGE_SEVERITY
+{
+	D3D11_MESSAGE_SEVERITY_CORRUPTION	= 0,
+	D3D11_MESSAGE_SEVERITY_ERROR		= D3D11_MESSAGE_SEVERITY_CORRUPTION + 1,
+	D3D11_MESSAGE_SEVERITY_WARNING		= D3D11_MESSAGE_SEVERITY_ERROR + 1,
+	D3D11_MESSAGE_SEVERITY_INFO			= D3D11_MESSAGE_SEVERITY_WARNING + 1
+} D3D11_MESSAGE_SEVERITY;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11SDKLayers.h" -> But only the few definitions we need
+typedef enum D3D11_MESSAGE_ID
+{
+	D3D11_MESSAGE_ID_DEVICE_OMSETRENDERTARGETS_HAZARD	= 9,
+	D3D11_MESSAGE_ID_DEVICE_VSSETSHADERRESOURCES_HAZARD	= 3,
+	D3D11_MESSAGE_ID_DEVICE_GSSETSHADERRESOURCES_HAZARD	= 5,
+	D3D11_MESSAGE_ID_DEVICE_PSSETSHADERRESOURCES_HAZARD	= 7,
+	D3D11_MESSAGE_ID_DEVICE_HSSETSHADERRESOURCES_HAZARD	= 2097173,
+	D3D11_MESSAGE_ID_DEVICE_DSSETSHADERRESOURCES_HAZARD	= 2097189
+} D3D11_MESSAGE_ID;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11SDKLayers.h"
+typedef struct D3D11_MESSAGE
+{
+	D3D11_MESSAGE_CATEGORY Category;
+	D3D11_MESSAGE_SEVERITY Severity;
+	D3D11_MESSAGE_ID ID;
+	const char *pDescription;
+	SIZE_T DescriptionByteLength;
+} D3D11_MESSAGE;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11SDKLayers.h"
+typedef struct D3D11_INFO_QUEUE_FILTER_DESC
+{
+	UINT NumCategories;
+	D3D11_MESSAGE_CATEGORY *pCategoryList;
+	UINT NumSeverities;
+	D3D11_MESSAGE_SEVERITY *pSeverityList;
+	UINT NumIDs;
+	D3D11_MESSAGE_ID *pIDList;
+} D3D11_INFO_QUEUE_FILTER_DESC;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11SDKLayers.h"
+typedef struct D3D11_INFO_QUEUE_FILTER
+{
+	D3D11_INFO_QUEUE_FILTER_DESC AllowList;
+	D3D11_INFO_QUEUE_FILTER_DESC DenyList;
+} D3D11_INFO_QUEUE_FILTER;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11SDKLayers.h"
+MIDL_INTERFACE("6543dbb6-1b48-42f5-ab82-e97ec74326f6")
+ID3D11InfoQueue : public IUnknown
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE SetMessageCountLimit(_In_ UINT64 MessageCountLimit) = 0;
+		virtual void STDMETHODCALLTYPE ClearStoredMessages(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetMessage(_In_ UINT64 MessageIndex, _Out_writes_bytes_opt_(*pMessageByteLength) D3D11_MESSAGE *pMessage, _Inout_ SIZE_T *pMessageByteLength) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetNumMessagesAllowedByStorageFilter(void) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetNumMessagesDeniedByStorageFilter(void) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetNumStoredMessages(void) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetNumStoredMessagesAllowedByRetrievalFilter(void) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetNumMessagesDiscardedByMessageCountLimit(void) = 0;
+		virtual UINT64 STDMETHODCALLTYPE GetMessageCountLimit(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE AddStorageFilterEntries(_In_ D3D11_INFO_QUEUE_FILTER *pFilter) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetStorageFilter(_Out_writes_bytes_opt_(*pFilterByteLength) D3D11_INFO_QUEUE_FILTER *pFilter, _Inout_ SIZE_T *pFilterByteLength) = 0;
+		virtual void STDMETHODCALLTYPE ClearStorageFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushEmptyStorageFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushCopyOfStorageFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushStorageFilter(_In_ D3D11_INFO_QUEUE_FILTER *pFilter) = 0;
+		virtual void STDMETHODCALLTYPE PopStorageFilter(void) = 0;
+		virtual UINT STDMETHODCALLTYPE GetStorageFilterStackSize(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE AddRetrievalFilterEntries(_In_ D3D11_INFO_QUEUE_FILTER *pFilter) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetRetrievalFilter(_Out_writes_bytes_opt_(*pFilterByteLength) D3D11_INFO_QUEUE_FILTER *pFilter, _Inout_ SIZE_T *pFilterByteLength) = 0;
+		virtual void STDMETHODCALLTYPE ClearRetrievalFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushEmptyRetrievalFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushCopyOfRetrievalFilter(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE PushRetrievalFilter(_In_ D3D11_INFO_QUEUE_FILTER *pFilter) = 0;
+		virtual void STDMETHODCALLTYPE PopRetrievalFilter(void) = 0;
+		virtual UINT STDMETHODCALLTYPE GetRetrievalFilterStackSize(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE AddMessage(_In_ D3D11_MESSAGE_CATEGORY Category, _In_ D3D11_MESSAGE_SEVERITY Severity, _In_ D3D11_MESSAGE_ID ID, _In_ LPCSTR pDescription) = 0;
+		virtual HRESULT STDMETHODCALLTYPE AddApplicationMessage(_In_ D3D11_MESSAGE_SEVERITY Severity, _In_ LPCSTR pDescription) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetBreakOnCategory(_In_ D3D11_MESSAGE_CATEGORY Category, _In_ BOOL bEnable) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetBreakOnSeverity(_In_ D3D11_MESSAGE_SEVERITY Severity, _In_ BOOL bEnable) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetBreakOnID(_In_ D3D11_MESSAGE_ID ID, _In_ BOOL bEnable) = 0;
+		virtual BOOL STDMETHODCALLTYPE GetBreakOnCategory(_In_ D3D11_MESSAGE_CATEGORY Category) = 0;
+		virtual BOOL STDMETHODCALLTYPE GetBreakOnSeverity(_In_ D3D11_MESSAGE_SEVERITY Severity) = 0;
+		virtual BOOL STDMETHODCALLTYPE GetBreakOnID(_In_ D3D11_MESSAGE_ID ID) = 0;
+		virtual void STDMETHODCALLTYPE SetMuteDebugOutput(_In_ BOOL bMute) = 0;
+		virtual BOOL STDMETHODCALLTYPE GetMuteDebugOutput(void) = 0;
+};

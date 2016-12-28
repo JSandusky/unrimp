@@ -77,8 +77,7 @@ namespace Direct3D12Renderer
 
 		{ // Shader resource view part
 			// Direct3D 12 shader resource view description
-			D3D12_SHADER_RESOURCE_VIEW_DESC d3d12ShaderResourceViewDesc;
-			::ZeroMemory(&d3d12ShaderResourceViewDesc, sizeof(D3D12_SHADER_RESOURCE_VIEW_DESC));
+			D3D12_SHADER_RESOURCE_VIEW_DESC d3d12ShaderResourceViewDesc = {};
 			d3d12ShaderResourceViewDesc.Format				 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(textureFormat));
 			d3d12ShaderResourceViewDesc.ViewDimension		 = D3D12_SRV_DIMENSION_BUFFER;
 			d3d12ShaderResourceViewDesc.Buffer.ElementOffset = 0;

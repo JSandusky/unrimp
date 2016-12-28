@@ -84,8 +84,7 @@ namespace Direct3D10Renderer
 		}
 
 		// Create the swap chain
-		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
-		::ZeroMemory(&dxgiSwapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
+		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc = {};
 		dxgiSwapChainDesc.BufferCount						 = 1;
 		dxgiSwapChainDesc.BufferDesc.Width					 = static_cast<UINT>(width);
 		dxgiSwapChainDesc.BufferDesc.Height					 = static_cast<UINT>(height);
@@ -396,8 +395,7 @@ namespace Direct3D10Renderer
 
 				// Create depth stencil texture
 				ID3D10Texture2D *d3d10Texture2DDepthStencil = nullptr;
-				D3D10_TEXTURE2D_DESC d3d10Texture2DDesc;
-				::ZeroMemory(&d3d10Texture2DDesc, sizeof(D3D10_TEXTURE2D_DESC));
+				D3D10_TEXTURE2D_DESC d3d10Texture2DDesc = {};
 				d3d10Texture2DDesc.Width			  = width;
 				d3d10Texture2DDesc.Height			  = height;
 				d3d10Texture2DDesc.MipLevels		  = 1;
@@ -413,8 +411,7 @@ namespace Direct3D10Renderer
 				if (SUCCEEDED(hResult))
 				{
 					// Create the depth stencil view
-					D3D10_DEPTH_STENCIL_VIEW_DESC d3d10DepthStencilViewDesc;
-					::ZeroMemory(&d3d10DepthStencilViewDesc, sizeof(D3D10_DEPTH_STENCIL_VIEW_DESC));
+					D3D10_DEPTH_STENCIL_VIEW_DESC d3d10DepthStencilViewDesc = {};
 					d3d10DepthStencilViewDesc.Format			 = d3d10Texture2DDesc.Format;
 					d3d10DepthStencilViewDesc.ViewDimension		 = D3D10_DSV_DIMENSION_TEXTURE2D;
 					d3d10DepthStencilViewDesc.Texture2D.MipSlice = 0;

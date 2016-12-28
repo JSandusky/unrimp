@@ -98,8 +98,7 @@ namespace Direct3D11Renderer
 			}
 
 			// Direct3D 11 shader resource view description
-			D3D11_SHADER_RESOURCE_VIEW_DESC d3d11ShaderResourceViewDesc;
-			::ZeroMemory(&d3d11ShaderResourceViewDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+			D3D11_SHADER_RESOURCE_VIEW_DESC d3d11ShaderResourceViewDesc = {};
 			d3d11ShaderResourceViewDesc.Format							= d3d11Texture2DDesc.Format;
 			d3d11ShaderResourceViewDesc.ViewDimension					= D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 			d3d11ShaderResourceViewDesc.Texture2DArray.MipLevels		= numberOfMipmaps;
