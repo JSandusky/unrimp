@@ -446,7 +446,7 @@ namespace OpenGLRenderer
 	// GL_ARB_debug_output
 	FNDEF_EX(glDebugMessageCallbackARB,	PFNGLDEBUGMESSAGECALLBACKARBPROC);
 
-	// GL_ARB_direct_state_access
+	// GL_ARB_direct_state_access (opengl 4.5 core extension)
 	FNDEF_EX(glNamedBufferData,					PFNGLNAMEDBUFFERDATAPROC);
 	FNDEF_EX(glNamedBufferSubData,				PFNGLNAMEDBUFFERSUBDATAPROC);
 	FNDEF_EX(glMapNamedBuffer,					PFNGLMAPNAMEDBUFFERPROC);
@@ -466,6 +466,10 @@ namespace OpenGLRenderer
 	FNDEF_EX(glNamedFramebufferTexture,			PFNGLNAMEDFRAMEBUFFERTEXTUREPROC);
 	FNDEF_EX(glTextureBuffer,					PFNGLTEXTUREBUFFERPROC);
 	FNDEF_EX(glBindTextureUnit,					PFNGLBINDTEXTUREUNITPROC);
+	FNDEF_EX(glCompressedTextureSubImage2D,		PFNGLCOMPRESSEDTEXTURESUBIMAGE2DPROC);
+	FNDEF_EX(glTextureSubImage2D,				PFNGLTEXTURESUBIMAGE2DPROC);
+	// Following methods are not direcly related to this extension but needed for implementation
+	FNDEF_EX(glTextureStorage2D,				PFNGLTEXTURESTORAGE2DPROC);
 
 
 	//[-------------------------------------------------------]

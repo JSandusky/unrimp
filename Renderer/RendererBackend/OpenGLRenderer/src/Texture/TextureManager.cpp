@@ -59,7 +59,7 @@ namespace OpenGLRenderer
 		if (width > 0 && height > 0)
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				// TODO(sw) Not ARB DSA compatible. Uses methods which got removed when extension was promoted to ARB extension
