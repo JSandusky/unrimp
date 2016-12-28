@@ -53,7 +53,7 @@ namespace OpenGLES2Renderer
 		return mDummySurface;
 	}
 
-	#ifdef LINUX
+	#if (defined(LINUX) && !defined(ANDROID))
 		inline ::Display* IContext::getX11Display() const
 		{
 			return mX11Display;
