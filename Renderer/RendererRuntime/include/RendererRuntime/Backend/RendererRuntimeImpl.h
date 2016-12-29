@@ -29,12 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/IRendererRuntime.h"
 
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4265)	// warning C4265: '<x>': class has virtual functions, but destructor is not virtual
-
-	#include <mutex>
-#pragma warning(pop)
+#include <mutex>
 #include <unordered_set>
 
 

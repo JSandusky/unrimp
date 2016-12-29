@@ -33,17 +33,7 @@
 
 #include <rapidjson/fwd.h>
 
-// Disable warnings in external headers, we can't fix them
-#ifdef WIN32
-#pragma warning(push)
-
-	#pragma warning(disable: 4265)	// warning C4265: '<x>': class has virtual functions, but destructor is not virtual
-#endif
-	#include <thread>
-#ifdef WIN32
-#pragma warning(pop)
-#endif
-
+#include <thread>
 #include <atomic>
 #include <unordered_map>
 

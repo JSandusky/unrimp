@@ -30,7 +30,6 @@
 #pragma warning(push)
 	#pragma warning(disable: 4061)	// warning C4061: enumerator 'cCRNFmtTotal' in switch of enum 'crn_format' is not explicitly handled by a case label
 	#pragma warning(disable: 4365)	// warning C4365: '<x>': conversion from '<y>' to '<z>', signed/unsigned mismatch
-	#pragma warning(disable: 4458)	// warning C4458: declaration of '<x>' hides class member
 	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
 	#pragma warning(disable: 4555)	// warning C4555: expression has no effect; expected expression with side-effect
 	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '<y>' for '<z>'

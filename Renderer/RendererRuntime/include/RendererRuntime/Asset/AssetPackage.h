@@ -31,15 +31,7 @@
 #include "RendererRuntime/Core/NonCopyable.h"
 #include "RendererRuntime/Asset/Asset.h"
 
-// Disable warnings in external headers, we can't fix them
-#ifdef WIN32
-#pragma warning(push)
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-#endif
-	#include <vector>
-#ifdef WIN32
-#pragma warning(pop)
-#endif
+#include <vector>
 
 
 //[-------------------------------------------------------]

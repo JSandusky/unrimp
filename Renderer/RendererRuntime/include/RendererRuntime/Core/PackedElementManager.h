@@ -29,12 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
 
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-	#include <limits.h>	// For "USHRT_MAX"
-#pragma warning(pop)
-
+#include <limits.h>		// For "USHRT_MAX"
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 

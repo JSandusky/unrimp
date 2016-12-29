@@ -29,12 +29,8 @@
 
 // Disable warnings
 #pragma warning(push)
-#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
 #pragma warning(disable: 4625)	// warning C4625: 'Concurrency::details::_ExceptionHolder': copy constructor was implicitly defined as deleted
 #pragma warning(disable: 4626)	// warning C4626: 'Concurrency::details::_ExceptionHolder': assignment operator was implicitly defined as deleted
-#pragma warning(disable: 4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
-#pragma warning(disable: 5026)	// warning C5026: 'Concurrency::details::_RunAllParam<Concurrency::details::_Unit_type>': move constructor was implicitly defined as deleted
-#pragma warning(disable: 5027)	// warning C5027: 'Concurrency::details::_RunAllParam<Concurrency::details::_Unit_type>': move assignment operator was implicitly defined as deleted
 
 
 //[-------------------------------------------------------]
