@@ -28,9 +28,7 @@
 #include "OpenGLRenderer/IContext.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
-#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-	#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
-#endif
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
