@@ -56,23 +56,37 @@ namespace OpenGLRenderer
 		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
 		if (numberOfMultisamples > 1)
 		{
-			// Create the OpenGL texture instance
 			if (isARB_DSA)
 			{
+				// Create the OpenGL texture instance
 				glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &mOpenGLTexture);
+
+				// Define the texture
+				glTextureStorage2DMultisample(mOpenGLTexture, numberOfMultisamples, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), GL_TRUE);
 			}
 			else
 			{
+				// Create the OpenGL texture instance
 				glGenTextures(1, &mOpenGLTexture);
+
+				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+					// Backup the currently bound OpenGL texture
+					GLint openGLTextureBackup = 0;
+					glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE, &openGLTextureBackup);
+				#endif
+
+				// Make this OpenGL texture instance to the currently used one
+				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mOpenGLTexture);
+
+				// Define the texture
+				// -> Sadly, there's no direct state access (DSA) function defined for this in "GL_EXT_direct_state_access"
+				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, numberOfMultisamples, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), GL_TRUE);
+
+				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+					// Be polite and restore the previous bound OpenGL texture
+					glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, static_cast<GLuint>(openGLTextureBackup));
+				#endif
 			}
-
-			// TODO(co) Use "glTextureStorage2DMultisample" from the "GL_ARB_direct_state_access"-extension
-
-			// Make this OpenGL texture instance to the currently used one
-			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mOpenGLTexture);
-
-			// Define the texture
-			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, numberOfMultisamples, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), GL_TRUE);
 		}
 		else
 		{

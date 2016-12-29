@@ -487,8 +487,9 @@ namespace OpenGLRenderer
 	FNDEF_EX(glVertexArrayElementBuffer,		PFNGLVERTEXARRAYELEMENTBUFFERPROC);
 
 	// GL_ARB_texture_storage
-	FNDEF_EX(glTextureStorage2D,	PFNGLTEXTURESTORAGE2DPROC);
-	FNDEF_EX(glTextureStorage3D,	PFNGLTEXTURESTORAGE3DPROC);
+	FNDEF_EX(glTextureStorage2D,			PFNGLTEXTURESTORAGE2DPROC);
+	FNDEF_EX(glTextureStorage3D,			PFNGLTEXTURESTORAGE3DPROC);
+	FNDEF_EX(glTextureStorage2DMultisample,	PFNGLTEXTURESTORAGE2DMULTISAMPLEPROC);
 
 
 	//[-------------------------------------------------------]

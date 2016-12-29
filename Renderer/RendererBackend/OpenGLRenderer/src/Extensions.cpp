@@ -739,6 +739,7 @@ namespace OpenGLRenderer
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glTextureStorage2D)
 			IMPORT_FUNC(glTextureStorage3D)
+			IMPORT_FUNC(glTextureStorage2DMultisample)
 			mGL_ARB_texture_storage = result;
 		}
 
