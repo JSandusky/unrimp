@@ -61,7 +61,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MaterialBlueprintResourceManager : public IResourceManager
+	class MaterialBlueprintResourceManager : private IResourceManager
 	{
 
 
@@ -69,6 +69,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
+		friend class IResource;	// Needed so that inside this classes an static_cast<CompositorNodeResourceManager*>(IResourceManager*) works
 
 
 	//[-------------------------------------------------------]

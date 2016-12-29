@@ -64,7 +64,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Shader blueprint resource manager
 	*/
-	class ShaderBlueprintResourceManager : public IResourceManager
+	class ShaderBlueprintResourceManager : private IResourceManager
 	{
 
 
@@ -72,6 +72,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
+ 		friend class ShaderBuilder;	// Needed so that inside this classes an static_cast<CompositorNodeResourceManager*>(IResourceManager*) works
 
 
 	//[-------------------------------------------------------]

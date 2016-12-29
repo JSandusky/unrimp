@@ -61,7 +61,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorNodeResourceManager : public IResourceManager
+	class CompositorNodeResourceManager : private IResourceManager
 	{
 
 
@@ -69,6 +69,8 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
+		friend class IResource; 					// Needed so that inside this classes an static_cast<CompositorNodeResourceManager*>(IResourceManager*) works
+		friend class CompositorNodeResourceLoader;	// Needed so that inside this classes an static_cast<CompositorNodeResourceManager*>(IResourceManager*) works
 
 
 	//[-------------------------------------------------------]
