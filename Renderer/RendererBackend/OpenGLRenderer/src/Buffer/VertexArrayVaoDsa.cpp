@@ -28,9 +28,7 @@
 #include "OpenGLRenderer/IContext.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
-#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-	#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
-#endif
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
@@ -48,7 +46,7 @@ namespace OpenGLRenderer
 	{
 		// Vertex buffer reference handling is done within the base class "VertexArrayVao"
 		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
-		if(isARB_DSA)
+		if (isARB_DSA)
 		{
 			{ // For ARB DSA version the buffer object must be initialized.
 				// TODO(sw) The base class uses glGenVertexArrays to create only the name for it, but the glNamedBufferData methods expects an initialized object
@@ -61,7 +59,7 @@ namespace OpenGLRenderer
 				glBindVertexArray(mOpenGLVertexArray);
 
 				// Restore old binding because we used it only to initialize it
-				glBindVertexArray(openGLVertexArrayBackup);
+				glBindVertexArray(static_cast<GLuint>(openGLVertexArrayBackup));
 			}
 		}
 
@@ -87,7 +85,7 @@ namespace OpenGLRenderer
 				glVertexArrayVertexBuffer(mOpenGLVertexArray,
 										  attributeLocation,
 										  static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer(),
-										  0, // No offset to the first element of the buffer
+										  0,	// No offset to the first element of the buffer
 										  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes));
 
 				// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
@@ -99,12 +97,12 @@ namespace OpenGLRenderer
 			else
 			{
 				glVertexArrayVertexAttribOffsetEXT(mOpenGLVertexArray,
-												static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer(),
-												attributeLocation, Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
-												Mapping::getOpenGLType(attribute->vertexAttributeFormat),
-												static_cast<GLboolean>(Mapping::isOpenGLVertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
-												static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
-												static_cast<GLintptr>(attribute->alignedByteOffset));
+												  static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer(),
+												  attributeLocation, Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
+												  Mapping::getOpenGLType(attribute->vertexAttributeFormat),
+												  static_cast<GLboolean>(Mapping::isOpenGLVertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
+												  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+												  static_cast<GLintptr>(attribute->alignedByteOffset));
 
 				// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
 				if (attribute->instancesPerElement > 0 && openGLRenderer.getExtensions().isGL_ARB_instanced_arrays())

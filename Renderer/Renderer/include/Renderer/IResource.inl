@@ -61,6 +61,13 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
+	inline IResource::IResource(ResourceType resourceType) :
+		mResourceType(resourceType),
+		mRenderer(nullptr)	// Only used for rare border cases, use the constructor with the renderer reference whenever possible. Normally the renderer pointer should never ever be a null pointer. So if you're in here, you're considered to be evil.
+	{
+		// Nothing here
+	}
+
 	inline IResource::IResource(ResourceType resourceType, IRenderer &renderer) :
 		mResourceType(resourceType),
 		mRenderer(&renderer)

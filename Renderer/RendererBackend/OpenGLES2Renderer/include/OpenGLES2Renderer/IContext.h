@@ -147,7 +147,7 @@ namespace OpenGLES2Renderer
 		//[-------------------------------------------------------]
 		//[ Platform specific                                     ]
 		//[-------------------------------------------------------]
-		#if (defined(LINUX) && !defined(ANDROID))
+		#if defined(LINUX) && !defined(ANDROID)
 			inline ::Display* getX11Display() const;
 		#endif
 

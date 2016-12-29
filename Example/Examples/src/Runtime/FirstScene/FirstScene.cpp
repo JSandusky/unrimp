@@ -82,6 +82,7 @@ FirstScene::FirstScene(const char *rendererName) :
 	mGlobalTimer(0.0f),
 	mInstancedCompositor(Compositor::FORWARD),
 	mCurrentCompositor(mInstancedCompositor),
+	mCurrentMsaa(Msaa::NONE),
 	mResolutionScale(1.0f),
 	mPerformFxaa(false),
 	mRotationSpeed(1.0f),
@@ -298,12 +299,21 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 		if (nullptr != compositorInstancePass)
 		{
 			// Setup GUI
-			mSceneResource->getRendererRuntime().getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
+			const RendererRuntime::IRendererRuntime& rendererRuntime = mSceneResource->getRendererRuntime();
+			rendererRuntime.getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
 			ImGui::Begin("Options");
 				// Compositing
 				{
 					const char* items[] = { "Debug", "Forward", "Deferred" };
-					ImGui::ListBox("Compositor", &mCurrentCompositor, items, static_cast<int>(glm::countof(items)));
+					ImGui::Combo("Compositor", &mCurrentCompositor, items, static_cast<int>(glm::countof(items)));
+				}
+				{
+					const Renderer::Capabilities& capabilities = rendererRuntime.getRenderer().getCapabilities();
+					if (capabilities.maximumNumberOfMultisamples > 1)
+					{
+						const char* items[] = { "None", "2x", "4x", "8x" };
+						ImGui::Combo("MSAA", &mCurrentMsaa, items, static_cast<int>(glm::countof(items)));
+					}
 				}
 				ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
 				ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
@@ -332,39 +342,58 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			}
 
 			// Update compositor workspace
+			{ // MSAA
+				uint8_t numberOfMultisamples = 1;
+				switch (mCurrentMsaa)
+				{
+					default:
+					case Msaa::NONE:
+						numberOfMultisamples = 1;
+						break;
+
+					case Msaa::TWO:
+						numberOfMultisamples = 2;
+						break;
+
+					case Msaa::FOUR:
+						numberOfMultisamples = 4;
+						break;
+
+					case Msaa::EIGHT:
+						numberOfMultisamples = 8;
+						break;
+				}
+				mCompositorWorkspaceInstance->setNumberOfMultisamples(numberOfMultisamples);
+			}
 			mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
 
 			{ // Update the material resource instance
-				RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
-				if (nullptr != rendererRuntime)
+				const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime.getMaterialResourceManager();
+				const RendererRuntime::MaterialResources& materialResources = materialResourceManager.getMaterialResources();
+
+				// Final compositor material
+				RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId(::detail::FinalMaterialAssetId);
+				if (nullptr != materialResource)
 				{
-					const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
-					const RendererRuntime::MaterialResources& materialResources = materialResourceManager.getMaterialResources();
+					materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
+				}
 
-					// Final compositor material
-					RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId(::detail::FinalMaterialAssetId);
-					if (nullptr != materialResource)
-					{
-						materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
-					}
+				// Imrod material
+				materialResource = materialResources.tryGetElementById(mMaterialResourceId);
+				if (nullptr != materialResource)
+				{
+					materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
+				}
 
-					// Imrod material
-					materialResource = materialResources.tryGetElementById(mMaterialResourceId);
-					if (nullptr != materialResource)
-					{
-						materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
-					}
-
-					// Imrod material clone
-					materialResource = materialResources.tryGetElementById(mCloneMaterialResourceId);
-					if (nullptr != materialResource)
-					{
-						materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));
-						materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
-						materialResource->setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
-						materialResource->setPropertyById("UseSpecularMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseSpecularMap));
-						materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
-					}
+				// Imrod material clone
+				materialResource = materialResources.tryGetElementById(mCloneMaterialResourceId);
+				if (nullptr != materialResource)
+				{
+					materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));
+					materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
+					materialResource->setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
+					materialResource->setPropertyById("UseSpecularMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseSpecularMap));
+					materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
 				}
 			}
 		}

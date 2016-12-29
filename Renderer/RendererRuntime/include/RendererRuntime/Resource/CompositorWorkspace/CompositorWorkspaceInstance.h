@@ -110,6 +110,8 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT virtual ~CompositorWorkspaceInstance();
 		inline const IRendererRuntime& getRendererRuntime() const;
 		inline IndirectBufferManager& getIndirectBufferManager() const;
+		inline uint8_t getNumberOfMultisamples() const;
+		RENDERERRUNTIME_API_EXPORT void setNumberOfMultisamples(uint8_t numberOfMultisamples);	// The number of multisamples per pixel (valid values: 1, 2, 4, 8); Changes are considered to be expensive since internal renderer resources might need to be updated when rendering the next time
 		inline float getResolutionScale() const;
 		inline void setResolutionScale(float resolutionScale);	// Changes are considered to be expensive since internal renderer resources might need to be updated when rendering the next time
 		inline const RenderQueueIndexRanges& getRenderQueueIndexRanges() const;	// Renderable manager pointers are only considered to be safe directly after the "RendererRuntime::CompositorWorkspaceInstance::execute()" call
@@ -153,6 +155,8 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime&			  mRendererRuntime;
 		IndirectBufferManager&		  mIndirectBufferManager;
+		uint8_t						  mNumberOfMultisamples;
+		uint8_t						  mCurrentlyUsedNumberOfMultisamples;
 		float						  mResolutionScale;
 		uint32_t					  mRenderTargetWidth;
 		uint32_t					  mRenderTargetHeight;

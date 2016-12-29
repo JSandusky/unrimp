@@ -31,6 +31,8 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/Scene/CompositorInstancePassScene.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorInstancePassDebugGui.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ResolveMultisample/CompositorResourcePassResolveMultisample.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ResolveMultisample/CompositorInstancePassResolveMultisample.h"
 
 
 //[-------------------------------------------------------]
@@ -52,13 +54,17 @@ namespace RendererRuntime
 		{
 			compositorResourcePass = new CompositorResourcePassClear(compositorTarget);
 		}
-		else if (compositorPassTypeId == CompositorResourcePassQuad::TYPE_ID)
-		{
-			compositorResourcePass = new CompositorResourcePassQuad(compositorTarget);
-		}
 		else if (compositorPassTypeId == CompositorResourcePassScene::TYPE_ID)
 		{
 			compositorResourcePass = new CompositorResourcePassScene(compositorTarget);
+		}
+		else if (compositorPassTypeId == CompositorResourcePassResolveMultisample::TYPE_ID)
+		{
+			compositorResourcePass = new CompositorResourcePassResolveMultisample(compositorTarget);
+		}
+		else if (compositorPassTypeId == CompositorResourcePassQuad::TYPE_ID)
+		{
+			compositorResourcePass = new CompositorResourcePassQuad(compositorTarget);
 		}
 		else if (compositorPassTypeId == CompositorResourcePassDebugGui::TYPE_ID)
 		{
@@ -79,13 +85,17 @@ namespace RendererRuntime
 		{
 			compositorInstancePass = new CompositorInstancePassClear(static_cast<const CompositorResourcePassClear&>(compositorResourcePass), compositorNodeInstance);
 		}
-		else if (compositorPassTypeId == CompositorResourcePassQuad::TYPE_ID)
-		{
-			compositorInstancePass = new CompositorInstancePassQuad(static_cast<const CompositorResourcePassQuad&>(compositorResourcePass), compositorNodeInstance);
-		}
 		else if (compositorPassTypeId == CompositorResourcePassScene::TYPE_ID)
 		{
 			compositorInstancePass = new CompositorInstancePassScene(static_cast<const CompositorResourcePassScene&>(compositorResourcePass), compositorNodeInstance);
+		}
+		else if (compositorPassTypeId == CompositorResourcePassResolveMultisample::TYPE_ID)
+		{
+			compositorInstancePass = new CompositorInstancePassResolveMultisample(static_cast<const CompositorResourcePassResolveMultisample&>(compositorResourcePass), compositorNodeInstance);
+		}
+		else if (compositorPassTypeId == CompositorResourcePassQuad::TYPE_ID)
+		{
+			compositorInstancePass = new CompositorInstancePassQuad(static_cast<const CompositorResourcePassQuad&>(compositorResourcePass), compositorNodeInstance);
 		}
 		else if (compositorPassTypeId == CompositorResourcePassDebugGui::TYPE_ID)
 		{

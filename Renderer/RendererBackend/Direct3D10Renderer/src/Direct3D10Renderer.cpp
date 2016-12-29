@@ -27,6 +27,7 @@
 #include "Direct3D10Renderer/Direct3D9RuntimeLinking.h"	//  For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging, also works directly within VisualStudio 2012 out-of-the-box
 #include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
 #include "Direct3D10Renderer/RootSignature.h"
+#include "Direct3D10Renderer/Mapping.h"
 #include "Direct3D10Renderer/RenderTarget/SwapChain.h"
 #include "Direct3D10Renderer/RenderTarget/Framebuffer.h"
 #include "Direct3D10Renderer/Buffer/BufferManager.h"
@@ -205,6 +206,12 @@ namespace Direct3D10Renderer
 					static_cast<Direct3D10Renderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
 				}
 
+				void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
+				}
+
 				//[-------------------------------------------------------]
 				//[ Draw call                                             ]
 				//[-------------------------------------------------------]
@@ -267,6 +274,7 @@ namespace Direct3D10Renderer
 				&BackendDispatch::SetRenderTarget,
 				// Operations
 				&BackendDispatch::Clear,
+				&BackendDispatch::ResolveMultisampleFramebuffer,
 				// Draw call
 				&BackendDispatch::Draw,
 				&BackendDispatch::DrawIndexed,
@@ -850,7 +858,7 @@ namespace Direct3D10Renderer
 						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 						// Set the Direct3D 10 render targets
-						mD3D10Device->OMSetRenderTargets(framebuffer->getNumberOfD3D10RenderTargetViews(), framebuffer->getD3D10RenderTargetViews(), framebuffer->getD3D10DepthStencilView());
+						mD3D10Device->OMSetRenderTargets(framebuffer->getNumberOfColorTextures(), framebuffer->getD3D10RenderTargetViews(), framebuffer->getD3D10DepthStencilView());
 						break;
 					}
 
@@ -946,7 +954,7 @@ namespace Direct3D10Renderer
 					if (flags & Renderer::ClearFlag::COLOR)
 					{
 						// Loop through all Direct3D 10 render target views
-						ID3D10RenderTargetView **d3d10RenderTargetViewsEnd = framebuffer->getD3D10RenderTargetViews() + framebuffer->getNumberOfD3D10RenderTargetViews();
+						ID3D10RenderTargetView **d3d10RenderTargetViewsEnd = framebuffer->getD3D10RenderTargetViews() + framebuffer->getNumberOfColorTextures();
 						for (ID3D10RenderTargetView **d3d10RenderTargetView = framebuffer->getD3D10RenderTargetViews(); d3d10RenderTargetView < d3d10RenderTargetViewsEnd; ++d3d10RenderTargetView)
 						{
 							// Valid Direct3D 10 render target view?
@@ -1004,6 +1012,81 @@ namespace Direct3D10Renderer
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(this)
+	}
+
+	void Direct3D10Renderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget& destinationRenderTarget, Renderer::IFramebuffer& sourceMultisampleFramebuffer)
+	{
+		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationRenderTarget)
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceMultisampleFramebuffer)
+
+		// Evaluate the render target type
+		switch (destinationRenderTarget.getResourceType())
+		{
+			case Renderer::ResourceType::SWAP_CHAIN:
+			{
+				// Get the Direct3D 10 swap chain instance
+				// TODO(co) Implement me, not that important in practice so not directly implemented
+				// SwapChain& swapChain = static_cast<SwapChain&>(destinationRenderTarget);
+				break;
+			}
+
+			case Renderer::ResourceType::FRAMEBUFFER:
+			{
+				// Get the Direct3D 10 framebuffer instances
+				const Framebuffer& direct3D10DestinationFramebuffer = static_cast<const Framebuffer&>(destinationRenderTarget);
+				const Framebuffer& direct3D10SourceMultisampleFramebuffer = static_cast<const Framebuffer&>(sourceMultisampleFramebuffer);
+
+				// Process all Direct3D 10 render target textures
+				if (direct3D10DestinationFramebuffer.getNumberOfColorTextures() > 0 && direct3D10SourceMultisampleFramebuffer.getNumberOfColorTextures() > 0)
+				{
+					const uint32_t numberOfColorTextures = (direct3D10DestinationFramebuffer.getNumberOfColorTextures() < direct3D10SourceMultisampleFramebuffer.getNumberOfColorTextures()) ? direct3D10DestinationFramebuffer.getNumberOfColorTextures() : direct3D10SourceMultisampleFramebuffer.getNumberOfColorTextures();
+					Renderer::ITexture** destinationTexture = direct3D10DestinationFramebuffer.getColorTextures();
+					Renderer::ITexture** sourceTexture = direct3D10SourceMultisampleFramebuffer.getColorTextures();
+					Renderer::ITexture** sourceTextureEnd = sourceTexture + numberOfColorTextures;
+					for (; sourceTexture < sourceTextureEnd; ++sourceTexture, ++destinationTexture)
+					{
+						// Valid Direct3D 10 render target views?
+						if (nullptr != *destinationTexture && nullptr != *sourceTexture)
+						{
+							const Texture2D* d3d10DestinationTexture2D = static_cast<const Texture2D*>(*destinationTexture);
+							const Texture2D* d3d10SourceTexture2D = static_cast<const Texture2D*>(*sourceTexture);
+							mD3D10Device->ResolveSubresource(d3d10DestinationTexture2D->getD3D10Texture2D(), D3D10CalcSubresource(0, 0, 1), d3d10SourceTexture2D->getD3D10Texture2D(), D3D10CalcSubresource(0, 0, 1), static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(d3d10DestinationTexture2D->getTextureFormat())));
+						}
+					}
+				}
+
+				// Process Direct3D 10 depth stencil texture
+				if (nullptr != direct3D10DestinationFramebuffer.getDepthStencilTexture() && nullptr != direct3D10SourceMultisampleFramebuffer.getDepthStencilTexture())
+				{
+					const Texture2D* d3d10DestinationTexture2D = static_cast<const Texture2D*>(direct3D10DestinationFramebuffer.getDepthStencilTexture());
+					const Texture2D* d3d10SourceTexture2D = static_cast<const Texture2D*>(direct3D10SourceMultisampleFramebuffer.getDepthStencilTexture());
+					mD3D10Device->ResolveSubresource(d3d10DestinationTexture2D->getD3D10Texture2D(), D3D10CalcSubresource(0, 0, 1), d3d10SourceTexture2D->getD3D10Texture2D(), D3D10CalcSubresource(0, 0, 1), static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(d3d10DestinationTexture2D->getTextureFormat())));
+				}
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::INDEX_BUFFER:
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_2D:
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Not handled in here
+				break;
+		}
 	}
 
 
@@ -1626,6 +1709,13 @@ namespace Direct3D10Renderer
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 		// -> DirectX 10 has no indirect buffer
 		mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+
+		// Maximum number of multisamples (always at least 1, usually 8)
+		// TODO(co) Currently Direct3D 10 instead of Direct3D 10.1 is used causing
+		// "D3D11 ERROR: ID3D10Device::CreateTexture2D: If the feature level is less than D3D_FEATURE_LEVEL_10_1, a Texture2D with sample count > 1 cannot have both D3D11_BIND_DEPTH_STENCIL and D3D11_BIND_SHADER_RESOURCE.  This call may appear to incorrectly return success on older/current D3D runtimes due to missing validation, despite this debug layer message.  [ STATE_CREATION ERROR #99: CREATETEXTURE2D_INVALIDBINDFLAGS]"
+		// error messages when trying to create a depth texture render target which one also wants to read from inside shaders. The Direct3D 10 renderer backend is still maintained for curiosity reasons,
+		// but it's not really worth to put more effort into it to be able to handle the lack of certain features. So, just say this renderer backend doesn't support multisampling at all.
+		mCapabilities.maximumNumberOfMultisamples = 1;
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = false;

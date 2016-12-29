@@ -27,6 +27,7 @@
 #include "Direct3D11Renderer/Direct3D9RuntimeLinking.h"	//  For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 #include "Direct3D11Renderer/RootSignature.h"
+#include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/RenderTarget/SwapChain.h"
 #include "Direct3D11Renderer/RenderTarget/Framebuffer.h"
 #include "Direct3D11Renderer/Buffer/BufferManager.h"
@@ -217,6 +218,12 @@ namespace Direct3D11Renderer
 					static_cast<Direct3D11Renderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
 				}
 
+				void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
+					static_cast<Direct3D11Renderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
+				}
+
 				//[-------------------------------------------------------]
 				//[ Draw call                                             ]
 				//[-------------------------------------------------------]
@@ -279,6 +286,7 @@ namespace Direct3D11Renderer
 				&BackendDispatch::SetRenderTarget,
 				// Operations
 				&BackendDispatch::Clear,
+				&BackendDispatch::ResolveMultisampleFramebuffer,
 				// Draw call
 				&BackendDispatch::Draw,
 				&BackendDispatch::DrawIndexed,
@@ -866,7 +874,7 @@ namespace Direct3D11Renderer
 						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 						// Set the Direct3D 11 render targets
-						mD3D11DeviceContext->OMSetRenderTargets(framebuffer->getNumberOfD3D11RenderTargetViews(), framebuffer->getD3D11RenderTargetViews(), framebuffer->getD3D11DepthStencilView());
+						mD3D11DeviceContext->OMSetRenderTargets(framebuffer->getNumberOfColorTextures(), framebuffer->getD3D11RenderTargetViews(), framebuffer->getD3D11DepthStencilView());
 						break;
 					}
 
@@ -962,7 +970,7 @@ namespace Direct3D11Renderer
 					if (flags & Renderer::ClearFlag::COLOR)
 					{
 						// Loop through all Direct3D 11 render target views
-						ID3D11RenderTargetView **d3d11RenderTargetViewsEnd = framebuffer->getD3D11RenderTargetViews() + framebuffer->getNumberOfD3D11RenderTargetViews();
+						ID3D11RenderTargetView **d3d11RenderTargetViewsEnd = framebuffer->getD3D11RenderTargetViews() + framebuffer->getNumberOfColorTextures();
 						for (ID3D11RenderTargetView **d3d11RenderTargetView = framebuffer->getD3D11RenderTargetViews(); d3d11RenderTargetView < d3d11RenderTargetViewsEnd; ++d3d11RenderTargetView)
 						{
 							// Valid Direct3D 11 render target view?
@@ -1020,6 +1028,81 @@ namespace Direct3D11Renderer
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(this)
+	}
+
+	void Direct3D11Renderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget& destinationRenderTarget, Renderer::IFramebuffer& sourceMultisampleFramebuffer)
+	{
+		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationRenderTarget)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceMultisampleFramebuffer)
+
+		// Evaluate the render target type
+		switch (destinationRenderTarget.getResourceType())
+		{
+			case Renderer::ResourceType::SWAP_CHAIN:
+			{
+				// Get the Direct3D 11 swap chain instance
+				// TODO(co) Implement me, not that important in practice so not directly implemented
+				// SwapChain& swapChain = static_cast<SwapChain&>(destinationRenderTarget);
+				break;
+			}
+
+			case Renderer::ResourceType::FRAMEBUFFER:
+			{
+				// Get the Direct3D 11 framebuffer instances
+				const Framebuffer& direct3D11DestinationFramebuffer = static_cast<const Framebuffer&>(destinationRenderTarget);
+				const Framebuffer& direct3D11SourceMultisampleFramebuffer = static_cast<const Framebuffer&>(sourceMultisampleFramebuffer);
+
+				// Process all Direct3D 11 render target textures
+				if (direct3D11DestinationFramebuffer.getNumberOfColorTextures() > 0 && direct3D11SourceMultisampleFramebuffer.getNumberOfColorTextures() > 0)
+				{
+					const uint32_t numberOfColorTextures = (direct3D11DestinationFramebuffer.getNumberOfColorTextures() < direct3D11SourceMultisampleFramebuffer.getNumberOfColorTextures()) ? direct3D11DestinationFramebuffer.getNumberOfColorTextures() : direct3D11SourceMultisampleFramebuffer.getNumberOfColorTextures();
+					Renderer::ITexture** destinationTexture = direct3D11DestinationFramebuffer.getColorTextures();
+					Renderer::ITexture** sourceTexture = direct3D11SourceMultisampleFramebuffer.getColorTextures();
+					Renderer::ITexture** sourceTextureEnd = sourceTexture + numberOfColorTextures;
+					for (; sourceTexture < sourceTextureEnd; ++sourceTexture, ++destinationTexture)
+					{
+						// Valid Direct3D 11 render target views?
+						if (nullptr != *destinationTexture && nullptr != *sourceTexture)
+						{
+							const Texture2D* d3d11DestinationTexture2D = static_cast<const Texture2D*>(*destinationTexture);
+							const Texture2D* d3d11SourceTexture2D = static_cast<const Texture2D*>(*sourceTexture);
+							mD3D11DeviceContext->ResolveSubresource(d3d11DestinationTexture2D->getD3D11Texture2D(), D3D11CalcSubresource(0, 0, 1), d3d11SourceTexture2D->getD3D11Texture2D(), D3D11CalcSubresource(0, 0, 1), static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(d3d11DestinationTexture2D->getTextureFormat())));
+						}
+					}
+				}
+
+				// Process Direct3D 11 depth stencil texture
+				if (nullptr != direct3D11DestinationFramebuffer.getDepthStencilTexture() && nullptr != direct3D11SourceMultisampleFramebuffer.getDepthStencilTexture())
+				{
+					const Texture2D* d3d11DestinationTexture2D = static_cast<const Texture2D*>(direct3D11DestinationFramebuffer.getDepthStencilTexture());
+					const Texture2D* d3d11SourceTexture2D = static_cast<const Texture2D*>(direct3D11SourceMultisampleFramebuffer.getDepthStencilTexture());
+					mD3D11DeviceContext->ResolveSubresource(d3d11DestinationTexture2D->getD3D11Texture2D(), D3D11CalcSubresource(0, 0, 1), d3d11SourceTexture2D->getD3D11Texture2D(), D3D11CalcSubresource(0, 0, 1), static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(d3d11DestinationTexture2D->getTextureFormat())));
+				}
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::INDEX_BUFFER:
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_2D:
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Not handled in here
+				break;
+		}
 	}
 
 
@@ -1579,6 +1662,9 @@ namespace Direct3D11Renderer
 				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy DirectX 9 multisample support
+
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = false;
 
@@ -1611,6 +1697,9 @@ namespace Direct3D11Renderer
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy DirectX 9 multisample support
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = false;
@@ -1645,6 +1734,9 @@ namespace Direct3D11Renderer
 				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy DirectX 9 multisample support
+
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
 
@@ -1677,6 +1769,9 @@ namespace Direct3D11Renderer
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 8;
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
@@ -1711,6 +1806,9 @@ namespace Direct3D11Renderer
 				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 8;
+
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
 
@@ -1743,6 +1841,9 @@ namespace Direct3D11Renderer
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support
 				mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+
+				// Maximum number of multisamples (always at least 1, usually 8)
+				mCapabilities.maximumNumberOfMultisamples = 8;
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;

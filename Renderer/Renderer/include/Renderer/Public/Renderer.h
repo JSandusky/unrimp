@@ -1516,6 +1516,7 @@ namespace Renderer
 			uint32_t maximumUniformBufferSize;
 			uint32_t maximumTextureBufferSize;
 			uint32_t maximumIndirectBufferSize;
+			uint8_t  maximumNumberOfMultisamples;
 			bool	 individualUniforms;
 			bool	 instancedArrays;
 			bool	 drawInstanced;
@@ -1533,6 +1534,7 @@ namespace Renderer
 				maximumUniformBufferSize(0),
 				maximumTextureBufferSize(0),
 				maximumIndirectBufferSize(0),
+				maximumNumberOfMultisamples(1),
 				individualUniforms(false),
 				instancedArrays(false),
 				drawInstanced(false),
@@ -1552,6 +1554,7 @@ namespace Renderer
 				maximumUniformBufferSize(0),
 				maximumTextureBufferSize(0),
 				maximumIndirectBufferSize(0),
+				maximumNumberOfMultisamples(1),
 				individualUniforms(false),
 				instancedArrays(false),
 				drawInstanced(false),
@@ -1850,6 +1853,10 @@ namespace Renderer
 				return nullptr;
 			}
 		protected:
+			inline explicit IResource(ResourceType resourceType) :
+				mResourceType(resourceType),
+				mRenderer(nullptr)
+			{}
 			inline IResource(ResourceType resourceType, IRenderer& renderer) :
 				mResourceType(resourceType),
 				mRenderer(&renderer)
@@ -2007,6 +2014,9 @@ namespace Renderer
 			inline virtual ~IBuffer()
 			{}
 		protected:
+			inline explicit IBuffer(ResourceType resourceType) :
+				IResource(resourceType)
+			{}
 			inline IBuffer(ResourceType resourceType, IRenderer& renderer) :
 				IResource(resourceType, renderer)
 			{}
@@ -2092,6 +2102,9 @@ namespace Renderer
 			virtual const uint8_t* getEmulationData() const = 0;
 			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
+			inline IIndirectBuffer() :
+				IBuffer(ResourceType::INDIRECT_BUFFER)
+			{}
 			inline explicit IIndirectBuffer(IRenderer& renderer) :
 				IBuffer(ResourceType::INDIRECT_BUFFER, renderer)
 			{}
@@ -2108,15 +2121,6 @@ namespace Renderer
 		{
 		public:
 			inline IndirectBuffer(uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0) :
-				#if defined(__clang__)
-					// TODO(sw) to silence clang warning : warning: binding dereferenced null pointer to reference has undefined behavior [-Wnull-dereference]
-					#pragma clang diagnostic push
-					#pragma clang diagnostic ignored "-Wnull-dereference"
-					IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
-					#pragma clang diagnostic pop
-				#else
-					IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
-				#endif
 				mDrawInstancedArguments(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation)
 			{}
 			inline virtual ~IndirectBuffer()
@@ -2140,15 +2144,6 @@ namespace Renderer
 		{
 		public:
 			inline IndexedIndirectBuffer(uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0) :
-				#if defined(__clang__)
-					// TODO(sw) to silence clang warning : warning: binding dereferenced null pointer to reference has undefined behavior [-Wnull-dereference]
-					#pragma clang diagnostic push
-					#pragma clang diagnostic ignored "-Wnull-dereference"
-					IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
-					#pragma clang diagnostic pop
-				#else
-					IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
-				#endif
 				mDrawIndexedInstancedArguments(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation)
 			{}
 			inline virtual ~IndexedIndirectBuffer()
@@ -2177,7 +2172,7 @@ namespace Renderer
 				return mRenderer;
 			}
 		public:
-			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
+			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, uint8_t numberOfMultisamples = 1, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
 			virtual ITexture2DArray* createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
 		protected:
 			inline explicit ITextureManager(IRenderer& renderer);
@@ -2437,6 +2432,7 @@ namespace Renderer
 			SetScissorRectangles,
 			SetRenderTarget,
 			Clear,
+			ResolveMultisampleFramebuffer,
 			Draw,
 			DrawIndexed,
 			SetDebugMarker,
@@ -2759,6 +2755,20 @@ namespace Renderer
 				uint32_t stencil;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::Clear;
 			};
+			struct ResolveMultisampleFramebuffer
+			{
+				inline static void create(CommandBuffer& commandBuffer, IRenderTarget& destinationRenderTarget, IFramebuffer& sourceMultisampleFramebuffer)
+				{
+					*commandBuffer.addCommand<ResolveMultisampleFramebuffer>() = ResolveMultisampleFramebuffer(destinationRenderTarget, sourceMultisampleFramebuffer);
+				}
+				inline ResolveMultisampleFramebuffer(IRenderTarget& _destinationRenderTarget, IFramebuffer& _sourceMultisampleFramebuffer) :
+					destinationRenderTarget(&_destinationRenderTarget),
+					sourceMultisampleFramebuffer(&_sourceMultisampleFramebuffer)
+				{}
+				IRenderTarget* destinationRenderTarget;
+				IFramebuffer* sourceMultisampleFramebuffer;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ResolveMultisampleFramebuffer;
+			};
 			struct Draw
 			{
 				inline static void create(CommandBuffer& commandBuffer, const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1)
@@ -2769,15 +2779,7 @@ namespace Renderer
 				{
 					Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(IndirectBuffer));
 					IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
-					#if defined(__clang__)
-						// TODO(sw) to silence clang warning: warning: destination for this 'memcpy' call is a pointer to dynamic class 'IndirectBuffer'; vtable pointer will be overwritten [-Wdynamic-class-memaccess]
-						#pragma clang diagnostic push
-						#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
-						memcpy(reinterpret_cast<IndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indirectBufferData, sizeof(IndirectBuffer));
-						#pragma clang diagnostic pop
-					#else
-						memcpy(reinterpret_cast<IndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indirectBufferData, sizeof(IndirectBuffer));
-					#endif
+					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &indirectBufferData, sizeof(IndirectBuffer));
 					drawCommand->indirectBuffer		  = nullptr;
 					drawCommand->indirectBufferOffset = 0;
 					drawCommand->numberOfDraws		  = 1;
@@ -2802,15 +2804,7 @@ namespace Renderer
 				{
 					DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(IndexedIndirectBuffer));
 					IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
-					#if defined(__clang__)
-						// TODO(sw) to silence clang warning: warning: destination for this 'memcpy' call is a pointer to dynamic class 'IndirectBuffer'; vtable pointer will be overwritten [-Wdynamic-class-memaccess]
-						#pragma clang diagnostic push
-						#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
-						memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), reinterpret_cast<unsigned char*>(&indexedIndirectBufferData), sizeof(IndexedIndirectBuffer));
-						#pragma clang diagnostic pop
-					#else
-						memcpy(reinterpret_cast<IndexedIndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
-					#endif
+					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
 					drawCommand->indirectBuffer		  = nullptr;
 					drawCommand->indirectBufferOffset = 0;
 					drawCommand->numberOfDraws		  = 1;

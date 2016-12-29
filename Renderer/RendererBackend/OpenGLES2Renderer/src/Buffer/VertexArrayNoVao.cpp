@@ -31,7 +31,7 @@
 #include <GLES2/gl2.h>
 
 #include <memory.h>
-#include <cstring> // For "memcpy"
+#include <cstring>	// For "memcpy()"
 
 
 //[-------------------------------------------------------]

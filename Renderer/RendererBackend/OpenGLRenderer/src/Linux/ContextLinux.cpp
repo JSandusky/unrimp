@@ -25,8 +25,9 @@
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
-#include <iostream>	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 #include <GL/glext.h>
+
+#include <iostream>	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 
 // Need to redefine "None"-macro (which got undefined in "Extensions.h" due name clashes used in enums)
 #ifndef None
@@ -119,12 +120,12 @@ namespace OpenGLRenderer
 			{
 				GLX_RGBA,
 				GLX_DOUBLEBUFFER,
-				GLX_RED_SIZE        , 8,
-				GLX_GREEN_SIZE      , 8,
-				GLX_BLUE_SIZE       , 8,
-				GLX_ALPHA_SIZE      , 8,
-				GLX_DEPTH_SIZE      , 24,
-				GLX_STENCIL_SIZE    , 8,
+				GLX_RED_SIZE,		8,
+				GLX_GREEN_SIZE,		8,
+				GLX_BLUE_SIZE,		8,
+				GLX_ALPHA_SIZE,		8,
+				GLX_DEPTH_SIZE,		24,
+				GLX_STENCIL_SIZE,	8,
 				0	// = "None"
 			};
 
@@ -152,7 +153,7 @@ namespace OpenGLRenderer
 				{
 					// Make the internal dummy to the current render target
 					const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, legacyRenderContext);
-					std::cout<<"Make legacy context current: "<<result<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+					std::cout << "Make legacy context current: " << result << "\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 
 					// Load the >= OpenGL 3.0 entry points
 					if (loadOpenGL3EntryPoints())
@@ -177,18 +178,18 @@ namespace OpenGLRenderer
 
 								int minor = 0;
 								glGetIntegerv(GL_MINOR_VERSION, &minor);
-								
+
 								GLint profile = 0;
 								glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
-								const bool isCoreProfile = profile & GL_CONTEXT_CORE_PROFILE_BIT;
-								
-								std::cout << "Opengl context version: "<<major<<'.'<<minor<< ' ' << (isCoreProfile ? "core" : "noncore") <<'\n';
+								const bool isCoreProfile = (profile & GL_CONTEXT_CORE_PROFILE_BIT);
+
+								std::cout << "OpenGL context version: " << major << '.' << minor << ' ' << (isCoreProfile ? "core" : "noncore") << '\n';
 								int numberOfExtensions = 0;
 								glGetIntegerv(GL_NUM_EXTENSIONS, &numberOfExtensions);
-								std::cout << "Supported extensions: "<<numberOfExtensions<<" \n";
+								std::cout << "Supported extensions: " << numberOfExtensions << " \n";
 								for (GLuint extensionIndex = 0; extensionIndex < static_cast<GLuint>(numberOfExtensions); ++extensionIndex)
 								{
-									std::cout << "\t"<<glGetStringi(GL_EXTENSIONS, extensionIndex)<<'\n';
+									std::cout << "\t" << glGetStringi(GL_EXTENSIONS, extensionIndex) << '\n';
 								}
 							}
 						}
@@ -256,18 +257,18 @@ namespace OpenGLRenderer
 				int numberOfElements = 0;
 				int visualAttributes[] =
 				{
-					GLX_RENDER_TYPE, GLX_RGBA_BIT,
-					GLX_DOUBLEBUFFER, true,
-					GLX_RED_SIZE        , 8,
-					GLX_GREEN_SIZE      , 8,
-					GLX_BLUE_SIZE       , 8,
-					GLX_ALPHA_SIZE      , 8,
-					GLX_DEPTH_SIZE      , 24,
-					GLX_STENCIL_SIZE    , 8,
+					GLX_RENDER_TYPE,	GLX_RGBA_BIT,
+					GLX_DOUBLEBUFFER,	true,
+					GLX_RED_SIZE,		8,
+					GLX_GREEN_SIZE,		8,
+					GLX_BLUE_SIZE,		8,
+					GLX_ALPHA_SIZE,		8,
+					GLX_DEPTH_SIZE,		24,
+					GLX_STENCIL_SIZE,	8,
 					None
 				};
 				GLXFBConfig *fbc = glXChooseFBConfig(mDisplay, DefaultScreen(mDisplay), visualAttributes, &numberOfElements);
-				std::cout<<"Renderer: Got "<<numberOfElements<<" of FBCOnfig\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+				std::cout << "Renderer: Got " << numberOfElements << " of FBCOnfig\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 				GLXContext glxContext = glXCreateContextAttribsARB(mDisplay, *fbc, 0, true, ATTRIBUTES);
 
 				XSync(mDisplay, False);
@@ -275,7 +276,7 @@ namespace OpenGLRenderer
 				// TODO(sw) make this fallback optional (via an option)
 				if (ctxErrorOccurred)
 				{
-					std::cerr<<"could not create opengl 3+ context try creating pre 3+ context\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+					std::cerr << "could not create OpenGL 3+ context try creating pre 3+ context\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 					ctxErrorOccurred = false;
 
 					// GLX_CONTEXT_MAJOR_VERSION_ARB = 1
@@ -294,27 +295,27 @@ namespace OpenGLRenderer
 				if (nullptr != glxContext)
 				{
 					// Done
-					std::cout<<"Renderer: OGL Context with glXCreateContextAttribsARB created\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead, do we really need messages on success?
+					std::cout << "Renderer: OpenGL context with glXCreateContextAttribsARB created\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead, do we really need messages on success?
 					return glxContext;
 				}
 				else
 				{
 					// Error, context creation failed!
-					std::cerr<<"Renderer: Could not create OGL Context with glXCreateContextAttribsARB\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+					std::cerr << "Renderer: Could not create OpenGL context with glXCreateContextAttribsARB\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 					return NULL_HANDLE;
 				}
 			}
 			else
 			{
 				// Error, failed to obtain the "GLX_ARB_create_context" function pointer (wow, something went terrible wrong!)
-				std::cerr<<"Renderer: could not found glXCreateContextAttribsARB\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+				std::cerr << "Renderer: Could not found glXCreateContextAttribsARB\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 				return NULL_HANDLE;
 			}
 		}
 		else
 		{
 			// Error, the OpenGL extension "GLX_ARB_create_context" is not supported... as a result we can't create an OpenGL context!
-			std::cerr<<"Renderer: GLX_ARB_create_context not supported\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+			std::cerr << "Renderer: GLX_ARB_create_context not supported\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 			return NULL_HANDLE;
 		}
 

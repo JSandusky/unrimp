@@ -94,12 +94,30 @@ namespace Direct3D11Renderer
 
 		/**
 		*  @brief
-		*    Return the number of Direct3D 11 render target views
+		*    Return the number of color textures
 		*
 		*  @return
-		*    The number of Direct3D 11 render target views
+		*    The number of color textures
 		*/
-		inline uint32_t getNumberOfD3D11RenderTargetViews() const;
+		inline uint32_t getNumberOfColorTextures() const;
+
+		/**
+		*  @brief
+		*    Return the color textures
+		*
+		*  @return
+		*    The color textures, can be a null pointer, do not release the returned instances unless you added an own reference to it
+		*/
+		inline Renderer::ITexture **getColorTextures() const;
+
+		/**
+		*  @brief
+		*    Return the depth stencil texture
+		*
+		*  @return
+		*    The depth stencil texture, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline Renderer::ITexture *getDepthStencilTexture() const;
 
 		/**
 		*  @brief

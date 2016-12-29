@@ -24,7 +24,7 @@
 #include "OpenGLES2Renderer/IContext.h"
 
 #ifdef ANDROID
-	#include <android/native_window.h> // For "ANativeWindow_setBuffersGeometry
+	#include <android/native_window.h>	// For "ANativeWindow_setBuffersGeometry()"
 #endif
 
 

@@ -40,7 +40,7 @@ namespace OpenGLRenderer
 	VertexBufferDsa::VertexBufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
 		VertexBuffer(openGLRenderer)
 	{
-		if(openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
+		if (openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
 		{
 			{ // For ARB DSA version the buffer object must be initialized.
 				// TODO(sw) The base class uses glGenBuffersARB to create only the name for it, but the glNamedBufferData methods expects an initialized object

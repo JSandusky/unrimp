@@ -198,6 +198,12 @@ namespace OpenGLRenderer
 					static_cast<OpenGLRenderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
 				}
 
+				void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
+					static_cast<OpenGLRenderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
+				}
+
 				//[-------------------------------------------------------]
 				//[ Draw call                                             ]
 				//[-------------------------------------------------------]
@@ -260,6 +266,7 @@ namespace OpenGLRenderer
 				&BackendDispatch::SetRenderTarget,
 				// Operations
 				&BackendDispatch::Clear,
+				&BackendDispatch::ResolveMultisampleFramebuffer,
 				// Draw call
 				&BackendDispatch::Draw,
 				&BackendDispatch::DrawIndexed,
@@ -527,10 +534,9 @@ namespace OpenGLRenderer
 					if (mExtensions->isGL_ARB_direct_state_access() || mExtensions->isGL_EXT_direct_state_access())
 					{
 						// Effective direct state access (DSA)
-
 						const bool isARB_DSA = mExtensions->isGL_ARB_direct_state_access();
 
-						// glBindTextureUnit unit paramter is zero based so we can simply use the value we received
+						// "glBindTextureUnit()" unit parameter is zero based so we can simply use the value we received
 						const GLuint unit = descriptorRange->baseShaderRegister;
 
 						// TODO(co) Some security checks might be wise *maximum number of texture units*
@@ -538,44 +544,41 @@ namespace OpenGLRenderer
 						switch (resourceType)
 						{
 							case Renderer::ResourceType::TEXTURE_BUFFER:
-							{
 								if (isARB_DSA)
 								{
 									glBindTextureUnit(unit, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
 								}
 								else
 								{
-									// GL_TEXTURE0_ARB is the first texture unit, while nUnit we received is zero based
+									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
 									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_BUFFER_ARB, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
 								}
 								break;
-							}
+
 							case Renderer::ResourceType::TEXTURE_2D:
-							{
 								if (isARB_DSA)
 								{
 									glBindTextureUnit(unit, static_cast<Texture2D*>(resource)->getOpenGLTexture());
 								}
 								else
 								{
-									// GL_TEXTURE0_ARB is the first texture unit, while nUnit we received is zero based
+									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
 									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLTexture());
 								}
 								break;
-							}
+
 							case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-							{
+								// No texture 2D array extension check required, if we in here we already know it must exist
 								if (isARB_DSA)
 								{
 									glBindTextureUnit(unit, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
 								}
 								else
 								{
-									// GL_TEXTURE0_ARB is the first texture unit, while nUnit we received is zero based
-									glBindMultiTextureEXT(unit, GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
+									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
 								}
 								break;
-							}
 
 							case Renderer::ResourceType::ROOT_SIGNATURE:
 							case Renderer::ResourceType::PROGRAM:
@@ -610,8 +613,33 @@ namespace OpenGLRenderer
 							}
 							else
 							{
-								// Direct state access (DSA) version to emulate a sampler object
-								static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
+								#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+									// Backup the currently active OpenGL texture
+									GLint openGLActiveTextureBackup = 0;
+									glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLActiveTextureBackup);
+								#endif
+
+								// TODO(co) Some security checks might be wise *maximum number of texture units*
+								// Activate the texture unit we want to manipulate
+								// -> "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+								glActiveTextureARB(GL_TEXTURE0_ARB + unit);
+
+								// Is "GL_EXT_direct_state_access" there?
+								if (mExtensions->isGL_EXT_direct_state_access())
+								{
+									// Direct state access (DSA) version to emulate a sampler object
+									static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
+								}
+								else
+								{
+									// Traditional bind version to emulate a sampler object
+									static_cast<const SamplerStateBind*>(samplerState)->setOpenGLSamplerStates();
+								}
+
+								#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+									// Be polite and restore the previous active OpenGL texture
+									glActiveTextureARB(static_cast<GLenum>(openGLActiveTextureBackup));
+								#endif
 							}
 						}
 					}
@@ -629,9 +657,9 @@ namespace OpenGLRenderer
 							#endif
 
 							// TODO(co) Some security checks might be wise *maximum number of texture units*
-							// GL_TEXTURE0_ARB is the first texture unit, while nUnit we received is zero based
-							const GLenum unit = GL_TEXTURE0_ARB + descriptorRange->baseShaderRegister;
-							glActiveTextureARB(unit);
+							// Activate the texture unit we want to manipulate
+							// -> "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+							glActiveTextureARB(GL_TEXTURE0_ARB + descriptorRange->baseShaderRegister);
 
 							// Evaluate the resource type
 							switch (resourceType)
@@ -942,6 +970,12 @@ namespace OpenGLRenderer
 					// Unbind OpenGL framebuffer?
 					if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType() && Renderer::ResourceType::FRAMEBUFFER != renderTarget->getResourceType())
 					{
+						// Do we need to disable multisample?
+						if (static_cast<Framebuffer*>(mRenderTarget)->isMultisampleRenderTarget())
+						{
+							glDisable(GL_MULTISAMPLE);
+						}
+
 						// We do not render into a OpenGL framebuffer
 						glBindFramebuffer(GL_FRAMEBUFFER, 0);
 					}
@@ -982,6 +1016,12 @@ namespace OpenGLRenderer
 								GL_COLOR_ATTACHMENT12, GL_COLOR_ATTACHMENT13, GL_COLOR_ATTACHMENT14, GL_COLOR_ATTACHMENT15
 							};
 							glDrawBuffersARB(static_cast<GLsizei>(framebuffer->getNumberOfColorTextures()), OPENGL_DRAW_BUFFER);
+						}
+
+						// Do we need to enable multisample?
+						if (framebuffer->isMultisampleRenderTarget())
+						{
+							glEnable(GL_MULTISAMPLE);
 						}
 						break;
 					}
@@ -1092,6 +1132,70 @@ namespace OpenGLRenderer
 			{
 				glDepthMask(GL_FALSE);
 			}
+		}
+	}
+
+	void OpenGLRenderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget& destinationRenderTarget, Renderer::IFramebuffer& sourceMultisampleFramebuffer)
+	{
+		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
+		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationRenderTarget)
+		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceMultisampleFramebuffer)
+
+		// Evaluate the render target type
+		switch (destinationRenderTarget.getResourceType())
+		{
+			case Renderer::ResourceType::SWAP_CHAIN:
+			{
+				// Get the OpenGL swap chain instance
+				// TODO(co) Implement me, not that important in practice so not directly implemented
+				// SwapChain& swapChain = static_cast<SwapChain&>(destinationRenderTarget);
+				break;
+			}
+
+			case Renderer::ResourceType::FRAMEBUFFER:
+			{
+				// Get the OpenGL framebuffer instances
+				const Framebuffer& openGLDestinationFramebuffer = static_cast<const Framebuffer&>(destinationRenderTarget);
+				const Framebuffer& openGLSourceMultisampleFramebuffer = static_cast<const Framebuffer&>(sourceMultisampleFramebuffer);
+
+				// Get the width and height of the destination and source framebuffer
+				uint32_t destinationWidth = 0;
+				uint32_t destinationHeight = 0;
+				openGLDestinationFramebuffer.getWidthAndHeight(destinationWidth, destinationHeight);
+				uint32_t sourceWidth = 0;
+				uint32_t sourceHeight = 0;
+				openGLSourceMultisampleFramebuffer.getWidthAndHeight(sourceWidth, sourceHeight);
+
+				// Resolve multisample
+				glBindFramebuffer(GL_READ_FRAMEBUFFER, openGLSourceMultisampleFramebuffer.getOpenGLFramebuffer());
+				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, openGLDestinationFramebuffer.getOpenGLFramebuffer());
+				glBlitFramebuffer(
+					0, 0, static_cast<GLint>(sourceWidth), static_cast<GLint>(sourceHeight),			// Source
+					0, 0, static_cast<GLint>(destinationWidth), static_cast<GLint>(destinationHeight),	// Destination
+					GL_COLOR_BUFFER_BIT, GL_NEAREST);
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::INDEX_BUFFER:
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_2D:
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Not handled in here
+				break;
 		}
 	}
 
@@ -2092,6 +2196,22 @@ namespace OpenGLRenderer
 		else
 		{
 			mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+		}
+
+		// Maximum number of multisamples (always at least 1, usually 8)
+		if (mExtensions->isGL_ARB_texture_multisample())
+		{
+			glGetIntegerv(GL_MAX_SAMPLES, &openGLValue);
+			if (openGLValue > 8)
+			{
+				// Limit to known maximum we can test, even if e.g. GeForce 980m reports 32 here
+				openGLValue = 8;
+			}
+			mCapabilities.maximumNumberOfMultisamples = static_cast<uint8_t>(openGLValue);
+		}
+		else
+		{
+			mCapabilities.maximumNumberOfMultisamples = 1;
 		}
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.

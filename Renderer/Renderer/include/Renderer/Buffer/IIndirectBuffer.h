@@ -95,6 +95,15 @@ namespace Renderer
 	protected:
 		/**
 		*  @brief
+		*    Default constructor
+		*
+		*  @note
+		*    - Only used for rare border cases, use the constructor with the renderer reference whenever possible
+		*/
+		inline IIndirectBuffer();
+
+		/**
+		*  @brief
 		*    Constructor
 		*
 		*  @param[in] renderer

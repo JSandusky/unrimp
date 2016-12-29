@@ -42,7 +42,7 @@ namespace OpenGLRenderer
 	{
 		// TODO(co) Review OpenGL uniform buffer alignment topic
 
-		if(openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
+		if (openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
 		{
 			{ // For ARB DSA version the buffer object must be initialized.
 				// TODO(sw) The base class uses glGenBuffersARB to create only the name for it, but the glNamedBufferData methods expects an initialized object

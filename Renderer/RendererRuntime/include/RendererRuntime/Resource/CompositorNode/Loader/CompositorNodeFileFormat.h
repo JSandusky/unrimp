@@ -119,18 +119,6 @@ namespace RendererRuntime
 				{}
 			};
 
-			struct PassQuad
-			{
-				AssetId				materialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
-				MaterialTechniqueId	materialTechniqueId;		///< Must always be valid
-				AssetId				materialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized
-				uint32_t			numberOfMaterialProperties;
-
-				PassQuad() :
-					numberOfMaterialProperties(0)
-				{}
-			};
-
 			struct PassScene
 			{
 				uint8_t				minimumRenderQueueIndex;	///< Inclusive
@@ -142,6 +130,23 @@ namespace RendererRuntime
 					minimumRenderQueueIndex(0),
 					maximumRenderQueueIndex(255),
 					transparentPass(false)
+				{}
+			};
+
+			struct PassResolveMultisample
+			{
+				CompositorFramebufferId sourceMultisampleCompositorFramebufferId;
+			};
+
+			struct PassQuad
+			{
+				AssetId				materialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
+				MaterialTechniqueId	materialTechniqueId;		///< Must always be valid
+				AssetId				materialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized
+				uint32_t			numberOfMaterialProperties;
+
+				PassQuad() :
+					numberOfMaterialProperties(0)
 				{}
 			};
 

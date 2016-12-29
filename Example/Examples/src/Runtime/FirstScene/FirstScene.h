@@ -131,6 +131,13 @@ private:
 		DEFERRED,
 		NumberOfCompositors
 	};
+	enum Msaa
+	{
+		NONE,
+		TWO,
+		FOUR,
+		EIGHT
+	};
 
 
 //[-------------------------------------------------------]
@@ -151,6 +158,7 @@ private:
 	// States for runtime-fun
 	Compositor mInstancedCompositor;
 	int		   mCurrentCompositor;
+	int		   mCurrentMsaa;
 	float	   mResolutionScale;
 	bool	   mPerformFxaa;
 	float	   mRotationSpeed;

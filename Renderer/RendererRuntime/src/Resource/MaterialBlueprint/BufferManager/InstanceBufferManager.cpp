@@ -108,7 +108,7 @@ namespace RendererRuntime
 		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
 
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = materialBlueprintResourceManager.getMaterialBlueprintResourceListener();
-		static const PassBufferManager::PassData passData{};
+		static const PassBufferManager::PassData passData = {};
 		materialBlueprintResourceListener.beginFillInstance((nullptr != passBufferManager) ? passBufferManager->getPassData() : passData, objectSpaceToWorldSpaceTransform, materialTechnique);
 
 		{ // Update the uniform scratch buffer

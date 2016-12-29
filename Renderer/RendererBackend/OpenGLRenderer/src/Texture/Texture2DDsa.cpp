@@ -28,6 +28,8 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
+#include <cassert>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -39,179 +41,198 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DDsa::Texture2DDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
-		Texture2D(openGLRenderer, width, height)
+	Texture2DDsa::Texture2DDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, uint8_t numberOfMultisamples) :
+		Texture2D(openGLRenderer, width, height, numberOfMultisamples)
 	{
-		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently set alignment
-			GLint openGLAlignmentBackup = 0;
-			glGetIntegerv(GL_UNPACK_ALIGNMENT, &openGLAlignmentBackup);
-		#endif
+		// Sanity checks
+		assert(numberOfMultisamples == 1 || numberOfMultisamples == 2 || numberOfMultisamples == 4 || numberOfMultisamples == 8);
+		assert(numberOfMultisamples == 1 || nullptr == data);
+		assert(numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS));
+		assert(numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
+		assert(numberOfMultisamples == 1 || 0 != (flags & Renderer::TextureFlag::RENDER_TARGET));
 
-		// Set correct alignment
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
-		if (isARB_DSA)
+		// Multisample texture?
+		if (numberOfMultisamples > 1)
 		{
-			// For ARB DSA version the buffer object must be initialized.
-			// TODO(sw) The base class uses glGenTextures to create only the name for it, but the glTextureStorage2D and glCompressedTextureSubImage2D methods expects an initialized object
-			// In OpenGL 4.5 there exists glCreateTextures which also initializes the object. But we want support OpenGL 4.1 where the glCreateTextures method doesn't exits. So we use glBind to initialize the object
+			// TODO(co) Use "glTextureStorage2DMultisample" from the "GL_ARB_direct_state_access"-extension
 
-			// Initialize our texture object
-			glBindTexture(GL_TEXTURE_2D, mOpenGLTexture);
+			// Make this OpenGL texture instance to the currently used one
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mOpenGLTexture);
 
-			// Unbind the texture object because we need the bind only to initialize the texture object
-			glBindTexture(GL_TEXTURE_2D, 0);
+			// Define the texture
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, numberOfMultisamples, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), GL_TRUE);
 		}
-
-		// Upload the texture data
-		if (Renderer::TextureFormat::isCompressed(textureFormat))
+		else
 		{
-			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
-			if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
+			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+				// Backup the currently set alignment
+				GLint openGLAlignmentBackup = 0;
+				glGetIntegerv(GL_UNPACK_ALIGNMENT, &openGLAlignmentBackup);
+			#endif
+
+			// Set correct alignment
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+			const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
+			if (isARB_DSA)
 			{
-				// Calculate the number of mipmaps
-				const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
+				// For ARB DSA version the buffer object must be initialized.
+				// TODO(sw) The base class uses glGenTextures to create only the name for it, but the glTextureStorage2D and glCompressedTextureSubImage2D methods expects an initialized object
+				// In OpenGL 4.5 there exists glCreateTextures which also initializes the object. But we want support OpenGL 4.1 where the glCreateTextures method doesn't exits. So we use glBind to initialize the object
 
-				if (isARB_DSA)
+				// Initialize our texture object
+				glBindTexture(GL_TEXTURE_2D, mOpenGLTexture);
+
+				// Unbind the texture object because we need the bind only to initialize the texture object
+				glBindTexture(GL_TEXTURE_2D, 0);
+			}
+
+			// Upload the texture data
+			if (Renderer::TextureFormat::isCompressed(textureFormat))
+			{
+				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
+				if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
 				{
+					// Calculate the number of mipmaps
+					const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
+
 					// Allocate storage for all levels
-					glTextureStorage2D( mOpenGLTexture, numberOfMipmaps, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height) );
-				}
-
-				// Upload all mipmaps
-				const uint32_t internalFormat = Mapping::getOpenGLInternalFormat(textureFormat);
-				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
-				{
-					// Upload the current mipmap
-					const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
-
 					if (isARB_DSA)
 					{
-						glCompressedTextureSubImage2D( mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), internalFormat, numberOfBytesPerSlice, data );
-					}
-					else
-					{
-						glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
+						glTextureStorage2D(mOpenGLTexture, static_cast<GLsizei>(numberOfMipmaps), Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 					}
 
-					// Move on to the next mipmap
-					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
-					width = std::max(width >> 1, 1u);	// /= 2
-					height = std::max(height >> 1, 1u);	// /= 2
-				}
-			}
-			else
-			{
-				if (isARB_DSA)
-				{
-					// The user only provided us with the base texture, no mipmaps
-					glTextureStorage2D( mOpenGLTexture, 1, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height) );
-					glCompressedTextureSubImage2D( mOpenGLTexture, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data );
+					// Upload all mipmaps
+					const uint32_t internalFormat = Mapping::getOpenGLInternalFormat(textureFormat);
+					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+					{
+						// Upload the current mipmap
+						const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
+						if (isARB_DSA)
+						{
+							glCompressedTextureSubImage2D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), internalFormat, numberOfBytesPerSlice, data);
+						}
+						else
+						{
+							glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
+						}
+
+						// Move on to the next mipmap
+						data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
+						width = std::max(width >> 1, 1u);	// /= 2
+						height = std::max(height >> 1, 1u);	// /= 2
+					}
 				}
 				else
 				{
 					// The user only provided us with the base texture, no mipmaps
-					glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, 0, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
-				}
-			}
-		}
-		else
-		{
-			// Texture format is not compressed
-
-			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
-			if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
-			{
-				// Calculate the number of mipmaps
-				const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
-
-				if (isARB_DSA)
-				{
-					// Allocate storage for all levels
-					glTextureStorage2D( mOpenGLTexture, numberOfMipmaps, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height) );
-				}
-
-				// Upload all mipmaps
-				const GLint internalFormat = static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat));
-				const uint32_t format = Mapping::getOpenGLFormat(textureFormat);
-				const uint32_t type = Mapping::getOpenGLType(textureFormat);
-				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
-				{
-					// Upload the current mipmap
-					const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
-
 					if (isARB_DSA)
 					{
-						glTextureSubImage2D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), format, type, data);
+						// Allocate storage for all levels
+						glTextureStorage2D(mOpenGLTexture, 1, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+						glCompressedTextureSubImage2D(mOpenGLTexture, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
 					}
 					else
 					{
-						glTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, format, type, data);
+						glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, 0, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
 					}
-
-					// Move on to the next mipmap
-					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
-					width = std::max(width >> 1, 1u);	// /= 2
-					height = std::max(height >> 1, 1u);	// /= 2
 				}
 			}
 			else
 			{
-				// The user only provided us with the base texture, no mipmaps
-				if (isARB_DSA)
+				// Texture format is not compressed
+
+				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
+				if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
 				{
+					// Calculate the number of mipmaps
+					const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
+
 					// Allocate storage for all levels
-					glTextureStorage2D( mOpenGLTexture, 1, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height) );
-					glTextureSubImage2D(mOpenGLTexture, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+					if (isARB_DSA)
+					{
+						glTextureStorage2D(mOpenGLTexture, static_cast<GLsizei>(numberOfMipmaps), Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+					}
+
+					// Upload all mipmaps
+					const GLint internalFormat = static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat));
+					const uint32_t format = Mapping::getOpenGLFormat(textureFormat);
+					const uint32_t type = Mapping::getOpenGLType(textureFormat);
+					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+					{
+						// Upload the current mipmap
+						const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
+						if (isARB_DSA)
+						{
+							glTextureSubImage2D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), format, type, data);
+						}
+						else
+						{
+							glTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, format, type, data);
+						}
+
+						// Move on to the next mipmap
+						data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
+						width = std::max(width >> 1, 1u);	// /= 2
+						height = std::max(height >> 1, 1u);	// /= 2
+					}
 				}
 				else
 				{
-					glTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, 0, static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat)), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+					// The user only provided us with the base texture, no mipmaps
+					if (isARB_DSA)
+					{
+						// Allocate storage for all levels
+						glTextureStorage2D(mOpenGLTexture, 1, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+						glTextureSubImage2D(mOpenGLTexture, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+					}
+					else
+					{
+						glTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, 0, static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat)), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+					}
 				}
 			}
-		}
 
-		// Build mipmaps automatically on the GPU? (or GPU driver)
-		if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
-		{
-			if (isARB_DSA)
+			// Build mipmaps automatically on the GPU? (or GPU driver)
+			if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
 			{
-				glGenerateTextureMipmap(mOpenGLTexture);
-				glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+				if (isARB_DSA)
+				{
+					glGenerateTextureMipmap(mOpenGLTexture);
+					glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+				}
+				else
+				{
+					glGenerateTextureMipmapEXT(mOpenGLTexture, GL_TEXTURE_2D);
+					glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+				}
 			}
 			else
 			{
-				glGenerateTextureMipmapEXT(mOpenGLTexture, GL_TEXTURE_2D);
-				glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+				if (isARB_DSA)
+				{
+					glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				}
+				else
+				{
+					glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				}
 			}
-		}
-		else
-		{
+
 			if (isARB_DSA)
 			{
-				glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			}
 			else
 			{
-				glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			}
-		}
 
-		if (isARB_DSA)
-		{
-			glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+				// Restore previous alignment
+				glPixelStorei(GL_UNPACK_ALIGNMENT, openGLAlignmentBackup);
+			#endif
 		}
-		else
-		{
-			glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		}
-
-		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Restore previous alignment
-			glPixelStorei(GL_UNPACK_ALIGNMENT, openGLAlignmentBackup);
-		#endif
 	}
 
 	Texture2DDsa::~Texture2DDsa()

@@ -103,7 +103,38 @@ namespace RendererRuntime
 		mCompositorFramebufferIdToFramebufferSignatureId.emplace(compositorFramebufferId, framebufferSignature.getFramebufferSignatureId());
 	}
 
-	Renderer::IFramebuffer* FramebufferManager::getFramebufferByCompositorFramebufferId(CompositorFramebufferId compositorFramebufferId, const Renderer::IRenderTarget& renderTarget, float resolutionScale)
+	Renderer::IFramebuffer* FramebufferManager::getFramebufferByCompositorFramebufferId(CompositorFramebufferId compositorFramebufferId) const
+	{
+		Renderer::IFramebuffer* framebuffer = nullptr;
+
+		// Map compositor framebuffer ID to framebuffer signature ID
+		CompositorFramebufferIdToFramebufferSignatureId::const_iterator iterator = mCompositorFramebufferIdToFramebufferSignatureId.find(compositorFramebufferId);
+		if (mCompositorFramebufferIdToFramebufferSignatureId.cend() != iterator)
+		{
+			// TODO(co) Is there need for a more efficient search?
+			const FramebufferSignatureId framebufferSignatureId = iterator->second;
+			for (const FramebufferElement& framebufferElement : mSortedFramebufferVector)
+			{
+				const FramebufferSignature& framebufferSignature = framebufferElement.framebufferSignature;
+				if (framebufferSignature.getFramebufferSignatureId() == framebufferSignatureId)
+				{
+					framebuffer = framebufferElement.framebuffer;
+					break;
+				}
+			}
+			assert(nullptr != framebuffer);
+		}
+		else
+		{
+			// Error! Unknown compositor framebuffer ID, this shouldn't have happened.
+			assert(false);
+		}
+
+		// Done
+		return framebuffer;
+	}
+
+	Renderer::IFramebuffer* FramebufferManager::getFramebufferByCompositorFramebufferId(CompositorFramebufferId compositorFramebufferId, const Renderer::IRenderTarget& renderTarget, uint8_t numberOfMultisamples, float resolutionScale)
 	{
 		Renderer::IFramebuffer* framebuffer = nullptr;
 
@@ -127,9 +158,9 @@ namespace RendererRuntime
 						for (uint8_t i = 0; i < numberOfColorTextures; ++i)
 						{
 							const AssetId colorTextureAssetId = framebufferSignature.getColorTextureAssetId(i);
-							colorTextures[i] = isInitialized(colorTextureAssetId) ? mRenderTargetTextureManager.getTextureByAssetId(colorTextureAssetId, renderTarget, resolutionScale) : nullptr;
+							colorTextures[i] = isInitialized(colorTextureAssetId) ? mRenderTargetTextureManager.getTextureByAssetId(colorTextureAssetId, renderTarget, numberOfMultisamples, resolutionScale) : nullptr;
 						}
-						Renderer::ITexture* depthStencilTexture = isInitialized(framebufferSignature.getDepthStencilTextureAssetId()) ? mRenderTargetTextureManager.getTextureByAssetId(framebufferSignature.getDepthStencilTextureAssetId(), renderTarget, resolutionScale) : nullptr;
+						Renderer::ITexture* depthStencilTexture = isInitialized(framebufferSignature.getDepthStencilTextureAssetId()) ? mRenderTargetTextureManager.getTextureByAssetId(framebufferSignature.getDepthStencilTextureAssetId(), renderTarget, numberOfMultisamples, resolutionScale) : nullptr;
 
 						// Create the framebuffer object (FBO) instance
 						// -> The framebuffer automatically adds a reference to the provided textures

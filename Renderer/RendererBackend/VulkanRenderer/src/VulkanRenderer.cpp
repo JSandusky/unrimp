@@ -184,6 +184,12 @@ namespace VulkanRenderer
 					static_cast<VulkanRenderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
 				}
 
+				void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
+					static_cast<VulkanRenderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
+				}
+
 				//[-------------------------------------------------------]
 				//[ Draw call                                             ]
 				//[-------------------------------------------------------]
@@ -246,6 +252,7 @@ namespace VulkanRenderer
 				&BackendDispatch::SetRenderTarget,
 				// Operations
 				&BackendDispatch::Clear,
+				&BackendDispatch::ResolveMultisampleFramebuffer,
 				// Draw call
 				&BackendDispatch::Draw,
 				&BackendDispatch::DrawIndexed,
@@ -690,6 +697,11 @@ namespace VulkanRenderer
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
 	void VulkanRenderer::clear(uint32_t, const float[4], float, uint32_t)
+	{
+		// TODO(co) Implement me
+	}
+
+	void VulkanRenderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget&, Renderer::IFramebuffer&)
 	{
 		// TODO(co) Implement me
 	}

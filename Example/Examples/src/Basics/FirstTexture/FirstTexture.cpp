@@ -29,8 +29,6 @@
 #include <string.h>
 #include <stdlib.h> // For rand()
 
-#include <fstream> // TODO(sw) test code
-
 
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
@@ -99,28 +97,6 @@ void FirstTexture::onInitialization()
 						data[n + 1] = static_cast<uint8_t>(rand() % 255);	// G
 						data[n + 2] = static_cast<uint8_t>(rand() % 255);	// B
 						data[n + 3] = static_cast<uint8_t>(rand() % 255);	// A
-					}
-				}
-			}
-			
-			{
-				const uint32_t rowPitch   = TEXTURE_WIDTH * TEXEL_ELEMENTS;
-
-				std::ofstream file("test.ppm");
-				file<<"P3\n"<< TEXTURE_WIDTH <<' '<< TEXTURE_HEIGHT<<"\n255\n";
-				for (uint32_t n = 0; n < NUMBER_OF_BYTES; n += TEXEL_ELEMENTS)
-				{
-					file<<(int)data[n + 0]<<' '<<(int)data[n + 1]<<' '<<(int)data[n + 2];
-
-					if (n > 0 && n % rowPitch == 0)
-					{
-						// Row end reached
-						file<<'\n';
-					}
-					else
-					{
-						// Still in current row
-						file<<' ';
 					}
 				}
 			}

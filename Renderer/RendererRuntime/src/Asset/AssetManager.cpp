@@ -32,8 +32,6 @@
 	#include <fstream>
 #pragma warning(pop)
 
-#include <unistd.h>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -59,10 +57,6 @@ namespace RendererRuntime
 	{
 		try
 		{
-			char buffer[1024];
-			getcwd(buffer, 1024);
-			const char* str = buffer;
-			
 			std::ifstream inputFileStream(filename, std::ios::binary);
 			mAssetPackageVector.push_back(AssetPackageSerializer().loadAssetPackage(inputFileStream));
 		}

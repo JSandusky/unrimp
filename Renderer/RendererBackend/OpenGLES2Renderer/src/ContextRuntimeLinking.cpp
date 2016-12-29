@@ -272,7 +272,7 @@ namespace OpenGLES2Renderer
 				}
 			}
 		#elif defined ANDROID
-			// On android we have libEGL.so
+			// On Android we have "libEGL.so"
 			mEGLSharedLibrary = ::dlopen("libEGL.so", RTLD_LAZY);
 			if (nullptr != mEGLSharedLibrary)
 			{
@@ -427,7 +427,7 @@ namespace OpenGLES2Renderer
 			#define IMPORT_FUNC(funcName)																														\
 				if (result)																																		\
 				{																																				\
-					void *symbol = ::dlsym(mGLESSharedLibrary, #funcName);																								\
+					void *symbol = ::dlsym(mGLESSharedLibrary, #funcName);																						\
 					if (nullptr != symbol)																														\
 					{																																			\
 						*(reinterpret_cast<void**>(&(funcName))) = symbol;																						\

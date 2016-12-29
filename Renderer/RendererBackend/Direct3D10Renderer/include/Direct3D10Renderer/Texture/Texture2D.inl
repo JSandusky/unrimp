@@ -33,6 +33,11 @@ namespace Direct3D10Renderer
 		return mTextureFormat;
 	}
 
+	inline uint8_t Texture2D::getNumberOfMultisamples() const
+	{
+		return mNumberOfMultisamples;
+	}
+
 	inline ID3D10Texture2D *Texture2D::getD3D10Texture2D() const
 	{
 		return mD3D10Texture2D;

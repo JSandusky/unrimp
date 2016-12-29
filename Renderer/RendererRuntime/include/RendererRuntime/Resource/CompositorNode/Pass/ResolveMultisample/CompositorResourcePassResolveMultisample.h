@@ -27,73 +27,73 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Texture/ITexture2D.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace VulkanRenderer
-{
-	class VulkanRenderer;
-}
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId CompositorFramebufferId;	///< Compositor framebuffer identifier, internally just a POD "uint32_t"
 
 
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Vulkan 2D texture interface
-	*/
-	class Texture2D : public Renderer::ITexture2D
+	class CompositorResourcePassResolveMultisample : public ICompositorResourcePass
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class CompositorPassFactory;	// The only one allowed to create instances of this class
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		RENDERERRUNTIME_API_EXPORT static const CompositorPassTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] vulkanRenderer
-		*    Owner Vulkan renderer instance
-		*  @param[in] width
-		*    Texture width, must be >1
-		*  @param[in] height
-		*    Texture height, must be >1
-		*  @param[in] textureFormat
-		*    Texture format
-		*  @param[in] data
-		*    Texture data, can be a null pointer
-		*  @param[in] flags
-		*    Texture flags, see "Renderer::TextureFlag::Enum"
-		*  @param[in] numberOfMultisamples
-		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
-		*/
-		Texture2D(VulkanRenderer &vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, uint8_t numberOfMultisamples);
+		inline CompositorFramebufferId getSourceMultisampleCompositorFramebufferId() const;
 
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~Texture2D();
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual CompositorPassTypeId getTypeId() const override;
+		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		inline explicit CompositorResourcePassResolveMultisample(const CompositorTarget& compositorTarget);
+		inline virtual ~CompositorResourcePassResolveMultisample();
+		CompositorResourcePassResolveMultisample(const CompositorResourcePassResolveMultisample&) = delete;
+		CompositorResourcePassResolveMultisample& operator=(const CompositorResourcePassResolveMultisample&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Implement me
+		CompositorFramebufferId mSourceMultisampleCompositorFramebufferId;
 
 
 	};
@@ -102,10 +102,10 @@ namespace VulkanRenderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+} // RendererRuntime
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/Texture/Texture2D.inl"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ResolveMultisample/CompositorResourcePassResolveMultisample.inl"

@@ -132,6 +132,18 @@ namespace Renderer
 		*
 		*  @param[in] resourceType
 		*    The resource type
+		*
+		*  @note
+		*    - Only used for rare border cases, use the constructor with the renderer reference whenever possible
+		*/
+		inline explicit IResource(ResourceType resourceType);
+
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] resourceType
+		*    The resource type
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/

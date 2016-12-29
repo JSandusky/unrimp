@@ -172,6 +172,12 @@ namespace NullRenderer
 					static_cast<NullRenderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
 				}
 
+				void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
+					static_cast<NullRenderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
+				}
+
 				//[-------------------------------------------------------]
 				//[ Draw call                                             ]
 				//[-------------------------------------------------------]
@@ -234,6 +240,7 @@ namespace NullRenderer
 				&BackendDispatch::SetRenderTarget,
 				// Operations
 				&BackendDispatch::Clear,
+				&BackendDispatch::ResolveMultisampleFramebuffer,
 				// Draw call
 				&BackendDispatch::Draw,
 				&BackendDispatch::DrawIndexed,
@@ -481,6 +488,11 @@ namespace NullRenderer
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
 	void NullRenderer::clear(uint32_t, const float [4], float, uint32_t)
+	{
+		// Nothing here
+	}
+
+	void NullRenderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget&, Renderer::IFramebuffer&)
 	{
 		// Nothing here
 	}
@@ -760,6 +772,9 @@ namespace NullRenderer
 
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 		mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+
+		// Maximum number of multisamples (always at least 1, usually 8)
+		mCapabilities.maximumNumberOfMultisamples = 1;
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;

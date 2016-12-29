@@ -26,41 +26,11 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline const IRendererRuntime& CompositorWorkspaceInstance::getRendererRuntime() const
+	inline CompositorInstancePassResolveMultisample::~CompositorInstancePassResolveMultisample()
 	{
-		return mRendererRuntime;
-	}
-
-	inline IndirectBufferManager& CompositorWorkspaceInstance::getIndirectBufferManager() const
-	{
-		return mIndirectBufferManager;
-	}
-
-	inline uint8_t CompositorWorkspaceInstance::getNumberOfMultisamples() const
-	{
-		return mNumberOfMultisamples;
-	}
-
-	inline float CompositorWorkspaceInstance::getResolutionScale() const
-	{
-		return mResolutionScale;
-	}
-
-	inline void CompositorWorkspaceInstance::setResolutionScale(float resolutionScale)
-	{
-		mResolutionScale = resolutionScale;
-	}
-
-	inline const CompositorWorkspaceInstance::RenderQueueIndexRanges& CompositorWorkspaceInstance::getRenderQueueIndexRanges() const
-	{
-		return mRenderQueueIndexRanges;
-	}
-
-	inline Renderer::IRenderTarget* CompositorWorkspaceInstance::getExecutionRenderTarget() const
-	{
-		return mExecutionRenderTarget;
+		// Nothing here
 	}
 
 

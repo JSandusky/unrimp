@@ -91,9 +91,9 @@ namespace Direct3D10Renderer
 							}
 
 							// Create the Direct3D 10 render target view instance
-							D3D10_RENDER_TARGET_VIEW_DESC d3d10RenderTargetViewDesc;
+							D3D10_RENDER_TARGET_VIEW_DESC d3d10RenderTargetViewDesc = {};
 							d3d10RenderTargetViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(texture2D->getTextureFormat()));
-							d3d10RenderTargetViewDesc.ViewDimension		 = D3D10_RTV_DIMENSION_TEXTURE2D;
+							d3d10RenderTargetViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D10_RTV_DIMENSION_TEXTURE2DMS : D3D10_RTV_DIMENSION_TEXTURE2D;
 							d3d10RenderTargetViewDesc.Texture2D.MipSlice = 0;
 							direct3D10Renderer.getD3D10Device()->CreateRenderTargetView(texture2D->getD3D10Texture2D(), &d3d10RenderTargetViewDesc, d3d10RenderTargetView);
 							break;
@@ -153,9 +153,9 @@ namespace Direct3D10Renderer
 					}
 
 					// Create the Direct3D 10 render target view instance
-					D3D10_DEPTH_STENCIL_VIEW_DESC d3d10DepthStencilViewDesc;
+					D3D10_DEPTH_STENCIL_VIEW_DESC d3d10DepthStencilViewDesc = {};
 					d3d10DepthStencilViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(texture2D->getTextureFormat()));
-					d3d10DepthStencilViewDesc.ViewDimension		 = D3D10_DSV_DIMENSION_TEXTURE2D;
+					d3d10DepthStencilViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D10_DSV_DIMENSION_TEXTURE2DMS : D3D10_DSV_DIMENSION_TEXTURE2D;
 					d3d10DepthStencilViewDesc.Texture2D.MipSlice = 0;
 					direct3D10Renderer.getD3D10Device()->CreateDepthStencilView(texture2D->getD3D10Texture2D(), &d3d10DepthStencilViewDesc, &mD3D10DepthStencilView);
 					break;

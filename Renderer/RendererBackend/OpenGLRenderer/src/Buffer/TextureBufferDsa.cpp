@@ -41,7 +41,7 @@ namespace OpenGLRenderer
 	TextureBufferDsa::TextureBufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage) :
 		TextureBuffer(openGLRenderer)
 	{
-		if(openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
+		if (openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
 		{
 			{ // Buffer part
 				{ // For ARB DSA version the buffer object must be initialized.
@@ -64,6 +64,7 @@ namespace OpenGLRenderer
 					// Reset texture binding because we needed it only for initialization
 					glBindTexture(GL_TEXTURE_BUFFER_ARB, 0);
 				}
+
 				// Upload the data
 				// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
 				glNamedBufferData(mOpenGLTextureBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));

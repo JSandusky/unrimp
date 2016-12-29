@@ -45,6 +45,7 @@ namespace Renderer
 	class IRenderer;
 	class IResource;
 	class IVertexArray;
+	class IFramebuffer;
 	class IRenderTarget;
 	class IUniformBuffer;
 	class ITextureBuffer;
@@ -84,6 +85,7 @@ namespace Renderer
 		SetRenderTarget,
 		// Operations
 		Clear,
+		ResolveMultisampleFramebuffer,
 		// Draw call
 		Draw,
 		DrawIndexed,
@@ -767,6 +769,34 @@ namespace Renderer
 			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::Clear;
 		};
 
+		/**
+		*  @brief
+		*    Resolve multisample framebuffer
+		*
+		*  @param[in] destinationRenderTarget
+		*    None multisample destination render target
+		*  @param[in] sourceMultisampleFramebuffer
+		*    Source multisample framebuffer
+		*/
+		struct ResolveMultisampleFramebuffer
+		{
+			// Static methods
+			inline static void create(CommandBuffer& commandBuffer, IRenderTarget& destinationRenderTarget, IFramebuffer& sourceMultisampleFramebuffer)
+			{
+				*commandBuffer.addCommand<ResolveMultisampleFramebuffer>() = ResolveMultisampleFramebuffer(destinationRenderTarget, sourceMultisampleFramebuffer);
+			}
+			// Constructor
+			inline ResolveMultisampleFramebuffer(IRenderTarget& _destinationRenderTarget, IFramebuffer& _sourceMultisampleFramebuffer) :
+				destinationRenderTarget(&_destinationRenderTarget),
+				sourceMultisampleFramebuffer(&_sourceMultisampleFramebuffer)
+			{}
+			// Data
+			IRenderTarget* destinationRenderTarget;
+			IFramebuffer* sourceMultisampleFramebuffer;
+			// Static data
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ResolveMultisampleFramebuffer;
+		};
+
 		//[-------------------------------------------------------]
 		//[ Draw call                                             ]
 		//[-------------------------------------------------------]
@@ -800,9 +830,10 @@ namespace Renderer
 			{
 				Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(IndirectBuffer));
 
-				// Set command data
+				// Set command data: The command packet auxiliary memory contains an "Renderer::IndirectBuffer"-instance. Due to "Renderer::IIndirectBuffer"
+				// the class is virtual but we don't mind in here because in this use-class the class is only used to transport the data in a generic way
 				IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
-				memcpy(reinterpret_cast<IndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indirectBufferData, sizeof(IndirectBuffer));
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &indirectBufferData, sizeof(IndirectBuffer));
 
 				// Finalize command
 				drawCommand->indirectBuffer		  = nullptr;
@@ -853,16 +884,13 @@ namespace Renderer
 			inline static void create(CommandBuffer& commandBuffer, uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0)
 			{
 				DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(IndexedIndirectBuffer));
+
+				// Set command data: The command packet auxiliary memory contains an "Renderer::IndexedIndirectBuffer"-instance. Due to "Renderer::IIndirectBuffer"
+				// the class is virtual but we don't mind in here because in this use-class the class is only used to transport the data in a generic way
 				IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
-				#if defined(__clang__)
-					// TODO(sw) to silence clang warning: warning: destination for this 'memcpy' call is a pointer to dynamic class 'IndirectBuffer'; vtable pointer will be overwritten [-Wdynamic-class-memaccess]
-					#pragma clang diagnostic push
-					#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
-					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), reinterpret_cast<unsigned char*>(&indexedIndirectBufferData), sizeof(IndexedIndirectBuffer));
-					#pragma clang diagnostic pop
-				#else
-					memcpy(reinterpret_cast<IndexedIndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
-				#endif
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
+
+				// Finalize command
 				drawCommand->indirectBuffer		  = nullptr;
 				drawCommand->indirectBufferOffset = 0;
 				drawCommand->numberOfDraws		  = 1;

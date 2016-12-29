@@ -50,7 +50,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
-	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, uint8_t, const Renderer::OptimizedTextureClearValue*)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 2 has no texture usage indication
 

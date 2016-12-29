@@ -19,93 +19,42 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Texture/ITexture2D.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace VulkanRenderer
-{
-	class VulkanRenderer;
-}
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ResolveMultisample/CompositorResourcePassResolveMultisample.h"
+#include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Vulkan 2D texture interface
-	*/
-	class Texture2D : public Renderer::ITexture2D
+	const CompositorPassTypeId CompositorResourcePassResolveMultisample::TYPE_ID("ResolveMultisample");
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	void CompositorResourcePassResolveMultisample::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
+		// Sanity check
+		assert(sizeof(v1CompositorNode::PassResolveMultisample) == numberOfBytes);
+		std::ignore = numberOfBytes;
 
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] vulkanRenderer
-		*    Owner Vulkan renderer instance
-		*  @param[in] width
-		*    Texture width, must be >1
-		*  @param[in] height
-		*    Texture height, must be >1
-		*  @param[in] textureFormat
-		*    Texture format
-		*  @param[in] data
-		*    Texture data, can be a null pointer
-		*  @param[in] flags
-		*    Texture flags, see "Renderer::TextureFlag::Enum"
-		*  @param[in] numberOfMultisamples
-		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
-		*/
-		Texture2D(VulkanRenderer &vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, uint8_t numberOfMultisamples);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~Texture2D();
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		// TODO(co) Implement me
-
-
-	};
+		// Read data
+		const v1CompositorNode::PassResolveMultisample* passResolveMultisample = reinterpret_cast<const v1CompositorNode::PassResolveMultisample*>(data);
+		mSourceMultisampleCompositorFramebufferId = passResolveMultisample->sourceMultisampleCompositorFramebufferId;
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "VulkanRenderer/Texture/Texture2D.inl"
+} // RendererRuntime
