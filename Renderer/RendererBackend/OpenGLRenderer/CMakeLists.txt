@@ -25,8 +25,10 @@ cmake_minimum_required(VERSION 2.8.8)
 ## Preprocessor definitions
 ##################################################
 if(NOT RENDERER_DEBUG)
-	add_definitions(-DRENDERER_NO_DEBUG)
+	#add_definitions(-DRENDERER_NO_DEBUG)
 endif()
+add_definitions(-DRENDERER_OUTPUT_DEBUG)
+add_definitions(-D_DEBUG)
 if(RENDERER_OPENGL_NO_STATE_CLEANUP)
 	add_definitions(-DOPENGLRENDERER_NO_STATE_CLEANUP)
 endif()

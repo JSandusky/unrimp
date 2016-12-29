@@ -726,6 +726,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glTextureStorage3D)
 			mGL_ARB_direct_state_access = result;
 		}
+		mGL_ARB_direct_state_access = false;
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC

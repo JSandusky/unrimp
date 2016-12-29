@@ -27,6 +27,7 @@ cmake_minimum_required(VERSION 2.8.8)
 if(NOT RENDERER_DEBUG)
 	add_definitions(-DRENDERER_NO_DEBUG)
 endif()
+add_compile_options(-Wno-unknown-pragmas)
 
 
 ##################################################
