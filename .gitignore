@@ -9,3 +9,8 @@
 /Projects.sdf
 /Projects.opensdf
 /Projects.v14.suo
+# ignore all in bin folder except the DataSource subfolder
+/bin/*
+!/bin/DataSource
+*.kdev4
+/build*
