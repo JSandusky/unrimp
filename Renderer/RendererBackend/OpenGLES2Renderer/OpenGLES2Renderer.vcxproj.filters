@@ -30,18 +30,6 @@
     <None Include="include\OpenGLES2Renderer\Texture\Texture2DArray.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.inl">
-      <Filter>Source Files\Buffer</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\VertexBuffer.inl">
-      <Filter>Source Files\Buffer</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.inl">
-      <Filter>Source Files\Buffer</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\VertexArray.inl">
-      <Filter>Source Files\Buffer</Filter>
-    </None>
     <None Include="include\OpenGLES2Renderer\RenderTarget\SwapChain.inl">
       <Filter>Source Files\RenderTarget</Filter>
     </None>
@@ -57,14 +45,32 @@
     <None Include="include\OpenGLES2Renderer\State\IState.inl">
       <Filter>Source Files\State</Filter>
     </None>
+    <None Include="include\OpenGLES2Renderer\Texture\TextureManager.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Buffer\TextureBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Buffer\UniformBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Buffer\VertexArray.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Buffer\VertexBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
     <None Include="include\OpenGLES2Renderer\Buffer\BufferManager.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
     <None Include="include\OpenGLES2Renderer\Buffer\IndirectBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\Texture\TextureManager.inl">
-      <Filter>Source Files\Texture</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -130,21 +136,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2D.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexBuffer.h">
-      <Filter>Source Files\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.h">
-      <Filter>Source Files\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayNoVao.h">
-      <Filter>Source Files\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.h">
-      <Filter>Source Files\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArray.h">
-      <Filter>Source Files\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\RenderTarget\SwapChain.h">
       <Filter>Source Files\RenderTarget</Filter>
     </ClInclude>
@@ -169,14 +160,41 @@
     <ClInclude Include="include\OpenGLES2Renderer\State\SamplerState.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Texture\TextureManager.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\TextureBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\TextureBufferBind.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\UniformBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\UniformBufferBind.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArray.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayNoVao.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\Buffer\BufferManager.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\Buffer\IndirectBuffer.h">
       <Filter>Source Files\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Texture\TextureManager.h">
-      <Filter>Source Files\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -219,21 +237,6 @@
     <ClCompile Include="src\Texture\Texture2DArray.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\Buffer\VertexBuffer.cpp">
-      <Filter>Source Files\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Buffer\IndexBuffer.cpp">
-      <Filter>Source Files\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Buffer\VertexArray.cpp">
-      <Filter>Source Files\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Buffer\VertexArrayNoVao.cpp">
-      <Filter>Source Files\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Buffer\VertexArrayVao.cpp">
-      <Filter>Source Files\Buffer</Filter>
-    </ClCompile>
     <ClCompile Include="src\RenderTarget\SwapChain.cpp">
       <Filter>Source Files\RenderTarget</Filter>
     </ClCompile>
@@ -255,14 +258,41 @@
     <ClCompile Include="src\State\SamplerState.cpp">
       <Filter>Source Files\State</Filter>
     </ClCompile>
+    <ClCompile Include="src\Texture\TextureManager.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\TextureBufferBind.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\UniformBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\UniformBufferBind.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArray.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArrayNoVao.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArrayVao.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Buffer\BufferManager.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\IndexBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer\IndirectBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Texture\TextureManager.cpp">
-      <Filter>Source Files\Texture</Filter>
+    <ClCompile Include="src\Buffer\TextureBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

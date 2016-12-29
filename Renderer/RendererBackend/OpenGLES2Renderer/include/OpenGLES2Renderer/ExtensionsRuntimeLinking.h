@@ -199,9 +199,9 @@ namespace OpenGLES2Renderer
 	#define GL_SAMPLER_2D_ARRAY_EXT						0x8DC1
 	#define GL_SAMPLER_1D_ARRAY_SHADOW_EXT				0x8DC3
 	#define GL_SAMPLER_2D_ARRAY_SHADOW_EXT				0x8DC4
-	
+
 	// GL_EXT_texture_buffer
-	FNDEF_EX(void,	glTexBufferEXT,			(GLenum target, GLenum internalformat, GLuint buffer));
+	FNDEF_EX(void,	glTexBufferEXT,	(GLenum target, GLenum internalformat, GLuint buffer));
 	#define glTexBufferEXT	FNPTR(glTexBufferEXT)
 
 

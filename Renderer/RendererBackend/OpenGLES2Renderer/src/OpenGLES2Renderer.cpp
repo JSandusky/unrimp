@@ -462,6 +462,7 @@ namespace OpenGLES2Renderer
 					glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<UniformBuffer*>(resource)->getOpenGLESUniformBuffer());
 					break;
 				}
+
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
