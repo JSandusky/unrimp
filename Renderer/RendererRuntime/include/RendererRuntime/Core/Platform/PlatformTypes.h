@@ -89,13 +89,13 @@
 	*  @brief
 	*    Platform specific "#pragma warning(push)" (MS Windows Visual Studio)
 	*/
-	#define PRAGMA_WARNING_PUSH #pragma clang diagnostic push
+	#define PRAGMA_WARNING_PUSH _Pragma("clang diagnostic push")
 
 	/**
 	*  @brief
 	*    Platform specific "#pragma warning(pop)" (MS Windows Visual Studio)
 	*/
-	#define PRAGMA_WARNING_POP #pragma clang diagnostic pop
+	#define PRAGMA_WARNING_POP _Pragma("clang diagnostic pop")
 
 	/**
 	*  @brief
@@ -107,7 +107,9 @@
 	*  @brief
 	*    Platform specific "#pragma clang diagnostic ignored <x>" (Clang)
 	*/
-	#define PRAGMA_WARNING_DISABLE_CLANG(id) // _Pragma("clang diagnostic ignored " id)		TODO(co) Needs to be tested before it's enabled
+	// We need stringify because _Pragma expects an string literal
+	#define STRINGIFY(a) #a
+	#define PRAGMA_WARNING_DISABLE_CLANG(id) _Pragma(STRINGIFY(clang diagnostic ignored id) )
 #else
 	#error "Unsupported platform"
 #endif
