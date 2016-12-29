@@ -50,6 +50,20 @@ namespace OpenGLES2Renderer
 
 
 //[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+#ifdef WIN32
+	#ifndef CALLBACK
+		#define CALLBACK __stdcall
+	#endif
+#elif defined LINUX
+	#define CALLBACK
+#else
+	#error "Unsupported platform"
+#endif
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLES2Renderer
@@ -182,6 +196,32 @@ namespace OpenGLES2Renderer
 		//[-------------------------------------------------------]
 		virtual void flush() override;
 		virtual void finish() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private static methods                                ]
+	//[-------------------------------------------------------]
+	private:
+		/**
+		*  @brief
+		*    Debug message callback function called by the "GL_KHR_debug"-extension
+		*
+		*  @param[in] source
+		*    Source of the debug message
+		*  @param[in] type
+		*    Type of the debug message
+		*  @param[in] id
+		*    ID of the debug message
+		*  @param[in] severity
+		*    Severity of the debug message
+		*  @param[in] length
+		*    Length of the debug message
+		*  @param[in] message
+		*    The debug message
+		*  @param[in] userParam
+		*    Additional user parameter of the debug message
+		*/
+		static void CALLBACK debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int length, const char *message, const void *userParam);
 
 
 	//[-------------------------------------------------------]

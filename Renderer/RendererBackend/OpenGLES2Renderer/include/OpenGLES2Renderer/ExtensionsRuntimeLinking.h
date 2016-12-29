@@ -89,6 +89,7 @@ namespace OpenGLES2Renderer
 		inline virtual bool isGL_EXT_texture_compression_latc() const override;
 		inline virtual bool isGL_EXT_texture_filter_anisotropic() const override;
 		inline virtual bool isGL_EXT_texture_array() const override;
+		inline virtual bool isGL_EXT_texture_buffer() const override;
 		// AMD
 		inline virtual bool isGL_AMD_compressed_3DC_texture() const override;
 		// NV
@@ -108,6 +109,8 @@ namespace OpenGLES2Renderer
 		// ANGLE
 		inline virtual bool isGL_ANGLE_framebuffer_blit() const override;
 		inline virtual bool isGL_ANGLE_framebuffer_multisample() const override;
+		// KHR
+		inline virtual bool isGL_KHR_debug() const override;
 
 
 	//[-------------------------------------------------------]
@@ -120,6 +123,7 @@ namespace OpenGLES2Renderer
 		bool mGL_EXT_texture_compression_latc;
 		bool mGL_EXT_texture_filter_anisotropic;
 		bool mGL_EXT_texture_array;
+		bool mGL_EXT_texture_buffer;
 		// AMD
 		bool mGL_AMD_compressed_3DC_texture;
 		// NV
@@ -139,6 +143,8 @@ namespace OpenGLES2Renderer
 		// ANGLE
 		bool mGL_ANGLE_framebuffer_blit;
 		bool mGL_ANGLE_framebuffer_multisample;
+		// KHR
+		bool mGL_KHR_debug;
 
 
 	};
@@ -193,6 +199,10 @@ namespace OpenGLES2Renderer
 	#define GL_SAMPLER_2D_ARRAY_EXT						0x8DC1
 	#define GL_SAMPLER_1D_ARRAY_SHADOW_EXT				0x8DC3
 	#define GL_SAMPLER_2D_ARRAY_SHADOW_EXT				0x8DC4
+	
+	// GL_EXT_texture_buffer
+	FNDEF_EX(void,	glTexBufferEXT,			(GLenum target, GLenum internalformat, GLuint buffer));
+	#define glTexBufferEXT	FNPTR(glTexBufferEXT)
 
 
 	//[-------------------------------------------------------]
@@ -332,6 +342,14 @@ namespace OpenGLES2Renderer
 	#define GL_MAX_SAMPLES_ANGLE						0x8D57
 	FNDEF_EX(void,	glRenderbufferStorageMultisampleANGLE,	(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height));
 	#define glRenderbufferStorageMultisampleANGLE	FNPTR(glRenderbufferStorageMultisampleANGLE)
+
+
+	//[-------------------------------------------------------]
+	//[ KHR definitions                                       ]
+	//[-------------------------------------------------------]
+	// GL_KHR_debug
+	FNDEF_EX(void,	glDebugMessageCallbackKHR,	(GLDEBUGPROCKHR callback, const void *userParam));
+	#define glDebugMessageCallbackKHR	FNPTR(glDebugMessageCallbackKHR)
 
 
 	//[-------------------------------------------------------]

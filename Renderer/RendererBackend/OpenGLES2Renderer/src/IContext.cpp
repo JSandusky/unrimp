@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/IContext.h"
 
+#include <EGL/eglext.h>
+
 #ifdef ANDROID
 	#include <android/native_window.h>	// For "ANativeWindow_setBuffersGeometry()"
 #endif
@@ -80,8 +82,12 @@ namespace OpenGLES2Renderer
 				// We can only go on if a EGL configuration was chosen properly
 				if (mConfig)
 				{
-					// Create context
-					const EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+					// Create context (request an version 3 client)
+					const EGLint contextAttribs[] = {
+						EGL_CONTEXT_CLIENT_VERSION, 3,
+						//EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR, // TODO(sw) make it possible to enable it from outside
+						EGL_NONE
+					};
 					mContext = eglCreateContext(mDisplay, mConfig, EGL_NO_CONTEXT, contextAttribs);
 					if (EGL_NO_CONTEXT != mContext)
 					{
@@ -299,7 +305,7 @@ namespace OpenGLES2Renderer
 			{
 				EGL_LEVEL,				0,										// Frame buffer level
 				EGL_SURFACE_TYPE,		EGL_WINDOW_BIT,							// Which types of EGL surfaces are supported
-				EGL_RENDERABLE_TYPE,	EGL_OPENGL_ES2_BIT,						// Which client APIs are supported
+				EGL_RENDERABLE_TYPE,	EGL_OPENGL_ES3_BIT_KHR,					// Which client APIs are supported
 				EGL_DEPTH_SIZE,			EGL_DONT_CARE,							// Bits of Z in the depth buffer
 				EGL_SAMPLE_BUFFERS,		multisampleAntialiasingSampleBuffers,	// Number of multisample buffers (enable/disable multisample antialiasing)
 				EGL_SAMPLES,			multisampleAntialiasingSamplesCurrent,	// Number of samples per pixel (multisample antialiasing samples)

@@ -28,7 +28,7 @@
 #include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
-#include <GLES2/gl2.h>
+#include <GLES3/gl3.h>
 
 #include <memory.h>
 #include <cstring>	// For "memcpy()"

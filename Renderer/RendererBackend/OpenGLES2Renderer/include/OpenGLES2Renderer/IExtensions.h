@@ -69,6 +69,7 @@ namespace OpenGLES2Renderer
 		virtual bool isGL_EXT_texture_compression_latc() const = 0;
 		virtual bool isGL_EXT_texture_filter_anisotropic() const = 0;
 		virtual bool isGL_EXT_texture_array() const = 0;
+		virtual bool isGL_EXT_texture_buffer() const = 0;
 		// AMD
 		virtual bool isGL_AMD_compressed_3DC_texture() const = 0;
 		// NV
@@ -88,6 +89,8 @@ namespace OpenGLES2Renderer
 		// ANGLE
 		virtual bool isGL_ANGLE_framebuffer_blit() const = 0;
 		virtual bool isGL_ANGLE_framebuffer_multisample() const = 0;
+		// KHR
+		virtual bool isGL_KHR_debug() const = 0;
 
 
 	//[-------------------------------------------------------]

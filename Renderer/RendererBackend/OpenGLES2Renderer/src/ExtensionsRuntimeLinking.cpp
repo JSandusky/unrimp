@@ -46,6 +46,7 @@ namespace OpenGLES2Renderer
 		mGL_EXT_texture_compression_latc(false),
 		mGL_EXT_texture_filter_anisotropic(false),
 		mGL_EXT_texture_array(false),
+		mGL_EXT_texture_buffer(false),
 		// AMD
 		mGL_AMD_compressed_3DC_texture(false),
 		// NV
@@ -64,7 +65,9 @@ namespace OpenGLES2Renderer
 		mGL_OES_vertex_array_object(false),
 		// ANGLE
 		mGL_ANGLE_framebuffer_blit(false),
-		mGL_ANGLE_framebuffer_multisample(false)
+		mGL_ANGLE_framebuffer_multisample(false),
+		// KHR
+		mGL_KHR_debug(false)
 	{
 		// Nothing here
 	}
@@ -102,7 +105,8 @@ namespace OpenGLES2Renderer
 		mGL_EXT_texture_compression_dxt1   = (nullptr != strstr(extensions, "GL_EXT_texture_compression_dxt1"));
 		mGL_EXT_texture_compression_latc   = (nullptr != strstr(extensions, "GL_EXT_texture_compression_latc"));
 		mGL_EXT_texture_filter_anisotropic = (nullptr != strstr(extensions, "GL_EXT_texture_filter_anisotropic"));
-		mGL_EXT_texture_array			   = (nullptr != strstr(extensions, "GL_EXT_texture_array"));
+		// TODO(sw) texture array and texture 3d are core features ion opengl es 3.0 which we target as minimum version
+		mGL_EXT_texture_array			   = true; //(nullptr != strstr(extensions, "GL_EXT_texture_array"));
 		if (mGL_EXT_texture_array)
 		{
 			// A funny thing: Tegra 2 has support for the extension "GL_EXT_texture_array", but has no support
@@ -120,6 +124,15 @@ namespace OpenGLES2Renderer
 			IMPORT_FUNC(glCompressedTexSubImage3DOES)
 			IMPORT_FUNC(glFramebufferTexture3DOES)
 			mGL_EXT_texture_array = result;
+		}
+
+		mGL_EXT_texture_buffer = (nullptr != strstr(extensions, "GL_EXT_texture_buffer"));
+		if (mGL_EXT_texture_buffer)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glTexBufferEXT)
+			mGL_EXT_texture_buffer = result;
 		}
 
 		//[-------------------------------------------------------]
@@ -173,7 +186,9 @@ namespace OpenGLES2Renderer
 			mGL_OES_mapbuffer = result;
 		}
 		mGL_OES_element_index_uint = (nullptr != strstr(extensions, "GL_OES_element_index_uint"));
-		mGL_OES_texture_3D		   = (nullptr != strstr(extensions, "GL_OES_texture_3D"));
+
+		// TODO(sw) texture array and texture 3d are core features ion opengl es 3.0 which we target as minimum version
+		mGL_OES_texture_3D		   = true; //(nullptr != strstr(extensions, "GL_OES_texture_3D"));
 		if (mGL_OES_texture_3D && !mGL_EXT_texture_array)
 		{	// See "GL_EXT_texture_array"-comment above
 			// Load the entry points
@@ -219,6 +234,18 @@ namespace OpenGLES2Renderer
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glRenderbufferStorageMultisampleANGLE)
 			mGL_ANGLE_framebuffer_multisample = result;
+		}
+
+		//[-------------------------------------------------------]
+		//[ KHR                                                   ]
+		//[-------------------------------------------------------]
+		mGL_KHR_debug = (nullptr != strstr(extensions, "GL_KHR_debug"));
+		if (mGL_KHR_debug)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glDebugMessageCallbackKHR)
+			mGL_KHR_debug = result;
 		}
 
 		// Undefine the helper macro

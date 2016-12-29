@@ -40,7 +40,7 @@ endif()
 ##################################################
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/OpenGLES2/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/OpenGLES/include)
 
 
 ##################################################
@@ -51,6 +51,10 @@ set(SOURCE_CODES
 	src/Buffer/BufferManager.cpp
 	src/Buffer/IndexBuffer.cpp
 	src/Buffer/IndirectBuffer.cpp
+	src/Buffer/TextureBuffer.cpp
+	src/Buffer/TextureBufferBind.cpp
+	src/Buffer/UniformBuffer.cpp
+	src/Buffer/UniformBufferBind.cpp
 	src/Buffer/VertexArray.cpp
 	src/Buffer/VertexArrayNoVao.cpp
 	src/Buffer/VertexArrayVao.cpp

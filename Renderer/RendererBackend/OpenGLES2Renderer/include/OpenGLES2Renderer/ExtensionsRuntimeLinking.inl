@@ -54,6 +54,11 @@ namespace OpenGLES2Renderer
 		return mGL_EXT_texture_array;
 	}
 
+	inline bool ExtensionsRuntimeLinking::isGL_EXT_texture_buffer() const
+	{
+		return mGL_EXT_texture_buffer;
+	}
+
 	// AMD
 	inline bool ExtensionsRuntimeLinking::isGL_AMD_compressed_3DC_texture() const
 	{
@@ -131,6 +136,12 @@ namespace OpenGLES2Renderer
 	inline bool ExtensionsRuntimeLinking::isGL_ANGLE_framebuffer_multisample() const
 	{
 		return mGL_ANGLE_framebuffer_multisample;
+	}
+
+	// KHR
+	inline bool ExtensionsRuntimeLinking::isGL_KHR_debug() const
+	{
+		return mGL_KHR_debug;
 	}
 
 

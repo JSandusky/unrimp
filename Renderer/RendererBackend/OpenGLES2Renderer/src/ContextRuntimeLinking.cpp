@@ -25,6 +25,9 @@
 
 #include "OpenGLES2Renderer/ContextRuntimeLinking.h"
 #include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"
+
+#include <EGL/eglext.h> // For "EGL_OPENGL_ES3_BIT_KHR"
+
 #if defined LINUX || defined(ANDROID)
 	#include <dlfcn.h>	// For "dlopen()", "dlclose()" and so on
 	#include <link.h>	// For getting the path to the library (for the error message)
@@ -160,7 +163,7 @@ namespace OpenGLES2Renderer
 			{
 				EGL_LEVEL,				0,										// Frame buffer level
 				EGL_SURFACE_TYPE,		EGL_WINDOW_BIT,							// Which types of EGL surfaces are supported
-				EGL_RENDERABLE_TYPE,	EGL_OPENGL_ES2_BIT,						// Which client APIs are supported
+				EGL_RENDERABLE_TYPE,	EGL_OPENGL_ES3_BIT_KHR,					// Which client APIs are supported
 				EGL_RED_SIZE,			8,										// Bits of red color component
 				EGL_GREEN_SIZE,			8,										// Bits of red color component
 				EGL_BLUE_SIZE,			8,										// Bits of red color component
@@ -600,6 +603,8 @@ namespace OpenGLES2Renderer
 		IMPORT_FUNC(glVertexAttrib4fv);
 		IMPORT_FUNC(glVertexAttribPointer);
 		IMPORT_FUNC(glViewport);
+
+		IMPORT_FUNC(glBindBufferBase);
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC
