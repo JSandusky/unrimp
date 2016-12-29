@@ -27,23 +27,16 @@
 #include "RendererRuntime/IRendererRuntime.h"
 
 // Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4061)	// warning C4061: enumerator 'cCRNFmtTotal' in switch of enum 'crn_format' is not explicitly handled by a case label
-	#pragma warning(disable: 4365)	// warning C4365: '<x>': conversion from '<y>' to '<z>', signed/unsigned mismatch
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#pragma warning(disable: 4555)	// warning C4555: expression has no effect; expected expression with side-effect
-	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '<y>' for '<z>'
-	#if defined(__clang__)
-		#pragma clang diagnostic push
-		#pragma clang diagnostic ignored "-Wunused-value" // warning: expression result unused [-Wunused-value]
-			#include <crunch/crn_decomp.h>
-			#include <crunch/dds_defs.h>
-		#pragma clang diagnostic pop
-	#else
-		#include <crunch/crn_decomp.h>
-		#include <crunch/dds_defs.h>
-	#endif
-#pragma warning(pop)
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator 'cCRNFmtTotal' in switch of enum 'crn_format' is not explicitly handled by a case label
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: '<x>': conversion from '<y>' to '<z>', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	PRAGMA_WARNING_DISABLE_MSVC(4555)	// warning C4555: expression has no effect; expected expression with side-effect
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '<y>' for '<z>'
+	PRAGMA_WARNING_DISABLE_CLANG("-Wunused-value")	// warning: expression result unused [-Wunused-value]
+	#include <crunch/crn_decomp.h>
+	#include <crunch/dds_defs.h>
+PRAGMA_WARNING_POP
 
 #include <fstream>
 #include <algorithm>

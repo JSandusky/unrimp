@@ -32,8 +32,8 @@
 #include <string>
 
 // Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4251)	// warning C4251: 'std::_String_alloc<std::_String_base_types<_Elem,_Alloc>>::_Mypair': class 'std::_Compressed_pair<std::_Wrap_alloc<std::allocator<char>>,std::_String_val<std::_Simple_types<char>>,true>' needs to have dll-interface to be used by clients of class 'std::_String_alloc<std::_String_base_types<_Elem,_Alloc>>'
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4251)	// warning C4251: 'std::_String_alloc<std::_String_base_types<_Elem,_Alloc>>::_Mypair': class 'std::_Compressed_pair<std::_Wrap_alloc<std::allocator<char>>,std::_String_val<std::_Simple_types<char>>,true>' needs to have dll-interface to be used by clients of class 'std::_String_alloc<std::_String_base_types<_Elem,_Alloc>>'
 
 
 //[-------------------------------------------------------]
@@ -86,4 +86,4 @@ namespace RendererRuntime
 
 
 // Disable warnings in external headers, we can't fix them
-#pragma warning(pop)
+PRAGMA_WARNING_POP

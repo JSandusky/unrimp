@@ -45,6 +45,30 @@
 	*    No operation macro ("_asm nop"/"__nop()")
 	*/
 	#define NOP __nop()
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma warning(push)" (MS Windows Visual Studio)
+	*/
+	#define PRAGMA_WARNING_PUSH __pragma(warning(push))
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma warning(pop)" (MS Windows Visual Studio)
+	*/
+	#define PRAGMA_WARNING_POP __pragma(warning(pop))
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma warning(disable: <x>)" (MS Windows Visual Studio)
+	*/
+	#define PRAGMA_WARNING_DISABLE_MSVC(id) __pragma(warning(disable: id))
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma clang diagnostic ignored <x>" (Clang)
+	*/
+	#define PRAGMA_WARNING_DISABLE_CLANG(id)
 #elif LINUX
 	/**
 	*  @brief
@@ -60,6 +84,30 @@
 	*    No operation macro ("_asm nop"/__nop())
 	*/
 	#define NOP
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma warning(push)" (MS Windows Visual Studio)
+	*/
+	#define PRAGMA_WARNING_PUSH #pragma clang diagnostic push
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma warning(pop)" (MS Windows Visual Studio)
+	*/
+	#define PRAGMA_WARNING_POP #pragma clang diagnostic pop
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma warning(disable: <x>)" (MS Windows Visual Studio)
+	*/
+	#define PRAGMA_WARNING_DISABLE_MSVC(id)
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma clang diagnostic ignored <x>" (Clang)
+	*/
+	#define PRAGMA_WARNING_DISABLE_CLANG(id) // _Pragma("clang diagnostic ignored " id)		TODO(co) Needs to be tested before it's enabled
 #else
 	#error "Unsupported platform"
 #endif
