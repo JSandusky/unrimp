@@ -51,6 +51,8 @@ set(SOURCE_CODES
 	src/Buffer/BufferManager.cpp
 	src/Buffer/IndexBuffer.cpp
 	src/Buffer/IndirectBuffer.cpp
+	src/Buffer/TextureBuffer.cpp
+	src/Buffer/TextureBufferBind.cpp
 	src/Buffer/VertexArray.cpp
 	src/Buffer/VertexArrayNoVao.cpp
 	src/Buffer/VertexArrayVao.cpp

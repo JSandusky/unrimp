@@ -27,6 +27,7 @@
 #include "OpenGLES2Renderer/Buffer/IndirectBuffer.h"
 #include "OpenGLES2Renderer/Buffer/VertexBuffer.h"
 #include "OpenGLES2Renderer/Buffer/IndexBuffer.h"
+#include "OpenGLES2Renderer/Buffer/TextureBufferBind.h"
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 #include "OpenGLES2Renderer/IExtensions.h"
 #include "OpenGLES2Renderer/IContext.h"
@@ -82,13 +83,18 @@ namespace OpenGLES2Renderer
 
 	Renderer::IUniformBuffer* BufferManager::createUniformBuffer(uint32_t, const void*, Renderer::BufferUsage)
 	{
-		// Error! OpenGL ES 2 has no uniform buffer support.
+		// TODO(sw) implement me. OpenGL ES 3 has uniform buffer support.
 		return nullptr;
 	}
 
-	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage)
+	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void* data, Renderer::BufferUsage bufferUsage)
 	{
-		// OpenGL ES 2 has no texture buffer support
+		// Is "GL_EXT_texture_buffer" there?
+		if (mExtensions->isGL_EXT_texture_buffer())
+		{
+			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+			return new TextureBufferBind(static_cast<OpenGLES2Renderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
+		}
 		return nullptr;
 	}
 
