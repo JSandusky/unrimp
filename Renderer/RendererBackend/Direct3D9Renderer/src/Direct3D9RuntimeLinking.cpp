@@ -26,11 +26,7 @@
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 
 #include <Renderer/PlatformTypes.h>	// For "RENDERER_OUTPUT_DEBUG_PRINTF()"
-#ifdef WIN32
-	#include <Renderer/WindowsHeader.h>
-#else
-	#error "Unsupported platform"
-#endif
+#include <Renderer/WindowsHeader.h>
 
 
 //[-------------------------------------------------------]
@@ -55,18 +51,14 @@ namespace Direct3D9Renderer
 	Direct3D9RuntimeLinking::~Direct3D9RuntimeLinking()
 	{
 		// Destroy the shared library instances
-		#ifdef WIN32
-			if (nullptr != mD3D9SharedLibrary)
-			{
-				::FreeLibrary(static_cast<HMODULE>(mD3D9SharedLibrary));
-			}
-			if (nullptr != mD3DX9SharedLibrary)
-			{
-				::FreeLibrary(static_cast<HMODULE>(mD3DX9SharedLibrary));
-			}
-		#else
-			#error "Unsupported platform"
-		#endif
+		if (nullptr != mD3D9SharedLibrary)
+		{
+			::FreeLibrary(static_cast<HMODULE>(mD3D9SharedLibrary));
+		}
+		if (nullptr != mD3DX9SharedLibrary)
+		{
+			::FreeLibrary(static_cast<HMODULE>(mD3DX9SharedLibrary));
+		}
 	}
 
 	bool Direct3D9RuntimeLinking::isDirect3D9Avaiable()
@@ -96,23 +88,19 @@ namespace Direct3D9Renderer
 	bool Direct3D9RuntimeLinking::loadSharedLibraries()
 	{
 		// Load the shared library
-		#ifdef WIN32
-			mD3D9SharedLibrary = ::LoadLibraryExA("d3d9.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-			if (nullptr != mD3D9SharedLibrary)
+		mD3D9SharedLibrary = ::LoadLibraryExA("d3d9.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+		if (nullptr != mD3D9SharedLibrary)
+		{
+			mD3DX9SharedLibrary = ::LoadLibraryExA("d3dx9_43.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+			if (nullptr == mD3DX9SharedLibrary)
 			{
-				mD3DX9SharedLibrary = ::LoadLibraryExA("d3dx9_43.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-				if (nullptr == mD3DX9SharedLibrary)
-				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Failed to load in the shared library \"d3dx9_43.dll\"\n")
-				}
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Failed to load in the shared library \"d3dx9_43.dll\"\n")
 			}
-			else
-			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Failed to load in the shared library \"d3d9.dll\"\n")
-			}
-		#else
-			#error "Unsupported platform"
-		#endif
+		}
+		else
+		{
+			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Failed to load in the shared library \"d3d9.dll\"\n")
+		}
 
 		// Done
 		return (nullptr != mD3D9SharedLibrary && nullptr != mD3DX9SharedLibrary);
@@ -123,27 +111,23 @@ namespace Direct3D9Renderer
 		bool result = true;	// Success by default
 
 		// Define a helper macro
-		#ifdef WIN32
-			#define IMPORT_FUNC(funcName)																																					\
-				if (result)																																									\
-				{																																											\
-					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D9SharedLibrary), #funcName);																					\
-					if (nullptr != symbol)																																					\
-					{																																										\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
-					}																																										\
-					else																																									\
-					{																																										\
-						wchar_t moduleFilename[MAX_PATH];																																	\
-						moduleFilename[0] = '\0';																																			\
-						::GetModuleFileNameW(static_cast<HMODULE>(mD3D9SharedLibrary), moduleFilename, MAX_PATH);																			\
-						RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 9 error: Failed to locate the entry point \"%s\" within the Direct3D 9 shared library \"%s\"", #funcName, moduleFilename)	\
-						result = false;																																						\
-					}																																										\
-				}
-		#else
-			#error "Unsupported platform"
-		#endif
+		#define IMPORT_FUNC(funcName)																																					\
+			if (result)																																									\
+			{																																											\
+				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D9SharedLibrary), #funcName);																					\
+				if (nullptr != symbol)																																					\
+				{																																										\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
+				}																																										\
+				else																																									\
+				{																																										\
+					wchar_t moduleFilename[MAX_PATH];																																	\
+					moduleFilename[0] = '\0';																																			\
+					::GetModuleFileNameW(static_cast<HMODULE>(mD3D9SharedLibrary), moduleFilename, MAX_PATH);																			\
+					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 9 error: Failed to locate the entry point \"%s\" within the Direct3D 9 shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																						\
+				}																																										\
+			}
 
 		// Load the entry points
 		IMPORT_FUNC(Direct3DCreate9);
@@ -167,27 +151,23 @@ namespace Direct3D9Renderer
 		bool result = true;	// Success by default
 
 		// Define a helper macro
-		#ifdef WIN32
-			#define IMPORT_FUNC(funcName)																																					\
-				if (result)																																									\
-				{																																											\
-					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX9SharedLibrary), #funcName);																					\
-					if (nullptr != symbol)																																					\
-					{																																										\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
-					}																																										\
-					else																																									\
-					{																																										\
-						wchar_t moduleFilename[MAX_PATH];																																	\
-						moduleFilename[0] = '\0';																																			\
-						::GetModuleFileNameW(static_cast<HMODULE>(mD3DX9SharedLibrary), moduleFilename, MAX_PATH);																			\
-						RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 9 error: Failed to locate the entry point \"%s\" within the Direct3D 9 shared library \"%s\"", #funcName, moduleFilename)	\
-						result = false;																																						\
-					}																																										\
-				}
-		#else
-			#error "Unsupported platform"
-		#endif
+		#define IMPORT_FUNC(funcName)																																					\
+			if (result)																																									\
+			{																																											\
+				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX9SharedLibrary), #funcName);																					\
+				if (nullptr != symbol)																																					\
+				{																																										\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
+				}																																										\
+				else																																									\
+				{																																										\
+					wchar_t moduleFilename[MAX_PATH];																																	\
+					moduleFilename[0] = '\0';																																			\
+					::GetModuleFileNameW(static_cast<HMODULE>(mD3DX9SharedLibrary), moduleFilename, MAX_PATH);																			\
+					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 9 error: Failed to locate the entry point \"%s\" within the Direct3D 9 shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																						\
+				}																																										\
+			}
 
 		// Load the entry points
 		IMPORT_FUNC(D3DXLoadSurfaceFromMemory);
