@@ -37,16 +37,16 @@ if (0 == strcmp(renderer->getName(), "OpenGLES2"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-attribute highp vec3 Position;		// Object space vertex position
-attribute highp vec2 TexCoord;		// 16 bit texture coordinate
-varying   highp vec2 TexCoordVs;	// Texture coordinate
-attribute highp vec4 QTangent;		// 16 bit QTangent
-varying   vec3 TangentVs;			// Tangent space to view space, x-axis
-varying   vec3 BinormalVs;			// Tangent space to view space, y-axis
-varying   vec3 NormalVs;			// Tangent space to view space, z-axis
+in highp vec3 Position;		// Object space vertex position
+in highp vec2 TexCoord;		// 16 bit texture coordinate
+out   highp vec2 TexCoordVs;	// Texture coordinate
+in highp vec4 QTangent;		// 16 bit QTangent
+out   vec3 TangentVs;			// Tangent space to view space, x-axis
+out   vec3 BinormalVs;			// Tangent space to view space, y-axis
+out   vec3 NormalVs;			// Tangent space to view space, z-axis
 
 // Uniforms
 uniform highp mat4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
@@ -94,13 +94,14 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-varying mediump vec2 TexCoordVs;	// Texture coordinate
-varying mediump vec3 TangentVs;		// Tangent space to view space, x-axis
-varying mediump vec3 BinormalVs;	// Tangent space to view space, y-axis
-varying mediump vec3 NormalVs;		// Tangent space to view space, z-axis
+in mediump vec2 TexCoordVs;	// Texture coordinate
+in mediump vec3 TangentVs;		// Tangent space to view space, x-axis
+in mediump vec3 BinormalVs;	// Tangent space to view space, y-axis
+in mediump vec3 NormalVs;		// Tangent space to view space, z-axis
+out highp vec4 fragmentColor; // Output variable for fragment color
 
 // Uniforms
 uniform mediump sampler2D DiffuseMap;
@@ -116,7 +117,7 @@ void main()
 	mediump vec3 ViewSpaceViewVector     = vec3(0.0, 0.0, 1.0);				// In view space, we always look along the positive z-axis
 
 	// Get the per fragment normal [0..1] by using a tangent space normal map
-	mediump vec3 normal = texture2D(NormalMap, TexCoordVs).rgb;
+	mediump vec3 normal = texture(NormalMap, TexCoordVs).rgb;
 
 	// Transform the normal from [0..1] to [-1..1]
 	normal = (normal - 0.5) * 2.0;
@@ -136,10 +137,10 @@ void main()
 	// Calculate the fragment color
 	mediump vec4 color = diffuseLight * texture2D(DiffuseMap, TexCoordVs);	// Diffuse term
 	color.rgb += specularLight * texture2D(SpecularMap, TexCoordVs).rgb;	// Specular term
-	color.rgb += texture2D(EmissiveMap, TexCoordVs).rgb;					// Emissive term
+	color.rgb += texture(EmissiveMap, TexCoordVs).rgb;					// Emissive term
 
 	// Done
-	gl_FragColor = min(color, vec4(1.0, 1.0, 1.0, 1.0));
+	fragmentColor = min(color, vec4(1.0, 1.0, 1.0, 1.0));
 }
 );	// STRINGIFY
 
