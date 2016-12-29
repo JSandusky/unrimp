@@ -80,8 +80,8 @@ namespace OpenGLES2Renderer
 				// We can only go on if a EGL configuration was chosen properly
 				if (mConfig)
 				{
-					// Create context
-					const EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+					// Create context (request an version 3 client)
+					const EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
 					mContext = eglCreateContext(mDisplay, mConfig, EGL_NO_CONTEXT, contextAttribs);
 					if (EGL_NO_CONTEXT != mContext)
 					{
