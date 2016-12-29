@@ -28,9 +28,9 @@
 
 
 // Disable warnings
-#pragma warning(push)
-#pragma warning(disable: 4625)	// warning C4625: 'Concurrency::details::_ExceptionHolder': copy constructor was implicitly defined as deleted
-#pragma warning(disable: 4626)	// warning C4626: 'Concurrency::details::_ExceptionHolder': assignment operator was implicitly defined as deleted
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'Concurrency::details::_ExceptionHolder': copy constructor was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: 'Concurrency::details::_ExceptionHolder': assignment operator was implicitly defined as deleted
 
 
 //[-------------------------------------------------------]
@@ -135,4 +135,4 @@ namespace RendererRuntime
 
 
 // Reset warning manipulations we did above
-#pragma warning(pop)
+PRAGMA_WARNING_POP

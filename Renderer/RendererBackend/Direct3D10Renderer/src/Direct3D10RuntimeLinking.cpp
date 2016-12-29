@@ -26,11 +26,7 @@
 #include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
 
 #include <Renderer/PlatformTypes.h>	// For "RENDERER_OUTPUT_DEBUG_PRINTF()"
-#ifdef WIN32
-	#include <Renderer/WindowsHeader.h>
-#else
-	#error "Unsupported platform"
-#endif
+#include <Renderer/WindowsHeader.h>
 
 
 //[-------------------------------------------------------]
@@ -55,18 +51,14 @@ namespace Direct3D10Renderer
 	Direct3D10RuntimeLinking::~Direct3D10RuntimeLinking()
 	{
 		// Destroy the shared library instances
-		#ifdef WIN32
-			if (nullptr != mD3D10SharedLibrary)
-			{
-				::FreeLibrary(static_cast<HMODULE>(mD3D10SharedLibrary));
-			}
-			if (nullptr != mD3DX10SharedLibrary)
-			{
-				::FreeLibrary(static_cast<HMODULE>(mD3DX10SharedLibrary));
-			}
-		#else
-			#error "Unsupported platform"
-		#endif
+		if (nullptr != mD3D10SharedLibrary)
+		{
+			::FreeLibrary(static_cast<HMODULE>(mD3D10SharedLibrary));
+		}
+		if (nullptr != mD3DX10SharedLibrary)
+		{
+			::FreeLibrary(static_cast<HMODULE>(mD3DX10SharedLibrary));
+		}
 	}
 
 	bool Direct3D10RuntimeLinking::isDirect3D10Avaiable()
@@ -96,23 +88,19 @@ namespace Direct3D10Renderer
 	bool Direct3D10RuntimeLinking::loadSharedLibraries()
 	{
 		// Load the shared library
-		#ifdef WIN32
-			mD3D10SharedLibrary = ::LoadLibraryExA("d3d10.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-			if (nullptr != mD3D10SharedLibrary)
+		mD3D10SharedLibrary = ::LoadLibraryExA("d3d10.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+		if (nullptr != mD3D10SharedLibrary)
+		{
+			mD3DX10SharedLibrary = ::LoadLibraryExA("d3dx10_43.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+			if (nullptr == mD3DX10SharedLibrary)
 			{
-				mD3DX10SharedLibrary = ::LoadLibraryExA("d3dx10_43.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-				if (nullptr == mD3DX10SharedLibrary)
-				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Failed to load in the shared library \"d3dx10_43.dll\"\n")
-				}
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Failed to load in the shared library \"d3dx10_43.dll\"\n")
 			}
-			else
-			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Failed to load in the shared library \"d3d10.dll\"\n")
-			}
-		#else
-			#error "Unsupported platform"
-		#endif
+		}
+		else
+		{
+			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Failed to load in the shared library \"d3d10.dll\"\n")
+		}
 
 		// Done
 		return (nullptr != mD3D10SharedLibrary && nullptr != mD3DX10SharedLibrary);
@@ -123,27 +111,23 @@ namespace Direct3D10Renderer
 		bool result = true;	// Success by default
 
 		// Define a helper macro
-		#ifdef WIN32
-			#define IMPORT_FUNC(funcName)																																					\
-				if (result)																																									\
-				{																																											\
-					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D10SharedLibrary), #funcName);																					\
-					if (nullptr != symbol)																																					\
-					{																																										\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
-					}																																										\
-					else																																									\
-					{																																										\
-						wchar_t moduleFilename[MAX_PATH];																																	\
-						moduleFilename[0] = '\0';																																			\
-						::GetModuleFileNameW(static_cast<HMODULE>(mD3D10SharedLibrary), moduleFilename, MAX_PATH);																			\
-						RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 10 error: Failed to locate the entry point \"%s\" within the Direct3D 10 shared library \"%s\"", #funcName, moduleFilename)	\
-						result = false;																																						\
-					}																																										\
-				}
-		#else
-			#error "Unsupported platform"
-		#endif
+		#define IMPORT_FUNC(funcName)																																					\
+			if (result)																																									\
+			{																																											\
+				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D10SharedLibrary), #funcName);																					\
+				if (nullptr != symbol)																																					\
+				{																																										\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
+				}																																										\
+				else																																									\
+				{																																										\
+					wchar_t moduleFilename[MAX_PATH];																																	\
+					moduleFilename[0] = '\0';																																			\
+					::GetModuleFileNameW(static_cast<HMODULE>(mD3D10SharedLibrary), moduleFilename, MAX_PATH);																			\
+					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 10 error: Failed to locate the entry point \"%s\" within the Direct3D 10 shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																						\
+				}																																										\
+			}
 
 		// Load the entry points
 		IMPORT_FUNC(D3D10CreateDevice);
@@ -161,27 +145,23 @@ namespace Direct3D10Renderer
 		bool result = true;	// Success by default
 
 		// Define a helper macro
-		#ifdef WIN32
-			#define IMPORT_FUNC(funcName)																																					\
-				if (result)																																									\
-				{																																											\
-					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX10SharedLibrary), #funcName);																					\
-					if (nullptr != symbol)																																					\
-					{																																										\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
-					}																																										\
-					else																																									\
-					{																																										\
-						wchar_t moduleFilename[MAX_PATH];																																	\
-						moduleFilename[0] = '\0';																																			\
-						::GetModuleFileNameW(static_cast<HMODULE>(mD3DX10SharedLibrary), moduleFilename, MAX_PATH);																			\
-						RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 10 error: Failed to locate the entry point \"%s\" within the Direct3D 10 shared library \"%s\"", #funcName, moduleFilename)	\
-						result = false;																																						\
-					}																																										\
-				}
-		#else
-			#error "Unsupported platform"
-		#endif
+		#define IMPORT_FUNC(funcName)																																					\
+			if (result)																																									\
+			{																																											\
+				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX10SharedLibrary), #funcName);																					\
+				if (nullptr != symbol)																																					\
+				{																																										\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
+				}																																										\
+				else																																									\
+				{																																										\
+					wchar_t moduleFilename[MAX_PATH];																																	\
+					moduleFilename[0] = '\0';																																			\
+					::GetModuleFileNameW(static_cast<HMODULE>(mD3DX10SharedLibrary), moduleFilename, MAX_PATH);																			\
+					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 10 error: Failed to locate the entry point \"%s\" within the Direct3D 10 shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																						\
+				}																																										\
+			}
 
 		// Load the entry points
 		IMPORT_FUNC(D3DX10CompileFromMemory);

@@ -40,13 +40,13 @@ vertexShaderSourceCode =
 "#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-in highp vec3 Position;		// Object space vertex position
-in highp vec2 TexCoord;		// 16 bit texture coordinate
-out   highp vec2 TexCoordVs;	// Texture coordinate
-in highp vec4 QTangent;		// 16 bit QTangent
-out   vec3 TangentVs;			// Tangent space to view space, x-axis
-out   vec3 BinormalVs;			// Tangent space to view space, y-axis
-out   vec3 NormalVs;			// Tangent space to view space, z-axis
+in  highp vec3 Position;	// Object space vertex position
+in  highp vec2 TexCoord;	// 16 bit texture coordinate
+out highp vec2 TexCoordVs;	// Texture coordinate
+in  highp vec4 QTangent;	// 16 bit QTangent
+out vec3 TangentVs;			// Tangent space to view space, x-axis
+out vec3 BinormalVs;		// Tangent space to view space, y-axis
+out vec3 NormalVs;			// Tangent space to view space, z-axis
 
 // Uniforms
 uniform highp mat4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
@@ -97,11 +97,11 @@ fragmentShaderSourceCode =
 "#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-in mediump vec2 TexCoordVs;	// Texture coordinate
-in mediump vec3 TangentVs;		// Tangent space to view space, x-axis
-in mediump vec3 BinormalVs;	// Tangent space to view space, y-axis
-in mediump vec3 NormalVs;		// Tangent space to view space, z-axis
-out highp vec4 fragmentColor; // Output variable for fragment color
+in  mediump vec2 TexCoordVs;	// Texture coordinate
+in  mediump vec3 TangentVs;		// Tangent space to view space, x-axis
+in  mediump vec3 BinormalVs;	// Tangent space to view space, y-axis
+in  mediump vec3 NormalVs;		// Tangent space to view space, z-axis
+out highp vec4 fragmentColor;	// Output variable for fragment color
 
 // Uniforms
 uniform mediump sampler2D DiffuseMap;

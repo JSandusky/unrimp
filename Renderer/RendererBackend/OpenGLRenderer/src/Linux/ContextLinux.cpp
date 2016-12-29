@@ -144,7 +144,7 @@ namespace OpenGLRenderer
 					mNativeWindowHandle = mDummyWindow = XCreateWindow(mDisplay, RootWindow(mDisplay, m_pDummyVisualInfo->screen), 0, 0, 300,
 																		300, 0, m_pDummyVisualInfo->depth, InputOutput, m_pDummyVisualInfo->visual,
 																		CWBorderPixel | CWColormap | CWEventMask, &setWindowAttributes);
-					std::cout<<"Create dummy window\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+					std::cout << "Create dummy window\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 				}
 
 				// Create a GLX context

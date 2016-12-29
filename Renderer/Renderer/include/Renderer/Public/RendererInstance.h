@@ -184,13 +184,13 @@ namespace Renderer
 						else
 						{
 							// Error!
-							std::cerr<<"Failed to locate the entry point \""<<functionName<<"\" within the renderer shared library \""<<rendererFilename<<"\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
+							std::cerr << "Failed to locate the entry point \"" << functionName << "\" within the renderer shared library \"" << rendererFilename << "\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
 							OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"%s\" within the renderer shared library \"%s\"", functionName, rendererFilename)
 						}
 					}
 					else
 					{
-						std::cerr<<"Failed to load in the shared library \""<<rendererFilename<<"\"\nReason:"<<dlerror()<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
+						std::cerr << "Failed to load in the shared library \"" << rendererFilename << "\"\nReason:" << dlerror() << "\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
 						OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", rendererFilename)
 					}
 				#else

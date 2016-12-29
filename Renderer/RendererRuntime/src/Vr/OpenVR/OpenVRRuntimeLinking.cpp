@@ -156,7 +156,7 @@ namespace RendererRuntime
 			mOpenVRSharedLibrary = ::dlopen("libopenvr_api.so", RTLD_NOW);
 			if (nullptr == mOpenVRSharedLibrary)
 			{
-				std::cout<<"OpenVR error: Failed to load in the shared library \"libopenvr_api.so\"\n";	// TODO(co) Use "RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF" instead
+				std::cout << "OpenVR error: Failed to load in the shared library \"libopenvr_api.so\"\n";	// TODO(co) Use "RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF" instead
 			}
 		#else
 			#error "Unsupported platform"

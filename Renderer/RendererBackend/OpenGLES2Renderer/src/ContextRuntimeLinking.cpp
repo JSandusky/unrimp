@@ -603,7 +603,6 @@ namespace OpenGLES2Renderer
 		IMPORT_FUNC(glVertexAttrib4fv);
 		IMPORT_FUNC(glVertexAttribPointer);
 		IMPORT_FUNC(glViewport);
-
 		IMPORT_FUNC(glBindBufferBase);
 
 		// Undefine the helper macro

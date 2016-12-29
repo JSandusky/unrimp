@@ -164,7 +164,7 @@ namespace OpenGLRenderer
 			mOpenGLSharedLibrary = ::dlopen("libGL.so", RTLD_NOW);
 			if (nullptr == mOpenGLSharedLibrary)
 			{
-				std::cout<<"OpenGL error: Failed to load in the shared library \"libGL.so\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+				std::cout << "OpenGL error: Failed to load in the shared library \"libGL.so\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 			}
 		#else
 			#error "Unsupported platform"

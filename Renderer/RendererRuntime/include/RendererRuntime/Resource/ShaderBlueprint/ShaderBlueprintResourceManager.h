@@ -64,7 +64,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Shader blueprint resource manager
 	*/
-	class ShaderBlueprintResourceManager : public IResourceManager
+	class ShaderBlueprintResourceManager : private IResourceManager
 	{
 
 

@@ -36,7 +36,7 @@
 
 // Disable warnings
 // TODO(co) See "RendererRuntime::PipelineStateCompiler::PipelineStateCompiler()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
-#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
+PRAGMA_WARNING_DISABLE_MSVC(4355)	// warning C4355: 'this': used in base member initializer list
 
 
 //[-------------------------------------------------------]

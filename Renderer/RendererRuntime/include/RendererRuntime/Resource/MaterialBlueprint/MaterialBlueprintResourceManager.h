@@ -61,7 +61,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MaterialBlueprintResourceManager : public IResourceManager
+	class MaterialBlueprintResourceManager : private IResourceManager
 	{
 
 

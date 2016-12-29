@@ -20,8 +20,8 @@
 
 // Disable warnings
 // TODO(co) See "RendererRuntime::PipelineStateCacheManager::PipelineStateCacheManager()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
-#pragma warning(push)
-#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4355)	// warning C4355: 'this': used in base member initializer list
 
 
 //[-------------------------------------------------------]
@@ -68,4 +68,4 @@ namespace RendererRuntime
 
 
 // Reset warning manipulations we did above
-#pragma warning(pop)
+PRAGMA_WARNING_POP

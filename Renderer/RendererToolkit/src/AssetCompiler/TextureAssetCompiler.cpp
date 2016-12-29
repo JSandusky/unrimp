@@ -54,24 +54,24 @@
 #include <crunch/stb_image.h>	// TODO(co) This is another library
 
 // Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4005)	// warning C4005: '_HAS_EXCEPTIONS': macro redefinition
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4005)	// warning C4005: '_HAS_EXCEPTIONS': macro redefinition
 	#include <crunch/crnlib.h>
 	#include <crunch/dds_defs.h>
 	#include <crunch/crnlib/crn_texture_conversion.h>
 	#include <crunch/crnlib/crn_command_line_params.h>
-#pragma warning(pop)
+PRAGMA_WARNING_POP
 
 #include <libtiff/tiffio.h>
 
 // Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
-	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
-	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
 	#include <rapidjson/document.h>
-#pragma warning(pop)
+PRAGMA_WARNING_POP
 
 #include <fstream>
 

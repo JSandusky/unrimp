@@ -156,7 +156,7 @@ namespace VulkanRenderer
 			mVulkanSharedLibrary = ::dlopen("libvulkan-1.so", RTLD_NOW);
 			if (nullptr == mVulkanSharedLibrary)
 			{
-				std::cout<<"Vulkan error: Failed to load in the shared library \"libvulkan-1.so\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+				std::cout << "Vulkan error: Failed to load in the shared library \"libvulkan-1.so\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 			}
 		#else
 			#error "Unsupported platform"

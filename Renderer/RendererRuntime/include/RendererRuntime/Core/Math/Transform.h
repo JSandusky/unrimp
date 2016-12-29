@@ -32,8 +32,8 @@
 
 
 // Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4251)	// warning C4251: "needs to have dll-interface to be used by clients of class "
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4251)	// warning C4251: "needs to have dll-interface to be used by clients of class "
 
 
 //[-------------------------------------------------------]
@@ -99,4 +99,4 @@ namespace RendererRuntime
 
 
 // Disable warnings in external headers, we can't fix them
-#pragma warning(pop)
+PRAGMA_WARNING_POP

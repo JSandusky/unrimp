@@ -30,14 +30,14 @@
 #include "RendererRuntime/Export.h"
 
 // Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4201)	// warning C4201: nonstandard extension used: nameless struct/union
-	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
-	#pragma warning(disable: 4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
 	#include <glm/glm.hpp>
-#pragma warning(pop)
-#pragma warning(push)
-	#pragma warning(disable: 4251)	// warning C4251: "needs to have dll-interface to be used by clients of class "
+PRAGMA_WARNING_POP
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4251)	// warning C4251: "needs to have dll-interface to be used by clients of class "
 
 
 //[-------------------------------------------------------]
@@ -79,4 +79,4 @@ namespace RendererRuntime
 
 
 // Disable warnings in external headers, we can't fix them
-#pragma warning(pop)
+PRAGMA_WARNING_POP
