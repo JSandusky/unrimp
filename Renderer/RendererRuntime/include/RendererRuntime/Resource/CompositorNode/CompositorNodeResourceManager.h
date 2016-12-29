@@ -61,7 +61,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorNodeResourceManager : private IResourceManager
+	class CompositorNodeResourceManager : public IResourceManager
 	{
 
 
