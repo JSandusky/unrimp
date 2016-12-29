@@ -65,7 +65,9 @@ namespace OpenGLES2Renderer
 		mGL_OES_vertex_array_object(false),
 		// ANGLE
 		mGL_ANGLE_framebuffer_blit(false),
-		mGL_ANGLE_framebuffer_multisample(false)
+		mGL_ANGLE_framebuffer_multisample(false),
+		// KHR
+		mGL_KHR_debug(false)
 	{
 		// Nothing here
 	}
@@ -232,6 +234,18 @@ namespace OpenGLES2Renderer
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glRenderbufferStorageMultisampleANGLE)
 			mGL_ANGLE_framebuffer_multisample = result;
+		}
+
+		//[-------------------------------------------------------]
+		//[ KHR                                                   ]
+		//[-------------------------------------------------------]
+		mGL_KHR_debug = (nullptr != strstr(extensions, "GL_KHR_debug"));
+		if (mGL_KHR_debug)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glDebugMessageCallbackKHR)
+			mGL_KHR_debug = result;
 		}
 
 		// Undefine the helper macro

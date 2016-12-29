@@ -363,6 +363,8 @@ namespace OpenGLES2Renderer
 	FNDEF_GL(void,				glVertexAttrib4fv,						(GLuint indx, const GLfloat* values));
 	FNDEF_GL(void,				glVertexAttribPointer,					(GLuint indx, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* ptr));
 	FNDEF_GL(void,				glViewport,								(GLint x, GLint y, GLsizei width, GLsizei height));
+	
+	FNDEF_GL(void,				glBindBufferBase,						(GLenum target, GLuint index, GLuint buffer));
 	#undef FNDEF_GL
 
 
@@ -551,6 +553,9 @@ namespace OpenGLES2Renderer
 	#define	glVertexAttrib4fv						FNPTR(glVertexAttrib4fv)
 	#define	glVertexAttribPointer					FNPTR(glVertexAttribPointer)
 	#define	glViewport								FNPTR(glViewport)
+
+	// ES 3
+	#define	glBindBufferBase						FNPTR(glBindBufferBase)
 
 
 //[-------------------------------------------------------]

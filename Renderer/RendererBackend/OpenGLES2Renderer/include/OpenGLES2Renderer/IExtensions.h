@@ -89,6 +89,8 @@ namespace OpenGLES2Renderer
 		// ANGLE
 		virtual bool isGL_ANGLE_framebuffer_blit() const = 0;
 		virtual bool isGL_ANGLE_framebuffer_multisample() const = 0;
+		// KHR
+		virtual bool isGL_KHR_debug() const = 0;
 
 
 	//[-------------------------------------------------------]

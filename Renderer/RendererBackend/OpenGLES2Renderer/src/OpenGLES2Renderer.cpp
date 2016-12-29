@@ -31,6 +31,8 @@
 #include "OpenGLES2Renderer/RenderTarget/Framebuffer.h"
 #include "OpenGLES2Renderer/Buffer/BufferManager.h"
 #include "OpenGLES2Renderer/Buffer/IndexBuffer.h"
+#include "OpenGLES2Renderer/Buffer/TextureBufferBind.h"
+#include "OpenGLES2Renderer/Buffer/UniformBufferBind.h"
 #include "OpenGLES2Renderer/Buffer/VertexBuffer.h"
 #include "OpenGLES2Renderer/Buffer/VertexArrayVao.h"
 #include "OpenGLES2Renderer/Buffer/VertexArrayNoVao.h"
@@ -42,9 +44,12 @@
 #include "OpenGLES2Renderer/State/PipelineState.h"
 #include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
 #include "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
+#include "OpenGLES2Renderer/ContextRuntimeLinking.h"
 
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
+
+#include <GLES2/gl2ext.h>
 
 #include <cassert>
 
@@ -282,6 +287,22 @@ namespace OpenGLES2Renderer
 			// Initialize the capabilities
 			initializeCapabilities();
 
+			#ifdef RENDERER_OUTPUT_DEBUG
+				// "GL_KHR_debug"-extension available?
+				if (mContext->getExtensions().isGL_KHR_debug())
+				{
+					// Synchronous debug output, please
+					// -> Makes it easier to find the place causing the issue
+					glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_KHR);
+
+					// We don't need to configure the debug output by using "glDebugMessageControlARB()",
+					// by default all messages are enabled and this is good this way
+
+					// Set the debug message callback function
+					glDebugMessageCallbackKHR(&OpenGLES2Renderer::debugMessageCallback, nullptr);
+				}
+			#endif
+
 			// Add references to the default sampler state and set it
 			if (nullptr != mDefaultSamplerState)
 			{
@@ -433,10 +454,15 @@ namespace OpenGLES2Renderer
 			const Renderer::ResourceType resourceType = resource->getResourceType();
 			switch (resourceType)
 			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 has no texture buffer support")
+				case Renderer::ResourceType::UNIFORM_BUFFER:
+				{
+					// Attach the buffer to the given UBO binding point
+					// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+					// -> Direct3D 10 and Direct3D 11 have explicit binding points
+					glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<UniformBuffer*>(resource)->getOpenGLESUniformBuffer());
 					break;
-
+				}
+				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
@@ -456,8 +482,13 @@ namespace OpenGLES2Renderer
 							// TODO(co) Some security checks might be wise *maximum number of texture units*
 							glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + descriptorRange->baseShaderRegister));
 
+							// Bind texture buffer
+							if (resourceType == Renderer::ResourceType::TEXTURE_BUFFER)
+							{
+								glBindTexture(GL_TEXTURE_BUFFER_EXT, static_cast<TextureBuffer*>(resource)->getOpenGLESTexture());
+							}
 							// Bind texture
-							if (resourceType == Renderer::ResourceType::TEXTURE_2D_ARRAY)
+							else if (resourceType == Renderer::ResourceType::TEXTURE_2D_ARRAY)
 							{
 								// No extension check required, if we in here we already know it must exist
 								glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLES2Texture());
@@ -467,8 +498,11 @@ namespace OpenGLES2Renderer
 								glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLES2Texture());
 							}
 
-							// Set the OpenGL ES 2 sampler states
-							mGraphicsRootSignature->setOpenGLES2SamplerStates(descriptorRange->samplerRootParameterIndex);
+							if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
+							{
+								// Set the OpenGL ES 2 sampler states
+								mGraphicsRootSignature->setOpenGLES2SamplerStates(descriptorRange->samplerRootParameterIndex);
+							}
 
 							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 								// Be polite and restore the previous active OpenGL ES 2 texture
@@ -506,7 +540,6 @@ namespace OpenGLES2Renderer
 				case Renderer::ResourceType::FRAMEBUFFER:
 				case Renderer::ResourceType::INDEX_BUFFER:
 				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
 				case Renderer::ResourceType::INDIRECT_BUFFER:
 				case Renderer::ResourceType::PIPELINE_STATE:
 				case Renderer::ResourceType::VERTEX_SHADER:
@@ -1415,6 +1448,113 @@ namespace OpenGLES2Renderer
 	void OpenGLES2Renderer::finish()
 	{
 		glFinish();
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private static methods                                ]
+	//[-------------------------------------------------------]
+	void OpenGLES2Renderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char *message, const void *)
+	{
+		// Source to string
+		char debugSource[20]{0};
+		switch (source)
+		{
+			case GL_DEBUG_SOURCE_API_KHR:
+				strncpy(debugSource, "OpenGL", 20);
+				break;
+
+			case GL_DEBUG_SOURCE_WINDOW_SYSTEM_KHR:
+				strncpy(debugSource, "Windows", 20);
+				break;
+
+			case GL_DEBUG_SOURCE_SHADER_COMPILER_KHR:
+				strncpy(debugSource, "Shader compiler", 20);
+				break;
+
+			case GL_DEBUG_SOURCE_THIRD_PARTY_KHR:
+				strncpy(debugSource, "Third party", 20);
+				break;
+
+			case GL_DEBUG_SOURCE_APPLICATION_KHR:
+				strncpy(debugSource, "Application", 20);
+				break;
+
+			case GL_DEBUG_SOURCE_OTHER_KHR:
+				strncpy(debugSource, "Other", 20);
+				break;
+
+			default:
+				strncpy(debugSource, "?", 20);
+				break;
+		}
+
+		// Debug type to string
+		char debugType[25]{0};
+		switch (type)
+		{
+			case GL_DEBUG_TYPE_ERROR_KHR:
+				strncpy(debugType, "Error", 25);
+				break;
+
+			case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_KHR:
+				strncpy(debugType, "Deprecated behavior", 25);
+				break;
+
+			case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_KHR:
+				strncpy(debugType, "Undefined behavior", 25);
+				break;
+
+			case GL_DEBUG_TYPE_PORTABILITY_KHR:
+				strncpy(debugType, "Portability", 25);
+				break;
+
+			case GL_DEBUG_TYPE_PERFORMANCE_KHR:
+				strncpy(debugType, "Performance", 25);
+				break;
+
+			case GL_DEBUG_TYPE_OTHER_KHR:
+				strncpy(debugType, "Other", 25);
+				break;
+
+			default:
+				strncpy(debugType, "?", 25);
+				break;
+		}
+
+		// Debug severity to string
+		char debugSeverity[20]{0};
+		switch (severity)
+		{
+			case GL_DEBUG_SEVERITY_HIGH_KHR:
+				strncpy(debugSeverity, "High", 20);
+				break;
+
+			case GL_DEBUG_SEVERITY_MEDIUM_KHR:
+				strncpy(debugSeverity, "Medium", 20);
+				break;
+
+			case GL_DEBUG_SEVERITY_LOW_KHR:
+				strncpy(debugSeverity, "Low", 20);
+				break;
+
+			case GL_DEBUG_SEVERITY_NOTIFICATION_KHR:
+				strncpy(debugSeverity, "Notification", 20);
+				break;
+
+			default:
+				strncpy(debugSeverity, "?", 20);
+				break;
+		}
+
+		// Output the debug message
+		#ifdef _DEBUG
+			RENDERER_OUTPUT_DEBUG_PRINTF("OpenGLES error: OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
+		#else
+			// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
+			id = id;
+			message = message;
+		#endif
 	}
 
 

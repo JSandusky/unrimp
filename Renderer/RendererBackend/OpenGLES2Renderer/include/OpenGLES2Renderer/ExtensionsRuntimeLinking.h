@@ -109,6 +109,8 @@ namespace OpenGLES2Renderer
 		// ANGLE
 		inline virtual bool isGL_ANGLE_framebuffer_blit() const override;
 		inline virtual bool isGL_ANGLE_framebuffer_multisample() const override;
+		// KHR
+		inline virtual bool isGL_KHR_debug() const override;
 
 
 	//[-------------------------------------------------------]
@@ -141,6 +143,8 @@ namespace OpenGLES2Renderer
 		// ANGLE
 		bool mGL_ANGLE_framebuffer_blit;
 		bool mGL_ANGLE_framebuffer_multisample;
+		// KHR
+		bool mGL_KHR_debug;
 
 
 	};
@@ -338,6 +342,14 @@ namespace OpenGLES2Renderer
 	#define GL_MAX_SAMPLES_ANGLE						0x8D57
 	FNDEF_EX(void,	glRenderbufferStorageMultisampleANGLE,	(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height));
 	#define glRenderbufferStorageMultisampleANGLE	FNPTR(glRenderbufferStorageMultisampleANGLE)
+
+
+	//[-------------------------------------------------------]
+	//[ KHR definitions                                       ]
+	//[-------------------------------------------------------]
+	// GL_KHR_debug
+	FNDEF_EX(void,	glDebugMessageCallbackKHR,	(GLDEBUGPROCKHR callback, const void *userParam));
+	#define glDebugMessageCallbackKHR	FNPTR(glDebugMessageCallbackKHR)
 
 
 	//[-------------------------------------------------------]
