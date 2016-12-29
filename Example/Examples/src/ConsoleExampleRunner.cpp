@@ -36,13 +36,13 @@ void ConsoleExampleRunner::showError(const std::string& errorMessage)
 
 void ConsoleExampleRunner::printUsage(const ExampleRunner::AvailableExamplesMap& knownExamples, const ExampleRunner::AvailableRendererMap& availableRenderer)
 {
-	std::cout<<"Usage: ./Examples <exampleName> [-r <rendererName>]\n";
-	std::cout<<"Available Examples:\n";
+	std::cout << "Usage: ./Examples <exampleName> [-r <rendererName>]\n";
+	std::cout << "Available Examples:\n";
 	for (AvailableExamplesMap::const_iterator it=knownExamples.cbegin(); it!=knownExamples.cend(); ++it)
-		std::cout <<"\t"<< it->first<< '\n';
-	std::cout<<"Available Renderer:\n";
+		std::cout << "\t" << it->first << '\n';
+	std::cout << "Available Renderer:\n";
 	for (AvailableRendererMap::const_iterator it=availableRenderer.cbegin(); it!=availableRenderer.cend(); ++it)
-		std::cout <<"\t"<< *it<< '\n';
+		std::cout << "\t" << *it << '\n';
 }
 
 int ConsoleExampleRunner::run(const CmdLineArgs& args)
