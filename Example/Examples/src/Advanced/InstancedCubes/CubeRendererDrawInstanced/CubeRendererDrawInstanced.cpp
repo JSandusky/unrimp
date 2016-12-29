@@ -122,7 +122,8 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 	// Get the maximum number of instances per batch
 	// -> In this application, this depends on the maximum texture buffer size
 	// -> /2 -> One instance requires two texels
-	mMaximumNumberOfInstancesPerBatch = mRenderer->getCapabilities().maximumTextureBufferSize / 2;
+	// TODO(sw) Test code. This makes the crash a bit less harsh -> i can reboot the system clearly
+	mMaximumNumberOfInstancesPerBatch = 65536; //mRenderer->getCapabilities().maximumTextureBufferSize / 2;
 
 	{ // Create the textures
 		static const uint32_t TEXTURE_WIDTH   = 128;

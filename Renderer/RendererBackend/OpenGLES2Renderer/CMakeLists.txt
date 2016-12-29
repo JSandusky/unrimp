@@ -40,7 +40,7 @@ endif()
 ##################################################
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/OpenGLES2/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/OpenGLES/include)
 
 
 ##################################################
