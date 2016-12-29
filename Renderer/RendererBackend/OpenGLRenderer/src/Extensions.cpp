@@ -689,6 +689,7 @@ namespace OpenGLRenderer
 			// Load the entry points
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glDebugMessageCallbackARB)
+			IMPORT_FUNC(glDebugMessageControlARB)
 			mGL_ARB_debug_output = result;
 		}
 

@@ -453,6 +453,7 @@ namespace OpenGLRenderer
 
 	// GL_ARB_debug_output
 	FNDEF_EX(glDebugMessageCallbackARB,	PFNGLDEBUGMESSAGECALLBACKARBPROC);
+	FNDEF_EX(glDebugMessageControlARB,	PFNGLDEBUGMESSAGECONTROLARBPROC);
 
 	// GL_ARB_direct_state_access
 	FNDEF_EX(glCreateBuffers,					PFNGLCREATEBUFFERSPROC);

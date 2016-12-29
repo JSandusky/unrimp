@@ -338,6 +338,9 @@ namespace OpenGLRenderer
 						// We don't need to configure the debug output by using "glDebugMessageControlARB()",
 						// by default all messages are enabled and this is good this way
 
+						// Disable severity​ notifications, most drivers print many things with this severity
+						glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, 0, false);
+
 						// Set the debug message callback function
 						glDebugMessageCallbackARB(&OpenGLRenderer::debugMessageCallback, nullptr);
 					}
