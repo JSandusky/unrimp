@@ -137,9 +137,16 @@ set(SOURCE_CODES
 	src/Resource/Texture/Loader/DdsTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/KtxTextureResourceLoader.cpp
 	src/Resource/Texture/TextureResourceManager.cpp
-	src/Vr/OpenVR/OpenVRRuntimeLinking.cpp
-	src/Vr/OpenVR/VrManagerOpenVR.cpp
 )
+
+if(NOT ANDROID)
+	# Not android source codes
+	set(SOURCE_CODES
+		${SOURCE_CODES}
+		src/Vr/OpenVR/OpenVRRuntimeLinking.cpp
+		src/Vr/OpenVR/VrManagerOpenVR.cpp
+	)
+endif()
 
 if(UNIX)
 	# Windows source codes
