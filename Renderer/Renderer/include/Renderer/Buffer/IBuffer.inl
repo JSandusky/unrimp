@@ -37,6 +37,12 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
+	inline IBuffer::IBuffer(ResourceType resourceType) :
+		IResource(resourceType)
+	{
+		// Nothing here
+	}
+
 	inline IBuffer::IBuffer(ResourceType resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{

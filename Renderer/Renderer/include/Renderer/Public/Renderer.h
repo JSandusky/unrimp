@@ -1853,6 +1853,10 @@ namespace Renderer
 				return nullptr;
 			}
 		protected:
+			inline explicit IResource(ResourceType resourceType) :
+				mResourceType(resourceType),
+				mRenderer(nullptr)
+			{}
 			inline IResource(ResourceType resourceType, IRenderer& renderer) :
 				mResourceType(resourceType),
 				mRenderer(&renderer)
@@ -2010,6 +2014,9 @@ namespace Renderer
 			inline virtual ~IBuffer()
 			{}
 		protected:
+			inline explicit IBuffer(ResourceType resourceType) :
+				IResource(resourceType)
+			{}
 			inline IBuffer(ResourceType resourceType, IRenderer& renderer) :
 				IResource(resourceType, renderer)
 			{}
@@ -2095,6 +2102,9 @@ namespace Renderer
 			virtual const uint8_t* getEmulationData() const = 0;
 			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
+			inline IIndirectBuffer() :
+				IBuffer(ResourceType::INDIRECT_BUFFER)
+			{}
 			inline explicit IIndirectBuffer(IRenderer& renderer) :
 				IBuffer(ResourceType::INDIRECT_BUFFER, renderer)
 			{}
@@ -2111,15 +2121,6 @@ namespace Renderer
 		{
 		public:
 			inline IndirectBuffer(uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0) :
-				#if defined(__clang__)
-					// TODO(sw) to silence clang warning : warning: binding dereferenced null pointer to reference has undefined behavior [-Wnull-dereference]
-					#pragma clang diagnostic push
-					#pragma clang diagnostic ignored "-Wnull-dereference"
-					IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
-					#pragma clang diagnostic pop
-				#else
-					IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
-				#endif
 				mDrawInstancedArguments(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation)
 			{}
 			inline virtual ~IndirectBuffer()
@@ -2143,15 +2144,6 @@ namespace Renderer
 		{
 		public:
 			inline IndexedIndirectBuffer(uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0) :
-				#if defined(__clang__)
-					// TODO(sw) to silence clang warning : warning: binding dereferenced null pointer to reference has undefined behavior [-Wnull-dereference]
-					#pragma clang diagnostic push
-					#pragma clang diagnostic ignored "-Wnull-dereference"
-					IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
-					#pragma clang diagnostic pop
-				#else
-					IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),
-				#endif
 				mDrawIndexedInstancedArguments(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation)
 			{}
 			inline virtual ~IndexedIndirectBuffer()

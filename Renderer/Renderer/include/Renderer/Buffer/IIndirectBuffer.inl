@@ -48,6 +48,12 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
+	inline IIndirectBuffer::IIndirectBuffer() :
+		IBuffer(ResourceType::INDIRECT_BUFFER)
+	{
+		// Nothing here
+	}
+
 	inline IIndirectBuffer::IIndirectBuffer(IRenderer &renderer) :
 		IBuffer(ResourceType::INDIRECT_BUFFER, renderer)
 	{

@@ -30,7 +30,6 @@ namespace Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline IndexedIndirectBuffer::IndexedIndirectBuffer(uint32_t indexCountPerInstance, uint32_t instanceCount, uint32_t startIndexLocation, int32_t baseVertexLocation, uint32_t startInstanceLocation) :
-		IIndirectBuffer(*static_cast<IRenderer*>(nullptr)),	// Evil but does the trick in this special use case
 		mDrawIndexedInstancedArguments(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation)
 	{
 		// Nothing here
