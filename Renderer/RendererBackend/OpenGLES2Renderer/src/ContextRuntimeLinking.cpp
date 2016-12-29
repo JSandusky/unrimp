@@ -25,7 +25,7 @@
 
 #include "OpenGLES2Renderer/ContextRuntimeLinking.h"
 #include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"
-#ifdef LINUX
+#if defined LINUX || defined(ANDROID)
 	#include <dlfcn.h>	// For "dlopen()", "dlclose()" and so on
 	#include <link.h>	// For getting the path to the library (for the error message)
 #endif
@@ -241,7 +241,7 @@ namespace OpenGLES2Renderer
 					}
 				}
 			}
-		#elif defined LINUX
+		#elif defined LINUX && !defined ANDROID
 			// First "libGL.so": The closed source drivers doesn't provide separate libraries for GLES and EGL (at least the drivers from AMD)
 			// but the separate EGL/GLES2 libs might be present on the system
 			mEGLSharedLibrary = ::dlopen("libGL.so", RTLD_LAZY);
@@ -270,6 +270,13 @@ namespace OpenGLES2Renderer
 				{
 					mGLESSharedLibrary = ::dlopen("libGLESv2.so", RTLD_LAZY);
 				}
+			}
+		#elif defined ANDROID
+			// On Android we have "libEGL.so"
+			mEGLSharedLibrary = ::dlopen("libEGL.so", RTLD_LAZY);
+			if (nullptr != mEGLSharedLibrary)
+			{
+				mGLESSharedLibrary = ::dlopen("libGLESv2.so", RTLD_LAZY);
 			}
 		#else
 			#error "Unsupported platform"
@@ -311,7 +318,7 @@ namespace OpenGLES2Renderer
 						result = false;																																				\
 					}																																								\
 				}
-		#elif defined LINUX
+		#elif defined LINUX && !defined(ANDROID)
 			#define IMPORT_FUNC(funcName)																																			\
 				if (result)																																							\
 				{																																									\
@@ -337,6 +344,31 @@ namespace OpenGLES2Renderer
 						{																																							\
 							libraryName = linkMap->l_name;																															\
 						}																																							\
+						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: Failed to locate the entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libraryName)		\
+						result = false;																																				\
+					}																																								\
+				}
+		#elif defined (LINUX) && defined(ANDROID)
+			#define IMPORT_FUNC(funcName)																																			\
+				if (result)																																							\
+				{																																									\
+					void *symbol = ::dlsym(mEGLSharedLibrary, #funcName);																											\
+					if (nullptr == symbol)																																			\
+					{																																								\
+						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 2 on desktop PC by using a					\
+						   native OpenGL ES 2 capable graphics driver under Linux (tested with "AMD Catalyst 11.8"), only this way will work */										\
+						if (nullptr != eglGetProcAddress)																															\
+						{																																							\
+							symbol = eglGetProcAddress(#funcName);																													\
+						}																																							\
+					}																																								\
+					if (nullptr != symbol)																																			\
+					{																																								\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
+					}																																								\
+					else																																							\
+					{																																								\
+						const char* libraryName = "unknown";																														\
 						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: Failed to locate the entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libraryName)		\
 						result = false;																																				\
 					}																																								\
@@ -392,7 +424,19 @@ namespace OpenGLES2Renderer
 		// Define a helper macro
 		#ifdef ANDROID
 			// Native OpenGL ES 2 on mobile device
-			#error "Unsupported platform"	// Load from mGLESSharedLibrary
+			#define IMPORT_FUNC(funcName)																														\
+				if (result)																																		\
+				{																																				\
+					void *symbol = ::dlsym(mGLESSharedLibrary, #funcName);																						\
+					if (nullptr != symbol)																														\
+					{																																			\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																						\
+					}																																			\
+					else																																		\
+					{																																			\
+						result = false;																															\
+					}																																			\
+				}
 		#else
 			// Native OpenGL ES 2 on desktop PC, we need an function entry point work around for this
 			#define IMPORT_FUNC(funcName)																														\

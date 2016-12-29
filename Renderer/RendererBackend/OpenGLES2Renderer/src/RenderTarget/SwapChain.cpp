@@ -93,7 +93,7 @@ namespace OpenGLES2Renderer
 				height = static_cast<UINT>(swapChainHeight);
 			}
 			else
-		#elif defined LINUX
+		#elif defined LINUX && !defined(ANDROID)
 			if (mNativeWindowHandle)
 			{
 				IContext &context = static_cast<OpenGLES2Renderer&>(getRenderer()).getContext();
@@ -106,6 +106,13 @@ namespace OpenGLES2Renderer
 				XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
 				width = unsignedWidth;
 				height = unsignedHeight;
+			}
+			else
+		#elif defined(ANDROID)
+			if (mNativeWindowHandle)
+			{
+				//TODO(sw) get size on android
+				width = height=0;
 			}
 			else
 		#else

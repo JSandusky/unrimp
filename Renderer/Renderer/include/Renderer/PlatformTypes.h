@@ -311,8 +311,8 @@
 			#endif
 		#elif LINUX
 			#include <iostream>
-			#define RENDERER_OUTPUT_DEBUG_STRING(outputString) std::cerr<<outputString<<'\n';
-			#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...) fprintf (stderr, outputString, __VA_ARGS__);
+			#define RENDERER_OUTPUT_DEBUG_STRING(outputString) std::cerr << outputString << '\n';
+			#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...) fprintf(stderr, outputString, __VA_ARGS__);
 		#else
 			#error "Unsupported platform"
 		#endif

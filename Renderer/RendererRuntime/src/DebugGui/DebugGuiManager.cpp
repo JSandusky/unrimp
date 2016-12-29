@@ -133,7 +133,7 @@ namespace RendererRuntime
 		}
 		// TODO(co) Get rid of "std::to_string()" later on in case it's a problem (memory allocations inside)
 		ImGui::Begin(("RendererRuntime::DebugGuiManager::drawText_" + std::to_string(mDrawTextCounter)).c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoFocusOnAppearing);
-			ImGui::Text(text);
+			ImGui::Text("%s", text);	// Use "%s" as format instead of the text itself to avoid compiler warning "-Wformat-security"
 			ImGui::SetWindowPos(ImVec2(x, y));
 		ImGui::End();
 		if (!drawBackground)

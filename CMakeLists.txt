@@ -18,7 +18,7 @@
 #\*********************************************************/
 
 
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 3.2.2)
 
 
 ##################################################
@@ -39,12 +39,16 @@ elseif(${CMAKE_GENERATOR} MATCHES "Visual Studio 10")
 	set(ARCHITECTURE_X86 1)
 	set(ARCHITECTURE "x86")
 elseif(${CMAKE_GENERATOR} MATCHES "Unix Makefiles")
-	if(CMAKE_SIZEOF_VOID_P MATCHES 8)
-		set(ARCHITECTURE_X64 1)
-		set(ARCHITECTURE "x64")
+	if (ANDROID)
+		set(ARCHITECTURE ${ANDROID_ABI})
 	else()
-		set(ARCHITECTURE_X86 1)
-		set(ARCHITECTURE "x86")
+		if(CMAKE_SIZEOF_VOID_P MATCHES 8)
+			set(ARCHITECTURE_X64 1)
+			set(ARCHITECTURE "x64")
+		else()
+			set(ARCHITECTURE_X86 1)
+			set(ARCHITECTURE "x86")
+		endif()
 	endif()
 else()
 	message("Unsupported architecture")
@@ -53,8 +57,10 @@ endif()
 # Operation system + architecture
 if(WIN32)
 	set(OS_ARCHITECTURE "Windows_${ARCHITECTURE}")
-elseif(UNIX)
+elseif(UNIX AND NOT ANDROID)
 	set(OS_ARCHITECTURE "Linux_${ARCHITECTURE}")
+elseif(ANDROID)
+	set(OS_ARCHITECTURE "Android_${ARCHITECTURE}")
 else()
 	message("Unsupported operation system")
 endif()
@@ -83,13 +89,21 @@ message(STATUS "External OS architecture directory: ${OUTPUT_EXTERNAL_OS_ARCHITE
 	# Advanced renderer options
 	set(RENDERER_DEBUG	"1"	CACHE BOOL "If false, the e.g. Direct3D 9 PIX functions (D3DPERF_* functions) debug features are disabled (disabling support just reduces the binary size slightly but makes debugging more difficult)")
 	mark_as_advanced(RENDERER_DEBUG)
-set(RENDERER_NULL			"1"	CACHE BOOL "Build null renderer?")
-set(RENDERER_OPENGL			"1"	CACHE BOOL "Build OpenGL renderer?")
-	# Advanced OpenGL renderer options
-	set(RENDERER_OPENGL_NO_STATE_CLEANUP		"1"	CACHE BOOL "If true, the previous OpenGL state will not be restored after performing an operation (better performance, reduces the binary size slightly, but might result in unexpected behaviour when using OpenGL directly beside this renderer)")
-	set(RENDERER_OPENGL_NO_RENDERERMATCHCHECK	"1"	CACHE BOOL "If true, remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)")
-	mark_as_advanced(RENDERER_OPENGL_NO_STATE_CLEANUP)
-	mark_as_advanced(RENDERER_OPENGL_NO_RENDERERMATCHCHECK)
+
+# NULL Renderer doesn't compile under android for now disable it
+if (NOT ANDROID)
+	set(RENDERER_NULL			"1"	CACHE BOOL "Build null renderer?")
+endif()
+
+# OpenGL Renderer is not for android
+if (NOT ANDROID)
+	set(RENDERER_OPENGL			"1"	CACHE BOOL "Build OpenGL renderer?")
+		# Advanced OpenGL renderer options
+		set(RENDERER_OPENGL_NO_STATE_CLEANUP		"1"	CACHE BOOL "If true, the previous OpenGL state will not be restored after performing an operation (better performance, reduces the binary size slightly, but might result in unexpected behaviour when using OpenGL directly beside this renderer)")
+		set(RENDERER_OPENGL_NO_RENDERERMATCHCHECK	"1"	CACHE BOOL "If true, remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)")
+		mark_as_advanced(RENDERER_OPENGL_NO_STATE_CLEANUP)
+		mark_as_advanced(RENDERER_OPENGL_NO_RENDERERMATCHCHECK)
+endif()
 set(RENDERER_OPENGLES2		"1"	CACHE BOOL "Build OpenGL ES 2 renderer?")
 	# Advanced OpenGL ES 2 renderer options
 	set(RENDERER_OPENGLES2_NO_STATE_CLEANUP			"1"	CACHE BOOL "If true, the previous OpenGL ES 2 state will not be restored after performing an operation (better performance, reduces the binary size slightly, but might result in unexpected behaviour when using OpenGL ES 2 directly beside this renderer)")
@@ -113,18 +127,26 @@ if(WIN32)
 endif()
 set(STATIC_LIBRARY			"1"	CACHE BOOL "Build static library?")
 set(SHARED_LIBRARY			"1"	CACHE BOOL "Build shared library?")
-# Renderer toolkit
-set(RENDERER_TOOLKIT		"1"	CACHE BOOL "Build renderer toolkit?")
+
+# Renderer toolkit is not for android
+if (NOT ANDROID)
+	# Renderer toolkit
+	set(RENDERER_TOOLKIT		"1"	CACHE BOOL "Build renderer toolkit?")
+endif()
+
 # Renderer runtime
 set(RENDERER_RUNTIME		"1"	CACHE BOOL "Build renderer runtime?")
-# Examples
-set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
-	# Advanced examples options
-	set(EXAMPLES_ASSIMP		"1"	CACHE BOOL "Build Open Asset Import Library (ASSIMP) examples? (will add approximately 2 MB to the executable size when statically linked)")
-	mark_as_advanced(EXAMPLES_ASSIMP)
 
+# No Examples for android for now
+if (NOT ANDROID)
+	# Examples
+	set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
+		# Advanced examples options
+		set(EXAMPLES_ASSIMP		"1"	CACHE BOOL "Build Open Asset Import Library (ASSIMP) examples? (will add approximately 2 MB to the executable size when statically linked)")
+		mark_as_advanced(EXAMPLES_ASSIMP)
+endif()
 
-if("${CMAKE_CXX_COMPILER_ID}"	 STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	# We need c++1z/c++17 support but only for the renderer toolkit part, runtime currently should be only uses c++11 features
 	include(CheckCXXCompilerFlag)
 	CHECK_CXX_COMPILER_FLAG("-std=c++1z" COMPILER_SUPPORTS_CXX1z)
@@ -149,9 +171,35 @@ IF(RENDERER_TOOLKIT AND NOT HAVE_CXX17_FILESYSTEM AND NOT HAVE_CXX1z_FILESYSTEM)
   message( FATAL_ERROR "Renderer toolkit needs c++ filesystem TS support but the compiler ${CMAKE_CXX_COMPILER} doesn't support c++ filesystem TS. Please use a different C++ compiler." )
 ENDIF()
 
+# Check for visibility support: -fvisibility=hidden -fvisibility-inlines-hidden
+check_cxx_compiler_flag( -fvisibility=hidden GXX_HAS_VISIBILITY_FLAG )
+check_cxx_compiler_flag( -fvisibility-inlines-hidden GXX_HAS_VISIBILITY_INLINES_FLAG )
+
+# if( GXX_HAS_VISIBILITY_FLAG AND NOT APPLE )
+# 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden" )
+# endif()
+# 
+# if( GXX_HAS_VISIBILITY_INLINES_FLAG AND NOT APPLE )
+# 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden" )
+# endif()
+
 # At first we treat UNIX = Linux
-if(UNIX)
+if(UNIX AND NOT ANDROID)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -DRENDERER_NO_DEBUG")
+endif()
+
+# We treat android also as linux
+if (ANDROID)
+		# We use exceptions so enable exception feature, is disabled by default by the android NDK
+		set(ANDROID_CPP_FEATURES "exceptions" CACHE STRING "")
+
+		# We only support android 5.1+
+		set(ANDROID_PLATFORM "android-22" CACHE STRING "")
+		
+		# We want also the llvm libc++ which is fully c++11 compatible
+		set(ANDROID_STL "c++_shared" CACHE STRING "")
+
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DANDROID -DLINUX -DRENDERER_NO_DEBUG")
 endif()
 
 if (${ARCHITECTURE_X64})

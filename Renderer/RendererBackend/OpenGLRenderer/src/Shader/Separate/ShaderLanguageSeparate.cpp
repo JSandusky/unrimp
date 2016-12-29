@@ -309,7 +309,7 @@ namespace OpenGLRenderer
 		}
 
 		// Is "GL_EXT_direct_state_access" there?
-		else if (openGLRenderer.getExtensions().isGL_EXT_direct_state_access())
+		else if (openGLRenderer.getExtensions().isGL_EXT_direct_state_access() || openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
 		{
 			// Effective direct state access (DSA)
 			return new ProgramSeparateDsa(openGLRenderer, rootSignature, static_cast<VertexShaderSeparate*>(vertexShader), static_cast<TessellationControlShaderSeparate*>(tessellationControlShader), static_cast<TessellationEvaluationShaderSeparate*>(tessellationEvaluationShader), static_cast<GeometryShaderSeparate*>(geometryShader), static_cast<FragmentShaderSeparate*>(fragmentShader));

@@ -530,29 +530,54 @@ namespace OpenGLRenderer
 				{
 					// In OpenGL, all shaders share the same texture units (= "Renderer::RootParameter::shaderVisibility" stays unused)
 
-					// Is "GL_EXT_direct_state_access" there?
-					if (mExtensions->isGL_EXT_direct_state_access())
+					// Is "GL_ARB_direct_state_access" or "GL_EXT_direct_state_access" there?
+					if (mExtensions->isGL_ARB_direct_state_access() || mExtensions->isGL_EXT_direct_state_access())
 					{
 						// Effective direct state access (DSA)
+						const bool isARB_DSA = mExtensions->isGL_ARB_direct_state_access();
 
-						// GL_TEXTURE0_ARB is the first texture unit, while nUnit we received is zero based
-						const GLenum unit = GL_TEXTURE0_ARB + descriptorRange->baseShaderRegister;
+						// "glBindTextureUnit()" unit parameter is zero based so we can simply use the value we received
+						const GLuint unit = descriptorRange->baseShaderRegister;
 
 						// TODO(co) Some security checks might be wise *maximum number of texture units*
 						// Evaluate the texture type
 						switch (resourceType)
 						{
 							case Renderer::ResourceType::TEXTURE_BUFFER:
-								glBindMultiTextureEXT(unit, GL_TEXTURE_BUFFER_ARB, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
+								if (isARB_DSA)
+								{
+									glBindTextureUnit(unit, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
+								}
+								else
+								{
+									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_BUFFER_ARB, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
+								}
 								break;
 
 							case Renderer::ResourceType::TEXTURE_2D:
-								glBindMultiTextureEXT(unit, GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLTexture());
+								if (isARB_DSA)
+								{
+									glBindTextureUnit(unit, static_cast<Texture2D*>(resource)->getOpenGLTexture());
+								}
+								else
+								{
+									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLTexture());
+								}
 								break;
 
 							case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-								// No extension check required, if we in here we already know it must exist
-								glBindMultiTextureEXT(unit, GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
+								// No texture 2D array extension check required, if we in here we already know it must exist
+								if (isARB_DSA)
+								{
+									glBindTextureUnit(unit, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
+								}
+								else
+								{
+									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
+								}
 								break;
 
 							case Renderer::ResourceType::ROOT_SIGNATURE:
@@ -596,7 +621,8 @@ namespace OpenGLRenderer
 
 								// TODO(co) Some security checks might be wise *maximum number of texture units*
 								// Activate the texture unit we want to manipulate
-								glActiveTextureARB(unit);
+								// -> "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+								glActiveTextureARB(GL_TEXTURE0_ARB + unit);
 
 								// Is "GL_EXT_direct_state_access" there?
 								if (mExtensions->isGL_EXT_direct_state_access())
@@ -631,9 +657,9 @@ namespace OpenGLRenderer
 							#endif
 
 							// TODO(co) Some security checks might be wise *maximum number of texture units*
-							// GL_TEXTURE0_ARB is the first texture unit, while nUnit we received is zero based
-							const GLenum unit = GL_TEXTURE0_ARB + descriptorRange->baseShaderRegister;
-							glActiveTextureARB(unit);
+							// Activate the texture unit we want to manipulate
+							// -> "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+							glActiveTextureARB(GL_TEXTURE0_ARB + descriptorRange->baseShaderRegister);
 
 							// Evaluate the resource type
 							switch (resourceType)
@@ -683,7 +709,7 @@ namespace OpenGLRenderer
 									glBindSampler(descriptorRange->baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
 								}
 								// Is "GL_EXT_direct_state_access" there?
-								else if (mExtensions->isGL_EXT_direct_state_access())
+								else if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 								{
 									// Direct state access (DSA) version to emulate a sampler object
 									static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
@@ -1521,7 +1547,7 @@ namespace OpenGLRenderer
 		if (mExtensions->isGL_ARB_framebuffer_object())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				// -> Validation is done inside the framebuffer implementation
@@ -1572,7 +1598,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Direct state access (DSA) version to emulate a sampler object
 				return new SamplerStateDsa(*this, samplerState);
@@ -1598,8 +1624,16 @@ namespace OpenGLRenderer
 			{
 				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
 
+				// Is "GL_ARB_direct_state_access" there?
+				if (mExtensions->isGL_ARB_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					mappedSubresource.data		 = glMapNamedBuffer(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer(), Mapping::getOpenGLMapType(mapType));
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+				}
 				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
+				else if (mExtensions->isGL_EXT_direct_state_access())
 				{
 					// Effective direct state access (DSA)
 					mappedSubresource.data		 = glMapNamedBufferEXT(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer(), Mapping::getOpenGLMapType(mapType));
@@ -1638,8 +1672,16 @@ namespace OpenGLRenderer
 			{
 				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
 
+				// Is "GL_ARB_direct_state_access" there?
+				if (mExtensions->isGL_ARB_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					mappedSubresource.data		 = glMapNamedBuffer(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer(), Mapping::getOpenGLMapType(mapType));
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+				}
 				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
+				else if (mExtensions->isGL_EXT_direct_state_access())
 				{
 					// Effective direct state access (DSA)
 					mappedSubresource.data		 = glMapNamedBufferEXT(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer(), Mapping::getOpenGLMapType(mapType));
@@ -1777,8 +1819,14 @@ namespace OpenGLRenderer
 		{
 			case Renderer::ResourceType::INDEX_BUFFER:
 			{
+				// Is "GL_ARB_direct_state_access" there?
+				if (mExtensions->isGL_ARB_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					glUnmapNamedBuffer(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
+				}
 				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
+				else if (mExtensions->isGL_EXT_direct_state_access())
 				{
 					// Effective direct state access (DSA)
 					glUnmapNamedBufferEXT(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
@@ -1809,8 +1857,14 @@ namespace OpenGLRenderer
 
 			case Renderer::ResourceType::VERTEX_BUFFER:
 			{
+				// Is "GL_ARB_direct_state_access" there?
+				if (mExtensions->isGL_ARB_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					glUnmapNamedBuffer(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
+				}
 				// Is "GL_EXT_direct_state_access" there?
-				if (mExtensions->isGL_EXT_direct_state_access())
+				else if (mExtensions->isGL_EXT_direct_state_access())
 				{
 					// Effective direct state access (DSA)
 					glUnmapNamedBufferEXT(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());

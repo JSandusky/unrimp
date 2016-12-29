@@ -41,6 +41,7 @@ namespace OpenGLRenderer
 		Framebuffer(openGLRenderer, numberOfColorTextures, colorTextures, depthStencilTexture)
 	{
 		// Texture reference handling is done within the base class "Framebuffer"
+		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
 
 		// Loop through all framebuffer color attachments
 		Renderer::ITexture **colorTexture    = colorTextures;
@@ -66,7 +67,14 @@ namespace OpenGLRenderer
 				{
 					// Set the OpenGL framebuffer color attachment
 					const Texture2D* texture2D = static_cast<const Texture2D*>(*colorTexture);
-					glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, openGLAttachment, static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture(), 0);
+					if (isARB_DSA)
+					{
+						glNamedFramebufferTexture(mOpenGLFramebuffer, openGLAttachment, texture2D->getOpenGLTexture(), 0);
+					}
+					else
+					{
+						glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, openGLAttachment, static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture(), 0);
+					}
 					if (!mMultisampleRenderTarget && texture2D->getNumberOfMultisamples() > 1)
 					{
 						mMultisampleRenderTarget = true;
@@ -112,7 +120,14 @@ namespace OpenGLRenderer
 
 			// Bind the depth stencil texture to framebuffer
 			const Texture2D* texture2D = static_cast<const Texture2D*>(depthStencilTexture);
-			glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture(), 0);
+			if (isARB_DSA)
+			{
+				glNamedFramebufferTexture(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, texture2D->getOpenGLTexture(), 0);
+			}
+			else
+			{
+				glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture(), 0);
+			}
 			if (!mMultisampleRenderTarget && texture2D->getNumberOfMultisamples() > 1)
 			{
 				mMultisampleRenderTarget = true;
@@ -121,7 +136,7 @@ namespace OpenGLRenderer
 
 		#ifdef RENDERER_OUTPUT_DEBUG
 			// Check the status of the OpenGL framebuffer
-			const GLenum openGLStatus = glCheckNamedFramebufferStatusEXT(mOpenGLFramebuffer, GL_FRAMEBUFFER);
+			const GLenum openGLStatus = isARB_DSA ? glCheckNamedFramebufferStatus(mOpenGLFramebuffer, GL_FRAMEBUFFER) : glCheckNamedFramebufferStatusEXT(mOpenGLFramebuffer, GL_FRAMEBUFFER);
 			switch (openGLStatus)
 			{
 				case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:

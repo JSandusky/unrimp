@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Shader/Monolithic/ProgramMonolithicDsa.h"
 #include "OpenGLRenderer/Extensions.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 
 
 //[-------------------------------------------------------]
@@ -52,32 +53,74 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	void ProgramMonolithicDsa::setUniform1f(handle uniformHandle, float value)
 	{
-		glProgramUniform1fEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), value);
+		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
+		{
+			glProgramUniform1f(mOpenGLProgram, static_cast<GLint>(uniformHandle), value);
+		}
+		else
+		{
+			glProgramUniform1fEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), value);
+		}
 	}
 
 	void ProgramMonolithicDsa::setUniform2fv(handle uniformHandle, const float *value)
 	{
-		glProgramUniform2fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
+		{
+			glProgramUniform2fv(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		}
+		else
+		{
+			glProgramUniform2fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		}
 	}
 
 	void ProgramMonolithicDsa::setUniform3fv(handle uniformHandle, const float *value)
 	{
-		glProgramUniform3fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
+		{
+			glProgramUniform3fv(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		}
+		else
+		{
+			glProgramUniform3fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		}
 	}
 
 	void ProgramMonolithicDsa::setUniform4fv(handle uniformHandle, const float *value)
 	{
-		glProgramUniform4fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
+		{
+			glProgramUniform4fv(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		}
+		else
+		{
+			glProgramUniform4fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		}
 	}
 
 	void ProgramMonolithicDsa::setUniformMatrix3fv(handle uniformHandle, const float *value)
 	{
-		glProgramUniformMatrix3fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
+		{
+			glProgramUniformMatrix3fv(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+		}
+		else
+		{
+			glProgramUniformMatrix3fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+		}
 	}
 
 	void ProgramMonolithicDsa::setUniformMatrix4fv(handle uniformHandle, const float *value)
 	{
-		glProgramUniformMatrix4fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
+		{
+			glProgramUniformMatrix4fv(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+		}
+		else
+		{
+			glProgramUniformMatrix4fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+		}
 	}
 
 

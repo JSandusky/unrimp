@@ -59,7 +59,7 @@ namespace OpenGLRenderer
 		if (width > 0 && height > 0)
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new Texture2DDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags, numberOfMultisamples);
@@ -84,9 +84,10 @@ namespace OpenGLRenderer
 		if (width > 0 && height > 0 && numberOfSlices > 0 && mExtensions->isGL_EXT_texture_array())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
+				// TODO(sw) Not ARB DSA compatible. Uses methods which got removed when extension was promoted to ARB extension
 				return new Texture2DArrayDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
 			}
 			else

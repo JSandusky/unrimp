@@ -2824,7 +2824,7 @@ namespace Renderer
 						// TODO(sw) to silence clang warning: warning: destination for this 'memcpy' call is a pointer to dynamic class 'IndirectBuffer'; vtable pointer will be overwritten [-Wdynamic-class-memaccess]
 						#pragma clang diagnostic push
 						#pragma clang diagnostic ignored "-Wdynamic-class-memaccess"
-						memcpy(reinterpret_cast<IndexedIndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
+						memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), reinterpret_cast<unsigned char*>(&indexedIndirectBufferData), sizeof(IndexedIndirectBuffer));
 						#pragma clang diagnostic pop
 					#else
 						memcpy(reinterpret_cast<IndexedIndirectBuffer*>(CommandPacketHelper::getAuxiliaryMemory(drawCommand)), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));

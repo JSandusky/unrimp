@@ -126,7 +126,11 @@ namespace RendererRuntime
 		#else
 			#error "Unsupported platform"
 		#endif
-		mVrManager = new VrManagerOpenVR(*this);
+
+		#ifndef ANDROID
+			// TODO(sw) For now no OpenVR support under Android
+			mVrManager = new VrManagerOpenVR(*this);
+		#endif
 	}
 
 	RendererRuntimeImpl::~RendererRuntimeImpl()

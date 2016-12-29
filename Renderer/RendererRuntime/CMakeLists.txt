@@ -41,6 +41,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenVR/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
 
 
 ##################################################
@@ -136,9 +137,16 @@ set(SOURCE_CODES
 	src/Resource/Texture/Loader/DdsTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/KtxTextureResourceLoader.cpp
 	src/Resource/Texture/TextureResourceManager.cpp
-	src/Vr/OpenVR/OpenVRRuntimeLinking.cpp
-	src/Vr/OpenVR/VrManagerOpenVR.cpp
 )
+
+if(NOT ANDROID)
+	# Not android source codes
+	set(SOURCE_CODES
+		${SOURCE_CODES}
+		src/Vr/OpenVR/OpenVRRuntimeLinking.cpp
+		src/Vr/OpenVR/VrManagerOpenVR.cpp
+	)
+endif()
 
 if(UNIX)
 	# Windows source codes
@@ -167,7 +175,9 @@ endif()
 if(SHARED_LIBRARY)
 	add_library(RendererRuntime SHARED ${SOURCE_CODES})
 	set_target_properties(RendererRuntime PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DRENDERERRUNTIME_EXPORTS")
-	if(UNIX)
+	if (ANDROID)
+		target_link_libraries(RendererRuntime dl ${ANDROID_CXX_STANDARD_LIBRARIES})
+	elseif(UNIX)
 		target_link_libraries(RendererRuntime dl pthread)
 	endif()
 endif()
