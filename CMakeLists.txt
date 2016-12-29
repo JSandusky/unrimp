@@ -89,7 +89,11 @@ message(STATUS "External OS architecture directory: ${OUTPUT_EXTERNAL_OS_ARCHITE
 	# Advanced renderer options
 	set(RENDERER_DEBUG	"1"	CACHE BOOL "If false, the e.g. Direct3D 9 PIX functions (D3DPERF_* functions) debug features are disabled (disabling support just reduces the binary size slightly but makes debugging more difficult)")
 	mark_as_advanced(RENDERER_DEBUG)
-set(RENDERER_NULL			"1"	CACHE BOOL "Build null renderer?")
+
+# NULL Renderer doesn't compile under android for now disable it
+if (NOT ANDROID)
+	set(RENDERER_NULL			"1"	CACHE BOOL "Build null renderer?")
+endif()
 
 # OpenGL Renderer is not for android
 if (NOT ANDROID)
@@ -193,7 +197,7 @@ if (ANDROID)
 		set(ANDROID_PLATFORM "android-22" CACHE STRING "")
 		
 		# We want also the llvm libc++ which is fully c++11 compatible
-		set(ANDROID_STL "c++_shared" CACHE STRING "")
+		set(ANDROID_STL "c++_static" CACHE STRING "")
 
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DANDROID -DLINUX -DRENDERER_NO_DEBUG")
 endif()
