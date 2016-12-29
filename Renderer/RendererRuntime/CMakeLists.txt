@@ -41,7 +41,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenVR/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
 
 
 ##################################################
