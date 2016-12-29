@@ -55,8 +55,7 @@
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
-	#pragma warning(disable: 4005)	// warning C4005: '<x>': macro redefinition
-
+	#pragma warning(disable: 4005)	// warning C4005: '_HAS_EXCEPTIONS': macro redefinition
 	#include <crunch/crnlib.h>
 	#include <crunch/dds_defs.h>
 	#include <crunch/crnlib/crn_texture_conversion.h>
@@ -71,8 +70,6 @@
 	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
 	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
-	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
-	#pragma warning(disable: 4770)	// warning C4770: partially validated enum 'type' used as index"
 	#include <rapidjson/document.h>
 #pragma warning(pop)
 

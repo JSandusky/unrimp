@@ -29,16 +29,11 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
 
-// Disable warnings in external headers, we can't fix them
 #include <deque>
+#include <mutex>
 #include <atomic>
-#pragma warning(push)
-	#pragma warning(disable: 4265)	// warning C4265: '<x>': class has virtual functions, but destructor is not virtual
-
-	#include <mutex>
-	#include <thread>
-	#include <condition_variable>
-#pragma warning(pop)
+#include <thread>
+#include <condition_variable>
 
 
 //[-------------------------------------------------------]

@@ -33,7 +33,6 @@
 #pragma warning(push)
 	#pragma warning(disable: 4201)	// warning C4201: nonstandard extension used: nameless struct/union
 	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
-	#pragma warning(disable: 4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
 	#include <glm/gtc/quaternion.hpp>
 #pragma warning(pop)
 #pragma warning(push)

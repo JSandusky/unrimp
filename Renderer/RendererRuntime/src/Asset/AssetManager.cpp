@@ -26,11 +26,7 @@
 #include "RendererRuntime/Asset/AssetPackage.h"
 #include "RendererRuntime/Asset/Serializer/AssetPackageSerializer.h"
 
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#include <fstream>
-#pragma warning(pop)
+#include <fstream>
 
 
 //[-------------------------------------------------------]

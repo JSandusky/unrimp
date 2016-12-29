@@ -30,7 +30,6 @@
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
 	#pragma warning(disable: 4061)	// warning C4061: enumerator 'FORCE_32BIT' in switch of enum 'aiMetadataType' is not explicitly handled by a case label
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
 	#include <assimp/scene.h>
 	#include <assimp/Importer.hpp>
 	#include <assimp/postprocess.h>
@@ -38,7 +37,6 @@
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
-	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 	#pragma warning(disable: 4201)	// warning C4201: nonstandard extension used: nameless struct/union
 	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
 	#pragma warning(disable: 4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
@@ -52,8 +50,6 @@
 	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
 	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
-	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
-	#pragma warning(disable: 4770)	// warning C4770: partially validated enum 'type' used as index"
 	#include <rapidjson/document.h>
 #pragma warning(pop)
 
