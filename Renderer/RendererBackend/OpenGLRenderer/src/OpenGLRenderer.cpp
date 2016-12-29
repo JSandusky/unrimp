@@ -2108,8 +2108,10 @@ namespace OpenGLRenderer
 				break;
 
 			case GL_DEBUG_SEVERITY_NOTIFICATION:
-				strncpy(debugSeverity, "Notification", 20);
-				break;
+				// TODO(co) Do we need some kind of renderer debug configuration? Disabled notifications due to massive log spamming like
+				//   "OpenGL debug message	Source:"OpenGL"	Type:"Other"	ID:"131185"	Severity:"Notification"	Message:"Buffer detailed info: Buffer object 13 (bound to NONE, usage hint is GL_DYNAMIC_DRAW) has been mapped WRITE_ONLY in SYSTEM HEAP memory (fast).""
+				// strncpy(debugSeverity, "Notification", 20);
+				return;	// Shut up, please
 
 			default:
 				strncpy(debugSeverity, "?", 20);
