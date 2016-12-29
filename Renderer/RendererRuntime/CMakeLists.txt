@@ -75,15 +75,17 @@ set(SOURCE_CODES
 	src/Resource/CompositorNode/CompositorNodeResourceManager.cpp
 	src/Resource/CompositorNode/CompositorTarget.cpp
 	src/Resource/CompositorNode/Loader/CompositorNodeResourceLoader.cpp
+	src/Resource/CompositorNode/Pass/CompositorPassFactory.cpp
 	src/Resource/CompositorNode/Pass/Clear/CompositorInstancePassClear.cpp
 	src/Resource/CompositorNode/Pass/Clear/CompositorResourcePassClear.cpp
-	src/Resource/CompositorNode/Pass/CompositorPassFactory.cpp
-	src/Resource/CompositorNode/Pass/DebugGui/CompositorInstancePassDebugGui.cpp
-	src/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.cpp
-	src/Resource/CompositorNode/Pass/Quad/CompositorInstancePassQuad.cpp
-	src/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.cpp
 	src/Resource/CompositorNode/Pass/Scene/CompositorInstancePassScene.cpp
 	src/Resource/CompositorNode/Pass/Scene/CompositorResourcePassScene.cpp
+	src/Resource/CompositorNode/Pass/ResolveMultisample/CompositorInstancePassResolveMultisample.cpp
+	src/Resource/CompositorNode/Pass/ResolveMultisample/CompositorResourcePassResolveMultisample.cpp
+	src/Resource/CompositorNode/Pass/Quad/CompositorInstancePassQuad.cpp
+	src/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.cpp
+	src/Resource/CompositorNode/Pass/DebugGui/CompositorInstancePassDebugGui.cpp
+	src/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.cpp
 	src/Resource/CompositorWorkspace/CompositorWorkspaceInstance.cpp
 	src/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.cpp
 	src/Resource/CompositorWorkspace/Loader/CompositorWorkspaceResourceLoader.cpp
