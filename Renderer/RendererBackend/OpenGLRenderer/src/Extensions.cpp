@@ -99,6 +99,7 @@ namespace OpenGLRenderer
 	bool Extensions::isGL_ARB_draw_elements_base_vertex()	const { return mGL_ARB_draw_elements_base_vertex;	}
 	bool Extensions::isGL_ARB_debug_output()				const { return mGL_ARB_debug_output;				}
 	bool Extensions::isGL_ARB_direct_state_access()			const { return mGL_ARB_direct_state_access;			}
+	bool Extensions::isGL_ARB_texture_storage()				const { return mGL_ARB_texture_storage;				}
 
 
 	//[-------------------------------------------------------]
@@ -264,6 +265,7 @@ namespace OpenGLRenderer
 		mGL_ARB_draw_elements_base_vertex	= false;
 		mGL_ARB_debug_output				= false;
 		mGL_ARB_direct_state_access			= false;
+		mGL_ARB_texture_storage				= false;
 	}
 
 	bool Extensions::initializeUniversal()
@@ -696,6 +698,10 @@ namespace OpenGLRenderer
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
+			IMPORT_FUNC(glCreateBuffers)
+			IMPORT_FUNC(glCreateFramebuffers)
+			IMPORT_FUNC(glCreateTextures)
+			IMPORT_FUNC(glCreateVertexArrays)
 			IMPORT_FUNC(glNamedBufferData)
 			IMPORT_FUNC(glNamedBufferSubData)
 			IMPORT_FUNC(glMapNamedBuffer)
@@ -722,11 +728,20 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glVertexArrayVertexBuffer)
 			IMPORT_FUNC(glVertexArrayBindingDivisor)
 			IMPORT_FUNC(glVertexArrayElementBuffer)
-			IMPORT_FUNC(glTextureStorage2D)
-			IMPORT_FUNC(glTextureStorage3D)
 			mGL_ARB_direct_state_access = result;
 		}
-		mGL_ARB_direct_state_access = false;
+
+		// GL_ARB_texture_storage - Is core since OpenGL 4.5
+		mGL_ARB_texture_storage = isSupported("GL_ARB_texture_storage");
+		if (mGL_ARB_texture_storage)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glTextureStorage2D)
+			IMPORT_FUNC(glTextureStorage3D)
+			IMPORT_FUNC(glTextureStorage2DMultisample)
+			mGL_ARB_texture_storage = result;
+		}
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC

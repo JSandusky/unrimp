@@ -50,8 +50,7 @@ namespace OpenGLRenderer
 		IVertexBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLArrayBuffer(0)
 	{
-		// Create the OpenGL array buffer
-		glGenBuffersARB(1, &mOpenGLArrayBuffer);
+		// Nothing here
 	}
 
 

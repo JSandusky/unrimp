@@ -90,7 +90,7 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void* getInternalResourceHandle() const override;
+		inline virtual void* getInternalResourceHandle() const override;
 
 
 	//[-------------------------------------------------------]

@@ -45,9 +45,12 @@ namespace OpenGLRenderer
 			glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, &openGLElementArrayBufferBackup);
 		#endif
 
+		// Create the OpenGL element array buffer
+		glGenBuffersARB(1, &mOpenGLElementArrayBuffer);
+
 		// Bind this OpenGL element array buffer and upload the data
+		// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
 		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, mOpenGLElementArrayBuffer);
-		// Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
 		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<GLsizeiptrARB>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP

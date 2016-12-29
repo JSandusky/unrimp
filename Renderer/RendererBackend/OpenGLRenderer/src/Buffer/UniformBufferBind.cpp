@@ -39,17 +39,20 @@ namespace OpenGLRenderer
 	UniformBufferBind::UniformBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
 		UniformBuffer(openGLRenderer)
 	{
+		// TODO(co) Review OpenGL uniform buffer alignment topic
+
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL uniform buffer
 			GLint openGLUniformBufferBackup = 0;
 			glGetIntegerv(GL_UNIFORM_BUFFER_BINDING, &openGLUniformBufferBackup);
 		#endif
 
-		// TODO(co) Review OpenGL uniform buffer alignment topic
+		// Create the OpenGL uniform buffer
+		glGenBuffersARB(1, &mOpenGLUniformBuffer);
 
 		// Bind this OpenGL uniform buffer and upload the data
-		glBindBufferARB(GL_UNIFORM_BUFFER, mOpenGLUniformBuffer);
 		// -> Usage: These constants directly map to GL_ARB_vertex_buffer_object and OpenGL ES 2 constants, do not change them
+		glBindBufferARB(GL_UNIFORM_BUFFER, mOpenGLUniformBuffer);
 		glBufferDataARB(GL_UNIFORM_BUFFER, static_cast<GLsizeiptrARB>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP

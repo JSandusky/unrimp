@@ -47,9 +47,12 @@ namespace OpenGLRenderer
 				glGetIntegerv(GL_TEXTURE_BINDING_BUFFER_ARB, &openGLTextureBufferBackup);
 			#endif
 
+			// Create the OpenGL texture buffer
+			glGenBuffersARB(1, &mOpenGLTextureBuffer);
+
 			// Bind this OpenGL texture buffer and upload the data
-			glBindBufferARB(GL_TEXTURE_BUFFER_ARB, mOpenGLTextureBuffer);
 			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
+			glBindBufferARB(GL_TEXTURE_BUFFER_ARB, mOpenGLTextureBuffer);
 			glBufferDataARB(GL_TEXTURE_BUFFER_ARB, static_cast<GLsizeiptrARB>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 
 			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
@@ -64,6 +67,9 @@ namespace OpenGLRenderer
 				GLint openGLTextureBackup = 0;
 				glGetIntegerv(GL_TEXTURE_BINDING_BUFFER_ARB, &openGLTextureBackup);
 			#endif
+
+			// Create the OpenGL texture instance
+			glGenTextures(1, &mOpenGLTexture);
 
 			// Make this OpenGL texture instance to the currently used one
 			glBindTexture(GL_TEXTURE_BUFFER_ARB, mOpenGLTexture);

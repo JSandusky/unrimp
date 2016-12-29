@@ -27,6 +27,8 @@
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 
+#include <cassert>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -42,6 +44,9 @@ namespace Direct3D9Renderer
 		ITexture2D(direct3D9Renderer, width, height),
 		mDirect3DTexture9(nullptr)
 	{
+		// Sanity checks
+		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D9Renderer)
 

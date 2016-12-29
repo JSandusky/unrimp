@@ -53,9 +53,6 @@ namespace OpenGLRenderer
 		mOpenGLType(GL_UNSIGNED_SHORT),
 		mIndexSizeInBytes(Renderer::IndexBufferFormat::getNumberOfBytesPerElement(indexBufferFormat))
 	{
-		// Create the OpenGL element array buffer
-		glGenBuffersARB(1, &mOpenGLElementArrayBuffer);
-
 		// Set the OpenGL index buffer data type
 		mOpenGLType = Mapping::getOpenGLType(indexBufferFormat);
 	}

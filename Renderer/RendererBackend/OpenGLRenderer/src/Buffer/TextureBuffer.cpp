@@ -56,11 +56,7 @@ namespace OpenGLRenderer
 		mOpenGLTextureBuffer(0),
 		mOpenGLTexture(0)
 	{
-		// Create the OpenGL texture buffer
-		glGenBuffersARB(1, &mOpenGLTextureBuffer);
-
-		// Create the OpenGL texture instance
-		glGenTextures(1, &mOpenGLTexture);
+		// Nothing here
 	}
 
 

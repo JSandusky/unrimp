@@ -39,6 +39,15 @@ namespace OpenGLRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	inline void* Texture2D::getInternalResourceHandle() const
+	{
+		return reinterpret_cast<void*>(mOpenGLTexture);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

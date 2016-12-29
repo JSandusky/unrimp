@@ -43,6 +43,16 @@ namespace OpenGLRenderer
 		// Texture reference handling is done within the base class "Framebuffer"
 		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
 
+		// Create the OpenGL framebuffer
+		if (isARB_DSA)
+		{
+			glCreateFramebuffers(1, &mOpenGLFramebuffer);
+		}
+		else
+		{
+			glGenFramebuffers(1, &mOpenGLFramebuffer);
+		}
+
 		// Loop through all framebuffer color attachments
 		Renderer::ITexture **colorTexture    = colorTextures;
 		Renderer::ITexture **colorTextureEnd = colorTextures + numberOfColorTextures;
