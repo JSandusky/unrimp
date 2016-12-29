@@ -60,6 +60,9 @@ namespace OpenGLRenderer
 			glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &openGLVertexArrayBackup);
 		#endif
 
+		// Create the OpenGL vertex array
+		glGenVertexArrays(1, &mOpenGLVertexArray);
+
 		// Bind this OpenGL vertex array
 		glBindVertexArray(mOpenGLVertexArray);
 

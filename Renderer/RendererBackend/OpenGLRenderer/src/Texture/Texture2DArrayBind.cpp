@@ -55,6 +55,9 @@ namespace OpenGLRenderer
 		// Set correct alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+		// Create the OpenGL texture instance
+		glGenTextures(1, &mOpenGLTexture);
+
 		// Make this OpenGL texture instance to the currently used one
 		glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, mOpenGLTexture);
 

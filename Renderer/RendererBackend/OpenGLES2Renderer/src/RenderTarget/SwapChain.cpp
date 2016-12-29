@@ -112,7 +112,7 @@ namespace OpenGLES2Renderer
 			if (mNativeWindowHandle)
 			{
 				//TODO(sw) get size on android
-				width = height=0;
+				width = height = 0;
 			}
 			else
 		#else

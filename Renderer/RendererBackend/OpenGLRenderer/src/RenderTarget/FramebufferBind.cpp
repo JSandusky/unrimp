@@ -49,6 +49,9 @@ namespace OpenGLRenderer
 			glGetIntegerv(GL_FRAMEBUFFER_BINDING, &openGLFramebufferBackup);
 		#endif
 
+		// Create the OpenGL framebuffer
+		glGenFramebuffers(1, &mOpenGLFramebuffer);
+
 		// Bind this OpenGL framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, mOpenGLFramebuffer);
 

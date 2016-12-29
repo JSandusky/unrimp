@@ -42,19 +42,8 @@ namespace OpenGLRenderer
 	{
 		if (openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
 		{
-			{ // For ARB DSA version the buffer object must be initialized.
-				// TODO(sw) The base class uses glGenBuffersARB to create only the name for it, but the glNamedBufferData methods expects an initialized object
-				// In OpenGL 4.5 there exists glCreateBuffers which also initializes the object. But we want support OpenGL 4.1 where the glCreateBuffers method doesn't exits
-				// Backup the currently bound OpenGL array buffer
-				GLint openGLBufferBackup = 0;
-				glGetIntegerv(GL_DRAW_INDIRECT_BUFFER_BINDING, &openGLBufferBackup);
-
-				// Initialize our buffer
-				glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, mOpenGLIndirectBuffer);
-
-				// Restore old binding because we needed the bind only to initialize the buffer object
-				glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<GLuint>(openGLBufferBackup));
-			}
+			// Create the OpenGL indirect buffer
+			glCreateBuffers(1, &mOpenGLIndirectBuffer);
 
 			// Upload the data
 			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
@@ -62,6 +51,9 @@ namespace OpenGLRenderer
 		}
 		else
 		{
+			// Create the OpenGL indirect buffer
+			glGenBuffersARB(1, &mOpenGLIndirectBuffer);
+
 			// Upload the data
 			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
 			glNamedBufferDataEXT(mOpenGLIndirectBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));

@@ -26,6 +26,8 @@
 #include "OpenGLES2Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
+#include <cassert>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -41,6 +43,9 @@ namespace OpenGLES2Renderer
 		ITexture2D(openGLES2Renderer, width, height),
 		mOpenGLES2Texture(0)
 	{
+		// Sanity checks
+		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
+
 		// TODO(co) Check support formats
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP

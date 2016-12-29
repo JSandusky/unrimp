@@ -50,10 +50,22 @@ namespace OpenGLRenderer
 		assert(numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS));
 		assert(numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
 		assert(numberOfMultisamples == 1 || 0 != (flags & Renderer::TextureFlag::RENDER_TARGET));
+		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
 
 		// Multisample texture?
+		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
 		if (numberOfMultisamples > 1)
 		{
+			// Create the OpenGL texture instance
+			if (isARB_DSA)
+			{
+				glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &mOpenGLTexture);
+			}
+			else
+			{
+				glGenTextures(1, &mOpenGLTexture);
+			}
+
 			// TODO(co) Use "glTextureStorage2DMultisample" from the "GL_ARB_direct_state_access"-extension
 
 			// Make this OpenGL texture instance to the currently used one
@@ -73,18 +85,14 @@ namespace OpenGLRenderer
 			// Set correct alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-			const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
+			// Create the OpenGL texture instance
 			if (isARB_DSA)
 			{
-				// For ARB DSA version the buffer object must be initialized.
-				// TODO(sw) The base class uses glGenTextures to create only the name for it, but the glTextureStorage2D and glCompressedTextureSubImage2D methods expects an initialized object
-				// In OpenGL 4.5 there exists glCreateTextures which also initializes the object. But we want support OpenGL 4.1 where the glCreateTextures method doesn't exits. So we use glBind to initialize the object
-
-				// Initialize our texture object
-				glBindTexture(GL_TEXTURE_2D, mOpenGLTexture);
-
-				// Unbind the texture object because we need the bind only to initialize the texture object
-				glBindTexture(GL_TEXTURE_2D, 0);
+				glCreateTextures(GL_TEXTURE_2D, 1, &mOpenGLTexture);
+			}
+			else
+			{
+				glGenTextures(1, &mOpenGLTexture);
 			}
 
 			// Upload the texture data
@@ -103,18 +111,19 @@ namespace OpenGLRenderer
 					}
 
 					// Upload all mipmaps
-					const uint32_t internalFormat = Mapping::getOpenGLInternalFormat(textureFormat);
+					const uint32_t format = Mapping::getOpenGLFormat(textureFormat);
 					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 					{
 						// Upload the current mipmap
 						const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
 						if (isARB_DSA)
 						{
-							glCompressedTextureSubImage2D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), internalFormat, numberOfBytesPerSlice, data);
+							// We know that "data" must be valid when we're in here due to the "Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS"-flag
+							glCompressedTextureSubImage2D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), format, numberOfBytesPerSlice, data);
 						}
 						else
 						{
-							glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
+							glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, static_cast<GLint>(mipmap), format, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
 						}
 
 						// Move on to the next mipmap
@@ -130,7 +139,10 @@ namespace OpenGLRenderer
 					{
 						// Allocate storage for all levels
 						glTextureStorage2D(mOpenGLTexture, 1, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
-						glCompressedTextureSubImage2D(mOpenGLTexture, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
+						if (nullptr != data)
+						{
+							glCompressedTextureSubImage2D(mOpenGLTexture, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), Mapping::getOpenGLFormat(textureFormat), static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
+						}
 					}
 					else
 					{
@@ -164,6 +176,7 @@ namespace OpenGLRenderer
 						const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
 						if (isARB_DSA)
 						{
+							// We know that "data" must be valid when we're in here due to the "Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS"-flag
 							glTextureSubImage2D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), format, type, data);
 						}
 						else
@@ -184,7 +197,10 @@ namespace OpenGLRenderer
 					{
 						// Allocate storage for all levels
 						glTextureStorage2D(mOpenGLTexture, 1, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
-						glTextureSubImage2D(mOpenGLTexture, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+						if (nullptr != data)
+						{
+							glTextureSubImage2D(mOpenGLTexture, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+						}
 					}
 					else
 					{

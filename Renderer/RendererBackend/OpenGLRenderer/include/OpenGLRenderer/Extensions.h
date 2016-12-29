@@ -155,6 +155,7 @@ namespace OpenGLRenderer
 		bool isGL_ARB_draw_elements_base_vertex() const;
 		bool isGL_ARB_debug_output() const;
 		bool isGL_ARB_direct_state_access() const;
+		bool isGL_ARB_texture_storage() const;
 
 
 	//[-------------------------------------------------------]
@@ -262,6 +263,7 @@ namespace OpenGLRenderer
 		bool mGL_ARB_draw_elements_base_vertex;
 		bool mGL_ARB_debug_output;
 		bool mGL_ARB_direct_state_access;
+		bool mGL_ARB_texture_storage;
 
 
 	};
@@ -453,6 +455,10 @@ namespace OpenGLRenderer
 	FNDEF_EX(glDebugMessageCallbackARB,	PFNGLDEBUGMESSAGECALLBACKARBPROC);
 
 	// GL_ARB_direct_state_access
+	FNDEF_EX(glCreateBuffers,					PFNGLCREATEBUFFERSPROC);
+	FNDEF_EX(glCreateFramebuffers,				PFNGLCREATEFRAMEBUFFERSPROC);
+	FNDEF_EX(glCreateTextures,					PFNGLCREATETEXTURESPROC);
+	FNDEF_EX(glCreateVertexArrays,				PFNGLCREATEVERTEXARRAYSPROC);
 	FNDEF_EX(glNamedBufferData,					PFNGLNAMEDBUFFERDATAPROC);
 	FNDEF_EX(glNamedBufferSubData,				PFNGLNAMEDBUFFERSUBDATAPROC);
 	FNDEF_EX(glMapNamedBuffer,					PFNGLMAPNAMEDBUFFERPROC);
@@ -479,9 +485,10 @@ namespace OpenGLRenderer
 	FNDEF_EX(glVertexArrayVertexBuffer,			PFNGLVERTEXARRAYVERTEXBUFFERPROC);
 	FNDEF_EX(glVertexArrayBindingDivisor,		PFNGLVERTEXARRAYBINDINGDIVISORPROC);
 	FNDEF_EX(glVertexArrayElementBuffer,		PFNGLVERTEXARRAYELEMENTBUFFERPROC);
-	// Following methods are not directly related to this extension but needed for implementation
-	FNDEF_EX(glTextureStorage2D,				PFNGLTEXTURESTORAGE2DPROC);
-	FNDEF_EX(glTextureStorage3D,				PFNGLTEXTURESTORAGE3DPROC);
+
+	// GL_ARB_texture_storage
+	FNDEF_EX(glTextureStorage2D,	PFNGLTEXTURESTORAGE2DPROC);
+	FNDEF_EX(glTextureStorage3D,	PFNGLTEXTURESTORAGE3DPROC);
 
 
 	//[-------------------------------------------------------]

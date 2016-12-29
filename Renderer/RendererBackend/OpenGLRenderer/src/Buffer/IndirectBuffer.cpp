@@ -49,8 +49,7 @@ namespace OpenGLRenderer
 	IndirectBuffer::IndirectBuffer(OpenGLRenderer &openGLRenderer) :
 		IIndirectBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer))
 	{
-		// Create the OpenGL indirect buffer
-		glGenBuffersARB(1, &mOpenGLIndirectBuffer);
+		// Nothing here
 	}
 
 

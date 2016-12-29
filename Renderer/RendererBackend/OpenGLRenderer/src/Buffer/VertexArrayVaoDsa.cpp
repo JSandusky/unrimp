@@ -48,19 +48,13 @@ namespace OpenGLRenderer
 		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
 		if (isARB_DSA)
 		{
-			{ // For ARB DSA version the buffer object must be initialized.
-				// TODO(sw) The base class uses glGenVertexArrays to create only the name for it, but the glNamedBufferData methods expects an initialized object
-				// In OpenGL 4.5 there exists glCreateVertexArrays which also initializes the object. But we want support OpenGL 4.1 where the glCreateVertexArrays method doesn't exits
-				// Backup the currently bound OpenGL vertex array
-				GLint openGLVertexArrayBackup = 0;
-				glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &openGLVertexArrayBackup);
-
-				// Initialize our vertex array object
-				glBindVertexArray(mOpenGLVertexArray);
-
-				// Restore old binding because we used it only to initialize it
-				glBindVertexArray(static_cast<GLuint>(openGLVertexArrayBackup));
-			}
+			// Create the OpenGL vertex array
+			glCreateVertexArrays(1, &mOpenGLVertexArray);
+		}
+		else
+		{
+			// Create the OpenGL vertex array
+			glGenVertexArrays(1, &mOpenGLVertexArray);
 		}
 
 		// Loop through all attributes
@@ -122,10 +116,10 @@ namespace OpenGLRenderer
 					// Set divisor
 					glVertexAttribDivisorARB(attributeLocation, attribute->instancesPerElement);
 
-				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL vertex array
-					glBindVertexArray(static_cast<GLuint>(openGLVertexArrayBackup));
-				#endif
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Be polite and restore the previous bound OpenGL vertex array
+						glBindVertexArray(static_cast<GLuint>(openGLVertexArrayBackup));
+					#endif
 				}
 
 				// Enable OpenGL vertex attribute array

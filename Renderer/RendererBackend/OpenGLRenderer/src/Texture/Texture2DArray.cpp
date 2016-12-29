@@ -50,8 +50,7 @@ namespace OpenGLRenderer
 		ITexture2DArray(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height, numberOfSlices),
 		mOpenGLTexture(0)
 	{
-		// Create the OpenGL texture instance
-		glGenTextures(1, &mOpenGLTexture);
+		// Nothing here
 	}
 
 

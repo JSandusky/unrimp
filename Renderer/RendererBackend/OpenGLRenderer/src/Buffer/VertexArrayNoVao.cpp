@@ -62,12 +62,11 @@ namespace OpenGLRenderer
 			memcpy(mVertexBuffers, vertexBuffers, sizeof(Renderer::VertexArrayVertexBuffer) * mNumberOfVertexBuffers);
 		}
 
-		{ // Add a reference to the used vertex buffers
-			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = mVertexBuffers + mNumberOfVertexBuffers;
-			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = mVertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
-			{
-				vertexBuffer->vertexBuffer->addReference();
-			}
+		// Add a reference to the used vertex buffers
+		const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = mVertexBuffers + mNumberOfVertexBuffers;
+		for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = mVertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
+		{
+			vertexBuffer->vertexBuffer->addReference();
 		}
 	}
 

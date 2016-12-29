@@ -200,9 +200,6 @@ namespace OpenGLRenderer
 			}
 		}
 
-		// Create the OpenGL framebuffer
-		glGenFramebuffers(1, &mOpenGLFramebuffer);
-
 		// Validate the framebuffer width and height
 		if (UINT_MAX == mWidth)
 		{

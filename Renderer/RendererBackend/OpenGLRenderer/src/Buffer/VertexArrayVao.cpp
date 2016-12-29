@@ -84,9 +84,6 @@ namespace OpenGLRenderer
 				(*currentVertexBuffers)->addReference();
 			}
 		}
-
-		// Create the OpenGL vertex array
-		glGenVertexArrays(1, &mOpenGLVertexArray);
 	}
 
 
