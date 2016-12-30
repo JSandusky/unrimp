@@ -91,74 +91,74 @@
 	*/
 	#define NOP
 
-#ifdef __clang__
-	/**
-	*  @brief
-	*    Platform specific "#pragma clang diagnostic push" (Clang)
-	*/
-	#define PRAGMA_WARNING_PUSH _Pragma("clang diagnostic push")
+	#ifdef __clang__
+		/**
+		*  @brief
+		*    Platform specific "#pragma clang diagnostic push" (Clang)
+		*/
+		#define PRAGMA_WARNING_PUSH _Pragma("clang diagnostic push")
 
-	/**
-	*  @brief
-	*    Platform specific "#pragma clang diagnostic pop" (Clang)
-	*/
-	#define PRAGMA_WARNING_POP _Pragma("clang diagnostic pop")
+		/**
+		*  @brief
+		*    Platform specific "#pragma clang diagnostic pop" (Clang)
+		*/
+		#define PRAGMA_WARNING_POP _Pragma("clang diagnostic pop")
 
-	/**
-	*  @brief
-	*    Platform specific "#pragma warning(disable: <x>)" (MS Windows Visual Studio)
-	*/
-	#define PRAGMA_WARNING_DISABLE_MSVC(id)
+		/**
+		*  @brief
+		*    Platform specific "#pragma warning(disable: <x>)" (MS Windows Visual Studio)
+		*/
+		#define PRAGMA_WARNING_DISABLE_MSVC(id)
 
-	/**
-	*  @brief
-	*    Platform specific "#pragma GCC diagnostic ignored <x>" (GCC)
-	*/
-	#define PRAGMA_WARNING_DISABLE_GCC(id)
+		/**
+		*  @brief
+		*    Platform specific "#pragma GCC diagnostic ignored <x>" (GCC)
+		*/
+		#define PRAGMA_WARNING_DISABLE_GCC(id)
 
-	/**
-	*  @brief
-	*    Platform specific "#pragma clang diagnostic ignored <x>" (Clang)
-	*/
-	// We need stringify because _Pragma expects an string literal
-	#define PRAGMA_STRINGIFY(a) #a
-	#define PRAGMA_WARNING_DISABLE_CLANG(id) _Pragma(PRAGMA_STRINGIFY(clang diagnostic ignored id) )
-#elif __GNUC__
-	// gcc
-	/**
-	*  @brief
-	*    Platform specific "#pragma GCC diagnostic push" (GCC)
-	*/
-	#define PRAGMA_WARNING_PUSH _Pragma("GCC diagnostic push")
+		/**
+		*  @brief
+		*    Platform specific "#pragma clang diagnostic ignored <x>" (Clang)
+		*/
+		// We need stringify because _Pragma expects an string literal
+		#define PRAGMA_STRINGIFY(a) #a
+		#define PRAGMA_WARNING_DISABLE_CLANG(id) _Pragma(PRAGMA_STRINGIFY(clang diagnostic ignored id) )
+	#elif __GNUC__
+		// gcc
+		/**
+		*  @brief
+		*    Platform specific "#pragma GCC diagnostic push" (GCC)
+		*/
+		#define PRAGMA_WARNING_PUSH _Pragma("GCC diagnostic push")
 
-	/**
-	*  @brief
-	*    Platform specific "#pragma warning(pop)" (GCC)
-	*/
-	#define PRAGMA_WARNING_POP _Pragma("GCC diagnostic pop")
+		/**
+		*  @brief
+		*    Platform specific "#pragma warning(pop)" (GCC)
+		*/
+		#define PRAGMA_WARNING_POP _Pragma("GCC diagnostic pop")
 
-	/**
-	*  @brief
-	*    Platform specific "#pragma warning(disable: <x>)" (MS Windows Visual Studio)
-	*/
-	#define PRAGMA_WARNING_DISABLE_MSVC(id)
+		/**
+		*  @brief
+		*    Platform specific "#pragma warning(disable: <x>)" (MS Windows Visual Studio)
+		*/
+		#define PRAGMA_WARNING_DISABLE_MSVC(id)
 
-	/**
-	*  @brief
-	*    Platform specific "#pragma GCC diagnostic ignored <x>" (GCC)
-	*/
-	// We need stringify because _Pragma expects an string literal
-	#define PRAGMA_STRINGIFY(a) #a
-	#define PRAGMA_WARNING_DISABLE_GCC(id) _Pragma(PRAGMA_STRINGIFY(GCC diagnostic ignored id) )
+		/**
+		*  @brief
+		*    Platform specific "#pragma GCC diagnostic ignored <x>" (GCC)
+		*/
+		// We need stringify because _Pragma expects an string literal
+		#define PRAGMA_STRINGIFY(a) #a
+		#define PRAGMA_WARNING_DISABLE_GCC(id) _Pragma(PRAGMA_STRINGIFY(GCC diagnostic ignored id) )
 
-	/**
-	*  @brief
-	*    Platform specific "#pragma clang diagnostic ignored <x>" (Clang)
-	*/
-	#define PRAGMA_WARNING_DISABLE_CLANG(id)
-#else
-	
-#endif	
+		/**
+		*  @brief
+		*    Platform specific "#pragma clang diagnostic ignored <x>" (Clang)
+		*/
+		#define PRAGMA_WARNING_DISABLE_CLANG(id)
+	#else
+		#error "Unsupported compiler"
+	#endif	
 #else
 	#error "Unsupported platform"
 #endif
