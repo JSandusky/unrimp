@@ -115,7 +115,7 @@
 @end
 
 @property(GLSL)
-	// We're using HLSL syntax inside out shaders. Hence we have to map GLSL to HLSL in here. See e.g.
+	// We're using HLSL syntax inside our shaders. Hence we have to map GLSL to HLSL in here. See e.g.
 	// - http://dench.flatlib.jp/opengl/glsl_hlsl
 	// - https://hl2glsl.codeplex.com/wikipage?title=Differences%20Between%20HLSL%20and%20GLSL
 	// - https://msdn.microsoft.com/en-us/library/windows/apps/dn166865.aspx
