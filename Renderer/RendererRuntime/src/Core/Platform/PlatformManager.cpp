@@ -99,8 +99,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void PlatformManager::setCurrentThreadName(const char* shortName, const char* descriptiveName)
 	{
-		// "prctl()" and "pthread_setname_np()" support only up to 16 characters (including the terminating zero), so this is our limiting factor
-		assert((strlen(shortName) + 1) < 16);	// +1 for the terminating zero
+		// "pthread_setname_np()" support only up to 16 characters (including the terminating zero), so this is our limiting factor
+		assert((strlen(shortName) + 1) <= 16);	// +1 for the terminating zero
 		assert(strlen(descriptiveName) >= strlen(shortName));
 
 		// Platform specific part
@@ -109,8 +109,7 @@ namespace RendererRuntime
 			::detail::setThreadName(::GetCurrentThreadId(), descriptiveName);
 		#elif LINUX
 			std::ignore = descriptiveName;
-			#warning "Linux: RendererRuntime::PlatformManager::setCurrentThreadName() is untested"	// TODO(co) Not tested
-			::prctl(PR_SET_NAME, shortName, 0, 0, 0);
+			::pthread_setname_np(pthread_self(), shortName);
 		#elif __APPLE__
 			std::ignore = descriptiveName;
 			#warning "Mac OS X: RendererRuntime::PlatformManager::setCurrentThreadName() is untested"	// TODO(co) Not tested
