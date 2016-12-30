@@ -22,7 +22,7 @@
 //[ Pieces                                                ]
 //[-------------------------------------------------------]
 @property(HLSL)
-	// We're using HLSL syntax inside out shaders. So not much to map but only abstract in here so a mapping to GLSL is possible.
+	// We're using HLSL syntax inside our shaders. So not much to map but only abstract in here so a mapping to GLSL is possible.
 	@piece(SetCrossPlatformSettings)
 		// Shader attribute input
 		#define INPUT_BEGIN struct SHADER_INPUT {
