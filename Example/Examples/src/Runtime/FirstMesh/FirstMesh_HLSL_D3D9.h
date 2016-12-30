@@ -41,7 +41,7 @@ vertexShaderSourceCode = STRINGIFY(
 struct VS_INPUT
 {
 	float3 Position : POSITION;		// Object space vertex position
-	float2 TexCoord : TEXCOORD0;	// 16 bit texture coordinate
+	float2 TexCoord : TEXCOORD0;	// 32 bit texture coordinate
 	float4 QTangent : TEXCOORD1;	// 16 bit QTangent
 };
 struct VS_OUTPUT
@@ -85,8 +85,8 @@ VS_OUTPUT main(VS_INPUT input)
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	output.Position = mul(float4(input.Position, 1.0f), ObjectSpaceToClipSpaceMatrix);
 
-	// Pass through the decoded 16 bit texture coordinate
-	output.TexCoord = input.TexCoord / 32767.0f;
+	// Pass through the 32 bit texture coordinate
+	output.TexCoord = input.TexCoord;
 
 	// Calculate the tangent space to view space tangent, binormal and normal
 	// - 16 bit QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on

@@ -84,6 +84,8 @@ namespace RendererRuntime
 		inline Renderables& getRenderables();			// Don't forget to call "RendererRuntime::RenderableManager::updateCachedRenderablesData()" if you changed something relevant in here
 		inline const Transform& getTransform() const;
 		void setTransform(const Transform* transform);	// Can be a null pointer (internally a identity transform will be set), transform instance must stay valid as long as the renderable manager is referencing it
+		inline bool isVisible() const;
+		inline void setVisible(bool visible);
 
 		//[-------------------------------------------------------]
 		//[ Cached data                                           ]
@@ -154,6 +156,7 @@ namespace RendererRuntime
 		// Data
 		Renderables		 mRenderables;				///< Renderables
 		const Transform* mTransform;				///< Transform instance, always valid, just shared meaning doesn't own the instance so don't delete it
+		bool			 mVisible;
 		// Cached data
 		float			 mCachedDistanceToCamera;	///< Cached distance to camera is updated during the culling phase
 		uint8_t			 mMinimumRenderQueueIndex;	///< The minimum renderables render queue index (inclusive, set inside "RendererRuntime::RenderableManager::updateCachedRenderablesData()")

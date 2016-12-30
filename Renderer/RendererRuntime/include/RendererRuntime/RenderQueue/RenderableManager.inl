@@ -56,6 +56,16 @@ namespace RendererRuntime
 		return *mTransform;
 	}
 
+	inline bool RenderableManager::isVisible() const
+	{
+		return mVisible;
+	}
+
+	inline void RenderableManager::setVisible(bool visible)
+	{
+		mVisible = visible;
+	}
+
 	inline float RenderableManager::getCachedDistanceToCamera() const
 	{
 		return mCachedDistanceToCamera;

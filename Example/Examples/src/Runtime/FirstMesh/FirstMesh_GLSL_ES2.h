@@ -41,7 +41,7 @@ vertexShaderSourceCode =
 STRINGIFY(
 // Attribute input/output
 in  highp vec3 Position;	// Object space vertex position
-in  highp vec2 TexCoord;	// 16 bit texture coordinate
+in  highp vec2 TexCoord;	// 32 bit texture coordinate
 out highp vec2 TexCoordVs;	// Texture coordinate
 in  highp vec4 QTangent;	// 16 bit QTangent
 out vec3 TangentVs;			// Tangent space to view space, x-axis
@@ -75,8 +75,8 @@ void main()
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	gl_Position = ObjectSpaceToClipSpaceMatrix * vec4(Position, 1.0);
 
-	// Pass through the decoded 16 bit texture coordinate
-	TexCoordVs = TexCoord / 32767.0;
+	// Pass through the 32 bit texture coordinate
+	TexCoordVs = TexCoord;
 
 	// Calculate the tangent space to view space tangent, binormal and normal
 	// - 16 bit QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on

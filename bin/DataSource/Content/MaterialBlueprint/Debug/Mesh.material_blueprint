@@ -202,7 +202,7 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "INSTANCE",
 					"ValueType": "FLOAT_4",
-					"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
+					"Value": "@POSITION_ROTATION_SCALE"
 				}
 			},
 			"SamplerStates":

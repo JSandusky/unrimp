@@ -88,6 +88,7 @@ namespace RendererRuntime
 		inline void setPosition(const glm::vec3& position);
 		inline void setRotation(const glm::quat& rotation);
 		inline void setPositionRotation(const glm::vec3& position, const glm::quat& rotation);
+		inline void setScale(const glm::vec3& scale);
 
 		//[-------------------------------------------------------]
 		//[ Attached scene items                                  ]
@@ -95,6 +96,7 @@ namespace RendererRuntime
 		void attachSceneItem(ISceneItem& sceneItem);
 		void detachAllSceneItems();
 		inline const AttachedSceneItems& getAttachedSceneItems() const;
+		void setSceneItemsVisible(bool visible);
 
 
 	//[-------------------------------------------------------]

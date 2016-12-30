@@ -40,7 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassDebugGui::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer)
+	void CompositorInstancePassDebugGui::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, Renderer::CommandBuffer& commandBuffer)
 	{
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
@@ -64,7 +64,7 @@ namespace RendererRuntime
 				}
 			}
 			mRenderQueue.addRenderablesFromRenderableManager(mRenderableManager);
-			mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassDebugGui&>(getCompositorResourcePass()).getMaterialTechniqueId(), commandBuffer);
+			mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassDebugGui&>(getCompositorResourcePass()).getMaterialTechniqueId(), cameraSceneItem, commandBuffer);
 
 			// Fill command buffer using custom material blueprint resource
 			debugGuiManager.fillCommandBuffer(commandBuffer);

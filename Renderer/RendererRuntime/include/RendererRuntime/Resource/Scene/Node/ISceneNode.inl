@@ -54,6 +54,11 @@ namespace RendererRuntime
 		mTransform.rotation = rotation;
 	}
 
+	inline void ISceneNode::setScale(const glm::vec3& scale)
+	{
+		mTransform.scale = scale;
+	}
+
 	inline const ISceneNode::AttachedSceneItems& ISceneNode::getAttachedSceneItems() const
 	{
 		return mAttachedSceneItems;

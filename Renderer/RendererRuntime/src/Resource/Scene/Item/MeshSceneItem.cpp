@@ -91,7 +91,7 @@ namespace RendererRuntime
 		setMeshResourceIdByAssetId(reinterpret_cast<const v1Scene::MeshItem*>(data)->meshAssetId);
 	}
 
-	void MeshSceneItem::onAttachedToSceneNode(const ISceneNode& sceneNode)
+	void MeshSceneItem::onAttachedToSceneNode(ISceneNode& sceneNode)
 	{
 		mRenderableManager.setTransform(&sceneNode.getTransform());
 

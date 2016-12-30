@@ -44,9 +44,20 @@ namespace RendererRuntime
 		return (nullptr != mParentSceneNode);
 	}
 
+	inline ISceneNode* ISceneItem::getParentSceneNode()
+	{
+		return mParentSceneNode;
+	}
+
 	inline const ISceneNode* ISceneItem::getParentSceneNode() const
 	{
 		return mParentSceneNode;
+	}
+
+	inline ISceneNode& ISceneItem::getParentSceneNodeSafe()
+	{
+		assert(nullptr != mParentSceneNode);
+		return *mParentSceneNode;
 	}
 
 	inline const ISceneNode& ISceneItem::getParentSceneNodeSafe() const
@@ -59,16 +70,21 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	inline void ISceneItem::onAttachedToSceneNode(const ISceneNode& sceneNode)
+	inline void ISceneItem::onAttachedToSceneNode(ISceneNode& sceneNode)
 	{
 		assert(nullptr == mParentSceneNode);
 		mParentSceneNode = &sceneNode;
 	}
 
-	inline void ISceneItem::onDetachedFromSceneNode(const ISceneNode&)
+	inline void ISceneItem::onDetachedFromSceneNode(ISceneNode&)
 	{
 		assert(nullptr != mParentSceneNode);
 		mParentSceneNode = nullptr;
+	}
+
+	inline void ISceneItem::setVisible(bool)
+	{
+		// Nothing here
 	}
 
 

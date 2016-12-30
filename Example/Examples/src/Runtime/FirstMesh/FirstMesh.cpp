@@ -103,7 +103,7 @@ void FirstMesh::onInitialization()
 				},
 				{ // Attribute 1
 					// Data destination
-					Renderer::VertexAttributeFormat::SHORT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+					Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 					"TexCoord",									// name[32] (char)
 					"TEXCOORD",									// semanticName[32] (char)
 					0,											// semanticIndex (uint32_t)
@@ -121,7 +121,7 @@ void FirstMesh::onInitialization()
 					1,											// semanticIndex (uint32_t)
 					// Data source
 					0,											// inputSlot (uint32_t)
-					sizeof(float) * 3 + sizeof(short) * 2,		// alignedByteOffset (uint32_t)
+					sizeof(float) * 3 + sizeof(float) * 2,		// alignedByteOffset (uint32_t)
 					// Data source, instancing part
 					0											// instancesPerElement (uint32_t)
 				}

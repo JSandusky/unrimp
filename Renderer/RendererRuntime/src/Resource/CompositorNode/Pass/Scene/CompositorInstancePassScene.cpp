@@ -46,7 +46,7 @@ namespace RendererRuntime
 		assert(mRenderQueueIndexRange->maximumRenderQueueIndex >= mRenderQueue.getMaximumRenderQueueIndex());
 	}
 
-	void CompositorInstancePassScene::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer)
+	void CompositorInstancePassScene::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, Renderer::CommandBuffer& commandBuffer)
 	{
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
@@ -60,7 +60,7 @@ namespace RendererRuntime
 			// really worth to do so since the render queue only considers renderables inside the render queue range anyway.
 			mRenderQueue.addRenderablesFromRenderableManager(*renderableManager);
 		}
-		mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassScene&>(getCompositorResourcePass()).getMaterialTechniqueId(), commandBuffer);
+		mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassScene&>(getCompositorResourcePass()).getMaterialTechniqueId(), cameraSceneItem, commandBuffer);
 
 		// End debug event
 		COMMAND_END_DEBUG_EVENT(commandBuffer)

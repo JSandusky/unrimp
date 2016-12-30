@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -38,6 +36,7 @@
 namespace RendererRuntime
 {
 	class Transform;
+	class CameraSceneItem;
 	class IRendererRuntime;
 	class MaterialTechnique;
 }
@@ -106,7 +105,7 @@ namespace RendererRuntime
 	private:
 		virtual void beginFillUnknown() = 0;
 		virtual bool fillUnknownValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
-		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const Transform& worldSpaceToViewSpaceTransform, PassBufferManager::PassData& passData) = 0;
+		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, PassBufferManager::PassData& passData) = 0;
 		virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
 		virtual void beginFillMaterial() = 0;
 		virtual bool fillMaterialValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;

@@ -114,6 +114,9 @@ namespace RendererRuntime
 
 	void RenderQueue::addRenderablesFromRenderableManager(const RenderableManager& renderableManager)
 	{
+		// Sanity check
+		assert(renderableManager.isVisible());
+
 		// Quantize the cached distance to camera
 		const uint32_t quantizedDepth = ::detail::depthToBits(renderableManager.getCachedDistanceToCamera());
 
@@ -141,7 +144,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void RenderQueue::fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, MaterialTechniqueId materialTechniqueId, Renderer::CommandBuffer& commandBuffer)
+	void RenderQueue::fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, MaterialTechniqueId materialTechniqueId, const CameraSceneItem* cameraSceneItem, Renderer::CommandBuffer& commandBuffer)
 	{
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
@@ -267,10 +270,7 @@ namespace RendererRuntime
 												if (nullptr != passBufferManager)
 												{
 													passBufferManager->resetCurrentPassBuffer();
-
-													// TODO(co) Camera usage
-													const Transform worldSpaceToViewSpaceTransform;
-													passBufferManager->fillBuffer(renderTarget, worldSpaceToViewSpaceTransform);
+													passBufferManager->fillBuffer(renderTarget, cameraSceneItem);
 												}
 											}
 

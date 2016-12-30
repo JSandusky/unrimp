@@ -69,7 +69,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
-		static const uint32_t NUMBER_OF_BYTES_PER_VERTEX = 24;	///< Number of bytes per vertex (3 float position, 2 short texture coordinate, 4 short qtangent)
+		static const uint32_t NUMBER_OF_BYTES_PER_VERTEX = 28;	///< Number of bytes per vertex (3 float position, 2 float texture coordinate, 4 short QTangent)
 		typedef std::vector<RendererRuntime::v1Mesh::SubMesh> SubMeshes;
 
 
@@ -188,16 +188,16 @@ namespace
 						currentVertexBuffer += sizeof(float) * 3;
 					}
 
-					{ // 16 bit texture coordinate
+					{ // 32 bit texture coordinate
 						// Get the Assimp mesh vertex texture coordinate
 						aiVector3D assimpTexCoord = assimpMesh.mTextureCoords[0][j];
 
-						// Set our vertex buffer 16 bit texture coordinate
-						short *currentVertexBufferShort = reinterpret_cast<short*>(currentVertexBuffer);
-						*currentVertexBufferShort = static_cast<short>(assimpTexCoord.x * SHRT_MAX);
-						++currentVertexBufferShort;
-						*currentVertexBufferShort = static_cast<short>(assimpTexCoord.y * SHRT_MAX);
-						currentVertexBuffer += sizeof(short) * 2;
+						// Set our vertex buffer 32 bit texture coordinate
+						float *currentVertexBufferFloat = reinterpret_cast<float*>(currentVertexBuffer);
+						*currentVertexBufferFloat = assimpTexCoord.x;
+						++currentVertexBufferFloat;
+						*currentVertexBufferFloat = assimpTexCoord.y;
+						currentVertexBuffer += sizeof(float) * 2;
 					}
 
 					{ // 16 bit QTangent
@@ -249,7 +249,7 @@ namespace
 							tangentFrameQuaternion.w *= qs;
 						}
 
-						// Set our vertex buffer 16 bit qtangent
+						// Set our vertex buffer 16 bit QTangent
 						short *currentVertexBufferShort = reinterpret_cast<short*>(currentVertexBuffer);
 						*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.x * SHRT_MAX);
 						++currentVertexBufferShort;

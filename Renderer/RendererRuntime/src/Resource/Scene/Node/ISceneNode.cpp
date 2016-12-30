@@ -52,6 +52,14 @@ namespace RendererRuntime
 		mAttachedSceneItems.clear();
 	}
 
+	void ISceneNode::setSceneItemsVisible(bool visible)
+	{
+		for (ISceneItem* sceneItem : mAttachedSceneItems)
+		{
+			sceneItem->setVisible(visible);
+		}
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

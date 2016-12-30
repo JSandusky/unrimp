@@ -250,17 +250,17 @@
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
-						"WorldSpaceToViewSpaceMatrix":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4_4",
-							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_MATRIX"
-						},
 						"WorldSpaceToClipSpaceMatrix":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
 							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
+						},
+						"WorldSpaceToViewSpaceQuaternion":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4",
+							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_QUATERNION"
 						},
 						"ViewSpaceSunLightDirection":
 						{
@@ -320,7 +320,7 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "INSTANCE",
 					"ValueType": "FLOAT_4",
-					"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
+					"Value": "@POSITION_ROTATION_SCALE"
 				}
 			},
 			"SamplerStates":

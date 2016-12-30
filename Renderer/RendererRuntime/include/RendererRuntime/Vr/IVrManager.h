@@ -113,7 +113,7 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Transform (only valid if manager is running)          ]
 		//[-------------------------------------------------------]
-		virtual void updateHmdMatrixPose() = 0;
+		virtual void updateHmdMatrixPose(CameraSceneItem* cameraSceneItem) = 0;
 		virtual glm::mat4 getHmdViewSpaceToClipSpaceMatrix(VrEye vrEye, float nearZ, float farZ) const = 0;
 		virtual glm::mat4 getHmdEyeSpaceToHeadSpaceMatrix(VrEye vrEye) const = 0;
 		virtual const glm::mat4& getHmdPoseMatrix() const = 0;

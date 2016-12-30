@@ -92,7 +92,7 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer) override;
+		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, Renderer::CommandBuffer& commandBuffer) override;
 		inline virtual void onFrameEnded() override;
 
 

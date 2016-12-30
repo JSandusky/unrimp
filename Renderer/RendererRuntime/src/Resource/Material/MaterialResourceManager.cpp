@@ -144,6 +144,11 @@ namespace RendererRuntime
 				// Create default material technique
 				materialResource.mSortedMaterialTechniqueVector.push_back(new MaterialTechnique(materialTechniqueId, materialResource, materialBlueprintResourceId));
 			}
+			else
+			{
+				// Error!
+				assert(false);
+			}
 		}
 
 		// Done

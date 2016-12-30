@@ -58,12 +58,17 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
-	inline void MeshSceneItem::onDetachedFromSceneNode(const ISceneNode& sceneNode)
+	inline void MeshSceneItem::onDetachedFromSceneNode(ISceneNode& sceneNode)
 	{
 		mRenderableManager.setTransform(nullptr);
 
 		// Call the base implementation
 		ISceneItem::onDetachedFromSceneNode(sceneNode);
+	}
+
+	inline void MeshSceneItem::setVisible(bool visible)
+	{
+		mRenderableManager.setVisible(visible);
 	}
 
 

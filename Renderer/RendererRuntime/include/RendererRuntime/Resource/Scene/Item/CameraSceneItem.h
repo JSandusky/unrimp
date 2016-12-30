@@ -56,6 +56,21 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
+		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_FOV_Y;
+		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_NEAR_Z;
+		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_FAR_Z;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline float getFovY() const;
+		inline void setFovY(float fovY);
+		inline float getNearZ() const;
+		inline void setNearZ(float nearZ);
+		inline float getFarZ() const;
+		inline void setFarZ(float farZ);
 
 
 	//[-------------------------------------------------------]
@@ -74,6 +89,15 @@ namespace RendererRuntime
 		inline virtual ~CameraSceneItem();
 		CameraSceneItem(const CameraSceneItem&) = delete;
 		CameraSceneItem& operator=(const CameraSceneItem&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		float mFovY;
+		float mNearZ;
+		float mFarZ;
 
 
 	};

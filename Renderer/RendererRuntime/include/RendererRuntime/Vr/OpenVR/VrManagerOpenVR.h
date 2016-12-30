@@ -74,7 +74,7 @@ namespace RendererRuntime
 		virtual bool startup() override;
 		inline virtual bool isRunning() const override;
 		virtual void shutdown() override;
-		virtual void updateHmdMatrixPose() override;
+		virtual void updateHmdMatrixPose(CameraSceneItem* cameraSceneItem) override;
 		virtual glm::mat4 getHmdViewSpaceToClipSpaceMatrix(VrEye vrEye, float nearZ, float farZ) const override;
 		virtual glm::mat4 getHmdEyeSpaceToHeadSpaceMatrix(VrEye vrEye) const override;
 		inline virtual const glm::mat4& getHmdPoseMatrix() const override;

@@ -38,7 +38,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassClear::onFillCommandBuffer(const Renderer::IRenderTarget&, Renderer::CommandBuffer& commandBuffer)
+	void CompositorInstancePassClear::onFillCommandBuffer(const Renderer::IRenderTarget&, const CameraSceneItem*, Renderer::CommandBuffer& commandBuffer)
 	{
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)

@@ -200,7 +200,7 @@ void FirstScene::onDrawRequest()
 					// No debug GUI in VR-mode for now
 
 					// Update the VR-manager just before rendering
-					vrManager.updateHmdMatrixPose();
+					vrManager.updateHmdMatrixPose(mCameraSceneItem);
 
 					// Execute the compositor workspace instance
 					vrManager.executeCompositorWorkspaceInstance(*mCompositorWorkspaceInstance, *swapChain, mCameraSceneItem);
@@ -252,6 +252,12 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 						}
 					}
 				}
+			}
+
+			// Set initial camera position if virtual reality is disabled
+			if (nullptr != mCameraSceneItem && nullptr != mCameraSceneItem->getParentSceneNode() && !mCompositorWorkspaceInstance->getRendererRuntime().getVrManager().isRunning())
+			{
+				mCameraSceneItem->getParentSceneNode()->setPosition(glm::vec3(0.0f, -1.0f, -3.0f));
 			}
 		}
 		else

@@ -39,6 +39,9 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	const SceneItemTypeId CameraSceneItem::TYPE_ID("CameraSceneItem");
+	const float CameraSceneItem::DEFAULT_FOV_Y  = 45.0f;
+	const float CameraSceneItem::DEFAULT_NEAR_Z = 0.1f;
+	const float CameraSceneItem::DEFAULT_FAR_Z  = 1000.0f;
 
 
 	//[-------------------------------------------------------]
@@ -48,6 +51,8 @@ namespace RendererRuntime
 	{
 		assert(sizeof(v1Scene::CameraItem) == numberOfBytes);
 		std::ignore = numberOfBytes;
+
+		// No FOV Y, near z and far z deserialization by intent, those are usually application controlled values
 	}
 
 

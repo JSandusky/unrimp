@@ -177,12 +177,29 @@ namespace RendererRuntime
 		}
 
 		{ // Update the texture scratch buffer
-			// TODO(co) Check "InstanceTextureBuffer" value, "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX" here
+			// TODO(co) Check "InstanceTextureBuffer" value
 			float* scratchBufferPointer = reinterpret_cast<float*>(mTextureScratchBuffer.data());
+
+			{ // "POSITION_ROTATION_SCALE"-semantic
+				// xyz position
+				memcpy(scratchBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceTransform.position), sizeof(float) * 3);
+				scratchBufferPointer += 4;
+
+				// xyzw rotation
+				memcpy(scratchBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceTransform.rotation), sizeof(float) * 4);
+				scratchBufferPointer += 4;
+
+				// xyz scale
+				memcpy(scratchBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceTransform.scale), sizeof(float) * 3);
+			}
+
+			// "OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"-semantic
+			/*
 			glm::mat4 objectSpaceToWorldSpaceMatrix;
 			objectSpaceToWorldSpaceTransform.getAsMatrix(objectSpaceToWorldSpaceMatrix);
 			objectSpaceToWorldSpaceMatrix = glm::transpose(objectSpaceToWorldSpaceMatrix);
 			memcpy(scratchBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceMatrix), sizeof(float) * 4 * 4);
+			*/
 		}
 
 		// Update the uniform and texture buffer by using our scratch buffer

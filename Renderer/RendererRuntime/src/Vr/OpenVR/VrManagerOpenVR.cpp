@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
@@ -154,7 +155,7 @@ namespace
 			if (RendererRuntime::isUninitialized(materialResourceId))
 			{
 				// We need to generate the runtime material asset right now
-				materialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialAssetId, RendererRuntime::StringId("Example/MaterialBlueprint/Default/MeshForwardLighting"), RendererRuntime::MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID);	// TODO(co) It must be possible to set the material blueprint ID from the outside
+				materialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialAssetId, RendererRuntime::StringId("Example/MaterialBlueprint/Forward/Mesh"), "Forward");	// TODO(co) It must be possible to set the material blueprint ID from the outside
 				if (RendererRuntime::isInitialized(materialResourceId))
 				{
 					RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResources().tryGetElementById(materialResourceId);
@@ -213,7 +214,7 @@ namespace
 
 					// Create the vertex buffer
 					Renderer::IVertexBuffer* vertexBuffer = nullptr;
-					const uint32_t numberOfBytesPerVertex = sizeof(float) * 3 + sizeof(short) * 6;
+					const uint32_t numberOfBytesPerVertex = sizeof(float) * 3 + sizeof(float) * 2 + sizeof(short) * 4;
 					{
 						const uint32_t numberOfBytes = numberOfVertices * numberOfBytesPerVertex;
 						uint8_t* temp = new uint8_t[numberOfBytes];
@@ -229,11 +230,11 @@ namespace
 								currentTemp += sizeof(float) * 3;
 							}
 
-							{ // 16 bit texture coordinate
-								short* textureCoordinate = reinterpret_cast<short*>(currentTemp);
-								textureCoordinate[0] = static_cast<short>(currentVrRenderModelVertex->rfTextureCoord[0] * SHRT_MAX);
-								textureCoordinate[1] = static_cast<short>(currentVrRenderModelVertex->rfTextureCoord[1] * SHRT_MAX);
-								currentTemp += sizeof(short) * 2;
+							{ // 32 bit texture coordinate
+								float* textureCoordinate = reinterpret_cast<float*>(currentTemp);
+								textureCoordinate[0] = currentVrRenderModelVertex->rfTextureCoord[0];
+								textureCoordinate[1] = currentVrRenderModelVertex->rfTextureCoord[1];
+								currentTemp += sizeof(float) * 2;
 							}
 
 							{ // TODO(co) 16 bit QTangent
@@ -355,7 +356,7 @@ namespace RendererRuntime
 			}
 
 			// Setup all render models for tracked devices
-			for (uint32_t trackedDeviceIndex = vr::k_unTrackedDeviceIndex_Hmd + 1; trackedDeviceIndex < vr::k_unMaxTrackedDeviceCount; ++trackedDeviceIndex)
+			for (uint32_t trackedDeviceIndex = vr::k_unTrackedDeviceIndex_Hmd; trackedDeviceIndex < vr::k_unMaxTrackedDeviceCount; ++trackedDeviceIndex)
 			{
 				if (mVrSystem->IsTrackedDeviceConnected(trackedDeviceIndex))
 				{
@@ -374,6 +375,9 @@ namespace RendererRuntime
 				// Create the framebuffer object (FBO) instance
 				mFramebuffer = renderer.createFramebuffer(1, &colorTexture2D, depthStencilTexture2D);
 			}
+
+			// TODO(co) Optionally mirror the result on the given render target
+			vr::VRCompositor()->ShowMirrorWindow();
 		}
 
 		// Done
@@ -395,7 +399,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void VrManagerOpenVR::updateHmdMatrixPose()
+	void VrManagerOpenVR::updateHmdMatrixPose(CameraSceneItem* cameraSceneItem)
 	{
 		assert(nullptr != mVrSystem);
 
@@ -434,7 +438,10 @@ namespace RendererRuntime
 					glm::decompose(devicePoseMatrix, scale, rotation, translation, skew, perspective);
 
 					// TODO(co) Why is the rotation inverted?
-					rotation = glm::inverse(rotation);
+					if (vr::k_unTrackedDeviceIndex_Hmd != deviceIndex)
+					{
+						rotation = glm::inverse(rotation);
+					}
 
 					// Tell the scene node about the new position and rotation, scale doesn't change
 					sceneNode->setPositionRotation(translation, rotation);
@@ -446,6 +453,23 @@ namespace RendererRuntime
 		if (mVrTrackedDevicePose[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid)
 		{
 			mHmdPoseMatrix = glm::inverse(mDevicePoseMatrix[vr::k_unTrackedDeviceIndex_Hmd]);
+		}
+
+		// Update camera scene node transform and hide the HMD scene node in case it's currently used as the camera scene node (we don't want to see the HMD mesh from the inside)
+		ISceneNode* hmdSceneNode = mSceneNodes[vr::k_unTrackedDeviceIndex_Hmd];
+		if (nullptr != hmdSceneNode)
+		{
+			bool hmdSceneNodeVisible = true;
+			if (nullptr != cameraSceneItem)
+			{
+				ISceneNode* sceneNode = cameraSceneItem->getParentSceneNode();
+				if (nullptr != sceneNode)
+				{
+				//	sceneNode->setTransform(hmdSceneNode->getTransform());	// TODO(co)
+					hmdSceneNodeVisible = false;
+				}
+			}
+			hmdSceneNode->setSceneItemsVisible(hmdSceneNodeVisible);
 		}
 	}
 
@@ -477,8 +501,6 @@ namespace RendererRuntime
 			vr::VRCompositor()->Submit(static_cast<vr::Hmd_Eye>(eyeIndex), &vrTexture);
 		}
 		materialBlueprintResourceListener.setCurrentRenderedVrEye(IMaterialBlueprintResourceListener::VrEye::UNKNOWN);
-
-		// TODO(co) Optionally mirror the result on the given render target
 	}
 
 

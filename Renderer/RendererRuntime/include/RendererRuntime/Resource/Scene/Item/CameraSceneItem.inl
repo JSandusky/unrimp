@@ -26,6 +26,40 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline float CameraSceneItem::getFovY() const
+	{
+		return mFovY;
+	}
+
+	inline void CameraSceneItem::setFovY(float fovY)
+	{
+		mFovY = fovY;
+	}
+
+	inline float CameraSceneItem::getNearZ() const
+	{
+		return mNearZ;
+	}
+
+	inline void CameraSceneItem::setNearZ(float nearZ)
+	{
+		mNearZ = nearZ;
+	}
+
+	inline float CameraSceneItem::getFarZ() const
+	{
+		return mFarZ;
+	}
+
+	inline void CameraSceneItem::setFarZ(float farZ)
+	{
+		mFarZ = farZ;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
 	inline SceneItemTypeId CameraSceneItem::getSceneItemTypeId() const
@@ -38,7 +72,10 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline CameraSceneItem::CameraSceneItem(ISceneResource& sceneResource) :
-		ISceneItem(sceneResource)
+		ISceneItem(sceneResource),
+		mFovY(DEFAULT_FOV_Y),
+		mNearZ(DEFAULT_NEAR_Z),
+		mFarZ(DEFAULT_FAR_Z)
 	{
 		// Nothing here
 	}

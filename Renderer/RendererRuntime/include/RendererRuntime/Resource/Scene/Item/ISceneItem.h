@@ -73,7 +73,9 @@ namespace RendererRuntime
 	public:
 		inline ISceneResource& getSceneResource() const;
 		inline bool hasParentSceneNode() const;
+		inline ISceneNode* getParentSceneNode();
 		inline const ISceneNode* getParentSceneNode() const;
+		inline ISceneNode& getParentSceneNodeSafe();				// Just safe in context known as safe
 		inline const ISceneNode& getParentSceneNodeSafe() const;	// Just safe in context known as safe
 
 
@@ -83,8 +85,9 @@ namespace RendererRuntime
 	public:
 		virtual SceneItemTypeId getSceneItemTypeId() const = 0;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) = 0;
-		inline virtual void onAttachedToSceneNode(const ISceneNode& sceneNode);
-		inline virtual void onDetachedFromSceneNode(const ISceneNode& sceneNode);
+		inline virtual void onAttachedToSceneNode(ISceneNode& sceneNode);
+		inline virtual void onDetachedFromSceneNode(ISceneNode& sceneNode);
+		inline virtual void setVisible(bool visible);
 
 
 	//[-------------------------------------------------------]
@@ -101,8 +104,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ISceneResource&   mSceneResource;
-		const ISceneNode* mParentSceneNode;	///< Parent scene node, can be a null pointer, don't destroy the instance
+		ISceneResource& mSceneResource;
+		ISceneNode*		mParentSceneNode;	///< Parent scene node, can be a null pointer, don't destroy the instance
 
 
 	};

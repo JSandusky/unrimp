@@ -113,7 +113,7 @@ namespace RendererRuntime
 		return nullptr;
 	}
 
-	void CompositorWorkspaceInstance::execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem)
+	void CompositorWorkspaceInstance::execute(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem)
 	{
 		// We could directly clear the render queue index ranges renderable managers as soon as the frame rendering has been finished to avoid evil dangling pointers,
 		// but on the other hand a responsible user might be interested in the potentially on-screen renderable managers to perform work which should only be performed
@@ -189,7 +189,7 @@ namespace RendererRuntime
 					Renderer::IRenderTarget* currentRenderTarget = &renderTarget;
 					for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
 					{
-						currentRenderTarget = &compositorNodeInstance->fillCommandBuffer(*currentRenderTarget, mCommandBuffer);
+						currentRenderTarget = &compositorNodeInstance->fillCommandBuffer(*currentRenderTarget, cameraSceneItem, mCommandBuffer);
 					}
 				}
 
@@ -409,7 +409,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void CompositorWorkspaceInstance::gatherRenderQueueIndexRangesRenderableManagers(CameraSceneItem& cameraSceneItem)
+	void CompositorWorkspaceInstance::gatherRenderQueueIndexRangesRenderableManagers(const CameraSceneItem& cameraSceneItem)
 	{
 		// TODO(co) This is just a dummy implementation, has to use high level culling including e.g. multi-threaded culling
 		const glm::vec3& cameraPosition = cameraSceneItem.getParentSceneNodeSafe().getTransform().position;
@@ -433,16 +433,19 @@ namespace RendererRuntime
 				if (sceneItem->getSceneItemTypeId() == MeshSceneItem::TYPE_ID)
 				{
 					RenderableManager& renderableManager = const_cast<RenderableManager&>(static_cast<const MeshSceneItem*>(sceneItem)->getRenderableManager());	// TODO(co) Get rid of the evil const-cast
-					renderableManager.setCachedDistanceToCamera(distanceToCamera);
-
-					// A renderable manager can be inside multiple render queue index ranges
-					for (RenderQueueIndexRange& renderQueueIndexRange : mRenderQueueIndexRanges)
+					if (renderableManager.isVisible())
 					{
-						// We only need to check the minimum render queue index to figure out whether or not the renderable manager falls into this render queue index range
-						const uint8_t minimumRenderQueueIndex = renderableManager.getMinimumRenderQueueIndex();
-						if (minimumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && minimumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex)
+						renderableManager.setCachedDistanceToCamera(distanceToCamera);
+
+						// A renderable manager can be inside multiple render queue index ranges
+						for (RenderQueueIndexRange& renderQueueIndexRange : mRenderQueueIndexRanges)
 						{
-							renderQueueIndexRange.renderableManagers.push_back(&renderableManager);
+							// We only need to check the minimum render queue index to figure out whether or not the renderable manager falls into this render queue index range
+							const uint8_t minimumRenderQueueIndex = renderableManager.getMinimumRenderQueueIndex();
+							if (minimumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && minimumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex)
+							{
+								renderQueueIndexRange.renderableManagers.push_back(&renderableManager);
+							}
 						}
 					}
 				}

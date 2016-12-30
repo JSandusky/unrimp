@@ -112,7 +112,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassQuad::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer)
+	void CompositorInstancePassQuad::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, Renderer::CommandBuffer& commandBuffer)
 	{
 		if (!mRenderableManager.getRenderables().empty())
 		{
@@ -121,7 +121,7 @@ namespace RendererRuntime
 
 			// Fill command buffer
 			mRenderQueue.addRenderablesFromRenderableManager(mRenderableManager);
-			mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialTechniqueId(), commandBuffer);
+			mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialTechniqueId(), cameraSceneItem, commandBuffer);
 
 			// End debug event
 			COMMAND_END_DEBUG_EVENT(commandBuffer)

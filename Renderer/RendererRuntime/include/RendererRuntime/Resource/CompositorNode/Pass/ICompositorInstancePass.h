@@ -40,6 +40,7 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
+	class CameraSceneItem;
 	class CompositorNodeInstance;
 	class ICompositorResourcePass;
 }
@@ -94,11 +95,13 @@ namespace RendererRuntime
 		*    Fill the compositor pass into the given commando buffer
 		*
 		*  @param[in] renderTarget
-		*    Render target
+		*    Render target to render into
+		*  @param[in] cameraSceneItem
+		*    Render target to use, can be a null pointer
 		*  @param[out] commandBuffer
 		*    Command buffer to fill
 		*/
-		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, Renderer::CommandBuffer& commandBuffer) = 0;
+		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, Renderer::CommandBuffer& commandBuffer) = 0;
 
 		/**
 		*  @brief

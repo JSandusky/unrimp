@@ -60,6 +60,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	RenderableManager::RenderableManager() :
 		mTransform(&::detail::IdentityTransform),
+		mVisible(true),
 		mCachedDistanceToCamera(getUninitialized<float>()),
 		mMinimumRenderQueueIndex(0),
 		mMaximumRenderQueueIndex(0),

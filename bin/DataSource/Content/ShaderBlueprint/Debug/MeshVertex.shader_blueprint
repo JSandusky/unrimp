@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 @includepiece(15)	// "Core.shader_piece"
+@includepiece(16)	// "TangentFrame.shader_piece"
 
 
 //[-------------------------------------------------------]
@@ -35,14 +36,9 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_VERTEX_POSITION(float3, Position)				// Object space vertex position
-	@property(HLSL)
-		INPUT_TEXTURE_COORDINATE(int2, TexCoord, 0)		// 16 bit texture coordinate
-	@end
-	@property(GLSL)
-		INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)	// 16 bit texture coordinate
-	@end
-	INPUT_VERTEX_DRAW_ID								// Draw ID
+	INPUT_VERTEX_POSITION(float3, Position)			// Object space vertex position
+	INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)	// 32 bit texture coordinate
+	INPUT_VERTEX_DRAW_ID							// Draw ID
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(uint,   AssignedMaterialSlotVS, 0)	// The assigned material slot inside the material uniform buffer
@@ -67,7 +63,7 @@ UNIFORM_BUFFER_BEGIN(InstanceUniformBuffer, 2)
 UNIFORM_BUFFER_END
 
 // Texture buffers
-TEXTURE_BUFFER(float4, InstanceTextureBuffer, 0)	// "OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
+TEXTURE_BUFFER(float4, InstanceTextureBuffer, 0)	// "POSITION_ROTATION_SCALE"
 
 
 //[-------------------------------------------------------]
@@ -80,24 +76,21 @@ TEXTURE_BUFFER(float4, InstanceTextureBuffer, 0)	// "OBJECT_SPACE_TO_WORLD_SPACE
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	uint4 instanceIndices = InstanceIndicesArray[MAIN_INPUT_DRAW_ID];
-
-	// Get the object space to world space matrix
-	float4 row0 = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x);
-	float4 row1 = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 1);
-	float4 row2 = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 2);
-	float4 row3 = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 3);
-	float4x4 objectSpaceToWorldSpaceMatrix = ROW_MATRIX_4x4(row0, row1, row2, row3);
+	// Get object space to world space data
+	uint4  instanceIndices 	  = InstanceIndicesArray[MAIN_INPUT_DRAW_ID];
+	float3 position 		  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x).xyz;
+	float4 rotationQuaternion = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 1);
+	float3 scale    		  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 2).xyz;
 
 	// Calculate the world space vertex position
-	float4 worldSpacePosition = MATRIX_MUL(objectSpaceToWorldSpaceMatrix, float4(MAIN_INPUT(Position), 1.0f));
+	float3 worldSpacePosition = MultiplyQuaternionVector(rotationQuaternion, MAIN_INPUT(Position) * scale) + position;
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, worldSpacePosition);
+	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, float4(worldSpacePosition, 1.0f));
 
 	// Pass through the assigned material slot inside the material uniform buffer
 	MAIN_OUTPUT(AssignedMaterialSlotVS) = instanceIndices.y;
 
-	// Pass through the decoded 16 bit texture coordinate
-	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(TexCoord) / 32767.0f;
+	// Pass through the 32 bit texture coordinate
+	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(TexCoord);
 MAIN_END

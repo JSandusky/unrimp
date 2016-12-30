@@ -117,7 +117,7 @@ namespace RendererRuntime
 		inline const RenderQueueIndexRanges& getRenderQueueIndexRanges() const;	// Renderable manager pointers are only considered to be safe directly after the "RendererRuntime::CompositorWorkspaceInstance::execute()" call
 		RENDERERRUNTIME_API_EXPORT const RenderQueueIndexRange* getRenderQueueIndexRangeByRenderQueueIndex(uint8_t renderQueueIndex) const;	// Can be a null pointer, don't destroy the instance
 		RENDERERRUNTIME_API_EXPORT const ICompositorInstancePass* getFirstCompositorInstancePassByCompositorPassTypeId(CompositorPassTypeId compositorPassTypeId) const;
-		RENDERERRUNTIME_API_EXPORT void execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem);
+		RENDERERRUNTIME_API_EXPORT void execute(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem);
 		inline Renderer::IRenderTarget* getExecutionRenderTarget() const;	// Only valid during compositor workspace instance execution
 
 
@@ -139,7 +139,7 @@ namespace RendererRuntime
 		void createFramebuffersAndRenderTargetTextures(const Renderer::IRenderTarget& mainRenderTarget);
 		void destroyFramebuffersAndRenderTargetTextures();
 		void clearRenderQueueIndexRangesRenderableManagers();
-		void gatherRenderQueueIndexRangesRenderableManagers(CameraSceneItem& cameraSceneItem);	// A naive method name would be "culling", this is considered to be an expensive method call
+		void gatherRenderQueueIndexRangesRenderableManagers(const CameraSceneItem& cameraSceneItem);	// A naive method name would be "culling", this is considered to be an expensive method call
 
 
 	//[-------------------------------------------------------]

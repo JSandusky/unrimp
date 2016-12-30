@@ -24,6 +24,8 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
+#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/Vr/IVrManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -57,6 +59,7 @@ namespace
 		#define DEFINE_CONSTANT(name) static const RendererRuntime::StringId name(#name);
 			// Pass
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
+			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_QUATERNION)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_SUN_LIGHT_DIRECTION)
@@ -85,7 +88,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
 	//[-------------------------------------------------------]
-	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const Transform& worldSpaceToViewSpaceTransform, PassBufferManager::PassData& passData)
+	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, PassBufferManager::PassData& passData)
 	{
 		// Remember the pass data memory address of the current scope
 		mPassData = &passData;
@@ -98,10 +101,10 @@ namespace RendererRuntime
 		// Get the aspect ratio
 		const float aspectRatio = static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight;
 
-		// TODO(co) Use dynamic values
-		float fovY = 45.0f;
-		float nearZ = 0.1f;
-		float farZ = 100.0f;
+		// Get camera settings
+		const float fovY  = (nullptr != cameraSceneItem) ? cameraSceneItem->getFovY()  : CameraSceneItem::DEFAULT_FOV_Y;
+		const float nearZ = (nullptr != cameraSceneItem) ? cameraSceneItem->getNearZ() : CameraSceneItem::DEFAULT_NEAR_Z;
+		const float farZ  = (nullptr != cameraSceneItem) ? cameraSceneItem->getFarZ()  : CameraSceneItem::DEFAULT_FAR_Z;
 
 		// Calculate required matrices basing whether or not the VR-manager is currently running
 		glm::mat4 viewSpaceToClipSpaceMatrix;
@@ -121,8 +124,10 @@ namespace RendererRuntime
 		}
 
 		// Calculate the final matrices
-		mPassData->worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
-		mPassData->worldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;
+		const Transform& worldSpaceToViewSpaceTransform = (nullptr != cameraSceneItem && nullptr != cameraSceneItem->getParentSceneNode()) ? cameraSceneItem->getParentSceneNode()->getTransform() : Transform::IDENTITY;
+		mPassData->worldSpaceToViewSpaceMatrix	   = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
+		mPassData->worldSpaceToViewSpaceQuaternion = worldSpaceToViewSpaceTransform.rotation;
+		mPassData->worldSpaceToClipSpaceMatrix	   = viewSpaceToClipSpaceMatrix * viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;
 	}
 
 	bool MaterialBlueprintResourceListener::fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes)
@@ -135,6 +140,11 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceMatrix), numberOfBytes);
+		}
+		else if (::detail::WORLD_SPACE_TO_VIEW_SPACE_QUATERNION == referenceValue)
+		{
+			assert(sizeof(float) * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceQuaternion), numberOfBytes);
 		}
 		else if (::detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{

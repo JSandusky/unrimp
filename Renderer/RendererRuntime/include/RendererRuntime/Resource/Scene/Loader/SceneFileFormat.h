@@ -30,8 +30,6 @@
 #include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

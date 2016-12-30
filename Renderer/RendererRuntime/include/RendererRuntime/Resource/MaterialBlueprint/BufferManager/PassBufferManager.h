@@ -37,6 +37,7 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
 	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
 	#include <glm/glm.hpp>
+	#include <glm/gtx/quaternion.hpp>
 PRAGMA_WARNING_POP
 
 #include <vector>
@@ -49,6 +50,7 @@ namespace RendererRuntime
 {
 	class Transform;
 	class IBufferManager;
+	class CameraSceneItem;
 	class IRendererRuntime;
 	class MaterialBlueprintResource;
 	class MaterialBlueprintResourceManager;
@@ -81,6 +83,7 @@ namespace RendererRuntime
 		{
 			glm::mat4 worldSpaceToClipSpaceMatrix;
 			glm::mat4 worldSpaceToViewSpaceMatrix;
+			glm::quat worldSpaceToViewSpaceQuaternion;
 			glm::mat4 viewSpaceToWorldSpaceMatrix;
 		};
 
@@ -111,11 +114,11 @@ namespace RendererRuntime
 		*    Fill the pass buffer
 		*
 		*  @param[in] renderTarget
-		*    Render target
-		*  @param[in] worldSpaceToViewSpaceTransform
-		*    World space to view space transform matrix
+		*    Render target to render into
+		*  @param[in] cameraSceneItem
+		*    Camera scene item to use, can be a null pointer
 		*/
-		void fillBuffer(const Renderer::IRenderTarget& renderTarget, const Transform& worldSpaceToViewSpaceTransform);
+		void fillBuffer(const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem);
 
 		/**
 		*  @brief

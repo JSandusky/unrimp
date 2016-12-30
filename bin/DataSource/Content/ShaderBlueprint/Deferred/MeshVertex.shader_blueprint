@@ -37,12 +37,11 @@
 // Attribute input / output
 INPUT_BEGIN
 	INPUT_VERTEX_POSITION(float3, Position)				// Object space vertex position
+	INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)		// 32 bit texture coordinate
 	@property(HLSL)
-		INPUT_TEXTURE_COORDINATE(int2, TexCoord, 0)		// 16 bit texture coordinate
 		INPUT_TEXTURE_COORDINATE(int4, QTangent, 1)		// 16 bit QTangent
 	@end
 	@property(GLSL)
-		INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)	// 16 bit texture coordinate
 		INPUT_TEXTURE_COORDINATE(float4, QTangent, 1)	// 16 bit QTangent
 	@end
 	INPUT_VERTEX_DRAW_ID								// Draw ID
@@ -59,8 +58,8 @@ OUTPUT_END
 // Uniform buffers
 struct PassDataStruct
 {
-	float4x4 WorldSpaceToViewSpaceMatrix;
 	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4	 WorldSpaceToViewSpaceQuaternion;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -74,7 +73,7 @@ UNIFORM_BUFFER_BEGIN(InstanceUniformBuffer, 2)
 UNIFORM_BUFFER_END
 
 // Texture buffers
-TEXTURE_BUFFER(float4, InstanceTextureBuffer, 0)	// "OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
+TEXTURE_BUFFER(float4, InstanceTextureBuffer, 0)	// "POSITION_ROTATION_SCALE"
 
 
 //[-------------------------------------------------------]
@@ -87,33 +86,29 @@ TEXTURE_BUFFER(float4, InstanceTextureBuffer, 0)	// "OBJECT_SPACE_TO_WORLD_SPACE
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	uint4 instanceIndices = InstanceIndicesArray[MAIN_INPUT_DRAW_ID];
-
-	// Get the object space to world space matrix
-	float4 row0 = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x);
-	float4 row1 = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 1);
-	float4 row2 = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 2);
-	float4 row3 = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 3);
-	float4x4 objectSpaceToWorldSpaceMatrix = ROW_MATRIX_4x4(row0, row1, row2, row3);
+	// Get object space to world space data
+	uint4  instanceIndices 	  = InstanceIndicesArray[MAIN_INPUT_DRAW_ID];
+	float3 position 		  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x).xyz;
+	float4 rotationQuaternion = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 1);
+	float3 scale    		  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 2).xyz;
 
 	// Calculate the world space vertex position
-	float4 worldSpacePosition = MATRIX_MUL(objectSpaceToWorldSpaceMatrix, float4(MAIN_INPUT(Position), 1.0f));
+	float3 worldSpacePosition = MultiplyQuaternionVector(rotationQuaternion, MAIN_INPUT(Position) * scale) + position;
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, worldSpacePosition);
+	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, float4(worldSpacePosition, 1.0f));
 
 	// Pass through the assigned material slot inside the material uniform buffer
 	MAIN_OUTPUT(AssignedMaterialSlotVS) = instanceIndices.y;
 
-	// Pass through the decoded 16 bit texture coordinate
-	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(TexCoord) / 32767.0f;
+	// Pass through the 32 bit texture coordinate
+	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(TexCoord);
 
 	// Calculate the tangent space to view space tangent, binormal and normal
 	// - 16 bit QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 	//   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
-	// TODO(co) float3x3
-	float4x4 objectSpaceToViewSpaceMatrix = MATRIX_MUL(PassData.WorldSpaceToViewSpaceMatrix, objectSpaceToWorldSpaceMatrix);
-	float3x3 tangentFrame = GetTangentFrame(CAST_TO(objectSpaceToViewSpaceMatrix, float3x3), MAIN_INPUT(QTangent) / 32767.0f);
+	float4 objectSpaceToViewSpaceQuaternion = MultiplyQuaternions(PassData.WorldSpaceToViewSpaceQuaternion, rotationQuaternion);
+	float3x3 tangentFrame = GetTangentFrame(objectSpaceToViewSpaceQuaternion, MAIN_INPUT(QTangent) / 32767.0f);
 	MAIN_OUTPUT(TangentFrame0VS) = tangentFrame[0];
 	MAIN_OUTPUT(TangentFrame1VS) = tangentFrame[1];
 	MAIN_OUTPUT(TangentFrame2VS) = tangentFrame[2];

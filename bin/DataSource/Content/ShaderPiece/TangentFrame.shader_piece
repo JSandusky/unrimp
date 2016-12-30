@@ -22,6 +22,23 @@
 //[ Pieces                                                ]
 //[-------------------------------------------------------]
 @piece(DefineGetTangentFrame)
+	float4 MultiplyQuaternions(float4 q1, float4 q2)
+	{
+		float4 result;
+		result.w = q1.w * q2.w - dot(q1.xyz, q2.xyz);
+		result.xyz = q1.w * q2.xyz + q2.w * q1.xyz + cross(q1.xyz, q2.xyz);
+		return result;
+	}
+
+	// https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/ mentions as source
+	//   "The faster method comes courtesy of Fabian Giesen ( http://fgiesen.wordpress.com/ ) (ryg of Farbrausch fame ( http://www.farbrausch.de/~fg/ )),
+	//    who posted this to the MollyRocket forums years ago. Another derivation, yielding the same result, can be found here ( http://gns.wikia.com/wiki/Quaternions )."
+	float3 MultiplyQuaternionVector(float4 rotationQuaternion, float3 vertex)
+	{
+		float3 t = 2.0f * cross(rotationQuaternion.xyz, vertex);
+		return vertex + rotationQuaternion.w * t + cross(rotationQuaternion.xyz, t);
+	}
+
 	float2x3 QuaternionToTangentBitangent(float4 q)
 	{
 		return float2x3(
@@ -30,12 +47,11 @@
 		);
 	}
 
-	float3x3 GetTangentFrame(float3x3 objectSpaceToViewSpaceMatrix, float4 qtangent)
+	float3x3 GetTangentFrame(float4 objectSpaceToViewSpaceQuaternion, float4 qtangent)
 	{
 		float2x3 tBt = QuaternionToTangentBitangent(qtangent);
-		float3 t = MATRIX_MUL(objectSpaceToViewSpaceMatrix, tBt[0]);
-		float3 b = MATRIX_MUL(objectSpaceToViewSpaceMatrix, tBt[1]);
-
+		float3 t = MultiplyQuaternionVector(objectSpaceToViewSpaceQuaternion, tBt[0]);
+		float3 b = MultiplyQuaternionVector(objectSpaceToViewSpaceQuaternion, tBt[1]);
 		return float3x3(
 			t,
 			b,

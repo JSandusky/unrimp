@@ -55,8 +55,8 @@ OUTPUT_END
 // Uniform buffers
 struct PassDataStruct
 {
-	float4x4 WorldSpaceToViewSpaceMatrix;
 	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4	 WorldSpaceToViewSpaceQuaternion;
 	float3	 ViewSpaceSunLightDirection;
 	float	 Wetness;
 	float3	 SunLightColor;

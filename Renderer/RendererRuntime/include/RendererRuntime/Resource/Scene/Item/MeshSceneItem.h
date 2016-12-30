@@ -86,8 +86,9 @@ namespace RendererRuntime
 	public:
 		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
-		virtual void onAttachedToSceneNode(const ISceneNode& sceneNode) override;
-		inline virtual void onDetachedFromSceneNode(const ISceneNode& sceneNode) override;
+		virtual void onAttachedToSceneNode(ISceneNode& sceneNode) override;
+		inline virtual void onDetachedFromSceneNode(ISceneNode& sceneNode) override;
+		inline virtual void setVisible(bool visible) override;
 
 
 	//[-------------------------------------------------------]
