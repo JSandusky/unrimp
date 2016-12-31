@@ -35,6 +35,41 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
+	glm::quat Math::calculateTangentFrameQuaternion(glm::mat3& tangentFrameMatrix)
+	{
+		// Flip y axis in case the tangent frame encodes a reflection
+		const float scale = (glm::determinant(tangentFrameMatrix) > 0) ? 1.0f : -1.0f;
+		tangentFrameMatrix[2][0] *= scale;
+		tangentFrameMatrix[2][1] *= scale;
+		tangentFrameMatrix[2][2] *= scale;
+
+		glm::quat tangentFrameQuaternion(tangentFrameMatrix);
+
+		{ // Make sure we don't end up with 0 as w component
+			const float threshold = 1.0f / SHRT_MAX; // 16 bit quantization QTangent
+			const float renomalization = sqrt(1.0f - threshold * threshold);
+
+			if (std::abs(tangentFrameQuaternion.w) < threshold)
+			{
+				tangentFrameQuaternion.x *= renomalization;
+				tangentFrameQuaternion.y *= renomalization;
+				tangentFrameQuaternion.z *= renomalization;
+				tangentFrameQuaternion.w =  (tangentFrameQuaternion.w > 0) ? threshold : -threshold;
+			}
+		}
+
+		{ // Encode reflection into quaternion's w element by making sign of w negative if y axis needs to be flipped, positive otherwise
+			const float qs = (scale < 0.0f && tangentFrameQuaternion.w > 0.0f) || (scale > 0.0f && tangentFrameQuaternion.w < 0.0f) ? -1.0f : 1.0f;
+			tangentFrameQuaternion.x *= qs;
+			tangentFrameQuaternion.y *= qs;
+			tangentFrameQuaternion.z *= qs;
+			tangentFrameQuaternion.w *= qs;
+		}
+
+		// Done
+		return tangentFrameQuaternion;
+	}
+
 	uint32_t Math::calculateFNV1a(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash)
 	{
 		// 32-bit FNV-1a implementation basing on http://de.wikipedia.org/wiki/FNV_%28Informatik%29
