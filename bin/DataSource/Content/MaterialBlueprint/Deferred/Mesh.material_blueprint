@@ -53,6 +53,30 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Description": "Material diffuse map"
 			},
+			"UseAlphaMap":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use alpha map?",
+				"VisualImportance": "100"
+			},
+			"AlphaMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Description": "Material alpha map"
+			},
+			"AlphaReference":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.05",
+				"Description": "Alpha reference. Only used if 'UseAlphaMap' is true.",
+				"RangeMin": "0.0",
+				"RangeMax": "1.0",
+				"RangeStep": "0.05"
+			},
 			"UseEmissiveMap":
 			{
 				"Usage": "SHADER_COMBINATION",
@@ -193,7 +217,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "EmissiveMap",
+							"BaseShaderRegisterName": "AlphaMap",
 							"SamplerRootParameterIndex": "4"
 						}
 					},
@@ -208,7 +232,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "NormalMap",
+							"BaseShaderRegisterName": "EmissiveMap",
 							"SamplerRootParameterIndex": "4"
 						}
 					},
@@ -223,6 +247,21 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
+							"BaseShaderRegisterName": "NormalMap",
+							"SamplerRootParameterIndex": "4"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"9":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "4",
 							"BaseShaderRegisterName": "SpecularMap",
 							"SamplerRootParameterIndex": "4"
 						}
@@ -277,6 +316,12 @@
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@DiffuseColor"
+						},
+						"AlphaReference":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@AlphaReference"
 						}
 					}
 				},
@@ -323,6 +368,13 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DiffuseMap"
+				},
+				"AlphaMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@AlphaMap"
 				},
 				"EmissiveMap":
 				{
