@@ -131,7 +131,7 @@ MAIN_BEGIN
 		float3 normal = SAMPLE_2D(NormalMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
 	@end
 	@property(!UseNormalMap)
-		float3 normal = float3(0.0f, 0.0f, 1.0f);
+		float3 normal = float3(0.5f, 0.5f, 1.0f);	// Flat
 	@end
 
 	// Transform the normal from [0..1] to [-1..1]
@@ -142,6 +142,9 @@ MAIN_BEGIN
 
 	// Calculate lighting
 	@insertpiece(CalculateLighting)
+
+	// Ambient term
+	diffuseLightColor += float3(0.2f, 0.2f, 0.2f);
 
 	// Diffuse term
 	@property(UseDiffuseMap)

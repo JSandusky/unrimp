@@ -77,6 +77,8 @@ public:
 				mApplication.onKeyUp(key);
 				break;
 			}
+
+			// TODO(co) Implement "onMouseButtonDown()" and "onMouseButtonUp()" for left and right mouse button as well as "onMouseMove()"
 		}
 		return false;
 	}

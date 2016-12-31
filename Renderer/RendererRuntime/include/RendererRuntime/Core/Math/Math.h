@@ -60,6 +60,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		static const uint32_t FNV1a_INITIAL_HASH = 0xcbf29ce4;
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 ZERO_VECTOR;		///< 0 0 0
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 ONE_VECTOR;		///< 1 1 1
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 RIGHT_VECTOR;		///< 1 0 0
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 UP_VECTOR;		///< 0 1 0
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 FORWARD_VECTOR;	///< 0 0 1
 
 
 	//[-------------------------------------------------------]
@@ -81,6 +86,25 @@ namespace RendererRuntime
 		*    http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
 		*/
 		RENDERERRUNTIME_API_EXPORT static glm::quat calculateTangentFrameQuaternion(glm::mat3& tangentFrameMatrix);
+
+		/**
+		*  @brief
+		*    Ensure that the given value is within the given interval [minimum, maximum] by wrapping the value
+		*
+		*  @param[in] value
+		*    Value to check
+		*  @param[in] minimum
+		*    Minimum of the interval, must be < maximum
+		*  @param[in] maximum
+		*    Maximum of the interval, must be > minimum
+		*
+		*  @return
+		*    The value within the interval [minimum, maximum]
+		*
+		*  @note
+		*    - In case of violating the interface specification by swapping minimum/maximum the result will not be different to the one of the correct order
+		*/
+		RENDERERRUNTIME_API_EXPORT static float wrapToInterval(float value, float minimum, float maximum);
 
 		//[-------------------------------------------------------]
 		//[ Hash                                                  ]

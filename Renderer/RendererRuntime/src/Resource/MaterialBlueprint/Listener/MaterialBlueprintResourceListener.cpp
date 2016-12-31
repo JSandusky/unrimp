@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Core/Math/Transform.h"
+#include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/Vr/IVrManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -105,27 +106,28 @@ namespace RendererRuntime
 		const float farZ  = (nullptr != cameraSceneItem) ? cameraSceneItem->getFarZ()  : CameraSceneItem::DEFAULT_FAR_Z;
 
 		// Calculate required matrices basing whether or not the VR-manager is currently running
-		glm::mat4 viewSpaceToClipSpaceMatrix;
 		glm::mat4 viewTranslateMatrix;
-		{
-			const IVrManager& vrManager = rendererRuntime.getVrManager();
-			if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye())
-			{
-				const IVrManager::VrEye vrEye = static_cast<IVrManager::VrEye>(getCurrentRenderedVrEye());
-				viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, nearZ, farZ);
-				viewTranslateMatrix = vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye) * vrManager.getHmdPoseMatrix();
-			}
-			else
-			{
-				viewSpaceToClipSpaceMatrix = glm::perspective(fovY, aspectRatio, nearZ, farZ);
-			}
-		}
-
-		// Calculate the final matrices
+		glm::mat4 viewSpaceToClipSpaceMatrix;
+		const IVrManager& vrManager = rendererRuntime.getVrManager();
 		const Transform& worldSpaceToViewSpaceTransform = (nullptr != cameraSceneItem && nullptr != cameraSceneItem->getParentSceneNode()) ? cameraSceneItem->getParentSceneNode()->getTransform() : Transform::IDENTITY;
-		mPassData->worldSpaceToViewSpaceMatrix	   = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
-		mPassData->worldSpaceToViewSpaceQuaternion = worldSpaceToViewSpaceTransform.rotation;
-		mPassData->worldSpaceToClipSpaceMatrix	   = viewSpaceToClipSpaceMatrix * viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;
+		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye())
+		{
+			const IVrManager::VrEye vrEye = static_cast<IVrManager::VrEye>(getCurrentRenderedVrEye());
+			viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, nearZ, farZ);
+			viewTranslateMatrix = vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye) * vrManager.getHmdPoseMatrix();
+
+			// Calculate the final matrices
+			mPassData->worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
+		}
+		else
+		{
+			viewSpaceToClipSpaceMatrix = glm::perspective(fovY, aspectRatio, nearZ, farZ);
+
+			// Calculate the final matrices
+			mPassData->worldSpaceToViewSpaceMatrix = glm::lookAt(worldSpaceToViewSpaceTransform.position, worldSpaceToViewSpaceTransform.position + worldSpaceToViewSpaceTransform.rotation * Math::FORWARD_VECTOR, Math::UP_VECTOR);
+		}
+		mPassData->worldSpaceToViewSpaceQuaternion = glm::quat(mPassData->worldSpaceToViewSpaceMatrix);
+		mPassData->worldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;
 	}
 
 	bool MaterialBlueprintResourceListener::fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes)
@@ -166,7 +168,7 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 3 == numberOfBytes);
 			glm::vec3 viewSpaceSunLightDirection(0.5f, 0.5f, 1.0f);	// TODO(co) This is just a test, needs to be filled from the outside
-			viewSpaceSunLightDirection = glm::normalize(viewSpaceSunLightDirection);
+			viewSpaceSunLightDirection = mPassData->worldSpaceToViewSpaceQuaternion * glm::normalize(viewSpaceSunLightDirection);
 			memcpy(buffer, glm::value_ptr(viewSpaceSunLightDirection), numberOfBytes);
 		}
 		else if (::detail::INVERSE_VIEWPORT_SIZE == referenceValue)

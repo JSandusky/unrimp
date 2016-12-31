@@ -159,6 +159,44 @@ public:
 
 	/**
 	*  @brief
+	*    Called in case a mouse button is now pressed
+	*
+	*  @param[in] button
+	*    Pressed mouse button
+	*
+	*  @note
+	*    - The base implementation is empty
+	*/
+	virtual void onMouseButtonDown(uint32_t button);
+
+	/**
+	*  @brief
+	*    Called in case a mouse button was released
+	*
+	*  @param[in] button
+	*    Released mouse button
+	*
+	*  @note
+	*    - The base implementation is empty
+	*/
+	virtual void onMouseButtonUp(uint32_t button);
+
+	/**
+	*  @brief
+	*    Called in case the mouse moved
+	*
+	*  @param[in] x
+	*    Mouse position along the x-axis
+	*  @param[in] y
+	*    Mouse position along the y-axis
+	*
+	*  @note
+	*    - The base implementation is empty
+	*/
+	virtual void onMouseMove(int x, int y);
+
+	/**
+	*  @brief
 	*    Update the logic
 	*
 	*  @note

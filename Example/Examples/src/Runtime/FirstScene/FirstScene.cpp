@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 #include "Runtime/FirstScene/FirstScene.h"
+#include "Runtime/FirstScene/FreeCameraController.h"
 
 #include <RendererRuntime/Vr/IVrManager.h>
 #include <RendererRuntime/Core/Math/Transform.h>
@@ -77,6 +78,7 @@ FirstScene::FirstScene(const char *rendererName) :
 	mMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
 	mCloneMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
 	mCustomMaterialResourceSet(false),
+	mFreeCameraController(nullptr),
 	mCameraSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mGlobalTimer(0.0f),
@@ -144,8 +146,55 @@ void FirstScene::onDeinitialization()
 	mCompositorWorkspaceInstance = nullptr;
 	delete mSceneResource;
 
+	// Destroy free camera controller instance
+	if (nullptr != mFreeCameraController)
+	{
+		delete mFreeCameraController;
+		mFreeCameraController = nullptr;
+	}
+
 	// Call the base implementation
 	IApplicationRendererRuntime::onDeinitialization();
+}
+
+void FirstScene::onKeyDown(uint32_t key)
+{
+	if (nullptr != mFreeCameraController)
+	{
+		mFreeCameraController->onKeyDown(key);
+	}
+}
+
+void FirstScene::onKeyUp(uint32_t key)
+{
+	if (nullptr != mFreeCameraController)
+	{
+		mFreeCameraController->onKeyUp(key);
+	}
+}
+
+void FirstScene::onMouseButtonDown(uint32_t button)
+{
+	if (nullptr != mFreeCameraController)
+	{
+		mFreeCameraController->onMouseButtonDown(button);
+	}
+}
+
+void FirstScene::onMouseButtonUp(uint32_t button)
+{
+	if (nullptr != mFreeCameraController)
+	{
+		mFreeCameraController->onMouseButtonUp(button);
+	}
+}
+
+void FirstScene::onMouseMove(int x, int y)
+{
+	if (nullptr != mFreeCameraController)
+	{
+		mFreeCameraController->onMouseMove(x, y);
+	}
 }
 
 void FirstScene::onUpdate()
@@ -153,8 +202,14 @@ void FirstScene::onUpdate()
 	// Call the base implementation
 	IApplicationRendererRuntime::onUpdate();
 
-	// Stop the stopwatch
+	// Stop the stopwatch and get the milliseconds
 	mStopwatch.stop();
+	float pastMilliseconds = mStopwatch.getMilliseconds();
+	if (pastMilliseconds > 60.0f)
+	{
+		// No one likes huge time jumps
+		pastMilliseconds = 60.0f;
+	}
 
 	{ // Tell the material blueprint resource manager about our global material properties
 		RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
@@ -172,7 +227,13 @@ void FirstScene::onUpdate()
 		mSceneNode->setRotation(glm::angleAxis(mGlobalTimer, glm::vec3(0.0f, 1.0f, 0.0f)));
 
 		// Update the global timer (FPS independent movement)
-		mGlobalTimer += mStopwatch.getMilliseconds() * 0.0005f * mRotationSpeed;
+		mGlobalTimer += pastMilliseconds * 0.0005f * mRotationSpeed;
+	}
+
+	// Update free camera controller
+	if (nullptr != mFreeCameraController)
+	{
+		mFreeCameraController->onUpdate(pastMilliseconds);
 	}
 
 	// Start the stopwatch
@@ -228,6 +289,10 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 	{
 		if (RendererRuntime::IResource::LoadingState::LOADED == loadingState)
 		{
+			// Sanity checks
+			assert(nullptr == mSceneNode);
+			assert(nullptr == mCameraSceneItem);
+
 			// Loop through all scene nodes and grab the first found camera and mesh
 			for (RendererRuntime::ISceneNode* sceneNode : mSceneResource->getSceneNodes())
 			{
@@ -249,6 +314,10 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 						if (nullptr == mCameraSceneItem)
 						{
 							mCameraSceneItem = static_cast<RendererRuntime::CameraSceneItem*>(sceneItem);
+							if (!mCompositorWorkspaceInstance->getRendererRuntime().getVrManager().isRunning())
+							{
+								mFreeCameraController = new FreeCameraController(*mCameraSceneItem);
+							}
 						}
 					}
 				}
@@ -257,12 +326,19 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 			// Set initial camera position if virtual reality is disabled
 			if (nullptr != mCameraSceneItem && nullptr != mCameraSceneItem->getParentSceneNode() && !mCompositorWorkspaceInstance->getRendererRuntime().getVrManager().isRunning())
 			{
-				mCameraSceneItem->getParentSceneNode()->setPosition(glm::vec3(0.0f, -1.0f, -3.0f));
+				RendererRuntime::ISceneNode* sceneNode = mCameraSceneItem->getParentSceneNode();
+				sceneNode->setPosition(glm::vec3(-3.12873816f, 0.6473912f, 2.20889306f));
+				sceneNode->setRotation(glm::quat(0.412612021f, -0.0201802868f, 0.909596086f, 0.0444870926f));
 			}
 		}
 		else
 		{
 			mCameraSceneItem = nullptr;
+			if (nullptr != mFreeCameraController)
+			{
+				delete mFreeCameraController;
+				mFreeCameraController = nullptr;
+			}
 			mSceneNode = nullptr;
 		}
 	}

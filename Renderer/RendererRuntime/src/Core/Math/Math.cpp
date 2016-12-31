@@ -33,6 +33,16 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const glm::vec3 Math::ZERO_VECTOR	(0.0f, 0.0f, 0.0f);
+	const glm::vec3 Math::ONE_VECTOR	(1.0f, 1.0f, 1.0f);
+	const glm::vec3 Math::RIGHT_VECTOR	(1.0f, 0.0f, 0.0f);
+	const glm::vec3 Math::UP_VECTOR		(0.0f, 1.0f, 0.0f);
+	const glm::vec3 Math::FORWARD_VECTOR(0.0f, 0.0f, 1.0f);
+
+
+	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	glm::quat Math::calculateTangentFrameQuaternion(glm::mat3& tangentFrameMatrix)
@@ -68,6 +78,16 @@ namespace RendererRuntime
 
 		// Done
 		return tangentFrameQuaternion;
+	}
+
+	float Math::wrapToInterval(float value, float minimum, float maximum)
+	{
+		// Wrap as described at http://en.wikipedia.org/wiki/Wrapping_%28graphics%29
+		//   value' = value - rounddown((value-min)/(max-min))*(max-min)
+		// -> In here, there's no need to check for swapped minimum/maximum, it's handled correctly
+		// -> Check interval in order to avoid an evil division through zero
+		const float interval = (maximum - minimum);
+		return interval ? (value - floor((value - minimum) / interval) * (maximum - minimum)) : minimum;
 	}
 
 	uint32_t Math::calculateFNV1a(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash)

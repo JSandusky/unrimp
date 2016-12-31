@@ -97,6 +97,21 @@ void IApplication::onKeyUp(uint32_t)
 	// Nothing here
 }
 
+void IApplication::onMouseButtonDown(uint32_t)
+{
+	// Nothing here
+}
+
+void IApplication::onMouseButtonUp(uint32_t)
+{
+	// Nothing here
+}
+
+void IApplication::onMouseMove(int, int)
+{
+	// Nothing here
+}
+
 void IApplication::onUpdate()
 {
 	// Nothing here

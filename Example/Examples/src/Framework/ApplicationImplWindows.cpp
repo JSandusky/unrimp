@@ -222,10 +222,34 @@ LRESULT CALLBACK ApplicationImplWindows::wndProc(HWND hWnd, UINT message, WPARAM
 			applicationImplWindows->mApplication->onKeyDown(static_cast<unsigned long>(wParam));
 			return 0;
 
-		// Keyboard key up
 		case WM_KEYUP:
 			// Inform the owner application instance
 			applicationImplWindows->mApplication->onKeyUp(static_cast<unsigned long>(wParam));
+			return 0;
+
+		case WM_LBUTTONDOWN:
+			// Inform the owner application instance
+			applicationImplWindows->mApplication->onMouseButtonDown(0);
+			return 0;
+
+		case WM_LBUTTONUP:
+			// Inform the owner application instance
+			applicationImplWindows->mApplication->onMouseButtonUp(0);
+			return 0;
+
+		case WM_RBUTTONDOWN:
+			// Inform the owner application instance
+			applicationImplWindows->mApplication->onMouseButtonDown(1);
+			return 0;
+
+		case WM_RBUTTONUP:
+			// Inform the owner application instance
+			applicationImplWindows->mApplication->onMouseButtonUp(1);
+			return 0;
+
+		case WM_MOUSEMOVE:
+			// Don't want to include the huge "Windowsx.h" just for the tiny "GET_X_LPARAM()" and "GET_Y_LPARAM()" macros
+			applicationImplWindows->mApplication->onMouseMove(static_cast<int>(static_cast<short>(LOWORD(lParam))), static_cast<int>(static_cast<short>(HIWORD(lParam))));
 			return 0;
 
 		// Window paint request
