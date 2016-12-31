@@ -32,6 +32,13 @@
 				"Description": "Perform lighting on the material?",
 				"VisualImportance": "MANDATORY"
 			},
+			"CullMode":
+			{
+				"Usage": "RASTERIZER_STATE",
+				"ValueType": "CULL_MODE",
+				"Value": "BACK",
+				"Description": "Cull mode rasterizer state"
+			},
 			"DiffuseColor":
 			{
 				"Usage": "SHADER_UNIFORM",
@@ -277,6 +284,10 @@
 			{
 				"VertexShaderBlueprintAssetId": "111",
 				"FragmentShaderBlueprintAssetId": "112"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "@CullMode"
 			}
 		},
 		"Resources":

@@ -77,10 +77,10 @@ namespace RendererToolkit
 		static RendererRuntime::MaterialPropertyValue mandatoryMaterialPropertyValue(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName, const RendererRuntime::MaterialProperty::ValueType valueType);
 		static void readRootSignature(const rapidjson::Value& rapidJsonValueRootSignature, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties);
 		static void readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::ShaderProperties& visualImportanceOfShaderProperties, RendererRuntime::ShaderProperties& maximumIntegerValueOfShaderProperties, bool sort = true, MaterialPropertyIdToName* materialPropertyIdToName = nullptr);
-		static void readPipelineStateObject(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValuePipelineState, std::ofstream& outputFileStream);
+		static void readPipelineStateObject(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValuePipelineState, std::ofstream& outputFileStream, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector);
 		static void readUniformBuffers(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueUniformBuffers, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties);
 		static void readTextureBuffers(const rapidjson::Value& rapidJsonValueTextureBuffers, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties);
-		static void readSamplerStates(const rapidjson::Value& rapidJsonValueSamplerStates, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties);
+		static void readSamplerStates(const rapidjson::Value& rapidJsonValueSamplerStates, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector);
 		static void readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueTextures, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties);
 
 

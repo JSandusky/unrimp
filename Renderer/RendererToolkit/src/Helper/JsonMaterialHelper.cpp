@@ -58,6 +58,42 @@ namespace
 			return (left.materialTechniqueId < right.materialTechniqueId);
 		}
 
+		const RendererRuntime::MaterialProperty* getMaterialPropertyOfUsageAndValueType(const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector, const std::string& valueAsString, RendererRuntime::MaterialProperty::Usage usage, RendererRuntime::MaterialPropertyValue::ValueType valueType)
+		{
+			// The character "@" is used to reference a material property value
+			if (nullptr != sortedMaterialPropertyVector && !valueAsString.empty() && valueAsString[0] == '@')
+			{
+				// Reference a material property value
+				const RendererRuntime::MaterialPropertyId materialPropertyId(valueAsString.substr(1).c_str());
+
+				// Figure out the material property value
+				RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector->cbegin(), sortedMaterialPropertyVector->cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
+				if (iterator != sortedMaterialPropertyVector->end() && iterator->getMaterialPropertyId() == materialPropertyId)
+				{
+					const RendererRuntime::MaterialProperty& materialProperty = *iterator;
+					if (materialProperty.getUsage() == usage && materialProperty.getValueType() == valueType)
+					{
+						return &materialProperty;
+					}
+					else
+					{
+						// TODO(co) Error handling: Usage mismatch etc.
+					}
+				}
+				else
+				{
+					// TODO(co) Error handling: Unknown material property
+				}
+			}
+			else
+			{
+				// TODO(co) Error handling
+			}
+
+			// Error!
+			return nullptr;
+		}
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -76,7 +112,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	void JsonMaterialHelper::optionalFillModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::FillMode& value)
+	void JsonMaterialHelper::optionalFillModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::FillMode& value, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -93,7 +129,12 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(SOLID)
 			else
 			{
-				// TODO(co) Error handling
+				// Might be a material property reference, the called method automatically throws an exception if something looks odd
+				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::FILL_MODE);
+				if (nullptr != materialProperty)
+				{
+					value = materialProperty->getFillModeValue();
+				}
 			}
 
 			// Undefine helper macros
@@ -102,7 +143,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalCullModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::CullMode& value)
+	void JsonMaterialHelper::optionalCullModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::CullMode& value, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -120,7 +161,12 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(BACK)
 			else
 			{
-				// TODO(co) Error handling
+				// Might be a material property reference, the called method automatically throws an exception if something looks odd
+				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::CULL_MODE);
+				if (nullptr != materialProperty)
+				{
+					value = materialProperty->getCullModeValue();
+				}
 			}
 
 			// Undefine helper macros
@@ -129,7 +175,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalConservativeRasterizationModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::ConservativeRasterizationMode& value)
+	void JsonMaterialHelper::optionalConservativeRasterizationModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::ConservativeRasterizationMode& value, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -146,7 +192,12 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(ON)
 			else
 			{
-				// TODO(co) Error handling
+				// Might be a material property reference, the called method automatically throws an exception if something looks odd
+				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE);
+				if (nullptr != materialProperty)
+				{
+					value = materialProperty->getConservativeRasterizationModeValue();
+				}
 			}
 
 			// Undefine helper macros
@@ -155,7 +206,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalDepthWriteMaskProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::DepthWriteMask& value)
+	void JsonMaterialHelper::optionalDepthWriteMaskProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::DepthWriteMask& value, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -172,7 +223,12 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(ALL)
 			else
 			{
-				// TODO(co) Error handling
+				// Might be a material property reference, the called method automatically throws an exception if something looks odd
+				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::DEPTH_STENCIL_STATE, RendererRuntime::MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK);
+				if (nullptr != materialProperty)
+				{
+					value = materialProperty->getDepthWriteMaskValue();
+				}
 			}
 
 			// Undefine helper macros
@@ -181,7 +237,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalStencilOpProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::StencilOp& value)
+	void JsonMaterialHelper::optionalStencilOpProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::StencilOp& value, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -204,7 +260,12 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(DECREASE)
 			else
 			{
-				// TODO(co) Error handling
+				// Might be a material property reference, the called method automatically throws an exception if something looks odd
+				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::DEPTH_STENCIL_STATE, RendererRuntime::MaterialPropertyValue::ValueType::STENCIL_OP);
+				if (nullptr != materialProperty)
+				{
+					value = materialProperty->getStencilOpValue();
+				}
 			}
 
 			// Undefine helper macros
@@ -213,7 +274,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalBlendProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::Blend& value)
+	void JsonMaterialHelper::optionalBlendProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::Blend& value, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -245,7 +306,12 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(INV_SRC_1_ALPHA)
 			else
 			{
-				// TODO(co) Error handling
+				// Might be a material property reference, the called method automatically throws an exception if something looks odd
+				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::BLEND_STATE, RendererRuntime::MaterialPropertyValue::ValueType::BLEND);
+				if (nullptr != materialProperty)
+				{
+					value = materialProperty->getBlendValue();
+				}
 			}
 
 			// Undefine helper macros
@@ -254,7 +320,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalBlendOpProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::BlendOp& value)
+	void JsonMaterialHelper::optionalBlendOpProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::BlendOp& value, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -274,7 +340,12 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(MAX)
 			else
 			{
-				// TODO(co) Error handling
+				// Might be a material property reference, the called method automatically throws an exception if something looks odd
+				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::BLEND_STATE, RendererRuntime::MaterialPropertyValue::ValueType::BLEND_OP);
+				if (nullptr != materialProperty)
+				{
+					value = materialProperty->getBlendOpValue();
+				}
 			}
 
 			// Undefine helper macros
@@ -283,7 +354,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalFilterProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::FilterMode& value)
+	void JsonMaterialHelper::optionalFilterProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::FilterMode& value, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -316,7 +387,12 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(COMPARISON_ANISOTROPIC)
 			else
 			{
-				// TODO(co) Error handling
+				// Might be a material property reference, the called method automatically throws an exception if something looks odd
+				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::FILTER_MODE);
+				if (nullptr != materialProperty)
+				{
+					value = materialProperty->getFilterMode();
+				}
 			}
 
 			// Undefine helper macros
@@ -325,7 +401,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalTextureAddressModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::TextureAddressMode& value)
+	void JsonMaterialHelper::optionalTextureAddressModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::TextureAddressMode& value, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -345,7 +421,12 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(MIRROR_ONCE)
 			else
 			{
-				// TODO(co) Error handling
+				// Might be a material property reference, the called method automatically throws an exception if something looks odd
+				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE);
+				if (nullptr != materialProperty)
+				{
+					value = materialProperty->getTextureAddressModeValue();
+				}
 			}
 
 			// Undefine helper macros
@@ -354,7 +435,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalComparisonFuncProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::ComparisonFunc& value)
+	void JsonMaterialHelper::optionalComparisonFuncProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::ComparisonFunc& value, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -377,7 +458,12 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(ALWAYS)
 			else
 			{
-				// TODO(co) Error handling
+				// Might be a material property reference, the called method automatically throws an exception if something looks odd
+				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::COMPARISON_FUNC);
+				if (nullptr != materialProperty)
+				{
+					value = materialProperty->getComparisonFuncValue();
+				}
 			}
 
 			// Undefine helper macros

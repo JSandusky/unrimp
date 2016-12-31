@@ -106,6 +106,9 @@ SAMPLER_STATE(SamplerLinear, 0)
 		float diffuseLightFactor = max(dot(normal, PassData.ViewSpaceSunLightDirection), 0.0f);
 		float3 diffuseLightColor = PassData.SunLightColor * diffuseLightFactor;
 
+		// Ambient term
+		diffuseLightColor += float3(0.2f, 0.2f, 0.2f);
+
 		// Build in variables
 		float3 ViewSpaceCameraDirection = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
 
@@ -154,9 +157,6 @@ MAIN_BEGIN
 
 	// Calculate lighting
 	@insertpiece(CalculateLighting)
-
-	// Ambient term
-	diffuseLightColor += float3(0.2f, 0.2f, 0.2f);
 
 	// Diffuse term
 	@property(UseDiffuseMap)

@@ -16,6 +16,7 @@
 		},
 		"Properties":
 		{
+			"CullMode": "NONE",
 			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "32",
 			"UseAlphaMap": "TRUE",
