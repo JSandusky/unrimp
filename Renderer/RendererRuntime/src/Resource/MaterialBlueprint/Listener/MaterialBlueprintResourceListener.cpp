@@ -95,8 +95,6 @@ namespace RendererRuntime
 
 		// Get the render target with and height
 		renderTarget.getWidthAndHeight(mRenderTargetWidth, mRenderTargetHeight);
-		assert(0 != mRenderTargetWidth);
-		assert(0 != mRenderTargetHeight);
 
 		// Get the aspect ratio
 		const float aspectRatio = static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight;

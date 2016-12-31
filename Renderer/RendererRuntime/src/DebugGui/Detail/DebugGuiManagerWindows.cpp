@@ -168,8 +168,8 @@ namespace RendererRuntime
 		ImGuiIO& imGuiIo = ImGui::GetIO();
 
 		{ // Setup display size (every frame to accommodate for render target resizing)
-			uint32_t width = 0;
-			uint32_t height = 0;
+			uint32_t width = 1;
+			uint32_t height = 1;
 			renderTarget.getWidthAndHeight(width, height);
 			imGuiIo.DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
 		}

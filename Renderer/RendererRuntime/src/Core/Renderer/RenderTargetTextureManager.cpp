@@ -144,8 +144,8 @@ namespace RendererRuntime
 						uint32_t height = renderTargetTextureSignature.getHeight();
 						if (isUninitialized(width) || isUninitialized(height))
 						{
-							uint32_t renderTargetWidth = 0;
-							uint32_t renderTargetHeight = 0;
+							uint32_t renderTargetWidth = 1;
+							uint32_t renderTargetHeight = 1;
 							renderTarget.getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 							if (!renderTargetTextureSignature.getAllowResolutionScale())
 							{
@@ -154,10 +154,18 @@ namespace RendererRuntime
 							if (isUninitialized(width))
 							{
 								width = static_cast<uint32_t>(static_cast<float>(renderTargetWidth) * resolutionScale * renderTargetTextureSignature.getWidthScale());
+								if (width < 1)
+								{
+									width = 1;
+								}
 							}
 							if (isUninitialized(height))
 							{
 								height = static_cast<uint32_t>(static_cast<float>(renderTargetHeight) * resolutionScale * renderTargetTextureSignature.getHeightScale());
+								if (height < 1)
+								{
+									height = 1;
+								}
 							}
 						}
 

@@ -900,8 +900,8 @@ namespace OpenGLRenderer
 			// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			uint32_t renderTargetWidth =  0;
-			uint32_t renderTargetHeight = 0;
+			uint32_t renderTargetWidth =  1;
+			uint32_t renderTargetHeight = 1;
 			if (nullptr != mRenderTarget)
 			{
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
@@ -930,8 +930,8 @@ namespace OpenGLRenderer
 			// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			uint32_t renderTargetWidth =  0;
-			uint32_t renderTargetHeight = 0;
+			uint32_t renderTargetWidth =  1;
+			uint32_t renderTargetHeight = 1;
 			if (nullptr != mRenderTarget)
 			{
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
@@ -1162,11 +1162,11 @@ namespace OpenGLRenderer
 				const Framebuffer& openGLSourceMultisampleFramebuffer = static_cast<const Framebuffer&>(sourceMultisampleFramebuffer);
 
 				// Get the width and height of the destination and source framebuffer
-				uint32_t destinationWidth = 0;
-				uint32_t destinationHeight = 0;
+				uint32_t destinationWidth = 1;
+				uint32_t destinationHeight = 1;
 				openGLDestinationFramebuffer.getWidthAndHeight(destinationWidth, destinationHeight);
-				uint32_t sourceWidth = 0;
-				uint32_t sourceHeight = 0;
+				uint32_t sourceWidth = 1;
+				uint32_t sourceHeight = 1;
 				openGLSourceMultisampleFramebuffer.getWidthAndHeight(sourceWidth, sourceHeight);
 
 				// Resolve multisample

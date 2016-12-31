@@ -130,8 +130,8 @@ namespace RendererRuntime
 			mExecutionRenderTarget = &renderTarget;
 
 			// Get the main render target size
-			uint32_t renderTargetWidth  = 0;
-			uint32_t renderTargetHeight = 0;
+			uint32_t renderTargetWidth  = 1;
+			uint32_t renderTargetHeight = 1;
 			renderTarget.getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 
 			{ // Do we need to destroy previous framebuffers and render target textures?

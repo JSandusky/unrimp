@@ -55,8 +55,8 @@ namespace OpenGLES2Renderer
 	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
 		// TODO(co) Use "eglQuerySurface()"
-	//	EGLint renderTargetWidth  = 0;
-	//	EGLint renderTargetHeight = 0;
+	//	EGLint renderTargetWidth  = 1;
+	//	EGLint renderTargetHeight = 1;
 	//	eglQuerySurface(mContext->getEGLDisplay(), mContext->getEGLDummySurface(), EGL_HEIGHT, &renderTargetHeight);
 
 		#ifdef WIN32
@@ -100,10 +100,24 @@ namespace OpenGLES2Renderer
 
 				// TODO(sw) Resue X11 display from "Frontend" -> for now reuse it from the context
 				Display *display = context.getX11Display();
+
+				// Get the width and height...
 				::Window rootWindow = 0;
 				int positionX = 0, positionY = 0;
 				unsigned int unsignedWidth = 0, unsignedHeight = 0, border = 0, depth = 0;
 				XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
+
+				// ... and ensure that none of them is ever zero
+				if (unsignedWidth < 1)
+				{
+					unsignedWidth = 1;
+				}
+				if (unsignedHeight < 1)
+				{
+					unsignedHeight = 1;
+				}
+
+				// Done
 				width = unsignedWidth;
 				height = unsignedHeight;
 			}
@@ -112,7 +126,7 @@ namespace OpenGLES2Renderer
 			if (mNativeWindowHandle)
 			{
 				//TODO(sw) get size on android
-				width = height = 0;
+				width = height = 1;
 			}
 			else
 		#else
@@ -120,8 +134,8 @@ namespace OpenGLES2Renderer
 		#endif
 		{
 			// Set known default return values
-			width  = 0;
-			height = 0;
+			width  = 1;
+			height = 1;
 		}
 	}
 
