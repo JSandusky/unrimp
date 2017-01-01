@@ -8,43 +8,45 @@
 	{
 		"Properties":
 		{
-			"Lighting":
+			"RenderQueueIndex":
+			{
+				"Usage": "STATIC",
+				"ValueType": "INTEGER",
+				"Value": "0",
+				"Description": "Render queue index [0, 255]",
+				"MinimumIntegerValue": "0",
+				"MaximumIntegerValue": "255"
+			},
+			"CastShadows":
+			{
+				"Usage": "STATIC",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Cast shadows?"
+			},
+			"UseAlphaMap":
 			{
 				"Usage": "SHADER_COMBINATION",
 				"ValueType": "BOOLEAN",
-				"Value": "TRUE",
-				"Description": "Perform lighting on the material?"
+				"Value": "FALSE",
+				"Description": "Use alpha map?",
+				"VisualImportance": "100"
 			},
-			"DiffuseColor":
+			"AlphaMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Description": "Material alpha map"
+			},
+			"AlphaReference":
 			{
 				"Usage": "SHADER_UNIFORM",
-				"ValueType": "FLOAT_3",
-				"Value": "1.0 1.0 1.0",
-				"Description": "Material diffuse color"
-			},
-			"DiffuseMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Description": "Material diffuse map"
-			},
-			"EmissiveMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Description": "Material emissive map"
-			},
-			"NormalMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Description": "Material normal map"
-			},
-			"SpecularMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Description": "Material specular map"
+				"ValueType": "FLOAT",
+				"Value": "0.05",
+				"Description": "Alpha reference. Only used if 'UseAlphaMap' is true.",
+				"RangeMin": "0.0",
+				"RangeMax": "1.0",
+				"RangeStep": "0.05"
 			}
 		},
 		"RootSignature":
@@ -62,7 +64,8 @@
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "PassUniformBuffer"
 						}
-					}
+					},
+					"ShaderVisibility": "VERTEX"
 				},
 				"1":
 				{
@@ -128,52 +131,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "DiffuseMap",
-							"SamplerRootParameterIndex": "4"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"6":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "EmissiveMap",
-							"SamplerRootParameterIndex": "4"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"7":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "NormalMap",
-							"SamplerRootParameterIndex": "4"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"8":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "3",
-							"BaseShaderRegisterName": "SpecularMap",
+							"BaseShaderRegisterName": "AlphaMap",
 							"SamplerRootParameterIndex": "4"
 						}
 					},
@@ -188,137 +146,6 @@
 			{
 				"VertexShaderBlueprintAssetId": "17",
 				"FragmentShaderBlueprintAssetId": "18"
-			},
-			"RasterizerState":
-			{
-				"FillMode": "SOLID",
-				"CullMode": "BACK",
-				"FrontCounterClockwise": "FALSE",
-				"DepthBias": "0",
-				"DepthBiasClamp": "0.0",
-				"SlopeScaledDepthBias": "0.0",
-				"DepthClipEnable": "TRUE",
-				"MultisampleEnable": "FALSE",
-				"AntialiasedLineEnable": "FALSE",
-				"ForcedSampleCount": "0",
-				"ConservativeRasterizationMode": "OFF",
-				"ScissorEnable": "FALSE"
-			},
-			"DepthStencilState":
-			{
-				"DepthEnable": "TRUE",
-				"DepthWriteMask": "ALL",
-				"DepthFunc": "LESS",
-				"StencilEnable": "FALSE",
-				"StencilReadMask": "255",
-				"StencilWriteMask": "255",
-				"FrontFace":
-				{
-					"StencilFailOp": "KEEP",
-					"StencilDepthFailOp": "KEEP",
-					"StencilPassOp": "KEEP",
-					"StencilFunc": "ALWAYS"
-				},
-				"BackFace":
-				{
-					"StencilFailOp": "KEEP",
-					"StencilDepthFailOp": "KEEP",
-					"StencilPassOp": "KEEP",
-					"StencilFunc": "ALWAYS"
-				}
-			},
-			"BlendState":
-			{
-				"AlphaToCoverageEnable": "FALSE",
-				"IndependentBlendEnable": "FALSE",
-				"RenderTarget[0]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[1]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[2]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[3]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[4]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[5]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[6]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				},
-				"RenderTarget[7]":
-				{
-					"BlendEnable": "FALSE",
-					"SrcBlend": "ONE",
-					"DestBlend": "ZERO",
-					"BlendOp": "ADD",
-					"SrcBlendAlpha": "ONE",
-					"DestBlendAlpha": "ZERO",
-					"BlendOpAlpha": "ADD",
-					"RenderTargetWriteMask": "ALL"
-				}
 			}
 		},
 		"Resources":
@@ -337,36 +164,6 @@
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
 							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
-						},
-						"WorldSpaceToViewSpaceQuaternion":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4",
-							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_QUATERNION"
-						},
-						"ViewSpaceSunLightDirection":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@VIEW_SPACE_SUN_LIGHT_DIRECTION"
-						},
-						"SunLightColor":
-						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@SunLightColor"
-						},
-						"Wetness":
-						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT",
-							"Value": "@Wetness"
-						},
-						"StaticPropertyTest":
-						{
-							"Usage": "STATIC",
-							"ValueType": "FLOAT",
-							"Value": "1.0"
 						}
 					}
 				},
@@ -377,17 +174,11 @@
 					"NumberOfElements": "2",
 					"ElementProperties":
 					{
-						"DiffuseColor":
+						"AlphaReference":
 						{
 							"Usage": "MATERIAL_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@DiffuseColor"
-						},
-						"StaticPropertyTest":
-						{
-							"Usage": "STATIC",
 							"ValueType": "FLOAT",
-							"Value": "1.0"
+							"Value": "@AlphaReference"
 						}
 					}
 				},
@@ -422,47 +213,18 @@
 				"SamplerLinear":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Filter": "MIN_MAG_MIP_LINEAR",
-					"AddressU": "CLAMP",
-					"AddressV": "CLAMP",
-					"AddressW": "CLAMP",
-					"MipLODBias": "0.0",
-					"MaxAnisotropy": "16",
-					"ComparisonFunc": "NEVER",
-					"BorderColor": "0.0 0.0 0.0 0.0",
-					"MinLOD": "-3.402823466e+38",
-					"MaxLOD": "3.402823466e+38"
+					"AddressU": "WRAP",
+					"AddressV": "WRAP"
 				}
 			},
 			"Textures":
 			{
-				"DiffuseMap":
+				"AlphaMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DiffuseMap"
-				},
-				"EmissiveMap":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@EmissiveMap"
-				},
-				"NormalMap":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@NormalMap"
-				},
-				"SpecularMap":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@SpecularMap"
+					"Value": "@AlphaMap"
 				}
 			}
 		}

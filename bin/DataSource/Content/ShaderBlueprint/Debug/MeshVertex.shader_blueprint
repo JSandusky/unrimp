@@ -77,10 +77,10 @@ TEXTURE_BUFFER(float4, InstanceTextureBuffer, 0)	// "POSITION_ROTATION_SCALE"
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	// Get object space to world space data
-	uint4  instanceIndices 	  = InstanceIndicesArray[MAIN_INPUT_DRAW_ID];
-	float3 position 		  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x).xyz;
+	uint4  instanceIndices	  = InstanceIndicesArray[MAIN_INPUT_DRAW_ID];
+	float3 position			  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x).xyz;
 	float4 rotationQuaternion = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 1);
-	float3 scale    		  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 2).xyz;
+	float3 scale			  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 2).xyz;
 
 	// Calculate the world space vertex position
 	float3 worldSpacePosition = MultiplyQuaternionVector(rotationQuaternion, MAIN_INPUT(Position) * scale) + position;
