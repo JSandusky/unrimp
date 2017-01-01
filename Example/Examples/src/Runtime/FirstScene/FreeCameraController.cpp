@@ -106,13 +106,13 @@ void FreeCameraController::onUpdate(float pastMilliseconds)
 				// Strafe up = "page up"-key
 				if (isKeyPressed(33))
 				{
-					movementVector -= transform.rotation * RendererRuntime::Math::UP_VECTOR;
+					movementVector += transform.rotation * RendererRuntime::Math::UP_VECTOR;
 				}
 
 				// Strafe down = "page down"-key
 				if (isKeyPressed(34))
 				{
-					movementVector += transform.rotation * RendererRuntime::Math::UP_VECTOR;
+					movementVector -= transform.rotation * RendererRuntime::Math::UP_VECTOR;
 				}
 			}
 
@@ -127,9 +127,9 @@ void FreeCameraController::onUpdate(float pastMilliseconds)
 		if (isMouseButtonPressed(1) && (0 != mMouseMoveX || 0 != mMouseMoveY))
 		{
 			// Get the rotation speed
-			// -> Slow down = "left strg"-key
+			// -> Slow down = "q"-key
 			float rotationSpeed = 0.2f;
-			if (isKeyPressed(17))
+			if (isKeyPressed(81))
 			{
 				rotationSpeed *= 0.2f;
 			}
