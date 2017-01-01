@@ -68,9 +68,11 @@ namespace OpenGLRenderer
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
 		*  @param[in] useExternalContext
-		*    When true an own OpenGL context won't be created
+		*    When true an own OpenGL context won't be created and the context pointed by shareContextLinux is ignored
+		*  @param[in] shareContextLinux
+		*    Optional share context, can be a null pointer
 		*/
-		ContextLinux(handle nativeWindowHandle, bool useExternalContext);
+		ContextLinux(handle nativeWindowHandle, bool useExternalContext, const ContextLinux* shareContextLinux = nullptr);
 
 		/**
 		*  @brief
@@ -118,9 +120,11 @@ namespace OpenGLRenderer
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
 		*  @param[in] useExternalContext
-		*    When true an own OpenGL context won't be created
+		*    When true an own OpenGL context won't be created and the context pointed by shareContextLinux is ignored
+		*  @param[in] shareContextLinux
+		*    Optional share context, can be a null pointer
 		*/
-		ContextLinux(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext);
+		ContextLinux(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext, const ContextLinux* shareContextLinux = nullptr);
 
 		/**
 		*  @brief
@@ -142,6 +146,7 @@ namespace OpenGLRenderer
 		XVisualInfo *m_pDummyVisualInfo;
 		GLXContext	 mWindowRenderContext;	///< The render context of the OpenGL dummy window, can be a null pointer
 		bool		 mUseExternalContext;
+		bool		 mOwnsRenderContext;		///< Does this context owns the OpenGL render context?
 
 
 	};

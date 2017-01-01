@@ -45,8 +45,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ContextLinux::ContextLinux(handle nativeWindowHandle, bool useExternalContext) :
-		ContextLinux(nullptr, nativeWindowHandle, useExternalContext)
+	ContextLinux::ContextLinux(handle nativeWindowHandle, bool useExternalContext, const ContextLinux* shareContextLinux) :
+		ContextLinux(nullptr, nativeWindowHandle, useExternalContext, shareContextLinux)
 	{
 		// Nothing here
 	}
@@ -63,7 +63,7 @@ namespace OpenGLRenderer
 			}
 
 			// Destroy the render context of the OpenGL window
-			if (NULL_HANDLE != mWindowRenderContext)
+			if (NULL_HANDLE != mWindowRenderContext && mOwnsRenderContext)
 			{
 				glXDestroyContext(mDisplay, mWindowRenderContext);
 			}
@@ -99,14 +99,15 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	ContextLinux::ContextLinux(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext) :
+	ContextLinux::ContextLinux(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext, const ContextLinux* shareContextLinux) :
 		IContext(openGLRuntimeLinking),
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
 		mDisplay(nullptr),
 		m_pDummyVisualInfo(nullptr),
 		mWindowRenderContext(NULL_HANDLE),
-		mUseExternalContext(useExternalContext)
+		mUseExternalContext(useExternalContext),
+		mOwnsRenderContext(true)
 	{
 		// Get X server display connection
 		if (!mUseExternalContext)
@@ -147,61 +148,74 @@ namespace OpenGLRenderer
 					std::cout << "Create dummy window\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 				}
 
-				// Create a GLX context
-				GLXContext legacyRenderContext = glXCreateContext(mDisplay, m_pDummyVisualInfo, 0, GL_TRUE);
-				if (nullptr != legacyRenderContext)
+				// Lookout! OpenGL context sharing chaos: https://www.opengl.org/wiki/OpenGL_Context
+				// "State" objects are not shared between contexts, including but not limited to:
+				// - Vertex Array Objects (VAOs)
+				// - Framebuffer Objects (FBOs)
+				// -> Keep away from "wglShareLists()" and the share context parameter of "wglCreateContextAttribsARB()" and just share the OpenGL render context instead
+				if (nullptr != shareContextLinux)
 				{
-					// Make the internal dummy to the current render target
-					const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, legacyRenderContext);
-					std::cout << "Make legacy context current: " << result << "\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
-
-					// Load the >= OpenGL 3.0 entry points
-					if (loadOpenGL3EntryPoints())
+					mWindowRenderContext = shareContextLinux->getRenderContext();
+					mOwnsRenderContext = false;
+				}
+				else
+				{
+					// Create a GLX context
+					GLXContext legacyRenderContext = glXCreateContext(mDisplay, m_pDummyVisualInfo, 0, GL_TRUE);
+					if (nullptr != legacyRenderContext)
 					{
-						// Create the render context of the OpenGL window
-						mWindowRenderContext = createOpenGLContext();
+						// Make the internal dummy to the current render target
+						const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, legacyRenderContext);
+						std::cout << "Make legacy context current: " << result << "\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 
-						// Destroy the legacy OpenGL render context
-						glXMakeCurrent(mDisplay, None, nullptr);
-						glXDestroyContext(mDisplay, legacyRenderContext);
-
-						// If there's an OpenGL context, do some final initialization steps
-						if (NULL_HANDLE != mWindowRenderContext)
+						// Load the >= OpenGL 3.0 entry points
+						if (loadOpenGL3EntryPoints())
 						{
-							// Make the OpenGL context to the current one
-							const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
-							std::cout << "Make new context current: " << result << "\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
-							// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+							// Create the render context of the OpenGL window
+							mWindowRenderContext = createOpenGLContext();
+
+							// Destroy the legacy OpenGL render context
+							glXMakeCurrent(mDisplay, None, nullptr);
+							glXDestroyContext(mDisplay, legacyRenderContext);
+
+							// If there's an OpenGL context, do some final initialization steps
+							if (NULL_HANDLE != mWindowRenderContext)
 							{
-								int major = 0;
-								glGetIntegerv(GL_MAJOR_VERSION, &major);
-
-								int minor = 0;
-								glGetIntegerv(GL_MINOR_VERSION, &minor);
-
-								GLint profile = 0;
-								glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
-								const bool isCoreProfile = (profile & GL_CONTEXT_CORE_PROFILE_BIT);
-
-								std::cout << "OpenGL context version: " << major << '.' << minor << ' ' << (isCoreProfile ? "core" : "noncore") << '\n';
-								int numberOfExtensions = 0;
-								glGetIntegerv(GL_NUM_EXTENSIONS, &numberOfExtensions);
-								std::cout << "Supported extensions: " << numberOfExtensions << " \n";
-								for (GLuint extensionIndex = 0; extensionIndex < static_cast<GLuint>(numberOfExtensions); ++extensionIndex)
+								// Make the OpenGL context to the current one
+								const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
+								std::cout << "Make new context current: " << result << "\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+								// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 								{
-									std::cout << "\t" << glGetStringi(GL_EXTENSIONS, extensionIndex) << '\n';
+									int major = 0;
+									glGetIntegerv(GL_MAJOR_VERSION, &major);
+
+									int minor = 0;
+									glGetIntegerv(GL_MINOR_VERSION, &minor);
+
+									GLint profile = 0;
+									glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
+									const bool isCoreProfile = (profile & GL_CONTEXT_CORE_PROFILE_BIT);
+
+									std::cout << "OpenGL context version: " << major << '.' << minor << ' ' << (isCoreProfile ? "core" : "noncore") << '\n';
+									int numberOfExtensions = 0;
+									glGetIntegerv(GL_NUM_EXTENSIONS, &numberOfExtensions);
+									std::cout << "Supported extensions: " << numberOfExtensions << " \n";
+									for (GLuint extensionIndex = 0; extensionIndex < static_cast<GLuint>(numberOfExtensions); ++extensionIndex)
+									{
+										std::cout << "\t" << glGetStringi(GL_EXTENSIONS, extensionIndex) << '\n';
+									}
 								}
 							}
+						}
+						else
+						{
+							// Error, failed to load >= OpenGL 3 entry points!
 						}
 					}
 					else
 					{
-						// Error, failed to load >= OpenGL 3 entry points!
+						// Error, failed to create a GLX context!
 					}
-				}
-				else
-				{
-					// Error, failed to create a GLX context!
 				}
 			}
 			else
