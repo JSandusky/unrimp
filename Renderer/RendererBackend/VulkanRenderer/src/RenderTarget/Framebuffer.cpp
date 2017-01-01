@@ -25,6 +25,7 @@
 #include "VulkanRenderer/Texture/Texture2D.h"
 #include "VulkanRenderer/Extensions.h"
 
+#include <cassert>
 #include <limits.h>	// For "INT_MAX"
 
 
@@ -160,13 +161,15 @@ namespace VulkanRenderer
 		// TODO(co) Implement me
 
 		// Validate the framebuffer width and height
-		if (UINT_MAX == mWidth)
+		if (0 == mWidth || UINT_MAX == mWidth)
 		{
-			mWidth = 0;
+			assert(false);
+			mWidth = 1;
 		}
-		if (UINT_MAX == mHeight)
+		if (0 == mHeight || UINT_MAX == mHeight)
 		{
-			mHeight = 0;
+			assert(false);
+			mHeight = 1;
 		}
 	}
 

@@ -58,6 +58,7 @@ OUTPUT_END
 struct Material
 {
 	float3 DiffuseColor;
+	float  AlphaReference;
 };
 UNIFORM_BUFFER_BEGIN(MaterialUniformBuffer, 1)
 	Material Materials[@insertpiece(MaximumNumberOfMaterials)];
@@ -70,14 +71,17 @@ SAMPLER_STATE(SamplerLinear, 0)
 @property(UseDiffuseMap)
 	TEXTURE_2D(DiffuseMap, 0)
 @end
+@property(UseAlphaMap)
+	TEXTURE_2D(AlphaMap, 1)
+@end
 @property(UseEmissiveMap)
-	TEXTURE_2D(EmissiveMap, 1)
+	TEXTURE_2D(EmissiveMap, 2)
 @end
 @property(UseNormalMap)
-	TEXTURE_2D(NormalMap, 2)	// Tangent space normal map
+	TEXTURE_2D(NormalMap, 3)	// Tangent space normal map
 @end
 @property(UseSpecularMap)
-	TEXTURE_2D(SpecularMap, 3)
+	TEXTURE_2D(SpecularMap, 4)
 @end
 
 
@@ -88,12 +92,20 @@ MAIN_BEGIN
 	// Get the used material
 	Material material = Materials[MAIN_INPUT(AssignedMaterialSlotVS)];
 
+	// Perform alpha map based fragment rejection
+	@property(UseAlphaMap)
+		if (material.AlphaReference >= SAMPLE_2D(AlphaMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r)
+		{
+			discard;
+		}
+	@end
+
 	// Get the per fragment normal [0..1] by using a tangent space normal map
 	@property(UseNormalMap)
 		float3 normal = SAMPLE_2D(NormalMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
 	@end
 	@property(!UseNormalMap)
-		float3 normal = float3(0.0f, 0.0f, 1.0f);
+		float3 normal = float3(0.5f, 0.5f, 1.0f);	// Flat
 	@end
 
 	// Transform the normal from [0..1] to [-1..1]

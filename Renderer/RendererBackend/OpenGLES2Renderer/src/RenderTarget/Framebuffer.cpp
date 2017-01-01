@@ -26,6 +26,8 @@
 #include "OpenGLES2Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
+#include <cassert>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,8 +45,8 @@ namespace OpenGLES2Renderer
 		mNumberOfColorTextures(numberOfColorTextures),
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(depthStencilTexture),
-		mWidth(0),
-		mHeight(0)
+		mWidth(1),
+		mHeight(1)
 	{
 		// Unlike the "GL_ARB_framebuffer_object"-extension of OpenGL, in OpenGL ES 2 all
 		// textures attached to the framebuffer must have the same width and height
@@ -208,6 +210,18 @@ namespace OpenGLES2Renderer
 			// Be polite and restore the previous bound OpenGL ES 2 framebuffer
 			glBindFramebuffer(GL_FRAMEBUFFER, openGLES2FramebufferBackup);
 		#endif
+
+		// Validate the framebuffer width and height
+		if (0 == mWidth || UINT_MAX == mWidth)
+		{
+			assert(false);
+			mWidth = 1;
+		}
+		if (0 == mHeight || UINT_MAX == mHeight)
+		{
+			assert(false);
+			mHeight = 1;
+		}
 	}
 
 	Framebuffer::~Framebuffer()

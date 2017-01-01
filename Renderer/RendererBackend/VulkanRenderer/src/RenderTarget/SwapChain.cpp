@@ -329,10 +329,23 @@ namespace VulkanRenderer
 				VulkanRenderer &vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
 				Display *display = static_cast<const ContextLinux&>(vulkanRenderer.getContext()).getDisplay();
 
+				// Get the width and height...
 				::Window rootWindow = 0;
 				int positionX = 0, positionY = 0;
 				unsigned int unsignedWidth = 0, unsignedHeight = 0, border = 0, depth = 0;
 				XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
+
+				// ... and ensure that none of them is ever zero
+				if (unsignedWidth < 1)
+				{
+					unsignedWidth = 1;
+				}
+				if (unsignedHeight < 1)
+				{
+					unsignedHeight = 1;
+				}
+
+				// Done
 				width = unsignedWidth;
 				height = unsignedHeight;
 			}
@@ -342,8 +355,8 @@ namespace VulkanRenderer
 		#endif
 		{
 			// Set known default return values
-			width  = 0;
-			height = 0;
+			width  = 1;
+			height = 1;
 		}
 	}
 

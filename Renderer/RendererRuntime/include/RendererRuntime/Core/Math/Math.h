@@ -29,6 +29,15 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
 
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+	#include <glm/glm.hpp>
+	#include <glm/gtc/quaternion.hpp>
+PRAGMA_WARNING_POP
+
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
@@ -51,17 +60,56 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		static const uint32_t FNV1a_INITIAL_HASH = 0xcbf29ce4;
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 ZERO_VECTOR;		///< 0 0 0
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 ONE_VECTOR;		///< 1 1 1
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 RIGHT_VECTOR;		///< 1 0 0
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 UP_VECTOR;		///< 0 1 0
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 FORWARD_VECTOR;	///< 0 0 1
 
 
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
+		/**
+		*  @brief
+		*    Calculate tangent frame quaternion (QTangent) basing of a provided 3x3 tangent frame matrix
+		*
+		*  @param[in, out] tangentFrameMatrix
+		*    3x3 tangent frame matrix, will be manipulated during calculation (no internal copy for performance reasons)
+		*
+		*  @return
+		*    The calculated tangent frame quaternion (QTangent)
+		*
+		*  @note
+		*  - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
+		*    http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
+		*/
+		RENDERERRUNTIME_API_EXPORT static glm::quat calculateTangentFrameQuaternion(glm::mat3& tangentFrameMatrix);
+
+		/**
+		*  @brief
+		*    Ensure that the given value is within the given interval [minimum, maximum] by wrapping the value
+		*
+		*  @param[in] value
+		*    Value to check
+		*  @param[in] minimum
+		*    Minimum of the interval, must be < maximum
+		*  @param[in] maximum
+		*    Maximum of the interval, must be > minimum
+		*
+		*  @return
+		*    The value within the interval [minimum, maximum]
+		*
+		*  @note
+		*    - In case of violating the interface specification by swapping minimum/maximum the result will not be different to the one of the correct order
+		*/
+		RENDERERRUNTIME_API_EXPORT static float wrapToInterval(float value, float minimum, float maximum);
+
 		//[-------------------------------------------------------]
 		//[ Hash                                                  ]
 		//[-------------------------------------------------------]
 		RENDERERRUNTIME_API_EXPORT static uint32_t calculateFNV1a(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash = FNV1a_INITIAL_HASH);
-
 
 
 	};

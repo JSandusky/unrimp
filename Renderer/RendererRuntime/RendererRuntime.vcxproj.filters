@@ -945,6 +945,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ResolveMultisample\CompositorInstancePassResolveMultisample.h">
       <Filter>Source Files\Resource\CompositorNode\Pass\ResolveMultisample</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Math\EulerAngles.h">
+      <Filter>Source Files\Core\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1228,6 +1231,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\CompositorNode\Pass\ResolveMultisample\CompositorResourcePassResolveMultisample.cpp">
       <Filter>Source Files\Resource\CompositorNode\Pass\ResolveMultisample</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Math\EulerAngles.cpp">
+      <Filter>Source Files\Core\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

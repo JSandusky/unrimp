@@ -108,8 +108,8 @@ void IApplicationRenderer::onDrawRequest()
 				{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle
 				  // must be set in every draw call to work with all supported renderer APIs
 					// Get the window size
-					uint32_t width  = 0;
-					uint32_t height = 0;
+					uint32_t width  = 1;
+					uint32_t height = 1;
 					swapChain->getWidthAndHeight(width, height);
 
 					// Set the viewport and scissor rectangle

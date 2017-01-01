@@ -229,8 +229,8 @@ namespace Direct3D11Renderer
 		else
 		{
 			// Set known default return values
-			width  = 0;
-			height = 0;
+			width  = 1;
+			height = 1;
 		}
 	}
 

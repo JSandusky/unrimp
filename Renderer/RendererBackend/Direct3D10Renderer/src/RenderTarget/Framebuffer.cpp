@@ -28,6 +28,7 @@
 #include "Direct3D10Renderer/Mapping.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
+#include <cassert>
 #include <stdio.h>	// For "sprintf_s()"
 
 
@@ -186,13 +187,15 @@ namespace Direct3D10Renderer
 		}
 
 		// Validate the framebuffer width and height
-		if (UINT_MAX == mWidth)
+		if (0 == mWidth || UINT_MAX == mWidth)
 		{
-			mWidth = 0;
+			assert(false);
+			mWidth = 1;
 		}
-		if (UINT_MAX == mHeight)
+		if (0 == mHeight || UINT_MAX == mHeight)
 		{
-			mHeight = 0;
+			assert(false);
+			mHeight = 1;
 		}
 
 		// Assign a default name to the resource for debugging purposes

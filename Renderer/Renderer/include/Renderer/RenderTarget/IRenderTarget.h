@@ -68,9 +68,9 @@ namespace Renderer
 		*    Return the width and height of the render target
 		*
 		*  @param[out] width
-		*    Receives the width of the render target
+		*    Receives the width of the render target, guaranteed to be never ever zero
 		*  @param[out] height
-		*    Receives the height of the render target
+		*    Receives the height of the render target, guaranteed to be never ever zero
 		*/
 		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const = 0;
 

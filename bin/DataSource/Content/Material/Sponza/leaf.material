@@ -16,10 +16,12 @@
 		},
 		"Properties":
 		{
+			"CullMode": "NONE",
 			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "23",
 			"UseAlphaMap": "TRUE",
 			"AlphaMap": "24",
+			"AlphaReference": "0.2",
 			"UseNormalMap": "TRUE",
 			"NormalMap": "25",
 			"UseSpecularMap": "TRUE",

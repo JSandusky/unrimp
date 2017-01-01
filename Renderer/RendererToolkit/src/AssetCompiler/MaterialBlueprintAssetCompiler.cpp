@@ -159,7 +159,7 @@ namespace RendererToolkit
 			JsonMaterialBlueprintHelper::readRootSignature(rapidJsonValueMaterialBlueprintAsset["RootSignature"], outputFileStream, shaderProperties);
 
 			// Pipeline state object (PSO)
-			JsonMaterialBlueprintHelper::readPipelineStateObject(input, rapidJsonValueMaterialBlueprintAsset["PipelineState"], outputFileStream);
+			JsonMaterialBlueprintHelper::readPipelineStateObject(input, rapidJsonValueMaterialBlueprintAsset["PipelineState"], outputFileStream, sortedMaterialPropertyVector);
 
 			{ // Resources
 				// Uniform buffers
@@ -177,7 +177,7 @@ namespace RendererToolkit
 				// Sampler states
 				if (rapidJsonValueSamplerStates.IsObject())
 				{
-					JsonMaterialBlueprintHelper::readSamplerStates(rapidJsonValueSamplerStates, outputFileStream, shaderProperties);
+					JsonMaterialBlueprintHelper::readSamplerStates(rapidJsonValueSamplerStates, outputFileStream, shaderProperties, sortedMaterialPropertyVector);
 				}
 
 				// Textures

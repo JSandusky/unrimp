@@ -688,8 +688,8 @@ namespace OpenGLES2Renderer
 			// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			uint32_t renderTargetWidth =  0;
-			uint32_t renderTargetHeight = 0;
+			uint32_t renderTargetWidth =  1;
+			uint32_t renderTargetHeight = 1;
 			if (nullptr != mRenderTarget)
 			{
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
@@ -717,8 +717,8 @@ namespace OpenGLES2Renderer
 			// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			uint32_t renderTargetWidth =  0;
-			uint32_t renderTargetHeight = 0;
+			uint32_t renderTargetWidth =  1;
+			uint32_t renderTargetHeight = 1;
 			if (nullptr != mRenderTarget)
 			{
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);

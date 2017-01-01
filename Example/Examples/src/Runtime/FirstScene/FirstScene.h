@@ -36,6 +36,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+class FreeCameraController;
 namespace RendererRuntime
 {
 	class ISceneNode;
@@ -98,6 +99,11 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
+	virtual void onKeyDown(uint32_t key) override;
+	virtual void onKeyUp(uint32_t key) override;
+	virtual void onMouseButtonDown(uint32_t button) override;
+	virtual void onMouseButtonUp(uint32_t button) override;
+	virtual void onMouseMove(int x, int y) override;
 	virtual void onUpdate() override;
 	virtual void onDrawRequest() override;
 
@@ -149,6 +155,7 @@ private:
 	RendererRuntime::MaterialResourceId			  mMaterialResourceId;
 	RendererRuntime::MaterialResourceId			  mCloneMaterialResourceId;
 	bool										  mCustomMaterialResourceSet;
+	FreeCameraController*						  mFreeCameraController;
 	// Crazy raw-pointers to point-of-interest scene stuff
 	RendererRuntime::CameraSceneItem* mCameraSceneItem;
 	RendererRuntime::ISceneNode*	  mSceneNode;

@@ -51,9 +51,9 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	void Framebuffer::getWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
-		// TODO(co) Better implementation instead of just returning zero (not that important, but would be nice)
-		width  = 0;
-		height = 0;
+		// TODO(co) Better implementation instead of just returning one (not that important, but would be nice)
+		width  = 1;
+		height = 1;
 	}
 
 

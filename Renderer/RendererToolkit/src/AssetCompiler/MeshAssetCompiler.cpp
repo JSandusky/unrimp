@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 
+#include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Resource/Mesh/MeshResource.h>
 #include <RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h>
@@ -33,15 +34,6 @@ PRAGMA_WARNING_PUSH
 	#include <assimp/scene.h>
 	#include <assimp/Importer.hpp>
 	#include <assimp/postprocess.h>
-PRAGMA_WARNING_POP
-
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
-	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
-	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
-	#include <glm/glm.hpp>
-	#include <glm/gtc/quaternion.hpp>
 PRAGMA_WARNING_POP
 
 // Disable warnings in external headers, we can't fix them
@@ -220,34 +212,8 @@ namespace
 							normal.x,   normal.y,   normal.z
 						);
 
-						// Flip y axis in case the tangent frame encodes a reflection
-						const float scale = (glm::determinant(tangentFrame) > 0) ? 1.0f : -1.0f;
-						tangentFrame[2][0] *= scale;
-						tangentFrame[2][1] *= scale;
-						tangentFrame[2][2] *= scale;
-
-						glm::quat tangentFrameQuaternion(tangentFrame);
-
-						{ // Make sure we don't end up with 0 as w component
-							const float threshold = 1.0f / SHRT_MAX; // 16 bit quantization QTangent
-							const float renomalization = sqrt(1.0f - threshold * threshold);
-
-							if (std::abs(tangentFrameQuaternion.w) < threshold)
-							{
-								tangentFrameQuaternion.x *= renomalization;
-								tangentFrameQuaternion.y *= renomalization;
-								tangentFrameQuaternion.z *= renomalization;
-								tangentFrameQuaternion.w =  (tangentFrameQuaternion.w > 0) ? threshold : -threshold;
-							}
-						}
-
-						{ // Encode reflection into quaternion's w element by making sign of w negative if y axis needs to be flipped, positive otherwise
-							const float qs = (scale < 0.0f && tangentFrameQuaternion.w > 0.0f) || (scale > 0.0f && tangentFrameQuaternion.w < 0.0f) ? -1.0f : 1.0f;
-							tangentFrameQuaternion.x *= qs;
-							tangentFrameQuaternion.y *= qs;
-							tangentFrameQuaternion.z *= qs;
-							tangentFrameQuaternion.w *= qs;
-						}
+						// Calculate tangent frame quaternion
+						const glm::quat tangentFrameQuaternion = RendererRuntime::Math::calculateTangentFrameQuaternion(tangentFrame);
 
 						// Set our vertex buffer 16 bit QTangent
 						short *currentVertexBufferShort = reinterpret_cast<short*>(currentVertexBuffer);
