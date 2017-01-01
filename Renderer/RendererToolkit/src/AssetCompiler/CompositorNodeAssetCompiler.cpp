@@ -31,8 +31,8 @@
 #include <RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorResourcePassClear.h>
-#include <RendererRuntime/Resource/CompositorNode/Pass/Scene/CompositorResourcePassScene.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h>
+#include <RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/ResolveMultisample/CompositorResourcePassResolveMultisample.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -140,6 +140,25 @@ namespace
 			if (RendererRuntime::isInitialized(passQuad.materialBlueprintAssetId) && RendererRuntime::isUninitialized(passQuad.materialTechniqueId))
 			{
 				passQuad.materialTechniqueId = RendererRuntime::MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID;
+			}
+		}
+
+		void readPassScene(const rapidjson::Value& rapidJsonValuePass, RendererRuntime::v1CompositorNode::PassScene& passScene)
+		{
+			// Read properties
+			RendererToolkit::JsonHelper::optionalByteProperty(rapidJsonValuePass, "MinimumRenderQueueIndex", passScene.minimumRenderQueueIndex);
+			RendererToolkit::JsonHelper::optionalByteProperty(rapidJsonValuePass, "MaximumRenderQueueIndex", passScene.maximumRenderQueueIndex);
+			RendererToolkit::JsonHelper::optionalBooleanProperty(rapidJsonValuePass, "TransparentPass", passScene.transparentPass);
+			RendererToolkit::JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "MaterialTechnique", passScene.materialTechniqueId);
+
+			// Sanity check
+			if (passScene.maximumRenderQueueIndex < passScene.minimumRenderQueueIndex)
+			{
+				throw std::runtime_error("The maximum render queue index must be equal or greater as the minimum render queue index");
+			}
+			if (passScene.maximumRenderQueueIndex < passScene.minimumRenderQueueIndex)
+			{
+				throw std::runtime_error("The maximum render queue index must be equal or greater as the minimum render queue index");
 			}
 		}
 
@@ -418,6 +437,10 @@ namespace RendererToolkit
 					{
 						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassScene);
 					}
+					else if (RendererRuntime::CompositorResourcePassShadowMap::TYPE_ID == compositorPassTypeId)
+					{
+						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassShadowMap);
+					}
 					else if (RendererRuntime::CompositorResourcePassResolveMultisample::TYPE_ID == compositorPassTypeId)
 					{
 						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassResolveMultisample);
@@ -459,25 +482,18 @@ namespace RendererToolkit
 						else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassScene passScene;
-
-							// Read properties
-							JsonHelper::optionalByteProperty(rapidJsonValuePass, "MinimumRenderQueueIndex", passScene.minimumRenderQueueIndex);
-							JsonHelper::optionalByteProperty(rapidJsonValuePass, "MaximumRenderQueueIndex", passScene.maximumRenderQueueIndex);
-							JsonHelper::optionalBooleanProperty(rapidJsonValuePass, "TransparentPass", passScene.transparentPass);
-							JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "MaterialTechnique", passScene.materialTechniqueId);
-
-							// Sanity check
-							if (passScene.maximumRenderQueueIndex < passScene.minimumRenderQueueIndex)
-							{
-								throw std::runtime_error("The maximum render queue index must be equal or greater as the minimum render queue index");
-							}
-							if (passScene.maximumRenderQueueIndex < passScene.minimumRenderQueueIndex)
-							{
-								throw std::runtime_error("The maximum render queue index must be equal or greater as the minimum render queue index");
-							}
+							::detail::readPassScene(rapidJsonValuePass, passScene);
 
 							// Write down
 							outputFileStream.write(reinterpret_cast<const char*>(&passScene), sizeof(RendererRuntime::v1CompositorNode::PassScene));
+						}
+						else if (RendererRuntime::CompositorResourcePassShadowMap::TYPE_ID == compositorPassTypeId)
+						{
+							RendererRuntime::v1CompositorNode::PassShadowMap passShadowMap;
+							::detail::readPassScene(rapidJsonValuePass, passShadowMap);
+
+							// Write down
+							outputFileStream.write(reinterpret_cast<const char*>(&passShadowMap), sizeof(RendererRuntime::v1CompositorNode::PassShadowMap));
 						}
 						else if (RendererRuntime::CompositorResourcePassResolveMultisample::TYPE_ID == compositorPassTypeId)
 						{

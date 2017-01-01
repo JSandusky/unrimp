@@ -27,8 +27,8 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorInstancePassClear.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorInstancePassQuad.h"
-#include "RendererRuntime/Resource/CompositorNode/Pass/Scene/CompositorResourcePassScene.h"
-#include "RendererRuntime/Resource/CompositorNode/Pass/Scene/CompositorInstancePassScene.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorInstancePassDebugGui.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ResolveMultisample/CompositorResourcePassResolveMultisample.h"
@@ -57,6 +57,10 @@ namespace RendererRuntime
 		else if (compositorPassTypeId == CompositorResourcePassScene::TYPE_ID)
 		{
 			compositorResourcePass = new CompositorResourcePassScene(compositorTarget);
+		}
+		else if (compositorPassTypeId == CompositorResourcePassShadowMap::TYPE_ID)
+		{
+			compositorResourcePass = new CompositorResourcePassShadowMap(compositorTarget);
 		}
 		else if (compositorPassTypeId == CompositorResourcePassResolveMultisample::TYPE_ID)
 		{
@@ -88,6 +92,10 @@ namespace RendererRuntime
 		else if (compositorPassTypeId == CompositorResourcePassScene::TYPE_ID)
 		{
 			compositorInstancePass = new CompositorInstancePassScene(static_cast<const CompositorResourcePassScene&>(compositorResourcePass), compositorNodeInstance);
+		}
+		else if (compositorPassTypeId == CompositorResourcePassShadowMap::TYPE_ID)
+		{
+			compositorInstancePass = new CompositorInstancePassShadowMap(static_cast<const CompositorResourcePassShadowMap&>(compositorResourcePass), compositorNodeInstance);
 		}
 		else if (compositorPassTypeId == CompositorResourcePassResolveMultisample::TYPE_ID)
 		{

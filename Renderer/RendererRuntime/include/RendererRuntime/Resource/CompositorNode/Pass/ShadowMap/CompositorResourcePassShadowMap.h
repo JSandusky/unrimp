@@ -27,18 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
-#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
-#include "RendererRuntime/RenderQueue/RenderQueue.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class CompositorResourcePassScene;
-}
+#include "RendererRuntime/Resource/CompositorNode/Pass/Scene/CompositorResourcePassScene.h"
 
 
 //[-------------------------------------------------------]
@@ -51,7 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorInstancePassScene : public ICompositorInstancePass
+	class CompositorResourcePassShadowMap : public CompositorResourcePassScene
 	{
 
 
@@ -62,30 +51,42 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	protected:
-		virtual void onCompositorWorkspaceInstanceLoadingFinished() override;
-		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, Renderer::CommandBuffer& commandBuffer) override;
-		inline virtual void onFrameEnded() override;
+	public:
+		RENDERERRUNTIME_API_EXPORT static const CompositorPassTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		// TODO(co)
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual CompositorPassTypeId getTypeId() const override;
+		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorInstancePassScene(const CompositorResourcePassScene& compositorResourcePassScene, const CompositorNodeInstance& compositorNodeInstance);
-		inline virtual ~CompositorInstancePassScene();
-		CompositorInstancePassScene(const CompositorInstancePassScene&) = delete;
-		CompositorInstancePassScene& operator=(const CompositorInstancePassScene&) = delete;
+		inline explicit CompositorResourcePassShadowMap(const CompositorTarget& compositorTarget);
+		inline virtual ~CompositorResourcePassShadowMap();
+		CompositorResourcePassShadowMap(const CompositorResourcePassShadowMap&) = delete;
+		CompositorResourcePassShadowMap& operator=(const CompositorResourcePassShadowMap&) = delete;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected data                                        ]
+	//[ Private data                                          ]
 	//[-------------------------------------------------------]
-	protected:
-		RenderQueue												  mRenderQueue;
-		const CompositorWorkspaceInstance::RenderQueueIndexRange* mRenderQueueIndexRange;	///< Cached render queue index range instance, can be a null pointer, don't destroy the instance
+	private:
+		// TODO(co)
 
 
 	};
@@ -100,4 +101,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/CompositorNode/Pass/Scene/CompositorInstancePassScene.inl"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.inl"

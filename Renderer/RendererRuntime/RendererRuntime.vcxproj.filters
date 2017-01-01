@@ -167,6 +167,9 @@
     <Filter Include="Source Files\Resource\CompositorNode\Pass\ResolveMultisample">
       <UniqueIdentifier>{11733ee7-12fc-4daf-95c5-09836152e9e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode\Pass\ShadowMap">
+      <UniqueIdentifier>{7162be81-cd0b-4c42-9e5e-9ebb1db09dba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -482,6 +485,12 @@
     </None>
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ResolveMultisample\CompositorResourcePassResolveMultisample.inl">
       <Filter>Source Files\Resource\CompositorNode\Pass\ResolveMultisample</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorInstancePassShadowMap.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -948,6 +957,12 @@
     <ClInclude Include="include\RendererRuntime\Core\Math\EulerAngles.h">
       <Filter>Source Files\Core\Math</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorInstancePassShadowMap.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1234,6 +1249,12 @@
     </ClCompile>
     <ClCompile Include="src\Core\Math\EulerAngles.cpp">
       <Filter>Source Files\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\ShadowMap\CompositorInstancePassShadowMap.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

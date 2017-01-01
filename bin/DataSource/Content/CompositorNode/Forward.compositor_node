@@ -62,6 +62,16 @@
 		},
 		"Targets":
 		{
+			"OutputRenderTarget":
+			{
+				"Passes":
+				{
+					"ShadowMap":
+					{
+						"MaterialTechnique": "DepthOnly"
+					}
+				}
+			},
 			"MultisampleFramebuffer":
 			{
 				"Passes":

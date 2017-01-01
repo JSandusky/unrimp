@@ -133,6 +133,10 @@ namespace RendererRuntime
 				{}
 			};
 
+			struct PassShadowMap : public PassScene
+			{
+			};
+
 			struct PassResolveMultisample
 			{
 				CompositorFramebufferId sourceMultisampleCompositorFramebufferId;
