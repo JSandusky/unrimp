@@ -38,12 +38,14 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class LightSceneItem;
 	class CameraSceneItem;
 	class IRendererRuntime;
 	class RenderableManager;
 	class IndirectBufferManager;
 	class CompositorNodeInstance;
 	class ICompositorInstancePass;
+	class CompositorInstancePassShadowMap;
 }
 
 
@@ -117,7 +119,7 @@ namespace RendererRuntime
 		inline const RenderQueueIndexRanges& getRenderQueueIndexRanges() const;	// Renderable manager pointers are only considered to be safe directly after the "RendererRuntime::CompositorWorkspaceInstance::execute()" call
 		RENDERERRUNTIME_API_EXPORT const RenderQueueIndexRange* getRenderQueueIndexRangeByRenderQueueIndex(uint8_t renderQueueIndex) const;	// Can be a null pointer, don't destroy the instance
 		RENDERERRUNTIME_API_EXPORT const ICompositorInstancePass* getFirstCompositorInstancePassByCompositorPassTypeId(CompositorPassTypeId compositorPassTypeId) const;
-		RENDERERRUNTIME_API_EXPORT void execute(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem);
+		RENDERERRUNTIME_API_EXPORT void execute(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem);
 		inline Renderer::IRenderTarget* getExecutionRenderTarget() const;	// Only valid during compositor workspace instance execution
 
 
@@ -153,19 +155,20 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&			  mRendererRuntime;
-		IndirectBufferManager&		  mIndirectBufferManager;
-		uint8_t						  mNumberOfMultisamples;
-		uint8_t						  mCurrentlyUsedNumberOfMultisamples;
-		float						  mResolutionScale;
-		uint32_t					  mRenderTargetWidth;
-		uint32_t					  mRenderTargetHeight;
-		Renderer::IRenderTarget*	  mExecutionRenderTarget;				///< Only valid during compositor workspace instance execution
-		CompositorWorkspaceResourceId mCompositorWorkspaceResourceId;
-		CompositorNodeInstances		  mSequentialCompositorNodeInstances;	///< We're responsible to destroy the compositor node instances if we no longer need them
-		bool						  mFramebufferManagerInitialized;
-		RenderQueueIndexRanges		  mRenderQueueIndexRanges;				///< The render queue index ranges layout is fixed during runtime
-		Renderer::CommandBuffer		  mCommandBuffer;						///< Command buffer
+		IRendererRuntime&				 mRendererRuntime;
+		IndirectBufferManager&			 mIndirectBufferManager;
+		uint8_t							 mNumberOfMultisamples;
+		uint8_t							 mCurrentlyUsedNumberOfMultisamples;
+		float							 mResolutionScale;
+		uint32_t						 mRenderTargetWidth;
+		uint32_t						 mRenderTargetHeight;
+		Renderer::IRenderTarget*		 mExecutionRenderTarget;				///< Only valid during compositor workspace instance execution
+		CompositorWorkspaceResourceId	 mCompositorWorkspaceResourceId;
+		CompositorNodeInstances			 mSequentialCompositorNodeInstances;	///< We're responsible to destroy the compositor node instances if we no longer need them
+		bool							 mFramebufferManagerInitialized;
+		RenderQueueIndexRanges			 mRenderQueueIndexRanges;				///< The render queue index ranges layout is fixed during runtime
+		Renderer::CommandBuffer			 mCommandBuffer;						///< Command buffer
+		CompositorInstancePassShadowMap* mCompositorInstancePassShadowMap;		///< Can be a null pointer, don't destroy the instance
 
 
 	};

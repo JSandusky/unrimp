@@ -24,12 +24,15 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.h"
+#include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeResource.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorPassFactory.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
@@ -62,7 +65,8 @@ namespace RendererRuntime
 		mRenderTargetHeight(getUninitialized<uint32_t>()),
 		mExecutionRenderTarget(nullptr),
 		mCompositorWorkspaceResourceId(getUninitialized<CompositorWorkspaceResourceId>()),
-		mFramebufferManagerInitialized(false)
+		mFramebufferManagerInitialized(false),
+		mCompositorInstancePassShadowMap(nullptr)
 	{
 		mCompositorWorkspaceResourceId = rendererRuntime.getCompositorWorkspaceResourceManager().loadCompositorWorkspaceResourceByAssetId(compositorWorkspaceAssetId, this);
 	}
@@ -113,7 +117,7 @@ namespace RendererRuntime
 		return nullptr;
 	}
 
-	void CompositorWorkspaceInstance::execute(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem)
+	void CompositorWorkspaceInstance::execute(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem)
 	{
 		// We could directly clear the render queue index ranges renderable managers as soon as the frame rendering has been finished to avoid evil dangling pointers,
 		// but on the other hand a responsible user might be interested in the potentially on-screen renderable managers to perform work which should only be performed
@@ -189,7 +193,7 @@ namespace RendererRuntime
 					Renderer::IRenderTarget* currentRenderTarget = &renderTarget;
 					for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
 					{
-						currentRenderTarget = &compositorNodeInstance->fillCommandBuffer(*currentRenderTarget, cameraSceneItem, mCommandBuffer);
+						currentRenderTarget = &compositorNodeInstance->fillCommandBuffer(*currentRenderTarget, CompositorContextData(cameraSceneItem, lightSceneItem, mCompositorInstancePassShadowMap), mCommandBuffer);
 					}
 				}
 
@@ -292,7 +296,13 @@ namespace RendererRuntime
 								if (nullptr != compositorResourcePass)
 								{
 									// Create the compositor instance pass
-									compositorNodeInstance->mCompositorInstancePasses.push_back(compositorPassFactory.createCompositorInstancePass(*compositorResourcePass, *compositorNodeInstance));
+									ICompositorInstancePass* compositorInstancePass = compositorPassFactory.createCompositorInstancePass(*compositorResourcePass, *compositorNodeInstance);
+									if (compositorResourcePass->getTypeId() == CompositorResourcePassShadowMap::TYPE_ID)
+									{
+										assert(nullptr == mCompositorInstancePassShadowMap);
+										mCompositorInstancePassShadowMap = static_cast<CompositorInstancePassShadowMap*>(compositorInstancePass);
+									}
+									compositorNodeInstance->mCompositorInstancePasses.push_back(compositorInstancePass);
 
 									// Gather render queue index range
 									uint8_t minimumRenderQueueIndex = 0;
@@ -359,6 +369,7 @@ namespace RendererRuntime
 		}
 		mSequentialCompositorNodeInstances.clear();
 		mRenderQueueIndexRanges.clear();
+		mCompositorInstancePassShadowMap = nullptr;
 
 		// Destroy framebuffers and render target textures
 		destroyFramebuffersAndRenderTargetTextures();

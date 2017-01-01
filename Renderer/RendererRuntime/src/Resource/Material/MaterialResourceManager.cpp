@@ -156,7 +156,7 @@ namespace RendererRuntime
 		return materialResource.getId();
 	}
 
-	MaterialResourceId MaterialResourceManager::createMaterialResourceByCloning(MaterialResourceId parentMaterialResourceId)
+	MaterialResourceId MaterialResourceManager::createMaterialResourceByCloning(MaterialResourceId parentMaterialResourceId, AssetId assetId)
 	{
 		assert(mMaterialResources.isElementIdValid(parentMaterialResourceId));
 		assert(mMaterialResources.getElementById(parentMaterialResourceId).getLoadingState() == IResource::LoadingState::LOADED);
@@ -164,6 +164,7 @@ namespace RendererRuntime
 		// Create the material resource instance
 		MaterialResource& materialResource = mMaterialResources.addElement();
 		materialResource.setResourceManager(this);
+		materialResource.setAssetId(assetId);
 		materialResource.setParentMaterialResourceId(parentMaterialResourceId);
 
 		// Done

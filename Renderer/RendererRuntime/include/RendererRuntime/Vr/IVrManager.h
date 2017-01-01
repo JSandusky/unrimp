@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Core/StringId.h"
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -48,6 +49,7 @@ namespace Renderer
 namespace RendererRuntime
 {
 	class ISceneResource;
+	class LightSceneItem;
 	class CameraSceneItem;
 	class CompositorWorkspaceInstance;
 }
@@ -58,6 +60,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
 
 
 	//[-------------------------------------------------------]
@@ -106,7 +114,7 @@ namespace RendererRuntime
 		//[ Lifecycle                                             ]
 		//[-------------------------------------------------------]
 		virtual void setSceneResource(ISceneResource* sceneResource) = 0;
-		virtual bool startup() = 0;
+		virtual bool startup(AssetId vrDeviceMaterialAssetId) = 0;	// If uninitialized material asset ID, no VR devices will be rendered
 		virtual bool isRunning() const = 0;
 		virtual void shutdown() = 0;
 
@@ -121,7 +129,7 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Render (only valid if manager is running)             ]
 		//[-------------------------------------------------------]
-		virtual void executeCompositorWorkspaceInstance(CompositorWorkspaceInstance& compositorWorkspaceInstance, Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem) = 0;
+		virtual void executeCompositorWorkspaceInstance(CompositorWorkspaceInstance& compositorWorkspaceInstance, Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem) = 0;
 
 
 	//[-------------------------------------------------------]

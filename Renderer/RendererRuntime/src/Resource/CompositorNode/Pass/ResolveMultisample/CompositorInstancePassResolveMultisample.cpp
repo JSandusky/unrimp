@@ -30,8 +30,6 @@
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-#include <Renderer/Public/Renderer.h>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassResolveMultisample::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CameraSceneItem*, Renderer::CommandBuffer& commandBuffer)
+	void CompositorInstancePassResolveMultisample::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData&, Renderer::CommandBuffer& commandBuffer)
 	{
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)

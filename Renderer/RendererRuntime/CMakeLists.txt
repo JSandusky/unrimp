@@ -120,6 +120,7 @@ set(SOURCE_CODES
 	src/Resource/Scene/Factory/SceneFactory.cpp
 	src/Resource/Scene/ISceneResource.cpp
 	src/Resource/Scene/Item/CameraSceneItem.cpp
+	src/Resource/Scene/Item/LightSceneItem.cpp
 	src/Resource/Scene/Item/MeshSceneItem.cpp
 	src/Resource/Scene/Loader/SceneResourceLoader.cpp
 	src/Resource/Scene/Node/ISceneNode.cpp

@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/SceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 
 
@@ -71,10 +72,14 @@ namespace RendererRuntime
 	{
 		ISceneItem* sceneItem = nullptr;
 
-		// Evaluate the scene item type
+		// Evaluate the scene item type, sorted by usual frequency
 		if (sceneItemTypeId == MeshSceneItem::TYPE_ID)
 		{
 			sceneItem = new MeshSceneItem(sceneResource);
+		}
+		else if (sceneItemTypeId == LightSceneItem::TYPE_ID)
+		{
+			sceneItem = new LightSceneItem(sceneResource);
 		}
 		else if (sceneItemTypeId == CameraSceneItem::TYPE_ID)
 		{

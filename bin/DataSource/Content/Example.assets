@@ -126,6 +126,7 @@
 		"118": "ShaderBlueprint/Compositor/PositionTextureCoordinateInverseTextureSize0Vertex.asset",
 		"119": "ShaderBlueprint/Debug/GuiVertex.asset",
 		"120": "ShaderBlueprint/Debug/GuiFragment.asset",
-		"121": "MaterialBlueprint/Debug/Gui.asset"
+		"121": "MaterialBlueprint/Debug/Gui.asset",
+		"122": "Material/Default/VrDevice.asset"
 	}
 }

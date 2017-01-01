@@ -26,6 +26,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline AssetId CompositorResourcePassShadowMap::getTextureAssetId() const
+	{
+		return mTextureAssetId;
+	}
+
+	inline uint32_t CompositorResourcePassShadowMap::getShadowMapSize() const
+	{
+		return mShadowMapSize;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
 	inline CompositorPassTypeId CompositorResourcePassShadowMap::getTypeId() const
@@ -38,7 +52,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline CompositorResourcePassShadowMap::CompositorResourcePassShadowMap(const CompositorTarget& compositorTarget) :
-		CompositorResourcePassScene(compositorTarget)
+		CompositorResourcePassScene(compositorTarget),
+		mShadowMapSize(2048)
 	{
 		// Nothing here
 	}

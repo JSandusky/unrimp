@@ -63,6 +63,7 @@
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorResourcePassScene.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorInstancePassShadowMap.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.inl" />
+    <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorContextData.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceInstance.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceResource.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceResourceManager.inl" />
@@ -101,6 +102,7 @@
     <None Include="include\RendererRuntime\Resource\Scene\ISceneResource.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\CameraSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.inl" />
+    <None Include="include\RendererRuntime\Resource\Scene\Item\LightSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.inl" />
@@ -200,6 +202,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorResourcePassScene.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorInstancePassShadowMap.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorContextData.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceInstance.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceResourceManager.h" />
@@ -244,6 +247,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\CameraSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\LightSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.h" />
@@ -396,6 +400,7 @@
     <ClCompile Include="src\Resource\Scene\Factory\SceneFactory.cpp" />
     <ClCompile Include="src\Resource\Scene\ISceneResource.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\CameraSceneItem.cpp" />
+    <ClCompile Include="src\Resource\Scene\Item\LightSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\MeshSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Loader\SceneResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Scene\Node\ISceneNode.cpp" />

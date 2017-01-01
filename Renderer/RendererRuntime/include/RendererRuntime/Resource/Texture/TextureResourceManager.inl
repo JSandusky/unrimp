@@ -33,6 +33,12 @@ namespace RendererRuntime
 		return mTextureResources;
 	}
 
+	inline void TextureResourceManager::destroyTextureResource(TextureResourceId)
+	{
+		// TODO(co) Implement this method
+		// mTextureResources.removeElement(textureResourceId);
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]

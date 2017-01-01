@@ -61,13 +61,13 @@ namespace RendererRuntime
 		}
 	}
 
-	void PassBufferManager::fillBuffer(const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem)
+	void PassBufferManager::fillBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData)
 	{
 		// Even if there's no pass uniform buffer, there must still be a pass buffer manager filling "RendererRuntime::PassBufferManager::PassData" which is used to fill the instances texture buffer
 
 		// Tell the material blueprint resource listener that we're about to fill a pass uniform buffer
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
-		materialBlueprintResourceListener.beginFillPass(mRendererRuntime, renderTarget, cameraSceneItem, mPassData);
+		materialBlueprintResourceListener.beginFillPass(mRendererRuntime, renderTarget, compositorContextData, mPassData);
 
 		// Get the pass uniform buffer containing the description of the element properties
 		const MaterialBlueprintResource::UniformBuffer* passUniformBuffer = mMaterialBlueprintResource.getPassUniformBuffer();

@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Vr/IVrManager.h"
+#include "RendererRuntime/Resource/IResourceListener.h"
 
 #include <Renderer/Public/Renderer.h>
 
@@ -53,9 +54,15 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class VrManagerOpenVR : private IVrManager
+	class VrManagerOpenVR : private IVrManager, public IResourceListener
 	{
 
 
@@ -71,14 +78,21 @@ namespace RendererRuntime
 	public:
 		virtual bool isHmdPresent() const override;
 		virtual void setSceneResource(ISceneResource* sceneResource) override;
-		virtual bool startup() override;
+		virtual bool startup(AssetId vrDeviceMaterialAssetId) override;
 		inline virtual bool isRunning() const override;
 		virtual void shutdown() override;
 		virtual void updateHmdMatrixPose(CameraSceneItem* cameraSceneItem) override;
 		virtual glm::mat4 getHmdViewSpaceToClipSpaceMatrix(VrEye vrEye, float nearZ, float farZ) const override;
 		virtual glm::mat4 getHmdEyeSpaceToHeadSpaceMatrix(VrEye vrEye) const override;
 		inline virtual const glm::mat4& getHmdPoseMatrix() const override;
-		virtual void executeCompositorWorkspaceInstance(CompositorWorkspaceInstance& compositorWorkspaceInstance, Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem) override;
+		virtual void executeCompositorWorkspaceInstance(CompositorWorkspaceInstance& compositorWorkspaceInstance, Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void onLoadingStateChange(const IResource& resource) override;
 
 
 	//[-------------------------------------------------------]
@@ -97,6 +111,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&		   mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
+		bool					   mVrDeviceMaterialResourceLoaded;
+		MaterialResourceId		   mVrDeviceMaterialResourceId;
 		ISceneResource*			   mSceneResource;			// TODO(co) No crazy raw-pointers
 		ISceneNode*				   mSceneNodes[vr::k_unMaxTrackedDeviceCount];	// TODO(co) No crazy raw-pointers
 		OpenVRRuntimeLinking*	   mOpenVRRuntimeLinking;

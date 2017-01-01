@@ -32,6 +32,7 @@
 #include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
 #include <RendererRuntime/Resource/Scene/Node/ISceneNode.h>
 #include <RendererRuntime/Resource/Scene/Item/MeshSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/LightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h>
@@ -57,6 +58,7 @@ namespace
 		//[-------------------------------------------------------]
 		static const RendererRuntime::AssetId CompositorWorkspaceAssetId[3] = { "Example/CompositorWorkspace/Default/Debug", "Example/CompositorWorkspace/Default/Forward", "Example/CompositorWorkspace/Default/Deferred" };
 		static const RendererRuntime::AssetId SceneAssetId("Example/Scene/Default/FirstScene");
+		static const RendererRuntime::AssetId VrDeviceMaterialAssetId("Example/Material/Default/VrDevice");
 		static const RendererRuntime::AssetId ImrodMaterialAssetId("Example/Material/Character/Imrod");
 		static const RendererRuntime::AssetId FinalMaterialAssetId("Example/MaterialBlueprint/Compositor/Final");
 
@@ -80,9 +82,10 @@ FirstScene::FirstScene(const char *rendererName) :
 	mCustomMaterialResourceSet(false),
 	mFreeCameraController(nullptr),
 	mCameraSceneItem(nullptr),
+	mLightSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mGlobalTimer(0.0f),
-	mInstancedCompositor(Compositor::FORWARD),
+	mInstancedCompositor(Compositor::DEFERRED),
 	mCurrentCompositor(mInstancedCompositor),
 	mCurrentMsaa(Msaa::NONE),
 	mResolutionScale(1.0f),
@@ -134,7 +137,7 @@ void FirstScene::onInitialization()
 		if (vrManager.isHmdPresent())
 		{
 			vrManager.setSceneResource(mSceneResource);
-			vrManager.startup();
+			vrManager.startup(::detail::VrDeviceMaterialAssetId);
 		}
 	}
 }
@@ -264,14 +267,14 @@ void FirstScene::onDrawRequest()
 					vrManager.updateHmdMatrixPose(mCameraSceneItem);
 
 					// Execute the compositor workspace instance
-					vrManager.executeCompositorWorkspaceInstance(*mCompositorWorkspaceInstance, *swapChain, mCameraSceneItem);
+					vrManager.executeCompositorWorkspaceInstance(*mCompositorWorkspaceInstance, *swapChain, mCameraSceneItem, mLightSceneItem);
 				}
 				else
 				{
 					createDebugGui(*swapChain);
 
 					// Execute the compositor workspace instance
-					mCompositorWorkspaceInstance->execute(*swapChain, mCameraSceneItem);
+					mCompositorWorkspaceInstance->execute(*swapChain, mCameraSceneItem, mLightSceneItem);
 				}
 			}
 		}
@@ -292,6 +295,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 			// Sanity checks
 			assert(nullptr == mSceneNode);
 			assert(nullptr == mCameraSceneItem);
+			assert(nullptr == mLightSceneItem);
 
 			// Loop through all scene nodes and grab the first found camera and mesh
 			for (RendererRuntime::ISceneNode* sceneNode : mSceneResource->getSceneNodes())
@@ -320,6 +324,14 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 							}
 						}
 					}
+					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::LightSceneItem::TYPE_ID)
+					{
+						// Grab the first found light scene item
+						if (nullptr == mLightSceneItem)
+						{
+							mLightSceneItem = static_cast<RendererRuntime::LightSceneItem*>(sceneItem);
+						}
+					}
 				}
 			}
 
@@ -334,6 +346,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 		else
 		{
 			mCameraSceneItem = nullptr;
+			mLightSceneItem = nullptr;
 			if (nullptr != mFreeCameraController)
 			{
 				delete mFreeCameraController;

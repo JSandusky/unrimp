@@ -25,7 +25,10 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
+#include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/Vr/IVrManager.h"
@@ -61,10 +64,16 @@ namespace
 			// Pass
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_QUATERNION)
+			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_QUATERNION)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
+			DEFINE_CONSTANT(CLIP_SPACE_TO_WORLD_SPACE_MATRIX)
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_SUN_LIGHT_DIRECTION)
 			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
+			DEFINE_CONSTANT(SHADOW_MATRIX)
+			DEFINE_CONSTANT(SHADOW_CASCADE_SPLITS)
+			DEFINE_CONSTANT(SHADOW_CASCADE_OFFSETS)
+			DEFINE_CONSTANT(SHADOW_CASCADE_SCALES)
 
 			// Instance
 			DEFINE_CONSTANT(INSTANCE_INDICES)
@@ -89,18 +98,17 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
 	//[-------------------------------------------------------]
-	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, PassBufferManager::PassData& passData)
+	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, PassBufferManager::PassData& passData)
 	{
 		// Remember the pass data memory address of the current scope
 		mPassData = &passData;
+		mCompositorContextData = &compositorContextData;
 
 		// Get the render target with and height
 		renderTarget.getWidthAndHeight(mRenderTargetWidth, mRenderTargetHeight);
 
-		// Get the aspect ratio
-		const float aspectRatio = static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight;
-
 		// Get camera settings
+		const CameraSceneItem* cameraSceneItem = compositorContextData.getCameraSceneItem();
 		const float fovY  = (nullptr != cameraSceneItem) ? cameraSceneItem->getFovY()  : CameraSceneItem::DEFAULT_FOV_Y;
 		const float nearZ = (nullptr != cameraSceneItem) ? cameraSceneItem->getNearZ() : CameraSceneItem::DEFAULT_NEAR_Z;
 		const float farZ  = (nullptr != cameraSceneItem) ? cameraSceneItem->getFarZ()  : CameraSceneItem::DEFAULT_FAR_Z;
@@ -110,7 +118,7 @@ namespace RendererRuntime
 		glm::mat4 viewSpaceToClipSpaceMatrix;
 		const IVrManager& vrManager = rendererRuntime.getVrManager();
 		const Transform& worldSpaceToViewSpaceTransform = (nullptr != cameraSceneItem && nullptr != cameraSceneItem->getParentSceneNode()) ? cameraSceneItem->getParentSceneNode()->getTransform() : Transform::IDENTITY;
-		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye())
+		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye() && nullptr == cameraSceneItem->mViewSpaceToClipSpaceMatrix && nullptr == cameraSceneItem->mWorldSpaceToViewSpaceMatrix)
 		{
 			const IVrManager::VrEye vrEye = static_cast<IVrManager::VrEye>(getCurrentRenderedVrEye());
 			viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, nearZ, farZ);
@@ -121,10 +129,30 @@ namespace RendererRuntime
 		}
 		else
 		{
-			viewSpaceToClipSpaceMatrix = glm::perspective(fovY, aspectRatio, nearZ, farZ);
+			// Get the aspect ratio
+			const float aspectRatio = static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight;
+
+			// Calculate the view space to clip space matrix
+			// TODO(co) Just a test: Implement decent custom matrices
+			if (nullptr != cameraSceneItem->mViewSpaceToClipSpaceMatrix)
+			{
+				viewSpaceToClipSpaceMatrix = *cameraSceneItem->mViewSpaceToClipSpaceMatrix;
+			}
+			else
+			{
+				viewSpaceToClipSpaceMatrix = glm::perspective(fovY, aspectRatio, nearZ, farZ);
+			}
 
 			// Calculate the final matrices
-			mPassData->worldSpaceToViewSpaceMatrix = glm::lookAt(worldSpaceToViewSpaceTransform.position, worldSpaceToViewSpaceTransform.position + worldSpaceToViewSpaceTransform.rotation * Math::FORWARD_VECTOR, Math::UP_VECTOR);
+			// TODO(co) Just a test: Implement decent custom matrices
+			if (nullptr != cameraSceneItem->mWorldSpaceToViewSpaceMatrix)
+			{
+				mPassData->worldSpaceToViewSpaceMatrix = *cameraSceneItem->mWorldSpaceToViewSpaceMatrix;
+			}
+			else
+			{
+				mPassData->worldSpaceToViewSpaceMatrix = glm::lookAt(worldSpaceToViewSpaceTransform.position, worldSpaceToViewSpaceTransform.position + worldSpaceToViewSpaceTransform.rotation * Math::FORWARD_VECTOR, Math::UP_VECTOR);
+			}
 		}
 		mPassData->worldSpaceToViewSpaceQuaternion = glm::quat(mPassData->worldSpaceToViewSpaceMatrix);
 		mPassData->worldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;
@@ -146,10 +174,20 @@ namespace RendererRuntime
 			assert(sizeof(float) * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceQuaternion), numberOfBytes);
 		}
+		else if (::detail::VIEW_SPACE_TO_WORLD_SPACE_QUATERNION == referenceValue)
+		{
+			assert(sizeof(float) * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToViewSpaceQuaternion)), numberOfBytes);
+		}
 		else if (::detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix), numberOfBytes);
+		}
+		else if (::detail::CLIP_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToClipSpaceMatrix)), numberOfBytes);
 		}
 		else if (::detail::IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
@@ -167,8 +205,19 @@ namespace RendererRuntime
 		else if (::detail::VIEW_SPACE_SUN_LIGHT_DIRECTION == referenceValue)
 		{
 			assert(sizeof(float) * 3 == numberOfBytes);
-			glm::vec3 viewSpaceSunLightDirection(0.5f, 0.5f, 1.0f);	// TODO(co) This is just a test, needs to be filled from the outside
-			viewSpaceSunLightDirection = mPassData->worldSpaceToViewSpaceQuaternion * glm::normalize(viewSpaceSunLightDirection);
+			glm::vec3 worldSpaceSunLightDirection;
+			const LightSceneItem* lightSceneItem = mCompositorContextData->getLightSceneItem();
+			if (nullptr != lightSceneItem && nullptr != lightSceneItem->getParentSceneNode())
+			{
+				worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getTransform().rotation * Math::FORWARD_VECTOR;
+			}
+			else
+			{
+				// Error!
+				assert(false);
+				worldSpaceSunLightDirection = Math::FORWARD_VECTOR;
+			}
+			const glm::vec3 viewSpaceSunLightDirection = glm::normalize(mPassData->worldSpaceToViewSpaceQuaternion * worldSpaceSunLightDirection);	// Normalize shouldn't be necessary, but last chance here to correct rounding errors before the shader is using the normalized direction vector
 			memcpy(buffer, glm::value_ptr(viewSpaceSunLightDirection), numberOfBytes);
 		}
 		else if (::detail::INVERSE_VIEWPORT_SIZE == referenceValue)
@@ -180,6 +229,66 @@ namespace RendererRuntime
 			// 1 = Inverse viewport height
 			floatBuffer[0] = 1.0f / static_cast<float>(mRenderTargetWidth);
 			floatBuffer[1] = 1.0f / static_cast<float>(mRenderTargetHeight);
+		}
+		else if (::detail::SHADOW_MATRIX == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = mCompositorContextData->getCompositorInstancePassShadowMap();
+			if (nullptr != compositorInstancePassShadowMap)
+			{
+				memcpy(buffer, glm::value_ptr(compositorInstancePassShadowMap->getPassData().shadowMatrix), numberOfBytes);
+			}
+			else
+			{
+				// Error!
+				assert(false);
+				memset(buffer, 0, numberOfBytes);
+			}
+		}
+		else if (::detail::SHADOW_CASCADE_SPLITS == referenceValue)
+		{
+			assert(sizeof(float) * 4 == numberOfBytes);
+			const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = mCompositorContextData->getCompositorInstancePassShadowMap();
+			if (nullptr != compositorInstancePassShadowMap)
+			{
+				memcpy(buffer, compositorInstancePassShadowMap->getPassData().cascadeSplits, numberOfBytes);
+			}
+			else
+			{
+				// Error!
+				assert(false);
+				memset(buffer, 0, numberOfBytes);
+			}
+		}
+		else if (::detail::SHADOW_CASCADE_OFFSETS == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = mCompositorContextData->getCompositorInstancePassShadowMap();
+			if (nullptr != compositorInstancePassShadowMap)
+			{
+				memcpy(buffer, compositorInstancePassShadowMap->getPassData().cascadeOffsets, numberOfBytes);
+			}
+			else
+			{
+				// Error!
+				assert(false);
+				memset(buffer, 0, numberOfBytes);
+			}
+		}
+		else if (::detail::SHADOW_CASCADE_SCALES == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = mCompositorContextData->getCompositorInstancePassShadowMap();
+			if (nullptr != compositorInstancePassShadowMap)
+			{
+				memcpy(buffer, compositorInstancePassShadowMap->getPassData().cascadeScales, numberOfBytes);
+			}
+			else
+			{
+				// Error!
+				assert(false);
+				memset(buffer, 0, numberOfBytes);
+			}
 		}
 		else
 		{

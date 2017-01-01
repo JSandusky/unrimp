@@ -82,13 +82,17 @@ namespace RendererRuntime
 				uint32_t		numberOfBytes;
 			};
 
+			struct CameraItem
+			{
+			};
+
+			struct LightItem
+			{
+			};
+
 			struct MeshItem
 			{
 				AssetId meshAssetId;
-			};
-
-			struct CameraItem
-			{
 			};
 		#pragma pack(pop)
 

@@ -44,14 +44,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorResourcePassShadowMap::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
-		// Call the base implementation
-		CompositorResourcePassScene::deserialize(numberOfBytes, data);
-
 		// Sanity check
 		assert(sizeof(v1CompositorNode::PassShadowMap) == numberOfBytes);
 		std::ignore = numberOfBytes;
 
-		// TODO(co)
+		// Call the base implementation
+		CompositorResourcePassScene::deserialize(sizeof(v1CompositorNode::PassScene), data);
+
+		// Read data
+		const v1CompositorNode::PassShadowMap* passShadowMap = reinterpret_cast<const v1CompositorNode::PassShadowMap*>(data);
+		mTextureAssetId = passShadowMap->textureAssetId;
 	}
 
 

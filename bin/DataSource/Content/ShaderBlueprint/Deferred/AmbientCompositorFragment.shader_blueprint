@@ -22,12 +22,19 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 @includepiece(15)	// "Core.shader_piece"
+@includepiece(16)	// "TangentFrame.shader_piece"
 
 
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
 @insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Functions                                             ]
+//[-------------------------------------------------------]
+@insertpiece(DefineGetTangentFrame)
 
 
 //[-------------------------------------------------------]
@@ -44,9 +51,11 @@ OUTPUT_END
 // Uniform buffers
 struct PassDataStruct
 {
-	float3 ViewSpaceSunLightDirection;
-	float  Wetness;
-	float3 SunLightColor;
+	float4x4 ClipSpaceToWorldSpaceMatrix;
+	float4x4 ShadowMatrix;
+	float3   ViewSpaceSunLightDirection;
+	float    Wetness;
+	float3   SunLightColor;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -60,11 +69,34 @@ TEXTURE_2D(GBufferMap0, 0)	// GBuffer 0: rgb = diffuse color, a = alpha unused (
 TEXTURE_2D(GBufferMap1, 1)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
 TEXTURE_2D(GBufferMap2, 2)	// GBuffer 2: rgb = emissive color, a = glossiness
 TEXTURE_2D(DepthMap, 3)
+TEXTURE_2D(ShadowMap, 4)
 
 
 //[-------------------------------------------------------]
 //[ Pieces                                                ]
 //[-------------------------------------------------------]
+// TODO(co) Put into shader piece
+float3 getWorldSpacePositionByScreenSpacePosition(float2 screenSpacePosition, float depth)
+{
+	// API coordinate system related differences
+	@property(GLSL)
+		// 0..1 -> -1..1
+		depth = depth * 2.0f - 1.0f;
+	@end
+	@property(!GLSL)
+		screenSpacePosition.y = 1.0f - screenSpacePosition.y;
+	@end
+
+	// Get x/w and y/w from the screen space position
+	float x = screenSpacePosition.x * 2.0f - 1.0f;
+	float y = screenSpacePosition.y * 2.0f - 1.0f;
+	float4 projectedPosition = float4(x, y, depth, 1.0f);
+
+	// Get world-space position
+	float4 inversePosition = MATRIX_MUL(PassData.ClipSpaceToWorldSpaceMatrix, projectedPosition);
+	return inversePosition.xyz / inversePosition.w;
+}
+
 // TODO(co) Just a first test, need reusable shader piece for this
 @piece(CalculateLighting)
 	// Perform standard Blinn-Phong diffuse and specular lighting
@@ -72,9 +104,6 @@ TEXTURE_2D(DepthMap, 3)
 	// Calculate the diffuse lighting
 	float diffuseLightFactor = max(dot(normal, PassData.ViewSpaceSunLightDirection), 0.0f);
 	float3 diffuseLightColor = PassData.SunLightColor * diffuseLightFactor;
-
-	// Ambient term
-	diffuseLightColor += float3(0.2f, 0.2f, 0.2f);
 
 	// Build in variables
 	float3 ViewSpaceCameraDirection = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
@@ -110,11 +139,25 @@ MAIN_BEGIN
 	// Calculate lighting
 	@insertpiece(CalculateLighting)
 
+	// TODO(co) Shadow: Totally primitive to have something to start with
+	float shadowVisibility = 1.0f;
+	{
+		float3 worldSpacePosition = getWorldSpacePositionByScreenSpacePosition(MAIN_INPUT(TexCoordVS), depthValue);
+		float4 shadowTextureCoordinate = MATRIX_MUL(PassData.ShadowMatrix, float4(worldSpacePosition, 1.0f));
+		if (SAMPLE_2D_LOD(ShadowMap, SamplerPoint, float4(shadowTextureCoordinate.xy, 0.0f, 0.0f)).r < shadowTextureCoordinate.z - 0.001f)
+		{
+			shadowVisibility = 0.0f;
+		}	
+	}
+
+	// Ambient term
+	float3 color = float3(0.2f, 0.2f, 0.2f) * diffuseValue;
+	
 	// Diffuse term
-	float3 color = diffuseLightColor * diffuseValue;
+	color += shadowVisibility * diffuseLightColor * diffuseValue;
 
 	// Specular term
-	color += specularLightColor * specularValue;
+	color += shadowVisibility * specularLightColor * specularValue;
 
 	// Emissive term
 	color += emissiveValue;

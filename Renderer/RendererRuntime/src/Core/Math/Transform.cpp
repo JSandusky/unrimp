@@ -52,7 +52,7 @@ namespace RendererRuntime
 	void Transform::getAsMatrix(glm::mat4& objectSpaceToWorldSpace) const
 	{
 		// TODO(co) Optimize
-		static const glm::mat4x4 IDENTITY_MATRIX;	// TODO(co) Does GLM offer such a constant?
+		static const glm::mat4 IDENTITY_MATRIX;	// TODO(co) Does GLM offer such a constant?
 		objectSpaceToWorldSpace = glm::translate(IDENTITY_MATRIX, position) * glm::mat4_cast(rotation) * glm::scale(IDENTITY_MATRIX, scale);
 	}
 

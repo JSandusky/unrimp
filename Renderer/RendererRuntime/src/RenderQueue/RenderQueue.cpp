@@ -112,7 +112,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void RenderQueue::addRenderablesFromRenderableManager(const RenderableManager& renderableManager)
+	void RenderQueue::addRenderablesFromRenderableManager(const RenderableManager& renderableManager, bool castShadows)
 	{
 		// Sanity check
 		assert(renderableManager.isVisible());
@@ -123,28 +123,31 @@ namespace RendererRuntime
 		// Register the renderables inside our renderables queue
 		for (const Renderable& renderable : renderableManager.getRenderables())
 		{
-			// It's valid if one or more renderables inside a renderable manager don't fall into the range processed by this render queue
-			// -> At least one renderable should fall into the range processed by this render queue or the render queue is used wrong
-			const uint8_t renderQueueIndex = renderable.getRenderQueueIndex();
-			if (renderQueueIndex >= mMinimumRenderQueueIndex && renderQueueIndex <= mMaximumRenderQueueIndex)
+			if (!castShadows || renderable.getCastShadows())
 			{
-				// Get the precalculated static part of the sorting key
-				// -> Sort renderables back-to-front (for transparency) or front-to-back (for occlusion efficiency)
-				// TODO(co) Depending on "mTransparentPass" the sorting key is used
-				uint64_t sortingKey = renderable.getSortingKey();
+				// It's valid if one or more renderables inside a renderable manager don't fall into the range processed by this render queue
+				// -> At least one renderable should fall into the range processed by this render queue or the render queue is used wrong
+				const uint8_t renderQueueIndex = renderable.getRenderQueueIndex();
+				if (renderQueueIndex >= mMinimumRenderQueueIndex && renderQueueIndex <= mMaximumRenderQueueIndex)
+				{
+					// Get the precalculated static part of the sorting key
+					// -> Sort renderables back-to-front (for transparency) or front-to-back (for occlusion efficiency)
+					// TODO(co) Depending on "mTransparentPass" the sorting key is used
+					uint64_t sortingKey = renderable.getSortingKey();
 
-				// The quantized depth is a dynamic part which is set now
-				sortingKey = quantizedDepth;	// TODO(co) Just bits influenced
+					// The quantized depth is a dynamic part which is set now
+					sortingKey = quantizedDepth;	// TODO(co) Just bits influenced
 
-				// Register the renderable inside our renderables queue
-				Queue& queue = mQueues[static_cast<size_t>(renderQueueIndex - mMinimumRenderQueueIndex)];
-				assert(!queue.sorted);	// Ensure render queue is still in filling state and not already in rendering state
-				queue.queuedRenderables.emplace_back(renderable, sortingKey);
+					// Register the renderable inside our renderables queue
+					Queue& queue = mQueues[static_cast<size_t>(renderQueueIndex - mMinimumRenderQueueIndex)];
+					assert(!queue.sorted);	// Ensure render queue is still in filling state and not already in rendering state
+					queue.queuedRenderables.emplace_back(renderable, sortingKey);
+				}
 			}
 		}
 	}
 
-	void RenderQueue::fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, MaterialTechniqueId materialTechniqueId, const CameraSceneItem* cameraSceneItem, Renderer::CommandBuffer& commandBuffer)
+	void RenderQueue::fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, MaterialTechniqueId materialTechniqueId, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer)
 	{
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
@@ -270,7 +273,7 @@ namespace RendererRuntime
 												if (nullptr != passBufferManager)
 												{
 													passBufferManager->resetCurrentPassBuffer();
-													passBufferManager->fillBuffer(renderTarget, cameraSceneItem);
+													passBufferManager->fillBuffer(renderTarget, compositorContextData);
 												}
 											}
 

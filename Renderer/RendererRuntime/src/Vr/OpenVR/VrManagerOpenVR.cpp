@@ -253,7 +253,7 @@ namespace
 			return diffuseTextureAssetId;
 		}
 
-		RendererRuntime::MaterialResourceId setupRenderModelMaterial(RendererRuntime::IRendererRuntime& rendererRuntime, vr::TextureID_t vrTextureId, RendererRuntime::AssetId diffuseTextureAssetId)
+		RendererRuntime::MaterialResourceId setupRenderModelMaterial(RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::MaterialResourceId vrDeviceMaterialResourceId, vr::TextureID_t vrTextureId, RendererRuntime::AssetId diffuseTextureAssetId)
 		{
 			// Get the texture name and convert it into an runtime material asset ID
 			const std::string materialName = "OpenVR_" + std::to_string(vrTextureId);
@@ -265,7 +265,7 @@ namespace
 			if (RendererRuntime::isUninitialized(materialResourceId))
 			{
 				// We need to generate the runtime material asset right now
-				materialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialAssetId, RendererRuntime::StringId("Example/MaterialBlueprint/Forward/Mesh"), "Forward");	// TODO(co) It must be possible to set the material blueprint ID from the outside
+				materialResourceId = materialResourceManager.createMaterialResourceByCloning(vrDeviceMaterialResourceId, materialAssetId);
 				if (RendererRuntime::isInitialized(materialResourceId))
 				{
 					RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResources().tryGetElementById(materialResourceId);
@@ -283,7 +283,7 @@ namespace
 		}
 
 		// TODO(co) Awful quick'n'dirty implementation. Implement asynchronous render model loading.
-		void setupRenderModel(RendererRuntime::IRendererRuntime& rendererRuntime, const std::string& renderModelName, RendererRuntime::MeshResource& meshResource)
+		void setupRenderModel(RendererRuntime::IRendererRuntime& rendererRuntime, const std::string& renderModelName, RendererRuntime::MeshResource& meshResource, RendererRuntime::MaterialResourceId vrDeviceMaterialResourceId)
 		{
 			vr::IVRRenderModels* vrRenderModels = vr::VRRenderModels();
 
@@ -310,7 +310,7 @@ namespace
 			const RendererRuntime::AssetId diffuseTextureAssetId = setupRenderModelDiffuseTexture(rendererRuntime, renderModelName, *vrRenderModel);
 
 			// Setup the material asset
-			const RendererRuntime::MaterialResourceId materialResourceId = setupRenderModelMaterial(rendererRuntime, vrRenderModel->diffuseTextureId, diffuseTextureAssetId);
+			const RendererRuntime::MaterialResourceId materialResourceId = setupRenderModelMaterial(rendererRuntime, vrDeviceMaterialResourceId, vrRenderModel->diffuseTextureId, diffuseTextureAssetId);
 
 			{ // Fill the mesh resource
 				// Tell the mesh resource about the number of vertices and indices
@@ -448,7 +448,7 @@ namespace RendererRuntime
 		mSceneResource = sceneResource;
 	}
 
-	bool VrManagerOpenVR::startup()
+	bool VrManagerOpenVR::startup(AssetId vrDeviceMaterialAssetId)
 	{
 		assert(nullptr == mVrSystem);
 		if (nullptr == mVrSystem)
@@ -488,14 +488,9 @@ namespace RendererRuntime
 				return false;
 			}
 
-			// Setup all render models for tracked devices
-			for (uint32_t trackedDeviceIndex = vr::k_unTrackedDeviceIndex_Hmd; trackedDeviceIndex < vr::k_unMaxTrackedDeviceCount; ++trackedDeviceIndex)
-			{
-				if (mVrSystem->IsTrackedDeviceConnected(trackedDeviceIndex))
-				{
-					setupRenderModelForTrackedDevice(trackedDeviceIndex);
-				}
-			}
+			// Try to load the device material resource material
+			mVrDeviceMaterialResourceLoaded = false;
+			mVrDeviceMaterialResourceId = isInitialized(vrDeviceMaterialAssetId) ? mRendererRuntime.getMaterialResourceManager().loadMaterialResourceByAssetId(vrDeviceMaterialAssetId, this) : getUninitialized<MaterialResourceId>();
 
 			{ // Create renderer resources
 				// Create the texture instance
@@ -536,7 +531,9 @@ namespace RendererRuntime
 	{
 		assert(nullptr != mVrSystem);
 
-		{ // Process OpenVR events
+		// Process OpenVR events
+		if (mVrDeviceMaterialResourceLoaded)
+		{
 			vr::VREvent_t vrVREvent;
 			while (mVrSystem->PollNextEvent(&vrVREvent, sizeof(vr::VREvent_t)))
 			{
@@ -618,7 +615,7 @@ namespace RendererRuntime
 		return glm::inverse(::detail::convertOpenVrMatrixToGlmMat4(mVrSystem->GetEyeToHeadTransform(static_cast<vr::Hmd_Eye>(vrEye))));
 	}
 
-	void VrManagerOpenVR::executeCompositorWorkspaceInstance(CompositorWorkspaceInstance& compositorWorkspaceInstance, Renderer::IRenderTarget&, CameraSceneItem* cameraSceneItem)
+	void VrManagerOpenVR::executeCompositorWorkspaceInstance(CompositorWorkspaceInstance& compositorWorkspaceInstance, Renderer::IRenderTarget&, CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem)
 	{
 		assert(nullptr != mVrSystem);
 
@@ -627,7 +624,7 @@ namespace RendererRuntime
 		{
 			// Execute the compositor workspace instance
 			materialBlueprintResourceListener.setCurrentRenderedVrEye(static_cast<IMaterialBlueprintResourceListener::VrEye>(eyeIndex));
-			compositorWorkspaceInstance.execute(*mFramebuffer, cameraSceneItem);
+			compositorWorkspaceInstance.execute(*mFramebuffer, cameraSceneItem, lightSceneItem);
 
 			// Submit the rendered texture to the OpenVR compositor
 			const vr::Texture_t vrTexture = { mColorTexture2D->getInternalResourceHandle(), mVrGraphicsAPIConvention, vr::ColorSpace_Auto };
@@ -638,10 +635,33 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	void VrManagerOpenVR::onLoadingStateChange(const IResource& resource)
+	{
+		if (mVrDeviceMaterialResourceId == resource.getId() && resource.getLoadingState() == IResource::LoadingState::LOADED)
+		{
+			mVrDeviceMaterialResourceLoaded = true;
+
+			// Setup all render models for tracked devices
+			for (uint32_t trackedDeviceIndex = vr::k_unTrackedDeviceIndex_Hmd; trackedDeviceIndex < vr::k_unMaxTrackedDeviceCount; ++trackedDeviceIndex)
+			{
+				if (mVrSystem->IsTrackedDeviceConnected(trackedDeviceIndex))
+				{
+					setupRenderModelForTrackedDevice(trackedDeviceIndex);
+				}
+			}
+		}
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	VrManagerOpenVR::VrManagerOpenVR(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
+		mVrDeviceMaterialResourceLoaded(false),
+		mVrDeviceMaterialResourceId(getUninitialized<MaterialResourceId>()),
 		mSceneResource(nullptr),
 		mOpenVRRuntimeLinking(new OpenVRRuntimeLinking()),
 		mVrGraphicsAPIConvention(vr::API_OpenGL),
@@ -678,7 +698,7 @@ namespace RendererRuntime
 				MeshResource* meshResource = meshResourceManager.getMeshResources().tryGetElementById(meshResourceId);
 				if (nullptr != meshResource)
 				{
-					::detail::setupRenderModel(mRendererRuntime, renderModelName, *meshResource);
+					::detail::setupRenderModel(mRendererRuntime, renderModelName, *meshResource, mVrDeviceMaterialResourceId);
 				}
 			}
 		}

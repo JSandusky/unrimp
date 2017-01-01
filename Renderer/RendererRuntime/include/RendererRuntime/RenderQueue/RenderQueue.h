@@ -44,9 +44,9 @@ namespace Renderer
 namespace RendererRuntime
 {
 	class Renderable;
-	class CameraSceneItem;
 	class IRendererRuntime;
 	class RenderableManager;
+	class CompositorContextData;
 	class IndirectBufferManager;
 }
 
@@ -107,8 +107,8 @@ namespace RendererRuntime
 		inline uint8_t getMinimumRenderQueueIndex() const;
 		inline uint8_t getMaximumRenderQueueIndex() const;
 		void clear();
-		void addRenderablesFromRenderableManager(const RenderableManager& renderableManager);
-		void fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, MaterialTechniqueId materialTechniqueId, const CameraSceneItem* cameraSceneItem, Renderer::CommandBuffer& commandBuffer);
+		void addRenderablesFromRenderableManager(const RenderableManager& renderableManager, bool castShadows = false);
+		void fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, MaterialTechniqueId materialTechniqueId, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]

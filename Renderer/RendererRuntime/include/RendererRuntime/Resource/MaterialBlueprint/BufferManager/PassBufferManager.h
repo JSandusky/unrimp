@@ -50,8 +50,8 @@ namespace RendererRuntime
 {
 	class Transform;
 	class IBufferManager;
-	class CameraSceneItem;
 	class IRendererRuntime;
+	class CompositorContextData;
 	class MaterialBlueprintResource;
 	class MaterialBlueprintResourceManager;
 }
@@ -115,10 +115,10 @@ namespace RendererRuntime
 		*
 		*  @param[in] renderTarget
 		*    Render target to render into
-		*  @param[in] cameraSceneItem
-		*    Camera scene item to use, can be a null pointer
+		*  @param[in] compositorContextData
+		*    Compositor context data
 		*/
-		void fillBuffer(const Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem);
+		void fillBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData);
 
 		/**
 		*  @brief

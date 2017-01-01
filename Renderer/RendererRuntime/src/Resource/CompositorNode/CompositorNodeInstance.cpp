@@ -54,7 +54,7 @@ namespace RendererRuntime
 		}
 	}
 
-	Renderer::IRenderTarget& CompositorNodeInstance::fillCommandBuffer(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, Renderer::CommandBuffer& commandBuffer) const
+	Renderer::IRenderTarget& CompositorNodeInstance::fillCommandBuffer(Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer) const
 	{
 		Renderer::IRenderTarget* currentRenderTarget = &renderTarget;
 		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
@@ -84,7 +84,7 @@ namespace RendererRuntime
 			}
 
 			// Let the compositor instance pass fill the command buffer
-			compositorInstancePass->onFillCommandBuffer(*currentRenderTarget, cameraSceneItem, commandBuffer);
+			compositorInstancePass->onFillCommandBuffer(*currentRenderTarget, compositorContextData, commandBuffer);
 		}
 
 		// Done

@@ -22,10 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorInstancePassClear.h"
-#include "RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorResourcePassClear.h"
+#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 
-#include <Renderer/Public/Renderer.h>
+#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -36,29 +36,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassClear::onFillCommandBuffer(const Renderer::IRenderTarget&, const CompositorContextData&, Renderer::CommandBuffer& commandBuffer)
+	const SceneItemTypeId LightSceneItem::TYPE_ID("LightSceneItem");
+
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[-------------------------------------------------------]
+	void LightSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t*)
 	{
-		// Begin debug event
-		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
-
-		// Clear the color buffer of the current render target, do also clear the depth buffer
-		const CompositorResourcePassClear& compositorResourcePassClear = static_cast<const CompositorResourcePassClear&>(getCompositorResourcePass());
-		Renderer::Command::Clear::create(commandBuffer, compositorResourcePassClear.getFlags(), glm::value_ptr(compositorResourcePassClear.getClearColor()), compositorResourcePassClear.getZ(), compositorResourcePassClear.getStencil());
-
-		// End debug event
-		COMMAND_END_DEBUG_EVENT(commandBuffer)
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	CompositorInstancePassClear::CompositorInstancePassClear(const CompositorResourcePassClear& compositorResourcePassClear, const CompositorNodeInstance& compositorNodeInstance) :
-		ICompositorInstancePass(compositorResourcePassClear, compositorNodeInstance)
-	{
-		// Nothing here
+		assert(sizeof(v1Scene::LightItem) == numberOfBytes);
+		std::ignore = numberOfBytes;
 	}
 
 

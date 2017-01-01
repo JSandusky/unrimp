@@ -27,15 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
-
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
-	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
-	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
-	#include <glm/glm.hpp>
-PRAGMA_WARNING_POP
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -48,66 +41,39 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Material blueprint resource listener
-	*/
-	class MaterialBlueprintResourceListener : public IMaterialBlueprintResourceListener
+	class LightSceneItem : public ISceneItem
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class SceneFactory;	// Needs to be able to create scene item instances
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
-		inline MaterialBlueprintResourceListener();
+		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
 
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~MaterialBlueprintResourceListener();
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
+		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		MaterialBlueprintResourceListener(const MaterialBlueprintResourceListener&) = delete;
-		MaterialBlueprintResourceListener& operator=(const MaterialBlueprintResourceListener&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
-	//[-------------------------------------------------------]
-	private:
-		inline virtual void beginFillUnknown() override;
-		inline virtual bool fillUnknownValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, PassBufferManager::PassData& passData) override;
-		virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-		inline virtual void beginFillMaterial() override;
-		inline virtual bool fillMaterialValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-		inline virtual void beginFillInstance(const PassBufferManager::PassData& passData, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) override;
-		virtual bool fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		// Pass
-		PassBufferManager::PassData* mPassData;	///< Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be a null pointer outside the correct scope, don't destroy the memory
-		const CompositorContextData* mCompositorContextData;
-		uint32_t					 mRenderTargetWidth;
-		uint32_t					 mRenderTargetHeight;
-
-		// Instance
-		const Transform*   mObjectSpaceToWorldSpaceTransform;
-		MaterialTechnique* mMaterialTechnique;
+		inline explicit LightSceneItem(ISceneResource& sceneResource);
+		inline virtual ~LightSceneItem();
+		LightSceneItem(const LightSceneItem&) = delete;
+		LightSceneItem& operator=(const LightSceneItem&) = delete;
 
 
 	};
@@ -122,4 +88,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.inl"
+#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.inl"

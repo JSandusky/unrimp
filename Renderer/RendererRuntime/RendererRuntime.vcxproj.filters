@@ -492,6 +492,12 @@
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.inl">
       <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\LightSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorContextData.inl">
+      <Filter>Source Files\Resource\CompositorWorkspace</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -963,6 +969,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.h">
       <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\LightSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorContextData.h">
+      <Filter>Source Files\Resource\CompositorWorkspace</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1255,6 +1267,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\CompositorNode\Pass\ShadowMap\CompositorInstancePassShadowMap.cpp">
       <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\LightSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

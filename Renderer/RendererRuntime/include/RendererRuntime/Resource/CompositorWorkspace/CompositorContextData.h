@@ -27,15 +27,18 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
+#include "RendererRuntime/Core/NonCopyable.h"
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
-	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
-	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
-	#include <glm/glm.hpp>
-PRAGMA_WARNING_POP
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class LightSceneItem;
+	class CameraSceneItem;
+	class CompositorInstancePassShadowMap;
+}
 
 
 //[-------------------------------------------------------]
@@ -50,9 +53,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Material blueprint resource listener
+	*    Compositor context data used during compositor execution
 	*/
-	class MaterialBlueprintResourceListener : public IMaterialBlueprintResourceListener
+	class CompositorContextData
 	{
 
 
@@ -60,54 +63,29 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
-		inline MaterialBlueprintResourceListener();
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~MaterialBlueprintResourceListener();
+		inline CompositorContextData();
+		inline explicit CompositorContextData(const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem = nullptr, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = nullptr);
+		inline ~CompositorContextData();
+		inline const CameraSceneItem* getCameraSceneItem() const;
+		inline const LightSceneItem* getLightSceneItem() const;
+		inline const CompositorInstancePassShadowMap* getCompositorInstancePassShadowMap() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		MaterialBlueprintResourceListener(const MaterialBlueprintResourceListener&) = delete;
-		MaterialBlueprintResourceListener& operator=(const MaterialBlueprintResourceListener&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline virtual void beginFillUnknown() override;
-		inline virtual bool fillUnknownValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, PassBufferManager::PassData& passData) override;
-		virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-		inline virtual void beginFillMaterial() override;
-		inline virtual bool fillMaterialValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-		inline virtual void beginFillInstance(const PassBufferManager::PassData& passData, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) override;
-		virtual bool fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
+		CompositorContextData(const CompositorContextData&) = delete;
+		CompositorContextData& operator=(const CompositorContextData&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// Pass
-		PassBufferManager::PassData* mPassData;	///< Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be a null pointer outside the correct scope, don't destroy the memory
-		const CompositorContextData* mCompositorContextData;
-		uint32_t					 mRenderTargetWidth;
-		uint32_t					 mRenderTargetHeight;
-
-		// Instance
-		const Transform*   mObjectSpaceToWorldSpaceTransform;
-		MaterialTechnique* mMaterialTechnique;
+		const CameraSceneItem*				   mCameraSceneItem;
+		const LightSceneItem*				   mLightSceneItem;
+		const CompositorInstancePassShadowMap* mCompositorInstancePassShadowMap;
 
 
 	};
@@ -122,4 +100,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.inl"
+#include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.inl"

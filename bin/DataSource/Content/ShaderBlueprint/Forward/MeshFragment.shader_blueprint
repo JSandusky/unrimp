@@ -106,9 +106,6 @@ SAMPLER_STATE(SamplerLinear, 0)
 		float diffuseLightFactor = max(dot(normal, PassData.ViewSpaceSunLightDirection), 0.0f);
 		float3 diffuseLightColor = PassData.SunLightColor * diffuseLightFactor;
 
-		// Ambient term
-		diffuseLightColor += float3(0.2f, 0.2f, 0.2f);
-
 		// Build in variables
 		float3 ViewSpaceCameraDirection = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
 
@@ -158,13 +155,18 @@ MAIN_BEGIN
 	// Calculate lighting
 	@insertpiece(CalculateLighting)
 
-	// Diffuse term
 	@property(UseDiffuseMap)
-		float3 color = diffuseLightColor * material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+		float3 diffuseValue = material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
 	@end
 	@property(!UseDiffuseMap)
-		float3 color = diffuseLightColor * material.DiffuseColor;
+		float3 diffuseValue = material.DiffuseColor;
 	@end
+
+	// Ambient term
+	float3 color = float3(0.2f, 0.2f, 0.2f) * diffuseValue;
+
+	// Diffuse term
+	color += diffuseLightColor * diffuseValue;
 
 	// Specular term
 	@property(UseSpecularMap)

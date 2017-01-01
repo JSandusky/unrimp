@@ -152,9 +152,9 @@ namespace RendererRuntime
 		*  @param[in]  order
 		*    Order of the Euler angles
 		*/
-		static void eulerToMatrix(const glm::vec3& eulerAngles, glm::mat3x3& mRot, Order order = DefaultOrder);
+		static void eulerToMatrix(const glm::vec3& eulerAngles, glm::mat3& mRot, Order order = DefaultOrder);
 		static void eulerToMatrix(const glm::vec3& eulerAngles, glm::mat3x4& mRot, Order order = DefaultOrder);
-		static void eulerToMatrix(const glm::vec3& eulerAngles, glm::mat4x4& mRot, Order order = DefaultOrder);
+		static void eulerToMatrix(const glm::vec3& eulerAngles, glm::mat4& mRot, Order order = DefaultOrder);
 
 		/**
 		*  @brief
@@ -168,9 +168,9 @@ namespace RendererRuntime
 		*  @return
 		*    Resulting Euler angles in vector format: yaw, pitch, roll in radians; for more information, see notes on EulerAngles class
 		*/
-		static glm::vec3 matrixToEuler(const glm::mat3x3& mRot, Order order = DefaultOrder);
+		static glm::vec3 matrixToEuler(const glm::mat3& mRot, Order order = DefaultOrder);
 		static glm::vec3 matrixToEuler(const glm::mat3x4& mRot, Order order = DefaultOrder);
-		static glm::vec3 matrixToEuler(const glm::mat4x4& mRot, Order order = DefaultOrder);
+		static glm::vec3 matrixToEuler(const glm::mat4& mRot, Order order = DefaultOrder);
 
 
 	};

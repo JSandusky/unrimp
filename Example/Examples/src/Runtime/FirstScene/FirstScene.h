@@ -41,6 +41,7 @@ namespace RendererRuntime
 {
 	class ISceneNode;
 	class ISceneResource;
+	class LightSceneItem;
 	class CameraSceneItem;
 	class CompositorWorkspaceInstance;
 }
@@ -158,6 +159,7 @@ private:
 	FreeCameraController*						  mFreeCameraController;
 	// Crazy raw-pointers to point-of-interest scene stuff
 	RendererRuntime::CameraSceneItem* mCameraSceneItem;
+	RendererRuntime::LightSceneItem*  mLightSceneItem;
 	RendererRuntime::ISceneNode*	  mSceneNode;
 	// Timing
 	Stopwatch mStopwatch;	///< Stopwatch instance

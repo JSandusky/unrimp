@@ -135,6 +135,7 @@ namespace RendererRuntime
 
 			struct PassShadowMap : public PassScene
 			{
+				AssetId textureAssetId;
 			};
 
 			struct PassResolveMultisample

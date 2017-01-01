@@ -126,7 +126,7 @@ void FirstCompositor::onDrawRequest()
 		if (nullptr != swapChain)
 		{
 			// Execute the compositor workspace instance
-			mCompositorWorkspaceInstance->execute(*swapChain, nullptr);
+			mCompositorWorkspaceInstance->execute(*swapChain, nullptr, nullptr);
 		}
 	}
 }

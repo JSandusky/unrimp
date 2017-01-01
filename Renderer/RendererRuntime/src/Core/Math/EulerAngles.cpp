@@ -119,7 +119,7 @@ namespace RendererRuntime
 		return eulerToQuaternion(glm::vec3(yaw, pitch, roll), order);
 	}
 
-	void EulerAngles::eulerToMatrix(const glm::vec3& eulerAngles, glm::mat3x3& mRot, Order order)
+	void EulerAngles::eulerToMatrix(const glm::vec3& eulerAngles, glm::mat3& mRot, Order order)
 	{
 		glm::vec3 angles = eulerAngles;
 
@@ -215,7 +215,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void EulerAngles::eulerToMatrix(const glm::vec3& eulerAngles, glm::mat4x4& mRot, Order order)
+	void EulerAngles::eulerToMatrix(const glm::vec3& eulerAngles, glm::mat4& mRot, Order order)
 	{
 		glm::vec3 angles = eulerAngles;
 
@@ -265,7 +265,7 @@ namespace RendererRuntime
 		}
 	}
 
-	glm::vec3 EulerAngles::matrixToEuler(const glm::mat3x3& mRot, Order order)
+	glm::vec3 EulerAngles::matrixToEuler(const glm::mat3& mRot, Order order)
 	{
 		glm::vec3 eulerAngles;
 
@@ -377,7 +377,7 @@ namespace RendererRuntime
 		return eulerAngles;
 	}
 
-	glm::vec3 EulerAngles::matrixToEuler(const glm::mat4x4& mRot, Order order)
+	glm::vec3 EulerAngles::matrixToEuler(const glm::mat4& mRot, Order order)
 	{
 		glm::vec3 eulerAngles;
 

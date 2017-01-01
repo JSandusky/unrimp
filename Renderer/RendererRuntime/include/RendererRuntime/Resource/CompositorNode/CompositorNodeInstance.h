@@ -42,7 +42,7 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
-	class CameraSceneItem;
+	class CompositorContextData;
 	class ICompositorInstancePass;
 	class CompositorWorkspaceInstance;
 }
@@ -91,7 +91,7 @@ namespace RendererRuntime
 		CompositorNodeInstance(const CompositorNodeInstance&) = delete;
 		CompositorNodeInstance& operator=(const CompositorNodeInstance&) = delete;
 		void compositorWorkspaceInstanceLoadingFinished() const;
-		Renderer::IRenderTarget& fillCommandBuffer(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, Renderer::CommandBuffer& commandBuffer) const;
+		Renderer::IRenderTarget& fillCommandBuffer(Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer) const;
 		void frameEnded() const;
 
 

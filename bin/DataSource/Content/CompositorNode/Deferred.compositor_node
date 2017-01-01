@@ -82,7 +82,8 @@
 				{
 					"ShadowMap":
 					{
-						"MaterialTechnique": "DepthOnly"
+						"MaterialTechnique": "DepthOnly",
+						"TextureAsset": "ShadowMapRenderTargetTexture"
 					}
 				}
 			},
@@ -119,7 +120,8 @@
 							"GBufferMap0": "GBufferRenderTargetTexture0",
 							"GBufferMap1": "GBufferRenderTargetTexture1",
 							"GBufferMap2": "GBufferRenderTargetTexture2",
-							"DepthMap": "DepthStencilRenderTargetTexture"
+							"DepthMap": "DepthStencilRenderTargetTexture",
+							"ShadowMap": "ShadowMapRenderTargetTexture"
 						}
 					}
 				}

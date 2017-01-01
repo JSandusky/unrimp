@@ -26,11 +26,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline const CompositorInstancePassShadowMap::PassData& CompositorInstancePassShadowMap::getPassData() const
+	{
+		return mPassData;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline CompositorInstancePassShadowMap::~CompositorInstancePassShadowMap()
 	{
-		// Nothing here
+		destroyShadowMapRenderTarget();
 	}
 
 

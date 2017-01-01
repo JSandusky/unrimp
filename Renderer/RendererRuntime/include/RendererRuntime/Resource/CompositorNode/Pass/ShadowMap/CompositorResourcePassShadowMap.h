@@ -38,8 +38,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Compositor resource pass shadow map
+	*/
 	class CompositorResourcePassShadowMap : public CompositorResourcePassScene
 	{
 
@@ -55,13 +65,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT static const CompositorPassTypeId TYPE_ID;
+		static const uint32_t NUMBER_OF_CASCADES = 4;	///< TODO(co) Port https://github.com/TheRealMJP/Shadows/tree/master/Shadows
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		// TODO(co)
+		inline AssetId getTextureAssetId() const;
+		inline uint32_t getShadowMapSize() const;
 
 
 	//[-------------------------------------------------------]
@@ -86,7 +98,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co)
+		AssetId	 mTextureAssetId;	///< Shadow map texture asset ID
+		uint32_t mShadowMapSize;	///< The shadow map size is usually 512, 1024 or 2048
 
 
 	};

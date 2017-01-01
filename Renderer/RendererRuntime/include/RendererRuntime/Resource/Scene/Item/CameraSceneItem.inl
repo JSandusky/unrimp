@@ -73,6 +73,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline CameraSceneItem::CameraSceneItem(ISceneResource& sceneResource) :
 		ISceneItem(sceneResource),
+		mViewSpaceToClipSpaceMatrix(nullptr),
+		mWorldSpaceToViewSpaceMatrix(nullptr),
 		mFovY(DEFAULT_FOV_Y),
 		mNearZ(DEFAULT_NEAR_Z),
 		mFarZ(DEFAULT_FAR_Z)

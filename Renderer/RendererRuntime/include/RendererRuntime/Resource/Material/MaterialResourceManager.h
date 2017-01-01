@@ -89,7 +89,7 @@ namespace RendererRuntime
 		inline MaterialResourceId getMaterialResourceIdByAssetId(AssetId assetId) const;
 		RENDERERRUNTIME_API_EXPORT MaterialResourceId loadMaterialResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 		RENDERERRUNTIME_API_EXPORT MaterialResourceId createMaterialResourceByAssetId(AssetId assetId, AssetId materialBlueprintAssetId, MaterialTechniqueId materialTechniqueId);	// Material resource is not allowed to exist, yet
-		RENDERERRUNTIME_API_EXPORT MaterialResourceId createMaterialResourceByCloning(MaterialResourceId parentMaterialResourceId);	// Parent material resource must be fully loaded
+		RENDERERRUNTIME_API_EXPORT MaterialResourceId createMaterialResourceByCloning(MaterialResourceId parentMaterialResourceId, AssetId assetId = getUninitialized<AssetId>());	// Parent material resource must be fully loaded
 		inline void destroyMaterialResource(MaterialResourceId materialResourceId);
 
 
