@@ -43,6 +43,7 @@ namespace OpenGLES2Renderer
 	Framebuffer::Framebuffer(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
 		IFramebuffer(openGLES2Renderer),
 		mOpenGLES2Framebuffer(0),
+		mDepthRenderbuffer(0),
 		mNumberOfColorTextures(numberOfColorTextures),
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(depthStencilTexture),
@@ -149,7 +150,11 @@ namespace OpenGLES2Renderer
 		{
 			mDepthStencilTexture->addReference();
 
-			// TODO(co) Depth texture support
+			glBindRenderbuffer(GL_RENDERBUFFER, mDepthRenderbuffer);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, mWidth, mHeight);
+
+			// attach a renderbuffer to depth attachment point
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthRenderbuffer);
 		}
 
 		#ifdef RENDERER_OUTPUT_DEBUG
@@ -230,6 +235,7 @@ namespace OpenGLES2Renderer
 		// Destroy the OpenGL ES 2 framebuffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteFramebuffers(1, &mOpenGLES2Framebuffer);
+		glDeleteRenderbuffers(1, &mDepthRenderbuffer);
 
 		// Release the reference to the used color textures
 		if (nullptr != mColorTextures)
