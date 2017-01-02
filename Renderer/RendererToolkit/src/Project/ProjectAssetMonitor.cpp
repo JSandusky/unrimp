@@ -195,9 +195,8 @@ namespace RendererToolkit
 		{
 			fileWatcher.update();
 			fileWatchListener.processFileActions();
-			#ifdef _WIN32
-				::Sleep(100);
-			#endif
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 	}
 
