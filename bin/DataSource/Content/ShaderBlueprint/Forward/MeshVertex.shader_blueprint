@@ -44,6 +44,9 @@ INPUT_BEGIN
 	@property(GLSL)
 		INPUT_TEXTURE_COORDINATE(float4, QTangent, 1)	// 16 bit QTangent
 	@end
+	@property(GLSLES)
+		INPUT_TEXTURE_COORDINATE(float4, QTangent, 1)	// 16 bit QTangent
+	@end
 	INPUT_VERTEX_DRAW_ID								// Draw ID
 INPUT_END
 OUTPUT_BEGIN

@@ -112,12 +112,12 @@
 			},
 			"OpenGLES_100":
 			{
-				"RendererBackend": "OpenGLES",
+				"RendererBackend": "OpenGLES2",
 				"ShaderVersion": "1.00"
 			},
 			"OpenGLES_300":
 			{
-				"RendererBackend": "OpenGLES",
+				"RendererBackend": "OpenGLES2",
 				"ShaderVersion": "3.00"
 			}
 		},
@@ -203,7 +203,7 @@
 			"OpenGLES3_300":
 			{
 				"Platform": "Mobile",
-				"RendererBackend": "OpenGLES3",
+				"RendererBackend": "OpenGLES2",
 				"TextureTarget": "Mobile",
 				"ShaderTarget": "OpenGLES_300",
 				"MaterialTarget": "Default",
