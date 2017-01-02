@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/Preprocessor/mojoshader.h"
 
 #include <cstring>	// For "strlen()"
+#include <iostream> // TODO(sw) test
 
 
 //[-------------------------------------------------------]
@@ -62,16 +63,6 @@ namespace RendererRuntime
 			result.assign(preprocessData->output, static_cast<size_t>(preprocessData->output_len));
 		}
 		MOJOSHADER_freePreprocessData(preprocessData);
-
-		{ // TODO(co) The MojoShader spaces make it really nasty, e.g. "sampleOffsets[15]" will become "sampleOffsets [ 15 ]" breaking GLSL shaders
-			while (true)
-			{
-				const size_t pos = result.find(" [");
-				if (pos == std::string::npos)
-					break;
-				result.replace(pos, 2, "[ ");	// Performance: Don't change the length of the string
-			}
-		}
 	}
 
 
