@@ -95,8 +95,15 @@ void IApplicationRendererRuntime::onInitialization()
 			{
 				// TODO(co) Under construction: Will probably become "mount asset package"
 				// Add used asset package
-			//	rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataMobile/Content/AssetPackage.assets");
-				rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/Content/AssetPackage.assets");
+				const bool rendererIsOpenGLES = 0 == strcmp(renderer->getName(), "OpenGLES2");
+				if (rendererIsOpenGLES)
+				{
+					rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataMobile/Content/AssetPackage.assets");
+				}
+				else
+				{
+					rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/Content/AssetPackage.assets");
+				}
 
 				#ifdef SHARED_LIBRARIES
 				{
@@ -110,9 +117,14 @@ void IApplicationRendererRuntime::onInitialization()
 							try
 							{
 								mProject->loadByFilename("../DataSource/Example.project");
-								// TODO(co) Renderer check
-							//	mProject->startupAssetMonitor(*rendererRuntime, "OpenGLES2_100");
-								mProject->startupAssetMonitor(*rendererRuntime, "Direct3D11_50");
+								if (rendererIsOpenGLES)
+								{
+									mProject->startupAssetMonitor(*rendererRuntime, "OpenGLES3_300");
+								}
+								else
+								{
+									mProject->startupAssetMonitor(*rendererRuntime, "Direct3D11_50");
+								}
 							}
 							catch (const std::exception& e)
 							{
