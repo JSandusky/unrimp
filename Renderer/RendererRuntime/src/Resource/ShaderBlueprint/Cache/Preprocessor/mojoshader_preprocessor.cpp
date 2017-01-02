@@ -2279,6 +2279,7 @@ const MOJOSHADER_preprocessData *MOJOSHADER_preprocess(const char *filename,
 	ErrorList *errors = NULL;
 	Buffer *buffer = NULL;
 	Token token = TOKEN_UNKNOWN;
+	Token prevToken = TOKEN_UNKNOWN;
 	const char *tokstr = NULL;
 	int nl = 1;
 	int indent = 0;
@@ -2372,6 +2373,24 @@ const MOJOSHADER_preprocessData *MOJOSHADER_preprocess(const char *filename,
 			isnewline = 1;
 		} // else if
 
+		else if ((token == TOKEN_IDENTIFIER && prevToken == ((Token) '.'))
+				|| ((token == TOKEN_INT_LITERAL || token == TOKEN_IDENTIFIER) && prevToken == ((Token) '['))
+			)
+		{
+			buffer_append(buffer, tokstr, len);
+		}
+		else if (token == ((Token) '.') || token == ((Token) ')') || token == ((Token) '(') || token == ((Token) '[') || token == ((Token) ']'))
+		{
+			buffer_append(buffer, tokstr, len);
+		} // else if
+
+		else if (token == ((Token) '=') || token == ((Token) '*') || token == ((Token) '+') || token == ((Token) '-'))
+		{
+			indent_buffer(buffer, indent, nl);
+			buffer_append(buffer, tokstr, len);
+			indent_buffer(buffer, indent, nl);
+		} // else if
+
 		else if (token == TOKEN_PREPROCESSING_ERROR)
 		{
 			unsigned int pos = 0;
@@ -2384,6 +2403,8 @@ const MOJOSHADER_preprocessData *MOJOSHADER_preprocess(const char *filename,
 			indent_buffer(buffer, indent, nl);
 			buffer_append(buffer, tokstr, len);
 		} // else
+
+		prevToken = token;
 
 		nl = isnewline;
 	} // while
