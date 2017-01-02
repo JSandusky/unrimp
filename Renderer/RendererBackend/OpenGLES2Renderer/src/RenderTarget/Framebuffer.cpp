@@ -27,6 +27,7 @@
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
 #include <cassert>
+#include <climits> // For UINT_MAX
 
 
 //[-------------------------------------------------------]
