@@ -46,6 +46,11 @@ namespace OpenGLES2Renderer
 		// are already unloaded and we are no longer allowed to use EGL or OpenGL ES 2 functions
 	}
 
+	bool IContext::isInitialized() const
+	{
+		return (mUseExternalContext || EGL_NO_CONTEXT != getEGLContext());
+	}
+
 	EGLBoolean IContext::makeCurrent(EGLSurface eglSurface)
 	{
 		// Use the EGL dummy surface?
@@ -64,8 +69,10 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	bool IContext::initialize(uint32_t multisampleAntialiasingSamples)
 	{
-		if(mUseExternalContext)
+		if (mUseExternalContext)
+		{
 			return true;
+		}
 
 		// Get display
 		#if (defined(LINUX) && !defined(ANDROID))
@@ -175,11 +182,6 @@ namespace OpenGLES2Renderer
 
 		// Error!
 		return false;
-	}
-
-	bool IContext::isInitialized() const
-	{
-		return ( mUseExternalContext || EGL_NO_CONTEXT != getEGLContext());
 	}
 
 

@@ -68,15 +68,14 @@ STRINGIFY(
 precision highp float; // Default precision to high for floating points
 
 // Attribute input/output
-in mediump vec2 TexCoord;	// Normalized texture coordinate as input
-
-out highp vec4 fragmentColor[2]; // Output variable for fragment color
+in mediump vec2 TexCoord;			// Normalized texture coordinate as input
+out highp vec4 FragmentColor[2];	// Output variable for fragment color
 
 // Programs
 void main()
 {
-	fragmentColor[0] = vec4(1.0f, 0.0f, 0.0f, 0.0f);	// Red
-	fragmentColor[1] = vec4(0.0f, 0.0f, 1.0f, 0.0f);	// Blue
+	FragmentColor[0] = vec4(1.0f, 0.0f, 0.0f, 0.0f);	// Red
+	FragmentColor[1] = vec4(0.0f, 0.0f, 1.0f, 0.0f);	// Blue
 }
 );	// STRINGIFY
 
@@ -91,13 +90,12 @@ STRINGIFY(
 precision highp float; // Default precision to high for floating points
 
 // Attribute input/output
-in mediump vec2 TexCoord;	// Normalized texture coordinate as input
+in mediump vec2 TexCoord;		// Normalized texture coordinate as input
+out highp vec4 FragmentColor;	// Output variable for fragment color
 
 // Uniforms
 uniform mediump sampler2D DiffuseMap0;
 uniform mediump sampler2D DiffuseMap1;
-
-out highp vec4 fragmentColor;	// Output variable for fragment color
 
 // Programs
 void main()
@@ -110,7 +108,7 @@ void main()
 
 	// Calculate the final color by subtracting the colors of the both render targets from white
 	// -> The result should be white or green
-	fragmentColor = vec4(1.0, 1.0, 1.0, 1.0) - color0 - color1;
+	FragmentColor = vec4(1.0, 1.0, 1.0, 1.0) - color0 - color1;
 }
 );	// STRINGIFY
 

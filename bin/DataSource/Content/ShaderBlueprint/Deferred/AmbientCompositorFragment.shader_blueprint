@@ -79,12 +79,12 @@ TEXTURE_2D(ShadowMap, 4)
 float3 getWorldSpacePositionByScreenSpacePosition(float2 screenSpacePosition, float depth)
 {
 	// API coordinate system related differences
-	@property(GLSL)
+	@property(HLSL)
+		screenSpacePosition.y = 1.0f - screenSpacePosition.y;
+	@end
+	@property(GLSL || GLSLES)
 		// 0..1 -> -1..1
 		depth = depth * 2.0f - 1.0f;
-	@end
-	@property(!GLSL)
-		screenSpacePosition.y = 1.0f - screenSpacePosition.y;
 	@end
 
 	// Get x/w and y/w from the screen space position

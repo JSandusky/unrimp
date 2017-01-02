@@ -34,7 +34,7 @@
 	@property(HLSL)
 		#define FXAA_HLSL_5		 1
 	@end
-	@property(GLSL)
+	@property(GLSL || GLSLES)
 		#define FXAA_GLSL_130	 1
 	@end
 	#define FXAA_QUALITY__PRESET 39
@@ -84,7 +84,7 @@ MAIN_BEGIN
 			fxaaTex.smpl = SamplerLinear;
 			fxaaTex.tex = ColorMap;
 		@end
-		@property(GLSL)
+		@property(GLSL || GLSLES)
 			#define fxaaTex ColorMap
 		@end
 

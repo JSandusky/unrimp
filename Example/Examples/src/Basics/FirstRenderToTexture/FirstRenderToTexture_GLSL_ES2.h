@@ -61,18 +61,17 @@ fragmentShaderSourceCode =
 "#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-in mediump vec2 TexCoord;	// Normalized texture coordinate as input
+in mediump vec2 TexCoord;		// Normalized texture coordinate as input
+out highp vec4 FragmentColor;	// Output variable for fragment color
 
 // Uniforms
 uniform mediump sampler2D DiffuseMap;
-
-out highp vec4 fragmentColor;	// Output variable for fragment color
 
 // Programs
 void main()
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	fragmentColor = texture2D(DiffuseMap, TexCoord);
+	FragmentColor = texture2D(DiffuseMap, TexCoord);
 }
 );	// STRINGIFY
 

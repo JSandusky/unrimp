@@ -97,10 +97,8 @@ namespace OpenGLES2Renderer
 		*
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
-		*
 		*  @param[in] useExternalContext
-		*    When true the renderer doesn't create an own opengles context for rendering
-
+		*    When true the renderer doesn't create an own OpenGL ES context for rendering
 		*
 		*  @note
 		*    - Do never ever use a not properly initialized renderer! Use "Renderer::IRenderer::isInitialized()" to check the initialization state.

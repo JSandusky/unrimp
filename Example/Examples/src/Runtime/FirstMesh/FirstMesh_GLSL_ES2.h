@@ -101,7 +101,7 @@ in  mediump vec2 TexCoordVs;	// Texture coordinate
 in  mediump vec3 TangentVs;		// Tangent space to view space, x-axis
 in  mediump vec3 BinormalVs;	// Tangent space to view space, y-axis
 in  mediump vec3 NormalVs;		// Tangent space to view space, z-axis
-out highp vec4 fragmentColor;	// Output variable for fragment color
+out highp vec4 FragmentColor;	// Output variable for fragment color
 
 // Uniforms
 uniform mediump sampler2D DiffuseMap;
@@ -137,10 +137,10 @@ void main()
 	// Calculate the fragment color
 	mediump vec4 color = diffuseLight * texture2D(DiffuseMap, TexCoordVs);	// Diffuse term
 	color.rgb += specularLight * texture2D(SpecularMap, TexCoordVs).rgb;	// Specular term
-	color.rgb += texture(EmissiveMap, TexCoordVs).rgb;					// Emissive term
+	color.rgb += texture(EmissiveMap, TexCoordVs).rgb;						// Emissive term
 
 	// Done
-	fragmentColor = min(color, vec4(1.0, 1.0, 1.0, 1.0));
+	FragmentColor = min(color, vec4(1.0, 1.0, 1.0, 1.0));
 }
 );	// STRINGIFY
 

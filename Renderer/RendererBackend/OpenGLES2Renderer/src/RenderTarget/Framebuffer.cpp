@@ -150,10 +150,11 @@ namespace OpenGLES2Renderer
 		{
 			mDepthStencilTexture->addReference();
 
+			// TODO(co) We should only support depth-stencil render target textures, no usage of renderbuffer. See OpenGL renderer backend.
 			glBindRenderbuffer(GL_RENDERBUFFER, mDepthRenderbuffer);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, mWidth, mHeight);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, static_cast<GLsizei>(mWidth), static_cast<GLsizei>(mHeight));
 
-			// attach a renderbuffer to depth attachment point
+			// Attach a renderbuffer to depth attachment point
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthRenderbuffer);
 		}
 

@@ -58,15 +58,16 @@ void main()
 fragmentShaderSourceCode =
 "#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
-precision highp float; // Default precision to high for floating points
+precision highp float;			// Default precision to high for floating points
 
-out highp vec4 fragmentColor;	// Output variable for fragment color
+// Attribute input/output
+out highp vec4 FragmentColor;	// Output variable for fragment color
 
 // Programs
 void main()
 {
 	// Return white
-	fragmentColor = vec4(1.0, 1.0, 1.0, 1.0);
+	FragmentColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 );	// STRINGIFY
 

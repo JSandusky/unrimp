@@ -60,13 +60,14 @@ fragmentShaderSourceCode =
 STRINGIFY(
 precision highp float;
 
-out highp vec4 fragmentColor;	// Output variable for fragment color
+// Attribute input/output
+out highp vec4 FragmentColor;	// Output variable for fragment color
 
 // Programs
 void main()
 {
 	// Return white
-	fragmentColor = vec4(1.0, 1.0, 1.0, 1.0);
+	FragmentColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 );	// STRINGIFY
 

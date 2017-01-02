@@ -64,15 +64,14 @@ fragmentShaderSourceCode =
 "#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-in mediump vec3 ColorVS;	// RGB color as input
-
-out highp vec4 fragmentColor;	// Output variable for fragment color
+in mediump vec3 ColorVS;		// RGB color as input
+out highp vec4 FragmentColor;	// Output variable for fragment color
 
 // Programs
 void main()
 {
 	// Return white
-	fragmentColor = vec4(ColorVS, 1.0);
+	FragmentColor = vec4(ColorVS, 1.0);
 }
 );	// STRINGIFY
 

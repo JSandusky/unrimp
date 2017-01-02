@@ -59,7 +59,7 @@ MAIN_BEGIN
 	@property(HLSL)
 		float glyphMapValue = SAMPLE_2D(GlyphMap, GlyphSampler, MAIN_INPUT(TexCoordVS).xy).a;
 	@end
-	@property(GLSL)
+	@property(GLSL || GLSLES)
 		float glyphMapValue = SAMPLE_2D(GlyphMap, GlyphSampler, MAIN_INPUT(TexCoordVS).xy).r;
 	@end
 	float4 sourceColor = MAIN_INPUT(ColorVS) * glyphMapValue;

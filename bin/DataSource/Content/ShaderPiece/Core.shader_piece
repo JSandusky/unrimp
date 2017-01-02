@@ -196,7 +196,7 @@
 		// Fragment shader only
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
-		
+
 		// Primitive HLSL datatypes
 		#define float2 vec2
 		#define float3 vec3
@@ -306,7 +306,7 @@
 		// Fragment shader only
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
-		
+
 		// Primitive HLSL datatypes
 		#define float2 vec2
 		#define float3 vec3
