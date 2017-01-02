@@ -192,6 +192,7 @@ void MOJOSHADER_print_debug_token(const char *subsystem, const char *token,
 		TOKENCASE(TOKEN_PP_ENDIF);
 		TOKENCASE(TOKEN_PP_ERROR);
 		TOKENCASE(TOKEN_PP_PRAGMA);
+		TOKENCASE(TOKEN_PP_EXTENSION);
 		TOKENCASE(TOKEN_INCOMPLETE_COMMENT);
 		TOKENCASE(TOKEN_BAD_CHARS);
 		TOKENCASE(TOKEN_EOI);
@@ -2021,7 +2022,6 @@ static void unterminated_pp_condition(Context *ctx)
 	put_conditional(ctx, cond);
 } // unterminated_pp_condition
 
-
 static MOJO_INLINE const char *_preprocessor_nexttoken(Preprocessor *_ctx,
 											 unsigned int *_len, Token *_token)
 {
@@ -2048,7 +2048,17 @@ static MOJO_INLINE const char *_preprocessor_nexttoken(Preprocessor *_ctx,
 		const Conditional *cond = state->conditional_stack;
 		const int skipping = ((cond != NULL) && (cond->skipping));
 
+        #if !MATCH_MICROSOFT_PREPROCESSOR
+        state->report_whitespace = 0;
+        state->report_comments = 0;
+        #endif
+
 		const Token token = lexer(state);
+
+        #if !MATCH_MICROSOFT_PREPROCESSOR
+        state->report_whitespace = 0;
+        state->report_comments = 0;
+        #endif
 
 		if (token != TOKEN_IDENTIFIER)
 			ctx->recursion_count = 0;
@@ -2143,6 +2153,16 @@ static MOJO_INLINE const char *_preprocessor_nexttoken(Preprocessor *_ctx,
 		} // else if
 
 		else if (token == TOKEN_PP_PRAGMA)
+		{
+			ctx->parsing_pragma = 1;
+		} // else if
+
+		else if (token == TOKEN_PP_EXTENSION)
+		{
+			ctx->parsing_pragma = 1;
+		} // else if
+
+		else if (token == TOKEN_PP_VERSION)
 		{
 			ctx->parsing_pragma = 1;
 		} // else if
