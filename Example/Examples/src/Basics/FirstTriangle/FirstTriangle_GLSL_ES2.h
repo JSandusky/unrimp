@@ -37,10 +37,10 @@ if (0 == strcmp(renderer->getName(), "OpenGLES2"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-attribute highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+in highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
 
 // Programs
 void main()
@@ -56,13 +56,17 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
+precision highp float;
+
+out highp vec4 fragmentColor;	// Output variable for fragment color
+
 // Programs
 void main()
 {
 	// Return white
-	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+	fragmentColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 );	// STRINGIFY
 

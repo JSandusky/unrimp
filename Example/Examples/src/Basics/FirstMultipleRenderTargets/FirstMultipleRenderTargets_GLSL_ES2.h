@@ -37,11 +37,11 @@ if (0 == strcmp(renderer->getName(), "OpenGLES2"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-attribute highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
-varying   highp vec2 TexCoord;	// Normalized texture coordinate as output
+in  highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+out highp vec2 TexCoord;	// Normalized texture coordinate as output
 
 // Programs
 void main()
@@ -63,16 +63,20 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode_MultipleRenderTargets =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
+precision highp float; // Default precision to high for floating points
+
 // Attribute input/output
-varying mediump vec2 TexCoord;	// Normalized texture coordinate as input
+in mediump vec2 TexCoord;	// Normalized texture coordinate as input
+
+out highp vec4 fragmentColor[2]; // Output variable for fragment color
 
 // Programs
 void main()
 {
-	gl_FragData[0] = vec4(1.0f, 0.0f, 0.0f, 0.0f);	// Red
-	gl_FragData[1] = vec4(0.0f, 0.0f, 1.0f, 0.0f);	// Blue
+	fragmentColor[0] = vec4(1.0f, 0.0f, 0.0f, 0.0f);	// Red
+	fragmentColor[1] = vec4(0.0f, 0.0f, 1.0f, 0.0f);	// Blue
 }
 );	// STRINGIFY
 
@@ -82,14 +86,18 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
+precision highp float; // Default precision to high for floating points
+
 // Attribute input/output
-varying mediump vec2 TexCoord;	// Normalized texture coordinate as input
+in mediump vec2 TexCoord;	// Normalized texture coordinate as input
 
 // Uniforms
 uniform mediump sampler2D DiffuseMap0;
 uniform mediump sampler2D DiffuseMap1;
+
+out highp vec4 fragmentColor;	// Output variable for fragment color
 
 // Programs
 void main()
@@ -102,7 +110,7 @@ void main()
 
 	// Calculate the final color by subtracting the colors of the both render targets from white
 	// -> The result should be white or green
-	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) - color0 - color1;
+	fragmentColor = vec4(1.0, 1.0, 1.0, 1.0) - color0 - color1;
 }
 );	// STRINGIFY
 

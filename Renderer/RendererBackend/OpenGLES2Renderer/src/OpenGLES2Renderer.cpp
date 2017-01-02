@@ -63,9 +63,14 @@
 #else
 	#define OPENGLES2RENDERER_API_EXPORT
 #endif
+OPENGLES2RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES2RendererInstance2(handle nativeWindowHandle, bool useExternalContext)
+{
+	return new OpenGLES2Renderer::OpenGLES2Renderer(nativeWindowHandle, useExternalContext);
+}
+
 OPENGLES2RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES2RendererInstance(handle nativeWindowHandle)
 {
-	return new OpenGLES2Renderer::OpenGLES2Renderer(nativeWindowHandle);
+	return new OpenGLES2Renderer::OpenGLES2Renderer(nativeWindowHandle, false);
 }
 #undef OPENGLES2RENDERER_API_EXPORT
 
@@ -267,8 +272,8 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	OpenGLES2Renderer::OpenGLES2Renderer(handle nativeWindowHandle) :
-		mContext(new ContextRuntimeLinking(nativeWindowHandle)),
+	OpenGLES2Renderer::OpenGLES2Renderer(handle nativeWindowHandle, bool useExternalContext) :
+		mContext(new ContextRuntimeLinking(nativeWindowHandle, useExternalContext)),
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
@@ -1013,7 +1018,7 @@ namespace OpenGLES2Renderer
 	bool OpenGLES2Renderer::isInitialized() const
 	{
 		// Is the context initialized?
-		return (EGL_NO_CONTEXT != mContext->getEGLContext());
+		return  mContext->isInitialized();
 	}
 
 	bool OpenGLES2Renderer::isDebugEnabled()
@@ -1596,11 +1601,22 @@ namespace OpenGLES2Renderer
 			mCapabilities.maximumNumberOf2DTextureArraySlices = 0;
 		}
 
-		// Maximum uniform buffer (UBO) size in bytes (usually at least 4096 * 16 bytes, in case there's no support for uniform buffer it's 0)
-		mCapabilities.maximumUniformBufferSize = 0;
+		// Maximum uniform buffer (UBO) size in bytes (usually at least 16384 bytes, in case there's no support for uniform buffer it's 0)
+		openGLValue = 0;
+		glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &openGLValue);
+		mCapabilities.maximumUniformBufferSize = static_cast<uint32_t>(openGLValue);
 
 		// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
-		mCapabilities.maximumTextureBufferSize = 0;
+		if (mContext->getExtensions().isGL_EXT_texture_buffer())
+		{
+			openGLValue = 0;
+			glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE_EXT, &openGLValue);
+			mCapabilities.maximumTextureBufferSize = static_cast<uint32_t>(openGLValue);
+		}
+		else
+		{
+			mCapabilities.maximumTextureBufferSize = 0;
+		}
 
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 		mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?

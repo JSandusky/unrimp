@@ -39,7 +39,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const char *ShaderLanguageGlsl::NAME = "GLSL";
+	const char *ShaderLanguageGlsl::NAME = "GLSLES";
 
 
 	//[-------------------------------------------------------]

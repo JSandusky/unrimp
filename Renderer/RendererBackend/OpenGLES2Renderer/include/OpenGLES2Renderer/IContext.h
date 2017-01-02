@@ -170,6 +170,12 @@ namespace OpenGLES2Renderer
 
 		/**
 		*  @brief
+		*    returns if the context is properly initialized
+		*/
+		bool isInitialized() const;
+
+		/**
+		*  @brief
 		*    Return the available extensions
 		*
 		*  @return
@@ -189,7 +195,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] nativeWindowHandle
 		*    Handle of a native OS window which is valid as long as the renderer instance exists, "NULL_HANDLE" if there's no such window
 		*/
-		explicit IContext(handle nativeWindowHandle);
+		explicit IContext(handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
@@ -255,6 +261,7 @@ namespace OpenGLES2Renderer
 		EGLContext			mContext;
 		EGLNativeWindowType	mDummyNativeWindow;	///< Native dummy window handle, can be identical to "mNativeWindowHandle" if it's in fact no dummy at all, can be "NULL_HANDLE"
 		EGLSurface			mDummySurface;
+		bool                mUseExternalContext;
 
 
 	};

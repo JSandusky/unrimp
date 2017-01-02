@@ -220,3 +220,113 @@
 		#define rcp(x) (1.0f / x)
 	@end
 @end
+
+@property(GLSLES)
+	// We're using HLSL syntax inside our shaders. Hence we have to map GLSL to HLSL in here. See e.g.
+	// - http://dench.flatlib.jp/opengl/glsl_hlsl
+	// - https://hl2glsl.codeplex.com/wikipage?title=Differences%20Between%20HLSL%20and%20GLSL
+	// - https://msdn.microsoft.com/en-us/library/windows/apps/dn166865.aspx
+	// for a shader language mapping
+	@piece(SetCrossPlatformSettings)
+		#version 310 es	// OpenGL ES 3.1. We need at least opengl es 3.1 support due texture buffer handling
+
+		#extension GL_EXT_texture_buffer : enable
+		precision highp float;
+
+		// Shader attribute input// Shader attribute input
+		#define INPUT_BEGIN
+			#define INPUT_VERTEX_DRAW_ID uniform highp uvec2 drawId;	// TODO(co) We're using OpenGL only for Mac OS X 10.11 which hasn't support for e.g. "glDrawElementsInstancedBaseVertexBaseInstance()", so we have to hack around. Mac OS X 10.11 also has no "glTexBufferRange()". On decent platforms this should be: #define INPUT_VERTEX_DRAW_ID in uint drawId; TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.0
+			#define INPUT_VERTEX_POSITION(type, name) in highp type name;
+			#define INPUT_VERTEX_COLOR(type, name) in highp type name;
+			#define INPUT_VERTEX_NORMAL(type, name) in highp type name;
+			#define INPUT_VERTEX_TANGENT(type, name) in highp type name;
+			#define INPUT_TEXTURE_COORDINATE(type, name, index) in highp type name;
+			#define INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(type, name, index) flat in highp type name;
+			#define INPUT_VERTEX_BLEND_INDICES(type, name) in highp type name;
+			#define INPUT_VERTEX_BLEND_WEIGHTS(type, name) in highp type name;
+		#define INPUT_END
+
+		// Shader attribute output
+		#define OUTPUT_BEGIN
+			#define OUTPUT_POSITION // gl_Position is still defined in opengl es 300 glsl
+			#define OUTPUT_COLOR(index) layout(location = ##index) out highp vec4 OutputColor##index;
+			#define OUTPUT_TEXTURE_COORDINATE(type, name, index) out highp type name;
+			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(type, name, index) flat out highp type name;
+		#define OUTPUT_END
+
+		// Main
+		#define MAIN_BEGIN void main() {
+		#define MAIN_BEGIN_NO_OUTPUT void main() {
+			#define MAIN_INPUT(name) name
+			#define MAIN_INPUT_DRAW_ID (drawId.x + gl_InstanceID)
+			#define MAIN_OUTPUT(name) name
+			#define MAIN_OUTPUT_POSITION gl_Position
+			#define MAIN_OUTPUT_COLOR(index) OutputColor##index
+			#define MAIN_RETURN
+		#define MAIN_END }
+		#define MAIN_END_NO_OUTPUT }
+
+		// Math
+		#define LERP(a, b, t) mix(a, b, t)
+		#define SATURATE(a) clamp(a, 0.0, 1.0f)
+		#define ROW_MATRIX_3x3(r0, r1, r2) transpose(mat3(r0, r1, r2))
+		#define ROW_MATRIX_4x4(r0, r1, r2, r3) transpose(mat4(r0, r1, r2, r3))
+		#define MATRIX_MUL(m, v) (m * v)
+		#define CAST_TO(a, b) b(a)
+		#define DDX(x) dFdx(x)
+		#define DDY(x) dFdy(x)
+
+		// Uniform buffer
+		#define UNIFORM_BUFFER_BEGIN(name, index) uniform
+		#define UNIFORM_BUFFER_END
+
+		// Texture buffer
+		#define TEXTURE_BUFFER(type, name, index) uniform highp samplerBuffer name;
+		#define TEXEL_FETCH(name, index) texelFetch(name, int(index + drawId.y / 16))	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
+
+		// Texture
+		#define TEXTURE_1D(name, index) uniform highp sampler1D name;
+		#define TEXTURE_2D(name, index) uniform highp sampler2D name;
+		#define TEXTURE_3D(name, index) uniform highp sampler3D name;
+		#define TEXTURE_CUBE(name, index) uniform highp samplerCube name;
+		#define GET_TEXTURE_SIZE(tex) textureSize(tex, 0)
+
+		// Sampler
+		#define SAMPLER_STATE(name, index) int name = index;	// We need something to pass into functions
+		#define SAMPLER_COMPARISON_STATE(name, index)
+		#define SAMPLE_1D(tex, sam, coord) texture(tex, coord)
+		#define SAMPLE_1D_LOD(tex, sam, coord) textureLod(tex, coord.x, coord.w)
+		#define SAMPLE_2D(tex, sam, coord) texture(tex, coord)
+		#define SAMPLE_2D_LOD(tex, sam, coord) textureLod(tex, coord.xy, coord.w)
+		#define SAMPLE_2D_CMP_LEVEL_ZERO(tex, sam, coord) vec4(coord.w <= textureLod(tex, coord.xy, 0.0f).r, 0.0f, 0.0f, 0.0f)
+		#define SAMPLE_3D_LOD(tex, sam, coord) textureLod(tex, coord.xyz, coord.w)
+		#define SAMPLE_CUBE(tex, sam, coord) texture(tex, coord)
+		#define SAMPLE_CUBE_LOD(tex, sam, coord) textureLod(tex, coord.xyz, coord.w)
+
+		// Fragment shader only
+		#define DECLARE_IS_FRONT_FACE
+		#define IS_FRONT_FACE gl_FrontFacing
+		
+		// Primitive HLSL datatypes
+		#define float2 vec2
+		#define float3 vec3
+		#define float4 vec4
+		#define float4x4 mat4
+		#define float3x4 mat3x4
+		#define float3x3 mat3
+		#define float3x2 mat3x2
+		#define float2x3 mat2x3
+		#define float2x2 mat2x2
+		#define int2 ivec2
+		#define int3 ivec3
+		#define int4 ivec4
+		#define uint2 uvec2
+		#define uint3 uvec3
+		#define uint4 uvec4
+
+		// HLSL math functions
+		#define rsqrt(x) inversesqrt(x)
+		#define frac(x) fract(x)
+		#define rcp(x) (1.0f / x)
+	@end
+@end

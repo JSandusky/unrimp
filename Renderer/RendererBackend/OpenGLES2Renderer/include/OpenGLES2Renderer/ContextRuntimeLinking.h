@@ -84,8 +84,10 @@ namespace OpenGLES2Renderer
 		*
 		*  @param[in] nativeWindowHandle
 		*    Handle of a native OS window which is valid as long as the renderer instance exists, "NULL_HANDLE" if there's no such window
+		*  @param[in] useExternalContext
+		*    When true an own OpenGL ES context won't be created
 		*/
-		explicit ContextRuntimeLinking(handle nativeWindowHandle);
+		explicit ContextRuntimeLinking(handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief

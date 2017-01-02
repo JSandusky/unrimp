@@ -44,8 +44,8 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ContextRuntimeLinking::ContextRuntimeLinking(handle nativeWindowHandle) :
-		IContext(nativeWindowHandle),
+	ContextRuntimeLinking::ContextRuntimeLinking(handle nativeWindowHandle, bool useExternalContext) :
+		IContext(nativeWindowHandle, useExternalContext),
 		mEGLSharedLibrary(nullptr),
 		mGLESSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
