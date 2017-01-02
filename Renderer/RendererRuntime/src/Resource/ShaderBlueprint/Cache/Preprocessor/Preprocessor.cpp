@@ -70,6 +70,13 @@ namespace RendererRuntime
 				static const size_t numberOfCharacters = strlen("# version 410 core\n");
 				result.replace(pos, numberOfCharacters, "#version  410 core\n");	// Performance: Don't change the length of the string
 			}
+
+			pos = result.find("# version 300 es");
+			if (pos != std::string::npos)
+			{
+				static const size_t numberOfCharacters = strlen("# version 300 es\n");
+				result.replace(pos, numberOfCharacters, "#version 300 es\n");	// Performance: Don't change the length of the string
+			}
 		}
 		{ // TODO(co) The MojoShader spaces make it really nasty, e.g. "sampleOffsets[15]" will become "sampleOffsets [ 15 ]" breaking GLSL shaders
 			while (true)
