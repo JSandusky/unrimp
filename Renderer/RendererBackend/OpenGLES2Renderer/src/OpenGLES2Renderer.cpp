@@ -63,9 +63,14 @@
 #else
 	#define OPENGLES2RENDERER_API_EXPORT
 #endif
+OPENGLES2RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES2RendererInstance2(handle nativeWindowHandle, bool useExternalContext)
+{
+	return new OpenGLES2Renderer::OpenGLES2Renderer(nativeWindowHandle, useExternalContext);
+}
+
 OPENGLES2RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES2RendererInstance(handle nativeWindowHandle)
 {
-	return new OpenGLES2Renderer::OpenGLES2Renderer(nativeWindowHandle);
+	return new OpenGLES2Renderer::OpenGLES2Renderer(nativeWindowHandle, false);
 }
 #undef OPENGLES2RENDERER_API_EXPORT
 
@@ -267,8 +272,8 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	OpenGLES2Renderer::OpenGLES2Renderer(handle nativeWindowHandle) :
-		mContext(new ContextRuntimeLinking(nativeWindowHandle)),
+	OpenGLES2Renderer::OpenGLES2Renderer(handle nativeWindowHandle, bool useExternalContext) :
+		mContext(new ContextRuntimeLinking(nativeWindowHandle, useExternalContext)),
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
@@ -1013,7 +1018,7 @@ namespace OpenGLES2Renderer
 	bool OpenGLES2Renderer::isInitialized() const
 	{
 		// Is the context initialized?
-		return (EGL_NO_CONTEXT != mContext->getEGLContext());
+		return  mContext->isInitialized();
 	}
 
 	bool OpenGLES2Renderer::isDebugEnabled()

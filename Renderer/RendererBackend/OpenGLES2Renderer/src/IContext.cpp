@@ -64,6 +64,9 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	bool IContext::initialize(uint32_t multisampleAntialiasingSamples)
 	{
+		if(mUseExternalContext)
+			return true;
+
 		// Get display
 		#if (defined(LINUX) && !defined(ANDROID))
 			mDisplay = eglGetDisplay(static_cast<EGLNativeDisplayType>(mX11Display));
@@ -174,11 +177,16 @@ namespace OpenGLES2Renderer
 		return false;
 	}
 
+	bool IContext::isInitialized() const
+	{
+		return ( mUseExternalContext || EGL_NO_CONTEXT != getEGLContext());
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	IContext::IContext(handle nativeWindowHandle) :
+	IContext::IContext(handle nativeWindowHandle, bool useExternalContext) :
 		mNativeWindowHandle(nativeWindowHandle),
 		#if (defined(LINUX) && !defined(ANDROID))
 			mX11Display(XOpenDisplay(nullptr)),
@@ -187,7 +195,8 @@ namespace OpenGLES2Renderer
 		mConfig(nullptr),
 		mContext(EGL_NO_CONTEXT),
 		mDummyNativeWindow(NULL_HANDLE),
-		mDummySurface(EGL_NO_SURFACE)
+		mDummySurface(EGL_NO_SURFACE),
+		mUseExternalContext(useExternalContext)
 	{
 		// Nothing here
 	}
@@ -201,7 +210,8 @@ namespace OpenGLES2Renderer
 		mConfig(nullptr),
 		mContext(EGL_NO_CONTEXT),
 		mDummyNativeWindow(NULL_HANDLE),
-		mDummySurface(EGL_NO_SURFACE)
+		mDummySurface(EGL_NO_SURFACE),
+		mUseExternalContext(false)
 	{
 		// No implementation because the copy constructor is never used
 	}
