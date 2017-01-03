@@ -109,9 +109,14 @@ namespace OpenGLRenderer
 		mUseExternalContext(useExternalContext),
 		mOwnsRenderContext(true)
 	{
-		// Get X server display connection
-		if (!mUseExternalContext)
+		if (mUseExternalContext)
 		{
+			// We use an external context -> load the opengl3 entry points
+			loadOpenGL3EntryPoints();
+		}
+		else
+		{
+			// Get X server display connection
 			mDisplay = XOpenDisplay(nullptr);
 		}
 		if (nullptr != mDisplay)
