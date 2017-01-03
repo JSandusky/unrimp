@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
@@ -713,6 +714,12 @@ namespace RendererRuntime
 				if (nullptr != meshSceneItem)
 				{
 					meshSceneItem->setMeshResourceId(meshResourceId);
+				}
+
+				// Attach a point light to controllers, this way they can be seen easier and it's possible to illuminate the scene by using the hands
+				if (mVrSystem->GetTrackedDeviceClass(trackedDeviceIndex) == vr::TrackedDeviceClass_Controller)
+				{
+					static_cast<LightSceneItem*>(mSceneResource->createSceneItem(LightSceneItem::TYPE_ID, *sceneNode));
 				}
 			}
 		}

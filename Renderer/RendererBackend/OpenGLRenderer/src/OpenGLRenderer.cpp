@@ -117,13 +117,13 @@ namespace OpenGLRenderer
 				void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
 				{
 					const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
-					realData->uniformBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+					realData->uniformBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
 				}
 
 				void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
 				{
 					const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
-					realData->textureBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+					realData->textureBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
 				}
 
 				//[-------------------------------------------------------]
@@ -1011,6 +1011,8 @@ namespace OpenGLRenderer
 						// Define the OpenGL buffers to draw into, "GL_ARB_draw_buffers"-extension required
 						if (mExtensions->isGL_ARB_draw_buffers())
 						{
+							// https://www.opengl.org/registry/specs/ARB/draw_buffers.txt - "The draw buffer for output colors beyond <n> is set to NONE."
+							// -> Meaning depth only rendering which has no color textures at all will work as well, no need for "glDrawBuffer(GL_NONE)"
 							static const GLenum OPENGL_DRAW_BUFFER[16] =
 							{
 								GL_COLOR_ATTACHMENT0,  GL_COLOR_ATTACHMENT1,  GL_COLOR_ATTACHMENT2,  GL_COLOR_ATTACHMENT3,

@@ -29,6 +29,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline MaterialBlueprintResourceListener::MaterialBlueprintResourceListener() :
+		mRendererRuntime(nullptr),
 		mPassData(nullptr),
 		mCompositorContextData(nullptr),
 		mRenderTargetWidth(1),

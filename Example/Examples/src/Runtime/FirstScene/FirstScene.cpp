@@ -297,7 +297,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 			assert(nullptr == mCameraSceneItem);
 			assert(nullptr == mLightSceneItem);
 
-			// Loop through all scene nodes and grab the first found camera and mesh
+			// Loop through all scene nodes and grab the first found camera, directional light and mesh
 			for (RendererRuntime::ISceneNode* sceneNode : mSceneResource->getSceneNodes())
 			{
 				// Loop through all scene items attached to the current scene node
@@ -326,10 +326,14 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 					}
 					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::LightSceneItem::TYPE_ID)
 					{
-						// Grab the first found light scene item
+						// Grab the first found directional light scene item
 						if (nullptr == mLightSceneItem)
 						{
-							mLightSceneItem = static_cast<RendererRuntime::LightSceneItem*>(sceneItem);
+							RendererRuntime::LightSceneItem* lightSceneItem = static_cast<RendererRuntime::LightSceneItem*>(sceneItem);
+							if (lightSceneItem->getLightType() == RendererRuntime::LightSceneItem::LightType::DIRECTIONAL)
+							{
+								mLightSceneItem = lightSceneItem;
+							}
 						}
 					}
 				}

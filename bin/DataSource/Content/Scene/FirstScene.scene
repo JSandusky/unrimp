@@ -27,6 +27,8 @@
 				{
 					"LightSceneItem":
 					{
+						"LightType": "DIRECTIONAL",
+						"Radius": "0.0"
 					}
 				}
 			},
@@ -70,6 +72,86 @@
 					"MeshSceneItem":
 					{
 						"MeshAssetId": "21"
+					}
+				}
+			},
+			"5":
+			{
+				"Properties":
+				{
+					"Position": "-2.56804585 1.92319942 1.58084095"
+				},
+				"Items":
+				{
+					"LightSceneItem":
+					{
+						"LightType": "POINT",
+						"Color": "1.0 0.0 0.0",
+						"Radius": "2.0"
+					}
+				}
+			},
+			"6":
+			{
+				"Properties":
+				{
+					"Position": "1.20822608 2.13819814 3.82538891"
+				},
+				"Items":
+				{
+					"LightSceneItem":
+					{
+						"LightType": "POINT",
+						"Color": "0.0 1.0 0.0",
+						"Radius": "1.0"
+					}
+				}
+			},
+			"7":
+			{
+				"Properties":
+				{
+					"Position": "-1.91534328 2.73809576 -5.37067556"
+				},
+				"Items":
+				{
+					"LightSceneItem":
+					{
+						"LightType": "POINT",
+						"Color": "0.0 0.0 1.0",
+						"Radius": "3.0"
+					}
+				}
+			},
+			"8":
+			{
+				"Properties":
+				{
+					"Position": "0.448334336 2.81350160 -5.06476307"
+				},
+				"Items":
+				{
+					"LightSceneItem":
+					{
+						"LightType": "POINT",
+						"Color": "0.0 1.0 1.0",
+						"Radius": "2.5"
+					}
+				}
+			},
+			"9":
+			{
+				"Properties":
+				{
+					"Position": "12.5456219 0.492846817 -5.29046202"
+				},
+				"Items":
+				{
+					"LightSceneItem":
+					{
+						"LightType": "POINT",
+						"Color": "1.0 0.0 1.0",
+						"Radius": "2.5"
 					}
 				}
 			}

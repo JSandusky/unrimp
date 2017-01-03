@@ -108,6 +108,11 @@ namespace RendererRuntime
 		return mInstanceTextureBuffer;
 	}
 
+	inline const MaterialBlueprintResource::TextureBuffer* MaterialBlueprintResource::getLightTextureBuffer() const
+	{
+		return mLightTextureBuffer;
+	}
+
 	inline PassBufferManager* MaterialBlueprintResource::getPassBufferManager() const
 	{
 		return mPassBufferManager;

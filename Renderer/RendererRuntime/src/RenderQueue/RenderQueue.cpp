@@ -28,6 +28,7 @@
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -158,6 +159,7 @@ namespace RendererRuntime
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 		MaterialBlueprintResource* currentlyBoundMaterialBlueprintResource = nullptr;
 		InstanceBufferManager& instanceBufferManager = materialBlueprintResourceManager.getInstanceBufferManager();
+		LightBufferManager& lightBufferManager = materialBlueprintResourceManager.getLightBufferManager();
 
 		// Process all render queues
 		// -> When adding renderables from renderable manager we could build up a minimum/maximum used render queue index to sometimes reduce
@@ -277,9 +279,10 @@ namespace RendererRuntime
 												}
 											}
 
-											// Bind the material blueprint resource and instance buffer manager to the used renderer
+											// Bind the material blueprint resource and instance and light buffer manager to the used renderer
 											materialBlueprintResource->fillCommandBuffer(commandBuffer);
 											instanceBufferManager.fillCommandBuffer(*materialBlueprintResource, commandBuffer);
+											lightBufferManager.fillCommandBuffer(*materialBlueprintResource, commandBuffer);
 										}
 
 										// Cheap state change: Bind the material technique to the used renderer

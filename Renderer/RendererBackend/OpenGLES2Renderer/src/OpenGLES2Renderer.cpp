@@ -795,7 +795,10 @@ namespace OpenGLES2Renderer
 						// Define the OpenGL buffers to draw into, "GL_NV_draw_buffers"-extension required
 						if (mContext->getExtensions().isGL_NV_draw_buffers())
 						{
-							// "GL_COLOR_ATTACHMENT0" and "GL_COLOR_ATTACHMENT0_NV" have the same value
+							// https://www.opengl.org/registry/specs/ARB/draw_buffers.txt - "The draw buffer for output colors beyond <n> is set to NONE."
+							// -> Meaning depth only rendering which has no color textures at all will work as well, no need for "glDrawBuffer(GL_NONE)"
+							// -> https://www.khronos.org/opengles/sdk/docs/man3/html/glDrawBuffers.xhtml for OpenGL ES 3 specifies the same behaviour
+							// -> "GL_COLOR_ATTACHMENT0" and "GL_COLOR_ATTACHMENT0_NV" have the same value
 							static const GLenum OPENGL_DRAW_BUFFER[16] =
 							{
 								GL_COLOR_ATTACHMENT0_NV,  GL_COLOR_ATTACHMENT1_NV,  GL_COLOR_ATTACHMENT2_NV,  GL_COLOR_ATTACHMENT3_NV,

@@ -103,13 +103,13 @@ namespace VulkanRenderer
 				void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
 				{
 					const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
-					realData->uniformBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+					realData->uniformBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
 				}
 
 				void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
 				{
 					const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
-					realData->textureBuffer->copyDataFrom(realData->size, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+					realData->textureBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
 				}
 
 				//[-------------------------------------------------------]

@@ -274,8 +274,7 @@
 					},
 					"ShaderVisibility": "FRAGMENT"
 				}
-			},
-			"Flags": "NONE"
+			}
 		},
 		"PipelineState":
 		{

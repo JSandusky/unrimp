@@ -73,6 +73,7 @@
     <None Include="include\RendererRuntime\Resource\Detail\IResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\LightBufferManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialBufferSlot.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassBufferManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.inl" />
@@ -214,6 +215,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceBufferManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\LightBufferManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialBufferManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialBufferSlot.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassBufferManager.h" />
@@ -377,6 +379,7 @@
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp" />
     <ClCompile Include="src\Resource\IResourceListener.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\InstanceBufferManager.cpp" />
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\LightBufferManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\MaterialBufferManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\MaterialBufferSlot.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\PassBufferManager.cpp" />

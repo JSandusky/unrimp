@@ -185,6 +185,9 @@ namespace RendererRuntime
 
 			case BufferUsage::INSTANCE:
 				return MaterialProperty::Usage::INSTANCE_REFERENCE;
+
+			case BufferUsage::LIGHT:
+				return MaterialProperty::Usage::UNKNOWN_REFERENCE;
 		}
 
 		// Error, we should never ever end up in here
@@ -354,6 +357,7 @@ namespace RendererRuntime
 		mMaterialUniformBuffer(nullptr),
 		mInstanceUniformBuffer(nullptr),
 		mInstanceTextureBuffer(nullptr),
+		mLightTextureBuffer(nullptr),
 		mPassBufferManager(nullptr),
 		mMaterialBufferManager(nullptr)
 	{
@@ -390,6 +394,7 @@ namespace RendererRuntime
 		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		TextureBuffer* mInstanceTextureBuffer;	///< Can be a null pointer, don't destroy the instance
+		TextureBuffer* mLightTextureBuffer;		///< Can be a null pointer, don't destroy the instance
 		*/
 	}
 

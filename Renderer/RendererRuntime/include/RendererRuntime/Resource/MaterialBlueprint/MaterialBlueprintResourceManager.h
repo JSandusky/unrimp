@@ -39,6 +39,7 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class IResourceListener;
+	class LightBufferManager;
 	class InstanceBufferManager;
 	class IMaterialBlueprintResourceListener;
 }
@@ -94,6 +95,7 @@ namespace RendererRuntime
 		inline const MaterialProperties& getGlobalMaterialProperties() const;
 
 		inline InstanceBufferManager& getInstanceBufferManager() const;
+		inline LightBufferManager& getLightBufferManager() const;
 
 
 	//[-------------------------------------------------------]
@@ -126,6 +128,7 @@ namespace RendererRuntime
 		IMaterialBlueprintResourceListener*	mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
 		MaterialProperties					mGlobalMaterialProperties;			///< Global material properties
 		InstanceBufferManager*				mInstanceBufferManager;				///< Instance buffer manager, always valid
+		LightBufferManager*					mLightBufferManager;				///< Light buffer manager, always valid
 
 
 	};

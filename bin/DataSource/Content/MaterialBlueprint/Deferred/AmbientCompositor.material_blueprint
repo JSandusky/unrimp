@@ -64,8 +64,9 @@
 					{
 						"0":
 						{
-							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "LightTextureBuffer"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -77,10 +78,8 @@
 					{
 						"0":
 						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "GBufferMap0",
-							"SamplerRootParameterIndex": "1"
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -94,8 +93,8 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "GBufferMap1",
-							"SamplerRootParameterIndex": "1"
+							"BaseShaderRegisterName": "GBufferMap0",
+							"SamplerRootParameterIndex": "2"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -109,8 +108,8 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "GBufferMap2",
-							"SamplerRootParameterIndex": "1"
+							"BaseShaderRegisterName": "GBufferMap1",
+							"SamplerRootParameterIndex": "2"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -124,8 +123,8 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
-							"BaseShaderRegisterName": "DepthMap",
-							"SamplerRootParameterIndex": "1"
+							"BaseShaderRegisterName": "GBufferMap2",
+							"SamplerRootParameterIndex": "2"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -139,8 +138,23 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "4",
+							"BaseShaderRegisterName": "DepthMap",
+							"SamplerRootParameterIndex": "2"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"7":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "5",
 							"BaseShaderRegisterName": "ShadowMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "2"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -204,8 +218,24 @@
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@SunLightColor"
+						},
+						"NumberOfLights":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@NUMBER_OF_LIGHTS"
 						}
 					}
+				}
+			},
+			"TextureBuffers":
+			{
+				"LightTextureBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "LIGHT",
+					"ValueType": "FLOAT_4",
+					"Value": "@LIGHT"
 				}
 			},
 			"SamplerStates":
