@@ -1011,6 +1011,8 @@ namespace OpenGLRenderer
 						// Define the OpenGL buffers to draw into, "GL_ARB_draw_buffers"-extension required
 						if (mExtensions->isGL_ARB_draw_buffers())
 						{
+							// https://www.opengl.org/registry/specs/ARB/draw_buffers.txt - "The draw buffer for output colors beyond <n> is set to NONE."
+							// -> Meaning depth only rendering which has no color textures at all will work as well, no need for "glDrawBuffer(GL_NONE)"
 							static const GLenum OPENGL_DRAW_BUFFER[16] =
 							{
 								GL_COLOR_ATTACHMENT0,  GL_COLOR_ATTACHMENT1,  GL_COLOR_ATTACHMENT2,  GL_COLOR_ATTACHMENT3,
