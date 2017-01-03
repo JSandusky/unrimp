@@ -50,6 +50,53 @@ PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Functions                                             ]
+		//[-------------------------------------------------------]
+		void optionalLightTypeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererRuntime::LightSceneItem::LightType& value)
+		{
+			if (rapidJsonValue.HasMember(propertyName))
+			{
+				const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+				const char* valueAsString = rapidJsonValueValueType.GetString();
+				const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
+
+				// Define helper macros
+				#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = RendererRuntime::LightSceneItem::LightType::name;
+				#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = RendererRuntime::LightSceneItem::LightType::name;
+
+				// Evaluate value
+				IF_VALUE(DIRECTIONAL)
+				ELSE_IF_VALUE(POINT)
+				ELSE_IF_VALUE(SPOT)
+				else
+				{
+					throw std::runtime_error("Light type \"" + std::string(valueAsString) + "\" is unknown. The light type must be one of the following constants: DIRECTIONAL, POINT or SPOT");
+				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
+			}
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -180,9 +227,9 @@ namespace RendererToolkit
 							{
 								// Nothing here
 							}
-							if (RendererRuntime::LightSceneItem::TYPE_ID == typeId)
+							else if (RendererRuntime::LightSceneItem::TYPE_ID == typeId)
 							{
-								// Nothing here
+								numberOfBytes = sizeof(RendererRuntime::v1Scene::LightItem);
 							}
 							else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId)
 							{
@@ -205,7 +252,29 @@ namespace RendererToolkit
 								}
 								else if (RendererRuntime::LightSceneItem::TYPE_ID == typeId)
 								{
-									// Nothing here
+									RendererRuntime::v1Scene::LightItem lightItem;
+
+									// Read properties
+									::detail::optionalLightTypeProperty(rapidJsonValueItem, "LightType", lightItem.lightType);
+									JsonHelper::optionalFloatNProperty(rapidJsonValueItem, "Color", lightItem.color, 3);
+									JsonHelper::optionalFloatProperty(rapidJsonValueItem, "Radius", lightItem.radius);
+
+									// Sanity checks
+									if (lightItem.color[0] < 0.0f || lightItem.color[1] < 0.0f || lightItem.color[2] < 0.0f)
+									{
+										throw std::runtime_error("All light item color components must be positive");
+									}
+									if (lightItem.lightType != RendererRuntime::LightSceneItem::LightType::DIRECTIONAL && lightItem.radius <= 0.0f)
+									{
+										throw std::runtime_error("For point or spot light items the radius must be greater as zero");
+									}
+									if (lightItem.lightType == RendererRuntime::LightSceneItem::LightType::DIRECTIONAL && lightItem.radius != 0.0f)
+									{
+										throw std::runtime_error("For directional light items the radius must be zero");
+									}
+
+									// Write down
+									outputFileStream.write(reinterpret_cast<const char*>(&lightItem), sizeof(RendererRuntime::v1Scene::LightItem));
 								}
 								else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId)
 								{

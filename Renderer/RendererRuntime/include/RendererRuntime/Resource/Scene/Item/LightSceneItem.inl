@@ -26,6 +26,25 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline LightSceneItem::LightType LightSceneItem::getLightType() const
+	{
+		return mLightType;
+	}
+
+	inline const glm::vec3& LightSceneItem::getColor() const
+	{
+		return mColor;
+	}
+
+	inline float LightSceneItem::getRadius() const
+	{
+		return mRadius;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
 	inline SceneItemTypeId LightSceneItem::getSceneItemTypeId() const
@@ -38,7 +57,10 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline LightSceneItem::LightSceneItem(ISceneResource& sceneResource) :
-		ISceneItem(sceneResource)
+		ISceneItem(sceneResource),
+		mLightType(LightType::POINT),
+		mColor(1.0f, 1.0f, 1.0f),
+		mRadius(1.0f)
 	{
 		// Nothing here
 	}

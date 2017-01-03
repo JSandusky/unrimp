@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/Math/Transform.h"
+#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -88,6 +89,15 @@ namespace RendererRuntime
 
 			struct LightItem
 			{
+				LightSceneItem::LightType lightType;
+				float					  color[3];
+				float					  radius;
+
+				LightItem() :
+					lightType(LightSceneItem::LightType::POINT),
+					color{ 1.0f, 1.0f, 1.0f },
+					radius(1.0f)
+				{};
 			};
 
 			struct MeshItem

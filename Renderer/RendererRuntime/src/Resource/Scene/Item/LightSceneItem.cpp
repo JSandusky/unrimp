@@ -44,10 +44,21 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	void LightSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t*)
+	void LightSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
 		assert(sizeof(v1Scene::LightItem) == numberOfBytes);
 		std::ignore = numberOfBytes;
+
+		// Read data
+		const v1Scene::LightItem* lightItem = reinterpret_cast<const v1Scene::LightItem*>(data);
+		mLightType = lightItem->lightType;
+		memcpy(glm::value_ptr(mColor), lightItem->color, sizeof(float) * 3);
+		mRadius = lightItem->radius;
+
+		// Sanity checks
+		assert(mColor.r >= 0.0f && mColor.g >= 0.0f && mColor.b >= 0.0f);
+		assert(mLightType == LightType::DIRECTIONAL || mRadius > 0.0f);
+		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mRadius);
 	}
 
 

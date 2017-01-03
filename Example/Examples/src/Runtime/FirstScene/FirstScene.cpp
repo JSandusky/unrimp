@@ -326,10 +326,14 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 					}
 					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::LightSceneItem::TYPE_ID)
 					{
-						// Grab the first found light scene item
+						// Grab the first found directional light scene item
 						if (nullptr == mLightSceneItem)
 						{
-							mLightSceneItem = static_cast<RendererRuntime::LightSceneItem*>(sceneItem);
+							RendererRuntime::LightSceneItem* lightSceneItem = static_cast<RendererRuntime::LightSceneItem*>(sceneItem);
+							if (lightSceneItem->getLightType() == RendererRuntime::LightSceneItem::LightType::DIRECTIONAL)
+							{
+								mLightSceneItem = lightSceneItem;
+							}
 						}
 					}
 				}
