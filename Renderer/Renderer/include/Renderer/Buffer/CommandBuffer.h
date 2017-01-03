@@ -382,23 +382,23 @@ namespace Renderer
 		struct CopyUniformBufferData
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, IUniformBuffer* uniformBuffer, uint32_t size, void* data)
+			inline static void create(CommandBuffer& commandBuffer, IUniformBuffer* uniformBuffer, uint32_t numberOfBytes, void* data)
 			{
-				Command::CopyUniformBufferData* copyUniformBufferDataCommand = commandBuffer.addCommand<Command::CopyUniformBufferData>(size);
-				copyUniformBufferDataCommand->uniformBuffer = uniformBuffer;
-				copyUniformBufferDataCommand->size			= size;
+				Command::CopyUniformBufferData* copyUniformBufferDataCommand = commandBuffer.addCommand<Command::CopyUniformBufferData>(numberOfBytes);
+				copyUniformBufferDataCommand->uniformBuffer	= uniformBuffer;
+				copyUniformBufferDataCommand->numberOfBytes	= numberOfBytes;
 				copyUniformBufferDataCommand->data			= nullptr;
-				memcpy(CommandPacketHelper::getAuxiliaryMemory(copyUniformBufferDataCommand), data, size);
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(copyUniformBufferDataCommand), data, numberOfBytes);
 			}
 			// Constructor
-			inline CopyUniformBufferData(IUniformBuffer* _uniformBuffer, uint32_t _size, void* _data) :
+			inline CopyUniformBufferData(IUniformBuffer* _uniformBuffer, uint32_t _numberOfBytes, void* _data) :
 				uniformBuffer(_uniformBuffer),
-				size(_size),
+				numberOfBytes(_numberOfBytes),
 				data(_data)
 			{}
 			// Data
 			IUniformBuffer* uniformBuffer;
-			uint32_t		size;
+			uint32_t		numberOfBytes;
 			void*			data;	///< If null pointer, command auxiliary memory is used instead
 			// Static data
 			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyUniformBufferData;
@@ -407,23 +407,23 @@ namespace Renderer
 		struct CopyTextureBufferData
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, ITextureBuffer* textureBuffer, uint32_t size, void* data)
+			inline static void create(CommandBuffer& commandBuffer, ITextureBuffer* textureBuffer, uint32_t numberOfBytes, void* data)
 			{
-				Command::CopyTextureBufferData* copyTextureBufferDataCommand = commandBuffer.addCommand<Command::CopyTextureBufferData>(size);
-				copyTextureBufferDataCommand->textureBuffer = textureBuffer;
-				copyTextureBufferDataCommand->size			= size;
+				Command::CopyTextureBufferData* copyTextureBufferDataCommand = commandBuffer.addCommand<Command::CopyTextureBufferData>(numberOfBytes);
+				copyTextureBufferDataCommand->textureBuffer	= textureBuffer;
+				copyTextureBufferDataCommand->numberOfBytes = numberOfBytes;
 				copyTextureBufferDataCommand->data			= nullptr;
-				memcpy(CommandPacketHelper::getAuxiliaryMemory(copyTextureBufferDataCommand), data, size);
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(copyTextureBufferDataCommand), data, numberOfBytes);
 			}
 			// Constructor
-			inline CopyTextureBufferData(ITextureBuffer* _textureBuffer, uint32_t _size, void* _data) :
+			inline CopyTextureBufferData(ITextureBuffer* _textureBuffer, uint32_t _numberOfBytes, void* _data) :
 				textureBuffer(_textureBuffer),
-				size(_size),
+				numberOfBytes(_numberOfBytes),
 				data(_data)
 			{}
 			// Data
 			ITextureBuffer* textureBuffer;
-			uint32_t		size;
+			uint32_t		numberOfBytes;
 			void*			data;	///< If null pointer, command auxiliary memory is used instead
 			// Static data
 			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyTextureBufferData;
