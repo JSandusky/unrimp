@@ -297,7 +297,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 			assert(nullptr == mCameraSceneItem);
 			assert(nullptr == mLightSceneItem);
 
-			// Loop through all scene nodes and grab the first found camera and mesh
+			// Loop through all scene nodes and grab the first found camera, directional light and mesh
 			for (RendererRuntime::ISceneNode* sceneNode : mSceneResource->getSceneNodes())
 			{
 				// Loop through all scene items attached to the current scene node

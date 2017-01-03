@@ -97,6 +97,7 @@ set(SOURCE_CODES
 	src/Resource/Detail/ResourceStreamer.cpp
 	src/Resource/IResourceListener.cpp
 	src/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.cpp
+	src/Resource/MaterialBlueprint/BufferManager/LightBufferManager.cpp
 	src/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.cpp
 	src/Resource/MaterialBlueprint/BufferManager/MaterialBufferSlot.cpp
 	src/Resource/MaterialBlueprint/BufferManager/PassBufferManager.cpp

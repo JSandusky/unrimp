@@ -100,7 +100,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		// Pass
-		PassBufferManager::PassData* mPassData;	///< Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be a null pointer outside the correct scope, don't destroy the memory
+		IRendererRuntime*			 mRendererRuntime;	///< Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be a null pointer outside the correct scope, don't destroy the memory
+		PassBufferManager::PassData* mPassData;			///< Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be a null pointer outside the correct scope, don't destroy the memory
 		const CompositorContextData* mCompositorContextData;
 		uint32_t					 mRenderTargetWidth;
 		uint32_t					 mRenderTargetHeight;

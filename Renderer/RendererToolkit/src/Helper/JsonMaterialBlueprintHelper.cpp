@@ -77,6 +77,7 @@ namespace
 				ELSE_IF_VALUE(PASS)
 				ELSE_IF_VALUE(MATERIAL)
 				ELSE_IF_VALUE(INSTANCE)
+				ELSE_IF_VALUE(LIGHT)
 				else
 				{
 					// TODO(co) Error handling

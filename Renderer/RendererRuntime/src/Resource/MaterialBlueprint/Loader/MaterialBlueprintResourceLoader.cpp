@@ -250,6 +250,11 @@ namespace RendererRuntime
 					case MaterialBlueprintResource::BufferUsage::INSTANCE:
 						mMaterialBlueprintResource->mInstanceUniformBuffer = &uniformBuffer;
 						break;
+
+					case MaterialBlueprintResource::BufferUsage::LIGHT:
+						// Error!
+						assert(false);
+						break;
 				}
 			}
 		}
@@ -260,9 +265,21 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfTextureBuffers; ++i)
 			{
 				MaterialBlueprintResource::TextureBuffer& textureBuffer = textureBuffers[i];
-				if (MaterialBlueprintResource::BufferUsage::INSTANCE == textureBuffer.bufferUsage)
+				switch (textureBuffer.bufferUsage)
 				{
-					mMaterialBlueprintResource->mInstanceTextureBuffer = &textureBuffer;
+					case MaterialBlueprintResource::BufferUsage::UNKNOWN:
+					case MaterialBlueprintResource::BufferUsage::PASS:
+					case MaterialBlueprintResource::BufferUsage::MATERIAL:
+						// Nothing here
+						break;
+
+					case MaterialBlueprintResource::BufferUsage::INSTANCE:
+						mMaterialBlueprintResource->mInstanceTextureBuffer = &textureBuffer;
+						break;
+
+					case MaterialBlueprintResource::BufferUsage::LIGHT:
+						mMaterialBlueprintResource->mLightTextureBuffer = &textureBuffer;
+						break;
 				}
 			}
 		}

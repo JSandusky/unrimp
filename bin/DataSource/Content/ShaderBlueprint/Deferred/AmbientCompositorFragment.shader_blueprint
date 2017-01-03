@@ -43,6 +43,7 @@
 // Attribute input / output
 INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+	INPUT_VERTEX_DRAW_ID							// Draw ID
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
@@ -56,20 +57,24 @@ struct PassDataStruct
 	float3   ViewSpaceSunLightDirection;
 	float    Wetness;
 	float3   SunLightColor;
+	int		 NumberOfLights;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 
+// Texture buffers
+TEXTURE_BUFFER(float4, LightTextureBuffer, 0)	// "LIGHT"
+
 // Samplers
 SAMPLER_STATE(SamplerPoint, 0)
 
 // Textures
-TEXTURE_2D(GBufferMap0, 0)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
-TEXTURE_2D(GBufferMap1, 1)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
-TEXTURE_2D(GBufferMap2, 2)	// GBuffer 2: rgb = emissive color, a = glossiness
-TEXTURE_2D(DepthMap, 3)
-TEXTURE_2D(ShadowMap, 4)
+TEXTURE_2D(GBufferMap0, 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
+TEXTURE_2D(GBufferMap1, 2)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
+TEXTURE_2D(GBufferMap2, 3)	// GBuffer 2: rgb = emissive color, a = glossiness
+TEXTURE_2D(DepthMap, 4)
+TEXTURE_2D(ShadowMap, 5)
 
 
 //[-------------------------------------------------------]
@@ -98,21 +103,31 @@ float3 getWorldSpacePositionByScreenSpacePosition(float2 screenSpacePosition, fl
 }
 
 // TODO(co) Just a first test, need reusable shader piece for this
-@piece(CalculateLighting)
+float3 calculateLighting(float3 lightDirection, float3 lightColor, float3 normal, float3 diffuseValue, float specularValue)
+{
 	// Perform standard Blinn-Phong diffuse and specular lighting
 
 	// Calculate the diffuse lighting
-	float diffuseLightFactor = max(dot(normal, PassData.ViewSpaceSunLightDirection), 0.0f);
-	float3 diffuseLightColor = PassData.SunLightColor * diffuseLightFactor;
+	float diffuseLightFactor = max(dot(normal, lightDirection), 0.0f);
+	float3 diffuseLightColor = lightColor * diffuseLightFactor;
 
 	// Build in variables
 	float3 ViewSpaceCameraDirection = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
 
 	// Calculate the specular lighting
-	float3 viewSpaceHalfVector = normalize(PassData.ViewSpaceSunLightDirection + ViewSpaceCameraDirection);
+	float3 viewSpaceHalfVector = normalize(lightDirection + ViewSpaceCameraDirection);
 	float specularLightFactor = (diffuseLightFactor > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
-	float3 specularLightColor = PassData.Wetness * PassData.SunLightColor * specularLightFactor;
-@end
+	float3 specularLightColor = PassData.Wetness * lightColor * specularLightFactor;
+
+	// Diffuse term
+	float3 color = diffuseLightColor * diffuseValue;
+
+	// Specular term
+	color += specularLightColor * specularValue;
+
+	// Done
+	return color;
+}
 
 
 //[-------------------------------------------------------]
@@ -136,13 +151,12 @@ MAIN_BEGIN
 	float specularValue = gbuffer1Value.a;
 	float3 emissiveValue = gbuffer2Value.rgb;
 
-	// Calculate lighting
-	@insertpiece(CalculateLighting)
+	// Derive data
+	float3 worldSpacePosition = getWorldSpacePositionByScreenSpacePosition(MAIN_INPUT(TexCoordVS), depthValue);
 
 	// TODO(co) Shadow: Totally primitive to have something to start with
 	float shadowVisibility = 1.0f;
 	{
-		float3 worldSpacePosition = getWorldSpacePositionByScreenSpacePosition(MAIN_INPUT(TexCoordVS), depthValue);
 		float4 shadowTextureCoordinate = MATRIX_MUL(PassData.ShadowMatrix, float4(worldSpacePosition, 1.0f));
 		if (SAMPLE_2D_LOD(ShadowMap, SamplerPoint, float4(shadowTextureCoordinate.xy, 0.0f, 0.0f)).r < shadowTextureCoordinate.z - 0.001f)
 		{
@@ -152,12 +166,28 @@ MAIN_BEGIN
 
 	// Ambient term
 	float3 color = float3(0.2f, 0.2f, 0.2f) * diffuseValue;
-	
-	// Diffuse term
-	color += shadowVisibility * diffuseLightColor * diffuseValue;
 
-	// Specular term
-	color += shadowVisibility * specularLightColor * specularValue;
+	// Primary directional light
+	if (shadowVisibility > 0.0f)
+	{
+		color += calculateLighting(PassData.ViewSpaceSunLightDirection, PassData.SunLightColor, normal, diffuseValue, specularValue);
+	}
+
+	// Point and spot lights
+	for (int i = 0; i < PassData.NumberOfLights; ++i)
+	{
+		// Fetch the light data
+		float4 lightPositionRadius = TEXEL_FETCH(LightTextureBuffer, i * 2);
+		float4 lightColor = TEXEL_FETCH(LightTextureBuffer, i * 2 + 1);
+
+		// Check if the fragment is inside the bounding volume of the light
+		float3 direction = lightPositionRadius.xyz - worldSpacePosition;
+		float distance = sqrt(dot(direction, direction));
+		if (distance < lightPositionRadius.w)
+		{
+			color += calculateLighting(normalize(direction), lightColor.rgb, normal, diffuseValue, specularValue);
+		}
+	}
 
 	// Emissive term
 	color += emissiveValue;

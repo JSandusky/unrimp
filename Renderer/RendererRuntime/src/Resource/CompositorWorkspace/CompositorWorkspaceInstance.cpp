@@ -33,6 +33,8 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
@@ -173,10 +175,13 @@ namespace RendererRuntime
 			Renderer::IRenderer& renderer = renderTarget.getRenderer();
 			if (renderer.beginScene())
 			{
-				// Gather render queue index ranges renderable managers
 				if (nullptr != cameraSceneItem)
 				{
+					// Gather render queue index ranges renderable managers
 					gatherRenderQueueIndexRangesRenderableManagers(*cameraSceneItem);
+
+					// Fill the light buffer manager
+					mRendererRuntime.getMaterialBlueprintResourceManager().getLightBufferManager().fillBuffer(cameraSceneItem->getSceneResource(), mCommandBuffer);
 				}
 
 				// Begin debug event

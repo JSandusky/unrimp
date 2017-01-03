@@ -62,6 +62,13 @@ namespace RendererRuntime
 		return *mInstanceBufferManager;
 	}
 
+	inline LightBufferManager& MaterialBlueprintResourceManager::getLightBufferManager() const
+	{
+		// We know this pointer must always be valid
+		assert(nullptr != mLightBufferManager);
+		return *mLightBufferManager;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]

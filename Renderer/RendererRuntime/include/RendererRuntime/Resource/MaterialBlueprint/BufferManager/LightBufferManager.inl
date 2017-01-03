@@ -28,62 +28,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialBlueprintResourceListener::MaterialBlueprintResourceListener() :
-		mRendererRuntime(nullptr),
-		mPassData(nullptr),
-		mCompositorContextData(nullptr),
-		mRenderTargetWidth(1),
-		mRenderTargetHeight(1),
-		mObjectSpaceToWorldSpaceTransform(nullptr),
-		mMaterialTechnique(nullptr)
+	inline uint32_t LightBufferManager::getNumberOfLights() const
 	{
-		// Nothing here
-	}
-
-	inline MaterialBlueprintResourceListener::~MaterialBlueprintResourceListener()
-	{
-		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
-	//[-------------------------------------------------------]
-	inline void MaterialBlueprintResourceListener::beginFillUnknown()
-	{
-		// Nothing here
-	}
-
-	inline bool MaterialBlueprintResourceListener::fillUnknownValue(uint32_t, uint8_t*, uint32_t)
-	{
-		// Nothing here
-
-		// Value not filled
-		return false;
-	}
-
-	inline void MaterialBlueprintResourceListener::beginFillMaterial()
-	{
-		// Nothing here
-	}
-
-	inline bool MaterialBlueprintResourceListener::fillMaterialValue(uint32_t, uint8_t*, uint32_t)
-	{
-		// Nothing here
-
-		// Value not filled
-		return false;
-	}
-
-	inline void MaterialBlueprintResourceListener::beginFillInstance(const PassBufferManager::PassData& passData, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique)
-	{
-		// Remember the pass data memory address of the current scope
-		// TODO(co) Rethink the evil const-cast on here
-		mPassData = &const_cast<PassBufferManager::PassData&>(passData);
-
-		// Remember the instance data of the current scope
-		mObjectSpaceToWorldSpaceTransform = &objectSpaceToWorldSpaceTransform;
-		mMaterialTechnique				  = &materialTechnique;
+		return mNumberOfLights;
 	}
 
 

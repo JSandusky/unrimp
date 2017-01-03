@@ -498,6 +498,9 @@
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorContextData.inl">
       <Filter>Source Files\Resource\CompositorWorkspace</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\LightBufferManager.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -975,6 +978,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorContextData.h">
       <Filter>Source Files\Resource\CompositorWorkspace</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\LightBufferManager.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1270,6 +1276,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\LightSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\LightBufferManager.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
@@ -70,6 +72,7 @@ namespace
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_SUN_LIGHT_DIRECTION)
 			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
+			DEFINE_CONSTANT(NUMBER_OF_LIGHTS)
 			DEFINE_CONSTANT(SHADOW_MATRIX)
 			DEFINE_CONSTANT(SHADOW_CASCADE_SPLITS)
 			DEFINE_CONSTANT(SHADOW_CASCADE_OFFSETS)
@@ -101,6 +104,7 @@ namespace RendererRuntime
 	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, PassBufferManager::PassData& passData)
 	{
 		// Remember the pass data memory address of the current scope
+		mRendererRuntime = &rendererRuntime;
 		mPassData = &passData;
 		mCompositorContextData = &compositorContextData;
 
@@ -229,6 +233,11 @@ namespace RendererRuntime
 			// 1 = Inverse viewport height
 			floatBuffer[0] = 1.0f / static_cast<float>(mRenderTargetWidth);
 			floatBuffer[1] = 1.0f / static_cast<float>(mRenderTargetHeight);
+		}
+		else if (::detail::NUMBER_OF_LIGHTS == referenceValue)
+		{
+			assert(sizeof(int) == numberOfBytes);
+			*reinterpret_cast<int*>(buffer) = static_cast<int>(mRendererRuntime->getMaterialBlueprintResourceManager().getLightBufferManager().getNumberOfLights());
 		}
 		else if (::detail::SHADOW_MATRIX == referenceValue)
 		{

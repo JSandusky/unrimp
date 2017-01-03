@@ -106,7 +106,8 @@ namespace RendererRuntime
 			UNKNOWN = 0,	///< Unknown buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "UNKNOWN_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
 			PASS,			///< Pass buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "PASS_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
 			MATERIAL,		///< Material buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "MATERIAL_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
-			INSTANCE		///< Instance buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "INSTANCE_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
+			INSTANCE,		///< Instance buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "INSTANCE_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
+			LIGHT			///< Light buffer usage for texture buffer only
 		};
 
 		typedef std::vector<MaterialProperty> UniformBufferElementProperties;
@@ -353,6 +354,15 @@ namespace RendererRuntime
 		*/
 		inline const TextureBuffer* getInstanceTextureBuffer() const;
 
+		/**
+		*  @brief
+		*    Return the light texture buffer
+		*
+		*  @return
+		*    The light texture buffer, can be a null pointer, don't destroy the instance
+		*/
+		inline const TextureBuffer* getLightTextureBuffer() const;
+
 		//[-------------------------------------------------------]
 		//[ Buffer manager                                        ]
 		//[-------------------------------------------------------]
@@ -453,6 +463,7 @@ namespace RendererRuntime
 		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		TextureBuffer* mInstanceTextureBuffer;	///< Can be a null pointer, don't destroy the instance
+		TextureBuffer* mLightTextureBuffer;		///< Can be a null pointer, don't destroy the instance
 		// Buffer manager
 		PassBufferManager*	   mPassBufferManager;		///< Pass buffer manager, can be a null pointer, destroy the instance if you no longer need it
 		MaterialBufferManager* mMaterialBufferManager;	///< Material buffer manager, can be a null pointer, destroy the instance if you no longer need it

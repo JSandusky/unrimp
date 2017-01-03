@@ -27,16 +27,23 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
+#include "RendererRuntime/Core/Manager.h"
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
-	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
-	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
-	#include <glm/glm.hpp>
-PRAGMA_WARNING_POP
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class CommandBuffer;
+	class ITextureBuffer;
+}
+namespace RendererRuntime
+{
+	class ISceneResource;
+	class IRendererRuntime;
+	class MaterialBlueprintResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -49,67 +56,88 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class LightSceneItem : public ISceneItem
+	/**
+	*  @brief
+	*    Light buffer manager
+	*/
+	class LightBufferManager : private Manager
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class SceneFactory;	// Needs to be able to create scene item instances
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
-		enum class LightType
-		{
-			DIRECTIONAL = 0,
-			POINT,
-			SPOT
-		};
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline LightType getLightType() const;
-		inline void setLightType(LightType lightType);
-		inline void setLightTypeAndRadius(LightType lightType, float radius);
-		inline const glm::vec3& getColor() const;
-		inline void setColor(const glm::vec3& color);
-		inline float getRadius() const;
-		inline void setRadius(float radius);
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] rendererRuntime
+		*    Renderer runtime instance to use
+		*/
+		explicit LightBufferManager(IRendererRuntime& rendererRuntime);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		~LightBufferManager();
+
+		/**
+		*  @brief
+		*    Fill the light buffer
+		*
+		*  @param[in] sceneResource
+		*    Scene resource to use
+		*  @param[out] commandBuffer
+		*    Command buffer to fill
+		*/
+		void fillBuffer(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer);
+
+		/**
+		*  @brief
+		*    Return the current number of recorded lights inside the texture buffer
+		*
+		*  @return
+		*    The current number of recorded lights inside the texture buffer
+		*/
+		inline uint32_t getNumberOfLights() const;
+
+		/**
+		*  @brief
+		*    Bind the light buffer manager into the given commando buffer
+		*
+		*  @param[in] materialBlueprintResource
+		*    Material blueprint resource
+		*  @param[out] commandBuffer
+		*    Command buffer to fill
+		*/
+		void fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	public:
-		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
-		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
+	private:
+		LightBufferManager(const LightBufferManager&) = delete;
+		LightBufferManager& operator=(const LightBufferManager&) = delete;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
-	protected:
-		inline explicit LightSceneItem(ISceneResource& sceneResource);
-		inline virtual ~LightSceneItem();
-		LightSceneItem(const LightSceneItem&) = delete;
-		LightSceneItem& operator=(const LightSceneItem&) = delete;
+	private:
+		typedef std::vector<uint8_t> ScratchBuffer;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		LightType mLightType;
-		glm::vec3 mColor;
-		float	  mRadius;	///< Must be zero for directional lights and none zero for point and spot lights
+		IRendererRuntime&		  mRendererRuntime;	///< Renderer runtime instance to use
+		Renderer::ITextureBuffer* mTextureBuffer;	///< Texture buffer instance, always valid
+		ScratchBuffer			  mTextureScratchBuffer;
+		uint32_t				  mNumberOfLights;	///< Current number of recorded lights inside the texture buffer
 
 
 	};
@@ -124,4 +152,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.inl"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.inl"
