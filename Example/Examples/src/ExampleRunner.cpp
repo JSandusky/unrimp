@@ -87,10 +87,26 @@ ExampleRunner::ExampleRunner()
 		#endif
 	)
 {
+	// Try to ensure that there's always a default renderer backend in case it's not provided via command line arguments
+	if (m_defaultRendererName.empty())
+	{
+		#ifdef WIN32
+			#if !defined(RENDERER_ONLY_NULL) && !defined(RENDERER_ONLY_OPENGL) && !defined(RENDERER_ONLY_OPENGLES2) && !defined(RENDERER_ONLY_DIRECT3D9) && !defined(RENDERER_ONLY_DIRECT3D10) && !defined(RENDERER_ONLY_DIRECT3D12) && !defined(RENDERER_ONLY_VULKAN)
+				m_defaultRendererName = "Direct3D11";
+			#endif
+		#else
+			#if !defined(RENDERER_ONLY_NULL) && !defined(RENDERER_ONLY_OPENGLES2) && !defined(RENDERER_ONLY_DIRECT3D9) && !defined(RENDERER_ONLY_DIRECT3D10) && !defined(RENDERER_ONLY_DIRECT3D11) && !defined(RENDERER_ONLY_DIRECT3D12) && !defined(RENDERER_ONLY_VULKAN)
+				m_defaultRendererName = "OpenGL";
+			#endif
+		#endif
+	}
+
+	// Sets of supported renderer backends
 	std::array<std::string, 8> supportsAllRenderer = {{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
 	std::array<std::string, 7> doesNotSupportOpenGLES2 = {{"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
 	std::array<std::string, 6> onlyShaderModel4Plus = {{"Null", "OpenGL", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
 	std::array<std::string, 5> onlyShaderModel5Plus = {{"Null", "OpenGL", "Direct3D11", "Direct3D12", "Vulkan"}};
+
 	// Basics
 	addExample("FirstTriangle",					&RunExample<FirstTriangle>,					supportsAllRenderer);
 	addExample("FirstIndirectBuffer",			&RunExample<FirstIndirectBuffer>,			supportsAllRenderer);
@@ -102,6 +118,7 @@ ExampleRunner::ExampleRunner()
 	addExample("FirstInstancing",				&RunExample<FirstInstancing>,				doesNotSupportOpenGLES2);
 	addExample("FirstGeometryShader",			&RunExample<FirstGeometryShader>,			onlyShaderModel4Plus);
 	addExample("FirstTessellation",				&RunExample<FirstTessellation>,				onlyShaderModel5Plus);
+
 	// Advanced
 	addExample("FirstGpgpu",					&RunExample<FirstGpgpu>,					supportsAllRenderer);
 	addExample("IcosahedronTessellation",		&RunExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
