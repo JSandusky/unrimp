@@ -51,6 +51,7 @@ namespace RendererRuntime
 	inline KtxTextureResourceLoader::KtxTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		ITextureResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
+		mTexture(nullptr),
 		mWidth(0),
 		mHeight(0),
 		mTextureFormat(0),

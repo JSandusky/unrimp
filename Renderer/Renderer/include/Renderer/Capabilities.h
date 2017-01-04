@@ -62,6 +62,7 @@ namespace Renderer
 		bool	 instancedArrays;							///< Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 		bool	 drawInstanced;								///< Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID)
 		bool	 baseVertex;								///< Base vertex supported for draw calls?
+		bool	 nativeMultiThreading;						///< Does the renderer support native multi-threading? For example Direct3D 11 does meaning we can also create renderer resources asynchronous while for OpenGL we have to create an separate OpenGL context (less efficient, more complex to implement).
 		// Vertex-shader (VS) stage
 		bool	 vertexShader;								///< Is there support for vertex shaders (VS)?
 		// Tessellation-control-shader (TCS) stage and tessellation-evaluation-shader (TES) stage

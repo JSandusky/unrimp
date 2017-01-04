@@ -1639,6 +1639,9 @@ namespace Direct3D9Renderer
 		// Base vertex supported for draw calls?
 		mCapabilities.baseVertex = true;
 
+		// Direct3D 9 has no native multi-threading
+		mCapabilities.nativeMultiThreading = false;
+
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;
 

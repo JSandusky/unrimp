@@ -1521,6 +1521,7 @@ namespace Renderer
 			bool	 instancedArrays;
 			bool	 drawInstanced;
 			bool	 baseVertex;
+			bool	 nativeMultiThreading;
 			bool	 vertexShader;
 			uint32_t maximumNumberOfPatchVertices;
 			uint32_t maximumNumberOfGsOutputVertices;
@@ -1539,6 +1540,7 @@ namespace Renderer
 				instancedArrays(false),
 				drawInstanced(false),
 				baseVertex(false),
+				nativeMultiThreading(false),
 				vertexShader(false),
 				maximumNumberOfPatchVertices(0),
 				maximumNumberOfGsOutputVertices(0)
@@ -1559,6 +1561,7 @@ namespace Renderer
 				instancedArrays(false),
 				drawInstanced(false),
 				baseVertex(false),
+				nativeMultiThreading(false),
 				vertexShader(false),
 				maximumNumberOfPatchVertices(0),
 				maximumNumberOfGsOutputVertices(0)

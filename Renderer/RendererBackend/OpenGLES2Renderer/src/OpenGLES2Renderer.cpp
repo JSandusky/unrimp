@@ -1639,6 +1639,9 @@ namespace OpenGLES2Renderer
 		// Base vertex supported for draw calls?
 		mCapabilities.baseVertex = false;	// OpenGL ES 2 has no "GL_ARB_draw_elements_base_vertex" extension equivalent
 
+		// OpenGL ES 2 has no native multi-threading
+		mCapabilities.nativeMultiThreading = false;
+
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;
 

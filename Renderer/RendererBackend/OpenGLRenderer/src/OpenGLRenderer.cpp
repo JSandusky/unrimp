@@ -2234,6 +2234,9 @@ namespace OpenGLRenderer
 		// Base vertex supported for draw calls?
 		mCapabilities.baseVertex = mExtensions->isGL_ARB_draw_elements_base_vertex();
 
+		// OpenGL has no native multi-threading
+		mCapabilities.nativeMultiThreading = false;
+
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = mExtensions->isGL_ARB_vertex_shader();
 
