@@ -36,6 +36,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
+	class IVertexArray;
 	class IBufferManager;
 	struct VertexAttribute;
 }
@@ -97,6 +98,7 @@ namespace RendererRuntime
 		MeshResourceLoader(const MeshResourceLoader&) = delete;
 		MeshResourceLoader& operator=(const MeshResourceLoader&) = delete;
 		inline void initialize(const Asset& asset, MeshResource& meshResource);
+		Renderer::IVertexArray* createVertexArray() const;
 
 
 	//[-------------------------------------------------------]
@@ -105,6 +107,7 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime&		  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		Renderer::IBufferManager& mBufferManager;	///< Buffer manager instance, do not destroy the instance
+		Renderer::IVertexArray*	  mVertexArray;		///< In case the used renderer backend supports native multi-threading we also create the renderer resource asynchronous, but the final resource pointer reassignment must still happen synchronous
 		// Resource source and destination
 		Asset				 mAsset;	///< In order to be multi-threading safe in here, we need an asset copy
 		MeshResource*		 mMeshResource;
