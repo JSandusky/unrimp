@@ -13,36 +13,36 @@
 		},
 		"RenderTargetTextures":
 		{
-			"ColorRenderTargetTexture0":
+			"Example/Texture/Dynamic/ColorRenderTarget0":
 			{
 				"TextureFormat": "R8G8B8A8"
 			},
-			"DepthStencilRenderTargetTexture":
+			"Example/Texture/Dynamic/DepthStencilRenderTarget":
 			{
 				"TextureFormat": "D32_FLOAT"
 			},
-			"GBufferRenderTargetTexture0":
+			"Example/Texture/Dynamic/GBufferRenderTarget0":
 			{
 				"TextureFormat": "R8G8B8A8",
 				"Description": "GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)"
 			},
-			"GBufferRenderTargetTexture1":
+			"Example/Texture/Dynamic/GBufferRenderTarget1":
 			{
 				"TextureFormat": "R16G16B16A16F",
 				"Description": "GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic"
 			},
-			"GBufferRenderTargetTexture2":
+			"Example/Texture/Dynamic/GBufferRenderTarget2":
 			{
 				"TextureFormat": "R8G8B8A8",
 				"Description": "GBuffer 2: rgb = emissive color, a = glossiness"
 			},
-			"GaussianBlurRenderTargetTexture0":
+			"Example/Texture/Dynamic/GaussianBlurRenderTarget0":
 			{
 				"TextureFormat": "R8G8B8A8",
 				"AllowResolutionScale": "FALSE",
 				"Scale": "0.25"
 			},
-			"GaussianBlurRenderTargetTexture1":
+			"Example/Texture/Dynamic/GaussianBlurRenderTarget1":
 			{
 				"TextureFormat": "R8G8B8A8",
 				"AllowResolutionScale": "FALSE",
@@ -53,25 +53,25 @@
 		{
 			"ShadowMapFramebuffer":
 			{
-				"DepthStencilTexture": "DepthStencilRenderTargetTexture"
+				"DepthStencilTexture": "Example/Texture/Dynamic/DepthStencilRenderTarget"
 			},
 			"Framebuffer0":
 			{
-				"ColorTextures": [ "ColorRenderTargetTexture0" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/ColorRenderTarget0" ]
 			},
 			"GBufferFramebuffer":
 			{
 				"Description": "GBuffer render target",
-				"ColorTextures": [ "GBufferRenderTargetTexture0", "GBufferRenderTargetTexture1", "GBufferRenderTargetTexture2" ],
-				"DepthStencilTexture": "DepthStencilRenderTargetTexture"
+				"ColorTextures": [ "Example/Texture/Dynamic/GBufferRenderTarget0", "Example/Texture/Dynamic/GBufferRenderTarget1", "Example/Texture/Dynamic/GBufferRenderTarget2" ],
+				"DepthStencilTexture": "Example/Texture/Dynamic/DepthStencilRenderTarget"
 			},
 			"GaussianBlurFramebuffer0":
 			{
-				"ColorTextures": [ "GaussianBlurRenderTargetTexture0" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/GaussianBlurRenderTarget0" ]
 			},
 			"GaussianBlurFramebuffer1":
 			{
-				"ColorTextures": [ "GaussianBlurRenderTargetTexture1" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/GaussianBlurRenderTarget1" ]
 			}
 		},
 		"Targets":
@@ -83,7 +83,7 @@
 					"ShadowMap":
 					{
 						"MaterialTechnique": "DepthOnly",
-						"TextureAsset": "ShadowMapRenderTargetTexture"
+						"TextureAssetId": "Example/Texture/Dynamic/ShadowMapRenderTarget"
 					}
 				}
 			},
@@ -117,11 +117,11 @@
 						"MaterialBlueprintAssetId": "115",
 						"SetMaterialProperties":
 						{
-							"GBufferMap0": "GBufferRenderTargetTexture0",
-							"GBufferMap1": "GBufferRenderTargetTexture1",
-							"GBufferMap2": "GBufferRenderTargetTexture2",
-							"DepthMap": "DepthStencilRenderTargetTexture",
-							"ShadowMap": "ShadowMapRenderTargetTexture"
+							"GBufferMap0": "Example/Texture/Dynamic/GBufferRenderTarget0",
+							"GBufferMap1": "Example/Texture/Dynamic/GBufferRenderTarget1",
+							"GBufferMap2": "Example/Texture/Dynamic/GBufferRenderTarget2",
+							"DepthMap": "Example/Texture/Dynamic/DepthStencilRenderTarget",
+							"ShadowMap": "Example/Texture/Dynamic/ShadowMapRenderTarget"
 						}
 					}
 				}
@@ -136,7 +136,7 @@
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "TRUE", 
-							"ColorMap": "ColorRenderTargetTexture0"
+							"ColorMap": "Example/Texture/Dynamic/ColorRenderTarget0"
 						}
 					}
 				}
@@ -151,7 +151,7 @@
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "FALSE", 
-							"ColorMap": "GaussianBlurRenderTargetTexture0"
+							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
 						}
 					}
 				}
@@ -166,7 +166,7 @@
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "TRUE", 
-							"ColorMap": "GaussianBlurRenderTargetTexture1"
+							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
 						}
 					}
 				}
@@ -181,7 +181,7 @@
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "TRUE", 
-							"ColorMap": "GaussianBlurRenderTargetTexture0"
+							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
 						}
 					}
 				}
@@ -195,7 +195,7 @@
 						"MaterialBlueprintAssetId": "102",
 						"SetMaterialProperties":
 						{
-							"ColorMap": "ColorRenderTargetTexture0"
+							"ColorMap": "Example/Texture/Dynamic/ColorRenderTarget0"
 						}
 					},
 					"DebugGui":
@@ -203,8 +203,8 @@
 						"MaterialBlueprintAssetId": "121",
 						"SetMaterialProperties":
 						{
-							"GlyphMap": "ImGuiGlyphMap",
-							"BackgroundMap": "GaussianBlurRenderTargetTexture1"
+							"GlyphMap": "Unrimp/Texture/Dynamic/ImGuiGlyphMap",
+							"BackgroundMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
 						}
 					}
 				}

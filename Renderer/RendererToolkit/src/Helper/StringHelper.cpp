@@ -23,7 +23,9 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/StringHelper.h"
 
+#include <cctype>
 #include <sstream>
+#include <algorithm>
 
 
 //[-------------------------------------------------------]
@@ -141,6 +143,23 @@ namespace RendererToolkit
 	{
 		// Trim from both ends of string (left & right)
 		return trimLeftWhitespaceCharacters(trimRightWhitespaceCharacters(s));
+	}
+
+	bool StringHelper::isPositiveInteger(const std::string& s)
+	{
+		return (!s.empty() && (static_cast<size_t>(std::count_if(s.begin(), s.end(), std::isdigit)) == s.size()));
+	}
+
+	RendererRuntime::AssetId StringHelper::getAssetIdByString(const std::string& assetIdAsString)
+	{
+		// Enforce asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
+		std::vector<std::string> elements;
+		splitString(assetIdAsString, "/", elements);
+		if (elements.size() != 4)
+		{
+			throw std::runtime_error('\"' + assetIdAsString + "\" is no valid asset ID as string. Asset ID naming scheme is \"<project name>/<asset type>/<asset category>/<asset name>\".");
+		}
+		return RendererRuntime::AssetId(assetIdAsString.c_str());
 	}
 
 	void StringHelper::stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode)

@@ -340,7 +340,7 @@ namespace RendererRuntime
 			RENDERER_SET_RESOURCE_DEBUG_NAME(mTexture2D, "Debug GUI glyph texture atlas")
 
 			// Tell the texture resource manager about our render target texture so it can be referenced inside e.g. compositor nodes
-			mRendererRuntime.getTextureResourceManager().createTextureResourceByAssetId(StringId("ImGuiGlyphMap"), *mTexture2D);
+			mRendererRuntime.getTextureResourceManager().createTextureResourceByAssetId(StringId("Unrimp/Texture/Dynamic/ImGuiGlyphMap"), *mTexture2D);
 		}
 	}
 

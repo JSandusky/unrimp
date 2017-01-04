@@ -22,9 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
-#include "RendererToolkit/Helper/JsonHelper.h"
-#include "RendererToolkit/Helper/JsonMaterialHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
+#include "RendererToolkit/Helper/JsonMaterialHelper.h"
+#include "RendererToolkit/Helper/StringHelper.h"
+#include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
@@ -88,12 +89,13 @@ namespace RendererToolkit
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// Read configuration
-		// TODO(co) Add required properties
 		std::string inputFile;
+		bool allowCrazyNumberOfShaderCombinations = false;
 		{
 			// Read material blueprint asset compiler configuration
 			const rapidjson::Value& rapidJsonValueMaterialBlueprintAssetCompiler = rapidJsonValueAsset["MaterialBlueprintAssetCompiler"];
 			inputFile = rapidJsonValueMaterialBlueprintAssetCompiler["InputFile"].GetString();
+			JsonHelper::optionalBooleanProperty(rapidJsonValueMaterialBlueprintAssetCompiler, "AllowCrazyNumberOfShaderCombinations", allowCrazyNumberOfShaderCombinations);
 		}
 
 		// Open the input file
@@ -127,6 +129,24 @@ namespace RendererToolkit
 			if (rapidJsonValueProperties.IsObject())
 			{
 				JsonMaterialBlueprintHelper::readProperties(input, rapidJsonValueProperties, sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties);
+
+				// Child protection: Throw an exception if there are too many shader combination properties to protect the material blueprint designer of over-engineering material blueprints
+				if (!allowCrazyNumberOfShaderCombinations)
+				{
+					uint32_t numberOfShaderCombinationProperties = 0;
+					for (const RendererRuntime::MaterialProperty& materialProperty : sortedMaterialPropertyVector)
+					{
+						if (materialProperty.getUsage() == RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION)
+						{
+							++numberOfShaderCombinationProperties;
+						}
+					}
+					static const uint32_t MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS = 4;	// This is no technical limit. See "RendererRuntime::MaterialBlueprintResource" class documentation regarding shader combination explosion for background information.
+					if (numberOfShaderCombinationProperties > MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS)
+					{
+						throw std::runtime_error("Material blueprint asset \"" + inputFilename + "\" is using " + std::to_string(numberOfShaderCombinationProperties) + " shader combination material properties. In order to prevent an shader combination explosion, only " + std::to_string(MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS) + " shader combination material properties are allowed. If you know what you're doing, the child protection can be disabled by using \"AllowCrazyNumberOfShaderCombinations\"=\"TRUE\" inside the material blueprint asset compiler configuration.");
+					}
+				}
 			}
 
 			{ // Material blueprint header
@@ -194,7 +214,7 @@ namespace RendererToolkit
 
 			// Output asset
 			RendererRuntime::Asset outputAsset;
-			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
+			outputAsset.assetId = StringHelper::getAssetIdByString(assetIdAsString.c_str());
 			strcpy(outputAsset.assetFilename, outputAssetFilename.c_str());	// TODO(co) Buffer overflow test
 			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 		}

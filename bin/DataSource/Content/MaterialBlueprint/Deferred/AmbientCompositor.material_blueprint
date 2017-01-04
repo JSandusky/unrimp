@@ -12,30 +12,35 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/BlackMap",
 				"Description": "GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)"
 			},
 			"GBufferMap1":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/BlackMap",
 				"Description": "GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic"
 			},
 			"GBufferMap2":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/BlackMap",
 				"Description": "GBuffer 2: rgb = emissive color, a = glossiness"
 			},
 			"DepthMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/BlackMap",
 				"Description": "Depth map"
 			},
 			"ShadowMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/BlackMap",
 				"Description": "Shadow map"
 			}
 		},

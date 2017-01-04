@@ -60,6 +60,20 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Texture resource manager class
+	*
+	*  @remarks
+	*    The texture manager automatically generates some dynamic default texture assets one can reference e.g. inside material blueprint resources:
+	*    - "Unrimp/Texture/Dynamic/WhiteMap"
+	*    - "Unrimp/Texture/Dynamic/BlackMap"
+	*    - "Unrimp/Texture/Dynamic/IdentityDiffuseMap"
+	*    - "Unrimp/Texture/Dynamic/IdentityAlphaMap"
+	*    - "Unrimp/Texture/Dynamic/IdentityNormalMap"
+	*    - "Unrimp/Texture/Dynamic/IdentitySpecularMap"
+	*    - "Unrimp/Texture/Dynamic/IdentityEmissiveMap"
+	*/
 	class TextureResourceManager : private IResourceManager
 	{
 
@@ -95,7 +109,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline explicit TextureResourceManager(IRendererRuntime& rendererRuntime);
+		explicit TextureResourceManager(IRendererRuntime& rendererRuntime);
 		inline virtual ~TextureResourceManager();
 		TextureResourceManager(const TextureResourceManager&) = delete;
 		TextureResourceManager& operator=(const TextureResourceManager&) = delete;

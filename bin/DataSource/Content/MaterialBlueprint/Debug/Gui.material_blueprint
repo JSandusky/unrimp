@@ -12,12 +12,14 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/IdentityAlphaMap",
 				"Description": "Glyph map"
 			},
 			"BackgroundMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/BlackMap",
 				"Description": "Background map"
 			}
 		},

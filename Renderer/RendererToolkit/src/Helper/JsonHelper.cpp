@@ -251,6 +251,19 @@ namespace RendererToolkit
 		}
 	}
 
+	void JsonHelper::mandatoryAssetIdProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererRuntime::AssetId& value)
+	{
+		value = StringHelper::getAssetIdByString(rapidJsonValue[propertyName].GetString());
+	}
+
+	void JsonHelper::optionalAssetIdProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererRuntime::AssetId& value)
+	{
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			mandatoryAssetIdProperty(rapidJsonValue, propertyName, value);
+		}
+	}
+
 	void JsonHelper::optionalClearFlagsProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, uint32_t& clearFlags)
 	{
 		if (rapidJsonValue.HasMember(propertyName))

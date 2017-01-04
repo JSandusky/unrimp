@@ -20,6 +20,7 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
 				"Description": "Color map"
 			}
 		},

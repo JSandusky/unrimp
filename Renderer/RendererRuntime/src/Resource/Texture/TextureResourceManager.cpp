@@ -33,6 +33,56 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void createDefaultDynamicTextureAssets(RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::TextureResourceManager& textureResourceManager)
+		{
+			Renderer::ITextureManager& textureManager = rendererRuntime.getTextureManager();
+
+			// White RGB texture
+			const uint8_t whiteRgbData[] = { 255, 255, 255 };
+			Renderer::ITexturePtr whiteRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8, whiteRgbData));
+
+			// Normal map identity texture
+			const uint8_t normalMapIdentityData[] = { 128, 128, 255 };
+			Renderer::ITexturePtr normalMapIdentityTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8, normalMapIdentityData));
+
+			// White alpha texture
+			const uint8_t whiteAData[] = { 255 };
+			Renderer::ITexturePtr whiteATexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::A8, whiteAData));
+
+			// Black RGB texture
+			const uint8_t blackRgbData[] = { 0, 0, 0 };
+			Renderer::ITexturePtr blackRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8, blackRgbData));
+
+			// Create default dynamic texture assets
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/WhiteMap",			*whiteRgbTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/BlackMap",			*blackRgbTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityDiffuseMap",	*whiteRgbTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityAlphaMap",	*whiteATexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityNormalMap",	*normalMapIdentityTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentitySpecularMap",	*whiteATexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityEmissiveMap",	*blackRgbTexturePtr);
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -164,6 +214,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
+	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
+	{
+		::detail::createDefaultDynamicTextureAssets(rendererRuntime, *this);
+	}
+
 	IResourceLoader* TextureResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Can we recycle an already existing resource loader instance?

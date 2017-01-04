@@ -56,4 +56,5 @@ protected:
 	AvailableRendererMap 			m_availableRenderer;
 	ExampleToSupportedRendererMap	m_supportedRendererForExample;
 	std::string						m_defaultRendererName;
+	std::string						m_defaultExampleName;
 };

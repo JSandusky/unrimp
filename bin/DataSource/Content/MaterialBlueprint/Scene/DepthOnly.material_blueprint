@@ -36,6 +36,7 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/IdentityAlphaMap",
 				"Description": "Material alpha map"
 			},
 			"AlphaReference":

@@ -24,6 +24,7 @@
 #include "RendererToolkit/AssetCompiler/CompositorNodeAssetCompiler.h"
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialHelper.h"
+#include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
@@ -99,7 +100,7 @@ namespace
 								materialProperty.setOverwritten(true);
 								if (materialProperty.getValueType() == RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
 								{
-									const RendererRuntime::AssetId assetId = RendererRuntime::StringId(iterator->second.c_str());
+									const RendererRuntime::AssetId assetId = RendererToolkit::StringHelper::getAssetIdByString(iterator->second);
 									if (renderTargetTextureAssetIds.find(assetId) != renderTargetTextureAssetIds.end())
 									{
 										static_cast<RendererRuntime::MaterialPropertyValue&>(materialProperty) = RendererRuntime::MaterialPropertyValue::fromTextureAssetId(assetId);
@@ -282,14 +283,23 @@ namespace RendererToolkit
 
 			// Write down the compositor render target textures
 			std::unordered_set<uint32_t> renderTargetTextureAssetIds;	// "RendererRuntime::AssetId"-type
-			renderTargetTextureAssetIds.insert(RendererRuntime::StringId("ImGuiGlyphMap"));	// TODO(co) Make this somehow more generic
+			{ // TODO(co) Make this somehow more generic
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/WhiteMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/BlackMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityDiffuseMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityAlphaMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityNormalMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentitySpecularMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityEmissiveMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/ImGuiGlyphMap"));
+			}
 			if (rapidJsonValueCompositorNodeAsset.HasMember("RenderTargetTextures"))
 			{
 				const rapidjson::Value& rapidJsonValueRenderTargetTextures = rapidJsonValueCompositorNodeAsset["RenderTargetTextures"];
 				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorRenderTargetTextures = rapidJsonValueRenderTargetTextures.MemberBegin(); rapidJsonMemberIteratorRenderTargetTextures != rapidJsonValueRenderTargetTextures.MemberEnd(); ++rapidJsonMemberIteratorRenderTargetTextures)
 				{
 					RendererRuntime::v1CompositorNode::RenderTargetTexture renderTargetTexture;
-					renderTargetTexture.assetId = RendererRuntime::StringId(rapidJsonMemberIteratorRenderTargetTextures->name.GetString());
+					renderTargetTexture.assetId = StringHelper::getAssetIdByString(rapidJsonMemberIteratorRenderTargetTextures->name.GetString());
 					{ // Render target texture signature
 						const rapidjson::Value& rapidJsonValueRenderTargetTexture = rapidJsonMemberIteratorRenderTargetTextures->value;
 
@@ -377,7 +387,7 @@ namespace RendererToolkit
 							numberOfColorTextures = static_cast<uint8_t>(rapidJsonValueFramebufferColorTextures.Size());
 							for (uint8_t i = 0; i < numberOfColorTextures; ++i)
 							{
-								colorTextureAssetIds[i] = RendererRuntime::StringId(rapidJsonValueFramebufferColorTextures[i].GetString());
+								colorTextureAssetIds[i] = StringHelper::getAssetIdByString(rapidJsonValueFramebufferColorTextures[i].GetString());
 								if (RendererRuntime::isInitialized(colorTextureAssetIds[i]) && renderTargetTextureAssetIds.find(colorTextureAssetIds[i]) == renderTargetTextureAssetIds.end())
 								{
 									throw std::runtime_error(std::string("Color texture \"") + rapidJsonValueFramebufferColorTextures[i].GetString() + "\" at index " + std::to_string(i) + " of framebuffer \"" + rapidJsonMemberIteratorFramebuffers->name.GetString() + "\" is unknown");
@@ -386,7 +396,7 @@ namespace RendererToolkit
 						}
 
 						// Optional depth stencil texture
-						const uint32_t depthStencilTexture = rapidJsonValueFramebuffer.HasMember("DepthStencilTexture") ? RendererRuntime::StringId(rapidJsonValueFramebuffer["DepthStencilTexture"].GetString()) : RendererRuntime::getUninitialized<RendererRuntime::AssetId>();
+						const uint32_t depthStencilTexture = rapidJsonValueFramebuffer.HasMember("DepthStencilTexture") ? StringHelper::getAssetIdByString(rapidJsonValueFramebuffer["DepthStencilTexture"].GetString()) : RendererRuntime::getUninitialized<RendererRuntime::AssetId>();
 						if (RendererRuntime::isInitialized(depthStencilTexture) && renderTargetTextureAssetIds.find(depthStencilTexture) == renderTargetTextureAssetIds.end())
 						{
 							throw std::runtime_error(std::string("Depth stencil texture \"") + rapidJsonValueFramebuffer["DepthStencilTexture"].GetString() + "\" of framebuffer \"" + rapidJsonMemberIteratorFramebuffers->name.GetString() + "\" is unknown");
@@ -491,7 +501,7 @@ namespace RendererToolkit
 						{
 							RendererRuntime::v1CompositorNode::PassShadowMap passShadowMap;
 							::detail::readPassScene(rapidJsonValuePass, passShadowMap);
-							JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "TextureAsset", passShadowMap.textureAssetId);
+							JsonHelper::mandatoryAssetIdProperty(rapidJsonValuePass, "TextureAssetId", passShadowMap.textureAssetId);
 							renderTargetTextureAssetIds.insert(passShadowMap.textureAssetId);
 
 							// Write down
@@ -553,7 +563,7 @@ namespace RendererToolkit
 
 			// Output asset
 			RendererRuntime::Asset outputAsset;
-			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
+			outputAsset.assetId = StringHelper::getAssetIdByString(assetIdAsString.c_str());
 			strcpy(outputAsset.assetFilename, outputAssetFilename.c_str());	// TODO(co) Buffer overflow test
 			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 		}
