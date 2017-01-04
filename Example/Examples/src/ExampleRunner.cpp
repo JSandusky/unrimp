@@ -122,12 +122,15 @@ ExampleRunner::ExampleRunner()
 	// Advanced
 	addExample("FirstGpgpu",					&RunExample<FirstGpgpu>,					supportsAllRenderer);
 	addExample("IcosahedronTessellation",		&RunExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
-	#ifndef RENDERER_NO_RUNTIME
+	#ifdef RENDERER_NO_RUNTIME
+		m_defaultExampleName = "FirstTriangle";
+	#else
 		// Renderer runtime
 		addExample("FirstMesh",					&RunExample<FirstMesh>,						supportsAllRenderer);
 		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);
 		addExample("FirstScene",				&RunExample<FirstScene>,					supportsAllRenderer);
 		addExample("InstancedCubes",			&RunExample<InstancedCubes>,				doesNotSupportOpenGLES2);
+		m_defaultExampleName = "FirstScene";
 	#endif
 
 	#ifndef RENDERER_NO_NULL
@@ -160,9 +163,10 @@ ExampleRunner::ExampleRunner()
 
 int ExampleRunner::runExample(const std::string& rendererName, const std::string& exampleName)
 {
-	AvailableExamplesMap::iterator example = m_availableExamples.find(exampleName);
+	const std::string& selectedExampleName = exampleName.empty() ? m_defaultExampleName : exampleName;
+	AvailableExamplesMap::iterator example = m_availableExamples.find(selectedExampleName);
 	AvailableRendererMap::iterator renderer = m_availableRenderer.find(rendererName);
-	ExampleToSupportedRendererMap::iterator supportedRenderer = m_supportedRendererForExample.find(exampleName);
+	ExampleToSupportedRendererMap::iterator supportedRenderer = m_supportedRendererForExample.find(selectedExampleName);
 	bool rendererNotSupportedByExample = false;
 	if (m_supportedRendererForExample.end() != supportedRenderer)
 	{
@@ -175,9 +179,9 @@ int ExampleRunner::runExample(const std::string& rendererName, const std::string
 		if (m_availableExamples.end() == example)
 			showError("no or unknown example given");
 		if (m_availableRenderer.end() == renderer)
-			showError("unkown renderer: \"" + rendererName + "\"");
+			showError("unknown renderer: \"" + rendererName + "\"");
 		if (rendererNotSupportedByExample) 
-			showError("the example \"" + exampleName + "\" doesn't support renderer: \"" + rendererName + "\"");
+			showError("the example \"" + selectedExampleName + "\" doesn't support renderer: \"" + rendererName + "\"");
 
 		// Print usage
 		printUsage(m_availableExamples, m_availableRenderer);
