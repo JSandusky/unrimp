@@ -24,14 +24,6 @@
 				"Value": "TRUE",
 				"Description": "Cast shadows?"
 			},
-			"Lighting":
-			{
-				"Usage": "SHADER_COMBINATION",
-				"ValueType": "BOOLEAN",
-				"Value": "TRUE",
-				"Description": "Perform lighting on the material?",
-				"VisualImportance": "MANDATORY"
-			},
 			"CullMode":
 			{
 				"Usage": "RASTERIZER_STATE",
@@ -48,11 +40,10 @@
 			},
 			"UseDiffuseMap":
 			{
-				"Usage": "SHADER_COMBINATION",
+				"Usage": "UNKNOWN",
 				"ValueType": "BOOLEAN",
 				"Value": "FALSE",
-				"Description": "Use diffuse map?",
-				"VisualImportance": "100"
+				"Description": "Use diffuse map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a diffuse map."
 			},
 			"DiffuseMap":
 			{
@@ -103,26 +94,24 @@
 			},
 			"UseNormalMap":
 			{
-				"Usage": "SHADER_COMBINATION",
+				"Usage": "UNKNOWN",
 				"ValueType": "BOOLEAN",
 				"Value": "FALSE",
-				"Description": "Use normal map?",
-				"VisualImportance": "20"
+				"Description": "Use normal map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a normal map."
 			},
 			"NormalMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/Dynamic/IdentityNormalMap",
-				"Description": "Material normal map"
+				"Description": "Material tangent space normal map"
 			},
 			"UseSpecularMap":
 			{
-				"Usage": "SHADER_COMBINATION",
+				"Usage": "UNKNOWN",
 				"ValueType": "BOOLEAN",
 				"Value": "FALSE",
-				"Description": "Use specular map?",
-				"VisualImportance": "10"
+				"Description": "Use specular map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a specular map."
 			},
 			"SpecularMap":
 			{

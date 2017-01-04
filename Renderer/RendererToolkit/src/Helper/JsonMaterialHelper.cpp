@@ -535,13 +535,11 @@ namespace RendererToolkit
 				else
 				{
 					// Sanity checks
+					// -> Do not check for usage since some material properties like "UseDiffuseMap" might be defined inside some material blueprints just for consistency using an unknown usage
 					const RendererRuntime::MaterialProperty& otherMaterialProperty = *iterator;
-					const bool valueTypeMatch = (materialProperty.getValueType() != otherMaterialProperty.getValueType());
-					const bool usageMatch = (materialProperty.getUsage() != otherMaterialProperty.getUsage());
-					if (valueTypeMatch | usageMatch)
+					if (materialProperty.getValueType() != otherMaterialProperty.getValueType())
 					{
-						const std::string mismatch = valueTypeMatch ? "value type" : "usage";
-						throw std::runtime_error(std::string("Material blueprint asset ") + std::to_string(technique.materialBlueprintAssetId) + " referenced by material technique \"" + materialTechniqueIdToName[technique.materialTechniqueId] + "\" has material property \"" + materialPropertyIdToName[materialProperty.getMaterialPropertyId()] + "\" which differs in " + mismatch + " to another already registered material property");
+						throw std::runtime_error(std::string("Material blueprint asset ") + std::to_string(technique.materialBlueprintAssetId) + " referenced by material technique \"" + materialTechniqueIdToName[technique.materialTechniqueId] + "\" has material property \"" + materialPropertyIdToName[materialProperty.getMaterialPropertyId()] + "\" which differs in value type to another already registered material property");
 					}
 				}
 			}
