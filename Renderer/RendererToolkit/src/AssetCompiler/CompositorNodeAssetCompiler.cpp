@@ -282,7 +282,7 @@ namespace RendererToolkit
 
 			// Write down the compositor render target textures
 			std::unordered_set<uint32_t> renderTargetTextureAssetIds;	// "RendererRuntime::AssetId"-type
-			renderTargetTextureAssetIds.insert(RendererRuntime::StringId("ImGuiGlyphMap"));	// TODO(co) Make this somehow more generic
+			renderTargetTextureAssetIds.insert(RendererRuntime::StringId("Unrimp/Texture/Dynamic/ImGuiGlyphMap"));	// TODO(co) Make this somehow more generic
 			if (rapidJsonValueCompositorNodeAsset.HasMember("RenderTargetTextures"))
 			{
 				const rapidjson::Value& rapidJsonValueRenderTargetTextures = rapidJsonValueCompositorNodeAsset["RenderTargetTextures"];

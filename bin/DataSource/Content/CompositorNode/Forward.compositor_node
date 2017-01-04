@@ -164,7 +164,7 @@
 						"MaterialBlueprintAssetId": "121",
 						"SetMaterialProperties":
 						{
-							"GlyphMap": "ImGuiGlyphMap",
+							"GlyphMap": "Unrimp/Texture/Dynamic/ImGuiGlyphMap",
 							"BackgroundMap": "GaussianBlurRenderTargetTexture1"
 						}
 					}
