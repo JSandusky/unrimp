@@ -163,9 +163,3 @@ if(SHARED_LIBRARY)
 		)
 	endif()
 endif()
-
-##################################################
-## Post build
-##################################################
-# Copy header
-file(MAKE_DIRECTORY ${OUTPUT_INCLUDE_DIR}/../OpenGLRenderer/)
