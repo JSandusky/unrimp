@@ -49,20 +49,20 @@ namespace
 			Renderer::ITextureManager& textureManager = rendererRuntime.getTextureManager();
 
 			// White RGB texture
-			const uint8_t whiteRgbData[] = { 255, 255, 255 };
-			Renderer::ITexturePtr whiteRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8, whiteRgbData));
+			const uint8_t whiteRgbData[] = { 255, 255, 255, 255 };
+			Renderer::ITexturePtr whiteRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, whiteRgbData));
 
 			// Normal map identity texture
-			const uint8_t normalMapIdentityData[] = { 128, 128, 255 };
-			Renderer::ITexturePtr normalMapIdentityTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8, normalMapIdentityData));
+			const uint8_t normalMapIdentityData[] = { 128, 128, 255, 255 };
+			Renderer::ITexturePtr normalMapIdentityTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, normalMapIdentityData));
 
 			// White alpha texture
 			const uint8_t whiteAData[] = { 255 };
 			Renderer::ITexturePtr whiteATexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::A8, whiteAData));
 
 			// Black RGB texture
-			const uint8_t blackRgbData[] = { 0, 0, 0 };
-			Renderer::ITexturePtr blackRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8, blackRgbData));
+			const uint8_t blackRgbData[] = { 0, 0, 0, 0 };
+			Renderer::ITexturePtr blackRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, blackRgbData));
 
 			// Create default dynamic texture assets
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/WhiteMap",			*whiteRgbTexturePtr);
