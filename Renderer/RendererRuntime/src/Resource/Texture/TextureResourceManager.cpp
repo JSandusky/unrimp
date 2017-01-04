@@ -44,7 +44,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void createDefaultDynamicTextureAssets(RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::TextureResourceManager& textureResourceManager)
+		Renderer::ITexturePtr createDefaultDynamicTextureAssets(RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::TextureResourceManager& textureResourceManager)
 		{
 			Renderer::ITextureManager& textureManager = rendererRuntime.getTextureManager();
 
@@ -72,6 +72,9 @@ namespace
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityNormalMap",	*normalMapIdentityTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentitySpecularMap",	*whiteATexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityEmissiveMap",	*blackRgbTexturePtr);
+
+			// Done
+			return blackRgbTexturePtr;
 		}
 
 
@@ -159,6 +162,11 @@ namespace RendererRuntime
 					resourceStreamerLoadRequest.resource = textureResource;
 					resourceStreamerLoadRequest.resourceLoader = textureResourceLoader;
 					mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+
+					// Since it might take a moment to load the texture resource, we'll use a placeholder renderer texture resource so we don't have to wait until the real thing is there
+					// TODO(co) This is currently totally primitive. Later on we need different texture types (3D etc.) and also want to have at least a rough texture preview (need to store lowest mipmaps inside the asset package). Currently e.g. normal maps will look totally wrong for a moment.
+					textureResource->mTexture = mPlaceholderTexturePtr;
+					textureResource->setLoadingState(IResource::LoadingState::LOADED);
 				}
 			}
 			else
@@ -217,7 +225,7 @@ namespace RendererRuntime
 	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime)
 	{
-		::detail::createDefaultDynamicTextureAssets(rendererRuntime, *this);
+		mPlaceholderTexturePtr = ::detail::createDefaultDynamicTextureAssets(rendererRuntime, *this);
 	}
 
 	IResourceLoader* TextureResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
