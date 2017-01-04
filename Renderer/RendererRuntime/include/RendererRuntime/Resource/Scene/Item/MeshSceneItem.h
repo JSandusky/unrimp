@@ -109,11 +109,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<AssetId> SubMeshMaterialAssetIds;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MeshResourceId	  mMeshResourceId;		///< Mesh resource ID, can be set to uninitialized value
-		RenderableManager mRenderableManager;
+		MeshResourceId			mMeshResourceId;			///< Mesh resource ID, can be set to uninitialized value
+		SubMeshMaterialAssetIds	mSubMeshMaterialAssetIds;	///< Sub-mesh material asset IDs received during deserialization
+		RenderableManager		mRenderableManager;
 
 
 	};
