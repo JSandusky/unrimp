@@ -492,7 +492,7 @@ namespace RendererToolkit
 						{
 							RendererRuntime::v1CompositorNode::PassShadowMap passShadowMap;
 							::detail::readPassScene(rapidJsonValuePass, passShadowMap);
-							JsonHelper::mandatoryAssetIdProperty(rapidJsonValuePass, "TextureAsset", passShadowMap.textureAssetId);
+							JsonHelper::mandatoryAssetIdProperty(rapidJsonValuePass, "TextureAssetId", passShadowMap.textureAssetId);
 							renderTargetTextureAssetIds.insert(passShadowMap.textureAssetId);
 
 							// Write down

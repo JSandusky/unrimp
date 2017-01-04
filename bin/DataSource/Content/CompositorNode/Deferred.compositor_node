@@ -83,7 +83,7 @@
 					"ShadowMap":
 					{
 						"MaterialTechnique": "DepthOnly",
-						"TextureAsset": "Example/Texture/Dynamic/ShadowMapRenderTarget"
+						"TextureAssetId": "Example/Texture/Dynamic/ShadowMapRenderTarget"
 					}
 				}
 			},
