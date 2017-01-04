@@ -282,7 +282,7 @@ void FirstMesh::onDraw()
 			// Get the render target with and height
 			uint32_t width  = 1;
 			uint32_t height = 1;
-			Renderer::IRenderTarget *renderTarget = renderer->getMainSwapChain();
+			Renderer::IRenderTarget *renderTarget = getMainRenderTarget();
 			if (nullptr != renderTarget)
 			{
 				renderTarget->getWidthAndHeight(width, height);

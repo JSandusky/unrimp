@@ -211,7 +211,7 @@ void FirstRenderToTexture::fillCommandBuffer()
 	// Sanity checks
 	assert(nullptr != mFramebuffer);
 	assert(nullptr != getRenderer());
-	assert(nullptr != getRenderer()->getMainSwapChain());
+	assert(nullptr != getMainRenderTarget());
 	assert(nullptr != mRootSignature);
 	assert(nullptr != mSamplerState);
 	assert(nullptr != mTexture2D);
@@ -237,7 +237,7 @@ void FirstRenderToTexture::fillCommandBuffer()
 		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR, Color4::GREEN, 1.0f, 0);
 
 		// Restore main swap chain as current render target
-		Renderer::Command::SetRenderTarget::create(mCommandBuffer, getRenderer()->getMainSwapChain());
+		Renderer::Command::SetRenderTarget::create(mCommandBuffer, getMainRenderTarget());
 
 		// End debug event
 		COMMAND_END_DEBUG_EVENT(mCommandBuffer)

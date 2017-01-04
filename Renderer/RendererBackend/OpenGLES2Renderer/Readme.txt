@@ -19,11 +19,11 @@
 
 
 == Description ==
-OpenGL ES 2 renderer implementation.
+OpenGL ES 3 renderer implementation.
 
 
 == Dependencies ==
-OpenGL ES 2 capable graphics driver or emulator, nothing else.
+OpenGL ES 3 capable graphics driver or emulator, nothing else.
 
 
 == Preprocessor Definitions ==

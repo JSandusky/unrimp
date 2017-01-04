@@ -113,6 +113,15 @@ public:
 	*/
 	inline Renderer::IRenderer *getRenderer() const;
 
+	/**
+	*  @brief
+	*    Return the main renderer target
+	*
+	*  @return
+	*    The main renderr target instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+	*/
+	inline Renderer::IRenderTarget *getMainRenderTarget() const;
+
 
 //[-------------------------------------------------------]
 //[ Public virtual IApplication methods                   ]

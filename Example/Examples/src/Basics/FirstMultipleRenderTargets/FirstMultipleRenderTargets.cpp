@@ -241,7 +241,7 @@ void FirstMultipleRenderTargets::fillCommandBuffer()
 	// Sanity checks
 	assert(nullptr != mFramebuffer);
 	assert(nullptr != getRenderer());
-	assert(nullptr != getRenderer()->getMainSwapChain());
+	assert(nullptr != getMainRenderTarget());
 	assert(nullptr != mRootSignature);
 	assert(nullptr != mPipelineStateMultipleRenderTargets);
 	assert(nullptr != mVertexArray);
@@ -287,7 +287,7 @@ void FirstMultipleRenderTargets::fillCommandBuffer()
 		Renderer::Command::Draw::create(mCommandBuffer, 3);
 
 		// Restore main swap chain as current render target
-		Renderer::Command::SetRenderTarget::create(mCommandBuffer, getRenderer()->getMainSwapChain());
+		Renderer::Command::SetRenderTarget::create(mCommandBuffer, getMainRenderTarget());
 
 		// End debug event
 		COMMAND_END_DEBUG_EVENT(mCommandBuffer)
@@ -301,7 +301,7 @@ void FirstMultipleRenderTargets::fillCommandBuffer()
 			// Get the render target with and height
 			uint32_t width  = 1;
 			uint32_t height = 1;
-			Renderer::IRenderTarget *renderTarget = getRenderer()->getMainSwapChain();
+			Renderer::IRenderTarget *renderTarget = getMainRenderTarget();
 			if (nullptr != renderTarget)
 			{
 				renderTarget->getWidthAndHeight(width, height);

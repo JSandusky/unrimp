@@ -25,3 +25,12 @@ inline Renderer::IRenderer *IApplicationRenderer::getRenderer() const
 {
 	return mRenderer;
 }
+
+ Renderer::IRenderTarget *IApplicationRenderer::getMainRenderTarget() const
+ {
+	 if (nullptr != mRenderer)
+	 {
+		 return mRenderer->getMainSwapChain();
+	 }
+	 return nullptr;
+ }
