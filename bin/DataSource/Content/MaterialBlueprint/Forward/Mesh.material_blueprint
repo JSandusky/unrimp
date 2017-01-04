@@ -58,6 +58,7 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/IdentityDiffuseMap",
 				"Description": "Material diffuse map"
 			},
 			"UseAlphaMap":
@@ -72,6 +73,7 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/IdentityAlphaMap",
 				"Description": "Material alpha map"
 			},
 			"AlphaReference":
@@ -96,6 +98,7 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/IdentityEmissiveMap",
 				"Description": "Material emissive map"
 			},
 			"UseNormalMap":
@@ -110,6 +113,7 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/IdentityNormalMap",
 				"Description": "Material normal map"
 			},
 			"UseSpecularMap":
@@ -124,6 +128,7 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/IdentitySpecularMap",
 				"Description": "Material specular map"
 			}
 		},

@@ -25,6 +25,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
+#include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/PlatformTypes.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
@@ -845,7 +846,7 @@ namespace RendererToolkit
 
 			// Output asset
 			RendererRuntime::Asset outputAsset;
-			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
+			outputAsset.assetId = StringHelper::getAssetIdByString(assetIdAsString.c_str());
 			strcpy(outputAsset.assetFilename, outputAssetFilename.c_str());	// TODO(co) Buffer overflow test
 			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 		}
@@ -1035,7 +1036,7 @@ comp_params.m_quality_level = cCRNMinQualityLevel;
 
 			// Output asset
 			RendererRuntime::Asset outputAsset;
-			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
+			outputAsset.assetId = StringHelper::getAssetIdByString(assetIdAsString.c_str());
 			strcpy(outputAsset.outputAssetFilename, outputAssetFilename.c_str());	// TODO(co) Buffer overflow test
 			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 		}

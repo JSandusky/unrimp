@@ -283,7 +283,16 @@ namespace RendererToolkit
 
 			// Write down the compositor render target textures
 			std::unordered_set<uint32_t> renderTargetTextureAssetIds;	// "RendererRuntime::AssetId"-type
-			renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/ImGuiGlyphMap"));	// TODO(co) Make this somehow more generic
+			{ // TODO(co) Make this somehow more generic
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/WhiteMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/BlackMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityDiffuseMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityAlphaMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityNormalMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentitySpecularMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityEmissiveMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/ImGuiGlyphMap"));
+			}
 			if (rapidJsonValueCompositorNodeAsset.HasMember("RenderTargetTextures"))
 			{
 				const rapidjson::Value& rapidJsonValueRenderTargetTextures = rapidJsonValueCompositorNodeAsset["RenderTargetTextures"];

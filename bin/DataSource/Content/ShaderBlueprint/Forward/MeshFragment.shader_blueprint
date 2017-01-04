@@ -170,7 +170,7 @@ MAIN_BEGIN
 
 	// Specular term
 	@property(UseSpecularMap)
-		color += specularLightColor * SAMPLE_2D(SpecularMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+		color += specularLightColor * SAMPLE_2D(SpecularMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r;
 	@end
 	@property(!UseSpecularMap)
 		color += specularLightColor;

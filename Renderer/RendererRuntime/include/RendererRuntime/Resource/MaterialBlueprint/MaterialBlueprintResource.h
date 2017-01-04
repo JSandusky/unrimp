@@ -72,6 +72,19 @@ namespace RendererRuntime
 	*  @brief
 	*    Material blueprint resource
 	*
+	*  @remarks
+	*    == Regarding shader combination explosion ==
+	*    The texture manager automatically generates some dynamic default texture assets like "Unrimp/Texture/Dynamic/IdentityDiffuseMap" or
+	*    "Unrimp/Texture/Dynamic/IdentityNormalMap" one can reference e.g. inside material blueprint resources. Especially the identity texture maps
+	*    can be used as default material property value. While it's tempting to add shader combination material properties like "UseDiffuseMap",
+	*    "UseNormalMap" etc. one has to keep the problem of shader combination explosion in mind. Especially in more complex material blueprints the
+	*    number of shader combinations can quickly reach a point were it's practically impossible to e.g. generate a shader cache for shipped products
+	*    or in case of Mac OS X (no OpenGL binary shader support) generate the required shaders during program start. The problem can be fought with
+	*    complex heuristics to filter out unused or rarely used shader combinations, this is an art form of itself. Please note that shader combination
+	*    explosion is a real existing serious problem which especially inside the product shipping phase can create stressful situations. Additionally,
+	*    if the shader complexity of different materials vary too extreme, the framerate might get instable. So, when designing material blueprints do
+	*    carefully thing about which shader combinations you really need.
+	*
 	*  @note
 	*    - Automatic handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 	*    - When writing new material blueprint resources, you might want to take the packing rules for uniform variables into account for an efficient data layout

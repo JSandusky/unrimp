@@ -66,6 +66,7 @@ namespace RendererToolkit
 		static std::string& trimRightWhitespaceCharacters(std::string& s);
 		static std::string& trimLeftWhitespaceCharacters(std::string& s);
 		static std::string& trimWhitespaceCharacters(std::string& s);
+		static bool isPositiveInteger(const std::string& s);
 		static RendererRuntime::AssetId getAssetIdByString(const std::string& assetIdAsString);
 		static void stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode);
 

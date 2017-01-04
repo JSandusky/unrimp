@@ -458,7 +458,19 @@ namespace RendererToolkit
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
 			{
-				return RendererRuntime::MaterialPropertyValue::fromTextureAssetId(rapidJsonValue.HasMember(propertyName) ? JsonHelper::getCompiledAssetId(input, rapidJsonValue, propertyName) : RendererRuntime::getUninitialized<RendererRuntime::AssetId>());
+				RendererRuntime::AssetId textureAssetId = RendererRuntime::getUninitialized<RendererRuntime::AssetId>();
+				if (rapidJsonValue.HasMember(propertyName))
+				{
+					const std::string valueAsString = rapidJsonValue[propertyName].GetString();
+					textureAssetId = StringHelper::isPositiveInteger(valueAsString) ? input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(valueAsString.c_str()))) : StringHelper::getAssetIdByString(valueAsString);
+				}
+				if (RendererRuntime::isUninitialized(textureAssetId))
+				{
+					throw std::runtime_error("Inside material blueprints, texture asset reference material properties must always have a value");
+				}
+
+				// Done
+				return RendererRuntime::MaterialPropertyValue::fromTextureAssetId(textureAssetId);
 			}
 		}
 

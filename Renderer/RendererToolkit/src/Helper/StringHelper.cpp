@@ -23,7 +23,9 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/StringHelper.h"
 
+#include <cctype>
 #include <sstream>
+#include <algorithm>
 
 
 //[-------------------------------------------------------]
@@ -141,6 +143,11 @@ namespace RendererToolkit
 	{
 		// Trim from both ends of string (left & right)
 		return trimLeftWhitespaceCharacters(trimRightWhitespaceCharacters(s));
+	}
+
+	bool StringHelper::isPositiveInteger(const std::string& s)
+	{
+		return (!s.empty() && (static_cast<size_t>(std::count_if(s.begin(), s.end(), std::isdigit)) == s.size()));
 	}
 
 	RendererRuntime::AssetId StringHelper::getAssetIdByString(const std::string& assetIdAsString)

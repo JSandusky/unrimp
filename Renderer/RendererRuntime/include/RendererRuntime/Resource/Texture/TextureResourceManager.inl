@@ -57,12 +57,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
-	{
-		// Nothing here
-	}
-
 	inline TextureResourceManager::~TextureResourceManager()
 	{
 		// Nothing here
