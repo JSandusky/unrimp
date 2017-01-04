@@ -216,10 +216,10 @@ void InstancedCubes::onDraw()
 		if (mDisplayStatistics)
 		{
 			RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
-			if (nullptr != rendererRuntime && nullptr != renderer->getMainSwapChain())
+			if (nullptr != rendererRuntime && nullptr != getMainRenderTarget())
 			{
 				RendererRuntime::DebugGuiManager& debugGuiManager = rendererRuntime->getDebugGuiManager();
-				debugGuiManager.newFrame(*renderer->getMainSwapChain());
+				debugGuiManager.newFrame(*getMainRenderTarget());
 
 				// Is there a cube renderer instance?
 				if (nullptr != mCubeRenderer)

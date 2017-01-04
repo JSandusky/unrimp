@@ -121,12 +121,12 @@ void FirstCompositor::onDrawRequest()
 	// Is there a compositor workspace instance?
 	if (nullptr != mCompositorWorkspaceInstance)
 	{
-		// Get the main swap chain and ensure there's one
-		Renderer::ISwapChain* swapChain = getRenderer()->getMainSwapChain();
-		if (nullptr != swapChain)
+		// Get the main render target and ensure there's one
+		Renderer::IRenderTarget* mainRenderTarget = getMainRenderTarget();
+		if (nullptr != mainRenderTarget)
 		{
 			// Execute the compositor workspace instance
-			mCompositorWorkspaceInstance->execute(*swapChain, nullptr, nullptr);
+			mCompositorWorkspaceInstance->execute(*mainRenderTarget, nullptr, nullptr);
 		}
 	}
 }

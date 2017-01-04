@@ -251,8 +251,8 @@ void FirstScene::onDrawRequest()
 	Renderer::IRenderer* renderer = getRenderer();
 	if (nullptr != renderer)
 	{
-		Renderer::ISwapChain* swapChain = renderer->getMainSwapChain();
-		if (nullptr != swapChain)
+		Renderer::IRenderTarget* mainRenderTarget = getMainRenderTarget();
+		if (nullptr != mainRenderTarget)
 		{
 			// Execute the compositor workspace instance
 			if (nullptr != mCompositorWorkspaceInstance)
@@ -267,14 +267,14 @@ void FirstScene::onDrawRequest()
 					vrManager.updateHmdMatrixPose(mCameraSceneItem);
 
 					// Execute the compositor workspace instance
-					vrManager.executeCompositorWorkspaceInstance(*mCompositorWorkspaceInstance, *swapChain, mCameraSceneItem, mLightSceneItem);
+					vrManager.executeCompositorWorkspaceInstance(*mCompositorWorkspaceInstance, *mainRenderTarget, mCameraSceneItem, mLightSceneItem);
 				}
 				else
 				{
-					createDebugGui(*swapChain);
+					createDebugGui(*mainRenderTarget);
 
 					// Execute the compositor workspace instance
-					mCompositorWorkspaceInstance->execute(*swapChain, mCameraSceneItem, mLightSceneItem);
+					mCompositorWorkspaceInstance->execute(*mainRenderTarget, mCameraSceneItem, mLightSceneItem);
 				}
 			}
 		}
