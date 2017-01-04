@@ -22,9 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
-#include "RendererToolkit/Helper/JsonHelper.h"
-#include "RendererToolkit/Helper/JsonMaterialHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
+#include "RendererToolkit/Helper/JsonMaterialHelper.h"
+#include "RendererToolkit/Helper/StringHelper.h"
+#include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
@@ -194,7 +195,7 @@ namespace RendererToolkit
 
 			// Output asset
 			RendererRuntime::Asset outputAsset;
-			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
+			outputAsset.assetId = StringHelper::getAssetIdByString(assetIdAsString.c_str());
 			strcpy(outputAsset.assetFilename, outputAssetFilename.c_str());	// TODO(co) Buffer overflow test
 			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 		}

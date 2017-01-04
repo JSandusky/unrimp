@@ -143,6 +143,18 @@ namespace RendererToolkit
 		return trimLeftWhitespaceCharacters(trimRightWhitespaceCharacters(s));
 	}
 
+	RendererRuntime::AssetId StringHelper::getAssetIdByString(const std::string& assetIdAsString)
+	{
+		// Enforce asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
+		std::vector<std::string> elements;
+		splitString(assetIdAsString, "/", elements);
+		if (elements.size() != 4)
+		{
+			throw std::runtime_error('\"' + assetIdAsString + "\" is no valid asset ID as string. Asset ID naming scheme is \"<project name>/<asset type>/<asset category>/<asset name>\".");
+		}
+		return RendererRuntime::AssetId(assetIdAsString.c_str());
+	}
+
 	void StringHelper::stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode)
 	{
 		const size_t endPosition = sourceCode.length();

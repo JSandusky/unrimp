@@ -74,6 +74,8 @@ namespace RendererToolkit
 		static void optionalStringNProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, std::string value[], uint32_t numberOfComponents, char separator = ' ');
 		static void mandatoryStringIdProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererRuntime::StringId& value);
 		static void optionalStringIdProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererRuntime::StringId& value);
+		static void mandatoryAssetIdProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererRuntime::AssetId& value);
+		static void optionalAssetIdProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererRuntime::AssetId& value);
 		static void optionalClearFlagsProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, uint32_t& clearFlags);
 		static void optionalCompiledAssetId(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererRuntime::AssetId& compiledAssetId);
 		static RendererRuntime::AssetId getCompiledAssetId(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName);

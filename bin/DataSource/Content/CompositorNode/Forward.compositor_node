@@ -13,27 +13,27 @@
 		},
 		"RenderTargetTextures":
 		{
-			"MultisampleColorRenderTargetTexture":
+			"Example/Texture/Dynamic/MultisampleColorRenderTarget":
 			{
 				"TextureFormat": "R8G8B8A8",
 				"AllowMultisample": "TRUE"
 			},
-			"MultisampleDepthStencilRenderTargetTexture":
+			"Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget":
 			{
 				"TextureFormat": "D32_FLOAT",
 				"AllowMultisample": "TRUE"
 			},
-			"ColorRenderTargetTexture":
+			"Example/Texture/Dynamic/ColorRenderTarget":
 			{
 				"TextureFormat": "R8G8B8A8"
 			},
-			"GaussianBlurRenderTargetTexture0":
+			"Example/Texture/Dynamic/GaussianBlurRenderTarget0":
 			{
 				"TextureFormat": "R8G8B8A8",
 				"AllowResolutionScale": "FALSE",
 				"Scale": "0.25"
 			},
-			"GaussianBlurRenderTargetTexture1":
+			"Example/Texture/Dynamic/GaussianBlurRenderTarget1":
 			{
 				"TextureFormat": "R8G8B8A8",
 				"AllowResolutionScale": "FALSE",
@@ -44,20 +44,20 @@
 		{
 			"MultisampleFramebuffer":
 			{
-				"ColorTextures": [ "MultisampleColorRenderTargetTexture" ],
-				"DepthStencilTexture": "MultisampleDepthStencilRenderTargetTexture"
+				"ColorTextures": [ "Example/Texture/Dynamic/MultisampleColorRenderTarget" ],
+				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			},
 			"Framebuffer0":
 			{
-				"ColorTextures": [ "ColorRenderTargetTexture" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/ColorRenderTarget" ]
 			},
 			"GaussianBlurFramebuffer0":
 			{
-				"ColorTextures": [ "GaussianBlurRenderTargetTexture0" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/GaussianBlurRenderTarget0" ]
 			},
 			"GaussianBlurFramebuffer1":
 			{
-				"ColorTextures": [ "GaussianBlurRenderTargetTexture1" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/GaussianBlurRenderTarget1" ]
 			}
 		},
 		"Targets":
@@ -97,7 +97,7 @@
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "TRUE", 
-							"ColorMap": "ColorRenderTargetTexture"
+							"ColorMap": "Example/Texture/Dynamic/ColorRenderTarget"
 						}
 					}
 				}
@@ -112,7 +112,7 @@
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "FALSE", 
-							"ColorMap": "GaussianBlurRenderTargetTexture0"
+							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
 						}
 					}
 				}
@@ -127,7 +127,7 @@
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "TRUE", 
-							"ColorMap": "GaussianBlurRenderTargetTexture1"
+							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
 						}
 					}
 				}
@@ -142,7 +142,7 @@
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "TRUE", 
-							"ColorMap": "GaussianBlurRenderTargetTexture0"
+							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
 						}
 					}
 				}
@@ -156,7 +156,7 @@
 						"MaterialBlueprintAssetId": "102",
 						"SetMaterialProperties":
 						{
-							"ColorMap": "ColorRenderTargetTexture"
+							"ColorMap": "Example/Texture/Dynamic/ColorRenderTarget"
 						}
 					},
 					"DebugGui":
@@ -165,7 +165,7 @@
 						"SetMaterialProperties":
 						{
 							"GlyphMap": "Unrimp/Texture/Dynamic/ImGuiGlyphMap",
-							"BackgroundMap": "GaussianBlurRenderTargetTexture1"
+							"BackgroundMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
 						}
 					}
 				}
