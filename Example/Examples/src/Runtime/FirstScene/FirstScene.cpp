@@ -317,14 +317,6 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 						if (nullptr == mCameraSceneItem)
 						{
 							mCameraSceneItem = static_cast<RendererRuntime::CameraSceneItem*>(sceneItem);
-							if (mCompositorWorkspaceInstance->getRendererRuntime().getVrManager().isRunning())
-							{
-								mController = new VrController(*mCameraSceneItem);
-							}
-							else
-							{
-								mController = new FreeCameraController(*mCameraSceneItem);
-							}
 						}
 					}
 					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::LightSceneItem::TYPE_ID)
@@ -342,12 +334,21 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 				}
 			}
 
-			// Set initial camera position if virtual reality is disabled
-			if (nullptr != mCameraSceneItem && nullptr != mCameraSceneItem->getParentSceneNode() && !mCompositorWorkspaceInstance->getRendererRuntime().getVrManager().isRunning())
+			if (nullptr != mCameraSceneItem && nullptr != mCameraSceneItem->getParentSceneNode())
 			{
-				RendererRuntime::ISceneNode* sceneNode = mCameraSceneItem->getParentSceneNode();
-				sceneNode->setPosition(glm::vec3(-3.12873816f, 0.6473912f, 2.20889306f));
-				sceneNode->setRotation(glm::quat(0.412612021f, -0.0201802868f, 0.909596086f, 0.0444870926f));
+				if (mCompositorWorkspaceInstance->getRendererRuntime().getVrManager().isRunning())
+				{
+					mController = new VrController(*mCameraSceneItem);
+				}
+				else
+				{
+					mController = new FreeCameraController(*mCameraSceneItem);
+
+					// Set initial camera position if virtual reality is disabled
+					RendererRuntime::ISceneNode* sceneNode = mCameraSceneItem->getParentSceneNode();
+					sceneNode->setPosition(glm::vec3(-3.12873816f, 0.6473912f, 2.20889306f));
+					sceneNode->setRotation(glm::quat(0.412612021f, -0.0201802868f, 0.909596086f, 0.0444870926f));
+				}
 			}
 		}
 		else

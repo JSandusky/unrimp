@@ -66,6 +66,8 @@ public:
 	*/
 	virtual ~IController();
 
+	RendererRuntime::CameraSceneItem& getCameraSceneItem();
+
 	/**
 	*  @brief
 	*    Called in case a key is now pressed

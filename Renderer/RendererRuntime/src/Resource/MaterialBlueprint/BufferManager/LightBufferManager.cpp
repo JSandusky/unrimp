@@ -97,7 +97,7 @@ namespace RendererRuntime
 				if (sceneItem->getSceneItemTypeId() == RendererRuntime::LightSceneItem::TYPE_ID)
 				{
 					const RendererRuntime::LightSceneItem* lightSceneItem = static_cast<const RendererRuntime::LightSceneItem*>(sceneItem);
-					if (lightSceneItem->getLightType() != RendererRuntime::LightSceneItem::LightType::DIRECTIONAL)
+					if (lightSceneItem->getLightType() != RendererRuntime::LightSceneItem::LightType::DIRECTIONAL && lightSceneItem->isVisible())
 					{
 						++mNumberOfLights;
 

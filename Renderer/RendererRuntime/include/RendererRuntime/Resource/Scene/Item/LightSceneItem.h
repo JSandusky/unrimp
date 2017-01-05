@@ -83,6 +83,7 @@ namespace RendererRuntime
 		inline void setColor(const glm::vec3& color);
 		inline float getRadius() const;
 		inline void setRadius(float radius);
+		inline bool isVisible() const;
 
 
 	//[-------------------------------------------------------]
@@ -91,6 +92,7 @@ namespace RendererRuntime
 	public:
 		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
+		inline virtual void setVisible(bool visible) override;
 
 
 	//[-------------------------------------------------------]
@@ -110,6 +112,7 @@ namespace RendererRuntime
 		LightType mLightType;
 		glm::vec3 mColor;
 		float	  mRadius;	///< Must be zero for directional lights and none zero for point and spot lights
+		bool	  mVisible;
 
 
 	};

@@ -459,6 +459,18 @@ namespace
 			vrRenderModels->FreeRenderModel(vrRenderModel);
 		}
 
+		void setSceneItemsVisible(RendererRuntime::ISceneNode* sceneNodes[vr::k_unMaxTrackedDeviceCount], bool visible)
+		{
+			for (uint32_t i = 0; i < vr::k_unMaxTrackedDeviceCount; ++i)
+			{
+				RendererRuntime::ISceneNode* sceneNode = sceneNodes[i];
+				if (nullptr != sceneNode)
+				{
+					sceneNode->setSceneItemsVisible(visible);
+				}
+			}
+		}
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -603,6 +615,16 @@ namespace RendererRuntime
 					case vr::VREvent_TrackedDeviceActivated:
 						setupRenderModelForTrackedDevice(vrVrEvent.trackedDeviceIndex);
 						break;
+
+					// Sent to the scene application to request hiding render models temporarily
+					case vr::VREvent_HideRenderModels:
+						::detail::setSceneItemsVisible(mSceneNodes, false);
+						break;
+
+					// Sent to the scene application to request restoring render model visibility
+					case vr::VREvent_ShowRenderModels:
+						::detail::setSceneItemsVisible(mSceneNodes, true);
+						break;
 				}
 
 				// Tell the world
@@ -612,6 +634,13 @@ namespace RendererRuntime
 
 		// Request poses from OpenVR
 		vr::VRCompositor()->WaitGetPoses(mVrTrackedDevicePose, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
+
+		// Everything must be relative to the camera world space position
+		glm::vec3 cameraPosition;
+		if (nullptr != cameraSceneItem && nullptr != cameraSceneItem->getParentSceneNode())
+		{
+			cameraPosition = cameraSceneItem->getParentSceneNode()->getTransform().position;
+		}
 
 		// Gather all valid poses
 		mNumberOfValidDevicePoses = 0;
@@ -630,6 +659,9 @@ namespace RendererRuntime
 					glm::vec3 skew;
 					glm::vec4 perspective;
 					glm::decompose(devicePoseMatrix, scale, rotation, translation, skew, perspective);
+
+					// Everything must be relative to the camera world space position
+					translation -= cameraPosition;
 
 					// TODO(co) Why is the rotation inverted?
 					if (vr::k_unTrackedDeviceIndex_Hmd != deviceIndex)
@@ -771,10 +803,10 @@ namespace RendererRuntime
 		// Create and setup scene node with mesh item, this is what's controlled during runtime
 		if (nullptr != mSceneResource)
 		{
-			ISceneNode* sceneNode = mSceneNodes[trackedDeviceIndex] = mSceneResource->createSceneNode(Transform());
+			ISceneNode* sceneNode = mSceneNodes[trackedDeviceIndex] = mSceneResource->createSceneNode(Transform::IDENTITY);
 			if (nullptr != sceneNode)
 			{
-				MeshSceneItem* meshSceneItem = static_cast<MeshSceneItem*>(mSceneResource->createSceneItem(MeshSceneItem::TYPE_ID, *sceneNode));
+				MeshSceneItem* meshSceneItem = mSceneResource->createSceneItem<MeshSceneItem>(*sceneNode);
 				if (nullptr != meshSceneItem)
 				{
 					meshSceneItem->setMeshResourceId(meshResourceId);

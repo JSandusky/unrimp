@@ -85,6 +85,11 @@ namespace RendererRuntime
 		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mRadius);
 	}
 
+	inline bool LightSceneItem::isVisible() const
+	{
+		return mVisible;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
@@ -92,6 +97,11 @@ namespace RendererRuntime
 	inline SceneItemTypeId LightSceneItem::getSceneItemTypeId() const
 	{
 		return TYPE_ID;
+	}
+
+	inline void LightSceneItem::setVisible(bool visible)
+	{
+		mVisible = visible;
 	}
 
 
@@ -102,7 +112,8 @@ namespace RendererRuntime
 		ISceneItem(sceneResource),
 		mLightType(LightType::POINT),
 		mColor(1.0f, 1.0f, 1.0f),
-		mRadius(1.0f)
+		mRadius(1.0f),
+		mVisible(true)
 	{
 		// Nothing here
 	}

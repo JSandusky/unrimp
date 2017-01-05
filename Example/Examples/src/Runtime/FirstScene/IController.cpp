@@ -35,6 +35,11 @@ IController::~IController()
 	// Nothing here
 }
 
+RendererRuntime::CameraSceneItem& IController::getCameraSceneItem()
+{
+	return mCameraSceneItem;
+}
+
 void IController::onKeyDown(uint32_t key)
 {
 	mPressedKeys.insert(key);
