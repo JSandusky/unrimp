@@ -32,6 +32,9 @@
 #include <glm/detail/setup.hpp>	// For "glm::countof()"
 
 #include <string>
+#ifdef ANDROID
+#include <cstdio> // For implementing own std::to_string
+#endif
 
 
 //[-------------------------------------------------------]
@@ -89,6 +92,25 @@ namespace
 		const Renderer::VertexAttributes VertexAttributes(glm::countof(VertexAttributesLayout), VertexAttributesLayout);
 
 
+		//[-------------------------------------------------------]
+		//[ Helper methods                                        ]
+		//[-------------------------------------------------------]
+		std::string own_to_string(uint32_t value)
+		{
+			// Own std::to_string implementation similar to the one used in gcc stl
+			// We need it on android because gnustl doesn't implement it, which is part of the android NDK
+			// We need to support gnustl because qt-runtimp uses Qt android which currently only supports gnustl as c++ runtime
+			#ifdef ANDROID
+				const size_t bufSize = 4 * sizeof(value);
+				std::string buffer(bufSize, '\0');
+				snprintf(&buffer[0], bufSize, "%u", value);
+				return buffer;
+			#else
+				return std::to_string(value);
+			#endif
+		}
+
+
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
@@ -132,7 +154,8 @@ namespace RendererRuntime
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 0.0f, 0.0f, 0.0f));
 		}
 		// TODO(co) Get rid of "std::to_string()" later on in case it's a problem (memory allocations inside)
-		ImGui::Begin(("RendererRuntime::DebugGuiManager::drawText_" + std::to_string(mDrawTextCounter)).c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoFocusOnAppearing);
+		// TODO(sw) the gnustl on android (Currently needed to be used in conjunction with Qt) doesn't have std::to_string
+		ImGui::Begin(("RendererRuntime::DebugGuiManager::drawText_" + ::detail::own_to_string(mDrawTextCounter)).c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoFocusOnAppearing);
 			ImGui::Text("%s", text);	// Use "%s" as format instead of the text itself to avoid compiler warning "-Wformat-security"
 			ImGui::SetWindowPos(ImVec2(x, y));
 		ImGui::End();
