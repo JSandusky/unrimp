@@ -36,7 +36,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-class FreeCameraController;
+class IController;
 namespace RendererRuntime
 {
 	class ISceneNode;
@@ -156,7 +156,7 @@ private:
 	RendererRuntime::MaterialResourceId			  mMaterialResourceId;
 	RendererRuntime::MaterialResourceId			  mCloneMaterialResourceId;
 	bool										  mCustomMaterialResourceSet;
-	FreeCameraController*						  mFreeCameraController;
+	IController*								  mController;
 	// Crazy raw-pointers to point-of-interest scene stuff
 	RendererRuntime::CameraSceneItem* mCameraSceneItem;
 	RendererRuntime::LightSceneItem*  mLightSceneItem;

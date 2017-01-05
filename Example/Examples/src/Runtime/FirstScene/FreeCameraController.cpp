@@ -24,7 +24,6 @@
 #include "PrecompiledHeader.h"
 #include "Runtime/FirstScene/FreeCameraController.h"
 
-#include <RendererRuntime/Core/GetUninitialized.h>
 #include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Core/Math/EulerAngles.h>
 #include <RendererRuntime/Resource/Scene/Node/ISceneNode.h>
@@ -35,11 +34,7 @@
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FreeCameraController::FreeCameraController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
-	mCameraSceneItem(cameraSceneItem),
-	mMousePositionX(RendererRuntime::getUninitialized<int>()),
-	mMousePositionY(RendererRuntime::getUninitialized<int>()),
-	mMouseMoveX(0),
-	mMouseMoveY(0)
+	IController(cameraSceneItem)
 {
 	// Nothing here
 }
@@ -49,6 +44,10 @@ FreeCameraController::~FreeCameraController()
 	// Nothing here
 }
 
+
+//[-------------------------------------------------------]
+//[ Public virtual IController methods                    ]
+//[-------------------------------------------------------]
 void FreeCameraController::onUpdate(float pastMilliseconds)
 {
 	RendererRuntime::ISceneNode* sceneNode = mCameraSceneItem.getParentSceneNode();
@@ -166,68 +165,6 @@ void FreeCameraController::onUpdate(float pastMilliseconds)
 		}
 	}
 
-	// "Jedi gesture": There was no mouse movement
-	mMouseMoveX = 0;
-	mMouseMoveY = 0;
-}
-
-void FreeCameraController::onKeyDown(uint32_t key)
-{
-	mPressedKeys.insert(key);
-}
-
-void FreeCameraController::onKeyUp(uint32_t key)
-{
-	mPressedKeys.erase(key);
-}
-
-void FreeCameraController::onMouseButtonDown(uint32_t button)
-{
-	mPressedMouseButtons.insert(button);
-}
-
-void FreeCameraController::onMouseButtonUp(uint32_t button)
-{
-	mPressedMouseButtons.erase(button);
-}
-
-void FreeCameraController::onMouseMove(int x, int y)
-{
-	const static int MAXIMUM = 100;
-
-	// X
-	if (RendererRuntime::isInitialized(mMousePositionX))
-	{
-		mMouseMoveX = x - mMousePositionX;
-		if (mMouseMoveX > MAXIMUM)
-		{
-			mMouseMoveX = MAXIMUM;
-		}
-	}
-	mMousePositionX = x;
-
-	// Y
-	if (RendererRuntime::isInitialized(mMousePositionY))
-	{
-		mMouseMoveY = y - mMousePositionY;
-		if (mMouseMoveY > MAXIMUM)
-		{
-			mMouseMoveY = MAXIMUM;
-		}
-	}
-	mMousePositionY = y;
-}
-
-
-//[-------------------------------------------------------]
-//[ Private methods                                       ]
-//[-------------------------------------------------------]
-bool FreeCameraController::isKeyPressed(uint32_t key) const
-{
-	return (mPressedKeys.find(key) != mPressedKeys.cend());
-}
-
-bool FreeCameraController::isMouseButtonPressed(uint32_t button) const
-{
-	return (mPressedMouseButtons.find(button) != mPressedMouseButtons.cend());
+	// Call the base implementation
+	IController::onUpdate(pastMilliseconds);
 }

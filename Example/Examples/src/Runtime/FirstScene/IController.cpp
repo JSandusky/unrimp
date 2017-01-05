@@ -19,61 +19,104 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Runtime/FirstScene/IController.h"
 
-
-//[-------------------------------------------------------]
-//[ Classes                                               ]
-//[-------------------------------------------------------]
-/**
-*  @brief
-*    Free camera controller
-*/
-class FreeCameraController : public IController
-{
+#include <RendererRuntime/Core/GetUninitialized.h>
 
 
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-public:
-	/**
-	*  @brief
-	*    Constructor
-	*
-	*  @param[in] cameraSceneItem
-	*    Camera scene item to control, instance must stay valid as long as this controller instance exists
-	*/
-	explicit FreeCameraController(RendererRuntime::CameraSceneItem& cameraSceneItem);
+IController::~IController()
+{
+	// Nothing here
+}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
-	virtual ~FreeCameraController();
+void IController::onKeyDown(uint32_t key)
+{
+	mPressedKeys.insert(key);
+}
+
+void IController::onKeyUp(uint32_t key)
+{
+	mPressedKeys.erase(key);
+}
+
+void IController::onMouseButtonDown(uint32_t button)
+{
+	mPressedMouseButtons.insert(button);
+}
+
+void IController::onMouseButtonUp(uint32_t button)
+{
+	mPressedMouseButtons.erase(button);
+}
+
+void IController::onMouseMove(int x, int y)
+{
+	const static int MAXIMUM = 100;
+
+	// X
+	if (RendererRuntime::isInitialized(mMousePositionX))
+	{
+		mMouseMoveX = x - mMousePositionX;
+		if (mMouseMoveX > MAXIMUM)
+		{
+			mMouseMoveX = MAXIMUM;
+		}
+	}
+	mMousePositionX = x;
+
+	// Y
+	if (RendererRuntime::isInitialized(mMousePositionY))
+	{
+		mMouseMoveY = y - mMousePositionY;
+		if (mMouseMoveY > MAXIMUM)
+		{
+			mMouseMoveY = MAXIMUM;
+		}
+	}
+	mMousePositionY = y;
+}
 
 
 //[-------------------------------------------------------]
 //[ Public virtual IController methods                    ]
 //[-------------------------------------------------------]
-public:
-	virtual void onUpdate(float pastMilliseconds) override;
+void IController::onUpdate(float)
+{
+	// "Jedi gesture": There was no mouse movement
+	mMouseMoveX = 0;
+	mMouseMoveY = 0;
+}
+
+
+//[-------------------------------------------------------]
+//[ Protected methods                                     ]
+//[-------------------------------------------------------]
+IController::IController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
+	mCameraSceneItem(cameraSceneItem),
+	mMousePositionX(RendererRuntime::getUninitialized<int>()),
+	mMousePositionY(RendererRuntime::getUninitialized<int>()),
+	mMouseMoveX(0),
+	mMouseMoveY(0)
+{
+	// Nothing here
+}
 
 
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-private:
-	FreeCameraController(const FreeCameraController&) = delete;
-	FreeCameraController& operator=(const FreeCameraController&) = delete;
+bool IController::isKeyPressed(uint32_t key) const
+{
+	return (mPressedKeys.find(key) != mPressedKeys.cend());
+}
 
-
-};
+bool IController::isMouseButtonPressed(uint32_t button) const
+{
+	return (mPressedMouseButtons.find(button) != mPressedMouseButtons.cend());
+}

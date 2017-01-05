@@ -35,9 +35,9 @@
 //[-------------------------------------------------------]
 /**
 *  @brief
-*    Free camera controller
+*    Virtual reality controller
 */
-class FreeCameraController : public IController
+class VrController : public IController
 {
 
 
@@ -52,13 +52,13 @@ public:
 	*  @param[in] cameraSceneItem
 	*    Camera scene item to control, instance must stay valid as long as this controller instance exists
 	*/
-	explicit FreeCameraController(RendererRuntime::CameraSceneItem& cameraSceneItem);
+	explicit VrController(RendererRuntime::CameraSceneItem& cameraSceneItem);
 
 	/**
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FreeCameraController();
+	virtual ~VrController();
 
 
 //[-------------------------------------------------------]
@@ -72,8 +72,15 @@ public:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
-	FreeCameraController(const FreeCameraController&) = delete;
-	FreeCameraController& operator=(const FreeCameraController&) = delete;
+	VrController(const VrController&) = delete;
+	VrController& operator=(const VrController&) = delete;
+
+
+//[-------------------------------------------------------]
+//[ Private data                                          ]
+//[-------------------------------------------------------]
+private:
+	// TODO(co)
 
 
 };

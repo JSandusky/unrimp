@@ -24,6 +24,7 @@
 #include "PrecompiledHeader.h"
 #include "Runtime/FirstScene/FirstScene.h"
 #include "Runtime/FirstScene/FreeCameraController.h"
+#include "Runtime/FirstScene/VrController.h"
 
 #include <RendererRuntime/Vr/IVrManager.h>
 #include <RendererRuntime/Core/Math/Transform.h>
@@ -80,7 +81,7 @@ FirstScene::FirstScene(const char *rendererName) :
 	mMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
 	mCloneMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
 	mCustomMaterialResourceSet(false),
-	mFreeCameraController(nullptr),
+	mController(nullptr),
 	mCameraSceneItem(nullptr),
 	mLightSceneItem(nullptr),
 	mSceneNode(nullptr),
@@ -149,11 +150,11 @@ void FirstScene::onDeinitialization()
 	mCompositorWorkspaceInstance = nullptr;
 	delete mSceneResource;
 
-	// Destroy free camera controller instance
-	if (nullptr != mFreeCameraController)
+	// Destroy controller instance
+	if (nullptr != mController)
 	{
-		delete mFreeCameraController;
-		mFreeCameraController = nullptr;
+		delete mController;
+		mController = nullptr;
 	}
 
 	// Call the base implementation
@@ -162,41 +163,41 @@ void FirstScene::onDeinitialization()
 
 void FirstScene::onKeyDown(uint32_t key)
 {
-	if (nullptr != mFreeCameraController)
+	if (nullptr != mController)
 	{
-		mFreeCameraController->onKeyDown(key);
+		mController->onKeyDown(key);
 	}
 }
 
 void FirstScene::onKeyUp(uint32_t key)
 {
-	if (nullptr != mFreeCameraController)
+	if (nullptr != mController)
 	{
-		mFreeCameraController->onKeyUp(key);
+		mController->onKeyUp(key);
 	}
 }
 
 void FirstScene::onMouseButtonDown(uint32_t button)
 {
-	if (nullptr != mFreeCameraController)
+	if (nullptr != mController)
 	{
-		mFreeCameraController->onMouseButtonDown(button);
+		mController->onMouseButtonDown(button);
 	}
 }
 
 void FirstScene::onMouseButtonUp(uint32_t button)
 {
-	if (nullptr != mFreeCameraController)
+	if (nullptr != mController)
 	{
-		mFreeCameraController->onMouseButtonUp(button);
+		mController->onMouseButtonUp(button);
 	}
 }
 
 void FirstScene::onMouseMove(int x, int y)
 {
-	if (nullptr != mFreeCameraController)
+	if (nullptr != mController)
 	{
-		mFreeCameraController->onMouseMove(x, y);
+		mController->onMouseMove(x, y);
 	}
 }
 
@@ -233,10 +234,10 @@ void FirstScene::onUpdate()
 		mGlobalTimer += pastMilliseconds * 0.0005f * mRotationSpeed;
 	}
 
-	// Update free camera controller
-	if (nullptr != mFreeCameraController)
+	// Update controller
+	if (nullptr != mController)
 	{
-		mFreeCameraController->onUpdate(pastMilliseconds);
+		mController->onUpdate(pastMilliseconds);
 	}
 
 	// Start the stopwatch
@@ -318,9 +319,13 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 						if (nullptr == mCameraSceneItem)
 						{
 							mCameraSceneItem = static_cast<RendererRuntime::CameraSceneItem*>(sceneItem);
-							if (!mCompositorWorkspaceInstance->getRendererRuntime().getVrManager().isRunning())
+							if (mCompositorWorkspaceInstance->getRendererRuntime().getVrManager().isRunning())
 							{
-								mFreeCameraController = new FreeCameraController(*mCameraSceneItem);
+								mController = new VrController(*mCameraSceneItem);
+							}
+							else
+							{
+								mController = new FreeCameraController(*mCameraSceneItem);
 							}
 						}
 					}
@@ -351,10 +356,10 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 		{
 			mCameraSceneItem = nullptr;
 			mLightSceneItem = nullptr;
-			if (nullptr != mFreeCameraController)
+			if (nullptr != mController)
 			{
-				delete mFreeCameraController;
-				mFreeCameraController = nullptr;
+				delete mController;
+				mController = nullptr;
 			}
 			mSceneNode = nullptr;
 		}

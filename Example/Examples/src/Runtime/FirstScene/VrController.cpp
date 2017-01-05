@@ -19,61 +19,34 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Runtime/FirstScene/IController.h"
-
-
-//[-------------------------------------------------------]
-//[ Classes                                               ]
-//[-------------------------------------------------------]
-/**
-*  @brief
-*    Free camera controller
-*/
-class FreeCameraController : public IController
-{
+#include "PrecompiledHeader.h"
+#include "Runtime/FirstScene/VrController.h"
 
 
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-public:
-	/**
-	*  @brief
-	*    Constructor
-	*
-	*  @param[in] cameraSceneItem
-	*    Camera scene item to control, instance must stay valid as long as this controller instance exists
-	*/
-	explicit FreeCameraController(RendererRuntime::CameraSceneItem& cameraSceneItem);
+VrController::VrController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
+	IController(cameraSceneItem)
+{
+	// Nothing here
+}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
-	virtual ~FreeCameraController();
+VrController::~VrController()
+{
+	// Nothing here
+}
 
 
 //[-------------------------------------------------------]
 //[ Public virtual IController methods                    ]
 //[-------------------------------------------------------]
-public:
-	virtual void onUpdate(float pastMilliseconds) override;
+void VrController::onUpdate(float pastMilliseconds)
+{
+	// TODO(co)
 
-
-//[-------------------------------------------------------]
-//[ Private methods                                       ]
-//[-------------------------------------------------------]
-private:
-	FreeCameraController(const FreeCameraController&) = delete;
-	FreeCameraController& operator=(const FreeCameraController&) = delete;
-
-
-};
+	// Call the base implementation
+	IController::onUpdate(pastMilliseconds);
+}

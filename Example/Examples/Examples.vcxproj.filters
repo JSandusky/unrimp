@@ -393,6 +393,12 @@
     <ClInclude Include="src\Runtime\FirstScene\FreeCameraController.h">
       <Filter>Runtime\FirstScene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Runtime\FirstScene\VrController.h">
+      <Filter>Runtime\FirstScene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstScene\IController.h">
+      <Filter>Runtime\FirstScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -508,6 +514,12 @@
       <Filter>Basics\FirstIndirectBuffer</Filter>
     </ClCompile>
     <ClCompile Include="src\Runtime\FirstScene\FreeCameraController.cpp">
+      <Filter>Runtime\FirstScene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Runtime\FirstScene\VrController.cpp">
+      <Filter>Runtime\FirstScene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Runtime\FirstScene\IController.cpp">
       <Filter>Runtime\FirstScene</Filter>
     </ClCompile>
   </ItemGroup>

@@ -118,7 +118,9 @@ if(RENDERER_RUNTIME)
 		src/Framework/IApplicationRendererRuntime.cpp
 		src/Runtime/FirstMesh/FirstMesh.cpp
 		src/Runtime/FirstScene/FirstScene.cpp
+		src/Runtime/FirstScene/IController.cpp
 		src/Runtime/FirstScene/FreeCameraController.cpp
+		src/Runtime/FirstScene/VrController.cpp
 		src/Runtime/FirstCompositor/FirstCompositor.cpp
 		src/Runtime/FirstCompositor/CompositorInstancePassFirst.cpp
 		src/Runtime/FirstCompositor/CompositorPassFactoryFirst.cpp

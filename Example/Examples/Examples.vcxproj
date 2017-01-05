@@ -334,6 +334,8 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_Null.h" />
     <ClInclude Include="src\Runtime\FirstScene\FirstScene.h" />
     <ClInclude Include="src\Runtime\FirstScene\FreeCameraController.h" />
+    <ClInclude Include="src\Runtime\FirstScene\IController.h" />
+    <ClInclude Include="src\Runtime\FirstScene\VrController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Advanced\FirstGpgpu\FirstGpgpu.cpp" />
@@ -397,6 +399,8 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClCompile Include="src\Runtime\FirstMesh\FirstMesh.cpp" />
     <ClCompile Include="src\Runtime\FirstScene\FirstScene.cpp" />
     <ClCompile Include="src\Runtime\FirstScene\FreeCameraController.cpp" />
+    <ClCompile Include="src\Runtime\FirstScene\IController.cpp" />
+    <ClCompile Include="src\Runtime\FirstScene\VrController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
