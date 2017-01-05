@@ -35,7 +35,7 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_VERTEX_POSITION	(float2, Position)		// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+	INPUT_VERTEX_POSITION	(float2, Position)		// GUI space vertex position as input
 	INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)	// 32 bit texture coordinate
 	INPUT_VERTEX_COLOR	 	(float4, Color)			// Vertex color
 INPUT_END

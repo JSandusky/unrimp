@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <cassert>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -47,7 +53,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline const PassBufferManager::PassData& MaterialBlueprintResourceListener::getPassData() const
+	{
+		assert(nullptr != mPassData);
+		return *mPassData;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
 	//[-------------------------------------------------------]
 	inline void MaterialBlueprintResourceListener::beginFillUnknown()
 	{

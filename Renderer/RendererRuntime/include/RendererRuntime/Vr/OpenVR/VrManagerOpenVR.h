@@ -43,6 +43,7 @@ namespace RendererRuntime
 	class ISceneNode;
 	class IRendererRuntime;
 	class OpenVRRuntimeLinking;
+	class IVrManagerOpenVRListener;
 }
 
 
@@ -73,9 +74,28 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		RENDERERRUNTIME_API_EXPORT static const VrManagerTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline IVrManagerOpenVRListener& getVrManagerOpenVRListener() const;
+		RENDERERRUNTIME_API_EXPORT void setVrManagerOpenVRListener(IVrManagerOpenVRListener* vrManagerOpenVRListener);	// Does not take over the control of the memory
+		inline vr::IVRSystem* getVrSystem() const;
+		inline const vr::TrackedDevicePose_t& getVrTrackedDevicePose(vr::TrackedDeviceIndex_t trackedDeviceIndex) const;
+		inline const glm::mat4& getDevicePoseMatrix(vr::TrackedDeviceIndex_t trackedDeviceIndex) const;
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IVrManager methods    ]
 	//[-------------------------------------------------------]
 	public:
+		virtual VrManagerTypeId getVrManagerTypeId() const override;
 		virtual bool isHmdPresent() const override;
 		virtual void setSceneResource(ISceneResource* sceneResource) override;
 		virtual bool startup(AssetId vrDeviceMaterialAssetId) override;
@@ -110,7 +130,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		   mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
+		IRendererRuntime&		   mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
+		IVrManagerOpenVRListener*  mVrManagerOpenVRListener;	///< OpenVR manager listener, always valid, do not destroy the instance
 		bool					   mVrDeviceMaterialResourceLoaded;
 		MaterialResourceId		   mVrDeviceMaterialResourceId;
 		ISceneResource*			   mSceneResource;			// TODO(co) No crazy raw-pointers

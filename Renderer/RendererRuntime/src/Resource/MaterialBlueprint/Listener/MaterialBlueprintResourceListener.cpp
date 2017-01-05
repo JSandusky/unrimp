@@ -99,7 +99,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
+	//[ Protected virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
 	//[-------------------------------------------------------]
 	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, PassBufferManager::PassData& passData)
 	{

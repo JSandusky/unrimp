@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/Math/Transform.h"
+#include "RendererRuntime/Core/Math/Math.h"
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -52,8 +53,7 @@ namespace RendererRuntime
 	void Transform::getAsMatrix(glm::mat4& objectSpaceToWorldSpace) const
 	{
 		// TODO(co) Optimize
-		static const glm::mat4 IDENTITY_MATRIX;	// TODO(co) Does GLM offer such a constant?
-		objectSpaceToWorldSpace = glm::translate(IDENTITY_MATRIX, position) * glm::mat4_cast(rotation) * glm::scale(IDENTITY_MATRIX, scale);
+		objectSpaceToWorldSpace = glm::translate(Math::IDENTITY_MATRIX, position) * glm::mat4_cast(rotation) * glm::scale(Math::IDENTITY_MATRIX, scale);
 	}
 
 	void Transform::setByMatrix(const glm::mat4& transformMatrix)

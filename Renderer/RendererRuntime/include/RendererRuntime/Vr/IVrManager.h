@@ -65,7 +65,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef StringId AssetId;			///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef StringId VrManagerTypeId;	///< VR manager identifier, internally just a POD "uint32_t"
 
 
 	//[-------------------------------------------------------]
@@ -96,6 +97,8 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IVrManager methods    ]
 	//[-------------------------------------------------------]
 	public:
+		virtual VrManagerTypeId getVrManagerTypeId() const = 0;
+
 		/**
 		*  @brief
 		*    Check whether or not a head-mounted display (HMD) is present

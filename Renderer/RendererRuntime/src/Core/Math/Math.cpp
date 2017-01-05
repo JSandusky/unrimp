@@ -40,6 +40,7 @@ namespace RendererRuntime
 	const glm::vec3 Math::RIGHT_VECTOR	(1.0f, 0.0f, 0.0f);
 	const glm::vec3 Math::UP_VECTOR		(0.0f, 1.0f, 0.0f);
 	const glm::vec3 Math::FORWARD_VECTOR(0.0f, 0.0f, 1.0f);
+	const glm::mat4 Math::IDENTITY_MATRIX;
 
 
 	//[-------------------------------------------------------]

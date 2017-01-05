@@ -501,6 +501,9 @@
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\LightBufferManager.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </None>
+    <None Include="include\RendererRuntime\Vr\OpenVR\IVrManagerOpenVRListener.inl">
+      <Filter>Source Files\Vr\OpenVR</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -980,6 +983,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\LightBufferManager.h">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\IVrManagerOpenVRListener.h">
+      <Filter>Source Files\Vr\OpenVR</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

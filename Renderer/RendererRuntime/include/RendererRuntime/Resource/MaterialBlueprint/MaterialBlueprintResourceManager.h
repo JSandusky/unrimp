@@ -82,7 +82,7 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT MaterialBlueprintResourceId loadMaterialBlueprintResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 
 		inline IMaterialBlueprintResourceListener& getMaterialBlueprintResourceListener() const;
-		RENDERERRUNTIME_API_EXPORT void setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener);
+		RENDERERRUNTIME_API_EXPORT void setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener);	// Does not take over the control of the memory
 
 		/**
 		*  @brief

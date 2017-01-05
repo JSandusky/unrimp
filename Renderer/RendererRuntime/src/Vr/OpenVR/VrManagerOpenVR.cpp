@@ -24,10 +24,10 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h"
 #include "RendererRuntime/Vr/OpenVR/OpenVRRuntimeLinking.h"
+#include "RendererRuntime/Vr/OpenVR/IVrManagerOpenVRListener.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
@@ -58,6 +58,45 @@ namespace
 {
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Classes                                               ]
+		//[-------------------------------------------------------]
+		class VrManagerOpenVRListener : public RendererRuntime::IVrManagerOpenVRListener
+		{
+
+
+		//[-------------------------------------------------------]
+		//[ Public methods                                        ]
+		//[-------------------------------------------------------]
+		public:
+			VrManagerOpenVRListener()
+			{
+				// Nothing here
+			}
+
+			virtual ~VrManagerOpenVRListener()
+			{
+				// Nothing here
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Protected methods                                     ]
+		//[-------------------------------------------------------]
+		protected:
+			VrManagerOpenVRListener(const VrManagerOpenVRListener&) = delete;
+			VrManagerOpenVRListener& operator=(const VrManagerOpenVRListener&) = delete;
+
+
+		};
+
+
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		static VrManagerOpenVRListener defaultVrManagerOpenVRListener;
 
 
 		//[-------------------------------------------------------]
@@ -436,8 +475,29 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const VrManagerTypeId VrManagerOpenVR::TYPE_ID("VrManagerOpenVR");
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	void VrManagerOpenVR::setVrManagerOpenVRListener(IVrManagerOpenVRListener* vrManagerOpenVRListener)
+	{
+		// There must always be a valid VR manager OpenVR listener instance
+		mVrManagerOpenVRListener = (nullptr != vrManagerOpenVRListener) ? vrManagerOpenVRListener : &::detail::defaultVrManagerOpenVRListener;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IVrManager methods    ]
 	//[-------------------------------------------------------]
+	VrManagerTypeId VrManagerOpenVR::getVrManagerTypeId() const
+	{
+		return TYPE_ID;
+	}
+
 	bool VrManagerOpenVR::isHmdPresent() const
 	{
 		return (mOpenVRRuntimeLinking->isOpenVRAvaiable() && vr::VR_IsRuntimeInstalled() && vr::VR_IsHmdPresent());
@@ -535,15 +595,18 @@ namespace RendererRuntime
 		// Process OpenVR events
 		if (mVrDeviceMaterialResourceLoaded)
 		{
-			vr::VREvent_t vrVREvent;
-			while (mVrSystem->PollNextEvent(&vrVREvent, sizeof(vr::VREvent_t)))
+			vr::VREvent_t vrVrEvent;
+			while (mVrSystem->PollNextEvent(&vrVrEvent, sizeof(vr::VREvent_t)))
 			{
-				switch (vrVREvent.eventType)
+				switch (vrVrEvent.eventType)
 				{
 					case vr::VREvent_TrackedDeviceActivated:
-						setupRenderModelForTrackedDevice(vrVREvent.trackedDeviceIndex);
+						setupRenderModelForTrackedDevice(vrVrEvent.trackedDeviceIndex);
 						break;
 				}
+
+				// Tell the world
+				mVrManagerOpenVRListener->onVrEvent(vrVrEvent);
 			}
 		}
 
@@ -661,6 +724,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	VrManagerOpenVR::VrManagerOpenVR(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
+		mVrManagerOpenVRListener(&::detail::defaultVrManagerOpenVRListener),
 		mVrDeviceMaterialResourceLoaded(false),
 		mVrDeviceMaterialResourceId(getUninitialized<MaterialResourceId>()),
 		mSceneResource(nullptr),
@@ -714,12 +778,9 @@ namespace RendererRuntime
 				if (nullptr != meshSceneItem)
 				{
 					meshSceneItem->setMeshResourceId(meshResourceId);
-				}
 
-				// Attach a point light to controllers, this way they can be seen easier and it's possible to illuminate the scene by using the hands
-				if (mVrSystem->GetTrackedDeviceClass(trackedDeviceIndex) == vr::TrackedDeviceClass_Controller)
-				{
-					static_cast<LightSceneItem*>(mSceneResource->createSceneItem(LightSceneItem::TYPE_ID, *sceneNode));
+					// Tell the world
+					mVrManagerOpenVRListener->onMeshSceneItemCreated(trackedDeviceIndex, *meshSceneItem);
 				}
 			}
 		}

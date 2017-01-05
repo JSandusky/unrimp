@@ -65,6 +65,7 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT static const glm::vec3 RIGHT_VECTOR;		///< 1 0 0
 		RENDERERRUNTIME_API_EXPORT static const glm::vec3 UP_VECTOR;		///< 0 1 0
 		RENDERERRUNTIME_API_EXPORT static const glm::vec3 FORWARD_VECTOR;	///< 0 0 1
+		RENDERERRUNTIME_API_EXPORT static const glm::mat4 IDENTITY_MATRIX;
 
 
 	//[-------------------------------------------------------]

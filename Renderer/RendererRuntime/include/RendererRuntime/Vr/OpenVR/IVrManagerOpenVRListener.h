@@ -27,7 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Runtime/FirstScene/IController.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+
+#include <openvr/openvr.h>
 
 
 //[-------------------------------------------------------]
@@ -35,61 +37,62 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IRendererRuntime;
+	class MeshSceneItem;
 }
 
 
 //[-------------------------------------------------------]
-//[ Classes                                               ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Virtual reality controller
-*/
-class VrController : public IController
+namespace RendererRuntime
 {
 
 
-//[-------------------------------------------------------]
-//[ Public methods                                        ]
-//[-------------------------------------------------------]
-public:
+	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Constructor
-	*
-	*  @param[in] cameraSceneItem
-	*    Camera scene item to control, instance must stay valid as long as this controller instance exists
+	*    Abstract OpenVR manager listener interface
 	*/
-	explicit VrController(RendererRuntime::CameraSceneItem& cameraSceneItem);
+	class IVrManagerOpenVRListener : public NonCopyable
+	{
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
-	virtual ~VrController();
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class VrManagerOpenVR;	// Is calling the protected interface methods
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		inline IVrManagerOpenVRListener();
+		inline virtual ~IVrManagerOpenVRListener();
+		IVrManagerOpenVRListener(const IVrManagerOpenVRListener&) = delete;
+		IVrManagerOpenVRListener& operator=(const IVrManagerOpenVRListener&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IVrManagerOpenVRListener methods ]
+	//[-------------------------------------------------------]
+	protected:
+		inline virtual void onVrEvent(const vr::VREvent_t& vrVrEvent);
+		inline virtual void onMeshSceneItemCreated(vr::TrackedDeviceIndex_t trackedDeviceIndex, MeshSceneItem& meshSceneItem);
+
+
+	};
 
 
 //[-------------------------------------------------------]
-//[ Public virtual IController methods                    ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-public:
-	virtual void onUpdate(float pastMilliseconds) override;
-
-
-//[-------------------------------------------------------]
-//[ Private methods                                       ]
-//[-------------------------------------------------------]
-private:
-	VrController(const VrController&) = delete;
-	VrController& operator=(const VrController&) = delete;
+} // RendererRuntime
 
 
 //[-------------------------------------------------------]
-//[ Private data                                          ]
+//[ Implementation                                        ]
 //[-------------------------------------------------------]
-private:
-	const RendererRuntime::IRendererRuntime& mRendererRuntime;
-
-
-};
+#include "RendererRuntime/Vr/OpenVR/IVrManagerOpenVRListener.inl"

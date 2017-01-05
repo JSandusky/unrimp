@@ -258,12 +258,12 @@ void FirstScene::onDrawRequest()
 			// Execute the compositor workspace instance
 			if (nullptr != mCompositorWorkspaceInstance)
 			{
+				createDebugGui(*mainRenderTarget);
+
 				// Decide whether or not the VR-manager is used for rendering
 				RendererRuntime::IVrManager& vrManager = mCompositorWorkspaceInstance->getRendererRuntime().getVrManager();
 				if (vrManager.isRunning())
 				{
-					// No debug GUI in VR-mode for now
-
 					// Update the VR-manager just before rendering
 					vrManager.updateHmdMatrixPose(mCameraSceneItem);
 
@@ -272,8 +272,6 @@ void FirstScene::onDrawRequest()
 				}
 				else
 				{
-					createDebugGui(*mainRenderTarget);
-
 					// Execute the compositor workspace instance
 					mCompositorWorkspaceInstance->execute(*mainRenderTarget, mCameraSceneItem, mLightSceneItem);
 				}

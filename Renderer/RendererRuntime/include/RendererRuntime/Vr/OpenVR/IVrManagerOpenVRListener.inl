@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include <cassert>
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,44 +26,30 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IVrManagerOpenVRListener& VrManagerOpenVR::getVrManagerOpenVRListener() const
+	inline IVrManagerOpenVRListener::IVrManagerOpenVRListener()
 	{
-		// We know this pointer must always be valid
-		assert(nullptr != mVrManagerOpenVRListener);
-		return *mVrManagerOpenVRListener;
+		// Nothing here
 	}
 
-	inline vr::IVRSystem* VrManagerOpenVR::getVrSystem() const
+	inline IVrManagerOpenVRListener::~IVrManagerOpenVRListener()
 	{
-		return mVrSystem;
-	}
-
-	inline const vr::TrackedDevicePose_t& VrManagerOpenVR::getVrTrackedDevicePose(vr::TrackedDeviceIndex_t trackedDeviceIndex) const
-	{
-		assert(trackedDeviceIndex < vr::k_unMaxTrackedDeviceCount);
-		return mVrTrackedDevicePose[trackedDeviceIndex];
-	}
-
-	inline const glm::mat4& VrManagerOpenVR::getDevicePoseMatrix(vr::TrackedDeviceIndex_t trackedDeviceIndex) const
-	{
-		assert(trackedDeviceIndex < vr::k_unMaxTrackedDeviceCount);
-		return mDevicePoseMatrix[trackedDeviceIndex];
+		// Nothing here
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IVrManager methods    ]
+	//[ Protected virtual RendererRuntime::IVrManagerOpenVRListener methods ]
 	//[-------------------------------------------------------]
-	inline bool VrManagerOpenVR::isRunning() const
+	inline void IVrManagerOpenVRListener::onVrEvent(const vr::VREvent_t&)
 	{
-		return (nullptr != mVrSystem);
+		// Nothing here
 	}
 
-	inline const glm::mat4& VrManagerOpenVR::getHmdPoseMatrix() const
+	inline void IVrManagerOpenVRListener::onMeshSceneItemCreated(vr::TrackedDeviceIndex_t, MeshSceneItem&)
 	{
-		return mHmdPoseMatrix;
+		// Nothing here
 	}
 
 
