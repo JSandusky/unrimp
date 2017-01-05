@@ -129,7 +129,7 @@ ExampleRunner::ExampleRunner()
 		addExample("FirstMesh",					&RunExample<FirstMesh>,						supportsAllRenderer);
 		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);
 		addExample("FirstScene",				&RunExample<FirstScene>,					supportsAllRenderer);
-		addExample("InstancedCubes",			&RunExample<InstancedCubes>,				doesNotSupportOpenGLES2);
+		addExample("InstancedCubes",			&RunExample<InstancedCubes>,				supportsAllRenderer);
 		m_defaultExampleName = "FirstScene";
 	#endif
 
