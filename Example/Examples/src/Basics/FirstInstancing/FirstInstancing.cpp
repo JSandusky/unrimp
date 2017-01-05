@@ -81,7 +81,7 @@ void FirstInstancing::onInitialization()
 			// -> Direct3D 9 has support for instanced arrays, but does not support draw instanced
 			// -> OpenGL 3.1 introduced draw instance ("GL_ARB_draw_instanced"-extension)
 			// -> OpenGL 3.3 introduced instance array ("GL_ARB_instanced_arrays"-extension)
-			// -> OpenGL ES 2 has no instancing support at all
+			// -> OpenGL ES 3.0 support both approaches
 
 			// Left side (green): Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 			if (renderer->getCapabilities().instancedArrays)
@@ -172,6 +172,7 @@ void FirstInstancing::onInitialization()
 					const char *vertexShaderSourceCode = nullptr;
 					const char *fragmentShaderSourceCode = nullptr;
 					#include "FirstInstancing_InstancedArrays_GLSL_410.h"
+					#include "FirstInstancing_InstancedArrays_GLSL_ES3.h"
 					#include "FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11_D3D12.h"
 					#include "FirstInstancing_InstancedArrays_Null.h"
 
@@ -245,6 +246,7 @@ void FirstInstancing::onInitialization()
 					const char *vertexShaderSourceCode = nullptr;
 					const char *fragmentShaderSourceCode = nullptr;
 					#include "FirstInstancing_DrawInstanced_GLSL_410.h"
+					#include "FirstInstancing_DrawInstanced_GLSL_ES3.h"
 					#include "FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11_D3D12.h"
 					#include "FirstInstancing_DrawInstanced_Null.h"
 
