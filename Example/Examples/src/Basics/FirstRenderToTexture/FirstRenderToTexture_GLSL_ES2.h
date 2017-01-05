@@ -71,7 +71,7 @@ uniform mediump sampler2D DiffuseMap;
 void main()
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	FragmentColor = texture2D(DiffuseMap, TexCoord);
+	FragmentColor = texture(DiffuseMap, TexCoord);
 }
 );	// STRINGIFY
 
