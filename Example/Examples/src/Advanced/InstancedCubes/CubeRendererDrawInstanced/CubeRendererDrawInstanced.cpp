@@ -310,6 +310,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 		const char *fragmentShaderSourceCode = nullptr;
 		#include "CubeRendererDrawInstanced_GLSL_410.h"
 		#include "CubeRendererDrawInstanced_HLSL_D3D10_D3D11_D3D12.h"
+		#include "CubeRendererDrawInstanced_GLSL_ES3.h"
 		#include "CubeRendererDrawInstanced_Null.h"
 
 		// Create the program

@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#ifndef RENDERER_NO_OPENGL
+#ifndef RENDERER_NO_OPENGLES2
 // Uniform buffer version (Direct3D 10 and Direct3D 11 only support uniform buffers and no individual uniform access)
 if (0 == strcmp(mRenderer->getName(), "OpenGLES2") && mRenderer->getCapabilities().maximumUniformBufferSize > 0)
 {
@@ -180,7 +180,7 @@ in vec3 NormalVs;
 layout(location = 0) out vec4 Color0; // index layout needs EXT_blend_func_extended which is gles 3.1+ feature but not supported in fragment shader!
 
 // Uniforms
-uniform sampler2D DiffuseMap;					// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform highp sampler2D DiffuseMap;					// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 layout(std140) uniform UniformBlockDynamicFs	// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec3 LightPosition;	// World space light position
