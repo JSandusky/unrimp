@@ -37,14 +37,14 @@ if (0 == strcmp(renderer.getName(), "OpenGLES2"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-attribute highp vec2 Position;		// Object space vertex position as input, left/bottom is (0,0) and right/top is (1,1)
-attribute highp vec2 TexCoord;		// Normalized texture coordinate as input
-varying   highp vec2 TexCoordVs;	// Normalized texture coordinate as output
-attribute highp vec4 Color;			// Color as input
-varying   highp vec4 ColorVs;		// Color as output
+in highp vec2 Position;		// Object space vertex position as input, left/bottom is (0,0) and right/top is (1,1)
+in highp vec2 TexCoord;		// Normalized texture coordinate as input
+out   highp vec2 TexCoordVs;	// Normalized texture coordinate as output
+in highp vec4 Color;			// Color as input
+out   highp vec4 ColorVs;		// Color as output
 
 // Uniforms
 uniform highp mat4 ObjectSpaceToClipSpaceMatrix;
@@ -69,11 +69,13 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-varying mediump vec2 TexCoordVs;	// Normalized texture coordinate as input
-varying mediump vec4 ColorVs;
+in mediump vec2 TexCoordVs;	// Normalized texture coordinate as input
+in mediump vec4 ColorVs;
+
+out highp vec4 FragmentColor;	// Output variable for fragment color
 
 // Uniforms
 uniform mediump sampler2D GlyphMap;	// Glyph atlas texture map
@@ -82,7 +84,7 @@ uniform mediump sampler2D GlyphMap;	// Glyph atlas texture map
 void main()
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	gl_FragColor = ColorVs * texture2D(GlyphMap, TexCoordVs).aaaa;
+	FragmentColor = ColorVs * texture2D(GlyphMap, TexCoordVs).aaaa;
 }
 );	// STRINGIFY
 
