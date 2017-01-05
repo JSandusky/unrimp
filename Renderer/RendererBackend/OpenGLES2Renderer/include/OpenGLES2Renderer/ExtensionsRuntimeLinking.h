@@ -90,6 +90,7 @@ namespace OpenGLES2Renderer
 		inline virtual bool isGL_EXT_texture_filter_anisotropic() const override;
 		inline virtual bool isGL_EXT_texture_array() const override;
 		inline virtual bool isGL_EXT_texture_buffer() const override;
+		inline virtual bool isGL_EXT_draw_elements_base_vertex() const override;
 		// AMD
 		inline virtual bool isGL_AMD_compressed_3DC_texture() const override;
 		// NV
@@ -124,6 +125,7 @@ namespace OpenGLES2Renderer
 		bool mGL_EXT_texture_filter_anisotropic;
 		bool mGL_EXT_texture_array;
 		bool mGL_EXT_texture_buffer;
+		bool mGL_EXT_draw_elements_base_vertex;
 		// AMD
 		bool mGL_AMD_compressed_3DC_texture;
 		// NV
@@ -203,6 +205,12 @@ namespace OpenGLES2Renderer
 	// GL_EXT_texture_buffer
 	FNDEF_EX(void,	glTexBufferEXT,	(GLenum target, GLenum internalformat, GLuint buffer));
 	#define glTexBufferEXT	FNPTR(glTexBufferEXT)
+
+	// GL_EXT_draw_elements_base_vertex
+	FNDEF_EX(void,	glDrawElementsBaseVertexEXT,	(GLenum mode, GLsizei count, GLenum type, const void *indices, GLint basevertex));
+	FNDEF_EX(void,	glDrawElementsInstancedBaseVertexEXT,	(GLenum mode, GLsizei count, GLenum type, const void *indices, GLsizei instancecount, GLint basevertex));
+	#define glDrawElementsBaseVertexEXT				FNPTR(glDrawElementsBaseVertexEXT)
+	#define glDrawElementsInstancedBaseVertexEXT	FNPTR(glDrawElementsInstancedBaseVertexEXT)
 
 
 	//[-------------------------------------------------------]

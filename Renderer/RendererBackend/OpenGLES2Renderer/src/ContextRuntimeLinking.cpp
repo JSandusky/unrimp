@@ -503,6 +503,7 @@ namespace OpenGLES2Renderer
 		IMPORT_FUNC(glDisableVertexAttribArray);
 		IMPORT_FUNC(glDrawArrays);
 		IMPORT_FUNC(glDrawElements);
+		IMPORT_FUNC(glDrawElementsInstanced);
 		IMPORT_FUNC(glEnable);
 		IMPORT_FUNC(glEnableVertexAttribArray);
 		IMPORT_FUNC(glFinish);
