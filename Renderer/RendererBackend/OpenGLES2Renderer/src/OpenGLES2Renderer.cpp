@@ -941,12 +941,18 @@ namespace OpenGLES2Renderer
 			{
 				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
 
-				// No instancing supported here
-				assert(1 == drawInstancedArguments.instanceCount);
-				assert(0 == drawInstancedArguments.startInstanceLocation);
-
 				// Draw and advance
-				glDrawArrays(mOpenGLES2PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance));
+				if (drawInstancedArguments.instanceCount > 1)
+				{
+					// With instancing
+					glDrawArraysInstanced(mOpenGLES2PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount));
+				}
+				else
+				{
+					// Without instancing
+					assert(drawInstancedArguments.instanceCount <= 1);
+					glDrawArrays(mOpenGLES2PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance));
+				}
 				emulationData += sizeof(Renderer::DrawInstancedArguments);
 			}
 		}
@@ -1676,10 +1682,10 @@ namespace OpenGLES2Renderer
 		mCapabilities.instancedArrays = true; // Is core feature in gles 3.0
 
 		// Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID, OpenGL ES 2 has no "GL_ARB_draw_instanced" extension)
-		mCapabilities.drawInstanced = false;
+		mCapabilities.drawInstanced = true; // Is core feature in gles 3.0
 
 		// Base vertex supported for draw calls?
-		mCapabilities.baseVertex = false;	// OpenGL ES 2 has no "GL_ARB_draw_elements_base_vertex" extension equivalent
+		mCapabilities.baseVertex = mContext->getExtensions().isGL_EXT_draw_elements_base_vertex();
 
 		// OpenGL ES 2 has no native multi-threading
 		mCapabilities.nativeMultiThreading = false;

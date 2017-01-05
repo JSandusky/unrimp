@@ -264,6 +264,7 @@ namespace OpenGLES2Renderer
 	FNDEF_GL(void,				glDisable,								(GLenum cap));
 	FNDEF_GL(void,				glDisableVertexAttribArray,				(GLuint index));
 	FNDEF_GL(void,				glDrawArrays,							(GLenum mode, GLint first, GLsizei count));
+	FNDEF_GL(void,				glDrawArraysInstanced,					(GLenum mode, GLint first, GLsizei count, GLsizei primcount));
 	FNDEF_GL(void,				glDrawElements,							(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices));
 	FNDEF_GL(void,				glDrawElementsInstanced,				(GLenum mode, GLsizei count, GLenum type, const void *indices, GLsizei instancecount));
 	FNDEF_GL(void,				glEnable,								(GLenum cap));
@@ -454,8 +455,9 @@ namespace OpenGLES2Renderer
 	#define	glDisable								FNPTR(glDisable)
 	#define	glDisableVertexAttribArray				FNPTR(glDisableVertexAttribArray)
 	#define	glDrawArrays							FNPTR(glDrawArrays)
+	#define	glDrawArraysInstanced					FNPTR(glDrawArraysInstanced)
 	#define	glDrawElements							FNPTR(glDrawElements)
-	#define	glDrawElementsInstanced							FNPTR(glDrawElementsInstanced)
+	#define	glDrawElementsInstanced					FNPTR(glDrawElementsInstanced)
 	#define	glEnable								FNPTR(glEnable)
 	#define	glEnableVertexAttribArray				FNPTR(glEnableVertexAttribArray)
 	#define	glFinish								FNPTR(glFinish)
