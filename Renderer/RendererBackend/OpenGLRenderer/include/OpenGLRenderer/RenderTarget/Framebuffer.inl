@@ -49,7 +49,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	inline void* Framebuffer::getInternalResourceHandle() const
 	{
-		return reinterpret_cast<void*>(mOpenGLES2Framebuffer);
+		return reinterpret_cast<void*>(mOpenGLFramebuffer);
 	}
 
 
