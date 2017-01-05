@@ -115,7 +115,7 @@ ExampleRunner::ExampleRunner()
 	addExample("FirstRenderToTexture",			&RunExample<FirstRenderToTexture>,			supportsAllRenderer);
 	addExample("FirstMultipleRenderTargets",	&RunExample<FirstMultipleRenderTargets>,	supportsAllRenderer);
 	addExample("FirstMultipleSwapChains",		&RunExample<FirstMultipleSwapChains>,		supportsAllRenderer);
-	addExample("FirstInstancing",				&RunExample<FirstInstancing>,				doesNotSupportOpenGLES2);
+	addExample("FirstInstancing",				&RunExample<FirstInstancing>,				supportsAllRenderer);
 	addExample("FirstGeometryShader",			&RunExample<FirstGeometryShader>,			onlyShaderModel4Plus);
 	addExample("FirstTessellation",				&RunExample<FirstTessellation>,				onlyShaderModel5Plus);
 
