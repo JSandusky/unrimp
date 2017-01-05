@@ -41,6 +41,7 @@ namespace Renderer
 		instancedArrays(false),
 		drawInstanced(false),
 		baseVertex(false),
+		nativeMultiThreading(false),
 		vertexShader(false),
 		maximumNumberOfPatchVertices(0),
 		maximumNumberOfGsOutputVertices(0)
@@ -70,6 +71,7 @@ namespace Renderer
 		instancedArrays(false),
 		drawInstanced(false),
 		baseVertex(false),
+		nativeMultiThreading(false),
 		vertexShader(false),
 		maximumNumberOfPatchVertices(0),
 		maximumNumberOfGsOutputVertices(0)

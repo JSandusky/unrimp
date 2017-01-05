@@ -120,8 +120,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		TextureResources  mTextureResources;
+		IRendererRuntime&	  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		TextureResources	  mTextureResources;
+		Renderer::ITexturePtr mPlaceholderTexturePtr;
 
 
 	};

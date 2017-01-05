@@ -111,7 +111,7 @@ namespace OpenGLRenderer
 	{
 		if (mUseExternalContext)
 		{
-			// We use an external context -> load the opengl3 entry points
+			// We use an external context -> load the OpenGL 3 entry points
 			loadOpenGL3EntryPoints();
 		}
 		else

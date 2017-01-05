@@ -102,7 +102,12 @@ namespace RendererRuntime
 
 			struct MeshItem
 			{
-				AssetId meshAssetId;
+				AssetId  meshAssetId;
+				uint32_t numberOfSubMeshMaterialAssetIds;
+
+				MeshItem() :
+					numberOfSubMeshMaterialAssetIds(0)
+				{};
 			};
 		#pragma pack(pop)
 

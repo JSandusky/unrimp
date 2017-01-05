@@ -46,6 +46,7 @@ namespace RendererRuntime
 	inline CrnTextureResourceLoader::CrnTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		ITextureResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
+		mTexture(nullptr),
 		mWidth(0),
 		mHeight(0),
 		mTextureFormat(0),

@@ -27,8 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <RendererRuntime/Core/StringId.h>
 #include <RendererRuntime/Core/NonCopyable.h>
+
+#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
 #include <string>
 #include <vector>
@@ -67,7 +68,8 @@ namespace RendererToolkit
 		static std::string& trimLeftWhitespaceCharacters(std::string& s);
 		static std::string& trimWhitespaceCharacters(std::string& s);
 		static bool isPositiveInteger(const std::string& s);
-		static RendererRuntime::AssetId getAssetIdByString(const std::string& assetIdAsString);
+		static RendererRuntime::AssetId getAssetIdByString(const std::string& assetIdAsString);	// Asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>" only
+		static RendererRuntime::AssetId getAssetIdByString(const std::string& assetIdAsString, const RendererToolkit::IAssetCompiler::Input& input);	// Asset ID name + ID directly
 		static void stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode);
 
 

@@ -1872,6 +1872,9 @@ namespace Direct3D11Renderer
 		// Base vertex supported for draw calls?
 		mCapabilities.baseVertex = true;
 
+		// Direct3D 11 has native multi-threading
+		mCapabilities.nativeMultiThreading = true;
+
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;
 

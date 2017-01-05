@@ -33,6 +33,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class ITexture;
+}
 namespace RendererRuntime
 {
 	class IRendererRuntime;
@@ -91,7 +95,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		IRendererRuntime&   mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		Renderer::ITexture* mTexture;			///< In case the used renderer backend supports native multi-threading we also create the renderer resource asynchronous, but the final resource pointer reassignment must still happen synchronous
 		// Temporary data
 		uint32_t mWidth;
 		uint32_t mHeight;

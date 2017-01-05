@@ -178,6 +178,25 @@ Renderer/RendererToolkit/src/Helper/StringHelper.cpp:150:92: note:   couldn't de
 		return RendererRuntime::AssetId(assetIdAsString.c_str());
 	}
 
+	RendererRuntime::AssetId StringHelper::getAssetIdByString(const std::string& assetIdAsString, const RendererToolkit::IAssetCompiler::Input& input)
+	{
+		// Sanity check
+		if (assetIdAsString.empty())
+		{
+			throw std::runtime_error("Empty strings can't be translated into asset IDs");
+		}
+
+		// Usage of asset IDs is the preferred way to go, but we also need to support the asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
+		if (StringHelper::isPositiveInteger(assetIdAsString))
+		{
+			return input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(assetIdAsString.c_str())));
+		}
+		else
+		{
+			return getAssetIdByString(assetIdAsString);
+		}
+	}
+
 	void StringHelper::stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode)
 	{
 		const size_t endPosition = sourceCode.length();

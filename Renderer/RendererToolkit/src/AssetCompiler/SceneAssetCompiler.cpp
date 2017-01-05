@@ -234,7 +234,8 @@ namespace RendererToolkit
 							}
 							else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId)
 							{
-								numberOfBytes = sizeof(RendererRuntime::v1Scene::MeshItem);
+								const uint32_t numberOfSubMeshMaterialAssetIds = rapidJsonValueItem.HasMember("SubMeshMaterialAssetIds") ? rapidJsonValueItem["SubMeshMaterialAssetIds"].Size() : 0;
+								numberOfBytes = sizeof(RendererRuntime::v1Scene::MeshItem) + sizeof(RendererRuntime::AssetId) * numberOfSubMeshMaterialAssetIds;
 							}
 
 							{ // Write down the scene item header
@@ -279,13 +280,34 @@ namespace RendererToolkit
 								}
 								else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId)
 								{
-									// Map the source asset ID to the compiled asset ID
-									const RendererRuntime::AssetId compiledAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "MeshAssetId");
-
-									// Write the mesh item data
 									RendererRuntime::v1Scene::MeshItem meshItem;
-									meshItem.meshAssetId = compiledAssetId;
+
+									// Map the source asset ID to the compiled asset ID
+									meshItem.meshAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "MeshAssetId");
+
+									// Optional sub-mesh material asset IDs to be able to overwrite the original material asset ID of sub-meshes
+									std::vector<RendererRuntime::AssetId> subMeshMaterialAssetIds;
+									if (rapidJsonValueItem.HasMember("SubMeshMaterialAssetIds"))
+									{
+										const rapidjson::Value& rapidJsonValueSubMeshMaterialAssetIds = rapidJsonValueItem["SubMeshMaterialAssetIds"];
+										const uint32_t numberOfSubMeshMaterialAssetIds = rapidJsonValueSubMeshMaterialAssetIds.Size();
+										subMeshMaterialAssetIds.resize(numberOfSubMeshMaterialAssetIds);
+										for (uint32_t i = 0; i < numberOfSubMeshMaterialAssetIds; ++i)
+										{
+											// Empty string means "Don't overwrite the original material asset ID of the sub-mesh"
+											const std::string valueAsString = rapidJsonValueSubMeshMaterialAssetIds[i].GetString();
+											subMeshMaterialAssetIds[i] = valueAsString.empty() ? RendererRuntime::getUninitialized<RendererRuntime::AssetId>() : StringHelper::getAssetIdByString(valueAsString, input);
+										}
+									}
+									meshItem.numberOfSubMeshMaterialAssetIds = subMeshMaterialAssetIds.size();
+
+									// Write down
 									outputFileStream.write(reinterpret_cast<const char*>(&meshItem), sizeof(RendererRuntime::v1Scene::MeshItem));
+									if (!subMeshMaterialAssetIds.empty())
+									{
+										// Write down all sub-mesh material asset IDs
+										outputFileStream.write(reinterpret_cast<const char*>(subMeshMaterialAssetIds.data()), sizeof(RendererRuntime::AssetId) * subMeshMaterialAssetIds.size());
+									}
 								}
 							}
 						}

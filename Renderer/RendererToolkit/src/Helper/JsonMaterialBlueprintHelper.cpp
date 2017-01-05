@@ -462,24 +462,7 @@ namespace RendererToolkit
 				if (rapidJsonValue.HasMember(propertyName))
 				{
 					// Usage of asset IDs is the preferred way to go, but we also need to support the asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
-					const std::string valueAsString = rapidJsonValue[propertyName].GetString();
-					if (StringHelper::isPositiveInteger(valueAsString))
-					{
-						textureAssetId = input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(valueAsString.c_str())));
-					}
-					else
-					{
-						textureAssetId = StringHelper::getAssetIdByString(valueAsString);
-					}
-					
-					// TODO(sw) causes error: 
-					/*
-					 * Renderer/RendererToolkit/src/Helper/JsonMaterialBlueprintHelper.cpp:466:70: error: operands to ?: have different types ‘uint32_t {aka unsigned int}’ and ‘RendererRuntime::AssetId {aka RendererRuntime::StringId}’
-      textureAssetId = StringHelper::isPositiveInteger(valueAsString) ? input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(valueAsString.c_str()))) : StringHelper::getAssetIdByString(valueAsString);
-                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-					 */
-					//textureAssetId = StringHelper::isPositiveInteger(valueAsString) ? input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(valueAsString.c_str()))) : StringHelper::getAssetIdByString(valueAsString);
+					textureAssetId = StringHelper::getAssetIdByString(rapidJsonValue[propertyName].GetString(), input);
 				}
 				if (RendererRuntime::isUninitialized(textureAssetId))
 				{
