@@ -214,8 +214,9 @@ namespace RendererRuntime
 					const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
 					if (MaterialProperty::Usage::MATERIAL_REFERENCE == usage)	// Most likely the case, so check this first
 					{
+						// TODO(sw) The explizit cast to MaterialPropertyId is needed because gcc 4.9 (currently used on android) doesn't get the correct call due the StringId is typedefed to 'RendererRuntime::MaterialPropertyId
 						// Figure out the material property value
-						const MaterialProperty* materialProperty = materialResource.getPropertyById(uniformBufferElementProperty.getReferenceValue());
+						const MaterialProperty* materialProperty = materialResource.getPropertyById(MaterialPropertyId(uniformBufferElementProperty.getReferenceValue()));
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
@@ -231,8 +232,9 @@ namespace RendererRuntime
 					{
 						// Referencing a global material property inside a material uniform buffer doesn't make really sense performance wise, but don't forbid it
 	
+						// TODO(sw) The explizit cast to MaterialPropertyId is needed because gcc 4.9 (currently used on android) doesn't get the correct call due the StringId is typedefed to 'RendererRuntime::MaterialPropertyId
 						// Figure out the global material property value
-						const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
+						const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(MaterialPropertyId(uniformBufferElementProperty.getReferenceValue()));
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
