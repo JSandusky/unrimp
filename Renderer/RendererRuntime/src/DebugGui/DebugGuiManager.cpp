@@ -225,6 +225,7 @@ namespace RendererRuntime
 			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
 			// Render command lists
+			// -> There's no need to try to gather draw calls and batch them into multi-draw-indirect buffers, ImGui does already a pretty good job
 			int vertexOffset = 0;
 			int indexOffset = 0;
 			const ImDrawData* imDrawData = ImGui::GetDrawData();

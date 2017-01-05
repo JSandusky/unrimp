@@ -64,6 +64,7 @@ int programEntryPoint(CmdLineArgs &args);
 					// Call the platform independent program entry point
 					result = programEntryPoint(arguments);
 				}
+
 				// For memory leak detection
 				#ifdef _DEBUG
 					_CrtDumpMemoryLeaks();
