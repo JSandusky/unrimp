@@ -39,6 +39,15 @@ namespace OpenGLES2Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	inline void* Framebuffer::getInternalResourceHandle() const
+	{
+		return reinterpret_cast<void*>(mOpenGLES2Framebuffer);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

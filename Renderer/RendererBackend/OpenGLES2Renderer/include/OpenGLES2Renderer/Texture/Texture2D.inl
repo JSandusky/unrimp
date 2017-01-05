@@ -34,6 +34,15 @@ namespace OpenGLES2Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	inline void* Texture2D::getInternalResourceHandle() const
+	{
+		return reinterpret_cast<void*>(mOpenGLES2Texture);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
