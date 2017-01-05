@@ -975,16 +975,58 @@ namespace OpenGLES2Renderer
 				{
 					const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
 
-					// No instancing supported here
-					assert(1 == drawIndexedInstancedArguments.instanceCount);
-					assert(0 == drawIndexedInstancedArguments.startInstanceLocation);
+					if (drawIndexedInstancedArguments.instanceCount > 1)
+					{
+						// With instancing
 
-					// OpenGL ES 2 has no "GL_ARB_draw_elements_base_vertex" equivalent, so, we can't support "baseVertexLocation" in here
-					assert(0 == drawIndexedInstancedArguments.baseVertexLocation);
+						// Use base vertex location?
+						if (drawIndexedInstancedArguments.baseVertexLocation > 0)
+						{
+							// Is the "GL_EXT_draw_elements_base_vertex" extension there?
+							if (mContext->getExtensions().isGL_EXT_draw_elements_base_vertex())
+							{
+								// Draw with base vertex location
+								glDrawElementsInstancedBaseVertexEXT(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES2Type(), reinterpret_cast<const GLvoid*>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes()), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
+							}
+							else
+							{
+								// Error!
+								assert(false);
+							}
+						}
+						else
+						{
+							// Draw without base vertex location
+							glDrawElementsInstanced(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES2Type(), reinterpret_cast<const GLvoid*>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes()), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount));
+						}
+					}
+					else
+					{
 
-					// Draw and advance
-					glDrawElements(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES2Type(), reinterpret_cast<const GLvoid*>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes()));
-					emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
+						// Without instancing
+						assert(drawIndexedInstancedArguments.instanceCount <= 1);
+
+						// Use base vertex location?
+						if (drawIndexedInstancedArguments.baseVertexLocation > 0)
+						{
+							// Is the "GL_EXT_draw_elements_base_vertex" extension there?
+							if (mContext->getExtensions().isGL_EXT_draw_elements_base_vertex())
+							{
+								// Draw with base vertex location
+								glDrawElementsBaseVertexEXT(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES2Type(), reinterpret_cast<const GLvoid*>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes()), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
+							}
+							else
+							{
+								// Error!
+							}
+						}
+						else
+						{
+							// Draw and advance
+							glDrawElements(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES2Type(), reinterpret_cast<const GLvoid*>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes()));
+							emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
+						}
+					}
 				}
 			}
 		}
@@ -1630,8 +1672,8 @@ namespace OpenGLES2Renderer
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;
 
-		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex, OpenGL ES 2 has no "GL_ARB_instanced_arrays" extension)
-		mCapabilities.instancedArrays = false;
+		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
+		mCapabilities.instancedArrays = true; // Is core feature in gles 3.0
 
 		// Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID, OpenGL ES 2 has no "GL_ARB_draw_instanced" extension)
 		mCapabilities.drawInstanced = false;
