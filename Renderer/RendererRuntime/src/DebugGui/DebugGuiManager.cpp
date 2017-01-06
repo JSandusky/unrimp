@@ -101,10 +101,11 @@ namespace
 			// We need it on android because gnustl doesn't implement it, which is part of the android NDK
 			// We need to support gnustl because qt-runtimp uses Qt android which currently only supports gnustl as c++ runtime
 			#ifdef ANDROID
-				const size_t bufSize = 4 * sizeof(value);
-				std::string buffer(bufSize, '\0');
-				snprintf(&buffer[0], bufSize, "%u", value);
-				return buffer;
+				// We convert only an uint32 value which has a max value of 4294967295 -> 11 chars so with 16 we are on the safe side
+				const size_t bufferSize = 16;
+				char buffer[bufferSize] = {0};
+				int len = snprintf(buffer, bufferSize, "%u", value);
+				return std::string(buffer, buffer+len);
 			#else
 				return std::to_string(value);
 			#endif
