@@ -119,8 +119,8 @@ if(RENDERER_RUNTIME)
 		${SOURCE_CODES}
 		src/Framework/IApplicationRendererRuntime.cpp
 		src/Runtime/FirstMesh/FirstMesh.cpp
-# 		src/Runtime/FirstScene/FirstScene.cpp
-# 		src/Runtime/FirstScene/FreeCameraController.cpp
+		src/Runtime/FirstScene/FirstScene.cpp
+		src/Runtime/FirstScene/FreeCameraController.cpp
 # 		src/Runtime/FirstCompositor/FirstCompositor.cpp
 # 		src/Runtime/FirstCompositor/CompositorInstancePassFirst.cpp
 # 		src/Runtime/FirstCompositor/CompositorPassFactoryFirst.cpp

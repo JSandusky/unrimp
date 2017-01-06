@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Framework/Stopwatch.h"
-#include "Framework/IApplicationRendererRuntime.h"
+#include "Framework/ExampleBase.h"
 
 #include <RendererRuntime/Resource/IResourceListener.h>
 
@@ -69,7 +69,7 @@ namespace RendererRuntime
 *    - Scene
 *    - Virtual reality (VR)
 */
-class FirstScene : public IApplicationRendererRuntime, public RendererRuntime::IResourceListener
+class FirstScene : public ExampleBase, public RendererRuntime::IResourceListener
 {
 
 
@@ -95,7 +95,7 @@ public:
 
 
 //[-------------------------------------------------------]
-//[ Public virtual IApplication methods                   ]
+//[ Public virtual ExampleBase methods                    ]
 //[-------------------------------------------------------]
 public:
 	virtual void onInitialization() override;
@@ -106,7 +106,10 @@ public:
 	virtual void onMouseButtonUp(uint32_t button) override;
 	virtual void onMouseMove(int x, int y) override;
 	virtual void onUpdate() override;
-	virtual void onDrawRequest() override;
+	virtual void onDraw() override;
+
+	// This example wants complete control of the drawing
+	inline virtual bool doesCompleteOwnDrawing() const override { return true; }
 
 
 //[-------------------------------------------------------]

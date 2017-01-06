@@ -184,8 +184,23 @@ public:
 public:
 	virtual void onInitialization();
 	virtual void onDeinitialization();
+	virtual void onKeyDown(uint32_t key);
+	virtual void onKeyUp(uint32_t key);
+	virtual void onMouseButtonDown(uint32_t button);
+	virtual void onMouseButtonUp(uint32_t button);
+	virtual void onMouseMove(int x, int y);
 	virtual void onUpdate();
 	virtual void onDraw();
+
+	/**
+	*  @brief
+	*    Return if the examples does the drawing completely on its own.
+	*    Thus no draw handling in frontend (aka draw request handling in IApplicationRenderer)
+	*
+	*  @return
+	*    True if the example does its complete draw handling, otherwise false
+	*/
+	inline virtual bool doesCompleteOwnDrawing() const;
 
 
 //[-------------------------------------------------------]

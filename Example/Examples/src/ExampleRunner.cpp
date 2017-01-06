@@ -44,7 +44,7 @@
 #ifndef RENDERER_NO_RUNTIME
 	#include "Runtime/FirstMesh/FirstMesh.h"
 // 	#include "Runtime/FirstCompositor/FirstCompositor.h"
-// 	#include "Runtime/FirstScene/FirstScene.h"
+	#include "Runtime/FirstScene/FirstScene.h"
 // 	#include "Advanced/InstancedCubes/InstancedCubes.h"
 #endif
 #include <algorithm>
@@ -144,7 +144,7 @@ ExampleRunner::ExampleRunner()
 		// Renderer runtime
 		addExample("FirstMesh",					&RunRenderRuntimeExample<FirstMesh>,		supportsAllRenderer);
 // 		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);
-// 		addExample("FirstScene",				&RunExample<FirstScene>,					supportsAllRenderer);
+		addExample("FirstScene",				&RunRenderRuntimeExample<FirstScene>,		supportsAllRenderer);
 // 		addExample("InstancedCubes",			&RunExample<InstancedCubes>,				supportsAllRenderer);
 		m_defaultExampleName = "FirstScene";
 	#endif

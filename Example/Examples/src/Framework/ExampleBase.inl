@@ -40,3 +40,13 @@ inline RendererToolkit::IRendererToolkit *ExampleBase::getRendererToolkit()
 {
 	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRendererToolkit() : nullptr;
 }
+
+
+//[-------------------------------------------------------]
+//[ Public virtual ExampleBase methods                    ]
+//[-------------------------------------------------------]
+inline bool ExampleBase::doesCompleteOwnDrawing() const
+{
+	// Default implementation does not complete own drawing
+	return false;
+}

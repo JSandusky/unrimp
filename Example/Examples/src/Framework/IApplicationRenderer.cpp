@@ -118,10 +118,56 @@ void IApplicationRenderer::onToggleFullscreenState()
 	}
 }
 
+void IApplicationRenderer::onKeyDown(uint32_t key)
+{
+	if (nullptr != mExample)
+	{
+		mExample->onKeyDown(key);
+	}
+}
+
+void IApplicationRenderer::onKeyUp(uint32_t key)
+{
+	if (nullptr != mExample)
+	{
+		mExample->onKeyUp(key);
+	}
+}
+
+void IApplicationRenderer::onMouseButtonDown(uint32_t button)
+{
+	if (nullptr != mExample)
+	{
+		mExample->onMouseButtonDown(button);
+	}
+}
+
+void IApplicationRenderer::onMouseButtonUp(uint32_t button)
+{
+	if (nullptr != mExample)
+	{
+		mExample->onMouseButtonUp(button);
+	}
+}
+
+void IApplicationRenderer::onMouseMove(int x, int y)
+{
+	if (nullptr != mExample)
+	{
+		mExample->onMouseMove(x, y);
+	}
+}
+
 void IApplicationRenderer::onDrawRequest()
 {
+	if (nullptr != mExample && mExample->doesCompleteOwnDrawing())
+	{
+		// The example does the drawing completely on its own
+		mExample->draw();
+	}
+
 	// Is there a renderer instance?
-	if (nullptr != mRenderer)
+	else if (nullptr != mRenderer)
 	{
 		// Get the main swap chain and ensure there's one
 		Renderer::ISwapChain* swapChain = mRenderer->getMainSwapChain();

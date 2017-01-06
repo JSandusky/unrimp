@@ -75,6 +75,31 @@ void ExampleBase::onDeinitialization()
 	// Base does nothing
 }
 
+void ExampleBase::onKeyDown(uint32_t key)
+{
+	// Base does nothing
+}
+
+void ExampleBase::onKeyUp(uint32_t key)
+{
+	// Base does nothing
+}
+
+void ExampleBase::onMouseButtonDown(uint32_t button)
+{
+	// Base does nothing
+}
+
+void ExampleBase::onMouseButtonUp(uint32_t button)
+{
+	// Base does nothing
+}
+
+void ExampleBase::onMouseMove(int x, int y)
+{
+	// Base does nothing
+}
+
 void ExampleBase::onUpdate()
 {
 	// Base does nothing
