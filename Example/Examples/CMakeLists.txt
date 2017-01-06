@@ -72,8 +72,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/include/)
 # Cross-platform source codes
 set(SOURCE_CODES
 	# Cross-platform source codes
-	src/Advanced/FirstGpgpu/FirstGpgpu.cpp
-	src/Advanced/IcosahedronTessellation/IcosahedronTessellation.cpp
+# 	src/Advanced/FirstGpgpu/FirstGpgpu.cpp
+# 	src/Advanced/IcosahedronTessellation/IcosahedronTessellation.cpp
 	src/Basics/FirstGeometryShader/FirstGeometryShader.cpp
 	src/Basics/FirstIndirectBuffer/FirstIndirectBuffer.cpp
 	src/Basics/FirstInstancing/FirstInstancing.cpp
@@ -89,9 +89,11 @@ set(SOURCE_CODES
 	src/Framework/CmdLineArgs.cpp
 	src/Framework/Color4.cpp
 	src/Framework/EulerAngles.cpp
+	src/Framework/ExampleBase.cpp
 	src/Framework/IApplication.cpp
 	src/Framework/IApplicationImpl.cpp
 	src/Framework/IApplicationRenderer.cpp
+	src/Framework/ExampleBase.cpp
 	src/Framework/Stopwatch.cpp
 	src/Main.cpp
 )
@@ -115,20 +117,20 @@ if(RENDERER_RUNTIME)
 	# Renderer runtime example source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
-		src/Framework/IApplicationRendererRuntime.cpp
-		src/Runtime/FirstMesh/FirstMesh.cpp
-		src/Runtime/FirstScene/FirstScene.cpp
-		src/Runtime/FirstScene/FreeCameraController.cpp
-		src/Runtime/FirstCompositor/FirstCompositor.cpp
-		src/Runtime/FirstCompositor/CompositorInstancePassFirst.cpp
-		src/Runtime/FirstCompositor/CompositorPassFactoryFirst.cpp
-		src/Runtime/FirstCompositor/CompositorResourcePassFirst.cpp
-		src/Advanced/InstancedCubes/CubeRendererDrawInstanced/BatchDrawInstanced.cpp
-		src/Advanced/InstancedCubes/CubeRendererDrawInstanced/CubeRendererDrawInstanced.cpp
-		src/Advanced/InstancedCubes/CubeRendererInstancedArrays/BatchInstancedArrays.cpp
-		src/Advanced/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.cpp
-		src/Advanced/InstancedCubes/ICubeRenderer.cpp
-		src/Advanced/InstancedCubes/InstancedCubes.cpp
+# 		src/Framework/IApplicationRendererRuntime.cpp
+# 		src/Runtime/FirstMesh/FirstMesh.cpp
+# 		src/Runtime/FirstScene/FirstScene.cpp
+# 		src/Runtime/FirstScene/FreeCameraController.cpp
+# 		src/Runtime/FirstCompositor/FirstCompositor.cpp
+# 		src/Runtime/FirstCompositor/CompositorInstancePassFirst.cpp
+# 		src/Runtime/FirstCompositor/CompositorPassFactoryFirst.cpp
+# 		src/Runtime/FirstCompositor/CompositorResourcePassFirst.cpp
+# 		src/Advanced/InstancedCubes/CubeRendererDrawInstanced/BatchDrawInstanced.cpp
+# 		src/Advanced/InstancedCubes/CubeRendererDrawInstanced/CubeRendererDrawInstanced.cpp
+# 		src/Advanced/InstancedCubes/CubeRendererInstancedArrays/BatchInstancedArrays.cpp
+# 		src/Advanced/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.cpp
+# 		src/Advanced/InstancedCubes/ICubeRenderer.cpp
+# 		src/Advanced/InstancedCubes/InstancedCubes.cpp
 	)
 endif()
 

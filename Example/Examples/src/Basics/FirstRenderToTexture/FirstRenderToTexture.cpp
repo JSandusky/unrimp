@@ -31,8 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstRenderToTexture::FirstRenderToTexture(const char *rendererName) :
-	IApplicationRenderer(rendererName)
+FirstRenderToTexture::FirstRenderToTexture(const char *rendererName)
 {
 	// Nothing here
 }
@@ -50,7 +49,7 @@ FirstRenderToTexture::~FirstRenderToTexture()
 void FirstRenderToTexture::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRenderer::onInitialization();
+	ExampleBase::onInitialization();
 
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
@@ -188,7 +187,7 @@ void FirstRenderToTexture::onDeinitialization()
 	mTextureManager = nullptr;
 
 	// Call the base implementation
-	IApplicationRenderer::onDeinitialization();
+	ExampleBase::onDeinitialization();
 }
 
 void FirstRenderToTexture::onDraw()

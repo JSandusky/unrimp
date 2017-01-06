@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRenderer.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -47,7 +47,7 @@
 *    - Root signature
 *    - Pipeline state object (PSO)
 */
-class FirstTexture : public IApplicationRenderer
+class FirstTexture : public ExampleBase
 {
 
 

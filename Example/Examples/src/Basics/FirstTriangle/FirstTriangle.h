@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRenderer.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -47,7 +47,7 @@
 *    - Debug methods: When using Direct3D <11.1, those methods map to the Direct3D 9 PIX functions
 *      (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
 */
-class FirstTriangle : public IApplicationRenderer
+class FirstTriangle : public ExampleBase
 {
 
 

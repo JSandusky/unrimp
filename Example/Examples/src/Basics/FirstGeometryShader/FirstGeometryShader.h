@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRenderer.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -46,7 +46,7 @@
 *    - Pipeline state object (PSO)
 *    - Attribute less rendering (aka "drawing without data")
 */
-class FirstGeometryShader : public IApplicationRenderer
+class FirstGeometryShader : public ExampleBase
 {
 
 

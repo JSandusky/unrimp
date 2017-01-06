@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRenderer.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -48,7 +48,7 @@
 *    - Pipeline state object (PSO)
 *    - Framebuffer object (FBO) used for render to texture
 */
-class FirstRenderToTexture : public IApplicationRenderer
+class FirstRenderToTexture : public ExampleBase
 {
 
 

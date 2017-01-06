@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 #include "Framework/IApplicationRenderer.h"
+#include "Framework/ExampleBase.h"
 
 #include <Renderer/Public/RendererInstance.h>
 
@@ -30,6 +31,29 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
+IApplicationRenderer::IApplicationRenderer(const char *rendererName, ExampleBase* example) :
+	IApplication(rendererName),
+	mRendererInstance(nullptr),
+	mRenderer(nullptr),
+	mExample(example)
+{
+	if (nullptr != mExample)
+		mExample->setApplicationFrontend(this);
+	
+	// Copy the given renderer name
+	if (nullptr != rendererName)
+	{
+		strncpy(mRendererName, rendererName, 32);
+
+		// In case the source string is longer then 32 bytes (including null terminator) make sure that the string is null terminated
+		mRendererName[31] = '\0';
+	}
+	else
+	{
+		mRendererName[0] = '\0';
+	}
+}
+
 IApplicationRenderer::~IApplicationRenderer()
 {
 	// Nothing here
@@ -43,10 +67,16 @@ void IApplicationRenderer::onInitialization()
 {
 	// Create the renderer instance (at this point our renderer pointer must be a null pointer, or something went terrible wrong!)
 	mRenderer = createRendererInstance(mRendererName);
+
+	if (nullptr != mExample)
+		mExample->initialize();
 }
 
 void IApplicationRenderer::onDeinitialization()
 {
+	if (nullptr != mExample)
+		mExample->deInitialize();
+
 	// Delete the renderer instance
 	mRenderer = nullptr;
 	delete mRendererInstance;
@@ -120,7 +150,8 @@ void IApplicationRenderer::onDrawRequest()
 				mCommandBuffer.submitAndClear(*mRenderer);
 
 				// Call the draw method
-				onDraw();
+				if (nullptr != mExample)
+					mExample->draw();
 
 				// End debug event
 				COMMAND_END_DEBUG_EVENT(mCommandBuffer)
@@ -145,22 +176,9 @@ void IApplicationRenderer::onDrawRequest()
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
 IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
-	IApplication(rendererName),
-	mRendererInstance(nullptr),
-	mRenderer(nullptr)
-{
-	// Copy the given renderer name
-	if (nullptr != rendererName)
-	{
-		strncpy(mRendererName, rendererName, 32);
-
-		// In case the source string is longer then 32 bytes (including null terminator) make sure that the string is null terminated
-		mRendererName[31] = '\0';
-	}
-	else
-	{
-		mRendererName[0] = '\0';
-	}
+	IApplicationRenderer(rendererName, nullptr)
+{	
+	// Nothing here
 }
 
 

@@ -31,8 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstTriangle::FirstTriangle(const char *rendererName) :
-	IApplicationRenderer(rendererName)
+FirstTriangle::FirstTriangle(const char *rendererName)
 {
 	// Nothing here
 }
@@ -50,7 +49,7 @@ FirstTriangle::~FirstTriangle()
 void FirstTriangle::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRenderer::onInitialization();
+	ExampleBase::onInitialization();
 
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
@@ -166,7 +165,7 @@ void FirstTriangle::onDeinitialization()
 	mBufferManager = nullptr;
 
 	// Call the base implementation
-	IApplicationRenderer::onDeinitialization();
+	ExampleBase::onDeinitialization();
 }
 
 void FirstTriangle::onDraw()

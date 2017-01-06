@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRenderer.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -49,7 +49,7 @@
 *    - Framebuffer object (FBO) used for render to texture
 *    - Multiple render targets (MRT)
 */
-class FirstMultipleRenderTargets : public IApplicationRenderer
+class FirstMultipleRenderTargets : public ExampleBase
 {
 
 

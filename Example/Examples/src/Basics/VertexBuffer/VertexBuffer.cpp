@@ -31,8 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-VertexBuffer::VertexBuffer(const char *rendererName) :
-	IApplicationRenderer(rendererName)
+VertexBuffer::VertexBuffer(const char *rendererName)
 {
 	// Nothing here
 }
@@ -50,7 +49,7 @@ VertexBuffer::~VertexBuffer()
 void VertexBuffer::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRenderer::onInitialization();
+	ExampleBase::onInitialization();
 
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
@@ -254,7 +253,7 @@ void VertexBuffer::onDeinitialization()
 	mBufferManager = nullptr;
 
 	// Call the base implementation
-	IApplicationRenderer::onDeinitialization();
+	ExampleBase::onDeinitialization();
 }
 
 void VertexBuffer::onDraw()
