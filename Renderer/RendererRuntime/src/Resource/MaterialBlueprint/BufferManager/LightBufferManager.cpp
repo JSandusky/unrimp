@@ -79,7 +79,8 @@ namespace RendererRuntime
 	LightBufferManager::~LightBufferManager()
 	{
 		// Release texture buffer instance
-		mTextureBuffer->releaseReference();
+        if (nullptr != mTextureBuffer)
+            mTextureBuffer->releaseReference();
 	}
 
 	void LightBufferManager::fillBuffer(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer)
