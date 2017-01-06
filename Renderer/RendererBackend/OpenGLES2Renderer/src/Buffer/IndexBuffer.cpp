@@ -41,7 +41,8 @@ namespace OpenGLES2Renderer
 		IIndexBuffer(openGLES2Renderer),
 		mOpenGLES2ElementArrayBuffer(0),
 		mOpenGLES2Type(GL_UNSIGNED_SHORT),
-		mIndexSizeInBytes(Renderer::IndexBufferFormat::getNumberOfBytesPerElement(indexBufferFormat))
+		mIndexSizeInBytes(Renderer::IndexBufferFormat::getNumberOfBytesPerElement(indexBufferFormat)),
+		mBufferSize(numberOfBytes)
 	{
 		// "GL_UNSIGNED_INT" is only allowed when the "GL_OES_element_index_uint" extension is there
 		if (Renderer::IndexBufferFormat::UNSIGNED_INT != indexBufferFormat || openGLES2Renderer.getContext().getExtensions().isGL_OES_element_index_uint())

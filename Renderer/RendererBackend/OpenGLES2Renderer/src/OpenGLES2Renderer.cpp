@@ -1198,7 +1198,14 @@ namespace OpenGLES2Renderer
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
 
 				// Map
-				mappedSubresource.data		 = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+				if (mContext->getExtensions().isGL_OES_mapbuffer())
+				{
+					mappedSubresource.data		 = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+				}
+				else
+				{
+					mappedSubresource.data		= glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, static_cast<IndexBuffer&>(resource).getBufferSize(), Mapping::getOpenGLES2MapRangeType(mapType));
+				}
 				mappedSubresource.rowPitch   = 0;
 				mappedSubresource.depthPitch = 0;
 
@@ -1225,7 +1232,14 @@ namespace OpenGLES2Renderer
 				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
 
 				// Map
-				mappedSubresource.data		 = glMapBufferOES(GL_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+				if (mContext->getExtensions().isGL_OES_mapbuffer())
+				{
+					mappedSubresource.data		 = glMapBufferOES(GL_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+				}
+				else
+				{
+					mappedSubresource.data		= glMapBufferRange(GL_ARRAY_BUFFER, 0, static_cast<VertexBuffer&>(resource).getBufferSize(), Mapping::getOpenGLES2MapRangeType(mapType));
+				}
 				mappedSubresource.rowPitch   = 0;
 				mappedSubresource.depthPitch = 0;
 
@@ -1351,8 +1365,15 @@ namespace OpenGLES2Renderer
 				// Bind this OpenGL ES 2 element buffer and upload the data
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
 
-				// Map
-				glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
+				// Unmap
+				if (mContext->getExtensions().isGL_OES_mapbuffer())
+				{
+					glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
+				}
+				else
+				{
+					glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+				}
 
 				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 2 array element buffer
@@ -1372,8 +1393,15 @@ namespace OpenGLES2Renderer
 				// Bind this OpenGL ES 2 array buffer and upload the data
 				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
 
-				// Map
-				glUnmapBufferOES(GL_ARRAY_BUFFER);
+				// Unmap
+				if (mContext->getExtensions().isGL_OES_mapbuffer())
+				{
+					glUnmapBufferOES(GL_ARRAY_BUFFER);
+				}
+				else
+				{
+					glUnmapBuffer(GL_ARRAY_BUFFER);
+				}
 
 				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 2 array buffer

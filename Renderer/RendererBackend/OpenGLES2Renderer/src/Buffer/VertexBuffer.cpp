@@ -39,7 +39,8 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	VertexBuffer::VertexBuffer(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
 		IVertexBuffer(openGLES2Renderer),
-		mOpenGLES2ArrayBuffer(0)
+		mOpenGLES2ArrayBuffer(0),
+		mBufferSize(numberOfBytes)
 	{
 		// Create the OpenGL ES 2 array buffer
 		glGenBuffers(1, &mOpenGLES2ArrayBuffer);

@@ -267,6 +267,18 @@ namespace OpenGLES2Renderer
 		*/
 		static uint32_t getOpenGLES2MapType(Renderer::MapType mapType);
 
+		/**
+		*  @brief
+		*    "Renderer::MapType" to OpenGL ES 3 acess bit field for glMapBufferRange
+		*
+		*  @param[in] mapType
+		*    "Renderer::MapType" to map
+		*
+		*  @return
+		*    OpenGL ES 3 type (type "GLbitfield" not used in here in order to keep the header slim)
+		*/
+		static uint32_t getOpenGLES2MapRangeType(Renderer::MapType mapType);
+
 		//[-------------------------------------------------------]
 		//[ Renderer::MapType                                     ]
 		//[-------------------------------------------------------]

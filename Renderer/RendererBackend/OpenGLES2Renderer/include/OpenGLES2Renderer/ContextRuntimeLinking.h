@@ -368,6 +368,8 @@ namespace OpenGLES2Renderer
 	FNDEF_GL(void,				glVertexAttribPointer,					(GLuint indx, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* ptr));
 	FNDEF_GL(void,				glViewport,								(GLint x, GLint y, GLsizei width, GLsizei height));
 	FNDEF_GL(void,				glBindBufferBase,						(GLenum target, GLuint index, GLuint buffer));
+	FNDEF_GL(void,				glUnmapBuffer,							(GLenum target));
+	FNDEF_GL(void*,				glMapBufferRange,						(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access));
 	#undef FNDEF_GL
 
 
@@ -561,6 +563,8 @@ namespace OpenGLES2Renderer
 
 	// ES 3
 	#define	glBindBufferBase						FNPTR(glBindBufferBase)
+	#define	glUnmapBuffer							FNPTR(glUnmapBuffer)
+	#define	glMapBufferRange						FNPTR(glMapBufferRange)
 
 
 //[-------------------------------------------------------]
