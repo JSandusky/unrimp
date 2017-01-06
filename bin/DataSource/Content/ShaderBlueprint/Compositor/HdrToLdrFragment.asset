@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "123",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "HdrToLdrFragment",
+			"AssetDependencies": [ "15" ],
+			"FileDependencies": [ "HdrToLdrFragment.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "HdrToLdrFragment.shader_blueprint"
+		}
+	}
+}

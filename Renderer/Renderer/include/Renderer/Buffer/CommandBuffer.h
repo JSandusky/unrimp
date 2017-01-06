@@ -86,6 +86,7 @@ namespace Renderer
 		// Operations
 		Clear,
 		ResolveMultisampleFramebuffer,
+		CopyResource,
 		// Draw call
 		Draw,
 		DrawIndexed,
@@ -795,6 +796,34 @@ namespace Renderer
 			IFramebuffer* sourceMultisampleFramebuffer;
 			// Static data
 			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ResolveMultisampleFramebuffer;
+		};
+
+		/**
+		*  @brief
+		*    Copy resource
+		*
+		*  @param[in] destinationResource
+		*    Destination resource
+		*  @param[in] sourceResource
+		*    Source Resource
+		*/
+		struct CopyResource
+		{
+			// Static methods
+			inline static void create(CommandBuffer& commandBuffer, IResource& destinationResource, IResource& sourceResource)
+			{
+				*commandBuffer.addCommand<CopyResource>() = CopyResource(destinationResource, sourceResource);
+			}
+			// Constructor
+			inline CopyResource(IResource& _destinationResource, IResource& _sourceResource) :
+				destinationResource(&_destinationResource),
+				sourceResource(&_sourceResource)
+			{}
+			// Data
+			IResource* destinationResource;
+			IResource* sourceResource;
+			// Static data
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyResource;
 		};
 
 		//[-------------------------------------------------------]

@@ -76,7 +76,7 @@ namespace Direct3D10Renderer
 		d3d10Texture2DDesc.Usage			  = static_cast<D3D10_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
 		d3d10Texture2DDesc.BindFlags		  = D3D10_BIND_SHADER_RESOURCE;
 		d3d10Texture2DDesc.CPUAccessFlags	  = 0;
-		d3d10Texture2DDesc.MiscFlags		  = 0;
+		d3d10Texture2DDesc.MiscFlags		  = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET)) ? D3D10_RESOURCE_MISC_GENERATE_MIPS : 0u;
 
 		// Use this texture as render target?
 		const bool isDepthFormat = Renderer::TextureFormat::isDepth(textureFormat);

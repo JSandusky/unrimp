@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "129",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "PositionVertex",
+			"AssetDependencies": [ "15" ],
+			"FileDependencies": [ "PositionVertex.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "PositionVertex.shader_blueprint"
+		}
+	}
+}

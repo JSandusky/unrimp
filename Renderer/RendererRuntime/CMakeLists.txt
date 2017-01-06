@@ -85,6 +85,8 @@ set(SOURCE_CODES
 	src/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.cpp
 	src/Resource/CompositorNode/Pass/ResolveMultisample/CompositorInstancePassResolveMultisample.cpp
 	src/Resource/CompositorNode/Pass/ResolveMultisample/CompositorResourcePassResolveMultisample.cpp
+	src/Resource/CompositorNode/Pass/Copy/CompositorInstancePassCopy.cpp
+	src/Resource/CompositorNode/Pass/Copy/CompositorResourcePassCopy.cpp
 	src/Resource/CompositorNode/Pass/Quad/CompositorInstancePassQuad.cpp
 	src/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.cpp
 	src/Resource/CompositorNode/Pass/DebugGui/CompositorInstancePassDebugGui.cpp

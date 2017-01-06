@@ -185,6 +185,12 @@ namespace Direct3D12Renderer
 					static_cast<Direct3D12Renderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
 				}
 
+				void CopyResource(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::CopyResource* realData = static_cast<const Renderer::Command::CopyResource*>(data);
+					static_cast<Direct3D12Renderer&>(renderer).copyResource(*realData->destinationResource, *realData->sourceResource);
+				}
+
 				//[-------------------------------------------------------]
 				//[ Draw call                                             ]
 				//[-------------------------------------------------------]
@@ -248,6 +254,7 @@ namespace Direct3D12Renderer
 				// Operations
 				&BackendDispatch::Clear,
 				&BackendDispatch::ResolveMultisampleFramebuffer,
+				&BackendDispatch::CopyResource,
 				// Draw call
 				&BackendDispatch::Draw,
 				&BackendDispatch::DrawIndexed,
@@ -954,6 +961,11 @@ namespace Direct3D12Renderer
 	}
 
 	void Direct3D12Renderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget&, Renderer::IFramebuffer&)
+	{
+		// TODO(co) Implement me
+	}
+
+	void Direct3D12Renderer::copyResource(Renderer::IResource&, Renderer::IResource&)
 	{
 		// TODO(co) Implement me
 	}

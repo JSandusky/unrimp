@@ -31,6 +31,7 @@
 #include <RendererRuntime/Resource/Material/MaterialResourceManager.h>
 #include <RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.h>
+#include <RendererRuntime/Resource/CompositorNode/Pass/Copy/CompositorResourcePassCopy.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorResourcePassClear.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.h>
@@ -314,6 +315,10 @@ namespace RendererToolkit
 						bool allowMultisample = false;
 						JsonHelper::optionalBooleanProperty(rapidJsonValueRenderTargetTexture, "AllowMultisample", allowMultisample);
 
+						// Generate mipmaps?
+						bool generateMipmaps = false;
+						JsonHelper::optionalBooleanProperty(rapidJsonValueRenderTargetTexture, "GenerateMipmaps", generateMipmaps);
+
 						// Allow resolution scale?
 						bool allowResolutionScale = true;
 						if (RendererRuntime::isInitialized(width) && RendererRuntime::isInitialized(height) && rapidJsonValueRenderTargetTexture.HasMember("AllowResolutionScale"))
@@ -356,7 +361,7 @@ namespace RendererToolkit
 
 						// Write render target texture signature
 						// TODO(co) Add sanity checks to be able to detect editing errors (compressed formats are not supported nor unknown formats, check for name conflicts with channels, unused render target textures etc.)
-						renderTargetTexture.renderTargetTextureSignature = RendererRuntime::RenderTargetTextureSignature(width, height, textureFormat, allowMultisample, allowResolutionScale, widthScale, heightScale);
+						renderTargetTexture.renderTargetTextureSignature = RendererRuntime::RenderTargetTextureSignature(width, height, textureFormat, allowMultisample, generateMipmaps, allowResolutionScale, widthScale, heightScale);
 					}
 					outputFileStream.write(reinterpret_cast<const char*>(&renderTargetTexture), sizeof(RendererRuntime::v1CompositorNode::RenderTargetTexture));
 
@@ -455,6 +460,10 @@ namespace RendererToolkit
 					{
 						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassResolveMultisample);
 					}
+					else if (RendererRuntime::CompositorResourcePassCopy::TYPE_ID == compositorPassTypeId)
+					{
+						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassCopy);
+					}
 					else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 					{
 						::detail::fillSortedMaterialPropertyVector(input, renderTargetTextureAssetIds, rapidJsonMemberIteratorPasses, sortedMaterialPropertyVector);
@@ -516,6 +525,21 @@ namespace RendererToolkit
 								throw std::runtime_error(std::string("Source multisample framebuffer \"") + rapidJsonValuePass["SourceMultisampleFramebuffer"].GetString() + "\" is unknown");
 							}
 							outputFileStream.write(reinterpret_cast<const char*>(&passResolveMultisample), sizeof(RendererRuntime::v1CompositorNode::PassResolveMultisample));
+						}
+						else if (RendererRuntime::CompositorResourcePassCopy::TYPE_ID == compositorPassTypeId)
+						{
+							RendererRuntime::v1CompositorNode::PassCopy passCopy;
+							JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "DestinationTextureAssetId", passCopy.destinationTextureAssetId);
+							JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "SourceTextureAssetId", passCopy.sourceTextureAssetId);
+							if (renderTargetTextureAssetIds.find(passCopy.destinationTextureAssetId) == renderTargetTextureAssetIds.end())
+							{
+								throw std::runtime_error(std::string("Destination texture asset ID \"") + rapidJsonValuePass["DestinationTextureAssetId"].GetString() + "\" is unknown");
+							}
+							if (renderTargetTextureAssetIds.find(passCopy.sourceTextureAssetId) == renderTargetTextureAssetIds.end())
+							{
+								throw std::runtime_error(std::string("Source texture asset ID \"") + rapidJsonValuePass["SourceTextureAssetId"].GetString() + "\" is unknown");
+							}
+							outputFileStream.write(reinterpret_cast<const char*>(&passCopy), sizeof(RendererRuntime::v1CompositorNode::PassCopy));
 						}
 						else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 						{

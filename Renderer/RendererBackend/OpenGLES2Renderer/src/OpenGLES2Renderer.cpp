@@ -189,6 +189,12 @@ namespace OpenGLES2Renderer
 					static_cast<OpenGLES2Renderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
 				}
 
+				void CopyResource(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::CopyResource* realData = static_cast<const Renderer::Command::CopyResource*>(data);
+					static_cast<OpenGLES2Renderer&>(renderer).copyResource(*realData->destinationResource, *realData->sourceResource);
+				}
+
 				//[-------------------------------------------------------]
 				//[ Draw call                                             ]
 				//[-------------------------------------------------------]
@@ -252,6 +258,7 @@ namespace OpenGLES2Renderer
 				// Operations
 				&BackendDispatch::Clear,
 				&BackendDispatch::ResolveMultisampleFramebuffer,
+				&BackendDispatch::CopyResource,
 				// Draw call
 				&BackendDispatch::Draw,
 				&BackendDispatch::DrawIndexed,
@@ -915,6 +922,11 @@ namespace OpenGLES2Renderer
 	}
 
 	void OpenGLES2Renderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget&, Renderer::IFramebuffer&)
+	{
+		// TODO(co) Implement me
+	}
+
+	void OpenGLES2Renderer::copyResource(Renderer::IResource&, Renderer::IResource&)
 	{
 		// TODO(co) Implement me
 	}

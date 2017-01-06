@@ -44,6 +44,7 @@ namespace Direct3D11Renderer
 		ITexture2D(direct3D11Renderer, width, height),
 		mTextureFormat(textureFormat),
 		mNumberOfMultisamples(numberOfMultisamples),
+		mGenerateMipmaps(false),
 		mD3D11Texture2D(nullptr),
 		mD3D11ShaderResourceViewTexture(nullptr)
 	{
@@ -62,6 +63,7 @@ namespace Direct3D11Renderer
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
 		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
+		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Direct3D 11 2D texture description
 		DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
@@ -76,7 +78,7 @@ namespace Direct3D11Renderer
 		d3d11Texture2DDesc.Usage			  = static_cast<D3D11_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
 		d3d11Texture2DDesc.BindFlags		  = D3D11_BIND_SHADER_RESOURCE;
 		d3d11Texture2DDesc.CPUAccessFlags	  = 0;
-		d3d11Texture2DDesc.MiscFlags		  = 0;
+		d3d11Texture2DDesc.MiscFlags		  = mGenerateMipmaps ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0u;
 
 		// Use this texture as render target?
 		const bool isDepthFormat = Renderer::TextureFormat::isDepth(textureFormat);

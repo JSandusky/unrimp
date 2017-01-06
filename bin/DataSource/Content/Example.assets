@@ -127,6 +127,13 @@
 		"119": "ShaderBlueprint/Debug/GuiVertex.asset",
 		"120": "ShaderBlueprint/Debug/GuiFragment.asset",
 		"121": "MaterialBlueprint/Debug/Gui.asset",
-		"122": "Material/Default/VrDevice.asset"
+		"122": "Material/Default/VrDevice.asset",
+		"123": "ShaderBlueprint/Compositor/HdrToLdrFragment.asset",
+		"124": "MaterialBlueprint/Compositor/HdrToLdr.asset",
+		"125": "ShaderBlueprint/Compositor/CalculateLuminanceFragment.asset",
+		"126": "MaterialBlueprint/Compositor/CalculateLuminance.asset",
+		"127": "ShaderBlueprint/Compositor/AdaptiveLuminanceFragment.asset",
+		"128": "MaterialBlueprint/Compositor/AdaptiveLuminance.asset",
+		"129": "ShaderBlueprint/Compositor/PositionVertex.asset"
 	}
 }

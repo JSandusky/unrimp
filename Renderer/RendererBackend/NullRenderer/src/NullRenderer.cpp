@@ -178,6 +178,12 @@ namespace NullRenderer
 					static_cast<NullRenderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
 				}
 
+				void CopyResource(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::CopyResource* realData = static_cast<const Renderer::Command::CopyResource*>(data);
+					static_cast<NullRenderer&>(renderer).copyResource(*realData->destinationResource, *realData->sourceResource);
+				}
+
 				//[-------------------------------------------------------]
 				//[ Draw call                                             ]
 				//[-------------------------------------------------------]
@@ -241,6 +247,7 @@ namespace NullRenderer
 				// Operations
 				&BackendDispatch::Clear,
 				&BackendDispatch::ResolveMultisampleFramebuffer,
+				&BackendDispatch::CopyResource,
 				// Draw call
 				&BackendDispatch::Draw,
 				&BackendDispatch::DrawIndexed,
@@ -495,6 +502,11 @@ namespace NullRenderer
 	void NullRenderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget&, Renderer::IFramebuffer&)
 	{
 		// Nothing here
+	}
+
+	void NullRenderer::copyResource(Renderer::IResource&, Renderer::IResource&)
+	{
+		// TODO(co) Implement me
 	}
 
 

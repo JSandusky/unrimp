@@ -67,6 +67,13 @@ SAMPLER_STATE(SamplerLinear, 0)
 @end
 
 
+// TODO(co) Move this into a shader piece
+float3 linearSpaceToGammaSpace3(float3 color)
+{
+	return SATURATE(pow(color, float3(1.0f / 2.2f, 1.0f / 2.2f, 1.0f / 2.2f)));
+}
+
+
 //[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
@@ -76,7 +83,8 @@ MAIN_BEGIN
 
 	// Diffuse term
 	@property(UseDiffuseMap)
-		float3 color = material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+		// Usually we're using sRGB textures, so textures might already be loaded in this format when switching to the debug compositor, convert back from linear space to gamma space
+		float3 color = material.DiffuseColor * linearSpaceToGammaSpace3(SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb);
 	@end
 	@property(!UseDiffuseMap)
 		float3 color = material.DiffuseColor;

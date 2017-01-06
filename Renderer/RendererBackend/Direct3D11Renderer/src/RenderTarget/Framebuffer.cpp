@@ -253,6 +253,24 @@ namespace Direct3D11Renderer
 		}
 	}
 
+	void Framebuffer::generateMipmaps(ID3D11DeviceContext& d3d11DeviceContext) const
+	{
+		// TODO(co) Complete
+		Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+		for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+		{
+			// Valid entry?
+			if (nullptr != *colorTexture && (*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+			{
+				Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+				if (texture2D->getGenerateMipmaps())
+				{
+					d3d11DeviceContext.GenerateMips(texture2D->getD3D11ShaderResourceView());
+				}
+			}
+		}
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]

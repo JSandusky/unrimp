@@ -118,7 +118,7 @@ namespace RendererRuntime
 	}
 
 	// TODO(co) Work-in-progress
-	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
+	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool hardwareGammaCorrection, bool reload)
 	{
 		TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
 
@@ -133,6 +133,7 @@ namespace RendererRuntime
 			textureResource = &mTextureResources.addElement();
 			textureResource->setResourceManager(this);
 			textureResource->setAssetId(assetId);
+			textureResource->mHardwareGammaCorrection = hardwareGammaCorrection;
 			load = true;
 		}
 		if (nullptr != textureResource)
@@ -205,9 +206,10 @@ namespace RendererRuntime
 		const uint32_t numberOfElements = mTextureResources.getNumberOfElements();
 		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			if (mTextureResources.getElementByIndex(i).getAssetId() == assetId)
+			const TextureResource& textureResource = mTextureResources.getElementByIndex(i);
+			if (textureResource.getAssetId() == assetId)
 			{
-				loadTextureResourceByAssetId(assetId, nullptr, true);
+				loadTextureResourceByAssetId(assetId, nullptr, textureResource.isHardwareGammaCorrection(), true);
 				break;
 			}
 		}

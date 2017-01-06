@@ -13,9 +13,9 @@
 		},
 		"RenderTargetTextures":
 		{
-			"Example/Texture/Dynamic/MultisampleColorRenderTarget":
+			"Example/Texture/Dynamic/HdrMultisampleColorRenderTarget":
 			{
-				"TextureFormat": "R8G8B8A8",
+				"TextureFormat": "R16G16B16A16F",
 				"AllowMultisample": "TRUE"
 			},
 			"Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget":
@@ -23,7 +23,30 @@
 				"TextureFormat": "D32_FLOAT",
 				"AllowMultisample": "TRUE"
 			},
-			"Example/Texture/Dynamic/ColorRenderTarget":
+			"Example/Texture/Dynamic/HdrColorRenderTarget":
+			{
+				"TextureFormat": "R16G16B16A16F"
+			},
+			"Example/Texture/Dynamic/LuminanceRenderTarget":
+			{
+				"Width": "1024",
+				"Height": "1024",
+				"TextureFormat": "R32_FLOAT",
+				"GenerateMipmaps": "TRUE"
+			},
+			"Example/Texture/Dynamic/PreviousLuminanceRenderTarget":
+			{
+				"Width": "1",
+				"Height": "1",
+				"TextureFormat": "R32_FLOAT"
+			},
+			"Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget":
+			{
+				"Width": "1",
+				"Height": "1",
+				"TextureFormat": "R32_FLOAT"
+			},
+			"Example/Texture/Dynamic/LdrColorRenderTarget":
 			{
 				"TextureFormat": "R8G8B8A8"
 			},
@@ -42,14 +65,30 @@
 		},
 		"Framebuffers":
 		{
-			"MultisampleFramebuffer":
+			"HdrMultisampleFramebuffer":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/MultisampleColorRenderTarget" ],
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrMultisampleColorRenderTarget" ],
 				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			},
-			"Framebuffer0":
+			"HdrFramebuffer":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/ColorRenderTarget" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget" ]
+			},
+			"LuminanceFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/LuminanceRenderTarget" ]
+			},
+			"PreviousLuminanceFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/PreviousLuminanceRenderTarget" ]
+			},
+			"AdaptiveLuminanceFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget" ]
+			},
+			"LdrFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget" ]
 			},
 			"GaussianBlurFramebuffer0":
 			{
@@ -62,7 +101,7 @@
 		},
 		"Targets":
 		{
-			"MultisampleFramebuffer":
+			"HdrMultisampleFramebuffer":
 			{
 				"Passes":
 				{
@@ -77,13 +116,72 @@
 					}
 				}
 			},
-			"Framebuffer0":
+			"HdrFramebuffer":
 			{
 				"Passes":
 				{
 					"ResolveMultisample":
 					{
-						"SourceMultisampleFramebuffer": "MultisampleFramebuffer"
+						"SourceMultisampleFramebuffer": "HdrMultisampleFramebuffer"
+					}
+				}
+			},
+			"LuminanceFramebuffer":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"Description": "Calculate luminance",
+						"MaterialBlueprintAssetId": "126",
+						"SetMaterialProperties":
+						{
+							"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget"
+						}
+					}
+				}
+			},
+			"PreviousLuminanceFramebuffer":
+			{
+				"Passes":
+				{
+					"Copy":
+					{
+						"Description": "Backup the adaptive luminance from the previous frame. The current compositor target isn't used for this.",
+						"DestinationTextureAssetId": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget",
+						"SourceTextureAssetId": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
+					}
+				}
+			},
+			"AdaptiveLuminanceFramebuffer":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"Description": "Slowly adjusts the scene luminance based on the previous scene luminance",
+						"MaterialBlueprintAssetId": "128",
+						"SetMaterialProperties":
+						{
+							"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
+							"PreviousLuminanceMap": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget"
+						}
+					}
+				}
+			},
+			"LdrFramebuffer":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"Description": "HDR to LDR",
+						"MaterialBlueprintAssetId": "124",
+						"SetMaterialProperties":
+						{
+							"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
+							"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
+						}
 					}
 				}
 			},
@@ -97,7 +195,7 @@
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "TRUE", 
-							"ColorMap": "Example/Texture/Dynamic/ColorRenderTarget"
+							"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget"
 						}
 					}
 				}
@@ -156,7 +254,7 @@
 						"MaterialBlueprintAssetId": "102",
 						"SetMaterialProperties":
 						{
-							"ColorMap": "Example/Texture/Dynamic/ColorRenderTarget"
+							"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget"
 						}
 					},
 					"DebugGui":

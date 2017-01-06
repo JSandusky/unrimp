@@ -27,6 +27,8 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorInstancePassClear.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorInstancePassQuad.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/Copy/CompositorResourcePassCopy.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/Copy/CompositorInstancePassCopy.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h"
@@ -66,6 +68,10 @@ namespace RendererRuntime
 		{
 			compositorResourcePass = new CompositorResourcePassResolveMultisample(compositorTarget);
 		}
+		else if (compositorPassTypeId == CompositorResourcePassCopy::TYPE_ID)
+		{
+			compositorResourcePass = new CompositorResourcePassCopy(compositorTarget);
+		}
 		else if (compositorPassTypeId == CompositorResourcePassQuad::TYPE_ID)
 		{
 			compositorResourcePass = new CompositorResourcePassQuad(compositorTarget);
@@ -100,6 +106,10 @@ namespace RendererRuntime
 		else if (compositorPassTypeId == CompositorResourcePassResolveMultisample::TYPE_ID)
 		{
 			compositorInstancePass = new CompositorInstancePassResolveMultisample(static_cast<const CompositorResourcePassResolveMultisample&>(compositorResourcePass), compositorNodeInstance);
+		}
+		else if (compositorPassTypeId == CompositorResourcePassCopy::TYPE_ID)
+		{
+			compositorInstancePass = new CompositorInstancePassCopy(static_cast<const CompositorResourcePassCopy&>(compositorResourcePass), compositorNodeInstance);
 		}
 		else if (compositorPassTypeId == CompositorResourcePassQuad::TYPE_ID)
 		{

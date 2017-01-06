@@ -33,6 +33,7 @@
 //[-------------------------------------------------------]
 //[ Forward declaration                                   ]
 //[-------------------------------------------------------]
+struct ID3D11DeviceContext;
 struct ID3D11RenderTargetView;
 struct ID3D11DepthStencilView;
 namespace Renderer
@@ -136,6 +137,15 @@ namespace Direct3D11Renderer
 		*    The Direct3D 11 depth stencil view, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
 		inline ID3D11DepthStencilView *getD3D11DepthStencilView() const;
+
+		/**
+		*  @brief
+		*    Generate mipmaps
+		*
+		*  @param[in] d3d11DeviceContext
+		*    Direct3D 11 device context to use
+		*/
+		void generateMipmaps(ID3D11DeviceContext& d3d11DeviceContext) const;
 
 
 	//[-------------------------------------------------------]

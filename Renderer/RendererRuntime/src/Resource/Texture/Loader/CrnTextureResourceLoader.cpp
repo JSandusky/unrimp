@@ -111,12 +111,12 @@ namespace RendererRuntime
 		{
 			// DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block)
 			case cCRNFmtDXT1:
-				mTextureFormat = Renderer::TextureFormat::BC1;
+				mTextureFormat = static_cast<uint8_t>(mTextureResource->isHardwareGammaCorrection() ? Renderer::TextureFormat::BC1_SRGB : Renderer::TextureFormat::BC1);
 				break;
 
 			// DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
 			case cCRNFmtDXT3:
-				mTextureFormat = Renderer::TextureFormat::BC2;
+				mTextureFormat = static_cast<uint8_t>(mTextureResource->isHardwareGammaCorrection() ? Renderer::TextureFormat::BC2_SRGB : Renderer::TextureFormat::BC2);
 				break;
 
 			// DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
@@ -125,7 +125,7 @@ namespace RendererRuntime
 			case cCRNFmtDXT5_xGxR:
 			case cCRNFmtDXT5_xGBR:
 			case cCRNFmtDXT5_AGBR:
-				mTextureFormat = Renderer::TextureFormat::BC3;
+				mTextureFormat = static_cast<uint8_t>(mTextureResource->isHardwareGammaCorrection() ? Renderer::TextureFormat::BC3_SRGB : Renderer::TextureFormat::BC3);
 				break;
 
 			// 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)

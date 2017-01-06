@@ -35,14 +35,19 @@ namespace Renderer
 			false,	// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
 			false,	// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			false,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
+			false,	// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = hardware gamma correction
 			false,	// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
 			false,	// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
 			true,	// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - when being uncompressed
+			true,	// Renderer::TextureFormat::BC1_SRGB      - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - when being uncompressed; sRGB = hardware gamma correction
 			true,	// Renderer::TextureFormat::BC2           - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed
+			true,	// Renderer::TextureFormat::BC2_SRGB      - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed; sRGB = hardware gamma correction
 			true,	// Renderer::TextureFormat::BC3           - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed
+			true,	// Renderer::TextureFormat::BC3_SRGB      - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed; sRGB = hardware gamma correction
 			true,	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - when being uncompressed
 			true,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - when being uncompressed
 			true,	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices
+			false,	// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			false,	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 			false	// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
@@ -56,14 +61,19 @@ namespace Renderer
 			false,	// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
 			false,	// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			false,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
+			false,	// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = hardware gamma correction
 			false,	// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
 			false,	// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
 			false,	// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - when being uncompressed
+			false,	// Renderer::TextureFormat::BC1_SRGB      - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - when being uncompressed; sRGB = hardware gamma correction
 			false,	// Renderer::TextureFormat::BC2           - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed
+			false,	// Renderer::TextureFormat::BC2_SRGB      - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed; sRGB = hardware gamma correction
 			false,	// Renderer::TextureFormat::BC3           - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed
+			false,	// Renderer::TextureFormat::BC3_SRGB      - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed; sRGB = hardware gamma correction
 			false,	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - when being uncompressed
 			false,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - when being uncompressed
 			false,	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices
+			false,	// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			true,	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 			false	// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
@@ -77,14 +87,19 @@ namespace Renderer
 			sizeof(uint8_t),		// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
 			sizeof(uint8_t) * 3,	// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			sizeof(uint8_t) * 4,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
+			sizeof(uint8_t) * 4,	// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = hardware gamma correction
 			sizeof(float) * 2,		// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
 			sizeof(float) * 4,		// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
 			sizeof(uint8_t) * 3,	// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - when being uncompressed
+			sizeof(uint8_t) * 3,	// Renderer::TextureFormat::BC1_SRGB      - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - when being uncompressed; sRGB = hardware gamma correction
 			sizeof(uint8_t) * 4,	// Renderer::TextureFormat::BC2           - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed
+			sizeof(uint8_t) * 4,	// Renderer::TextureFormat::BC2_SRGB      - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed; sRGB = hardware gamma correction
 			sizeof(uint8_t) * 4,	// Renderer::TextureFormat::BC3           - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed
+			sizeof(uint8_t) * 4,	// Renderer::TextureFormat::BC3_SRGB      - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed; sRGB = hardware gamma correction
 			sizeof(uint8_t) * 1,	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - when being uncompressed
 			sizeof(uint8_t) * 2,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - when being uncompressed
 			sizeof(uint8_t) * 3,	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - when being uncompressed
+			sizeof(float),			// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			sizeof(float),			// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 			0						// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
@@ -105,6 +120,7 @@ namespace Renderer
 
 			// 32-bit pixel format, 8 bits for red, green, blue and alpha
 			case R8G8B8A8:
+			case R8G8B8A8_SRGB:
 				return 4 * width;
 
 			// 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
@@ -117,14 +133,17 @@ namespace Renderer
 
 			// DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block)
 			case BC1:
+			case BC1_SRGB:
 				return ((width + 3) >> 2) * 8;
 
 			// DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
 			case BC2:
+			case BC2_SRGB:
 				return ((width + 3) >> 2) * 16;
 
 			// DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
 			case BC3:
+			case BC3_SRGB:
 				return ((width + 3) >> 2) * 16;
 
 			// 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
@@ -140,11 +159,13 @@ namespace Renderer
 				return (width >> 1);
 
 			// 32-bit float depth format
+			case R32_FLOAT:
 			case D32_FLOAT:
 				return sizeof(float) * width;
 
 			// Unknown
 			case UNKNOWN:
+			case NUMBER_OF_FORMATS:
 				return 0;
 
 			default:
@@ -166,6 +187,7 @@ namespace Renderer
 
 			// 32-bit pixel format, 8 bits for red, green, blue and alpha
 			case R8G8B8A8:
+			case R8G8B8A8_SRGB:
 				return 4 * width * height;
 
 			// 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
@@ -178,14 +200,17 @@ namespace Renderer
 
 			// DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block)
 			case BC1:
+			case BC1_SRGB:
 				return ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
 
 			// DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
 			case BC2:
+			case BC2_SRGB:
 				return ((width + 3) >> 2) * ((height + 3) >> 2) * 16;
 
 			// DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
 			case BC3:
+			case BC3_SRGB:
 				return ((width + 3) >> 2) * ((height + 3) >> 2) * 16;
 
 			// 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
@@ -205,11 +230,13 @@ namespace Renderer
 			}
 
 			// 32-bit float depth format
+			case R32_FLOAT:
 			case D32_FLOAT:
 				return sizeof(float) * width * height;
 
 			// Unknown
 			case UNKNOWN:
+			case NUMBER_OF_FORMATS:
 				return 0;
 
 			default:

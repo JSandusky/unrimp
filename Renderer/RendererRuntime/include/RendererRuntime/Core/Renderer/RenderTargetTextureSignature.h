@@ -79,6 +79,8 @@ namespace RendererRuntime
 		*    Texture format
 		*  @param[in] allowMultisample
 		*    Allow multisample?
+		*  @param[in] generateMipmaps
+		*    Generate mipmaps?
 		*  @param[in] allowResolutionScale
 		*    Allow resolution scale?
 		*  @param[in] widthScale
@@ -86,7 +88,7 @@ namespace RendererRuntime
 		*  @param[in] heightScale
 		*    Height scale
 		*/
-		RENDERERRUNTIME_API_EXPORT RenderTargetTextureSignature(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, bool allowMultisample, bool allowResolutionScale, float widthScale, float heightScale);
+		RENDERERRUNTIME_API_EXPORT RenderTargetTextureSignature(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, bool allowMultisample, bool generateMipmaps, bool allowResolutionScale, float widthScale, float heightScale);
 
 		/**
 		*  @brief
@@ -116,6 +118,7 @@ namespace RendererRuntime
 		inline uint32_t getHeight() const;
 		inline Renderer::TextureFormat::Enum getTextureFormat() const;
 		inline bool getAllowMultisample() const;
+		inline bool getGenerateMipmaps() const;
 		inline bool getAllowResolutionScale() const;
 		inline float getWidthScale() const;
 		inline float getHeightScale() const;
@@ -135,6 +138,7 @@ namespace RendererRuntime
 		uint32_t					  mHeight;
 		Renderer::TextureFormat::Enum mTextureFormat;
 		bool						  mAllowMultisample;
+		bool						  mGenerateMipmaps;
 		bool						  mAllowResolutionScale;
 		float						  mWidthScale;
 		float						  mHeightScale;

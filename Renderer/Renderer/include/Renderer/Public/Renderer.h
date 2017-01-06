@@ -705,19 +705,25 @@ namespace Renderer
 		{
 			enum Enum
 			{
-				A8            = 0,
-				R8G8B8        = 1,
-				R8G8B8A8      = 2,
-				R16G16B16A16F = 3,
-				R32G32B32A32F = 4,
-				BC1           = 5,
-				BC2           = 6,
-				BC3           = 7,
-				BC4           = 8,
-				BC5           = 9,
-				ETC1          = 10,
-				D32_FLOAT     = 11,
-				UNKNOWN       = 12
+				A8				  = 0,
+				R8G8B8			  = 1,
+				R8G8B8A8		  = 2,
+				R8G8B8A8_SRGB	  = 3,
+				R16G16B16A16F	  = 4,
+				R32G32B32A32F	  = 5,
+				BC1				  = 6,
+				BC1_SRGB		  = 7,
+				BC2				  = 8,
+				BC2_SRGB		  = 9,
+				BC3				  = 10,
+				BC3_SRGB		  = 11,
+				BC4				  = 12,
+				BC5				  = 13,
+				ETC1			  = 14,
+				R32_FLOAT		  = 15,
+				D32_FLOAT		  = 16,
+				UNKNOWN			  = 17,
+				NUMBER_OF_FORMATS = 18
 			};
 			inline static bool isCompressed(Enum textureFormat)
 			{
@@ -728,12 +734,17 @@ namespace Renderer
 					false,
 					false,
 					false,
+					false,
 					true,
 					true,
 					true,
 					true,
 					true,
 					true,
+					true,
+					true,
+					true,
+					false,
 					false,
 					false
 				};
@@ -743,6 +754,11 @@ namespace Renderer
 			{
 				static bool MAPPING[] =
 				{
+					false,
+					false,
+					false,
+					false,
+					false,
 					false,
 					false,
 					false,
@@ -766,14 +782,19 @@ namespace Renderer
 					sizeof(uint8_t),
 					sizeof(uint8_t) * 3,
 					sizeof(uint8_t) * 4,
+					sizeof(uint8_t) * 4,
 					sizeof(float) * 2,
 					sizeof(float) * 4,
 					sizeof(uint8_t) * 3,
+					sizeof(uint8_t) * 3,
+					sizeof(uint8_t) * 4,
+					sizeof(uint8_t) * 4,
 					sizeof(uint8_t) * 4,
 					sizeof(uint8_t) * 4,
 					sizeof(uint8_t) * 1,
 					sizeof(uint8_t) * 2,
 					sizeof(uint8_t) * 3,
+					sizeof(float),
 					sizeof(float),
 					0
 				};
@@ -788,16 +809,20 @@ namespace Renderer
 					case R8G8B8:
 						return 3 * width;
 					case R8G8B8A8:
+					case R8G8B8A8_SRGB:
 						return 4 * width;
 					case R16G16B16A16F:
 						return 8 * width;
 					case R32G32B32A32F:
 						return 16 * width;
 					case BC1:
+					case BC1_SRGB:
 						return ((width + 3) >> 2) * 8;
 					case BC2:
+					case BC2_SRGB:
 						return ((width + 3) >> 2) * 16;
 					case BC3:
+					case BC3_SRGB:
 						return ((width + 3) >> 2) * 16;
 					case BC4:
 						return ((width + 3) >> 2) * 8;
@@ -805,9 +830,11 @@ namespace Renderer
 						return ((width + 3) >> 2) * 16;
 					case ETC1:
 						return (width >> 1);
+					case R32_FLOAT:
 					case D32_FLOAT:
 						return sizeof(float) * width;
 					case UNKNOWN:
+					case NUMBER_OF_FORMATS:
 						return 0;
 					default:
 						return 0;
@@ -822,16 +849,20 @@ namespace Renderer
 					case R8G8B8:
 						return 3 * width * height;
 					case R8G8B8A8:
+					case R8G8B8A8_SRGB:
 						return 4 * width * height;
 					case R16G16B16A16F:
 						return 8 * width * height;
 					case R32G32B32A32F:
 						return 16 * width * height;
 					case BC1:
+					case BC1_SRGB:
 						return ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
 					case BC2:
+					case BC2_SRGB:
 						return ((width + 3) >> 2) * ((height + 3) >> 2) * 16;
 					case BC3:
+					case BC3_SRGB:
 						return ((width + 3) >> 2) * ((height + 3) >> 2) * 16;
 					case BC4:
 						return ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
@@ -842,9 +873,11 @@ namespace Renderer
 						const uint32_t numberOfBytesPerSlice = (width * height) >> 1;
 						return (numberOfBytesPerSlice > 8) ? numberOfBytesPerSlice : 8;
 					}
+					case R32_FLOAT:
 					case D32_FLOAT:
 						return sizeof(float) * width * height;
 					case UNKNOWN:
+					case NUMBER_OF_FORMATS:
 						return 0;
 					default:
 						return 0;
@@ -2436,6 +2469,7 @@ namespace Renderer
 			SetRenderTarget,
 			Clear,
 			ResolveMultisampleFramebuffer,
+			CopyResource,
 			Draw,
 			DrawIndexed,
 			SetDebugMarker,
@@ -2771,6 +2805,20 @@ namespace Renderer
 				IRenderTarget* destinationRenderTarget;
 				IFramebuffer* sourceMultisampleFramebuffer;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ResolveMultisampleFramebuffer;
+			};
+			struct CopyResource
+			{
+				inline static void create(CommandBuffer& commandBuffer, IResource& destinationResource, IResource& sourceResource)
+				{
+					*commandBuffer.addCommand<CopyResource>() = CopyResource(destinationResource, sourceResource);
+				}
+				inline CopyResource(IResource& _destinationResource, IResource& _sourceResource) :
+					destinationResource(&_destinationResource),
+					sourceResource(&_sourceResource)
+				{}
+				IResource* destinationResource;
+				IResource* sourceResource;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyResource;
 			};
 			struct Draw
 			{

@@ -212,6 +212,12 @@ namespace Direct3D10Renderer
 					static_cast<Direct3D10Renderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
 				}
 
+				void CopyResource(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::CopyResource* realData = static_cast<const Renderer::Command::CopyResource*>(data);
+					static_cast<Direct3D10Renderer&>(renderer).copyResource(*realData->destinationResource, *realData->sourceResource);
+				}
+
 				//[-------------------------------------------------------]
 				//[ Draw call                                             ]
 				//[-------------------------------------------------------]
@@ -275,6 +281,7 @@ namespace Direct3D10Renderer
 				// Operations
 				&BackendDispatch::Clear,
 				&BackendDispatch::ResolveMultisampleFramebuffer,
+				&BackendDispatch::CopyResource,
 				// Draw call
 				&BackendDispatch::Draw,
 				&BackendDispatch::DrawIndexed,
@@ -1075,6 +1082,56 @@ namespace Direct3D10Renderer
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			case Renderer::ResourceType::INDIRECT_BUFFER:
 			case Renderer::ResourceType::TEXTURE_2D:
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Not handled in here
+				break;
+		}
+	}
+
+	void Direct3D10Renderer::copyResource(Renderer::IResource& destinationResource, Renderer::IResource& sourceResource)
+	{
+		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationResource)
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceResource)
+
+		// Evaluate the render target type
+		switch (destinationResource.getResourceType())
+		{
+			case Renderer::ResourceType::TEXTURE_2D:
+				if (sourceResource.getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+				{
+					// Get the Direct3D 10 texture 2D instances
+					const Texture2D& direct3D10DestinationTexture2D = static_cast<const Texture2D&>(destinationResource);
+					const Texture2D& direct3D10SourceTexture2D = static_cast<const Texture2D&>(sourceResource);
+
+					// Copy resource
+					mD3D10Device->CopyResource(direct3D10DestinationTexture2D.getD3D10Texture2D(), direct3D10SourceTexture2D.getD3D10Texture2D());
+				}
+				else
+				{
+					// Error!
+					assert(false);
+				}
+				break;
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::INDEX_BUFFER:
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::INDIRECT_BUFFER:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:

@@ -248,5 +248,5 @@ MAIN_BEGIN
 	@end
 
 	// Done
-	MAIN_OUTPUT_COLOR(0) = min(float4(color, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
+	MAIN_OUTPUT_COLOR(0) = float4(color, 1.0f);
 MAIN_END

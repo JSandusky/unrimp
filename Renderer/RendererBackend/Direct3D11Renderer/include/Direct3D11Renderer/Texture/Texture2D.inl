@@ -38,6 +38,11 @@ namespace Direct3D11Renderer
 		return mNumberOfMultisamples;
 	}
 
+	inline bool Texture2D::getGenerateMipmaps() const
+	{
+		return mGenerateMipmaps;
+	}
+
 	inline ID3D11Texture2D *Texture2D::getD3D11Texture2D() const
 	{
 		return mD3D11Texture2D;

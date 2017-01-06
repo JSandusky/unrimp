@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "128",
+			"AssetType": "MaterialBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "AdaptiveLuminance",
+			"AssetDependencies": [ "129", "127" ],
+			"FileDependencies": [ "AdaptiveLuminance.material_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"MaterialBlueprintAssetCompiler":
+		{
+			"InputFile": "AdaptiveLuminance.material_blueprint"
+		}
+	}
+}

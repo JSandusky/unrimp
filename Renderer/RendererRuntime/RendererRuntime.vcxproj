@@ -50,6 +50,8 @@
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Clear\CompositorInstancePassClear.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Clear\CompositorResourcePassClear.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\CompositorPassFactory.inl" />
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Copy\CompositorInstancePassCopy.inl" />
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Copy\CompositorResourcePassCopy.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\DebugGui\CompositorInstancePassDebugGui.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\DebugGui\CompositorResourcePassDebugGui.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ICompositorInstancePass.inl" />
@@ -191,6 +193,8 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Clear\CompositorInstancePassClear.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Clear\CompositorResourcePassClear.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\CompositorPassFactory.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Copy\CompositorInstancePassCopy.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Copy\CompositorResourcePassCopy.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\DebugGui\CompositorInstancePassDebugGui.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\DebugGui\CompositorResourcePassDebugGui.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ICompositorInstancePass.h" />
@@ -363,6 +367,8 @@
     <ClCompile Include="src\Resource\CompositorNode\Pass\Clear\CompositorInstancePassClear.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\Clear\CompositorResourcePassClear.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\CompositorPassFactory.cpp" />
+    <ClCompile Include="src\Resource\CompositorNode\Pass\Copy\CompositorInstancePassCopy.cpp" />
+    <ClCompile Include="src\Resource\CompositorNode\Pass\Copy\CompositorResourcePassCopy.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\DebugGui\CompositorInstancePassDebugGui.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\DebugGui\CompositorResourcePassDebugGui.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\Quad\CompositorInstancePassQuad.cpp" />

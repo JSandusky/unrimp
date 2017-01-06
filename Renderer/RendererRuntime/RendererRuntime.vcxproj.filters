@@ -170,6 +170,9 @@
     <Filter Include="Source Files\Resource\CompositorNode\Pass\ShadowMap">
       <UniqueIdentifier>{7162be81-cd0b-4c42-9e5e-9ebb1db09dba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode\Pass\Copy">
+      <UniqueIdentifier>{0a6dee19-60f1-45ee-a0cb-3c6e317eb610}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -503,6 +506,12 @@
     </None>
     <None Include="include\RendererRuntime\Vr\OpenVR\IVrManagerOpenVRListener.inl">
       <Filter>Source Files\Vr\OpenVR</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Copy\CompositorInstancePassCopy.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Copy</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Copy\CompositorResourcePassCopy.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Copy</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -987,6 +996,12 @@
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\IVrManagerOpenVRListener.h">
       <Filter>Source Files\Vr\OpenVR</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Copy\CompositorResourcePassCopy.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Copy</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Copy\CompositorInstancePassCopy.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Copy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1285,6 +1300,12 @@
     </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\LightBufferManager.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\Copy\CompositorInstancePassCopy.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Copy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\Copy\CompositorResourcePassCopy.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Copy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

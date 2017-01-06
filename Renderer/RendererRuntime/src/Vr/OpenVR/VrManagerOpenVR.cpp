@@ -255,7 +255,7 @@ namespace
 
 			// Check whether or not we need to generate the runtime texture asset right now
 			RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
-			RendererRuntime::TextureResourceId textureResourceId = textureResourceManager.loadTextureResourceByAssetId(diffuseTextureAssetId);
+			RendererRuntime::TextureResourceId textureResourceId = textureResourceManager.loadTextureResourceByAssetId(diffuseTextureAssetId, nullptr, true);	// TODO(co) Ask the material blueprint whether or not hardware gamma correction should be used
 			if (RendererRuntime::isUninitialized(textureResourceId))
 			{
 				// Load the render model texture

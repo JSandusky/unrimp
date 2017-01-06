@@ -1,0 +1,116 @@
+/*********************************************************\
+ * Copyright (c) 2012-2016 Christian Ofenberg
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+@includepiece(15)	// "Core.shader_piece"
+
+
+//[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_COLOR(0)
+OUTPUT_END
+
+// Uniform buffers
+struct PassDataStruct
+{
+	float2 InverseViewportSize;
+	float  ToneMapKeyValue;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
+
+// Samplers
+SAMPLER_STATE(SamplerPoint, 0)
+
+// Textures
+TEXTURE_2D(ColorMap, 0)
+TEXTURE_2D(LuminanceMap, 1)
+
+
+//[-------------------------------------------------------]
+//[ Functions                                             ]
+//[-------------------------------------------------------]
+// TODO(co) Make to shader piece
+// Approximate luminance from a RGB value
+float ColorToLuminance(float3 color)
+{
+	return max(dot(color, float3(0.299f, 0.587f, 0.114f)), 0.0001f);
+}
+
+// Determine the color based on exposure settings
+float3 CalculateExposedColor(float3 color, float averageLuminance, float threshold, out float exposure)
+{
+	// Use geometric mean
+	averageLuminance = max(averageLuminance, 0.001f);
+	float linearExposure = (PassData.ToneMapKeyValue / averageLuminance);
+	exposure = log2(max(linearExposure, 0.0001f));
+	exposure -= threshold;
+	return exp2(exposure) * color;
+}
+
+// Apply the filmic curve from John Hable's presentation
+float3 ToneMapFilmicAlu(float3 color)
+{
+	color = max(float3(0.0f, 0.0f, 0.0f), color - 0.004f);
+	color = (color * (6.2f * color + 0.5f)) / (color * (6.2f * color + 1.7f) + 0.06f);
+
+	// Result has 1 / 2.2 baked in
+	return pow(color, float3(2.2f, 2.2f, 2.2f));
+}
+
+// Apply exposure and tone mapping to the specific color, apply the threshold to the exposure value
+float3 ToneMap(float3 color, float averageLuminance, float threshold, out float exposure)
+{
+	float pixelLuminance = ColorToLuminance(color);
+	color = CalculateExposedColor(color, averageLuminance, threshold, exposure);
+	color = ToneMapFilmicAlu(color);
+	return color;
+}
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	float3 color = SAMPLE_2D_LOD(ColorMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).rgb;
+	float averageLuminance = SAMPLE_2D_LOD(LuminanceMap, SamplerPoint, float4(0.5f, 0.5f, 0.0f, 0.0f)).r;
+
+	// Tone map
+	float exposure = 0;
+	color = ToneMap(color, averageLuminance, 0, exposure);
+
+	// Done
+	MAIN_OUTPUT_COLOR(0) = float4(SATURATE(color), 1.0f);
+MAIN_END

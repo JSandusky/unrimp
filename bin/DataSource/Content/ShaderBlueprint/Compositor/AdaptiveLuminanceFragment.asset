@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "127",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "AdaptiveLuminanceFragment",
+			"AssetDependencies": [ "15" ],
+			"FileDependencies": [ "AdaptiveLuminanceFragment.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "AdaptiveLuminanceFragment.shader_blueprint"
+		}
+	}
+}

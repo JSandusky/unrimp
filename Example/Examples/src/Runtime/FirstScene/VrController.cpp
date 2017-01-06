@@ -139,7 +139,7 @@ namespace
 						// The first VR controller is used for teleporting
 						// -> A green light indicates the position one will end up
 						// -> When pressing the trigger button one teleports to this position
-						if (mNumberOfVrControllers > 0 && mVrControllerTrackedDeviceIndices[0] == vrVrEvent.trackedDeviceIndex && vrVrEvent.data.controller.button == vr::k_EButton_SteamVR_Trigger)
+						if (mNumberOfVrControllers > 0 && mVrControllerTrackedDeviceIndices[0] == vrVrEvent.trackedDeviceIndex && vrVrEvent.data.controller.button == vr::k_EButton_SteamVR_Trigger && mVrController->getTeleportIndicationLightSceneItemSafe().isVisible())
 						{
 							// TODO(co) Why inversed position?
 							mVrController->getCameraSceneItem().getParentSceneNodeSafe().setPosition(-mVrController->getTeleportIndicationLightSceneItemSafe().getParentSceneNodeSafe().getTransform().position);

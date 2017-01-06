@@ -87,7 +87,7 @@ FirstScene::FirstScene(const char *rendererName) :
 	mLightSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mGlobalTimer(0.0f),
-	mInstancedCompositor(Compositor::DEFERRED),
+	mInstancedCompositor(Compositor::DEBUG),	// TODO(co) DirectX 11 part is ready, for OpenGL renderer backend mipmap generation and resource copy still need to be implemented
 	mCurrentCompositor(mInstancedCompositor),
 	mCurrentMsaa(Msaa::NONE),
 	mResolutionScale(1.0f),
@@ -223,6 +223,7 @@ void FirstScene::onUpdate()
 			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
 			globalMaterialProperties.setPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunLightColor));
 			globalMaterialProperties.setPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
+			globalMaterialProperties.setPropertyById("PastSecondsSinceLastFrame", RendererRuntime::MaterialPropertyValue::fromFloat(pastMilliseconds / 1000.0f));
 		}
 	}
 

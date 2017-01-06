@@ -39,6 +39,7 @@ namespace RendererRuntime
 		mHeight(getUninitialized<uint32_t>()),
 		mTextureFormat(Renderer::TextureFormat::UNKNOWN),
 		mAllowMultisample(false),
+		mGenerateMipmaps(false),
 		mAllowResolutionScale(true),
 		mWidthScale(1.0f),
 		mHeightScale(1.0f),
@@ -52,6 +53,7 @@ namespace RendererRuntime
 		mHeight(renderTargetTextureSignature.mHeight),
 		mTextureFormat(renderTargetTextureSignature.mTextureFormat),
 		mAllowMultisample(renderTargetTextureSignature.mAllowMultisample),
+		mGenerateMipmaps(renderTargetTextureSignature.mGenerateMipmaps),
 		mAllowResolutionScale(renderTargetTextureSignature.mAllowResolutionScale),
 		mWidthScale(renderTargetTextureSignature.mWidthScale),
 		mHeightScale(renderTargetTextureSignature.mHeightScale),
@@ -71,6 +73,7 @@ namespace RendererRuntime
 		mHeight							= renderTargetTextureSignature.mHeight;
 		mTextureFormat					= renderTargetTextureSignature.mTextureFormat;
 		mAllowMultisample				= renderTargetTextureSignature.mAllowMultisample;
+		mGenerateMipmaps				= renderTargetTextureSignature.mGenerateMipmaps;
 		mAllowResolutionScale			= renderTargetTextureSignature.mAllowResolutionScale;
 		mWidthScale						= renderTargetTextureSignature.mWidthScale;
 		mHeightScale					= renderTargetTextureSignature.mHeightScale;
@@ -98,6 +101,11 @@ namespace RendererRuntime
 	inline bool RenderTargetTextureSignature::getAllowMultisample() const
 	{
 		return mAllowMultisample;
+	}
+
+	inline bool RenderTargetTextureSignature::getGenerateMipmaps() const
+	{
+		return mGenerateMipmaps;
 	}
 
 	inline bool RenderTargetTextureSignature::getAllowResolutionScale() const

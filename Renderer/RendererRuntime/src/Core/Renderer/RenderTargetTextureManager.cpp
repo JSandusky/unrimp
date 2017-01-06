@@ -169,12 +169,19 @@ namespace RendererRuntime
 							}
 						}
 
+						// Get texture flags
+						uint32_t textureFlags = Renderer::TextureFlag::RENDER_TARGET;
+						if (renderTargetTextureSignature.getGenerateMipmaps())
+						{
+							textureFlags |= Renderer::TextureFlag::GENERATE_MIPMAPS;
+						}
+
 						// Create the texture instance, but without providing texture data (we use the texture as render target)
 						// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
 						// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 						// -> Not required for OpenGL and OpenGL ES 2
 						// -> The optimized texture clear value is a Direct3D 12 related option
-						renderTargetTextureElement.texture = mRendererRuntime.getTextureManager().createTexture2D(width, height, renderTargetTextureSignature.getTextureFormat(), nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, renderTargetTextureSignature.getAllowMultisample() ? numberOfMultisamples : 1u);
+						renderTargetTextureElement.texture = mRendererRuntime.getTextureManager().createTexture2D(width, height, renderTargetTextureSignature.getTextureFormat(), nullptr, textureFlags, Renderer::TextureUsage::DEFAULT, renderTargetTextureSignature.getAllowMultisample() ? numberOfMultisamples : 1u);
 						renderTargetTextureElement.texture->addReference();
 
 						{ // Tell the texture resource manager about our render target texture so it can be referenced inside e.g. compositor nodes

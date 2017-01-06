@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "124",
+			"AssetType": "MaterialBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "HdrToLdr",
+			"AssetDependencies": [ "100", "123" ],
+			"FileDependencies": [ "HdrToLdr.material_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"MaterialBlueprintAssetCompiler":
+		{
+			"InputFile": "HdrToLdr.material_blueprint"
+		}
+	}
+}

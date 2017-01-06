@@ -329,7 +329,7 @@ namespace RendererRuntime
 				const MaterialProperty& materialProperty = texture.materialProperty = materialBlueprintTexture->materialProperty;
 				if (materialProperty.getValueType() == MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
 				{
-					texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(materialProperty.getTextureAssetIdValue());
+					texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(materialProperty.getTextureAssetIdValue(), nullptr, true);	// TODO(co) Ask the material blueprint whether or not hardware gamma correction should be used
 				}
 			}
 		}

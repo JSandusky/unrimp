@@ -143,6 +143,12 @@ namespace RendererRuntime
 				CompositorFramebufferId sourceMultisampleCompositorFramebufferId;
 			};
 
+			struct PassCopy
+			{
+				AssetId destinationTextureAssetId;
+				AssetId sourceTextureAssetId;
+			};
+
 			struct PassQuad
 			{
 				AssetId				materialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
