@@ -2426,6 +2426,8 @@ namespace crnd
          {
 #ifdef WIN32
             *pActual_size = p_new ? ::_msize(p_new) : 0;
+#elif defined(ANDROID) // TODO(sw) android does not have malloc_usable_size in there c runtime anymore
+            *pActual_size = size;
 #else
             *pActual_size = p_new ? malloc_usable_size(p_new) : 0;
 #endif
@@ -2462,6 +2464,8 @@ namespace crnd
          {
 #ifdef WIN32
             *pActual_size = ::_msize(p_final_block);
+#elif defined(ANDROID) // TODO(sw) android does not have malloc_usable_size in there c runtime anymore
+            *pActual_size = p_new ? size : 0;
 #else
             *pActual_size = ::malloc_usable_size(p_final_block);
 #endif
@@ -2476,6 +2480,8 @@ namespace crnd
       pUser_data;
 #ifdef WIN32
       return p ? _msize(p) : 0;
+#elif defined(ANDROID) // TODO(sw) android does not have malloc_usable_size in there c runtime anymore
+      return 0;
 #else
       return p ? malloc_usable_size(p) : 0;
 #endif
