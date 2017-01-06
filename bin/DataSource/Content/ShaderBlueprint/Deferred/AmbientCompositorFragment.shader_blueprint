@@ -58,6 +58,7 @@ struct PassDataStruct
 	float    Wetness;
 	float3   SunLightColor;
 	int		 NumberOfLights;
+	float2   ViewportSize;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -70,10 +71,18 @@ TEXTURE_BUFFER(float4, LightTextureBuffer, 0)	// "LIGHT"
 SAMPLER_STATE(SamplerPoint, 0)
 
 // Textures
-TEXTURE_2D(GBufferMap0, 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
-TEXTURE_2D(GBufferMap1, 2)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
-TEXTURE_2D(GBufferMap2, 3)	// GBuffer 2: rgb = emissive color, a = glossiness
-TEXTURE_2D(DepthMap, 4)
+@property(NumberOfMultisamples)
+	TEXTURE_2D_MS(GBufferMap0, @value(NumberOfMultisamples), 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
+	TEXTURE_2D_MS(GBufferMap1, @value(NumberOfMultisamples), 2)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
+	TEXTURE_2D_MS(GBufferMap2, @value(NumberOfMultisamples), 3)	// GBuffer 2: rgb = emissive color, a = glossiness
+	TEXTURE_2D_MS(DepthMap, @value(NumberOfMultisamples), 4)
+@end
+@property(!NumberOfMultisamples)
+	TEXTURE_2D(GBufferMap0, 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
+	TEXTURE_2D(GBufferMap1, 2)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
+	TEXTURE_2D(GBufferMap2, 3)	// GBuffer 2: rgb = emissive color, a = glossiness
+	TEXTURE_2D(DepthMap, 4)
+@end
 TEXTURE_2D(ShadowMap, 5)
 
 
@@ -129,30 +138,16 @@ float3 calculateLighting(float3 lightDirection, float3 lightColor, float3 normal
 	return color;
 }
 
-
-//[-------------------------------------------------------]
-//[ Main                                                  ]
-//[-------------------------------------------------------]
-MAIN_BEGIN
-	// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
-	float4 textureCoordinate = float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f);
-	float depthValue = SAMPLE_2D_LOD(DepthMap, SamplerPoint, textureCoordinate).r;
-	if (1.0f == depthValue)
-	{
-		discard;
-	}
-
-	// Read GBuffer data
-	float4 gbuffer0Value = SAMPLE_2D_LOD(GBufferMap0, SamplerPoint, textureCoordinate);
-	float4 gbuffer1Value = SAMPLE_2D_LOD(GBufferMap1, SamplerPoint, textureCoordinate);
-	float4 gbuffer2Value = SAMPLE_2D_LOD(GBufferMap2, SamplerPoint, textureCoordinate);
+float3 calculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depthValue)
+{
+	// Gather GBuffer data
 	float3 diffuseValue = gbuffer0Value.rgb;
 	float3 normal = gbuffer1Value.rgb;
 	float specularValue = gbuffer1Value.a;
 	float3 emissiveValue = gbuffer2Value.rgb;
 
 	// Derive data
-	float3 worldSpacePosition = getWorldSpacePositionByScreenSpacePosition(MAIN_INPUT(TexCoordVS), depthValue);
+	float3 worldSpacePosition = getWorldSpacePositionByScreenSpacePosition(screenSpacePosition, depthValue);
 
 	// TODO(co) Shadow: Totally primitive to have something to start with
 	float shadowVisibility = 1.0f;
@@ -191,6 +186,66 @@ MAIN_BEGIN
 
 	// Emissive term
 	color += emissiveValue;
+
+	// Done
+	return color;	
+}
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	@property(NumberOfMultisamples)
+		// Custom MSAA resolve
+		int2 textureCoordinate = int2(MAIN_INPUT(TexCoordVS) * PassData.ViewportSize);
+		float3 color = float3(0.0f, 0.0f, 0.0f);
+		int numberOfValues = 0;
+		@foreach(NumberOfMultisamples, i, 0)
+		{
+			// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
+			float depthValue = SAMPLE_2D_MS(DepthMap, textureCoordinate, @i).r;
+			if (1.0f != depthValue)
+			{
+				// Read GBuffer data
+				float4 gbuffer0Value = SAMPLE_2D_MS(GBufferMap0, textureCoordinate, @i);
+				float4 gbuffer1Value = SAMPLE_2D_MS(GBufferMap1, textureCoordinate, @i);
+				float4 gbuffer2Value = SAMPLE_2D_MS(GBufferMap2, textureCoordinate, @i);
+
+				// Calculate color by GBuffer
+				color += calculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue);
+				++numberOfValues;
+			}
+		}
+		@end
+		if (numberOfValues > 0)
+		{
+			color /= numberOfValues;
+		}
+		else
+		{
+			// Visible aliasing comes up. Since there's still also shader aliasing etc. one might want to use FXAA or so on top of everything.
+			discard;
+		}
+	@end
+	@property(!NumberOfMultisamples)
+		float4 textureCoordinate = float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f);
+
+		// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
+		float depthValue = SAMPLE_2D_LOD(DepthMap, SamplerPoint, textureCoordinate).r;
+		if (1.0f == depthValue)
+		{
+			discard;
+		}
+
+		// Read GBuffer data
+		float4 gbuffer0Value = SAMPLE_2D_LOD(GBufferMap0, SamplerPoint, textureCoordinate);
+		float4 gbuffer1Value = SAMPLE_2D_LOD(GBufferMap1, SamplerPoint, textureCoordinate);
+		float4 gbuffer2Value = SAMPLE_2D_LOD(GBufferMap2, SamplerPoint, textureCoordinate);
+
+		// Calculate color by GBuffer
+		float3 color = calculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue);
+	@end
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = min(float4(color, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));

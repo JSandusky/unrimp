@@ -85,6 +85,7 @@
 		// Texture
 		#define TEXTURE_1D(name, index) Texture1D name : register(t##index);
 		#define TEXTURE_2D(name, index) Texture2D name : register(t##index);
+		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) Texture2DMS<float4, numberOfMultisamples> name : register(t##index);
 		#define TEXTURE_3D(name, index) Texture3D name : register(t##index);
 		#define TEXTURE_CUBE(name, index) TextureCube name : register(t##index);
 		float2 getDirect3DTextureSize(Texture2D textureObject)
@@ -94,19 +95,20 @@
 			textureObject.GetDimensions(width, height);
 			return float2(width, height);
 		}
-		#define GET_TEXTURE_SIZE(tex) getDirect3DTextureSize(tex)
+		#define GET_TEXTURE_SIZE(textureObject) getDirect3DTextureSize(textureObject)
 
 		// Sampler
 		#define SAMPLER_STATE(name, index) SamplerState name : register(s##index);
 		#define SAMPLER_COMPARISON_STATE(name, index) SamplerComparisonState name : register(s##index);
-		#define SAMPLE_1D(tex, sam, coord) tex.Sample(sam, coord)
-		#define SAMPLE_1D_LOD(tex, sam, coord) tex.SampleLevel(sam, coord.x, coord.w)
-		#define SAMPLE_2D(tex, sam, coord) tex.Sample(sam, coord)
-		#define SAMPLE_2D_LOD(tex, sam, coord) tex.SampleLevel(sam, coord.xy, coord.w)
-		#define SAMPLE_2D_CMP_LEVEL_ZERO(tex, sam, coord) tex.SampleCmpLevelZero(sam, coord.xy, coord.w)
-		#define SAMPLE_3D_LOD(tex, sam, coord) tex.SampleLevel(sam, coord.xyz, coord.w)
-		#define SAMPLE_CUBE(tex, sam, coord) tex.Sample(sam, coord)
-		#define SAMPLE_CUBE_LOD(tex, sam, coord) tex.SampleLevel(sam, coord.xyz, coord.w)
+		#define SAMPLE_1D(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
+		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.x, coordinate.w)
+		#define SAMPLE_2D(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
+		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) textureObject.Load(coordinate, sampleIndex)
+		#define SAMPLE_2D_CMP_LEVEL_ZERO(textureObject, samplerObject, coordinate) textureObject.SampleCmpLevelZero(samplerObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
+		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
+		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
 
 		// Fragment shader only
 		#define DECLARE_IS_FRONT_FACE bool IsFrontFace : SV_IsFrontFace;
@@ -177,21 +179,23 @@
 		// Texture
 		#define TEXTURE_1D(name, index) uniform sampler1D name;
 		#define TEXTURE_2D(name, index) uniform sampler2D name;
+		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) uniform sampler2DMS name;
 		#define TEXTURE_3D(name, index) uniform sampler3D name;
 		#define TEXTURE_CUBE(name, index) uniform samplerCube name;
-		#define GET_TEXTURE_SIZE(tex) textureSize(tex, 0)
+		#define GET_TEXTURE_SIZE(textureObject) textureSize(textureObject, 0)
 
 		// Sampler
 		#define SAMPLER_STATE(name, index) int name = index;	// We need something to pass into functions
 		#define SAMPLER_COMPARISON_STATE(name, index)
-		#define SAMPLE_1D(tex, sam, coord) texture(tex, coord)
-		#define SAMPLE_1D_LOD(tex, sam, coord) textureLod(tex, coord.x, coord.w)
-		#define SAMPLE_2D(tex, sam, coord) texture(tex, coord)
-		#define SAMPLE_2D_LOD(tex, sam, coord) textureLod(tex, coord.xy, coord.w)
-		#define SAMPLE_2D_CMP_LEVEL_ZERO(tex, sam, coord) vec4(coord.w <= textureLod(tex, coord.xy, 0.0f).r, 0.0f, 0.0f, 0.0f)
-		#define SAMPLE_3D_LOD(tex, sam, coord) textureLod(tex, coord.xyz, coord.w)
-		#define SAMPLE_CUBE(tex, sam, coord) texture(tex, coord)
-		#define SAMPLE_CUBE_LOD(tex, sam, coord) textureLod(tex, coord.xyz, coord.w)
+		#define SAMPLE_1D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
+		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.x, coordinate.w)
+		#define SAMPLE_2D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
+		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
+		#define SAMPLE_2D_CMP_LEVEL_ZERO(textureObject, samplerObject, coordinate) vec4(coordinate.w <= textureLod(textureObject, coordinate.xy, 0.0f).r, 0.0f, 0.0f, 0.0f)
+		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
+		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
+		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 
 		// Fragment shader only
 		#define DECLARE_IS_FRONT_FACE
@@ -287,21 +291,23 @@
 		// Texture
 		#define TEXTURE_1D(name, index) uniform highp sampler1D name;
 		#define TEXTURE_2D(name, index) uniform highp sampler2D name;
+		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) uniform sampler2DMS name;
 		#define TEXTURE_3D(name, index) uniform highp sampler3D name;
 		#define TEXTURE_CUBE(name, index) uniform highp samplerCube name;
-		#define GET_TEXTURE_SIZE(tex) textureSize(tex, 0)
+		#define GET_TEXTURE_SIZE(textureObject) textureSize(textureObject, 0)
 
 		// Sampler
 		#define SAMPLER_STATE(name, index) int name = index;	// We need something to pass into functions
 		#define SAMPLER_COMPARISON_STATE(name, index)
-		#define SAMPLE_1D(tex, sam, coord) texture(tex, coord)
-		#define SAMPLE_1D_LOD(tex, sam, coord) textureLod(tex, coord.x, coord.w)
-		#define SAMPLE_2D(tex, sam, coord) texture(tex, coord)
-		#define SAMPLE_2D_LOD(tex, sam, coord) textureLod(tex, coord.xy, coord.w)
-		#define SAMPLE_2D_CMP_LEVEL_ZERO(tex, sam, coord) vec4(coord.w <= textureLod(tex, coord.xy, 0.0f).r, 0.0f, 0.0f, 0.0f)
-		#define SAMPLE_3D_LOD(tex, sam, coord) textureLod(tex, coord.xyz, coord.w)
-		#define SAMPLE_CUBE(tex, sam, coord) texture(tex, coord)
-		#define SAMPLE_CUBE_LOD(tex, sam, coord) textureLod(tex, coord.xyz, coord.w)
+		#define SAMPLE_1D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
+		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.x, coordinate.w)
+		#define SAMPLE_2D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
+		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
+		#define SAMPLE_2D_CMP_LEVEL_ZERO(textureObject, samplerObject, coordinate) vec4(coordinate.w <= textureLod(textureObject, coordinate.xy, 0.0f).r, 0.0f, 0.0f, 0.0f)
+		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
+		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
+		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 
 		// Fragment shader only
 		#define DECLARE_IS_FRONT_FACE

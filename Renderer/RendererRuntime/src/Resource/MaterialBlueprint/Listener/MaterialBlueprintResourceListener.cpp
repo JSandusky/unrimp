@@ -71,6 +71,7 @@ namespace
 			DEFINE_CONSTANT(CLIP_SPACE_TO_WORLD_SPACE_MATRIX)
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_SUN_LIGHT_DIRECTION)
+			DEFINE_CONSTANT(VIEWPORT_SIZE)
 			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
 			DEFINE_CONSTANT(NUMBER_OF_LIGHTS)
 			DEFINE_CONSTANT(SHADOW_MATRIX)
@@ -223,6 +224,16 @@ namespace RendererRuntime
 			}
 			const glm::vec3 viewSpaceSunLightDirection = glm::normalize(mPassData->worldSpaceToViewSpaceQuaternion * worldSpaceSunLightDirection);	// Normalize shouldn't be necessary, but last chance here to correct rounding errors before the shader is using the normalized direction vector
 			memcpy(buffer, glm::value_ptr(viewSpaceSunLightDirection), numberOfBytes);
+		}
+		else if (::detail::VIEWPORT_SIZE == referenceValue)
+		{
+			assert(sizeof(float) * 2 == numberOfBytes);
+			float* floatBuffer = reinterpret_cast<float*>(buffer);
+
+			// 0 = Viewport width
+			// 1 = Viewport height
+			floatBuffer[0] = static_cast<float>(mRenderTargetWidth);
+			floatBuffer[1] = static_cast<float>(mRenderTargetHeight);
 		}
 		else if (::detail::INVERSE_VIEWPORT_SIZE == referenceValue)
 		{

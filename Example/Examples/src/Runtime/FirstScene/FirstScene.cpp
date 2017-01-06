@@ -62,6 +62,7 @@ namespace
 		static const RendererRuntime::AssetId VrDeviceMaterialAssetId("Example/Material/Default/VrDevice");
 		static const RendererRuntime::AssetId ImrodMaterialAssetId("Example/Material/Character/Imrod");
 		static const RendererRuntime::AssetId FinalMaterialAssetId("Example/MaterialBlueprint/Compositor/Final");
+		static const RendererRuntime::AssetId DeferredAmbientCompositorMaterialAssetId("Example/MaterialBlueprint/Deferred/AmbientCompositor");
 
 
 //[-------------------------------------------------------]
@@ -467,6 +468,17 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 						break;
 				}
 				mCompositorWorkspaceInstance->setNumberOfMultisamples(numberOfMultisamples);
+
+				// Deferred ambient compositor material
+				RendererRuntime::MaterialResource* materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::DeferredAmbientCompositorMaterialAssetId);
+				if (nullptr != materialResource)
+				{
+					if (1 == numberOfMultisamples)
+					{
+						numberOfMultisamples = 0;
+					}
+					materialResource->setPropertyById("NumberOfMultisamples", RendererRuntime::MaterialPropertyValue::fromInteger(numberOfMultisamples));
+				}
 			}
 			mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
 
