@@ -19,9 +19,21 @@
 
 
 //[-------------------------------------------------------]
-//[ Public methods                                        ]
+//[ Public virtual IApplicationFrontend methods           ]
 //[-------------------------------------------------------]
 inline IApplicationFrontend::~IApplicationFrontend()
 {
 	// Nothing here
+}
+
+inline RendererRuntime::IRendererRuntime *IApplicationFrontend::getRendererRuntime() const
+{
+	// Base implementation returns always an nullptr
+	return nullptr;
+}
+
+inline RendererToolkit::IRendererToolkit *IApplicationFrontend::getRendererToolkit()
+{
+	// Base implementation returns always an nullptr
+	return nullptr;
 }

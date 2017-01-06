@@ -30,3 +30,13 @@ inline Renderer::IRenderTarget *ExampleBase::getMainRenderTarget() const
 {
 	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getMainRenderTarget() : nullptr;
 }
+
+inline RendererRuntime::IRendererRuntime *ExampleBase::getRendererRuntime() const
+{
+	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRendererRuntime() : nullptr;
+}
+
+inline RendererToolkit::IRendererToolkit *ExampleBase::getRendererToolkit()
+{
+	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRendererToolkit() : nullptr;
+}

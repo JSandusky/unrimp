@@ -48,12 +48,27 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
+IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererName, ExampleBase* example) :
+	IApplicationRenderer(rendererName, example),
+	mRendererRuntimeInstance(nullptr)
+	#ifdef SHARED_LIBRARIES
+		, mRendererToolkitInstance(nullptr)
+		, mProject(nullptr)
+	#endif
+{
+	// Nothing here
+}
+
 IApplicationRendererRuntime::~IApplicationRendererRuntime()
 {
 	// Nothing here
 	// mRendererRuntimeInstance is destroyed within onDeinitialization()
 }
 
+
+//[-------------------------------------------------------]
+//[ Public virtual IApplicationFrontend methods           ]
+//[-------------------------------------------------------]
 RendererRuntime::IRendererRuntime *IApplicationRendererRuntime::getRendererRuntime() const
 {
 	return (nullptr != mRendererRuntimeInstance) ? mRendererRuntimeInstance->getRendererRuntime() : nullptr;
@@ -79,8 +94,9 @@ RendererToolkit::IRendererToolkit *IApplicationRendererRuntime::getRendererToolk
 //[-------------------------------------------------------]
 void IApplicationRendererRuntime::onInitialization()
 {
-	// Call the base implementation
-	IApplicationRenderer::onInitialization();
+	// Don't call the base this would break examples which depends on renderer runtime instance
+	// Create the renderer instance
+	createRenderer();
 
 	// Is there a valid renderer instance?
 	Renderer::IRenderer *renderer = getRenderer();
@@ -138,6 +154,9 @@ void IApplicationRendererRuntime::onInitialization()
 			}
 		}
 	}
+
+	// Initialize the example now that the renderer instance should be created successfully
+	initializeExample();
 }
 
 void IApplicationRendererRuntime::onDeinitialization()
@@ -169,6 +188,9 @@ void IApplicationRendererRuntime::onUpdate()
 	{
 		rendererRuntime->update();
 	}
+
+	// Call base implementation
+	IApplicationRenderer::onUpdate();
 }
 
 
@@ -176,12 +198,7 @@ void IApplicationRendererRuntime::onUpdate()
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
 IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererName) :
-	IApplicationRenderer(rendererName),
-	mRendererRuntimeInstance(nullptr)
-	#ifdef SHARED_LIBRARIES
-		, mRendererToolkitInstance(nullptr)
-		, mProject(nullptr)
-	#endif
+	IApplicationRendererRuntime(rendererName, nullptr)
 {
 	// Nothing here
 }

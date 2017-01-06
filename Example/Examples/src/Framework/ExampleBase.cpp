@@ -35,12 +35,20 @@ ExampleBase::~ExampleBase()
 
 void ExampleBase::initialize()
 {
-	onInitialization();
+	if (!mInitialized)
+	{
+		onInitialization();
+		mInitialized = true;
+	}
 }
 
 void ExampleBase::deInitialize()
 {
-	onDeinitialization();
+	if (mInitialized)
+	{
+		onDeinitialization();
+		mInitialized = false;
+	}
 }
 
 void ExampleBase::draw()
@@ -67,6 +75,11 @@ void ExampleBase::onDeinitialization()
 	// Base does nothing
 }
 
+void ExampleBase::onUpdate()
+{
+	// Base does nothing
+}
+
 void ExampleBase::onDraw()
 {
 	// Base does nothing
@@ -77,6 +90,7 @@ void ExampleBase::onDraw()
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
 ExampleBase::ExampleBase() :
+	mInitialized(false),
 	mApplicationFrontend(nullptr)
 {
 	// Nothing here

@@ -135,6 +135,7 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
+	virtual void onUpdate() override;
 	virtual void onResize() override;
 	virtual void onToggleFullscreenState() override;
 	virtual void onDrawRequest() override;
@@ -153,6 +154,18 @@ public:
 	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 	*/
 	explicit IApplicationRenderer(const char *rendererName);
+
+	/**
+	*  @brief
+	*    Creates the renderer instance when it not already exists
+	*/
+	void createRenderer();
+
+	/**
+	*  @brief
+	*    Initializes the example, when not already done
+	*/
+	void initializeExample();
 
 
 //[-------------------------------------------------------]

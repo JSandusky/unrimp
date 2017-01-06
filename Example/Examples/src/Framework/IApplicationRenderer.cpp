@@ -65,11 +65,8 @@ IApplicationRenderer::~IApplicationRenderer()
 //[-------------------------------------------------------]
 void IApplicationRenderer::onInitialization()
 {
-	// Create the renderer instance (at this point our renderer pointer must be a null pointer, or something went terrible wrong!)
-	mRenderer = createRendererInstance(mRendererName);
-
-	if (nullptr != mExample)
-		mExample->initialize();
+	createRenderer();
+	initializeExample();
 }
 
 void IApplicationRenderer::onDeinitialization()
@@ -81,6 +78,12 @@ void IApplicationRenderer::onDeinitialization()
 	mRenderer = nullptr;
 	delete mRendererInstance;
 	mRendererInstance = nullptr;
+}
+
+void IApplicationRenderer::onUpdate()
+{
+	if (nullptr != mExample)
+		mExample->onUpdate();
 }
 
 void IApplicationRenderer::onResize()
@@ -179,6 +182,21 @@ IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
 	IApplicationRenderer(rendererName, nullptr)
 {	
 	// Nothing here
+}
+
+void IApplicationRenderer::createRenderer()
+{
+	if (nullptr == mRenderer)
+	{
+		// Create the renderer instance
+		mRenderer = createRendererInstance(mRendererName);
+	}
+}
+
+void IApplicationRenderer::initializeExample()
+{
+	if (nullptr != mExample)
+		mExample->initialize();
 }
 
 

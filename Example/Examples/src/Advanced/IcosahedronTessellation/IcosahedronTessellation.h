@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRenderer.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -47,7 +47,7 @@
 *    - Uniform buffer object (UBO)
 *    - Vertex shader (VS), tessellation control shader (TCS), tessellation evaluation shader (TES), geometry shader (GS) and fragment shader (FS)
 */
-class IcosahedronTessellation : public IApplicationRenderer
+class IcosahedronTessellation : public ExampleBase
 {
 
 

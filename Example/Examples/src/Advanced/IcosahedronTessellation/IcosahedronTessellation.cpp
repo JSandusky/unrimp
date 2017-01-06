@@ -37,7 +37,6 @@
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 IcosahedronTessellation::IcosahedronTessellation(const char *rendererName) :
-	IApplicationRenderer(rendererName),
 	mTessellationLevelOuter(2.0f),
 	mTessellationLevelInner(3.0f)
 {
@@ -57,7 +56,7 @@ IcosahedronTessellation::~IcosahedronTessellation()
 void IcosahedronTessellation::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRenderer::onInitialization();
+	ExampleBase::onInitialization();
 
 	// Get and check the renderer instance
 	// -> Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
@@ -259,7 +258,7 @@ void IcosahedronTessellation::onDeinitialization()
 	mBufferManager = nullptr;
 
 	// Call the base implementation
-	IApplicationRenderer::onDeinitialization();
+	ExampleBase::onDeinitialization();
 }
 
 void IcosahedronTessellation::onDraw()

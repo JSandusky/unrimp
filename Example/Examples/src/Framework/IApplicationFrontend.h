@@ -39,6 +39,16 @@ namespace Renderer
 	class IRenderTarget;
 }
 
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+}
+
+namespace RendererToolkit
+{
+	class IRendererToolkit;
+}
+
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]
@@ -78,6 +88,33 @@ public:
 	*    The main renderer target instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 	*/
 	virtual Renderer::IRenderTarget *getMainRenderTarget() const = 0;
+
+	/**
+	*  @brief
+	*    Return the renderer runtime instance
+	*
+	*  @return
+	*    The renderer runtime instance, can be a null pointer
+	*/
+	inline virtual RendererRuntime::IRendererRuntime *getRendererRuntime() const;
+
+	/**
+	*  @brief
+	*    Return the renderer toolkit instance
+	*
+	*  @return
+	*    The renderer toolkit instance, can be a null pointer
+	*
+	*  @remarks
+	*    During runtime, the renderer toolkit can optionally be used to enable asset hot-reloading. Meaning,
+	*    as soon as an source asset gets changed, the asset is recompiled in a background thread and the compiled
+	*    runtime-ready asset is reloaded. One can see the change in realtime without the need to restart the application.
+	*
+	*    This feature links during runtime the renderer toolkit as soon as this method is accessed the first time. If
+	*    the renderer toolkit shared library is not there, this method will return a null pointer. This is a developer-feature
+	*    and as such, it's not available in static builds which are meant for the end-user who e.g. just want to "play the game".
+	*/
+	inline virtual RendererToolkit::IRendererToolkit *getRendererToolkit();
 
 
 };

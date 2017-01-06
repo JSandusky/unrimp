@@ -72,8 +72,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/include/)
 # Cross-platform source codes
 set(SOURCE_CODES
 	# Cross-platform source codes
-# 	src/Advanced/FirstGpgpu/FirstGpgpu.cpp
-# 	src/Advanced/IcosahedronTessellation/IcosahedronTessellation.cpp
+	src/Advanced/FirstGpgpu/FirstGpgpu.cpp
+	src/Advanced/IcosahedronTessellation/IcosahedronTessellation.cpp
 	src/Basics/FirstGeometryShader/FirstGeometryShader.cpp
 	src/Basics/FirstIndirectBuffer/FirstIndirectBuffer.cpp
 	src/Basics/FirstInstancing/FirstInstancing.cpp
@@ -117,8 +117,8 @@ if(RENDERER_RUNTIME)
 	# Renderer runtime example source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
-# 		src/Framework/IApplicationRendererRuntime.cpp
-# 		src/Runtime/FirstMesh/FirstMesh.cpp
+		src/Framework/IApplicationRendererRuntime.cpp
+		src/Runtime/FirstMesh/FirstMesh.cpp
 # 		src/Runtime/FirstScene/FirstScene.cpp
 # 		src/Runtime/FirstScene/FreeCameraController.cpp
 # 		src/Runtime/FirstCompositor/FirstCompositor.cpp

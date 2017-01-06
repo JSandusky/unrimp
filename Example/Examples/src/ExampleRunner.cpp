@@ -26,6 +26,7 @@
 #include "Framework/PlatformTypes.h"
 #include "Framework/CmdLineArgs.h"
 #include "Framework/IApplicationRenderer.h"
+#include "Framework/IApplicationRendererRuntime.h"
 // Basics
 #include "Basics/FirstTriangle/FirstTriangle.h"
 #include "Basics/FirstIndirectBuffer/FirstIndirectBuffer.h"
@@ -37,15 +38,15 @@
 #include "Basics/FirstInstancing/FirstInstancing.h"
 #include "Basics/FirstGeometryShader/FirstGeometryShader.h"
 #include "Basics/FirstTessellation/FirstTessellation.h"
-// // Advanced
-// #include "Advanced/FirstGpgpu/FirstGpgpu.h"
-// #include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
-// #ifndef RENDERER_NO_RUNTIME
-// 	#include "Runtime/FirstMesh/FirstMesh.h"
+// Advanced
+#include "Advanced/FirstGpgpu/FirstGpgpu.h"
+#include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
+#ifndef RENDERER_NO_RUNTIME
+	#include "Runtime/FirstMesh/FirstMesh.h"
 // 	#include "Runtime/FirstCompositor/FirstCompositor.h"
 // 	#include "Runtime/FirstScene/FirstScene.h"
 // 	#include "Advanced/InstancedCubes/InstancedCubes.h"
-// #endif
+#endif
 #include <algorithm>
 #include <array>
 
@@ -58,6 +59,13 @@ int RunRenderExample(const char* rendererName)
 {
 	ExampleClass example(rendererName);
 	return IApplicationRenderer(rendererName, &example).run();
+}
+
+template <class ExampleClass>
+int RunRenderRuntimeExample(const char* rendererName)
+{
+	ExampleClass example(rendererName);
+	return IApplicationRendererRuntime(rendererName, &example).run();
 }
 
 template <class ExampleClass>
@@ -126,20 +134,20 @@ ExampleRunner::ExampleRunner()
 	addExample("FirstInstancing",				&RunRenderExample<FirstInstancing>,				supportsAllRenderer);
 	addExample("FirstGeometryShader",			&RunRenderExample<FirstGeometryShader>,			onlyShaderModel4Plus);
 	addExample("FirstTessellation",				&RunRenderExample<FirstTessellation>,			onlyShaderModel5Plus);
-// 
-// 	// Advanced
-// 	addExample("FirstGpgpu",					&RunExample<FirstGpgpu>,					supportsAllRenderer);
-// 	addExample("IcosahedronTessellation",		&RunExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
-// 	#ifdef RENDERER_NO_RUNTIME
-// 		m_defaultExampleName = "FirstTriangle";
-// 	#else
-// 		// Renderer runtime
-// 		addExample("FirstMesh",					&RunExample<FirstMesh>,						supportsAllRenderer);
+
+	// Advanced
+	addExample("FirstGpgpu",					&RunExample<FirstGpgpu>,						supportsAllRenderer);
+	addExample("IcosahedronTessellation",		&RunRenderExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
+	#ifdef RENDERER_NO_RUNTIME
+		m_defaultExampleName = "FirstTriangle";
+	#else
+		// Renderer runtime
+		addExample("FirstMesh",					&RunRenderRuntimeExample<FirstMesh>,		supportsAllRenderer);
 // 		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);
 // 		addExample("FirstScene",				&RunExample<FirstScene>,					supportsAllRenderer);
 // 		addExample("InstancedCubes",			&RunExample<InstancedCubes>,				supportsAllRenderer);
-// 		m_defaultExampleName = "FirstScene";
-// 	#endif
+		m_defaultExampleName = "FirstScene";
+	#endif
 
 	#ifndef RENDERER_NO_NULL
 		m_availableRenderer.insert("Null");

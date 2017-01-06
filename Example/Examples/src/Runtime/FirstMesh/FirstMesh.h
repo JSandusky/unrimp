@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Framework/Stopwatch.h"
-#include "Framework/IApplicationRendererRuntime.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -64,7 +64,7 @@ namespace RendererRuntime
 *    - Optimization: Cache data to not bother the renderer API to much
 *    - Compact vertex format (32 bit texture coordinate, QTangent, 56 bytes vs. 28 bytes per vertex)
 */
-class FirstMesh : public IApplicationRendererRuntime
+class FirstMesh : public ExampleBase
 {
 
 

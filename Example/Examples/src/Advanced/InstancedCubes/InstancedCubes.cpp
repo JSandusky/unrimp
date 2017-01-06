@@ -75,12 +75,12 @@ void InstancedCubes::onInitialization()
 	{
 		// Create the cube renderer instance
 		// -> Evaluate the feature set of the used renderer
-		if (renderer->getCapabilities().drawInstanced && renderer->getCapabilities().maximumNumberOf2DTextureArraySlices > 0 && renderer->getCapabilities().maximumTextureBufferSize > 0)
+		/*if (renderer->getCapabilities().drawInstanced && renderer->getCapabilities().maximumNumberOf2DTextureArraySlices > 0 && renderer->getCapabilities().maximumTextureBufferSize > 0)
 		{
 			// Render cubes by using draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
 			mCubeRenderer = new CubeRendererDrawInstanced(*renderer, NUMBER_OF_TEXTURES, SCENE_RADIUS);
 		}
-		else if (renderer->getCapabilities().instancedArrays)
+		else*/ if (renderer->getCapabilities().instancedArrays)
 		{
 			// Render cubes by using instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 			mCubeRenderer = new CubeRendererInstancedArrays(*renderer, NUMBER_OF_TEXTURES, SCENE_RADIUS);
