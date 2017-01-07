@@ -116,9 +116,9 @@ public:
 
 	/**
 	*  @brief
-	*    De-Initializes the example. Does nothing when already de-initialized
+	*    Deinitialize the example. Does nothing when already deinitialized
 	*/
-	void deInitialize();
+	void deinitialize();
 
 	/**
 	*  @brief

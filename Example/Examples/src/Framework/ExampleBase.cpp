@@ -42,7 +42,7 @@ void ExampleBase::initialize()
 	}
 }
 
-void ExampleBase::deInitialize()
+void ExampleBase::deinitialize()
 {
 	if (mInitialized)
 	{

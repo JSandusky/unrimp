@@ -172,6 +172,12 @@ public:
 	*/
 	void initializeExample();
 
+	/**
+	*  @brief
+	*    Deinitializes the example, when not already done
+	*/
+	void deinitializeExample();
+
 
 //[-------------------------------------------------------]
 //[ Private methods                                       ]

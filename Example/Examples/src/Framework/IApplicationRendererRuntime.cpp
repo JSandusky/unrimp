@@ -161,6 +161,10 @@ void IApplicationRendererRuntime::onInitialization()
 
 void IApplicationRendererRuntime::onDeinitialization()
 {
+	// Deinit example before we tear down any dependecies
+	// The base class calls this too but this is safe to do because the deinit is only done when the example wasn't already deinitialized
+	deinitializeExample();
+
 	// Delete the renderer runtime instance
 	delete mRendererRuntimeInstance;
 	mRendererRuntimeInstance = nullptr;

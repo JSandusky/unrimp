@@ -71,8 +71,7 @@ void IApplicationRenderer::onInitialization()
 
 void IApplicationRenderer::onDeinitialization()
 {
-	if (nullptr != mExample)
-		mExample->deInitialize();
+	deinitializeExample();
 
 	// Delete the renderer instance
 	mRenderer = nullptr;
@@ -243,6 +242,12 @@ void IApplicationRenderer::initializeExample()
 {
 	if (nullptr != mExample)
 		mExample->initialize();
+}
+
+void IApplicationRenderer::deinitializeExample()
+{
+	if (nullptr != mExample)
+		mExample->deinitialize();
 }
 
 
