@@ -142,6 +142,13 @@ namespace RendererRuntime
 		{
 			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
 
+			if (!inputFileStream)
+			{
+				// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
+				RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %u. Could not open file: %s", mAsset.assetId.getId(), mAsset.assetFilename);
+				return;
+			}
+
 			#define MCHAR4(a, b, c, d) (a | (b << 8) | (c << 16) | (d << 24))
 
 			// Read the header
@@ -631,7 +638,8 @@ namespace RendererRuntime
 		}
 		catch (const std::exception& e)
 		{
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %d: %s", mAsset.assetId, e.what());
+			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
+			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %u: %s", mAsset.assetId.getId(), e.what());
 		}
 
 		// Can we create the renderer resource asynchronous as well?
