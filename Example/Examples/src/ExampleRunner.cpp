@@ -43,9 +43,9 @@
 #include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
 #ifndef RENDERER_NO_RUNTIME
 	#include "Runtime/FirstMesh/FirstMesh.h"
-// 	#include "Runtime/FirstCompositor/FirstCompositor.h"
+	#include "Runtime/FirstCompositor/FirstCompositor.h"
 	#include "Runtime/FirstScene/FirstScene.h"
-// 	#include "Advanced/InstancedCubes/InstancedCubes.h"
+	#include "Advanced/InstancedCubes/InstancedCubes.h"
 #endif
 #include <algorithm>
 #include <array>
@@ -143,9 +143,9 @@ ExampleRunner::ExampleRunner()
 	#else
 		// Renderer runtime
 		addExample("FirstMesh",					&RunRenderRuntimeExample<FirstMesh>,		supportsAllRenderer);
-// 		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);
+		addExample("FirstCompositor",			&RunRenderRuntimeExample<FirstCompositor>,	supportsAllRenderer);
 		addExample("FirstScene",				&RunRenderRuntimeExample<FirstScene>,		supportsAllRenderer);
-// 		addExample("InstancedCubes",			&RunExample<InstancedCubes>,				supportsAllRenderer);
+		addExample("InstancedCubes",			&RunRenderRuntimeExample<InstancedCubes>,	supportsAllRenderer);
 		m_defaultExampleName = "FirstScene";
 	#endif
 

@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRendererRuntime.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -50,7 +50,7 @@ namespace RendererRuntime
 *    Demonstrates:
 *    - Compositor
 */
-class FirstCompositor : public IApplicationRendererRuntime
+class FirstCompositor : public ExampleBase
 {
 
 
@@ -81,7 +81,10 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
-	virtual void onDrawRequest() override;
+	virtual void onDraw() override;
+
+	// This example wants complete control of the drawing
+	inline virtual bool doesCompleteOwnDrawing() const override { return true; }
 
 
 //[-------------------------------------------------------]

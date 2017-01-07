@@ -121,16 +121,16 @@ if(RENDERER_RUNTIME)
 		src/Runtime/FirstMesh/FirstMesh.cpp
 		src/Runtime/FirstScene/FirstScene.cpp
 		src/Runtime/FirstScene/FreeCameraController.cpp
-# 		src/Runtime/FirstCompositor/FirstCompositor.cpp
-# 		src/Runtime/FirstCompositor/CompositorInstancePassFirst.cpp
-# 		src/Runtime/FirstCompositor/CompositorPassFactoryFirst.cpp
-# 		src/Runtime/FirstCompositor/CompositorResourcePassFirst.cpp
-# 		src/Advanced/InstancedCubes/CubeRendererDrawInstanced/BatchDrawInstanced.cpp
-# 		src/Advanced/InstancedCubes/CubeRendererDrawInstanced/CubeRendererDrawInstanced.cpp
-# 		src/Advanced/InstancedCubes/CubeRendererInstancedArrays/BatchInstancedArrays.cpp
-# 		src/Advanced/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.cpp
-# 		src/Advanced/InstancedCubes/ICubeRenderer.cpp
-# 		src/Advanced/InstancedCubes/InstancedCubes.cpp
+		src/Runtime/FirstCompositor/FirstCompositor.cpp
+		src/Runtime/FirstCompositor/CompositorInstancePassFirst.cpp
+		src/Runtime/FirstCompositor/CompositorPassFactoryFirst.cpp
+		src/Runtime/FirstCompositor/CompositorResourcePassFirst.cpp
+		src/Advanced/InstancedCubes/CubeRendererDrawInstanced/BatchDrawInstanced.cpp
+		src/Advanced/InstancedCubes/CubeRendererDrawInstanced/CubeRendererDrawInstanced.cpp
+		src/Advanced/InstancedCubes/CubeRendererInstancedArrays/BatchInstancedArrays.cpp
+		src/Advanced/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.cpp
+		src/Advanced/InstancedCubes/ICubeRenderer.cpp
+		src/Advanced/InstancedCubes/InstancedCubes.cpp
 	)
 endif()
 
