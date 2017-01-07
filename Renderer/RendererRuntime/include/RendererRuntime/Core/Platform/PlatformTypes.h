@@ -231,9 +231,9 @@
 		#define RENDERERRUNTIME_OUTPUT_ERROR_PRINTF(outputString, ...) rendererRuntimeOutputErrorPrintf(outputString, __VA_ARGS__);
 	#endif
 #elif LINUX
-	// TODO(co) Error stuff is not supported for now
-	#define RENDERERRUNTIME_OUTPUT_ERROR_STRING(outputString)
-	#define RENDERERRUNTIME_OUTPUT_ERROR_PRINTF(outputString, ...)
+	#include <iostream>
+	#define RENDERERRUNTIME_OUTPUT_ERROR_STRING(outputString) std::cerr<<outputstring<<'\n';
+	#define RENDERERRUNTIME_OUTPUT_ERROR_PRINTF(outputString, ...) fprintf(stderr, outputString, __VA_ARGS__);std::cerr<<'\n';
 #else
 	#error "Unsupported platform"
 #endif
