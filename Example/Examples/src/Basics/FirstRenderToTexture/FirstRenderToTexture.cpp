@@ -31,7 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstRenderToTexture::FirstRenderToTexture(const char *rendererName)
+FirstRenderToTexture::FirstRenderToTexture()
 {
 	// Nothing here
 }

@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstTexture::FirstTexture(const char *rendererName)
+FirstTexture::FirstTexture()
 {
 	// Nothing here
 }

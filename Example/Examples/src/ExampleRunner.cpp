@@ -57,14 +57,14 @@
 template <class ExampleClass>
 int RunRenderExample(const char* rendererName)
 {
-	ExampleClass example(rendererName);
+	ExampleClass example;
 	return IApplicationRenderer(rendererName, &example).run();
 }
 
 template <class ExampleClass>
 int RunRenderRuntimeExample(const char* rendererName)
 {
-	ExampleClass example(rendererName);
+	ExampleClass example;
 	return IApplicationRendererRuntime(rendererName, &example).run();
 }
 

@@ -31,7 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstTessellation::FirstTessellation(const char *rendererName)
+FirstTessellation::FirstTessellation()
 {
 	// Nothing here
 }

@@ -37,7 +37,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstMesh::FirstMesh(const char *rendererName) :
+FirstMesh::FirstMesh() :
 	mMeshResourceId(RendererRuntime::getUninitialized<RendererRuntime::MeshResourceId>()),
 	mDiffuseTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	mNormalTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),

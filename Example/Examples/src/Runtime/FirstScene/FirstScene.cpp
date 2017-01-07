@@ -73,7 +73,7 @@ namespace
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstScene::FirstScene(const char *rendererName) :
+FirstScene::FirstScene() :
 	mCompositorWorkspaceInstance(nullptr),
 	mSceneResource(nullptr),
 	mMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),

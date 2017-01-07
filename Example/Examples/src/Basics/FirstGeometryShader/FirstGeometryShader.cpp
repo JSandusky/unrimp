@@ -31,7 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstGeometryShader::FirstGeometryShader(const char *rendererName)
+FirstGeometryShader::FirstGeometryShader()
 {
 	// Nothing here
 }

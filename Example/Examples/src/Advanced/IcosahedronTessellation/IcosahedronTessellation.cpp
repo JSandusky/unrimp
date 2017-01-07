@@ -36,7 +36,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-IcosahedronTessellation::IcosahedronTessellation(const char *rendererName) :
+IcosahedronTessellation::IcosahedronTessellation() :
 	mTessellationLevelOuter(2.0f),
 	mTessellationLevelInner(3.0f)
 {

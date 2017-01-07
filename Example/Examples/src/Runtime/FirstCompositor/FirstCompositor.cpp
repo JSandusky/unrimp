@@ -65,7 +65,7 @@ namespace
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstCompositor::FirstCompositor(const char *rendererName) :
+FirstCompositor::FirstCompositor() :
 	mCompositorWorkspaceInstance(nullptr)
 {
 	// Nothing here

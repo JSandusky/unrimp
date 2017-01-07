@@ -40,7 +40,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-InstancedCubes::InstancedCubes(const char *rendererName) :
+InstancedCubes::InstancedCubes() :
 	mCubeRenderer(nullptr),
 	mNumberOfCubeInstances(1000),
 	mGlobalTimer(0.0f),

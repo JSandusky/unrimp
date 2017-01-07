@@ -31,7 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstInstancing::FirstInstancing(const char *rendererName)
+FirstInstancing::FirstInstancing()
 {
 	// Nothing here
 }

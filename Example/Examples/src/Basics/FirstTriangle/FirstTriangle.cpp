@@ -31,7 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstTriangle::FirstTriangle(const char *rendererName)
+FirstTriangle::FirstTriangle()
 {
 	// Nothing here
 }

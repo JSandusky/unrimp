@@ -31,7 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstMultipleRenderTargets::FirstMultipleRenderTargets(const char *rendererName)
+FirstMultipleRenderTargets::FirstMultipleRenderTargets()
 {
 	// Nothing here
 }

@@ -31,7 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-VertexBuffer::VertexBuffer(const char *rendererName)
+VertexBuffer::VertexBuffer()
 {
 	// Nothing here
 }

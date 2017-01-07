@@ -59,12 +59,8 @@ public:
 	/**
 	*  @brief
 	*    Constructor
-	*
-	*  @param[in] rendererName
-	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 	*/
-	explicit FirstRenderToTexture(const char *rendererName);
+	explicit FirstRenderToTexture();
 
 	/**
 	*  @brief
