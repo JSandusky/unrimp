@@ -207,7 +207,7 @@ namespace OpenGLES2Renderer
 	#define glTexBufferEXT	FNPTR(glTexBufferEXT)
 
 	// GL_EXT_draw_elements_base_vertex
-	FNDEF_EX(void,	glDrawElementsBaseVertexEXT,	(GLenum mode, GLsizei count, GLenum type, const void *indices, GLint basevertex));
+	FNDEF_EX(void,	glDrawElementsBaseVertexEXT,			(GLenum mode, GLsizei count, GLenum type, const void *indices, GLint basevertex));
 	FNDEF_EX(void,	glDrawElementsInstancedBaseVertexEXT,	(GLenum mode, GLsizei count, GLenum type, const void *indices, GLsizei instancecount, GLint basevertex));
 	#define glDrawElementsBaseVertexEXT				FNPTR(glDrawElementsBaseVertexEXT)
 	#define glDrawElementsInstancedBaseVertexEXT	FNPTR(glDrawElementsInstancedBaseVertexEXT)

@@ -57,7 +57,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit FirstTessellation();
+	FirstTessellation();
 
 	/**
 	*  @brief

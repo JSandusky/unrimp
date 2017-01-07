@@ -60,7 +60,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit FirstRenderToTexture();
+	FirstRenderToTexture();
 
 	/**
 	*  @brief

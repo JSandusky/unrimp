@@ -33,6 +33,11 @@ namespace OpenGLES2Renderer
 		return mOpenGLES2ArrayBuffer;
 	}
 
+	inline uint32_t VertexBuffer::getBufferSize() const
+	{
+		return mBufferSize;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -62,7 +62,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit FirstCompositor();
+	FirstCompositor();
 
 	/**
 	*  @brief
@@ -78,9 +78,7 @@ public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
 	virtual void onDraw() override;
-
-	// This example wants complete control of the drawing
-	inline virtual bool doesCompleteOwnDrawing() const override { return true; }
+	virtual bool doesCompleteOwnDrawing() const override;
 
 
 //[-------------------------------------------------------]

@@ -59,7 +59,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit VertexBuffer();
+	VertexBuffer();
 
 	/**
 	*  @brief

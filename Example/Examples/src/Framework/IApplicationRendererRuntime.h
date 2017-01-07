@@ -71,11 +71,10 @@ public:
 	*  @param[in] rendererName
 	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
 	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
-	*
-	*  @param[in] example
+	*  @param[in] exampleBase
 	*    Pointer to an example which should be used
 	*/
-	explicit IApplicationRendererRuntime(const char *rendererName, ExampleBase* example);
+	explicit IApplicationRendererRuntime(const char *rendererName, ExampleBase* exampleBase);
 
 	/**
 	*  @brief

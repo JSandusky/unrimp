@@ -113,7 +113,7 @@ namespace OpenGLES2Renderer
 		*/
 		inline uint32_t getIndexSizeInBytes() const;
 
-		inline uint32_t getBufferSize() const { return mBufferSize; }
+		inline uint32_t getBufferSize() const;
 
 
 	//[-------------------------------------------------------]

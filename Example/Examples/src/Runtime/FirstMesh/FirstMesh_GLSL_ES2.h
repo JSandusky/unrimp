@@ -136,7 +136,7 @@ void main()
 
 	// Calculate the fragment color
 	mediump vec4 color = diffuseLight * texture(DiffuseMap, TexCoordVs);	// Diffuse term
-	color.rgb += specularLight * texture(SpecularMap, TexCoordVs).rgb;	// Specular term
+	color.rgb += specularLight * texture(SpecularMap, TexCoordVs).rgb;		// Specular term
 	color.rgb += texture(EmissiveMap, TexCoordVs).rgb;						// Emissive term
 
 	// Done

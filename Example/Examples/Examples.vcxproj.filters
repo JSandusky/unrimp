@@ -399,6 +399,24 @@
     <ClInclude Include="src\Runtime\FirstScene\IController.h">
       <Filter>Runtime\FirstScene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_GLSL_ES3.h">
+      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_ES3.h">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_ES3.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_ES3.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Framework\ExampleBase.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Framework\IApplicationFrontend.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -522,6 +540,9 @@
     <ClCompile Include="src\Runtime\FirstScene\IController.cpp">
       <Filter>Runtime\FirstScene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Framework\ExampleBase.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Framework\IApplication.inl">
@@ -553,5 +574,11 @@
     </None>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
+    <None Include="src\Framework\ExampleBase.inl">
+      <Filter>Framework</Filter>
+    </None>
+    <None Include="src\Framework\IApplicationFrontend.inl">
+      <Filter>Framework</Filter>
+    </None>
   </ItemGroup>
 </Project>

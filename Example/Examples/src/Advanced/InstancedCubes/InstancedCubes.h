@@ -72,7 +72,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit InstancedCubes();
+	InstancedCubes();
 
 	/**
 	*  @brief

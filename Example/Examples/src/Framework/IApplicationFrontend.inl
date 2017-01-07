@@ -28,12 +28,12 @@ inline IApplicationFrontend::~IApplicationFrontend()
 
 inline RendererRuntime::IRendererRuntime *IApplicationFrontend::getRendererRuntime() const
 {
-	// Base implementation returns always an nullptr
+	// Base implementation returns always a null pointer
 	return nullptr;
 }
 
 inline RendererToolkit::IRendererToolkit *IApplicationFrontend::getRendererToolkit()
 {
-	// Base implementation returns always an nullptr
+	// Base implementation returns always a null pointer
 	return nullptr;
 }

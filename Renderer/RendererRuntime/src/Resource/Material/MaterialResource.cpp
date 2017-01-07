@@ -80,9 +80,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	// TODO(sw) The explizit cast to MaterialPropertyId is needed because gcc 4.9 (currently used on android) doesn't get the correct call due the StringId is typedefed to 'RendererRuntime::MaterialPropertyId
-	const MaterialPropertyId MaterialResource::RENDER_QUEUE_INDEX_PROPERTY_ID = MaterialPropertyId("RenderQueueIndex");
-	const MaterialPropertyId MaterialResource::CAST_SHADOWS_PROPERTY_ID		  = MaterialPropertyId("CastShadows");
+	const MaterialPropertyId MaterialResource::RENDER_QUEUE_INDEX_PROPERTY_ID("RenderQueueIndex");
+	const MaterialPropertyId MaterialResource::CAST_SHADOWS_PROPERTY_ID("CastShadows");
 
 
 	//[-------------------------------------------------------]

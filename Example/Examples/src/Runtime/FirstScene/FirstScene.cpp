@@ -281,6 +281,12 @@ void FirstScene::onDraw()
 	}
 }
 
+bool FirstScene::doesCompleteOwnDrawing() const
+{
+	// This example wants complete control of the drawing
+	return true;
+}
+
 
 //[-------------------------------------------------------]
 //[ Protected virtual RendererRuntime::IResourceListener methods ]

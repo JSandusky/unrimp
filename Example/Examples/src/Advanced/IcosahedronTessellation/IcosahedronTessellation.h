@@ -59,7 +59,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit IcosahedronTessellation();
+	IcosahedronTessellation();
 
 	/**
 	*  @brief

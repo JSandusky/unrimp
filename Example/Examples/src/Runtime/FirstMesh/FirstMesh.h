@@ -76,7 +76,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit FirstMesh();
+	FirstMesh();
 
 	/**
 	*  @brief

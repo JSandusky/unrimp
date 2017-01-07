@@ -88,8 +88,12 @@ namespace RendererRuntime
 	{
 		// Release uniform and texture buffer instances
 		mUniformBuffer->releaseReference();
-        if(nullptr != mTextureBuffer)
-            mTextureBuffer->releaseReference();
+
+		// TODO(co) Remove this null pointer check. Then using the instance buffer manger this instance must be valid, else this instance buffer manager shouldn't have been used in the first place.
+		if (nullptr != mTextureBuffer)
+		{
+			mTextureBuffer->releaseReference();
+		}
 	}
 
 	void InstanceBufferManager::fillBuffer(PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer, const MaterialBlueprintResource::TextureBuffer*, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer)

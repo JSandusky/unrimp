@@ -237,12 +237,14 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\BatchDrawInstanced.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_GLSL_410.h" />
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_GLSL_ES3.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_Null.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\BatchInstancedArrays.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_130.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_140.h" />
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_ES3.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_HLSL_D3D9.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_Null.h" />
@@ -255,9 +257,11 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Basics\FirstIndirectBuffer\FirstIndirectBuffer.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_410.h" />
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_ES3.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_Null.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_410.h" />
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_ES3.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_Null.h" />
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets.h" />
@@ -305,7 +309,9 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Framework\CmdLineArgs.h" />
     <ClInclude Include="src\Framework\Color4.h" />
     <ClInclude Include="src\Framework\EulerAngles.h" />
+    <ClInclude Include="src\Framework\ExampleBase.h" />
     <ClInclude Include="src\Framework\IApplication.h" />
+    <ClInclude Include="src\Framework\IApplicationFrontend.h" />
     <ClInclude Include="src\Framework\IApplicationImpl.h" />
     <ClInclude Include="src\Framework\IApplicationRenderer.h" />
     <ClInclude Include="src\Framework\IApplicationRendererRuntime.h" />
@@ -368,6 +374,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClCompile Include="src\Framework\CmdLineArgs.cpp" />
     <ClCompile Include="src\Framework\Color4.cpp" />
     <ClCompile Include="src\Framework\EulerAngles.cpp" />
+    <ClCompile Include="src\Framework\ExampleBase.cpp" />
     <ClCompile Include="src\Framework\IApplication.cpp" />
     <ClCompile Include="src\Framework\IApplicationImpl.cpp" />
     <ClCompile Include="src\Framework\IApplicationRenderer.cpp" />
@@ -406,7 +413,9 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <None Include="CMakeLists.txt" />
     <None Include="Readme.txt" />
     <None Include="src\Framework\Color4.inl" />
+    <None Include="src\Framework\ExampleBase.inl" />
     <None Include="src\Framework\IApplication.inl" />
+    <None Include="src\Framework\IApplicationFrontend.inl" />
     <None Include="src\Framework\IApplicationRenderer.inl" />
     <None Include="src\Framework\Quaternion.inl" />
     <None Include="src\Framework\RefCount.inl" />

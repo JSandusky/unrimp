@@ -54,7 +54,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit FirstIndirectBuffer();
+	FirstIndirectBuffer();
 
 	/**
 	*  @brief

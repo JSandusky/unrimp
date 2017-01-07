@@ -61,7 +61,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit FirstMultipleRenderTargets();
+	FirstMultipleRenderTargets();
 
 	/**
 	*  @brief

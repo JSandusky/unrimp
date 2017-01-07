@@ -38,7 +38,9 @@ IApplicationRenderer::IApplicationRenderer(const char *rendererName, ExampleBase
 	mExample(example)
 {
 	if (nullptr != mExample)
+	{
 		mExample->setApplicationFrontend(this);
+	}
 	
 	// Copy the given renderer name
 	if (nullptr != rendererName)
@@ -82,7 +84,9 @@ void IApplicationRenderer::onDeinitialization()
 void IApplicationRenderer::onUpdate()
 {
 	if (nullptr != mExample)
+	{
 		mExample->onUpdate();
+	}
 }
 
 void IApplicationRenderer::onResize()
@@ -199,7 +203,9 @@ void IApplicationRenderer::onDrawRequest()
 
 				// Call the draw method
 				if (nullptr != mExample)
+				{
 					mExample->draw();
+				}
 
 				// End debug event
 				COMMAND_END_DEBUG_EVENT(mCommandBuffer)
@@ -225,7 +231,7 @@ void IApplicationRenderer::onDrawRequest()
 //[-------------------------------------------------------]
 IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
 	IApplicationRenderer(rendererName, nullptr)
-{	
+{
 	// Nothing here
 }
 
@@ -241,13 +247,17 @@ void IApplicationRenderer::createRenderer()
 void IApplicationRenderer::initializeExample()
 {
 	if (nullptr != mExample)
+	{
 		mExample->initialize();
+	}
 }
 
 void IApplicationRenderer::deinitializeExample()
 {
 	if (nullptr != mExample)
+	{
 		mExample->deinitialize();
+	}
 }
 
 

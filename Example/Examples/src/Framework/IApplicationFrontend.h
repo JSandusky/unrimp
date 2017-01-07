@@ -38,12 +38,10 @@ namespace Renderer
 	class IRenderer;
 	class IRenderTarget;
 }
-
 namespace RendererRuntime
 {
 	class IRendererRuntime;
 }
-
 namespace RendererToolkit
 {
 	class IRendererToolkit;

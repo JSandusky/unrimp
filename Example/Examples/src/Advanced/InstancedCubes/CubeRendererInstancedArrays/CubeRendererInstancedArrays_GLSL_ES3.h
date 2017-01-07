@@ -47,9 +47,9 @@ in highp vec3 Normal;
 
 // Attribute input - Per-instance data
 in highp vec4 PerInstancePositionTexture;	// Position: xyz=Position, w=Slice of the 2D texture array to use
-in highp vec4 PerInstanceRotationScale;	// Rotation: Rotation quaternion (xyz) and scale (w)
-									// -> We don't need to store the w component of the quaternion. It's normalized and storing
-									//    three components while recomputing the fourths component is be sufficient.
+in highp vec4 PerInstanceRotationScale;		// Rotation: Rotation quaternion (xyz) and scale (w)
+											// -> We don't need to store the w component of the quaternion. It's normalized and storing
+											//    three components while recomputing the fourths component is be sufficient.
 
 // Attribute output
 out highp vec3 WorldPositionVs;
@@ -88,7 +88,7 @@ void main()
 		// Time
 		float time = TimerAndGlobalScale.x * 0.001f;
 
-		// Calc cosine
+		// Calculate cosine
 		float cosom = dot(from, to);
 
 		// Adjust signs (if necessary)
@@ -170,17 +170,17 @@ void main()
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
 "#version 300 es\n"	// OpenGL ES 3.0
-//"#extension EXT_blend_func_extended : enable\n"	// Required for "layout(location = 0, index = )" etc. needs EXT_blend_func_extended which is gles 3.1+
 STRINGIFY(
 precision highp float;
+
 // Attribute input/output
 in vec3 WorldPositionVs;
 in vec2 TexCoordVs;
 in vec3 NormalVs;
-layout(location = 0) out vec4 Color0; // index layout needs EXT_blend_func_extended which is gles 3.1+ feature but not supported in fragment shader!
+layout(location = 0) out vec4 Color0;	// Index layout needs "EXT_blend_func_extended" which is OpenGL ES 3.1+ feature but not supported in fragment shader
 
 // Uniforms
-uniform highp sampler2D DiffuseMap;					// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform highp sampler2D DiffuseMap;				// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 layout(std140) uniform UniformBlockDynamicFs	// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec3 LightPosition;	// World space light position

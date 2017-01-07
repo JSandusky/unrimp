@@ -40,11 +40,11 @@ vertexShaderSourceCode =
 "#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-in highp vec2 Position;		// Object space vertex position as input, left/bottom is (0,0) and right/top is (1,1)
-in highp vec2 TexCoord;		// Normalized texture coordinate as input
-out   highp vec2 TexCoordVs;	// Normalized texture coordinate as output
-in highp vec4 Color;			// Color as input
-out   highp vec4 ColorVs;		// Color as output
+in  highp vec2 Position;	// Object space vertex position as input, left/bottom is (0,0) and right/top is (1,1)
+in  highp vec2 TexCoord;	// Normalized texture coordinate as input
+out highp vec2 TexCoordVs;	// Normalized texture coordinate as output
+in  highp vec4 Color;		// Color as input
+out highp vec4 ColorVs;		// Color as output
 
 // Uniforms
 uniform highp mat4 ObjectSpaceToClipSpaceMatrix;
@@ -72,9 +72,8 @@ fragmentShaderSourceCode =
 "#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
-in mediump vec2 TexCoordVs;	// Normalized texture coordinate as input
+in mediump vec2 TexCoordVs;		// Normalized texture coordinate as input
 in mediump vec4 ColorVs;
-
 out highp vec4 FragmentColor;	// Output variable for fragment color
 
 // Uniforms

@@ -81,7 +81,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit FirstScene();
+	FirstScene();
 
 	/**
 	*  @brief
@@ -103,9 +103,7 @@ public:
 	virtual void onMouseMove(int x, int y) override;
 	virtual void onUpdate() override;
 	virtual void onDraw() override;
-
-	// This example wants complete control of the drawing
-	inline virtual bool doesCompleteOwnDrawing() const override { return true; }
+	virtual bool doesCompleteOwnDrawing() const override;
 
 
 //[-------------------------------------------------------]

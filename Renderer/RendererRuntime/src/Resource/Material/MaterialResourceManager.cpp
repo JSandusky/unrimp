@@ -40,8 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	// TODO(sw) The explizit cast to MaterialPropertyId is needed because gcc 4.9 (currently used on android) doesn't get the correct call due the StringId is typedefed to 'RendererRuntime::MaterialPropertyId
-	const MaterialTechniqueId MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID = MaterialPropertyId("Default");
+	const MaterialTechniqueId MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID("Default");
 
 
 	//[-------------------------------------------------------]

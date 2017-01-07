@@ -78,12 +78,11 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+class ExampleBase;
 namespace Renderer
 {
 	class RendererInstance;
 }
-
-class ExampleBase;
 
 
 //[-------------------------------------------------------]
@@ -149,7 +148,7 @@ public:
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-public:
+protected:
 	/**
 	*  @brief
 	*    Constructor
@@ -162,19 +161,19 @@ public:
 
 	/**
 	*  @brief
-	*    Creates the renderer instance when it not already exists
+	*    Create the renderer instance when it not already exists
 	*/
 	void createRenderer();
 
 	/**
 	*  @brief
-	*    Initializes the example, when not already done
+	*    Initialize the example, when not already done
 	*/
 	void initializeExample();
 
 	/**
 	*  @brief
-	*    Deinitializes the example, when not already done
+	*    Deinitialize the example, when not already done
 	*/
 	void deinitializeExample();
 
@@ -205,8 +204,7 @@ private:
 	Renderer::RendererInstance* mRendererInstance;	///< Renderer instance, can be a null pointer
 	Renderer::IRenderer*		mRenderer;			///< Renderer instance, can be a null pointer, do not destroy the instance
 	Renderer::CommandBuffer		mCommandBuffer;		///< Command buffer
-
-	ExampleBase* mExample;
+	ExampleBase*				mExample;
 
 
 };

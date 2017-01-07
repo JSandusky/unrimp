@@ -58,7 +58,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit FirstGeometryShader();
+	FirstGeometryShader();
 
 	/**
 	*  @brief

@@ -86,7 +86,7 @@ void main()
 		// Time
 		float time = TimerAndGlobalScale.x * 0.001f;
 
-		// Calc cosine
+		// Calculate cosine
 		float cosom = dot(from, to);
 
 		// Adjust signs (if necessary)
@@ -227,7 +227,7 @@ void main()
 		// Time
 		float time = TimerAndGlobalScale.x * 0.001f;
 
-		// Calc cosine
+		// Calculate cosine
 		float cosom = dot(from, to);
 
 		// Adjust signs (if necessary)

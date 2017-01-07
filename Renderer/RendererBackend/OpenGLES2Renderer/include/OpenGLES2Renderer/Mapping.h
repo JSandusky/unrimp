@@ -269,7 +269,7 @@ namespace OpenGLES2Renderer
 
 		/**
 		*  @brief
-		*    "Renderer::MapType" to OpenGL ES 3 acess bit field for glMapBufferRange
+		*    "Renderer::MapType" to OpenGL ES 3 access bit field for "glMapBufferRange()"
 		*
 		*  @param[in] mapType
 		*    "Renderer::MapType" to map

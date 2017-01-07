@@ -75,27 +75,27 @@ void ExampleBase::onDeinitialization()
 	// Base does nothing
 }
 
-void ExampleBase::onKeyDown(uint32_t key)
+void ExampleBase::onKeyDown(uint32_t)
 {
 	// Base does nothing
 }
 
-void ExampleBase::onKeyUp(uint32_t key)
+void ExampleBase::onKeyUp(uint32_t)
 {
 	// Base does nothing
 }
 
-void ExampleBase::onMouseButtonDown(uint32_t button)
+void ExampleBase::onMouseButtonDown(uint32_t)
 {
 	// Base does nothing
 }
 
-void ExampleBase::onMouseButtonUp(uint32_t button)
+void ExampleBase::onMouseButtonUp(uint32_t)
 {
 	// Base does nothing
 }
 
-void ExampleBase::onMouseMove(int x, int y)
+void ExampleBase::onMouseMove(int, int)
 {
 	// Base does nothing
 }

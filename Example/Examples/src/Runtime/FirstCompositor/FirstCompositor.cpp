@@ -130,6 +130,12 @@ void FirstCompositor::onDraw()
 	}
 }
 
+bool FirstCompositor::doesCompleteOwnDrawing() const
+{
+	// This example wants complete control of the drawing
+	return true;
+}
+
 
 //[-------------------------------------------------------]
 //[ Preprocessor                                          ]

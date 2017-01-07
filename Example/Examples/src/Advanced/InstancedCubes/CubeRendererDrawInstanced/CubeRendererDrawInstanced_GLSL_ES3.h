@@ -45,23 +45,17 @@ STRINGIFY(
 in highp vec3 Position;	// Object space vertex position input
 in highp vec2 TexCoord;
 in highp vec3 Normal;
-
-// gl_Position is still defined in opengl es 300 glsl
-// out gl_PerVertex
-// {
-// 	vec4 gl_Position;
-// };
 out highp vec3 WorldPositionVs;
 out highp vec3 TexCoordVs;	// z component = texture ID
 out highp vec3 NormalVs;
 
 // Uniforms
 uniform highp samplerBuffer PerInstanceDataMap;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-											// -> Layout: [Position][Rotation][Position][Rotation]...
-											//    - Position: xyz=Position, w=Slice of the 2D texture array to use
-											//    - Rotation: Rotation quaternion (xyz) and scale (w)
-											//      -> We don't need to store the w component of the quaternion. It's normalized and storing
-											//         three components while recomputing the fourths component is be sufficient.
+												// -> Layout: [Position][Rotation][Position][Rotation]...
+												//    - Position: xyz=Position, w=Slice of the 2D texture array to use
+												//    - Rotation: Rotation quaternion (xyz) and scale (w)
+												//      -> We don't need to store the w component of the quaternion. It's normalized and storing
+												//         three components while recomputing the fourths component is be sufficient.
 uniform highp mat4 MVP;
 uniform highp vec2 TimerAndGlobalScale;	// x=Timer, y=Global scale
 
@@ -90,7 +84,7 @@ void main()
 		// Time
 		float time = TimerAndGlobalScale.x * 0.001f;
 
-		// Calc cosine
+		// Calculate cosine
 		float cosom = dot(from, to);
 
 		// Adjust signs (if necessary)
@@ -174,7 +168,7 @@ void main()
 // Needs texture buffers so check if supported too
 if (mRenderer->getCapabilities().maximumUniformBufferSize > 0)
 vertexShaderSourceCode =
-"#version 310 es\n"	// OpenGLES 3.1
+"#version 310 es\n"	// OpenGL ES 3.1
 "#extension GL_EXT_texture_buffer : enable\n"
 STRINGIFY(
 precision highp float;
@@ -183,22 +177,17 @@ precision highp float;
 in vec3 Position;		// Object space vertex position input
 in vec2 TexCoord;
 in vec3 Normal;
-// gl_Position is still defined in opengl es 300 glsl
-// out gl_PerVertex
-// {
-// 	vec4 gl_Position;
-// };
 out vec3 WorldPositionVs;
 out vec3 TexCoordVs;	// z component = texture ID
 out vec3 NormalVs;
 
 // Uniforms
 uniform highp samplerBuffer PerInstanceDataMap;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-											// -> Layout: [Position][Rotation][Position][Rotation]...
-											//    - Position: xyz=Position, w=Slice of the 2D texture array to use
-											//    - Rotation: Rotation quaternion (xyz) and scale (w)
-											//      -> We don't need to store the w component of the quaternion. It's normalized and storing
-											//         three components while recomputing the fourths component is be sufficient.
+												// -> Layout: [Position][Rotation][Position][Rotation]...
+												//    - Position: xyz=Position, w=Slice of the 2D texture array to use
+												//    - Rotation: Rotation quaternion (xyz) and scale (w)
+												//      -> We don't need to store the w component of the quaternion. It's normalized and storing
+												//         three components while recomputing the fourths component is be sufficient.
 layout(std140) uniform UniformBlockStaticVs		// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	mat4 MVP;
@@ -236,7 +225,7 @@ void main()
 		// Time
 		float time = TimerAndGlobalScale.x * 0.001f;
 
-		// Calc cosine
+		// Calculate cosine
 		float cosom = dot(from, to);
 
 		// Adjust signs (if necessary)
@@ -318,9 +307,7 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 310 es\n"									// OpenGLES 3.0 
-//"#extension GL_EXT_texture_array : enable\n"
-//"#extension GL_ARB_explicit_attrib_location : enable\n"	// Required for "layout(location = 0)" etc.
+"#version 310 es\n"	// OpenGL ES 3.1
 STRINGIFY(
 precision highp float;
 
@@ -332,7 +319,7 @@ layout(location = 0) out vec4 Color0;
 
 // Uniforms
 uniform highp sampler2DArray DiffuseMap;	// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-uniform vec3 LightPosition;	// World space light position
+uniform vec3 LightPosition;					// World space light position
 
 // Programs
 void main()
@@ -349,9 +336,7 @@ void main()
 // Uniform buffer version (Direct3D 10 and Direct3D 11 only support uniform buffers and no individual uniform access)
 if (mRenderer->getCapabilities().maximumUniformBufferSize > 0)
 fragmentShaderSourceCode =
-"#version 310 es\n"									// OpenGLES 3.0 
-//"#extension GL_EXT_texture_array : enable\n"
-//"#extension GL_ARB_explicit_attrib_location : enable\n"	// Required for "layout(location = 0)" etc.
+"#version 310 es\n"	// OpenGL ES 3.1
 STRINGIFY(
 precision highp float;
 
@@ -362,7 +347,7 @@ in vec3 NormalVs;
 layout(location = 0) out vec4 Color0;
 
 // Uniforms
-uniform highp sampler2DArray DiffuseMap;				// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform highp sampler2DArray DiffuseMap;		// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 layout(std140) uniform UniformBlockDynamicFs	// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec3 LightPosition;	// World space light position

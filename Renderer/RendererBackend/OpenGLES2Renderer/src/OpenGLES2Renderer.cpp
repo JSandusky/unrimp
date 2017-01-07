@@ -1212,11 +1212,11 @@ namespace OpenGLES2Renderer
 				// Map
 				if (mContext->getExtensions().isGL_OES_mapbuffer())
 				{
-					mappedSubresource.data		 = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+					mappedSubresource.data = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
 				}
 				else
 				{
-					mappedSubresource.data		= glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, static_cast<IndexBuffer&>(resource).getBufferSize(), Mapping::getOpenGLES2MapRangeType(mapType));
+					mappedSubresource.data = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<IndexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES2MapRangeType(mapType));
 				}
 				mappedSubresource.rowPitch   = 0;
 				mappedSubresource.depthPitch = 0;
@@ -1246,11 +1246,11 @@ namespace OpenGLES2Renderer
 				// Map
 				if (mContext->getExtensions().isGL_OES_mapbuffer())
 				{
-					mappedSubresource.data		 = glMapBufferOES(GL_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+					mappedSubresource.data = glMapBufferOES(GL_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
 				}
 				else
 				{
-					mappedSubresource.data		= glMapBufferRange(GL_ARRAY_BUFFER, 0, static_cast<VertexBuffer&>(resource).getBufferSize(), Mapping::getOpenGLES2MapRangeType(mapType));
+					mappedSubresource.data = glMapBufferRange(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<VertexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES2MapRangeType(mapType));
 				}
 				mappedSubresource.rowPitch   = 0;
 				mappedSubresource.depthPitch = 0;
@@ -1719,10 +1719,10 @@ namespace OpenGLES2Renderer
 		mCapabilities.individualUniforms = true;
 
 		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
-		mCapabilities.instancedArrays = true; // Is core feature in gles 3.0
+		mCapabilities.instancedArrays = true;	// Is core feature in OpenGL ES 3.0
 
 		// Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID, OpenGL ES 2 has no "GL_ARB_draw_instanced" extension)
-		mCapabilities.drawInstanced = true; // Is core feature in gles 3.0
+		mCapabilities.drawInstanced = true;	// Is core feature in OpenGL ES 3.0
 
 		// Base vertex supported for draw calls?
 		mCapabilities.baseVertex = mContext->getExtensions().isGL_EXT_draw_elements_base_vertex();

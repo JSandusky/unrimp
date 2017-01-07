@@ -37,15 +37,10 @@ if (0 == strcmp(renderer->getName(), "OpenGLES2"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 300 es\n"	// OpenGLES 3.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input - Mesh data
 in highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
-// gl_Position is still defined in opengles 3.0
-// out gl_PerVertex
-// {
-// 	vec4 gl_Position;
-// };
 
 // Attribute input - Per-instance data
 in highp float InstanceID;	// Simple instance ID in order to keep it similar to the "draw instanced" version on the right side (blue)
@@ -64,10 +59,11 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 300 es\n"	// OpenGLES 3.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
 out highp vec4 FragmentColor;	// Output variable for fragment color
+
 // Programs
 void main()
 {

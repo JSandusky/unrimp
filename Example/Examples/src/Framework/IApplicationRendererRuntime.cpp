@@ -48,8 +48,8 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererName, ExampleBase* example) :
-	IApplicationRenderer(rendererName, example),
+IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererName, ExampleBase* exampleBase) :
+	IApplicationRenderer(rendererName, exampleBase),
 	mRendererRuntimeInstance(nullptr)
 	#ifdef SHARED_LIBRARIES
 		, mRendererToolkitInstance(nullptr)
@@ -62,7 +62,8 @@ IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererNam
 IApplicationRendererRuntime::~IApplicationRendererRuntime()
 {
 	// Nothing here
-	// mRendererRuntimeInstance is destroyed within onDeinitialization()
+
+	// "mRendererRuntimeInstance" is destroyed within "onDeinitialization()"
 }
 
 
@@ -94,7 +95,8 @@ RendererToolkit::IRendererToolkit *IApplicationRendererRuntime::getRendererToolk
 //[-------------------------------------------------------]
 void IApplicationRendererRuntime::onInitialization()
 {
-	// Don't call the base this would break examples which depends on renderer runtime instance
+	// Don't call the base, this would break examples which depends on renderer runtime instance
+
 	// Create the renderer instance
 	createRenderer();
 
@@ -161,8 +163,8 @@ void IApplicationRendererRuntime::onInitialization()
 
 void IApplicationRendererRuntime::onDeinitialization()
 {
-	// Deinit example before we tear down any dependecies
-	// The base class calls this too but this is safe to do because the deinit is only done when the example wasn't already deinitialized
+	// Deinitinitialize example before we tear down any dependencies
+	// -> The base class calls this too but this is safe to do because the deinitialization is only done when the example wasn't already deinitialized
 	deinitializeExample();
 
 	// Delete the renderer runtime instance

@@ -59,7 +59,7 @@ public:
 	*  @brief
 	*    Constructor
 	*/
-	explicit FirstTriangle();
+	FirstTriangle();
 
 	/**
 	*  @brief

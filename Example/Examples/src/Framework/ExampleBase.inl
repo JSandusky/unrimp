@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 inline Renderer::IRenderer *ExampleBase::getRenderer() const
 {
-	return nullptr != mApplicationFrontend ? mApplicationFrontend->getRenderer() : nullptr;
+	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRenderer() : nullptr;
 }
 
 inline Renderer::IRenderTarget *ExampleBase::getMainRenderTarget() const

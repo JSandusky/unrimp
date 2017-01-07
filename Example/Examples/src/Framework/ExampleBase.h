@@ -110,13 +110,13 @@ public:
 
 	/**
 	*  @brief
-	*    Initializes the example. Does nothing when already initialized
+	*    Initializes the example; does nothing when already initialized
 	*/
 	void initialize();
 
 	/**
 	*  @brief
-	*    Deinitialize the example. Does nothing when already deinitialized
+	*    Deinitialize the example; does nothing when already deinitialized
 	*/
 	void deinitialize();
 
@@ -128,7 +128,7 @@ public:
 
 	/**
 	*  @brief
-	*   Set the application frontend to be used by the example
+	*    Set the application frontend to be used by the example
 	*/
 	void setApplicationFrontend(IApplicationFrontend* applicationFrontend);
 
@@ -194,11 +194,10 @@ public:
 
 	/**
 	*  @brief
-	*    Return if the examples does the drawing completely on its own.
-	*    Thus no draw handling in frontend (aka draw request handling in IApplicationRenderer)
+	*    Return if the examples does the drawing completely on its own; thus no draw handling in frontend (aka draw request handling in IApplicationRenderer)
 	*
 	*  @return
-	*    True if the example does its complete draw handling, otherwise false
+	*    "true" if the example does it's complete draw handling, otherwise "false"
 	*/
 	inline virtual bool doesCompleteOwnDrawing() const;
 
@@ -211,15 +210,15 @@ protected:
 	*  @brief
 	*    Constructor
 	*/
-	explicit ExampleBase();
+	ExampleBase();
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	bool mInitialized;
-	IApplicationFrontend*		mApplicationFrontend;	///< Renderer instance, can be a null pointer, do not destroy the instance
+	bool				  mInitialized;
+	IApplicationFrontend* mApplicationFrontend;	///< Renderer instance, can be a null pointer, do not destroy the instance
 
 
 };
@@ -228,4 +227,4 @@ private:
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "ExampleBase.inl"
+#include "Framework/ExampleBase.inl"
