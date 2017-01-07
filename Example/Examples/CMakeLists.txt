@@ -64,7 +64,7 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${OS_ARCHITECTURE})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/utf8cpp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/include/)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/openvr/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenVR/include/)
 
 
 ##################################################

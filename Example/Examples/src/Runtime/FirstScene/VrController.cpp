@@ -35,8 +35,10 @@
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h>
-#include <RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h>
-#include <RendererRuntime/Vr/OpenVR/IVrManagerOpenVRListener.h>
+#ifdef WIN32 // TODO(sw) openvr doesn't support non windows systems yet
+	#include <RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h>
+	#include <RendererRuntime/Vr/OpenVR/IVrManagerOpenVRListener.h>
+#endif
 
 #include <imgui/imgui.h>
 
@@ -70,6 +72,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Classes                                               ]
 		//[-------------------------------------------------------]
+#ifdef WIN32 // TODO(sw) openvr doesn't support non windows systems yet
 		/**
 		*  @brief
 		*    Virtual reality manager OpenVR listener
@@ -182,6 +185,7 @@ namespace
 
 
 		};
+#endif
 
 		class MaterialBlueprintResourceListener : public RendererRuntime::MaterialBlueprintResourceListener
 		{
@@ -192,8 +196,10 @@ namespace
 		//[-------------------------------------------------------]
 		public:
 			MaterialBlueprintResourceListener() :
+#ifdef WIN32 // TODO(sw) openvr doesn't support non windows systems yet
 				mVrManagerOpenVR(nullptr),
 				mVrManagerOpenVRListener(nullptr),
+#endif
 				mVrController(nullptr)
 			{
 				// Nothing here
@@ -204,12 +210,14 @@ namespace
 				// Nothing here
 			}
 
+#ifdef WIN32 // TODO(sw) openvr doesn't support non windows systems yet
 			void setVrManagerOpenVR(const RendererRuntime::VrManagerOpenVR& vrManagerOpenVR, const VrManagerOpenVRListener& vrManagerOpenVRListener, VrController& vrController)
 			{
 				mVrManagerOpenVR = &vrManagerOpenVR;
 				mVrManagerOpenVRListener = &vrManagerOpenVRListener;
 				mVrController = &vrController;
 			}
+#endif
 
 
 		//[-------------------------------------------------------]
@@ -218,6 +226,7 @@ namespace
 		private:
 			virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override
 			{
+#ifdef WIN32 // TODO(sw) openvr doesn't support non windows systems yet
 				// The GUI is placed over the second VR controller
 				if (::detail::IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue && mVrManagerOpenVRListener->getNumberOfVrControllers() >= 2)
 				{
@@ -234,6 +243,7 @@ namespace
 					return true;
 				}
 				else
+#endif
 				{
 					// Call the base implementation
 					return RendererRuntime::MaterialBlueprintResourceListener::fillPassValue(referenceValue, buffer, numberOfBytes);
@@ -253,8 +263,10 @@ namespace
 		//[ Private data                                          ]
 		//[-------------------------------------------------------]
 		private:
+#ifdef WIN32 // TODO(sw) openvr doesn't support non windows systems yet
 			const RendererRuntime::VrManagerOpenVR*	mVrManagerOpenVR;
 			const VrManagerOpenVRListener*			mVrManagerOpenVRListener;
+#endif
 			VrController*							mVrController;
 
 
@@ -264,7 +276,9 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global variables                                      ]
 		//[-------------------------------------------------------]
+#ifdef WIN32 // TODO(sw) openvr doesn't support non windows systems yet
 		static VrManagerOpenVRListener defaultVrManagerOpenVRListener;
+#endif
 		static MaterialBlueprintResourceListener materialBlueprintResourceListener;
 
 
@@ -284,6 +298,7 @@ VrController::VrController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
 	mTeleportIndicationLightSceneItem(nullptr)
 {
 	// Register our listeners
+#ifdef WIN32 // TODO(sw) openvr doesn't support non windows systems yet
 	if (mRendererRuntime.getVrManager().getVrManagerTypeId() == RendererRuntime::VrManagerOpenVR::TYPE_ID)
 	{
 		RendererRuntime::VrManagerOpenVR& vrManagerOpenVR = static_cast<RendererRuntime::VrManagerOpenVR&>(mRendererRuntime.getVrManager());
@@ -292,6 +307,7 @@ VrController::VrController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
 		::detail::materialBlueprintResourceListener.setVrManagerOpenVR(vrManagerOpenVR, ::detail::defaultVrManagerOpenVRListener, *this);
 		mRendererRuntime.getMaterialBlueprintResourceManager().setMaterialBlueprintResourceListener(&::detail::materialBlueprintResourceListener);
 	}
+#endif
 
 	{ // Create the teleport indication light scene item
 		RendererRuntime::ISceneResource& sceneResource = cameraSceneItem.getSceneResource();
@@ -307,13 +323,14 @@ VrController::VrController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
 VrController::~VrController()
 {
 	// TODO(co) Destroy the teleport indication light scene item? (not really worth the effort here)
-
+#ifdef WIN32 // TODO(sw) openvr doesn't support non windows systems yet
 	// Unregister our listeners
 	if (mRendererRuntime.getVrManager().getVrManagerTypeId() == RendererRuntime::VrManagerOpenVR::TYPE_ID)
 	{
 		static_cast<RendererRuntime::VrManagerOpenVR&>(mRendererRuntime.getVrManager()).setVrManagerOpenVRListener(nullptr);
 		mRendererRuntime.getMaterialBlueprintResourceManager().setMaterialBlueprintResourceListener(nullptr);
 	}
+#endif
 }
 
 const RendererRuntime::LightSceneItem& VrController::getTeleportIndicationLightSceneItemSafe() const
@@ -331,6 +348,7 @@ void VrController::onUpdate(float pastMilliseconds)
 	// The first VR controller is used for teleporting
 	// -> A green light indicates the position one will end up
 	// -> When pressing the trigger button one teleports to this position
+#ifdef WIN32 // TODO(sw) openvr doesn't support non windows systems yet
 	if (mRendererRuntime.getVrManager().getVrManagerTypeId() == RendererRuntime::VrManagerOpenVR::TYPE_ID && ::detail::defaultVrManagerOpenVRListener.getNumberOfVrControllers() >= 1 && nullptr != mTeleportIndicationLightSceneItem)
 	{
 		// Get VR controller transform data
@@ -366,6 +384,7 @@ void VrController::onUpdate(float pastMilliseconds)
 			mTeleportIndicationLightSceneItem->setVisible(false);
 		}
 	}
+#endif
 
 	// Call the base implementation
 	IController::onUpdate(pastMilliseconds);
