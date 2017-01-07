@@ -147,7 +147,23 @@ namespace RendererToolkit
 
 	bool StringHelper::isPositiveInteger(const std::string& s)
 	{
-		return (!s.empty() && (static_cast<size_t>(std::count_if(s.begin(), s.end(), std::isdigit)) == s.size()));
+		// TODO(sw) the static cast is needed otherwise compiler error:
+		/*
+		 Renderer/RendererToolkit/src/Helper/StringHelper.cpp: In static member function ‘static bool RendererToolkit::StringHelper::isPositiveInteger(const string&)’:
+Renderer/RendererToolkit/src/Helper/StringHelper.cpp:150:92: error: no matching function for call to ‘count_if(std::__cxx11::basic_string<char>::const_iterator, std::__cxx11::basic_string<char>::const_iterator, <unresolved overloaded function type>)’
+   return (!s.empty() && (static_cast<size_t>(std::count_if(s.begin(), s.end(), std::isdigit)) == s.size()));
+                                                                                            ^
+In file included from /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/algorithm:62:0,
+                 from Renderer/RendererToolkit/src/Helper/StringHelper.cpp:28:
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_algo.h:3984:5: note: candidate: template<class _IIter, class _Predicate> typename std::iterator_traits<_Iterator>::difference_type std::count_if(_IIter, _IIter, _Predicate)
+     count_if(_InputIterator __first, _InputIterator __last, _Predicate __pred)
+     ^~~~~~~~
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_algo.h:3984:5: note:   template argument deduction/substitution failed:
+Renderer/RendererToolkit/src/Helper/StringHelper.cpp:150:92: note:   couldn't deduce template parameter ‘_Predicate’
+   return (!s.empty() && (static_cast<size_t>(std::count_if(s.begin(), s.end(), std::isdigit)) == s.size()));
+
+		 */
+		return (!s.empty() && (static_cast<size_t>(std::count_if(s.begin(), s.end(), static_cast<int(*)(int)>(std::isdigit))) == s.size()));
 	}
 
 	RendererRuntime::AssetId StringHelper::getAssetIdByString(const std::string& assetIdAsString)

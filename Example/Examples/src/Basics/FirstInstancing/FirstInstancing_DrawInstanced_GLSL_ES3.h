@@ -22,7 +22,7 @@
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
 #ifndef RENDERER_NO_OPENGLES2
-if (0 == strcmp(renderer.getName(), "OpenGLES2"))
+if (0 == strcmp(renderer->getName(), "OpenGLES2"))
 {
 
 
@@ -37,29 +37,21 @@ if (0 == strcmp(renderer.getName(), "OpenGLES2"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 300 es\n"	// OpenGL ES 3.0
+"#version 300 es\n"	// OpenGL ES 3.0 
 STRINGIFY(
 // Attribute input/output
-in highp vec2 Position;		// Object space vertex position as input, left/bottom is (0,0) and right/top is (1,1)
-in highp vec2 TexCoord;		// Normalized texture coordinate as input
-out   highp vec2 TexCoordVs;	// Normalized texture coordinate as output
-in highp vec4 Color;			// Color as input
-out   highp vec4 ColorVs;		// Color as output
-
-// Uniforms
-uniform highp mat4 ObjectSpaceToClipSpaceMatrix;
+in highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+// gl_Position is still defined in opengles 3.0
+// out gl_PerVertex
+// {
+// 	vec4 gl_Position;
+// };
 
 // Programs
 void main()
 {
-	// Calculate the clip space vertex position, lower/left is (-1,-1) and upper/right is (1,1)
-	gl_Position = ObjectSpaceToClipSpaceMatrix * vec4(Position, 0.0f, 1.0f);
-
-	// Pass through the vertex texture coordinate
-	TexCoordVs = TexCoord;
-
-	// Pass through the vertex color
-	ColorVs = Color;
+	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
+	gl_Position = vec4(Position.x, Position.y - float(gl_InstanceID), 0.0, 1.0);
 }
 );	// STRINGIFY
 
@@ -69,22 +61,16 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 300 es\n"	// OpenGL ES 3.0
+"#version 300 es\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input/output
-in mediump vec2 TexCoordVs;	// Normalized texture coordinate as input
-in mediump vec4 ColorVs;
-
 out highp vec4 FragmentColor;	// Output variable for fragment color
-
-// Uniforms
-uniform mediump sampler2D GlyphMap;	// Glyph atlas texture map
 
 // Programs
 void main()
 {
-	// Fetch the texel at the given texture coordinate and return it's color
-	FragmentColor = ColorVs * texture(GlyphMap, TexCoordVs).aaaa;
+	// Return blue
+	FragmentColor = vec4(0.0, 0.0, 1.0, 1.0);
 }
 );	// STRINGIFY
 

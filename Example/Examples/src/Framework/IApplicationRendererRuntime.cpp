@@ -48,12 +48,27 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
+IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererName, ExampleBase* example) :
+	IApplicationRenderer(rendererName, example),
+	mRendererRuntimeInstance(nullptr)
+	#ifdef SHARED_LIBRARIES
+		, mRendererToolkitInstance(nullptr)
+		, mProject(nullptr)
+	#endif
+{
+	// Nothing here
+}
+
 IApplicationRendererRuntime::~IApplicationRendererRuntime()
 {
 	// Nothing here
 	// mRendererRuntimeInstance is destroyed within onDeinitialization()
 }
 
+
+//[-------------------------------------------------------]
+//[ Public virtual IApplicationFrontend methods           ]
+//[-------------------------------------------------------]
 RendererRuntime::IRendererRuntime *IApplicationRendererRuntime::getRendererRuntime() const
 {
 	return (nullptr != mRendererRuntimeInstance) ? mRendererRuntimeInstance->getRendererRuntime() : nullptr;
@@ -79,8 +94,9 @@ RendererToolkit::IRendererToolkit *IApplicationRendererRuntime::getRendererToolk
 //[-------------------------------------------------------]
 void IApplicationRendererRuntime::onInitialization()
 {
-	// Call the base implementation
-	IApplicationRenderer::onInitialization();
+	// Don't call the base this would break examples which depends on renderer runtime instance
+	// Create the renderer instance
+	createRenderer();
 
 	// Is there a valid renderer instance?
 	Renderer::IRenderer *renderer = getRenderer();
@@ -138,10 +154,17 @@ void IApplicationRendererRuntime::onInitialization()
 			}
 		}
 	}
+
+	// Initialize the example now that the renderer instance should be created successfully
+	initializeExample();
 }
 
 void IApplicationRendererRuntime::onDeinitialization()
 {
+	// Deinit example before we tear down any dependecies
+	// The base class calls this too but this is safe to do because the deinit is only done when the example wasn't already deinitialized
+	deinitializeExample();
+
 	// Delete the renderer runtime instance
 	delete mRendererRuntimeInstance;
 	mRendererRuntimeInstance = nullptr;
@@ -169,6 +192,9 @@ void IApplicationRendererRuntime::onUpdate()
 	{
 		rendererRuntime->update();
 	}
+
+	// Call base implementation
+	IApplicationRenderer::onUpdate();
 }
 
 
@@ -176,12 +202,7 @@ void IApplicationRendererRuntime::onUpdate()
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
 IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererName) :
-	IApplicationRenderer(rendererName),
-	mRendererRuntimeInstance(nullptr)
-	#ifdef SHARED_LIBRARIES
-		, mRendererToolkitInstance(nullptr)
-		, mProject(nullptr)
-	#endif
+	IApplicationRendererRuntime(rendererName, nullptr)
 {
 	// Nothing here
 }

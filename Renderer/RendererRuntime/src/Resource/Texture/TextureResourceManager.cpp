@@ -65,13 +65,14 @@ namespace
 			Renderer::ITexturePtr blackRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, blackRgbData));
 
 			// Create default dynamic texture assets
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/WhiteMap",			*whiteRgbTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/BlackMap",			*blackRgbTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityDiffuseMap",	*whiteRgbTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityAlphaMap",	*whiteATexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityNormalMap",	*normalMapIdentityTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentitySpecularMap",	*whiteATexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityEmissiveMap",	*blackRgbTexturePtr);
+			// TODO(sw) The explizit cast to AssetId is needed because gcc 4.9 (currently used on android) doesn't get the correct call due the StringId is typedefed to 'RendererRuntime::AssetId
+			textureResourceManager.createTextureResourceByAssetId(RendererRuntime::AssetId("Unrimp/Texture/Dynamic/WhiteMap"),				*whiteRgbTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId(RendererRuntime::AssetId("Unrimp/Texture/Dynamic/BlackMap"),				*blackRgbTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId(RendererRuntime::AssetId("Unrimp/Texture/Dynamic/IdentityDiffuseMap"),	*whiteRgbTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId(RendererRuntime::AssetId("Unrimp/Texture/Dynamic/IdentityAlphaMap"),		*whiteATexturePtr);
+			textureResourceManager.createTextureResourceByAssetId(RendererRuntime::AssetId("Unrimp/Texture/Dynamic/IdentityNormalMap"),		*normalMapIdentityTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId(RendererRuntime::AssetId("Unrimp/Texture/Dynamic/IdentitySpecularMap"),	*whiteATexturePtr);
+			textureResourceManager.createTextureResourceByAssetId(RendererRuntime::AssetId("Unrimp/Texture/Dynamic/IdentityEmissiveMap"),	*blackRgbTexturePtr);
 
 			// Done
 			return blackRgbTexturePtr;

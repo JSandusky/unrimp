@@ -31,8 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstIndirectBuffer::FirstIndirectBuffer(const char *rendererName) :
-	FirstTriangle(rendererName)
+FirstIndirectBuffer::FirstIndirectBuffer()
 {
 	// Nothing here
 }

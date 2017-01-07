@@ -37,8 +37,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstMesh::FirstMesh(const char *rendererName) :
-	IApplicationRendererRuntime(rendererName),
+FirstMesh::FirstMesh() :
 	mMeshResourceId(RendererRuntime::getUninitialized<RendererRuntime::MeshResourceId>()),
 	mDiffuseTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	mNormalTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
@@ -64,7 +63,7 @@ FirstMesh::~FirstMesh()
 void FirstMesh::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRendererRuntime::onInitialization();
+	ExampleBase::onInitialization();
 
 	// Get and check the renderer runtime instance
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
@@ -228,13 +227,13 @@ void FirstMesh::onDeinitialization()
 	mUniformBuffer = nullptr;
 
 	// Call the base implementation
-	IApplicationRendererRuntime::onDeinitialization();
+	ExampleBase::onDeinitialization();
 }
 
 void FirstMesh::onUpdate()
 {
 	// Call the base implementation
-	IApplicationRendererRuntime::onUpdate();
+	ExampleBase::onUpdate();
 
 	// Stop the stopwatch
 	mStopwatch.stop();

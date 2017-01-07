@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRenderer.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -48,7 +48,7 @@
 *    - Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 *    - Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
 */
-class FirstInstancing : public IApplicationRenderer
+class FirstInstancing : public ExampleBase
 {
 
 
@@ -59,12 +59,8 @@ public:
 	/**
 	*  @brief
 	*    Constructor
-	*
-	*  @param[in] rendererName
-	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 	*/
-	explicit FirstInstancing(const char *rendererName);
+	explicit FirstInstancing();
 
 	/**
 	*  @brief

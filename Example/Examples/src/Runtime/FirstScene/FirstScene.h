@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Framework/Stopwatch.h"
-#include "Framework/IApplicationRendererRuntime.h"
+#include "Framework/ExampleBase.h"
 
 #include <RendererRuntime/Resource/IResourceListener.h>
 
@@ -69,7 +69,7 @@ namespace RendererRuntime
 *    - Scene
 *    - Virtual reality (VR)
 */
-class FirstScene : public IApplicationRendererRuntime, public RendererRuntime::IResourceListener
+class FirstScene : public ExampleBase, public RendererRuntime::IResourceListener
 {
 
 
@@ -80,12 +80,8 @@ public:
 	/**
 	*  @brief
 	*    Constructor
-	*
-	*  @param[in] rendererName
-	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 	*/
-	explicit FirstScene(const char *rendererName);
+	explicit FirstScene();
 
 	/**
 	*  @brief
@@ -95,7 +91,7 @@ public:
 
 
 //[-------------------------------------------------------]
-//[ Public virtual IApplication methods                   ]
+//[ Public virtual ExampleBase methods                    ]
 //[-------------------------------------------------------]
 public:
 	virtual void onInitialization() override;
@@ -106,7 +102,10 @@ public:
 	virtual void onMouseButtonUp(uint32_t button) override;
 	virtual void onMouseMove(int x, int y) override;
 	virtual void onUpdate() override;
-	virtual void onDrawRequest() override;
+	virtual void onDraw() override;
+
+	// This example wants complete control of the drawing
+	inline virtual bool doesCompleteOwnDrawing() const override { return true; }
 
 
 //[-------------------------------------------------------]

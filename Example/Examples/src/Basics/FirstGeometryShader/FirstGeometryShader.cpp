@@ -31,8 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstGeometryShader::FirstGeometryShader(const char *rendererName) :
-	IApplicationRenderer(rendererName)
+FirstGeometryShader::FirstGeometryShader()
 {
 	// Nothing here
 }
@@ -50,7 +49,7 @@ FirstGeometryShader::~FirstGeometryShader()
 void FirstGeometryShader::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRenderer::onInitialization();
+	ExampleBase::onInitialization();
 
 	// Get and check the renderer instance
 	// -> Geometry shaders supported?
@@ -159,7 +158,7 @@ void FirstGeometryShader::onDeinitialization()
 	mBufferManager = nullptr;
 
 	// Call the base implementation
-	IApplicationRenderer::onDeinitialization();
+	ExampleBase::onDeinitialization();
 }
 
 void FirstGeometryShader::onDraw()

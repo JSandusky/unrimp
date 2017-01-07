@@ -50,6 +50,8 @@
 *    - This example is intentionally using OS dependent native window
 *      creation in order to keep the example "close to metal"
 */
+// TODO(sw) Is not derived from ExampleBase because it wants do drive own draw requests without base class interaction
+// And such an example is currently not supported by the example base implementation
 class FirstMultipleSwapChains : public IApplicationRenderer
 {
 

@@ -44,6 +44,15 @@ namespace OpenGLRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	inline void* Framebuffer::getInternalResourceHandle() const
+	{
+		return reinterpret_cast<void*>(mOpenGLFramebuffer);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

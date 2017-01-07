@@ -388,6 +388,20 @@ namespace OpenGLES2Renderer
 		return MAPPING[static_cast<int>(mapType) - 1];	// Lookout! The "Renderer::MapType"-values start with 1, not 0
 	}
 
+	uint32_t Mapping::getOpenGLES2MapRangeType(Renderer::MapType mapType)
+	{
+		// OPENGL ES 3 defines access bits for glMapBufferRange
+		static const GLbitfield MAPPING[] =
+		{
+			GL_MAP_READ_BIT,	// Renderer::MapType::READ
+			GL_MAP_WRITE_BIT,	// Renderer::MapType::WRITE
+			GL_MAP_READ_BIT | GL_MAP_WRITE_BIT,	// Renderer::MapType::READ_WRITE
+			GL_MAP_WRITE_BIT,	// Renderer::MapType::WRITE_DISCARD
+			GL_MAP_WRITE_BIT	// Renderer::MapType::WRITE_NO_OVERWRITE
+		};
+		return MAPPING[static_cast<int>(mapType) - 1];	// Lookout! The "Renderer::MapType"-values start with 1, not 0
+	}
+
 	uint32_t Mapping::getOpenGLES2BlendType(Renderer::Blend blend)
 	{
 		if (blend <= Renderer::Blend::SRC_ALPHA_SAT)

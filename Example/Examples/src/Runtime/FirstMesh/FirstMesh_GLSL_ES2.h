@@ -135,8 +135,8 @@ void main()
 	mediump float specularLight = (diffuseLight > 0.0) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0), 128.0) : 0.0;
 
 	// Calculate the fragment color
-	mediump vec4 color = diffuseLight * texture2D(DiffuseMap, TexCoordVs);	// Diffuse term
-	color.rgb += specularLight * texture2D(SpecularMap, TexCoordVs).rgb;	// Specular term
+	mediump vec4 color = diffuseLight * texture(DiffuseMap, TexCoordVs);	// Diffuse term
+	color.rgb += specularLight * texture(SpecularMap, TexCoordVs).rgb;	// Specular term
 	color.rgb += texture(EmissiveMap, TexCoordVs).rgb;						// Emissive term
 
 	// Done

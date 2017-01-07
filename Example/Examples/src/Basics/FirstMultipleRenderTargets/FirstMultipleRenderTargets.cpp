@@ -31,8 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstMultipleRenderTargets::FirstMultipleRenderTargets(const char *rendererName) :
-	IApplicationRenderer(rendererName)
+FirstMultipleRenderTargets::FirstMultipleRenderTargets()
 {
 	// Nothing here
 }
@@ -50,7 +49,7 @@ FirstMultipleRenderTargets::~FirstMultipleRenderTargets()
 void FirstMultipleRenderTargets::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRenderer::onInitialization();
+	ExampleBase::onInitialization();
 
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
@@ -218,7 +217,7 @@ void FirstMultipleRenderTargets::onDeinitialization()
 	mTextureManager = nullptr;
 
 	// Call the base implementation
-	IApplicationRenderer::onDeinitialization();
+	ExampleBase::onDeinitialization();
 }
 
 void FirstMultipleRenderTargets::onDraw()

@@ -90,9 +90,11 @@ set(SOURCE_CODES
 	src/Framework/CmdLineArgs.cpp
 	src/Framework/Color4.cpp
 	src/Framework/EulerAngles.cpp
+	src/Framework/ExampleBase.cpp
 	src/Framework/IApplication.cpp
 	src/Framework/IApplicationImpl.cpp
 	src/Framework/IApplicationRenderer.cpp
+	src/Framework/ExampleBase.cpp
 	src/Framework/Stopwatch.cpp
 	src/Main.cpp
 )

@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRendererRuntime.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -50,7 +50,7 @@ namespace RendererRuntime
 *    Demonstrates:
 *    - Compositor
 */
-class FirstCompositor : public IApplicationRendererRuntime
+class FirstCompositor : public ExampleBase
 {
 
 
@@ -61,12 +61,8 @@ public:
 	/**
 	*  @brief
 	*    Constructor
-	*
-	*  @param[in] rendererName
-	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 	*/
-	explicit FirstCompositor(const char *rendererName);
+	explicit FirstCompositor();
 
 	/**
 	*  @brief
@@ -81,7 +77,10 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
-	virtual void onDrawRequest() override;
+	virtual void onDraw() override;
+
+	// This example wants complete control of the drawing
+	inline virtual bool doesCompleteOwnDrawing() const override { return true; }
 
 
 //[-------------------------------------------------------]

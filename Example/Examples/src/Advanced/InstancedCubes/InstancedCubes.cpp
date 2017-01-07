@@ -40,8 +40,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-InstancedCubes::InstancedCubes(const char *rendererName) :
-	IApplicationRendererRuntime(rendererName),
+InstancedCubes::InstancedCubes() :
 	mCubeRenderer(nullptr),
 	mNumberOfCubeInstances(1000),
 	mGlobalTimer(0.0f),
@@ -67,7 +66,7 @@ InstancedCubes::~InstancedCubes()
 void InstancedCubes::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRendererRuntime::onInitialization();
+	ExampleBase::onInitialization();
 
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
@@ -104,7 +103,7 @@ void InstancedCubes::onDeinitialization()
 	}
 
 	// Call the base implementation
-	IApplicationRendererRuntime::onDeinitialization();
+	ExampleBase::onDeinitialization();
 }
 
 void InstancedCubes::onKeyDown(uint32_t key)

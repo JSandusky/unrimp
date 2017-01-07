@@ -95,7 +95,7 @@ void main()
 {
 	// Fetch the texel at the given texture coordinate and return it's color
 	// -> Apply a simple wobble to the texture coordinate so we can see that content processing is up and running
-	gl_FragColor = texture2D(ContentMap, vec2(TexCoord.x + sin(TexCoord.x * 100.0) * 0.01, TexCoord.y + cos(TexCoord.y * 100.0) * 0.01));
+	gl_FragColor = texture(ContentMap, vec2(TexCoord.x + sin(TexCoord.x * 100.0) * 0.01, TexCoord.y + cos(TexCoord.y * 100.0) * 0.01));
 }
 );	// STRINGIFY
 

@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRenderer.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -47,7 +47,7 @@
 *    - Multiple vertex attributes within a single vertex buffer object (VBO), vertex array object (VAO) is only using one vertex buffer object (VBO)
 *    - One vertex buffer object (VBO) per vertex attribute, vertex array object (VAO) is using multiple vertex buffer objects (VBO)
 */
-class VertexBuffer : public IApplicationRenderer
+class VertexBuffer : public ExampleBase
 {
 
 
@@ -58,12 +58,8 @@ public:
 	/**
 	*  @brief
 	*    Constructor
-	*
-	*  @param[in] rendererName
-	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 	*/
-	explicit VertexBuffer(const char *rendererName);
+	explicit VertexBuffer();
 
 	/**
 	*  @brief

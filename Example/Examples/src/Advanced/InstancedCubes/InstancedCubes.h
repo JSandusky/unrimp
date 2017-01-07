@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Framework/Stopwatch.h"
-#include "Framework/IApplicationRendererRuntime.h"
+#include "Framework/ExampleBase.h"
 
 
 //[-------------------------------------------------------]
@@ -60,7 +60,7 @@ class ICubeRenderer;
 *    - Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 *    - Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
 */
-class InstancedCubes : public IApplicationRendererRuntime
+class InstancedCubes : public ExampleBase
 {
 
 
@@ -71,12 +71,8 @@ public:
 	/**
 	*  @brief
 	*    Constructor
-	*
-	*  @param[in] rendererName
-	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 	*/
-	explicit InstancedCubes(const char *rendererName);
+	explicit InstancedCubes();
 
 	/**
 	*  @brief

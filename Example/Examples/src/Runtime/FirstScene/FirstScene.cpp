@@ -75,8 +75,7 @@ namespace
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstScene::FirstScene(const char *rendererName) :
-	IApplicationRendererRuntime(rendererName),
+FirstScene::FirstScene() :
 	mCompositorWorkspaceInstance(nullptr),
 	mSceneResource(nullptr),
 	mMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
@@ -118,7 +117,7 @@ FirstScene::~FirstScene()
 void FirstScene::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRendererRuntime::onInitialization();
+	ExampleBase::onInitialization();
 
 	// Get and check the renderer runtime instance
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
@@ -159,7 +158,7 @@ void FirstScene::onDeinitialization()
 	}
 
 	// Call the base implementation
-	IApplicationRendererRuntime::onDeinitialization();
+	ExampleBase::onDeinitialization();
 }
 
 void FirstScene::onKeyDown(uint32_t key)
@@ -205,7 +204,7 @@ void FirstScene::onMouseMove(int x, int y)
 void FirstScene::onUpdate()
 {
 	// Call the base implementation
-	IApplicationRendererRuntime::onUpdate();
+	ExampleBase::onUpdate();
 
 	// Stop the stopwatch and get the milliseconds
 	mStopwatch.stop();
@@ -249,7 +248,7 @@ void FirstScene::onUpdate()
 	trySetCustomMaterialResource();
 }
 
-void FirstScene::onDrawRequest()
+void FirstScene::onDraw()
 {
 	Renderer::IRenderer* renderer = getRenderer();
 	if (nullptr != renderer)

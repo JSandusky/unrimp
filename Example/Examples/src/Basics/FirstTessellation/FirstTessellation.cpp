@@ -31,8 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstTessellation::FirstTessellation(const char *rendererName) :
-	IApplicationRenderer(rendererName)
+FirstTessellation::FirstTessellation()
 {
 	// Nothing here
 }
@@ -50,7 +49,7 @@ FirstTessellation::~FirstTessellation()
 void FirstTessellation::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRenderer::onInitialization();
+	ExampleBase::onInitialization();
 
 	// Get and check the renderer instance
 	// -> Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
@@ -166,7 +165,7 @@ void FirstTessellation::onDeinitialization()
 	mBufferManager = nullptr;
 
 	// Call the base implementation
-	IApplicationRenderer::onDeinitialization();
+	ExampleBase::onDeinitialization();
 }
 
 void FirstTessellation::onDraw()

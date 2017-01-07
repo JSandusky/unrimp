@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 #include "Framework/IApplicationRenderer.h"
+#include "Framework/ExampleBase.h"
 
 #include <Renderer/Public/RendererInstance.h>
 
@@ -30,6 +31,29 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
+IApplicationRenderer::IApplicationRenderer(const char *rendererName, ExampleBase* example) :
+	IApplication(rendererName),
+	mRendererInstance(nullptr),
+	mRenderer(nullptr),
+	mExample(example)
+{
+	if (nullptr != mExample)
+		mExample->setApplicationFrontend(this);
+	
+	// Copy the given renderer name
+	if (nullptr != rendererName)
+	{
+		strncpy(mRendererName, rendererName, 32);
+
+		// In case the source string is longer then 32 bytes (including null terminator) make sure that the string is null terminated
+		mRendererName[31] = '\0';
+	}
+	else
+	{
+		mRendererName[0] = '\0';
+	}
+}
+
 IApplicationRenderer::~IApplicationRenderer()
 {
 	// Nothing here
@@ -41,16 +65,24 @@ IApplicationRenderer::~IApplicationRenderer()
 //[-------------------------------------------------------]
 void IApplicationRenderer::onInitialization()
 {
-	// Create the renderer instance (at this point our renderer pointer must be a null pointer, or something went terrible wrong!)
-	mRenderer = createRendererInstance(mRendererName);
+	createRenderer();
+	initializeExample();
 }
 
 void IApplicationRenderer::onDeinitialization()
 {
+	deinitializeExample();
+
 	// Delete the renderer instance
 	mRenderer = nullptr;
 	delete mRendererInstance;
 	mRendererInstance = nullptr;
+}
+
+void IApplicationRenderer::onUpdate()
+{
+	if (nullptr != mExample)
+		mExample->onUpdate();
 }
 
 void IApplicationRenderer::onResize()
@@ -85,10 +117,56 @@ void IApplicationRenderer::onToggleFullscreenState()
 	}
 }
 
+void IApplicationRenderer::onKeyDown(uint32_t key)
+{
+	if (nullptr != mExample)
+	{
+		mExample->onKeyDown(key);
+	}
+}
+
+void IApplicationRenderer::onKeyUp(uint32_t key)
+{
+	if (nullptr != mExample)
+	{
+		mExample->onKeyUp(key);
+	}
+}
+
+void IApplicationRenderer::onMouseButtonDown(uint32_t button)
+{
+	if (nullptr != mExample)
+	{
+		mExample->onMouseButtonDown(button);
+	}
+}
+
+void IApplicationRenderer::onMouseButtonUp(uint32_t button)
+{
+	if (nullptr != mExample)
+	{
+		mExample->onMouseButtonUp(button);
+	}
+}
+
+void IApplicationRenderer::onMouseMove(int x, int y)
+{
+	if (nullptr != mExample)
+	{
+		mExample->onMouseMove(x, y);
+	}
+}
+
 void IApplicationRenderer::onDrawRequest()
 {
+	if (nullptr != mExample && mExample->doesCompleteOwnDrawing())
+	{
+		// The example does the drawing completely on its own
+		mExample->draw();
+	}
+
 	// Is there a renderer instance?
-	if (nullptr != mRenderer)
+	else if (nullptr != mRenderer)
 	{
 		// Get the main swap chain and ensure there's one
 		Renderer::ISwapChain* swapChain = mRenderer->getMainSwapChain();
@@ -120,7 +198,8 @@ void IApplicationRenderer::onDrawRequest()
 				mCommandBuffer.submitAndClear(*mRenderer);
 
 				// Call the draw method
-				onDraw();
+				if (nullptr != mExample)
+					mExample->draw();
 
 				// End debug event
 				COMMAND_END_DEBUG_EVENT(mCommandBuffer)
@@ -145,22 +224,30 @@ void IApplicationRenderer::onDrawRequest()
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
 IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
-	IApplication(rendererName),
-	mRendererInstance(nullptr),
-	mRenderer(nullptr)
-{
-	// Copy the given renderer name
-	if (nullptr != rendererName)
-	{
-		strncpy(mRendererName, rendererName, 32);
+	IApplicationRenderer(rendererName, nullptr)
+{	
+	// Nothing here
+}
 
-		// In case the source string is longer then 32 bytes (including null terminator) make sure that the string is null terminated
-		mRendererName[31] = '\0';
-	}
-	else
+void IApplicationRenderer::createRenderer()
+{
+	if (nullptr == mRenderer)
 	{
-		mRendererName[0] = '\0';
+		// Create the renderer instance
+		mRenderer = createRendererInstance(mRendererName);
 	}
+}
+
+void IApplicationRenderer::initializeExample()
+{
+	if (nullptr != mExample)
+		mExample->initialize();
+}
+
+void IApplicationRenderer::deinitializeExample()
+{
+	if (nullptr != mExample)
+		mExample->deinitialize();
 }
 
 

@@ -151,7 +151,8 @@ namespace RendererRuntime
 			TextureBuffer(uint32_t rootParameterIndex, BufferUsage bufferUsage, const MaterialPropertyValue& _materialPropertyValue) :
 				rootParameterIndex(rootParameterIndex),
 				bufferUsage(bufferUsage),
-				materialPropertyValue(MaterialProperty(0, getMaterialPropertyUsageFromBufferUsage(bufferUsage), _materialPropertyValue))
+				// TODO(sw) The explizit cast to MaterialPropertyId is needed because gcc 4.9 (currently used on android) doesn't get the correct call due the StringId is typedefed to 'RendererRuntime::MaterialPropertyId
+				materialPropertyValue(MaterialProperty(RendererRuntime::MaterialPropertyId(0), getMaterialPropertyUsageFromBufferUsage(bufferUsage), _materialPropertyValue))
 			{
 				// Nothing here
 			}

@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Framework/IApplication.h"
+#include "Framework/IApplicationFrontend.h"
 
 #include <Renderer/Public/Renderer.h>
 
@@ -82,6 +83,8 @@ namespace Renderer
 	class RendererInstance;
 }
 
+class ExampleBase;
+
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]
@@ -90,7 +93,7 @@ namespace Renderer
 *  @brief
 *    Renderer application interface
 */
-class IApplicationRenderer : public IApplication
+class IApplicationRenderer : public IApplication, public IApplicationFrontend
 {
 
 
@@ -100,27 +103,30 @@ class IApplicationRenderer : public IApplication
 public:
 	/**
 	*  @brief
+	*    Constructor
+	*
+	*  @param[in] rendererName
+	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
+	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
+	*
+	*  @param[in] example
+	*    Pointer to an example which should be used
+	*/
+	explicit IApplicationRenderer(const char *rendererName, ExampleBase* example);
+
+	/**
+	*  @brief
 	*    Destructor
 	*/
 	virtual ~IApplicationRenderer();
 
-	/**
-	*  @brief
-	*    Return the renderer instance
-	*
-	*  @return
-	*    The renderer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
-	*/
-	inline Renderer::IRenderer *getRenderer() const;
 
-	/**
-	*  @brief
-	*    Return the main renderer target
-	*
-	*  @return
-	*    The main renderer target instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
-	*/
-	inline Renderer::IRenderTarget *getMainRenderTarget() const;
+//[-------------------------------------------------------]
+//[ Public virtual IApplicationFrontend methods           ]
+//[-------------------------------------------------------]
+public:
+	inline Renderer::IRenderer *getRenderer() const override;
+	inline Renderer::IRenderTarget *getMainRenderTarget() const override;
 
 
 //[-------------------------------------------------------]
@@ -129,15 +135,21 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
+	virtual void onUpdate() override;
 	virtual void onResize() override;
 	virtual void onToggleFullscreenState() override;
+	virtual void onKeyDown(uint32_t key) override;
+	virtual void onKeyUp(uint32_t key) override;
+	virtual void onMouseButtonDown(uint32_t button) override;
+	virtual void onMouseButtonUp(uint32_t button) override;
+	virtual void onMouseMove(int x, int y) override;
 	virtual void onDrawRequest() override;
 
 
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-protected:
+public:
 	/**
 	*  @brief
 	*    Constructor
@@ -147,6 +159,24 @@ protected:
 	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 	*/
 	explicit IApplicationRenderer(const char *rendererName);
+
+	/**
+	*  @brief
+	*    Creates the renderer instance when it not already exists
+	*/
+	void createRenderer();
+
+	/**
+	*  @brief
+	*    Initializes the example, when not already done
+	*/
+	void initializeExample();
+
+	/**
+	*  @brief
+	*    Deinitializes the example, when not already done
+	*/
+	void deinitializeExample();
 
 
 //[-------------------------------------------------------]
@@ -175,6 +205,8 @@ private:
 	Renderer::RendererInstance* mRendererInstance;	///< Renderer instance, can be a null pointer
 	Renderer::IRenderer*		mRenderer;			///< Renderer instance, can be a null pointer, do not destroy the instance
 	Renderer::CommandBuffer		mCommandBuffer;		///< Command buffer
+
+	ExampleBase* mExample;
 
 
 };

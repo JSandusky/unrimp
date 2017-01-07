@@ -25,6 +25,8 @@
 #include "ExampleRunner.h"
 #include "Framework/PlatformTypes.h"
 #include "Framework/CmdLineArgs.h"
+#include "Framework/IApplicationRenderer.h"
+#include "Framework/IApplicationRendererRuntime.h"
 // Basics
 #include "Basics/FirstTriangle/FirstTriangle.h"
 #include "Basics/FirstIndirectBuffer/FirstIndirectBuffer.h"
@@ -52,6 +54,20 @@
 //[-------------------------------------------------------]
 //[ Helper method template                                ]
 //[-------------------------------------------------------]
+template <class ExampleClass>
+int RunRenderExample(const char* rendererName)
+{
+	ExampleClass example;
+	return IApplicationRenderer(rendererName, &example).run();
+}
+
+template <class ExampleClass>
+int RunRenderRuntimeExample(const char* rendererName)
+{
+	ExampleClass example;
+	return IApplicationRendererRuntime(rendererName, &example).run();
+}
+
 template <class ExampleClass>
 int RunExample(const char* rendererName)
 {
@@ -108,28 +124,28 @@ ExampleRunner::ExampleRunner()
 	std::array<std::string, 5> onlyShaderModel5Plus = {{"Null", "OpenGL", "Direct3D11", "Direct3D12", "Vulkan"}};
 
 	// Basics
-	addExample("FirstTriangle",					&RunExample<FirstTriangle>,					supportsAllRenderer);
-	addExample("FirstIndirectBuffer",			&RunExample<FirstIndirectBuffer>,			supportsAllRenderer);
-	addExample("VertexBuffer",					&RunExample<VertexBuffer>,					supportsAllRenderer);
-	addExample("FirstTexture",					&RunExample<FirstTexture>,					supportsAllRenderer);
-	addExample("FirstRenderToTexture",			&RunExample<FirstRenderToTexture>,			supportsAllRenderer);
-	addExample("FirstMultipleRenderTargets",	&RunExample<FirstMultipleRenderTargets>,	supportsAllRenderer);
-	addExample("FirstMultipleSwapChains",		&RunExample<FirstMultipleSwapChains>,		supportsAllRenderer);
-	addExample("FirstInstancing",				&RunExample<FirstInstancing>,				doesNotSupportOpenGLES2);
-	addExample("FirstGeometryShader",			&RunExample<FirstGeometryShader>,			onlyShaderModel4Plus);
-	addExample("FirstTessellation",				&RunExample<FirstTessellation>,				onlyShaderModel5Plus);
+	addExample("FirstTriangle",					&RunRenderExample<FirstTriangle>,				supportsAllRenderer);
+	addExample("FirstIndirectBuffer",			&RunRenderExample<FirstIndirectBuffer>,			supportsAllRenderer);
+	addExample("VertexBuffer",					&RunRenderExample<VertexBuffer>,				supportsAllRenderer);
+	addExample("FirstTexture",					&RunRenderExample<FirstTexture>,				supportsAllRenderer);
+	addExample("FirstRenderToTexture",			&RunRenderExample<FirstRenderToTexture>,		supportsAllRenderer);
+	addExample("FirstMultipleRenderTargets",	&RunRenderExample<FirstMultipleRenderTargets>,	supportsAllRenderer);
+	addExample("FirstMultipleSwapChains",		&RunExample<FirstMultipleSwapChains>,			supportsAllRenderer);
+	addExample("FirstInstancing",				&RunRenderExample<FirstInstancing>,				supportsAllRenderer);
+	addExample("FirstGeometryShader",			&RunRenderExample<FirstGeometryShader>,			onlyShaderModel4Plus);
+	addExample("FirstTessellation",				&RunRenderExample<FirstTessellation>,			onlyShaderModel5Plus);
 
 	// Advanced
-	addExample("FirstGpgpu",					&RunExample<FirstGpgpu>,					supportsAllRenderer);
-	addExample("IcosahedronTessellation",		&RunExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
+	addExample("FirstGpgpu",					&RunExample<FirstGpgpu>,						supportsAllRenderer);
+	addExample("IcosahedronTessellation",		&RunRenderExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
 	#ifdef RENDERER_NO_RUNTIME
 		m_defaultExampleName = "FirstTriangle";
 	#else
 		// Renderer runtime
-		addExample("FirstMesh",					&RunExample<FirstMesh>,						supportsAllRenderer);
-		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);
-		addExample("FirstScene",				&RunExample<FirstScene>,					supportsAllRenderer);
-		addExample("InstancedCubes",			&RunExample<InstancedCubes>,				doesNotSupportOpenGLES2);
+		addExample("FirstMesh",					&RunRenderRuntimeExample<FirstMesh>,		supportsAllRenderer);
+		addExample("FirstCompositor",			&RunRenderRuntimeExample<FirstCompositor>,	supportsAllRenderer);
+		addExample("FirstScene",				&RunRenderRuntimeExample<FirstScene>,		supportsAllRenderer);
+		addExample("InstancedCubes",			&RunRenderRuntimeExample<InstancedCubes>,	supportsAllRenderer);
 		m_defaultExampleName = "FirstScene";
 	#endif
 

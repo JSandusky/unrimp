@@ -264,7 +264,9 @@ namespace OpenGLES2Renderer
 	FNDEF_GL(void,				glDisable,								(GLenum cap));
 	FNDEF_GL(void,				glDisableVertexAttribArray,				(GLuint index));
 	FNDEF_GL(void,				glDrawArrays,							(GLenum mode, GLint first, GLsizei count));
+	FNDEF_GL(void,				glDrawArraysInstanced,					(GLenum mode, GLint first, GLsizei count, GLsizei primcount));
 	FNDEF_GL(void,				glDrawElements,							(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices));
+	FNDEF_GL(void,				glDrawElementsInstanced,				(GLenum mode, GLsizei count, GLenum type, const void *indices, GLsizei instancecount));
 	FNDEF_GL(void,				glEnable,								(GLenum cap));
 	FNDEF_GL(void,				glEnableVertexAttribArray,				(GLuint index));
 	FNDEF_GL(void,				glFinish,								(void));
@@ -366,6 +368,8 @@ namespace OpenGLES2Renderer
 	FNDEF_GL(void,				glVertexAttribPointer,					(GLuint indx, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* ptr));
 	FNDEF_GL(void,				glViewport,								(GLint x, GLint y, GLsizei width, GLsizei height));
 	FNDEF_GL(void,				glBindBufferBase,						(GLenum target, GLuint index, GLuint buffer));
+	FNDEF_GL(void,				glUnmapBuffer,							(GLenum target));
+	FNDEF_GL(void*,				glMapBufferRange,						(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access));
 	#undef FNDEF_GL
 
 
@@ -453,7 +457,9 @@ namespace OpenGLES2Renderer
 	#define	glDisable								FNPTR(glDisable)
 	#define	glDisableVertexAttribArray				FNPTR(glDisableVertexAttribArray)
 	#define	glDrawArrays							FNPTR(glDrawArrays)
+	#define	glDrawArraysInstanced					FNPTR(glDrawArraysInstanced)
 	#define	glDrawElements							FNPTR(glDrawElements)
+	#define	glDrawElementsInstanced					FNPTR(glDrawElementsInstanced)
 	#define	glEnable								FNPTR(glEnable)
 	#define	glEnableVertexAttribArray				FNPTR(glEnableVertexAttribArray)
 	#define	glFinish								FNPTR(glFinish)
@@ -557,6 +563,8 @@ namespace OpenGLES2Renderer
 
 	// ES 3
 	#define	glBindBufferBase						FNPTR(glBindBufferBase)
+	#define	glUnmapBuffer							FNPTR(glUnmapBuffer)
+	#define	glMapBufferRange						FNPTR(glMapBufferRange)
 
 
 //[-------------------------------------------------------]

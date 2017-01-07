@@ -47,6 +47,7 @@ namespace OpenGLES2Renderer
 		mGL_EXT_texture_filter_anisotropic(false),
 		mGL_EXT_texture_array(false),
 		mGL_EXT_texture_buffer(false),
+		mGL_EXT_draw_elements_base_vertex(false),
 		// AMD
 		mGL_AMD_compressed_3DC_texture(false),
 		// NV
@@ -132,6 +133,16 @@ namespace OpenGLES2Renderer
 			// Load the entry points
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glTexBufferEXT)
+			mGL_EXT_texture_buffer = result;
+		}
+
+		mGL_EXT_draw_elements_base_vertex = (nullptr != strstr(extensions, "GL_EXT_draw_elements_base_vertex"));
+		if (mGL_EXT_texture_buffer)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glDrawElementsBaseVertexEXT)
+			IMPORT_FUNC(glDrawElementsInstancedBaseVertexEXT)
 			mGL_EXT_texture_buffer = result;
 		}
 

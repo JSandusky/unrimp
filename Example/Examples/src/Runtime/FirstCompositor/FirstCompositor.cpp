@@ -65,8 +65,7 @@ namespace
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstCompositor::FirstCompositor(const char *rendererName) :
-	IApplicationRendererRuntime(rendererName),
+FirstCompositor::FirstCompositor() :
 	mCompositorWorkspaceInstance(nullptr)
 {
 	// Nothing here
@@ -85,7 +84,7 @@ FirstCompositor::~FirstCompositor()
 void FirstCompositor::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRendererRuntime::onInitialization();
+	ExampleBase::onInitialization();
 
 	// Get and check the renderer runtime instance
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
@@ -113,10 +112,10 @@ void FirstCompositor::onDeinitialization()
 	}
 
 	// Call the base implementation
-	IApplicationRendererRuntime::onDeinitialization();
+	ExampleBase::onDeinitialization();
 }
 
-void FirstCompositor::onDrawRequest()
+void FirstCompositor::onDraw()
 {
 	// Is there a compositor workspace instance?
 	if (nullptr != mCompositorWorkspaceInstance)
