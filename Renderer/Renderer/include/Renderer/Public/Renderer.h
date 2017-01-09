@@ -2828,9 +2828,9 @@ namespace Renderer
 				}
 				inline static void create(CommandBuffer& commandBuffer, uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0)
 				{
-					Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(IndirectBuffer));
+					Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(DrawInstancedArguments));
 					IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
-					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &indirectBufferData, sizeof(IndirectBuffer));
+					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), indirectBufferData.getEmulationData(), sizeof(DrawInstancedArguments));
 					drawCommand->indirectBuffer		  = nullptr;
 					drawCommand->indirectBufferOffset = 0;
 					drawCommand->numberOfDraws		  = 1;
@@ -2853,9 +2853,9 @@ namespace Renderer
 				}
 				inline static void create(CommandBuffer& commandBuffer, uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0)
 				{
-					DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(IndexedIndirectBuffer));
+					DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(DrawIndexedInstancedArguments));
 					IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
-					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
+					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), indexedIndirectBufferData.getEmulationData(), sizeof(DrawIndexedInstancedArguments));
 					drawCommand->indirectBuffer		  = nullptr;
 					drawCommand->indirectBufferOffset = 0;
 					drawCommand->numberOfDraws		  = 1;

@@ -216,13 +216,39 @@ namespace OpenGLRenderer
 				void Draw(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<OpenGLRenderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+
+					if (nullptr != realData->indirectBuffer)
+					{
+						static_cast<OpenGLRenderer&>(renderer).draw(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						Renderer::DrawInstancedArguments data(0);
+						memcpy(&data, Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), sizeof(Renderer::DrawInstancedArguments));
+
+						Renderer::IndirectBuffer indirectBuffer(data.vertexCountPerInstance, data.instanceCount, data.startVertexLocation, data.startInstanceLocation);
+
+						static_cast<OpenGLRenderer&>(renderer).draw(indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<OpenGLRenderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+
+					if (nullptr != realData->indirectBuffer)
+					{
+						static_cast<OpenGLRenderer&>(renderer).drawIndexed(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						Renderer::DrawIndexedInstancedArguments data(0);
+						memcpy(&data, Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), sizeof(Renderer::DrawIndexedInstancedArguments));
+
+						Renderer::IndexedIndirectBuffer indirectBuffer(data.indexCountPerInstance, data.instanceCount, data.startIndexLocation, data.baseVertexLocation, data.startInstanceLocation);
+
+						static_cast<OpenGLRenderer&>(renderer).drawIndexed(indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				//[-------------------------------------------------------]

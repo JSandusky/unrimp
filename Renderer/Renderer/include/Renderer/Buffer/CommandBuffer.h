@@ -857,12 +857,12 @@ namespace Renderer
 			}
 			inline static void create(CommandBuffer& commandBuffer, uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0)
 			{
-				Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(IndirectBuffer));
+				Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(DrawInstancedArguments));
 
-				// Set command data: The command packet auxiliary memory contains an "Renderer::IndirectBuffer"-instance. Due to "Renderer::IIndirectBuffer"
-				// the class is virtual but we don't mind in here because in this use-class the class is only used to transport the data in a generic way
+				// Set command data: The command packet auxiliary memory contains an "Renderer::DrawInstancedArguments"-instance.
+				// TODO(sw) Get rid of the IndirectBuffer instance which simply sets the values to the internal "Renderer::DrawInstancedArguments" member
 				IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
-				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &indirectBufferData, sizeof(IndirectBuffer));
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), indirectBufferData.getEmulationData(), sizeof(DrawInstancedArguments));
 
 				// Finalize command
 				drawCommand->indirectBuffer		  = nullptr;
@@ -912,12 +912,12 @@ namespace Renderer
 			}
 			inline static void create(CommandBuffer& commandBuffer, uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0)
 			{
-				DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(IndexedIndirectBuffer));
+				DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(DrawIndexedInstancedArguments));
 
-				// Set command data: The command packet auxiliary memory contains an "Renderer::IndexedIndirectBuffer"-instance. Due to "Renderer::IIndirectBuffer"
-				// the class is virtual but we don't mind in here because in this use-class the class is only used to transport the data in a generic way
+				// Set command data: The command packet auxiliary memory contains an "Renderer::DrawIndexedInstancedArguments"-instance.
+				// TODO(sw) Get rid of the IndexedIndirectBuffer instance which simply sets the values to the internal "Renderer::DrawIndexedInstancedArguments" member
 				IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
-				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &indexedIndirectBufferData, sizeof(IndexedIndirectBuffer));
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), indexedIndirectBufferData.getEmulationData(), sizeof(DrawIndexedInstancedArguments));
 
 				// Finalize command
 				drawCommand->indirectBuffer		  = nullptr;
