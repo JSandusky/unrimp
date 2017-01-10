@@ -24,7 +24,9 @@
 #include "PrecompiledHeader.h"
 #include "Runtime/FirstScene/FirstScene.h"
 #include "Runtime/FirstScene/FreeCameraController.h"
-#include "Runtime/FirstScene/VrController.h"
+#ifdef WIN32	// TODO(sw) openvr doesn't support non windows systems yet
+	#include "Runtime/FirstScene/VrController.h"
+#endif
 
 #include <RendererRuntime/Vr/IVrManager.h>
 #include <RendererRuntime/Core/Math/Transform.h>
@@ -343,11 +345,13 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 
 			if (nullptr != mCameraSceneItem && nullptr != mCameraSceneItem->getParentSceneNode())
 			{
-				if (mCompositorWorkspaceInstance->getRendererRuntime().getVrManager().isRunning())
-				{
-					mController = new VrController(*mCameraSceneItem);
-				}
-				else
+				#ifdef WIN32	// TODO(sw) openvr doesn't support non windows systems yet
+					if (mCompositorWorkspaceInstance->getRendererRuntime().getVrManager().isRunning())
+					{
+						mController = new VrController(*mCameraSceneItem);
+					}
+					else
+				#endif
 				{
 					mController = new FreeCameraController(*mCameraSceneItem);
 

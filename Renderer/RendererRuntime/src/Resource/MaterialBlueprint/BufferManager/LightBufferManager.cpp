@@ -78,12 +78,7 @@ namespace RendererRuntime
 
 	LightBufferManager::~LightBufferManager()
 	{
-		// TODO(co) Remove this null pointer check. Then using the light buffer manger this instance must be valid, else this light buffer manager shouldn't have been used in the first place.
-		// Release texture buffer instance
-		if (nullptr != mTextureBuffer)
-		{
-			mTextureBuffer->releaseReference();
-		}
+		mTextureBuffer->releaseReference();
 	}
 
 	void LightBufferManager::fillBuffer(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer)

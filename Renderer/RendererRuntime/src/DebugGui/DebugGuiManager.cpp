@@ -459,7 +459,7 @@ namespace RendererRuntime
 		}
 
 		// Create vertex uniform buffer instance
-		if (0 != strcmp(renderer.getName(), "OpenGL") && 0 != strcmp(renderer.getName(), "OpenGLES2"))
+		if (renderer.getCapabilities().maximumUniformBufferSize > 0)
 		{
 			mVertexShaderUniformBuffer = mRendererRuntime.getBufferManager().createUniformBuffer(sizeof(float) * 4 * 4, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		}

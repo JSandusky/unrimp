@@ -123,7 +123,6 @@ if(RENDERER_RUNTIME)
 		src/Runtime/FirstScene/FirstScene.cpp
 		src/Runtime/FirstScene/IController.cpp
 		src/Runtime/FirstScene/FreeCameraController.cpp
-		src/Runtime/FirstScene/VrController.cpp
 		src/Runtime/FirstCompositor/FirstCompositor.cpp
 		src/Runtime/FirstCompositor/CompositorInstancePassFirst.cpp
 		src/Runtime/FirstCompositor/CompositorPassFactoryFirst.cpp
@@ -135,6 +134,14 @@ if(RENDERER_RUNTIME)
 		src/Advanced/InstancedCubes/ICubeRenderer.cpp
 		src/Advanced/InstancedCubes/InstancedCubes.cpp
 	)
+
+	# TODO(sw) openvr doesn't support non windows systems yet
+	if(WIN32)
+		set(SOURCE_CODES
+			${SOURCE_CODES}
+			src/Runtime/FirstScene/VrController.cpp
+		)
+	endif()
 endif()
 
 if(EXAMPLE_RUNNER_QT4)

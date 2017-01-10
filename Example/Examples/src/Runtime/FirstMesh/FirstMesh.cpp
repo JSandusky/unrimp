@@ -75,7 +75,7 @@ void FirstMesh::onInitialization()
 		// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
 		// -> Direct3D 10, 11 and 12 do not support individual uniforms
 		// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-		if ((0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11") || 0 == strcmp(renderer->getName(), "Direct3D12")))
+		if (renderer->getCapabilities().maximumUniformBufferSize > 0)
 		{
 			// Allocate enough memory for two 4x4 floating point matrices
 			mUniformBuffer = rendererRuntime->getBufferManager().createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
@@ -254,7 +254,6 @@ void FirstMesh::onDraw()
 	}
 
 	// Due to background texture loading, some textures might not be ready, yet
-	// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
 	const RendererRuntime::TextureResources& textureResources = rendererRuntime->getTextureResourceManager().getTextureResources();
 	const RendererRuntime::TextureResource* diffuseTextureResource  = textureResources.tryGetElementById(mDiffuseTextureResourceId);
 	const RendererRuntime::TextureResource* normalTextureResource   = textureResources.tryGetElementById(mNormalTextureResourceId);
