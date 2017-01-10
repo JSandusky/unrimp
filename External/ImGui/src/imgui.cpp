@@ -601,10 +601,12 @@
 */
 
 // Disable warnings
-#pragma warning(disable: 4365)	// warning C4365: 'argument': conversion from 'int' to 'const size_t', signed/unsigned mismatch
-#pragma warning(disable: 4774)	// warning C4774: 'sscanf' : format string expected in argument 2 is not a string literal
-#pragma warning(disable: 4668)	// warning C4668: '_WIN32_WINNT_WINTHRESHOLD' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-#pragma warning(disable: 4723)	// warning C4723: potential divide by 0
+#ifdef WIN32
+	#pragma warning(disable: 4365)	// warning C4365: 'argument': conversion from 'int' to 'const size_t', signed/unsigned mismatch
+	#pragma warning(disable: 4774)	// warning C4774: 'sscanf' : format string expected in argument 2 is not a string literal
+	#pragma warning(disable: 4668)	// warning C4668: '_WIN32_WINNT_WINTHRESHOLD' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#pragma warning(disable: 4723)	// warning C4723: potential divide by 0
+#endif
 
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS

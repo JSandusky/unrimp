@@ -9,7 +9,9 @@
 // - Default font data
 
 // Disable warnings
-#pragma warning(disable: 4365)	// warning C4365: 'argument': conversion from 'int' to 'const size_t', signed/unsigned mismatch
+#ifdef WIN32
+	#pragma warning(disable: 4365)	// warning C4365: 'argument': conversion from 'int' to 'const size_t', signed/unsigned mismatch
+#endif
 
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
