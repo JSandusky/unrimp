@@ -223,10 +223,10 @@ namespace OpenGLRenderer
 					}
 					else
 					{
-						Renderer::DrawInstancedArguments data(0);
-						memcpy(&data, Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), sizeof(Renderer::DrawInstancedArguments));
+						Renderer::DrawInstancedArguments drawInstancedArguments(0);
+						memcpy(&drawInstancedArguments, Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), sizeof(Renderer::DrawInstancedArguments));
 
-						Renderer::IndirectBuffer indirectBuffer(data.vertexCountPerInstance, data.instanceCount, data.startVertexLocation, data.startInstanceLocation);
+						Renderer::IndirectBuffer indirectBuffer(drawInstancedArguments.vertexCountPerInstance, drawInstancedArguments.instanceCount, drawInstancedArguments.startVertexLocation, drawInstancedArguments.startInstanceLocation);
 
 						static_cast<OpenGLRenderer&>(renderer).draw(indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
 					}
@@ -242,10 +242,10 @@ namespace OpenGLRenderer
 					}
 					else
 					{
-						Renderer::DrawIndexedInstancedArguments data(0);
-						memcpy(&data, Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), sizeof(Renderer::DrawIndexedInstancedArguments));
+						Renderer::DrawIndexedInstancedArguments drawIndexedInstancedArguments(0);
+						memcpy(&drawIndexedInstancedArguments, Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), sizeof(Renderer::DrawIndexedInstancedArguments));
 
-						Renderer::IndexedIndirectBuffer indirectBuffer(data.indexCountPerInstance, data.instanceCount, data.startIndexLocation, data.baseVertexLocation, data.startInstanceLocation);
+						Renderer::IndexedIndirectBuffer indirectBuffer(drawIndexedInstancedArguments.indexCountPerInstance, drawIndexedInstancedArguments.instanceCount, drawIndexedInstancedArguments.startIndexLocation, drawIndexedInstancedArguments.baseVertexLocation, drawIndexedInstancedArguments.startInstanceLocation);
 
 						static_cast<OpenGLRenderer&>(renderer).drawIndexed(indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
 					}
