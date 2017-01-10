@@ -127,8 +127,8 @@ namespace RendererRuntime
 		MaterialBlueprintResources			mMaterialBlueprintResources;
 		IMaterialBlueprintResourceListener*	mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
 		MaterialProperties					mGlobalMaterialProperties;			///< Global material properties
-		InstanceBufferManager*				mInstanceBufferManager;				///< Instance buffer manager, always valid
-		LightBufferManager*					mLightBufferManager;				///< Light buffer manager, always valid
+		InstanceBufferManager*				mInstanceBufferManager;				///< Instance buffer manager, always valid in a sane none-legacy environment
+		LightBufferManager*					mLightBufferManager;				///< Light buffer manager, always valid in a sane none-legacy environment
 
 
 	};

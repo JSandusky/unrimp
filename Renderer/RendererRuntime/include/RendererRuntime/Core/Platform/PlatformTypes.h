@@ -232,8 +232,8 @@
 	#endif
 #elif LINUX
 	#include <iostream>
-	#define RENDERERRUNTIME_OUTPUT_ERROR_STRING(outputString) std::cerr<<outputstring<<'\n';
-	#define RENDERERRUNTIME_OUTPUT_ERROR_PRINTF(outputString, ...) fprintf(stderr, outputString, __VA_ARGS__);std::cerr<<'\n';
+	#define RENDERERRUNTIME_OUTPUT_ERROR_STRING(outputString) std::cerr << outputstring << '\n';
+	#define RENDERERRUNTIME_OUTPUT_ERROR_PRINTF(outputString, ...) fprintf(stderr, outputString, __VA_ARGS__); std::cerr << '\n';
 #else
 	#error "Unsupported platform"
 #endif

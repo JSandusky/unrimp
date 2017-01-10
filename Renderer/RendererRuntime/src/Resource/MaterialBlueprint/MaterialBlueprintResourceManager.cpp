@@ -259,16 +259,27 @@ namespace RendererRuntime
 	MaterialBlueprintResourceManager::MaterialBlueprintResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mMaterialBlueprintResourceListener(&::detail::defaultMaterialBlueprintResourceListener),
-		mInstanceBufferManager(new InstanceBufferManager(rendererRuntime)),
-		mLightBufferManager(new LightBufferManager(rendererRuntime))
+		mInstanceBufferManager(nullptr),
+		mLightBufferManager(nullptr)
 	{
-		// Nothing here
+		const Renderer::Capabilities& capabilities = rendererRuntime.getRenderer().getCapabilities();
+		if (capabilities.maximumUniformBufferSize > 0 && capabilities.maximumTextureBufferSize > 0)
+		{
+			mInstanceBufferManager = new InstanceBufferManager(rendererRuntime);
+			mLightBufferManager = new LightBufferManager(rendererRuntime);
+		}
 	}
 
 	MaterialBlueprintResourceManager::~MaterialBlueprintResourceManager()
 	{
-		delete mInstanceBufferManager;
-		delete mLightBufferManager;
+		if (nullptr != mInstanceBufferManager)
+		{
+			delete mInstanceBufferManager;
+		}
+		if (nullptr != mLightBufferManager)
+		{
+			delete mLightBufferManager;
+		}
 	}
 
 	IResourceLoader* MaterialBlueprintResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)

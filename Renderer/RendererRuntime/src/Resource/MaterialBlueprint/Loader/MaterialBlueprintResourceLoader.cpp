@@ -55,12 +55,11 @@ namespace RendererRuntime
 		try
 		{
 			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-
 			if (!inputFileStream)
 			{
-				// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-				RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load material blueprint asset %u. Could not open file: %s", mAsset.assetId.getId(), mAsset.assetFilename);
-				return;
+				// This error handling shouldn't be there since everything the asset package says exists
+				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
+				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
 			}
 
 			// Read in the material blueprint header
@@ -307,7 +306,7 @@ namespace RendererRuntime
 		}
 		{ // It's valid if a material blueprint resource doesn't contain a material uniform buffer (usually the case for compositor material blueprint resources)
 			const MaterialBlueprintResource::UniformBuffer* uniformBuffer = mMaterialBlueprintResource->getMaterialUniformBuffer();
-			if (nullptr != uniformBuffer)
+			if (nullptr != uniformBuffer && mRendererRuntime.getRenderer().getCapabilities().maximumUniformBufferSize > 0)
 			{
 				mMaterialBlueprintResource->mMaterialBufferManager = new MaterialBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
 			}

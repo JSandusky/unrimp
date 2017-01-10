@@ -54,11 +54,11 @@ namespace RendererRuntime
 		try
 		{
 			std::ifstream inputFileStream(filename, std::ios::binary);
-
 			if (!inputFileStream)
 			{
-				RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load asset package. Could not open file: %s", filename);
-				return;
+				// This error handling shouldn't be there since everything the asset package says exists
+				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
+				throw std::runtime_error("Could not open file \"" + std::string(filename) + '\"');
 			}
 			mAssetPackageVector.push_back(AssetPackageSerializer().loadAssetPackage(inputFileStream));
 		}
