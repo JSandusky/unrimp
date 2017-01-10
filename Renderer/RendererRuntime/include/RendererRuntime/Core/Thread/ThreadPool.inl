@@ -31,11 +31,12 @@ namespace RendererRuntime
 	template <typename RetType>
 	ThreadPool<RetType>::ThreadPool(size_t threads)
 	{
-		if (threads == -1)
+		// ~0 (== -1 == size_t max_value) avoids an signed/unsigned compare mismatch warning
+		if (threads == ~0)
 		{
 			threads = std::thread::hardware_concurrency();
 		}
-		if (threads <= 0)
+		if (threads == 0)
 		{
 			threads = 1;
 		}
