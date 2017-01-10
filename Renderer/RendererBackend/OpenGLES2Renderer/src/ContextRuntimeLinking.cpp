@@ -347,6 +347,7 @@ namespace OpenGLES2Renderer
 						{																																							\
 							libraryName = linkMap->l_name;																															\
 						}																																							\
+						libraryName = libraryName; /* To avoid -Wunused-but-set-variable warning when RENDERER_OUTPUT_DEBUG_PRINTF is defined empty */ \
 						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: Failed to locate the entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libraryName)		\
 						result = false;																																				\
 					}																																								\

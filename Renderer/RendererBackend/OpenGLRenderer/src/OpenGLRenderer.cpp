@@ -2160,7 +2160,7 @@ namespace OpenGLRenderer
 		}
 
 		// Output the debug message
-		#ifdef _DEBUG
+		#if defined(_DEBUG) && !defined(RENDERER_NO_DEBUG)
 			RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
 		#else
 			// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning

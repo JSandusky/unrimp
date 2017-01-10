@@ -85,7 +85,7 @@ private:
 	void AddWindowToEventLoop(X11Window &window);
 	void RemoveWindowFromEventLoop(const X11Window &window);
 	X11Application(const X11Application &other);
-	virtual X11Application& operator=(const X11Application &other);
+	X11Application& operator=(const X11Application &other);
 
 
 //[-------------------------------------------------------]
