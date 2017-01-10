@@ -212,8 +212,8 @@ namespace Renderer
 		inline CommandBuffer() :
 			mCommandPacketBufferNumberOfBytes(0),
 			mCommandPacketBuffer(nullptr),
-			mCurrentCommandPacketByteIndex(0),
-			mPreviousCommandPacketByteIndex(~0u)
+			mPreviousCommandPacketByteIndex(~0u),
+			mCurrentCommandPacketByteIndex(0)
 		{
 			// Nothing here
 		}
@@ -366,8 +366,8 @@ namespace Renderer
 		uint32_t mCommandPacketBufferNumberOfBytes;
 		uint8_t* mCommandPacketBuffer;
 		// Current state
-		uint32_t mCurrentCommandPacketByteIndex;
 		uint32_t mPreviousCommandPacketByteIndex;
+		uint32_t mCurrentCommandPacketByteIndex;
 
 
 	};
