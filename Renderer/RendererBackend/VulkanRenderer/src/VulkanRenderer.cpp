@@ -202,13 +202,29 @@ namespace VulkanRenderer
 				void Draw(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<VulkanRenderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+					if (nullptr != realData->indirectBuffer)
+					{
+						// No resource owner security check in here, we only support emulated indirect buffer
+						static_cast<VulkanRenderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						static_cast<VulkanRenderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<VulkanRenderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+					if (nullptr != realData->indirectBuffer)
+					{
+						// No resource owner security check in here, we only support emulated indirect buffer
+						static_cast<VulkanRenderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						static_cast<VulkanRenderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				//[-------------------------------------------------------]
@@ -722,7 +738,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::draw(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void VulkanRenderer::drawEmulated(const uint8_t*, uint32_t, uint32_t)
 	{
 		// Is currently an vertex array set?
 		if (nullptr != mVertexArray)
@@ -736,7 +752,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	void VulkanRenderer::drawIndexed(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void VulkanRenderer::drawIndexedEmulated(const uint8_t*, uint32_t, uint32_t)
 	{
 		// Is currently an vertex array set?
 		if (nullptr != mVertexArray)

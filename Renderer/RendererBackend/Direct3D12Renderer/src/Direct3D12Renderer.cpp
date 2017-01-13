@@ -197,13 +197,31 @@ namespace Direct3D12Renderer
 				void Draw(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<Direct3D12Renderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+					if (nullptr != realData->indirectBuffer)
+					{
+						// No resource owner security check in here, we only support emulated indirect buffer
+						// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
+						static_cast<Direct3D12Renderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						static_cast<Direct3D12Renderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<Direct3D12Renderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+					if (nullptr != realData->indirectBuffer)
+					{
+						// No resource owner security check in here, we only support emulated indirect buffer
+						// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
+						static_cast<Direct3D12Renderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						static_cast<Direct3D12Renderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				//[-------------------------------------------------------]
@@ -974,66 +992,56 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void Direct3D12Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// No resource owner security check in here, we only support emulated indirect buffer
-		// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
+		// Get indirect buffer data and perform security checks
+		assert(nullptr != emulationData);
 
-		if (numberOfDraws > 0)
+		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+		emulationData += indirectBufferOffset;
+
+		// Emit the draw calls
+		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
-			// Get indirect buffer data and perform security checks
-			const uint8_t* emulationData = indirectBuffer.getEmulationData();
-			assert(nullptr != emulationData);
+			const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
 
-			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
-			emulationData += indirectBufferOffset;
+			// Draw
+			mD3D12GraphicsCommandList->DrawInstanced(
+				drawInstancedArguments.vertexCountPerInstance,	// Vertex count per instance (UINT)
+				drawInstancedArguments.instanceCount,			// Instance count (UINT)
+				drawInstancedArguments.startVertexLocation,		// Start vertex location (UINT)
+				drawInstancedArguments.startInstanceLocation	// Start instance location (UINT)
+			);
 
-			// Emit the draw calls
-			for (uint32_t i = 0; i < numberOfDraws; ++i)
-			{
-				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
-
-				// Draw and advance
-				mD3D12GraphicsCommandList->DrawInstanced(
-					drawInstancedArguments.vertexCountPerInstance,	// Vertex count per instance (UINT)
-					drawInstancedArguments.instanceCount,			// Instance count (UINT)
-					drawInstancedArguments.startVertexLocation,		// Start vertex location (UINT)
-					drawInstancedArguments.startInstanceLocation	// Start instance location (UINT)
-				);
-				emulationData += sizeof(Renderer::DrawInstancedArguments);
-			}
+			// Advance
+			emulationData += sizeof(Renderer::DrawInstancedArguments);
 		}
 	}
 
-	void Direct3D12Renderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void Direct3D12Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// No resource owner security check in here, we only support emulated indirect buffer
-		// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
+		// Get indirect buffer data and perform security checks
+		assert(nullptr != emulationData);
 
-		if (numberOfDraws > 0)
+		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+		emulationData += indirectBufferOffset;
+
+		// Emit the draw calls
+		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
-			// Get indirect buffer data and perform security checks
-			const uint8_t* emulationData = indirectBuffer.getEmulationData();
-			assert(nullptr != emulationData);
+			const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
 
-			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
-			emulationData += indirectBufferOffset;
+			// Draw
+			mD3D12GraphicsCommandList->DrawIndexedInstanced(
+				drawIndexedInstancedArguments.indexCountPerInstance,	// Index count per instance (UINT)
+				drawIndexedInstancedArguments.instanceCount,			// Instance count (UINT)
+				drawIndexedInstancedArguments.startIndexLocation,		// Start index location (UINT)
+				drawIndexedInstancedArguments.baseVertexLocation,		// Base vertex location (INT)
+				drawIndexedInstancedArguments.startInstanceLocation		// Start instance location (UINT)
+			);
 
-			// Emit the draw calls
-			for (uint32_t i = 0; i < numberOfDraws; ++i)
-			{
-				const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
-
-				// Draw and advance
-				mD3D12GraphicsCommandList->DrawIndexedInstanced(
-					drawIndexedInstancedArguments.indexCountPerInstance,	// Index count per instance (UINT)
-					drawIndexedInstancedArguments.instanceCount,			// Instance count (UINT)
-					drawIndexedInstancedArguments.startIndexLocation,		// Start index location (UINT)
-					drawIndexedInstancedArguments.baseVertexLocation,		// Base vertex location (INT)
-					drawIndexedInstancedArguments.startInstanceLocation		// Start instance location (UINT)
-				);
-				emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
-			}
+			// Advance
+			emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
 		}
 	}
 

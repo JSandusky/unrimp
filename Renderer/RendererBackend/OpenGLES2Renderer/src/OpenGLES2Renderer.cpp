@@ -201,13 +201,29 @@ namespace OpenGLES2Renderer
 				void Draw(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<OpenGLES2Renderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+					if (nullptr != realData->indirectBuffer)
+					{
+						// No resource owner security check in here, we only support emulated indirect buffer
+						static_cast<OpenGLES2Renderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						static_cast<OpenGLES2Renderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<OpenGLES2Renderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+					if (nullptr != realData->indirectBuffer)
+					{
+						// No resource owner security check in here, we only support emulated indirect buffer
+						static_cast<OpenGLES2Renderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						static_cast<OpenGLES2Renderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				//[-------------------------------------------------------]
@@ -935,14 +951,10 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void OpenGLES2Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// No resource owner security check in here, we only support emulated indirect buffer
-
 		if (nullptr != mVertexArray && numberOfDraws > 0)
 		{
-			// Get indirect buffer data and perform security checks
-			const uint8_t* emulationData = indirectBuffer.getEmulationData();
 			assert(nullptr != emulationData);
 
 			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
@@ -970,10 +982,8 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void OpenGLES2Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// No resource owner security check in here, we only support emulated indirect buffer
-
 		// Is currently an vertex array?
 		if (nullptr != mVertexArray && numberOfDraws > 0)
 		{
@@ -981,8 +991,6 @@ namespace OpenGLES2Renderer
 			IndexBuffer *indexBuffer = mVertexArray->getIndexBuffer();
 			if (nullptr != indexBuffer)
 			{
-				// Get indirect buffer data and perform security checks
-				const uint8_t* emulationData = indirectBuffer.getEmulationData();
 				assert(nullptr != emulationData);
 
 				// TODO(co) Currently no buffer overflow check due to lack of interface provided data

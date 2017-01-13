@@ -28,8 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Renderer/IRenderer.h"
-#include "Renderer/Buffer/IndirectBuffer.h"
-#include "Renderer/Buffer/IndexedIndirectBuffer.h"
+#include "Renderer/Buffer/IndirectBufferTypes.h"
 
 #include <cassert>
 #ifndef WIN32
@@ -862,10 +861,9 @@ namespace Renderer
 			{
 				Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(DrawInstancedArguments));
 
-				// Set command data: The command packet auxiliary memory contains an "Renderer::DrawInstancedArguments"-instance.
-				// TODO(sw) Get rid of the IndirectBuffer instance which simply sets the values to the internal "Renderer::DrawInstancedArguments" member
-				IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
-				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), indirectBufferData.getEmulationData(), sizeof(DrawInstancedArguments));
+				// Set command data: The command packet auxiliary memory contains an "Renderer::DrawInstancedArguments"-instance
+				const DrawInstancedArguments drawInstancedArguments(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &drawInstancedArguments, sizeof(DrawInstancedArguments));
 
 				// Finalize command
 				drawCommand->indirectBuffer		  = nullptr;
@@ -917,10 +915,9 @@ namespace Renderer
 			{
 				DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(DrawIndexedInstancedArguments));
 
-				// Set command data: The command packet auxiliary memory contains an "Renderer::DrawIndexedInstancedArguments"-instance.
-				// TODO(sw) Get rid of the IndexedIndirectBuffer instance which simply sets the values to the internal "Renderer::DrawIndexedInstancedArguments" member
-				IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
-				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), indexedIndirectBufferData.getEmulationData(), sizeof(DrawIndexedInstancedArguments));
+				// Set command data: The command packet auxiliary memory contains an "Renderer::DrawIndexedInstancedArguments"-instance
+				const DrawIndexedInstancedArguments drawIndexedInstancedArguments(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &drawIndexedInstancedArguments, sizeof(DrawIndexedInstancedArguments));
 
 				// Finalize command
 				drawCommand->indirectBuffer		  = nullptr;
