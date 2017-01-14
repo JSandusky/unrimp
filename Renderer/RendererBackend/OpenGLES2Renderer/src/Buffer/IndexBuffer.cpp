@@ -65,7 +65,7 @@ namespace OpenGLES2Renderer
 
 			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous bound OpenGL ES 2 element array buffer
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLES2ElementArrayBufferBackup);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ElementArrayBufferBackup));
 			#endif
 		}
 		else

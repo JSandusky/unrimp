@@ -142,7 +142,7 @@ namespace OpenGLES2Renderer
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 2 texture
-			glBindTexture(GL_TEXTURE_2D, openGLES2TextureBackup);
+			glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(openGLES2TextureBackup));
 
 			// Restore previous alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, openGLES2AlignmentBackup);

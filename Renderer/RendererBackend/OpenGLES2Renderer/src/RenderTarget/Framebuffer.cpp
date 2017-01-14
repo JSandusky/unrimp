@@ -258,7 +258,7 @@ namespace OpenGLES2Renderer
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 2 framebuffer
-			glBindFramebuffer(GL_FRAMEBUFFER, openGLES2FramebufferBackup);
+			glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLES2FramebufferBackup));
 		#endif
 
 		// Validate the framebuffer width and height
@@ -336,7 +336,7 @@ namespace OpenGLES2Renderer
 
 					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 						// Be polite and restore the previous bound OpenGL ES 2 texture
-						glBindTexture(GL_TEXTURE_2D, openGLES2TextureBackup);
+						glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(openGLES2TextureBackup));
 					#endif
 				}
 			}
