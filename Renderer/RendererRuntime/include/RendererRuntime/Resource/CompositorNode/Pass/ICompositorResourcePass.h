@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 
@@ -71,6 +72,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline const CompositorTarget& getCompositorTarget() const;
+		inline bool getSkipFirstExecution() const;
+		inline uint32_t getNumberOfExecutions() const;
 
 
 	//[-------------------------------------------------------]
@@ -78,7 +81,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		virtual CompositorPassTypeId getTypeId() const = 0;
-		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) = 0;
+		RENDERERRUNTIME_API_EXPORT virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data);
 
 		/**
 		*  @brief
@@ -110,6 +113,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		const CompositorTarget& mCompositorTarget;
+		bool					mSkipFirstExecution;
+		uint32_t				mNumberOfExecutions;
 
 
 	};

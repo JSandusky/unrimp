@@ -24,8 +24,11 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
 
 #include <Renderer/Public/Renderer.h>
+
+#include <limits>
 
 
 //[-------------------------------------------------------]
@@ -59,32 +62,44 @@ namespace RendererRuntime
 		Renderer::IRenderTarget* currentRenderTarget = &renderTarget;
 		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
 		{
-			{ // Set the current render target
-				Renderer::IRenderTarget* newRenderTarget = compositorInstancePass->getRenderTarget();
-				if (nullptr == newRenderTarget)
-				{
-					// TODO(co) This in here is just a temporary solution
-					newRenderTarget = &renderTarget;
-				}
-				if (newRenderTarget != currentRenderTarget)
-				{
-					currentRenderTarget = newRenderTarget;
-					Renderer::Command::SetRenderTarget::create(commandBuffer, currentRenderTarget);
+			// Check whether or not to execute the compositor pass instance
+			const ICompositorResourcePass& compositorResourcePass = compositorInstancePass->getCompositorResourcePass();
+			if ((!compositorResourcePass.getSkipFirstExecution() || compositorInstancePass->mNumberOfExecutionRequests > 0) &&
+				(isUninitialized(compositorResourcePass.getNumberOfExecutions()) || compositorInstancePass->mNumberOfExecutionRequests < compositorResourcePass.getNumberOfExecutions()))
+			{
+				{ // Set the current render target
+					Renderer::IRenderTarget* newRenderTarget = compositorInstancePass->getRenderTarget();
+					if (nullptr == newRenderTarget)
+					{
+						// TODO(co) This in here is just a temporary solution
+						newRenderTarget = &renderTarget;
+					}
+					if (newRenderTarget != currentRenderTarget)
+					{
+						currentRenderTarget = newRenderTarget;
+						Renderer::Command::SetRenderTarget::create(commandBuffer, currentRenderTarget);
 
-					{ // Set the viewport and scissor rectangle
-						// Get the window size
-						uint32_t width  = 1;
-						uint32_t height = 1;
-						currentRenderTarget->getWidthAndHeight(width, height);
+						{ // Set the viewport and scissor rectangle
+							// Get the window size
+							uint32_t width  = 1;
+							uint32_t height = 1;
+							currentRenderTarget->getWidthAndHeight(width, height);
 
-						// Set the viewport and scissor rectangle
-						Renderer::Command::SetViewportAndScissorRectangle::create(commandBuffer, 0, 0, width, height);
+							// Set the viewport and scissor rectangle
+							Renderer::Command::SetViewportAndScissorRectangle::create(commandBuffer, 0, 0, width, height);
+						}
 					}
 				}
+
+				// Let the compositor instance pass fill the command buffer
+				compositorInstancePass->onFillCommandBuffer(*currentRenderTarget, compositorContextData, commandBuffer);
 			}
 
-			// Let the compositor instance pass fill the command buffer
-			compositorInstancePass->onFillCommandBuffer(*currentRenderTarget, compositorContextData, commandBuffer);
+			// Update the number of compositor instance pass execution requests and don't forget to avoid integer range overflow
+			if (compositorInstancePass->mNumberOfExecutionRequests < std::numeric_limits<uint32_t>::max())
+			{
+				++compositorInstancePass->mNumberOfExecutionRequests;
+			}
 		}
 
 		// Done

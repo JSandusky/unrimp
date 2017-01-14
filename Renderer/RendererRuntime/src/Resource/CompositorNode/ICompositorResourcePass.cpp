@@ -21,7 +21,11 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/GetUninitialized.h"
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
+#include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h"
+
+#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -32,48 +36,22 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	inline const CompositorTarget& ICompositorResourcePass::getCompositorTarget() const
-	{
-		return mCompositorTarget;
-	}
-
-	inline bool ICompositorResourcePass::getSkipFirstExecution() const
-	{
-		return mSkipFirstExecution;
-	}
-
-	inline uint32_t ICompositorResourcePass::getNumberOfExecutions() const
-	{
-		return mNumberOfExecutions;
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
-	inline bool ICompositorResourcePass::getRenderQueueIndexRange(uint8_t&, uint8_t&) const
+	void ICompositorResourcePass::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
-		// This compositor resource pass has no render queue range defined
-		return false;
-	}
+		// Sanity check
+		assert(sizeof(v1CompositorNode::Pass) == numberOfBytes);
+		std::ignore = numberOfBytes;
 
+		// Read data
+		const v1CompositorNode::Pass* pass = reinterpret_cast<const v1CompositorNode::Pass*>(data);
+		mSkipFirstExecution = pass->skipFirstExecution;
+		mNumberOfExecutions = pass->numberOfExecutions;
 
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	inline ICompositorResourcePass::ICompositorResourcePass(const CompositorTarget& compositorTarget) :
-		mCompositorTarget(compositorTarget),
-		mSkipFirstExecution(false),
-		mNumberOfExecutions(RendererRuntime::getUninitialized<uint32_t>())
-	{
-		// Nothing here
-	}
-
-	inline ICompositorResourcePass::~ICompositorResourcePass()
-	{
-		// Nothing here
+		// Sanity checks
+		assert(mNumberOfExecutions > 0);
+		assert(!mSkipFirstExecution || mNumberOfExecutions > 1);
 	}
 
 

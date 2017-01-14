@@ -130,6 +130,7 @@ namespace RendererRuntime
 		const ICompositorResourcePass& mCompositorResourcePass;
 		const CompositorNodeInstance&  mCompositorNodeInstance;
 		Renderer::IRenderTarget*	   mRenderTarget;	/// Render target, can be a null pointer, don't destroy the instance
+		uint32_t					   mNumberOfExecutionRequests;
 
 
 	};

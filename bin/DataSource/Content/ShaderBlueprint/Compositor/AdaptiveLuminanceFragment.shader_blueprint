@@ -63,10 +63,17 @@ TEXTURE_2D(PreviousLuminanceMap, 1)
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	float currentAverageLuminance = exp(SAMPLE_2D_LOD(CurrentLuminanceMap, SamplerPoint, float4(0.5f, 0.5f, 0.0f, 10.0f)).r);
-	float previousAverageLuminance = SAMPLE_2D_LOD(PreviousLuminanceMap, SamplerPoint, float4(0.5f, 0.5f, 0.0f, 0.0f)).r;
 
-	// Adapt the luminance using Pattanaik's technique
-	float adaptiveLuminance = previousAverageLuminance + (currentAverageLuminance - previousAverageLuminance) * (1.0f - exp(-PassData.PastSecondsSinceLastFrame * PassData.AdaptationRate));
+	// During the first execution there's no valid previous adaptive luminance available, so use the just calculated luminance as previous luminance
+	@property(FirstExecution)
+		float adaptiveLuminance = currentAverageLuminance;
+	@end
+	@property(!FirstExecution)
+		float previousAverageLuminance = SAMPLE_2D_LOD(PreviousLuminanceMap, SamplerPoint, float4(0.5f, 0.5f, 0.0f, 0.0f)).r;
+
+		// Adapt the luminance using Pattanaik's technique
+		float adaptiveLuminance = previousAverageLuminance + (currentAverageLuminance - previousAverageLuminance) * (1.0f - exp(-PassData.PastSecondsSinceLastFrame * PassData.AdaptationRate));
+	@end
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(adaptiveLuminance, 1.0f, 1.0f, 1.0f);

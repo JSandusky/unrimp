@@ -50,11 +50,6 @@ RendererRuntime::CompositorPassTypeId CompositorResourcePassFirst::getTypeId() c
 	return TYPE_ID;
 }
 
-void CompositorResourcePassFirst::deserialize(uint32_t, const uint8_t*)
-{
-	// Nothing here
-}
-
 
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]

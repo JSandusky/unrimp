@@ -114,6 +114,23 @@ namespace
 			}
 		}
 
+		void readPass(const rapidjson::Value& rapidJsonValuePass, RendererRuntime::v1CompositorNode::Pass& pass)
+		{
+			// Read properties
+			RendererToolkit::JsonHelper::optionalBooleanProperty(rapidJsonValuePass, "SkipFirstExecution", pass.skipFirstExecution);
+			RendererToolkit::JsonHelper::optionalIntegerProperty(rapidJsonValuePass, "NumberOfExecutions", pass.numberOfExecutions);
+
+			// Sanity checks
+			if (0 == pass.numberOfExecutions)
+			{
+				throw std::runtime_error("The number of compositor pass executions can't be zero");
+			}
+			if (pass.skipFirstExecution && 1 == pass.numberOfExecutions)
+			{
+				throw std::runtime_error("The first execution of the compositor pass is skipped, but the number of compositor pass executions is set to one resulting in that the compositor pass will never be executed");
+			}
+		}
+
 		void readPassQuad(const RendererToolkit::IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValuePass, bool materialDefinitionMandatory, RendererRuntime::v1CompositorNode::PassQuad& passQuad)
 		{
 			// Set data
@@ -153,7 +170,7 @@ namespace
 			RendererToolkit::JsonHelper::optionalBooleanProperty(rapidJsonValuePass, "TransparentPass", passScene.transparentPass);
 			RendererToolkit::JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "MaterialTechnique", passScene.materialTechniqueId);
 
-			// Sanity check
+			// Sanity checks
 			if (passScene.maximumRenderQueueIndex < passScene.minimumRenderQueueIndex)
 			{
 				throw std::runtime_error("The maximum render queue index must be equal or greater as the minimum render queue index");
@@ -488,6 +505,7 @@ namespace RendererToolkit
 						if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassClear passClear;
+							::detail::readPass(rapidJsonValuePass, passClear);
 
 							// Read properties
 							JsonHelper::optionalClearFlagsProperty(rapidJsonValuePass, "Flags", passClear.flags);
@@ -501,6 +519,7 @@ namespace RendererToolkit
 						else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassScene passScene;
+							::detail::readPass(rapidJsonValuePass, passScene);
 							::detail::readPassScene(rapidJsonValuePass, passScene);
 
 							// Write down
@@ -509,6 +528,7 @@ namespace RendererToolkit
 						else if (RendererRuntime::CompositorResourcePassShadowMap::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassShadowMap passShadowMap;
+							::detail::readPass(rapidJsonValuePass, passShadowMap);
 							::detail::readPassScene(rapidJsonValuePass, passShadowMap);
 							JsonHelper::mandatoryAssetIdProperty(rapidJsonValuePass, "TextureAssetId", passShadowMap.textureAssetId);
 							renderTargetTextureAssetIds.insert(passShadowMap.textureAssetId);
@@ -519,6 +539,7 @@ namespace RendererToolkit
 						else if (RendererRuntime::CompositorResourcePassResolveMultisample::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassResolveMultisample passResolveMultisample;
+							::detail::readPass(rapidJsonValuePass, passResolveMultisample);
 							JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "SourceMultisampleFramebuffer", passResolveMultisample.sourceMultisampleCompositorFramebufferId);
 							if (compositorFramebufferIds.find(passResolveMultisample.sourceMultisampleCompositorFramebufferId) == compositorFramebufferIds.end())
 							{
@@ -529,6 +550,7 @@ namespace RendererToolkit
 						else if (RendererRuntime::CompositorResourcePassCopy::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassCopy passCopy;
+							::detail::readPass(rapidJsonValuePass, passCopy);
 							JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "DestinationTextureAssetId", passCopy.destinationTextureAssetId);
 							JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "SourceTextureAssetId", passCopy.sourceTextureAssetId);
 							if (renderTargetTextureAssetIds.find(passCopy.destinationTextureAssetId) == renderTargetTextureAssetIds.end())
@@ -544,6 +566,7 @@ namespace RendererToolkit
 						else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassQuad passQuad;
+							::detail::readPass(rapidJsonValuePass, passQuad);
 							::detail::readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, true, passQuad);
 
 							// Write down
@@ -558,6 +581,7 @@ namespace RendererToolkit
 						{
 							// The material definition is not mandatory for the debug GUI, if nothing is defined the fixed build in renderer configuration resources will be used instead
 							RendererRuntime::v1CompositorNode::PassDebugGui passDebugGui;
+							::detail::readPass(rapidJsonValuePass, passDebugGui);
 							::detail::readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, false, passDebugGui);
 
 							// Write down

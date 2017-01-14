@@ -48,6 +48,9 @@ namespace RendererRuntime
 		assert(sizeof(v1CompositorNode::PassCopy) == numberOfBytes);
 		std::ignore = numberOfBytes;
 
+		// Call the base implementation
+		ICompositorResourcePass::deserialize(sizeof(v1CompositorNode::Pass), data);
+
 		// Read data
 		const v1CompositorNode::PassCopy* passCopy = reinterpret_cast<const v1CompositorNode::PassCopy*>(data);
 		mDestinationTextureAssetId = passCopy->destinationTextureAssetId;

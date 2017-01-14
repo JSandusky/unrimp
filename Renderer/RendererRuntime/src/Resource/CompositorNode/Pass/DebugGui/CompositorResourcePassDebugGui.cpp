@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h"
-#include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h"
 
 
 //[-------------------------------------------------------]
@@ -37,16 +36,6 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	const CompositorPassTypeId CompositorResourcePassDebugGui::TYPE_ID("DebugGui");
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
-	//[-------------------------------------------------------]
-	void CompositorResourcePassDebugGui::deserialize(uint32_t numberOfBytes, const uint8_t* data)
-	{
-		// Call the base implementation
-		CompositorResourcePassQuad::deserialize(numberOfBytes, data);
-	}
 
 
 //[-------------------------------------------------------]

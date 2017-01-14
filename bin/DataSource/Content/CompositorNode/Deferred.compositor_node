@@ -198,12 +198,25 @@
 				{
 					"Quad":
 					{
-						"Description": "Slowly adjusts the scene luminance based on the previous scene luminance",
+						"SkipFirstExecution": "TRUE",
+						"Description": "Slowly adjusts the scene luminance based on the previous scene luminance. Skip the first execution since there's no valid previous adaptive luminance available in this situation.",
 						"MaterialBlueprintAssetId": "128",
 						"SetMaterialProperties":
 						{
 							"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
 							"PreviousLuminanceMap": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget"
+						}
+					},
+					"Quad":
+					{
+						"NumberOfExecutions": "1",
+						"Description": "During the first execution there's no valid previous adaptive luminance available, so use the just calculated luminance as previous luminance.",
+						"MaterialBlueprintAssetId": "128",
+						"SetMaterialProperties":
+						{
+							"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
+							"PreviousLuminanceMap": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget",
+							"FirstExecution": "TRUE"
 						}
 					}
 				}

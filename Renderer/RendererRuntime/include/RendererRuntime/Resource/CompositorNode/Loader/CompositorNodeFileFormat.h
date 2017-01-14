@@ -104,7 +104,18 @@ namespace RendererRuntime
 				uint32_t			 numberOfBytes;
 			};
 
-			struct PassClear
+			struct Pass
+			{
+				bool	 skipFirstExecution;
+				uint32_t numberOfExecutions;
+
+				Pass() :
+					skipFirstExecution(false),
+					numberOfExecutions(RendererRuntime::getUninitialized<uint32_t>())
+				{}
+			};
+
+			struct PassClear : public Pass
 			{
 				uint32_t flags;		///< Combination of "Renderer::ClearFlag"
 				float	 color[4];
@@ -119,7 +130,7 @@ namespace RendererRuntime
 				{}
 			};
 
-			struct PassScene
+			struct PassScene : public Pass
 			{
 				uint8_t				minimumRenderQueueIndex;	///< Inclusive
 				uint8_t				maximumRenderQueueIndex;	///< Inclusive
@@ -138,18 +149,18 @@ namespace RendererRuntime
 				AssetId textureAssetId;
 			};
 
-			struct PassResolveMultisample
+			struct PassResolveMultisample : public Pass
 			{
 				CompositorFramebufferId sourceMultisampleCompositorFramebufferId;
 			};
 
-			struct PassCopy
+			struct PassCopy : public Pass
 			{
 				AssetId destinationTextureAssetId;
 				AssetId sourceTextureAssetId;
 			};
 
-			struct PassQuad
+			struct PassQuad : public Pass
 			{
 				AssetId				materialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
 				MaterialTechniqueId	materialTechniqueId;		///< Must always be valid

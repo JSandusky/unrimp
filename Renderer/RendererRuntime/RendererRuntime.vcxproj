@@ -363,6 +363,7 @@
     <ClCompile Include="src\Resource\CompositorNode\CompositorNodeResource.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\CompositorNodeResourceManager.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\CompositorTarget.cpp" />
+    <ClCompile Include="src\Resource\CompositorNode\ICompositorResourcePass.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Loader\CompositorNodeResourceLoader.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\Clear\CompositorInstancePassClear.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\Clear\CompositorResourcePassClear.cpp" />

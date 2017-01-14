@@ -406,6 +406,7 @@ namespace RendererRuntime
 			for (ICompositorInstancePass* compositorInstancePass : compositorNodeInstance->mCompositorInstancePasses)
 			{
 				compositorInstancePass->mRenderTarget = nullptr;
+				compositorInstancePass->mNumberOfExecutionRequests = 0;
 			}
 		}
 

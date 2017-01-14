@@ -48,6 +48,9 @@ namespace RendererRuntime
 		assert(sizeof(v1CompositorNode::PassClear) == numberOfBytes);
 		std::ignore = numberOfBytes;
 
+		// Call the base implementation
+		ICompositorResourcePass::deserialize(sizeof(v1CompositorNode::Pass), data);
+
 		// Read data
 		const v1CompositorNode::PassClear* passClear = reinterpret_cast<const v1CompositorNode::PassClear*>(data);
 		mFlags = passClear->flags;

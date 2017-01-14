@@ -8,6 +8,14 @@
 	{
 		"Properties":
 		{
+			"FirstExecution":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Is this the first execution? During the first execution there's no valid previous adaptive luminance available, so use the just calculated luminance as previous luminance.",
+				"VisualImportance": "MANDATORY"
+			},
 			"AdaptationRate":
 			{
 				"Usage": "SHADER_UNIFORM",

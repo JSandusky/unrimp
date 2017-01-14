@@ -64,7 +64,8 @@ namespace RendererRuntime
 	inline ICompositorInstancePass::ICompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorNodeInstance& compositorNodeInstance) :
 		mCompositorResourcePass(compositorResourcePass),
 		mCompositorNodeInstance(compositorNodeInstance),
-		mRenderTarget(nullptr)
+		mRenderTarget(nullptr),
+		mNumberOfExecutionRequests(0)
 	{
 		// Nothing here
 	}

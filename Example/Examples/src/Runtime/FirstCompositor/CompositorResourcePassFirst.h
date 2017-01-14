@@ -55,7 +55,6 @@ public:
 //[-------------------------------------------------------]
 public:
 	virtual RendererRuntime::CompositorPassTypeId getTypeId() const override;
-	virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
 
 
 //[-------------------------------------------------------]

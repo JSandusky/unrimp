@@ -1307,5 +1307,8 @@
     <ClCompile Include="src\Resource\CompositorNode\Pass\Copy\CompositorResourcePassCopy.cpp">
       <Filter>Source Files\Resource\CompositorNode\Pass\Copy</Filter>
     </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\ICompositorResourcePass.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
