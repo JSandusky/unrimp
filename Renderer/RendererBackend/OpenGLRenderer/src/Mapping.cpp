@@ -287,7 +287,7 @@ namespace OpenGLRenderer
 			GL_R8,										// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha" (please note that "GL_ALPHA" is no valid OpenGL internal format)
 			GL_RGB8,									// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			GL_RGBA8,									// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
-			GL_RGBA8,									// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = hardware gamma correction	- TODO(co) OpenGL sRGB format
+			GL_SRGB8_ALPHA8,							// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = hardware gamma correction
 			GL_RGBA16F_ARB,								// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
 			GL_RGBA32F_ARB,								// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha),
 			GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,			// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block)
@@ -313,7 +313,7 @@ namespace OpenGLRenderer
 			GL_RED,										// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha" (please note that "GL_ALPHA" is no valid OpenGL format)
 			GL_RGB,										// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			GL_RGBA,									// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
-			GL_RGBA,									// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = hardware gamma correction	- TODO(co) OpenGL sRGB format
+			GL_SRGB8_ALPHA8,							// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = hardware gamma correction
 			GL_RGBA,									// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
 			GL_RGBA,									// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
 			GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,			// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block)
