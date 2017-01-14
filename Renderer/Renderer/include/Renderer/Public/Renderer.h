@@ -2150,52 +2150,6 @@ namespace Renderer
 		typedef SmartRefCount<IIndirectBuffer> IIndirectBufferPtr;
 	#endif
 
-	// Renderer/Buffer/IndirectBuffer.h
-	#ifndef __RENDERER_INDIRECTBUFFER_H__
-	#define __RENDERER_INDIRECTBUFFER_H__
-		class IndirectBuffer : public IIndirectBuffer
-		{
-		public:
-			inline IndirectBuffer(uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0) :
-				mDrawInstancedArguments(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation)
-			{}
-			inline virtual ~IndirectBuffer()
-			{}
-		public:
-			inline virtual const uint8_t* getEmulationData() const override
-			{
-				return reinterpret_cast<const uint8_t*>(&mDrawInstancedArguments);
-			}
-			inline virtual void copyDataFrom(uint32_t, const void*) override
-			{}
-		private:
-			DrawInstancedArguments mDrawInstancedArguments;
-		};
-	#endif
-
-	// Renderer/Buffer/IndexedIndirectBuffer.h
-	#ifndef __RENDERER_INDEXEDINDIRECTBUFFER_H__
-	#define __RENDERER_INDEXEDINDIRECTBUFFER_H__
-		class IndexedIndirectBuffer : public IIndirectBuffer
-		{
-		public:
-			inline IndexedIndirectBuffer(uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0) :
-				mDrawIndexedInstancedArguments(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation)
-			{}
-			inline virtual ~IndexedIndirectBuffer()
-			{}
-		public:
-			inline virtual const uint8_t* getEmulationData() const override
-			{
-				return reinterpret_cast<const uint8_t*>(&mDrawIndexedInstancedArguments);
-			}
-			inline virtual void copyDataFrom(uint32_t, const void*) override
-			{}
-		private:
-			DrawIndexedInstancedArguments mDrawIndexedInstancedArguments;
-		};
-	#endif
-
 	// Renderer/Texture/ITextureManager.h
 	#ifndef __RENDERER_ITEXTUREMANAGER_H__
 	#define __RENDERER_ITEXTUREMANAGER_H__
@@ -2483,7 +2437,7 @@ namespace Renderer
 		{
 			static const uint32_t OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX	= 0u;
 			static const uint32_t OFFSET_BACKEND_DISPATCH_FUNCTION		= OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX + sizeof(uint32_t);
-			static const uint32_t OFFSET_COMMAND						= OFFSET_BACKEND_DISPATCH_FUNCTION + sizeof(CommandDispatchFunctionIndex) + 3; // TODO(sw) 3 padding bytes so that command offset is aligned to 2 uint32_t. Find a better way to determine the padding because the +3 is wrong when sizeof(CommandDispatchFunctionIndex) > 1?
+			static const uint32_t OFFSET_COMMAND						= OFFSET_BACKEND_DISPATCH_FUNCTION + sizeof(uint32_t);
 			template <typename T>
 			uint32_t getNumberOfBytes(uint32_t numberOfAuxiliaryBytes)
 			{
@@ -2535,8 +2489,8 @@ namespace Renderer
 			inline CommandBuffer() :
 				mCommandPacketBufferNumberOfBytes(0),
 				mCommandPacketBuffer(nullptr),
-				mCurrentCommandPacketByteIndex(0),
-				mPreviousCommandPacketByteIndex(~0u)
+				mPreviousCommandPacketByteIndex(~0u),
+				mCurrentCommandPacketByteIndex(0)
 			{}
 			inline ~CommandBuffer()
 			{
@@ -2558,10 +2512,11 @@ namespace Renderer
 			U* addCommand(uint32_t numberOfAuxiliaryBytes = 0)
 			{
 				const uint32_t numberOfCommandBytes = CommandPacketHelper::getNumberOfBytes<U>(numberOfAuxiliaryBytes);
-#ifndef RENDERER_NO_DEBUG
-				// TODO(sw) The 4294967295 is the maximum value of an uint32 type we use the magic number here to avoid std::numeric_limits::max usage
-				assert((static_cast<uint64_t>(mCurrentCommandPacketByteIndex) + numberOfCommandBytes) < 4294967295);
-#endif
+
+				#ifndef RENDERER_NO_DEBUG
+					// TODO(sw) The 4294967295 is the maximum value of an uint32 type we use the magic number here to avoid std::numeric_limits::max usage
+					assert((static_cast<uint64_t>(mCurrentCommandPacketByteIndex) + numberOfCommandBytes) < 4294967295);
+				#endif
 
 				if (mCommandPacketBufferNumberOfBytes < mCurrentCommandPacketByteIndex + numberOfCommandBytes)
 				{
@@ -2600,8 +2555,8 @@ namespace Renderer
 		private:
 			uint32_t mCommandPacketBufferNumberOfBytes;
 			uint8_t* mCommandPacketBuffer;
-			uint32_t mCurrentCommandPacketByteIndex;
 			uint32_t mPreviousCommandPacketByteIndex;
+			uint32_t mCurrentCommandPacketByteIndex;
 		};
 		namespace Command
 		{
@@ -2834,8 +2789,8 @@ namespace Renderer
 				inline static void create(CommandBuffer& commandBuffer, uint32_t vertexCountPerInstance, uint32_t instanceCount = 1, uint32_t startVertexLocation = 0, uint32_t startInstanceLocation = 0)
 				{
 					Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(DrawInstancedArguments));
-					IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
-					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), indirectBufferData.getEmulationData(), sizeof(DrawInstancedArguments));
+					const DrawInstancedArguments drawInstancedArguments(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
+					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &drawInstancedArguments, sizeof(DrawInstancedArguments));
 					drawCommand->indirectBuffer		  = nullptr;
 					drawCommand->indirectBufferOffset = 0;
 					drawCommand->numberOfDraws		  = 1;
@@ -2859,8 +2814,8 @@ namespace Renderer
 				inline static void create(CommandBuffer& commandBuffer, uint32_t indexCountPerInstance, uint32_t instanceCount = 1, uint32_t startIndexLocation = 0, int32_t baseVertexLocation = 0, uint32_t startInstanceLocation = 0)
 				{
 					DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(DrawIndexedInstancedArguments));
-					IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
-					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), indexedIndirectBufferData.getEmulationData(), sizeof(DrawIndexedInstancedArguments));
+					const DrawIndexedInstancedArguments drawIndexedInstancedArguments(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
+					memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &drawIndexedInstancedArguments, sizeof(DrawIndexedInstancedArguments));
 					drawCommand->indirectBuffer		  = nullptr;
 					drawCommand->indirectBufferOffset = 0;
 					drawCommand->numberOfDraws		  = 1;

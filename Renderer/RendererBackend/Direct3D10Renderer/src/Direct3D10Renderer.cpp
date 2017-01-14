@@ -224,13 +224,29 @@ namespace Direct3D10Renderer
 				void Draw(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+					if (nullptr != realData->indirectBuffer)
+					{
+						// No resource owner security check in here, we only support emulated indirect buffer
+						static_cast<Direct3D10Renderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						static_cast<Direct3D10Renderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+					if (nullptr != realData->indirectBuffer)
+					{
+						// No resource owner security check in here, we only support emulated indirect buffer
+						static_cast<Direct3D10Renderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						static_cast<Direct3D10Renderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				//[-------------------------------------------------------]
@@ -1150,89 +1166,81 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void Direct3D10Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// No resource owner security check in here, we only support emulated indirect buffer
+		// Get indirect buffer data and perform security checks
+		assert(nullptr != emulationData);
 
-		if (numberOfDraws > 0)
+		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+		emulationData += indirectBufferOffset;
+
+		// Emit the draw calls
+		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
-			// Get indirect buffer data and perform security checks
-			const uint8_t* emulationData = indirectBuffer.getEmulationData();
-			assert(nullptr != emulationData);
+			const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
 
-			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
-			emulationData += indirectBufferOffset;
-
-			// Emit the draw calls
-			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			// Draw
+			if (drawInstancedArguments.instanceCount > 1)
 			{
-				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
-
-				// Draw and advance
-				if (drawInstancedArguments.instanceCount > 1)
-				{
-					// With instancing
-					mD3D10Device->DrawInstanced(
-						drawInstancedArguments.vertexCountPerInstance,	// Vertex count per instance (UINT)
-						drawInstancedArguments.instanceCount,			// Instance count (UINT)
-						drawInstancedArguments.startVertexLocation,		// Start vertex location (UINT)
-						drawInstancedArguments.startInstanceLocation	// Start instance location (UINT)
-					);
-				}
-				else
-				{
-					// Without instancing
-					mD3D10Device->Draw(
-						drawInstancedArguments.vertexCountPerInstance,	// Vertex count (UINT)
-						drawInstancedArguments.startVertexLocation		// Start index location (UINT)
-					);
-				}
-				emulationData += sizeof(Renderer::DrawInstancedArguments);
+				// With instancing
+				mD3D10Device->DrawInstanced(
+					drawInstancedArguments.vertexCountPerInstance,	// Vertex count per instance (UINT)
+					drawInstancedArguments.instanceCount,			// Instance count (UINT)
+					drawInstancedArguments.startVertexLocation,		// Start vertex location (UINT)
+					drawInstancedArguments.startInstanceLocation	// Start instance location (UINT)
+				);
 			}
+			else
+			{
+				// Without instancing
+				mD3D10Device->Draw(
+					drawInstancedArguments.vertexCountPerInstance,	// Vertex count (UINT)
+					drawInstancedArguments.startVertexLocation		// Start index location (UINT)
+				);
+			}
+
+			// Advance
+			emulationData += sizeof(Renderer::DrawInstancedArguments);
 		}
 	}
 
-	void Direct3D10Renderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void Direct3D10Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// No resource owner security check in here, we only support emulated indirect buffer
+		// Get indirect buffer data and perform security checks
+		assert(nullptr != emulationData);
 
-		if (numberOfDraws > 0)
+		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+		emulationData += indirectBufferOffset;
+
+		// Emit the draw calls
+		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
-			// Get indirect buffer data and perform security checks
-			const uint8_t* emulationData = indirectBuffer.getEmulationData();
-			assert(nullptr != emulationData);
+			const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
 
-			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
-			emulationData += indirectBufferOffset;
-
-			// Emit the draw calls
-			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			// Draw
+			if (drawIndexedInstancedArguments.instanceCount > 1)
 			{
-				const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
-
-				// Draw and advance
-				if (drawIndexedInstancedArguments.instanceCount > 1)
-				{
-					// With instancing
-					mD3D10Device->DrawIndexedInstanced(
-						drawIndexedInstancedArguments.indexCountPerInstance,	// Index count per instance (UINT)
-						drawIndexedInstancedArguments.instanceCount,			// Instance count (UINT)
-						drawIndexedInstancedArguments.startIndexLocation,		// Start index location (UINT)
-						drawIndexedInstancedArguments.baseVertexLocation,		// Base vertex location (INT)
-						drawIndexedInstancedArguments.startInstanceLocation		// Start instance location (UINT)
-					);
-				}
-				else
-				{
-					// Without instancing
-					mD3D10Device->DrawIndexed(
-						drawIndexedInstancedArguments.indexCountPerInstance,	// Index count (UINT)
-						drawIndexedInstancedArguments.startIndexLocation,		// Start index location (UINT)
-						drawIndexedInstancedArguments.baseVertexLocation		// Base vertex location (INT)
-					);
-				}
-				emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
+				// With instancing
+				mD3D10Device->DrawIndexedInstanced(
+					drawIndexedInstancedArguments.indexCountPerInstance,	// Index count per instance (UINT)
+					drawIndexedInstancedArguments.instanceCount,			// Instance count (UINT)
+					drawIndexedInstancedArguments.startIndexLocation,		// Start index location (UINT)
+					drawIndexedInstancedArguments.baseVertexLocation,		// Base vertex location (INT)
+					drawIndexedInstancedArguments.startInstanceLocation		// Start instance location (UINT)
+				);
 			}
+			else
+			{
+				// Without instancing
+				mD3D10Device->DrawIndexed(
+					drawIndexedInstancedArguments.indexCountPerInstance,	// Index count (UINT)
+					drawIndexedInstancedArguments.startIndexLocation,		// Start index location (UINT)
+					drawIndexedInstancedArguments.baseVertexLocation		// Base vertex location (INT)
+				);
+			}
+
+			// Advance
+			emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
 		}
 	}
 

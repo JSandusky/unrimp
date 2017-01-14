@@ -69,30 +69,41 @@ namespace
 				//    in GLSL shader) , for backward compatibility we don't use it in here
 				// -> When using Direct3D 9, 10, 11 or 12, the texture unit
 				//    to use is usually defined directly within the shader by using the "register"-keyword
-				// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
-				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-					// Backup the currently used OpenGL program
-					GLint openGLProgramBackup = 0;
-					OpenGLRenderer::glGetProgramPipelineiv(openGLProgramPipeline, GL_ACTIVE_PROGRAM, &openGLProgramBackup);
-					if (static_cast<uint32_t>(openGLProgramBackup) == openGLProgram)
-					{
-						// Set uniform, please note that for this our program must be the currently used one
-						OpenGLRenderer::glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
-					}
-					else
-					{
-						// Set uniform, please note that for this our program must be the currently used one
+				// -> Use the "GL_ARB_direct_state_access" or "GL_EXT_direct_state_access" extension if possible to not change OpenGL states
+				if (nullptr != OpenGLRenderer::glProgramUniform1i)
+				{
+					OpenGLRenderer::glProgramUniform1i(openGLProgram, uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
+				}
+				else if (nullptr != OpenGLRenderer::glProgramUniform1iEXT)
+				{
+					OpenGLRenderer::glProgramUniform1iEXT(openGLProgram, uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
+				}
+				else
+				{
+					// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Backup the currently used OpenGL program
+						GLint openGLProgramBackup = 0;
+						OpenGLRenderer::glGetProgramPipelineiv(openGLProgramPipeline, GL_ACTIVE_PROGRAM, &openGLProgramBackup);
+						if (static_cast<uint32_t>(openGLProgramBackup) == openGLProgram)
+						{
+							// Set uniform, please note that for this our program must be the currently used one
+							OpenGLRenderer::glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
+						}
+						else
+						{
+							// Set uniform, please note that for this our program must be the currently used one
+							OpenGLRenderer::glActiveShaderProgram(openGLProgramPipeline, openGLProgram);
+							OpenGLRenderer::glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
+
+							// Be polite and restore the previous used OpenGL program
+							OpenGLRenderer::glActiveShaderProgram(openGLProgramPipeline, static_cast<GLuint>(openGLProgramBackup));
+						}
+					#else
 						OpenGLRenderer::glActiveShaderProgram(openGLProgramPipeline, openGLProgram);
 						OpenGLRenderer::glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
-
-						// Be polite and restore the previous used OpenGL program
-						OpenGLRenderer::glActiveShaderProgram(openGLProgramPipeline, static_cast<GLuint>(openGLProgramBackup));
-					}
-				#else
-					// Set uniform, please note that for this our program must be the currently used one
-					OpenGLRenderer::glActiveShaderProgram(openGLProgramPipeline, openGLProgram);
-					OpenGLRenderer::glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
-				#endif
+					#endif
+				}
 			}
 		}
 
@@ -125,12 +136,19 @@ namespace OpenGLRenderer
 	{
 		// Create the OpenGL program pipeline
 		glGenProgramPipelines(1, &mOpenGLProgramPipeline);
+
+		// If the "GL_ARB_direct_state_access" nor "GL_EXT_direct_state_access" extension is available, we need to change OpenGL states during resource creation (nasty thing)
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program pipeline
 			GLint openGLProgramPipelineBackup = 0;
-			glGetIntegerv(GL_PROGRAM_PIPELINE_BINDING, &openGLProgramPipelineBackup);
 		#endif
-		glBindProgramPipeline(mOpenGLProgramPipeline);
+		if (nullptr == glProgramUniform1i && nullptr == glProgramUniform1iEXT)
+		{
+			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+				glGetIntegerv(GL_PROGRAM_PIPELINE_BINDING, &openGLProgramPipelineBackup);
+			#endif
+			glBindProgramPipeline(mOpenGLProgramPipeline);
+		}
 
 		// Add references to the provided shaders
 		#define USE_PROGRAM_STAGES(ShaderBit, ShaderSeparate) if (nullptr != ShaderSeparate) { ShaderSeparate->addReference(); glUseProgramStages(mOpenGLProgramPipeline, ShaderBit, ShaderSeparate->getOpenGLShaderProgram()); }
@@ -274,7 +292,10 @@ namespace OpenGLRenderer
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous used OpenGL program pipeline
-			glBindProgramPipeline(static_cast<GLuint>(openGLProgramPipelineBackup));
+			if (nullptr == glProgramUniform1i && nullptr == glProgramUniform1iEXT)
+			{
+				glBindProgramPipeline(static_cast<GLuint>(openGLProgramPipelineBackup));
+			}
 		#endif
 	}
 

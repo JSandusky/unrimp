@@ -190,13 +190,29 @@ namespace NullRenderer
 				void Draw(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<NullRenderer&>(renderer).draw(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+					if (nullptr != realData->indirectBuffer)
+					{
+						// No resource owner security check in here, we only support emulated indirect buffer
+						static_cast<NullRenderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						static_cast<NullRenderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
 				{
 					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					static_cast<NullRenderer&>(renderer).drawIndexed(*((nullptr != realData->indirectBuffer) ? realData->indirectBuffer : reinterpret_cast<const IndirectBuffer*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData))), realData->indirectBufferOffset, realData->numberOfDraws);
+					if (nullptr != realData->indirectBuffer)
+					{
+						// No resource owner security check in here, we only support emulated indirect buffer
+						static_cast<NullRenderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
+					else
+					{
+						static_cast<NullRenderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					}
 				}
 
 				//[-------------------------------------------------------]
@@ -513,12 +529,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void NullRenderer::draw(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void NullRenderer::drawEmulated(const uint8_t*, uint32_t, uint32_t)
 	{
 		// Nothing here
 	}
 
-	void NullRenderer::drawIndexed(const Renderer::IIndirectBuffer&, uint32_t, uint32_t)
+	void NullRenderer::drawIndexedEmulated(const uint8_t*, uint32_t, uint32_t)
 	{
 		// Nothing here
 	}

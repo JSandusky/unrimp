@@ -167,30 +167,41 @@ namespace OpenGLRenderer
 								//    in GLSL shader) , for backward compatibility we don't use it in here
 								// -> When using Direct3D 9, 10, 11 or 12, the texture unit
 								//    to use is usually defined directly within the shader by using the "register"-keyword
-								// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
-								#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-									// Backup the currently used OpenGL program
-									GLint openGLProgramBackup = 0;
-									glGetIntegerv(GL_CURRENT_PROGRAM, &openGLProgramBackup);
-									if (static_cast<GLuint>(openGLProgramBackup) == mOpenGLProgram)
-									{
-										// Set uniform, please note that for this our program must be the currently used one
-										glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-									}
-									else
-									{
-										// Set uniform, please note that for this our program must be the currently used one
+								// -> Use the "GL_ARB_direct_state_access" or "GL_EXT_direct_state_access" extension if possible to not change OpenGL states
+								if (nullptr != glProgramUniform1i)
+								{
+									glProgramUniform1i(mOpenGLProgram, uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+								}
+								else if (nullptr != glProgramUniform1iEXT)
+								{
+									glProgramUniform1iEXT(mOpenGLProgram, uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+								}
+								else
+								{
+									// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
+									#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+										// Backup the currently used OpenGL program
+										GLint openGLProgramBackup = 0;
+										glGetIntegerv(GL_CURRENT_PROGRAM, &openGLProgramBackup);
+										if (static_cast<GLuint>(openGLProgramBackup) == mOpenGLProgram)
+										{
+											// Set uniform, please note that for this our program must be the currently used one
+											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+										}
+										else
+										{
+											// Set uniform, please note that for this our program must be the currently used one
+											glUseProgramObjectARB(mOpenGLProgram);
+											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+
+											// Be polite and restore the previous used OpenGL program
+											glUseProgramObjectARB(static_cast<GLhandleARB>(openGLProgramBackup));
+										}
+									#else
 										glUseProgramObjectARB(mOpenGLProgram);
 										glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-
-										// Be polite and restore the previous used OpenGL program
-										glUseProgramObjectARB(static_cast<GLhandleARB>(openGLProgramBackup));
-									}
-								#else
-									// Set uniform, please note that for this our program must be the currently used one
-									glUseProgramObjectARB(mOpenGLProgram);
-									glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-								#endif
+									#endif
+								}
 							}
 						}
 					}

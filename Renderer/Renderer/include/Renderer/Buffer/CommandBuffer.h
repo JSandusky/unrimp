@@ -28,8 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Renderer/IRenderer.h"
-#include "Renderer/Buffer/IndirectBuffer.h"
-#include "Renderer/Buffer/IndexedIndirectBuffer.h"
+#include "Renderer/Buffer/IndirectBufferTypes.h"
 
 #include <cassert>
 #ifndef WIN32
@@ -109,7 +108,7 @@ namespace Renderer
 	{
 		static const uint32_t OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX	= 0u;
 		static const uint32_t OFFSET_BACKEND_DISPATCH_FUNCTION		= OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX + sizeof(uint32_t);
-		static const uint32_t OFFSET_COMMAND						= OFFSET_BACKEND_DISPATCH_FUNCTION + sizeof(CommandDispatchFunctionIndex) + 3; // TODO(sw) 3 padding bytes so that command offset is aligned to 2 uint32_t. Find a better way to determine the padding because the +3 is wrong when sizeof(CommandDispatchFunctionIndex) > 1?
+		static const uint32_t OFFSET_COMMAND						= OFFSET_BACKEND_DISPATCH_FUNCTION + sizeof(uint32_t);	// Don't use "sizeof(CommandDispatchFunctionIndex)" instead of "sizeof(uint32_t)" so we have a known alignment
 
 		template <typename T>
 		uint32_t getNumberOfBytes(uint32_t numberOfAuxiliaryBytes)
@@ -212,8 +211,8 @@ namespace Renderer
 		inline CommandBuffer() :
 			mCommandPacketBufferNumberOfBytes(0),
 			mCommandPacketBuffer(nullptr),
-			mCurrentCommandPacketByteIndex(0),
-			mPreviousCommandPacketByteIndex(~0u)
+			mPreviousCommandPacketByteIndex(~0u),
+			mCurrentCommandPacketByteIndex(0)
 		{
 			// Nothing here
 		}
@@ -366,8 +365,8 @@ namespace Renderer
 		uint32_t mCommandPacketBufferNumberOfBytes;
 		uint8_t* mCommandPacketBuffer;
 		// Current state
-		uint32_t mCurrentCommandPacketByteIndex;
 		uint32_t mPreviousCommandPacketByteIndex;
+		uint32_t mCurrentCommandPacketByteIndex;
 
 
 	};
@@ -862,10 +861,9 @@ namespace Renderer
 			{
 				Draw* drawCommand = commandBuffer.addCommand<Draw>(sizeof(DrawInstancedArguments));
 
-				// Set command data: The command packet auxiliary memory contains an "Renderer::DrawInstancedArguments"-instance.
-				// TODO(sw) Get rid of the IndirectBuffer instance which simply sets the values to the internal "Renderer::DrawInstancedArguments" member
-				IndirectBuffer indirectBufferData(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
-				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), indirectBufferData.getEmulationData(), sizeof(DrawInstancedArguments));
+				// Set command data: The command packet auxiliary memory contains an "Renderer::DrawInstancedArguments"-instance
+				const DrawInstancedArguments drawInstancedArguments(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &drawInstancedArguments, sizeof(DrawInstancedArguments));
 
 				// Finalize command
 				drawCommand->indirectBuffer		  = nullptr;
@@ -917,10 +915,9 @@ namespace Renderer
 			{
 				DrawIndexed* drawCommand = commandBuffer.addCommand<DrawIndexed>(sizeof(DrawIndexedInstancedArguments));
 
-				// Set command data: The command packet auxiliary memory contains an "Renderer::DrawIndexedInstancedArguments"-instance.
-				// TODO(sw) Get rid of the IndexedIndirectBuffer instance which simply sets the values to the internal "Renderer::DrawIndexedInstancedArguments" member
-				IndexedIndirectBuffer indexedIndirectBufferData(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
-				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), indexedIndirectBufferData.getEmulationData(), sizeof(DrawIndexedInstancedArguments));
+				// Set command data: The command packet auxiliary memory contains an "Renderer::DrawIndexedInstancedArguments"-instance
+				const DrawIndexedInstancedArguments drawIndexedInstancedArguments(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
+				memcpy(CommandPacketHelper::getAuxiliaryMemory(drawCommand), &drawIndexedInstancedArguments, sizeof(DrawIndexedInstancedArguments));
 
 				// Finalize command
 				drawCommand->indirectBuffer		  = nullptr;
