@@ -580,11 +580,14 @@ namespace OpenGLRenderer
 								break;
 
 							case Renderer::ResourceType::TEXTURE_2D:
+								// TODO(co) Something odd is going on with DSA on AMD graphics cards. "glBindTextureUnit()" sometimes fails resulting in nothing visible on screen on MS Windows while causing a system crash on Linux. Works with NVIDIA under MS Windows.
+								/*
 								if (isARB_DSA)
 								{
 									glBindTextureUnit(unit, static_cast<Texture2D*>(resource)->getOpenGLTexture());
 								}
 								else
+								*/
 								{
 									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
 									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLTexture());
