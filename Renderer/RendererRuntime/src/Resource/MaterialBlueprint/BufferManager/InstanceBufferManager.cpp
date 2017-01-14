@@ -145,9 +145,8 @@ namespace RendererRuntime
 				{
 					// Referencing a global material property inside an instance uniform buffer doesn't make really sense performance wise, but don't forbid it
 
-					// TODO(sw) The explizit cast to MaterialPropertyId is needed because gcc 4.9 (currently used on android) doesn't get the correct call due the StringId is typedefed to 'RendererRuntime::MaterialPropertyId
 					// Figure out the global material property value
-					const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(MaterialPropertyId(uniformBufferElementProperty.getReferenceValue()));
+					const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
 					if (nullptr != materialProperty)
 					{
 						// TODO(co) Error handling: Usage mismatch, value type mismatch etc.

@@ -425,8 +425,7 @@ namespace RendererRuntime
 	inline AssetId MaterialPropertyValue::getTextureAssetIdValue() const
 	{
 		assert(ValueType::TEXTURE_ASSET_ID == mValueType);
-		// TODO(sw) The explizit cast to AssetId is needed because gcc 4.9 (currently used on android) doesn't get the correct call due the StringId is typedefed to 'RendererRuntime::AssetId
-		return AssetId(mValue.TextureAssetId);
+		return mValue.TextureAssetId;
 	}
 
 	inline bool MaterialPropertyValue::operator !=(const MaterialPropertyValue& materialPropertyValue) const

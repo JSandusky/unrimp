@@ -157,8 +157,18 @@ namespace RendererRuntime
 		*
 		*  @param[in] stringId
 		*    String ID instance to copy from
+		*
+		*  @note
+		*    - By intent not explicit because otherwise gcc 4.9 throws an error when StringId is used e.g. as an function parameter and the function is called with an string literal
+		*      E.g.:
+		*      typedef StringId AssetId;
+		*      void function(StringId assetId){}
+		*      void functionAssetId(AssetId assetId){}
+		*
+		*      function("BlaBlub"); <-- gcc 4.9 error: no matching function for call to ‘RendererRuntime::StringId::StringId(RendererRuntime::StringId)’
+		*      functionAssetId("BlaBlub"); <-- gcc 4.9 error: no matching function for call to ‘RendererRuntime::StringId::StringId(AssetId)’
 		*/
-		inline FORCEINLINE explicit StringId(const StringId& stringId);
+		inline FORCEINLINE StringId(const StringId& stringId);
 
 		/**
 		*  @brief
