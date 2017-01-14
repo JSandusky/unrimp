@@ -287,7 +287,7 @@ namespace RendererRuntime
 		*  @return
 		*    The requested shader blueprint resource ID, can be uninitialized
 		*/
-		inline const ShaderBlueprintResourceId getShaderBlueprintResourceId(ShaderType shaderType) const;
+		inline ShaderBlueprintResourceId getShaderBlueprintResourceId(ShaderType shaderType) const;
 
 		//[-------------------------------------------------------]
 		//[ Resource                                              ]
