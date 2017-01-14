@@ -644,7 +644,7 @@ namespace RendererRuntime
 
 		// Gather all valid poses
 		mNumberOfValidDevicePoses = 0;
-		for (int32_t deviceIndex = 0; deviceIndex < vr::k_unMaxTrackedDeviceCount; ++deviceIndex)
+		for (uint32_t deviceIndex = 0; deviceIndex < vr::k_unMaxTrackedDeviceCount; ++deviceIndex)
 		{
 			if (mVrTrackedDevicePose[deviceIndex].bPoseIsValid)
 			{
