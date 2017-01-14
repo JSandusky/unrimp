@@ -852,9 +852,19 @@ namespace Direct3D10Renderer
 				DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
 
 				// Release the render target reference, in case we have one
+				Framebuffer* framebufferToGenerateMipmapsFor = nullptr;
 				if (nullptr != mRenderTarget)
 				{
-					mRenderTarget->releaseReference();
+					// Generate mipmaps?
+					if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType() && static_cast<Framebuffer*>(mRenderTarget)->getGenerateMipmaps())
+					{
+						framebufferToGenerateMipmapsFor = static_cast<Framebuffer*>(mRenderTarget);
+					}
+					else
+					{
+						// Release reference
+						mRenderTarget->releaseReference();
+					}
 				}
 
 				// Set new render target and add a reference to it
@@ -905,6 +915,13 @@ namespace Direct3D10Renderer
 					default:
 						// Not handled in here
 						break;
+				}
+
+				// Generate mipmaps
+				if (nullptr != framebufferToGenerateMipmapsFor)
+				{
+					framebufferToGenerateMipmapsFor->generateMipmaps(*mD3D10Device);
+					framebufferToGenerateMipmapsFor->releaseReference();
 				}
 			}
 			else

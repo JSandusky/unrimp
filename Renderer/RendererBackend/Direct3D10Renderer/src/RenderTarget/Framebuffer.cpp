@@ -49,6 +49,7 @@ namespace Direct3D10Renderer
 		mDepthStencilTexture(depthStencilTexture),
 		mWidth(UINT_MAX),
 		mHeight(UINT_MAX),
+		mGenerateMipmaps(false),
 		mD3D10RenderTargetViews(nullptr),
 		mD3D10DepthStencilView(nullptr)
 	{
@@ -97,6 +98,12 @@ namespace Direct3D10Renderer
 							d3d10RenderTargetViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D10_RTV_DIMENSION_TEXTURE2DMS : D3D10_RTV_DIMENSION_TEXTURE2D;
 							d3d10RenderTargetViewDesc.Texture2D.MipSlice = 0;
 							direct3D10Renderer.getD3D10Device()->CreateRenderTargetView(texture2D->getD3D10Texture2D(), &d3d10RenderTargetViewDesc, d3d10RenderTargetView);
+
+							// Generate mipmaps?
+							if (texture2D->getGenerateMipmaps())
+							{
+								mGenerateMipmaps = true;
+							}
 							break;
 						}
 
@@ -159,6 +166,12 @@ namespace Direct3D10Renderer
 					d3d10DepthStencilViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D10_DSV_DIMENSION_TEXTURE2DMS : D3D10_DSV_DIMENSION_TEXTURE2D;
 					d3d10DepthStencilViewDesc.Texture2D.MipSlice = 0;
 					direct3D10Renderer.getD3D10Device()->CreateDepthStencilView(texture2D->getD3D10Texture2D(), &d3d10DepthStencilViewDesc, &mD3D10DepthStencilView);
+
+					// Generate mipmaps?
+					if (texture2D->getGenerateMipmaps())
+					{
+						mGenerateMipmaps = true;
+					}
 					break;
 				}
 
@@ -250,6 +263,27 @@ namespace Direct3D10Renderer
 		{
 			// Release reference
 			mDepthStencilTexture->releaseReference();
+		}
+	}
+
+	void Framebuffer::generateMipmaps(ID3D10Device& d3d10Device) const
+	{
+		// Sanity check
+		assert(mGenerateMipmaps);
+
+		// TODO(co) Complete, currently only 2D textures are supported
+		Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+		for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+		{
+			// Valid entry?
+			if (nullptr != *colorTexture && (*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+			{
+				Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+				if (texture2D->getGenerateMipmaps())
+				{
+					d3d10Device.GenerateMips(texture2D->getD3D10ShaderResourceView());
+				}
+			}
 		}
 	}
 

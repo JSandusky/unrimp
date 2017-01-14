@@ -120,6 +120,15 @@ namespace Direct3D10Renderer
 
 		/**
 		*  @brief
+		*    Return whether or not mipmaps should be generated automatically
+		*
+		*  @return
+		*    "true" if mipmaps should be generated automatically, else "false"
+		*/
+		inline bool getGenerateMipmaps() const;
+
+		/**
+		*  @brief
 		*    Return the Direct3D texture 2D resource instance
 		*
 		*  @return
@@ -155,6 +164,7 @@ namespace Direct3D10Renderer
 	private:
 		Renderer::TextureFormat::Enum  mTextureFormat;
 		uint8_t						   mNumberOfMultisamples;
+		bool						   mGenerateMipmaps;
 		ID3D10Texture2D				  *mD3D10Texture2D;					///< Direct3D 10 texture 2D resource, can be a null pointer
 		ID3D10ShaderResourceView	  *mD3D10ShaderResourceViewTexture;	///< Direct3D 10 shader resource view, can be a null pointer
 

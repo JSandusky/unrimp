@@ -62,7 +62,7 @@ namespace Direct3D12Renderer
 		ID3D12Device* d3d12Device = direct3D12Renderer.getD3D12Device();
 
 		// TODO(co) Add buffer usage setting support
-		// TODO(co) Add "Renderer::TextureFlag::GENERATE_MIPMAPS" support
+		// TODO(co) Add "Renderer::TextureFlag::GENERATE_MIPMAPS" support, also for render target textures
 
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);

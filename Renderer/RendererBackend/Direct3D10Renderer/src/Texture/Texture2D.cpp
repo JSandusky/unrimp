@@ -44,6 +44,7 @@ namespace Direct3D10Renderer
 		ITexture2D(direct3D10Renderer, width, height),
 		mTextureFormat(textureFormat),
 		mNumberOfMultisamples(numberOfMultisamples),
+		mGenerateMipmaps(false),
 		mD3D10Texture2D(nullptr),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
@@ -62,6 +63,7 @@ namespace Direct3D10Renderer
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
 		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
+		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Direct3D 10 2D texture description
 		DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(textureFormat));

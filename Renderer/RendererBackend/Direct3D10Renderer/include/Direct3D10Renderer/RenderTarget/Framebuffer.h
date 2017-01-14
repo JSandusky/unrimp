@@ -33,6 +33,7 @@
 //[-------------------------------------------------------]
 //[ Forward declaration                                   ]
 //[-------------------------------------------------------]
+struct ID3D10Device;
 struct ID3D10RenderTargetView;
 struct ID3D10DepthStencilView;
 namespace Renderer
@@ -137,6 +138,24 @@ namespace Direct3D10Renderer
 		*/
 		inline ID3D10DepthStencilView *getD3D10DepthStencilView() const;
 
+		/**
+		*  @brief
+		*    Return whether or not mipmaps should be generated automatically
+		*
+		*  @return
+		*    "true" if mipmaps should be generated automatically, else "false"
+		*/
+		inline bool getGenerateMipmaps() const;
+
+		/**
+		*  @brief
+		*    Generate mipmaps
+		*
+		*  @param[in] d3d10Device
+		*    Direct3D 10 device to use
+		*/
+		void generateMipmaps(ID3D10Device& d3d10Device) const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
@@ -162,6 +181,7 @@ namespace Direct3D10Renderer
 		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
+		bool				 mGenerateMipmaps;			///< "true" if mipmaps should be generated automatically, else "false"
 		// Direct3D 10 part
 		ID3D10RenderTargetView **mD3D10RenderTargetViews;	///< The Direct3D 10 render target views (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" views in the provided C-array of pointers
 		ID3D10DepthStencilView  *mD3D10DepthStencilView;	///< The Direct3D 10 depth stencil view (we keep a reference to it), can be a null pointer

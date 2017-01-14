@@ -51,6 +51,7 @@ namespace Direct3D9Renderer
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D9Renderer)
 
 		// Get the Direct3D 9 usage indication
+		// TODO(co) Add "Renderer::TextureFlag::GENERATE_MIPMAPS" support for render target textures
 		DWORD direct3D9Usage = (flags & Renderer::TextureFlag::GENERATE_MIPMAPS) ? D3DUSAGE_AUTOGENMIPMAP : 0u;
 		switch (textureUsage)
 		{
