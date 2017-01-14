@@ -300,6 +300,7 @@ namespace OpenGLES2Renderer
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
+		mOpenGLES2CopyResourceFramebuffer(0),
 		mVertexArray(nullptr),
 		mOpenGLES2PrimitiveTopology(0xFFFF),	// Unknown default setting
 		mMainSwapChain(nullptr),
@@ -367,6 +368,10 @@ namespace OpenGLES2Renderer
 			mDefaultSamplerState->releaseReference();
 			mDefaultSamplerState = nullptr;
 		}
+
+		// Destroy the OpenGL ES 2 framebuffer used by "OpenGLES2Renderer::OpenGLES2Renderer::copyResource()"
+		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
+		glDeleteFramebuffers(1, &mOpenGLES2CopyResourceFramebuffer);
 
 		// Set no vertex array reference, in case we have one
 		if (nullptr != mVertexArray)
@@ -968,13 +973,42 @@ namespace OpenGLES2Renderer
 		switch (destinationResource.getResourceType())
 		{
 			case Renderer::ResourceType::TEXTURE_2D:
-				if (sourceResource.getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+				// "GL_NV_draw_buffers"-extension required
+				if (sourceResource.getResourceType() == Renderer::ResourceType::TEXTURE_2D && mContext->getExtensions().isGL_NV_draw_buffers())
 				{
 					// Get the OpenGL ES 2 texture 2D instances
-					// const Texture2D& openGlEs2DestinationTexture2D = static_cast<const Texture2D&>(destinationResource);
-					// const Texture2D& openGlEs2SourceTexture2D = static_cast<const Texture2D&>(sourceResource);
+					const Texture2D& openGlEs2DestinationTexture2D = static_cast<const Texture2D&>(destinationResource);
+					const Texture2D& openGlEs2SourceTexture2D = static_cast<const Texture2D&>(sourceResource);
+					assert(openGlEs2DestinationTexture2D.getWidth() == openGlEs2SourceTexture2D.getWidth());
+					assert(openGlEs2DestinationTexture2D.getHeight() == openGlEs2SourceTexture2D.getHeight());
 
-					// TODO(co) Copy resource
+					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+						// Backup the currently bound OpenGL ES 2 framebuffer
+						GLint openGLES2FramebufferBackup = 0;
+						glGetIntegerv(GL_FRAMEBUFFER_BINDING, &openGLES2FramebufferBackup);
+					#endif
+
+					// Copy resource by using a framebuffer
+					const GLint width = static_cast<GLint>(openGlEs2DestinationTexture2D.getWidth());
+					const GLint height = static_cast<GLint>(openGlEs2DestinationTexture2D.getHeight());
+					if (0 == mOpenGLES2CopyResourceFramebuffer)
+					{
+						glGenFramebuffers(1, &mOpenGLES2CopyResourceFramebuffer);
+					}
+					glBindFramebuffer(GL_FRAMEBUFFER, mOpenGLES2CopyResourceFramebuffer);
+					glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, openGlEs2SourceTexture2D.getOpenGLES2Texture(), 0);
+					glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, openGlEs2DestinationTexture2D.getOpenGLES2Texture(), 0);
+					static const GLenum OPENGL_DRAW_BUFFER[1] =
+					{
+						GL_COLOR_ATTACHMENT1_NV
+					};
+					glDrawBuffersNV(1, OPENGL_DRAW_BUFFER);
+					glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+						// Be polite and restore the previous bound OpenGL ES 2 framebuffer
+						glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLES2FramebufferBackup));
+					#endif
 				}
 				else
 				{

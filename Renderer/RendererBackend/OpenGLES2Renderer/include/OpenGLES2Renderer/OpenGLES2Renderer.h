@@ -251,10 +251,11 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IContext				  *mContext;				///< Context instance, always valid
-		Renderer::IShaderLanguage *mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
-		RootSignature			  *mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
-		Renderer::ISamplerState	  *mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
+		IContext				  *mContext;							///< Context instance, always valid
+		Renderer::IShaderLanguage *mShaderLanguageGlsl;					///< GLSL shader language instance (we keep a reference to it), can be a null pointer
+		RootSignature			  *mGraphicsRootSignature;				///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
+		Renderer::ISamplerState	  *mDefaultSamplerState;				///< Default rasterizer state (we keep a reference to it), can be a null pointer
+		uint32_t				   mOpenGLES2CopyResourceFramebuffer;	///< OpenGL ES 2 framebuffer ("container" object, not shared between OpenGL ES 2 contexts) used by "OpenGLES2Renderer::OpenGLES2Renderer::copyResource()", can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]

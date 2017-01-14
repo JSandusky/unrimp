@@ -512,6 +512,7 @@ namespace OpenGLES2Renderer
 		IMPORT_FUNC(glFlush);
 		IMPORT_FUNC(glFramebufferRenderbuffer);
 		IMPORT_FUNC(glFramebufferTexture2D);
+		IMPORT_FUNC(glBlitFramebuffer);
 		IMPORT_FUNC(glFrontFace);
 		IMPORT_FUNC(glGenBuffers);
 		IMPORT_FUNC(glGenerateMipmap);
