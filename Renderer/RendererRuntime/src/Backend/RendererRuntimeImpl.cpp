@@ -189,8 +189,7 @@ namespace RendererRuntime
 					// Inform the individual resource manager instances
 					for (size_t i = 0; i < numberOfResourceManagers; ++i)
 					{
-						// TODO(sw) The explizit cast to StringId is needed because gcc 4.9 (currently used on android) doesn't get the correct call due the StringId is typedefed to AssetId
-						mResourceManagers[i]->reloadResourceByAssetId(RendererRuntime::StringId(assetId));
+						mResourceManagers[i]->reloadResourceByAssetId(assetId);
 					}
 				}
 				mResourcesToReload.clear();

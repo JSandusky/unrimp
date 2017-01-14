@@ -78,9 +78,9 @@ namespace RendererRuntime
 
 
 	public:
-		/// -1 threads means to use as many threads as there are hardware threads on
+		/// ~0ul (== -1 == size_t max_value) threads means to use as many threads as there are hardware threads on
 		/// the system.
-		ThreadPool(size_t threads = -1);
+		ThreadPool(size_t threads = ~0ul);
 		~ThreadPool();
 
 		void queueTask(const Task &task);

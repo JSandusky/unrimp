@@ -108,9 +108,8 @@ namespace RendererRuntime
 					}
 					else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
 					{
-						// TODO(sw) The explizit cast to MaterialPropertyId is needed because gcc 4.9 (currently used on android) doesn't get the correct call due the StringId is typedefed to 'RendererRuntime::MaterialPropertyId
 						// Figure out the global material property value
-						const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(MaterialPropertyId(uniformBufferElementProperty.getReferenceValue()));
+						const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
@@ -124,9 +123,8 @@ namespace RendererRuntime
 					}
 					else if (MaterialProperty::Usage::MATERIAL_REFERENCE == usage)
 					{
-						// TODO(sw) The explizit cast to MaterialPropertyId is needed because gcc 4.9 (currently used on android) doesn't get the correct call due the StringId is typedefed to 'RendererRuntime::MaterialPropertyId
 						// Figure out the material property value
-						const MaterialProperty* materialProperty = mMaterialBlueprintResource.getMaterialProperties().getPropertyById(MaterialPropertyId(uniformBufferElementProperty.getReferenceValue()));
+						const MaterialProperty* materialProperty = mMaterialBlueprintResource.getMaterialProperties().getPropertyById(uniformBufferElementProperty.getReferenceValue());
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.

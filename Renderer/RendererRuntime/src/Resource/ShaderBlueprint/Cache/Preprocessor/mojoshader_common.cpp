@@ -8,6 +8,12 @@
 	#pragma warning(disable: 4244)	// warning C4244: '<x>': conversion from 'uint32' to 'uint8', possible loss of data
 	#pragma warning(disable: 4456)	// warning C4456: declaration of '<x>' hides previous local declaration
 	#pragma warning(disable: 4505)	// warning C4505: '<x>': unreferenced local function has been removed
+#elif defined(__clang__)
+	#pragma clang diagnostic ignored "-Wunused-parameter" // warning: unused parameter 'x' [-Wunused-parameter]
+	#pragma clang diagnostic ignored "-Wsign-compare" // warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+#else
+	#pragma GCC diagnostic ignored "-Wsign-compare" // warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+	#pragma GCC diagnostic ignored "-Wunused-parameter" // warning: unused parameter 'x' [-Wunused-parameter]
 #endif
 
 #define MOJOSHADER_NO_VERSION_INCLUDE
