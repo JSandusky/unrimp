@@ -75,7 +75,8 @@ void FirstMesh::onInitialization()
 		// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
 		// -> Direct3D 10, 11 and 12 do not support individual uniforms
 		// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-		if (renderer->getCapabilities().maximumUniformBufferSize > 0)
+		// -> Don't use "renderer.getCapabilities().maximumUniformBufferSize > 0" here since for OpenGL we're not using uniform buffers in here
+		if (0 != strcmp(renderer->getName(), "OpenGL") && 0 != strcmp(renderer->getName(), "OpenGLES2"))
 		{
 			// Allocate enough memory for two 4x4 floating point matrices
 			mUniformBuffer = rendererRuntime->getBufferManager().createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
