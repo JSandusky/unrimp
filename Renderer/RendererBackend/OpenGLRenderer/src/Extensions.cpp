@@ -100,6 +100,7 @@ namespace OpenGLRenderer
 	bool Extensions::isGL_ARB_debug_output()				const { return mGL_ARB_debug_output;				}
 	bool Extensions::isGL_ARB_direct_state_access()			const { return mGL_ARB_direct_state_access;			}
 	bool Extensions::isGL_ARB_texture_storage()				const { return mGL_ARB_texture_storage;				}
+	bool Extensions::isGL_ARB_copy_image()					const { return mGL_ARB_copy_image;					}
 
 
 	//[-------------------------------------------------------]
@@ -266,6 +267,7 @@ namespace OpenGLRenderer
 		mGL_ARB_debug_output				= false;
 		mGL_ARB_direct_state_access			= false;
 		mGL_ARB_texture_storage				= false;
+		mGL_ARB_copy_image					= false;
 	}
 
 	bool Extensions::initializeUniversal()
@@ -744,6 +746,16 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glTextureStorage3D)
 			IMPORT_FUNC(glTextureStorage2DMultisample)
 			mGL_ARB_texture_storage = result;
+		}
+
+		// GL_ARB_copy_image - Is core since OpenGL 4.3
+		mGL_ARB_copy_image = isSupported("GL_ARB_copy_image");
+		if (mGL_ARB_copy_image)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glCopyImageSubData)
+			mGL_ARB_copy_image = result;
 		}
 
 		// Undefine the helper macro

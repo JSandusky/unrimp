@@ -156,6 +156,7 @@ namespace OpenGLRenderer
 		bool isGL_ARB_debug_output() const;
 		bool isGL_ARB_direct_state_access() const;
 		bool isGL_ARB_texture_storage() const;
+		bool isGL_ARB_copy_image() const;
 
 
 	//[-------------------------------------------------------]
@@ -264,6 +265,7 @@ namespace OpenGLRenderer
 		bool mGL_ARB_debug_output;
 		bool mGL_ARB_direct_state_access;
 		bool mGL_ARB_texture_storage;
+		bool mGL_ARB_copy_image;
 
 
 	};
@@ -493,6 +495,9 @@ namespace OpenGLRenderer
 	FNDEF_EX(glTextureStorage2D,			PFNGLTEXTURESTORAGE2DPROC);
 	FNDEF_EX(glTextureStorage3D,			PFNGLTEXTURESTORAGE3DPROC);
 	FNDEF_EX(glTextureStorage2DMultisample,	PFNGLTEXTURESTORAGE2DMULTISAMPLEPROC);
+
+	// GL_ARB_copy_image
+	FNDEF_EX(glCopyImageSubData,	PFNGLCOPYIMAGESUBDATAPROC);
 
 
 	//[-------------------------------------------------------]

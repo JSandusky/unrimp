@@ -958,9 +958,53 @@ namespace OpenGLES2Renderer
 		// TODO(co) Implement me
 	}
 
-	void OpenGLES2Renderer::copyResource(Renderer::IResource&, Renderer::IResource&)
+	void OpenGLES2Renderer::copyResource(Renderer::IResource& destinationResource, Renderer::IResource& sourceResource)
 	{
-		// TODO(co) Implement me
+		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
+		OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationResource)
+		OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceResource)
+
+		// Evaluate the render target type
+		switch (destinationResource.getResourceType())
+		{
+			case Renderer::ResourceType::TEXTURE_2D:
+				if (sourceResource.getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+				{
+					// Get the OpenGL ES 2 texture 2D instances
+					// const Texture2D& openGlEs2DestinationTexture2D = static_cast<const Texture2D&>(destinationResource);
+					// const Texture2D& openGlEs2SourceTexture2D = static_cast<const Texture2D&>(sourceResource);
+
+					// TODO(co) Copy resource
+				}
+				else
+				{
+					// Error!
+					assert(false);
+				}
+				break;
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::INDEX_BUFFER:
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Not handled in here
+				break;
+		}
 	}
 
 

@@ -321,6 +321,7 @@ namespace OpenGLRenderer
 		mShaderLanguage(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
+		mOpenGLCopyResourceFramebuffer(0),
 		mPipelineState(nullptr),
 		mVertexArray(nullptr),
 		mOpenGLPrimitiveTopology(0xFFFF),	// Unknown default setting
@@ -422,6 +423,10 @@ namespace OpenGLRenderer
 			mDefaultSamplerState->releaseReference();
 			mDefaultSamplerState = nullptr;
 		}
+
+		// Destroy the OpenGL framebuffer used by "OpenGLRenderer::OpenGLRenderer::copyResource()" if the "GL_ARB_copy_image"-extension isn't available
+		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
+		glDeleteFramebuffers(1, &mOpenGLCopyResourceFramebuffer);
 
 		// Release the graphics root signature instance, in case we have one
 		if (nullptr != mGraphicsRootSignature)
@@ -1244,9 +1249,91 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::copyResource(Renderer::IResource&, Renderer::IResource&)
+	void OpenGLRenderer::copyResource(Renderer::IResource& destinationResource, Renderer::IResource& sourceResource)
 	{
-		// TODO(co) Implement me
+		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
+		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationResource)
+		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceResource)
+
+		// Evaluate the render target type
+		switch (destinationResource.getResourceType())
+		{
+			case Renderer::ResourceType::TEXTURE_2D:
+				if (sourceResource.getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+				{
+					// Get the OpenGL texture 2D instances
+					const Texture2D& openGlDestinationTexture2D = static_cast<const Texture2D&>(destinationResource);
+					const Texture2D& openGlSourceTexture2D = static_cast<const Texture2D&>(sourceResource);
+					assert(openGlDestinationTexture2D.getWidth() == openGlSourceTexture2D.getWidth());
+					assert(openGlDestinationTexture2D.getHeight() == openGlSourceTexture2D.getHeight());
+
+					// Copy resource
+					const GLsizei width = static_cast<GLsizei>(openGlDestinationTexture2D.getWidth());
+					const GLsizei height = static_cast<GLsizei>(openGlDestinationTexture2D.getHeight());
+					if (mExtensions->isGL_ARB_copy_image())
+					{
+						glCopyImageSubData(openGlSourceTexture2D.getOpenGLTexture(), GL_TEXTURE_2D, 0, 0, 0, 0,
+										   openGlDestinationTexture2D.getOpenGLTexture(), GL_TEXTURE_2D, 0, 0, 0, 0,
+										   width, height, 1);
+					}
+					else
+					{
+						#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+							// Backup the currently bound OpenGL framebuffer
+							GLint openGLFramebufferBackup = 0;
+							glGetIntegerv(GL_FRAMEBUFFER_BINDING, &openGLFramebufferBackup);
+						#endif
+
+						// Copy resource by using a framebuffer
+						if (0 == mOpenGLCopyResourceFramebuffer)
+						{
+							glGenFramebuffers(1, &mOpenGLCopyResourceFramebuffer);
+						}
+						glBindFramebuffer(GL_FRAMEBUFFER, mOpenGLCopyResourceFramebuffer);
+						glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, openGlSourceTexture2D.getOpenGLTexture(), 0);
+						glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, openGlDestinationTexture2D.getOpenGLTexture(), 0);
+						static const GLenum OPENGL_DRAW_BUFFER[1] =
+						{
+							GL_COLOR_ATTACHMENT1
+						};
+						glDrawBuffersARB(1, OPENGL_DRAW_BUFFER);	// We could use "glDrawBuffer(GL_COLOR_ATTACHMENT1);", but then we would also have to get the "glDrawBuffer()" function pointer, avoid OpenGL function overkill
+						glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+						#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+							// Be polite and restore the previous bound OpenGL framebuffer
+							glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLFramebufferBackup));
+						#endif
+					}
+				}
+				else
+				{
+					// Error!
+					assert(false);
+				}
+				break;
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::INDEX_BUFFER:
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Not handled in here
+				break;
+		}
 	}
 
 

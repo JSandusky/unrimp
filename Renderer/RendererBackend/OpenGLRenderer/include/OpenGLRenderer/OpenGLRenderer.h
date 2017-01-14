@@ -280,12 +280,13 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		OpenGLRuntimeLinking	  *mOpenGLRuntimeLinking;	///< OpenGL runtime linking instance, always valid
-		IContext				  *mContext;				///< OpenGL context instance, always valid
-		Extensions				  *mExtensions;				///< Extensions instance, always valid
-		Renderer::IShaderLanguage *mShaderLanguage;			///< Shader language instance (we keep a reference to it), can be a null pointer
-		RootSignature			  *mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
-		Renderer::ISamplerState	  *mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
+		OpenGLRuntimeLinking	  *mOpenGLRuntimeLinking;			///< OpenGL runtime linking instance, always valid
+		IContext				  *mContext;						///< OpenGL context instance, always valid
+		Extensions				  *mExtensions;						///< Extensions instance, always valid
+		Renderer::IShaderLanguage *mShaderLanguage;					///< Shader language instance (we keep a reference to it), can be a null pointer
+		RootSignature			  *mGraphicsRootSignature;			///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
+		Renderer::ISamplerState	  *mDefaultSamplerState;			///< Default rasterizer state (we keep a reference to it), can be a null pointer
+		uint32_t				   mOpenGLCopyResourceFramebuffer;	///< OpenGL framebuffer ("container" object, not shared between OpenGL contexts) used by "OpenGLRenderer::OpenGLRenderer::copyResource()" if the "GL_ARB_copy_image"-extension isn't available, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		//[-------------------------------------------------------]
 		//[ States                                                ]
 		//[-------------------------------------------------------]

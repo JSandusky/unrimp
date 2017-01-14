@@ -88,7 +88,7 @@ FirstScene::FirstScene() :
 	mLightSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mGlobalTimer(0.0f),
-	mInstancedCompositor(Compositor::DEBUG),	// TODO(co) DirectX 11 part is ready, for OpenGL renderer backend mipmap generation and resource copy still need to be implemented
+	mInstancedCompositor(Compositor::DEFERRED),
 	mCurrentCompositor(mInstancedCompositor),
 	mCurrentMsaa(Msaa::NONE),
 	mResolutionScale(1.0f),
