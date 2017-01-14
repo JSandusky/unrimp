@@ -40,13 +40,11 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline uint32_t ITexture::getNumberOfMipmaps(uint32_t width, uint32_t height)
 	{
-#ifdef ANDROID
-		// TODO(sw) Android gnustl has no std::log2 so replace ist with (std::log(x)/1.4426950408889634)
-		// TODO(sw) Needed this hack because Qt for android is build against gnustl and gcc 4.9 which is depricated in android ndk 13b. But Qt android llvm/clang build is not yet ready
-		return static_cast<uint32_t>(1 + std::floor(std::log(std::max(width, height))/1.4426950408889634));
-#else
-		return static_cast<uint32_t>(1 + std::floor(std::log2(std::max(width, height))));
-#endif
+		// Don't write "return static_cast<uint32_t>(1 + std::floor(std::log2(std::max(width, height))));"
+		// -> Android GNU STL has no "std::log2()", poor but no disaster in here because we can use another solution
+		// -> log2(x) = log(x) / log(2)
+		// -> log(2) = 0.69314718055994529
+		return static_cast<uint32_t>(1 + std::floor(std::log(std::max(width, height)) / 0.69314718055994529));
 	}
 
 
