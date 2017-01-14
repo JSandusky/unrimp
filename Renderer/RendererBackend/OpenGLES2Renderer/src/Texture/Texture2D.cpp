@@ -41,7 +41,8 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	Texture2D::Texture2D(OpenGLES2Renderer &openGLES2Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
 		ITexture2D(openGLES2Renderer, width, height),
-		mOpenGLES2Texture(0)
+		mOpenGLES2Texture(0),
+		mGenerateMipmaps(false)
 	{
 		// Sanity checks
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
@@ -61,6 +62,12 @@ namespace OpenGLES2Renderer
 		// Set correct alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+		// Calculate the number of mipmaps
+		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
+		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
+		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
+
 		// Create the OpenGL ES 2 texture instance
 		glGenTextures(1, &mOpenGLES2Texture);
 		glBindTexture(GL_TEXTURE_2D, mOpenGLES2Texture);
@@ -69,11 +76,8 @@ namespace OpenGLES2Renderer
 		if (Renderer::TextureFormat::isCompressed(textureFormat))
 		{
 			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
-			if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
+			if (dataContainsMipmaps)
 			{
-				// Calculate the number of mipmaps
-				const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
-
 				// Upload all mipmaps
 				const uint32_t internalFormat = Mapping::getOpenGLES2InternalFormat(textureFormat);
 				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
@@ -99,11 +103,8 @@ namespace OpenGLES2Renderer
 			// Texture format is not compressed
 
 			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
-			if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
+			if (dataContainsMipmaps)
 			{
-				// Calculate the number of mipmaps
-				const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
-
 				// Upload all mipmaps
 				const uint32_t internalFormat = Mapping::getOpenGLES2InternalFormat(textureFormat);
 				const uint32_t format = Mapping::getOpenGLES2Format(textureFormat);

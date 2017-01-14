@@ -781,6 +781,7 @@ namespace OpenGLES2Renderer
 				OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
 
 				// Release the render target reference, in case we have one
+				Framebuffer* framebufferToGenerateMipmapsFor = nullptr;
 				if (nullptr != mRenderTarget)
 				{
 					// Unbind OpenGL ES 2 framebuffer?
@@ -790,8 +791,16 @@ namespace OpenGLES2Renderer
 						glBindFramebuffer(GL_FRAMEBUFFER, 0);
 					}
 
-					// Release the reference
-					mRenderTarget->releaseReference();
+					// Generate mipmaps?
+					if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType() && static_cast<Framebuffer*>(mRenderTarget)->getGenerateMipmaps())
+					{
+						framebufferToGenerateMipmapsFor = static_cast<Framebuffer*>(mRenderTarget);
+					}
+					else
+					{
+						// Release
+						mRenderTarget->releaseReference();
+					}
 				}
 
 				// Set new render target and add a reference to it
@@ -854,6 +863,13 @@ namespace OpenGLES2Renderer
 					default:
 						// Not handled in here
 						break;
+				}
+
+				// Generate mipmaps
+				if (nullptr != framebufferToGenerateMipmapsFor)
+				{
+					framebufferToGenerateMipmapsFor->generateMipmaps();
+					framebufferToGenerateMipmapsFor->releaseReference();
 				}
 			}
 			else

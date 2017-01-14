@@ -108,6 +108,21 @@ namespace OpenGLES2Renderer
 		*/
 		inline uint32_t getNumberOfColorTextures() const;
 
+		/**
+		*  @brief
+		*    Return whether or not mipmaps should be generated automatically
+		*
+		*  @return
+		*    "true" if mipmaps should be generated automatically, else "false"
+		*/
+		inline bool getGenerateMipmaps() const;
+
+		/**
+		*  @brief
+		*    Generate mipmaps
+		*/
+		void generateMipmaps() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
@@ -134,6 +149,7 @@ namespace OpenGLES2Renderer
 		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
+		bool				 mGenerateMipmaps;			///< "true" if mipmaps should be generated automatically, else "false"
 
 
 	};

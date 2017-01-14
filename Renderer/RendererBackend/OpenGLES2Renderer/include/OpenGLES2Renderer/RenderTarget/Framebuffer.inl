@@ -38,6 +38,11 @@ namespace OpenGLES2Renderer
 		return mNumberOfColorTextures;
 	}
 
+	inline bool Framebuffer::getGenerateMipmaps() const
+	{
+		return mGenerateMipmaps;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]

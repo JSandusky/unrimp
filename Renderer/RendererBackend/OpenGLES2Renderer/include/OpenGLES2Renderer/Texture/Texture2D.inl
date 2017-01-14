@@ -33,6 +33,11 @@ namespace OpenGLES2Renderer
 		return mOpenGLES2Texture;
 	}
 
+	inline bool Texture2D::getGenerateMipmaps() const
+	{
+		return mGenerateMipmaps;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]

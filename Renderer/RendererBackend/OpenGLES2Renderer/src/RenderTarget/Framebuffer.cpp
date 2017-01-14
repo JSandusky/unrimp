@@ -48,7 +48,8 @@ namespace OpenGLES2Renderer
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(depthStencilTexture),
 		mWidth(1),
-		mHeight(1)
+		mHeight(1),
+		mGenerateMipmaps(false)
 	{
 		// Unlike the "GL_ARB_framebuffer_object"-extension of OpenGL, in OpenGL ES 2 all
 		// textures attached to the framebuffer must have the same width and height
@@ -112,6 +113,12 @@ namespace OpenGLES2Renderer
 								mWidth  = texture2D->getWidth();
 								mHeight = texture2D->getHeight();
 							}
+
+							// Generate mipmaps?
+							if (texture2D->getGenerateMipmaps())
+							{
+								mGenerateMipmaps = true;
+							}
 							break;
 						}
 
@@ -150,12 +157,48 @@ namespace OpenGLES2Renderer
 		{
 			mDepthStencilTexture->addReference();
 
-			// TODO(co) We should only support depth-stencil render target textures, no usage of renderbuffer. See OpenGL renderer backend.
-			glBindRenderbuffer(GL_RENDERBUFFER, mDepthRenderbuffer);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, static_cast<GLsizei>(mWidth), static_cast<GLsizei>(mHeight));
+			// Evaluate the color texture type
+			switch (mDepthStencilTexture->getResourceType())
+			{
+				case Renderer::ResourceType::TEXTURE_2D:
+				{
+					// TODO(co) We should only support depth-stencil render target textures, no usage of renderbuffer. See OpenGL renderer backend.
+					glBindRenderbuffer(GL_RENDERBUFFER, mDepthRenderbuffer);
+					glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, static_cast<GLsizei>(mWidth), static_cast<GLsizei>(mHeight));
 
-			// Attach a renderbuffer to depth attachment point
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthRenderbuffer);
+					// Attach a renderbuffer to depth attachment point
+					glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthRenderbuffer);
+
+					// Generate mipmaps?
+					if (static_cast<Texture2D*>(mDepthStencilTexture)->getGenerateMipmaps())
+					{
+						mGenerateMipmaps = true;
+					}
+					break;
+				}
+
+				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::PROGRAM:
+				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::SWAP_CHAIN:
+				case Renderer::ResourceType::FRAMEBUFFER:
+				case Renderer::ResourceType::INDEX_BUFFER:
+				case Renderer::ResourceType::VERTEX_BUFFER:
+				case Renderer::ResourceType::UNIFORM_BUFFER:
+				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::INDIRECT_BUFFER:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::PIPELINE_STATE:
+				case Renderer::ResourceType::SAMPLER_STATE:
+				case Renderer::ResourceType::VERTEX_SHADER:
+				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+				case Renderer::ResourceType::GEOMETRY_SHADER:
+				case Renderer::ResourceType::FRAGMENT_SHADER:
+				default:
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: The type of the given depth stencil texture is not supported")
+					break;
+			}
 		}
 
 		#ifdef RENDERER_OUTPUT_DEBUG
@@ -261,6 +304,42 @@ namespace OpenGLES2Renderer
 		{
 			// Release reference
 			mDepthStencilTexture->releaseReference();
+		}
+	}
+
+	void Framebuffer::generateMipmaps() const
+	{
+		// Sanity check
+		assert(mGenerateMipmaps);
+
+		// TODO(co) Complete, currently only 2D textures are supported
+		Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+		for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+		{
+			// Valid entry?
+			if (nullptr != *colorTexture && (*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+			{
+				Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+				if (texture2D->getGenerateMipmaps())
+				{
+					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+						// Backup the currently bound OpenGL ES 2 texture
+						// TODO(co) It's possible to avoid calling this multiple times
+						GLint openGLES2TextureBackup = 0;
+						glGetIntegerv(GL_TEXTURE_2D_BINDING, &openGLES2TextureBackup);
+					#endif
+
+					// Generate mipmaps
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, texture2D->getOpenGLES2Texture());
+					glGenerateMipmap(GL_TEXTURE_2D);
+
+					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+						// Be polite and restore the previous bound OpenGL ES 2 texture
+						glBindTexture(GL_TEXTURE_2D, openGLES2TextureBackup);
+					#endif
+				}
+			}
 		}
 	}
 

@@ -95,6 +95,15 @@ namespace OpenGLES2Renderer
 		*/
 		inline uint32_t getOpenGLES2Texture() const;
 
+		/**
+		*  @brief
+		*    Return whether or not mipmaps should be generated automatically
+		*
+		*  @return
+		*    "true" if mipmaps should be generated automatically, else "false"
+		*/
+		inline bool getGenerateMipmaps() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
@@ -108,6 +117,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	private:
 		uint32_t mOpenGLES2Texture;	///< OpenGL ES 2 texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		bool	 mGenerateMipmaps;
 
 
 	};
