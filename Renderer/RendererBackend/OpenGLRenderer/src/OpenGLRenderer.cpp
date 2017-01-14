@@ -595,7 +595,8 @@ namespace OpenGLRenderer
 								else
 								{
 									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
-									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLTexture());
+									const Texture2D* texture2D = static_cast<Texture2D*>(resource);
+									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture());
 								}
 								break;
 
@@ -701,8 +702,11 @@ namespace OpenGLRenderer
 									break;
 
 								case Renderer::ResourceType::TEXTURE_2D:
-									glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLTexture());
+								{
+									const Texture2D* texture2D = static_cast<Texture2D*>(resource);
+									glBindTexture(static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), static_cast<Texture2D*>(resource)->getOpenGLTexture());
 									break;
+								}
 
 								case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 									// No extension check required, if we in here we already know it must exist
