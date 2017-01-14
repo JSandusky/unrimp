@@ -326,7 +326,7 @@ namespace OpenGLES2Renderer
 						// Backup the currently bound OpenGL ES 2 texture
 						// TODO(co) It's possible to avoid calling this multiple times
 						GLint openGLES2TextureBackup = 0;
-						glGetIntegerv(GL_TEXTURE_2D_BINDING, &openGLES2TextureBackup);
+						glGetIntegerv(GL_TEXTURE_BINDING_2D, &openGLES2TextureBackup);
 					#endif
 
 					// Generate mipmaps
