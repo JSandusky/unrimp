@@ -120,7 +120,6 @@ namespace OpenGLRenderer
 			{
 				// Effective direct state access (DSA)
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				// TODO(sw) Not ARB DSA compatible. Uses glVertexArrayVertexAttribOffsetEXT which is not part of the ARB DSA version
 				return new VertexArrayVaoDsa(static_cast<OpenGLRenderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 			}
 			else

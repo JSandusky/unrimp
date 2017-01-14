@@ -65,11 +65,11 @@ namespace
 			Renderer::ITexturePtr blackRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, blackRgbData));
 
 			// Create default dynamic texture assets
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/WhiteMap",				*whiteRgbTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/BlackMap",				*blackRgbTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/WhiteMap",			*whiteRgbTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/BlackMap",			*blackRgbTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityDiffuseMap",	*whiteRgbTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityAlphaMap",		*whiteATexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityNormalMap",		*normalMapIdentityTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityAlphaMap",	*whiteATexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityNormalMap",	*normalMapIdentityTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentitySpecularMap",	*whiteATexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/IdentityEmissiveMap",	*blackRgbTexturePtr);
 

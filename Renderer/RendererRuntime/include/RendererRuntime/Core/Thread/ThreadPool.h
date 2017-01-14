@@ -36,6 +36,8 @@ PRAGMA_WARNING_PUSH
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
 #include <mutex>
 #include <queue>
 #include <thread>
@@ -78,9 +80,8 @@ namespace RendererRuntime
 
 
 	public:
-		/// ~0ul (== -1 == size_t max_value) threads means to use as many threads as there are hardware threads on
-		/// the system.
-		ThreadPool(size_t threads = ~0ul);
+		/// Uninitialized number of threads means to use as many threads as there are hardware threads on the system
+		ThreadPool(size_t threads = getUninitialized<size_t>());
 		~ThreadPool();
 
 		void queueTask(const Task &task);

@@ -2512,12 +2512,9 @@ namespace Renderer
 			U* addCommand(uint32_t numberOfAuxiliaryBytes = 0)
 			{
 				const uint32_t numberOfCommandBytes = CommandPacketHelper::getNumberOfBytes<U>(numberOfAuxiliaryBytes);
-
 				#ifndef RENDERER_NO_DEBUG
-					// TODO(sw) The 4294967295 is the maximum value of an uint32 type we use the magic number here to avoid std::numeric_limits::max usage
-					assert((static_cast<uint64_t>(mCurrentCommandPacketByteIndex) + numberOfCommandBytes) < 4294967295);
+					assert((static_cast<uint64_t>(mCurrentCommandPacketByteIndex) + numberOfCommandBytes) < 4294967295u);
 				#endif
-
 				if (mCommandPacketBufferNumberOfBytes < mCurrentCommandPacketByteIndex + numberOfCommandBytes)
 				{
 					const uint32_t newCommandPacketBufferNumberOfBytes = mCommandPacketBufferNumberOfBytes + NUMBER_OF_BYTES_TO_GROW + numberOfCommandBytes;

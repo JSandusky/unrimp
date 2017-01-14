@@ -151,7 +151,7 @@ namespace RendererRuntime
 			TextureBuffer(uint32_t rootParameterIndex, BufferUsage bufferUsage, const MaterialPropertyValue& _materialPropertyValue) :
 				rootParameterIndex(rootParameterIndex),
 				bufferUsage(bufferUsage),
-				materialPropertyValue(MaterialProperty(0, getMaterialPropertyUsageFromBufferUsage(bufferUsage), _materialPropertyValue))
+				materialPropertyValue(MaterialProperty(getUninitialized<MaterialPropertyId>(), getMaterialPropertyUsageFromBufferUsage(bufferUsage), _materialPropertyValue))
 			{
 				// Nothing here
 			}
