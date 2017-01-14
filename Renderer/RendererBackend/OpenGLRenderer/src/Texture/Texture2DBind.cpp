@@ -90,6 +90,12 @@ namespace OpenGLRenderer
 			// Set correct alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+			// Calculate the number of mipmaps
+			const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+			const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
+			const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
+			mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
+
 			// Make this OpenGL texture instance to the currently used one
 			glBindTexture(GL_TEXTURE_2D, mOpenGLTexture);
 
@@ -97,11 +103,8 @@ namespace OpenGLRenderer
 			if (Renderer::TextureFormat::isCompressed(textureFormat))
 			{
 				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
-				if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
+				if (dataContainsMipmaps)
 				{
-					// Calculate the number of mipmaps
-					const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
-
 					// Upload all mipmaps
 					const uint32_t internalFormat = Mapping::getOpenGLInternalFormat(textureFormat);
 					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
@@ -127,11 +130,8 @@ namespace OpenGLRenderer
 				// Texture format is not compressed
 
 				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
-				if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
+				if (dataContainsMipmaps)
 				{
-					// Calculate the number of mipmaps
-					const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
-
 					// Upload all mipmaps
 					const GLint internalFormat = static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat));
 					const uint32_t format = Mapping::getOpenGLFormat(textureFormat);

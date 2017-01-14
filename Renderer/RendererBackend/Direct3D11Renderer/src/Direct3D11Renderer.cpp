@@ -874,8 +874,7 @@ namespace Direct3D11Renderer
 				if (nullptr != mRenderTarget)
 				{
 					// Generate mipmaps?
-					// TODO(co) Early escape check if no mipmaps need to be generated
-					if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType())
+					if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType() && static_cast<Framebuffer*>(mRenderTarget)->getGenerateMipmaps())
 					{
 						framebufferToGenerateMipmapsFor = static_cast<Framebuffer*>(mRenderTarget);
 					}

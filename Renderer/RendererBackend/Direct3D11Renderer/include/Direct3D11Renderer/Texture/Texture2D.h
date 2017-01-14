@@ -118,6 +118,13 @@ namespace Direct3D11Renderer
 		*/
 		inline uint8_t getNumberOfMultisamples() const;
 
+		/**
+		*  @brief
+		*    Return whether or not mipmaps should be generated automatically
+		*
+		*  @return
+		*    "true" if mipmaps should be generated automatically, else "false"
+		*/
 		inline bool getGenerateMipmaps() const;
 
 		/**

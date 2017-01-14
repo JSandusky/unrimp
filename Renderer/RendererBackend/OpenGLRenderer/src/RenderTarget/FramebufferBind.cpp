@@ -27,6 +27,8 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
+#include <cassert>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -192,6 +194,46 @@ namespace OpenGLRenderer
 	{
 		// Texture reference handling is done within the base class "Framebuffer"
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual OpenGLRenderer::Framebuffer methods    ]
+	//[-------------------------------------------------------]
+	void FramebufferBind::generateMipmaps() const
+	{
+		// Sanity check
+		assert(mGenerateMipmaps);
+
+		// TODO(co) Complete, currently only 2D textures are supported
+		Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+		for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+		{
+			// Valid entry?
+			if (nullptr != *colorTexture && (*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+			{
+				Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+				if (texture2D->getGenerateMipmaps())
+				{
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Backup the currently bound OpenGL texture
+						// TODO(co) It's possible to avoid calling this multiple times
+						GLint openGLTextureBackup = 0;
+						glGetIntegerv(GL_TEXTURE_BINDING_2D, &openGLTextureBackup);
+					#endif
+
+					// Generate mipmaps
+					glActiveTextureARB(GL_TEXTURE0_ARB);
+					glBindTexture(GL_TEXTURE_2D, texture2D->getOpenGLTexture());
+					glGenerateMipmap(GL_TEXTURE_2D);
+
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						// Be polite and restore the previous bound OpenGL texture
+						glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(openGLTextureBackup));
+					#endif
+				}
+			}
+		}
 	}
 
 

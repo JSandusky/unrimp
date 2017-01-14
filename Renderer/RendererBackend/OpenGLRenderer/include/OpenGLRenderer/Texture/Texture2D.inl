@@ -38,6 +38,11 @@ namespace OpenGLRenderer
 		return mOpenGLTexture;
 	}
 
+	inline bool Texture2D::getGenerateMipmaps() const
+	{
+		return mGenerateMipmaps;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]

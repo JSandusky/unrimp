@@ -78,6 +78,13 @@ namespace OpenGLRenderer
 		virtual ~FramebufferBind();
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual OpenGLRenderer::Framebuffer methods    ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void generateMipmaps() const override;
+
+
 	};
 
 

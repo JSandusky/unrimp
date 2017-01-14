@@ -98,6 +98,26 @@ namespace OpenGLRenderer
 		*/
 		inline bool isMultisampleRenderTarget() const;
 
+		/**
+		*  @brief
+		*    Return whether or not mipmaps should be generated automatically
+		*
+		*  @return
+		*    "true" if mipmaps should be generated automatically, else "false"
+		*/
+		inline bool getGenerateMipmaps() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual OpenGLRenderer::Framebuffer methods    ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Generate mipmaps
+		*/
+		virtual void generateMipmaps() const = 0;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
@@ -148,6 +168,7 @@ namespace OpenGLRenderer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
 		bool				 mMultisampleRenderTarget;	///< Multisample render target?
+		bool				 mGenerateMipmaps;			///< "true" if mipmaps should be generated automatically, else "false"
 
 
 	};

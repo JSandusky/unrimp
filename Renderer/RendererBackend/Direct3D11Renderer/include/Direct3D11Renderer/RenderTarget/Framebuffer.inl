@@ -53,6 +53,11 @@ namespace Direct3D11Renderer
 		return mD3D11DepthStencilView;
 	}
 
+	inline bool Framebuffer::getGenerateMipmaps() const
+	{
+		return mGenerateMipmaps;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

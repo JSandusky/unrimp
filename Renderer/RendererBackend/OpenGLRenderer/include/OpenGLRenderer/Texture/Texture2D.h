@@ -85,6 +85,15 @@ namespace OpenGLRenderer
 		*/
 		inline uint32_t getOpenGLTexture() const;
 
+		/**
+		*  @brief
+		*    Return whether or not mipmaps should be generated automatically
+		*
+		*  @return
+		*    "true" if mipmaps should be generated automatically, else "false"
+		*/
+		inline bool getGenerateMipmaps() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
@@ -119,6 +128,7 @@ namespace OpenGLRenderer
 	protected:
 		uint8_t  mNumberOfMultisamples;	///< The number of multisamples per pixel (valid values: 1, 2, 4, 8)
 		uint32_t mOpenGLTexture;		///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		bool	 mGenerateMipmaps;
 
 
 	};

@@ -99,6 +99,12 @@ namespace OpenGLRenderer
 			// Set correct alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+			// Calculate the number of mipmaps
+			const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+			const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
+			const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
+			mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
+
 			// Create the OpenGL texture instance
 			if (isARB_DSA)
 			{
@@ -113,11 +119,8 @@ namespace OpenGLRenderer
 			if (Renderer::TextureFormat::isCompressed(textureFormat))
 			{
 				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
-				if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
+				if (dataContainsMipmaps)
 				{
-					// Calculate the number of mipmaps
-					const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
-
 					// Allocate storage for all levels
 					if (isARB_DSA)
 					{
@@ -169,11 +172,8 @@ namespace OpenGLRenderer
 				// Texture format is not compressed
 
 				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
-				if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
+				if (dataContainsMipmaps)
 				{
-					// Calculate the number of mipmaps
-					const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
-
 					// Allocate storage for all levels
 					if (isARB_DSA)
 					{
@@ -210,7 +210,7 @@ namespace OpenGLRenderer
 					if (isARB_DSA)
 					{
 						// Allocate storage for all levels
-						glTextureStorage2D(mOpenGLTexture, 1, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+						glTextureStorage2D(mOpenGLTexture, static_cast<GLsizei>(numberOfMipmaps), Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 						if (nullptr != data)
 						{
 							glTextureSubImage2D(mOpenGLTexture, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);

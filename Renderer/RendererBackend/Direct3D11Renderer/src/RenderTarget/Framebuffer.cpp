@@ -49,6 +49,7 @@ namespace Direct3D11Renderer
 		mDepthStencilTexture(depthStencilTexture),
 		mWidth(UINT_MAX),
 		mHeight(UINT_MAX),
+		mGenerateMipmaps(false),
 		mD3D11RenderTargetViews(nullptr),
 		mD3D11DepthStencilView(nullptr)
 	{
@@ -97,6 +98,12 @@ namespace Direct3D11Renderer
 							d3d11RenderTargetViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
 							d3d11RenderTargetViewDesc.Texture2D.MipSlice = 0;
 							direct3D11Renderer.getD3D11Device()->CreateRenderTargetView(texture2D->getD3D11Texture2D(), &d3d11RenderTargetViewDesc, d3d11RenderTargetView);
+
+							// Generate mipmaps?
+							if (texture2D->getGenerateMipmaps())
+							{
+								mGenerateMipmaps = true;
+							}
 							break;
 						}
 
@@ -159,6 +166,12 @@ namespace Direct3D11Renderer
 					d3d11DepthStencilViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D11_DSV_DIMENSION_TEXTURE2DMS : D3D11_DSV_DIMENSION_TEXTURE2D;
 					d3d11DepthStencilViewDesc.Texture2D.MipSlice = 0;
 					direct3D11Renderer.getD3D11Device()->CreateDepthStencilView(texture2D->getD3D11Texture2D(), &d3d11DepthStencilViewDesc, &mD3D11DepthStencilView);
+
+					// Generate mipmaps?
+					if (texture2D->getGenerateMipmaps())
+					{
+						mGenerateMipmaps = true;
+					}
 					break;
 				}
 
@@ -255,7 +268,10 @@ namespace Direct3D11Renderer
 
 	void Framebuffer::generateMipmaps(ID3D11DeviceContext& d3d11DeviceContext) const
 	{
-		// TODO(co) Complete
+		// Sanity check
+		assert(mGenerateMipmaps);
+
+		// TODO(co) Complete, currently only 2D textures are supported
 		Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
 		for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 		{

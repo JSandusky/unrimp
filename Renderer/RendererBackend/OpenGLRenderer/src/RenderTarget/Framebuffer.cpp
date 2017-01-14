@@ -83,7 +83,8 @@ namespace OpenGLRenderer
 		mDepthStencilTexture(depthStencilTexture),
 		mWidth(UINT_MAX),
 		mHeight(UINT_MAX),
-		mMultisampleRenderTarget(false)
+		mMultisampleRenderTarget(false),
+		mGenerateMipmaps(false)
 	{
 		// The "GL_ARB_framebuffer_object"-extension documentation says the following about the framebuffer width and height
 		//   "If the attachment sizes are not all identical, rendering will be limited to the largest area that can fit in
@@ -120,6 +121,12 @@ namespace OpenGLRenderer
 							if (mHeight > texture2D->getHeight())
 							{
 								mHeight = texture2D->getHeight();
+							}
+
+							// Generate mipmaps?
+							if (texture2D->getGenerateMipmaps())
+							{
+								mGenerateMipmaps = true;
 							}
 							break;
 						}
@@ -173,6 +180,12 @@ namespace OpenGLRenderer
 					if (mHeight > texture2D->getHeight())
 					{
 						mHeight = texture2D->getHeight();
+					}
+
+					// Generate mipmaps?
+					if (texture2D->getGenerateMipmaps())
+					{
+						mGenerateMipmaps = true;
 					}
 					break;
 				}

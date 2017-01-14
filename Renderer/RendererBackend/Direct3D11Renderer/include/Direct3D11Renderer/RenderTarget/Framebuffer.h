@@ -140,6 +140,15 @@ namespace Direct3D11Renderer
 
 		/**
 		*  @brief
+		*    Return whether or not mipmaps should be generated automatically
+		*
+		*  @return
+		*    "true" if mipmaps should be generated automatically, else "false"
+		*/
+		inline bool getGenerateMipmaps() const;
+
+		/**
+		*  @brief
 		*    Generate mipmaps
 		*
 		*  @param[in] d3d11DeviceContext
@@ -172,6 +181,7 @@ namespace Direct3D11Renderer
 		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
+		bool				 mGenerateMipmaps;			///< "true" if mipmaps should be generated automatically, else "false"
 		// Direct3D 11 part
 		ID3D11RenderTargetView **mD3D11RenderTargetViews;	///< The Direct3D 11 render target views (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" views in the provided C-array of pointers
 		ID3D11DepthStencilView  *mD3D11DepthStencilView;	///< The Direct3D 11 depth stencil view (we keep a reference to it), can be a null pointer

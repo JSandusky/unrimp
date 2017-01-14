@@ -43,6 +43,11 @@ namespace OpenGLRenderer
 		return mMultisampleRenderTarget;
 	}
 
+	inline bool Framebuffer::getGenerateMipmaps() const
+	{
+		return mGenerateMipmaps;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]

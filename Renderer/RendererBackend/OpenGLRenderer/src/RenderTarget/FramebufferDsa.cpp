@@ -25,6 +25,9 @@
 #include "OpenGLRenderer/Texture/Texture2D.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+
+#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -199,6 +202,39 @@ namespace OpenGLRenderer
 	{
 		// Texture reference handling is done within the base class "Framebuffer"
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual OpenGLRenderer::Framebuffer methods    ]
+	//[-------------------------------------------------------]
+	void FramebufferDsa::generateMipmaps() const
+	{
+		// Sanity check
+		assert(mGenerateMipmaps);
+
+		// TODO(co) Complete, currently only 2D textures are supported
+		const bool isARB_DSA = static_cast<const OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access();
+		Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+		for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+		{
+			// Valid entry?
+			if (nullptr != *colorTexture && (*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+			{
+				Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+				if (texture2D->getGenerateMipmaps())
+				{
+					if (isARB_DSA)
+					{
+						glGenerateTextureMipmap(texture2D->getOpenGLTexture());
+					}
+					else
+					{
+						glGenerateTextureMipmapEXT(texture2D->getOpenGLTexture(), GL_TEXTURE_2D);
+					}
+				}
+			}
+		}
 	}
 
 
