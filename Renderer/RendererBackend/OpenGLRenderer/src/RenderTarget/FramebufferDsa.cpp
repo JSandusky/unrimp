@@ -44,10 +44,10 @@ namespace OpenGLRenderer
 		Framebuffer(openGLRenderer, numberOfColorTextures, colorTextures, depthStencilTexture)
 	{
 		// Texture reference handling is done within the base class "Framebuffer"
-		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
+		const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
 
 		// Create the OpenGL framebuffer
-		if (isARB_DSA)
+		if (isArbDsa)
 		{
 			glCreateFramebuffers(1, &mOpenGLFramebuffer);
 		}
@@ -80,7 +80,7 @@ namespace OpenGLRenderer
 				{
 					// Set the OpenGL framebuffer color attachment
 					const Texture2D* texture2D = static_cast<const Texture2D*>(*colorTexture);
-					if (isARB_DSA)
+					if (isArbDsa)
 					{
 						glNamedFramebufferTexture(mOpenGLFramebuffer, openGLAttachment, texture2D->getOpenGLTexture(), 0);
 					}
@@ -133,7 +133,7 @@ namespace OpenGLRenderer
 
 			// Bind the depth stencil texture to framebuffer
 			const Texture2D* texture2D = static_cast<const Texture2D*>(depthStencilTexture);
-			if (isARB_DSA)
+			if (isArbDsa)
 			{
 				glNamedFramebufferTexture(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, texture2D->getOpenGLTexture(), 0);
 			}
@@ -149,7 +149,7 @@ namespace OpenGLRenderer
 
 		#ifdef RENDERER_OUTPUT_DEBUG
 			// Check the status of the OpenGL framebuffer
-			const GLenum openGLStatus = isARB_DSA ? glCheckNamedFramebufferStatus(mOpenGLFramebuffer, GL_FRAMEBUFFER) : glCheckNamedFramebufferStatusEXT(mOpenGLFramebuffer, GL_FRAMEBUFFER);
+			const GLenum openGLStatus = isArbDsa ? glCheckNamedFramebufferStatus(mOpenGLFramebuffer, GL_FRAMEBUFFER) : glCheckNamedFramebufferStatusEXT(mOpenGLFramebuffer, GL_FRAMEBUFFER);
 			switch (openGLStatus)
 			{
 				case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
@@ -214,7 +214,7 @@ namespace OpenGLRenderer
 		assert(mGenerateMipmaps);
 
 		// TODO(co) Complete, currently only 2D textures are supported
-		const bool isARB_DSA = static_cast<const OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access();
+		const bool isArbDsa = static_cast<const OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access();
 		Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
 		for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 		{
@@ -224,7 +224,7 @@ namespace OpenGLRenderer
 				Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
 				if (texture2D->getGenerateMipmaps())
 				{
-					if (isARB_DSA)
+					if (isArbDsa)
 					{
 						glGenerateTextureMipmap(texture2D->getOpenGLTexture());
 					}

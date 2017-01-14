@@ -45,8 +45,8 @@ namespace OpenGLRenderer
 		VertexArrayVao(openGLRenderer, numberOfVertexBuffers, vertexBuffers, indexBuffer)
 	{
 		// Vertex buffer reference handling is done within the base class "VertexArrayVao"
-		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
-		if (isARB_DSA)
+		const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
+		if (isArbDsa)
 		{
 			// Create the OpenGL vertex array
 			glCreateVertexArrays(1, &mOpenGLVertexArray);
@@ -67,7 +67,7 @@ namespace OpenGLRenderer
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 			const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
 
-			if (isARB_DSA)
+			if (isArbDsa)
 			{
 				// Enable attribute
 				glEnableVertexArrayAttrib(mOpenGLVertexArray, attributeLocation);
@@ -131,7 +131,7 @@ namespace OpenGLRenderer
 		// -> In case of no index buffer we don't bind buffer 0, there's not really a point in it
 		if (nullptr != indexBuffer)
 		{
-			if (isARB_DSA)
+			if (isArbDsa)
 			{
 				// Bind the index buffer
 				glVertexArrayElementBuffer(mOpenGLVertexArray, indexBuffer->getOpenGLElementArrayBuffer());

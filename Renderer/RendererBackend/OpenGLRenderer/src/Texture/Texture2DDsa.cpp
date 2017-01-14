@@ -53,10 +53,10 @@ namespace OpenGLRenderer
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
 
 		// Multisample texture?
-		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
+		const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
 		if (numberOfMultisamples > 1)
 		{
-			if (isARB_DSA)
+			if (isArbDsa)
 			{
 				// Create the OpenGL texture instance
 				glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &mOpenGLTexture);
@@ -106,7 +106,7 @@ namespace OpenGLRenderer
 			mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 			// Create the OpenGL texture instance
-			if (isARB_DSA)
+			if (isArbDsa)
 			{
 				glCreateTextures(GL_TEXTURE_2D, 1, &mOpenGLTexture);
 			}
@@ -122,7 +122,7 @@ namespace OpenGLRenderer
 				if (dataContainsMipmaps)
 				{
 					// Allocate storage for all levels
-					if (isARB_DSA)
+					if (isArbDsa)
 					{
 						glTextureStorage2D(mOpenGLTexture, static_cast<GLsizei>(numberOfMipmaps), Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 					}
@@ -133,7 +133,7 @@ namespace OpenGLRenderer
 					{
 						// Upload the current mipmap
 						const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
-						if (isARB_DSA)
+						if (isArbDsa)
 						{
 							// We know that "data" must be valid when we're in here due to the "Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS"-flag
 							glCompressedTextureSubImage2D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), format, numberOfBytesPerSlice, data);
@@ -152,7 +152,7 @@ namespace OpenGLRenderer
 				else
 				{
 					// The user only provided us with the base texture, no mipmaps
-					if (isARB_DSA)
+					if (isArbDsa)
 					{
 						// Allocate storage for all levels
 						glTextureStorage2D(mOpenGLTexture, 1, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
@@ -175,7 +175,7 @@ namespace OpenGLRenderer
 				if (dataContainsMipmaps)
 				{
 					// Allocate storage for all levels
-					if (isARB_DSA)
+					if (isArbDsa)
 					{
 						glTextureStorage2D(mOpenGLTexture, static_cast<GLsizei>(numberOfMipmaps), Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 					}
@@ -188,7 +188,7 @@ namespace OpenGLRenderer
 					{
 						// Upload the current mipmap
 						const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
-						if (isARB_DSA)
+						if (isArbDsa)
 						{
 							// We know that "data" must be valid when we're in here due to the "Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS"-flag
 							glTextureSubImage2D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), format, type, data);
@@ -207,7 +207,7 @@ namespace OpenGLRenderer
 				else
 				{
 					// The user only provided us with the base texture, no mipmaps
-					if (isARB_DSA)
+					if (isArbDsa)
 					{
 						// Allocate storage for all levels
 						glTextureStorage2D(mOpenGLTexture, static_cast<GLsizei>(numberOfMipmaps), Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
@@ -226,7 +226,7 @@ namespace OpenGLRenderer
 			// Build mipmaps automatically on the GPU? (or GPU driver)
 			if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
 			{
-				if (isARB_DSA)
+				if (isArbDsa)
 				{
 					glGenerateTextureMipmap(mOpenGLTexture);
 					glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
@@ -239,7 +239,7 @@ namespace OpenGLRenderer
 			}
 			else
 			{
-				if (isARB_DSA)
+				if (isArbDsa)
 				{
 					glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				}
@@ -249,7 +249,7 @@ namespace OpenGLRenderer
 				}
 			}
 
-			if (isARB_DSA)
+			if (isArbDsa)
 			{
 				glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			}

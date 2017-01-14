@@ -108,8 +108,8 @@ MAIN_BEGIN
 	float averageLuminance = SAMPLE_2D_LOD(LuminanceMap, SamplerPoint, float4(0.5f, 0.5f, 0.0f, 0.0f)).r;
 
 	// Tone map
-	float exposure = 0;
-	color = ToneMap(color, averageLuminance, 0, exposure);
+	float exposure = 0.0f;
+	color = ToneMap(color, averageLuminance, 0.0f, exposure);
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(SATURATE(color), 1.0f);

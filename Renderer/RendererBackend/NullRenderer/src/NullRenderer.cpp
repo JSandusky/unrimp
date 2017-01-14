@@ -63,222 +63,222 @@ NULLRENDERER_API_EXPORT Renderer::IRenderer *createNullRendererInstance(handle n
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace NullRenderer
+namespace
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Anonymous detail namespace                            ]
-	//[-------------------------------------------------------]
-	namespace
+	namespace detail
 	{
-		namespace detail
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		namespace BackendDispatch
 		{
 
 
 			//[-------------------------------------------------------]
-			//[ Global functions                                      ]
+			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
-			namespace BackendDispatch
+			void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
 			{
+				const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
+				realData->uniformBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+			}
 
+			void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
+			{
+				const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
+				realData->textureBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+			}
 
-				//[-------------------------------------------------------]
-				//[ Resource handling                                     ]
-				//[-------------------------------------------------------]
-				void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
+			//[-------------------------------------------------------]
+			//[ Graphics root                                         ]
+			//[-------------------------------------------------------]
+			void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
+			}
+
+			void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+			}
+
+			//[-------------------------------------------------------]
+			//[ States                                                ]
+			//[-------------------------------------------------------]
+			void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).setPipelineState(realData->pipelineState);
+			}
+
+			//[-------------------------------------------------------]
+			//[ Input-assembler (IA) stage                            ]
+			//[-------------------------------------------------------]
+			void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).iaSetVertexArray(realData->vertexArray);
+			}
+
+			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
+			}
+
+			//[-------------------------------------------------------]
+			//[ Rasterizer (RS) stage                                 ]
+			//[-------------------------------------------------------]
+			void SetViewports(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+			}
+
+			void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+			}
+
+			//[-------------------------------------------------------]
+			//[ Output-merger (OM) stage                              ]
+			//[-------------------------------------------------------]
+			void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).omSetRenderTarget(realData->renderTarget);
+			}
+
+			//[-------------------------------------------------------]
+			//[ Operations                                            ]
+			//[-------------------------------------------------------]
+			void Clear(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
+			}
+
+			void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
+			}
+
+			void CopyResource(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::CopyResource* realData = static_cast<const Renderer::Command::CopyResource*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).copyResource(*realData->destinationResource, *realData->sourceResource);
+			}
+
+			//[-------------------------------------------------------]
+			//[ Draw call                                             ]
+			//[-------------------------------------------------------]
+			void Draw(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+				if (nullptr != realData->indirectBuffer)
 				{
-					const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
-					realData->uniformBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+					// No resource owner security check in here, we only support emulated indirect buffer
+					static_cast<NullRenderer::NullRenderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
 				}
-
-				void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
+				else
 				{
-					const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
-					realData->textureBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+					static_cast<NullRenderer::NullRenderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
 				}
+			}
 
-				//[-------------------------------------------------------]
-				//[ Graphics root                                         ]
-				//[-------------------------------------------------------]
-				void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
+			void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+				if (nullptr != realData->indirectBuffer)
 				{
-					const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
-					static_cast<NullRenderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
+					// No resource owner security check in here, we only support emulated indirect buffer
+					static_cast<NullRenderer::NullRenderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
 				}
-
-				void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+				else
 				{
-					const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
-					static_cast<NullRenderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+					static_cast<NullRenderer::NullRenderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
 				}
+			}
 
-				//[-------------------------------------------------------]
-				//[ States                                                ]
-				//[-------------------------------------------------------]
-				void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
-					static_cast<NullRenderer&>(renderer).setPipelineState(realData->pipelineState);
-				}
+			//[-------------------------------------------------------]
+			//[ Debug                                                 ]
+			//[-------------------------------------------------------]
+			void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).setDebugMarker(realData->name);
+			}
 
-				//[-------------------------------------------------------]
-				//[ Input-assembler (IA) stage                            ]
-				//[-------------------------------------------------------]
-				void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
-					static_cast<NullRenderer&>(renderer).iaSetVertexArray(realData->vertexArray);
-				}
+			void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).beginDebugEvent(realData->name);
+			}
 
-				void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-					static_cast<NullRenderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-				}
-
-				//[-------------------------------------------------------]
-				//[ Rasterizer (RS) stage                                 ]
-				//[-------------------------------------------------------]
-				void SetViewports(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
-					static_cast<NullRenderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
-				}
-
-				void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
-					static_cast<NullRenderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
-				}
-
-				//[-------------------------------------------------------]
-				//[ Output-merger (OM) stage                              ]
-				//[-------------------------------------------------------]
-				void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
-					static_cast<NullRenderer&>(renderer).omSetRenderTarget(realData->renderTarget);
-				}
-
-				//[-------------------------------------------------------]
-				//[ Operations                                            ]
-				//[-------------------------------------------------------]
-				void Clear(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
-					static_cast<NullRenderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
-				}
-
-				void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
-					static_cast<NullRenderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
-				}
-
-				void CopyResource(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::CopyResource* realData = static_cast<const Renderer::Command::CopyResource*>(data);
-					static_cast<NullRenderer&>(renderer).copyResource(*realData->destinationResource, *realData->sourceResource);
-				}
-
-				//[-------------------------------------------------------]
-				//[ Draw call                                             ]
-				//[-------------------------------------------------------]
-				void Draw(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					if (nullptr != realData->indirectBuffer)
-					{
-						// No resource owner security check in here, we only support emulated indirect buffer
-						static_cast<NullRenderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
-					}
-					else
-					{
-						static_cast<NullRenderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
-					}
-				}
-
-				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					if (nullptr != realData->indirectBuffer)
-					{
-						// No resource owner security check in here, we only support emulated indirect buffer
-						static_cast<NullRenderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
-					}
-					else
-					{
-						static_cast<NullRenderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
-					}
-				}
-
-				//[-------------------------------------------------------]
-				//[ Debug                                                 ]
-				//[-------------------------------------------------------]
-				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
-					static_cast<NullRenderer&>(renderer).setDebugMarker(realData->name);
-				}
-
-				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
-					static_cast<NullRenderer&>(renderer).beginDebugEvent(realData->name);
-				}
-
-				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
-				{
-					static_cast<NullRenderer&>(renderer).endDebugEvent();
-				}
-
-
+			void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+			{
+				static_cast<NullRenderer::NullRenderer&>(renderer).endDebugEvent();
 			}
 
 
-			//[-------------------------------------------------------]
-			//[ Global definitions                                    ]
-			//[-------------------------------------------------------]
-			static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
-			{
-				// Resource handling
-				&BackendDispatch::CopyUniformBufferData,
-				&BackendDispatch::CopyTextureBufferData,
-				// Graphics root
-				&BackendDispatch::SetGraphicsRootSignature,
-				&BackendDispatch::SetGraphicsRootDescriptorTable,
-				// States
-				&BackendDispatch::SetPipelineState,
-				// Input-assembler (IA) stage
-				&BackendDispatch::SetVertexArray,
-				&BackendDispatch::SetPrimitiveTopology,
-				// Rasterizer (RS) stage
-				&BackendDispatch::SetViewports,
-				&BackendDispatch::SetScissorRectangles,
-				// Output-merger (OM) stage
-				&BackendDispatch::SetRenderTarget,
-				// Operations
-				&BackendDispatch::Clear,
-				&BackendDispatch::ResolveMultisampleFramebuffer,
-				&BackendDispatch::CopyResource,
-				// Draw call
-				&BackendDispatch::Draw,
-				&BackendDispatch::DrawIndexed,
-				// Debug
-				&BackendDispatch::SetDebugMarker,
-				&BackendDispatch::BeginDebugEvent,
-				&BackendDispatch::EndDebugEvent
-			};
+		}
 
 
-	//[-------------------------------------------------------]
-	//[ Anonymous detail namespace                            ]
-	//[-------------------------------------------------------]
-		} // detail
-	}
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
+		{
+			// Resource handling
+			&BackendDispatch::CopyUniformBufferData,
+			&BackendDispatch::CopyTextureBufferData,
+			// Graphics root
+			&BackendDispatch::SetGraphicsRootSignature,
+			&BackendDispatch::SetGraphicsRootDescriptorTable,
+			// States
+			&BackendDispatch::SetPipelineState,
+			// Input-assembler (IA) stage
+			&BackendDispatch::SetVertexArray,
+			&BackendDispatch::SetPrimitiveTopology,
+			// Rasterizer (RS) stage
+			&BackendDispatch::SetViewports,
+			&BackendDispatch::SetScissorRectangles,
+			// Output-merger (OM) stage
+			&BackendDispatch::SetRenderTarget,
+			// Operations
+			&BackendDispatch::Clear,
+			&BackendDispatch::ResolveMultisampleFramebuffer,
+			&BackendDispatch::CopyResource,
+			// Draw call
+			&BackendDispatch::Draw,
+			&BackendDispatch::DrawIndexed,
+			// Debug
+			&BackendDispatch::SetDebugMarker,
+			&BackendDispatch::BeginDebugEvent,
+			&BackendDispatch::EndDebugEvent
+		};
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace NullRenderer
+{
 
 
 	//[-------------------------------------------------------]

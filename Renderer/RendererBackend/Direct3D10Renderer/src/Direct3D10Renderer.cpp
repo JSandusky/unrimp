@@ -71,248 +71,248 @@ DIRECT3D10RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D10RendererInsta
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace Direct3D10Renderer
+namespace
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Anonymous detail namespace                            ]
-	//[-------------------------------------------------------]
-	namespace
+	namespace detail
 	{
-		namespace detail
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		bool createDevice(UINT flags, ID3D10Device** d3d10Device)
+		{
+			// Driver types
+			static const D3D10_DRIVER_TYPE D3D10_DRIVER_TYPES[] =
+			{
+				D3D10_DRIVER_TYPE_HARDWARE,
+				D3D10_DRIVER_TYPE_WARP,
+				D3D10_DRIVER_TYPE_REFERENCE,
+			};
+			static const UINT NUMBER_OF_DRIVER_TYPES = sizeof(D3D10_DRIVER_TYPES) / sizeof(D3D10_DRIVER_TYPE);
+
+			// Create the Direct3D 10 device
+			for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
+			{
+				if (SUCCEEDED(Direct3D10Renderer::D3D10CreateDevice(nullptr, D3D10_DRIVER_TYPES[deviceType], nullptr, flags, D3D10_SDK_VERSION, d3d10Device)))
+				{
+					// Done
+					return true;
+				}
+			}
+
+			// Error!
+			return false;
+		}
+
+
+		namespace BackendDispatch
 		{
 
 
 			//[-------------------------------------------------------]
-			//[ Global functions                                      ]
+			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
-			bool createDevice(UINT flags, ID3D10Device** d3d10Device)
+			void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
 			{
-				// Driver types
-				static const D3D10_DRIVER_TYPE D3D10_DRIVER_TYPES[] =
-				{
-					D3D10_DRIVER_TYPE_HARDWARE,
-					D3D10_DRIVER_TYPE_WARP,
-					D3D10_DRIVER_TYPE_REFERENCE,
-				};
-				static const UINT NUMBER_OF_DRIVER_TYPES = sizeof(D3D10_DRIVER_TYPES) / sizeof(D3D10_DRIVER_TYPE);
+				const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
+				realData->uniformBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+			}
 
-				// Create the Direct3D 10 device
-				for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
+			void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
+			{
+				const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
+				realData->textureBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
+			}
+
+			//[-------------------------------------------------------]
+			//[ Graphics root                                         ]
+			//[-------------------------------------------------------]
+			void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
+			}
+
+			void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+			}
+
+			//[-------------------------------------------------------]
+			//[ States                                                ]
+			//[-------------------------------------------------------]
+			void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).setPipelineState(realData->pipelineState);
+			}
+
+			//[-------------------------------------------------------]
+			//[ Input-assembler (IA) stage                            ]
+			//[-------------------------------------------------------]
+			void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
+			}
+
+			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
+			}
+
+			//[-------------------------------------------------------]
+			//[ Rasterizer (RS) stage                                 ]
+			//[-------------------------------------------------------]
+			void SetViewports(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+			}
+
+			void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+			}
+
+			//[-------------------------------------------------------]
+			//[ Output-merger (OM) stage                              ]
+			//[-------------------------------------------------------]
+			void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).omSetRenderTarget(realData->renderTarget);
+			}
+
+			//[-------------------------------------------------------]
+			//[ Operations                                            ]
+			//[-------------------------------------------------------]
+			void Clear(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
+			}
+
+			void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
+			}
+
+			void CopyResource(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::CopyResource* realData = static_cast<const Renderer::Command::CopyResource*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).copyResource(*realData->destinationResource, *realData->sourceResource);
+			}
+
+			//[-------------------------------------------------------]
+			//[ Draw call                                             ]
+			//[-------------------------------------------------------]
+			void Draw(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+				if (nullptr != realData->indirectBuffer)
 				{
-					if (SUCCEEDED(D3D10CreateDevice(nullptr, D3D10_DRIVER_TYPES[deviceType], nullptr, flags, D3D10_SDK_VERSION, d3d10Device)))
-					{
-						// Done
-						return true;
-					}
+					// No resource owner security check in here, we only support emulated indirect buffer
+					static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
 				}
+				else
+				{
+					static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+			}
 
-				// Error!
-				return false;
+			void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+				if (nullptr != realData->indirectBuffer)
+				{
+					// No resource owner security check in here, we only support emulated indirect buffer
+					static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+				else
+				{
+					static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+			}
+
+			//[-------------------------------------------------------]
+			//[ Debug                                                 ]
+			//[-------------------------------------------------------]
+			void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).setDebugMarker(realData->name);
+			}
+
+			void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).beginDebugEvent(realData->name);
+			}
+
+			void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+			{
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).endDebugEvent();
 			}
 
 
-			namespace BackendDispatch
-			{
+		}
 
 
-				//[-------------------------------------------------------]
-				//[ Resource handling                                     ]
-				//[-------------------------------------------------------]
-				void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
-				{
-					const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
-					realData->uniformBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
-				}
-
-				void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
-				{
-					const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
-					realData->textureBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
-				}
-
-				//[-------------------------------------------------------]
-				//[ Graphics root                                         ]
-				//[-------------------------------------------------------]
-				void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
-				}
-
-				void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
-				}
-
-				//[-------------------------------------------------------]
-				//[ States                                                ]
-				//[-------------------------------------------------------]
-				void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).setPipelineState(realData->pipelineState);
-				}
-
-				//[-------------------------------------------------------]
-				//[ Input-assembler (IA) stage                            ]
-				//[-------------------------------------------------------]
-				void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
-				}
-
-				void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-				}
-
-				//[-------------------------------------------------------]
-				//[ Rasterizer (RS) stage                                 ]
-				//[-------------------------------------------------------]
-				void SetViewports(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
-				}
-
-				void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
-				}
-
-				//[-------------------------------------------------------]
-				//[ Output-merger (OM) stage                              ]
-				//[-------------------------------------------------------]
-				void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).omSetRenderTarget(realData->renderTarget);
-				}
-
-				//[-------------------------------------------------------]
-				//[ Operations                                            ]
-				//[-------------------------------------------------------]
-				void Clear(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
-				}
-
-				void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
-				}
-
-				void CopyResource(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::CopyResource* realData = static_cast<const Renderer::Command::CopyResource*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).copyResource(*realData->destinationResource, *realData->sourceResource);
-				}
-
-				//[-------------------------------------------------------]
-				//[ Draw call                                             ]
-				//[-------------------------------------------------------]
-				void Draw(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					if (nullptr != realData->indirectBuffer)
-					{
-						// No resource owner security check in here, we only support emulated indirect buffer
-						static_cast<Direct3D10Renderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
-					}
-					else
-					{
-						static_cast<Direct3D10Renderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
-					}
-				}
-
-				void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
-					if (nullptr != realData->indirectBuffer)
-					{
-						// No resource owner security check in here, we only support emulated indirect buffer
-						static_cast<Direct3D10Renderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
-					}
-					else
-					{
-						static_cast<Direct3D10Renderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
-					}
-				}
-
-				//[-------------------------------------------------------]
-				//[ Debug                                                 ]
-				//[-------------------------------------------------------]
-				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).setDebugMarker(realData->name);
-				}
-
-				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
-				{
-					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
-					static_cast<Direct3D10Renderer&>(renderer).beginDebugEvent(realData->name);
-				}
-
-				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
-				{
-					static_cast<Direct3D10Renderer&>(renderer).endDebugEvent();
-				}
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
+		{
+			// Resource handling
+			&BackendDispatch::CopyUniformBufferData,
+			&BackendDispatch::CopyTextureBufferData,
+			// Graphics root
+			&BackendDispatch::SetGraphicsRootSignature,
+			&BackendDispatch::SetGraphicsRootDescriptorTable,
+			// States
+			&BackendDispatch::SetPipelineState,
+			// Input-assembler (IA) stage
+			&BackendDispatch::SetVertexArray,
+			&BackendDispatch::SetPrimitiveTopology,
+			// Rasterizer (RS) stage
+			&BackendDispatch::SetViewports,
+			&BackendDispatch::SetScissorRectangles,
+			// Output-merger (OM) stage
+			&BackendDispatch::SetRenderTarget,
+			// Operations
+			&BackendDispatch::Clear,
+			&BackendDispatch::ResolveMultisampleFramebuffer,
+			&BackendDispatch::CopyResource,
+			// Draw call
+			&BackendDispatch::Draw,
+			&BackendDispatch::DrawIndexed,
+			// Debug
+			&BackendDispatch::SetDebugMarker,
+			&BackendDispatch::BeginDebugEvent,
+			&BackendDispatch::EndDebugEvent
+		};
 
 
-			}
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
-			//[-------------------------------------------------------]
-			//[ Global definitions                                    ]
-			//[-------------------------------------------------------]
-			static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
-			{
-				// Resource handling
-				&BackendDispatch::CopyUniformBufferData,
-				&BackendDispatch::CopyTextureBufferData,
-				// Graphics root
-				&BackendDispatch::SetGraphicsRootSignature,
-				&BackendDispatch::SetGraphicsRootDescriptorTable,
-				// States
-				&BackendDispatch::SetPipelineState,
-				// Input-assembler (IA) stage
-				&BackendDispatch::SetVertexArray,
-				&BackendDispatch::SetPrimitiveTopology,
-				// Rasterizer (RS) stage
-				&BackendDispatch::SetViewports,
-				&BackendDispatch::SetScissorRectangles,
-				// Output-merger (OM) stage
-				&BackendDispatch::SetRenderTarget,
-				// Operations
-				&BackendDispatch::Clear,
-				&BackendDispatch::ResolveMultisampleFramebuffer,
-				&BackendDispatch::CopyResource,
-				// Draw call
-				&BackendDispatch::Draw,
-				&BackendDispatch::DrawIndexed,
-				// Debug
-				&BackendDispatch::SetDebugMarker,
-				&BackendDispatch::BeginDebugEvent,
-				&BackendDispatch::EndDebugEvent
-			};
-
-
-	//[-------------------------------------------------------]
-	//[ Anonymous detail namespace                            ]
-	//[-------------------------------------------------------]
-		} // detail
-	}
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace Direct3D10Renderer
+{
 
 
 	//[-------------------------------------------------------]

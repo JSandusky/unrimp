@@ -98,8 +98,8 @@ namespace
 		std::string own_to_string(uint32_t value)
 		{
 			// Own "std::to_string()" implementation similar to the one used in GCC STL
-			// -> We need it on Android because gnustl doesn't implement it, which is part of the Android NDK
-			// -> We need to support gnustl because Qt-runtime uses Qt Android which currently only supports gnustl as C++ runtime
+			// -> We need it on Android because GNU STL doesn't implement it, which is part of the Android NDK
+			// -> We need to support GNU STL because Qt-runtime uses Qt Android which currently only supports GNU STL as C++ runtime
 			#ifdef ANDROID
 				// We convert only an uint32 value which has a maximum value of 4294967295 -> 11 characters so with 16 we are on the safe side
 				const size_t bufferSize = 16;

@@ -52,8 +52,8 @@ namespace OpenGLRenderer
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		// Create the OpenGL texture instance
-		const bool isARB_DSA = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
-		if (isARB_DSA)
+		const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
+		if (isArbDsa)
 		{
 			glCreateTextures(GL_TEXTURE_2D_ARRAY_EXT, 1, &mOpenGLTexture);
 		}
@@ -63,7 +63,7 @@ namespace OpenGLRenderer
 		}
 
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
-		if (isARB_DSA)
+		if (isArbDsa)
 		{
 			glTextureStorage3D(mOpenGLTexture, 1, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices));
 			if (nullptr != data)
@@ -79,7 +79,7 @@ namespace OpenGLRenderer
 		// Build mipmaps automatically on the GPU? (or GPU driver)
 		if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
 		{
-			if (isARB_DSA)
+			if (isArbDsa)
 			{
 				glGenerateTextureMipmap(mOpenGLTexture);
 				glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
@@ -92,7 +92,7 @@ namespace OpenGLRenderer
 		}
 		else
 		{
-			if (isARB_DSA)
+			if (isArbDsa)
 			{
 				glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			}
@@ -102,7 +102,7 @@ namespace OpenGLRenderer
 			}
 		}
 
-		if (isARB_DSA)
+		if (isArbDsa)
 		{
 			glTextureParameteri(mOpenGLTexture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
