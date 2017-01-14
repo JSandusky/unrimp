@@ -108,7 +108,7 @@ namespace Renderer
 	{
 		static const uint32_t OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX	= 0u;
 		static const uint32_t OFFSET_BACKEND_DISPATCH_FUNCTION		= OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX + sizeof(uint32_t);
-		static const uint32_t OFFSET_COMMAND						= OFFSET_BACKEND_DISPATCH_FUNCTION + sizeof(CommandDispatchFunctionIndex) + 3; // TODO(sw) 3 padding bytes so that command offset is aligned to 2 uint32_t. Find a better way to determine the padding because the +3 is wrong when sizeof(CommandDispatchFunctionIndex) > 1?
+		static const uint32_t OFFSET_COMMAND						= OFFSET_BACKEND_DISPATCH_FUNCTION + sizeof(uint32_t);	// Don't use "sizeof(CommandDispatchFunctionIndex)" instead of "sizeof(uint32_t)" so we have a known alignment
 
 		template <typename T>
 		uint32_t getNumberOfBytes(uint32_t numberOfAuxiliaryBytes)
