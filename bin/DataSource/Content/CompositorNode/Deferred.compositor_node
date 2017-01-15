@@ -66,36 +66,44 @@
 			"Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget":
 			{
 				"TextureFormat": "R11G11B10F",
+				"AllowResolutionScale": "FALSE",
 				"Scale": "0.5"
 			},
 			"Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget":
 			{
 				"TextureFormat": "R11G11B10F",
+				"AllowResolutionScale": "FALSE",
 				"Scale": "0.25"
 			},
 			"Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget":
 			{
 				"TextureFormat": "R11G11B10F",
+				"AllowResolutionScale": "FALSE",
 				"Scale": "0.125"
 			},
 			"Example/Texture/Dynamic/BloomDownscale8GaussianBlurTemporaryRenderTarget":
 			{
 				"TextureFormat": "R11G11B10F",
+				"AllowResolutionScale": "FALSE",
 				"Scale": "0.125"
 			},
-			"Example/Texture/Dynamic/LdrColorRenderTarget":
+			"Example/Texture/Dynamic/LdrColorRenderTarget0":
+			{
+				"TextureFormat": "R8G8B8A8"
+			},
+			"Example/Texture/Dynamic/LdrColorRenderTarget1":
 			{
 				"TextureFormat": "R8G8B8A8"
 			},
 			"Example/Texture/Dynamic/GaussianBlurRenderTarget0":
 			{
-				"TextureFormat": "R8G8B8A8",
+				"TextureFormat": "R11G11B10F",
 				"AllowResolutionScale": "FALSE",
 				"Scale": "0.25"
 			},
 			"Example/Texture/Dynamic/GaussianBlurRenderTarget1":
 			{
-				"TextureFormat": "R8G8B8A8",
+				"TextureFormat": "R11G11B10F",
 				"AllowResolutionScale": "FALSE",
 				"Scale": "0.25"
 			}
@@ -144,9 +152,13 @@
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/BloomDownscale8GaussianBlurTemporaryRenderTarget" ]
 			},
-			"LdrFramebuffer":
+			"LdrFramebuffer0":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget0" ]
+			},
+			"LdrFramebuffer1":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget1" ]
 			},
 			"GaussianBlurFramebuffer0":
 			{
@@ -420,7 +432,7 @@
 					}
 				}
 			},
-			"LdrFramebuffer":
+			"LdrFramebuffer0":
 			{
 				"Passes":
 				{
@@ -437,6 +449,36 @@
 					}
 				}
 			},
+			"BloomDownscale2Framebuffer":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"Description": "Downscale",
+						"MaterialBlueprintAssetId": "134",
+						"SetMaterialProperties":
+						{
+							"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0"
+						}
+					}
+				}
+			},
+			"BloomDownscale4Framebuffer":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"Description": "Downscale",
+						"MaterialBlueprintAssetId": "134",
+						"SetMaterialProperties":
+						{
+							"ColorMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
+						}
+					}
+				}
+			},
 			"GaussianBlurFramebuffer0":
 			{
 				"Passes":
@@ -448,7 +490,7 @@
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "TRUE", 
-							"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget"
+							"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
 						}
 					}
 				}
@@ -501,6 +543,38 @@
 					}
 				}
 			},
+			"BloomDownscale2Framebuffer":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"Description": "Upscale",
+						"MaterialBlueprintAssetId": "134",
+						"SetMaterialProperties":
+						{
+							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
+						}
+					}
+				}
+			},
+			"LdrFramebuffer1":
+			{
+				"Passes":
+				{
+					"Quad":
+					{
+						"Description": "Depth of field",
+						"MaterialBlueprintAssetId": "137",
+						"SetMaterialProperties":
+						{
+							"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0",
+							"DepthMap": "Example/Texture/Dynamic/DepthStencilRenderTarget",
+							"BlurMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
+						}
+					}
+				}
+			},
 			"OutputRenderTarget":
 			{
 				"Passes":
@@ -510,7 +584,7 @@
 						"MaterialBlueprintAssetId": "102",
 						"SetMaterialProperties":
 						{
-							"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget"
+							"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget1"
 						}
 					},
 					"DebugGui":
@@ -519,7 +593,7 @@
 						"SetMaterialProperties":
 						{
 							"GlyphMap": "Unrimp/Texture/Dynamic/ImGuiGlyphMap",
-							"BackgroundMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
+							"BackgroundMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
 						}
 					}
 				}

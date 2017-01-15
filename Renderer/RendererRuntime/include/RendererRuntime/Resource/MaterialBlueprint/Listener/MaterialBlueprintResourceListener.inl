@@ -40,6 +40,8 @@ namespace RendererRuntime
 		mCompositorContextData(nullptr),
 		mRenderTargetWidth(1),
 		mRenderTargetHeight(1),
+		mNearZ(0.0f),
+		mFarZ(0.0f),
 		mObjectSpaceToWorldSpaceTransform(nullptr),
 		mMaterialTechnique(nullptr)
 	{

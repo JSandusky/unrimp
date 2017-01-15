@@ -107,6 +107,8 @@ namespace RendererRuntime
 		const CompositorContextData* mCompositorContextData;
 		uint32_t					 mRenderTargetWidth;
 		uint32_t					 mRenderTargetHeight;
+		float						 mNearZ;
+		float						 mFarZ;
 
 		// Instance
 		const Transform*   mObjectSpaceToWorldSpaceTransform;

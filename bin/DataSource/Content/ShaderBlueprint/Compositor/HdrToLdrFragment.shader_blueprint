@@ -46,7 +46,7 @@ OUTPUT_END
 struct PassDataStruct
 {
 	float ToneMapKeyValue;
-	float BloomMagnitude;
+	float BloomIntensity;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -105,7 +105,7 @@ MAIN_BEGIN
 	{ // Apply the bloom with dirty lens
 		float3 bloom = SAMPLE_2D_LOD(BloomMap, SamplerLinear, textureCoordinate).rgb;
 		float dirtyLenseIntensity = 0.5f;
-		color += (bloom * dirtyLenseIntensity * SAMPLE_2D_LOD(DirtyLensMap, SamplerLinear, textureCoordinate).rgb + bloom * (1.0f - dirtyLenseIntensity)) * PassData.BloomMagnitude;
+		color += (bloom * dirtyLenseIntensity * SAMPLE_2D_LOD(DirtyLensMap, SamplerLinear, textureCoordinate).rgb + bloom * (1.0f - dirtyLenseIntensity)) * PassData.BloomIntensity;
 	}
 
 	// Done

@@ -140,6 +140,8 @@
 		"132": "ShaderPiece/Color.asset",
 		"133": "ShaderBlueprint/Compositor/ScaleFragment.asset",
 		"134": "MaterialBlueprint/Compositor/Scale.asset",
-		"135": "Texture/Compositor/DirtyLens.asset"
+		"135": "Texture/Compositor/DirtyLens.asset",
+		"136": "ShaderBlueprint/Compositor/DepthOfFieldFragment.asset",
+		"137": "MaterialBlueprint/Compositor/DepthOfField.asset"
 	}
 }
