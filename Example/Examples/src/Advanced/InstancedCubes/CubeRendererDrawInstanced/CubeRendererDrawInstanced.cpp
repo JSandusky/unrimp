@@ -422,13 +422,13 @@ void CubeRendererDrawInstanced::draw(float globalTimer, float globalScale, float
 	{
 		// TODO(co) Ugly fixed hacked in model-view-projection matrix
 		// TODO(co) OpenGL matrix, Direct3D has minor differences within the projection matrix we have to compensate
-		static const float MVP[] =
-		{
-				1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
-				0.0f,			 1.9776078f,	-0.57472473f,	-0.573576453f,
-			-1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
-				0.0f,			 0.0f,			 9.8198195f,	 10.0f
-		};
+// 		static const float MVP[] =
+// 		{
+// 				1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
+// 				0.0f,			 1.9776078f,	-0.57472473f,	-0.573576453f,
+// 			-1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
+// 				0.0f,			 0.0f,			 9.8198195f,	 10.0f
+// 		};
 
 		// There's no uniform buffer: We have to set individual uniforms
 		// TODO(co) Update
