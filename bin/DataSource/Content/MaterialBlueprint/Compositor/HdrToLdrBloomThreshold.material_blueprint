@@ -18,15 +18,15 @@
 				"StepSize": "0.01",
 				"Description": "Auto-exposure key value; parameter that biases the result of the auto-exposure pass"
 			},
-			"BloomMagnitude":
+			"BloomThreshold":
 			{
 				"Usage": "SHADER_UNIFORM",
 				"ValueType": "FLOAT",
 				"Value": "1.0",
 				"MinimumValue": "0.0",
-				"MaximumValue": "2.0",
+				"MaximumValue": "20.0",
 				"StepSize": "0.01",
-				"Description": "Scale factor applied to the bloom results when combined with tone-mapped result"
+				"Description": "Exposure offset applied to generate the input of the bloom pass"
 			},
 			"ColorMap":
 			{
@@ -41,20 +41,6 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
 				"Description": "Luminance map"
-			},
-			"BloomMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "Bloom map"
-			},
-			"DirtyLensMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "135",
-				"Description": "Dirty lens map"
 			}
 		},
 		"RootSignature":
@@ -95,19 +81,6 @@
 					{
 						"0":
 						{
-							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "1"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"3":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "ColorMap",
@@ -116,7 +89,7 @@
 					},
 					"ShaderVisibility": "FRAGMENT"
 				},
-				"4":
+				"3":
 				{
 					"ParameterType": "DESCRIPTOR_TABLE",
 					"DescriptorRanges":
@@ -130,36 +103,6 @@
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
-				},
-				"5":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "BloomMap",
-							"SamplerRootParameterIndex": "2"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"6":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "3",
-							"BaseShaderRegisterName": "DirtyLensMap",
-							"SamplerRootParameterIndex": "2"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
 				}
 			}
 		},
@@ -168,7 +111,7 @@
 			"ShaderBlueprints":
 			{
 				"VertexShaderBlueprintAssetId": "100",
-				"FragmentShaderBlueprintAssetId": "123"
+				"FragmentShaderBlueprintAssetId": "130"
 			},
 			"RasterizerState":
 			{
@@ -197,11 +140,11 @@
 							"ValueType": "FLOAT",
 							"Value": "@ToneMapKeyValue"
 						},
-						"BloomMagnitude":
+						"BloomThreshold":
 						{
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT",
-							"Value": "@BloomMagnitude"
+							"Value": "@BloomThreshold"
 						}
 					}
 				}
@@ -212,12 +155,6 @@
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_POINT",
-					"MaxLOD": "0.0"
-				},
-				"SamplerLinear":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
 					"MaxLOD": "0.0"
 				}
 			},
@@ -236,20 +173,6 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LuminanceMap"
-				},
-				"BloomMap":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@BloomMap"
-				},
-				"DirtyLensMap":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DirtyLensMap"
 				}
 			}
 		}

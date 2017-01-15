@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 @includepiece(15)	// "Core.shader_piece"
+@includepiece(132)	// "Color.shader_piece"
 
 
 //[-------------------------------------------------------]
@@ -51,12 +52,7 @@ TEXTURE_2D(ColorMap, 0)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-// TODO(co) Make to shader piece
-// Approximate luminance from a RGB value
-float ColorToLuminance(float3 color)
-{
-	return max(dot(color, float3(0.299f, 0.587f, 0.114f)), 0.0001f);
-}
+@insertpiece(DefineColorToLuminance)
 
 
 //[-------------------------------------------------------]
@@ -65,8 +61,8 @@ float ColorToLuminance(float3 color)
 MAIN_BEGIN
 	float3 color = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).rgb;
 
-    // Calculate the luminance using a weighted average
-    float luminance = log(max(ColorToLuminance(color), 0.00001f));
+	// Calculate the luminance using a weighted average
+	float luminance = log(max(ColorToLuminance(color), 0.00001f));
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(luminance, 1.0f, 1.0f, 1.0f);

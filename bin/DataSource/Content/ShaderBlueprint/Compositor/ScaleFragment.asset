@@ -1,0 +1,25 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "133",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "ScaleFragment",
+			"AssetDependencies": [ "15" ],
+			"FileDependencies": [ "ScaleFragment.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg",
+			"Description": "Using hardware bilinear filtering for upscaling or downscaling"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "ScaleFragment.shader_blueprint"
+		}
+	}
+}

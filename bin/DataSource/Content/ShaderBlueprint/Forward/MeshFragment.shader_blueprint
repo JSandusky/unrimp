@@ -68,6 +68,7 @@ struct Material
 {
 	float3 DiffuseColor;
 	float  AlphaReference;
+	float  EmissiveIntensity;
 };
 UNIFORM_BUFFER_BEGIN(MaterialUniformBuffer, 1)
 	Material Materials[@insertpiece(MaximumNumberOfMaterials)];
@@ -157,7 +158,7 @@ MAIN_BEGIN
 
 	// Emissive term
 	@property(UseEmissiveMap)
-		color += SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+		color += SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb * material.EmissiveIntensity;
 	@end
 
 	// Done

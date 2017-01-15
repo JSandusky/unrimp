@@ -222,7 +222,7 @@ void FirstScene::onUpdate()
 		if (nullptr != rendererRuntime)
 		{
 			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
-			globalMaterialProperties.setPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunLightColor));
+			globalMaterialProperties.setPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunLightColor[0] * 2.0f, mSunLightColor[1] * 2.0f, mSunLightColor[2] * 2.0f));
 			globalMaterialProperties.setPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
 			globalMaterialProperties.setPropertyById("PastSecondsSinceLastFrame", RendererRuntime::MaterialPropertyValue::fromFloat(pastMilliseconds / 1000.0f));
 		}
