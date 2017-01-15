@@ -178,8 +178,8 @@ namespace RendererRuntime
 			// Constructors
 			Texture() :
 				rootParameterIndex(getUninitialized<uint32_t>()),
-				textureResourceId(getUninitialized<TextureResourceId>()),
-				rgbHardwareGammaCorrection(false)
+				rgbHardwareGammaCorrection(false),
+				textureResourceId(getUninitialized<TextureResourceId>())
 			{
 				// Nothing here
 			}
