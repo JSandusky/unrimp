@@ -170,6 +170,7 @@ namespace RendererRuntime
 			// Loaded from material blueprint
 			uint32_t		  rootParameterIndex;
 			MaterialProperty  materialProperty;
+			bool			  rgbHardwareGammaCorrection;
 
 			// Derived data
 			TextureResourceId textureResourceId;
@@ -177,7 +178,8 @@ namespace RendererRuntime
 			// Constructors
 			Texture() :
 				rootParameterIndex(getUninitialized<uint32_t>()),
-				textureResourceId(getUninitialized<TextureResourceId>())
+				textureResourceId(getUninitialized<TextureResourceId>()),
+				rgbHardwareGammaCorrection(false)
 			{
 				// Nothing here
 			}

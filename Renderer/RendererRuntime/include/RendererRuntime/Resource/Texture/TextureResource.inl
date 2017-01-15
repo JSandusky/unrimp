@@ -28,9 +28,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline bool TextureResource::isHardwareGammaCorrection() const
+	inline bool TextureResource::isRgbHardwareGammaCorrection() const
 	{
-		return mHardwareGammaCorrection;
+		return mRgbHardwareGammaCorrection;
 	}
 
 	inline Renderer::ITexturePtr TextureResource::getTexture() const
@@ -48,7 +48,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline TextureResource::TextureResource() :
-		mHardwareGammaCorrection(false)
+		mRgbHardwareGammaCorrection(false)
 	{
 		// Nothing here
 	}

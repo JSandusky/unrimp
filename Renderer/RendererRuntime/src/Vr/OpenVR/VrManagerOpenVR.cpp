@@ -255,7 +255,8 @@ namespace
 
 			// Check whether or not we need to generate the runtime texture asset right now
 			RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
-			RendererRuntime::TextureResourceId textureResourceId = textureResourceManager.loadTextureResourceByAssetId(diffuseTextureAssetId, nullptr, true);	// TODO(co) Ask the material blueprint whether or not hardware gamma correction should be used
+			const bool rgbHardwareGammaCorrection = true;	// TODO(co) It must be possible to set the property name from the outside: Ask the material blueprint whether or not hardware gamma correction should be used
+			RendererRuntime::TextureResourceId textureResourceId = textureResourceManager.loadTextureResourceByAssetId(diffuseTextureAssetId, nullptr, rgbHardwareGammaCorrection);
 			if (RendererRuntime::isUninitialized(textureResourceId))
 			{
 				// Load the render model texture
@@ -279,11 +280,11 @@ namespace
 				}
 
 				// Create the renderer texture instance
-				Renderer::ITexture2D* texture2D = rendererRuntime.getTextureManager().createTexture2D(vrRenderModelTextureMap->unWidth, vrRenderModelTextureMap->unHeight, Renderer::TextureFormat::R8G8B8A8, static_cast<const void*>(vrRenderModelTextureMap->rubTextureMapData), Renderer::TextureFlag::GENERATE_MIPMAPS);
+				Renderer::ITexture2D* texture2D = rendererRuntime.getTextureManager().createTexture2D(vrRenderModelTextureMap->unWidth, vrRenderModelTextureMap->unHeight, rgbHardwareGammaCorrection ? Renderer::TextureFormat::R8G8B8A8_SRGB : Renderer::TextureFormat::R8G8B8A8, static_cast<const void*>(vrRenderModelTextureMap->rubTextureMapData), Renderer::TextureFlag::GENERATE_MIPMAPS);
 
 				// We need to generate the runtime texture asset right now
 				// -> Takes over the given 2D texture
-				textureResourceId = textureResourceManager.createTextureResourceByAssetId(diffuseTextureAssetId, *texture2D);
+				textureResourceId = textureResourceManager.createTextureResourceByAssetId(diffuseTextureAssetId, *texture2D, rgbHardwareGammaCorrection);
 
 				// Free the render model texture
 				vrRenderModels->FreeTexture(vrRenderModelTextureMap);

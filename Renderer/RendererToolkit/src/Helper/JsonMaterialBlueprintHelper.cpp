@@ -946,6 +946,10 @@ namespace RendererToolkit
 			// Mandatory root parameter index
 			const uint32_t rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueTexture["RootParameterIndex"].GetString(), shaderProperties);
 
+			// Optional RGB hardware gamma correction
+			bool rgbHardwareGammaCorrection = false;
+			JsonHelper::optionalBooleanProperty(rapidJsonValueTexture, "RgbHardwareGammaCorrection", rgbHardwareGammaCorrection);
+
 			// Mandatory usage
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(rapidJsonValueTexture);
 			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValueTexture);
@@ -961,7 +965,7 @@ namespace RendererToolkit
 						const RendererRuntime::MaterialPropertyValue materialPropertyValue = RendererRuntime::MaterialPropertyValue::fromTextureAssetId((iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0);
 
 						// Write down the texture
-						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, materialPropertyValue));
+						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, materialPropertyValue), rgbHardwareGammaCorrection);
 						outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 
 						// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
@@ -995,7 +999,7 @@ namespace RendererToolkit
 									// TODO(co) Error handling: Usage mismatch etc.
 
 									// Write down the texture
-									const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, materialProperty));
+									const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, materialProperty), rgbHardwareGammaCorrection);
 									outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 								}
 							}

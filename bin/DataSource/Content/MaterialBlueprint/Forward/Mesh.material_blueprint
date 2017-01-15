@@ -396,7 +396,8 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DiffuseMap"
+					"Value": "@DiffuseMap",
+					"RgbHardwareGammaCorrection": "TRUE"
 				},
 				"AlphaMap":
 				{
@@ -410,7 +411,8 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@EmissiveMap"
+					"Value": "@EmissiveMap",
+					"RgbHardwareGammaCorrection": "TRUE"
 				},
 				"NormalMap":
 				{
@@ -424,7 +426,8 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@SpecularMap"
+					"Value": "@SpecularMap",
+					"RgbHardwareGammaCorrection": "TRUE"
 				}
 			}
 		}

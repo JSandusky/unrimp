@@ -479,7 +479,7 @@ namespace RendererRuntime
 
 				mWidth = ddsHeader.width;
 				mHeight = ddsHeader.height;
-				mTextureFormat = static_cast<uint8_t>(mTextureResource->isHardwareGammaCorrection() ? Renderer::TextureFormat::BC1_SRGB : Renderer::TextureFormat::BC1);	// TODO(co) Make this dynamic
+				mTextureFormat = static_cast<uint8_t>(mTextureResource->isRgbHardwareGammaCorrection() ? Renderer::TextureFormat::BC1_SRGB : Renderer::TextureFormat::BC1);	// TODO(co) Make this dynamic
 
 				{ // Loop through all faces
 					uint32_t width = mWidth;

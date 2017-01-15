@@ -51,15 +51,15 @@ namespace Renderer
 			A8				  = 0,	///< 8-bit pixel format, all bits alpha
 			R8G8B8			  = 1,	///< 24-bit pixel format, 8 bits for red, green and blue
 			R8G8B8A8		  = 2,	///< 32-bit pixel format, 8 bits for red, green, blue and alpha
-			R8G8B8A8_SRGB	  = 3,	///< 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = hardware gamma correction
+			R8G8B8A8_SRGB	  = 3,	///< 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear
 			R16G16B16A16F	  = 4,	///< 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
 			R32G32B32A32F	  = 5,	///< 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
 			BC1				  = 6,	///< DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block)
-			BC1_SRGB		  = 7,	///< DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block); sRGB = hardware gamma correction
+			BC1_SRGB		  = 7,	///< DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block); sRGB = RGB hardware gamma correction, the alpha channel always remains linear
 			BC2				  = 8,	///< DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
-			BC2_SRGB		  = 9,	///< DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block); sRGB = hardware gamma correction
+			BC2_SRGB		  = 9,	///< DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block); sRGB = RGB hardware gamma correction, the alpha channel always remains linear
 			BC3				  = 10,	///< DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
-			BC3_SRGB		  = 11,	///< DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block); sRGB = hardware gamma correction
+			BC3_SRGB		  = 11,	///< DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block); sRGB = RGB hardware gamma correction, the alpha channel always remains linear
 			BC4				  = 12,	///< 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
 			BC5				  = 13,	///< 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)
 			ETC1			  = 14,	///< 3 component texture compression meant for mobile devices

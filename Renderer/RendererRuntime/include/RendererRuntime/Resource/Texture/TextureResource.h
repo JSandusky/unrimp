@@ -82,7 +82,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline bool isHardwareGammaCorrection() const;
+		inline bool isRgbHardwareGammaCorrection() const;
 		inline Renderer::ITexturePtr getTexture() const;
 		inline void setTexture(Renderer::ITexture& texture);
 
@@ -107,8 +107,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		bool				  mHardwareGammaCorrection;	///< If true, sRGB texture formats will be used meaning the GPU will return linear space colors instead of gamma space colors when fetching texels inside a shader
-		Renderer::ITexturePtr mTexture;					///< Texture, can be a null pointer
+		bool				  mRgbHardwareGammaCorrection;	///< If true, sRGB texture formats will be used meaning the GPU will return linear space colors instead of gamma space colors when fetching texels inside a shader (the alpha channel always remains linear)
+		Renderer::ITexturePtr mTexture;						///< Texture, can be a null pointer
 
 
 	};

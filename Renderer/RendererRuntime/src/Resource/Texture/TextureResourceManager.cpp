@@ -118,7 +118,7 @@ namespace RendererRuntime
 	}
 
 	// TODO(co) Work-in-progress
-	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool hardwareGammaCorrection, bool reload)
+	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool rgbHardwareGammaCorrection, bool reload)
 	{
 		TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
 
@@ -133,7 +133,7 @@ namespace RendererRuntime
 			textureResource = &mTextureResources.addElement();
 			textureResource->setResourceManager(this);
 			textureResource->setAssetId(assetId);
-			textureResource->mHardwareGammaCorrection = hardwareGammaCorrection;
+			textureResource->mRgbHardwareGammaCorrection = rgbHardwareGammaCorrection;
 			load = true;
 		}
 		if (nullptr != textureResource)
@@ -180,7 +180,7 @@ namespace RendererRuntime
 		return textureResourceId;
 	}
 
-	TextureResourceId TextureResourceManager::createTextureResourceByAssetId(AssetId assetId, Renderer::ITexture& texture)
+	TextureResourceId TextureResourceManager::createTextureResourceByAssetId(AssetId assetId, Renderer::ITexture& texture, bool rgbHardwareGammaCorrection)
 	{
 		// Texture resource is not allowed to exist, yet
 		assert(isUninitialized(loadTextureResourceByAssetId(assetId)));
@@ -189,6 +189,7 @@ namespace RendererRuntime
 		TextureResource& textureResource = mTextureResources.addElement();
 		textureResource.setResourceManager(this);
 		textureResource.setAssetId(assetId);
+		textureResource.mRgbHardwareGammaCorrection = rgbHardwareGammaCorrection;	// TODO(co) We might need to extend "Renderer::ITexture" so we can readback the texture format
 		textureResource.mTexture = &texture;
 
 		// Done
@@ -209,7 +210,7 @@ namespace RendererRuntime
 			const TextureResource& textureResource = mTextureResources.getElementByIndex(i);
 			if (textureResource.getAssetId() == assetId)
 			{
-				loadTextureResourceByAssetId(assetId, nullptr, textureResource.isHardwareGammaCorrection(), true);
+				loadTextureResourceByAssetId(assetId, nullptr, textureResource.isRgbHardwareGammaCorrection(), true);
 				break;
 			}
 		}

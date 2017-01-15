@@ -114,16 +114,19 @@ namespace RendererRuntime
 			{
 				uint32_t		 rootParameterIndex;
 				MaterialProperty materialProperty;
+				bool			 rgbHardwareGammaCorrection;
 
 				Texture() :
-					rootParameterIndex(getUninitialized<uint32_t>())
+					rootParameterIndex(getUninitialized<uint32_t>()),
+					rgbHardwareGammaCorrection(false)
 				{
 					// Nothing here
 				}
 
-				Texture(uint32_t _rootParameterIndex, MaterialProperty _materialProperty) :
+				Texture(uint32_t _rootParameterIndex, MaterialProperty _materialProperty, bool _rgbHardwareGammaCorrection) :
 					rootParameterIndex(_rootParameterIndex),
-					materialProperty(_materialProperty)
+					materialProperty(_materialProperty),
+					rgbHardwareGammaCorrection(_rgbHardwareGammaCorrection)
 				{
 					// Nothing here
 				}

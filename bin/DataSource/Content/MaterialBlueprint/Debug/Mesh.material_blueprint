@@ -221,7 +221,8 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DiffuseMap"
+					"Value": "@DiffuseMap",
+					"RgbHardwareGammaCorrection": "TRUE"
 				}
 			}
 		}

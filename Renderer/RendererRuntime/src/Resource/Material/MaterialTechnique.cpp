@@ -93,7 +93,7 @@ namespace RendererRuntime
 						{
 							// TODO(co) Error handling: Usage mismatch etc.
 							texture.materialProperty = *materialProperty;
-							texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(texture.materialProperty.getTextureAssetIdValue(), nullptr, true);	// TODO(co) Ask the material blueprint whether or not hardware gamma correction should be used
+							texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(texture.materialProperty.getTextureAssetIdValue(), nullptr, blueprintTexture.rgbHardwareGammaCorrection);
 						}
 					}
 
