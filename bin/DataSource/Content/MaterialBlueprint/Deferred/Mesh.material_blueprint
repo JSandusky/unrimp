@@ -92,6 +92,13 @@
 				"Value": "Unrimp/Texture/Dynamic/IdentityEmissiveMap",
 				"Description": "Material emissive map"
 			},
+			"EmissiveIntensity":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "1.0",
+				"Description": "Material emissive intensity, has only an effect if there's an emissive map"
+			},
 			"UseNormalMap":
 			{
 				"Usage": "UNKNOWN",
@@ -326,6 +333,12 @@
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT",
 							"Value": "@AlphaReference"
+						},
+						"EmissiveIntensity":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@EmissiveIntensity"
 						}
 					}
 				},

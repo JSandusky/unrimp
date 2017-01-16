@@ -8,17 +8,17 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "124",
+			"AssetId": "134",
 			"AssetType": "MaterialBlueprint",
 			"AssetCategory": "Compositor",
-			"AssetName": "HdrToLdr",
-			"AssetDependencies": [ "100", "123", "135" ],
-			"FileDependencies": [ "HdrToLdr.material_blueprint" ],
+			"AssetName": "Scale",
+			"AssetDependencies": [ "100", "133" ],
+			"FileDependencies": [ "Scale.material_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
 		},
 		"MaterialBlueprintAssetCompiler":
 		{
-			"InputFile": "HdrToLdr.material_blueprint"
+			"InputFile": "Scale.material_blueprint"
 		}
 	}
 }

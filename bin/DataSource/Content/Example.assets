@@ -134,6 +134,14 @@
 		"126": "MaterialBlueprint/Compositor/CalculateLuminance.asset",
 		"127": "ShaderBlueprint/Compositor/AdaptiveLuminanceFragment.asset",
 		"128": "MaterialBlueprint/Compositor/AdaptiveLuminance.asset",
-		"129": "ShaderBlueprint/Compositor/PositionVertex.asset"
+		"129": "ShaderBlueprint/Compositor/PositionVertex.asset",
+		"130": "ShaderBlueprint/Compositor/HdrToLdrBloomThresholdFragment.asset",
+		"131": "MaterialBlueprint/Compositor/HdrToLdrBloomThreshold.asset",
+		"132": "ShaderPiece/Color.asset",
+		"133": "ShaderBlueprint/Compositor/ScaleFragment.asset",
+		"134": "MaterialBlueprint/Compositor/Scale.asset",
+		"135": "Texture/Compositor/DirtyLens.asset",
+		"136": "ShaderBlueprint/Compositor/DepthOfFieldFragment.asset",
+		"137": "MaterialBlueprint/Compositor/DepthOfField.asset"
 	}
 }

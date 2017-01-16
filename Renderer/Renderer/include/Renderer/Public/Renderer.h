@@ -709,26 +709,28 @@ namespace Renderer
 				R8G8B8			  = 1,
 				R8G8B8A8		  = 2,
 				R8G8B8A8_SRGB	  = 3,
-				R16G16B16A16F	  = 4,
-				R32G32B32A32F	  = 5,
-				BC1				  = 6,
-				BC1_SRGB		  = 7,
-				BC2				  = 8,
-				BC2_SRGB		  = 9,
-				BC3				  = 10,
-				BC3_SRGB		  = 11,
-				BC4				  = 12,
-				BC5				  = 13,
-				ETC1			  = 14,
-				R32_FLOAT		  = 15,
-				D32_FLOAT		  = 16,
-				UNKNOWN			  = 17,
-				NUMBER_OF_FORMATS = 18
+				R11G11B10F		  = 4,
+				R16G16B16A16F	  = 5,
+				R32G32B32A32F	  = 6,
+				BC1				  = 7,
+				BC1_SRGB		  = 8,
+				BC2				  = 9,
+				BC2_SRGB		  = 10,
+				BC3				  = 11,
+				BC3_SRGB		  = 12,
+				BC4				  = 13,
+				BC5				  = 14,
+				ETC1			  = 15,
+				R32_FLOAT		  = 16,
+				D32_FLOAT		  = 17,
+				UNKNOWN			  = 18,
+				NUMBER_OF_FORMATS = 19
 			};
 			inline static bool isCompressed(Enum textureFormat)
 			{
 				static bool MAPPING[] =
 				{
+					false,
 					false,
 					false,
 					false,
@@ -770,6 +772,7 @@ namespace Renderer
 					false,
 					false,
 					false,
+					false,
 					true,
 					false
 				};
@@ -783,6 +786,7 @@ namespace Renderer
 					sizeof(uint8_t) * 3,
 					sizeof(uint8_t) * 4,
 					sizeof(uint8_t) * 4,
+					sizeof(float),
 					sizeof(float) * 2,
 					sizeof(float) * 4,
 					sizeof(uint8_t) * 3,
@@ -810,6 +814,8 @@ namespace Renderer
 						return 3 * width;
 					case R8G8B8A8:
 					case R8G8B8A8_SRGB:
+						return 4 * width;
+					case R11G11B10F:
 						return 4 * width;
 					case R16G16B16A16F:
 						return 8 * width;
@@ -850,6 +856,8 @@ namespace Renderer
 						return 3 * width * height;
 					case R8G8B8A8:
 					case R8G8B8A8_SRGB:
+						return 4 * width * height;
+					case R11G11B10F:
 						return 4 * width * height;
 					case R16G16B16A16F:
 						return 8 * width * height;

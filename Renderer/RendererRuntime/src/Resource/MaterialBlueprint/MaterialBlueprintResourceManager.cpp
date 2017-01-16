@@ -128,7 +128,10 @@ namespace RendererRuntime
 					643992955 == assetId ||		// "MaterialBlueprint/Compositor/GaussianBlur"
 					3502284972 == assetId ||	// "MaterialBlueprint/Compositor/HdrToLdr"
 					1374114827 == assetId ||	// "MaterialBlueprint/Compositor/CalculateLuminance"
-					2961560463 == assetId)		// "MaterialBlueprint/Compositor/AdaptiveLuminance"
+					2961560463 == assetId ||	// "MaterialBlueprint/Compositor/AdaptiveLuminance"
+					2167712998 == assetId ||	// "MaterialBlueprint/Compositor/HdrToLdrBloomThreshold"
+					738992981 == assetId ||		// "MaterialBlueprint/Compositor/Scale"
+					1243189953 == assetId)		// "MaterialBlueprint/Compositor/DepthOfField"
 				{
 					Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(materialBlueprintResource->getVertexAttributes());
 					static const Renderer::VertexAttribute vertexAttributesLayout[] =

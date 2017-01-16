@@ -110,7 +110,7 @@ MAIN_BEGIN
 		color.w = 1.0f;
 	@end
 	@property(!Fxaa)
-		color = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).rgba;
+		color = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
 	@end
 
 	// Done

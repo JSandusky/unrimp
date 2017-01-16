@@ -69,6 +69,7 @@ namespace
 			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_QUATERNION)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(CLIP_SPACE_TO_WORLD_SPACE_MATRIX)
+			DEFINE_CONSTANT(PROJECTION_PARAMETERS)
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_SUN_LIGHT_DIRECTION)
 			DEFINE_CONSTANT(VIEWPORT_SIZE)
@@ -115,8 +116,8 @@ namespace RendererRuntime
 		// Get camera settings
 		const CameraSceneItem* cameraSceneItem = compositorContextData.getCameraSceneItem();
 		const float fovY  = (nullptr != cameraSceneItem) ? cameraSceneItem->getFovY()  : CameraSceneItem::DEFAULT_FOV_Y;
-		const float nearZ = (nullptr != cameraSceneItem) ? cameraSceneItem->getNearZ() : CameraSceneItem::DEFAULT_NEAR_Z;
-		const float farZ  = (nullptr != cameraSceneItem) ? cameraSceneItem->getFarZ()  : CameraSceneItem::DEFAULT_FAR_Z;
+		mNearZ = (nullptr != cameraSceneItem) ? cameraSceneItem->getNearZ() : CameraSceneItem::DEFAULT_NEAR_Z;
+		mFarZ  = (nullptr != cameraSceneItem) ? cameraSceneItem->getFarZ()  : CameraSceneItem::DEFAULT_FAR_Z;
 
 		// Calculate required matrices basing whether or not the VR-manager is currently running
 		glm::mat4 viewTranslateMatrix;
@@ -126,7 +127,7 @@ namespace RendererRuntime
 		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye() && nullptr == cameraSceneItem->mViewSpaceToClipSpaceMatrix && nullptr == cameraSceneItem->mWorldSpaceToViewSpaceMatrix)
 		{
 			const IVrManager::VrEye vrEye = static_cast<IVrManager::VrEye>(getCurrentRenderedVrEye());
-			viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, nearZ, farZ);
+			viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, mNearZ, mFarZ);
 			viewTranslateMatrix = vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye) * vrManager.getHmdPoseMatrix();
 
 			// Calculate the final matrices
@@ -145,7 +146,7 @@ namespace RendererRuntime
 			}
 			else
 			{
-				viewSpaceToClipSpaceMatrix = glm::perspective(fovY, aspectRatio, nearZ, farZ);
+				viewSpaceToClipSpaceMatrix = glm::perspective(fovY, aspectRatio, mNearZ, mFarZ);
 			}
 
 			// Calculate the final matrices
@@ -193,6 +194,12 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToClipSpaceMatrix)), numberOfBytes);
+		}
+		else if (::detail::PROJECTION_PARAMETERS == referenceValue)
+		{
+			assert(sizeof(float) * 2 == numberOfBytes);
+			const float projectionParameters[2] = { mFarZ / (mFarZ - mNearZ), (-mFarZ * mNearZ) / (mFarZ - mNearZ) };
+			memcpy(buffer, &projectionParameters[0], numberOfBytes);
 		}
 		else if (::detail::IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{

@@ -1,0 +1,25 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "137",
+			"AssetType": "MaterialBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "DepthOfField",
+			"AssetDependencies": [ "100", "136" ],
+			"FileDependencies": [ "DepthOfField.material_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg",
+			"Description": "Depth of field basing on https://developer.amd.com/wordpress/media/2012/10/Scheuermann_DepthOfField.pdf"
+		},
+		"MaterialBlueprintAssetCompiler":
+		{
+			"InputFile": "DepthOfField.material_blueprint"
+		}
+	}
+}

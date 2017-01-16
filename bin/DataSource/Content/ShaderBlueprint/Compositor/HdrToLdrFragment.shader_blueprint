@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 @includepiece(15)	// "Core.shader_piece"
+@includepiece(132)	// "Color.shader_piece"
 
 
 //[-------------------------------------------------------]
@@ -44,8 +45,8 @@ OUTPUT_END
 // Uniform buffers
 struct PassDataStruct
 {
-	float2 InverseViewportSize;
-	float  ToneMapKeyValue;
+	float ToneMapKeyValue;
+	float BloomIntensity;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -53,32 +54,20 @@ UNIFORM_BUFFER_END
 
 // Samplers
 SAMPLER_STATE(SamplerPoint, 0)
+SAMPLER_STATE(SamplerLinear, 1)
 
 // Textures
 TEXTURE_2D(ColorMap, 0)
 TEXTURE_2D(LuminanceMap, 1)
+TEXTURE_2D(BloomMap, 2)
+TEXTURE_2D(DirtyLensMap, 3)
 
 
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-// TODO(co) Make to shader piece
-// Approximate luminance from a RGB value
-float ColorToLuminance(float3 color)
-{
-	return max(dot(color, float3(0.299f, 0.587f, 0.114f)), 0.0001f);
-}
-
-// Determine the color based on exposure settings
-float3 CalculateExposedColor(float3 color, float averageLuminance, float threshold, out float exposure)
-{
-	// Use geometric mean
-	averageLuminance = max(averageLuminance, 0.001f);
-	float linearExposure = (PassData.ToneMapKeyValue / averageLuminance);
-	exposure = log2(max(linearExposure, 0.0001f));
-	exposure -= threshold;
-	return exp2(exposure) * color;
-}
+@insertpiece(DefineColorToLuminance)
+@insertpiece(DefineCalculateExposedColor)
 
 // Apply the filmic curve from John Hable's presentation
 float3 ToneMapFilmicAlu(float3 color)
@@ -104,12 +93,20 @@ float3 ToneMap(float3 color, float averageLuminance, float threshold, out float 
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	float3 color = SAMPLE_2D_LOD(ColorMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).rgb;
+	float4 textureCoordinate = float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f);
+	float3 color = SAMPLE_2D_LOD(ColorMap, SamplerPoint, textureCoordinate).rgb;
 	float averageLuminance = SAMPLE_2D_LOD(LuminanceMap, SamplerPoint, float4(0.5f, 0.5f, 0.0f, 0.0f)).r;
 
-	// Tone map
-	float exposure = 0.0f;
-	color = ToneMap(color, averageLuminance, 0.0f, exposure);
+	{ // Tone map
+		float exposure = 0.0f;
+		color = ToneMap(color, averageLuminance, 0.0f, exposure);
+	}
+
+	{ // Apply the bloom with dirty lens
+		float3 bloom = SAMPLE_2D_LOD(BloomMap, SamplerLinear, textureCoordinate).rgb;
+		float dirtyLenseIntensity = 0.5f;
+		color += (bloom * dirtyLenseIntensity * SAMPLE_2D_LOD(DirtyLensMap, SamplerLinear, textureCoordinate).rgb + bloom * (1.0f - dirtyLenseIntensity)) * PassData.BloomIntensity;
+	}
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(SATURATE(color), 1.0f);

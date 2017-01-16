@@ -8,25 +8,45 @@
 	{
 		"Properties":
 		{
-			"ToneMapKeyValue":
+			"NearBlurDepth":
 			{
 				"Usage": "SHADER_UNIFORM",
 				"ValueType": "FLOAT",
-				"Value": "0.115",
+				"Value": "0.1",
 				"MinimumValue": "0.0",
-				"MaximumValue": "0.5",
+				"MaximumValue": "1000.0",
 				"StepSize": "0.01",
-				"Description": "Auto-exposure key value; parameter that biases the result of the auto-exposure pass"
+				"Description": "Near blur depth"
 			},
-			"BloomIntensity":
+			"FocalPlaneDepth":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.3",
+				"MinimumValue": "0.0",
+				"MaximumValue": "1.0",
+				"StepSize": "0.01",
+				"Description": "Focal plane depth"
+			},
+			"FarBlurDepth":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "10.0",
+				"MinimumValue": "0.0",
+				"MaximumValue": "1000.0",
+				"StepSize": "0.01",
+				"Description": "Far blur depth"
+			},
+			"BlurrinessCutoff":
 			{
 				"Usage": "SHADER_UNIFORM",
 				"ValueType": "FLOAT",
 				"Value": "1.0",
 				"MinimumValue": "0.0",
-				"MaximumValue": "2.0",
+				"MaximumValue": "1.0",
 				"StepSize": "0.01",
-				"Description": "Scale factor applied to the bloom results when combined with tone-mapped result"
+				"Description": "Blurriness cutoff constant for objects behind the focal plane"
 			},
 			"ColorMap":
 			{
@@ -35,26 +55,19 @@
 				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
 				"Description": "Color map"
 			},
-			"LuminanceMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
-				"Description": "Luminance map"
-			},
-			"BloomMap":
+			"DepthMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "Bloom map"
+				"Description": "Depth map"
 			},
-			"DirtyLensMap":
+			"BlurMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "135",
-				"Description": "Dirty lens map"
+				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
+				"Description": "Blur map"
 			}
 		},
 		"RootSignature":
@@ -125,7 +138,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "LuminanceMap",
+							"BaseShaderRegisterName": "DepthMap",
 							"SamplerRootParameterIndex": "1"
 						}
 					},
@@ -140,22 +153,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "BloomMap",
-							"SamplerRootParameterIndex": "2"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"6":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "3",
-							"BaseShaderRegisterName": "DirtyLensMap",
+							"BaseShaderRegisterName": "BlurMap",
 							"SamplerRootParameterIndex": "2"
 						}
 					},
@@ -168,7 +166,7 @@
 			"ShaderBlueprints":
 			{
 				"VertexShaderBlueprintAssetId": "100",
-				"FragmentShaderBlueprintAssetId": "123"
+				"FragmentShaderBlueprintAssetId": "136"
 			},
 			"RasterizerState":
 			{
@@ -191,17 +189,41 @@
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
-						"ToneMapKeyValue":
+						"InverseViewportSize":
 						{
-							"Usage": "MATERIAL_REFERENCE",
-							"ValueType": "FLOAT",
-							"Value": "@ToneMapKeyValue"
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@INVERSE_VIEWPORT_SIZE"
 						},
-						"BloomIntensity":
+						"ProjectionParameters":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@PROJECTION_PARAMETERS"
+						},
+						"NearBlurDepth":
 						{
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT",
-							"Value": "@BloomIntensity"
+							"Value": "@NearBlurDepth"
+						},
+						"FocalPlaneDepth":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@FocalPlaneDepth"
+						},
+						"FarBlurDepth":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@FarBlurDepth"
+						},
+						"BlurrinessCutoff":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@BlurrinessCutoff"
 						}
 					}
 				}
@@ -230,26 +252,19 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap"
 				},
-				"LuminanceMap":
+				"DepthMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@LuminanceMap"
+					"Value": "@DepthMap"
 				},
-				"BloomMap":
+				"BlurMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@BloomMap"
-				},
-				"DirtyLensMap":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DirtyLensMap"
+					"Value": "@BlurMap"
 				}
 			}
 		}

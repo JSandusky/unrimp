@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "132",
+			"AssetType": "ShaderPiece",
+			"AssetCategory": "Default",
+			"AssetName": "Color",
+			"FileDependencies": [ "Color.shader_piece" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"ShaderPieceAssetCompiler":
+		{
+			"InputFile": "Color.shader_piece"
+		}
+	}
+}
