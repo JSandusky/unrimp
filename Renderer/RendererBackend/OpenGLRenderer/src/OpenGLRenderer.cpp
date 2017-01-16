@@ -560,13 +560,10 @@ namespace OpenGLRenderer
 					// In OpenGL, all shaders share the same texture units (= "Renderer::RootParameter::shaderVisibility" stays unused)
 
 					// Is "GL_ARB_direct_state_access" or "GL_EXT_direct_state_access" there?
-					// TODO(co) "GL_ARB_direct_state_access": Something odd is going on with DSA on AMD graphics cards. "glBindTextureUnit()" sometimes fails resulting in nothing visible on screen on MS Windows while causing a system crash on Linux. Works with NVIDIA under MS Windows.
-			//		if (mExtensions->isGL_ARB_direct_state_access() || mExtensions->isGL_EXT_direct_state_access())
-					if (mExtensions->isGL_EXT_direct_state_access())
+					if (mExtensions->isGL_ARB_direct_state_access() || mExtensions->isGL_EXT_direct_state_access())
 					{
 						// Effective direct state access (DSA)
-						// const bool isArbDsa = mExtensions->isGL_ARB_direct_state_access();	// TODO(co) See TODO above
-						const bool isArbDsa = false;
+						const bool isArbDsa = mExtensions->isGL_ARB_direct_state_access();
 
 						// "glBindTextureUnit()" unit parameter is zero based so we can simply use the value we received
 						const GLuint unit = descriptorRange->baseShaderRegister;
