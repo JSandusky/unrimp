@@ -730,6 +730,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glTextureSubImage2D)
 			IMPORT_FUNC(glTextureSubImage3D)
 			IMPORT_FUNC(glVertexArrayAttribFormat)
+			IMPORT_FUNC(glVertexArrayAttribBinding)
 			IMPORT_FUNC(glVertexArrayVertexBuffer)
 			IMPORT_FUNC(glVertexArrayBindingDivisor)
 			IMPORT_FUNC(glVertexArrayElementBuffer)
