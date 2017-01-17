@@ -180,7 +180,7 @@
 			{
 				"Quad":
 				{
-					"Description": "Calculate luminance",
+					"Description": "Calculate luminance. The mipmaps are generated automatically after the next render target change.",
 					"MaterialBlueprintAssetId": "126",
 					"SetMaterialProperties":
 					{
@@ -272,55 +272,32 @@
 					}
 				}
 			},
-			"BloomDownscale8GaussianBlurTemporaryFramebuffer":
+			"@foreach(2, i)":
 			{
-				"Quad":
+				"BloomDownscale8GaussianBlurTemporaryFramebuffer":
 				{
-					"Description": "Vertical Gaussian blur",
-					"MaterialBlueprintAssetId": "117",
-					"SetMaterialProperties":
+					"Quad":
 					{
-						"VerticalBlur": "TRUE", 
-						"ColorMap": "Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget"
+						"Description": "Vertical Gaussian blur",
+						"MaterialBlueprintAssetId": "117",
+						"SetMaterialProperties":
+						{
+							"VerticalBlur": "TRUE", 
+							"ColorMap": "Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget"
+						}
 					}
-				}
-			},
-			"BloomDownscale8Framebuffer":
-			{
-				"Quad":
+				},
+				"BloomDownscale8Framebuffer":
 				{
-					"Description": "Horizontal Gaussian blur",
-					"MaterialBlueprintAssetId": "117",
-					"SetMaterialProperties":
+					"Quad":
 					{
-						"VerticalBlur": "FALSE", 
-						"ColorMap": "Example/Texture/Dynamic/BloomDownscale8GaussianBlurTemporaryRenderTarget"
-					}
-				}
-			},
-			"BloomDownscale8GaussianBlurTemporaryFramebuffer":
-			{
-				"Quad":
-				{
-					"Description": "Vertical Gaussian blur",
-					"MaterialBlueprintAssetId": "117",
-					"SetMaterialProperties":
-					{
-						"VerticalBlur": "TRUE", 
-						"ColorMap": "Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget"
-					}
-				}
-			},
-			"BloomDownscale8Framebuffer":
-			{
-				"Quad":
-				{
-					"Description": "Horizontal Gaussian blur",
-					"MaterialBlueprintAssetId": "117",
-					"SetMaterialProperties":
-					{
-						"VerticalBlur": "FALSE", 
-						"ColorMap": "Example/Texture/Dynamic/BloomDownscale8GaussianBlurTemporaryRenderTarget"
+						"Description": "Horizontal Gaussian blur",
+						"MaterialBlueprintAssetId": "117",
+						"SetMaterialProperties":
+						{
+							"VerticalBlur": "FALSE", 
+							"ColorMap": "Example/Texture/Dynamic/BloomDownscale8GaussianBlurTemporaryRenderTarget"
+						}
 					}
 				}
 			},
@@ -386,55 +363,32 @@
 					}
 				}
 			},
-			"GaussianBlurFramebuffer0":
+			"@foreach(2, i)":
 			{
-				"Quad":
+				"GaussianBlurFramebuffer0":
 				{
-					"Description": "Vertical Gaussian blur",
-					"MaterialBlueprintAssetId": "117",
-					"SetMaterialProperties":
+					"Quad":
 					{
-						"VerticalBlur": "TRUE", 
-						"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
+						"Description": "Vertical Gaussian blur",
+						"MaterialBlueprintAssetId": "117",
+						"SetMaterialProperties":
+						{
+							"VerticalBlur": "TRUE", 
+							"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
+						}
 					}
-				}
-			},
-			"GaussianBlurFramebuffer1":
-			{
-				"Quad":
+				},
+				"GaussianBlurFramebuffer1":
 				{
-					"Description": "Horizontal Gaussian blur",
-					"MaterialBlueprintAssetId": "117",
-					"SetMaterialProperties":
+					"Quad":
 					{
-						"VerticalBlur": "FALSE", 
-						"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
-					}
-				}
-			},
-			"GaussianBlurFramebuffer0":
-			{
-				"Quad":
-				{
-					"Description": "Vertical Gaussian blur",
-					"MaterialBlueprintAssetId": "117",
-					"SetMaterialProperties":
-					{
-						"VerticalBlur": "TRUE", 
-						"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
-					}
-				}
-			},
-			"GaussianBlurFramebuffer1":
-			{
-				"Quad":
-				{
-					"Description": "Horizontal Gaussian blur",
-					"MaterialBlueprintAssetId": "117",
-					"SetMaterialProperties":
-					{
-						"VerticalBlur": "FALSE", 
-						"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
+						"Description": "Horizontal Gaussian blur",
+						"MaterialBlueprintAssetId": "117",
+						"SetMaterialProperties":
+						{
+							"VerticalBlur": "FALSE", 
+							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
+						}
 					}
 				}
 			},
