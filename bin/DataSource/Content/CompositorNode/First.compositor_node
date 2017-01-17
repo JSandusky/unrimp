@@ -15,18 +15,15 @@
 		{
 			"OutputRenderTarget":
 			{
-				"Passes":
+				"Clear":
 				{
-					"Clear":
-					{
-						"Flags": "COLOR | DEPTH",
-						"Color": "0.5 0.5 0.5 1.0",
-						"Z": "1.0",
-						"Stencil": "0"
-					},
-					"FirstCompositorExample":
-					{
-					}
+					"Flags": "COLOR | DEPTH",
+					"Color": "0.5 0.5 0.5 1.0",
+					"Z": "1.0",
+					"Stencil": "0"
+				},
+				"FirstCompositorExample":
+				{
 				}
 			}
 		},

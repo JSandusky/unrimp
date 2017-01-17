@@ -159,403 +159,328 @@
 		{
 			"HdrMultisampleFramebuffer":
 			{
-				"Passes":
+				"Clear":
 				{
-					"Clear":
-					{
-						"Flags": "COLOR | DEPTH",
-						"Color": "0.5 0.5 0.5 1.0"
-					},
-					"Scene":
-					{
-						"MaterialTechnique": "Forward"
-					}
+					"Flags": "COLOR | DEPTH",
+					"Color": "0.5 0.5 0.5 1.0"
+				},
+				"Scene":
+				{
+					"MaterialTechnique": "Forward"
 				}
 			},
 			"HdrFramebuffer":
 			{
-				"Passes":
+				"ResolveMultisample":
 				{
-					"ResolveMultisample":
-					{
-						"SourceMultisampleFramebuffer": "HdrMultisampleFramebuffer"
-					}
+					"SourceMultisampleFramebuffer": "HdrMultisampleFramebuffer"
 				}
 			},
 			"LuminanceFramebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Calculate luminance",
+					"MaterialBlueprintAssetId": "126",
+					"SetMaterialProperties":
 					{
-						"Description": "Calculate luminance",
-						"MaterialBlueprintAssetId": "126",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget"
-						}
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget"
 					}
 				}
 			},
 			"PreviousLuminanceFramebuffer":
 			{
-				"Passes":
+				"Copy":
 				{
-					"Copy":
-					{
-						"Description": "Backup the adaptive luminance from the previous frame. The current compositor target isn't used for this.",
-						"DestinationTextureAssetId": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget",
-						"SourceTextureAssetId": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
-					}
+					"Description": "Backup the adaptive luminance from the previous frame. The current compositor target isn't used for this.",
+					"DestinationTextureAssetId": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget",
+					"SourceTextureAssetId": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
 				}
 			},
 			"AdaptiveLuminanceFramebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"SkipFirstExecution": "TRUE",
+					"Description": "Slowly adjusts the scene luminance based on the previous scene luminance. Skip the first execution since there's no valid previous adaptive luminance available in this situation.",
+					"MaterialBlueprintAssetId": "128",
+					"SetMaterialProperties":
 					{
-						"SkipFirstExecution": "TRUE",
-						"Description": "Slowly adjusts the scene luminance based on the previous scene luminance. Skip the first execution since there's no valid previous adaptive luminance available in this situation.",
-						"MaterialBlueprintAssetId": "128",
-						"SetMaterialProperties":
-						{
-							"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
-							"PreviousLuminanceMap": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget"
-						}
-					},
-					"Quad":
+						"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
+						"PreviousLuminanceMap": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget"
+					}
+				},
+				"Quad":
+				{
+					"NumberOfExecutions": "1",
+					"Description": "During the first execution there's no valid previous adaptive luminance available, so use the just calculated luminance as previous luminance.",
+					"MaterialBlueprintAssetId": "128",
+					"SetMaterialProperties":
 					{
-						"NumberOfExecutions": "1",
-						"Description": "During the first execution there's no valid previous adaptive luminance available, so use the just calculated luminance as previous luminance.",
-						"MaterialBlueprintAssetId": "128",
-						"SetMaterialProperties":
-						{
-							"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
-							"PreviousLuminanceMap": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget",
-							"FirstExecution": "TRUE"
-						}
+						"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
+						"PreviousLuminanceMap": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget",
+						"FirstExecution": "TRUE"
 					}
 				}
 			},
 			"BloomFramebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Use a lower exposure to produce a value suitable for a bloom pass",
+					"MaterialBlueprintAssetId": "131",
+					"SetMaterialProperties":
 					{
-						"Description": "Use a lower exposure to produce a value suitable for a bloom pass",
-						"MaterialBlueprintAssetId": "131",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
-							"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
-						}
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
+						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
 					}
 				}
 			},
 			"BloomDownscale2Framebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Downscale",
+					"MaterialBlueprintAssetId": "134",
+					"SetMaterialProperties":
 					{
-						"Description": "Downscale",
-						"MaterialBlueprintAssetId": "134",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/BloomColorRenderTarget"
-						}
+						"ColorMap": "Example/Texture/Dynamic/BloomColorRenderTarget"
 					}
 				}
 			},
 			"BloomDownscale4Framebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Downscale",
+					"MaterialBlueprintAssetId": "134",
+					"SetMaterialProperties":
 					{
-						"Description": "Downscale",
-						"MaterialBlueprintAssetId": "134",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
-						}
+						"ColorMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
 					}
 				}
 			},
 			"BloomDownscale8Framebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Downscale",
+					"MaterialBlueprintAssetId": "134",
+					"SetMaterialProperties":
 					{
-						"Description": "Downscale",
-						"MaterialBlueprintAssetId": "134",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
-						}
+						"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
 					}
 				}
 			},
 			"BloomDownscale8GaussianBlurTemporaryFramebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Vertical Gaussian blur",
+					"MaterialBlueprintAssetId": "117",
+					"SetMaterialProperties":
 					{
-						"Description": "Vertical Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
-						"SetMaterialProperties":
-						{
-							"VerticalBlur": "TRUE", 
-							"ColorMap": "Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget"
-						}
+						"VerticalBlur": "TRUE", 
+						"ColorMap": "Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget"
 					}
 				}
 			},
 			"BloomDownscale8Framebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Horizontal Gaussian blur",
+					"MaterialBlueprintAssetId": "117",
+					"SetMaterialProperties":
 					{
-						"Description": "Horizontal Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
-						"SetMaterialProperties":
-						{
-							"VerticalBlur": "FALSE", 
-							"ColorMap": "Example/Texture/Dynamic/BloomDownscale8GaussianBlurTemporaryRenderTarget"
-						}
+						"VerticalBlur": "FALSE", 
+						"ColorMap": "Example/Texture/Dynamic/BloomDownscale8GaussianBlurTemporaryRenderTarget"
 					}
 				}
 			},
 			"BloomDownscale8GaussianBlurTemporaryFramebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Vertical Gaussian blur",
+					"MaterialBlueprintAssetId": "117",
+					"SetMaterialProperties":
 					{
-						"Description": "Vertical Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
-						"SetMaterialProperties":
-						{
-							"VerticalBlur": "TRUE", 
-							"ColorMap": "Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget"
-						}
+						"VerticalBlur": "TRUE", 
+						"ColorMap": "Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget"
 					}
 				}
 			},
 			"BloomDownscale8Framebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Horizontal Gaussian blur",
+					"MaterialBlueprintAssetId": "117",
+					"SetMaterialProperties":
 					{
-						"Description": "Horizontal Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
-						"SetMaterialProperties":
-						{
-							"VerticalBlur": "FALSE", 
-							"ColorMap": "Example/Texture/Dynamic/BloomDownscale8GaussianBlurTemporaryRenderTarget"
-						}
+						"VerticalBlur": "FALSE", 
+						"ColorMap": "Example/Texture/Dynamic/BloomDownscale8GaussianBlurTemporaryRenderTarget"
 					}
 				}
 			},
 			"BloomDownscale4Framebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Upscale",
+					"MaterialBlueprintAssetId": "134",
+					"SetMaterialProperties":
 					{
-						"Description": "Upscale",
-						"MaterialBlueprintAssetId": "134",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget"
-						}
+						"ColorMap": "Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget"
 					}
 				}
 			},
 			"BloomDownscale2Framebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Upscale",
+					"MaterialBlueprintAssetId": "134",
+					"SetMaterialProperties":
 					{
-						"Description": "Upscale",
-						"MaterialBlueprintAssetId": "134",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
-						}
+						"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
 					}
 				}
 			},
 			"LdrFramebuffer0":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "HDR to LDR",
+					"MaterialBlueprintAssetId": "124",
+					"SetMaterialProperties":
 					{
-						"Description": "HDR to LDR",
-						"MaterialBlueprintAssetId": "124",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
-							"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget",
-							"BloomMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
-						}
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
+						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget",
+						"BloomMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
 					}
 				}
 			},
 			"BloomDownscale2Framebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Downscale",
+					"MaterialBlueprintAssetId": "134",
+					"SetMaterialProperties":
 					{
-						"Description": "Downscale",
-						"MaterialBlueprintAssetId": "134",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0"
-						}
+						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0"
 					}
 				}
 			},
 			"BloomDownscale4Framebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Downscale",
+					"MaterialBlueprintAssetId": "134",
+					"SetMaterialProperties":
 					{
-						"Description": "Downscale",
-						"MaterialBlueprintAssetId": "134",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
-						}
+						"ColorMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
 					}
 				}
 			},
 			"GaussianBlurFramebuffer0":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Vertical Gaussian blur",
+					"MaterialBlueprintAssetId": "117",
+					"SetMaterialProperties":
 					{
-						"Description": "Vertical Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
-						"SetMaterialProperties":
-						{
-							"VerticalBlur": "TRUE", 
-							"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
-						}
+						"VerticalBlur": "TRUE", 
+						"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
 					}
 				}
 			},
 			"GaussianBlurFramebuffer1":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Horizontal Gaussian blur",
+					"MaterialBlueprintAssetId": "117",
+					"SetMaterialProperties":
 					{
-						"Description": "Horizontal Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
-						"SetMaterialProperties":
-						{
-							"VerticalBlur": "FALSE", 
-							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
-						}
+						"VerticalBlur": "FALSE", 
+						"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
 					}
 				}
 			},
 			"GaussianBlurFramebuffer0":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Vertical Gaussian blur",
+					"MaterialBlueprintAssetId": "117",
+					"SetMaterialProperties":
 					{
-						"Description": "Vertical Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
-						"SetMaterialProperties":
-						{
-							"VerticalBlur": "TRUE", 
-							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
-						}
+						"VerticalBlur": "TRUE", 
+						"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
 					}
 				}
 			},
 			"GaussianBlurFramebuffer1":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Horizontal Gaussian blur",
+					"MaterialBlueprintAssetId": "117",
+					"SetMaterialProperties":
 					{
-						"Description": "Horizontal Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
-						"SetMaterialProperties":
-						{
-							"VerticalBlur": "FALSE", 
-							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
-						}
+						"VerticalBlur": "FALSE", 
+						"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
 					}
 				}
 			},
 			"BloomDownscale2Framebuffer":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Upscale",
+					"MaterialBlueprintAssetId": "134",
+					"SetMaterialProperties":
 					{
-						"Description": "Upscale",
-						"MaterialBlueprintAssetId": "134",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
-						}
+						"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
 					}
 				}
 			},
 			"LdrFramebuffer1":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"Description": "Depth of field",
+					"MaterialBlueprintAssetId": "137",
+					"SetMaterialProperties":
 					{
-						"Description": "Depth of field",
-						"MaterialBlueprintAssetId": "137",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0",
-							"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
-							"BlurMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
-						}
+						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0",
+						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
+						"BlurMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
 					}
 				}
 			},
 			"OutputRenderTarget":
 			{
-				"Passes":
+				"Quad":
 				{
-					"Quad":
+					"MaterialBlueprintAssetId": "102",
+					"SetMaterialProperties":
 					{
-						"MaterialBlueprintAssetId": "102",
-						"SetMaterialProperties":
-						{
-							"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget1"
-						}
-					},
-					"DebugGui":
+						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget1"
+					}
+				},
+				"DebugGui":
+				{
+					"MaterialBlueprintAssetId": "121",
+					"SetMaterialProperties":
 					{
-						"MaterialBlueprintAssetId": "121",
-						"SetMaterialProperties":
-						{
-							"GlyphMap": "Unrimp/Texture/Dynamic/ImGuiGlyphMap",
-							"BackgroundMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
-						}
+						"GlyphMap": "Unrimp/Texture/Dynamic/ImGuiGlyphMap",
+						"BackgroundMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
 					}
 				}
 			}

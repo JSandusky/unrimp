@@ -439,7 +439,7 @@ namespace RendererToolkit
 			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTargets = rapidJsonValueTargets.MemberBegin(); rapidJsonMemberIteratorTargets != rapidJsonValueTargets.MemberEnd(); ++rapidJsonMemberIteratorTargets)
 			{
 				const rapidjson::Value& rapidJsonValueTarget = rapidJsonMemberIteratorTargets->value;
-				const rapidjson::Value& rapidJsonValuePasses = rapidJsonValueTarget["Passes"];
+				const rapidjson::Value& rapidJsonValuePasses = rapidJsonValueTarget;	// A render target only contains passes, keep this variable to make the content more clear
 
 				{ // Write down the compositor resource node target
 				  // -> Render target might be compositor channel (external interconnection) or compositor framebuffer (node internal processing)

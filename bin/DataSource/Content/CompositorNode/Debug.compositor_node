@@ -15,20 +15,17 @@
 		{
 			"OutputRenderTarget":
 			{
-				"Passes":
+				"Clear":
 				{
-					"Clear":
-					{
-						"Flags": "COLOR | DEPTH",
-						"Color": "0.5 0.5 0.5 1.0"
-					},
-					"Scene":
-					{
-						"MaterialTechnique": "Debug"
-					},
-					"DebugGui":
-					{
-					}
+					"Flags": "COLOR | DEPTH",
+					"Color": "0.5 0.5 0.5 1.0"
+				},
+				"Scene":
+				{
+					"MaterialTechnique": "Debug"
+				},
+				"DebugGui":
+				{
 				}
 			}
 		},
