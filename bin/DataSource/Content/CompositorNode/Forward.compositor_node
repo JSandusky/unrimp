@@ -272,7 +272,7 @@
 					}
 				}
 			},
-			"@foreach(2, i)":
+			"@foreach(4, i)":
 			{
 				"BloomDownscale8GaussianBlurTemporaryFramebuffer":
 				{
@@ -363,7 +363,7 @@
 					}
 				}
 			},
-			"@foreach(2, i)":
+			"@foreach(4, i)":
 			{
 				"GaussianBlurFramebuffer0":
 				{
