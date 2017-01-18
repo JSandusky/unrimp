@@ -250,7 +250,8 @@
 			{
 				"Copy":
 				{
-					"Description": "Backup the adaptive luminance from the previous frame. The current compositor target isn't used for this.",
+					"SkipFirstExecution": "TRUE",
+					"Description": "Backup the adaptive luminance from the previous frame. Skip the first execution since there's no valid previous adaptive luminance available in this situation. The current compositor target isn't used for this.",
 					"DestinationTextureAssetId": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget",
 					"SourceTextureAssetId": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
 				}
@@ -276,7 +277,6 @@
 					"SetMaterialProperties":
 					{
 						"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
-						"PreviousLuminanceMap": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget",
 						"FirstExecution": "TRUE"
 					}
 				}

@@ -74,7 +74,6 @@ namespace OpenGLRenderer
 
 				// Set up the format for my attribute
 				glVertexArrayAttribFormat(mOpenGLVertexArray, attributeLocation, Mapping::getOpenGLSize(attribute->vertexAttributeFormat), Mapping::getOpenGLType(attribute->vertexAttributeFormat), static_cast<GLboolean>(Mapping::isOpenGLVertexAttributeFormatNormalized(attribute->vertexAttributeFormat)), static_cast<GLuint>(attribute->alignedByteOffset));
-
 				glVertexArrayAttribBinding(mOpenGLVertexArray, attributeLocation, attributeLocation);
 
 				// Bind vertex buffer to buffer point
