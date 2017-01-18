@@ -65,6 +65,7 @@ namespace
 		static const RendererRuntime::AssetId ImrodMaterialAssetId("Example/Material/Character/Imrod");
 		static const RendererRuntime::AssetId FinalMaterialAssetId("Example/MaterialBlueprint/Compositor/Final");
 		static const RendererRuntime::AssetId DeferredAmbientCompositorMaterialAssetId("Example/MaterialBlueprint/Deferred/AmbientCompositor");
+		static const RendererRuntime::AssetId DepthOfFieldCompositorMaterialAssetId("Example/MaterialBlueprint/Compositor/DepthOfField");
 
 
 //[-------------------------------------------------------]
@@ -479,14 +480,19 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				}
 				mCompositorWorkspaceInstance->setNumberOfMultisamples(numberOfMultisamples);
 
-				// Deferred ambient compositor material
+				// Tell compositor materials about the number of multisamples
+				if (1 == numberOfMultisamples)
+				{
+					numberOfMultisamples = 0;
+				}
 				RendererRuntime::MaterialResource* materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::DeferredAmbientCompositorMaterialAssetId);
 				if (nullptr != materialResource)
 				{
-					if (1 == numberOfMultisamples)
-					{
-						numberOfMultisamples = 0;
-					}
+					materialResource->setPropertyById("NumberOfMultisamples", RendererRuntime::MaterialPropertyValue::fromInteger(numberOfMultisamples));
+				}
+				materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::DepthOfFieldCompositorMaterialAssetId);
+				if (nullptr != materialResource)
+				{
 					materialResource->setPropertyById("NumberOfMultisamples", RendererRuntime::MaterialPropertyValue::fromInteger(numberOfMultisamples));
 				}
 			}

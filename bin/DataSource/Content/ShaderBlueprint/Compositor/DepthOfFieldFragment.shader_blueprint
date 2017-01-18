@@ -61,7 +61,12 @@ SAMPLER_STATE(SamplerLinear, 1)
 
 // Textures
 TEXTURE_2D(ColorMap, 0)
-TEXTURE_2D(DepthMap, 1)
+@property(NumberOfMultisamples)
+	TEXTURE_2D_MS(DepthMap, @value(NumberOfMultisamples), 1)
+@end
+@property(!NumberOfMultisamples)
+	TEXTURE_2D(DepthMap, 1)
+@end
 TEXTURE_2D(BlurMap, 2)	// Blurred low resolution version of the color map
 
 
@@ -97,16 +102,18 @@ float GetLinearDepth(float depth)
 }
 
 // TODO(co) Make this to a shader piece
-float GetLinearDepthFromDepthMap(float2 textureCoordinate)
+float GetLinearDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
 {
-	return GetLinearDepth(SAMPLE_2D_LOD(DepthMap, SamplerPoint, float4(textureCoordinate, 0.0f, 0.0f)).r);
+	@property(NumberOfMultisamples)
+		return GetLinearDepth(SAMPLE_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex).r);
+	@end
+	@property(!NumberOfMultisamples)
+		return GetLinearDepth(SAMPLE_2D_LOD(DepthMap, SamplerPoint, float4(textureCoordinate, 0.0f, 0.0f)).r);
+	@end
 }
 
-
-//[-------------------------------------------------------]
-//[ Main                                                  ]
-//[-------------------------------------------------------]
-MAIN_BEGIN
+float4 CalculateSum(float2 textureCoordinate, int sampleIndex)
+{
 	// Depth of field basing on https://developer.amd.com/wordpress/media/2012/10/Scheuermann_DepthOfField.pdf
 	float2 pixelSizeScene = PassData.InverseViewportSize;		// Pixel size of full resolution image
 	float2 pixelSizeBlur = 1.0f / GET_TEXTURE_SIZE(BlurMap);	// Pixel size of downsampled and blurred image
@@ -131,7 +138,7 @@ MAIN_BEGIN
 	float radiusScale = 0.4f;
 
 	// Get depth of center tap and convert it into blur radius in pixels
-	float centerDepth	  = ConvertDepth(GetLinearDepthFromDepthMap(MAIN_INPUT(TexCoordVS)));
+	float centerDepth	  = ConvertDepth(GetLinearDepthFromDepthMap(textureCoordinate, sampleIndex));
 	float discRadiusScene = abs(centerDepth * maxCoC.y - maxCoC.x);
 	float discRadiusBlur  = discRadiusScene * radiusScale;	// Radius on low resolution image
 
@@ -139,12 +146,12 @@ MAIN_BEGIN
 	for (int i = 0; i < 12; ++i)
 	{
 		// Compute texture coordinates
-		float4 coordScene = float4(MAIN_INPUT(TexCoordVS) + (pixelSizeScene * poisson[i] * discRadiusScene), 0.0f, 0.0f);
-		float4 coordBlur = float4(MAIN_INPUT(TexCoordVS) + (pixelSizeBlur * poisson[i] * discRadiusBlur), 0.0f, 0.0f);
+		float4 coordScene = float4(textureCoordinate + (pixelSizeScene * poisson[i] * discRadiusScene), 0.0f, 0.0f);
+		float4 coordBlur = float4(textureCoordinate + (pixelSizeBlur * poisson[i] * discRadiusBlur), 0.0f, 0.0f);
 
 		// Fetch taps and depth
 		float4 tapScene = SAMPLE_2D_LOD(ColorMap, SamplerPoint, coordScene);
-		float tapDepth = ConvertDepth(GetLinearDepthFromDepthMap(coordScene.xy));
+		float tapDepth = ConvertDepth(GetLinearDepthFromDepthMap(coordScene.xy, sampleIndex));
 		float4 tapBlur = SAMPLE_2D_LOD(BlurMap, SamplerLinear, coordBlur);
 
 		// Mix low and high resolution taps based on tap blurriness
@@ -158,6 +165,28 @@ MAIN_BEGIN
 		sum.rgb += tap.rgb * factor;
 		sum.a += factor;
 	}
+
+	// Done
+	return sum;
+}
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	@property(NumberOfMultisamples)
+		// Custom MSAA resolve
+		float4 sum = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		@foreach(NumberOfMultisamples, i, 0)
+		{
+			sum += CalculateSum(MAIN_INPUT(TexCoordVS), @i);
+		}
+		@end
+	@end
+	@property(!NumberOfMultisamples)
+		float4 sum = CalculateSum(MAIN_INPUT(TexCoordVS), 0);
+	@end
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(sum.rgb / sum.a, 1.0f);
