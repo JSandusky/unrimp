@@ -26,11 +26,10 @@
 #include "RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Asset/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <glm/detail/setup.hpp>	// For "glm::countof()"
-
-#include <fstream>
 
 
 //[-------------------------------------------------------]
@@ -49,73 +48,56 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void MeshResourceLoader::onDeserialization()
+	void MeshResourceLoader::onDeserialization(IFile& file)
 	{
-		// TODO(co) Error handling
-		try
+		// Read in the mesh header
+		v1Mesh::Header meshHeader;
+		file.read(&meshHeader, sizeof(v1Mesh::Header));
+		mMeshResource->mNumberOfVertices = meshHeader.numberOfVertices;
+		mMeshResource->mNumberOfIndices  = meshHeader.numberOfIndices;
+
+		// Allocate memory for the local vertex buffer data
+		mNumberOfUsedVertexBufferDataBytes = meshHeader.numberOfBytesPerVertex * mMeshResource->mNumberOfVertices;
+		if (mNumberOfVertexBufferDataBytes < mNumberOfUsedVertexBufferDataBytes)
 		{
-			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-			if (!inputFileStream)
-			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
-			}
-
-			// Read in the mesh header
-			v1Mesh::Header meshHeader;
-			inputFileStream.read(reinterpret_cast<char*>(&meshHeader), sizeof(v1Mesh::Header));
-			mMeshResource->mNumberOfVertices = meshHeader.numberOfVertices;
-			mMeshResource->mNumberOfIndices  = meshHeader.numberOfIndices;
-
-			// Allocate memory for the local vertex buffer data
-			mNumberOfUsedVertexBufferDataBytes = meshHeader.numberOfBytesPerVertex * mMeshResource->mNumberOfVertices;
-			if (mNumberOfVertexBufferDataBytes < mNumberOfUsedVertexBufferDataBytes)
-			{
-				mNumberOfVertexBufferDataBytes = mNumberOfUsedVertexBufferDataBytes;
-				delete [] mVertexBufferData;
-				mVertexBufferData = new uint8_t[mNumberOfVertexBufferDataBytes];
-			}
-
-			// Allocate memory for the local index buffer data
-			mIndexBufferFormat = meshHeader.indexBufferFormat;
-			mNumberOfUsedIndexBufferDataBytes = Renderer::IndexBufferFormat::getNumberOfBytesPerElement(static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat)) * mMeshResource->mNumberOfIndices;
-			if (mNumberOfIndexBufferDataBytes < mNumberOfUsedIndexBufferDataBytes)
-			{
-				mNumberOfIndexBufferDataBytes = mNumberOfUsedIndexBufferDataBytes;
-				delete [] mIndexBufferData;
-				mIndexBufferData = new uint8_t[mNumberOfIndexBufferDataBytes];
-			}
-
-			// Read in the vertex and index buffer
-			inputFileStream.read(reinterpret_cast<char*>(mVertexBufferData), mNumberOfUsedVertexBufferDataBytes);
-			inputFileStream.read(reinterpret_cast<char*>(mIndexBufferData), mNumberOfUsedIndexBufferDataBytes);
-
-			// Read in the vertex attributes
-			mNumberOfUsedVertexAttributes = meshHeader.numberOfVertexAttributes;
-			if (mNumberOfVertexAttributes < mNumberOfUsedVertexAttributes)
-			{
-				mNumberOfVertexAttributes = mNumberOfUsedVertexAttributes;
-				delete [] mVertexAttributes;
-				mVertexAttributes = new Renderer::VertexAttribute[mNumberOfVertexAttributes];
-			}
-			inputFileStream.read(reinterpret_cast<char*>(mVertexAttributes), sizeof(Renderer::VertexAttribute) * mNumberOfUsedVertexAttributes);
-
-			// Read in the sub-meshes
-			mNumberOfUsedSubMeshes = meshHeader.numberOfSubMeshes;
-			if (mNumberOfSubMeshes < mNumberOfUsedSubMeshes)
-			{
-				mNumberOfSubMeshes = mNumberOfUsedSubMeshes;
-				delete [] mSubMeshes;
-				mSubMeshes = new v1Mesh::SubMesh[mNumberOfSubMeshes];
-			}
-			inputFileStream.read(reinterpret_cast<char*>(mSubMeshes), sizeof(v1Mesh::SubMesh) * mNumberOfUsedSubMeshes);
+			mNumberOfVertexBufferDataBytes = mNumberOfUsedVertexBufferDataBytes;
+			delete [] mVertexBufferData;
+			mVertexBufferData = new uint8_t[mNumberOfVertexBufferDataBytes];
 		}
-		catch (const std::exception& e)
+
+		// Allocate memory for the local index buffer data
+		mIndexBufferFormat = meshHeader.indexBufferFormat;
+		mNumberOfUsedIndexBufferDataBytes = Renderer::IndexBufferFormat::getNumberOfBytesPerElement(static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat)) * mMeshResource->mNumberOfIndices;
+		if (mNumberOfIndexBufferDataBytes < mNumberOfUsedIndexBufferDataBytes)
 		{
-			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load mesh asset %u: %s", mAsset.assetId.getId(), e.what());
+			mNumberOfIndexBufferDataBytes = mNumberOfUsedIndexBufferDataBytes;
+			delete [] mIndexBufferData;
+			mIndexBufferData = new uint8_t[mNumberOfIndexBufferDataBytes];
 		}
+
+		// Read in the vertex and index buffer
+		file.read(mVertexBufferData, mNumberOfUsedVertexBufferDataBytes);
+		file.read(mIndexBufferData, mNumberOfUsedIndexBufferDataBytes);
+
+		// Read in the vertex attributes
+		mNumberOfUsedVertexAttributes = meshHeader.numberOfVertexAttributes;
+		if (mNumberOfVertexAttributes < mNumberOfUsedVertexAttributes)
+		{
+			mNumberOfVertexAttributes = mNumberOfUsedVertexAttributes;
+			delete [] mVertexAttributes;
+			mVertexAttributes = new Renderer::VertexAttribute[mNumberOfVertexAttributes];
+		}
+		file.read(mVertexAttributes, sizeof(Renderer::VertexAttribute) * mNumberOfUsedVertexAttributes);
+
+		// Read in the sub-meshes
+		mNumberOfUsedSubMeshes = meshHeader.numberOfSubMeshes;
+		if (mNumberOfSubMeshes < mNumberOfUsedSubMeshes)
+		{
+			mNumberOfSubMeshes = mNumberOfUsedSubMeshes;
+			delete [] mSubMeshes;
+			mSubMeshes = new v1Mesh::SubMesh[mNumberOfSubMeshes];
+		}
+		file.read(mSubMeshes, sizeof(v1Mesh::SubMesh) * mNumberOfUsedSubMeshes);
 
 		// Can we create the renderer resource asynchronous as well?
 		if (mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading)

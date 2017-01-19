@@ -26,8 +26,7 @@
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 #include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
-
-#include <fstream>
+#include "RendererRuntime/Asset/IFile.h"
 
 
 // TODO(co) Possible performance improvement: Inside "SceneResourceLoader::onDeserialization()" load everything directly into memory,
@@ -47,11 +46,11 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void itemDeserialization(std::istream& inputStream, RendererRuntime::ISceneResource& sceneResource, RendererRuntime::ISceneNode& sceneNode)
+		void itemDeserialization(RendererRuntime::IFile& file, RendererRuntime::ISceneResource& sceneResource, RendererRuntime::ISceneNode& sceneNode)
 		{
 			// Read the scene item header
 			RendererRuntime::v1Scene::ItemHeader itemHeader;
-			inputStream.read(reinterpret_cast<char*>(&itemHeader), sizeof(RendererRuntime::v1Scene::ItemHeader));
+			file.read(&itemHeader, sizeof(RendererRuntime::v1Scene::ItemHeader));
 
 			// Create the scene item
 			RendererRuntime::ISceneItem* sceneItem = sceneResource.createSceneItem(itemHeader.typeId, sceneNode);
@@ -60,7 +59,7 @@ namespace
 				// Load in the scene item data
 				// TODO(co) Get rid of the new/delete in here
 				uint8_t* data = new uint8_t[itemHeader.numberOfBytes];
-				inputStream.read(reinterpret_cast<char*>(data), itemHeader.numberOfBytes);
+				file.read(data, itemHeader.numberOfBytes);
 
 				// Deserialize the scene item
 				sceneItem->deserialize(itemHeader.numberOfBytes, data);
@@ -74,11 +73,11 @@ namespace
 			}
 		}
 
-		void nodeDeserialization(std::istream& inputStream, RendererRuntime::ISceneResource& sceneResource)
+		void nodeDeserialization(RendererRuntime::IFile& file, RendererRuntime::ISceneResource& sceneResource)
 		{
 			// Read in the scene node
 			RendererRuntime::v1Scene::Node node;
-			inputStream.read(reinterpret_cast<char*>(&node), sizeof(RendererRuntime::v1Scene::Node));
+			file.read(&node, sizeof(RendererRuntime::v1Scene::Node));
 
 			// Create the scene node
 			RendererRuntime::ISceneNode* sceneNode = sceneResource.createSceneNode(node.transform);
@@ -87,7 +86,7 @@ namespace
 				// Read in the scene items
 				for (uint32_t i = 0; i < node.numberOfItems; ++i)
 				{
-					itemDeserialization(inputStream, sceneResource, *sceneNode);
+					itemDeserialization(file, sceneResource, *sceneNode);
 				}
 			}
 			else
@@ -96,16 +95,16 @@ namespace
 			}
 		}
 
-		void nodesDeserialization(std::istream& inputStream, RendererRuntime::ISceneResource& sceneResource)
+		void nodesDeserialization(RendererRuntime::IFile& file, RendererRuntime::ISceneResource& sceneResource)
 		{
 			// Read in the scene nodes
 			RendererRuntime::v1Scene::Nodes nodes;
-			inputStream.read(reinterpret_cast<char*>(&nodes), sizeof(RendererRuntime::v1Scene::Nodes));
+			file.read(&nodes, sizeof(RendererRuntime::v1Scene::Nodes));
 
 			// Read in the scene nodes
 			for (uint32_t i = 0; i < nodes.numberOfNodes; ++i)
 			{
-				nodeDeserialization(inputStream, sceneResource);
+				nodeDeserialization(file, sceneResource);
 			}
 		}
 
@@ -133,31 +132,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void SceneResourceLoader::onDeserialization()
+	void SceneResourceLoader::onDeserialization(IFile& file)
 	{
-		// TODO(co) Error handling
-		try
-		{
-			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-			if (!inputFileStream)
-			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
-			}
+		// Read in the scene header
+		v1Scene::Header sceneHeader;
+		file.read(&sceneHeader, sizeof(v1Scene::Header));
 
-			// Read in the scene header
-			v1Scene::Header sceneHeader;
-			inputFileStream.read(reinterpret_cast<char*>(&sceneHeader), sizeof(v1Scene::Header));
-
-			// Read in the scene resource nodes
-			::detail::nodesDeserialization(inputFileStream, *mSceneResource);
-		}
-		catch (const std::exception& e)
-		{
-			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load scene asset %u: %s", mAsset.assetId.getId(), e.what());
-		}
+		// Read in the scene resource nodes
+		::detail::nodesDeserialization(file, *mSceneResource);
 	}
 
 

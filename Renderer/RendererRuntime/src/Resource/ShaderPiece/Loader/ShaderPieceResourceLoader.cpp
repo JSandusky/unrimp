@@ -25,8 +25,7 @@
 #include "RendererRuntime/Resource/ShaderPiece/Loader/ShaderPieceResourceLoader.h"
 #include "RendererRuntime/Resource/ShaderPiece/Loader/ShaderPieceFileFormat.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
-
-#include <fstream>
+#include "RendererRuntime/Asset/IFile.h"
 
 
 //[-------------------------------------------------------]
@@ -45,40 +44,23 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void ShaderPieceResourceLoader::onDeserialization()
+	void ShaderPieceResourceLoader::onDeserialization(IFile& file)
 	{
-		// TODO(co) Error handling
-		try
+		// Read in the shader piece header
+		v1ShaderPiece::Header shaderPieceHeader;
+		file.read(&shaderPieceHeader, sizeof(v1ShaderPiece::Header));
+
+		// Allocate more temporary memory, if required
+		if (mMaximumNumberOfShaderSourceCodeBytes < shaderPieceHeader.numberOfShaderSourceCodeBytes)
 		{
-			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-			if (!inputFileStream)
-			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
-			}
-
-			// Read in the shader piece header
-			v1ShaderPiece::Header shaderPieceHeader;
-			inputFileStream.read(reinterpret_cast<char*>(&shaderPieceHeader), sizeof(v1ShaderPiece::Header));
-
-			// Allocate more temporary memory, if required
-			if (mMaximumNumberOfShaderSourceCodeBytes < shaderPieceHeader.numberOfShaderSourceCodeBytes)
-			{
-				mMaximumNumberOfShaderSourceCodeBytes = shaderPieceHeader.numberOfShaderSourceCodeBytes;
-				delete [] mShaderSourceCode;
-				mShaderSourceCode = new char[mMaximumNumberOfShaderSourceCodeBytes];
-			}
-
-			// Read the shader piece ASCII source code
-			inputFileStream.read(mShaderSourceCode, shaderPieceHeader.numberOfShaderSourceCodeBytes);
-			mShaderPieceResource->mShaderSourceCode.assign(mShaderSourceCode, mShaderSourceCode + shaderPieceHeader.numberOfShaderSourceCodeBytes);
+			mMaximumNumberOfShaderSourceCodeBytes = shaderPieceHeader.numberOfShaderSourceCodeBytes;
+			delete [] mShaderSourceCode;
+			mShaderSourceCode = new char[mMaximumNumberOfShaderSourceCodeBytes];
 		}
-		catch (const std::exception& e)
-		{
-			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load shader piece asset %u: %s", mAsset.assetId.getId(), e.what());
-		}
+
+		// Read the shader piece ASCII source code
+		file.read(mShaderSourceCode, shaderPieceHeader.numberOfShaderSourceCodeBytes);
+		mShaderPieceResource->mShaderSourceCode.assign(mShaderSourceCode, mShaderSourceCode + shaderPieceHeader.numberOfShaderSourceCodeBytes);
 	}
 
 

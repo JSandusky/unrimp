@@ -26,9 +26,78 @@
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
 #include "RendererRuntime/Core/Platform/PlatformManager.h"
+#include "RendererRuntime/Asset/IFile.h"
+
+#include <fstream>
 
 // TODO(co) Can we do something about the warning which does not involve using "std::thread"-pointers?
 PRAGMA_WARNING_DISABLE_MSVC(4355)	// warning C4355: 'this': used in base member initializer list
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Classes                                               ]
+		//[-------------------------------------------------------]
+		// TODO(co) Add file manager interface, with only a single file instance at one and the same time, this here is only for intermediate commit
+		struct StdFile : public RendererRuntime::IFile
+		{
+			explicit StdFile(std::ifstream& fileStream) :
+				mFileStream(fileStream)
+			{
+				// Nothing here
+			}
+
+			virtual size_t getNumberOfBytes() override
+			{
+				size_t numberOfBytes = 0;
+				mFileStream.seekg(0, std::istream::end);
+				numberOfBytes = static_cast<size_t>(mFileStream.tellg());
+				mFileStream.seekg(0, std::istream::beg);
+				return numberOfBytes;
+			}
+
+			virtual void read(void* destinationBuffer, size_t numberOfBytes) override
+			{
+				mFileStream.read(reinterpret_cast<char*>(destinationBuffer), static_cast<std::streamsize>(numberOfBytes));
+			}
+
+			virtual void skip(size_t numberOfBytes) override
+			{
+				mFileStream.ignore(static_cast<std::streamsize>(numberOfBytes));
+			}
+
+
+			//[-------------------------------------------------------]
+			//[ Protected methods                                     ]
+			//[-------------------------------------------------------]
+			protected:
+				StdFile(const StdFile&) = delete;
+				StdFile& operator=(const StdFile&) = delete;
+
+
+			//[-------------------------------------------------------]
+			//[ Private data methods                                  ]
+			//[-------------------------------------------------------]
+			private:
+				std::ifstream& mFileStream;
+
+
+		};
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -195,7 +264,24 @@ namespace RendererRuntime
 				deserializationMutexLock.unlock();
 
 				// Do the work
-				loadRequest.resourceLoader->onDeserialization();
+				const Asset& asset = loadRequest.resourceLoader->getAsset();
+				try
+				{
+					std::ifstream inputFileStream(asset.assetFilename, std::ios::binary);
+					if (!inputFileStream)
+					{
+						// This error handling shouldn't be there since everything the asset package says exists
+						// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
+						throw std::runtime_error("Could not open file \"" + std::string(asset.assetFilename) + '\"');
+					}
+					::detail::StdFile stdFile(inputFileStream);
+					loadRequest.resourceLoader->onDeserialization(stdFile);
+				}
+				catch (const std::exception& e)
+				{
+					// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
+					RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load compositor node asset %u: %s", asset.assetId.getId(), e.what());
+				}
 
 				{ // Push the load request into the queue of the next resource streamer pipeline stage
 				  // -> Resource streamer stage: 2. Asynchronous processing

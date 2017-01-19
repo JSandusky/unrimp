@@ -72,7 +72,7 @@ namespace RendererRuntime
 
 	inline void ShaderPieceResourceLoader::initialize(const Asset& asset, ShaderPieceResource& shaderPieceResource)
 	{
-		mAsset				 = asset;
+		IResourceLoader::initialize(asset);
 		mShaderPieceResource = &shaderPieceResource;
 	}
 

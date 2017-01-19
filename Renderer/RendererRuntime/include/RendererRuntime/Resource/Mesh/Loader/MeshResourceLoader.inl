@@ -44,7 +44,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline void MeshResourceLoader::initialize(const Asset& asset, MeshResource& meshResource)
 	{
-		mAsset		  = asset;
+		IResourceLoader::initialize(asset);
 		mMeshResource = &meshResource;
 	}
 

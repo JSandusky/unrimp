@@ -55,7 +55,7 @@ namespace RendererRuntime
 
 	inline void MaterialResourceLoader::initialize(const Asset& asset, MaterialResource& materialResource)
 	{
-		mAsset			  = asset;
+		IResourceLoader::initialize(asset);
 		mMaterialResource = &materialResource;
 	}
 

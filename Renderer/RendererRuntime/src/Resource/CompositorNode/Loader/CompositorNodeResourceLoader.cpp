@@ -26,8 +26,7 @@
 #include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
-
-#include <fstream>
+#include "RendererRuntime/Asset/IFile.h"
 
 
 // TODO(co) Possible performance improvement: Inside "CompositorNodeResourceLoader::onDeserialization()" load everything directly into memory,
@@ -48,11 +47,11 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void nodeTargetDeserialization(std::istream& inputStream, RendererRuntime::CompositorNodeResource& compositorNodeResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
+		void nodeTargetDeserialization(RendererRuntime::IFile& file, RendererRuntime::CompositorNodeResource& compositorNodeResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
 		{
 			// Read in the compositor node resource target
 			RendererRuntime::v1CompositorNode::Target target;
-			inputStream.read(reinterpret_cast<char*>(&target), sizeof(RendererRuntime::v1CompositorNode::Target));
+			file.read(&target, sizeof(RendererRuntime::v1CompositorNode::Target));
 
 			// Create the compositor node resource target instance
 			RendererRuntime::CompositorTarget& compositorTarget = compositorNodeResource.addCompositorTarget(target.compositorChannelId, target.compositorFramebufferId);
@@ -63,7 +62,7 @@ namespace
 			{
 				// Read the pass header
 				RendererRuntime::v1CompositorNode::PassHeader passHeader;
-				inputStream.read(reinterpret_cast<char*>(&passHeader), sizeof(RendererRuntime::v1CompositorNode::PassHeader));
+				file.read(&passHeader, sizeof(RendererRuntime::v1CompositorNode::PassHeader));
 
 				// Create the compositor resource pass
 				RendererRuntime::ICompositorResourcePass* compositorResourcePass = compositorTarget.addCompositorResourcePass(compositorPassFactory, passHeader.compositorPassTypeId);
@@ -74,7 +73,7 @@ namespace
 					// Load in the compositor resource pass data
 					// TODO(co) Get rid of the new/delete in here
 					uint8_t* data = new uint8_t[passHeader.numberOfBytes];
-					inputStream.read(reinterpret_cast<char*>(data), passHeader.numberOfBytes);
+					file.read(data, passHeader.numberOfBytes);
 
 					// Deserialize the compositor resource pass
 					compositorResourcePass->deserialize(passHeader.numberOfBytes, data);
@@ -89,7 +88,7 @@ namespace
 			}
 		}
 
-		void nodeDeserialization(std::istream& inputStream, const RendererRuntime::v1CompositorNode::Header& compositorNodeHeader, RendererRuntime::CompositorNodeResource& compositorNodeResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
+		void nodeDeserialization(RendererRuntime::IFile& file, const RendererRuntime::v1CompositorNode::Header& compositorNodeHeader, RendererRuntime::CompositorNodeResource& compositorNodeResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
 		{
 			// Read in the compositor resource node input channels
 			// TODO(co) Read all input channels in a single burst? (need to introduce a maximum number of input channels for this)
@@ -97,7 +96,7 @@ namespace
 			for (uint32_t i = 0; i < compositorNodeHeader.numberOfInputChannels; ++i)
 			{
 				RendererRuntime::CompositorChannelId channelId;
-				inputStream.read(reinterpret_cast<char*>(&channelId), sizeof(RendererRuntime::CompositorChannelId));
+				file.read(&channelId, sizeof(RendererRuntime::CompositorChannelId));
 				compositorNodeResource.addInputChannel(channelId);
 			}
 
@@ -106,7 +105,7 @@ namespace
 			for (uint32_t i = 0; i < compositorNodeHeader.numberOfRenderTargetTextures; ++i)
 			{
 				RendererRuntime::v1CompositorNode::RenderTargetTexture renderTargetTexture;
-				inputStream.read(reinterpret_cast<char*>(&renderTargetTexture), sizeof(RendererRuntime::v1CompositorNode::RenderTargetTexture));
+				file.read(&renderTargetTexture, sizeof(RendererRuntime::v1CompositorNode::RenderTargetTexture));
 				compositorNodeResource.addRenderTargetTexture(renderTargetTexture.assetId, renderTargetTexture.renderTargetTextureSignature);
 			}
 
@@ -115,7 +114,7 @@ namespace
 			for (uint32_t i = 0; i < compositorNodeHeader.numberOfFramebuffers; ++i)
 			{
 				RendererRuntime::v1CompositorNode::Framebuffer framebuffer;
-				inputStream.read(reinterpret_cast<char*>(&framebuffer), sizeof(RendererRuntime::v1CompositorNode::Framebuffer));
+				file.read(&framebuffer, sizeof(RendererRuntime::v1CompositorNode::Framebuffer));
 				compositorNodeResource.addFramebuffer(framebuffer.compositorFramebufferId, framebuffer.framebufferSignature);
 			}
 
@@ -123,7 +122,7 @@ namespace
 			compositorNodeResource.reserveCompositorTargets(compositorNodeHeader.numberOfTargets);
 			for (uint32_t i = 0; i < compositorNodeHeader.numberOfTargets; ++i)
 			{
-				nodeTargetDeserialization(inputStream, compositorNodeResource, compositorPassFactory);
+				nodeTargetDeserialization(file, compositorNodeResource, compositorPassFactory);
 			}
 
 			// Read in the compositor resource node output channels
@@ -132,7 +131,7 @@ namespace
 			for (uint32_t i = 0; i < compositorNodeHeader.numberOfOutputChannels; ++i)
 			{
 				RendererRuntime::CompositorChannelId channelId;
-				inputStream.read(reinterpret_cast<char*>(&channelId), sizeof(RendererRuntime::CompositorChannelId));
+				file.read(&channelId, sizeof(RendererRuntime::CompositorChannelId));
 				compositorNodeResource.addOutputChannel(channelId);
 			}
 		}
@@ -161,31 +160,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void CompositorNodeResourceLoader::onDeserialization()
+	void CompositorNodeResourceLoader::onDeserialization(IFile& file)
 	{
 		const ICompositorPassFactory& compositorPassFactory = static_cast<CompositorNodeResourceManager&>(getResourceManager()).getCompositorPassFactory();
-		try
-		{
-			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-			if (!inputFileStream)
-			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
-			}
 
-			// Read in the compositor node header
-			v1CompositorNode::Header compositorNodeHeader;
-			inputFileStream.read(reinterpret_cast<char*>(&compositorNodeHeader), sizeof(v1CompositorNode::Header));
+		// Read in the compositor node header
+		v1CompositorNode::Header compositorNodeHeader;
+		file.read(&compositorNodeHeader, sizeof(v1CompositorNode::Header));
 
-			// Read in the compositor node resource
-			::detail::nodeDeserialization(inputFileStream, compositorNodeHeader, *mCompositorNodeResource, compositorPassFactory);
-		}
-		catch (const std::exception& e)
-		{
-			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load compositor node asset %u: %s", mAsset.assetId.getId(), e.what());
-		}
+		// Read in the compositor node resource
+		::detail::nodeDeserialization(file, compositorNodeHeader, *mCompositorNodeResource, compositorPassFactory);
 	}
 
 

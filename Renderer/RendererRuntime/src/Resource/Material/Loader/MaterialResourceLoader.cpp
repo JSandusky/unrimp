@@ -27,9 +27,8 @@
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Asset/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
-
-#include <fstream>
 
 
 //[-------------------------------------------------------]
@@ -48,49 +47,32 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void MaterialResourceLoader::onDeserialization()
+	void MaterialResourceLoader::onDeserialization(IFile& file)
 	{
-		// TODO(co) Error handling
-		try
-		{
-			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-			if (!inputFileStream)
+		// Read in the material header
+		v1Material::Header materialHeader;
+		file.read(&materialHeader, sizeof(v1Material::Header));
+
+		{ // Read techniques
+			mNumberOfTechniques = materialHeader.numberOfTechniques;
+
+			// Allocate memory for the temporary data
+			if (mMaximumNumberOfMaterialTechniques < mNumberOfTechniques)
 			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
+				delete [] mMaterialTechniques;
+				mMaximumNumberOfMaterialTechniques = mNumberOfTechniques;
+				mMaterialTechniques = new v1Material::Technique[mMaximumNumberOfMaterialTechniques];
 			}
 
-			// Read in the material header
-			v1Material::Header materialHeader;
-			inputFileStream.read(reinterpret_cast<char*>(&materialHeader), sizeof(v1Material::Header));
-
-			{ // Read techniques
-				mNumberOfTechniques = materialHeader.numberOfTechniques;
-
-				// Allocate memory for the temporary data
-				if (mMaximumNumberOfMaterialTechniques < mNumberOfTechniques)
-				{
-					delete [] mMaterialTechniques;
-					mMaximumNumberOfMaterialTechniques = mNumberOfTechniques;
-					mMaterialTechniques = new v1Material::Technique[mMaximumNumberOfMaterialTechniques];
-				}
-
-				// Read already sorted techniques
-				inputFileStream.read(reinterpret_cast<char*>(mMaterialTechniques), sizeof(v1Material::Technique) * mNumberOfTechniques);
-			}
-
-			// Read properties
-			// TODO(co) Get rid of the evil const-cast
-			MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialResource->mMaterialProperties.getSortedPropertyVector());
-			sortedPropertyVector.resize(materialHeader.numberOfProperties);
-			inputFileStream.read(reinterpret_cast<char*>(sortedPropertyVector.data()), sizeof(MaterialProperty) * materialHeader.numberOfProperties);
+			// Read already sorted techniques
+			file.read(mMaterialTechniques, sizeof(v1Material::Technique) * mNumberOfTechniques);
 		}
-		catch (const std::exception& e)
-		{
-			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load material asset %u: %s", mAsset.assetId.getId(), e.what());
-		}
+
+		// Read properties
+		// TODO(co) Get rid of the evil const-cast
+		MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialResource->mMaterialProperties.getSortedPropertyVector());
+		sortedPropertyVector.resize(materialHeader.numberOfProperties);
+		file.read(sortedPropertyVector.data(), sizeof(MaterialProperty) * materialHeader.numberOfProperties);
 	}
 
 	bool MaterialResourceLoader::onDispatch()

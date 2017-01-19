@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
-#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Asset/Asset.h"
 
 
 //[-------------------------------------------------------]
@@ -36,6 +36,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IFile;
 	class IResourceManager;
 }
 
@@ -79,6 +80,15 @@ namespace RendererRuntime
 		*/
 		inline IResourceManager& getResourceManager() const;
 
+		/**
+		*  @brief
+		*    Return the asset the resource is using
+		*
+		*  @return
+		*    The asset the resource is using
+		*/
+		inline const Asset& getAsset() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
@@ -93,8 +103,11 @@ namespace RendererRuntime
 		/**
 		*  @brief
 		*    Called when the resource loader has to deserialize (usually from file) the internal data into memory
+		*
+		*  @param[in] file
+		*    File to read from
 		*/
-		virtual void onDeserialization() = 0;
+		virtual void onDeserialization(IFile& file) = 0;
 
 		/**
 		*  @brief
@@ -129,6 +142,7 @@ namespace RendererRuntime
 		inline virtual ~IResourceLoader();
 		IResourceLoader(const IResourceLoader&) = delete;
 		IResourceLoader& operator=(const IResourceLoader&) = delete;
+		inline void initialize(const Asset& asset);
 
 
 	//[-------------------------------------------------------]
@@ -136,6 +150,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IResourceManager& mResourceManager;	///< Owner resource manager
+		Asset			  mAsset;			///< In order to be multi-threading safe in here, we need an asset copy
 
 
 	};

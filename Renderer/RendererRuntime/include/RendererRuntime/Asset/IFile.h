@@ -27,16 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
+#include "RendererRuntime/Core/NonCopyable.h"
 
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class TextureResource;
-}
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
 //[-------------------------------------------------------]
@@ -49,38 +42,61 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ITextureResourceLoader : protected IResourceLoader
+	/**
+	*  @brief
+	*    Abstract file interface
+	*
+	*  @note
+	*    - There's no "seek()" or "tell()" by intent, the renderer toolkit can transform the data so during runtime the most simple file access pattern is sufficient
+	*    - It's only called "file interface" because this is usually the name for such a concept, doesn't mean the concrete implementation needs to work with files
+	*    - Renderer runtime loaders try to read bigger chunks as often as possible instead of too fine granular byte wise read calls
+	*/
+	class IFile : public NonCopyable
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Public virtual RendererRuntime::IFile methods         ]
 	//[-------------------------------------------------------]
-		friend class TextureResourceManager;
+	public:
+		/**
+		*  @brief
+		*    Return the number of bytes inside the file
+		*
+		*  @return
+		*    The number of bytes inside the file
+		*/
+		virtual size_t getNumberOfBytes() = 0;
+
+		/**
+		*  @brief
+		*    Read a requested number of bytes from the file
+		*
+		*  @param[out] destinationBuffer
+		*    Destination buffer were to write to, must be at least "numberOfBytes" long, never ever a null pointer
+		*  @param[in] numberOfBytes
+		*    Number of bytes to write into the destination buffer, it's the callers responsibility that this number of byte is correct
+		*/
+		virtual void read(void* destinationBuffer, size_t numberOfBytes) = 0;
+
+		/**
+		*  @brief
+		*    Skip a requested number of bytes
+		*
+		*  @param[in] numberOfBytes
+		*    Number of bytes to skip, it's the callers responsibility that this number of byte is correct
+		*/
+		virtual void skip(size_t numberOfBytes) = 0;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline ITextureResourceLoader(IResourceManager& resourceManager);
-		inline virtual ~ITextureResourceLoader();
-		ITextureResourceLoader(const ITextureResourceLoader&) = delete;
-		ITextureResourceLoader& operator=(const ITextureResourceLoader&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected data                                        ]
-	//[-------------------------------------------------------]
-	protected:
-		TextureResource* mTextureResource;	///< Destination resource
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		inline void initialize(const Asset& asset, TextureResource& textureResource);
+		inline IFile();
+		inline virtual ~IFile();
+		IFile(const IFile&) = delete;
+		IFile& operator=(const IFile&) = delete;
 
 
 	};
@@ -95,4 +111,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Texture/Loader/ITextureResourceLoader.inl"
+#include "RendererRuntime/Asset/IFile.inl"

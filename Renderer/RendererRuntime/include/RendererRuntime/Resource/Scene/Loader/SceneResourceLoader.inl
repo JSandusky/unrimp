@@ -69,7 +69,7 @@ namespace RendererRuntime
 
 	inline void SceneResourceLoader::initialize(const Asset& asset, ISceneResource& sceneResource)
 	{
-		mAsset			= asset;
+		IResourceLoader::initialize(asset);
 		mSceneResource	= &sceneResource;
 	}
 

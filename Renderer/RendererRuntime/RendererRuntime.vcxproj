@@ -22,6 +22,7 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\RendererRuntime\Asset\AssetManager.inl" />
     <None Include="include\RendererRuntime\Asset\AssetPackage.inl" />
+    <None Include="include\RendererRuntime\Asset\IFile.inl" />
     <None Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.inl" />
     <None Include="include\RendererRuntime\Backend\RendererBackendManager.inl" />
     <None Include="include\RendererRuntime\Backend\RendererRuntimeImpl.inl" />
@@ -144,6 +145,7 @@
     <ClInclude Include="include\RendererRuntime\Asset\Asset.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetPackage.h" />
+    <ClInclude Include="include\RendererRuntime\Asset\IFile.h" />
     <ClInclude Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Backend\RendererBackendManager.h" />
     <ClInclude Include="include\RendererRuntime\Backend\RendererRuntimeImpl.h" />

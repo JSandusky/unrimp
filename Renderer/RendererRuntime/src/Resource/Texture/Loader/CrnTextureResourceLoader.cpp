@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Texture/Loader/CrnTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
+#include "RendererRuntime/Asset/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 // Disable warnings in external headers, we can't fix them
@@ -40,7 +41,6 @@ PRAGMA_WARNING_PUSH
 	#include <crunch/dds_defs.h>
 PRAGMA_WARNING_POP
 
-#include <fstream>
 #include <algorithm>
 
 
@@ -60,36 +60,17 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void CrnTextureResourceLoader::onDeserialization()
+	void CrnTextureResourceLoader::onDeserialization(IFile& file)
 	{
-		// TODO(co) Error handling
-		try
+		// Load the source image file into memory: Get file size and file data
+		mNumberOfUsedFileDataBytes = file.getNumberOfBytes();
+		if (mNumberOfFileDataBytes < mNumberOfUsedFileDataBytes)
 		{
-			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-			if (!inputFileStream)
-			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
-			}
-
-			// Load the source image file into memory: Get file size and file data
-			inputFileStream.seekg(0, std::istream::end);
-			mNumberOfUsedFileDataBytes = static_cast<uint32_t>(inputFileStream.tellg());
-			inputFileStream.seekg(0, std::istream::beg);
-			if (mNumberOfFileDataBytes < mNumberOfUsedFileDataBytes)
-			{
-				mNumberOfFileDataBytes = mNumberOfUsedFileDataBytes;
-				delete [] mFileData;
-				mFileData = new uint8_t[mNumberOfFileDataBytes];
-			}
-			inputFileStream.read(reinterpret_cast<char*>(mFileData), mNumberOfFileDataBytes);
+			mNumberOfFileDataBytes = mNumberOfUsedFileDataBytes;
+			delete [] mFileData;
+			mFileData = new uint8_t[mNumberOfFileDataBytes];
 		}
-		catch (const std::exception& e)
-		{
-			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %u: %s", mAsset.assetId.getId(), e.what());
-		}
+		file.read(mFileData, mNumberOfFileDataBytes);
 	}
 
 	void CrnTextureResourceLoader::onProcessing()

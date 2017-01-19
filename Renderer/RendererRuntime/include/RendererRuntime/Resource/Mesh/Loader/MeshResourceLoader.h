@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
-#include "RendererRuntime/Asset/Asset.h"
 
 
 //[-------------------------------------------------------]
@@ -83,7 +82,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void onDeserialization() override;
+		virtual void onDeserialization(IFile& file) override;
 		inline virtual void onProcessing() override;
 		virtual bool onDispatch() override;
 		virtual bool isFullyLoaded() override;
@@ -108,9 +107,7 @@ namespace RendererRuntime
 		IRendererRuntime&		  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		Renderer::IBufferManager& mBufferManager;	///< Buffer manager instance, do not destroy the instance
 		Renderer::IVertexArray*	  mVertexArray;		///< In case the used renderer backend supports native multi-threading we also create the renderer resource asynchronous, but the final resource pointer reassignment must still happen synchronous
-		// Resource source and destination
-		Asset				 mAsset;	///< In order to be multi-threading safe in here, we need an asset copy
-		MeshResource*		 mMeshResource;
+		MeshResource*			  mMeshResource;	///< Destination resource
 		// Temporary data
 		// Temporary vertex buffer
 		uint32_t mNumberOfVertexBufferDataBytes;

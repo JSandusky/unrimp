@@ -24,9 +24,9 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Texture/Loader/KtxTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
+#include "RendererRuntime/Asset/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-#include <fstream>
 #include <algorithm>
 
 
@@ -46,86 +46,69 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void KtxTextureResourceLoader::onDeserialization()
+	void KtxTextureResourceLoader::onDeserialization(IFile& file)
 	{
-		// TODO(co) Error handling
-		try
+		// Read in the image header
+		#pragma pack(push)
+		#pragma pack(1)
+			struct KtxHeader
+			{
+				uint8_t  identifier[12];
+				uint32_t endianness;
+				uint32_t glType;
+				uint32_t glTypeSize;
+				uint32_t glFormat;
+				uint32_t glInternalFormat;
+				uint32_t glBaseInternalFormat;
+				uint32_t pixelWidth;
+				uint32_t pixelHeight;
+				uint32_t pixelDepth;
+				uint32_t numberOfArrayElements;
+				uint32_t numberOfFaces;
+				uint32_t numberOfMipmapLevels;
+				uint32_t bytesOfKeyValueData;
+			};
+		#pragma pack(pop)
+		KtxHeader ktxHeader;
+		file.read(&ktxHeader, sizeof(KtxHeader));
+		file.skip(ktxHeader.bytesOfKeyValueData);
+		mWidth = ktxHeader.pixelWidth;
+		mHeight = ktxHeader.pixelHeight;
+		mTextureFormat = Renderer::TextureFormat::ETC1;	// TODO(co) Make this dynamic
+
+		// Get the size of the compressed image
+		mNumberOfUsedImageDataBytes = 0;
 		{
-			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-			if (!inputFileStream)
-			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
-			}
-
-			// Read in the image header
-			#pragma pack(push)
-			#pragma pack(1)
-				struct KtxHeader
-				{
-					uint8_t  identifier[12];
-					uint32_t endianness;
-					uint32_t glType;
-					uint32_t glTypeSize;
-					uint32_t glFormat;
-					uint32_t glInternalFormat;
-					uint32_t glBaseInternalFormat;
-					uint32_t pixelWidth;
-					uint32_t pixelHeight;
-					uint32_t pixelDepth;
-					uint32_t numberOfArrayElements;
-					uint32_t numberOfFaces;
-					uint32_t numberOfMipmapLevels;
-					uint32_t bytesOfKeyValueData;
-				};
-			#pragma pack(pop)
-			KtxHeader ktxHeader;
-			inputFileStream.read(reinterpret_cast<char*>(&ktxHeader), sizeof(KtxHeader));
-			inputFileStream.ignore(ktxHeader.bytesOfKeyValueData);
-			mWidth = ktxHeader.pixelWidth;
-			mHeight = ktxHeader.pixelHeight;
-			mTextureFormat = Renderer::TextureFormat::ETC1;	// TODO(co) Make this dynamic
-
-			// Get the size of the compressed image
-			mNumberOfUsedImageDataBytes = 0;
-			{
-				uint32_t width = mWidth;
-				uint32_t height = mHeight;
-				for (uint32_t mipmap = 0; mipmap < ktxHeader.numberOfMipmapLevels; ++mipmap)
-				{
-					mNumberOfUsedImageDataBytes += std::max((width * height) >> 1, 8u);
-					width = std::max(width >> 1, 1u);	// /= 2
-					height = std::max(height >> 1, 1u);	// /= 2
-				}
-			}
-			if (mNumberOfImageDataBytes < mNumberOfUsedImageDataBytes)
-			{
-				mNumberOfImageDataBytes = mNumberOfUsedImageDataBytes;
-				delete [] mImageData;
-				mImageData = new uint8_t[mNumberOfImageDataBytes];
-			}
-
-			// Load in the image data
-			uint8_t* currentImageData = mImageData;
 			uint32_t width = mWidth;
 			uint32_t height = mHeight;
 			for (uint32_t mipmap = 0; mipmap < ktxHeader.numberOfMipmapLevels; ++mipmap)
 			{
-				uint32_t imageSize = 0;
-				inputFileStream.read(reinterpret_cast<char*>(&imageSize), sizeof(uint32_t));
-				inputFileStream.read(reinterpret_cast<char*>(currentImageData), imageSize);
-
-				// Move on to the next mipmap
-				currentImageData += imageSize;
+				mNumberOfUsedImageDataBytes += std::max((width * height) >> 1, 8u);
 				width = std::max(width >> 1, 1u);	// /= 2
 				height = std::max(height >> 1, 1u);	// /= 2
 			}
 		}
-		catch (const std::exception& e)
+		if (mNumberOfImageDataBytes < mNumberOfUsedImageDataBytes)
 		{
-			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %u: %s", mAsset.assetId.getId(), e.what());
+			mNumberOfImageDataBytes = mNumberOfUsedImageDataBytes;
+			delete [] mImageData;
+			mImageData = new uint8_t[mNumberOfImageDataBytes];
+		}
+
+		// Load in the image data
+		uint8_t* currentImageData = mImageData;
+		uint32_t width = mWidth;
+		uint32_t height = mHeight;
+		for (uint32_t mipmap = 0; mipmap < ktxHeader.numberOfMipmapLevels; ++mipmap)
+		{
+			uint32_t imageSize = 0;
+			file.read(&imageSize, sizeof(uint32_t));
+			file.read(currentImageData, imageSize);
+
+			// Move on to the next mipmap
+			currentImageData += imageSize;
+			width = std::max(width >> 1, 1u);	// /= 2
+			height = std::max(height >> 1, 1u);	// /= 2
 		}
 
 		// Can we create the renderer resource asynchronous as well?

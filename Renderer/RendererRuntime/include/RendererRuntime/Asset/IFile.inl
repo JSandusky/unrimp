@@ -26,36 +26,16 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	inline IResourceManager& IResourceLoader::getResourceManager() const
-	{
-		return mResourceManager;
-	}
-
-	inline const Asset& IResourceLoader::getAsset() const
-	{
-		return mAsset;
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IResourceLoader::IResourceLoader(IResourceManager& resourceManager) :
-		mResourceManager(resourceManager)
+	inline IFile::IFile()
 	{
 		// Nothing here
 	}
 
-	inline IResourceLoader::~IResourceLoader()
+	inline IFile::~IFile()
 	{
 		// Nothing here
-	}
-
-	inline void IResourceLoader::initialize(const Asset& asset)
-	{
-		mAsset = asset;
 	}
 
 

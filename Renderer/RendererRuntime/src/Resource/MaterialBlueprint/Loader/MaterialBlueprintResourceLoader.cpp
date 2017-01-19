@@ -28,9 +28,8 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Asset/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
-
-#include <fstream>
 
 
 //[-------------------------------------------------------]
@@ -49,173 +48,156 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void MaterialBlueprintResourceLoader::onDeserialization()
+	void MaterialBlueprintResourceLoader::onDeserialization(IFile& file)
 	{
-		// TODO(co) Error handling
-		try
-		{
-			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-			if (!inputFileStream)
+		// Read in the material blueprint header
+		v1MaterialBlueprint::Header materialBlueprintHeader;
+		file.read(&materialBlueprintHeader, sizeof(v1MaterialBlueprint::Header));
+
+		{ // Read properties
+			// TODO(co) Get rid of the evil const-cast
+			MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mMaterialProperties.getSortedPropertyVector());
+			sortedPropertyVector.resize(materialBlueprintHeader.numberOfProperties);
+			file.read(sortedPropertyVector.data(), sizeof(MaterialProperty) * materialBlueprintHeader.numberOfProperties);
+		}
+
+		{ // Read visual importance of shader properties
+			// TODO(co) Get rid of the evil const-cast
+			ShaderProperties::SortedPropertyVector& sortedPropertyVector = const_cast<ShaderProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mVisualImportanceOfShaderProperties.getSortedPropertyVector());
+			sortedPropertyVector.resize(materialBlueprintHeader.numberOfShaderCombinationProperties);
+			file.read(sortedPropertyVector.data(), sizeof(ShaderProperties::Property) * materialBlueprintHeader.numberOfShaderCombinationProperties);
+		}
+
+		{ // Read maximum integer value of shader properties
+			// TODO(co) Get rid of the evil const-cast
+			ShaderProperties::SortedPropertyVector& sortedPropertyVector = const_cast<ShaderProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mMaximumIntegerValueOfShaderProperties.getSortedPropertyVector());
+			sortedPropertyVector.resize(materialBlueprintHeader.numberOfIntegerShaderCombinationProperties);
+			file.read(sortedPropertyVector.data(), sizeof(ShaderProperties::Property) * materialBlueprintHeader.numberOfIntegerShaderCombinationProperties);
+		}
+
+		{ // Read in the root signature
+			// Read in the root signature header
+			v1MaterialBlueprint::RootSignatureHeader rootSignatureHeader;
+			file.read(&rootSignatureHeader, sizeof(v1MaterialBlueprint::RootSignatureHeader));
+
+			// Allocate memory for the temporary data
+			if (mMaximumNumberOfRootParameters < rootSignatureHeader.numberOfRootParameters)
 			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
+				delete [] mRootParameters;
+				mMaximumNumberOfRootParameters = rootSignatureHeader.numberOfRootParameters;
+				mRootParameters = new Renderer::RootParameter[mMaximumNumberOfRootParameters];
+			}
+			if (mMaximumNumberOfDescriptorRanges < rootSignatureHeader.numberOfDescriptorRanges)
+			{
+				delete [] mDescriptorRanges;
+				mMaximumNumberOfDescriptorRanges = rootSignatureHeader.numberOfDescriptorRanges;
+				mDescriptorRanges = new Renderer::DescriptorRange[mMaximumNumberOfDescriptorRanges];
 			}
 
-			// Read in the material blueprint header
-			v1MaterialBlueprint::Header materialBlueprintHeader;
-			inputFileStream.read(reinterpret_cast<char*>(&materialBlueprintHeader), sizeof(v1MaterialBlueprint::Header));
+			// Load in the root parameters
+			file.read(mRootParameters, sizeof(Renderer::RootParameter) * rootSignatureHeader.numberOfRootParameters);
 
-			{ // Read properties
-				// TODO(co) Get rid of the evil const-cast
-				MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mMaterialProperties.getSortedPropertyVector());
-				sortedPropertyVector.resize(materialBlueprintHeader.numberOfProperties);
-				inputFileStream.read(reinterpret_cast<char*>(sortedPropertyVector.data()), sizeof(MaterialProperty) * materialBlueprintHeader.numberOfProperties);
-			}
+			// Load in the descriptor ranges
+			file.read(mDescriptorRanges, sizeof(Renderer::DescriptorRange) * rootSignatureHeader.numberOfDescriptorRanges);
 
-			{ // Read visual importance of shader properties
-				// TODO(co) Get rid of the evil const-cast
-				ShaderProperties::SortedPropertyVector& sortedPropertyVector = const_cast<ShaderProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mVisualImportanceOfShaderProperties.getSortedPropertyVector());
-				sortedPropertyVector.resize(materialBlueprintHeader.numberOfShaderCombinationProperties);
-				inputFileStream.read(reinterpret_cast<char*>(sortedPropertyVector.data()), sizeof(ShaderProperties::Property) * materialBlueprintHeader.numberOfShaderCombinationProperties);
-			}
+			// Prepare our temporary root signature
+			mRootSignature.numberOfParameters	  = rootSignatureHeader.numberOfRootParameters;
+			mRootSignature.parameters			  = mRootParameters;
+			mRootSignature.numberOfStaticSamplers = rootSignatureHeader.numberOfStaticSamplers;
+			mRootSignature.staticSamplers		  = nullptr;	// TODO(co) Add support for static samplers
+			mRootSignature.flags				  = static_cast<Renderer::RootSignatureFlags::Enum>(rootSignatureHeader.flags);
 
-			{ // Read maximum integer value of shader properties
-				// TODO(co) Get rid of the evil const-cast
-				ShaderProperties::SortedPropertyVector& sortedPropertyVector = const_cast<ShaderProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mMaximumIntegerValueOfShaderProperties.getSortedPropertyVector());
-				sortedPropertyVector.resize(materialBlueprintHeader.numberOfIntegerShaderCombinationProperties);
-				inputFileStream.read(reinterpret_cast<char*>(sortedPropertyVector.data()), sizeof(ShaderProperties::Property) * materialBlueprintHeader.numberOfIntegerShaderCombinationProperties);
-			}
-
-			{ // Read in the root signature
-				// Read in the root signature header
-				v1MaterialBlueprint::RootSignatureHeader rootSignatureHeader;
-				inputFileStream.read(reinterpret_cast<char*>(&rootSignatureHeader), sizeof(v1MaterialBlueprint::RootSignatureHeader));
-
-				// Allocate memory for the temporary data
-				if (mMaximumNumberOfRootParameters < rootSignatureHeader.numberOfRootParameters)
+			{ // Tell the temporary root signature about the descriptor ranges
+				Renderer::DescriptorRange* descriptorRange = mDescriptorRanges;
+				for (uint32_t i = 0; i < rootSignatureHeader.numberOfRootParameters; ++i)
 				{
-					delete [] mRootParameters;
-					mMaximumNumberOfRootParameters = rootSignatureHeader.numberOfRootParameters;
-					mRootParameters = new Renderer::RootParameter[mMaximumNumberOfRootParameters];
-				}
-				if (mMaximumNumberOfDescriptorRanges < rootSignatureHeader.numberOfDescriptorRanges)
-				{
-					delete [] mDescriptorRanges;
-					mMaximumNumberOfDescriptorRanges = rootSignatureHeader.numberOfDescriptorRanges;
-					mDescriptorRanges = new Renderer::DescriptorRange[mMaximumNumberOfDescriptorRanges];
-				}
-
-				// Load in the root parameters
-				inputFileStream.read(reinterpret_cast<char*>(mRootParameters), sizeof(Renderer::RootParameter) * rootSignatureHeader.numberOfRootParameters);
-
-				// Load in the descriptor ranges
-				inputFileStream.read(reinterpret_cast<char*>(mDescriptorRanges), sizeof(Renderer::DescriptorRange) * rootSignatureHeader.numberOfDescriptorRanges);
-
-				// Prepare our temporary root signature
-				mRootSignature.numberOfParameters	  = rootSignatureHeader.numberOfRootParameters;
-				mRootSignature.parameters			  = mRootParameters;
-				mRootSignature.numberOfStaticSamplers = rootSignatureHeader.numberOfStaticSamplers;
-				mRootSignature.staticSamplers		  = nullptr;	// TODO(co) Add support for static samplers
-				mRootSignature.flags				  = static_cast<Renderer::RootSignatureFlags::Enum>(rootSignatureHeader.flags);
-
-				{ // Tell the temporary root signature about the descriptor ranges
-					Renderer::DescriptorRange* descriptorRange = mDescriptorRanges;
-					for (uint32_t i = 0; i < rootSignatureHeader.numberOfRootParameters; ++i)
+					Renderer::RootParameter& rootParameter = mRootParameters[i];
+					if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 					{
-						Renderer::RootParameter& rootParameter = mRootParameters[i];
-						if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
-						{
-							rootParameter.descriptorTable.descriptorRanges = descriptorRange;
-							descriptorRange += rootParameter.descriptorTable.numberOfDescriptorRanges;
-						}
+						rootParameter.descriptorTable.descriptorRanges = descriptorRange;
+						descriptorRange += rootParameter.descriptorTable.numberOfDescriptorRanges;
 					}
 				}
 			}
+		}
 
-			{ // Read in the pipeline state
-				// Read in the shader blueprints
-				inputFileStream.read(reinterpret_cast<char*>(&mShaderBlueprintAssetId), sizeof(AssetId) * NUMBER_OF_SHADER_TYPES);
+		{ // Read in the pipeline state
+			// Read in the shader blueprints
+			file.read(&mShaderBlueprintAssetId, sizeof(AssetId) * NUMBER_OF_SHADER_TYPES);
 
-				// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
-				// Read in the pipeline state
-				inputFileStream.read(reinterpret_cast<char*>(&mMaterialBlueprintResource->mPipelineState), sizeof(Renderer::PipelineState));
-			}
+			// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
+			// Read in the pipeline state
+			file.read(&mMaterialBlueprintResource->mPipelineState, sizeof(Renderer::PipelineState));
+		}
 
-			{ // Read in the uniform buffers
-				MaterialBlueprintResource::UniformBuffers& uniformBuffers = mMaterialBlueprintResource->mUniformBuffers;
-				uniformBuffers.resize(materialBlueprintHeader.numberOfUniformBuffers);
-				for (uint32_t i = 0; i < materialBlueprintHeader.numberOfUniformBuffers; ++i)
-				{
-					MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
+		{ // Read in the uniform buffers
+			MaterialBlueprintResource::UniformBuffers& uniformBuffers = mMaterialBlueprintResource->mUniformBuffers;
+			uniformBuffers.resize(materialBlueprintHeader.numberOfUniformBuffers);
+			for (uint32_t i = 0; i < materialBlueprintHeader.numberOfUniformBuffers; ++i)
+			{
+				MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
 
-					// Read in the uniform buffer header
-					v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
-					inputFileStream.read(reinterpret_cast<char*>(&uniformBufferHeader), sizeof(v1MaterialBlueprint::UniformBufferHeader));
-					uniformBuffer.rootParameterIndex		 = uniformBufferHeader.rootParameterIndex;
-					uniformBuffer.bufferUsage				 = uniformBufferHeader.bufferUsage;
-					uniformBuffer.numberOfElements			 = uniformBufferHeader.numberOfElements;
-					uniformBuffer.uniformBufferNumberOfBytes = uniformBufferHeader.uniformBufferNumberOfBytes;
+				// Read in the uniform buffer header
+				v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
+				file.read(&uniformBufferHeader, sizeof(v1MaterialBlueprint::UniformBufferHeader));
+				uniformBuffer.rootParameterIndex		 = uniformBufferHeader.rootParameterIndex;
+				uniformBuffer.bufferUsage				 = uniformBufferHeader.bufferUsage;
+				uniformBuffer.numberOfElements			 = uniformBufferHeader.numberOfElements;
+				uniformBuffer.uniformBufferNumberOfBytes = uniformBufferHeader.uniformBufferNumberOfBytes;
 
-					// Read in the uniform buffer property elements
-					MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = uniformBuffer.uniformBufferElementProperties;
-					uniformBufferElementProperties.resize(uniformBufferHeader.numberOfElementProperties);
-					inputFileStream.read(reinterpret_cast<char*>(uniformBufferElementProperties.data()), sizeof(MaterialProperty) * uniformBufferHeader.numberOfElementProperties);
-				}
-			}
-
-			{ // Read in the texture buffers
-				MaterialBlueprintResource::TextureBuffers& textureBuffers = mMaterialBlueprintResource->mTextureBuffers;
-				textureBuffers.resize(materialBlueprintHeader.numberOfTextureBuffers);
-				for (uint32_t i = 0; i < materialBlueprintHeader.numberOfTextureBuffers; ++i)
-				{
-					MaterialBlueprintResource::TextureBuffer& textureBuffer = textureBuffers[i];
-
-					// Read in the texture buffer header
-					v1MaterialBlueprint::TextureBufferHeader textureBufferHeader;
-					inputFileStream.read(reinterpret_cast<char*>(&textureBufferHeader), sizeof(v1MaterialBlueprint::TextureBufferHeader));
-					textureBuffer.rootParameterIndex		 = textureBufferHeader.rootParameterIndex;
-					textureBuffer.bufferUsage				 = textureBufferHeader.bufferUsage;
-					textureBuffer.materialPropertyValue		 = textureBufferHeader.materialPropertyValue;
-				}
-			}
-
-			{ // Read in the sampler states
-				// Allocate memory for the temporary data
-				if (mMaximumNumberOfMaterialBlueprintSamplerStates < materialBlueprintHeader.numberOfSamplerStates)
-				{
-					delete [] mMaterialBlueprintSamplerStates;
-					mMaximumNumberOfMaterialBlueprintSamplerStates = materialBlueprintHeader.numberOfSamplerStates;
-					mMaterialBlueprintSamplerStates = new v1MaterialBlueprint::SamplerState[mMaximumNumberOfMaterialBlueprintSamplerStates];
-				}
-
-				// Read in the sampler states
-				inputFileStream.read(reinterpret_cast<char*>(mMaterialBlueprintSamplerStates), sizeof(v1MaterialBlueprint::SamplerState) * materialBlueprintHeader.numberOfSamplerStates);
-
-				// Allocate material blueprint resource sampler states
-				mMaterialBlueprintResource->mSamplerStates.resize(materialBlueprintHeader.numberOfSamplerStates);
-			}
-
-			{ // Read in the textures
-				// Allocate memory for the temporary data
-				if (mMaximumNumberOfMaterialBlueprintTextures < materialBlueprintHeader.numberOfTextures)
-				{
-					delete [] mMaterialBlueprintTextures;
-					mMaximumNumberOfMaterialBlueprintTextures = materialBlueprintHeader.numberOfTextures;
-					mMaterialBlueprintTextures = new v1MaterialBlueprint::Texture[mMaximumNumberOfMaterialBlueprintTextures];
-				}
-
-				// Read in the textures
-				inputFileStream.read(reinterpret_cast<char*>(mMaterialBlueprintTextures), sizeof(v1MaterialBlueprint::Texture) * materialBlueprintHeader.numberOfTextures);
-
-				// Allocate material blueprint resource textures
-				mMaterialBlueprintResource->mTextures.resize(materialBlueprintHeader.numberOfTextures);
+				// Read in the uniform buffer property elements
+				MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = uniformBuffer.uniformBufferElementProperties;
+				uniformBufferElementProperties.resize(uniformBufferHeader.numberOfElementProperties);
+				file.read(uniformBufferElementProperties.data(), sizeof(MaterialProperty) * uniformBufferHeader.numberOfElementProperties);
 			}
 		}
-		catch (const std::exception& e)
-		{
-			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load material blueprint asset %u: %s", mAsset.assetId.getId(), e.what());
+
+		{ // Read in the texture buffers
+			MaterialBlueprintResource::TextureBuffers& textureBuffers = mMaterialBlueprintResource->mTextureBuffers;
+			textureBuffers.resize(materialBlueprintHeader.numberOfTextureBuffers);
+			for (uint32_t i = 0; i < materialBlueprintHeader.numberOfTextureBuffers; ++i)
+			{
+				MaterialBlueprintResource::TextureBuffer& textureBuffer = textureBuffers[i];
+
+				// Read in the texture buffer header
+				v1MaterialBlueprint::TextureBufferHeader textureBufferHeader;
+				file.read(&textureBufferHeader, sizeof(v1MaterialBlueprint::TextureBufferHeader));
+				textureBuffer.rootParameterIndex		 = textureBufferHeader.rootParameterIndex;
+				textureBuffer.bufferUsage				 = textureBufferHeader.bufferUsage;
+				textureBuffer.materialPropertyValue		 = textureBufferHeader.materialPropertyValue;
+			}
+		}
+
+		{ // Read in the sampler states
+			// Allocate memory for the temporary data
+			if (mMaximumNumberOfMaterialBlueprintSamplerStates < materialBlueprintHeader.numberOfSamplerStates)
+			{
+				delete [] mMaterialBlueprintSamplerStates;
+				mMaximumNumberOfMaterialBlueprintSamplerStates = materialBlueprintHeader.numberOfSamplerStates;
+				mMaterialBlueprintSamplerStates = new v1MaterialBlueprint::SamplerState[mMaximumNumberOfMaterialBlueprintSamplerStates];
+			}
+
+			// Read in the sampler states
+			file.read(mMaterialBlueprintSamplerStates, sizeof(v1MaterialBlueprint::SamplerState) * materialBlueprintHeader.numberOfSamplerStates);
+
+			// Allocate material blueprint resource sampler states
+			mMaterialBlueprintResource->mSamplerStates.resize(materialBlueprintHeader.numberOfSamplerStates);
+		}
+
+		{ // Read in the textures
+			// Allocate memory for the temporary data
+			if (mMaximumNumberOfMaterialBlueprintTextures < materialBlueprintHeader.numberOfTextures)
+			{
+				delete [] mMaterialBlueprintTextures;
+				mMaximumNumberOfMaterialBlueprintTextures = materialBlueprintHeader.numberOfTextures;
+				mMaterialBlueprintTextures = new v1MaterialBlueprint::Texture[mMaximumNumberOfMaterialBlueprintTextures];
+			}
+
+			// Read in the textures
+			file.read(mMaterialBlueprintTextures, sizeof(v1MaterialBlueprint::Texture) * materialBlueprintHeader.numberOfTextures);
+
+			// Allocate material blueprint resource textures
+			mMaterialBlueprintResource->mTextures.resize(materialBlueprintHeader.numberOfTextures);
 		}
 	}
 

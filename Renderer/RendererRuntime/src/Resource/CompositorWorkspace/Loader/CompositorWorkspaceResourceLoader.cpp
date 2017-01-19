@@ -25,8 +25,7 @@
 #include "RendererRuntime/Resource/CompositorWorkspace/Loader/CompositorWorkspaceResourceLoader.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/Loader/CompositorWorkspaceFileFormat.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResource.h"
-
-#include <fstream>
+#include "RendererRuntime/Asset/IFile.h"
 
 
 // TODO(co) Possible performance improvement: Inside "CompositorWorkspaceResourceLoader::onDeserialization()" load everything directly into memory,
@@ -47,18 +46,18 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void nodesDeserialization(std::istream& inputStream, RendererRuntime::CompositorWorkspaceResource& compositorWorkspaceResource)
+		void nodesDeserialization(RendererRuntime::IFile& file, RendererRuntime::CompositorWorkspaceResource& compositorWorkspaceResource)
 		{
 			// Read in the compositor workspace resource nodes
 			RendererRuntime::v1CompositorWorkspace::Nodes nodes;
-			inputStream.read(reinterpret_cast<char*>(&nodes), sizeof(RendererRuntime::v1CompositorWorkspace::Nodes));
+			file.read(&nodes, sizeof(RendererRuntime::v1CompositorWorkspace::Nodes));
 
 			// Read in the compositor node asset IDs
 			compositorWorkspaceResource.reserveCompositorNodes(nodes.numberOfNodes);
 			// TODO(co) Get rid of the evil const-cast
 			RendererRuntime::CompositorWorkspaceResource::CompositorNodeAssetIds& compositorNodeAssetIds = const_cast<RendererRuntime::CompositorWorkspaceResource::CompositorNodeAssetIds&>(compositorWorkspaceResource.getCompositorNodeAssetIds());
 			compositorNodeAssetIds.resize(nodes.numberOfNodes);
-			inputStream.read(reinterpret_cast<char*>(compositorNodeAssetIds.data()), sizeof(RendererRuntime::AssetId) * nodes.numberOfNodes);
+			file.read(compositorNodeAssetIds.data(), sizeof(RendererRuntime::AssetId) * nodes.numberOfNodes);
 		}
 
 
@@ -85,30 +84,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void CompositorWorkspaceResourceLoader::onDeserialization()
+	void CompositorWorkspaceResourceLoader::onDeserialization(IFile& file)
 	{
-		try
-		{
-			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-			if (!inputFileStream)
-			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
-			}
+		// Read in the compositor workspace header
+		v1CompositorWorkspace::Header compositorWorkspaceHeader;
+		file.read(&compositorWorkspaceHeader, sizeof(v1CompositorWorkspace::Header));
 
-			// Read in the compositor workspace header
-			v1CompositorWorkspace::Header compositorWorkspaceHeader;
-			inputFileStream.read(reinterpret_cast<char*>(&compositorWorkspaceHeader), sizeof(v1CompositorWorkspace::Header));
-
-			// Read in the compositor workspace resource nodes
-			::detail::nodesDeserialization(inputFileStream, *mCompositorWorkspaceResource);
-		}
-		catch (const std::exception& e)
-		{
-			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load compositor workspace asset %u: %s", mAsset.assetId.getId(), e.what());
-		}
+		// Read in the compositor workspace resource nodes
+		::detail::nodesDeserialization(file, *mCompositorWorkspaceResource);
 	}
 
 

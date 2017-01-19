@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
-#include "RendererRuntime/Asset/Asset.h"
 
 
 //[-------------------------------------------------------]
@@ -73,7 +72,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void onDeserialization() override;
+		virtual void onDeserialization(IFile& file) override;
 		inline virtual void onProcessing() override;
 		inline virtual bool onDispatch() override;
 		inline virtual bool isFullyLoaded() override;
@@ -94,10 +93,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		// Resource source and destination
-		Asset				 mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
-		ShaderPieceResource* mShaderPieceResource;
+		IRendererRuntime&	 mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
+		ShaderPieceResource* mShaderPieceResource;	///< Destination resource
 		// Temporary data
 		uint32_t mMaximumNumberOfShaderSourceCodeBytes;
 		char*	 mShaderSourceCode;

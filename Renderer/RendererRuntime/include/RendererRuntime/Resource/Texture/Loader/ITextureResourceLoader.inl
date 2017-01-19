@@ -46,7 +46,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline void ITextureResourceLoader::initialize(const Asset& asset, TextureResource& textureResource)
 	{
-		mAsset			 = asset;
+		IResourceLoader::initialize(asset);
 		mTextureResource = &textureResource;
 	}
 

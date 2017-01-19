@@ -24,9 +24,8 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Texture/Loader/DdsTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
+#include "RendererRuntime/Asset/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
-
-#include <fstream>
 
 
 //[-------------------------------------------------------]
@@ -134,512 +133,496 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void DdsTextureResourceLoader::onDeserialization()
+	void DdsTextureResourceLoader::onDeserialization(IFile& file)
 	{
-		// TODO(co) Error handling
 		// TODO(co) Cleanup and complete, currently just a prototype
-		try
+
+		#define MCHAR4(a, b, c, d) (a | (b << 8) | (c << 16) | (d << 24))
+
+		// Read the header
+		::detail::DdsHeader ddsHeader;
+		file.read(&ddsHeader, sizeof(::detail::DdsHeader));
+		if (ddsHeader.magic[0] == 'D' && ddsHeader.magic[1] == 'D' && ddsHeader.magic[2] == 'S' && ddsHeader.magic[3] == ' ' &&
+			// Note that if "size" is "DDS " this is not a valid dds file according
+			// to the file spec. Some broken tool out there seems to produce files
+			// with this value in the size field, so we support reading them...
+			(ddsHeader.size == 124 || ddsHeader.size != MCHAR4('D', 'D', 'S', ' ')))
 		{
-			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-			if (!inputFileStream)
+			// Get the color format and compression
+			// TODO(co)
+		//	EDataFormat  nDataFormat = DataByte;
+		//	EColorFormat nColorFormat;
+		//	EColorFormat nInternalColorFormat;
+		//	ECompression nCompression = CompressionNone;
+
+			// Get the depth
+			const uint32_t depth = ddsHeader.depth ? ddsHeader.depth : 1;
+
+			// Is this image compressed?
+			if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_FOURCC)
 			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
-			}
-
-			#define MCHAR4(a, b, c, d) (a | (b << 8) | (c << 16) | (d << 24))
-
-			// Read the header
-			::detail::DdsHeader ddsHeader;
-			inputFileStream.read(reinterpret_cast<char*>(&ddsHeader), sizeof(::detail::DdsHeader));
-			if (ddsHeader.magic[0] == 'D' && ddsHeader.magic[1] == 'D' && ddsHeader.magic[2] == 'S' && ddsHeader.magic[3] == ' ' &&
-				// Note that if "size" is "DDS " this is not a valid dds file according
-				// to the file spec. Some broken tool out there seems to produce files
-				// with this value in the size field, so we support reading them...
-				(ddsHeader.size == 124 || ddsHeader.size != MCHAR4('D', 'D', 'S', ' ')))
-			{
-				// Get the color format and compression
-				// TODO(co)
-			//	EDataFormat  nDataFormat = DataByte;
-			//	EColorFormat nColorFormat;
-			//	EColorFormat nInternalColorFormat;
-			//	ECompression nCompression = CompressionNone;
-
-				// Get the depth
-				const uint32_t depth = ddsHeader.depth ? ddsHeader.depth : 1;
-
-				// Is this image compressed?
-				if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_FOURCC)
+				// The image is compressed
+				if (ddsHeader.ddpfPixelFormat.fourCC == MCHAR4('D', 'X', '1', '0'))
 				{
-					// The image is compressed
-					if (ddsHeader.ddpfPixelFormat.fourCC == MCHAR4('D', 'X', '1', '0'))
+					// Read the DX10 header
+					::detail::DdsHeaderDX10 ddsHeaderDX10;
+					file.read(&ddsHeaderDX10, sizeof(::detail::DdsHeaderDX10));
+
+					// Get the color format and compression
+					switch (ddsHeaderDX10.DXGIFormat)
 					{
-						// Read the DX10 header
-						::detail::DdsHeaderDX10 ddsHeaderDX10;
-						inputFileStream.read(reinterpret_cast<char*>(&ddsHeaderDX10), sizeof(::detail::DdsHeaderDX10));
+					// Integer
+						// R8 UNORM
+						case 61:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscale;
+							break;
 
-						// Get the color format and compression
-						switch (ddsHeaderDX10.DXGIFormat)
-						{
-						// Integer
-							// R8 UNORM
-							case 61:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscale;
-								break;
+						// RG8 UNORM
+						case 49:
+							// TODO(co)
+							// nInternalColorFormat = (ddsHeader.ddpfPixelFormat.BBitMask == 0xFF) ? ColorBGR : ColorRGB;
+							// nColorFormat = ColorRGB;	// Store it as RGB
+							break;
 
-							// RG8 UNORM
-							case 49:
-								// TODO(co)
-								// nInternalColorFormat = (ddsHeader.ddpfPixelFormat.BBitMask == 0xFF) ? ColorBGR : ColorRGB;
-								// nColorFormat = ColorRGB;	// Store it as RGB
-								break;
+						// RGBA8 UNORM
+						case 28:
+							// TODO(co)
+							// nInternalColorFormat = (ddsHeader.ddpfPixelFormat.BBitMask == 0xFF) ? ColorBGRA : ColorRGBA;
+							// nColorFormat = ColorRGBA;
+							break;
 
-							// RGBA8 UNORM
-							case 28:
-								// TODO(co)
-								// nInternalColorFormat = (ddsHeader.ddpfPixelFormat.BBitMask == 0xFF) ? ColorBGRA : ColorRGBA;
-								// nColorFormat = ColorRGBA;
-								break;
+					// 16 bit float
+						// R16F
+						case 54:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscale;
+							// nDataFormat = DataHalf;
+							break;
 
-						// 16 bit float
-							// R16F
-							case 54:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscale;
-								// nDataFormat = DataHalf;
-								break;
+						// RG16F
+						case 34:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
+							// nDataFormat = DataHalf;
+							break;
 
-							// RG16F
-							case 34:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
-								// nDataFormat = DataHalf;
-								break;
+						// RGBA16F
+						case 10:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorRGBA;
+							// nDataFormat = DataHalf;
+							break;
 
-							// RGBA16F
-							case 10:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorRGBA;
-								// nDataFormat = DataHalf;
-								break;
+					// IEEE 32 bit float
+						// R32F
+						case 41:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscale;
+							// nDataFormat = DataFloat;
+							break;
 
-						// IEEE 32 bit float
-							// R32F
-							case 41:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscale;
-								// nDataFormat = DataFloat;
-								break;
+						// RG32F
+						case 16:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
+							// nDataFormat = DataFloat;
+							break;
 
-							// RG32F
-							case 16:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
-								// nDataFormat = DataFloat;
-								break;
+						// RGB32F
+						case 6:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorRGB;
+							// nDataFormat = DataFloat;
+							break;
 
-							// RGB32F
-							case 6:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorRGB;
-								// nDataFormat = DataFloat;
-								break;
+						// RGBA32F
+						case 2:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorRGBA;
+							// nDataFormat = DataFloat;
+							break;
 
-							// RGBA32F
-							case 2:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorRGBA;
-								// nDataFormat = DataFloat;
-								break;
+					// Compressed
+						// DXT1 (BC1 UNORM)
+						case 71:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorRGB;
+							// nCompression = CompressionDXT1;
+							break;
 
-						// Compressed
-							// DXT1 (BC1 UNORM)
-							case 71:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorRGB;
-								// nCompression = CompressionDXT1;
-								break;
+						// DXT3 (BC2 UNORM)
+						case 74:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorRGBA;
+							// nCompression = CompressionDXT3;
+							break;
 
-							// DXT3 (BC2 UNORM)
-							case 74:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorRGBA;
-								// nCompression = CompressionDXT3;
-								break;
+						// DXT5 (BC3 UNORM)
+						case 77:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorRGBA;
+							// nCompression = CompressionDXT5;
+							break;
 
-							// DXT5 (BC3 UNORM)
-							case 77:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorRGBA;
-								// nCompression = CompressionDXT5;
-								break;
+						// LATC1 (BC4 UNORM, previously known as ATI1N)
+						case 80:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscale;
+							// nCompression = CompressionLATC1;
+							break;
 
-							// LATC1 (BC4 UNORM, previously known as ATI1N)
-							case 80:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscale;
-								// nCompression = CompressionLATC1;
-								break;
+						// LATC2 (BC5 UNORM, previously known as ATI2N)
+						case 83:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
+							// nCompression = CompressionLATC2;
+							break;
 
-							// LATC2 (BC5 UNORM, previously known as ATI2N)
-							case 83:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
-								// nCompression = CompressionLATC2;
-								break;
-
-							default:
-								// Error: Unsupported format
-								return;
-						}
-					}
-					else
-					{
-						switch (ddsHeader.ddpfPixelFormat.fourCC)
-						{
-						// 16 bit float
-							// R16F
-							case 111:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscale;
-								// nDataFormat = DataHalf;
-								break;
-
-							// RG16F
-							case 112:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
-								// nDataFormat = DataHalf;
-								break;
-
-							// RGBA16F
-							case 113:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorRGBA;
-								// nDataFormat = DataHalf;
-								break;
-
-						// IEEE 32 bit float
-							// R32F
-							case 114:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscale;
-								// nDataFormat = DataFloat;
-								break;
-
-							// RG32F
-							case 115:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
-								// nDataFormat = DataFloat;
-								break;
-
-							// RGBA32F
-							case 116:
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorRGBA;
-								// nDataFormat = DataFloat;
-								break;
-
-						// Compressed
-							// DXT1 (BC1 UNORM)
-							case MCHAR4('D', 'X', 'T', '1'):
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorRGB;
-								// nCompression = CompressionDXT1;
-								break;
-
-							// DXT3 (BC2 UNORM)
-							case MCHAR4('D', 'X', 'T', '3'):
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorRGBA;
-								// nCompression = CompressionDXT3;
-								break;
-
-							// DXT5 (BC3 UNORM)
-							case MCHAR4('D', 'X', 'T', '5'):
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorRGBA;
-								// nCompression = CompressionDXT5;
-								break;
-
-							// LATC1 (BC4 UNORM, previously known as ATI1N)
-							case MCHAR4('A', 'T', 'I', '1'):
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscale;
-								// nCompression = CompressionLATC1;
-								break;
-
-							// LATC2 (BC5 UNORM, previously known as ATI2N)
-							case MCHAR4('A', 'T', 'I', '2'):
-								// TODO(co)
-								// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
-								// nCompression = CompressionLATC2;
-								break;
-
-						// Uncompressed
-							default:
-								switch (ddsHeader.ddpfPixelFormat.RGBBitCount)
-								{
-									// R8
-									case 8:
-										// TODO(co)
-										// nInternalColorFormat = nColorFormat = ColorGrayscale;
-										break;
-
-									// LA8
-									case 16:
-										if (ddsHeader.ddpfPixelFormat.RGBAlphaBitMask == 0xFF00)
-										{
-											// TODO(co)
-											// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
-										}
-										else
-										{
-											// Error: Unsupported format
-											return;
-										}
-										break;
-
-									// RGB8
-									case 24:
-										// TODO(co)
-										// nInternalColorFormat = (ddsHeader.ddpfPixelFormat.BBitMask == 0xFF) ? ColorBGR : ColorRGB;
-										// nColorFormat         = ColorRGB;
-										break;
-
-									// RGBA8
-									case 32:
-										if (ddsHeader.ddpfPixelFormat.RBitMask != 0x3FF00000)
-										{
-											// TODO(co)
-											// nInternalColorFormat = (ddsHeader.ddpfPixelFormat.BBitMask == 0xFF) ? ColorBGRA : ColorRGBA;
-											// nColorFormat         = ColorRGBA;
-										}
-										else
-										{
-											// Error: Unsupported format
-											return;
-										}
-										break;
-
-									default:
-										// Error: Unsupported format
-										return;
-								}
-						}
+						default:
+							// Error: Unsupported format
+							return;
 					}
 				}
 				else
 				{
-					// The image is not compressed
-					if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_LUMINANCE)
+					switch (ddsHeader.ddpfPixelFormat.fourCC)
 					{
-						if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_ALPHAPIXELS)
-						{
-							// TODO(co)
-							// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
-						}
-						else
-						{
+					// 16 bit float
+						// R16F
+						case 111:
 							// TODO(co)
 							// nInternalColorFormat = nColorFormat = ColorGrayscale;
-						}
-					}
-					else
-					{
-						if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_ALPHAPIXELS)
-						{
-							// Set color format, please not that all bit mask relevant stuff is done inside "DecompressRGBA()"
+							// nDataFormat = DataHalf;
+							break;
+
+						// RG16F
+						case 112:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
+							// nDataFormat = DataHalf;
+							break;
+
+						// RGBA16F
+						case 113:
 							// TODO(co)
 							// nInternalColorFormat = nColorFormat = ColorRGBA;
-						}
-						else
-						{
-							// Set color format, please not that all bit mask relevant stuff is done inside "DecompressRGBA()"
+							// nDataFormat = DataHalf;
+							break;
+
+					// IEEE 32 bit float
+						// R32F
+						case 114:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscale;
+							// nDataFormat = DataFloat;
+							break;
+
+						// RG32F
+						case 115:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
+							// nDataFormat = DataFloat;
+							break;
+
+						// RGBA32F
+						case 116:
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorRGBA;
+							// nDataFormat = DataFloat;
+							break;
+
+					// Compressed
+						// DXT1 (BC1 UNORM)
+						case MCHAR4('D', 'X', 'T', '1'):
 							// TODO(co)
 							// nInternalColorFormat = nColorFormat = ColorRGB;
-						}
-					}
+							// nCompression = CompressionDXT1;
+							break;
 
-					// Microsoft bug, they're not following their own documentation
-					if (!(ddsHeader.ddpfPixelFormat.flags & (::detail::DDS_LINEARSIZE | ::detail::DDS_PITCH)) || !ddsHeader.pitchOrLinearSize)
-					{
-						ddsHeader.ddpfPixelFormat.flags |= ::detail::DDS_LINEARSIZE;
-					}
-				}
+						// DXT3 (BC2 UNORM)
+						case MCHAR4('D', 'X', 'T', '3'):
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorRGBA;
+							// nCompression = CompressionDXT3;
+							break;
 
-				// Get the number of mipmaps
-				const uint32_t numberOfMipmaps = (!ddsHeader.mipMapCount) ? 1 : ddsHeader.mipMapCount;
+						// DXT5 (BC3 UNORM)
+						case MCHAR4('D', 'X', 'T', '5'):
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorRGBA;
+							// nCompression = CompressionDXT5;
+							break;
 
-				// Cube map?
-				const uint32_t numberOfFaces = (ddsHeader.ddsCaps.caps2 & ::detail::DDSCAPS2_CUBEMAP) ? 6u : 1u;
+						// LATC1 (BC4 UNORM, previously known as ATI1N)
+						case MCHAR4('A', 'T', 'I', '1'):
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscale;
+							// nCompression = CompressionLATC1;
+							break;
 
-				mWidth = ddsHeader.width;
-				mHeight = ddsHeader.height;
-				mTextureFormat = static_cast<uint8_t>(mTextureResource->isRgbHardwareGammaCorrection() ? Renderer::TextureFormat::BC1_SRGB : Renderer::TextureFormat::BC1);	// TODO(co) Make this dynamic
+						// LATC2 (BC5 UNORM, previously known as ATI2N)
+						case MCHAR4('A', 'T', 'I', '2'):
+							// TODO(co)
+							// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
+							// nCompression = CompressionLATC2;
+							break;
 
-				{ // Loop through all faces
-					uint32_t width = mWidth;
-					uint32_t height = mHeight;
-					mNumberOfUsedImageDataBytes = 0;
-					while (width > 1 && height > 1)
-					{
-						mNumberOfUsedImageDataBytes += ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
-
-						width /= 2;
-						height /= 2;
-					}
-					mNumberOfUsedImageDataBytes += ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
-
-					if (mNumberOfImageDataBytes < mNumberOfUsedImageDataBytes)
-					{
-						mNumberOfImageDataBytes = mNumberOfUsedImageDataBytes;
-						delete [] mImageData;
-						mImageData = new uint8_t[mNumberOfImageDataBytes];
-					}
-
-					// Avoid slow division by using bit-shift
-		//			const size_t compressedSize = ((ddsHeader.width + 3) >> 2) * ((ddsHeader.height + 3) >> 2) * 8;
-					// m_nCompressedSize = ((ddsHeader.width + 3) / 4) * ((ddsHeader.height + 3) / 4) * 8;
-
-					// TODO(co)
-					// A simple one: Just read in the whole compressed data
-					inputFileStream.read(reinterpret_cast<char*>(mImageData), mNumberOfUsedImageDataBytes);
-
-
-
-					//uint8_t* tempData = nullptr;	// Used when "DDS_LINEARSIZE" is set
-					for (uint32_t face = 0; face < numberOfFaces; ++face)
-					{
-						// Load in all mipmaps
-						for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
-						{
-						}
-
-						// TODO(co)
-						/*
-						// Create image part with reasonable semantic
-						ImagePart *pImagePart = cImage.CreatePart((numberOfFaces == 6) ? (static_cast<uint32_t>(ImagePartCubeSidePosX) + face) : 0);
-						if (pImagePart)
-						{
-							// Load in all mipmaps
-							for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+					// Uncompressed
+						default:
+							switch (ddsHeader.ddpfPixelFormat.RGBBitCount)
 							{
-								// Create image buffer
-								ImageBuffer *pImageBuffer = pImagePart->CreateMipmap();
-								pImageBuffer->CreateImage(nDataFormat,
-														  nColorFormat,
-														  Vector3i(ImageBuffer::GetMipmapSize(ddsHeader.nWidth,  mipmap),
-																   ImageBuffer::GetMipmapSize(ddsHeader.nHeight, mipmap),
-																   ImageBuffer::GetMipmapSize(nDepth,		   mipmap)),
-														  nCompression);
+								// R8
+								case 8:
+									// TODO(co)
+									// nInternalColorFormat = nColorFormat = ColorGrayscale;
+									break;
 
-								// Read in compressed data?
-								if (nCompression == CompressionNone)
-								{
-									// If the "DDS_LINEARSIZE" flag is set we need to do some more work...
-									if (ddsHeader.ddpfPixelFormat.flags & DDS_LINEARSIZE)
+								// LA8
+								case 16:
+									if (ddsHeader.ddpfPixelFormat.RGBAlphaBitMask == 0xFF00)
 									{
-										// Calculate the current linear size
-										const uint32_t pitchOrLinearSize = (pImageBuffer->GetSize().x * pImageBuffer->GetSize().y * nDepth * (ddsHeader.ddpfPixelFormat.nRGBBitCount >> 3));
-
-										// Allocate temp data right now? (we can reuse it for the following smaller mipmaps)
-										if (!tempData)
-										{
-											tempData = new uint8_t[pitchOrLinearSize];
-										}
-
-										// Read the data
-										fread(tempData, 1, pitchOrLinearSize, file);
-
-										// Decompress the image data
-										DecompressRGBA(ddsHeader, *pImageBuffer, tempData);
+										// TODO(co)
+										// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
 									}
 									else
 									{
-										// A simple one: Just read in the whole uncompressed data
-										fread(pImageBuffer->GetData(), 1, pImageBuffer->GetDataSize(), file);
+										// Error: Unsupported format
+										return;
 									}
-								}
-								else
-								{
-									// A simple one: Just read in the whole compressed data
-									fread(pImageBuffer->GetCompressedData(), 1, pImageBuffer->GetCompressedDataSize(), file);
-								}
+									break;
+
+								// RGB8
+								case 24:
+									// TODO(co)
+									// nInternalColorFormat = (ddsHeader.ddpfPixelFormat.BBitMask == 0xFF) ? ColorBGR : ColorRGB;
+									// nColorFormat         = ColorRGB;
+									break;
+
+								// RGBA8
+								case 32:
+									if (ddsHeader.ddpfPixelFormat.RBitMask != 0x3FF00000)
+									{
+										// TODO(co)
+										// nInternalColorFormat = (ddsHeader.ddpfPixelFormat.BBitMask == 0xFF) ? ColorBGRA : ColorRGBA;
+										// nColorFormat         = ColorRGBA;
+									}
+									else
+									{
+										// Error: Unsupported format
+										return;
+									}
+									break;
+
+								default:
+									// Error: Unsupported format
+									return;
 							}
-						}
 					}
-
-					// Cleanup temp data
-					if (tempData)
-					{
-						delete [] tempData;
-					}
-					*/
-				}
-
-				// TODO(co)
-				/*
-				// Convert BGR(A) to RGB(A)
-				if (nInternalColorFormat == ColorBGR)
-				{
-					// Loop through all faces
-					for (uint32_t face = 0; face < numberOfFaces; ++face)
-					{
-						// Create image part with reasonable semantic
-						ImagePart *pImagePart = cImage.GetPartBySemantics((numberOfFaces == 6) ? (static_cast<uint32_t>(ImagePartCubeSidePosX) + face) : 0);
-						if (pImagePart)
-						{
-							// Load in all mipmaps
-							for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
-							{
-								// Get image buffer
-								ImageBuffer *pImageBuffer = pImagePart->GetMipmap(mipmap);
-
-								// Swap R/B
-								Color3::SwapRB(pImageBuffer->GetData(), pImageBuffer->GetNumOfPixels());
-							}
-						}
-					}
-				}
-				else if (nInternalColorFormat == ColorBGRA)
-				{
-					// Loop through all faces
-					for (uint32_t face = 0; face < numberOfFaces; ++face)
-					{
-						// Create image part with reasonable semantic
-						ImagePart *pImagePart = cImage.GetPartBySemantics((numberOfFaces == 6) ? (static_cast<uint32_t>(ImagePartCubeSidePosX) + face) : 0);
-						if (pImagePart)
-						{
-							// Load in all mipmaps
-							for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
-							{
-								// Get image buffer
-								ImageBuffer *pImageBuffer = pImagePart->GetMipmap(mipmap);
-
-								// Swap R/B
-								Color4::SwapRB(pImageBuffer->GetData(), pImageBuffer->GetNumOfPixels());
-							}
-						}
-					}
-				*/
 				}
 			}
 			else
 			{
-				// Error: Invalid magic number
+				// The image is not compressed
+				if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_LUMINANCE)
+				{
+					if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_ALPHAPIXELS)
+					{
+						// TODO(co)
+						// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
+					}
+					else
+					{
+						// TODO(co)
+						// nInternalColorFormat = nColorFormat = ColorGrayscale;
+					}
+				}
+				else
+				{
+					if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_ALPHAPIXELS)
+					{
+						// Set color format, please not that all bit mask relevant stuff is done inside "DecompressRGBA()"
+						// TODO(co)
+						// nInternalColorFormat = nColorFormat = ColorRGBA;
+					}
+					else
+					{
+						// Set color format, please not that all bit mask relevant stuff is done inside "DecompressRGBA()"
+						// TODO(co)
+						// nInternalColorFormat = nColorFormat = ColorRGB;
+					}
+				}
+
+				// Microsoft bug, they're not following their own documentation
+				if (!(ddsHeader.ddpfPixelFormat.flags & (::detail::DDS_LINEARSIZE | ::detail::DDS_PITCH)) || !ddsHeader.pitchOrLinearSize)
+				{
+					ddsHeader.ddpfPixelFormat.flags |= ::detail::DDS_LINEARSIZE;
+				}
 			}
 
-			#undef MCHAR4
+			// Get the number of mipmaps
+			const uint32_t numberOfMipmaps = (!ddsHeader.mipMapCount) ? 1 : ddsHeader.mipMapCount;
+
+			// Cube map?
+			const uint32_t numberOfFaces = (ddsHeader.ddsCaps.caps2 & ::detail::DDSCAPS2_CUBEMAP) ? 6u : 1u;
+
+			mWidth = ddsHeader.width;
+			mHeight = ddsHeader.height;
+			mTextureFormat = static_cast<uint8_t>(mTextureResource->isRgbHardwareGammaCorrection() ? Renderer::TextureFormat::BC1_SRGB : Renderer::TextureFormat::BC1);	// TODO(co) Make this dynamic
+
+			{ // Loop through all faces
+				uint32_t width = mWidth;
+				uint32_t height = mHeight;
+				mNumberOfUsedImageDataBytes = 0;
+				while (width > 1 && height > 1)
+				{
+					mNumberOfUsedImageDataBytes += ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
+
+					width /= 2;
+					height /= 2;
+				}
+				mNumberOfUsedImageDataBytes += ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
+
+				if (mNumberOfImageDataBytes < mNumberOfUsedImageDataBytes)
+				{
+					mNumberOfImageDataBytes = mNumberOfUsedImageDataBytes;
+					delete [] mImageData;
+					mImageData = new uint8_t[mNumberOfImageDataBytes];
+				}
+
+				// Avoid slow division by using bit-shift
+	//			const size_t compressedSize = ((ddsHeader.width + 3) >> 2) * ((ddsHeader.height + 3) >> 2) * 8;
+				// m_nCompressedSize = ((ddsHeader.width + 3) / 4) * ((ddsHeader.height + 3) / 4) * 8;
+
+				// TODO(co)
+				// A simple one: Just read in the whole compressed data
+				file.read(mImageData, mNumberOfUsedImageDataBytes);
+
+
+
+				//uint8_t* tempData = nullptr;	// Used when "DDS_LINEARSIZE" is set
+				for (uint32_t face = 0; face < numberOfFaces; ++face)
+				{
+					// Load in all mipmaps
+					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+					{
+					}
+
+					// TODO(co)
+					/*
+					// Create image part with reasonable semantic
+					ImagePart *pImagePart = cImage.CreatePart((numberOfFaces == 6) ? (static_cast<uint32_t>(ImagePartCubeSidePosX) + face) : 0);
+					if (pImagePart)
+					{
+						// Load in all mipmaps
+						for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+						{
+							// Create image buffer
+							ImageBuffer *pImageBuffer = pImagePart->CreateMipmap();
+							pImageBuffer->CreateImage(nDataFormat,
+														nColorFormat,
+														Vector3i(ImageBuffer::GetMipmapSize(ddsHeader.nWidth,  mipmap),
+																ImageBuffer::GetMipmapSize(ddsHeader.nHeight, mipmap),
+																ImageBuffer::GetMipmapSize(nDepth,		   mipmap)),
+														nCompression);
+
+							// Read in compressed data?
+							if (nCompression == CompressionNone)
+							{
+								// If the "DDS_LINEARSIZE" flag is set we need to do some more work...
+								if (ddsHeader.ddpfPixelFormat.flags & DDS_LINEARSIZE)
+								{
+									// Calculate the current linear size
+									const uint32_t pitchOrLinearSize = (pImageBuffer->GetSize().x * pImageBuffer->GetSize().y * nDepth * (ddsHeader.ddpfPixelFormat.nRGBBitCount >> 3));
+
+									// Allocate temp data right now? (we can reuse it for the following smaller mipmaps)
+									if (!tempData)
+									{
+										tempData = new uint8_t[pitchOrLinearSize];
+									}
+
+									// Read the data
+									fread(tempData, 1, pitchOrLinearSize, file);
+
+									// Decompress the image data
+									DecompressRGBA(ddsHeader, *pImageBuffer, tempData);
+								}
+								else
+								{
+									// A simple one: Just read in the whole uncompressed data
+									fread(pImageBuffer->GetData(), 1, pImageBuffer->GetDataSize(), file);
+								}
+							}
+							else
+							{
+								// A simple one: Just read in the whole compressed data
+								fread(pImageBuffer->GetCompressedData(), 1, pImageBuffer->GetCompressedDataSize(), file);
+							}
+						}
+					}
+				}
+
+				// Cleanup temp data
+				if (tempData)
+				{
+					delete [] tempData;
+				}
+				*/
+			}
+
+			// TODO(co)
+			/*
+			// Convert BGR(A) to RGB(A)
+			if (nInternalColorFormat == ColorBGR)
+			{
+				// Loop through all faces
+				for (uint32_t face = 0; face < numberOfFaces; ++face)
+				{
+					// Create image part with reasonable semantic
+					ImagePart *pImagePart = cImage.GetPartBySemantics((numberOfFaces == 6) ? (static_cast<uint32_t>(ImagePartCubeSidePosX) + face) : 0);
+					if (pImagePart)
+					{
+						// Load in all mipmaps
+						for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+						{
+							// Get image buffer
+							ImageBuffer *pImageBuffer = pImagePart->GetMipmap(mipmap);
+
+							// Swap R/B
+							Color3::SwapRB(pImageBuffer->GetData(), pImageBuffer->GetNumOfPixels());
+						}
+					}
+				}
+			}
+			else if (nInternalColorFormat == ColorBGRA)
+			{
+				// Loop through all faces
+				for (uint32_t face = 0; face < numberOfFaces; ++face)
+				{
+					// Create image part with reasonable semantic
+					ImagePart *pImagePart = cImage.GetPartBySemantics((numberOfFaces == 6) ? (static_cast<uint32_t>(ImagePartCubeSidePosX) + face) : 0);
+					if (pImagePart)
+					{
+						// Load in all mipmaps
+						for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+						{
+							// Get image buffer
+							ImageBuffer *pImageBuffer = pImagePart->GetMipmap(mipmap);
+
+							// Swap R/B
+							Color4::SwapRB(pImageBuffer->GetData(), pImageBuffer->GetNumOfPixels());
+						}
+					}
+				}
+			*/
+			}
 		}
-		catch (const std::exception& e)
+		else
 		{
-			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %u: %s", mAsset.assetId.getId(), e.what());
+			// Error: Invalid magic number
 		}
+
+		#undef MCHAR4
 
 		// Can we create the renderer resource asynchronous as well?
 		if (mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading)

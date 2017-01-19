@@ -75,7 +75,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void onDeserialization() override;
+		virtual void onDeserialization(IFile& file) override;
 		inline virtual void onProcessing() override;
 		virtual bool onDispatch() override;
 		inline virtual bool isFullyLoaded() override;

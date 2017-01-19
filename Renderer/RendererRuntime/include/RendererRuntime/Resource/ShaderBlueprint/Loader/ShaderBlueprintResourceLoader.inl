@@ -63,7 +63,7 @@ namespace RendererRuntime
 
 	inline void ShaderBlueprintResourceLoader::initialize(const Asset& asset, ShaderBlueprintResource& shaderBlueprintResource)
 	{
-		mAsset					 = asset;
+		IResourceLoader::initialize(asset);
 		mShaderBlueprintResource = &shaderBlueprintResource;
 	}
 

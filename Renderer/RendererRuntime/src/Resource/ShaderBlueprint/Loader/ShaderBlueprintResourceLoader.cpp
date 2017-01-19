@@ -28,9 +28,9 @@
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Asset/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-#include <fstream>
 #include <unordered_set>
 
 
@@ -50,56 +50,39 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void ShaderBlueprintResourceLoader::onDeserialization()
+	void ShaderBlueprintResourceLoader::onDeserialization(IFile& file)
 	{
-		// TODO(co) Error handling
-		try
+		// Read in the shader blueprint header
+		v1ShaderBlueprint::Header shaderBlueprintHeader;
+		file.read(&shaderBlueprintHeader, sizeof(v1ShaderBlueprint::Header));
+
+		// Allocate more temporary memory, if required
+		if (mMaximumNumberOfIncludeShaderPieceAssetIds < shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds)
 		{
-			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
-			if (!inputFileStream)
-			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(mAsset.assetFilename) + '\"');
-			}
-
-			// Read in the shader blueprint header
-			v1ShaderBlueprint::Header shaderBlueprintHeader;
-			inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprintHeader), sizeof(v1ShaderBlueprint::Header));
-
-			// Allocate more temporary memory, if required
-			if (mMaximumNumberOfIncludeShaderPieceAssetIds < shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds)
-			{
-				mMaximumNumberOfIncludeShaderPieceAssetIds = shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds;
-				delete [] mIncludeShaderPieceAssetIds;
-				mIncludeShaderPieceAssetIds = new AssetId[mMaximumNumberOfIncludeShaderPieceAssetIds];
-			}
-			if (mMaximumNumberOfShaderSourceCodeBytes < shaderBlueprintHeader.numberOfShaderSourceCodeBytes)
-			{
-				mMaximumNumberOfShaderSourceCodeBytes = shaderBlueprintHeader.numberOfShaderSourceCodeBytes;
-				delete [] mShaderSourceCode;
-				mShaderSourceCode = new char[mMaximumNumberOfShaderSourceCodeBytes];
-			}
-
-			// Read the asset IDs of the shader pieces to include
-			inputFileStream.read(reinterpret_cast<char*>(mIncludeShaderPieceAssetIds), sizeof(AssetId) * shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
-			mShaderBlueprintResource->mIncludeShaderPieceResourceIds.resize(shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
-
-			{ // Read the referenced shader properties
-				ShaderProperties::SortedPropertyVector& sortedPropertyVector = mShaderBlueprintResource->mReferencedShaderProperties.getSortedPropertyVector();
-				sortedPropertyVector.resize(shaderBlueprintHeader.numberReferencedShaderProperties);
-				inputFileStream.read(reinterpret_cast<char*>(sortedPropertyVector.data()), sizeof(ShaderProperties::Property) * shaderBlueprintHeader.numberReferencedShaderProperties);
-			}
-
-			// Read the shader blueprint ASCII source code
-			inputFileStream.read(mShaderSourceCode, shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
-			mShaderBlueprintResource->mShaderSourceCode.assign(mShaderSourceCode, mShaderSourceCode + shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
+			mMaximumNumberOfIncludeShaderPieceAssetIds = shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds;
+			delete [] mIncludeShaderPieceAssetIds;
+			mIncludeShaderPieceAssetIds = new AssetId[mMaximumNumberOfIncludeShaderPieceAssetIds];
 		}
-		catch (const std::exception& e)
+		if (mMaximumNumberOfShaderSourceCodeBytes < shaderBlueprintHeader.numberOfShaderSourceCodeBytes)
 		{
-			// TODO(sw) the getId is needed because clang3.9/gcc 4.9 cannot determine to use the uint32_t conversion operator on it when passed to a printf method: error: cannot pass non-trivial object of type 'AssetId' (aka 'RendererRuntime::StringId') to variadic function; expected type from format string was 'int' [-Wnon-pod-varargs]
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load shader blueprint asset %u: %s", mAsset.assetId.getId(), e.what());
+			mMaximumNumberOfShaderSourceCodeBytes = shaderBlueprintHeader.numberOfShaderSourceCodeBytes;
+			delete [] mShaderSourceCode;
+			mShaderSourceCode = new char[mMaximumNumberOfShaderSourceCodeBytes];
 		}
+
+		// Read the asset IDs of the shader pieces to include
+		file.read(mIncludeShaderPieceAssetIds, sizeof(AssetId) * shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
+		mShaderBlueprintResource->mIncludeShaderPieceResourceIds.resize(shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
+
+		{ // Read the referenced shader properties
+			ShaderProperties::SortedPropertyVector& sortedPropertyVector = mShaderBlueprintResource->mReferencedShaderProperties.getSortedPropertyVector();
+			sortedPropertyVector.resize(shaderBlueprintHeader.numberReferencedShaderProperties);
+			file.read(sortedPropertyVector.data(), sizeof(ShaderProperties::Property) * shaderBlueprintHeader.numberReferencedShaderProperties);
+		}
+
+		// Read the shader blueprint ASCII source code
+		file.read(mShaderSourceCode, shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
+		mShaderBlueprintResource->mShaderSourceCode.assign(mShaderSourceCode, mShaderSourceCode + shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
 	}
 
 	bool ShaderBlueprintResourceLoader::onDispatch()
