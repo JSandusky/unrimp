@@ -116,7 +116,7 @@ namespace Renderer
 		#else
 			#error "Unsupported platform"
 		#endif
-		#ifdef RENDERER_NO_DEBUG
+		#if defined(RENDERER_NO_DEBUG) || !defined(_MSC_VER)
 			#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name)
 		#else
 			#define RENDERER_INTERNAL__WFUNCTION__2(x) L ## x
@@ -2878,7 +2878,7 @@ namespace Renderer
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::EndDebugEvent;
 			};
 		}
-		#ifdef RENDERER_NO_DEBUG
+		#if defined(RENDERER_NO_DEBUG) || !defined(_MSC_VER)
 			#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name)
 			#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer)
 			#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name)
