@@ -158,8 +158,10 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQ
 		message(FATAL_ERROR "Renderer toolkit needs c++17 support but the compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
 	endif()
 	
+	# All unrimp parts except renderer toolkit uses only c++14 features, so we can enable here "globaly" c++14 compiler settings
+	# Renderer Toolkit only needs c++17 runtime features (filesystem TS) so no c++17 specific compiler features
 	if(COMPILER_SUPPORTS_CXX14)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+		add_compile_options("-std=c++14")
 	else()
 		message(FATAL_ERROR "Unrimp needs at least c++14 support but the compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
 	endif()
@@ -185,8 +187,8 @@ check_cxx_compiler_flag( -fvisibility-inlines-hidden GXX_HAS_VISIBILITY_INLINES_
 # endif()
 
 # At first we treat UNIX = Linux
-if(UNIX AND NOT ANDROID)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -DRENDERER_NO_DEBUG")
+if(UNIX )
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX")
 endif()
 
 # We treat android also as linux
@@ -198,13 +200,17 @@ if (ANDROID)
 		set(ANDROID_PLATFORM "android-22" CACHE STRING "")
 		
 		# We want also the llvm libc++ which is fully c++11 compatible
-		set(ANDROID_STL "c++_shared" CACHE STRING "")
+		# TODO(sw) For qtunrimp we cannot use llvm libc++ because Qt is not yet compileable with llvm libc++ on android
+		#          For now we need to use gnustl_shared
+		#set(ANDROID_STL "c++_shared" CACHE STRING "")
+		set(ANDROID_STL "gnustl_shared" CACHE STRING "")
 
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DANDROID -DLINUX -DRENDERER_NO_DEBUG")
+		# L"" in macros don't work with android gcc -> so Renderer debug disabled
+		add_definitions("-DANDROID -DRENDERER_NO_DEBUG")
 endif()
 
 if (${ARCHITECTURE_X64})
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DX64_ARCHITECTURE")
+	add_definitions("-DX64_ARCHITECTURE")
 endif()
 
 
@@ -217,10 +223,8 @@ if(RENDERER_TOOLKIT)
 endif()
 if(EXAMPLES)
 	add_subdirectory(Example/Examples)
-	if(RENDERER_RUNTIME AND RENDERER_TOOLKIT)
-		add_subdirectory(Example/ExampleProjectCompiler)
-	endif()
 endif()
+
 if(EXAMPLE_PROJECT_COMPILER AND RENDERER_RUNTIME AND RENDERER_TOOLKIT)
 	add_subdirectory(Example/ExampleProjectCompiler)
 endif()

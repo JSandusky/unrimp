@@ -18,7 +18,7 @@
 #\*********************************************************/
 
 
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 3.2.2)
 
 
 ##################################################
@@ -97,7 +97,6 @@ if(STATIC_LIBRARY)
 	if (WIN32)
 		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX} zlibStatic.lib)
 	elseif(UNIX)
-		#set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimp${CMAKE_STATIC_LIBRARY_SUFFIX} tiff minizip crunch)
 		set(LIBRARIES ${LIBRARIES} assimp tiff minizip crunch stdc++fs)
 	endif()
 	

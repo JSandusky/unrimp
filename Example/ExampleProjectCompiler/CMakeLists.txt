@@ -18,7 +18,7 @@
 #\*********************************************************/
 
 
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 3.2.2)
 
 
 ##################################################
@@ -56,15 +56,13 @@ if(STATIC_LIBRARY)
 	else()
 		add_executable(ExampleProjectCompilerStatic ${SOURCE_CODES})
 	endif()
-	set(LIBRARIES ${LIBRARIES} RendererToolkitStatic)
-	if(RENDERER_RUNTIME)
-		set(LIBRARIES ${LIBRARIES} RendererRuntimeStatic)
-		if(UNIX)
-			set(LIBRARIES ${LIBRARIES} pthread)
-		endif()
+	set(LIBRARIES ${LIBRARIES} RendererToolkitStatic RendererRuntimeStatic)
+	if(UNIX)
+		set(LIBRARIES ${LIBRARIES} pthread)
 	endif()
 	target_link_libraries(ExampleProjectCompilerStatic ${LIBRARIES})
-	add_dependencies(ExampleProjectCompilerStatic Renderer RendererRuntimeStatic RendererToolkitStatic)
+	add_dependencies(ExampleProjectCompilerStatic Renderer RendererToolkitStatic RendererRuntimeStatic)
+	
 endif()
 if(SHARED_LIBRARY)
 	# Shared
