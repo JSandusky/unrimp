@@ -40,6 +40,7 @@
 namespace RendererRuntime
 {
 	class IVrManager;
+	class IFileManager;
 	class AssetManager;
 	class ThreadManager;
 	class DebugGuiManager;
@@ -130,6 +131,15 @@ namespace RendererRuntime
 		*    The used texture manager instance, do not release the returned instance unless you added an own reference to it
 		*/
 		inline Renderer::ITextureManager& getTextureManager() const;
+
+		/**
+		*  @brief
+		*    Return the file manager instance
+		*
+		*  @return
+		*    The file manager instance, do not release the returned instance
+		*/
+		inline IFileManager& getFileManager() const;
 
 		/**
 		*  @brief
@@ -360,6 +370,7 @@ namespace RendererRuntime
 		Renderer::IRenderer*	   mRenderer;		///< The used renderer instance (we keep a reference to it), always valid
 		Renderer::IBufferManager*  mBufferManager;	///< The used buffer manager instance (we keep a reference to it), always valid
 		Renderer::ITextureManager* mTextureManager;	///< The used texture manager instance (we keep a reference to it), always valid
+		IFileManager*			   mFileManager;	///< The used file manager instance, always valid
 		ThreadManager*			   mThreadManager;
 		AssetManager*			   mAssetManager;
 		// Resource

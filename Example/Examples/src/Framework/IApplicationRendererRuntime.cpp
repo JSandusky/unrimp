@@ -36,6 +36,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRendererRuntime.h"
+#include "Framework/StdFileManager.h"
 
 #ifdef SHARED_LIBRARIES
 	#include <RendererToolkit/Public/RendererToolkitInstance.h>
@@ -50,6 +51,7 @@
 //[-------------------------------------------------------]
 IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererName, ExampleBase* exampleBase) :
 	IApplicationRenderer(rendererName, exampleBase),
+	mFileManager(nullptr),
 	mRendererRuntimeInstance(nullptr)
 	#ifdef SHARED_LIBRARIES
 		, mRendererToolkitInstance(nullptr)
@@ -63,7 +65,7 @@ IApplicationRendererRuntime::~IApplicationRendererRuntime()
 {
 	// Nothing here
 
-	// "mRendererRuntimeInstance" is destroyed within "onDeinitialization()"
+	// "mFileManager" and "mRendererRuntimeInstance" is destroyed within "onDeinitialization()"
 }
 
 
@@ -105,7 +107,8 @@ void IApplicationRendererRuntime::onInitialization()
 	if (nullptr != renderer)
 	{
 		// Create the renderer runtime instance
-		mRendererRuntimeInstance = new RendererRuntime::RendererRuntimeInstance(*renderer);
+		mFileManager = new StdFileManager();
+		mRendererRuntimeInstance = new RendererRuntime::RendererRuntimeInstance(*renderer, *mFileManager);
 
 		{
 			RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
@@ -170,6 +173,8 @@ void IApplicationRendererRuntime::onDeinitialization()
 	// Delete the renderer runtime instance
 	delete mRendererRuntimeInstance;
 	mRendererRuntimeInstance = nullptr;
+	delete mFileManager;
+	mFileManager = nullptr;
 	#ifdef SHARED_LIBRARIES
 		if (nullptr != mProject)
 		{

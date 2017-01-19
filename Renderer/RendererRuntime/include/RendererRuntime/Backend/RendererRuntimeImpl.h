@@ -74,11 +74,13 @@ namespace RendererRuntime
 		*
 		*  @param[in] renderer
 		*    Renderer instance to use
+		*  @param[in] fileManager
+		*    File manager instance to use
 		*
 		*  @note
 		*    - The renderer runtime keeps a reference to the provided renderer instance
 		*/
-		explicit RendererRuntimeImpl(Renderer::IRenderer &renderer);
+		explicit RendererRuntimeImpl(Renderer::IRenderer &renderer, IFileManager& fileManager);
 
 		/**
 		*  @brief

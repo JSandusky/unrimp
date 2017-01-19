@@ -173,6 +173,9 @@
     <Filter Include="Source Files\Resource\CompositorNode\Pass\Copy">
       <UniqueIdentifier>{0a6dee19-60f1-45ee-a0cb-3c6e317eb610}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\File">
+      <UniqueIdentifier>{a6a59f93-d647-4744-b65e-c8a67e021337}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -513,8 +516,11 @@
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Copy\CompositorResourcePassCopy.inl">
       <Filter>Source Files\Resource\CompositorNode\Pass\Copy</Filter>
     </None>
-    <None Include="include\RendererRuntime\Asset\IFile.inl">
-      <Filter>Source Files\Asset</Filter>
+    <None Include="include\RendererRuntime\Core\File\IFileManager.inl">
+      <Filter>Source Files\Core\File</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\File\IFile.inl">
+      <Filter>Source Files\Core\File</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1005,8 +1011,11 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Copy\CompositorInstancePassCopy.h">
       <Filter>Source Files\Resource\CompositorNode\Pass\Copy</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Asset\IFile.h">
-      <Filter>Source Files\Asset</Filter>
+    <ClInclude Include="include\RendererRuntime\Core\File\IFile.h">
+      <Filter>Source Files\Core\File</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\File\IFileManager.h">
+      <Filter>Source Files\Core\File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

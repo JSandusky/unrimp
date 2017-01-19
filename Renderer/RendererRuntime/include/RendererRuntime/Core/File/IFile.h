@@ -111,4 +111,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Asset/IFile.inl"
+#include "RendererRuntime/Core/File/IFile.inl"

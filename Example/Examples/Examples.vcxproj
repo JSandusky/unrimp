@@ -323,6 +323,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Framework\RefCountPtr.h" />
     <ClInclude Include="src\Framework\SmartPtr.h" />
     <ClInclude Include="src\Framework\SmartRefCount.h" />
+    <ClInclude Include="src\Framework\StdFileManager.h" />
     <ClInclude Include="src\Framework\Stopwatch.h" />
     <ClInclude Include="src\Framework\WindowsHeader.h" />
     <ClInclude Include="src\Framework\X11Application.h" />
@@ -379,6 +380,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClCompile Include="src\Framework\IApplicationImpl.cpp" />
     <ClCompile Include="src\Framework\IApplicationRenderer.cpp" />
     <ClCompile Include="src\Framework\IApplicationRendererRuntime.cpp" />
+    <ClCompile Include="src\Framework\StdFileManager.cpp" />
     <ClCompile Include="src\Framework\Stopwatch.cpp" />
     <ClCompile Include="src\Framework\X11Application.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
@@ -422,6 +424,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <None Include="src\Framework\RefCountPtr.inl" />
     <None Include="src\Framework\SmartPtr.inl" />
     <None Include="src\Framework\SmartRefCount.inl" />
+    <None Include="src\Framework\StdFileManager.inl" />
     <None Include="src\Framework\Stopwatch.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

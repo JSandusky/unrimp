@@ -96,6 +96,7 @@ set(SOURCE_CODES
 	src/Framework/IApplicationRenderer.cpp
 	src/Framework/ExampleBase.cpp
 	src/Framework/Stopwatch.cpp
+	src/Framework/StdFileManager.cpp
 	src/Main.cpp
 )
 if(WIN32)

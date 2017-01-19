@@ -53,9 +53,9 @@
 //[ Global functions                                      ]
 //[-------------------------------------------------------]
 // Export the instance creation function
-RENDERERRUNTIME_FUNCTION_EXPORT RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer)
+RENDERERRUNTIME_FUNCTION_EXPORT RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager)
 {
-	return new RendererRuntime::RendererRuntimeImpl(renderer);
+	return new RendererRuntime::RendererRuntimeImpl(renderer, fileManager);
 }
 
 
@@ -69,7 +69,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RendererRuntimeImpl::RendererRuntimeImpl(Renderer::IRenderer &renderer)
+	RendererRuntimeImpl::RendererRuntimeImpl(Renderer::IRenderer &renderer, IFileManager& fileManager)
 	{
 		// Backup the given renderer and add our reference
 		mRenderer = &renderer;
@@ -80,6 +80,9 @@ namespace RendererRuntime
 		mBufferManager->addReference();
 		mTextureManager = mRenderer->createTextureManager();
 		mTextureManager->addReference();
+
+		// Backup the given file manager instance
+		mFileManager = &fileManager;
 
 		// Create the core manager instances
 		mThreadManager = new ThreadManager();
