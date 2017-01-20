@@ -371,6 +371,7 @@ namespace OpenGLES2Renderer
 	FNDEF_GL(void,				glBindBufferBase,						(GLenum target, GLuint index, GLuint buffer));
 	FNDEF_GL(void,				glUnmapBuffer,							(GLenum target));
 	FNDEF_GL(void*,				glMapBufferRange,						(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access));
+	FNDEF_GL(void*,				glDrawBuffers,							(GLsizei n, const GLenum *bufs));
 	#undef FNDEF_GL
 
 
@@ -567,6 +568,7 @@ namespace OpenGLES2Renderer
 	#define	glBindBufferBase						FNPTR(glBindBufferBase)
 	#define	glUnmapBuffer							FNPTR(glUnmapBuffer)
 	#define	glMapBufferRange						FNPTR(glMapBufferRange)
+	#define	glDrawBuffers							FNPTR(glDrawBuffers)
 
 
 //[-------------------------------------------------------]

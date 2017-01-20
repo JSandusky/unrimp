@@ -162,18 +162,9 @@ namespace OpenGLES2Renderer
 			{
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
-					// TODO(co) We should only support depth-stencil render target textures, no usage of renderbuffer. See OpenGL renderer backend.
-					glBindRenderbuffer(GL_RENDERBUFFER, mDepthRenderbuffer);
-					glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, static_cast<GLsizei>(mWidth), static_cast<GLsizei>(mHeight));
-
-					// Attach a renderbuffer to depth attachment point
-					glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthRenderbuffer);
-
-					// Generate mipmaps?
-					if (static_cast<Texture2D*>(mDepthStencilTexture)->getGenerateMipmaps())
-					{
-						mGenerateMipmaps = true;
-					}
+					// Bind the depth stencil texture to framebuffer
+					const Texture2D* texture2D = static_cast<const Texture2D*>(depthStencilTexture);
+					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture2D->getOpenGLES2Texture(), 0);
 					break;
 				}
 

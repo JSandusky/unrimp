@@ -829,8 +829,7 @@ namespace OpenGLES2Renderer
 						// Bind the OpenGL ES 2 framebuffer
 						glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->getOpenGLES2Framebuffer());
 
-						// Define the OpenGL buffers to draw into, "GL_NV_draw_buffers"-extension required
-						if (mContext->getExtensions().isGL_NV_draw_buffers())
+						// Define the OpenGL buffers to draw into
 						{
 							// https://www.opengl.org/registry/specs/ARB/draw_buffers.txt - "The draw buffer for output colors beyond <n> is set to NONE."
 							// -> Meaning depth only rendering which has no color textures at all will work as well, no need for "glDrawBuffer(GL_NONE)"
@@ -838,12 +837,12 @@ namespace OpenGLES2Renderer
 							// -> "GL_COLOR_ATTACHMENT0" and "GL_COLOR_ATTACHMENT0_NV" have the same value
 							static const GLenum OPENGL_DRAW_BUFFER[16] =
 							{
-								GL_COLOR_ATTACHMENT0_NV,  GL_COLOR_ATTACHMENT1_NV,  GL_COLOR_ATTACHMENT2_NV,  GL_COLOR_ATTACHMENT3_NV,
-								GL_COLOR_ATTACHMENT4_NV,  GL_COLOR_ATTACHMENT5_NV,  GL_COLOR_ATTACHMENT6_NV,  GL_COLOR_ATTACHMENT7_NV,
-								GL_COLOR_ATTACHMENT8_NV,  GL_COLOR_ATTACHMENT9_NV,  GL_COLOR_ATTACHMENT10_NV, GL_COLOR_ATTACHMENT11_NV,
-								GL_COLOR_ATTACHMENT12_NV, GL_COLOR_ATTACHMENT13_NV, GL_COLOR_ATTACHMENT14_NV, GL_COLOR_ATTACHMENT15_NV
+								GL_COLOR_ATTACHMENT0,  GL_COLOR_ATTACHMENT1,  GL_COLOR_ATTACHMENT2,  GL_COLOR_ATTACHMENT3,
+								GL_COLOR_ATTACHMENT4,  GL_COLOR_ATTACHMENT5,  GL_COLOR_ATTACHMENT6,  GL_COLOR_ATTACHMENT7,
+								GL_COLOR_ATTACHMENT8,  GL_COLOR_ATTACHMENT9,  GL_COLOR_ATTACHMENT10, GL_COLOR_ATTACHMENT11,
+								GL_COLOR_ATTACHMENT12, GL_COLOR_ATTACHMENT13, GL_COLOR_ATTACHMENT14, GL_COLOR_ATTACHMENT15
 							};
-							glDrawBuffersNV(static_cast<GLsizei>(framebuffer->getNumberOfColorTextures()), OPENGL_DRAW_BUFFER);
+							glDrawBuffers(static_cast<GLsizei>(framebuffer->getNumberOfColorTextures()), OPENGL_DRAW_BUFFER);
 						}
 						break;
 					}
@@ -973,8 +972,7 @@ namespace OpenGLES2Renderer
 		switch (destinationResource.getResourceType())
 		{
 			case Renderer::ResourceType::TEXTURE_2D:
-				// "GL_NV_draw_buffers"-extension required
-				if (sourceResource.getResourceType() == Renderer::ResourceType::TEXTURE_2D && mContext->getExtensions().isGL_NV_draw_buffers())
+				if (sourceResource.getResourceType() == Renderer::ResourceType::TEXTURE_2D)
 				{
 					// Get the OpenGL ES 2 texture 2D instances
 					const Texture2D& openGlEs2DestinationTexture2D = static_cast<const Texture2D&>(destinationResource);
@@ -1000,9 +998,9 @@ namespace OpenGLES2Renderer
 					glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, openGlEs2DestinationTexture2D.getOpenGLES2Texture(), 0);
 					static const GLenum OPENGL_DRAW_BUFFER[1] =
 					{
-						GL_COLOR_ATTACHMENT1_NV
+						GL_COLOR_ATTACHMENT1
 					};
-					glDrawBuffersNV(1, OPENGL_DRAW_BUFFER);
+					glDrawBuffers(1, OPENGL_DRAW_BUFFER);
 					glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
@@ -1767,16 +1765,9 @@ namespace OpenGLES2Renderer
 		// Maximum number of viewports (always at least 1)
 		mCapabilities.maximumNumberOfViewports = 1;	// OpenGL ES 2 only supports a single viewport
 
-		// Maximum number of simultaneous render targets (if <1 render to texture is not supported, "GL_NV_draw_buffers" extension required)
-		if (mContext->getExtensions().isGL_NV_draw_buffers())
-		{
-			glGetIntegerv(GL_MAX_DRAW_BUFFERS_NV, &openGLValue);
-			mCapabilities.maximumNumberOfSimultaneousRenderTargets = static_cast<uint32_t>(openGLValue);
-		}
-		else
-		{
-			mCapabilities.maximumNumberOfSimultaneousRenderTargets = 1;
-		}
+		// Maximum number of simultaneous render targets (if <1 render to texture is not supported)
+		glGetIntegerv(GL_MAX_DRAW_BUFFERS, &openGLValue);
+		mCapabilities.maximumNumberOfSimultaneousRenderTargets = static_cast<uint32_t>(openGLValue);
 
 		// Maximum texture dimension
 		openGLValue = 0;
