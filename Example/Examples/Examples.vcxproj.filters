@@ -417,6 +417,9 @@
     <ClInclude Include="src\Framework\IApplicationFrontend.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="src\Framework\StdFileManager.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -543,6 +546,9 @@
     <ClCompile Include="src\Framework\ExampleBase.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="src\Framework\StdFileManager.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Framework\IApplication.inl">
@@ -578,6 +584,9 @@
       <Filter>Framework</Filter>
     </None>
     <None Include="src\Framework\IApplicationFrontend.inl">
+      <Filter>Framework</Filter>
+    </None>
+    <None Include="src\Framework\StdFileManager.inl">
       <Filter>Framework</Filter>
     </None>
   </ItemGroup>

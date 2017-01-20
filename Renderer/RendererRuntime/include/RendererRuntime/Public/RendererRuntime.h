@@ -45,6 +45,7 @@
 namespace RendererRuntime
 {
 	class IVrManager;
+	class IFileManager;
 	class AssetManager;
 	class ThreadManager;
 	class DebugGuiManager;
@@ -99,6 +100,10 @@ namespace RendererRuntime
 		inline Renderer::ITextureManager& getTextureManager() const
 		{
 			return *mTextureManager;
+		}
+		inline IFileManager& getFileManager() const
+		{
+			return *mFileManager;
 		}
 		inline ThreadManager& getThreadManager() const
 		{
@@ -179,6 +184,7 @@ namespace RendererRuntime
 		Renderer::IRenderer*				mRenderer;
 		Renderer::IBufferManager*			mBufferManager;
 		Renderer::ITextureManager*			mTextureManager;
+		IFileManager*						mFileManager;
 		ThreadManager*						mThreadManager;
 		AssetManager*						mAssetManager;
 		ResourceStreamer*					mResourceStreamer;

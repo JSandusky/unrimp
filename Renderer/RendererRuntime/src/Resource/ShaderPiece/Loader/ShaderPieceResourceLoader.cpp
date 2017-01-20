@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/ShaderPiece/Loader/ShaderPieceResourceLoader.h"
 #include "RendererRuntime/Resource/ShaderPiece/Loader/ShaderPieceFileFormat.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
-#include "RendererRuntime/Asset/IFile.h"
+#include "RendererRuntime/Core/File/IFile.h"
 
 
 //[-------------------------------------------------------]

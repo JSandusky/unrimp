@@ -19,12 +19,24 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Asset/Serializer/AssetPackageSerializer.h"
-#include "RendererRuntime/Asset/AssetPackage.h"
-#include "RendererRuntime/Core/File/IFile.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IFile;
+}
 
 
 //[-------------------------------------------------------]
@@ -35,37 +47,62 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	// TODO(co) Work-in-progress
-	AssetPackage* AssetPackageSerializer::loadAssetPackage(IFile& file)
+	/**
+	*  @brief
+	*    Abstract file manager interface
+	*/
+	class IFileManager : public NonCopyable
 	{
-		AssetPackage* assetPackage = new AssetPackage;
 
-		// Read in the asset package header
-		#pragma pack(push)
-		#pragma pack(1)
-			struct AssetPackageHeader
-			{
-				uint32_t formatType;
-				uint16_t formatVersion;
-				uint32_t numberOfAssets;
-			};
-		#pragma pack(pop)
-		AssetPackageHeader assetPackageHeader;
-		file.read(&assetPackageHeader, sizeof(AssetPackageHeader));
 
-		// Read in the asset package content in one single burst
-		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage->getWritableSortedAssetVector();
-		sortedAssetVector.resize(assetPackageHeader.numberOfAssets);
-		file.read(sortedAssetVector.data(), sizeof(Asset) * assetPackageHeader.numberOfAssets);
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IFileManager methods  ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Open a file
+		*
+		*  @param[in] filename
+		*    ASCII name of the file to open for reading, never ever a null pointer and always finished by a terminating zero
+		*
+		*  @return
+		*    The file interface, can be a null pointer if horrible things are happening (total failure)
+		*/
+		virtual IFile* openFile(const char* filename) = 0;
 
-		// Done
-		return assetPackage;
-	}
+		/**
+		*  @brief
+		*    Close a file
+		*
+		*  @param[in] file
+		*    File to close
+		*/
+		virtual void closeFile(IFile& file) = 0;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		inline IFileManager();
+		inline virtual ~IFileManager();
+		IFileManager(const IFileManager&) = delete;
+		IFileManager& operator=(const IFileManager&) = delete;
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/File/IFileManager.inl"

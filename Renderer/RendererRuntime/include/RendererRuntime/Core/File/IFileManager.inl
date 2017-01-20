@@ -19,15 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Asset/Serializer/AssetPackageSerializer.h"
-#include "RendererRuntime/Asset/AssetPackage.h"
-#include "RendererRuntime/Core/File/IFile.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -35,33 +26,16 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	// TODO(co) Work-in-progress
-	AssetPackage* AssetPackageSerializer::loadAssetPackage(IFile& file)
+	inline IFileManager::IFileManager()
 	{
-		AssetPackage* assetPackage = new AssetPackage;
+		// Nothing here
+	}
 
-		// Read in the asset package header
-		#pragma pack(push)
-		#pragma pack(1)
-			struct AssetPackageHeader
-			{
-				uint32_t formatType;
-				uint16_t formatVersion;
-				uint32_t numberOfAssets;
-			};
-		#pragma pack(pop)
-		AssetPackageHeader assetPackageHeader;
-		file.read(&assetPackageHeader, sizeof(AssetPackageHeader));
-
-		// Read in the asset package content in one single burst
-		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage->getWritableSortedAssetVector();
-		sortedAssetVector.resize(assetPackageHeader.numberOfAssets);
-		file.read(sortedAssetVector.data(), sizeof(Asset) * assetPackageHeader.numberOfAssets);
-
-		// Done
-		return assetPackage;
+	inline IFileManager::~IFileManager()
+	{
+		// Nothing here
 	}
 
 

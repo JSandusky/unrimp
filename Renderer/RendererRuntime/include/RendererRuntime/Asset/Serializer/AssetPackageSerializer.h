@@ -29,14 +29,13 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Serializer.h"
 
-#include <iosfwd>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IFile;
 	class AssetPackage;
 }
 
@@ -63,7 +62,7 @@ namespace RendererRuntime
 
 	// TODO(co) Work-in-progress
 	private:
-		AssetPackage* loadAssetPackage(std::istream& inputStream);
+		AssetPackage* loadAssetPackage(IFile& file);
 
 
 	//[-------------------------------------------------------]

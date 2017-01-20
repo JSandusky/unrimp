@@ -28,7 +28,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
-#include "RendererRuntime/Asset/IFile.h"
+#include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 

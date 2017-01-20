@@ -22,10 +22,11 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\RendererRuntime\Asset\AssetManager.inl" />
     <None Include="include\RendererRuntime\Asset\AssetPackage.inl" />
-    <None Include="include\RendererRuntime\Asset\IFile.inl" />
     <None Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.inl" />
     <None Include="include\RendererRuntime\Backend\RendererBackendManager.inl" />
     <None Include="include\RendererRuntime\Backend\RendererRuntimeImpl.inl" />
+    <None Include="include\RendererRuntime\Core\File\IFile.inl" />
+    <None Include="include\RendererRuntime\Core\File\IFileManager.inl" />
     <None Include="include\RendererRuntime\Core\Math\Transform.inl" />
     <None Include="include\RendererRuntime\Core\PackedElementManager.inl" />
     <None Include="include\RendererRuntime\Core\Renderer\FramebufferManager.inl" />
@@ -145,10 +146,11 @@
     <ClInclude Include="include\RendererRuntime\Asset\Asset.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetPackage.h" />
-    <ClInclude Include="include\RendererRuntime\Asset\IFile.h" />
     <ClInclude Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Backend\RendererBackendManager.h" />
     <ClInclude Include="include\RendererRuntime\Backend\RendererRuntimeImpl.h" />
+    <ClInclude Include="include\RendererRuntime\Core\File\IFile.h" />
+    <ClInclude Include="include\RendererRuntime\Core\File\IFileManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\GetUninitialized.h" />
     <ClInclude Include="include\RendererRuntime\Core\MakeId.h" />
     <ClInclude Include="include\RendererRuntime\Core\Manager.h" />

@@ -54,7 +54,7 @@
 	// This is needed to do here because the methods in the library are also defined in global namespace
 
 	// "createRendererRuntimeInstance()" signature
-	extern RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer);
+	extern RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
 #endif
 
 
@@ -87,7 +87,7 @@ namespace RendererRuntime
 		*  @param[in] renderer
 		*    Renderer instance to use
 		*/
-		RendererRuntimeInstance(Renderer::IRenderer& renderer)
+		RendererRuntimeInstance(Renderer::IRenderer& renderer, RendererRuntime::IFileManager& fileManager)
 		{
 			#ifdef SHARED_LIBRARIES
 				// Dynamically linked libraries
@@ -106,10 +106,10 @@ namespace RendererRuntime
 						if (nullptr != symbol)
 						{
 							// "createRendererRuntimeInstance()" signature
-							typedef RendererRuntime::IRendererRuntime *(__cdecl *createRendererRuntimeInstance)(Renderer::IRenderer &renderer);
+							typedef RendererRuntime::IRendererRuntime *(__cdecl *createRendererRuntimeInstance)(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer runtime instance
-							mRendererRuntime = static_cast<createRendererRuntimeInstance>(symbol)(renderer);
+							mRendererRuntime = static_cast<createRendererRuntimeInstance>(symbol)(renderer, fileManager);
 						}
 						else
 						{
@@ -138,10 +138,10 @@ namespace RendererRuntime
 						if (nullptr != symbol)
 						{
 							// "createRendererRuntimeInstance()" signature
-							typedef RendererRuntime::IRendererRuntime *(*createRendererRuntimeInstance)(Renderer::IRenderer &renderer);
+							typedef RendererRuntime::IRendererRuntime *(*createRendererRuntimeInstance)(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer runtime instance
-							mRendererRuntime = reinterpret_cast<createRendererRuntimeInstance>(symbol)(renderer);
+							mRendererRuntime = reinterpret_cast<createRendererRuntimeInstance>(symbol)(renderer, fileManager);
 						}
 						else
 						{
@@ -162,7 +162,7 @@ namespace RendererRuntime
 				// Statically linked libraries
 
 				// Create the renderer runtime instance
-				mRendererRuntime = createRendererRuntimeInstance(renderer);
+				mRendererRuntime = createRendererRuntimeInstance(renderer, fileManager);
 			#endif
 		}
 

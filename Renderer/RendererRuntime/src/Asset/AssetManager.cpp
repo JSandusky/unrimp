@@ -25,8 +25,8 @@
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/Asset/AssetPackage.h"
 #include "RendererRuntime/Asset/Serializer/AssetPackageSerializer.h"
-
-#include <fstream>
+#include "RendererRuntime/Core/File/IFileManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -51,20 +51,17 @@ namespace RendererRuntime
 
 	void AssetManager::addAssetPackageByFilename(const char* filename)
 	{
-		try
+		IFileManager& fileManager = mRendererRuntime.getFileManager();
+		IFile* file = fileManager.openFile(filename);
+		if (nullptr != file)
 		{
-			std::ifstream inputFileStream(filename, std::ios::binary);
-			if (!inputFileStream)
-			{
-				// This error handling shouldn't be there since everything the asset package says exists
-				// must exist, else it's as fatal as "new" returning a null pointer due to out-of-memory.
-				throw std::runtime_error("Could not open file \"" + std::string(filename) + '\"');
-			}
-			mAssetPackageVector.push_back(AssetPackageSerializer().loadAssetPackage(inputFileStream));
+			mAssetPackageVector.push_back(AssetPackageSerializer().loadAssetPackage(*file));
+			fileManager.closeFile(*file);
 		}
-		catch (const std::exception& e)
+		else
 		{
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load asset package \"%s\": %s", filename, e.what());
+			// Error! This is horrible. No assets.
+			assert(false);
 		}
 	}
 

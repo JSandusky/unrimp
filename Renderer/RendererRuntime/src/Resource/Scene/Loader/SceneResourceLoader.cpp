@@ -26,7 +26,7 @@
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 #include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
-#include "RendererRuntime/Asset/IFile.h"
+#include "RendererRuntime/Core/File/IFile.h"
 
 
 // TODO(co) Possible performance improvement: Inside "SceneResourceLoader::onDeserialization()" load everything directly into memory,

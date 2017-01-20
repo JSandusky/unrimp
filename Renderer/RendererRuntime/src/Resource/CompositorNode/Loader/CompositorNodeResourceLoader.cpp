@@ -26,7 +26,7 @@
 #include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
-#include "RendererRuntime/Asset/IFile.h"
+#include "RendererRuntime/Core/File/IFile.h"
 
 
 // TODO(co) Possible performance improvement: Inside "CompositorNodeResourceLoader::onDeserialization()" load everything directly into memory,
@@ -162,14 +162,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorNodeResourceLoader::onDeserialization(IFile& file)
 	{
-		const ICompositorPassFactory& compositorPassFactory = static_cast<CompositorNodeResourceManager&>(getResourceManager()).getCompositorPassFactory();
-
 		// Read in the compositor node header
 		v1CompositorNode::Header compositorNodeHeader;
 		file.read(&compositorNodeHeader, sizeof(v1CompositorNode::Header));
 
 		// Read in the compositor node resource
-		::detail::nodeDeserialization(file, compositorNodeHeader, *mCompositorNodeResource, compositorPassFactory);
+		::detail::nodeDeserialization(file, compositorNodeHeader, *mCompositorNodeResource, static_cast<CompositorNodeResourceManager&>(getResourceManager()).getCompositorPassFactory());
 	}
 
 

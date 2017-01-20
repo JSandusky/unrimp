@@ -26,7 +26,7 @@
 #include "RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
-#include "RendererRuntime/Asset/IFile.h"
+#include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <glm/detail/setup.hpp>	// For "glm::countof()"

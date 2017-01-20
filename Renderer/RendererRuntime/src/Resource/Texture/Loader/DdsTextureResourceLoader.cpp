@@ -24,7 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Texture/Loader/DdsTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
-#include "RendererRuntime/Asset/IFile.h"
+#include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 

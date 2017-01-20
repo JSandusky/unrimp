@@ -48,6 +48,11 @@ namespace RendererRuntime
 		return *mTextureManager;
 	}
 
+	inline IFileManager& IRendererRuntime::getFileManager() const
+	{
+		return *mFileManager;
+	}
+
 	inline ThreadManager& IRendererRuntime::getThreadManager() const
 	{
 		return *mThreadManager;
