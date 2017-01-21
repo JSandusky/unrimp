@@ -324,7 +324,7 @@ void FirstInstancing::fillCommandBuffer()
 	if (getRenderer()->getCapabilities().instancedArrays)
 	{
 		// Begin debug event
-		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Draw using instanced arrays")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, "Draw using instanced arrays")
 
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateInstancedArrays);
@@ -351,7 +351,7 @@ void FirstInstancing::fillCommandBuffer()
 	if (getRenderer()->getCapabilities().drawInstanced)
 	{
 		// Begin debug event
-		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Draw instanced")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, "Draw instanced")
 
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateDrawInstanced);

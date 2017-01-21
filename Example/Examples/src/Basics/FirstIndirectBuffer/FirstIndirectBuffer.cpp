@@ -117,11 +117,11 @@ void FirstIndirectBuffer::fillCommandBuffer()
 	// Set debug marker
 	// -> Debug methods: When using Direct3D <11.1, these methods map to the Direct3D 9 PIX functions
 	//    (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
-	COMMAND_SET_DEBUG_MARKER(mCommandBuffer, L"Everyone ready for the upcoming triangle?")
+	COMMAND_SET_DEBUG_MARKER(mCommandBuffer, "Everyone ready for the upcoming triangle?")
 
 	{
 		// Begin debug event
-		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Drawing the fancy triangle")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, "Drawing the fancy triangle")
 
 		// Render the specified geometric primitive, based on an array of vertices
 		Renderer::Command::Draw::create(mCommandBuffer, *mIndirectBuffer);

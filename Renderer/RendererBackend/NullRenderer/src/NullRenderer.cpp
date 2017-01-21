@@ -543,12 +543,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void NullRenderer::setDebugMarker(const wchar_t *)
+	void NullRenderer::setDebugMarker(const char *)
 	{
 		// Nothing here
 	}
 
-	void NullRenderer::beginDebugEvent(const wchar_t *)
+	void NullRenderer::beginDebugEvent(const char *)
 	{
 		// Nothing here
 	}

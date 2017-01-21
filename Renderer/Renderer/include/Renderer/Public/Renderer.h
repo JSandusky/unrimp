@@ -38,9 +38,6 @@
 #ifndef RENDERER_NO_STATISTICS
 	#include <atomic>	// For "std::atomic<>"
 #endif
-#ifdef LINUX
-	#include <wchar.h>	// For "wcsncpy()"
-#endif
 
 
 //[-------------------------------------------------------]
@@ -119,9 +116,6 @@ namespace Renderer
 		#ifdef RENDERER_NO_DEBUG
 			#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name)
 		#else
-			#define RENDERER_INTERNAL__WFUNCTION__2(x) L ## x
-			#define RENDERER_INTERNAL__WFUNCTION__1(x) RENDERER_INTERNAL__WFUNCTION__2(x)
-			#define RENDERER_INTERNAL__WFUNCTION__ RENDERER_INTERNAL__WFUNCTION__1(__FUNCTION__)
 			#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name) if (nullptr != resource) { (resource)->setDebugName(name); }
 		#endif
 	#endif
@@ -2837,36 +2831,36 @@ namespace Renderer
 			};
 			struct SetDebugMarker
 			{
-				inline static void create(CommandBuffer& commandBuffer, const wchar_t* name)
+				inline static void create(CommandBuffer& commandBuffer, const char* name)
 				{
 					*commandBuffer.addCommand<SetDebugMarker>() = SetDebugMarker(name);
 				}
-				inline SetDebugMarker(const wchar_t* _name)
+				inline SetDebugMarker(const char* _name)
 				{
 					#ifndef RENDERER_NO_DEBUG
-						assert(wcslen(_name) < 128);
+						assert(strlen(_name) < 128);
 					#endif
-					wcsncpy(name, _name, 128);
+					strncpy(name, _name, 128);
 					name[127] = '\0';
 				};
-				wchar_t name[128];
+				char name[128];
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetDebugMarker;
 			};
 			struct BeginDebugEvent
 			{
-				inline static void create(CommandBuffer& commandBuffer, const wchar_t* name)
+				inline static void create(CommandBuffer& commandBuffer, const char* name)
 				{
 					*commandBuffer.addCommand<BeginDebugEvent>() = BeginDebugEvent(name);
 				}
-				inline BeginDebugEvent(const wchar_t* _name)
+				inline BeginDebugEvent(const char* _name)
 				{
 					#ifndef RENDERER_NO_DEBUG
-						assert(wcslen(_name) < 128);
+						assert(strlen(_name) < 128);
 					#endif
-					wcsncpy(name, _name, 128);
+					strncpy(name, _name, 128);
 					name[127] = '\0';
 				};
-				wchar_t name[128];
+				char name[128];
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::BeginDebugEvent;
 			};
 			struct EndDebugEvent
@@ -2886,9 +2880,9 @@ namespace Renderer
 			#define COMMAND_END_DEBUG_EVENT(commandBuffer)
 		#else
 			#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name) Renderer::Command::SetDebugMarker::create(commandBuffer, name);
-			#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer) Renderer::Command::SetDebugMarker::create(commandBuffer, RENDERER_INTERNAL__WFUNCTION__);
+			#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer) Renderer::Command::SetDebugMarker::create(commandBuffer, __FUNCTION__);
 			#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name) Renderer::Command::BeginDebugEvent::create(commandBuffer, name);
-			#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer) Renderer::Command::BeginDebugEvent::create(commandBuffer, RENDERER_INTERNAL__WFUNCTION__);
+			#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer) Renderer::Command::BeginDebugEvent::create(commandBuffer, __FUNCTION__);
 			#define COMMAND_END_DEBUG_EVENT(commandBuffer) Renderer::Command::EndDebugEvent::create(commandBuffer);
 		#endif
 	#endif

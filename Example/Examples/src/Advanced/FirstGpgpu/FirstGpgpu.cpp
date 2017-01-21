@@ -294,7 +294,7 @@ void FirstGpgpu::fillCommandBufferContentGeneration()
 	assert(mCommandBufferContentGeneration.isEmpty());
 
 	// Begin debug event
-	COMMAND_BEGIN_DEBUG_EVENT(mCommandBufferContentGeneration, L"Generate the content of the 2D texture to process later on")
+	COMMAND_BEGIN_DEBUG_EVENT(mCommandBufferContentGeneration, "Generate the content of the 2D texture to process later on")
 
 	// Set the render target to render into
 	Renderer::Command::SetRenderTarget::create(mCommandBufferContentGeneration, mFramebuffer[0]);
@@ -348,7 +348,7 @@ void FirstGpgpu::fillCommandBufferContentProcessing()
 	assert(mCommandBufferContentProcessing.isEmpty());
 
 	// Begin debug event
-	COMMAND_BEGIN_DEBUG_EVENT(mCommandBufferContentProcessing, L"Content processing")
+	COMMAND_BEGIN_DEBUG_EVENT(mCommandBufferContentProcessing, "Content processing")
 
 	// Set the render target to render into
 	Renderer::Command::SetRenderTarget::create(mCommandBufferContentProcessing, mFramebuffer[1]);

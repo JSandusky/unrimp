@@ -1190,22 +1190,28 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::setDebugMarker(const wchar_t *name)
+	void Direct3D9Renderer::setDebugMarker(const char *name)
 	{
 		#ifndef DIRECT3D9RENDERER_NO_DEBUG
 			if (nullptr != D3DPERF_SetMarker)
 			{
-				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), name);
+				assert(strlen(name) < 256);
+				wchar_t unicodeName[256];
+				std::mbstowcs(unicodeName, name, 256);
+				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), unicodeName);
 			}
 		#endif
 	}
 
-	void Direct3D9Renderer::beginDebugEvent(const wchar_t *name)
+	void Direct3D9Renderer::beginDebugEvent(const char *name)
 	{
 		#ifndef DIRECT3D9RENDERER_NO_DEBUG
 			if (nullptr != D3DPERF_BeginEvent)
 			{
-				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), name);
+				assert(strlen(name) < 256);
+				wchar_t unicodeName[256];
+				std::mbstowcs(unicodeName, name, 256);
+				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), unicodeName);
 			}
 		#endif
 	}

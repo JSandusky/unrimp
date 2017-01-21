@@ -1283,7 +1283,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::setDebugMarker(const wchar_t *name)
+	void Direct3D11Renderer::setDebugMarker(const char *name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
@@ -1295,12 +1295,15 @@ namespace Direct3D11Renderer
 			// Call the Direct3D 9 PIX function
 			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
 			{
-				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), name);
+				assert(strlen(name) < 256);
+				wchar_t unicodeName[256];
+				std::mbstowcs(unicodeName, name, 256);
+				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), unicodeName);
 			}
 		#endif
 	}
 
-	void Direct3D11Renderer::beginDebugEvent(const wchar_t *name)
+	void Direct3D11Renderer::beginDebugEvent(const char *name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
@@ -1312,7 +1315,10 @@ namespace Direct3D11Renderer
 			// Call the Direct3D 9 PIX function
 			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
 			{
-				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), name);
+				assert(strlen(name) < 256);
+				wchar_t unicodeName[256];
+				std::mbstowcs(unicodeName, name, 256);
+				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), unicodeName);
 			}
 		#endif
 	}

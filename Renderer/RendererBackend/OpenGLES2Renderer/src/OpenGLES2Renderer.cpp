@@ -1154,19 +1154,28 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::setDebugMarker(const wchar_t *)
+	void OpenGLES2Renderer::setDebugMarker(const char *)
 	{
-		// OpenGL ES 2 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+		// TODO(co) Implement me. See
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
+		// - https://www.opengl.org/registry/specs/KHR/debug.txt
 	}
 
-	void OpenGLES2Renderer::beginDebugEvent(const wchar_t *)
+	void OpenGLES2Renderer::beginDebugEvent(const char *)
 	{
-		// OpenGL ES 2 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+		// TODO(co) Implement me. See
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
+		// - https://www.opengl.org/registry/specs/KHR/debug.txt
 	}
 
 	void OpenGLES2Renderer::endDebugEvent()
 	{
-		// OpenGL ES 2 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+		// TODO(co) Implement me. See
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
+		// - https://www.opengl.org/registry/specs/KHR/debug.txt
 	}
 
 

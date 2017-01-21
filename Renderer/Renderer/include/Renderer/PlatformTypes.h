@@ -128,7 +128,7 @@
 	*  @param[in] renderer
 	*    Pointer to the renderer instance to use, can be a null pointer
 	*  @param[in] name
-	*    Unicode name of the debug marker
+	*    ASCII name of the debug marker
 	*
 	*  @note
 	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
@@ -154,7 +154,7 @@
 	*  @param[in] renderer
 	*    Pointer to the renderer instance to use, can be a null pointer
 	*  @param[in] name
-	*    Unicode name of the debug event
+	*    ASCII name of the debug event
 	*
 	*  @note
 	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
@@ -202,12 +202,6 @@
 	#define RENDERER_OUTPUT_DEBUG_STRING(outputString)
 	#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...)
 #else
-	// Helper macros to transform __FUNCTION__ into a wchar_t version
-	// as described within the "Predefined Macros"-documentation at MSDN http://msdn.microsoft.com/en-us/library/b0084kay%28v=vs.80%29.aspx
-	#define RENDERER_INTERNAL__WFUNCTION__2(x) L ## x
-	#define RENDERER_INTERNAL__WFUNCTION__1(x) RENDERER_INTERNAL__WFUNCTION__2(x)
-	#define RENDERER_INTERNAL__WFUNCTION__ RENDERER_INTERNAL__WFUNCTION__1(__FUNCTION__)
-
 	/**
 	*  @brief
 	*    Set a debug marker
@@ -215,7 +209,7 @@
 	*  @param[in] renderer
 	*    Pointer to the renderer instance to use, can be a null pointer
 	*  @param[in] name
-	*    Unicode name of the debug marker
+	*    ASCII name of the debug marker
 	*
 	*  @note
 	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
@@ -232,7 +226,7 @@
 	*  @note
 	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
-	#define RENDERER_SET_DEBUG_MARKER_FUNCTION(renderer) if (nullptr != renderer) { (renderer)->setDebugMarker(RENDERER_INTERNAL__WFUNCTION__); }
+	#define RENDERER_SET_DEBUG_MARKER_FUNCTION(renderer) if (nullptr != renderer) { (renderer)->setDebugMarker(__FUNCTION__); }
 
 	/**
 	*  @brief
@@ -241,7 +235,7 @@
 	*  @param[in] renderer
 	*    Pointer to the renderer instance to use, can be a null pointer
 	*  @param[in] name
-	*    Unicode name of the debug event
+	*    ASCII name of the debug event
 	*
 	*  @note
 	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
@@ -258,7 +252,7 @@
 	*  @note
 	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
 	*/
-	#define RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer) if (nullptr != renderer) { (renderer)->beginDebugEvent(RENDERER_INTERNAL__WFUNCTION__); }
+	#define RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer) if (nullptr != renderer) { (renderer)->beginDebugEvent(__FUNCTION__); }
 
 	/**
 	*  @brief

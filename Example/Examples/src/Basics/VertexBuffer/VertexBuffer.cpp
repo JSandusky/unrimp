@@ -294,7 +294,7 @@ void VertexBuffer::fillCommandBuffer()
 	if (nullptr != mPipelineStateVBO)
 	{
 		// Begin debug event
-		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Draw using one VBO")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, "Draw using one VBO")
 
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateVBO);
@@ -318,7 +318,7 @@ void VertexBuffer::fillCommandBuffer()
 	if (nullptr != mPipelineStateVBOs)
 	{
 		// Begin debug event
-		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Draw using multiple VBOs")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, "Draw using multiple VBOs")
 
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateVBOs);

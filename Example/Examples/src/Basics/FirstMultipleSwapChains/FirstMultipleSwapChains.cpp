@@ -369,7 +369,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 				{
 					{ // Fill the command buffer
 						// Begin debug event
-						COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Draw into the main swap chain")
+						COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, "Draw into the main swap chain")
 
 						// Set the render target to render into
 						Renderer::Command::SetRenderTarget::create(mCommandBuffer, swapChain);
@@ -412,7 +412,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 		{
 			{ // Fill the command buffer
 				// Begin debug event
-				COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Render to the swap chain created in this example")
+				COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, "Render to the swap chain created in this example")
 
 				// Set the render target to render into
 				Renderer::Command::SetRenderTarget::create(mCommandBuffer, mSwapChain);

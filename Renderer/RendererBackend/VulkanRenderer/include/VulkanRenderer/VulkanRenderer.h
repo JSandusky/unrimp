@@ -180,8 +180,8 @@ namespace VulkanRenderer
 		//[-------------------------------------------------------]
 		//[ Debug                                                 ]
 		//[-------------------------------------------------------]
-		void setDebugMarker(const wchar_t *name);
-		void beginDebugEvent(const wchar_t *name);
+		void setDebugMarker(const char *name);
+		void beginDebugEvent(const char *name);
 		void endDebugEvent();
 
 

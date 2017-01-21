@@ -31,9 +31,6 @@
 #include "Renderer/Buffer/IndirectBufferTypes.h"
 
 #include <cassert>
-#ifndef WIN32
-	#include <wchar.h>	// For "wcsncpy()"
-#endif
 
 
 //[-------------------------------------------------------]
@@ -947,7 +944,7 @@ namespace Renderer
 		*    Set a debug marker
 		*
 		*  @param[in] name
-		*    Unicode name of the debug marker, must be valid (there's no internal null pointer test)
+		*    ASCII name of the debug marker, must be valid (there's no internal null pointer test)
 		*
 		*  @see
 		*    - "isDebugEnabled()"
@@ -955,19 +952,19 @@ namespace Renderer
 		struct SetDebugMarker
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, const wchar_t* name)
+			inline static void create(CommandBuffer& commandBuffer, const char* name)
 			{
 				*commandBuffer.addCommand<SetDebugMarker>() = SetDebugMarker(name);
 			}
 			// Constructor
-			inline SetDebugMarker(const wchar_t* _name)
+			inline SetDebugMarker(const char* _name)
 			{
-				assert(wcslen(_name) < 128);
-				wcsncpy(name, _name, 128);
+				assert(strlen(_name) < 128);
+				strncpy(name, _name, 128);
 				name[127] = '\0';
 			};
 			// Data
-			wchar_t name[128];
+			char name[128];
 			// Static data
 			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetDebugMarker;
 		};
@@ -977,7 +974,7 @@ namespace Renderer
 		*    Begin debug event
 		*
 		*  @param[in] name
-		*    Unicode name of the debug event, must be valid (there's no internal null pointer test)
+		*    ASCII name of the debug event, must be valid (there's no internal null pointer test)
 		*
 		*  @see
 		*    - "isDebugEnabled()"
@@ -985,19 +982,19 @@ namespace Renderer
 		struct BeginDebugEvent
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, const wchar_t* name)
+			inline static void create(CommandBuffer& commandBuffer, const char* name)
 			{
 				*commandBuffer.addCommand<BeginDebugEvent>() = BeginDebugEvent(name);
 			}
 			// Constructor
-			inline BeginDebugEvent(const wchar_t* _name)
+			inline BeginDebugEvent(const char* _name)
 			{
-				assert(wcslen(_name) < 128);
-				wcsncpy(name, _name, 128);
+				assert(strlen(_name) < 128);
+				strncpy(name, _name, 128);
 				name[127] = '\0';
 			};
 			// Data
-			wchar_t name[128];
+			char name[128];
 			// Static data
 			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::BeginDebugEvent;
 		};
@@ -1042,7 +1039,7 @@ namespace Renderer
 	*  @param[in] commandBuffer
 	*    Reference to the renderer instance to use
 	*  @param[in] name
-	*    Unicode name of the debug marker
+	*    ASCII name of the debug marker
 	*/
 	#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name)
 
@@ -1062,7 +1059,7 @@ namespace Renderer
 	*  @param[in] commandBuffer
 	*    Reference to the renderer instance to use
 	*  @param[in] name
-	*    Unicode name of the debug event
+	*    ASCII name of the debug event
 	*/
 	#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name)
 
@@ -1091,7 +1088,7 @@ namespace Renderer
 	*  @param[in] commandBuffer
 	*    Reference to the renderer instance to use
 	*  @param[in] name
-	*    Unicode name of the debug marker
+	*    ASCII name of the debug marker
 	*/
 	#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name) Renderer::Command::SetDebugMarker::create(commandBuffer, name);
 
@@ -1102,7 +1099,7 @@ namespace Renderer
 	*  @param[in] commandBuffer
 	*    Reference to the renderer instance to use
 	*/
-	#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer) Renderer::Command::SetDebugMarker::create(commandBuffer, RENDERER_INTERNAL__WFUNCTION__);
+	#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer) Renderer::Command::SetDebugMarker::create(commandBuffer, __FUNCTION__);
 
 	/**
 	*  @brief
@@ -1111,7 +1108,7 @@ namespace Renderer
 	*  @param[in] commandBuffer
 	*    Reference to the renderer instance to use
 	*  @param[in] name
-	*    Unicode name of the debug event
+	*    ASCII name of the debug event
 	*/
 	#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name) Renderer::Command::BeginDebugEvent::create(commandBuffer, name);
 
@@ -1122,7 +1119,7 @@ namespace Renderer
 	*  @param[in] commandBuffer
 	*    Reference to the renderer instance to use
 	*/
-	#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer) Renderer::Command::BeginDebugEvent::create(commandBuffer, RENDERER_INTERNAL__WFUNCTION__);
+	#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer) Renderer::Command::BeginDebugEvent::create(commandBuffer, __FUNCTION__);
 
 	/**
 	*  @brief

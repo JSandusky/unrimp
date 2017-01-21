@@ -1684,7 +1684,7 @@ typedef struct D3D12_GRAPHICS_PIPELINE_STATE_DESC
 	} D3D12_RLDO_FLAGS;
 
 	// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "pix_win.h"
-	static const UINT PIX_EVENT_UNICODE_VERSION = 0;
+	static const UINT PIX_EVENT_ANSI_VERSION = 1;
 #endif
 
 

@@ -1551,19 +1551,28 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::setDebugMarker(const wchar_t *)
+	void OpenGLRenderer::setDebugMarker(const char *)
 	{
-		// OpenGL has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+		// TODO(co) Implement me. See
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
+		// - https://www.opengl.org/registry/specs/KHR/debug.txt
 	}
 
-	void OpenGLRenderer::beginDebugEvent(const wchar_t *)
+	void OpenGLRenderer::beginDebugEvent(const char *)
 	{
-		// OpenGL has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+		// TODO(co) Implement me. See
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
+		// - https://www.opengl.org/registry/specs/KHR/debug.txt
 	}
 
 	void OpenGLRenderer::endDebugEvent()
 	{
-		// OpenGL has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+		// TODO(co) Implement me. See
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
+		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
+		// - https://www.opengl.org/registry/specs/KHR/debug.txt
 	}
 
 

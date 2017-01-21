@@ -253,7 +253,7 @@ void FirstMultipleRenderTargets::fillCommandBuffer()
 
 	{ // Render to multiple render targets
 		// Begin debug event
-		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Render to multiple render targets")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, "Render to multiple render targets")
 
 		// This in here is of course just an example. In a real application
 		// there would be no point in constantly updating texture content
@@ -294,7 +294,7 @@ void FirstMultipleRenderTargets::fillCommandBuffer()
 
 	{ // Use the render to multiple render targets result
 		// Begin debug event
-		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, L"Use the render to multiple render targets result")
+		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, "Use the render to multiple render targets result")
 
 		{ // Set the viewport
 			// Get the render target with and height

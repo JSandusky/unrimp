@@ -1049,24 +1049,24 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::setDebugMarker(const wchar_t *name)
+	void Direct3D12Renderer::setDebugMarker(const char *name)
 	{
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			if (nullptr != mD3D12GraphicsCommandList)
 			{
-				const UINT size = static_cast<UINT>((wcslen(name) + 1) * sizeof(name[0]));
-				mD3D12GraphicsCommandList->SetMarker(PIX_EVENT_UNICODE_VERSION, name, size);
+				const UINT size = static_cast<UINT>((strlen(name) + 1) * sizeof(name[0]));
+				mD3D12GraphicsCommandList->SetMarker(PIX_EVENT_ANSI_VERSION, name, size);
 			}
 		#endif
 	}
 
-	void Direct3D12Renderer::beginDebugEvent(const wchar_t *name)
+	void Direct3D12Renderer::beginDebugEvent(const char *name)
 	{
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			if (nullptr != mD3D12GraphicsCommandList)
 			{
-				const UINT size = static_cast<UINT>((wcslen(name) + 1) * sizeof(name[0]));
-				mD3D12GraphicsCommandList->BeginEvent(PIX_EVENT_UNICODE_VERSION, name, size);
+				const UINT size = static_cast<UINT>((strlen(name) + 1) * sizeof(name[0]));
+				mD3D12GraphicsCommandList->BeginEvent(PIX_EVENT_ANSI_VERSION, name, size);
 			}
 		#endif
 	}

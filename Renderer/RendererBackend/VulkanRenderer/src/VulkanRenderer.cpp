@@ -770,12 +770,12 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::setDebugMarker(const wchar_t *)
+	void VulkanRenderer::setDebugMarker(const char *)
 	{
 		// TODO(co) Implement me
 	}
 
-	void VulkanRenderer::beginDebugEvent(const wchar_t *)
+	void VulkanRenderer::beginDebugEvent(const char *)
 	{
 		// TODO(co) Implement me
 	}
