@@ -1017,6 +1017,9 @@
     <ClInclude Include="include\RendererRuntime\Core\File\IFileManager.h">
       <Filter>Source Files\Core\File</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerLinux.h">
+      <Filter>Source Files\DebugGui\Detail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1324,6 +1327,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\CompositorNode\ICompositorResourcePass.cpp">
       <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerLinux.cpp">
+      <Filter>Source Files\DebugGui\Detail</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

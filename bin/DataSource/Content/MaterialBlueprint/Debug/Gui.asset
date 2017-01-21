@@ -14,7 +14,7 @@
 			"AssetName": "Gui",
 			"AssetDependencies": [ "119", "120" ],
 			"FileDependencies": [ "Gui.material_blueprint" ],
-			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+			"Copyright": "Copyright (c) 2012-2017 Christian Ofenberg"
 		},
 		"MaterialBlueprintAssetCompiler":
 		{

@@ -14,7 +14,7 @@
 			"AssetName": "GuiVertex",
 			"AssetDependencies": [ "15" ],
 			"FileDependencies": [ "GuiVertex.shader_blueprint" ],
-			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+			"Copyright": "Copyright (c) 2012-2017 Christian Ofenberg"
 		},
 		"ShaderBlueprintAssetCompiler":
 		{

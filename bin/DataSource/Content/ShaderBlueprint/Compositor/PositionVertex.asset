@@ -14,7 +14,7 @@
 			"AssetName": "PositionVertex",
 			"AssetDependencies": [ "15" ],
 			"FileDependencies": [ "PositionVertex.shader_blueprint" ],
-			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+			"Copyright": "Copyright (c) 2012-2017 Christian Ofenberg"
 		},
 		"ShaderBlueprintAssetCompiler":
 		{

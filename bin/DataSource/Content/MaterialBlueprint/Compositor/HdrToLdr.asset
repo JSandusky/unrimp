@@ -14,7 +14,7 @@
 			"AssetName": "HdrToLdr",
 			"AssetDependencies": [ "100", "123", "135" ],
 			"FileDependencies": [ "HdrToLdr.material_blueprint" ],
-			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+			"Copyright": "Copyright (c) 2012-2017 Christian Ofenberg"
 		},
 		"MaterialBlueprintAssetCompiler":
 		{
