@@ -165,6 +165,12 @@ namespace OpenGLES2Renderer
 					// Bind the depth stencil texture to framebuffer
 					const Texture2D* texture2D = static_cast<const Texture2D*>(depthStencilTexture);
 					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture2D->getOpenGLES2Texture(), 0);
+
+					// Generate mipmaps?
+					if (texture2D->getGenerateMipmaps())
+					{
+						mGenerateMipmaps = true;
+					}
 					break;
 				}
 
