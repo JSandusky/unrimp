@@ -128,9 +128,10 @@ namespace RendererRuntime
 			// Read in the shader blueprints
 			file.read(&mShaderBlueprintAssetId, sizeof(AssetId) * NUMBER_OF_SHADER_TYPES);
 
-			// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
 			// Read in the pipeline state
-			file.read(&mMaterialBlueprintResource->mPipelineState, sizeof(Renderer::PipelineState));
+			file.read(&mMaterialBlueprintResource->mPipelineState, sizeof(Renderer::SerializedPipelineState));
+			mMaterialBlueprintResource->mPipelineState.rootSignature = nullptr;
+			mMaterialBlueprintResource->mPipelineState.program = nullptr;
 		}
 
 		{ // Read in the uniform buffers

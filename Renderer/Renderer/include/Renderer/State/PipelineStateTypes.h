@@ -80,18 +80,21 @@ namespace Renderer
 	*  @todo
 	*    - TODO(co) Under construction
 	*/
-	struct PipelineState
+	struct SerializedPipelineState
 	{
-		IRootSignature*			rootSignature;				///< Root signature (pipeline state instances keep a reference to the program), must be valid
-		IProgram*				program;					///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
-		VertexAttributes		vertexAttributes;			///< Vertex attributes
-		PrimitiveTopologyType	primitiveTopologyType;		///< Primitive topology type
-		RasterizerState			rasterizerState;			///< Rasterizer state
-		DepthStencilState		depthStencilState;			///< Depth stencil state
-		BlendState				blendState;					///< Blend state
-		uint32_t				numberOfRenderTargets;		///< Number of render targets
-		TextureFormat::Enum		renderTargetViewFormats[8];	///< Render target view formats
-		TextureFormat::Enum		depthStencilViewFormat;		///< Depth stencil view formats
+		VertexAttributes	  vertexAttributes;				///< Vertex attributes
+		PrimitiveTopologyType primitiveTopologyType;		///< Primitive topology type
+		RasterizerState		  rasterizerState;				///< Rasterizer state
+		DepthStencilState	  depthStencilState;			///< Depth stencil state
+		BlendState			  blendState;					///< Blend state
+		uint32_t			  numberOfRenderTargets;		///< Number of render targets
+		TextureFormat::Enum	  renderTargetViewFormats[8];	///< Render target view formats
+		TextureFormat::Enum	  depthStencilViewFormat;		///< Depth stencil view formats
+	};
+	struct PipelineState : public SerializedPipelineState
+	{
+		IRootSignature* rootSignature;	///< Root signature (pipeline state instances keep a reference to the program), must be valid
+		IProgram*		program;		///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
 	};
 	struct PipelineStateBuilder : public PipelineState
 	{

@@ -1340,10 +1340,8 @@ namespace Renderer
 			TRIANGLE	= 3,
 			PATCH		= 4
 		};
-		struct PipelineState
+		struct SerializedPipelineState
 		{
-			IRootSignature*		  rootSignature;
-			IProgram*			  program;
 			VertexAttributes	  vertexAttributes;
 			PrimitiveTopologyType primitiveTopologyType;
 			RasterizerState		  rasterizerState;
@@ -1352,6 +1350,11 @@ namespace Renderer
 			uint32_t			  numberOfRenderTargets;
 			TextureFormat::Enum	  renderTargetViewFormats[8];
 			TextureFormat::Enum	  depthStencilViewFormat;
+		};
+		struct PipelineState : public SerializedPipelineState
+		{
+			IRootSignature* rootSignature;
+			IProgram*		program;
 		};
 		struct PipelineStateBuilder : public PipelineState
 		{

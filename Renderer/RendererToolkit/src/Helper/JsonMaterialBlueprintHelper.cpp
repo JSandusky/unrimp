@@ -796,9 +796,8 @@ namespace RendererToolkit
 			}
 		}
 
-		// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
 		// Write down the pipeline state object (PSO)
-		outputFileStream.write(reinterpret_cast<const char*>(&pipelineState), sizeof(Renderer::PipelineState));
+		outputFileStream.write(reinterpret_cast<const char*>(&pipelineState), sizeof(Renderer::SerializedPipelineState));
 	}
 
 	void JsonMaterialBlueprintHelper::readUniformBuffers(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueUniformBuffers, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
