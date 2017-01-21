@@ -482,7 +482,7 @@ namespace VulkanRenderer
 				RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Only a single descriptor range is supported")
 				return;
 			}
-			if (nullptr == rootParameter.descriptorTable.descriptorRanges)
+			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
 				RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Descriptor ranges is a null pointer")
 				return;

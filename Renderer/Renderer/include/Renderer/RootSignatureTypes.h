@@ -155,8 +155,8 @@ namespace Renderer
 	*/
 	struct RootDescriptorTable
 	{
-		uint32_t			   numberOfDescriptorRanges;
-		const DescriptorRange* descriptorRanges;
+		uint32_t numberOfDescriptorRanges;
+		uint64_t descriptorRanges;			///< Can't use "const DescriptorRange*" because we need to have something platform neutral we can easily serialize without getting too fine granular
 	};
 	struct RootDescriptorTableBuilder : public RootDescriptorTable
 	{
@@ -184,7 +184,10 @@ namespace Renderer
 			const DescriptorRange* _descriptorRanges)
 		{
 			rootDescriptorTable.numberOfDescriptorRanges = _numberOfDescriptorRanges;
-			rootDescriptorTable.descriptorRanges = _descriptorRanges;
+			PRAGMA_WARNING_PUSH
+				PRAGMA_WARNING_DISABLE_MSVC(4826)	// warning C4826: Conversion from 'const Renderer::DescriptorRange *' to 'uint64_t' is sign-extended. This may cause unexpected runtime behavior.
+				rootDescriptorTable.descriptorRanges = reinterpret_cast<uint64_t>(_descriptorRanges);
+			PRAGMA_WARNING_POP
 		}
 	};
 

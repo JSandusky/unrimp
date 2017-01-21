@@ -99,6 +99,11 @@ namespace Renderer
 			#endif
 			#define FORCEINLINE __forceinline
 			#define NOP __nop()
+			#define PRAGMA_WARNING_PUSH __pragma(warning(push))
+			#define PRAGMA_WARNING_POP __pragma(warning(pop))
+			#define PRAGMA_WARNING_DISABLE_MSVC(id) __pragma(warning(disable: id))
+			#define PRAGMA_WARNING_DISABLE_CLANG(id)
+			#define PRAGMA_WARNING_DISABLE_GCC(id)
 		#elif LINUX
 			#if X64_ARCHITECTURE
 				typedef uint64_t handle;
@@ -110,6 +115,23 @@ namespace Renderer
 			#endif
 			#define FORCEINLINE __attribute__((always_inline))
 			#define NOP
+			#ifdef __clang__
+				#define PRAGMA_WARNING_PUSH _Pragma("clang diagnostic push")
+				#define PRAGMA_WARNING_POP _Pragma("clang diagnostic pop")
+				#define PRAGMA_WARNING_DISABLE_MSVC(id)
+				#define PRAGMA_WARNING_DISABLE_GCC(id)
+				#define PRAGMA_STRINGIFY(a) #a
+				#define PRAGMA_WARNING_DISABLE_CLANG(id) _Pragma(PRAGMA_STRINGIFY(clang diagnostic ignored id) )
+			#elif __GNUC__
+				#define PRAGMA_WARNING_PUSH _Pragma("GCC diagnostic push")
+				#define PRAGMA_WARNING_POP _Pragma("GCC diagnostic pop")
+				#define PRAGMA_WARNING_DISABLE_MSVC(id)
+				#define PRAGMA_STRINGIFY(a) #a
+				#define PRAGMA_WARNING_DISABLE_GCC(id) _Pragma(PRAGMA_STRINGIFY(GCC diagnostic ignored id) )
+				#define PRAGMA_WARNING_DISABLE_CLANG(id)
+			#else
+				#error "Unsupported compiler"
+			#endif
 		#else
 			#error "Unsupported platform"
 		#endif
@@ -388,8 +410,8 @@ namespace Renderer
 		};
 		struct RootDescriptorTable
 		{
-			uint32_t			   numberOfDescriptorRanges;
-			const DescriptorRange* descriptorRanges;
+			uint32_t numberOfDescriptorRanges;
+			uint64_t descriptorRanges;
 		};
 		struct RootDescriptorTableBuilder : public RootDescriptorTable
 		{
@@ -415,7 +437,10 @@ namespace Renderer
 				const DescriptorRange* _descriptorRanges)
 			{
 				rootDescriptorTable.numberOfDescriptorRanges = _numberOfDescriptorRanges;
-				rootDescriptorTable.descriptorRanges = _descriptorRanges;
+				PRAGMA_WARNING_PUSH
+					PRAGMA_WARNING_DISABLE_MSVC(4826)	// warning C4826: Conversion from 'const Renderer::DescriptorRange *' to 'uint64_t' is sign-extended. This may cause unexpected runtime behavior.
+					rootDescriptorTable.descriptorRanges = reinterpret_cast<uint64_t>(_descriptorRanges);
+				PRAGMA_WARNING_POP
 			}
 		};
 		enum class RootParameterType

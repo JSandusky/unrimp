@@ -69,7 +69,7 @@ namespace Direct3D12Renderer
 							// "Renderer::DescriptorRange" is not identical to "D3D12_DESCRIPTOR_RANGE" because it had to be extended by information required by OpenGL
 							for (uint32_t descriptorRangeIndex = 0; descriptorRangeIndex < numberOfDescriptorRanges; ++descriptorRangeIndex)
 							{
-								memcpy(const_cast<D3D12_DESCRIPTOR_RANGE*>(&d3dRootParameter.DescriptorTable.pDescriptorRanges[descriptorRangeIndex]), &rootParameter.descriptorTable.descriptorRanges[descriptorRangeIndex], sizeof(D3D12_DESCRIPTOR_RANGE));
+								memcpy(const_cast<D3D12_DESCRIPTOR_RANGE*>(&d3dRootParameter.DescriptorTable.pDescriptorRanges[descriptorRangeIndex]), &reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[descriptorRangeIndex], sizeof(D3D12_DESCRIPTOR_RANGE));
 							}
 						}
 					}

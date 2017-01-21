@@ -142,7 +142,7 @@ namespace OpenGLRenderer
 					}
 					else
 					{
-						const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
+						const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
 
 						// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
 						if (Renderer::DescriptorRangeType::UBV == descriptorRange->rangeType)

@@ -462,7 +462,7 @@ namespace OpenGLES2Renderer
 				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Only a single descriptor range is supported")
 				return;
 			}
-			if (nullptr == rootParameter.descriptorTable.descriptorRanges)
+			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
 				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Descriptor ranges is a null pointer")
 				return;
@@ -477,7 +477,7 @@ namespace OpenGLES2Renderer
 
 			// Get the root signature parameter instance
 			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
-			const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
+			const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
 
 			// Check the type of resource to set
 			// TODO(co) Some additional resource type root signature security checks in debug build?

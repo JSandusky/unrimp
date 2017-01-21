@@ -398,7 +398,7 @@ namespace NullRenderer
 				RENDERER_OUTPUT_DEBUG_STRING("Null error: Only a single descriptor range is supported")
 				return;
 			}
-			if (nullptr == rootParameter.descriptorTable.descriptorRanges)
+			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
 				RENDERER_OUTPUT_DEBUG_STRING("Null error: Descriptor ranges is a null pointer")
 				return;

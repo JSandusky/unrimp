@@ -114,7 +114,10 @@ namespace RendererRuntime
 					Renderer::RootParameter& rootParameter = mRootParameters[i];
 					if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 					{
-						rootParameter.descriptorTable.descriptorRanges = descriptorRange;
+						PRAGMA_WARNING_PUSH
+							PRAGMA_WARNING_DISABLE_MSVC(4826)	// warning C4826: Conversion from 'const Renderer::DescriptorRange *' to 'uint64_t' is sign-extended. This may cause unexpected runtime behavior.
+							rootParameter.descriptorTable.descriptorRanges = reinterpret_cast<uint64_t>(descriptorRange);
+						PRAGMA_WARNING_POP
 						descriptorRange += rootParameter.descriptorTable.numberOfDescriptorRanges;
 					}
 				}

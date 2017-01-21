@@ -57,8 +57,11 @@ namespace Direct3D11Renderer
 					if (Renderer::RootParameterType::DESCRIPTOR_TABLE == destinationRootParameter.parameterType)
 					{
 						const uint32_t numberOfDescriptorRanges = destinationRootParameter.descriptorTable.numberOfDescriptorRanges;
-						destinationRootParameter.descriptorTable.descriptorRanges = new Renderer::DescriptorRange[numberOfDescriptorRanges];
-						memcpy(const_cast<Renderer::DescriptorRange*>(destinationRootParameter.descriptorTable.descriptorRanges), sourceRootParameter.descriptorTable.descriptorRanges, sizeof(Renderer::DescriptorRange) * numberOfDescriptorRanges);
+						PRAGMA_WARNING_PUSH
+							PRAGMA_WARNING_DISABLE_MSVC(4826)	// warning C4826: Conversion from 'const Renderer::DescriptorRange *' to 'uint64_t' is sign-extended. This may cause unexpected runtime behavior.
+							destinationRootParameter.descriptorTable.descriptorRanges = reinterpret_cast<uint64_t>(new Renderer::DescriptorRange[numberOfDescriptorRanges]);
+						PRAGMA_WARNING_POP
+						memcpy(reinterpret_cast<Renderer::DescriptorRange*>(destinationRootParameter.descriptorTable.descriptorRanges), reinterpret_cast<const Renderer::DescriptorRange*>(sourceRootParameter.descriptorTable.descriptorRanges), sizeof(Renderer::DescriptorRange) * numberOfDescriptorRanges);
 					}
 				}
 			}
@@ -83,7 +86,7 @@ namespace Direct3D11Renderer
 				const Renderer::RootParameter& rootParameter = mRootSignature.parameters[i];
 				if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 				{
-					delete [] rootParameter.descriptorTable.descriptorRanges;
+					delete [] reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
 				}
 			}
 			delete [] mRootSignature.parameters;
