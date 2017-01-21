@@ -209,7 +209,7 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
+							"BaseShaderRegister": "1",
 							"BaseShaderRegisterName": "DiffuseMap",
 							"SamplerRootParameterIndex": "4"
 						}
@@ -224,7 +224,7 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "1",
+							"BaseShaderRegister": "2",
 							"BaseShaderRegisterName": "AlphaMap",
 							"SamplerRootParameterIndex": "4"
 						}
@@ -239,7 +239,7 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "2",
+							"BaseShaderRegister": "3",
 							"BaseShaderRegisterName": "EmissiveMap",
 							"SamplerRootParameterIndex": "4"
 						}
@@ -254,7 +254,7 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "3",
+							"BaseShaderRegister": "4",
 							"BaseShaderRegisterName": "NormalMap",
 							"SamplerRootParameterIndex": "4"
 						}
@@ -269,7 +269,7 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "4",
+							"BaseShaderRegister": "5",
 							"BaseShaderRegisterName": "SpecularMap",
 							"SamplerRootParameterIndex": "4"
 						}

@@ -41,6 +41,7 @@ PRAGMA_WARNING_POP
 
 #include <fstream>
 #include <algorithm>
+#include <unordered_set>
 
 
 //[-------------------------------------------------------]
@@ -574,7 +575,25 @@ namespace RendererToolkit
 			}
 		}
 
-		// Now that we have collect everything we need, write it down
+		{ // Now that we have collected everything we need, perform some editing sanity and security checks before writing down the root signature
+		  // -> Base shader register clashes: Direct3D has completely separated shader stages allowing one to e.g. bind a texture buffer at vertex shader texture stage 0 while binding
+		  //    a 2D texture at fragment shader stage 0. OpenGL doesn't support something like this and one has to ensure there are no base shader register clashes between separate shader
+		  //    stages. Horrible error prone and inflexible restriction, but we can't change that so we have to check for it and sparing the material blueprint editor crazy debugging efforts.
+			typedef std::unordered_set<uint32_t> BaseShaderRegisterUsed;	// Key = Base shader register
+			BaseShaderRegisterUsed rangeTypeBaseShaderRegisterUsed[static_cast<uint32_t>(Renderer::DescriptorRangeType::NUMBER_OF_RANGE_TYPES)];
+			for (const Renderer::DescriptorRange& descriptorRange : descriptorRanges)
+			{
+				BaseShaderRegisterUsed& baseShaderRegisterUsed = rangeTypeBaseShaderRegisterUsed[static_cast<uint32_t>(descriptorRange.rangeType)];
+				if (baseShaderRegisterUsed.find(descriptorRange.baseShaderRegister) == baseShaderRegisterUsed.cend())
+				{
+					baseShaderRegisterUsed.insert(descriptorRange.baseShaderRegister);
+				}
+				else
+				{
+					throw std::runtime_error("Base shader register " + std::to_string(descriptorRange.baseShaderRegister) + " is already used. Please note that to be renderer API independent, base shader register usage is considered to be across all shader stages like OpenGL does.");
+				}
+			}
+		}
 
 		{ // Write down the root signature header
 			RendererRuntime::v1MaterialBlueprint::RootSignatureHeader rootSignatureHeader;

@@ -77,16 +77,16 @@ UNIFORM_BUFFER_END
 // Samplers
 SAMPLER_STATE(SamplerLinear, 0)
 
-// Textures
-TEXTURE_2D(DiffuseMap, 0)
+// Textures: We need to start at texture unit 1 instead of texture unit 0 because the vertex shader has an instance texture buffer bound at texture unit 0 (OpenGL shares those bindings accros all shader stages while Direct3D doesn't)
+TEXTURE_2D(DiffuseMap, 1)
 @property(UseAlphaMap)
-	TEXTURE_2D(AlphaMap, 1)
+	TEXTURE_2D(AlphaMap, 2)
 @end
 @property(UseEmissiveMap)
-	TEXTURE_2D(EmissiveMap, 2)
+	TEXTURE_2D(EmissiveMap, 3)
 @end
-TEXTURE_2D(NormalMap, 3)	// Tangent space normal map
-TEXTURE_2D(SpecularMap, 4)
+TEXTURE_2D(NormalMap, 4)	// Tangent space normal map
+TEXTURE_2D(SpecularMap, 5)
 
 
 //[-------------------------------------------------------]

@@ -55,10 +55,11 @@ namespace Renderer
 	*/
 	enum class DescriptorRangeType
 	{
-		SRV     = 0,
-		UAV     = SRV + 1,
-		UBV     = UAV + 1,
-		SAMPLER = UBV + 1
+		SRV					  = 0,
+		UAV					  = SRV + 1,
+		UBV					  = UAV + 1,
+		SAMPLER				  = UBV + 1,
+		NUMBER_OF_RANGE_TYPES = SAMPLER + 1
 	};
 
 	/**

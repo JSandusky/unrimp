@@ -62,9 +62,9 @@ UNIFORM_BUFFER_END
 // Samplers
 SAMPLER_STATE(SamplerLinear, 0)
 
-// Textures
+// Textures: We need to start at texture unit 1 instead of texture unit 0 because the vertex shader has an instance texture buffer bound at texture unit 0 (OpenGL shares those bindings accros all shader stages while Direct3D doesn't)
 @property(UseDiffuseMap)
-	TEXTURE_2D(DiffuseMap, 0)
+	TEXTURE_2D(DiffuseMap, 1)
 @end
 
 

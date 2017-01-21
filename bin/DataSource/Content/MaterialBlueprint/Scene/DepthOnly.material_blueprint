@@ -131,7 +131,7 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
+							"BaseShaderRegister": "1",
 							"BaseShaderRegisterName": "AlphaMap",
 							"SamplerRootParameterIndex": "4"
 						}

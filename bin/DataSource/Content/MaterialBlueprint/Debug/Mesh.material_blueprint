@@ -128,7 +128,7 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
+							"BaseShaderRegister": "1",
 							"BaseShaderRegisterName": "DiffuseMap",
 							"SamplerRootParameterIndex": "4"
 						}
