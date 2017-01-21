@@ -79,6 +79,7 @@ namespace RendererRuntime
 		inline virtual void onProcessing() override;
 		virtual bool onDispatch() override;
 		inline virtual bool isFullyLoaded() override;
+		Renderer::ITexture* createRendererTexture();
 
 
 	//[-------------------------------------------------------]

@@ -207,6 +207,7 @@ namespace RendererRuntime
 
 		// Create the root signature
 		mMaterialBlueprintResource->mRootSignaturePtr = renderer.createRootSignature(mRootSignature);
+		RENDERER_SET_RESOURCE_DEBUG_NAME(mMaterialBlueprintResource->mRootSignaturePtr, getAsset().assetFilename)
 
 		{ // Get the used shader blueprint resources
 			ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
@@ -303,6 +304,7 @@ namespace RendererRuntime
 				MaterialBlueprintResource::SamplerState& samplerState = samplerStates[i];
 				samplerState.rootParameterIndex = materialBlueprintSamplerState->rootParameterIndex;
 				samplerState.samplerStatePtr = renderer.createSamplerState(*materialBlueprintSamplerState);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(samplerState.samplerStatePtr, getAsset().assetFilename)
 			}
 		}
 

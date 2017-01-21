@@ -77,6 +77,7 @@ namespace
 				-1.0f, -3.0f, 0.0f, 2.0f	// 2			  2
 			};
 			Renderer::IVertexBufferPtr vertexBuffer(bufferManager.createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Compositor instance pass quad")
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -91,7 +92,11 @@ namespace
 					sizeof(float) * 4	// strideInBytes (uint32_t)
 				}
 			};
-			return bufferManager.createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			Renderer::IVertexArray* vertexArray = bufferManager.createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexArray, "Compositor instance pass quad")
+
+			// Done
+			return vertexArray;
 		}
 
 

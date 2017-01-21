@@ -165,6 +165,7 @@ namespace RendererRuntime
 						// Create the framebuffer object (FBO) instance
 						// -> The framebuffer automatically adds a reference to the provided textures
 						framebufferElement.framebuffer = mRenderTargetTextureManager.getRendererRuntime().getRenderer().createFramebuffer(numberOfColorTextures, colorTextures, depthStencilTexture);
+						RENDERER_SET_RESOURCE_DEBUG_NAME(framebufferElement.framebuffer, "Framebuffer manager")
 						framebufferElement.framebuffer->addReference();
 					}
 					framebuffer = framebufferElement.framebuffer;

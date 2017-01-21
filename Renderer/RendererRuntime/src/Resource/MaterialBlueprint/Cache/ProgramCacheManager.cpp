@@ -104,6 +104,7 @@ namespace RendererRuntime
 					static_cast<Renderer::ITessellationEvaluationShader*>(shaders[static_cast<int>(ShaderType::TessellationEvaluation)]),
 					static_cast<Renderer::IGeometryShader*>(shaders[static_cast<int>(ShaderType::Geometry)]),
 					static_cast<Renderer::IFragmentShader*>(shaders[static_cast<int>(ShaderType::Fragment)]));
+				RENDERER_SET_RESOURCE_DEBUG_NAME(program, "Program cache manager")
 
 				// Create the new program cache instance
 				if (nullptr != program)

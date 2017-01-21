@@ -281,6 +281,7 @@ namespace
 
 				// Create the renderer texture instance
 				Renderer::ITexture2D* texture2D = rendererRuntime.getTextureManager().createTexture2D(vrRenderModelTextureMap->unWidth, vrRenderModelTextureMap->unHeight, rgbHardwareGammaCorrection ? Renderer::TextureFormat::R8G8B8A8_SRGB : Renderer::TextureFormat::R8G8B8A8, static_cast<const void*>(vrRenderModelTextureMap->rubTextureMapData), Renderer::TextureFlag::GENERATE_MIPMAPS);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(texture2D, diffuseTextureName.c_str())
 
 				// We need to generate the runtime texture asset right now
 				// -> Takes over the given 2D texture
@@ -420,6 +421,7 @@ namespace
 							}
 						}
 						vertexBuffer = bufferManager.createVertexBuffer(numberOfBytes, temp, Renderer::BufferUsage::STATIC_DRAW);
+						RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, renderModelName.c_str())
 						delete [] temp;
 						delete [] tangents;
 					}
@@ -438,18 +440,22 @@ namespace
 							currentTemp[2] = vrRenderModel->rIndexData[offset + 0];
 						}
 						indexBuffer = bufferManager.createIndexBuffer(numberOfIndices * sizeof(uint16_t), Renderer::IndexBufferFormat::UNSIGNED_SHORT, temp, Renderer::BufferUsage::STATIC_DRAW);
+						RENDERER_SET_RESOURCE_DEBUG_NAME(indexBuffer, renderModelName.c_str())
 						delete [] temp;
 					}
 
-					// Create vertex array object (VAO)
-					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-					{
-						{ // Vertex buffer 0
-							vertexBuffer,			// vertexBuffer (Renderer::IVertexBuffer *)
-							numberOfBytesPerVertex	// strideInBytes (uint32_t)
-						}
-					};
-					meshResource.setVertexArray(bufferManager.createVertexArray(RendererRuntime::MeshResource::VERTEX_ATTRIBUTES, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer));
+					{ // Create vertex array object (VAO)
+						const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+						{
+							{ // Vertex buffer 0
+								vertexBuffer,			// vertexBuffer (Renderer::IVertexBuffer *)
+								numberOfBytesPerVertex	// strideInBytes (uint32_t)
+							}
+						};
+						Renderer::IVertexArray* vertexArray = bufferManager.createVertexArray(RendererRuntime::MeshResource::VERTEX_ATTRIBUTES, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
+						meshResource.setVertexArray(vertexArray);
+						RENDERER_SET_RESOURCE_DEBUG_NAME(vertexArray, renderModelName.c_str())
+					}
 				}
 
 				// Tell the mesh resource about the sub-mesh
@@ -572,10 +578,13 @@ namespace RendererRuntime
 				uint32_t height = 0;
 				mVrSystem->GetRecommendedRenderTargetSize(&width, &height);
 				Renderer::ITexture* colorTexture2D = mColorTexture2D = mRendererRuntime.getTextureManager().createTexture2D(width, height, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(colorTexture2D, "OpenVR color render target texture")
 				Renderer::ITexture* depthStencilTexture2D = mRendererRuntime.getTextureManager().createTexture2D(width, height, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(depthStencilTexture2D, "OpenVR depth stencil render target texture")
 
 				// Create the framebuffer object (FBO) instance
 				mFramebuffer = renderer.createFramebuffer(1, &colorTexture2D, depthStencilTexture2D);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(mFramebuffer, "OpenVR framebuffer")
 			}
 
 			// TODO(co) Optionally mirror the result on the given render target

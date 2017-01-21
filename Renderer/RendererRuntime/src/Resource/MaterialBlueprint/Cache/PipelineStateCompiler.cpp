@@ -63,7 +63,11 @@ namespace
 			pipelineState.vertexAttributes = materialBlueprintResource.getVertexAttributes();
 
 			// Create the pipeline state object (PSO)
-			return rootSignaturePtr->getRenderer().createPipelineState(pipelineState);
+			Renderer::IPipelineState* pipelineStateResource = rootSignaturePtr->getRenderer().createPipelineState(pipelineState);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(pipelineStateResource, "Pipeline state compiler")
+
+			// Done
+			return pipelineStateResource;
 		}
 
 
@@ -384,6 +388,7 @@ namespace RendererRuntime
 											break;
 									}
 									assert(nullptr != shader);	// TODO(co) Error handling
+									RENDERER_SET_RESOURCE_DEBUG_NAME(shader, "Pipeline state compiler")
 									shaderCache->mShaderPtr = shaders[i] = shader;
 								}
 							}
@@ -404,6 +409,7 @@ namespace RendererRuntime
 								static_cast<Renderer::ITessellationEvaluationShader*>(shaders[static_cast<int>(ShaderType::TessellationEvaluation)]),
 								static_cast<Renderer::IGeometryShader*>(shaders[static_cast<int>(ShaderType::Geometry)]),
 								static_cast<Renderer::IFragmentShader*>(shaders[static_cast<int>(ShaderType::Fragment)]));
+							RENDERER_SET_RESOURCE_DEBUG_NAME(program, "Pipeline state compiler")
 
 							// Create the pipeline state object (PSO)
 							compilerRequest.pipelineStateObject = ::detail::createPipelineState(materialBlueprintResource, *program);

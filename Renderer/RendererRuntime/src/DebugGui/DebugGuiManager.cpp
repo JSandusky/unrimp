@@ -183,12 +183,14 @@ namespace RendererRuntime
 				{
 					mNumberOfAllocatedVertices = static_cast<uint32_t>(imDrawData->TotalVtxCount + 5000);	// Add some reserve to reduce reallocations
 					mVertexBufferPtr = bufferManager.createVertexBuffer(mNumberOfAllocatedVertices * sizeof(ImDrawVert), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexBufferPtr, "Debug GUI")
 					mVertexArrayPtr = nullptr;
 				}
 				if (nullptr == mIndexBufferPtr || mNumberOfAllocatedIndices < static_cast<uint32_t>(imDrawData->TotalIdxCount))
 				{
 					mNumberOfAllocatedIndices = static_cast<uint32_t>(imDrawData->TotalIdxCount + 10000);	// Add some reserve to reduce reallocations
 					mIndexBufferPtr = bufferManager.createIndexBuffer(mNumberOfAllocatedIndices * sizeof(ImDrawIdx), Renderer::IndexBufferFormat::UNSIGNED_SHORT, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(mIndexBufferPtr, "Debug GUI")
 					mVertexArrayPtr = nullptr;
 				}
 				if (nullptr == mVertexArrayPtr)
@@ -205,6 +207,7 @@ namespace RendererRuntime
 						}
 					};
 					mVertexArrayPtr = bufferManager.createVertexArray(::detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, mIndexBufferPtr);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexArrayPtr, "Debug GUI")
 				}
 
 				{ // Copy and convert all vertices and indices into a single contiguous buffer
@@ -416,6 +419,7 @@ namespace RendererRuntime
 
 			// Create the instance
 			mRootSignature = renderer.createRootSignature(rootSignature);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(mRootSignature, "Debug GUI")
 		}
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -433,12 +437,19 @@ namespace RendererRuntime
 					#include "Detail/Shader/DebugGui_HLSL_D3D10_D3D11_D3D12.h"
 					#include "Detail/Shader/DebugGui_Null.h"
 
+					// Create the shaders
+					Renderer::IVertexShader* vertexShader = shaderLanguage->createVertexShaderFromSourceCode(::detail::VertexAttributes, vertexShaderSourceCode);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(vertexShader, "Debug GUI")
+					Renderer::IFragmentShader* fragmentShader = shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(fragmentShader, "Debug GUI")
+
 					// Create the program
 					mProgram = shaderLanguage->createProgram(
 						*mRootSignature,
 						::detail::VertexAttributes,
-						shaderLanguage->createVertexShaderFromSourceCode(::detail::VertexAttributes, vertexShaderSourceCode),
-						shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
+						vertexShader,
+						fragmentShader);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(mProgram, "Debug GUI")
 				}
 
 				// Create the pipeline state object (PSO)
@@ -454,6 +465,7 @@ namespace RendererRuntime
 					pipelineState.blendState.renderTarget[0].destBlend	   = Renderer::Blend::INV_SRC_ALPHA;
 					pipelineState.blendState.renderTarget[0].srcBlendAlpha = Renderer::Blend::INV_SRC_ALPHA;
 					mPipelineState = renderer.createPipelineState(pipelineState);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(mPipelineState, "Debug GUI")
 				}
 			}
 		}
@@ -463,6 +475,7 @@ namespace RendererRuntime
 		if (0 != strcmp(renderer.getName(), "OpenGL") && 0 != strcmp(renderer.getName(), "OpenGLES2"))
 		{
 			mVertexShaderUniformBuffer = mRendererRuntime.getBufferManager().createUniformBuffer(sizeof(float) * 4 * 4, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexShaderUniformBuffer, "Debug GUI")
 		}
 		else if (nullptr != mProgram)
 		{
@@ -474,6 +487,7 @@ namespace RendererRuntime
 			samplerState.addressU = Renderer::TextureAddressMode::WRAP;
 			samplerState.addressV = Renderer::TextureAddressMode::WRAP;
 			mSamplerState = renderer.createSamplerState(samplerState);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(mSamplerState, "Debug GUI")
 		}
 	}
 

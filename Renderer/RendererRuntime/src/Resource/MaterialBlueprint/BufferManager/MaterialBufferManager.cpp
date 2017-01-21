@@ -283,6 +283,7 @@ namespace RendererRuntime
 	MaterialBufferManager::BufferPool::BufferPool(size_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager) :
 		uniformBuffer(bufferManager.createUniformBuffer(bufferSize, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW))
 	{
+		RENDERER_SET_RESOURCE_DEBUG_NAME(uniformBuffer, "Material buffer manager")
 		freeSlots.reserve(slotsPerPool);
 		for (uint32_t i = 0; i < slotsPerPool; ++i)
 		{

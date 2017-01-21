@@ -627,17 +627,28 @@ namespace RendererRuntime
 		// Can we create the renderer resource asynchronous as well?
 		if (mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading)
 		{
-			mTexture = mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+			mTexture = createRendererTexture();
 		}
 	}
 
 	bool DdsTextureResourceLoader::onDispatch()
 	{
 		// Create the renderer texture instance
-		mTextureResource->mTexture = mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading ? mTexture : mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+		mTextureResource->mTexture = mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading ? mTexture : createRendererTexture();
 
 		// Fully loaded
 		return true;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	Renderer::ITexture* DdsTextureResourceLoader::createRendererTexture()
+	{
+		Renderer::ITexture* texture = mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+		RENDERER_SET_RESOURCE_DEBUG_NAME(texture, getAsset().assetFilename)
+		return texture;
 	}
 
 

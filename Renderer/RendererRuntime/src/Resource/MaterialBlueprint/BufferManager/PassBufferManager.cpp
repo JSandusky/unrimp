@@ -155,7 +155,9 @@ namespace RendererRuntime
 			// Update the uniform buffer by using our scratch buffer
 			if (mCurrentUniformBufferIndex >= static_cast<uint32_t>(mUniformBuffers.size()))
 			{
-				mUniformBuffers.push_back(mBufferManager.createUniformBuffer(passUniformBuffer->uniformBufferNumberOfBytes, mScratchBuffer.data(), Renderer::BufferUsage::DYNAMIC_DRAW));
+				Renderer::IUniformBuffer* uniformBuffer = mBufferManager.createUniformBuffer(passUniformBuffer->uniformBufferNumberOfBytes, mScratchBuffer.data(), Renderer::BufferUsage::DYNAMIC_DRAW);
+				mUniformBuffers.push_back(uniformBuffer);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(uniformBuffer, "Pass buffer manager")
 			}
 			else
 			{

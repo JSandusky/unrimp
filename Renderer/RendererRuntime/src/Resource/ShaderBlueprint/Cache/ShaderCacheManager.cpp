@@ -119,6 +119,7 @@ namespace RendererRuntime
 							// Create the new shader cache instance
 							if (nullptr != shader)
 							{
+								RENDERER_SET_RESOURCE_DEBUG_NAME(shader, "Shader cache manager")
 								shaderCache = new ShaderCache(shaderCacheId, *shader);
 								mShaderCacheByShaderCacheId.emplace(shaderCacheId, shaderCache);
 								mShaderCacheByShaderSourceCodeId.emplace(shaderSourceCodeId, shaderCache);

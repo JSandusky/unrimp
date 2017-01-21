@@ -182,6 +182,7 @@ namespace RendererRuntime
 						// -> Not required for OpenGL and OpenGL ES 2
 						// -> The optimized texture clear value is a Direct3D 12 related option
 						renderTargetTextureElement.texture = mRendererRuntime.getTextureManager().createTexture2D(width, height, renderTargetTextureSignature.getTextureFormat(), nullptr, textureFlags, Renderer::TextureUsage::DEFAULT, renderTargetTextureSignature.getAllowMultisample() ? numberOfMultisamples : 1u);
+						RENDERER_SET_RESOURCE_DEBUG_NAME(renderTargetTextureElement.texture, "Render target texture manager")
 						renderTargetTextureElement.texture->addReference();
 
 						{ // Tell the texture resource manager about our render target texture so it can be referenced inside e.g. compositor nodes

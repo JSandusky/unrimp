@@ -87,6 +87,7 @@ namespace RendererRuntime
 		{
 			indirectBuffer = mBufferManager.createIndirectBuffer(maximumNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 			mUsedIndirectBuffers.emplace_back(indirectBuffer, maximumNumberOfBytes);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(indirectBuffer, "Indirect buffer manager")
 		}
 		else
 		{

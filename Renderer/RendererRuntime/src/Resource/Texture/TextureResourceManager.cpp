@@ -51,18 +51,22 @@ namespace
 			// White RGB texture
 			const uint8_t whiteRgbData[] = { 255, 255, 255, 255 };
 			Renderer::ITexturePtr whiteRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, whiteRgbData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgbTexturePtr, "White RGB texture")
 
 			// Normal map identity texture
 			const uint8_t normalMapIdentityData[] = { 128, 128, 255, 255 };
 			Renderer::ITexturePtr normalMapIdentityTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, normalMapIdentityData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(normalMapIdentityTexturePtr, "Normal map identity texture")
 
 			// White alpha texture
 			const uint8_t whiteAData[] = { 255 };
 			Renderer::ITexturePtr whiteATexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::A8, whiteAData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteATexturePtr, "White alpha texture")
 
 			// Black RGB texture
 			const uint8_t blackRgbData[] = { 0, 0, 0, 0 };
 			Renderer::ITexturePtr blackRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, blackRgbData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgbTexturePtr, "Black RGB texture")
 
 			// Create default dynamic texture assets
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/Dynamic/WhiteMap",			*whiteRgbTexturePtr);

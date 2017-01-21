@@ -89,6 +89,7 @@ namespace RendererRuntime
 		inline virtual ~DdsTextureResourceLoader();
 		DdsTextureResourceLoader(const DdsTextureResourceLoader&) = delete;
 		DdsTextureResourceLoader& operator=(const DdsTextureResourceLoader&) = delete;
+		Renderer::ITexture* createRendererTexture();
 
 
 	//[-------------------------------------------------------]

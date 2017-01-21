@@ -74,6 +74,7 @@ namespace RendererRuntime
 		// Create texture buffer instance
 		mTextureScratchBuffer.resize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumTextureBufferSize, ::detail::DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES));
 		mTextureBuffer = rendererRuntime.getBufferManager().createTextureBuffer(mTextureScratchBuffer.size(), Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		RENDERER_SET_RESOURCE_DEBUG_NAME(mTextureBuffer, "Light buffer manager")
 	}
 
 	LightBufferManager::~LightBufferManager()

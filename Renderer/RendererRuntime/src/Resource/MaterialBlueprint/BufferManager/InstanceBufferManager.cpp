@@ -78,10 +78,12 @@ namespace RendererRuntime
 		// Create uniform buffer instance
 		mUniformScratchBuffer.resize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumUniformBufferSize, ::detail::DEFAULT_UNIFORM_BUFFER_NUMBER_OF_BYTES));
 		mUniformBuffer = bufferManager.createUniformBuffer(mUniformScratchBuffer.size(), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		RENDERER_SET_RESOURCE_DEBUG_NAME(mUniformBuffer, "Instance buffer manager")
 
 		// Create texture buffer instance
 		mTextureScratchBuffer.resize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumTextureBufferSize, ::detail::DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES));
 		mTextureBuffer = bufferManager.createTextureBuffer(mTextureScratchBuffer.size(), Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		RENDERER_SET_RESOURCE_DEBUG_NAME(mTextureBuffer, "Instance buffer manager")
 	}
 
 	InstanceBufferManager::~InstanceBufferManager()

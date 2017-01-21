@@ -194,9 +194,11 @@ namespace RendererRuntime
 	{
 		// Create the vertex buffer object (VBO)
 		Renderer::IVertexBufferPtr vertexBuffer(mBufferManager.createVertexBuffer(mNumberOfUsedVertexBufferDataBytes, mVertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
+		RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, getAsset().assetFilename)
 
 		// Create the index buffer object (IBO)
 		Renderer::IIndexBuffer *indexBuffer = mBufferManager.createIndexBuffer(mNumberOfUsedIndexBufferDataBytes, static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat), mIndexBufferData, Renderer::BufferUsage::STATIC_DRAW);
+		RENDERER_SET_RESOURCE_DEBUG_NAME(indexBuffer, getAsset().assetFilename)
 
 		// Create vertex array object (VAO)
 		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -212,7 +214,11 @@ namespace RendererRuntime
 				(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0	// strideInBytes (uint32_t)
 			}
 		};
-		return mBufferManager.createVertexArray(Renderer::VertexAttributes(mNumberOfUsedVertexAttributes, mVertexAttributes), glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
+		Renderer::IVertexArray* vertexArray = mBufferManager.createVertexArray(Renderer::VertexAttributes(mNumberOfUsedVertexAttributes, mVertexAttributes), glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
+		RENDERER_SET_RESOURCE_DEBUG_NAME(vertexArray, getAsset().assetFilename)
+
+		// Done
+		return vertexArray;
 	}
 
 

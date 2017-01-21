@@ -89,6 +89,7 @@ namespace RendererRuntime
 		inline virtual ~CrnTextureResourceLoader();
 		CrnTextureResourceLoader(const CrnTextureResourceLoader&) = delete;
 		CrnTextureResourceLoader& operator=(const CrnTextureResourceLoader&) = delete;
+		Renderer::ITexture* createRendererTexture();
 
 
 	//[-------------------------------------------------------]
