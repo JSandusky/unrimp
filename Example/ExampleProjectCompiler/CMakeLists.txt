@@ -22,11 +22,6 @@ cmake_minimum_required(VERSION 3.2.2)
 
 
 ##################################################
-## Preprocessor definitions
-##################################################
-
-
-##################################################
 ## Includes
 ##################################################
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -62,7 +57,6 @@ if(STATIC_LIBRARY)
 	endif()
 	target_link_libraries(ExampleProjectCompilerStatic ${LIBRARIES})
 	add_dependencies(ExampleProjectCompilerStatic Renderer RendererToolkitStatic RendererRuntimeStatic)
-	
 endif()
 if(SHARED_LIBRARY)
 	# Shared

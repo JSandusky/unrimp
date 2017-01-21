@@ -27,11 +27,11 @@ cmake_minimum_required(VERSION 2.8.8)
 if(NOT RENDERER_DEBUG)
 	add_definitions(-DRENDERER_NO_DEBUG)
 endif()
-
 if(UNIX)
-	# Needed for openvr
+	# Needed for OpenVR
 	add_definitions(-DCOMPILER_GCC)
 endif()
+
 
 ##################################################
 ## Includes
@@ -150,7 +150,7 @@ set(SOURCE_CODES
 )
 
 if(NOT ANDROID)
-	# Not android source codes
+	# Not Android source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
 		src/Vr/OpenVR/OpenVRRuntimeLinking.cpp
@@ -213,6 +213,7 @@ if(SHARED_LIBRARY)
 		)
 	endif()
 endif()
+
 
 ##################################################
 ## Post build

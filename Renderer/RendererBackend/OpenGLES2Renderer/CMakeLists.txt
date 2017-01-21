@@ -92,9 +92,9 @@ endif()
 if(SHARED_LIBRARY)
 	add_library(OpenGLES2Renderer SHARED ${SOURCE_CODES})
 	set_target_properties(OpenGLES2Renderer PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DOPENGLES2RENDERER_EXPORTS")
-	
+
 	if (ANDROID)
-		# It references ANativeWindow_setBuffersGeometry so link agains android lib
+		# It references ANativeWindow_setBuffersGeometry so link agains Android library
 		target_link_libraries(OpenGLES2Renderer android)
 	endif()
 endif()

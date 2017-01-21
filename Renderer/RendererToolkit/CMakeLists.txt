@@ -40,9 +40,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/RapidJSON/include
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
 if(WIN32)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/libtiff/include/)
-elseif(UNIX) # TODO(sw) Part of the libtiff headers(tiffconf.h are platform depended so added linux system version to external(64bit only)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/libtiff/linux/include)
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/libtiff/include/)
+elseif(UNIX) # TODO(sw) Part of the libtiff headers(tiffconf.h are platform depended so added Linux system version to external(64bit only)
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/libtiff/linux/include)
 endif()
 
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/${OS_ARCHITECTURE}/Assimp/lib)
@@ -99,7 +99,7 @@ if(STATIC_LIBRARY)
 	elseif(UNIX)
 		set(LIBRARIES ${LIBRARIES} assimp tiff minizip crunch stdc++fs)
 	endif()
-	
+
 	target_link_libraries(RendererToolkitStatic ${LIBRARIES})
 
 	add_dependencies(RendererToolkitStatic crunch)
@@ -145,6 +145,7 @@ if(SHARED_LIBRARY)
 		)
 	endif()
 endif()
+
 
 ##################################################
 ## Post build

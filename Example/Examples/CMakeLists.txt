@@ -24,7 +24,7 @@ cmake_minimum_required(VERSION 2.8.8)
 find_package(Qt4 COMPONENTS QtCore QtGui)
 
 if (QT4_FOUND AND QT_QTGUI_FOUND)
-	set(EXAMPLE_RUNNER_QT4 "0" CACHE BOOL "use Qt Gui Runner")
+	set(EXAMPLE_RUNNER_QT4 "0" CACHE BOOL "Use Qt GUI runner")
 else()
 	unset(EXAMPLE_RUNNER_QT4 CACHE)
 endif()
@@ -136,7 +136,7 @@ if(RENDERER_RUNTIME)
 		src/Advanced/InstancedCubes/InstancedCubes.cpp
 	)
 
-	# TODO(sw) openvr doesn't support non windows systems yet
+	# TODO(sw) OpenVR doesn't support non Windows systems yet
 	if(WIN32)
 		set(SOURCE_CODES
 			${SOURCE_CODES}
@@ -169,7 +169,7 @@ if(STATIC_LIBRARY)
 		endif()
 		TARGET_LINK_LIBRARIES(ExamplesStatic dl)
 	endif()
-	
+
 	set(LIBRARIES NullRendererStatic)
 	if(RENDERER_OPENGL)
 		set(LIBRARIES ${LIBRARIES} OpenGLRendererStatic)
@@ -197,7 +197,7 @@ if(STATIC_LIBRARY)
 		endif()
 	endif()
 	target_link_libraries(ExamplesStatic ${LIBRARIES})
-	
+
 	if(WIN32)
 		add_dependencies(ExamplesStatic Renderer NullRendererStatic OpenGLRendererStatic OpenGLES2RendererStatic Direct3D9RendererStatic Direct3D10RendererStatic Direct3D11RendererStatic Direct3D12RendererStatic)
 	else()

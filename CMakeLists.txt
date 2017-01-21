@@ -66,7 +66,7 @@ else()
 endif()
 message(STATUS "Operation system + architecture: ${OS_ARCHITECTURE}")
 
-# Ouput paths and create the directories
+# Output paths and create the directories
 set(OUTPUT_BIN_DIR "${CMAKE_SOURCE_DIR}/bin/${OS_ARCHITECTURE}")
 message(STATUS "Output binary directory: ${OUTPUT_BIN_DIR}")
 file(MAKE_DIRECTORY ${OUTPUT_BIN_DIR})
@@ -90,13 +90,13 @@ message(STATUS "External OS architecture directory: ${OUTPUT_EXTERNAL_OS_ARCHITE
 	set(RENDERER_DEBUG	"1"	CACHE BOOL "If false, the e.g. Direct3D 9 PIX functions (D3DPERF_* functions) debug features are disabled (disabling support just reduces the binary size slightly but makes debugging more difficult)")
 	mark_as_advanced(RENDERER_DEBUG)
 
-# NULL Renderer doesn't compile under android for now disable it
-if (NOT ANDROID)
+# Null renderer doesn't compile under Android for now disable it
+if(NOT ANDROID)
 	set(RENDERER_NULL			"1"	CACHE BOOL "Build null renderer?")
 endif()
 
-# OpenGL Renderer is not for android
-if (NOT ANDROID)
+# OpenGL renderer is not for Android
+if(NOT ANDROID)
 	set(RENDERER_OPENGL			"1"	CACHE BOOL "Build OpenGL renderer?")
 		# Advanced OpenGL renderer options
 		set(RENDERER_OPENGL_NO_STATE_CLEANUP		"1"	CACHE BOOL "If true, the previous OpenGL state will not be restored after performing an operation (better performance, reduces the binary size slightly, but might result in unexpected behaviour when using OpenGL directly beside this renderer)")
@@ -128,17 +128,17 @@ endif()
 set(STATIC_LIBRARY			"1"	CACHE BOOL "Build static library?")
 set(SHARED_LIBRARY			"1"	CACHE BOOL "Build shared library?")
 
-# Renderer toolkit is not for android
-if (NOT ANDROID)
+# Renderer toolkit is not for Android
+if(NOT ANDROID)
 	# Renderer toolkit
-	set(RENDERER_TOOLKIT		"1"	CACHE BOOL "Build renderer toolkit?")
+	set(RENDERER_TOOLKIT	"1"	CACHE BOOL "Build renderer toolkit?")
 endif()
 
 # Renderer runtime
 set(RENDERER_RUNTIME		"1"	CACHE BOOL "Build renderer runtime?")
 
-# No Examples for android for now
-if (NOT ANDROID)
+# No examples for Android for now
+if(NOT ANDROID)
 	# Examples
 	set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
 		# Advanced examples options
@@ -148,65 +148,65 @@ if (NOT ANDROID)
 endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	# We need c++1z/c++17 support but only for the renderer toolkit part, runtime currently should be only uses c++11 features
+	# We need C++1z/C++17 support but only for the renderer toolkit part, runtime currently should be only uses C++11 features
 	include(CheckCXXCompilerFlag)
 	CHECK_CXX_COMPILER_FLAG("-std=c++1z" COMPILER_SUPPORTS_CXX1z)
 	CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
 	CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
-	
+
 	if(RENDERER_TOOLKIT AND NOT (COMPILER_SUPPORTS_CXX17) AND NOT COMPILER_SUPPORTS_CXX1z)
-		message(FATAL_ERROR "Renderer toolkit needs c++17 support but the compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
+		message(FATAL_ERROR "Renderer toolkit needs C++17 support but the compiler ${CMAKE_CXX_COMPILER} has no C++17 support. Please use a different C++ compiler.")
 	endif()
-	
-	# All unrimp parts except renderer toolkit uses only c++14 features, so we can enable here "globaly" c++14 compiler settings
-	# Renderer Toolkit only needs c++17 runtime features (filesystem TS) so no c++17 specific compiler features
+
+	# All Unrimp parts except renderer toolkit uses only C++14 features, so we can enable here "globally" C++14 compiler settings
+	# Renderer toolkit only needs C++17 runtime features (filesystem TS) so no C++17 specific compiler features
 	if(COMPILER_SUPPORTS_CXX14)
 		add_compile_options("-std=c++14")
 	else()
-		message(FATAL_ERROR "Unrimp needs at least c++14 support but the compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
+		message(FATAL_ERROR "Unrimp needs at least C++14 support but the compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
 	endif()
 endif()
 
-INCLUDE (CheckIncludeFileCXX)
+include(CheckIncludeFileCXX)
 CHECK_INCLUDE_FILE_CXX("filesystem" HAVE_CXX17_FILESYSTEM)
 CHECK_INCLUDE_FILE_CXX("experimental/filesystem" HAVE_CXX1z_FILESYSTEM)
-IF(RENDERER_TOOLKIT AND NOT HAVE_CXX17_FILESYSTEM AND NOT HAVE_CXX1z_FILESYSTEM)
-  message( FATAL_ERROR "Renderer toolkit needs c++ filesystem TS support but the compiler ${CMAKE_CXX_COMPILER} doesn't support c++ filesystem TS. Please use a different C++ compiler." )
-ENDIF()
+if(RENDERER_TOOLKIT AND NOT HAVE_CXX17_FILESYSTEM AND NOT HAVE_CXX1z_FILESYSTEM)
+	message(FATAL_ERROR "Renderer toolkit needs C++ filesystem TS support but the compiler ${CMAKE_CXX_COMPILER} doesn't support C++ filesystem TS. Please use a different C++ compiler.")
+endif()
 
 # Check for visibility support: -fvisibility=hidden -fvisibility-inlines-hidden
-check_cxx_compiler_flag( -fvisibility=hidden GXX_HAS_VISIBILITY_FLAG )
-check_cxx_compiler_flag( -fvisibility-inlines-hidden GXX_HAS_VISIBILITY_INLINES_FLAG )
+check_cxx_compiler_flag(-fvisibility=hidden GXX_HAS_VISIBILITY_FLAG)
+check_cxx_compiler_flag(-fvisibility-inlines-hidden GXX_HAS_VISIBILITY_INLINES_FLAG)
 
-# if( GXX_HAS_VISIBILITY_FLAG AND NOT APPLE )
-# 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden" )
+# if(GXX_HAS_VISIBILITY_FLAG AND NOT APPLE)
+# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
 # endif()
 # 
-# if( GXX_HAS_VISIBILITY_INLINES_FLAG AND NOT APPLE )
-# 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden" )
+# if(GXX_HAS_VISIBILITY_INLINES_FLAG AND NOT APPLE)
+# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
 # endif()
 
 # At first we treat UNIX = Linux
-if(UNIX )
+if(UNIX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX")
 endif()
 
-# We treat android also as linux
-if (ANDROID)
-		# We use exceptions so enable exception feature, is disabled by default by the android NDK
-		set(ANDROID_CPP_FEATURES "exceptions" CACHE STRING "")
+# We treat Android also as Linux
+if(ANDROID)
+	# We use exceptions so enable exception feature, is disabled by default by the Android NDK
+	set(ANDROID_CPP_FEATURES "exceptions" CACHE STRING "")
 
-		# We only support android 5.1+
-		set(ANDROID_PLATFORM "android-22" CACHE STRING "")
-		
-		# We want also the llvm libc++ which is fully c++11 compatible
-		# TODO(sw) For qtunrimp we cannot use llvm libc++ because Qt is not yet compileable with llvm libc++ on android
-		#          For now we need to use gnustl_shared
-		#set(ANDROID_STL "c++_shared" CACHE STRING "")
-		set(ANDROID_STL "gnustl_shared" CACHE STRING "")
+	# We only support Android 5.1+
+	set(ANDROID_PLATFORM "android-22" CACHE STRING "")
 
-		# L"" in macros don't work with android gcc -> so Renderer debug disabled
-		add_definitions("-DANDROID -DRENDERER_NO_DEBUG")
+	# We want also the llvm libc++ which is fully C++11 compatible
+	# TODO(sw) For qtunrimp we cannot use llvm libc++ because Qt is not yet compilable with llvm libc++ on Android
+	#          For now we need to use gnustl_shared
+	#set(ANDROID_STL "c++_shared" CACHE STRING "")
+	set(ANDROID_STL "gnustl_shared" CACHE STRING "")
+
+	# L"" in macros don't work with Android GCC -> so renderer debug disabled
+	add_definitions("-DANDROID -DRENDERER_NO_DEBUG")
 endif()
 
 if (${ARCHITECTURE_X64})
@@ -228,4 +228,3 @@ endif()
 if(EXAMPLE_PROJECT_COMPILER AND RENDERER_RUNTIME AND RENDERER_TOOLKIT)
 	add_subdirectory(Example/ExampleProjectCompiler)
 endif()
-

@@ -1034,7 +1034,7 @@ namespace Renderer
 //[ Debug                                                 ]
 //[-------------------------------------------------------]
 // Debug macros
-// Only D3D API supports such debug macros which only works with an MSVC compatible compiler thus disable these macros when not using MSVC compiler
+// Only the Direct3D API supports such debug macros which only works with an MSVC compatible compiler thus disable these macros when not using MSVC compiler
 #if defined RENDERER_NO_DEBUG || !defined(_MSC_VER)
 	/**
 	*  @brief
