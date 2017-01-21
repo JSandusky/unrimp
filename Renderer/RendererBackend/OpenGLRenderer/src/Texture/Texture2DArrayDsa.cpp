@@ -48,8 +48,8 @@ namespace OpenGLRenderer
 			glGetIntegerv(GL_UNPACK_ALIGNMENT, &openGLAlignmentBackup);
 		#endif
 
-		// Set correct alignment
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		// Set correct unpack alignment
+		glPixelStorei(GL_UNPACK_ALIGNMENT, (Renderer::TextureFormat::getNumberOfBytesPerElement(textureFormat) & 3) ? 1 : 4);
 
 		// Create the OpenGL texture instance
 		const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();

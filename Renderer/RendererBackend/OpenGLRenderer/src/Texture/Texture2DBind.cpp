@@ -85,8 +85,8 @@ namespace OpenGLRenderer
 				glGetIntegerv(GL_TEXTURE_BINDING_2D, &openGLTextureBackup);
 			#endif
 
-			// Set correct alignment
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			// Set correct unpack alignment
+			glPixelStorei(GL_UNPACK_ALIGNMENT, (Renderer::TextureFormat::getNumberOfBytesPerElement(textureFormat) & 3) ? 1 : 4);
 
 			// Calculate the number of mipmaps
 			const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
