@@ -25,7 +25,6 @@
 #include "OpenGLRenderer/Texture/Texture2D.h"
 #include "OpenGLRenderer/Extensions.h"
 
-#include <cassert>
 #include <limits.h>	// For "INT_MAX"
 
 

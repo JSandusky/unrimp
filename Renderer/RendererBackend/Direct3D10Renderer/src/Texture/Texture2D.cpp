@@ -27,8 +27,6 @@
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 #include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -26,8 +26,6 @@
 #include "OpenGLES2Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

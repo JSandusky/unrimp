@@ -28,7 +28,6 @@
 #include "Direct3D10Renderer/Mapping.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
-#include <cassert>
 #include <stdio.h>	// For "sprintf_s()"
 
 

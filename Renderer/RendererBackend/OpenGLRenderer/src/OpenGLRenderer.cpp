@@ -63,8 +63,6 @@
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]

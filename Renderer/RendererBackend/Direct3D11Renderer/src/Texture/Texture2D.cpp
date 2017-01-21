@@ -27,8 +27,6 @@
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

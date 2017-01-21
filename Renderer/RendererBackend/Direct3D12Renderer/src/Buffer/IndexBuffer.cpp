@@ -107,7 +107,7 @@ namespace Direct3D12Renderer
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			setDebugName("IBO");
+			setDebugName("");
 		#endif
 
 		// End debug event
@@ -134,8 +134,9 @@ namespace Direct3D12Renderer
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "IBO", 6);	// 6 = "IBO: " including terminating zero!
 				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(detailedName), detailedName);
 			}
 		#endif
 	}

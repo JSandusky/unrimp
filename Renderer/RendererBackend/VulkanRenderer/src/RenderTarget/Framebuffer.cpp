@@ -25,7 +25,6 @@
 #include "VulkanRenderer/Texture/Texture2D.h"
 #include "VulkanRenderer/Extensions.h"
 
-#include <cassert>
 #include <limits.h>	// For "INT_MAX"
 
 

@@ -83,7 +83,7 @@ namespace Direct3D11Renderer
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
-			setDebugName("UBO");
+			setDebugName("");
 		#endif
 	}
 
@@ -108,8 +108,9 @@ namespace Direct3D11Renderer
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "UBO", 6);	// 6 = "UBO: " including terminating zero
 				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(detailedName), detailedName);
 			}
 		#endif
 	}

@@ -27,8 +27,6 @@
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

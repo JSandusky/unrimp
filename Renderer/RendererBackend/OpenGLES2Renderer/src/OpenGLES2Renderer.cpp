@@ -51,8 +51,6 @@
 
 #include <GLES2/gl2ext.h>
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]

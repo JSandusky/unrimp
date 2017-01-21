@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
+#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -276,6 +277,31 @@
 	*    ASCII name for debugging purposes, must be valid (there's no internal null pointer test)
 	*/
 	#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name) if (nullptr != resource) { (resource)->setDebugName(name); }
+
+	/**
+	*  @brief
+	*    Decorate the debug name to make it easier to see the semantic of the resource
+	*
+	*  @param[in] name
+	*    Debug name provided from the outside
+	*  @param[in] decoration
+	*    Decoration to append in front (e.g. "IBO", will result in appended "IBO: " in front if the provided name isn't empty)
+	*  @param[in] numberOfDecorationCharacters
+	*    Number of decoration characters
+	*
+	*  @note
+	*    - The result is in local string variable "detailedName"
+	*    - Traditional C-string on the runtime stack used for efficiency reasons (just for debugging, but must still be some kind of usable)
+	*    - Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
+	*/
+	#define RENDERER_DECORATED_DEBUG_NAME(name, detailedName, decoration, numberOfDecorationCharacters) \
+		assert(strlen(name) < 256); \
+		char detailedName[256 + numberOfDecorationCharacters] = decoration; \
+		if (name[0] != '\0') \
+		{ \
+			strcat(detailedName, ": "); \
+			strncat(detailedName, name, 256); \
+		}
 
 	// OUTPUT_DEBUG_* macros
 	// -> Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only

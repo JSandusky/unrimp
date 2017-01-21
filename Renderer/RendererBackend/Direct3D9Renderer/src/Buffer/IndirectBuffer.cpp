@@ -24,8 +24,6 @@
 #include "Direct3D9Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

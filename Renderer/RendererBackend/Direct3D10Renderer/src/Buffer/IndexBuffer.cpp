@@ -82,7 +82,7 @@ namespace Direct3D10Renderer
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
-			setDebugName("IBO");
+			setDebugName("");
 		#endif
 	}
 
@@ -105,9 +105,10 @@ namespace Direct3D10Renderer
 			if (nullptr != mD3D10Buffer)
 			{
 				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
+				RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "IBO", 6);	// 6 = "IBO: " including terminating zero!
 				mD3D10Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D10Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D10Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(detailedName), detailedName);
 			}
 		#endif
 	}

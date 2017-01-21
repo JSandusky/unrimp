@@ -107,7 +107,7 @@ namespace Direct3D12Renderer
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			setDebugName("UBO");
+			setDebugName("");
 		#endif
 
 		// End debug event
@@ -134,20 +134,22 @@ namespace Direct3D12Renderer
 	void UniformBuffer::setDebugName(const char *name)
 	{
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+			RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "UBO", 6);	// 6 = "UBO: " including terminating zero!
+
 			// Valid Direct3D 12 uniform buffer?
 			if (nullptr != mD3D12Resource)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
 				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(detailedName), detailedName);
 			}
 			if (nullptr != mD3D12DescriptorHeap)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
 				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(detailedName), detailedName);
 			}
 		#endif
 	}

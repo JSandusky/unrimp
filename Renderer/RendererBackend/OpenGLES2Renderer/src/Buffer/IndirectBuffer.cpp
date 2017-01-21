@@ -24,7 +24,6 @@
 #include "OpenGLES2Renderer/Buffer/IndirectBuffer.h"
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
-#include <cassert>
 #include <cstring>	// For "memcpy"
 
 

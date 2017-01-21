@@ -28,7 +28,6 @@
 #include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
-#include <cassert>
 #include <stdio.h>	// For "sprintf_s()"
 
 

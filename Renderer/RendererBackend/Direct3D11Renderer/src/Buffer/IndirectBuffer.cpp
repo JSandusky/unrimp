@@ -27,8 +27,6 @@
 #include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -106,7 +104,7 @@ namespace Direct3D11Renderer
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
-			setDebugName("IndirectBufferObject");
+			setDebugName("");
 		#endif
 	}
 
@@ -137,13 +135,15 @@ namespace Direct3D11Renderer
 	void IndirectBuffer::setDebugName(const char *name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+			RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "IndirectBufferObject", 23);	// 23 = "IndirectBufferObject: " including terminating zero
+
 			// Assign a debug name to the shader resource view
 			if (nullptr != mD3D11ShaderResourceViewIndirect)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
 				mD3D11ShaderResourceViewIndirect->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D11ShaderResourceViewIndirect->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D11ShaderResourceViewIndirect->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(detailedName), detailedName);
 			}
 
 			// Assign a debug name to the indirect buffer
@@ -152,7 +152,7 @@ namespace Direct3D11Renderer
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
 				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(detailedName), detailedName);
 			}
 		#endif
 	}

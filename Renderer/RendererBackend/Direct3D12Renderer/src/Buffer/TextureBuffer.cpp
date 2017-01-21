@@ -89,7 +89,7 @@ namespace Direct3D12Renderer
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			setDebugName("TBO");
+			setDebugName("");
 		#endif
 		*/
 	}
@@ -121,13 +121,15 @@ namespace Direct3D12Renderer
 		// TODO(co) Direct3D 12 update
 		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+			RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "TBO", 6);	// 6 = "TBO: " including terminating zero!
+
 			// Assign a debug name to the shader resource view
 			if (nullptr != mD3D12ShaderResourceViewTexture)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
 				mD3D12ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(detailedName), detailedName);
 			}
 
 			// Assign a debug name to the texture buffer
@@ -136,7 +138,7 @@ namespace Direct3D12Renderer
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
 				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(detailedName), detailedName);
 			}
 		#endif
 		*/
