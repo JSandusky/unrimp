@@ -80,7 +80,7 @@ public:
 	*/
 	uint32_t GetCount() const
 	{
-		return m_args.size();
+		return static_cast<uint32_t>(m_args.size());
 	}
 
 	/**

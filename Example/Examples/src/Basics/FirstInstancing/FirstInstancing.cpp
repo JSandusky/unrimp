@@ -113,7 +113,7 @@ void FirstInstancing::onInitialization()
 						1											// instancesPerElement (uint32_t)
 					}
 				};
-				const Renderer::VertexAttributes vertexAttributes(glm::countof(vertexAttributesLayout), vertexAttributesLayout);
+				const Renderer::VertexAttributes vertexAttributes(static_cast<uint32_t>(glm::countof(vertexAttributesLayout)), vertexAttributesLayout);
 
 				{ // Create vertex array object (VAO)
 					// Create the vertex buffer object (VBO)
@@ -161,7 +161,7 @@ void FirstInstancing::onInitialization()
 							sizeof(float)			// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArrayInstancedArrays = mBufferManager->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBufferInstancedArrays);
+					mVertexArrayInstancedArrays = mBufferManager->createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBufferInstancedArrays);
 				}
 
 				// Create the program
@@ -209,7 +209,7 @@ void FirstInstancing::onInitialization()
 						0											// instancesPerElement (uint32_t)
 					}
 				};
-				const Renderer::VertexAttributes vertexAttributes(glm::countof(vertexAttributesLayout), vertexAttributesLayout);
+				const Renderer::VertexAttributes vertexAttributes(static_cast<uint32_t>(glm::countof(vertexAttributesLayout)), vertexAttributesLayout);
 
 				{ // Create vertex array object (VAO)
 					// Create the vertex buffer object (VBO)
@@ -235,7 +235,7 @@ void FirstInstancing::onInitialization()
 							sizeof(float) * 2	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArrayDrawInstanced = mBufferManager->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+					mVertexArrayDrawInstanced = mBufferManager->createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
 				}
 
 				// Create the program

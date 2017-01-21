@@ -281,10 +281,10 @@ namespace Direct3D12Renderer
 				for (ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = mD3D12DescriptorHeapRenderTargetViews; d3d12DescriptorHeapRenderTargetView < d3d12DescriptorHeapRenderTargetViewsEnd; ++d3d12DescriptorHeapRenderTargetView)
 				{
 					// Set the debug name
-					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-					sprintf_s(nameWithIndex, nameLength, "%s [%d]", name, d3d12DescriptorHeapRenderTargetView - mD3D12DescriptorHeapRenderTargetViews);
+					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
+					sprintf_s(nameWithIndex, nameLength, "%s [%d]", name, static_cast<uint32_t>(d3d12DescriptorHeapRenderTargetView - mD3D12DescriptorHeapRenderTargetViews));
 					(*d3d12DescriptorHeapRenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-					(*d3d12DescriptorHeapRenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, nameLength, nameWithIndex);
+					(*d3d12DescriptorHeapRenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(nameLength), nameWithIndex);
 				}
 				delete [] nameWithIndex;
 			}
@@ -293,9 +293,9 @@ namespace Direct3D12Renderer
 			if (nullptr != mD3D12DescriptorHeapDepthStencilView)
 			{
 				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				mD3D12DescriptorHeapDepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12DescriptorHeapDepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12DescriptorHeapDepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
 		#endif
 	}

@@ -126,7 +126,7 @@ void FirstMesh::onInitialization()
 					0											// instancesPerElement (uint32_t)
 				}
 			};
-			const Renderer::VertexAttributes vertexAttributes(glm::countof(vertexAttributesLayout), vertexAttributesLayout);
+			const Renderer::VertexAttributes vertexAttributes(static_cast<uint32_t>(glm::countof(vertexAttributesLayout)), vertexAttributesLayout);
 
 			{ // Create the root signature
 				Renderer::DescriptorRangeBuilder ranges[6];
@@ -147,7 +147,7 @@ void FirstMesh::onInitialization()
 
 				// Setup
 				Renderer::RootSignatureBuilder rootSignature;
-				rootSignature.initialize(glm::countof(rootParameters), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+				rootSignature.initialize(static_cast<uint32_t>(glm::countof(rootParameters)), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 				// Create the instance
 				mRootSignature = renderer->createRootSignature(rootSignature);

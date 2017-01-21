@@ -300,10 +300,10 @@ namespace Direct3D10Renderer
 				for (ID3D10RenderTargetView **d3d10RenderTargetView = mD3D10RenderTargetViews; d3d10RenderTargetView < d3d10RenderTargetViewsEnd; ++d3d10RenderTargetView)
 				{
 					// Set the debug name
-					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-					sprintf_s(nameWithIndex, nameLength, "%s [%d]", name, d3d10RenderTargetView - mD3D10RenderTargetViews);
+					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
+					sprintf_s(nameWithIndex, nameLength, "%s [%d]", name, static_cast<uint32_t>(d3d10RenderTargetView - mD3D10RenderTargetViews));
 					(*d3d10RenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-					(*d3d10RenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, nameLength, nameWithIndex);
+					(*d3d10RenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(nameLength), nameWithIndex);
 				}
 				delete [] nameWithIndex;
 			}
@@ -312,9 +312,9 @@ namespace Direct3D10Renderer
 			if (nullptr != mD3D10DepthStencilView)
 			{
 				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				mD3D10DepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D10DepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D10DepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
 		#endif
 	}

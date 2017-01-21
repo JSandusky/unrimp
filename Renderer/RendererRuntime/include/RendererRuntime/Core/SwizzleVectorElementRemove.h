@@ -49,7 +49,7 @@ namespace
 		template<typename T>
 		typename T::iterator swizzleVectorElementRemove(T& container, typename T::iterator& iterator)
 		{
-			const int index = iterator - container.begin();
+			const int index = static_cast<int>(iterator - container.begin());
 			*iterator = container.back();
 			container.pop_back();
 			return container.begin() + index;

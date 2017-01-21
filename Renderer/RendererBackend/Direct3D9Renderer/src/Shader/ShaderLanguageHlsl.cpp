@@ -97,7 +97,7 @@ namespace Direct3D9Renderer
 
 		ID3DXBuffer *d3dXBuffer = nullptr;
 		ID3DXBuffer *d3dXBufferErrorMessages = nullptr;
-		if (D3D_OK != D3DXCompileShader(shaderSource, strlen(shaderSource), nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, &d3dXBuffer, &d3dXBufferErrorMessages, d3dXConstantTable))
+		if (D3D_OK != D3DXCompileShader(shaderSource, static_cast<UINT>(strlen(shaderSource)), nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, &d3dXBuffer, &d3dXBufferErrorMessages, d3dXConstantTable))
 		{
 			OutputDebugStringA(static_cast<char*>(d3dXBufferErrorMessages->GetBufferPointer()));
 			d3dXBufferErrorMessages->Release();

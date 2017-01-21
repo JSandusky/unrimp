@@ -108,7 +108,7 @@ namespace Direct3D10Renderer
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "IBO", 6);	// 6 = "IBO: " including terminating zero!
 				mD3D10Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D10Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(detailedName), detailedName);
+				mD3D10Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(detailedName)), detailedName);
 			}
 		#endif
 	}

@@ -132,7 +132,7 @@ namespace RendererToolkit
 				}
 
 				// Write down compositor node asset IDs
-				outputFileStream.write(reinterpret_cast<const char*>(compositorNodeAssetIds.data()), sizeof(RendererRuntime::AssetId) * nodes.numberOfNodes);
+				outputFileStream.write(reinterpret_cast<const char*>(compositorNodeAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * nodes.numberOfNodes));
 			}
 		}
 

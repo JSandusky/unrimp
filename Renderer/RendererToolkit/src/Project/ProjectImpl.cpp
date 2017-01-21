@@ -272,11 +272,11 @@ namespace RendererToolkit
 			AssetPackageHeader assetPackageHeader;
 			assetPackageHeader.formatType	  = RendererRuntime::StringId("AssetPackage");
 			assetPackageHeader.formatVersion  = 1;
-			assetPackageHeader.numberOfAssets = sortedAssetVector.size();
+			assetPackageHeader.numberOfAssets = static_cast<uint32_t>(sortedAssetVector.size());
 			outputFileStream.write(reinterpret_cast<const char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
 
 			// Write down the asset package content in one single burst
-			outputFileStream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), sizeof(RendererRuntime::Asset) * assetPackageHeader.numberOfAssets);
+			outputFileStream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::Asset) * assetPackageHeader.numberOfAssets));
 		}
 	}
 

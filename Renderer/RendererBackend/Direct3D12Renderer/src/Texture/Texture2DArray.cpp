@@ -149,9 +149,9 @@ namespace Direct3D12Renderer
 			if (nullptr != mD3D12ShaderResourceViewTexture)
 			{
 				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				mD3D12ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 
 				// Do also set the given debug name to the Direct3D 12 resource referenced by the Direct3D resource view
 				// -> In our use case, this resource is tightly coupled with the view
@@ -162,9 +162,9 @@ namespace Direct3D12Renderer
 				if (nullptr != d3d12Resource)
 				{
 					// Set the debug name
-					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 					d3d12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-					d3d12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+					d3d12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 
 					// Release the Direct3D 12 resource instance
 					d3d12Resource->Release();

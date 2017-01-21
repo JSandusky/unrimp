@@ -149,7 +149,7 @@ namespace RendererRuntime
 							0											// instancesPerElement (uint32_t)
 						}
 					};
-					vertexAttributes.numberOfAttributes = glm::countof(vertexAttributesLayout);
+					vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
 					vertexAttributes.attributes = vertexAttributesLayout;
 				}
 				else if (1042371778 == assetId)	// "MaterialBlueprint/Debug/Gui"
@@ -194,7 +194,7 @@ namespace RendererRuntime
 							0													// instancesPerElement (uint32_t)
 						}
 					};
-					vertexAttributes.numberOfAttributes = glm::countof(vertexAttributesLayout);
+					vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
 					vertexAttributes.attributes = vertexAttributesLayout;
 				}
 

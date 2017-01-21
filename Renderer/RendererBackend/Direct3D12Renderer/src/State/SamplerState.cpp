@@ -92,9 +92,9 @@ namespace Direct3D12Renderer
 			if (nullptr != mD3D12DescriptorHeap)
 			{
 				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
 		#endif
 	}

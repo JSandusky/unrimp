@@ -96,7 +96,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const Renderer::VertexAttributes MeshResource::VERTEX_ATTRIBUTES(glm::countof(::detail::VertexAttributesLayout), ::detail::VertexAttributesLayout);
+	const Renderer::VertexAttributes MeshResource::VERTEX_ATTRIBUTES(static_cast<uint32_t>(glm::countof(::detail::VertexAttributesLayout)), ::detail::VertexAttributesLayout);
 
 
 //[-------------------------------------------------------]

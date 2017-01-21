@@ -166,9 +166,9 @@ namespace RendererRuntime
 				// Read in the texture buffer header
 				v1MaterialBlueprint::TextureBufferHeader textureBufferHeader;
 				file.read(&textureBufferHeader, sizeof(v1MaterialBlueprint::TextureBufferHeader));
+				textureBuffer.materialPropertyValue		 = textureBufferHeader.materialPropertyValue;
 				textureBuffer.rootParameterIndex		 = textureBufferHeader.rootParameterIndex;
 				textureBuffer.bufferUsage				 = textureBufferHeader.bufferUsage;
-				textureBuffer.materialPropertyValue		 = textureBufferHeader.materialPropertyValue;
 			}
 		}
 

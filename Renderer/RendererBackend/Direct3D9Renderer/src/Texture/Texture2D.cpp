@@ -157,9 +157,9 @@ namespace Direct3D9Renderer
 			if (nullptr != mDirect3DTexture9)
 			{
 				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				mDirect3DTexture9->SetPrivateData(WKPDID_D3DDebugObjectName, nullptr, 0, 0);
-				mDirect3DTexture9->SetPrivateData(WKPDID_D3DDebugObjectName, name, strlen(name), 0);
+				mDirect3DTexture9->SetPrivateData(WKPDID_D3DDebugObjectName, name, static_cast<UINT>(strlen(name)), 0);
 
 				// Set debug name of the texture surfaces
 				const DWORD levelCount = mDirect3DTexture9->GetLevelCount();
@@ -172,9 +172,9 @@ namespace Direct3D9Renderer
 					if (nullptr != direct3DSurface9)
 					{
 						// Set the debug name
-						// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+						// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 						direct3DSurface9->SetPrivateData(WKPDID_D3DDebugObjectName, nullptr, 0, 0);
-						direct3DSurface9->SetPrivateData(WKPDID_D3DDebugObjectName, name, nameLength, 0);
+						direct3DSurface9->SetPrivateData(WKPDID_D3DDebugObjectName, name, static_cast<UINT>(nameLength), 0);
 
 						// Release the Direct3D 9 surface
 						direct3DSurface9->Release();

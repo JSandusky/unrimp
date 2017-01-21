@@ -93,7 +93,7 @@ namespace RendererRuntime
 			// Register the new render target texture element
 			++renderTargetTextureElement.numberOfReferences;
 			mSortedRenderTargetTextureVector.push_back(renderTargetTextureElement);
-			mAssetIdToIndex.emplace(assetId, mSortedRenderTargetTextureVector.size() - 1);
+			mAssetIdToIndex.emplace(assetId, static_cast<uint32_t>(mSortedRenderTargetTextureVector.size() - 1));
 		}
 		/*
 		SortedRenderTargetTextureVector::iterator iterator = std::lower_bound(mSortedRenderTargetTextureVector.begin(), mSortedRenderTargetTextureVector.end(), renderTargetTextureElement, ::detail::orderRenderTargetTextureElementByRenderTargetTextureSignatureId);

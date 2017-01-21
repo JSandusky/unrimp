@@ -114,18 +114,18 @@ namespace RendererToolkit
 				RendererRuntime::v1Material::Header materialHeader;
 				materialHeader.formatType		  = RendererRuntime::v1Material::FORMAT_TYPE;
 				materialHeader.formatVersion	  = RendererRuntime::v1Material::FORMAT_VERSION;
-				materialHeader.numberOfTechniques = techniques.size();
-				materialHeader.numberOfProperties = sortedMaterialPropertyVector.size();
+				materialHeader.numberOfTechniques = static_cast<uint32_t>(techniques.size());
+				materialHeader.numberOfProperties = static_cast<uint32_t>(sortedMaterialPropertyVector.size());
 
 				// Write down the material header
 				outputFileStream.write(reinterpret_cast<const char*>(&materialHeader), sizeof(RendererRuntime::v1Material::Header));
 			}
 
 			// Write down the material techniques
-			outputFileStream.write(reinterpret_cast<const char*>(techniques.data()), sizeof(RendererRuntime::v1Material::Technique) * techniques.size());
+			outputFileStream.write(reinterpret_cast<const char*>(techniques.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Material::Technique) * techniques.size()));
 
 			// Write down all material properties
-			outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
+			outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size()));
 		}
 
 		{ // Update the output asset package

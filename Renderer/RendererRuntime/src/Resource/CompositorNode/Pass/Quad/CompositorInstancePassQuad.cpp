@@ -66,7 +66,7 @@ namespace
 					0											// instancesPerElement (uint32_t)
 				}
 			};
-			const Renderer::VertexAttributes vertexAttributes(glm::countof(vertexAttributesLayout), vertexAttributesLayout);
+			const Renderer::VertexAttributes vertexAttributes(static_cast<uint32_t>(glm::countof(vertexAttributesLayout)), vertexAttributesLayout);
 
 			// Create the vertex buffer object (VBO)
 			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
@@ -92,7 +92,7 @@ namespace
 					sizeof(float) * 4	// strideInBytes (uint32_t)
 				}
 			};
-			Renderer::IVertexArray* vertexArray = bufferManager.createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			Renderer::IVertexArray* vertexArray = bufferManager.createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
 			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexArray, "Compositor instance pass quad")
 
 			// Done

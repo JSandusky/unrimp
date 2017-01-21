@@ -75,7 +75,7 @@ namespace
 				shaderCombinationId = RendererRuntime::Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&dynamicShaderPiecesElement.first), sizeof(uint32_t), shaderCombinationId);
 
 				// Apply shader property value
-				shaderCombinationId = RendererRuntime::Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(dynamicShaderPiecesElement.second.c_str()), dynamicShaderPiecesElement.second.length(), shaderCombinationId);
+				shaderCombinationId = RendererRuntime::Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(dynamicShaderPiecesElement.second.c_str()), static_cast<uint32_t>(dynamicShaderPiecesElement.second.length()), shaderCombinationId);
 			}
 
 			// Done

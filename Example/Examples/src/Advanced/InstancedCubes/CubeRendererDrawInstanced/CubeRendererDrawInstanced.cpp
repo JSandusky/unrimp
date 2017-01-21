@@ -84,7 +84,7 @@ namespace
 				0											// instancesPerElement (uint32_t)
 			}
 		};
-		const Renderer::VertexAttributes VertexAttributes(glm::countof(VertexAttributesLayout), VertexAttributesLayout);
+		const Renderer::VertexAttributes VertexAttributes(static_cast<uint32_t>(glm::countof(VertexAttributesLayout)), VertexAttributesLayout);
 
 
 //[-------------------------------------------------------]
@@ -195,7 +195,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 
 		// Setup
 		Renderer::RootSignatureBuilder rootSignature;
-		rootSignature.initialize(glm::countof(rootParameters), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+		rootSignature.initialize(static_cast<uint32_t>(glm::countof(rootParameters)), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 		// Create the instance
 		mRootSignature = mRenderer->createRootSignature(rootSignature);
@@ -276,7 +276,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 				sizeof(float) * (3 + 2 + 3)	// strideInBytes (uint32_t)
 			}
 		};
-		mVertexArray = mBufferManager->createVertexArray(detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
+		mVertexArray = mBufferManager->createVertexArray(detail::VertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBuffer);
 	}
 
 	// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?

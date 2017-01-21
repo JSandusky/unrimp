@@ -146,7 +146,7 @@ namespace RendererRuntime
 			std::vector<uint32_t>	  freeSlots;
 			Renderer::IUniformBuffer* uniformBuffer;	///< Memory is managed by this buffer pool instance
 
-			BufferPool(size_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager);
+			BufferPool(uint32_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager);
 			~BufferPool();
 		};
 
@@ -163,7 +163,7 @@ namespace RendererRuntime
 		const MaterialBlueprintResource& mMaterialBlueprintResource;
 		BufferPools						 mBufferPools;
 		uint32_t						 mSlotsPerPool;
-		size_t							 mBufferSize;
+		uint32_t						 mBufferSize;
 		MaterialBufferSlots				 mDirtyMaterialBufferSlots;
 		MaterialBufferSlots				 mMaterialBufferSlots;
 		const BufferPool*				 mLastBoundPool;

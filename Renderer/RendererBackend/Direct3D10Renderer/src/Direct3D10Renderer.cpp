@@ -1744,7 +1744,7 @@ namespace Direct3D10Renderer
 				if (nullptr != mD3D10QueryFlush)
 				{
 					// No need to reset the previous private data, there shouldn't be any...
-					mD3D10QueryFlush->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(__FUNCTION__), __FUNCTION__);
+					mD3D10QueryFlush->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(__FUNCTION__)), __FUNCTION__);
 				}
 			#endif
 		}

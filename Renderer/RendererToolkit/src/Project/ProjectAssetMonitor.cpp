@@ -21,6 +21,12 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+// Disable warnings in external headers, we can't fix them
+// -> Would be nice to use "PRAGMA_WARNING_DISABLE_MSVC(4371)" but can't because we need to disable this warning early as possible
+#ifdef WIN32
+	__pragma(warning(disable: 4371))	// warning C4371: 'std::_Tuple_val<_This>': layout of class may have changed from a previous version of the compiler due to better packing of member 'std::_Tuple_val<_This>::_Val'
+#endif
+
 #include "RendererToolkit/Project/ProjectAssetMonitor.h"
 #include "RendererToolkit/Project/ProjectImpl.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"

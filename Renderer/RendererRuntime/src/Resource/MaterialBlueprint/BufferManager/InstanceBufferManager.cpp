@@ -77,12 +77,12 @@ namespace RendererRuntime
 
 		// Create uniform buffer instance
 		mUniformScratchBuffer.resize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumUniformBufferSize, ::detail::DEFAULT_UNIFORM_BUFFER_NUMBER_OF_BYTES));
-		mUniformBuffer = bufferManager.createUniformBuffer(mUniformScratchBuffer.size(), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		mUniformBuffer = bufferManager.createUniformBuffer(static_cast<uint32_t>(mUniformScratchBuffer.size()), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		RENDERER_SET_RESOURCE_DEBUG_NAME(mUniformBuffer, "Instance buffer manager")
 
 		// Create texture buffer instance
 		mTextureScratchBuffer.resize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumTextureBufferSize, ::detail::DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES));
-		mTextureBuffer = bufferManager.createTextureBuffer(mTextureScratchBuffer.size(), Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		mTextureBuffer = bufferManager.createTextureBuffer(static_cast<uint32_t>(mTextureScratchBuffer.size()), Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		RENDERER_SET_RESOURCE_DEBUG_NAME(mTextureBuffer, "Instance buffer manager")
 	}
 
@@ -206,8 +206,8 @@ namespace RendererRuntime
 
 		// Update the uniform and texture buffer by using our scratch buffer
 		// TODO(co) This is just a dummy implementation, so full uniform buffer size to stress the command buffer
-		Renderer::Command::CopyUniformBufferData::create(commandBuffer, mUniformBuffer, mUniformScratchBuffer.size(), mUniformScratchBuffer.data());
-		Renderer::Command::CopyTextureBufferData::create(commandBuffer, mTextureBuffer, mTextureScratchBuffer.size(), mTextureScratchBuffer.data());
+		Renderer::Command::CopyUniformBufferData::create(commandBuffer, mUniformBuffer, static_cast<uint32_t>(mUniformScratchBuffer.size()), mUniformScratchBuffer.data());
+		Renderer::Command::CopyTextureBufferData::create(commandBuffer, mTextureBuffer, static_cast<uint32_t>(mTextureScratchBuffer.size()), mTextureScratchBuffer.data());
 	}
 
 	void InstanceBufferManager::fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer)

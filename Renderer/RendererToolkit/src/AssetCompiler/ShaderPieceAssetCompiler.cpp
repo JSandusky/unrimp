@@ -114,7 +114,7 @@ namespace RendererToolkit
 				// Strip comments from source code
 				StringHelper::stripCommentsFromSourceCode(originalSourceCode, sourceCode);
 			}
-			const std::streampos numberOfBytes = sourceCode.length();
+			const size_t numberOfBytes = sourceCode.length();
 
 			{ // Shader piece header
 				RendererRuntime::v1ShaderPiece::Header shaderPieceHeader;
@@ -127,7 +127,7 @@ namespace RendererToolkit
 			}
 
 			// Dump the unchanged content into the output file stream
-			outputFileStream.write(sourceCode.c_str(), numberOfBytes);
+			outputFileStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
 		}
 
 		{ // Update the output asset package

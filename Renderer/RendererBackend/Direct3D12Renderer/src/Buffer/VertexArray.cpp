@@ -24,7 +24,6 @@
 #include "Direct3D12Renderer/Buffer/VertexArray.h"
 #include "Direct3D12Renderer/Buffer/IndexBuffer.h"
 #include "Direct3D12Renderer/Buffer/VertexBuffer.h"
-#include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"

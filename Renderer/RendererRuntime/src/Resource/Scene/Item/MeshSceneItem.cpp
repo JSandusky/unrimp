@@ -149,7 +149,7 @@ namespace RendererRuntime
 					// -> In case there are more overwritten sub-meshes as there are sub-meshes, be error tolerant here (mesh assets might have been changed, but not updated scene assets in use)
 					if (!mSubMeshMaterialAssetIds.empty())
 					{
-						const uint32_t numberOfMaterials = std::min(mSubMeshMaterialAssetIds.size(), mRenderableManager.getRenderables().size());
+						const uint32_t numberOfMaterials = static_cast<uint32_t>(std::min(mSubMeshMaterialAssetIds.size(), mRenderableManager.getRenderables().size()));
 						for (size_t i = 0; i < numberOfMaterials; ++i)
 						{
 							if (isInitialized(mSubMeshMaterialAssetIds[i]))
@@ -167,7 +167,7 @@ namespace RendererRuntime
 			{
 				// Overwritten sub-mesh material loaded now?
 				// -> In case there are more overwritten sub-meshes as there are sub-meshes, be error tolerant here (mesh assets might have been changed, but not updated scene assets in use)
-				const uint32_t numberOfMaterials = std::min(mSubMeshMaterialAssetIds.size(), mRenderableManager.getRenderables().size());
+				const uint32_t numberOfMaterials = static_cast<uint32_t>(std::min(mSubMeshMaterialAssetIds.size(), mRenderableManager.getRenderables().size()));
 				bool updateCachedRenderablesDataRequired = false;
 				for (uint32_t i = 0; i < numberOfMaterials; ++i)
 				{

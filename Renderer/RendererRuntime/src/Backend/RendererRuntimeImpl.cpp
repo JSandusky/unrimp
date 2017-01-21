@@ -44,8 +44,6 @@
 #endif
 #include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h"
 
-#include <glm/detail/setup.hpp>	// For "glm::countof()"
-
 #include <cstring>
 
 

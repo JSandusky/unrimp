@@ -89,10 +89,10 @@ namespace Direct3D9Renderer
 			if (nullptr != mDirect3DIndexBuffer9)
 			{
 				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "IBO", 6);	// 6 = "IBO: " including terminating zero
 				mDirect3DIndexBuffer9->SetPrivateData(WKPDID_D3DDebugObjectName, nullptr, 0, 0);
-				mDirect3DIndexBuffer9->SetPrivateData(WKPDID_D3DDebugObjectName, detailedName, strlen(detailedName), 0);
+				mDirect3DIndexBuffer9->SetPrivateData(WKPDID_D3DDebugObjectName, detailedName, static_cast<UINT>(strlen(detailedName)), 0);
 			}
 		#endif
 	}

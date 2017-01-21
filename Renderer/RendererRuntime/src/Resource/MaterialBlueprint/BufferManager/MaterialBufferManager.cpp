@@ -53,7 +53,7 @@ namespace RendererRuntime
 		assert(nullptr != materialUniformBuffer);
 
 		// Get the buffer size
-		mBufferSize = std::min<size_t>(rendererRuntime.getRenderer().getCapabilities().maximumUniformBufferSize, 64 * 1024);
+		mBufferSize = std::min<uint32_t>(rendererRuntime.getRenderer().getCapabilities().maximumUniformBufferSize, 64 * 1024);
 		mScratchBuffer.resize(mBufferSize);
 
 		// Calculate the number of slots per pool
@@ -132,7 +132,7 @@ namespace RendererRuntime
 		if (iterator != mMaterialBufferSlots.end())
 		{
 			// The node that was at the end got swapped and has now a different index
-			(*iterator)->mGlobalIndex = iterator - mMaterialBufferSlots.begin();
+			(*iterator)->mGlobalIndex = static_cast<int>(iterator - mMaterialBufferSlots.begin());
 		}
 	}
 
@@ -269,7 +269,7 @@ namespace RendererRuntime
 		// Update the uniform buffer by using our scratch buffer
 		if (nullptr != uniformBuffer)
 		{
-			uniformBuffer->copyDataFrom(mScratchBuffer.size(), mScratchBuffer.data());
+			uniformBuffer->copyDataFrom(static_cast<uint32_t>(mScratchBuffer.size()), mScratchBuffer.data());
 		}
 
 		// Done
@@ -280,7 +280,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::MaterialBufferManager::BufferPool methods ]
 	//[-------------------------------------------------------]
-	MaterialBufferManager::BufferPool::BufferPool(size_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager) :
+	MaterialBufferManager::BufferPool::BufferPool(uint32_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager) :
 		uniformBuffer(bufferManager.createUniformBuffer(bufferSize, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW))
 	{
 		RENDERER_SET_RESOURCE_DEBUG_NAME(uniformBuffer, "Material buffer manager")

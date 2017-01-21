@@ -204,17 +204,17 @@ namespace Direct3D10Renderer
 			if (nullptr != mD3D10ShaderResourceViewTexture)
 			{
 				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				mD3D10ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D10ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D10ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 
 				// Do also set the given debug name to the Direct3D 10 resource referenced by the Direct3D resource view
 				if (nullptr != mD3D10Texture2D)
 				{
 					// Set the debug name
-					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 					mD3D10Texture2D->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-					mD3D10Texture2D->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+					mD3D10Texture2D->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 				}
 			}
 		#endif

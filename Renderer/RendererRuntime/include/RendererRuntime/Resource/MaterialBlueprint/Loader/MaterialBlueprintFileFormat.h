@@ -92,14 +92,14 @@ namespace RendererRuntime
 
 			struct TextureBufferHeader
 			{
+				MaterialPropertyValue				   materialPropertyValue;
 				uint32_t							   rootParameterIndex;
 				MaterialBlueprintResource::BufferUsage bufferUsage;
-				MaterialPropertyValue				   materialPropertyValue;
 
 				TextureBufferHeader() :
+					materialPropertyValue(MaterialPropertyValue::fromUnknown()),
 					rootParameterIndex(getUninitialized<uint32_t>()),
-					bufferUsage(MaterialBlueprintResource::BufferUsage::UNKNOWN),
-					materialPropertyValue(MaterialPropertyValue::fromUnknown())
+					bufferUsage(MaterialBlueprintResource::BufferUsage::UNKNOWN)
 				{
 					// Nothing here
 				}

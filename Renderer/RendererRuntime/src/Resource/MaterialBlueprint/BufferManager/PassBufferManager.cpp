@@ -161,7 +161,7 @@ namespace RendererRuntime
 			}
 			else
 			{
-				mUniformBuffers[mCurrentUniformBufferIndex]->copyDataFrom(mScratchBuffer.size(), mScratchBuffer.data());
+				mUniformBuffers[mCurrentUniformBufferIndex]->copyDataFrom(static_cast<uint32_t>(mScratchBuffer.size()), mScratchBuffer.data());
 			}
 			++mCurrentUniformBufferIndex;
 		}

@@ -201,7 +201,7 @@ namespace RendererToolkit
 				// Strip comments from source code
 				StringHelper::stripCommentsFromSourceCode(originalSourceCode, sourceCode);
 			}
-			const std::streampos numberOfBytes = sourceCode.length();
+			const std::size_t numberOfBytes = sourceCode.length();
 
 			// Collect shader piece resources to include
 			std::vector<RendererRuntime::AssetId> includeShaderPieceAssetIds;
@@ -253,13 +253,13 @@ namespace RendererToolkit
 			}
 
 			// Write down the asset IDs of the shader pieces to include
-			outputFileStream.write(reinterpret_cast<char*>(includeShaderPieceAssetIds.data()), sizeof(RendererRuntime::AssetId) * includeShaderPieceAssetIds.size());
+			outputFileStream.write(reinterpret_cast<char*>(includeShaderPieceAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * includeShaderPieceAssetIds.size()));
 
 			// Write down the referenced shader properties
-			outputFileStream.write(reinterpret_cast<char*>(referencedShaderProperties.getSortedPropertyVector().data()), sizeof(RendererRuntime::ShaderProperties::Property) * referencedShaderProperties.getSortedPropertyVector().size());
+			outputFileStream.write(reinterpret_cast<char*>(referencedShaderProperties.getSortedPropertyVector().data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * referencedShaderProperties.getSortedPropertyVector().size()));
 
 			// Dump the unchanged content into the output file stream
-			outputFileStream.write(sourceCode.c_str(), numberOfBytes);
+			outputFileStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
 		}
 
 		{ // Update the output asset package

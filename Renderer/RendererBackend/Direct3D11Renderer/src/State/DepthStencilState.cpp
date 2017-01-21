@@ -72,9 +72,9 @@ namespace Direct3D11Renderer
 			if (nullptr != mD3D11DepthStencilState)
 			{
 				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				mD3D11DepthStencilState->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D11DepthStencilState->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D11DepthStencilState->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
 		#endif
 	}

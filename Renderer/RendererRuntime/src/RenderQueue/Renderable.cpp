@@ -216,7 +216,7 @@ namespace RendererRuntime
 			if (iterator != materialResource.mAttachedRenderables.end())
 			{
 				// The node that was at the end got swapped and has now a different index
-				(*iterator)->mMaterialResourceAttachmentIndex = iterator - materialResource.mAttachedRenderables.begin();
+				(*iterator)->mMaterialResourceAttachmentIndex = static_cast<int>(iterator - materialResource.mAttachedRenderables.begin());
 			}
 			setUninitialized(mMaterialResourceId);
 			mMaterialResourceManager = nullptr;

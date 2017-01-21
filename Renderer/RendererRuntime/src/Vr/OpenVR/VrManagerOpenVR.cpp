@@ -452,7 +452,7 @@ namespace
 								numberOfBytesPerVertex	// strideInBytes (uint32_t)
 							}
 						};
-						Renderer::IVertexArray* vertexArray = bufferManager.createVertexArray(RendererRuntime::MeshResource::VERTEX_ATTRIBUTES, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
+						Renderer::IVertexArray* vertexArray = bufferManager.createVertexArray(RendererRuntime::MeshResource::VERTEX_ATTRIBUTES, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBuffer);
 						meshResource.setVertexArray(vertexArray);
 						RENDERER_SET_RESOURCE_DEBUG_NAME(vertexArray, renderModelName.c_str())
 					}

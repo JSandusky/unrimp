@@ -95,7 +95,7 @@ void VertexBuffer::onInitialization()
 				0											// instancesPerElement (uint32_t)
 			}
 		};
-		const Renderer::VertexAttributes vertexAttributesVBO(glm::countof(vertexAttributesLayoutVBO), vertexAttributesLayoutVBO);
+		const Renderer::VertexAttributes vertexAttributesVBO(static_cast<uint32_t>(glm::countof(vertexAttributesLayoutVBO)), vertexAttributesLayoutVBO);
 		const Renderer::VertexAttribute vertexAttributesLayoutVBOs[] =
 		{
 			{ // Attribute 0
@@ -123,7 +123,7 @@ void VertexBuffer::onInitialization()
 				0											// instancesPerElement (uint32_t)
 			}
 		};
-		const Renderer::VertexAttributes vertexAttributesVBOs(glm::countof(vertexAttributesLayoutVBOs), vertexAttributesLayoutVBOs);
+		const Renderer::VertexAttributes vertexAttributesVBOs(static_cast<uint32_t>(glm::countof(vertexAttributesLayoutVBOs)), vertexAttributesLayoutVBOs);
 
 		// Vertex array object (VAO)
 		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -152,7 +152,7 @@ void VertexBuffer::onInitialization()
 					sizeof(float) * (2 + 3)		// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayVBO = mBufferManager->createVertexArray(vertexAttributesVBO, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			mVertexArrayVBO = mBufferManager->createVertexArray(vertexAttributesVBO, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
 		}
 
 		{ // Create vertex array object (VAO) using multiple vertex buffer object (VBO)
@@ -188,7 +188,7 @@ void VertexBuffer::onInitialization()
 					sizeof(float) * 3		// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayVBOs = mBufferManager->createVertexArray(vertexAttributesVBOs, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			mVertexArrayVBOs = mBufferManager->createVertexArray(vertexAttributesVBOs, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
 		}
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")

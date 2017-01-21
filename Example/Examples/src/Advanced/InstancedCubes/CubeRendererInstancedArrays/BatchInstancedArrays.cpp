@@ -123,7 +123,7 @@ void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, R
 					sizeof(float) * 4 * 2			// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArray = bufferManager.createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, &indexBuffer);
+			mVertexArray = bufferManager.createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, &indexBuffer);
 		}
 
 		// Free local per instance data

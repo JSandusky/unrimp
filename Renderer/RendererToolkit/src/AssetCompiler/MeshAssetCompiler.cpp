@@ -369,7 +369,7 @@ namespace RendererToolkit
 
 				// Write down the vertex and index buffer
 				outputFileStream.write(reinterpret_cast<const char*>(vertexBufferData), ::detail::NUMBER_OF_BYTES_PER_VERTEX * numberOfVertices);
-				outputFileStream.write(reinterpret_cast<const char*>(indexBufferData), sizeof(uint16_t) * numberOfIndices);
+				outputFileStream.write(reinterpret_cast<const char*>(indexBufferData), static_cast<std::streamsize>(sizeof(uint16_t) * numberOfIndices));
 
 				// Destroy local vertex and input buffer data
 				delete [] vertexBufferData;
@@ -377,10 +377,10 @@ namespace RendererToolkit
 			}
 
 			// Write down the vertex array attributes
-			outputFileStream.write(reinterpret_cast<const char*>(RendererRuntime::MeshResource::VERTEX_ATTRIBUTES.attributes), sizeof(Renderer::VertexAttribute) * RendererRuntime::MeshResource::VERTEX_ATTRIBUTES.numberOfAttributes);
+			outputFileStream.write(reinterpret_cast<const char*>(RendererRuntime::MeshResource::VERTEX_ATTRIBUTES.attributes), static_cast<std::streamsize>(sizeof(Renderer::VertexAttribute) * RendererRuntime::MeshResource::VERTEX_ATTRIBUTES.numberOfAttributes));
 
 			// Write down the sub-meshes
-			outputFileStream.write(reinterpret_cast<const char*>(subMeshes.data()), sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size());
+			outputFileStream.write(reinterpret_cast<const char*>(subMeshes.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size()));
 		}
 		else
 		{

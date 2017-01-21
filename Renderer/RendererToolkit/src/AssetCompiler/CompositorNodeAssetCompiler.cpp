@@ -141,7 +141,7 @@ namespace
 			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialBlueprintAssetId", materialBlueprintAssetId);
 			passQuad.materialAssetId = materialAssetId;
 			passQuad.materialBlueprintAssetId = materialBlueprintAssetId;
-			passQuad.numberOfMaterialProperties = sortedMaterialPropertyVector.size();
+			passQuad.numberOfMaterialProperties = static_cast<uint32_t>(sortedMaterialPropertyVector.size());
 
 			// Sanity checks
 			if (materialDefinitionMandatory && RendererRuntime::isUninitialized(passQuad.materialAssetId) && RendererRuntime::isUninitialized(passQuad.materialBlueprintAssetId))
@@ -307,12 +307,12 @@ namespace
 						else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 						{
 							fillSortedMaterialPropertyVector(input, renderTargetTextureAssetIds, rapidJsonMemberIteratorPasses, sortedMaterialPropertyVector);
-							numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassQuad) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size();
+							numberOfBytes = static_cast<uint32_t>(sizeof(RendererRuntime::v1CompositorNode::PassQuad) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
 						}
 						else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == compositorPassTypeId)
 						{
 							fillSortedMaterialPropertyVector(input, renderTargetTextureAssetIds, rapidJsonMemberIteratorPasses, sortedMaterialPropertyVector);
-							numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassDebugGui) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size();
+							numberOfBytes = static_cast<uint32_t>(sizeof(RendererRuntime::v1CompositorNode::PassDebugGui) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
 						}
 
 						{ // Write down the compositor resource node target pass header
@@ -397,7 +397,7 @@ namespace
 								if (!sortedMaterialPropertyVector.empty())
 								{
 									// Write down all material properties
-									outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
+									outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size()));
 								}
 							}
 							else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == compositorPassTypeId)
@@ -412,7 +412,7 @@ namespace
 								if (!sortedMaterialPropertyVector.empty())
 								{
 									// Write down all material properties
-									outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
+									outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size()));
 								}
 							}
 						}

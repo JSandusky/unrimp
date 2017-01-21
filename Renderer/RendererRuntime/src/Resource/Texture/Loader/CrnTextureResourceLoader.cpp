@@ -63,7 +63,7 @@ namespace RendererRuntime
 	void CrnTextureResourceLoader::onDeserialization(IFile& file)
 	{
 		// Load the source image file into memory: Get file size and file data
-		mNumberOfUsedFileDataBytes = file.getNumberOfBytes();
+		mNumberOfUsedFileDataBytes = static_cast<uint32_t>(file.getNumberOfBytes());
 		if (mNumberOfFileDataBytes < mNumberOfUsedFileDataBytes)
 		{
 			mNumberOfFileDataBytes = mNumberOfUsedFileDataBytes;

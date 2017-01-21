@@ -597,18 +597,18 @@ namespace RendererToolkit
 
 		{ // Write down the root signature header
 			RendererRuntime::v1MaterialBlueprint::RootSignatureHeader rootSignatureHeader;
-			rootSignatureHeader.numberOfRootParameters	 = rootParameters.size();
-			rootSignatureHeader.numberOfDescriptorRanges = descriptorRanges.size();
+			rootSignatureHeader.numberOfRootParameters	 = static_cast<uint32_t>(rootParameters.size());
+			rootSignatureHeader.numberOfDescriptorRanges = static_cast<uint32_t>(descriptorRanges.size());
 			rootSignatureHeader.numberOfStaticSamplers	 = 0;									// TODO(co) Add support for static samplers
 			rootSignatureHeader.flags					 = Renderer::RootSignatureFlags::NONE;	// TODO(co) Add support for flags
 			outputFileStream.write(reinterpret_cast<const char*>(&rootSignatureHeader), sizeof(RendererRuntime::v1MaterialBlueprint::RootSignatureHeader));
 		}
 
 		// Write down the root parameters
-		outputFileStream.write(reinterpret_cast<const char*>(rootParameters.data()), sizeof(Renderer::RootParameter) * rootParameters.size());
+		outputFileStream.write(reinterpret_cast<const char*>(rootParameters.data()), static_cast<std::streamsize>(sizeof(Renderer::RootParameter) * rootParameters.size()));
 
 		// Write down the descriptor ranges
-		outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), sizeof(Renderer::DescriptorRange) * descriptorRanges.size());
+		outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), static_cast<std::streamsize>(sizeof(Renderer::DescriptorRange) * descriptorRanges.size()));
 	}
 
 	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::ShaderProperties& visualImportanceOfShaderProperties, RendererRuntime::ShaderProperties& maximumIntegerValueOfShaderProperties, bool sort, MaterialPropertyIdToName* materialPropertyIdToName)
@@ -887,13 +887,13 @@ namespace RendererToolkit
 				uniformBufferHeader.rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueUniformBuffer["RootParameterIndex"].GetString(), shaderProperties);
 				detail::optionalBufferUsageProperty(rapidJsonValueUniformBuffer, "BufferUsage", uniformBufferHeader.bufferUsage);
 				JsonHelper::optionalIntegerProperty(rapidJsonValueUniformBuffer, "NumberOfElements", uniformBufferHeader.numberOfElements);
-				uniformBufferHeader.numberOfElementProperties = elementProperties.size();
+				uniformBufferHeader.numberOfElementProperties = static_cast<uint32_t>(elementProperties.size());
 				uniformBufferHeader.uniformBufferNumberOfBytes = numberOfBytesPerElement * uniformBufferHeader.numberOfElements;
 				outputFileStream.write(reinterpret_cast<const char*>(&uniformBufferHeader), sizeof(RendererRuntime::v1MaterialBlueprint::UniformBufferHeader));
 			}
 
 			// Write down the uniform buffer element properties
-			outputFileStream.write(reinterpret_cast<const char*>(elementProperties.data()), sizeof(RendererRuntime::MaterialProperty) * elementProperties.size());
+			outputFileStream.write(reinterpret_cast<const char*>(elementProperties.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * elementProperties.size()));
 		}
 	}
 
@@ -905,8 +905,6 @@ namespace RendererToolkit
 
 			{ // Write down the texture buffer header
 				RendererRuntime::v1MaterialBlueprint::TextureBufferHeader textureBufferHeader;
-				textureBufferHeader.rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueTextureBuffer["RootParameterIndex"].GetString(), shaderProperties);
-				detail::optionalBufferUsageProperty(rapidJsonValueTextureBuffer, "BufferUsage", textureBufferHeader.bufferUsage);
 				{ // Value type and value
 					const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValueTextureBuffer);
 
@@ -920,6 +918,8 @@ namespace RendererToolkit
 					const RendererRuntime::StringId referenceAsInteger(&referenceAsString[1]);	// Skip the '@'
 					textureBufferHeader.materialPropertyValue = RendererRuntime::MaterialProperty::materialPropertyValueFromReference(valueType, referenceAsInteger);
 				}
+				textureBufferHeader.rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueTextureBuffer["RootParameterIndex"].GetString(), shaderProperties);
+				detail::optionalBufferUsageProperty(rapidJsonValueTextureBuffer, "BufferUsage", textureBufferHeader.bufferUsage);
 				outputFileStream.write(reinterpret_cast<const char*>(&textureBufferHeader), sizeof(RendererRuntime::v1MaterialBlueprint::TextureBufferHeader));
 			}
 		}

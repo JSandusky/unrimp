@@ -136,18 +136,18 @@ namespace Direct3D9Renderer
 			if (nullptr != mDirect3DSurface9RenderTarget)
 			{
 				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				mDirect3DSurface9RenderTarget->SetPrivateData(WKPDID_D3DDebugObjectName, nullptr, 0, 0);
-				mDirect3DSurface9RenderTarget->SetPrivateData(WKPDID_D3DDebugObjectName, name, strlen(name), 0);
+				mDirect3DSurface9RenderTarget->SetPrivateData(WKPDID_D3DDebugObjectName, name, static_cast<UINT>(strlen(name)), 0);
 			}
 
 			// Assign a debug name to the Direct3D 9 depth stencil surface
 			if (nullptr != mDirect3DSurface9DepthStencil)
 			{
 				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				mDirect3DSurface9DepthStencil->SetPrivateData(WKPDID_D3DDebugObjectName, nullptr, 0, 0);
-				mDirect3DSurface9DepthStencil->SetPrivateData(WKPDID_D3DDebugObjectName, name, strlen(name), 0);
+				mDirect3DSurface9DepthStencil->SetPrivateData(WKPDID_D3DDebugObjectName, name, static_cast<UINT>(strlen(name)), 0);
 			}
 		#endif
 	}

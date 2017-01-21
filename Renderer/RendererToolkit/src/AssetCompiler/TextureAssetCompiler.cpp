@@ -52,7 +52,11 @@
 #define STBI_NO_PNM
 */
 // STB image
-#include <crunch/stb_image.h>	// TODO(co) This is another library
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4312)	// warning C4312: 'type cast': conversion from 'int' to 'unsigned char *' of greater size
+	#include <crunch/stb_image.h>	// TODO(co) This is another library
+PRAGMA_WARNING_POP
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH

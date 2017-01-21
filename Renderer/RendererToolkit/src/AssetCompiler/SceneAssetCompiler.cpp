@@ -299,14 +299,14 @@ namespace RendererToolkit
 											subMeshMaterialAssetIds[i] = valueAsString.empty() ? RendererRuntime::getUninitialized<RendererRuntime::AssetId>() : StringHelper::getAssetIdByString(valueAsString, input);
 										}
 									}
-									meshItem.numberOfSubMeshMaterialAssetIds = subMeshMaterialAssetIds.size();
+									meshItem.numberOfSubMeshMaterialAssetIds = static_cast<uint32_t>(subMeshMaterialAssetIds.size());
 
 									// Write down
 									outputFileStream.write(reinterpret_cast<const char*>(&meshItem), sizeof(RendererRuntime::v1Scene::MeshItem));
 									if (!subMeshMaterialAssetIds.empty())
 									{
 										// Write down all sub-mesh material asset IDs
-										outputFileStream.write(reinterpret_cast<const char*>(subMeshMaterialAssetIds.data()), sizeof(RendererRuntime::AssetId) * subMeshMaterialAssetIds.size());
+										outputFileStream.write(reinterpret_cast<const char*>(subMeshMaterialAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * subMeshMaterialAssetIds.size()));
 									}
 								}
 							}
