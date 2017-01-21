@@ -14,7 +14,7 @@
 			"AssetName": "AdaptiveLuminanceFragment",
 			"AssetDependencies": [ "15" ],
 			"FileDependencies": [ "AdaptiveLuminanceFragment.shader_blueprint" ],
-			"Copyright": "Copyright (c) 2012-2017 Christian Ofenberg"
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"ShaderBlueprintAssetCompiler":
 		{

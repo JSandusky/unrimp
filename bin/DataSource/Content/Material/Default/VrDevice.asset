@@ -14,7 +14,7 @@
 			"AssetName": "VrDevice",
 			"AssetDependencies": [ "0", "14", "110", "113" ],
 			"FileDependencies": [ "VrDevice.material" ],
-			"Copyright": "Copyright (c) 2012-2017 Christian Ofenberg"
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"MaterialAssetCompiler":
 		{

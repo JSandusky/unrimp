@@ -14,7 +14,7 @@
 			"AssetName": "GaussianBlurFragment",
 			"AssetDependencies": [ "15" ],
 			"FileDependencies": [ "GaussianBlurFragment.shader_blueprint" ],
-			"Copyright": "Copyright (c) 2012-2017 Christian Ofenberg",
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team",
 			"Description": "The Gaussian blur implementation is basing on http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/"
 		},
 		"ShaderBlueprintAssetCompiler":

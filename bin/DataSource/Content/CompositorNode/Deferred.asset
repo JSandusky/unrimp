@@ -14,7 +14,7 @@
 			"AssetName": "Deferred",
 			"AssetDependencies": [ "102", "115", "117", "121" ],
 			"FileDependencies": [ "Deferred.compositor_node" ],
-			"Copyright": "Copyright (c) 2012-2017 Christian Ofenberg",
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team",
 			"Description": "Deferred rendering compositor node"
 		},
 		"CompositorNodeAssetCompiler":

@@ -14,7 +14,7 @@
 			"AssetName": "FinalFragment",
 			"AssetDependencies": [ "15", "103" ],
 			"FileDependencies": [ "FinalFragment.shader_blueprint" ],
-			"Copyright": "Copyright (c) 2012-2017 Christian Ofenberg"
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"ShaderBlueprintAssetCompiler":
 		{

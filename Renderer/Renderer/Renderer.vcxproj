@@ -36,6 +36,7 @@
     <ClInclude Include="include\Renderer\IRenderer.h" />
     <ClInclude Include="include\Renderer\IResource.h" />
     <ClInclude Include="include\Renderer\IRootSignature.h" />
+    <ClInclude Include="include\Renderer\LinuxHeader.h" />
     <ClInclude Include="include\Renderer\PlatformTypes.h" />
     <ClInclude Include="include\Renderer\Public\Renderer.h" />
     <ClInclude Include="include\Renderer\Public\RendererInstance.h" />

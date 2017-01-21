@@ -12,6 +12,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RendererToolkit", "Renderer
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RendererBackend", "RendererBackend", "{A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}"
+	ProjectSection(SolutionItems) = preProject
+		Renderer\RendererBackend\CMakeLists.txt = Renderer\RendererBackend\CMakeLists.txt
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct3D9Renderer", "Renderer\RendererBackend\Direct3D9Renderer\Direct3D9Renderer.vcxproj", "{FBAF5E40-0077-4B00-A424-A7F169974A55}"
 EndProject

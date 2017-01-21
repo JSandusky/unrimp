@@ -13,7 +13,7 @@
 			"AssetCategory": "Default",
 			"AssetName": "Core",
 			"FileDependencies": [ "Core.shader_piece" ],
-			"Copyright": "Copyright (c) 2012-2017 Christian Ofenberg"
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"ShaderPieceAssetCompiler":
 		{

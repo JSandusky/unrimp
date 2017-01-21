@@ -14,7 +14,7 @@
 			"AssetName": "DepthOfField",
 			"AssetDependencies": [ "100", "136" ],
 			"FileDependencies": [ "DepthOfField.material_blueprint" ],
-			"Copyright": "Copyright (c) 2012-2017 Christian Ofenberg",
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team",
 			"Description": "Depth of field basing on https://developer.amd.com/wordpress/media/2012/10/Scheuermann_DepthOfField.pdf"
 		},
 		"MaterialBlueprintAssetCompiler":
