@@ -175,6 +175,7 @@
     <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadPool.h" />
     <ClInclude Include="include\RendererRuntime\DebugGui\DebugGuiManager.h" />
+    <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerLinux.h" />
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerWindows.h" />
     <ClInclude Include="include\RendererRuntime\Export.h" />
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
@@ -348,6 +349,12 @@
     <ClCompile Include="src\Core\Renderer\RenderTargetTextureSignature.cpp" />
     <ClCompile Include="src\Core\String.cpp" />
     <ClCompile Include="src\DebugGui\DebugGuiManager.cpp" />
+    <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerLinux.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerWindows.cpp" />
     <ClCompile Include="src\PrecompiledHeader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Create</PrecompiledHeader>
