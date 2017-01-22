@@ -95,6 +95,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
+	IResource& IResource::operator=(IResource&& resource)
+	{
+		// Swap data
+		std::swap(mResourceManager,			resource.mResourceManager);
+		std::swap(mResourceId,				resource.mResourceId);
+		std::swap(mAssetId,					resource.mAssetId);
+		std::swap(mLoadingState,			resource.mLoadingState);
+		std::swap(mSortedResourceListeners,	resource.mSortedResourceListeners);	// This is fine, resource listeners store a resource ID instead of a raw pointer
+
+		// Done
+		return *this;
+	}
+
 	void IResource::setLoadingState(LoadingState loadingState)
 	{
 		mLoadingState = loadingState;

@@ -106,6 +106,7 @@ namespace RendererRuntime
 		inline virtual ~IResource();
 		IResource(const IResource&) = delete;
 		IResource& operator=(const IResource&) = delete;
+		RENDERERRUNTIME_API_EXPORT IResource& operator=(IResource&& resource);
 		inline void setResourceManager(IResourceManager* resourceManager);
 		inline void setAssetId(AssetId assetId);
 		void setLoadingState(LoadingState loadingState);

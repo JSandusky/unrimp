@@ -95,6 +95,7 @@ namespace RendererRuntime
 		inline virtual ~TextureResource();
 		TextureResource(const TextureResource&) = delete;
 		TextureResource& operator=(const TextureResource&) = delete;
+		inline TextureResource& operator=(TextureResource&& textureResource);
 
 		//[-------------------------------------------------------]
 		//[ "RendererRuntime::PackedElementManager" management    ]

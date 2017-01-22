@@ -210,6 +210,7 @@ namespace RendererRuntime
 		virtual ~MaterialResource();
 		MaterialResource(const MaterialResource&) = delete;
 		MaterialResource& operator=(const MaterialResource&) = delete;
+		RENDERERRUNTIME_API_EXPORT MaterialResource& operator=(MaterialResource&& materialResource);
 
 		//[-------------------------------------------------------]
 		//[ "RendererRuntime::PackedElementManager" management    ]
