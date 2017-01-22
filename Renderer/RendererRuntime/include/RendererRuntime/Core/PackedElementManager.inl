@@ -123,12 +123,19 @@ namespace RendererRuntime
 		// Deinitialize the removed element
 		// -> Calling the destructor ("element.~ELEMENT_TYPE();") is not used by intent to avoid some nasty STL issues
 		element.deinitializeElement();
+		--mNumberOfElements;
 
-		element = mElements[--mNumberOfElements];
-		mIndices[element.id & INDEX_MASK].index = index.index;
+		// If this is the last element, there's no need to swap it with itself
+		if (index.index != mNumberOfElements)
+		{
+			element = std::move(mElements[mNumberOfElements]);
+			mIndices[element.getId() & INDEX_MASK].index = index.index;
+		}
+
+		// Update free list
 		index.index = USHRT_MAX;
-		mIndices[mFreeListEnqueue].next = id & INDEX_MASK;
-		mFreeListEnqueue = id & INDEX_MASK;
+		mIndices[mFreeListEnqueue].next = (id & INDEX_MASK);
+		mFreeListEnqueue = (id & INDEX_MASK);
 	}
 
 

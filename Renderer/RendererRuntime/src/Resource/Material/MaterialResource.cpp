@@ -178,8 +178,35 @@ namespace RendererRuntime
 		}
 	}
 
+	MaterialResource& MaterialResource::operator=(MaterialResource&& materialResource)
+	{
+		// Call base implementation
+		IResource::operator=(std::move(materialResource));
+
+		// Swap data
+		// -> Lucky us that we're usually not referencing by using raw-pointers, so a simple swap does the trick
+		std::swap(mParentMaterialResourceId,	   materialResource.mParentMaterialResourceId);
+		std::swap(mSortedChildMaterialResourceIds, materialResource.mSortedChildMaterialResourceIds);
+		std::swap(mSortedMaterialTechniqueVector,  materialResource.mSortedMaterialTechniqueVector);
+		std::swap(mMaterialProperties,			   materialResource.mMaterialProperties);
+		std::swap(mAttachedRenderables,			   materialResource.mAttachedRenderables);
+
+		// Done
+		return *this;
+	}
+
 	void MaterialResource::deinitializeElement()
 	{
+		// Sanity check
+		assert(mAttachedRenderables.empty());
+
+		// Avoid crash in case of failed sanity check
+		while (!mAttachedRenderables.empty())
+		{
+			mAttachedRenderables[0]->unsetMaterialResourceId();
+		}
+
+		// Unset parent material resource ID
 		setParentMaterialResourceId(getUninitialized<MaterialResourceId>());
 
 		// Inform child material resources, if required

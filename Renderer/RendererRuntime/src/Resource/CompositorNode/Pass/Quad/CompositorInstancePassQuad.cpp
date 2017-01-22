@@ -173,9 +173,6 @@ namespace RendererRuntime
 	{
 		if (isInitialized(mMaterialResourceId))
 		{
-			// Destroy the material resource the compositor instance pass quad created
-			getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getMaterialResourceManager().destroyMaterialResource(mMaterialResourceId);
-
 			// Clear the renderable manager right now so we have no more references to the shared vertex array
 			mRenderableManager.getRenderables().clear();
 
@@ -184,6 +181,9 @@ namespace RendererRuntime
 			{
 				::detail::VertexArrayPtr = nullptr;
 			}
+
+			// Destroy the material resource the compositor instance pass quad created
+			getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getMaterialResourceManager().destroyMaterialResource(mMaterialResourceId);
 		}
 	}
 

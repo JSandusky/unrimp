@@ -59,6 +59,19 @@ namespace RendererRuntime
 		assert(nullptr == mTexture.getPointer());
 	}
 
+	inline TextureResource& TextureResource::operator=(TextureResource&& textureResource)
+	{
+		// Call base implementation
+		IResource::operator=(std::move(textureResource));
+
+		// Swap data
+		std::swap(mRgbHardwareGammaCorrection, textureResource.mRgbHardwareGammaCorrection);
+		std::swap(mTexture,					   textureResource.mTexture);
+
+		// Done
+		return *this;
+	}
+
 	inline void TextureResource::initializeElement(TextureResourceId textureResourceId)
 	{
 		// Sanity checks
