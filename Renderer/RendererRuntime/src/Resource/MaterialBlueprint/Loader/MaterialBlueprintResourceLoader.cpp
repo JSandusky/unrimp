@@ -87,9 +87,9 @@ namespace RendererRuntime
 			// Allocate memory for the temporary data
 			if (mMaximumNumberOfRootParameters < rootSignatureHeader.numberOfRootParameters)
 			{
-				delete [] mRootParameters;
+				mRootParameters.clear();
 				mMaximumNumberOfRootParameters = rootSignatureHeader.numberOfRootParameters;
-				mRootParameters = new Renderer::RootParameter[mMaximumNumberOfRootParameters];
+				mRootParameters.resize(mMaximumNumberOfRootParameters);
 			}
 			if (mMaximumNumberOfDescriptorRanges < rootSignatureHeader.numberOfDescriptorRanges)
 			{
@@ -114,7 +114,7 @@ namespace RendererRuntime
 
 			// Prepare our temporary root signature
 			mRootSignature.numberOfParameters	  = rootSignatureHeader.numberOfRootParameters;
-			mRootSignature.parameters			  = mRootParameters;
+			mRootSignature.parameters			  = mRootParameters.data();
 			mRootSignature.numberOfStaticSamplers = rootSignatureHeader.numberOfStaticSamplers;
 			mRootSignature.staticSamplers		  = nullptr;	// TODO(co) Add support for static samplers
 			mRootSignature.flags				  = static_cast<Renderer::RootSignatureFlags::Enum>(rootSignatureHeader.flags);
@@ -370,7 +370,6 @@ namespace RendererRuntime
 	MaterialBlueprintResourceLoader::~MaterialBlueprintResourceLoader()
 	{
 		// Free temporary data
-		delete [] mRootParameters;
 		delete [] mMaterialBlueprintSamplerStates;
 		delete [] mMaterialBlueprintTextures;
 	}

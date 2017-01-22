@@ -53,7 +53,6 @@ namespace RendererRuntime
 		mRendererRuntime(rendererRuntime),
 		mMaterialBlueprintResource(nullptr),
 		mMaximumNumberOfRootParameters(0),
-		mRootParameters(nullptr),
 		mMaximumNumberOfDescriptorRanges(0),
 		mMaximumNumberOfMaterialBlueprintSamplerStates(0),
 		mMaterialBlueprintSamplerStates(nullptr),
