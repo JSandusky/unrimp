@@ -34,12 +34,10 @@
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)d_static\ExampleProjectCompilerStaticD.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)\bin\$(PlatformTarget)d_static\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>FirstTriangle</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)d_static\ExampleProjectCompilerStaticD.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)\bin\$(PlatformTarget)d_static\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>FirstTriangle</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

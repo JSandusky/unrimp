@@ -331,7 +331,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\libtiff\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntimeD.lib;zlibstatic.lib;assimp.lib;libtiff.lib;crnlibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -361,7 +361,7 @@ copy "..\..\External\Windows_x86\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTar
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\libtiff\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntimeD.lib;zlibstatic.lib;assimp.lib;libtiff.lib;crnlibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -492,7 +492,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\libtiff\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntime.lib;zlibstatic.lib;assimp.lib;libtiff.lib;crnlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -533,7 +533,7 @@ copy "..\..\External\Windows_x86\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTar
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\libtiff\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntime.lib;zlibstatic.lib;assimp.lib;libtiff.lib;crnlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
