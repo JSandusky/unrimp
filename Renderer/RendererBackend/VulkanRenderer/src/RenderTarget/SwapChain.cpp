@@ -54,7 +54,7 @@ namespace VulkanRenderer
 		#ifdef _WIN32
 			VkWin32SurfaceCreateInfoKHR vkWin32SurfaceCreateInfoKHR = {};
 			vkWin32SurfaceCreateInfoKHR.sType	  = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-			vkWin32SurfaceCreateInfoKHR.hinstance = reinterpret_cast<HINSTANCE>(::GetWindowLong(reinterpret_cast<HWND>(nativeWindowHandle), GWL_HINSTANCE));
+			vkWin32SurfaceCreateInfoKHR.hinstance = reinterpret_cast<HINSTANCE>(::GetWindowLongPtr(reinterpret_cast<HWND>(nativeWindowHandle), GWLP_HINSTANCE));
 			vkWin32SurfaceCreateInfoKHR.hwnd	  = reinterpret_cast<HWND>(nativeWindowHandle);
 			VkResult vkResult = vkCreateWin32SurfaceKHR(vkInstance, &vkWin32SurfaceCreateInfoKHR, nullptr, &mVkSurfaceKHR);
 		#else
