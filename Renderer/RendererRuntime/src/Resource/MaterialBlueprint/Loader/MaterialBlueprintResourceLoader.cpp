@@ -94,8 +94,8 @@ namespace RendererRuntime
 			if (mMaximumNumberOfDescriptorRanges < rootSignatureHeader.numberOfDescriptorRanges)
 			{
 				mDescriptorRanges.clear();
-				mDescriptorRanges.resize(mMaximumNumberOfDescriptorRanges);
 				mMaximumNumberOfDescriptorRanges = rootSignatureHeader.numberOfDescriptorRanges;
+				mDescriptorRanges.resize(mMaximumNumberOfDescriptorRanges);
 			}
 
 			// Load in the root parameters
@@ -110,10 +110,7 @@ namespace RendererRuntime
 			}
 
 			// Load in the descriptor ranges
-			std::vector<Renderer::DescriptorRange> descriptorRangeData;
-			descriptorRangeData.resize(rootSignatureHeader.numberOfDescriptorRanges);
-			file.read(descriptorRangeData.data(), sizeof(Renderer::DescriptorRange) * rootSignatureHeader.numberOfDescriptorRanges);
-			mDescriptorRanges = std::move(descriptorRangeData);
+			file.read(mDescriptorRanges.data(), sizeof(Renderer::DescriptorRange) * rootSignatureHeader.numberOfDescriptorRanges);
 
 			// Prepare our temporary root signature
 			mRootSignature.numberOfParameters	  = rootSignatureHeader.numberOfRootParameters;
