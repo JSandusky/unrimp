@@ -49,7 +49,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	inline void* Framebuffer::getInternalResourceHandle() const
 	{
-		return reinterpret_cast<void*>(mOpenGLES2Framebuffer);
+		return reinterpret_cast<void*>(static_cast<uintptr_t>(mOpenGLES2Framebuffer));
 	}
 
 

@@ -118,7 +118,7 @@ namespace OpenGLRenderer
 									 Mapping::getOpenGLType(attribute->vertexAttributeFormat),
 									 static_cast<GLboolean>(Mapping::isOpenGLVertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
 									 static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
-									 reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
+									 reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 
 			// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
 			if (attribute->instancesPerElement > 0 && mIsGL_ARB_instanced_arrays)

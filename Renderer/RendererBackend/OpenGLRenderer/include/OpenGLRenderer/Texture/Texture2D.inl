@@ -49,7 +49,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	inline void* Texture2D::getInternalResourceHandle() const
 	{
-		return reinterpret_cast<void*>(mOpenGLTexture);
+		return reinterpret_cast<void*>(static_cast<uintptr_t>(mOpenGLTexture));
 	}
 
 

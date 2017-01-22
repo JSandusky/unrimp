@@ -44,7 +44,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	inline void* Texture2D::getInternalResourceHandle() const
 	{
-		return reinterpret_cast<void*>(mOpenGLES2Texture);
+		return reinterpret_cast<void*>(static_cast<uintptr_t>(mOpenGLES2Texture));
 	}
 
 

@@ -92,7 +92,7 @@ namespace OpenGLES2Renderer
 									  Mapping::getOpenGLES2Type(attribute->vertexAttributeFormat),
 									  static_cast<GLboolean>(Mapping::isOpenGLES2VertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
 									  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
-									  reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
+									  reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 
 				// Enable OpenGL ES 2 vertex attribute array
 				glEnableVertexAttribArray(attributeLocation);
