@@ -25,6 +25,13 @@
 #include "Framework/ApplicationImplLinux.h"
 #include "Framework/IApplication.h"
 #include "Framework/X11Application.h"
+#include "Framework/IApplicationRendererRuntime.h"
+
+#include <RendererRuntime/DebugGui/Detail/DebugGuiManagerLinux.h>
+
+#include <X11/keysym.h>
+
+#include <unordered_map>
 
 
 //[-------------------------------------------------------]
@@ -32,6 +39,16 @@
 //[-------------------------------------------------------]
 class ApplicationWindow : public X11Window
 {
+	std::unordered_map<uint32_t, uint32_t> mX11KeySymToKeyMap {
+												{XK_a, 'A'}, 
+												{XK_A, 'A'},
+												{XK_w, 'W'}, 
+												{XK_W, 'W'},
+												{XK_s, 'S'}, 
+												{XK_S, 'S'},
+												{XK_d, 'D'}, 
+												{XK_D, 'D'}
+											};
 public:
 	ApplicationWindow(IApplication &application) :
 		mApplication(application)
@@ -67,18 +84,92 @@ public:
 			case KeyPress:
 			{
 				const uint32_t key = XLookupKeysym(&event.xkey, 0);
-				mApplication.onKeyDown(key);
+				auto keyIterator = mX11KeySymToKeyMap.find(key);
+				if (keyIterator != mX11KeySymToKeyMap.end())
+				{
+					mApplication.onKeyDown(keyIterator->second);
+				}
 				break;
 			}
 
 			case KeyRelease:
 			{
-				const uint32_t key = XLookupKeysym(&event.xkey, 0);
-				mApplication.onKeyUp(key);
+				bool is_retriggered = false;
+
+				if (XEventsQueued(event.xany.display, QueuedAfterReading))
+				{
+					XEvent nev;
+					XPeekEvent(event.xany.display, &nev);
+
+					// Filter out key repeats. This is simulated by a key press directly after an key relase
+					if (nev.type == KeyPress && nev.xkey.time == event.xkey.time &&
+						nev.xkey.keycode == event.xkey.keycode)
+					{
+						// Delete retriggered KeyPress event
+						XNextEvent (event.xany.display, &nev);
+						is_retriggered = true;
+					}
+				}
+
+ 				if (!is_retriggered)
+				{
+					const uint32_t key = XLookupKeysym(&event.xkey, 0);
+					auto keyIterator = mX11KeySymToKeyMap.find(key);
+					if (keyIterator != mX11KeySymToKeyMap.end())
+					{
+						mApplication.onKeyUp(keyIterator->second);
+					}
+				}
 				break;
 			}
 
-			// TODO(co) Implement "onMouseButtonDown()" and "onMouseButtonUp()" for left and right mouse button as well as "onMouseMove()"
+			case ButtonPress:
+			{
+				if (event.xbutton.button == 1)
+				{
+					mApplication.onMouseButtonDown(0);
+				}
+				else if (event.xbutton.button == 3)
+				{
+					mApplication.onMouseButtonDown(1);
+				}
+				else if (event.xbutton.button == 4 || event.xbutton.button == 5) // Wheel buttons
+				{
+					// TODO(sw)MouseWheel?
+					//imGuiIo.MouseWheel += (event.xbutton.button == 4) ? 1.0f : -1.0f;
+				}
+				break;
+			}
+
+			case ButtonRelease:
+			{
+				if (event.xbutton.button == 1)
+				{
+					mApplication.onMouseButtonUp(0);
+				}
+				else if (event.xbutton.button == 3)
+				{
+					mApplication.onMouseButtonUp(1);
+				}
+				break;
+			}
+
+			case MotionNotify:
+			{
+				mApplication.onMouseMove(event.xmotion.x, event.xmotion.y);
+				break;
+			}
+		}
+
+		// TODO(co) Evil cast ahead. Maybe simplify the example application framework? After all, it's just an example framework for Unrimp and nothing too generic.
+		const IApplicationRendererRuntime* applicationRendererRuntime = dynamic_cast<IApplicationRendererRuntime*>(&mApplication);
+		if (nullptr != applicationRendererRuntime)
+		{
+			const RendererRuntime::IRendererRuntime* rendererRuntime = applicationRendererRuntime->getRendererRuntime();
+			if (nullptr != rendererRuntime)
+			{
+				static_cast<RendererRuntime::DebugGuiManagerLinux&>(rendererRuntime->getDebugGuiManager()).onXEvent(event);
+			}
 		}
 		return false;
 	}

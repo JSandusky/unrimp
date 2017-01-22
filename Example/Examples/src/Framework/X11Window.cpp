@@ -51,7 +51,7 @@ X11Window::X11Window() :
 	// Create the native OS window instance with a black background (else we will see trash if nothing has been drawn, yet)
 	XSetWindowAttributes sXSetWindowAttributes;
 	sXSetWindowAttributes.background_pixel = 0;
-	sXSetWindowAttributes.event_mask = ExposureMask | StructureNotifyMask | EnterWindowMask | LeaveWindowMask | FocusChangeMask | VisibilityChangeMask | KeyPressMask | MotionNotify;
+	sXSetWindowAttributes.event_mask = ExposureMask | StructureNotifyMask | EnterWindowMask | LeaveWindowMask | FocusChangeMask | VisibilityChangeMask | KeyReleaseMask | KeyPressMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
 	mWindowId = XCreateWindow(display, XRootWindow(display, screen), 0, 0, width, height, 0, depth, InputOutput, visual, CWBackPixel | CWEventMask, &sXSetWindowAttributes);
 	XSetWMProtocols(display, mWindowId, &WM_DELETE_WINDOW, 1);
 
