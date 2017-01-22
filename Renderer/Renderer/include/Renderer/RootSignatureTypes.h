@@ -341,6 +341,14 @@ namespace Renderer
 		};
 		ShaderVisibility		shaderVisibility;
 	};
+	
+	struct RootParameterData
+	{
+		RootParameterType		parameterType;
+		ShaderVisibility		shaderVisibility;
+		uint32_t				numberOfDescriptorRanges;
+	};
+	
 	struct RootParameterBuilder : public RootParameter
 	{
 		RootParameterBuilder()

@@ -52,9 +52,12 @@ namespace RendererRuntime
 	{
 		// Read in the material blueprint header
 		v1MaterialBlueprint::Header materialBlueprintHeader;
+		auto size = sizeof(v1MaterialBlueprint::Header);
 		file.read(&materialBlueprintHeader, sizeof(v1MaterialBlueprint::Header));
 
 		{ // Read properties
+			
+			auto sizeProperties = sizeof(MaterialProperty);
 			// TODO(co) Get rid of the evil const-cast
 			MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mMaterialProperties.getSortedPropertyVector());
 			sortedPropertyVector.resize(materialBlueprintHeader.numberOfProperties);
@@ -62,6 +65,7 @@ namespace RendererRuntime
 		}
 
 		{ // Read visual importance of shader properties
+			auto sizeProperties = sizeof(ShaderProperties::Property);
 			// TODO(co) Get rid of the evil const-cast
 			ShaderProperties::SortedPropertyVector& sortedPropertyVector = const_cast<ShaderProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mVisualImportanceOfShaderProperties.getSortedPropertyVector());
 			sortedPropertyVector.resize(materialBlueprintHeader.numberOfShaderCombinationProperties);
@@ -89,16 +93,27 @@ namespace RendererRuntime
 			}
 			if (mMaximumNumberOfDescriptorRanges < rootSignatureHeader.numberOfDescriptorRanges)
 			{
-				delete [] mDescriptorRanges;
+				mDescriptorRanges.clear();
+				mDescriptorRanges.resize(mMaximumNumberOfDescriptorRanges);
 				mMaximumNumberOfDescriptorRanges = rootSignatureHeader.numberOfDescriptorRanges;
-				mDescriptorRanges = new Renderer::DescriptorRange[mMaximumNumberOfDescriptorRanges];
 			}
 
 			// Load in the root parameters
-			file.read(mRootParameters, sizeof(Renderer::RootParameter) * rootSignatureHeader.numberOfRootParameters);
+			std::vector<Renderer::RootParameterData> rootParameterData;
+			rootParameterData.resize(rootSignatureHeader.numberOfRootParameters);
+			file.read(rootParameterData.data(), sizeof(Renderer::RootParameterData) * rootSignatureHeader.numberOfRootParameters);
+			for (size_t index = 0; index < rootSignatureHeader.numberOfRootParameters; ++index)
+			{
+				mRootParameters[index].parameterType = rootParameterData[index].parameterType;
+				mRootParameters[index].descriptorTable.numberOfDescriptorRanges = rootParameterData[index].numberOfDescriptorRanges;
+				mRootParameters[index].shaderVisibility = rootParameterData[index].shaderVisibility;
+			}
 
 			// Load in the descriptor ranges
-			file.read(mDescriptorRanges, sizeof(Renderer::DescriptorRange) * rootSignatureHeader.numberOfDescriptorRanges);
+			std::vector<Renderer::DescriptorRange> descriptorRangeData;
+			descriptorRangeData.resize(rootSignatureHeader.numberOfDescriptorRanges);
+			file.read(descriptorRangeData.data(), sizeof(Renderer::DescriptorRange) * rootSignatureHeader.numberOfDescriptorRanges);
+			mDescriptorRanges = std::move(descriptorRangeData);
 
 			// Prepare our temporary root signature
 			mRootSignature.numberOfParameters	  = rootSignatureHeader.numberOfRootParameters;
@@ -108,7 +123,7 @@ namespace RendererRuntime
 			mRootSignature.flags				  = static_cast<Renderer::RootSignatureFlags::Enum>(rootSignatureHeader.flags);
 
 			{ // Tell the temporary root signature about the descriptor ranges
-				Renderer::DescriptorRange* descriptorRange = mDescriptorRanges;
+				Renderer::DescriptorRange* descriptorRange = mDescriptorRanges.data();
 				for (uint32_t i = 0; i < rootSignatureHeader.numberOfRootParameters; ++i)
 				{
 					Renderer::RootParameter& rootParameter = mRootParameters[i];
@@ -359,7 +374,6 @@ namespace RendererRuntime
 	{
 		// Free temporary data
 		delete [] mRootParameters;
-		delete [] mDescriptorRanges;
 		delete [] mMaterialBlueprintSamplerStates;
 		delete [] mMaterialBlueprintTextures;
 	}
