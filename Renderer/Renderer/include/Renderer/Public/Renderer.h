@@ -438,10 +438,7 @@ namespace Renderer
 				const DescriptorRange* _descriptorRanges)
 			{
 				rootDescriptorTable.numberOfDescriptorRanges = _numberOfDescriptorRanges;
-				PRAGMA_WARNING_PUSH
-					PRAGMA_WARNING_DISABLE_MSVC(4826)	// warning C4826: Conversion from 'const Renderer::DescriptorRange *' to 'uint64_t' is sign-extended. This may cause unexpected runtime behavior.
-					rootDescriptorTable.descriptorRanges = reinterpret_cast<uint64_t>(_descriptorRanges);
-				PRAGMA_WARNING_POP
+				rootDescriptorTable.descriptorRanges = reinterpret_cast<uintptr_t>(_descriptorRanges);
 			}
 		};
 		enum class RootParameterType
