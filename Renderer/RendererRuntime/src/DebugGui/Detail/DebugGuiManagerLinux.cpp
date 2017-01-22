@@ -26,6 +26,9 @@
 
 #include <imgui/imgui.h>
 
+#include <X11/keysym.h>
+#include <sys/time.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -37,6 +40,63 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	void DebugGuiManagerLinux::onXEvent(XEvent& event)
+	{
+		ImGuiIO& imGuiIo = ImGui::GetIO();
+		
+		switch (event.type)
+		{
+			case ConfigureNotify:
+				mWindowWidth = event.xconfigure.width;
+				mWindowHeigth = event.xconfigure.height;
+				break;
+			case KeyPress:
+			{
+				const uint32_t keySym = XLookupKeysym(&event.xkey, 0);
+				imGuiIo.KeysDown[keySym] = 1;
+				break;
+			}
+
+			case KeyRelease:
+			{
+				const uint32_t keySym = XLookupKeysym(&event.xkey, 0);
+				imGuiIo.KeysDown[keySym] = 0;
+				break;
+			}
+
+			case ButtonPress:
+			{
+				if (event.xbutton.button == 1)
+				{
+					imGuiIo.MouseDown[0] = true;
+				}
+				else if (event.xbutton.button == 3)
+				{
+					imGuiIo.MouseDown[1] = true;
+				}
+				else if (event.xbutton.button == 4 || event.xbutton.button == 5) // Wheel buttons
+				{
+					imGuiIo.MouseWheel += (event.xbutton.button == 4) ? 1.0f : -1.0f;
+				}
+				break;
+			}
+
+			case ButtonRelease:
+			{
+				if (event.xbutton.button == 1)
+					imGuiIo.MouseDown[0] = false;
+				else if (event.xbutton.button == 3)
+					imGuiIo.MouseDown[1] = false;
+				break;
+			}
+
+			case MotionNotify:
+			{
+				updateMousePosition(event.xmotion.x, event.xmotion.y);
+				break;
+			}
+		}
+	}
 
 
 
@@ -45,31 +105,28 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void DebugGuiManagerLinux::startup()
 	{
-		// TODO(sw) implement me
-// 		::QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&mTicksPerSecond));
-// 		::QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mTime));
-// 
-// 		// Keyboard mapping. ImGui will use those indices to peek into the imGuiIo.KeyDown[] array that we will update during the application lifetime.
-// 		ImGuiIO& imGuiIo = ImGui::GetIO();
-// 		imGuiIo.KeyMap[ImGuiKey_Tab]		= VK_TAB;
-// 		imGuiIo.KeyMap[ImGuiKey_LeftArrow]	= VK_LEFT;
-// 		imGuiIo.KeyMap[ImGuiKey_RightArrow]	= VK_RIGHT;
-// 		imGuiIo.KeyMap[ImGuiKey_UpArrow]	= VK_UP;
-// 		imGuiIo.KeyMap[ImGuiKey_DownArrow]	= VK_DOWN;
-// 		imGuiIo.KeyMap[ImGuiKey_PageUp]		= VK_PRIOR;
-// 		imGuiIo.KeyMap[ImGuiKey_PageDown]	= VK_NEXT;
-// 		imGuiIo.KeyMap[ImGuiKey_Home]		= VK_HOME;
-// 		imGuiIo.KeyMap[ImGuiKey_End]		= VK_END;
-// 		imGuiIo.KeyMap[ImGuiKey_Delete]		= VK_DELETE;
-// 		imGuiIo.KeyMap[ImGuiKey_Backspace]	= VK_BACK;
-// 		imGuiIo.KeyMap[ImGuiKey_Enter]		= VK_RETURN;
-// 		imGuiIo.KeyMap[ImGuiKey_Escape]		= VK_ESCAPE;
-// 		imGuiIo.KeyMap[ImGuiKey_A]			= 'A';
-// 		imGuiIo.KeyMap[ImGuiKey_C]			= 'C';
-// 		imGuiIo.KeyMap[ImGuiKey_V]			= 'V';
-// 		imGuiIo.KeyMap[ImGuiKey_X]			= 'X';
-// 		imGuiIo.KeyMap[ImGuiKey_Y]			= 'Y';
-// 		imGuiIo.KeyMap[ImGuiKey_Z]			= 'Z';
+		// Keyboard mapping. ImGui will use those indices to peek into the imGuiIo.KeyDown[] array that we will update during the application lifetime.
+		ImGuiIO& imGuiIo = ImGui::GetIO();
+		// TODO(sw) These keysyms are 16bit values with an value > 512
+// 		imGuiIo.KeyMap[ImGuiKey_Tab]		= XK_Tab;
+// 		imGuiIo.KeyMap[ImGuiKey_LeftArrow]	= XK_Left;
+// 		imGuiIo.KeyMap[ImGuiKey_RightArrow]	= XK_Right;
+// 		imGuiIo.KeyMap[ImGuiKey_UpArrow]	= XK_Up;
+// 		imGuiIo.KeyMap[ImGuiKey_DownArrow]	= XK_Down;
+// 		imGuiIo.KeyMap[ImGuiKey_PageUp]		= XK_Page_Up;
+// 		imGuiIo.KeyMap[ImGuiKey_PageDown]	= XK_Page_Down;
+// 		imGuiIo.KeyMap[ImGuiKey_Home]		= XK_Home;
+// 		imGuiIo.KeyMap[ImGuiKey_End]		= XK_End;
+// 		imGuiIo.KeyMap[ImGuiKey_Delete]		= XK_Delete;
+// 		imGuiIo.KeyMap[ImGuiKey_Backspace]	= XK_BackSpace;
+// 		imGuiIo.KeyMap[ImGuiKey_Enter]		= XK_Return;
+// 		imGuiIo.KeyMap[ImGuiKey_Escape]		= XK_Escape;
+		imGuiIo.KeyMap[ImGuiKey_A]			= XK_a;
+		imGuiIo.KeyMap[ImGuiKey_C]			= XK_c;
+		imGuiIo.KeyMap[ImGuiKey_V]			= XK_v;
+		imGuiIo.KeyMap[ImGuiKey_X]			= XK_x;
+		imGuiIo.KeyMap[ImGuiKey_Y]			= XK_y;
+		imGuiIo.KeyMap[ImGuiKey_Z]			= XK_z;
 
 		// Call the base implementation
 		DebugGuiManager::startup();
@@ -88,12 +145,13 @@ namespace RendererRuntime
 
 		// TODO(sw) implement me
 		
-// 		{ // Setup time step
-// 			INT64 currentTime = 0;
-// 			::QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&currentTime));
-// 			imGuiIo.DeltaTime = static_cast<float>(currentTime - mTime) / mTicksPerSecond;
-// 			mTime = currentTime;
-// 		}
+		{ // Setup time step
+			timeval currentTimeValue;
+			gettimeofday(&currentTimeValue, nullptr);
+			uint64_t currentTime = currentTimeValue.tv_sec * 1000000 + currentTimeValue.tv_usec;
+			imGuiIo.DeltaTime = static_cast<float>(currentTime - mTime) / 1000000.0f;
+			mTime = currentTime;
+		}
 // 
 // 		// Read keyboard modifiers inputs
 // 		imGuiIo.KeyCtrl  = ((::GetKeyState(VK_CONTROL) & 0x8000) != 0);
@@ -111,7 +169,10 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	DebugGuiManagerLinux::DebugGuiManagerLinux(IRendererRuntime& rendererRuntime) :
-		DebugGuiManager(rendererRuntime)
+		DebugGuiManager(rendererRuntime),
+		mWindowWidth(0),
+		mWindowHeigth(0),
+		mTime(0)
 	{
 		// Nothing here
 	}
@@ -119,6 +180,27 @@ namespace RendererRuntime
 	DebugGuiManagerLinux::~DebugGuiManagerLinux()
 	{
 		// Nothing here
+	}
+	
+	void DebugGuiManagerLinux::updateMousePosition(int x, int y)
+	{
+		ImGuiIO& imGuiIo = ImGui::GetIO();
+		float windowWidth  = 1.0f;
+		float windowHeight = 1.0f;
+		{
+			// Ensure that none of them is ever zero
+			if (mWindowWidth >= 1)
+			{
+				windowWidth = static_cast<float>(mWindowWidth);
+			}
+			if (mWindowHeigth >= 1)
+			{
+				windowHeight = static_cast<float>(mWindowHeigth);
+			}
+		}
+		
+		imGuiIo.MousePos.x = static_cast<float>(x) * (imGuiIo.DisplaySize.x / windowWidth);
+		imGuiIo.MousePos.y = static_cast<float>(y) * (imGuiIo.DisplaySize.y / windowHeight);
 	}
 
 

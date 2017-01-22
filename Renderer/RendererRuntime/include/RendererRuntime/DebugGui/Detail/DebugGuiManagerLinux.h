@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/DebugGui/DebugGuiManager.h"
 
+#include <X11/Xlib.h> // Needed for XEvent
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -55,6 +57,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		void onXEvent(XEvent& event);
 
 
 	//[-------------------------------------------------------]
@@ -74,11 +77,16 @@ namespace RendererRuntime
 		DebugGuiManagerLinux(const DebugGuiManagerLinux&) = delete;
 		DebugGuiManagerLinux& operator=(const DebugGuiManagerLinux&) = delete;
 
+		void updateMousePosition(int x, int y);
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		uint32_t mWindowWidth;
+		uint32_t mWindowHeigth;
+		uint64_t mTime; //< Holds the time in microseconds
 
 
 	};
