@@ -26,6 +26,7 @@
 #include "Framework/X11Window.h"
 #include "Framework/PlatformTypes.h"
 
+
 //[-------------------------------------------------------]
 //[ Public static data                                    ]
 //[-------------------------------------------------------]
@@ -65,11 +66,13 @@ bool X11Application::handlePendingEvents()
 	while (!mWindows.empty() && XPending(mDisplay) > 0)
 	{
 		XNextEvent(mDisplay, &event);
-		if (!HandleEvent(event))
-			return false;
+		if (HandleEvent(event))
+		{
+			return true;
+		}
 	}
 
-	return true;
+	return false;
 }
 
 
