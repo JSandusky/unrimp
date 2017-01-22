@@ -179,7 +179,7 @@
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
-</Command>
+copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">
@@ -208,7 +208,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
-</Command>
+copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
@@ -236,7 +236,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
-</Command>
+copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">
@@ -264,7 +264,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
-</Command>
+copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
@@ -305,7 +305,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
-</Command>
+copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">
@@ -345,7 +345,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
-</Command>
+copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
@@ -384,7 +384,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
-</Command>
+copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">
@@ -422,7 +422,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
-</Command>
+copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
