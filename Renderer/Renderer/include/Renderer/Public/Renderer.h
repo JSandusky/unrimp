@@ -1343,7 +1343,6 @@ namespace Renderer
 		};
 		struct SerializedPipelineState
 		{
-			VertexAttributes	  vertexAttributes;
 			PrimitiveTopologyType primitiveTopologyType;
 			RasterizerState		  rasterizerState;
 			DepthStencilState	  depthStencilState;
@@ -1354,8 +1353,9 @@ namespace Renderer
 		};
 		struct PipelineState : public SerializedPipelineState
 		{
-			IRootSignature* rootSignature;
-			IProgram*		program;
+			IRootSignature*  rootSignature;
+			IProgram*		 program;
+			VertexAttributes vertexAttributes;
 		};
 		struct PipelineStateBuilder : public PipelineState
 		{

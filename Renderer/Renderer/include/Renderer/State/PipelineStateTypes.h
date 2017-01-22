@@ -82,7 +82,6 @@ namespace Renderer
 	*/
 	struct SerializedPipelineState
 	{
-		VertexAttributes	  vertexAttributes;				///< Vertex attributes
 		PrimitiveTopologyType primitiveTopologyType;		///< Primitive topology type
 		RasterizerState		  rasterizerState;				///< Rasterizer state
 		DepthStencilState	  depthStencilState;			///< Depth stencil state
@@ -93,8 +92,9 @@ namespace Renderer
 	};
 	struct PipelineState : public SerializedPipelineState
 	{
-		IRootSignature* rootSignature;	///< Root signature (pipeline state instances keep a reference to the program), must be valid
-		IProgram*		program;		///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
+		IRootSignature*  rootSignature;		///< Root signature (pipeline state instances keep a reference to the program), must be valid
+		IProgram*		 program;			///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
+		VertexAttributes vertexAttributes;	///< Vertex attributes
 	};
 	struct PipelineStateBuilder : public PipelineState
 	{

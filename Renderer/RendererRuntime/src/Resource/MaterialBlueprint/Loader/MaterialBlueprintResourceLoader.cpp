@@ -132,6 +132,8 @@ namespace RendererRuntime
 			file.read(&mMaterialBlueprintResource->mPipelineState, sizeof(Renderer::SerializedPipelineState));
 			mMaterialBlueprintResource->mPipelineState.rootSignature = nullptr;
 			mMaterialBlueprintResource->mPipelineState.program = nullptr;
+			mMaterialBlueprintResource->mPipelineState.vertexAttributes.numberOfAttributes = 0;
+			mMaterialBlueprintResource->mPipelineState.vertexAttributes.attributes = nullptr;
 		}
 
 		{ // Read in the uniform buffers
