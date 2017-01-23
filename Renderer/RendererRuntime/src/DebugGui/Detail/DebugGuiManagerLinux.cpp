@@ -51,42 +51,49 @@ namespace RendererRuntime
 				mWindowHeigth = event.xconfigure.height;
 				break;
 			case KeyPress:
-			{
-				const uint32_t keySym = XLookupKeysym(&event.xkey, 0);
-				imGuiIo.KeysDown[keySym] = 1;
-				break;
-			}
-
 			case KeyRelease:
 			{
+				// TODO(sw) Some keysyms are a 16 bit value (e.g. for tab key) map the keysym to a value which is in range of 0-512
 				const uint32_t keySym = XLookupKeysym(&event.xkey, 0);
-				imGuiIo.KeysDown[keySym] = 0;
+				if (keySym < 512)
+				{
+					imGuiIo.KeysDown[keySym] = event.type == KeyPress;
+				}
+				
+				if (keySym == XK_Alt_L)
+				{
+					imGuiIo.KeyAlt = event.type == KeyPress;
+				}
+				else if (keySym == XK_Shift_L)
+				{
+					imGuiIo.KeyShift = event.type == KeyPress;
+				}
+				else if (keySym == XK_Control_L )
+				{
+					imGuiIo.KeyCtrl = event.type == KeyPress;
+				}
+				else if (keySym == XK_Super_L)
+				{
+					imGuiIo.KeySuper = event.type == KeyPress;
+				}
 				break;
 			}
 
 			case ButtonPress:
-			{
-				if (event.xbutton.button == 1)
-				{
-					imGuiIo.MouseDown[0] = true;
-				}
-				else if (event.xbutton.button == 3)
-				{
-					imGuiIo.MouseDown[1] = true;
-				}
-				else if (event.xbutton.button == 4 || event.xbutton.button == 5) // Wheel buttons
-				{
-					imGuiIo.MouseWheel += (event.xbutton.button == 4) ? 1.0f : -1.0f;
-				}
-				break;
-			}
-
 			case ButtonRelease:
 			{
 				if (event.xbutton.button == 1)
-					imGuiIo.MouseDown[0] = false;
+				{
+					imGuiIo.MouseDown[0] = event.type == ButtonPress;
+				}
 				else if (event.xbutton.button == 3)
-					imGuiIo.MouseDown[1] = false;
+				{
+					imGuiIo.MouseDown[1] = event.type == ButtonPress;
+				}
+				else if (event.type == ButtonPress && (event.xbutton.button == 4 || event.xbutton.button == 5)) // Wheel buttons
+				{
+					imGuiIo.MouseWheel += (event.xbutton.button == 4) ? 1.0f : -1.0f;
+				}
 				break;
 			}
 
