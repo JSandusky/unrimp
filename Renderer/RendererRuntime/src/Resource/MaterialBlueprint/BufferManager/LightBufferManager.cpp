@@ -121,7 +121,6 @@ namespace RendererRuntime
 		}
 
 		// Update the texture buffer by using our scratch buffer
-		// TODO(co) This is just a dummy implementation, so full texture buffer size to stress the command buffer
 		if (0 != mNumberOfLights)
 		{
 			Renderer::Command::CopyTextureBufferData::create(commandBuffer, mTextureBuffer, mNumberOfLights * ::detail::NUMBER_OF_BYTES_PER_LIGHT, mTextureScratchBuffer.data());

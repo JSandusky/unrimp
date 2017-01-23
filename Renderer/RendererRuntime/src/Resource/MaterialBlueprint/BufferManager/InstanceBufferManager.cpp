@@ -113,8 +113,9 @@ namespace RendererRuntime
 		static const PassBufferManager::PassData passData = {};
 		materialBlueprintResourceListener.beginFillInstance((nullptr != passBufferManager) ? passBufferManager->getPassData() : passData, objectSpaceToWorldSpaceTransform, materialTechnique);
 
-		{ // Update the uniform scratch buffer
-			uint8_t* scratchBufferPointer = mUniformScratchBuffer.data();
+		// Update the uniform scratch buffer
+		uint8_t* scratchUniformBufferPointer = mUniformScratchBuffer.data();
+		{
 			const MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = instanceUniformBuffer->uniformBufferElementProperties;
 			const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
 			for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
@@ -128,7 +129,7 @@ namespace RendererRuntime
 				if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
 				{
 					// Move the scratch buffer pointer to the location of the next aligned package and restart the package bytes counter
-					scratchBufferPointer += 4 * 4 - numberOfPackageBytes;
+					scratchUniformBufferPointer += 4 * 4 - numberOfPackageBytes;
 					numberOfPackageBytes = 0;
 				}
 				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
@@ -137,7 +138,7 @@ namespace RendererRuntime
 				const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
 				if (MaterialProperty::Usage::INSTANCE_REFERENCE == usage)	// Most likely the case, so check this first
 				{
-					if (!materialBlueprintResourceListener.fillInstanceValue(uniformBufferElementProperty.getReferenceValue(), scratchBufferPointer, valueTypeNumberOfBytes))
+					if (!materialBlueprintResourceListener.fillInstanceValue(uniformBufferElementProperty.getReferenceValue(), scratchUniformBufferPointer, valueTypeNumberOfBytes))
 					{
 						// Error, can't resolve reference
 						assert(false);
@@ -152,7 +153,7 @@ namespace RendererRuntime
 					if (nullptr != materialProperty)
 					{
 						// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
-						memcpy(scratchBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
+						memcpy(scratchUniformBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
 					}
 					else
 					{
@@ -165,7 +166,7 @@ namespace RendererRuntime
 					// Referencing a static uniform buffer element property inside an instance uniform buffer doesn't make really sense performance wise, but don't forbid it
 
 					// Just copy over the property value
-					memcpy(scratchBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
+					memcpy(scratchUniformBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
 				}
 				else
 				{
@@ -174,25 +175,27 @@ namespace RendererRuntime
 				}
 
 				// Next property
-				scratchBufferPointer += valueTypeNumberOfBytes;
+				scratchUniformBufferPointer += valueTypeNumberOfBytes;
 			}
 		}
 
-		{ // Update the texture scratch buffer
+		// Update the texture scratch buffer
+		float* scratchTextureBufferPointer = reinterpret_cast<float*>(mTextureScratchBuffer.data());
+		{
 			// TODO(co) Check "InstanceTextureBuffer" value
-			float* scratchBufferPointer = reinterpret_cast<float*>(mTextureScratchBuffer.data());
 
 			{ // "POSITION_ROTATION_SCALE"-semantic
 				// xyz position
-				memcpy(scratchBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceTransform.position), sizeof(float) * 3);
-				scratchBufferPointer += 4;
+				memcpy(scratchTextureBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceTransform.position), sizeof(float) * 3);
+				scratchTextureBufferPointer += 4;
 
 				// xyzw rotation
-				memcpy(scratchBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceTransform.rotation), sizeof(float) * 4);
-				scratchBufferPointer += 4;
+				memcpy(scratchTextureBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceTransform.rotation), sizeof(float) * 4);
+				scratchTextureBufferPointer += 4;
 
 				// xyz scale
-				memcpy(scratchBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceTransform.scale), sizeof(float) * 3);
+				memcpy(scratchTextureBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceTransform.scale), sizeof(float) * 3);
+				scratchTextureBufferPointer += 4;
 			}
 
 			// "OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"-semantic
@@ -200,14 +203,13 @@ namespace RendererRuntime
 			glm::mat4 objectSpaceToWorldSpaceMatrix;
 			objectSpaceToWorldSpaceTransform.getAsMatrix(objectSpaceToWorldSpaceMatrix);
 			objectSpaceToWorldSpaceMatrix = glm::transpose(objectSpaceToWorldSpaceMatrix);
-			memcpy(scratchBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceMatrix), sizeof(float) * 4 * 4);
+			memcpy(scratchTextureBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceMatrix), sizeof(float) * 4 * 4);
 			*/
 		}
 
 		// Update the uniform and texture buffer by using our scratch buffer
-		// TODO(co) This is just a dummy implementation, so full uniform buffer size to stress the command buffer
-		Renderer::Command::CopyUniformBufferData::create(commandBuffer, mUniformBuffer, static_cast<uint32_t>(mUniformScratchBuffer.size()), mUniformScratchBuffer.data());
-		Renderer::Command::CopyTextureBufferData::create(commandBuffer, mTextureBuffer, static_cast<uint32_t>(mTextureScratchBuffer.size()), mTextureScratchBuffer.data());
+		Renderer::Command::CopyUniformBufferData::create(commandBuffer, mUniformBuffer, static_cast<uint32_t>(scratchUniformBufferPointer - mUniformScratchBuffer.data()), mUniformScratchBuffer.data());
+		Renderer::Command::CopyTextureBufferData::create(commandBuffer, mTextureBuffer, static_cast<uint32_t>(reinterpret_cast<uint8_t*>(scratchTextureBufferPointer) - mTextureScratchBuffer.data()), mTextureScratchBuffer.data());
 	}
 
 	void InstanceBufferManager::fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer)
