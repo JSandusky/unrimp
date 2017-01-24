@@ -224,6 +224,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">
     <TargetName>$(ProjectName)StaticD</TargetName>
+    <OutDir>..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
     <OutDir>..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
@@ -232,6 +234,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">
     <TargetName>$(ProjectName)D</TargetName>
+    <OutDir>..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
     <OutDir>..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
@@ -240,6 +244,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">
     <TargetName>$(ProjectName)Static</TargetName>
+    <OutDir>..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
     <OutDir>..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
@@ -248,6 +254,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">
     <TargetName>$(ProjectName)</TargetName>
+    <OutDir>..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
     <ClCompile>
