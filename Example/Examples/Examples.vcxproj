@@ -528,6 +528,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Framework\LinuxHeader.h" />
     <ClInclude Include="src\Framework\Main.h" />
     <ClInclude Include="src\Framework\PlatformTypes.h" />
+    <ClInclude Include="src\Framework\QtRunner\ExampleRunnerQt4.h" />
     <ClInclude Include="src\Framework\Quaternion.h" />
     <ClInclude Include="src\Framework\RefCount.h" />
     <ClInclude Include="src\Framework\RefCountPtr.h" />
@@ -594,6 +595,16 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClCompile Include="src\Framework\IApplicationImpl.cpp" />
     <ClCompile Include="src\Framework\IApplicationRenderer.cpp" />
     <ClCompile Include="src\Framework\IApplicationRendererRuntime.cpp" />
+    <ClCompile Include="src\Framework\QtRunner\ExampleRunnerQt4.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\Framework\StdFileManager.cpp" />
     <ClCompile Include="src\Framework\Stopwatch.cpp" />
     <ClCompile Include="src\Framework\X11Application.cpp">

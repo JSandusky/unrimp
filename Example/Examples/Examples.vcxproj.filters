@@ -67,6 +67,9 @@
     <Filter Include="Basics\FirstIndirectBuffer">
       <UniqueIdentifier>{3249dc8b-2da1-4ba9-8967-e02803a43e41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\QtRunner">
+      <UniqueIdentifier>{be97a96a-64ab-4665-a15f-eff8501a15a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Framework\IApplication.h">
@@ -420,6 +423,9 @@
     <ClInclude Include="src\Framework\StdFileManager.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="src\Framework\QtRunner\ExampleRunnerQt4.h">
+      <Filter>Framework\QtRunner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -548,6 +554,9 @@
     </ClCompile>
     <ClCompile Include="src\Framework\StdFileManager.cpp">
       <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Framework\QtRunner\ExampleRunnerQt4.cpp">
+      <Filter>Framework\QtRunner</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
