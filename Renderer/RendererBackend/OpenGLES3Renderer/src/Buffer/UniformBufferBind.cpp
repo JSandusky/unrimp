@@ -48,7 +48,7 @@ namespace OpenGLES3Renderer
 
 		// Bind this OpenGL uniform buffer and upload the data
 		glBindBuffer(GL_UNIFORM_BUFFER, mOpenGLESUniformBuffer);
-		// -> Usage: These constants directly map to GL_EXT_vertex_buffer_object and OpenGL ES 2 constants, do not change them
+		// -> Usage: These constants directly map to GL_EXT_vertex_buffer_object and OpenGL ES 3 constants, do not change them
 		glBufferData(GL_UNIFORM_BUFFER, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP

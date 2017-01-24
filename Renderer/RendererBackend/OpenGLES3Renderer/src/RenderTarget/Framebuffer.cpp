@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/RenderTarget/Framebuffer.h"
 #include "OpenGLES3Renderer/Texture/Texture2D.h"
-#include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
+#include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <climits> // For UINT_MAX
@@ -50,19 +50,19 @@ namespace OpenGLES3Renderer
 		mHeight(1),
 		mGenerateMipmaps(false)
 	{
-		// Unlike the "GL_ARB_framebuffer_object"-extension of OpenGL, in OpenGL ES 2 all
+		// Unlike the "GL_ARB_framebuffer_object"-extension of OpenGL, in OpenGL ES 3 all
 		// textures attached to the framebuffer must have the same width and height
 
-		// Create the OpenGL ES 2 framebuffer
+		// Create the OpenGL ES 3 framebuffer
 		glGenFramebuffers(1, &mOpenGLES2Framebuffer);
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently bound OpenGL ES 2 framebuffer
+			// Backup the currently bound OpenGL ES 3 framebuffer
 			GLint openGLES2FramebufferBackup = 0;
 			glGetIntegerv(GL_FRAMEBUFFER_BINDING, &openGLES2FramebufferBackup);
 		#endif
 
-		// Bind this OpenGL ES 2 framebuffer
+		// Bind this OpenGL ES 3 framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, mOpenGLES2Framebuffer);
 
 		// Are there any color textures? (usually there are, so we just keep the "glBindFramebuffer()" above without trying to make this method implementation more complex)
@@ -89,7 +89,7 @@ namespace OpenGLES3Renderer
 						if (&openGLES3Renderer != &(*colorTexture)->getRenderer())
 						{
 							// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
-							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: The given color texture at index %d is owned by another renderer instance", colorTexture - colorTextures)
+							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: The given color texture at index %d is owned by another renderer instance", colorTexture - colorTextures)
 
 							// Continue, there's no point in trying to do any error handling in here
 							continue;
@@ -103,7 +103,7 @@ namespace OpenGLES3Renderer
 						{
 							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
 
-							// Set the OpenGL ES 2 framebuffer color attachment
+							// Set the OpenGL ES 3 framebuffer color attachment
 							glFramebufferTexture2D(GL_FRAMEBUFFER, openGLES2Attachment, GL_TEXTURE_2D, texture2D->getOpenGLES2Texture(), 0);
 
 							// If this is the primary render target, get the framebuffer width and height
@@ -140,7 +140,7 @@ namespace OpenGLES3Renderer
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
 						default:
-							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: The type of the given color texture at index %d is not supported", colorTexture - colorTextures)
+							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: The type of the given color texture at index %d is not supported", colorTexture - colorTextures)
 							break;
 					}
 				}
@@ -192,57 +192,57 @@ namespace OpenGLES3Renderer
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
 				default:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: The type of the given depth stencil texture is not supported")
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: The type of the given depth stencil texture is not supported")
 					break;
 			}
 		}
 
 		#ifdef RENDERER_OUTPUT_DEBUG
-			// Check the status of the OpenGL ES 2 framebuffer
+			// Check the status of the OpenGL ES 3 framebuffer
 			const GLenum openGLES2Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 			switch (openGLES2Status)
 			{
 				case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Not all framebuffer attachment points are framebuffer attachment complete (\"GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT\")")
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Not all framebuffer attachment points are framebuffer attachment complete (\"GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT\")")
 					break;
 
 				case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: No images are attached to the framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT\")")
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: No images are attached to the framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT\")")
 					break;
 
-			// Not supported by OpenGL ES 2
+			// Not supported by OpenGL ES 3
 			//	case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Incomplete draw buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER\")")
+			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Incomplete draw buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER\")")
 			//		break;
 
-			// Not supported by OpenGL ES 2
+			// Not supported by OpenGL ES 3
 			//	case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Incomplete read buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER\")")
+			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Incomplete read buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER\")")
 			//		break;
 
-			// Not supported by OpenGL ES 2
+			// Not supported by OpenGL ES 3
 			//	case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Incomplete multisample framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE\")")
+			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Incomplete multisample framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE\")")
 			//		break;
 
-			// Not supported by OpenGL ES 2
+			// Not supported by OpenGL ES 3
 			//	case GL_FRAMEBUFFER_UNDEFINED:
-			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Undefined framebuffer (\"GL_FRAMEBUFFER_UNDEFINED\")")
+			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Undefined framebuffer (\"GL_FRAMEBUFFER_UNDEFINED\")")
 			//		break;
 
 				case GL_FRAMEBUFFER_UNSUPPORTED:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: The combination of internal formats of the attached images violates an implementation-dependent set of restrictions (\"GL_FRAMEBUFFER_UNSUPPORTED\")")
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: The combination of internal formats of the attached images violates an implementation-dependent set of restrictions (\"GL_FRAMEBUFFER_UNSUPPORTED\")")
 					break;
 
-				// Not supported by OpenGL ES 2
+				// Not supported by OpenGL ES 3
 				case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Not all attached images have the same width and height (\"GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS\")")
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Not all attached images have the same width and height (\"GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS\")")
 					break;
 
-				// Not supported by OpenGL ES 2
+				// Not supported by OpenGL ES 3
 				// OpenGL: From "GL_EXT_framebuffer_object" (should no longer matter, should)
 			//	case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Incomplete formats framebuffer object (\"GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT\")")
+			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Incomplete formats framebuffer object (\"GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT\")")
 			//		break;
 
 				default:
@@ -253,7 +253,7 @@ namespace OpenGLES3Renderer
 		#endif
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Be polite and restore the previous bound OpenGL ES 2 framebuffer
+			// Be polite and restore the previous bound OpenGL ES 3 framebuffer
 			glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLES2FramebufferBackup));
 		#endif
 
@@ -272,7 +272,7 @@ namespace OpenGLES3Renderer
 
 	Framebuffer::~Framebuffer()
 	{
-		// Destroy the OpenGL ES 2 framebuffer
+		// Destroy the OpenGL ES 3 framebuffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteFramebuffers(1, &mOpenGLES2Framebuffer);
 		glDeleteRenderbuffers(1, &mDepthRenderbuffer);
@@ -319,7 +319,7 @@ namespace OpenGLES3Renderer
 				if (texture2D->getGenerateMipmaps())
 				{
 					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-						// Backup the currently bound OpenGL ES 2 texture
+						// Backup the currently bound OpenGL ES 3 texture
 						// TODO(co) It's possible to avoid calling this multiple times
 						GLint openGLES2TextureBackup = 0;
 						glGetIntegerv(GL_TEXTURE_BINDING_2D, &openGLES2TextureBackup);
@@ -331,7 +331,7 @@ namespace OpenGLES3Renderer
 					glGenerateMipmap(GL_TEXTURE_2D);
 
 					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-						// Be polite and restore the previous bound OpenGL ES 2 texture
+						// Be polite and restore the previous bound OpenGL ES 3 texture
 						glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(openGLES2TextureBackup));
 					#endif
 				}

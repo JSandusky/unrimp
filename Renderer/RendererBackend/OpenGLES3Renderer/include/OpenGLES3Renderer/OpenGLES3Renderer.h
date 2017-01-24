@@ -75,7 +75,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 renderer class
+	*    OpenGL ES 3 renderer class
 	*/
 	class OpenGLES3Renderer : public Renderer::IRenderer
 	{
@@ -255,12 +255,12 @@ namespace OpenGLES3Renderer
 		Renderer::IShaderLanguage *mShaderLanguageGlsl;					///< GLSL shader language instance (we keep a reference to it), can be a null pointer
 		RootSignature			  *mGraphicsRootSignature;				///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState	  *mDefaultSamplerState;				///< Default rasterizer state (we keep a reference to it), can be a null pointer
-		uint32_t				   mOpenGLES2CopyResourceFramebuffer;	///< OpenGL ES 2 framebuffer ("container" object, not shared between OpenGL ES 2 contexts) used by "OpenGLES3Renderer::OpenGLES3Renderer::copyResource()", can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t				   mOpenGLES2CopyResourceFramebuffer;	///< OpenGL ES 3 framebuffer ("container" object, not shared between OpenGL ES 3 contexts) used by "OpenGLES3Renderer::OpenGLES3Renderer::copyResource()", can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
 		VertexArray *mVertexArray;					///< Currently set vertex array (we keep a reference to it), can be a null pointer
-		uint32_t	 mOpenGLES2PrimitiveTopology;	///< OpenGL ES 2 primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
+		uint32_t	 mOpenGLES2PrimitiveTopology;	///< OpenGL ES 3 primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
@@ -269,7 +269,7 @@ namespace OpenGLES3Renderer
 		//[-------------------------------------------------------]
 		//[ States                                                ]
 		//[-------------------------------------------------------]
-		uint32_t mOpenGLES2Program;	///< Currently set OpenGL ES 2 program, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES2Program;	///< Currently set OpenGL ES 3 program, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

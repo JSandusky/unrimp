@@ -53,7 +53,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 depth stencil state class
+	*    OpenGL ES 3 depth stencil state class
 	*/
 	class DepthStencilState : public IState
 	{
@@ -80,7 +80,7 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Set the OpenGL ES 2 depth stencil states
+		*    Set the OpenGL ES 3 depth stencil states
 		*/
 		void setOpenGLES2DepthStencilStates() const;
 

@@ -59,7 +59,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 pipeline state class
+	*    OpenGL ES 3 pipeline state class
 	*/
 	class PipelineState : public Renderer::IPipelineState
 	{
@@ -74,7 +74,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] pipelineState
 		*    Pipeline state to use
 		*/

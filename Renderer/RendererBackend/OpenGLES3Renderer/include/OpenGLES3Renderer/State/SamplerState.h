@@ -51,7 +51,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 sampler state class
+	*    OpenGL ES 3 sampler state class
 	*/
 	class SamplerState : public Renderer::ISamplerState
 	{
@@ -66,7 +66,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] samplerState
 		*    Sampler state to use
 		*/
@@ -80,7 +80,7 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Set the OpenGL ES 2 sampler states
+		*    Set the OpenGL ES 3 sampler states
 		*/
 		void setOpenGLES2SamplerStates() const;
 
@@ -89,7 +89,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// "Renderer::SamplerState" translated into OpenGL ES 2
+		// "Renderer::SamplerState" translated into OpenGL ES 3
 		int   mOpenGLMagFilterMode;			///< Renderer::SamplerState::filter (type "GLint" not used in here in order to keep the header slim)
 		int   mOpenGLMinFilterMode;			///< Renderer::SamplerState::filter (type "GLint" not used in here in order to keep the header slim)
 		int   mOpenGLTextureAddressModeS;	///< Renderer::SamplerState::addressU (type "GLint" not used in here in order to keep the header slim)

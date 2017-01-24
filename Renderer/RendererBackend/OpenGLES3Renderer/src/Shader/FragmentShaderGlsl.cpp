@@ -54,7 +54,7 @@ namespace OpenGLES3Renderer
 
 	FragmentShaderGlsl::~FragmentShaderGlsl()
 	{
-		// Destroy the OpenGL ES 2 shader
+		// Destroy the OpenGL ES 3 shader
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteShader(mOpenGLES2Shader);
 	}

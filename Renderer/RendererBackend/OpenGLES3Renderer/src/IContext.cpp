@@ -43,7 +43,7 @@ namespace OpenGLES3Renderer
 	IContext::~IContext()
 	{
 		// Everything must be done in "deinitialize()" because when we're in here, the shared libraries
-		// are already unloaded and we are no longer allowed to use EGL or OpenGL ES 2 functions
+		// are already unloaded and we are no longer allowed to use EGL or OpenGL ES 3 functions
 	}
 
 	bool IContext::isInitialized() const
@@ -167,7 +167,7 @@ namespace OpenGLES3Renderer
 				}
 				else
 				{
-					// Error! Failed to choose EGL configuration! (OpenGL ES 2 not supported?)
+					// Error! Failed to choose EGL configuration! (OpenGL ES 3 not supported?)
 				}
 			}
 			else

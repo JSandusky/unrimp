@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/Buffer/VertexBuffer.h"
 #include "OpenGLES3Renderer/Mapping.h"
-#include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
+#include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 
@@ -42,28 +42,28 @@ namespace OpenGLES3Renderer
 		mOpenGLES2ArrayBuffer(0),
 		mBufferSize(numberOfBytes)
 	{
-		// Create the OpenGL ES 2 array buffer
+		// Create the OpenGL ES 3 array buffer
 		glGenBuffers(1, &mOpenGLES2ArrayBuffer);
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently bound OpenGL ES 2 array buffer
+			// Backup the currently bound OpenGL ES 3 array buffer
 			GLint openGLES2ArrayBufferBackup = 0;
 			glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
 		#endif
 
-		// Bind this OpenGL ES 2 array buffer and upload the data
+		// Bind this OpenGL ES 3 array buffer and upload the data
 		glBindBuffer(GL_ARRAY_BUFFER, mOpenGLES2ArrayBuffer);
 		glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(numberOfBytes), data, Mapping::getOpenGLES2Type(bufferUsage));
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Be polite and restore the previous bound OpenGL ES 2 array buffer
+			// Be polite and restore the previous bound OpenGL ES 3 array buffer
 			glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayBufferBackup));
 		#endif
 	}
 
 	VertexBuffer::~VertexBuffer()
 	{
-		// Destroy the OpenGL ES 2 array buffer
+		// Destroy the OpenGL ES 3 array buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteBuffers(1, &mOpenGLES2ArrayBuffer);
 	}

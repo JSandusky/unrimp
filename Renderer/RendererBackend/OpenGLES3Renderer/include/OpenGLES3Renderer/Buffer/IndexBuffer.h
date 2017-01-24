@@ -53,7 +53,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 index buffer object (IBO, "element array buffer" in OpenGL terminology) class
+	*    OpenGL ES 3 index buffer object (IBO, "element array buffer" in OpenGL terminology) class
 	*/
 	class IndexBuffer : public Renderer::IIndexBuffer
 	{
@@ -68,7 +68,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the index buffer, must be valid
 		*  @param[in] indexBufferFormat
@@ -88,19 +88,19 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Return the OpenGL ES 2 element array buffer
+		*    Return the OpenGL ES 3 element array buffer
 		*
 		*  @return
-		*    The OpenGL ES 2 element array buffer, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*    The OpenGL ES 3 element array buffer, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
 		inline uint32_t getOpenGLES2ElementArrayBuffer() const;
 
 		/**
 		*  @brief
-		*    Return the OpenGL ES 2 element array buffer data type
+		*    Return the OpenGL ES 3 element array buffer data type
 		*
 		*  @return
-		*    The OpenGL ES 2 element array buffer data type (type "GLenum" not used in here in order to keep the header slim)
+		*    The OpenGL ES 3 element array buffer data type (type "GLenum" not used in here in order to keep the header slim)
 		*/
 		inline uint32_t getOpenGLES2Type() const;
 
@@ -120,8 +120,8 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t mOpenGLES2ElementArrayBuffer;	///< OpenGL ES 2 element array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		uint32_t mOpenGLES2Type;				///< OpenGL ES 2 element array buffer data type (type "GLenum" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES2ElementArrayBuffer;	///< OpenGL ES 3 element array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES2Type;				///< OpenGL ES 3 element array buffer data type (type "GLenum" not used in here in order to keep the header slim)
 		uint32_t mIndexSizeInBytes;				///< Number of bytes of an index
 		uint32_t mBufferSize;					///< Holds the size of the buffer
 

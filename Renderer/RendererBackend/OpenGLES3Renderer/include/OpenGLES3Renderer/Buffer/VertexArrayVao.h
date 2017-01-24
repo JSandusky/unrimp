@@ -57,7 +57,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 vertex array class, effective vertex array object (VAO)
+	*    OpenGL ES 3 vertex array class, effective vertex array object (VAO)
 	*/
 	class VertexArrayVao : public VertexArray
 	{
@@ -72,7 +72,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] vertexAttributes
 		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] numberOfVertexBuffers
@@ -92,10 +92,10 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Return the OpenGL ES 2 vertex array
+		*    Return the OpenGL ES 3 vertex array
 		*
 		*  @return
-		*    The OpenGL ES 2 vertex array, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*    The OpenGL ES 3 vertex array, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
 		inline uint32_t getOpenGLES2VertexArray() const;
 
@@ -104,7 +104,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t	   mOpenGLES2VertexArray;	///< OpenGL ES 2 vertex array, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t	   mOpenGLES2VertexArray;	///< OpenGL ES 3 vertex array, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t	   mNumberOfVertexBuffers;	///< Number of vertex buffers
 		VertexBuffer **mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
 

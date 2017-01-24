@@ -52,7 +52,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 vertex buffer object (VBO, "array buffer" in OpenGL terminology) class
+	*    OpenGL ES 3 vertex buffer object (VBO, "array buffer" in OpenGL terminology) class
 	*/
 	class VertexBuffer : public Renderer::IVertexBuffer
 	{
@@ -67,7 +67,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the vertex buffer, must be valid
 		*  @param[in] data
@@ -85,10 +85,10 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Return the OpenGL ES 2 array buffer
+		*    Return the OpenGL ES 3 array buffer
 		*
 		*  @return
-		*    The OpenGL ES 2 array buffer, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*    The OpenGL ES 3 array buffer, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
 		inline uint32_t getOpenGLES2ArrayBuffer() const;
 
@@ -99,7 +99,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t mOpenGLES2ArrayBuffer;	///< OpenGL ES 2 array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES2ArrayBuffer;	///< OpenGL ES 3 array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t mBufferSize;			///< Holds the size of the buffer
 
 

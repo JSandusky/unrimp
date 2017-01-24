@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/Texture/Texture2D.h"
 #include "OpenGLES3Renderer/Mapping.h"
-#include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
+#include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 
@@ -52,7 +52,7 @@ namespace OpenGLES3Renderer
 			GLint openGLES2AlignmentBackup = 0;
 			glGetIntegerv(GL_UNPACK_ALIGNMENT, &openGLES2AlignmentBackup);
 
-			// Backup the currently bound OpenGL ES 2 texture
+			// Backup the currently bound OpenGL ES 3 texture
 			GLint openGLES2TextureBackup = 0;
 			glGetIntegerv(GL_TEXTURE_BINDING_2D, &openGLES2TextureBackup);
 		#endif
@@ -66,7 +66,7 @@ namespace OpenGLES3Renderer
 		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
-		// Create the OpenGL ES 2 texture instance
+		// Create the OpenGL ES 3 texture instance
 		glGenTextures(1, &mOpenGLES2Texture);
 		glBindTexture(GL_TEXTURE_2D, mOpenGLES2Texture);
 
@@ -139,7 +139,7 @@ namespace OpenGLES3Renderer
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Be polite and restore the previous bound OpenGL ES 2 texture
+			// Be polite and restore the previous bound OpenGL ES 3 texture
 			glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(openGLES2TextureBackup));
 
 			// Restore previous alignment
@@ -149,7 +149,7 @@ namespace OpenGLES3Renderer
 
 	Texture2D::~Texture2D()
 	{
-		// Destroy the OpenGL ES 2 texture instance
+		// Destroy the OpenGL ES 3 texture instance
 		// -> Silently ignores 0's and names that do not correspond to existing textures
 		glDeleteTextures(1, &mOpenGLES2Texture);
 	}

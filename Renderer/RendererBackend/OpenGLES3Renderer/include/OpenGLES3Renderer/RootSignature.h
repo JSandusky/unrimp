@@ -53,7 +53,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 root signature ("pipeline layout" in Vulkan terminology) class
+	*    OpenGL ES 3 root signature ("pipeline layout" in Vulkan terminology) class
 	*/
 	class RootSignature : public Renderer::IRootSignature
 	{
@@ -68,7 +68,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] rootSignature
 		*    Root signature to use
 		*/
@@ -102,7 +102,7 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Set the OpenGL ES 2 sampler states
+		*    Set the OpenGL ES 3 sampler states
 		*
 		*  @param[in] samplerRootParameterIndex
 		*    Sampler root parameter index

@@ -51,23 +51,23 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 runtime linking context
+	*    OpenGL ES 3 runtime linking context
 	*
 	*  @remarks
-	*    This context implementation links against the OpenGL ES 2 shared libraries at runtime. There are
-	*    three typical variations of this OpenGL ES 2 shared libraries:
+	*    This context implementation links against the OpenGL ES 3 shared libraries at runtime. There are
+	*    three typical variations of this OpenGL ES 3 shared libraries:
 	*
-	*    - Implementation for OpenGL ES 2 on mobile devices.
+	*    - Implementation for OpenGL ES 3 on mobile devices.
 	*
-	*    - Implementation for OpenGL ES 2 on desktop PC by using a OpenGL ES 2 capable graphics driver.
+	*    - Implementation for OpenGL ES 3 on desktop PC by using a OpenGL ES 3 capable graphics driver.
 	*      Basing on the example http://developer.amd.com/samples/assets/egl_sample.zip from
 	*      http://blogs.amd.com/developer/2010/07/26/opengl-es-2-0-coming-to-a-desktop-near-you/
 	*      Tested with "AMD Catalyst 11.8" on a "ATI Mobility Radeon HD 4850", no errors, but just got
 	*      a white screen when Windows Aero is active. As soon as I disabled Windows Aero all went fine.
 	*
-	*    - Implementation for testing OpenGL ES 2 on a desktop PC using OpenGL ES 2 Emulator from ARM
+	*    - Implementation for testing OpenGL ES 3 on a desktop PC using OpenGL ES 3 Emulator from ARM
 	*      (http://www.malideveloper.com/tools/software-development/opengl-es-20-emulator.php). If you have
-	*      a OpenGL ES 2 capable graphics driver, you may want to use the "ContextNative"-implementation
+	*      a OpenGL ES 3 capable graphics driver, you may want to use the "ContextNative"-implementation
 	*      instead.
 	*/
 	class ContextRuntimeLinking : public IContext
@@ -132,19 +132,19 @@ namespace OpenGLES3Renderer
 		*    "true" if all went fine, else "false"
 		*
 		*  @note
-		*    - Do only call this method if the OpenGL ES 2 shared library was loaded successfully
+		*    - Do only call this method if the OpenGL ES 3 shared library was loaded successfully
 		*/
 		bool loadEGLEntryPoints();
 
 		/**
 		*  @brief
-		*    Loads the OpenGL ES 2 entry points
+		*    Loads the OpenGL ES 3 entry points
 		*
 		*  @return
 		*    "true" if all went fine, else "false"
 		*
 		*  @note
-		*    - Do only call this method if the OpenGL ES 2 shared library was loaded successfully
+		*    - Do only call this method if the OpenGL ES 3 shared library was loaded successfully
 		*/
 		bool loadGLESEntryPoints();
 
@@ -154,7 +154,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	private:
 		void					 *mEGLSharedLibrary;		///< EGL shared library, can be a null pointer
-		void					 *mGLESSharedLibrary;		///< OpenGL ES 2 shared library, can be a null pointer
+		void					 *mGLESSharedLibrary;		///< OpenGL ES 3 shared library, can be a null pointer
 		bool					  mEntryPointsRegistered;	///< Entry points successfully registered?
 		ExtensionsRuntimeLinking *mExtensions;				///< Extensions instance, always valid!
 

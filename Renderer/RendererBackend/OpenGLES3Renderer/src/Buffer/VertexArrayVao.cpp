@@ -25,7 +25,7 @@
 #include "OpenGLES3Renderer/Buffer/IndexBuffer.h"
 #include "OpenGLES3Renderer/Buffer/VertexBuffer.h"
 #include "OpenGLES3Renderer/Mapping.h"
-#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
+#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 
@@ -45,24 +45,24 @@ namespace OpenGLES3Renderer
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
 		mVertexBuffers((mNumberOfVertexBuffers > 0) ? new VertexBuffer*[mNumberOfVertexBuffers] : nullptr)	// Guaranteed to be filled below, so we don't need to care to initialize the content in here
 	{
-		// Create the OpenGL ES 2 vertex array
+		// Create the OpenGL ES 3 vertex array
 		glGenVertexArraysOES(1, &mOpenGLES2VertexArray);
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently bound OpenGL ES 2 array buffer
+			// Backup the currently bound OpenGL ES 3 array buffer
 			GLint openGLES2ArrayBufferBackup = 0;
 			glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
 
-			// Backup the currently bound OpenGL ES 2 element array buffer
+			// Backup the currently bound OpenGL ES 3 element array buffer
 			GLint openGLES2ElementArrayBufferBackup = 0;
 			glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ElementArrayBufferBackup);
 
-			// Backup the currently bound OpenGL ES 2 vertex array
+			// Backup the currently bound OpenGL ES 3 vertex array
 			GLint openGLES2VertexArrayBackup = 0;
 			glGetIntegerv(GL_VERTEX_ARRAY_BINDING_OES, &openGLES2VertexArrayBackup);
 		#endif
 
-		// Bind this OpenGL ES 2 vertex array
+		// Bind this OpenGL ES 3 vertex array
 		glBindVertexArrayOES(mOpenGLES2VertexArray);
 
 		{ // Add a reference to the used vertex buffers
@@ -77,14 +77,14 @@ namespace OpenGLES3Renderer
 			}
 		}
 
-		{ // Enable OpenGL ES 2 vertex attribute arrays
+		{ // Enable OpenGL ES 3 vertex attribute arrays
 			// Loop through all attributes
 			// -> We're using "glBindAttribLocation()" when linking the program so we have known attribute locations (the vertex array can't know about the program)
 			GLuint attributeLocation = 0;
 			const Renderer::VertexAttribute *attributeEnd = vertexAttributes.attributes + vertexAttributes.numberOfAttributes;
 			for (const Renderer::VertexAttribute *attribute = vertexAttributes.attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
 			{
-				// Set the OpenGL ES 2 vertex attribute pointer
+				// Set the OpenGL ES 3 vertex attribute pointer
 				const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
 				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES2ArrayBuffer());
 				glVertexAttribPointer(attributeLocation,
@@ -94,7 +94,7 @@ namespace OpenGLES3Renderer
 									  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
 									  reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 
-				// Enable OpenGL ES 2 vertex attribute array
+				// Enable OpenGL ES 3 vertex attribute array
 				glEnableVertexAttribArray(attributeLocation);
 			}
 
@@ -102,26 +102,26 @@ namespace OpenGLES3Renderer
 			// -> In case of no index buffer we don't bind buffer 0, there's not really a point in it
 			if (nullptr != indexBuffer)
 			{
-				// Bind OpenGL ES 2 element array buffer
+				// Bind OpenGL ES 3 element array buffer
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->getOpenGLES2ElementArrayBuffer());
 			}
 		}
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Be polite and restore the previous bound OpenGL ES 2 vertex array
+			// Be polite and restore the previous bound OpenGL ES 3 vertex array
 			glBindVertexArrayOES(static_cast<GLuint>(openGLES2VertexArrayBackup));
 
-			// Be polite and restore the previous bound OpenGL ES 2 element array buffer
+			// Be polite and restore the previous bound OpenGL ES 3 element array buffer
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ElementArrayBufferBackup));
 
-			// Be polite and restore the previous bound OpenGL ES 2 array buffer
+			// Be polite and restore the previous bound OpenGL ES 3 array buffer
 			glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayBufferBackup));
 		#endif
 	}
 
 	VertexArrayVao::~VertexArrayVao()
 	{
-		// Destroy the OpenGL ES 2 vertex array
+		// Destroy the OpenGL ES 3 vertex array
 		// -> Silently ignores 0's and names that do not correspond to existing vertex array objects
 		glDeleteVertexArraysOES(1, &mOpenGLES2VertexArray);
 

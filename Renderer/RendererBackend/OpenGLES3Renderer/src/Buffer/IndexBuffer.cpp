@@ -47,24 +47,24 @@ namespace OpenGLES3Renderer
 		// "GL_UNSIGNED_INT" is only allowed when the "GL_OES_element_index_uint" extension is there
 		if (Renderer::IndexBufferFormat::UNSIGNED_INT != indexBufferFormat || openGLES3Renderer.getContext().getExtensions().isGL_OES_element_index_uint())
 		{
-			// Create the OpenGL ES 2 element array buffer
+			// Create the OpenGL ES 3 element array buffer
 			glGenBuffers(1, &mOpenGLES2ElementArrayBuffer);
 
-			// Set the OpenGL ES 2 index buffer data type
+			// Set the OpenGL ES 3 index buffer data type
 			mOpenGLES2Type = Mapping::getOpenGLES2Type(indexBufferFormat);
 
 			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Backup the currently bound OpenGL ES 2 element array buffer
+				// Backup the currently bound OpenGL ES 3 element array buffer
 				GLint openGLES2ElementArrayBufferBackup = 0;
 				glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ElementArrayBufferBackup);
 			#endif
 
-			// Bind this OpenGL ES 2 element array buffer and upload the data
+			// Bind this OpenGL ES 3 element array buffer and upload the data
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mOpenGLES2ElementArrayBuffer);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(numberOfBytes), data, Mapping::getOpenGLES2Type(bufferUsage));
 
 			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Be polite and restore the previous bound OpenGL ES 2 element array buffer
+				// Be polite and restore the previous bound OpenGL ES 3 element array buffer
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ElementArrayBufferBackup));
 			#endif
 		}
@@ -76,7 +76,7 @@ namespace OpenGLES3Renderer
 
 	IndexBuffer::~IndexBuffer()
 	{
-		// Destroy the OpenGL ES 2 element array buffer
+		// Destroy the OpenGL ES 3 element array buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteBuffers(1, &mOpenGLES2ElementArrayBuffer);
 	}

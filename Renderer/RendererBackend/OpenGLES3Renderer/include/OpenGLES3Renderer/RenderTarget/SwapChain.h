@@ -51,7 +51,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 swap chain class
+	*    OpenGL ES 3 swap chain class
 	*/
 	class SwapChain : public Renderer::ISwapChain
 	{
@@ -66,7 +66,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/

@@ -51,7 +51,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 2D array texture class
+	*    OpenGL ES 3 2D array texture class
 	*/
 	class Texture2DArray : public Renderer::ITexture2DArray
 	{
@@ -66,7 +66,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] width
 		*    Texture width, must be >1
 		*  @param[in] height
@@ -90,10 +90,10 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Return the OpenGL ES 2 texture
+		*    Return the OpenGL ES 3 texture
 		*
 		*  @return
-		*    The OpenGL ES 2 texture, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*    The OpenGL ES 3 texture, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
 		inline uint32_t getOpenGLES2Texture() const;
 
@@ -102,7 +102,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t mOpenGLES2Texture;	///< OpenGL ES 2 texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES2Texture;	///< OpenGL ES 3 texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

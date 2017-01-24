@@ -25,7 +25,7 @@
 #include "OpenGLES3Renderer/Buffer/IndexBuffer.h"
 #include "OpenGLES3Renderer/Buffer/VertexBuffer.h"
 #include "OpenGLES3Renderer/Mapping.h"
-#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
+#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <GLES3/gl3.h>
@@ -97,7 +97,7 @@ namespace OpenGLES3Renderer
 	void VertexArrayNoVao::enableOpenGLES2VertexAttribArrays()
 	{
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently bound OpenGL ES 2 array buffer
+			// Backup the currently bound OpenGL ES 3 array buffer
 			GLint openGLES2ArrayBufferBackup = 0;
 			glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
 		#endif
@@ -108,7 +108,7 @@ namespace OpenGLES3Renderer
 		const Renderer::VertexAttribute *attributeEnd = mAttributes + mNumberOfAttributes;
 		for (const Renderer::VertexAttribute *attribute = mAttributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
 		{
-			// Set the OpenGL ES 2 vertex attribute pointer
+			// Set the OpenGL ES 3 vertex attribute pointer
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 			const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = mVertexBuffers[attribute->inputSlot];
 			glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES2ArrayBuffer());
@@ -119,12 +119,12 @@ namespace OpenGLES3Renderer
 								  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
 								  reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 
-			// Enable OpenGL ES 2 vertex attribute array
+			// Enable OpenGL ES 3 vertex attribute array
 			glEnableVertexAttribArray(attributeLocation);
 		}
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Be polite and restore the previous bound OpenGL ES 2 array buffer
+			// Be polite and restore the previous bound OpenGL ES 3 array buffer
 			glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayBufferBackup));
 		#endif
 
@@ -133,7 +133,7 @@ namespace OpenGLES3Renderer
 		const IndexBuffer *indexBuffer = getIndexBuffer();
 		if (nullptr != indexBuffer)
 		{
-			// Bind OpenGL ES 2 element array buffer
+			// Bind OpenGL ES 3 element array buffer
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->getOpenGLES2ElementArrayBuffer());
 		}
 	}
@@ -146,7 +146,7 @@ namespace OpenGLES3Renderer
 		// -> We're using "glBindAttribLocation()" when linking the program so we have known attribute locations (the vertex array can't know about the program)
 		for (GLuint attributeLocation = 0; attributeLocation < mNumberOfAttributes; ++attributeLocation)
 		{
-			// Disable OpenGL ES 2 vertex attribute array
+			// Disable OpenGL ES 3 vertex attribute array
 			glDisableVertexAttribArray(attributeLocation);
 		}
 	}

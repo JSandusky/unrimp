@@ -26,7 +26,7 @@
 #include "OpenGLES3Renderer/Shader/FragmentShaderGlsl.h"
 #include "OpenGLES3Renderer/Shader/ProgramGlsl.h"
 #include "OpenGLES3Renderer/Shader/VertexShaderGlsl.h"
-#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
+#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
 
 
 //[-------------------------------------------------------]
@@ -134,37 +134,37 @@ namespace OpenGLES3Renderer
 
 	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const uint8_t *, uint32_t )
 	{
-		// Error! OpenGL ES 2 has no tessellation control shader support.
+		// Error! OpenGL ES 3 has no tessellation control shader support.
 		return nullptr;
 	}
 
 	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromSourceCode(const char *, const char *, const char *, const char *)
 	{
-		// Error! OpenGL ES 2 has no tessellation control shader support.
+		// Error! OpenGL ES 3 has no tessellation control shader support.
 		return nullptr;
 	}
 
 	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromBytecode(const uint8_t *, uint32_t )
 	{
-		// Error! OpenGL ES 2 has no tessellation evaluation shader support.
+		// Error! OpenGL ES 3 has no tessellation evaluation shader support.
 		return nullptr;
 	}
 
 	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromSourceCode(const char *, const char *, const char *, const char *)
 	{
-		// Error! OpenGL ES 2 has no tessellation evaluation shader support.
+		// Error! OpenGL ES 3 has no tessellation evaluation shader support.
 		return nullptr;
 	}
 
 	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromBytecode(const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, const char *, const char *, const char *)
 	{
-		// Error! OpenGL ES 2 has no geometry shader support.
+		// Error! OpenGL ES 3 has no geometry shader support.
 		return nullptr;
 	}
 
 	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromSourceCode(const char *, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, const char *, const char *, const char *)
 	{
-		// Error! OpenGL ES 2 has no geometry shader support.
+		// Error! OpenGL ES 3 has no geometry shader support.
 		return nullptr;
 	}
 
@@ -192,15 +192,15 @@ namespace OpenGLES3Renderer
 		}
 		else if (nullptr != tessellationControlShader)
 		{
-			// Error! OpenGL ES 2 has no tessellation control shader support.
+			// Error! OpenGL ES 3 has no tessellation control shader support.
 		}
 		else if (nullptr != tessellationEvaluationShader)
 		{
-			// Error! OpenGL ES 2 has no tessellation evaluation shader support.
+			// Error! OpenGL ES 3 has no tessellation evaluation shader support.
 		}
 		else if (nullptr != geometryShader)
 		{
-			// Error! OpenGL ES 2 has no geometry shader support.
+			// Error! OpenGL ES 3 has no geometry shader support.
 		}
 		else if (nullptr != fragmentShader && fragmentShader->getShaderLanguageName() != NAME)
 		{

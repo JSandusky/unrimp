@@ -78,7 +78,7 @@ namespace OpenGLES3Renderer
 		*    Shader ASCII source code, must be a valid pointer (type "GLchar" not used in here in order to keep the header slim)
 		*
 		*  @return
-		*    The OpenGL ES 2 shader, 0 on error, destroy the returned resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
+		*    The OpenGL ES 3 shader, 0 on error, destroy the returned resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
 		*/
 		static uint32_t loadShader(uint32_t shaderType, const char *shaderSource);
 
@@ -92,7 +92,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*/
 		explicit ShaderLanguageGlsl(OpenGLES3Renderer &openGLES3Renderer);
 

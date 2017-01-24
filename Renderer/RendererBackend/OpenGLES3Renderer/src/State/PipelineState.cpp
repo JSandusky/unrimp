@@ -68,13 +68,13 @@ namespace OpenGLES3Renderer
 	{
 		static_cast<OpenGLES3Renderer&>(getRenderer()).setProgram(mProgram);
 
-		// Set the OpenGL ES 2 rasterizer state
+		// Set the OpenGL ES 3 rasterizer state
 		mRasterizerState->setOpenGLES2RasterizerStates();
 
-		// Set OpenGL ES 2 depth stencil state
+		// Set OpenGL ES 3 depth stencil state
 		mDepthStencilState->setOpenGLES2DepthStencilStates();
 
-		// Set OpenGL ES 2 blend state
+		// Set OpenGL ES 3 blend state
 		mBlendState->setOpenGLES2BlendStates();
 	}
 

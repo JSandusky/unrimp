@@ -43,7 +43,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 extensions runtime linking
+	*    OpenGL ES 3 extensions runtime linking
 	*/
 	class ExtensionsRuntimeLinking : public IExtensions
 	{

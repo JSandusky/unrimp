@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/State/SamplerState.h"
 #include "OpenGLES3Renderer/Mapping.h"
-#include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
+#include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <GLES3/gl3.h>
@@ -53,10 +53,10 @@ namespace OpenGLES3Renderer
 		mMinLOD(samplerState.minLOD),
 		mMaxLOD(samplerState.maxLOD)
 	{
-		// Ignore "Renderer::SamplerState.borderColor", border color is not supported by OpenGL ES 2
+		// Ignore "Renderer::SamplerState.borderColor", border color is not supported by OpenGL ES 3
 
-		// TODO(co)  "GL_COMPARE_REF_TO_TEXTURE" is not supported by OpenGL ES 2, check/inform the user?
-		// TODO(co)  "GL_CLAMP_TO_BORDER" is not supported by OpenGL ES 2, check/inform the user?
+		// TODO(co)  "GL_COMPARE_REF_TO_TEXTURE" is not supported by OpenGL ES 3, check/inform the user?
+		// TODO(co)  "GL_CLAMP_TO_BORDER" is not supported by OpenGL ES 3, check/inform the user?
 	}
 
 	SamplerState::~SamplerState()

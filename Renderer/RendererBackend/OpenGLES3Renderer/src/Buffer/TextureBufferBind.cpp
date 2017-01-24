@@ -48,7 +48,7 @@ namespace OpenGLES3Renderer
 
 			// Bind this OpenGL texture buffer and upload the data
 			glBindBuffer(GL_TEXTURE_BUFFER_EXT, mOpenGLESTextureBuffer);
-			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
+			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 3 constants, do not change them
 			glBufferData(GL_TEXTURE_BUFFER_EXT, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 
 			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP

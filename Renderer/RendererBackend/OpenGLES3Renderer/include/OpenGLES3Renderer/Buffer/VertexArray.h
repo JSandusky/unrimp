@@ -51,7 +51,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract OpenGL ES 2 vertex array interface
+	*    Abstract OpenGL ES 3 vertex array interface
 	*/
 	class VertexArray : public Renderer::IVertexArray
 	{

@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/State/RasterizerState.h"
-#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
+#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 
@@ -54,14 +54,14 @@ namespace OpenGLES3Renderer
 		{
 			// Wireframe
 			case Renderer::FillMode::WIREFRAME:
-				// OpenGL ES 2 has no support for polygon mode
+				// OpenGL ES 3 has no support for polygon mode
 				// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 				break;
 
 			// Solid
 			default:
 			case Renderer::FillMode::SOLID:
-				// OpenGL ES 2 has no support for polygon mode
+				// OpenGL ES 3 has no support for polygon mode
 				// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 				break;
 		}
@@ -114,7 +114,7 @@ namespace OpenGLES3Renderer
 		// RasterizerState::multisampleEnable
 
 		// RasterizerState::antialiasedLineEnable
-		// -> Anti-aliased lines are not supported by OpenGL ES 2
+		// -> Anti-aliased lines are not supported by OpenGL ES 3
 	}
 
 

@@ -66,7 +66,7 @@ namespace OpenGLES3Renderer
 				return GL_LINEAR;
 
 			case Renderer::FilterMode::ANISOTROPIC:
-				return GL_LINEAR;	// There's no special setting in OpenGL ES 2
+				return GL_LINEAR;	// There's no special setting in OpenGL ES 3
 
 			case Renderer::FilterMode::COMPARISON_MIN_MAG_MIP_POINT:
 				return GL_NEAREST;
@@ -93,7 +93,7 @@ namespace OpenGLES3Renderer
 				return GL_LINEAR;
 
 			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
-				return GL_LINEAR;	// There's no special setting in OpenGL ES 2
+				return GL_LINEAR;	// There's no special setting in OpenGL ES 3
 
 			default:
 				return GL_NEAREST;	// We should never be in here
@@ -129,7 +129,7 @@ namespace OpenGLES3Renderer
 				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
 			case Renderer::FilterMode::ANISOTROPIC:
-				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL ES 2
+				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL ES 3
 
 			case Renderer::FilterMode::COMPARISON_MIN_MAG_MIP_POINT:
 				return hasMipmaps ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
@@ -156,7 +156,7 @@ namespace OpenGLES3Renderer
 				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
 			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
-				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL ES 2
+				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL ES 3
 
 			default:
 				return GL_NEAREST;	// We should never be in here
@@ -165,7 +165,7 @@ namespace OpenGLES3Renderer
 
 	int Mapping::getOpenGLES2CompareMode(Renderer::FilterMode)
 	{
-		// "GL_COMPARE_REF_TO_TEXTURE" is not supported by OpenGL ES 2
+		// "GL_COMPARE_REF_TO_TEXTURE" is not supported by OpenGL ES 3
 		return GL_NONE;
 	}
 
@@ -176,8 +176,8 @@ namespace OpenGLES3Renderer
 			GL_REPEAT,			// Renderer::TextureAddressMode::WRAP
 			GL_MIRRORED_REPEAT,	// Renderer::TextureAddressMode::MIRROR
 			GL_CLAMP_TO_EDGE,	// Renderer::TextureAddressMode::CLAMP
-			GL_CLAMP_TO_EDGE,	// Renderer::TextureAddressMode::BORDER - Not supported by OpenGL ES 2
-			GL_MIRRORED_REPEAT	// Renderer::TextureAddressMode::MIRROR_ONCE	// TODO(co) OpenGL ES 2 equivalent?
+			GL_CLAMP_TO_EDGE,	// Renderer::TextureAddressMode::BORDER - Not supported by OpenGL ES 3
+			GL_MIRRORED_REPEAT	// Renderer::TextureAddressMode::MIRROR_ONCE	// TODO(co) OpenGL ES 3 equivalent?
 		};
 		return MAPPING[static_cast<int>(textureAddressMode) - 1];	// Lookout! The "Renderer::TextureAddressMode"-values start with 1, not 0
 	}
@@ -248,9 +248,9 @@ namespace OpenGLES3Renderer
 
 	uint32_t Mapping::getOpenGLES2Type(Renderer::BufferUsage bufferUsage)
 	{
-		// OpenGL ES 2 only supports: "STREAM_DRAW", "STATIC_DRAW" and "DYNAMIC_DRAW"
+		// OpenGL ES 3 only supports: "STREAM_DRAW", "STATIC_DRAW" and "DYNAMIC_DRAW"
 
-		// These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
+		// These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 3 constants, do not change them
 		// -> This also means that we have to use a switch statement for the mapping
 		switch (bufferUsage)
 		{
@@ -290,16 +290,16 @@ namespace OpenGLES3Renderer
 			GL_ALPHA,							// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
 			GL_RGB,								// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			GL_RGBA,							// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
-			GL_RGBA,							// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear	- TODO(co) OpenGL ES 2 sRGB format
+			GL_RGBA,							// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear	- TODO(co) OpenGL ES 3 sRGB format
 			GL_R11F_G11F_B10F,					// Renderer::TextureFormat::R11G11B10F    - 32-bit float format using 11 bits the red and green channel, 10 bits the blue channel; red and green channels have a 6 bits mantissa and a 5 bits exponent and blue has a 5 bits mantissa and 5 bits exponent - available in OpenGL ES 3
 			GL_RGBA16F,							// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
 			GL_RGBA32F,							// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
 			GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,	// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - "GL_EXT_texture_compression_dxt1" OpenGL ES extension
-			GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,	// Renderer::TextureFormat::BC1_SRGB      - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - "GL_EXT_texture_compression_dxt1" OpenGL ES extension; sRGB = RGB hardware gamma correction, the alpha channel always remains linear	- TODO(co) OpenGL ES 2 sRGB format
+			GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,	// Renderer::TextureFormat::BC1_SRGB      - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - "GL_EXT_texture_compression_dxt1" OpenGL ES extension; sRGB = RGB hardware gamma correction, the alpha channel always remains linear	- TODO(co) OpenGL ES 3 sRGB format
 			GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,	// Renderer::TextureFormat::BC2           - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - "GL_EXT_texture_compression_s3tc" OpenGL ES extension
-			GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,	// Renderer::TextureFormat::BC2_SRGB      - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - "GL_EXT_texture_compression_s3tc" OpenGL ES extension; sRGB = RGB hardware gamma correction, the alpha channel always remains linear	- TODO(co) OpenGL ES 2 sRGB format
+			GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,	// Renderer::TextureFormat::BC2_SRGB      - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - "GL_EXT_texture_compression_s3tc" OpenGL ES extension; sRGB = RGB hardware gamma correction, the alpha channel always remains linear	- TODO(co) OpenGL ES 3 sRGB format
 			GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,	// Renderer::TextureFormat::BC3           - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - "GL_EXT_texture_compression_s3tc" OpenGL ES extension
-			GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,	// Renderer::TextureFormat::BC3_SRGB      - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - "GL_EXT_texture_compression_s3tc" OpenGL ES extension; sRGB = RGB hardware gamma correction, the alpha channel always remains linear	- TODO(co) OpenGL ES 2 sRGB format
+			GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,	// Renderer::TextureFormat::BC3_SRGB      - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - "GL_EXT_texture_compression_s3tc" OpenGL ES extension; sRGB = RGB hardware gamma correction, the alpha channel always remains linear	- TODO(co) OpenGL ES 3 sRGB format
 			GL_3DC_X_AMD,						// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - "GL_AMD_compressed_3DC_texture" OpenGL ES extension
 			GL_3DC_XY_AMD,						// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - "GL_AMD_compressed_3DC_texture" OpenGL ES extension
 			GL_ETC1_RGB8_OES,					// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices
@@ -319,8 +319,8 @@ namespace OpenGLES3Renderer
 			GL_RGBA,			// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			GL_RGBA,			// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear
 			GL_RGB,				// Renderer::TextureFormat::R11G11B10F    - 32-bit float format using 11 bits the red and green channel, 10 bits the blue channel; red and green channels have a 6 bits mantissa and a 5 bits exponent and blue has a 5 bits mantissa and 5 bits exponent - available in OpenGL ES 3
-			GL_RGBA,			// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha) - Not supported by OpenGL ES 2
-			GL_RGBA,			// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha) - Not supported by OpenGL ES 2
+			GL_RGBA,			// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha) - Not supported by OpenGL ES 3
+			GL_RGBA,			// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha) - Not supported by OpenGL ES 3
 			0,					// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - Compressed format, so not supported in here
 			0,					// Renderer::TextureFormat::BC1_SRGB      - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block); sRGB = RGB hardware gamma correction, the alpha channel always remains linear - Compressed format, so not supported in here
 			0,					// Renderer::TextureFormat::BC2           - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - Compressed format, so not supported in here
@@ -346,8 +346,8 @@ namespace OpenGLES3Renderer
 			GL_UNSIGNED_BYTE,					// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			GL_UNSIGNED_BYTE,					// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear
 			GL_UNSIGNED_INT_10F_11F_11F_REV,	// Renderer::TextureFormat::R11G11B10F    - 32-bit float format using 11 bits the red and green channel, 10 bits the blue channel; red and green channels have a 6 bits mantissa and a 5 bits exponent and blue has a 5 bits mantissa and 5 bits exponent - available in OpenGL ES 3
-			GL_FLOAT,							// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha) - Not supported by OpenGL ES 2
-			GL_FLOAT,							// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha) - Not supported by OpenGL ES 2
+			GL_FLOAT,							// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha) - Not supported by OpenGL ES 3
+			GL_FLOAT,							// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha) - Not supported by OpenGL ES 3
 			0,									// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - Compressed format, so not supported in here
 			0,									// Renderer::TextureFormat::BC1_SRGB      - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block); sRGB = RGB hardware gamma correction, the alpha channel always remains linear - Compressed format, so not supported in here
 			0,									// Renderer::TextureFormat::BC2           - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - Compressed format, so not supported in here
@@ -429,12 +429,12 @@ namespace OpenGLES3Renderer
 		{
 			static const GLenum MAPPING[] =
 			{
-				GL_SRC_COLOR,			// Renderer::Blend::BLEND_FACTOR		TODO(co) Mapping "Renderer::Blend::BLEND_FACTOR" to OpenGL ES 2 possible?
-				GL_ONE_MINUS_SRC_COLOR,	// Renderer::Blend::INV_BLEND_FACTOR	TODO(co) Mapping "Renderer::Blend::INV_BLEND_FACTOR" to OpenGL ES 2 possible?
-				GL_SRC_COLOR,			// Renderer::Blend::SRC_1_COLOR			TODO(co) Mapping "Renderer::Blend::SRC_1_COLOR" to OpenGL ES 2 possible?
-				GL_ONE_MINUS_SRC_COLOR,	// Renderer::Blend::INV_SRC_1_COLOR		TODO(co) Mapping "Renderer::Blend::INV_SRC_1_COLOR" to OpenGL ES 2 possible?
-				GL_SRC_COLOR,			// Renderer::Blend::SRC_1_ALPHA			TODO(co) Mapping "Renderer::Blend::SRC_1_ALPHA" to OpenGL ES 2 possible?
-				GL_ONE_MINUS_SRC_COLOR,	// Renderer::Blend::INV_SRC_1_ALPHA		TODO(co) Mapping "Renderer::Blend::INV_SRC_1_ALPHA" to OpenGL ES 2 possible?
+				GL_SRC_COLOR,			// Renderer::Blend::BLEND_FACTOR		TODO(co) Mapping "Renderer::Blend::BLEND_FACTOR" to OpenGL ES 3 possible?
+				GL_ONE_MINUS_SRC_COLOR,	// Renderer::Blend::INV_BLEND_FACTOR	TODO(co) Mapping "Renderer::Blend::INV_BLEND_FACTOR" to OpenGL ES 3 possible?
+				GL_SRC_COLOR,			// Renderer::Blend::SRC_1_COLOR			TODO(co) Mapping "Renderer::Blend::SRC_1_COLOR" to OpenGL ES 3 possible?
+				GL_ONE_MINUS_SRC_COLOR,	// Renderer::Blend::INV_SRC_1_COLOR		TODO(co) Mapping "Renderer::Blend::INV_SRC_1_COLOR" to OpenGL ES 3 possible?
+				GL_SRC_COLOR,			// Renderer::Blend::SRC_1_ALPHA			TODO(co) Mapping "Renderer::Blend::SRC_1_ALPHA" to OpenGL ES 3 possible?
+				GL_ONE_MINUS_SRC_COLOR,	// Renderer::Blend::INV_SRC_1_ALPHA		TODO(co) Mapping "Renderer::Blend::INV_SRC_1_ALPHA" to OpenGL ES 3 possible?
 			};
 			return MAPPING[static_cast<int>(blend) - static_cast<int>(Renderer::Blend::BLEND_FACTOR)];
 		}

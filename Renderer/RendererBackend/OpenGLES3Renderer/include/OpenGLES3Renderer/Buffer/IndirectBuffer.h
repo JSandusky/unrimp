@@ -51,7 +51,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 indirect buffer object emulation class
+	*    OpenGL ES 3 indirect buffer object emulation class
 	*/
 	class IndirectBuffer : public Renderer::IIndirectBuffer
 	{
@@ -66,7 +66,7 @@ namespace OpenGLES3Renderer
 		*    Default constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the indirect buffer, must be valid
 		*  @param[in] data

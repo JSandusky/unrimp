@@ -53,7 +53,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 rasterizer state class
+	*    OpenGL ES 3 rasterizer state class
 	*/
 	class RasterizerState : public IState
 	{
@@ -89,7 +89,7 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Set the OpenGL ES 2 rasterizer states
+		*    Set the OpenGL ES 3 rasterizer states
 		*/
 		void setOpenGLES2RasterizerStates() const;
 

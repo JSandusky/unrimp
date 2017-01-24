@@ -52,7 +52,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, uint8_t, const Renderer::OptimizedTextureClearValue*)
 	{
-		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 2 has no texture usage indication
+		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 3 has no texture usage indication
 
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
@@ -67,7 +67,7 @@ namespace OpenGLES3Renderer
 
 	Renderer::ITexture2DArray *TextureManager::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
 	{
-		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 2 has no texture usage indication
+		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 3 has no texture usage indication
 
 		// Check whether or not the given texture dimension is valid, "GL_EXT_texture_array" extension required
 		if (width > 0 && height > 0 && numberOfSlices > 0 && mExtensions->isGL_EXT_texture_array())

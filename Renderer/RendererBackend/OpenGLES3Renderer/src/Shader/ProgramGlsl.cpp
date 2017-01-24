@@ -26,7 +26,7 @@
 #include "OpenGLES3Renderer/Shader/FragmentShaderGlsl.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/RootSignature.h"
-#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
+#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
 
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
@@ -47,7 +47,7 @@ namespace OpenGLES3Renderer
 		mRootSignatureParameterIndexToUniformLocation(nullptr),
 		mOpenGLES2Program(0)
 	{
-		// Create the OpenGL ES 2 program
+		// Create the OpenGL ES 3 program
 		mOpenGLES2Program = glCreateProgram();
 
 		{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
@@ -97,7 +97,7 @@ namespace OpenGLES3Renderer
 						// TODO(co) For now, we only support a single descriptor range
 						if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 						{
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Only a single descriptor range is supported")
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Only a single descriptor range is supported")
 						}
 						else
 						{
@@ -111,15 +111,15 @@ namespace OpenGLES3Renderer
 								{
 									mRootSignatureParameterIndexToUniformLocation[parameterIndex] = uniformLocation;
 
-									// OpenGL ES 2/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
-									// -> When using OpenGL or OpenGL ES 2 this is required
+									// OpenGL ES 3/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
+									// -> When using OpenGL or OpenGL ES 3 this is required
 									// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
 									//    in GLSL shader) , for backward compatibility we don't use it in here
 									// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
 									//    to use is usually defined directly within the shader by using the "register"-keyword
 									// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
 									#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-										// Backup the currently used OpenGL ES 2 program
+										// Backup the currently used OpenGL ES 3 program
 										GLint openGLES2ProgramBackup = 0;
 										glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
 										if (openGLES2ProgramBackup == mOpenGLES2Program)
@@ -133,7 +133,7 @@ namespace OpenGLES3Renderer
 											glUseProgram(mOpenGLES2Program);
 											glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
 
-											// Be polite and restore the previous used OpenGL ES 2 program
+											// Be polite and restore the previous used OpenGL ES 3 program
 											glUseProgram(openGLES2ProgramBackup);
 										}
 									#else
@@ -175,11 +175,11 @@ namespace OpenGLES3Renderer
 
 	ProgramGlsl::~ProgramGlsl()
 	{
-		// Destroy the OpenGL ES 2 program
+		// Destroy the OpenGL ES 3 program
 		// -> A value of 0 for program will be silently ignored
 		glDeleteProgram(mOpenGLES2Program);
 
-		// Destroy root signature parameter index to OpenGL ES 2 uniform location mapping, if required
+		// Destroy root signature parameter index to OpenGL ES 3 uniform location mapping, if required
 		if (nullptr != mRootSignatureParameterIndexToUniformLocation)
 		{
 			delete [] mRootSignatureParameterIndexToUniformLocation;
@@ -198,7 +198,7 @@ namespace OpenGLES3Renderer
 	void ProgramGlsl::setUniform1i(handle uniformHandle, int value)
 	{
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL ES 2 program
+			// Backup the currently used OpenGL ES 3 program
 			GLint openGLES2ProgramBackup = 0;
 			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
 			if (openGLES2ProgramBackup == mOpenGLES2Program)
@@ -212,7 +212,7 @@ namespace OpenGLES3Renderer
 				glUseProgram(mOpenGLES2Program);
 				glUniform1i(static_cast<GLint>(uniformHandle), value);
 
-				// Be polite and restore the previous used OpenGL ES 2 program
+				// Be polite and restore the previous used OpenGL ES 3 program
 				glUseProgram(openGLES2ProgramBackup);
 			}
 		#else
@@ -225,7 +225,7 @@ namespace OpenGLES3Renderer
 	void ProgramGlsl::setUniform1f(handle uniformHandle, float value)
 	{
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL ES 2 program
+			// Backup the currently used OpenGL ES 3 program
 			GLint openGLES2ProgramBackup = 0;
 			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
 			if (openGLES2ProgramBackup == mOpenGLES2Program)
@@ -239,7 +239,7 @@ namespace OpenGLES3Renderer
 				glUseProgram(mOpenGLES2Program);
 				glUniform1f(static_cast<GLint>(uniformHandle), value);
 
-				// Be polite and restore the previous used OpenGL ES 2 program
+				// Be polite and restore the previous used OpenGL ES 3 program
 				glUseProgram(openGLES2ProgramBackup);
 			}
 		#else
@@ -252,7 +252,7 @@ namespace OpenGLES3Renderer
 	void ProgramGlsl::setUniform2fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL ES 2 program
+			// Backup the currently used OpenGL ES 3 program
 			GLint openGLES2ProgramBackup = 0;
 			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
 			if (openGLES2ProgramBackup == mOpenGLES2Program)
@@ -266,7 +266,7 @@ namespace OpenGLES3Renderer
 				glUseProgram(mOpenGLES2Program);
 				glUniform2fv(static_cast<GLint>(uniformHandle), 1, value);
 
-				// Be polite and restore the previous used OpenGL ES 2 program
+				// Be polite and restore the previous used OpenGL ES 3 program
 				glUseProgram(openGLES2ProgramBackup);
 			}
 		#else
@@ -279,7 +279,7 @@ namespace OpenGLES3Renderer
 	void ProgramGlsl::setUniform3fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL ES 2 program
+			// Backup the currently used OpenGL ES 3 program
 			GLint openGLES2ProgramBackup = 0;
 			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
 			if (openGLES2ProgramBackup == mOpenGLES2Program)
@@ -293,7 +293,7 @@ namespace OpenGLES3Renderer
 				glUseProgram(mOpenGLES2Program);
 				glUniform3fv(static_cast<GLint>(uniformHandle), 1, value);
 
-				// Be polite and restore the previous used OpenGL ES 2 program
+				// Be polite and restore the previous used OpenGL ES 3 program
 				glUseProgram(openGLES2ProgramBackup);
 			}
 		#else
@@ -306,7 +306,7 @@ namespace OpenGLES3Renderer
 	void ProgramGlsl::setUniform4fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL ES 2 program
+			// Backup the currently used OpenGL ES 3 program
 			GLint openGLES2ProgramBackup = 0;
 			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
 			if (openGLES2ProgramBackup == mOpenGLES2Program)
@@ -320,7 +320,7 @@ namespace OpenGLES3Renderer
 				glUseProgram(mOpenGLES2Program);
 				glUniform4fv(static_cast<GLint>(uniformHandle), 1, value);
 
-				// Be polite and restore the previous used OpenGL ES 2 program
+				// Be polite and restore the previous used OpenGL ES 3 program
 				glUseProgram(openGLES2ProgramBackup);
 			}
 		#else
@@ -333,7 +333,7 @@ namespace OpenGLES3Renderer
 	void ProgramGlsl::setUniformMatrix3fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL ES 2 program
+			// Backup the currently used OpenGL ES 3 program
 			GLint openGLES2ProgramBackup = 0;
 			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
 			if (openGLES2ProgramBackup == mOpenGLES2Program)
@@ -347,7 +347,7 @@ namespace OpenGLES3Renderer
 				glUseProgram(mOpenGLES2Program);
 				glUniformMatrix3fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 
-				// Be polite and restore the previous used OpenGL ES 2 program
+				// Be polite and restore the previous used OpenGL ES 3 program
 				glUseProgram(openGLES2ProgramBackup);
 			}
 		#else
@@ -360,7 +360,7 @@ namespace OpenGLES3Renderer
 	void ProgramGlsl::setUniformMatrix4fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL ES 2 program
+			// Backup the currently used OpenGL ES 3 program
 			GLint openGLES2ProgramBackup = 0;
 			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
 			if (openGLES2ProgramBackup == mOpenGLES2Program)
@@ -374,7 +374,7 @@ namespace OpenGLES3Renderer
 				glUseProgram(mOpenGLES2Program);
 				glUniformMatrix4fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 
-				// Be polite and restore the previous used OpenGL ES 2 program
+				// Be polite and restore the previous used OpenGL ES 3 program
 				glUseProgram(openGLES2ProgramBackup);
 			}
 		#else

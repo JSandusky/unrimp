@@ -24,7 +24,7 @@
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/Shader/VertexShaderGlsl.h"
 #include "OpenGLES3Renderer/Shader/ShaderLanguageGlsl.h"
-#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
+#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
 
 
 //[-------------------------------------------------------]
@@ -54,7 +54,7 @@ namespace OpenGLES3Renderer
 
 	VertexShaderGlsl::~VertexShaderGlsl()
 	{
-		// Destroy the OpenGL ES 2 shader
+		// Destroy the OpenGL ES 3 shader
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteShader(mOpenGLES2Shader);
 	}

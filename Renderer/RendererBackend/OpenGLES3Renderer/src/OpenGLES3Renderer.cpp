@@ -94,12 +94,12 @@ namespace
 			//[-------------------------------------------------------]
 			void CopyUniformBufferData(const void*, Renderer::IRenderer&)
 			{
-				// Not supported by OpenGL ES 2
+				// Not supported by OpenGL ES 3
 			}
 
 			void CopyTextureBufferData(const void*, Renderer::IRenderer&)
 			{
-				// Not supported by OpenGL ES 2
+				// Not supported by OpenGL ES 3
 			}
 
 			//[-------------------------------------------------------]
@@ -367,7 +367,7 @@ namespace OpenGLES3Renderer
 			mDefaultSamplerState = nullptr;
 		}
 
-		// Destroy the OpenGL ES 2 framebuffer used by "OpenGLES3Renderer::OpenGLES3Renderer::copyResource()"
+		// Destroy the OpenGL ES 3 framebuffer used by "OpenGLES3Renderer::OpenGLES3Renderer::copyResource()"
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteFramebuffers(1, &mOpenGLES2CopyResourceFramebuffer);
 
@@ -391,11 +391,11 @@ namespace OpenGLES3Renderer
 				// Error!
 				if (numberOfCurrentResources > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: Renderer is going to be destroyed, but there are still %d resource instances left (memory leak)\n", numberOfCurrentResources)
+					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: Renderer is going to be destroyed, but there are still %d resource instances left (memory leak)\n", numberOfCurrentResources)
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Renderer is going to be destroyed, but there is still one resource instance left (memory leak)\n")
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Renderer is going to be destroyed, but there is still one resource instance left (memory leak)\n")
 				}
 
 				// Use debug output to show the current number of resource instances
@@ -440,31 +440,31 @@ namespace OpenGLES3Renderer
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: No graphics root signature set")
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: No graphics root signature set")
 				return;
 			}
 			const Renderer::RootSignature& rootSignature = mGraphicsRootSignature->getRootSignature();
 			if (rootParameterIndex >= rootSignature.numberOfParameters)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Root parameter index is out of bounds")
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Root parameter index is out of bounds")
 				return;
 			}
 			const Renderer::RootParameter& rootParameter = rootSignature.parameters[rootParameterIndex];
 			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Root parameter index doesn't reference a descriptor table")
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Root parameter index doesn't reference a descriptor table")
 				return;
 			}
 
 			// TODO(co) For now, we only support a single descriptor range
 			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Only a single descriptor range is supported")
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Only a single descriptor range is supported")
 				return;
 			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Descriptor ranges is a null pointer")
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Descriptor ranges is a null pointer")
 				return;
 			}
 		}
@@ -500,13 +500,13 @@ namespace OpenGLES3Renderer
 				{
 					switch (rootParameter.shaderVisibility)
 					{
-						// In OpenGL ES 2, all shaders share the same texture units
+						// In OpenGL ES 3, all shaders share the same texture units
 						case Renderer::ShaderVisibility::ALL:
 						case Renderer::ShaderVisibility::VERTEX:
 						case Renderer::ShaderVisibility::FRAGMENT:
 						{
 							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-								// Backup the currently active OpenGL ES 2 texture
+								// Backup the currently active OpenGL ES 3 texture
 								GLint openGLES2ActiveTextureBackup = 0;
 								glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
 							#endif
@@ -532,27 +532,27 @@ namespace OpenGLES3Renderer
 
 							if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 							{
-								// Set the OpenGL ES 2 sampler states
+								// Set the OpenGL ES 3 sampler states
 								mGraphicsRootSignature->setOpenGLES2SamplerStates(descriptorRange->samplerRootParameterIndex);
 							}
 
 							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-								// Be polite and restore the previous active OpenGL ES 2 texture
+								// Be polite and restore the previous active OpenGL ES 3 texture
 								glActiveTexture(static_cast<GLuint>(openGLES2ActiveTextureBackup));
 							#endif
 							break;
 						}
 
 						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2: OpenGL ES 2 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3: OpenGL ES 3 has no tessellation control shader support (hull shader in Direct3D terminology)")
 							break;
 
 						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: OpenGL ES 3 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
 							break;
 
 						case Renderer::ShaderVisibility::GEOMETRY:
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 has no geometry shader support")
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: OpenGL ES 3 has no geometry shader support")
 							break;
 					}
 					break;
@@ -560,7 +560,7 @@ namespace OpenGLES3Renderer
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					// Unlike Direct3D >=10, OpenGL ES 2 directly attaches the sampler settings to the texture
+					// Unlike Direct3D >=10, OpenGL ES 3 directly attaches the sampler settings to the texture
 					mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
 				}
@@ -579,7 +579,7 @@ namespace OpenGLES3Renderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Invalid resource type")
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Invalid resource type")
 					break;
 			}
 		}
@@ -588,7 +588,7 @@ namespace OpenGLES3Renderer
 			// TODO(co) Handle this situation?
 			/*
 			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Backup the currently active OpenGL ES 2 texture
+				// Backup the currently active OpenGL ES 3 texture
 				GLint openGLES2ActiveTextureBackup = 0;
 				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
 			#endif
@@ -600,7 +600,7 @@ namespace OpenGLES3Renderer
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Be polite and restore the previous active OpenGL ES 2 texture
+				// Be polite and restore the previous active OpenGL ES 3 texture
 				glActiveTexture(openGLES2ActiveTextureBackup);
 			#endif
 			*/
@@ -652,7 +652,7 @@ namespace OpenGLES3Renderer
 					mVertexArray = static_cast<VertexArray*>(vertexArray);
 					mVertexArray->addReference();
 
-					// Bind OpenGL ES 2 vertex array
+					// Bind OpenGL ES 3 vertex array
 					glBindVertexArrayOES(static_cast<VertexArrayVao*>(mVertexArray)->getOpenGLES2VertexArray());
 				}
 				else
@@ -660,7 +660,7 @@ namespace OpenGLES3Renderer
 					// Release the vertex array reference, in case we have one
 					if (nullptr != mVertexArray)
 					{
-						// Disable OpenGL ES 2 vertex attribute arrays
+						// Disable OpenGL ES 3 vertex attribute arrays
 						static_cast<VertexArrayNoVao*>(mVertexArray)->disableOpenGLES2VertexAttribArrays();
 
 						// Release reference
@@ -671,7 +671,7 @@ namespace OpenGLES3Renderer
 					mVertexArray = static_cast<VertexArray*>(vertexArray);
 					mVertexArray->addReference();
 
-					// Enable OpenGL ES 2 vertex attribute arrays
+					// Enable OpenGL ES 3 vertex attribute arrays
 					static_cast<VertexArrayNoVao*>(mVertexArray)->enableOpenGLES2VertexAttribArrays();
 				}
 			}
@@ -680,10 +680,10 @@ namespace OpenGLES3Renderer
 				// Release the vertex array reference, in case we have one
 				if (nullptr != mVertexArray)
 				{
-					// Disable OpenGL ES 2 vertex attribute arrays - Is the "GL_OES_vertex_array_object" extension there?
+					// Disable OpenGL ES 3 vertex attribute arrays - Is the "GL_OES_vertex_array_object" extension there?
 					if (mContext->getExtensions().isGL_OES_vertex_array_object())
 					{
-						// Unbind OpenGL ES 2 vertex array
+						// Unbind OpenGL ES 3 vertex array
 						glBindVertexArrayOES(0);
 					}
 					else
@@ -702,7 +702,7 @@ namespace OpenGLES3Renderer
 
 	void OpenGLES3Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
 	{
-		// Map and backup the set OpenGL ES 2 primitive topology
+		// Map and backup the set OpenGL ES 3 primitive topology
 		mOpenGLES2PrimitiveTopology = Mapping::getOpenGLES2Type(primitiveTopology);
 	}
 
@@ -715,7 +715,7 @@ namespace OpenGLES3Renderer
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
 		{
-			// In OpenGL ES 2, the origin of the viewport is left bottom while Direct3D is using a left top origin. To make the
+			// In OpenGL ES 3, the origin of the viewport is left bottom while Direct3D is using a left top origin. To make the
 			// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
@@ -726,12 +726,12 @@ namespace OpenGLES3Renderer
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 			}
 
-			// Set the OpenGL ES 2 viewport
-			// -> OpenGL ES 2 supports only one viewport
+			// Set the OpenGL ES 3 viewport
+			// -> OpenGL ES 3 supports only one viewport
 		#ifndef RENDERER_NO_DEBUG
 			if (numberOfViewports > 1)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 supports only one viewport")
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: OpenGL ES 3 supports only one viewport")
 			}
 		#endif
 			glViewport(static_cast<GLint>(viewports->topLeftX), static_cast<GLint>(renderTargetHeight - viewports->topLeftY - viewports->height), static_cast<GLsizei>(viewports->width), static_cast<GLsizei>(viewports->height));
@@ -744,7 +744,7 @@ namespace OpenGLES3Renderer
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
 		{
-			// In OpenGL ES 2, the origin of the scissor rectangle is left bottom while Direct3D is using a left top origin. To make the
+			// In OpenGL ES 3, the origin of the scissor rectangle is left bottom while Direct3D is using a left top origin. To make the
 			// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
@@ -755,11 +755,11 @@ namespace OpenGLES3Renderer
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 			}
 
-			// Set the OpenGL ES 2 scissor rectangle
+			// Set the OpenGL ES 3 scissor rectangle
 		#ifndef RENDERER_NO_DEBUG
 			if (numberOfScissorRectangles > 1)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 supports only one scissor rectangle")
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: OpenGL ES 3 supports only one scissor rectangle")
 			}
 		#endif
 			const GLsizei width  = scissorRectangles->bottomRightX - scissorRectangles->topLeftX;
@@ -787,10 +787,10 @@ namespace OpenGLES3Renderer
 				Framebuffer* framebufferToGenerateMipmapsFor = nullptr;
 				if (nullptr != mRenderTarget)
 				{
-					// Unbind OpenGL ES 2 framebuffer?
+					// Unbind OpenGL ES 3 framebuffer?
 					if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType() && Renderer::ResourceType::FRAMEBUFFER != renderTarget->getResourceType())
 					{
-						// We do not render into a OpenGL ES 2 framebuffer
+						// We do not render into a OpenGL ES 3 framebuffer
 						glBindFramebuffer(GL_FRAMEBUFFER, 0);
 					}
 
@@ -821,10 +821,10 @@ namespace OpenGLES3Renderer
 
 					case Renderer::ResourceType::FRAMEBUFFER:
 					{
-						// Get the OpenGL ES 2 framebuffer instance
+						// Get the OpenGL ES 3 framebuffer instance
 						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
-						// Bind the OpenGL ES 2 framebuffer
+						// Bind the OpenGL ES 3 framebuffer
 						glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->getOpenGLES2Framebuffer());
 
 						// Define the OpenGL buffers to draw into
@@ -879,7 +879,7 @@ namespace OpenGLES3Renderer
 				// Evaluate the render target type
 				if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType())
 				{
-					// We do not render into a OpenGL ES 2 framebuffer
+					// We do not render into a OpenGL ES 3 framebuffer
 					glBindFramebuffer(GL_FRAMEBUFFER, 0);
 				}
 
@@ -933,8 +933,8 @@ namespace OpenGLES3Renderer
 				glClearStencil(static_cast<GLint>(stencil));
 			}
 
-			// Unlike OpenGL ES 2, when using Direct3D 10 & 11 the scissor rectangle(s) do not affect the clear operation
-			// -> We have to compensate the OpenGL ES 2 behaviour in here
+			// Unlike OpenGL ES 3, when using Direct3D 10 & 11 the scissor rectangle(s) do not affect the clear operation
+			// -> We have to compensate the OpenGL ES 3 behaviour in here
 
 			// Disable OpenGL scissor test, in case it's not disabled, yet
 			// TODO(co) Pipeline state update
@@ -972,14 +972,14 @@ namespace OpenGLES3Renderer
 			case Renderer::ResourceType::TEXTURE_2D:
 				if (sourceResource.getResourceType() == Renderer::ResourceType::TEXTURE_2D)
 				{
-					// Get the OpenGL ES 2 texture 2D instances
+					// Get the OpenGL ES 3 texture 2D instances
 					const Texture2D& openGlEs2DestinationTexture2D = static_cast<const Texture2D&>(destinationResource);
 					const Texture2D& openGlEs2SourceTexture2D = static_cast<const Texture2D&>(sourceResource);
 					assert(openGlEs2DestinationTexture2D.getWidth() == openGlEs2SourceTexture2D.getWidth());
 					assert(openGlEs2DestinationTexture2D.getHeight() == openGlEs2SourceTexture2D.getHeight());
 
 					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-						// Backup the currently bound OpenGL ES 2 framebuffer
+						// Backup the currently bound OpenGL ES 3 framebuffer
 						GLint openGLES2FramebufferBackup = 0;
 						glGetIntegerv(GL_FRAMEBUFFER_BINDING, &openGLES2FramebufferBackup);
 					#endif
@@ -1002,7 +1002,7 @@ namespace OpenGLES3Renderer
 					glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-						// Be polite and restore the previous bound OpenGL ES 2 framebuffer
+						// Be polite and restore the previous bound OpenGL ES 3 framebuffer
 						glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLES2FramebufferBackup));
 					#endif
 				}
@@ -1193,7 +1193,7 @@ namespace OpenGLES3Renderer
 
 	bool OpenGLES3Renderer::isDebugEnabled()
 	{
-		// OpenGL ES 2 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+		// OpenGL ES 3 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
 
 		// Debug disabled
 		return false;
@@ -1308,12 +1308,12 @@ namespace OpenGLES3Renderer
 				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
 
 				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 2 array element buffer
+					// Backup the currently bound OpenGL ES 3 array element buffer
 					GLint openGLES2ArrayElementBufferBackup = 0;
 					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
 				#endif
 
-				// Bind this OpenGL ES 2 element buffer and upload the data
+				// Bind this OpenGL ES 3 element buffer and upload the data
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
 
 				// Map
@@ -1329,7 +1329,7 @@ namespace OpenGLES3Renderer
 				mappedSubresource.depthPitch = 0;
 
 				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 2 array element buffer
+					// Be polite and restore the previous bound OpenGL ES 3 array element buffer
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayElementBufferBackup));
 				#endif
 
@@ -1342,12 +1342,12 @@ namespace OpenGLES3Renderer
 				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
 
 				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 2 array buffer
+					// Backup the currently bound OpenGL ES 3 array buffer
 					GLint openGLES2ArrayBufferBackup = 0;
 					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
 				#endif
 
-				// Bind this OpenGL ES 2 array buffer and upload the data
+				// Bind this OpenGL ES 3 array buffer and upload the data
 				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
 
 				// Map
@@ -1363,7 +1363,7 @@ namespace OpenGLES3Renderer
 				mappedSubresource.depthPitch = 0;
 
 				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 2 array buffer
+					// Be polite and restore the previous bound OpenGL ES 3 array buffer
 					glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayBufferBackup));
 				#endif
 
@@ -1372,12 +1372,12 @@ namespace OpenGLES3Renderer
 			}
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// OpenGL ES 2 has no uniform buffer
+				// OpenGL ES 3 has no uniform buffer
 				// TODO(co) Error handling
 				return false;
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// OpenGL ES 2 has no texture buffer
+				// OpenGL ES 3 has no texture buffer
 				// TODO(co) Error handling
 				return false;
 
@@ -1476,12 +1476,12 @@ namespace OpenGLES3Renderer
 			case Renderer::ResourceType::INDEX_BUFFER:
 			{
 				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 2 array element buffer
+					// Backup the currently bound OpenGL ES 3 array element buffer
 					GLint openGLES2ArrayElementBufferBackup = 0;
 					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
 				#endif
 
-				// Bind this OpenGL ES 2 element buffer and upload the data
+				// Bind this OpenGL ES 3 element buffer and upload the data
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
 
 				// Unmap
@@ -1495,7 +1495,7 @@ namespace OpenGLES3Renderer
 				}
 
 				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 2 array element buffer
+					// Be polite and restore the previous bound OpenGL ES 3 array element buffer
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayElementBufferBackup));
 				#endif
 				break;
@@ -1504,12 +1504,12 @@ namespace OpenGLES3Renderer
 			case Renderer::ResourceType::VERTEX_BUFFER:
 			{
 				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 2 array buffer
+					// Backup the currently bound OpenGL ES 3 array buffer
 					GLint openGLES2ArrayBufferBackup = 0;
 					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
 				#endif
 
-				// Bind this OpenGL ES 2 array buffer and upload the data
+				// Bind this OpenGL ES 3 array buffer and upload the data
 				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
 
 				// Unmap
@@ -1523,19 +1523,19 @@ namespace OpenGLES3Renderer
 				}
 
 				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 2 array buffer
+					// Be polite and restore the previous bound OpenGL ES 3 array buffer
 					glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayBufferBackup));
 				#endif
 				break;
 			}
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// OpenGL ES 2 has no uniform buffer
+				// OpenGL ES 3 has no uniform buffer
 				// TODO(co) Error handling
 				break;
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// OpenGL ES 2 has no texture buffer
+				// OpenGL ES 3 has no texture buffer
 				// TODO(co) Error handling
 				break;
 
@@ -1605,7 +1605,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	bool OpenGLES3Renderer::beginScene()
 	{
-		// Not required when using OpenGL ES 2
+		// Not required when using OpenGL ES 3
 
 		// Done
 		return true;
@@ -1770,7 +1770,7 @@ namespace OpenGLES3Renderer
 		GLint openGLValue = 0;
 
 		// Maximum number of viewports (always at least 1)
-		mCapabilities.maximumNumberOfViewports = 1;	// OpenGL ES 2 only supports a single viewport
+		mCapabilities.maximumNumberOfViewports = 1;	// OpenGL ES 3 only supports a single viewport
 
 		// Maximum number of simultaneous render targets (if <1 render to texture is not supported)
 		glGetIntegerv(GL_MAX_DRAW_BUFFERS, &openGLValue);
@@ -1813,7 +1813,7 @@ namespace OpenGLES3Renderer
 		mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
 
 		// Maximum number of multisamples (always at least 1, usually 8)
-		mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy OpenGL ES 2 multisample support
+		mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy OpenGL ES 3 multisample support
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;
@@ -1821,23 +1821,23 @@ namespace OpenGLES3Renderer
 		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 		mCapabilities.instancedArrays = true;	// Is core feature in OpenGL ES 3.0
 
-		// Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID, OpenGL ES 2 has no "GL_ARB_draw_instanced" extension)
+		// Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID, OpenGL ES 3 has no "GL_ARB_draw_instanced" extension)
 		mCapabilities.drawInstanced = true;	// Is core feature in OpenGL ES 3.0
 
 		// Base vertex supported for draw calls?
 		mCapabilities.baseVertex = mContext->getExtensions().isGL_EXT_draw_elements_base_vertex();
 
-		// OpenGL ES 2 has no native multi-threading
+		// OpenGL ES 3 has no native multi-threading
 		mCapabilities.nativeMultiThreading = false;
 
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;
 
 		// Maximum number of vertices per patch (usually 0 for no tessellation support or 32 which is the maximum number of supported vertices per patch)
-		mCapabilities.maximumNumberOfPatchVertices = 0;	// OpenGL ES 2 has no tessellation support
+		mCapabilities.maximumNumberOfPatchVertices = 0;	// OpenGL ES 3 has no tessellation support
 
 		// Maximum number of vertices a geometry shader can emit (usually 0 for no geometry shader support or 1024)
-		mCapabilities.maximumNumberOfGsOutputVertices = 0;	// OpenGL ES 2 has no support for geometry shaders
+		mCapabilities.maximumNumberOfGsOutputVertices = 0;	// OpenGL ES 3 has no support for geometry shaders
 
 		// Is there support for fragment shaders (FS)?
 		mCapabilities.fragmentShader = true;
@@ -1850,7 +1850,7 @@ namespace OpenGLES3Renderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
-			// Backup OpenGL ES 2 program identifier
+			// Backup OpenGL ES 3 program identifier
 			mOpenGLES2Program = static_cast<ProgramGlsl*>(program)->getOpenGLES2Program();
 
 			// Bind the program
@@ -1861,7 +1861,7 @@ namespace OpenGLES3Renderer
 			// Unbind the program
 			glUseProgram(0);
 
-			// Reset OpenGL ES 2 program identifier
+			// Reset OpenGL ES 3 program identifier
 			mOpenGLES2Program = 0;
 		}
 	}

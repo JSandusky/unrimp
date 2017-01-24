@@ -52,7 +52,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 buffer manager interface
+	*    OpenGL ES 3 buffer manager interface
 	*/
 	class BufferManager : public Renderer::IBufferManager
 	{
@@ -67,7 +67,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*/
 		explicit BufferManager(OpenGLES3Renderer& openGLES3Renderer);
 

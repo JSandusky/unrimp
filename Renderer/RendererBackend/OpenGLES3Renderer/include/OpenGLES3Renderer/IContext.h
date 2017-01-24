@@ -279,4 +279,4 @@ namespace OpenGLES3Renderer
 //[ Implementation includes                               ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/IContext.inl"
-#include "OpenGLES3Renderer/ContextRuntimeLinking.h"	// Required in here because we redefine the OpenGL ES 2 functions for dynamic runtime linking
+#include "OpenGLES3Renderer/ContextRuntimeLinking.h"	// Required in here because we redefine the OpenGL ES 3 functions for dynamic runtime linking

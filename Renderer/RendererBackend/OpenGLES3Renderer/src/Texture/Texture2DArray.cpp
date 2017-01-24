@@ -48,7 +48,7 @@ namespace OpenGLES3Renderer
 			GLint openGLES2AlignmentBackup = 0;
 			glGetIntegerv(GL_UNPACK_ALIGNMENT, &openGLES2AlignmentBackup);
 
-			// Backup the currently bound OpenGL ES 2 texture
+			// Backup the currently bound OpenGL ES 3 texture
 			GLint openGLES2TextureBackup = 0;
 			glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY_EXT, &openGLES2TextureBackup);
 		#endif
@@ -56,7 +56,7 @@ namespace OpenGLES3Renderer
 		// Set correct alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-		// Create the OpenGL ES 2 texture instance
+		// Create the OpenGL ES 3 texture instance
 		glGenTextures(1, &mOpenGLES2Texture);
 		glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, mOpenGLES2Texture);
 
@@ -76,7 +76,7 @@ namespace OpenGLES3Renderer
 		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Be polite and restore the previous bound OpenGL ES 2 texture
+			// Be polite and restore the previous bound OpenGL ES 3 texture
 			glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, openGLES2TextureBackup);
 
 			// Restore previous alignment
@@ -86,7 +86,7 @@ namespace OpenGLES3Renderer
 
 	Texture2DArray::~Texture2DArray()
 	{
-		// Destroy the OpenGL ES 2 texture instance
+		// Destroy the OpenGL ES 3 texture instance
 		// -> Silently ignores 0's and names that do not correspond to existing textures
 		glDeleteTextures(1, &mOpenGLES2Texture);
 	}

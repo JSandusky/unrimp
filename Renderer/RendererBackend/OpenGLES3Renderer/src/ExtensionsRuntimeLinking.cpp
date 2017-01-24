@@ -91,7 +91,7 @@ namespace OpenGLES3Renderer
 				}																																			\
 				else																																		\
 				{																																			\
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: Failed to locate the entry point \"%s\" within the GLES shared library", #funcName)	\
+					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: Failed to locate the entry point \"%s\" within the GLES shared library", #funcName)	\
 					result = false;																															\
 				}																																			\
 			}

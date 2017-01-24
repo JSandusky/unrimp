@@ -53,7 +53,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 blend state class
+	*    OpenGL ES 3 blend state class
 	*/
 	class BlendState : public IState
 	{
@@ -80,7 +80,7 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Set the OpenGL ES 2 blend states
+		*    Set the OpenGL ES 3 blend states
 		*/
 		void setOpenGLES2BlendStates() const;
 
@@ -90,8 +90,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	private:
 		Renderer::BlendState mBlendState;			///< Blend state
-		uint32_t			 mOpenGLES2SrcBlend;	///< OpenGL ES 2 source blend function (type "GLenum" not used in here in order to keep the header slim)
-		uint32_t			 mOpenGLES2DstBlend;	///< OpenGL ES 2 destination blend function (type "GLenum" not used in here in order to keep the header slim)
+		uint32_t			 mOpenGLES2SrcBlend;	///< OpenGL ES 3 source blend function (type "GLenum" not used in here in order to keep the header slim)
+		uint32_t			 mOpenGLES2DstBlend;	///< OpenGL ES 3 destination blend function (type "GLenum" not used in here in order to keep the header slim)
 
 
 	};

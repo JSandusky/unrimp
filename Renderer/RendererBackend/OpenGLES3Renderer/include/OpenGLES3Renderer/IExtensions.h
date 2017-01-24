@@ -36,7 +36,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract OpenGL ES 2 extensions base interface
+	*    Abstract OpenGL ES 3 extensions base interface
 	*
 	*  @note
 	*    - Extensions are only optional, so do always take into account that an extension may not be available
@@ -138,4 +138,4 @@ namespace OpenGLES3Renderer
 //[-------------------------------------------------------]
 //[ Implementation includes                               ]
 //[-------------------------------------------------------]
-#include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"	// Required in here because we define the OpenGL ES 2 extension functions for dynamic runtime linking
+#include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"	// Required in here because we define the OpenGL ES 3 extension functions for dynamic runtime linking

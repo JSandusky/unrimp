@@ -45,25 +45,25 @@
 			{
 				if (samplerRootParameterIndex >= rootSignature.numberOfParameters)
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index is out of bounds")
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Sampler root parameter index is out of bounds")
 					return;
 				}
 				const Renderer::RootParameter& samplerRootParameter = rootSignature.parameters[samplerRootParameterIndex];
 				if (Renderer::RootParameterType::DESCRIPTOR_TABLE != samplerRootParameter.parameterType)
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index doesn't point to a descriptor table")
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Sampler root parameter index doesn't point to a descriptor table")
 					return;
 				}
 
 				// TODO(co) For now, we only support a single descriptor range
 				if (1 != samplerRootParameter.descriptorTable.numberOfDescriptorRanges)
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter: Only a single descriptor range is supported")
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Sampler root parameter: Only a single descriptor range is supported")
 					return;
 				}
 				if (Renderer::DescriptorRangeType::SAMPLER != reinterpret_cast<const Renderer::DescriptorRange*>(samplerRootParameter.descriptorTable.descriptorRanges)[0].rangeType)
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index is out of bounds")
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Sampler root parameter index is out of bounds")
 					return;
 				}
 			}
@@ -197,7 +197,7 @@ namespace OpenGLES3Renderer
 			detail::checkSamplerState(mRootSignature, samplerRootParameterIndex);
 			if (nullptr == mSamplerStates[samplerRootParameterIndex])
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index points to no sampler state instance")
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Sampler root parameter index points to no sampler state instance")
 				return;
 			}
 		#endif

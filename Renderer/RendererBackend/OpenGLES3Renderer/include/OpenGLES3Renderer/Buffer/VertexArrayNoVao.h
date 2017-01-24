@@ -57,7 +57,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 vertex array class, traditional version
+	*    OpenGL ES 3 vertex array class, traditional version
 	*/
 	class VertexArrayNoVao : public VertexArray
 	{
@@ -72,7 +72,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 2 renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] vertexAttributes
 		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] numberOfVertexBuffers
@@ -92,13 +92,13 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Enable OpenGL ES 2 vertex attribute arrays
+		*    Enable OpenGL ES 3 vertex attribute arrays
 		*/
 		void enableOpenGLES2VertexAttribArrays();
 
 		/**
 		*  @brief
-		*    Disable OpenGL ES 2 vertex attribute arrays
+		*    Disable OpenGL ES 3 vertex attribute arrays
 		*/
 		void disableOpenGLES2VertexAttribArrays();
 
