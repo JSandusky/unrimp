@@ -62,7 +62,7 @@
 	#endif
 
 	// OpenGLES2
-	#ifndef RENDERER_NO_OPENGLES2
+	#ifndef RENDERER_NO_OPENGLES3
 		// "createOpenGLES2RendererInstance()" signature
 		extern Renderer::IRenderer *createOpenGLES2RendererInstance(Renderer::handle);
 	#endif
@@ -218,7 +218,7 @@ namespace Renderer
 				#endif
 
 				// OpenGLES2
-				#ifndef RENDERER_NO_OPENGLES2
+				#ifndef RENDERER_NO_OPENGLES3
 					if (0 == strcmp(rendererName, "OpenGLES2"))
 					{
 						// Create the renderer instance

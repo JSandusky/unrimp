@@ -169,7 +169,7 @@ ExampleRunner::ExampleRunner()
 	#ifndef RENDERER_NO_OPENGL
 		m_availableRenderer.insert("OpenGL");
 	#endif
-	#ifndef RENDERER_NO_OPENGLES2
+	#ifndef RENDERER_NO_OPENGLES3
 		m_availableRenderer.insert("OpenGLES2");
 	#endif
 	#ifndef RENDERER_NO_VULKAN
