@@ -40,7 +40,7 @@ namespace OpenGLES3Renderer
 		TextureBuffer(openGLES3Renderer)
 	{
 		{ // Buffer part
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 				// Backup the currently bound OpenGL texture buffer
 				GLint openGLESTextureBufferBackup = 0;
 				glGetIntegerv(GL_TEXTURE_BINDING_BUFFER_EXT, &openGLESTextureBufferBackup);
@@ -51,14 +51,14 @@ namespace OpenGLES3Renderer
 			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 3 constants, do not change them
 			glBufferData(GL_TEXTURE_BUFFER_EXT, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous bound OpenGL texture buffer
 				glBindBuffer(GL_TEXTURE_BUFFER_ARB, static_cast<GLuint>(openGLESTextureBufferBackup));
 			#endif
 		}
 
 		{ // Texture part
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 				// Backup the currently bound OpenGL texture
 				GLint openGLESTextureBackup = 0;
 				glGetIntegerv(GL_TEXTURE_BUFFER_BINDING_EXT, &openGLESTextureBackup);
@@ -70,7 +70,7 @@ namespace OpenGLES3Renderer
 			// Attaches the storage for the buffer object to the active buffer texture
 			glTexBufferEXT(GL_TEXTURE_BUFFER_EXT, Mapping::getOpenGLES3InternalFormat(textureFormat), mOpenGLESTextureBuffer);
 
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous bound OpenGL texture
 				glBindTexture(GL_TEXTURE_BUFFER_EXT, static_cast<GLuint>(openGLESTextureBackup));
 			#endif
@@ -88,7 +88,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	void TextureBufferBind::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
-		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGLES texture buffer
 			GLint openGLESTextureBufferBackup = 0;
 			glGetIntegerv(GL_TEXTURE_BINDING_BUFFER_EXT, &openGLESTextureBufferBackup);
@@ -98,7 +98,7 @@ namespace OpenGLES3Renderer
 		glBindBuffer(GL_TEXTURE_BUFFER_EXT, mOpenGLESTextureBuffer);
 		glBufferSubData(GL_TEXTURE_BUFFER_EXT, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
 
-		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL texture buffer
 			glBindBuffer(GL_TEXTURE_BUFFER_EXT, static_cast<GLuint>(openGLESTextureBufferBackup));
 		#endif

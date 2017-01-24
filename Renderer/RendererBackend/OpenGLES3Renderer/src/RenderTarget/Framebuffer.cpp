@@ -56,7 +56,7 @@ namespace OpenGLES3Renderer
 		// Create the OpenGL ES 3 framebuffer
 		glGenFramebuffers(1, &mOpenGLES3Framebuffer);
 
-		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES 3 framebuffer
 			GLint openGLES2FramebufferBackup = 0;
 			glGetIntegerv(GL_FRAMEBUFFER_BINDING, &openGLES2FramebufferBackup);
@@ -85,7 +85,7 @@ namespace OpenGLES3Renderer
 					(*colorTextureToSetup)->addReference();
 
 					// Security check: Is the given resource owned by this renderer?
-					#ifndef OPENGLES2RENDERER_NO_RENDERERMATCHCHECK
+					#ifndef OPENGLES3RENDERER_NO_RENDERERMATCHCHECK
 						if (&openGLES3Renderer != &(*colorTexture)->getRenderer())
 						{
 							// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
@@ -252,7 +252,7 @@ namespace OpenGLES3Renderer
 			}
 		#endif
 
-		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 framebuffer
 			glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLES2FramebufferBackup));
 		#endif
@@ -318,7 +318,7 @@ namespace OpenGLES3Renderer
 				Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
 				if (texture2D->getGenerateMipmaps())
 				{
-					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 						// Backup the currently bound OpenGL ES 3 texture
 						// TODO(co) It's possible to avoid calling this multiple times
 						GLint openGLES2TextureBackup = 0;
@@ -330,7 +330,7 @@ namespace OpenGLES3Renderer
 					glBindTexture(GL_TEXTURE_2D, texture2D->getOpenGLES3Texture());
 					glGenerateMipmap(GL_TEXTURE_2D);
 
-					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 						// Be polite and restore the previous bound OpenGL ES 3 texture
 						glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(openGLES2TextureBackup));
 					#endif

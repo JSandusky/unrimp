@@ -34,17 +34,17 @@
 *  @note
 *    In case of no match, a debug output message will be made with a following immediate "return"
 */
-#ifdef OPENGLES2RENDERER_NO_RENDERERMATCHCHECK
-	#define OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference)
-	#define OPENGLES2RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(resourcePointer) resourcePointer = resourcePointer;	// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
+#ifdef OPENGLES3RENDERER_NO_RENDERERMATCHCHECK
+	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference)
+	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(resourcePointer) resourcePointer = resourcePointer;	// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
 #else
-	#define OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference) \
+	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference) \
 		if (&rendererReference != &(resourceReference).getRenderer()) \
 		{ \
 			RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: The given resource is owned by another renderer instance") \
 			return; \
 		}
-	#define OPENGLES2RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(resourcePointer) \
+	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(resourcePointer) \
 		if (nullptr != resourcePointer) \
 		{ \
 			RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: The given resource is owned by another renderer instance") \

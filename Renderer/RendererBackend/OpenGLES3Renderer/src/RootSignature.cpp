@@ -28,7 +28,7 @@
 #include <memory.h>
 
 
-#ifndef OPENGLES2RENDERER_NO_DEBUG
+#ifndef OPENGLES3RENDERER_NO_DEBUG
 	//[-------------------------------------------------------]
 	//[ Anonymous detail namespace                            ]
 	//[-------------------------------------------------------]
@@ -170,7 +170,7 @@ namespace OpenGLES3Renderer
 	void RootSignature::setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const
 	{
 		// Security checks
-		#ifndef OPENGLES2RENDERER_NO_DEBUG
+		#ifndef OPENGLES3RENDERER_NO_DEBUG
 			detail::checkSamplerState(mRootSignature, samplerRootParameterIndex);
 		#endif
 
@@ -193,7 +193,7 @@ namespace OpenGLES3Renderer
 	void RootSignature::setOpenGLES3SamplerStates(uint32_t samplerRootParameterIndex) const
 	{
 		// Security checks
-		#ifndef OPENGLES2RENDERER_NO_DEBUG
+		#ifndef OPENGLES3RENDERER_NO_DEBUG
 			detail::checkSamplerState(mRootSignature, samplerRootParameterIndex);
 			if (nullptr == mSamplerStates[samplerRootParameterIndex])
 			{

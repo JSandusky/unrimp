@@ -38,7 +38,7 @@ namespace OpenGLES3Renderer
 	UniformBufferBind::UniformBufferBind(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
 		UniformBuffer(openGLES3Renderer)
 	{
-		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES uniform buffer
 			GLint openGLESUniformBufferBackup = 0;
 			glGetIntegerv(GL_UNIFORM_BUFFER_BINDING, &openGLESUniformBufferBackup);
@@ -51,7 +51,7 @@ namespace OpenGLES3Renderer
 		// -> Usage: These constants directly map to GL_EXT_vertex_buffer_object and OpenGL ES 3 constants, do not change them
 		glBufferData(GL_UNIFORM_BUFFER, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 
-		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES uniform buffer
 			glBindBuffer(GL_UNIFORM_BUFFER, static_cast<GLuint>(openGLESUniformBufferBackup));
 		#endif
@@ -68,7 +68,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	void UniformBufferBind::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
-		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL uniform buffer
 			GLint openGLESUniformBufferBackup = 0;
 			glGetIntegerv(GL_UNIFORM_BUFFER_BINDING, &openGLESUniformBufferBackup);
@@ -79,7 +79,7 @@ namespace OpenGLES3Renderer
 		glBindBuffer(GL_UNIFORM_BUFFER, mOpenGLESUniformBuffer);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
 
-		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL uniform buffer
 			glBindBuffer(GL_UNIFORM_BUFFER, static_cast<GLuint>(openGLESUniformBufferBackup));
 		#endif

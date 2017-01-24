@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
-#include "OpenGLES3Renderer/OpenGLES3Debug.h"	// For "OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "OpenGLES3Renderer/OpenGLES3Debug.h"	// For "OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "OpenGLES3Renderer/Mapping.h"
 #include "OpenGLES3Renderer/IExtensions.h"
 #include "OpenGLES3Renderer/RootSignature.h"
@@ -56,21 +56,21 @@
 //[ Global functions                                      ]
 //[-------------------------------------------------------]
 // Export the instance creation function
-#ifdef OPENGLES2RENDERER_EXPORTS
-	#define OPENGLES2RENDERER_API_EXPORT GENERIC_API_EXPORT
+#ifdef OPENGLES3RENDERER_EXPORTS
+	#define OPENGLES3RENDERER_API_EXPORT GENERIC_API_EXPORT
 #else
-	#define OPENGLES2RENDERER_API_EXPORT
+	#define OPENGLES3RENDERER_API_EXPORT
 #endif
-OPENGLES2RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES3RendererInstance2(handle nativeWindowHandle, bool useExternalContext)
+OPENGLES3RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES3RendererInstance2(handle nativeWindowHandle, bool useExternalContext)
 {
 	return new OpenGLES3Renderer::OpenGLES3Renderer(nativeWindowHandle, useExternalContext);
 }
 
-OPENGLES2RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES3RendererInstance(handle nativeWindowHandle)
+OPENGLES3RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES3RendererInstance(handle nativeWindowHandle)
 {
 	return new OpenGLES3Renderer::OpenGLES3Renderer(nativeWindowHandle, false);
 }
-#undef OPENGLES2RENDERER_API_EXPORT
+#undef OPENGLES3RENDERER_API_EXPORT
 
 
 //[-------------------------------------------------------]
@@ -429,14 +429,14 @@ namespace OpenGLES3Renderer
 			mGraphicsRootSignature->addReference();
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
 		}
 	}
 
 	void OpenGLES3Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
 	{
 		// Security checks
-		#ifndef OPENGLES2RENDERER_NO_DEBUG
+		#ifndef OPENGLES3RENDERER_NO_DEBUG
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
@@ -473,7 +473,7 @@ namespace OpenGLES3Renderer
 		if (nullptr != resource)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
 
 			// Get the root signature parameter instance
 			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
@@ -505,7 +505,7 @@ namespace OpenGLES3Renderer
 						case Renderer::ShaderVisibility::VERTEX:
 						case Renderer::ShaderVisibility::FRAGMENT:
 						{
-							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+							#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 								// Backup the currently active OpenGL ES 3 texture
 								GLint openGLES2ActiveTextureBackup = 0;
 								glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
@@ -536,7 +536,7 @@ namespace OpenGLES3Renderer
 								mGraphicsRootSignature->setOpenGLES3SamplerStates(descriptorRange->samplerRootParameterIndex);
 							}
 
-							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+							#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 								// Be polite and restore the previous active OpenGL ES 3 texture
 								glActiveTexture(static_cast<GLuint>(openGLES2ActiveTextureBackup));
 							#endif
@@ -587,7 +587,7 @@ namespace OpenGLES3Renderer
 		{
 			// TODO(co) Handle this situation?
 			/*
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 				// Backup the currently active OpenGL ES 3 texture
 				GLint openGLES2ActiveTextureBackup = 0;
 				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
@@ -599,7 +599,7 @@ namespace OpenGLES3Renderer
 			// Unbind the texture at the given texture unit
 			glBindTexture(GL_TEXTURE_2D, 0);
 
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous active OpenGL ES 3 texture
 				glActiveTexture(openGLES2ActiveTextureBackup);
 			#endif
@@ -612,7 +612,7 @@ namespace OpenGLES3Renderer
 		if (nullptr != pipelineState)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
+			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
 			// Set pipeline state
 			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
@@ -636,7 +636,7 @@ namespace OpenGLES3Renderer
 			if (nullptr != vertexArray)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *vertexArray)
+				OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *vertexArray)
 
 				// Is GL_OES_vertex_array_object there?
 				if (mContext->getExtensions().isGL_OES_vertex_array_object())
@@ -781,7 +781,7 @@ namespace OpenGLES3Renderer
 			if (nullptr != renderTarget)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
+				OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
 
 				// Release the render target reference, in case we have one
 				Framebuffer* framebufferToGenerateMipmapsFor = nullptr;
@@ -963,8 +963,8 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::copyResource(Renderer::IResource& destinationResource, Renderer::IResource& sourceResource)
 	{
 		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
-		OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationResource)
-		OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceResource)
+		OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationResource)
+		OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceResource)
 
 		// Evaluate the render target type
 		switch (destinationResource.getResourceType())
@@ -978,7 +978,7 @@ namespace OpenGLES3Renderer
 					assert(openGlEs2DestinationTexture2D.getWidth() == openGlEs2SourceTexture2D.getWidth());
 					assert(openGlEs2DestinationTexture2D.getHeight() == openGlEs2SourceTexture2D.getHeight());
 
-					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 						// Backup the currently bound OpenGL ES 3 framebuffer
 						GLint openGLES2FramebufferBackup = 0;
 						glGetIntegerv(GL_FRAMEBUFFER_BINDING, &openGLES2FramebufferBackup);
@@ -1001,7 +1001,7 @@ namespace OpenGLES3Renderer
 					glDrawBuffers(1, OPENGL_DRAW_BUFFER);
 					glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 						// Be polite and restore the previous bound OpenGL ES 3 framebuffer
 						glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLES2FramebufferBackup));
 					#endif
@@ -1307,7 +1307,7 @@ namespace OpenGLES3Renderer
 			{
 				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
 
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Backup the currently bound OpenGL ES 3 array element buffer
 					GLint openGLES2ArrayElementBufferBackup = 0;
 					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
@@ -1328,7 +1328,7 @@ namespace OpenGLES3Renderer
 				mappedSubresource.rowPitch   = 0;
 				mappedSubresource.depthPitch = 0;
 
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 3 array element buffer
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayElementBufferBackup));
 				#endif
@@ -1341,7 +1341,7 @@ namespace OpenGLES3Renderer
 			{
 				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
 
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Backup the currently bound OpenGL ES 3 array buffer
 					GLint openGLES2ArrayBufferBackup = 0;
 					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
@@ -1362,7 +1362,7 @@ namespace OpenGLES3Renderer
 				mappedSubresource.rowPitch   = 0;
 				mappedSubresource.depthPitch = 0;
 
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 3 array buffer
 					glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayBufferBackup));
 				#endif
@@ -1475,7 +1475,7 @@ namespace OpenGLES3Renderer
 		{
 			case Renderer::ResourceType::INDEX_BUFFER:
 			{
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Backup the currently bound OpenGL ES 3 array element buffer
 					GLint openGLES2ArrayElementBufferBackup = 0;
 					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
@@ -1494,7 +1494,7 @@ namespace OpenGLES3Renderer
 					glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 				}
 
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 3 array element buffer
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayElementBufferBackup));
 				#endif
@@ -1503,7 +1503,7 @@ namespace OpenGLES3Renderer
 
 			case Renderer::ResourceType::VERTEX_BUFFER:
 			{
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Backup the currently bound OpenGL ES 3 array buffer
 					GLint openGLES2ArrayBufferBackup = 0;
 					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
@@ -1522,7 +1522,7 @@ namespace OpenGLES3Renderer
 					glUnmapBuffer(GL_ARRAY_BUFFER);
 				}
 
-				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 3 array buffer
 					glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayBufferBackup));
 				#endif
@@ -1848,7 +1848,7 @@ namespace OpenGLES3Renderer
 		if (nullptr != program)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
+			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
 			// Backup OpenGL ES 3 program identifier
 			mOpenGLES3Program = static_cast<ProgramGlsl*>(program)->getOpenGLES3Program();

@@ -43,7 +43,7 @@ namespace OpenGLES3Renderer
 	{
 		// TODO(co) Check support formats
 
-		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently set alignment
 			GLint openGLES2AlignmentBackup = 0;
 			glGetIntegerv(GL_UNPACK_ALIGNMENT, &openGLES2AlignmentBackup);
@@ -75,7 +75,7 @@ namespace OpenGLES3Renderer
 		}
 		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 texture
 			glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, openGLES2TextureBackup);
 
