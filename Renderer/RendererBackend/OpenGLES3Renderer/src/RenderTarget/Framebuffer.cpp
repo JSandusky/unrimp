@@ -58,8 +58,8 @@ namespace OpenGLES3Renderer
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES 3 framebuffer
-			GLint openGLES2FramebufferBackup = 0;
-			glGetIntegerv(GL_FRAMEBUFFER_BINDING, &openGLES2FramebufferBackup);
+			GLint openGLES3FramebufferBackup = 0;
+			glGetIntegerv(GL_FRAMEBUFFER_BINDING, &openGLES3FramebufferBackup);
 		#endif
 
 		// Bind this OpenGL ES 3 framebuffer
@@ -75,7 +75,7 @@ namespace OpenGLES3Renderer
 			Renderer::ITexture **colorTextureToSetup = mColorTextures;
 			Renderer::ITexture **colorTexture		 = colorTextures;
 			Renderer::ITexture **colorTextureEnd     = colorTextures + numberOfColorTextures;
-			for (GLenum openGLES2Attachment = GL_COLOR_ATTACHMENT0; colorTexture < colorTextureEnd; ++colorTexture, ++openGLES2Attachment, ++colorTextureToSetup)
+			for (GLenum openGLES3Attachment = GL_COLOR_ATTACHMENT0; colorTexture < colorTextureEnd; ++colorTexture, ++openGLES3Attachment, ++colorTextureToSetup)
 			{
 				// Valid entry?
 				if (nullptr != *colorTextures)
@@ -104,10 +104,10 @@ namespace OpenGLES3Renderer
 							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
 
 							// Set the OpenGL ES 3 framebuffer color attachment
-							glFramebufferTexture2D(GL_FRAMEBUFFER, openGLES2Attachment, GL_TEXTURE_2D, texture2D->getOpenGLES3Texture(), 0);
+							glFramebufferTexture2D(GL_FRAMEBUFFER, openGLES3Attachment, GL_TEXTURE_2D, texture2D->getOpenGLES3Texture(), 0);
 
 							// If this is the primary render target, get the framebuffer width and height
-							if (GL_COLOR_ATTACHMENT0 == openGLES2Attachment)
+							if (GL_COLOR_ATTACHMENT0 == openGLES3Attachment)
 							{
 								mWidth  = texture2D->getWidth();
 								mHeight = texture2D->getHeight();
@@ -199,8 +199,8 @@ namespace OpenGLES3Renderer
 
 		#ifdef RENDERER_OUTPUT_DEBUG
 			// Check the status of the OpenGL ES 3 framebuffer
-			const GLenum openGLES2Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-			switch (openGLES2Status)
+			const GLenum openGLES3Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+			switch (openGLES3Status)
 			{
 				case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
 					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Not all framebuffer attachment points are framebuffer attachment complete (\"GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT\")")
@@ -254,7 +254,7 @@ namespace OpenGLES3Renderer
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 framebuffer
-			glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLES2FramebufferBackup));
+			glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLES3FramebufferBackup));
 		#endif
 
 		// Validate the framebuffer width and height
@@ -321,8 +321,8 @@ namespace OpenGLES3Renderer
 					#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 						// Backup the currently bound OpenGL ES 3 texture
 						// TODO(co) It's possible to avoid calling this multiple times
-						GLint openGLES2TextureBackup = 0;
-						glGetIntegerv(GL_TEXTURE_BINDING_2D, &openGLES2TextureBackup);
+						GLint openGLES3TextureBackup = 0;
+						glGetIntegerv(GL_TEXTURE_BINDING_2D, &openGLES3TextureBackup);
 					#endif
 
 					// Generate mipmaps
@@ -332,7 +332,7 @@ namespace OpenGLES3Renderer
 
 					#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 						// Be polite and restore the previous bound OpenGL ES 3 texture
-						glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(openGLES2TextureBackup));
+						glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(openGLES3TextureBackup));
 					#endif
 				}
 			}

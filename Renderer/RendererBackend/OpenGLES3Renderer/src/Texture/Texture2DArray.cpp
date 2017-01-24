@@ -45,12 +45,12 @@ namespace OpenGLES3Renderer
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently set alignment
-			GLint openGLES2AlignmentBackup = 0;
-			glGetIntegerv(GL_UNPACK_ALIGNMENT, &openGLES2AlignmentBackup);
+			GLint openGLES3AlignmentBackup = 0;
+			glGetIntegerv(GL_UNPACK_ALIGNMENT, &openGLES3AlignmentBackup);
 
 			// Backup the currently bound OpenGL ES 3 texture
-			GLint openGLES2TextureBackup = 0;
-			glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY_EXT, &openGLES2TextureBackup);
+			GLint openGLES3TextureBackup = 0;
+			glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY_EXT, &openGLES3TextureBackup);
 		#endif
 
 		// Set correct alignment
@@ -77,10 +77,10 @@ namespace OpenGLES3Renderer
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 texture
-			glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, openGLES2TextureBackup);
+			glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, openGLES3TextureBackup);
 
 			// Restore previous alignment
-			glPixelStorei(GL_UNPACK_ALIGNMENT, openGLES2AlignmentBackup);
+			glPixelStorei(GL_UNPACK_ALIGNMENT, openGLES3AlignmentBackup);
 		#endif
 	}
 

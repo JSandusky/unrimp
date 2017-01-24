@@ -120,9 +120,9 @@ namespace OpenGLES3Renderer
 									// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
 									#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 										// Backup the currently used OpenGL ES 3 program
-										GLint openGLES2ProgramBackup = 0;
-										glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
-										if (openGLES2ProgramBackup == mOpenGLES3Program)
+										GLint openGLES3ProgramBackup = 0;
+										glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES3ProgramBackup);
+										if (openGLES3ProgramBackup == mOpenGLES3Program)
 										{
 											// Set uniform, please note that for this our program must be the currently used one
 											glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
@@ -134,7 +134,7 @@ namespace OpenGLES3Renderer
 											glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
 
 											// Be polite and restore the previous used OpenGL ES 3 program
-											glUseProgram(openGLES2ProgramBackup);
+											glUseProgram(openGLES3ProgramBackup);
 										}
 									#else
 										// Set uniform, please note that for this our program must be the currently used one
@@ -199,9 +199,9 @@ namespace OpenGLES3Renderer
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program
-			GLint openGLES2ProgramBackup = 0;
-			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
-			if (openGLES2ProgramBackup == mOpenGLES3Program)
+			GLint openGLES3ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES3ProgramBackup);
+			if (openGLES3ProgramBackup == mOpenGLES3Program)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniform1i(static_cast<GLint>(uniformHandle), value);
@@ -213,7 +213,7 @@ namespace OpenGLES3Renderer
 				glUniform1i(static_cast<GLint>(uniformHandle), value);
 
 				// Be polite and restore the previous used OpenGL ES 3 program
-				glUseProgram(openGLES2ProgramBackup);
+				glUseProgram(openGLES3ProgramBackup);
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
@@ -226,9 +226,9 @@ namespace OpenGLES3Renderer
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program
-			GLint openGLES2ProgramBackup = 0;
-			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
-			if (openGLES2ProgramBackup == mOpenGLES3Program)
+			GLint openGLES3ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES3ProgramBackup);
+			if (openGLES3ProgramBackup == mOpenGLES3Program)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniform1f(static_cast<GLint>(uniformHandle), value);
@@ -240,7 +240,7 @@ namespace OpenGLES3Renderer
 				glUniform1f(static_cast<GLint>(uniformHandle), value);
 
 				// Be polite and restore the previous used OpenGL ES 3 program
-				glUseProgram(openGLES2ProgramBackup);
+				glUseProgram(openGLES3ProgramBackup);
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
@@ -253,9 +253,9 @@ namespace OpenGLES3Renderer
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program
-			GLint openGLES2ProgramBackup = 0;
-			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
-			if (openGLES2ProgramBackup == mOpenGLES3Program)
+			GLint openGLES3ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES3ProgramBackup);
+			if (openGLES3ProgramBackup == mOpenGLES3Program)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniform2fv(static_cast<GLint>(uniformHandle), 1, value);
@@ -267,7 +267,7 @@ namespace OpenGLES3Renderer
 				glUniform2fv(static_cast<GLint>(uniformHandle), 1, value);
 
 				// Be polite and restore the previous used OpenGL ES 3 program
-				glUseProgram(openGLES2ProgramBackup);
+				glUseProgram(openGLES3ProgramBackup);
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
@@ -280,9 +280,9 @@ namespace OpenGLES3Renderer
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program
-			GLint openGLES2ProgramBackup = 0;
-			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
-			if (openGLES2ProgramBackup == mOpenGLES3Program)
+			GLint openGLES3ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES3ProgramBackup);
+			if (openGLES3ProgramBackup == mOpenGLES3Program)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniform3fv(static_cast<GLint>(uniformHandle), 1, value);
@@ -294,7 +294,7 @@ namespace OpenGLES3Renderer
 				glUniform3fv(static_cast<GLint>(uniformHandle), 1, value);
 
 				// Be polite and restore the previous used OpenGL ES 3 program
-				glUseProgram(openGLES2ProgramBackup);
+				glUseProgram(openGLES3ProgramBackup);
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
@@ -307,9 +307,9 @@ namespace OpenGLES3Renderer
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program
-			GLint openGLES2ProgramBackup = 0;
-			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
-			if (openGLES2ProgramBackup == mOpenGLES3Program)
+			GLint openGLES3ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES3ProgramBackup);
+			if (openGLES3ProgramBackup == mOpenGLES3Program)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniform4fv(static_cast<GLint>(uniformHandle), 1, value);
@@ -321,7 +321,7 @@ namespace OpenGLES3Renderer
 				glUniform4fv(static_cast<GLint>(uniformHandle), 1, value);
 
 				// Be polite and restore the previous used OpenGL ES 3 program
-				glUseProgram(openGLES2ProgramBackup);
+				glUseProgram(openGLES3ProgramBackup);
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
@@ -334,9 +334,9 @@ namespace OpenGLES3Renderer
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program
-			GLint openGLES2ProgramBackup = 0;
-			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
-			if (openGLES2ProgramBackup == mOpenGLES3Program)
+			GLint openGLES3ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES3ProgramBackup);
+			if (openGLES3ProgramBackup == mOpenGLES3Program)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniformMatrix3fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
@@ -348,7 +348,7 @@ namespace OpenGLES3Renderer
 				glUniformMatrix3fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 
 				// Be polite and restore the previous used OpenGL ES 3 program
-				glUseProgram(openGLES2ProgramBackup);
+				glUseProgram(openGLES3ProgramBackup);
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
@@ -361,9 +361,9 @@ namespace OpenGLES3Renderer
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program
-			GLint openGLES2ProgramBackup = 0;
-			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
-			if (openGLES2ProgramBackup == mOpenGLES3Program)
+			GLint openGLES3ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES3ProgramBackup);
+			if (openGLES3ProgramBackup == mOpenGLES3Program)
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniformMatrix4fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
@@ -375,7 +375,7 @@ namespace OpenGLES3Renderer
 				glUniformMatrix4fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 
 				// Be polite and restore the previous used OpenGL ES 3 program
-				glUseProgram(openGLES2ProgramBackup);
+				glUseProgram(openGLES3ProgramBackup);
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one

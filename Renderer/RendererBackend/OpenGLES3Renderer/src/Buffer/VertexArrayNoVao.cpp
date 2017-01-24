@@ -98,8 +98,8 @@ namespace OpenGLES3Renderer
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES 3 array buffer
-			GLint openGLES2ArrayBufferBackup = 0;
-			glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
+			GLint openGLES3ArrayBufferBackup = 0;
+			glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES3ArrayBufferBackup);
 		#endif
 
 		// Loop through all attributes
@@ -125,7 +125,7 @@ namespace OpenGLES3Renderer
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 array buffer
-			glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayBufferBackup));
+			glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ArrayBufferBackup));
 		#endif
 
 		// Get the used index buffer

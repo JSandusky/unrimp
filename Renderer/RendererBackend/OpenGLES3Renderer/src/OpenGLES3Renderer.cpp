@@ -49,7 +49,7 @@
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
-#include <GLES2/gl2ext.h>
+#include <GLES3/gl2ext.h>
 
 
 //[-------------------------------------------------------]
@@ -507,8 +507,8 @@ namespace OpenGLES3Renderer
 						{
 							#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 								// Backup the currently active OpenGL ES 3 texture
-								GLint openGLES2ActiveTextureBackup = 0;
-								glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
+								GLint openGLES3ActiveTextureBackup = 0;
+								glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES3ActiveTextureBackup);
 							#endif
 
 							// TODO(co) Some security checks might be wise *maximum number of texture units*
@@ -538,7 +538,7 @@ namespace OpenGLES3Renderer
 
 							#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 								// Be polite and restore the previous active OpenGL ES 3 texture
-								glActiveTexture(static_cast<GLuint>(openGLES2ActiveTextureBackup));
+								glActiveTexture(static_cast<GLuint>(openGLES3ActiveTextureBackup));
 							#endif
 							break;
 						}
@@ -589,8 +589,8 @@ namespace OpenGLES3Renderer
 			/*
 			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 				// Backup the currently active OpenGL ES 3 texture
-				GLint openGLES2ActiveTextureBackup = 0;
-				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
+				GLint openGLES3ActiveTextureBackup = 0;
+				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES3ActiveTextureBackup);
 			#endif
 
 			// TODO(co) Some security checks might be wise *maximum number of texture units*
@@ -601,7 +601,7 @@ namespace OpenGLES3Renderer
 
 			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous active OpenGL ES 3 texture
-				glActiveTexture(openGLES2ActiveTextureBackup);
+				glActiveTexture(openGLES3ActiveTextureBackup);
 			#endif
 			*/
 		}
@@ -980,8 +980,8 @@ namespace OpenGLES3Renderer
 
 					#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 						// Backup the currently bound OpenGL ES 3 framebuffer
-						GLint openGLES2FramebufferBackup = 0;
-						glGetIntegerv(GL_FRAMEBUFFER_BINDING, &openGLES2FramebufferBackup);
+						GLint openGLES3FramebufferBackup = 0;
+						glGetIntegerv(GL_FRAMEBUFFER_BINDING, &openGLES3FramebufferBackup);
 					#endif
 
 					// Copy resource by using a framebuffer
@@ -1003,7 +1003,7 @@ namespace OpenGLES3Renderer
 
 					#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 						// Be polite and restore the previous bound OpenGL ES 3 framebuffer
-						glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLES2FramebufferBackup));
+						glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(openGLES3FramebufferBackup));
 					#endif
 				}
 				else
@@ -1309,8 +1309,8 @@ namespace OpenGLES3Renderer
 
 				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Backup the currently bound OpenGL ES 3 array element buffer
-					GLint openGLES2ArrayElementBufferBackup = 0;
-					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
+					GLint openGLES3ArrayElementBufferBackup = 0;
+					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES3ArrayElementBufferBackup);
 				#endif
 
 				// Bind this OpenGL ES 3 element buffer and upload the data
@@ -1330,7 +1330,7 @@ namespace OpenGLES3Renderer
 
 				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 3 array element buffer
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayElementBufferBackup));
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ArrayElementBufferBackup));
 				#endif
 
 				// Done
@@ -1343,8 +1343,8 @@ namespace OpenGLES3Renderer
 
 				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Backup the currently bound OpenGL ES 3 array buffer
-					GLint openGLES2ArrayBufferBackup = 0;
-					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
+					GLint openGLES3ArrayBufferBackup = 0;
+					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES3ArrayBufferBackup);
 				#endif
 
 				// Bind this OpenGL ES 3 array buffer and upload the data
@@ -1364,7 +1364,7 @@ namespace OpenGLES3Renderer
 
 				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 3 array buffer
-					glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayBufferBackup));
+					glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ArrayBufferBackup));
 				#endif
 
 				// Done
@@ -1477,8 +1477,8 @@ namespace OpenGLES3Renderer
 			{
 				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Backup the currently bound OpenGL ES 3 array element buffer
-					GLint openGLES2ArrayElementBufferBackup = 0;
-					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
+					GLint openGLES3ArrayElementBufferBackup = 0;
+					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES3ArrayElementBufferBackup);
 				#endif
 
 				// Bind this OpenGL ES 3 element buffer and upload the data
@@ -1496,7 +1496,7 @@ namespace OpenGLES3Renderer
 
 				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 3 array element buffer
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayElementBufferBackup));
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ArrayElementBufferBackup));
 				#endif
 				break;
 			}
@@ -1505,8 +1505,8 @@ namespace OpenGLES3Renderer
 			{
 				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Backup the currently bound OpenGL ES 3 array buffer
-					GLint openGLES2ArrayBufferBackup = 0;
-					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
+					GLint openGLES3ArrayBufferBackup = 0;
+					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES3ArrayBufferBackup);
 				#endif
 
 				// Bind this OpenGL ES 3 array buffer and upload the data
@@ -1524,7 +1524,7 @@ namespace OpenGLES3Renderer
 
 				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 3 array buffer
-					glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayBufferBackup));
+					glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ArrayBufferBackup));
 				#endif
 				break;
 			}

@@ -246,7 +246,7 @@ namespace OpenGLES3Renderer
 			}
 		#elif defined LINUX && !defined ANDROID
 			// First "libGL.so": The closed source drivers doesn't provide separate libraries for GLES and EGL (at least the drivers from AMD)
-			// but the separate EGL/GLES2 libs might be present on the system
+			// but the separate EGL/GLES3 libs might be present on the system
 			mEGLSharedLibrary = ::dlopen("libGL.so", RTLD_LAZY);
 			if (nullptr != mEGLSharedLibrary)
 			{

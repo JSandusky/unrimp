@@ -50,16 +50,16 @@ namespace OpenGLES3Renderer
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES 3 array buffer
-			GLint openGLES2ArrayBufferBackup = 0;
-			glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
+			GLint openGLES3ArrayBufferBackup = 0;
+			glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES3ArrayBufferBackup);
 
 			// Backup the currently bound OpenGL ES 3 element array buffer
-			GLint openGLES2ElementArrayBufferBackup = 0;
-			glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ElementArrayBufferBackup);
+			GLint openGLES3ElementArrayBufferBackup = 0;
+			glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES3ElementArrayBufferBackup);
 
 			// Backup the currently bound OpenGL ES 3 vertex array
-			GLint openGLES2VertexArrayBackup = 0;
-			glGetIntegerv(GL_VERTEX_ARRAY_BINDING_OES, &openGLES2VertexArrayBackup);
+			GLint openGLES3VertexArrayBackup = 0;
+			glGetIntegerv(GL_VERTEX_ARRAY_BINDING_OES, &openGLES3VertexArrayBackup);
 		#endif
 
 		// Bind this OpenGL ES 3 vertex array
@@ -109,13 +109,13 @@ namespace OpenGLES3Renderer
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 vertex array
-			glBindVertexArrayOES(static_cast<GLuint>(openGLES2VertexArrayBackup));
+			glBindVertexArrayOES(static_cast<GLuint>(openGLES3VertexArrayBackup));
 
 			// Be polite and restore the previous bound OpenGL ES 3 element array buffer
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ElementArrayBufferBackup));
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ElementArrayBufferBackup));
 
 			// Be polite and restore the previous bound OpenGL ES 3 array buffer
-			glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES2ArrayBufferBackup));
+			glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ArrayBufferBackup));
 		#endif
 	}
 
