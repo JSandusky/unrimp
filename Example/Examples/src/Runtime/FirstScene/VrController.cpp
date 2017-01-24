@@ -333,38 +333,47 @@ void VrController::onUpdate(float pastMilliseconds)
 	// -> When pressing the trigger button one teleports to this position
 	if (mRendererRuntime.getVrManager().getVrManagerTypeId() == RendererRuntime::VrManagerOpenVR::TYPE_ID && ::detail::defaultVrManagerOpenVRListener.getNumberOfVrControllers() >= 1 && nullptr != mTeleportIndicationLightSceneItem)
 	{
-		// Get VR controller transform data
 		const RendererRuntime::VrManagerOpenVR& vrManagerOpenVR = static_cast<RendererRuntime::VrManagerOpenVR&>(mRendererRuntime.getVrManager());
-		const glm::mat4& devicePoseMatrix = vrManagerOpenVR.getDevicePoseMatrix(::detail::defaultVrManagerOpenVRListener.getVrControllerTrackedDeviceIndices(0));
-		glm::vec3 scale;
-		glm::quat rotation;
-		glm::vec3 translation;
-		glm::vec3 skew;
-		glm::vec4 perspective;
-		glm::decompose(devicePoseMatrix, scale, rotation, translation, skew, perspective);
+		const bool hasFocus = !vrManagerOpenVR.getVrSystem()->IsInputFocusCapturedByAnotherProcess();
+		bool teleportIndicationLightSceneItemVisible = hasFocus;
 
-		// Everything must be relative to the camera world space position
-		translation -= getCameraSceneItem().getParentSceneNodeSafe().getTransform().position;
-
-		// TODO(co) Why is the rotation inverted?
-		rotation = glm::inverse(rotation);
-
-		// Construct ray
-		const glm::vec3& rayOrigin = translation;
-		const glm::vec3 rayDirection = rotation * -RendererRuntime::Math::FORWARD_VECTOR;
-
-		// Simple ray-plane intersection
-		static const float MAXIMUM_TELEPORT_DISTANCE = 10.0f;
-		float distance = 0.0f;
-		if (glm::intersectRayPlane(rayOrigin, rayDirection, RendererRuntime::Math::ZERO_VECTOR, RendererRuntime::Math::UP_VECTOR, distance) && !std::isnan(distance) && distance <= MAXIMUM_TELEPORT_DISTANCE)
+		// Do only show the teleport indication light scene item visible if the input focus is captured by our process
+		if (hasFocus)
 		{
-			mTeleportIndicationLightSceneItem->setVisible(true);
-			mTeleportIndicationLightSceneItem->getParentSceneNode()->setPosition(rayOrigin + rayDirection * distance);
+			// Get VR controller transform data
+			const glm::mat4& devicePoseMatrix = vrManagerOpenVR.getDevicePoseMatrix(::detail::defaultVrManagerOpenVRListener.getVrControllerTrackedDeviceIndices(0));
+			glm::vec3 scale;
+			glm::quat rotation;
+			glm::vec3 translation;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::decompose(devicePoseMatrix, scale, rotation, translation, skew, perspective);
+
+			// Everything must be relative to the camera world space position
+			translation -= getCameraSceneItem().getParentSceneNodeSafe().getTransform().position;
+
+			// TODO(co) Why is the rotation inverted?
+			rotation = glm::inverse(rotation);
+
+			// Construct ray
+			const glm::vec3& rayOrigin = translation;
+			const glm::vec3 rayDirection = rotation * -RendererRuntime::Math::FORWARD_VECTOR;
+
+			// Simple ray-plane intersection
+			static const float MAXIMUM_TELEPORT_DISTANCE = 10.0f;
+			float distance = 0.0f;
+			if (glm::intersectRayPlane(rayOrigin, rayDirection, RendererRuntime::Math::ZERO_VECTOR, RendererRuntime::Math::UP_VECTOR, distance) && !std::isnan(distance) && distance <= MAXIMUM_TELEPORT_DISTANCE)
+			{
+				mTeleportIndicationLightSceneItem->getParentSceneNode()->setPosition(rayOrigin + rayDirection * distance);
+			}
+			else
+			{
+				teleportIndicationLightSceneItemVisible = false;
+			}
 		}
-		else
-		{
-			mTeleportIndicationLightSceneItem->setVisible(false);
-		}
+
+		// Set teleport indication light scene item visibility
+		mTeleportIndicationLightSceneItem->setVisible(teleportIndicationLightSceneItemVisible);
 	}
 
 	// Call the base implementation

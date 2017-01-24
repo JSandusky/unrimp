@@ -628,12 +628,14 @@ namespace RendererRuntime
 
 					// Sent to the scene application to request hiding render models temporarily
 					case vr::VREvent_HideRenderModels:
-						::detail::setSceneItemsVisible(mSceneNodes, false);
+						mShowRenderModels = false;
+						::detail::setSceneItemsVisible(mSceneNodes, mShowRenderModels);
 						break;
 
 					// Sent to the scene application to request restoring render model visibility
 					case vr::VREvent_ShowRenderModels:
-						::detail::setSceneItemsVisible(mSceneNodes, true);
+						mShowRenderModels = true;
+						::detail::setSceneItemsVisible(mSceneNodes, mShowRenderModels);
 						break;
 				}
 
@@ -651,6 +653,9 @@ namespace RendererRuntime
 		{
 			cameraPosition = cameraSceneItem->getParentSceneNode()->getTransform().position;
 		}
+
+		// Don't draw controllers if somebody else has input focus
+		const bool showControllers = (mShowRenderModels && !mVrSystem->IsInputFocusCapturedByAnotherProcess());
 
 		// Gather all valid poses
 		mNumberOfValidDevicePoses = 0;
@@ -681,6 +686,9 @@ namespace RendererRuntime
 
 					// Tell the scene node about the new position and rotation, scale doesn't change
 					sceneNode->setPositionRotation(translation, rotation);
+
+					// Show/hide scene node
+					sceneNode->setSceneItemsVisible(showControllers);
 				}
 			}
 		}
@@ -774,6 +782,7 @@ namespace RendererRuntime
 		mVrGraphicsAPIConvention(vr::API_OpenGL),
 		mVrSystem(nullptr),
 		mVrRenderModels(nullptr),
+		mShowRenderModels(true),
 		mNumberOfValidDevicePoses(0)
 	{
 		memset(mSceneNodes, 0, sizeof(ISceneNode*) * vr::k_unMaxTrackedDeviceCount);

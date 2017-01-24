@@ -140,6 +140,7 @@ namespace RendererRuntime
 		vr::EGraphicsAPIConvention mVrGraphicsAPIConvention;
 		vr::IVRSystem*			   mVrSystem;
 		vr::IVRRenderModels*	   mVrRenderModels;
+		bool					   mShowRenderModels;
 		// Transform
 		vr::TrackedDevicePose_t	mVrTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];
 		glm::mat4				mDevicePoseMatrix[vr::k_unMaxTrackedDeviceCount];
