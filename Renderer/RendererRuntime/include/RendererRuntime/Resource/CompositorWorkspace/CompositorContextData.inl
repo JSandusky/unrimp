@@ -31,7 +31,8 @@ namespace RendererRuntime
 	inline CompositorContextData::CompositorContextData() :
 		mCameraSceneItem(nullptr),
 		mLightSceneItem(nullptr),
-		mCompositorInstancePassShadowMap(nullptr)
+		mCompositorInstancePassShadowMap(nullptr),
+		mCurrentlyBoundMaterialBlueprintResource(nullptr)
 	{
 		// Nothing here
 	}
@@ -39,7 +40,8 @@ namespace RendererRuntime
 	inline CompositorContextData::CompositorContextData(const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap) :
 		mCameraSceneItem(cameraSceneItem),
 		mLightSceneItem(lightSceneItem),
-		mCompositorInstancePassShadowMap(compositorInstancePassShadowMap)
+		mCompositorInstancePassShadowMap(compositorInstancePassShadowMap),
+		mCurrentlyBoundMaterialBlueprintResource(nullptr)
 	{
 		// Nothing here
 	}

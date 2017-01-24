@@ -37,6 +37,7 @@ namespace RendererRuntime
 {
 	class LightSceneItem;
 	class CameraSceneItem;
+	class MaterialBlueprintResource;
 	class CompositorInstancePassShadowMap;
 }
 
@@ -57,6 +58,12 @@ namespace RendererRuntime
 	*/
 	class CompositorContextData
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class RenderQueue;	// Needs access to "mCurrentlyBoundMaterialBlueprintResource"
 
 
 	//[-------------------------------------------------------]
@@ -86,6 +93,8 @@ namespace RendererRuntime
 		const CameraSceneItem*				   mCameraSceneItem;
 		const LightSceneItem*				   mLightSceneItem;
 		const CompositorInstancePassShadowMap* mCompositorInstancePassShadowMap;
+		// Cached "RendererRuntime::RenderQueue" data to reduce the number of state changes across different render queue instances (beneficial for complex compositors with e.g. multiple Gaussian blur passes)
+		mutable MaterialBlueprintResource* mCurrentlyBoundMaterialBlueprintResource;
 
 
 	};

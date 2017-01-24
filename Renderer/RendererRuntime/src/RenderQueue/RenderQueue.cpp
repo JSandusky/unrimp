@@ -25,6 +25,7 @@
 #include "RendererRuntime/RenderQueue/RenderQueue.h"
 #include "RendererRuntime/RenderQueue/RenderableManager.h"
 #include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
+#include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
@@ -157,7 +158,6 @@ namespace RendererRuntime
 
 		const MaterialResources& materialResources = mRendererRuntime.getMaterialResourceManager().getMaterialResources();
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
-		MaterialBlueprintResource* currentlyBoundMaterialBlueprintResource = nullptr;
 		InstanceBufferManager& instanceBufferManager = materialBlueprintResourceManager.getInstanceBufferManager();
 		LightBufferManager& lightBufferManager = materialBlueprintResourceManager.getLightBufferManager();
 
@@ -265,9 +265,9 @@ namespace RendererRuntime
 									{
 										// Expensive state change: Handle material blueprint resource switches
 										// -> Render queue should be sorted by material blueprint resource first to reduce those expensive state changes
-										if (currentlyBoundMaterialBlueprintResource != materialBlueprintResource)
+										if (compositorContextData.mCurrentlyBoundMaterialBlueprintResource != materialBlueprintResource)
 										{
-											currentlyBoundMaterialBlueprintResource = materialBlueprintResource;
+											compositorContextData.mCurrentlyBoundMaterialBlueprintResource = materialBlueprintResource;
 
 											// Fill the pass buffer manager
 											{ // TODO(co) Just a dummy usage for now
