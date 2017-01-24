@@ -482,8 +482,6 @@ namespace RendererToolkit
 	void JsonMaterialBlueprintHelper::readRootSignature(const rapidjson::Value& rapidJsonValueRootSignature, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
 		// First: Collect everything we need instead of directly writing it down using an inefficient data layout
-		// -> We don't care that "Renderer::RootDescriptorTable::descriptorRanges" has unused bogus content, makes loading the root signature much easier because there this content just has to be set
-		// TODO(sw) Nope it is relevant because the rootParameter members contains data which memory layout is not portable. We need here a data structure which contains only the relevant data oder only write the relevant data by hand!!!
 		std::vector<Renderer::RootParameterData> rootParameters;
 		std::vector<Renderer::DescriptorRange> descriptorRanges;
 		{

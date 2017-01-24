@@ -49,41 +49,41 @@ namespace RendererRuntime
 		mWindowHeigth = heigth;
 	}
 
-	void DebugGuiManagerLinux::onKeyInput(uint32_t keySym, const char character, bool pressed)
+	void DebugGuiManagerLinux::onKeyInput(uint32_t keySym, char character, bool pressed)
 	{
-#ifndef ANDROID
-		ImGuiIO& imGuiIo = ImGui::GetIO();
-		if (keySym < 512)
-		{
-			imGuiIo.KeysDown[keySym] = pressed;
-		}
-		else if (keySym == XK_Alt_L)
-		{
-			imGuiIo.KeyAlt = pressed;
-		}
-		else if (keySym == XK_Shift_L)
-		{
-			imGuiIo.KeyShift = pressed;
-		}
-		else if (keySym == XK_Control_L )
-		{
-			imGuiIo.KeyCtrl = pressed;
-		}
-		else if (keySym == XK_Super_L)
-		{
-			imGuiIo.KeySuper = pressed;
-		}
-		else if ((keySym & 0xff00) == 0xff00)
-		{
-			// It is a special key (e.g. tab key) map the value to a range between 0x0ff and 0x1ff
-			imGuiIo.KeysDown[(keySym & 0x1ff)] = pressed;
-		}
+		#ifndef ANDROID
+			ImGuiIO& imGuiIo = ImGui::GetIO();
+			if (keySym < 512)
+			{
+				imGuiIo.KeysDown[keySym] = pressed;
+			}
+			else if (keySym == XK_Alt_L)
+			{
+				imGuiIo.KeyAlt = pressed;
+			}
+			else if (keySym == XK_Shift_L)
+			{
+				imGuiIo.KeyShift = pressed;
+			}
+			else if (keySym == XK_Control_L )
+			{
+				imGuiIo.KeyCtrl = pressed;
+			}
+			else if (keySym == XK_Super_L)
+			{
+				imGuiIo.KeySuper = pressed;
+			}
+			else if ((keySym & 0xff00) == 0xff00)
+			{
+				// It is a special key (e.g. tab key) map the value to a range between 0x0ff and 0x1ff
+				imGuiIo.KeysDown[(keySym & 0x1ff)] = pressed;
+			}
 
-		if (pressed && character > 0)
-		{
-			imGuiIo.AddInputCharacter(character);
-		}
-#endif
+			if (pressed && character > 0)
+			{
+				imGuiIo.AddInputCharacter(character);
+			}
+		#endif
 	}
 
 	void DebugGuiManagerLinux::onMouseMoveInput(int x, int y)
@@ -94,8 +94,8 @@ namespace RendererRuntime
 	void DebugGuiManagerLinux::onMouseButtonInput(uint32_t button, bool pressed)
 	{
 		ImGuiIO& imGuiIo = ImGui::GetIO();
-		
-		// The mouse buttons on X11 starts at index 1 for the left mouse button. In ImGui the left mouse button is at index 0. Compensate it
+
+		// The mouse buttons on X11 starts at index 1 for the left mouse button. In ImGui the left mouse button is at index 0. Compensate it.
 		if (button > 0 && button <= 5)
 		{
 			imGuiIo.MouseDown[button - 1] = pressed;
@@ -109,7 +109,6 @@ namespace RendererRuntime
 	}
 
 
-
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::DebugGuiManager methods ]
 	//[-------------------------------------------------------]
@@ -117,28 +116,28 @@ namespace RendererRuntime
 	{
 		// Keyboard mapping. ImGui will use those indices to peek into the imGuiIo.KeyDown[] array that we will update during the application lifetime.
 		ImGuiIO& imGuiIo = ImGui::GetIO();
-#ifndef ANDROID
-		// TODO(sw) These keysyms are 16bit values with an value > 512. We map them to a range between 0x0ff and 0x1ff
-		imGuiIo.KeyMap[ImGuiKey_Tab]		= XK_Tab & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_LeftArrow]	= XK_Left & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_RightArrow]	= XK_Right & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_UpArrow]	= XK_Up & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_DownArrow]	= XK_Down & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_PageUp]		= XK_Page_Up & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_PageDown]	= XK_Page_Down & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_Home]		= XK_Home & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_End]		= XK_End & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_Delete]		= XK_Delete & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_Backspace]	= XK_BackSpace & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_Enter]		= XK_Return & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_Escape]		= XK_Escape & 0x1ff;
-		imGuiIo.KeyMap[ImGuiKey_A]			= XK_a;
-		imGuiIo.KeyMap[ImGuiKey_C]			= XK_c;
-		imGuiIo.KeyMap[ImGuiKey_V]			= XK_v;
-		imGuiIo.KeyMap[ImGuiKey_X]			= XK_x;
-		imGuiIo.KeyMap[ImGuiKey_Y]			= XK_y;
-		imGuiIo.KeyMap[ImGuiKey_Z]			= XK_z;
-#endif
+		#ifndef ANDROID
+			// TODO(sw) These keysyms are 16bit values with an value > 512. We map them to a range between 0x0ff and 0x1ff
+			imGuiIo.KeyMap[ImGuiKey_Tab]		= XK_Tab & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_LeftArrow]	= XK_Left & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_RightArrow]	= XK_Right & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_UpArrow]	= XK_Up & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_DownArrow]	= XK_Down & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_PageUp]		= XK_Page_Up & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_PageDown]	= XK_Page_Down & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_Home]		= XK_Home & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_End]		= XK_End & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_Delete]		= XK_Delete & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_Backspace]	= XK_BackSpace & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_Enter]		= XK_Return & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_Escape]		= XK_Escape & 0x1ff;
+			imGuiIo.KeyMap[ImGuiKey_A]			= XK_a;
+			imGuiIo.KeyMap[ImGuiKey_C]			= XK_c;
+			imGuiIo.KeyMap[ImGuiKey_V]			= XK_v;
+			imGuiIo.KeyMap[ImGuiKey_X]			= XK_x;
+			imGuiIo.KeyMap[ImGuiKey_Y]			= XK_y;
+			imGuiIo.KeyMap[ImGuiKey_Z]			= XK_z;
+		#endif
 
 		// Call the base implementation
 		DebugGuiManager::startup();

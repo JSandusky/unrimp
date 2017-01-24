@@ -52,12 +52,9 @@ namespace RendererRuntime
 	{
 		// Read in the material blueprint header
 		v1MaterialBlueprint::Header materialBlueprintHeader;
-		auto size = sizeof(v1MaterialBlueprint::Header);
 		file.read(&materialBlueprintHeader, sizeof(v1MaterialBlueprint::Header));
 
 		{ // Read properties
-			
-			auto sizeProperties = sizeof(MaterialProperty);
 			// TODO(co) Get rid of the evil const-cast
 			MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mMaterialProperties.getSortedPropertyVector());
 			sortedPropertyVector.resize(materialBlueprintHeader.numberOfProperties);
@@ -65,7 +62,6 @@ namespace RendererRuntime
 		}
 
 		{ // Read visual importance of shader properties
-			auto sizeProperties = sizeof(ShaderProperties::Property);
 			// TODO(co) Get rid of the evil const-cast
 			ShaderProperties::SortedPropertyVector& sortedPropertyVector = const_cast<ShaderProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mVisualImportanceOfShaderProperties.getSortedPropertyVector());
 			sortedPropertyVector.resize(materialBlueprintHeader.numberOfShaderCombinationProperties);

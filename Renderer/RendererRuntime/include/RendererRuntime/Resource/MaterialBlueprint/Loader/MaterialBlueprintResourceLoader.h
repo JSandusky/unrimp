@@ -105,11 +105,11 @@ namespace RendererRuntime
 		MaterialBlueprintResource* mMaterialBlueprintResource;	///< Destination resource
 
 		// Temporary data: Root signature
-		uint32_t				   mMaximumNumberOfRootParameters;
+		uint32_t							   mMaximumNumberOfRootParameters;
 		std::vector<Renderer::RootParameter>   mRootParameters;
-		uint32_t				   mMaximumNumberOfDescriptorRanges;
+		uint32_t							   mMaximumNumberOfDescriptorRanges;
 		std::vector<Renderer::DescriptorRange> mDescriptorRanges;
-		Renderer::RootSignature	   mRootSignature;
+		Renderer::RootSignature				   mRootSignature;
 
 		// Temporary data: Shader blueprints
 		AssetId mShaderBlueprintAssetId[NUMBER_OF_SHADER_TYPES];
