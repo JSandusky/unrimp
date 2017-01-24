@@ -79,15 +79,15 @@ ExampleRunner::~ExampleRunner() {}
 ExampleRunner::ExampleRunner()
 	:
 	// Case sensitive name of the renderer to instance, might be ignored in case e.g. "RENDERER_ONLY_DIRECT3D12" was set as preprocessor definition
-	// -> Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
+	// -> Example renderer names: "Null", "OpenGL", "OpenGLES3", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 	// -> In case the graphics driver supports it, the OpenGL ES 2 renderer can automatically also run on a desktop PC without an emulator (perfect for testing/debugging)
 	m_defaultRendererName(
 		#ifdef RENDERER_ONLY_NULL
 			"Null"
 		#elif defined(RENDERER_ONLY_OPENGL) || defined(LINUX)
 			"OpenGL"
-		#elif RENDERER_ONLY_OPENGLES2
-			"OpenGLES2"
+		#elif RENDERER_ONLY_OPENGLES3
+			"OpenGLES3"
 		#elif WIN32
 			#ifdef RENDERER_ONLY_DIRECT3D9
 				"Direct3D9"
@@ -107,19 +107,19 @@ ExampleRunner::ExampleRunner()
 	if (m_defaultRendererName.empty())
 	{
 		#ifdef WIN32
-			#if !defined(RENDERER_ONLY_NULL) && !defined(RENDERER_ONLY_OPENGL) && !defined(RENDERER_ONLY_OPENGLES2) && !defined(RENDERER_ONLY_DIRECT3D9) && !defined(RENDERER_ONLY_DIRECT3D10) && !defined(RENDERER_ONLY_DIRECT3D12) && !defined(RENDERER_ONLY_VULKAN)
+			#if !defined(RENDERER_ONLY_NULL) && !defined(RENDERER_ONLY_OPENGL) && !defined(RENDERER_ONLY_OPENGLES3) && !defined(RENDERER_ONLY_DIRECT3D9) && !defined(RENDERER_ONLY_DIRECT3D10) && !defined(RENDERER_ONLY_DIRECT3D12) && !defined(RENDERER_ONLY_VULKAN)
 				m_defaultRendererName = "Direct3D11";
 			#endif
 		#else
-			#if !defined(RENDERER_ONLY_NULL) && !defined(RENDERER_ONLY_OPENGLES2) && !defined(RENDERER_ONLY_DIRECT3D9) && !defined(RENDERER_ONLY_DIRECT3D10) && !defined(RENDERER_ONLY_DIRECT3D11) && !defined(RENDERER_ONLY_DIRECT3D12) && !defined(RENDERER_ONLY_VULKAN)
+			#if !defined(RENDERER_ONLY_NULL) && !defined(RENDERER_ONLY_OPENGLES3) && !defined(RENDERER_ONLY_DIRECT3D9) && !defined(RENDERER_ONLY_DIRECT3D10) && !defined(RENDERER_ONLY_DIRECT3D11) && !defined(RENDERER_ONLY_DIRECT3D12) && !defined(RENDERER_ONLY_VULKAN)
 				m_defaultRendererName = "OpenGL";
 			#endif
 		#endif
 	}
 
 	// Sets of supported renderer backends
-	std::array<std::string, 8> supportsAllRenderer = {{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
-	std::array<std::string, 7> doesNotSupportOpenGLES2 = {{"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
+	std::array<std::string, 8> supportsAllRenderer = {{"Null", "OpenGL", "OpenGLES3", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
+	std::array<std::string, 7> doesNotSupportOpenGLES3 = {{"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
 	std::array<std::string, 6> onlyShaderModel4Plus = {{"Null", "OpenGL", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
 	std::array<std::string, 5> onlyShaderModel5Plus = {{"Null", "OpenGL", "Direct3D11", "Direct3D12", "Vulkan"}};
 
@@ -169,8 +169,8 @@ ExampleRunner::ExampleRunner()
 	#ifndef RENDERER_NO_OPENGL
 		m_availableRenderer.insert("OpenGL");
 	#endif
-	#ifndef RENDERER_NO_OPENGLES2
-		m_availableRenderer.insert("OpenGLES2");
+	#ifndef RENDERER_NO_OPENGLES3
+		m_availableRenderer.insert("OpenGLES3");
 	#endif
 	#ifndef RENDERER_NO_VULKAN
 		m_availableRenderer.insert("Vulkan");

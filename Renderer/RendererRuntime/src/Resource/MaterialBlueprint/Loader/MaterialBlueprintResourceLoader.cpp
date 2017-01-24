@@ -52,9 +52,12 @@ namespace RendererRuntime
 	{
 		// Read in the material blueprint header
 		v1MaterialBlueprint::Header materialBlueprintHeader;
+		auto size = sizeof(v1MaterialBlueprint::Header);
 		file.read(&materialBlueprintHeader, sizeof(v1MaterialBlueprint::Header));
 
 		{ // Read properties
+			
+			auto sizeProperties = sizeof(MaterialProperty);
 			// TODO(co) Get rid of the evil const-cast
 			MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mMaterialProperties.getSortedPropertyVector());
 			sortedPropertyVector.resize(materialBlueprintHeader.numberOfProperties);
@@ -62,6 +65,7 @@ namespace RendererRuntime
 		}
 
 		{ // Read visual importance of shader properties
+			auto sizeProperties = sizeof(ShaderProperties::Property);
 			// TODO(co) Get rid of the evil const-cast
 			ShaderProperties::SortedPropertyVector& sortedPropertyVector = const_cast<ShaderProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mVisualImportanceOfShaderProperties.getSortedPropertyVector());
 			sortedPropertyVector.resize(materialBlueprintHeader.numberOfShaderCombinationProperties);
@@ -83,32 +87,40 @@ namespace RendererRuntime
 			// Allocate memory for the temporary data
 			if (mMaximumNumberOfRootParameters < rootSignatureHeader.numberOfRootParameters)
 			{
-				delete [] mRootParameters;
+				mRootParameters.clear();
 				mMaximumNumberOfRootParameters = rootSignatureHeader.numberOfRootParameters;
-				mRootParameters = new Renderer::RootParameter[mMaximumNumberOfRootParameters];
+				mRootParameters.resize(mMaximumNumberOfRootParameters);
 			}
 			if (mMaximumNumberOfDescriptorRanges < rootSignatureHeader.numberOfDescriptorRanges)
 			{
-				delete [] mDescriptorRanges;
+				mDescriptorRanges.clear();
 				mMaximumNumberOfDescriptorRanges = rootSignatureHeader.numberOfDescriptorRanges;
-				mDescriptorRanges = new Renderer::DescriptorRange[mMaximumNumberOfDescriptorRanges];
+				mDescriptorRanges.resize(mMaximumNumberOfDescriptorRanges);
 			}
 
 			// Load in the root parameters
-			file.read(mRootParameters, sizeof(Renderer::RootParameter) * rootSignatureHeader.numberOfRootParameters);
+			std::vector<Renderer::RootParameterData> rootParameterData;
+			rootParameterData.resize(rootSignatureHeader.numberOfRootParameters);
+			file.read(rootParameterData.data(), sizeof(Renderer::RootParameterData) * rootSignatureHeader.numberOfRootParameters);
+			for (size_t index = 0; index < rootSignatureHeader.numberOfRootParameters; ++index)
+			{
+				mRootParameters[index].parameterType = rootParameterData[index].parameterType;
+				mRootParameters[index].descriptorTable.numberOfDescriptorRanges = rootParameterData[index].numberOfDescriptorRanges;
+				mRootParameters[index].shaderVisibility = rootParameterData[index].shaderVisibility;
+			}
 
 			// Load in the descriptor ranges
-			file.read(mDescriptorRanges, sizeof(Renderer::DescriptorRange) * rootSignatureHeader.numberOfDescriptorRanges);
+			file.read(mDescriptorRanges.data(), sizeof(Renderer::DescriptorRange) * rootSignatureHeader.numberOfDescriptorRanges);
 
 			// Prepare our temporary root signature
 			mRootSignature.numberOfParameters	  = rootSignatureHeader.numberOfRootParameters;
-			mRootSignature.parameters			  = mRootParameters;
+			mRootSignature.parameters			  = mRootParameters.data();
 			mRootSignature.numberOfStaticSamplers = rootSignatureHeader.numberOfStaticSamplers;
 			mRootSignature.staticSamplers		  = nullptr;	// TODO(co) Add support for static samplers
 			mRootSignature.flags				  = static_cast<Renderer::RootSignatureFlags::Enum>(rootSignatureHeader.flags);
 
 			{ // Tell the temporary root signature about the descriptor ranges
-				Renderer::DescriptorRange* descriptorRange = mDescriptorRanges;
+				Renderer::DescriptorRange* descriptorRange = mDescriptorRanges.data();
 				for (uint32_t i = 0; i < rootSignatureHeader.numberOfRootParameters; ++i)
 				{
 					Renderer::RootParameter& rootParameter = mRootParameters[i];
@@ -358,8 +370,6 @@ namespace RendererRuntime
 	MaterialBlueprintResourceLoader::~MaterialBlueprintResourceLoader()
 	{
 		// Free temporary data
-		delete [] mRootParameters;
-		delete [] mDescriptorRanges;
 		delete [] mMaterialBlueprintSamplerStates;
 		delete [] mMaterialBlueprintTextures;
 	}

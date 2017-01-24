@@ -21,9 +21,9 @@
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#ifndef RENDERER_NO_OPENGLES2
+#ifndef RENDERER_NO_OPENGLES3
 // These shader needs texture buffer support
-if (0 == strcmp(mRenderer->getName(), "OpenGLES2") && mRenderer->getCapabilities().maximumTextureBufferSize > 0)
+if (0 == strcmp(mRenderer->getName(), "OpenGLES3") && mRenderer->getCapabilities().maximumTextureBufferSize > 0)
 {
 
 

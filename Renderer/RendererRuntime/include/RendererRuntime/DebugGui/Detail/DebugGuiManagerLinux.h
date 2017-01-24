@@ -40,7 +40,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	// TODO(sw) implement me
 	class DebugGuiManagerLinux : public DebugGuiManager
 	{
 
@@ -54,7 +53,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	// TODO(sw) Move this into base class, because these methods are input/windowing agnostic?
 	public:
+		void onWindowResize(uint32_t width, uint32_t heigth);
+		void onKeyInput(uint32_t keySym, const char character, bool pressed);
+		void onMouseMoveInput(int x, int y);
+		void onMouseButtonInput(uint32_t button, bool pressed);
+		void onMouseWheelInput(bool scrollUp);
 
 
 	//[-------------------------------------------------------]
@@ -74,11 +79,16 @@ namespace RendererRuntime
 		DebugGuiManagerLinux(const DebugGuiManagerLinux&) = delete;
 		DebugGuiManagerLinux& operator=(const DebugGuiManagerLinux&) = delete;
 
+		void updateMousePosition(int x, int y);
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		uint32_t mWindowWidth;
+		uint32_t mWindowHeigth;
+		uint64_t mTime; //< Holds the time in microseconds
 
 
 	};

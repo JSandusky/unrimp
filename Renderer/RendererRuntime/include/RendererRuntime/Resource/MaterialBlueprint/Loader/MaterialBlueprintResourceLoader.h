@@ -106,9 +106,9 @@ namespace RendererRuntime
 
 		// Temporary data: Root signature
 		uint32_t				   mMaximumNumberOfRootParameters;
-		Renderer::RootParameter*   mRootParameters;
+		std::vector<Renderer::RootParameter>   mRootParameters;
 		uint32_t				   mMaximumNumberOfDescriptorRanges;
-		Renderer::DescriptorRange* mDescriptorRanges;
+		std::vector<Renderer::DescriptorRange> mDescriptorRanges;
 		Renderer::RootSignature	   mRootSignature;
 
 		// Temporary data: Shader blueprints

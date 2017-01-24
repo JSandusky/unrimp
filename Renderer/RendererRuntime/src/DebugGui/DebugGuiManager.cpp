@@ -472,7 +472,7 @@ namespace RendererRuntime
 
 		// Create vertex uniform buffer instance
 		// -> Don't use "renderer.getCapabilities().maximumUniformBufferSize > 0" here since for OpenGL we're not using uniform buffers in here
-		if (0 != strcmp(renderer.getName(), "OpenGL") && 0 != strcmp(renderer.getName(), "OpenGLES2"))
+		if (0 != strcmp(renderer.getName(), "OpenGL") && 0 != strcmp(renderer.getName(), "OpenGLES3"))
 		{
 			mVertexShaderUniformBuffer = mRendererRuntime.getBufferManager().createUniformBuffer(sizeof(float) * 4 * 4, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 			RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexShaderUniformBuffer, "Debug GUI")

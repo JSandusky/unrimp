@@ -483,7 +483,8 @@ namespace RendererToolkit
 	{
 		// First: Collect everything we need instead of directly writing it down using an inefficient data layout
 		// -> We don't care that "Renderer::RootDescriptorTable::descriptorRanges" has unused bogus content, makes loading the root signature much easier because there this content just has to be set
-		std::vector<Renderer::RootParameter> rootParameters;
+		// TODO(sw) Nope it is relevant because the rootParameter members contains data which memory layout is not portable. We need here a data structure which contains only the relevant data oder only write the relevant data by hand!!!
+		std::vector<Renderer::RootParameterData> rootParameters;
 		std::vector<Renderer::DescriptorRange> descriptorRanges;
 		{
 			const rapidjson::Value& rapidJsonValueRootParameters = rapidJsonValueRootSignature["RootParameters"];
@@ -503,9 +504,9 @@ namespace RendererToolkit
 					const rapidjson::Value& rapidJsonValueDescriptorRanges = rapidJsonValueRootParameter["DescriptorRanges"];
 
 					{ // Collect the root parameter
-						Renderer::RootParameter rootParameter;
+						Renderer::RootParameterData rootParameter;
 						rootParameter.parameterType = Renderer::RootParameterType::DESCRIPTOR_TABLE;
-						rootParameter.descriptorTable.numberOfDescriptorRanges = rapidJsonValueDescriptorRanges.MemberCount();
+						rootParameter.numberOfDescriptorRanges = rapidJsonValueDescriptorRanges.MemberCount();
 						rootParameter.shaderVisibility = Renderer::ShaderVisibility::ALL;
 						optionalShaderVisibilityProperty(rapidJsonValueRootParameter, "ShaderVisibility", rootParameter.shaderVisibility);
 						rootParameters.push_back(rootParameter);
@@ -605,7 +606,7 @@ namespace RendererToolkit
 		}
 
 		// Write down the root parameters
-		outputFileStream.write(reinterpret_cast<const char*>(rootParameters.data()), static_cast<std::streamsize>(sizeof(Renderer::RootParameter) * rootParameters.size()));
+		outputFileStream.write(reinterpret_cast<const char*>(rootParameters.data()), static_cast<std::streamsize>(sizeof(Renderer::RootParameterData) * rootParameters.size()));
 
 		// Write down the descriptor ranges
 		outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), static_cast<std::streamsize>(sizeof(Renderer::DescriptorRange) * descriptorRanges.size()));
