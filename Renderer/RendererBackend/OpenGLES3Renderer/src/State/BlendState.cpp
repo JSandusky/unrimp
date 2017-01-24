@@ -39,8 +39,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	BlendState::BlendState(const Renderer::BlendState &blendState) :
 		mBlendState(blendState),
-		mOpenGLES2SrcBlend(Mapping::getOpenGLES2BlendType(mBlendState.renderTarget[0].srcBlend)),
-		mOpenGLES2DstBlend(Mapping::getOpenGLES2BlendType(mBlendState.renderTarget[0].destBlend))
+		mOpenGLES3SrcBlend(Mapping::getOpenGLES3BlendType(mBlendState.renderTarget[0].srcBlend)),
+		mOpenGLES3DstBlend(Mapping::getOpenGLES3BlendType(mBlendState.renderTarget[0].destBlend))
 	{
 		// Nothing here
 	}
@@ -50,12 +50,12 @@ namespace OpenGLES3Renderer
 		// Nothing here
 	}
 
-	void BlendState::setOpenGLES2BlendStates() const
+	void BlendState::setOpenGLES3BlendStates() const
 	{
 		if (mBlendState.renderTarget[0].blendEnable)
 		{
 			glEnable(GL_BLEND);
-			glBlendFunc(mOpenGLES2SrcBlend, mOpenGLES2DstBlend);
+			glBlendFunc(mOpenGLES3SrcBlend, mOpenGLES3DstBlend);
 		}
 		else
 		{

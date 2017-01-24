@@ -95,14 +95,14 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    The OpenGL ES 3 texture, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline uint32_t getOpenGLES2Texture() const;
+		inline uint32_t getOpenGLES3Texture() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t mOpenGLES2Texture;	///< OpenGL ES 3 texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES3Texture;	///< OpenGL ES 3 texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

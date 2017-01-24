@@ -71,7 +71,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 magnification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2MagFilterMode(Renderer::FilterMode filterMode);
+		static int getOpenGLES3MagFilterMode(Renderer::FilterMode filterMode);
 
 		/**
 		*  @brief
@@ -85,7 +85,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 minification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2MinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps);
+		static int getOpenGLES3MinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps);
 
 		/**
 		*  @brief
@@ -97,7 +97,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 compare mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2CompareMode(Renderer::FilterMode filterMode);
+		static int getOpenGLES3CompareMode(Renderer::FilterMode filterMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureAddressMode                          ]
@@ -112,7 +112,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 texture address mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2TextureAddressMode(Renderer::TextureAddressMode textureAddressMode);
+		static int getOpenGLES3TextureAddressMode(Renderer::TextureAddressMode textureAddressMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::ComparisonFunc                              ]
@@ -127,7 +127,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 comparison function (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2ComparisonFunc(Renderer::ComparisonFunc comparisonFunc);
+		static int getOpenGLES3ComparisonFunc(Renderer::ComparisonFunc comparisonFunc);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::VertexAttributeFormat                       ]
@@ -142,7 +142,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 size (number of elements, type GLint not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2Size(Renderer::VertexAttributeFormat vertexAttributeFormat);
+		static int getOpenGLES3Size(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
 		/**
 		*  @brief
@@ -154,7 +154,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2Type(Renderer::VertexAttributeFormat vertexAttributeFormat);
+		static uint32_t getOpenGLES3Type(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
 		/**
 		*  @brief
@@ -166,7 +166,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    "1" if the format is normalized, else "0" (type "GLboolean" not used in here in order to keep the header slim)
 		*/
-		static uint32_t isOpenGLES2VertexAttributeFormatNormalized(Renderer::VertexAttributeFormat vertexAttributeFormat);
+		static uint32_t isOpenGLES3VertexAttributeFormatNormalized(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]
@@ -181,7 +181,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 usage (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2Type(Renderer::BufferUsage bufferUsage);
+		static uint32_t getOpenGLES3Type(Renderer::BufferUsage bufferUsage);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]
@@ -196,7 +196,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2Type(Renderer::IndexBufferFormat::Enum indexBufferFormat);
+		static uint32_t getOpenGLES3Type(Renderer::IndexBufferFormat::Enum indexBufferFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureFormat                               ]
@@ -211,7 +211,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 internal format (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2InternalFormat(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getOpenGLES3InternalFormat(Renderer::TextureFormat::Enum textureFormat);
 
 		/**
 		*  @brief
@@ -223,7 +223,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 format (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2Format(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getOpenGLES3Format(Renderer::TextureFormat::Enum textureFormat);
 
 		/**
 		*  @brief
@@ -235,7 +235,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2Type(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getOpenGLES3Type(Renderer::TextureFormat::Enum textureFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::PrimitiveTopology                           ]
@@ -250,7 +250,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2Type(Renderer::PrimitiveTopology primitive);
+		static uint32_t getOpenGLES3Type(Renderer::PrimitiveTopology primitive);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::MapType                                     ]
@@ -265,7 +265,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2MapType(Renderer::MapType mapType);
+		static uint32_t getOpenGLES3MapType(Renderer::MapType mapType);
 
 		/**
 		*  @brief
@@ -277,7 +277,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 type (type "GLbitfield" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2MapRangeType(Renderer::MapType mapType);
+		static uint32_t getOpenGLES3MapRangeType(Renderer::MapType mapType);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::MapType                                     ]
@@ -292,7 +292,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2BlendType(Renderer::Blend blend);
+		static uint32_t getOpenGLES3BlendType(Renderer::Blend blend);
 
 
 	};

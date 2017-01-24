@@ -39,7 +39,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const uint8_t *, uint32_t) :
 		IFragmentShader(openGLES3Renderer),
-		mOpenGLES2Shader(0)
+		mOpenGLES3Shader(0)
 	{
 		// TODO(co) Implement me
 		// Nothing here
@@ -47,7 +47,7 @@ namespace OpenGLES3Renderer
 
 	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode) :
 		IFragmentShader(openGLES3Renderer),
-		mOpenGLES2Shader(ShaderLanguageGlsl::loadShader(GL_FRAGMENT_SHADER, sourceCode))
+		mOpenGLES3Shader(ShaderLanguageGlsl::loadShader(GL_FRAGMENT_SHADER, sourceCode))
 	{
 		// Nothing here
 	}
@@ -56,7 +56,7 @@ namespace OpenGLES3Renderer
 	{
 		// Destroy the OpenGL ES 3 shader
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteShader(mOpenGLES2Shader);
+		glDeleteShader(mOpenGLES3Shader);
 	}
 
 

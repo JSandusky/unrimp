@@ -94,13 +94,13 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Enable OpenGL ES 3 vertex attribute arrays
 		*/
-		void enableOpenGLES2VertexAttribArrays();
+		void enableOpenGLES3VertexAttribArrays();
 
 		/**
 		*  @brief
 		*    Disable OpenGL ES 3 vertex attribute arrays
 		*/
-		void disableOpenGLES2VertexAttribArrays();
+		void disableOpenGLES3VertexAttribArrays();
 
 
 	//[-------------------------------------------------------]

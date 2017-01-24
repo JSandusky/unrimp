@@ -82,7 +82,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Set the OpenGL ES 3 sampler states
 		*/
-		void setOpenGLES2SamplerStates() const;
+		void setOpenGLES3SamplerStates() const;
 
 
 	//[-------------------------------------------------------]

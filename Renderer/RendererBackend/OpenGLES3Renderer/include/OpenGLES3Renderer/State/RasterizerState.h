@@ -91,7 +91,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Set the OpenGL ES 3 rasterizer states
 		*/
-		void setOpenGLES2RasterizerStates() const;
+		void setOpenGLES3RasterizerStates() const;
 
 
 	//[-------------------------------------------------------]

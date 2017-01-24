@@ -190,7 +190,7 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	void RootSignature::setOpenGLES2SamplerStates(uint32_t samplerRootParameterIndex) const
+	void RootSignature::setOpenGLES3SamplerStates(uint32_t samplerRootParameterIndex) const
 	{
 		// Security checks
 		#ifndef OPENGLES2RENDERER_NO_DEBUG
@@ -203,7 +203,7 @@ namespace OpenGLES3Renderer
 		#endif
 
 		// Set sampler state
-		mSamplerStates[samplerRootParameterIndex]->setOpenGLES2SamplerStates();
+		mSamplerStates[samplerRootParameterIndex]->setOpenGLES3SamplerStates();
 	}
 
 

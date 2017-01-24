@@ -28,9 +28,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t Framebuffer::getOpenGLES2Framebuffer() const
+	inline uint32_t Framebuffer::getOpenGLES3Framebuffer() const
 	{
-		return mOpenGLES2Framebuffer;
+		return mOpenGLES3Framebuffer;
 	}
 
 	inline uint32_t Framebuffer::getNumberOfColorTextures() const
@@ -49,7 +49,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	inline void* Framebuffer::getInternalResourceHandle() const
 	{
-		return reinterpret_cast<void*>(static_cast<uintptr_t>(mOpenGLES2Framebuffer));
+		return reinterpret_cast<void*>(static_cast<uintptr_t>(mOpenGLES3Framebuffer));
 	}
 
 

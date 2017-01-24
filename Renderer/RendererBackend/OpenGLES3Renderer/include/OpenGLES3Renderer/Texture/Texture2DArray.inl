@@ -28,9 +28,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t Texture2DArray::getOpenGLES2Texture() const
+	inline uint32_t Texture2DArray::getOpenGLES3Texture() const
 	{
-		return mOpenGLES2Texture;
+		return mOpenGLES3Texture;
 	}
 
 

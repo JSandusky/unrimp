@@ -28,9 +28,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t VertexBuffer::getOpenGLES2ArrayBuffer() const
+	inline uint32_t VertexBuffer::getOpenGLES3ArrayBuffer() const
 	{
-		return mOpenGLES2ArrayBuffer;
+		return mOpenGLES3ArrayBuffer;
 	}
 
 	inline uint32_t VertexBuffer::getBufferSize() const

@@ -107,7 +107,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] samplerRootParameterIndex
 		*    Sampler root parameter index
 		*/
-		void setOpenGLES2SamplerStates(uint32_t samplerRootParameterIndex) const;
+		void setOpenGLES3SamplerStates(uint32_t samplerRootParameterIndex) const;
 
 
 	//[-------------------------------------------------------]

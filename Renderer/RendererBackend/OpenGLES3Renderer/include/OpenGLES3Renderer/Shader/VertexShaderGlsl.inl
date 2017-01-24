@@ -28,9 +28,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t VertexShaderGlsl::getOpenGLES2Shader() const
+	inline uint32_t VertexShaderGlsl::getOpenGLES3Shader() const
 	{
-		return mOpenGLES2Shader;
+		return mOpenGLES3Shader;
 	}
 
 

@@ -41,7 +41,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	Framebuffer::Framebuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
 		IFramebuffer(openGLES3Renderer),
-		mOpenGLES2Framebuffer(0),
+		mOpenGLES3Framebuffer(0),
 		mDepthRenderbuffer(0),
 		mNumberOfColorTextures(numberOfColorTextures),
 		mColorTextures(nullptr),	// Set below
@@ -54,7 +54,7 @@ namespace OpenGLES3Renderer
 		// textures attached to the framebuffer must have the same width and height
 
 		// Create the OpenGL ES 3 framebuffer
-		glGenFramebuffers(1, &mOpenGLES2Framebuffer);
+		glGenFramebuffers(1, &mOpenGLES3Framebuffer);
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES 3 framebuffer
@@ -63,7 +63,7 @@ namespace OpenGLES3Renderer
 		#endif
 
 		// Bind this OpenGL ES 3 framebuffer
-		glBindFramebuffer(GL_FRAMEBUFFER, mOpenGLES2Framebuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, mOpenGLES3Framebuffer);
 
 		// Are there any color textures? (usually there are, so we just keep the "glBindFramebuffer()" above without trying to make this method implementation more complex)
 		if (mNumberOfColorTextures > 0)
@@ -104,7 +104,7 @@ namespace OpenGLES3Renderer
 							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
 
 							// Set the OpenGL ES 3 framebuffer color attachment
-							glFramebufferTexture2D(GL_FRAMEBUFFER, openGLES2Attachment, GL_TEXTURE_2D, texture2D->getOpenGLES2Texture(), 0);
+							glFramebufferTexture2D(GL_FRAMEBUFFER, openGLES2Attachment, GL_TEXTURE_2D, texture2D->getOpenGLES3Texture(), 0);
 
 							// If this is the primary render target, get the framebuffer width and height
 							if (GL_COLOR_ATTACHMENT0 == openGLES2Attachment)
@@ -163,7 +163,7 @@ namespace OpenGLES3Renderer
 				{
 					// Bind the depth stencil texture to framebuffer
 					const Texture2D* texture2D = static_cast<const Texture2D*>(depthStencilTexture);
-					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture2D->getOpenGLES2Texture(), 0);
+					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture2D->getOpenGLES3Texture(), 0);
 
 					// Generate mipmaps?
 					if (texture2D->getGenerateMipmaps())
@@ -274,7 +274,7 @@ namespace OpenGLES3Renderer
 	{
 		// Destroy the OpenGL ES 3 framebuffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteFramebuffers(1, &mOpenGLES2Framebuffer);
+		glDeleteFramebuffers(1, &mOpenGLES3Framebuffer);
 		glDeleteRenderbuffers(1, &mDepthRenderbuffer);
 
 		// Release the reference to the used color textures
@@ -327,7 +327,7 @@ namespace OpenGLES3Renderer
 
 					// Generate mipmaps
 					glActiveTexture(GL_TEXTURE0);
-					glBindTexture(GL_TEXTURE_2D, texture2D->getOpenGLES2Texture());
+					glBindTexture(GL_TEXTURE_2D, texture2D->getOpenGLES3Texture());
 					glGenerateMipmap(GL_TEXTURE_2D);
 
 					#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP

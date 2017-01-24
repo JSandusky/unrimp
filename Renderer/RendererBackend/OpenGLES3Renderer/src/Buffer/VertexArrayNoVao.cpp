@@ -94,7 +94,7 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	void VertexArrayNoVao::enableOpenGLES2VertexAttribArrays()
+	void VertexArrayNoVao::enableOpenGLES3VertexAttribArrays()
 	{
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES 3 array buffer
@@ -111,11 +111,11 @@ namespace OpenGLES3Renderer
 			// Set the OpenGL ES 3 vertex attribute pointer
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 			const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = mVertexBuffers[attribute->inputSlot];
-			glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES2ArrayBuffer());
+			glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES3ArrayBuffer());
 			glVertexAttribPointer(attributeLocation,
-								  Mapping::getOpenGLES2Size(attribute->vertexAttributeFormat),
-								  Mapping::getOpenGLES2Type(attribute->vertexAttributeFormat),
-								  static_cast<GLboolean>(Mapping::isOpenGLES2VertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
+								  Mapping::getOpenGLES3Size(attribute->vertexAttributeFormat),
+								  Mapping::getOpenGLES3Type(attribute->vertexAttributeFormat),
+								  static_cast<GLboolean>(Mapping::isOpenGLES3VertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
 								  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
 								  reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 
@@ -134,11 +134,11 @@ namespace OpenGLES3Renderer
 		if (nullptr != indexBuffer)
 		{
 			// Bind OpenGL ES 3 element array buffer
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->getOpenGLES2ElementArrayBuffer());
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->getOpenGLES3ElementArrayBuffer());
 		}
 	}
 
-	void VertexArrayNoVao::disableOpenGLES2VertexAttribArrays()
+	void VertexArrayNoVao::disableOpenGLES3VertexAttribArrays()
 	{
 		// No previous bound OpenGL element array buffer restore, there's not really a point in it
 

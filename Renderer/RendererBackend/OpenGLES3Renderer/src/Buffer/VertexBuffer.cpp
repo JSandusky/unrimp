@@ -39,11 +39,11 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	VertexBuffer::VertexBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
 		IVertexBuffer(openGLES3Renderer),
-		mOpenGLES2ArrayBuffer(0),
+		mOpenGLES3ArrayBuffer(0),
 		mBufferSize(numberOfBytes)
 	{
 		// Create the OpenGL ES 3 array buffer
-		glGenBuffers(1, &mOpenGLES2ArrayBuffer);
+		glGenBuffers(1, &mOpenGLES3ArrayBuffer);
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES 3 array buffer
@@ -52,8 +52,8 @@ namespace OpenGLES3Renderer
 		#endif
 
 		// Bind this OpenGL ES 3 array buffer and upload the data
-		glBindBuffer(GL_ARRAY_BUFFER, mOpenGLES2ArrayBuffer);
-		glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(numberOfBytes), data, Mapping::getOpenGLES2Type(bufferUsage));
+		glBindBuffer(GL_ARRAY_BUFFER, mOpenGLES3ArrayBuffer);
+		glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(numberOfBytes), data, Mapping::getOpenGLES3Type(bufferUsage));
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 array buffer
@@ -65,7 +65,7 @@ namespace OpenGLES3Renderer
 	{
 		// Destroy the OpenGL ES 3 array buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteBuffers(1, &mOpenGLES2ArrayBuffer);
+		glDeleteBuffers(1, &mOpenGLES3ArrayBuffer);
 	}
 
 

@@ -39,7 +39,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	Texture2D::Texture2D(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
 		ITexture2D(openGLES3Renderer, width, height),
-		mOpenGLES2Texture(0),
+		mOpenGLES3Texture(0),
 		mGenerateMipmaps(false)
 	{
 		// Sanity checks
@@ -67,8 +67,8 @@ namespace OpenGLES3Renderer
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Create the OpenGL ES 3 texture instance
-		glGenTextures(1, &mOpenGLES2Texture);
-		glBindTexture(GL_TEXTURE_2D, mOpenGLES2Texture);
+		glGenTextures(1, &mOpenGLES3Texture);
+		glBindTexture(GL_TEXTURE_2D, mOpenGLES3Texture);
 
 		// Upload the texture data
 		if (Renderer::TextureFormat::isCompressed(textureFormat))
@@ -77,7 +77,7 @@ namespace OpenGLES3Renderer
 			if (dataContainsMipmaps)
 			{
 				// Upload all mipmaps
-				const uint32_t internalFormat = Mapping::getOpenGLES2InternalFormat(textureFormat);
+				const uint32_t internalFormat = Mapping::getOpenGLES3InternalFormat(textureFormat);
 				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 				{
 					// Upload the current mipmap
@@ -93,7 +93,7 @@ namespace OpenGLES3Renderer
 			else
 			{
 				// The user only provided us with the base texture, no mipmaps
-				glCompressedTexImage2D(GL_TEXTURE_2D, 0, Mapping::getOpenGLES2InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
+				glCompressedTexImage2D(GL_TEXTURE_2D, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
 			}
 		}
 		else
@@ -104,9 +104,9 @@ namespace OpenGLES3Renderer
 			if (dataContainsMipmaps)
 			{
 				// Upload all mipmaps
-				const uint32_t internalFormat = Mapping::getOpenGLES2InternalFormat(textureFormat);
-				const uint32_t format = Mapping::getOpenGLES2Format(textureFormat);
-				const uint32_t type = Mapping::getOpenGLES2Type(textureFormat);
+				const uint32_t internalFormat = Mapping::getOpenGLES3InternalFormat(textureFormat);
+				const uint32_t format = Mapping::getOpenGLES3Format(textureFormat);
+				const uint32_t type = Mapping::getOpenGLES3Type(textureFormat);
 				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 				{
 					// Upload the current mipmap
@@ -122,7 +122,7 @@ namespace OpenGLES3Renderer
 			else
 			{
 				// The user only provided us with the base texture, no mipmaps
-				glTexImage2D(GL_TEXTURE_2D, 0, Mapping::getOpenGLES2InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, Mapping::getOpenGLES2Format(textureFormat), Mapping::getOpenGLES2Type(textureFormat), data);
+				glTexImage2D(GL_TEXTURE_2D, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, Mapping::getOpenGLES3Format(textureFormat), Mapping::getOpenGLES3Type(textureFormat), data);
 			}
 		}
 
@@ -151,7 +151,7 @@ namespace OpenGLES3Renderer
 	{
 		// Destroy the OpenGL ES 3 texture instance
 		// -> Silently ignores 0's and names that do not correspond to existing textures
-		glDeleteTextures(1, &mOpenGLES2Texture);
+		glDeleteTextures(1, &mOpenGLES3Texture);
 	}
 
 

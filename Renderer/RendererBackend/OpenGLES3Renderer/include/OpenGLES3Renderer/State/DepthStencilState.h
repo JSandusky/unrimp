@@ -82,7 +82,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Set the OpenGL ES 3 depth stencil states
 		*/
-		void setOpenGLES2DepthStencilStates() const;
+		void setOpenGLES3DepthStencilStates() const;
 
 
 	//[-------------------------------------------------------]

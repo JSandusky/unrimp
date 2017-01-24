@@ -28,9 +28,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t Texture2D::getOpenGLES2Texture() const
+	inline uint32_t Texture2D::getOpenGLES3Texture() const
 	{
-		return mOpenGLES2Texture;
+		return mOpenGLES3Texture;
 	}
 
 	inline bool Texture2D::getGenerateMipmaps() const
@@ -44,7 +44,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	inline void* Texture2D::getInternalResourceHandle() const
 	{
-		return reinterpret_cast<void*>(static_cast<uintptr_t>(mOpenGLES2Texture));
+		return reinterpret_cast<void*>(static_cast<uintptr_t>(mOpenGLES3Texture));
 	}
 
 

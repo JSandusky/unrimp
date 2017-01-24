@@ -28,9 +28,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t ProgramGlsl::getOpenGLES2Program() const
+	inline uint32_t ProgramGlsl::getOpenGLES3Program() const
 	{
-		return mOpenGLES2Program;
+		return mOpenGLES3Program;
 	}
 
 

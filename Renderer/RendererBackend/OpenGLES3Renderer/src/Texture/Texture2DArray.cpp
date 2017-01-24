@@ -39,7 +39,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	Texture2DArray::Texture2DArray(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
 		ITexture2DArray(openGLES3Renderer, width, height, numberOfSlices),
-		mOpenGLES2Texture(0)
+		mOpenGLES3Texture(0)
 	{
 		// TODO(co) Check support formats
 
@@ -57,11 +57,11 @@ namespace OpenGLES3Renderer
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		// Create the OpenGL ES 3 texture instance
-		glGenTextures(1, &mOpenGLES2Texture);
-		glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, mOpenGLES2Texture);
+		glGenTextures(1, &mOpenGLES3Texture);
+		glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, mOpenGLES3Texture);
 
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
-		glTexImage3DOES(GL_TEXTURE_2D_ARRAY_EXT, 0, Mapping::getOpenGLES2InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLES2Format(textureFormat), Mapping::getOpenGLES2Type(textureFormat), data);
+		glTexImage3DOES(GL_TEXTURE_2D_ARRAY_EXT, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLES3Format(textureFormat), Mapping::getOpenGLES3Type(textureFormat), data);
 
 		// Build mipmaps automatically on the GPU? (or GPU driver)
 		if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
@@ -88,7 +88,7 @@ namespace OpenGLES3Renderer
 	{
 		// Destroy the OpenGL ES 3 texture instance
 		// -> Silently ignores 0's and names that do not correspond to existing textures
-		glDeleteTextures(1, &mOpenGLES2Texture);
+		glDeleteTextures(1, &mOpenGLES3Texture);
 	}
 
 

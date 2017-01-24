@@ -39,8 +39,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	IndexBuffer::IndexBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
 		IIndexBuffer(openGLES3Renderer),
-		mOpenGLES2ElementArrayBuffer(0),
-		mOpenGLES2Type(GL_UNSIGNED_SHORT),
+		mOpenGLES3ElementArrayBuffer(0),
+		mOpenGLES3Type(GL_UNSIGNED_SHORT),
 		mIndexSizeInBytes(Renderer::IndexBufferFormat::getNumberOfBytesPerElement(indexBufferFormat)),
 		mBufferSize(numberOfBytes)
 	{
@@ -48,10 +48,10 @@ namespace OpenGLES3Renderer
 		if (Renderer::IndexBufferFormat::UNSIGNED_INT != indexBufferFormat || openGLES3Renderer.getContext().getExtensions().isGL_OES_element_index_uint())
 		{
 			// Create the OpenGL ES 3 element array buffer
-			glGenBuffers(1, &mOpenGLES2ElementArrayBuffer);
+			glGenBuffers(1, &mOpenGLES3ElementArrayBuffer);
 
 			// Set the OpenGL ES 3 index buffer data type
-			mOpenGLES2Type = Mapping::getOpenGLES2Type(indexBufferFormat);
+			mOpenGLES3Type = Mapping::getOpenGLES3Type(indexBufferFormat);
 
 			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 				// Backup the currently bound OpenGL ES 3 element array buffer
@@ -60,8 +60,8 @@ namespace OpenGLES3Renderer
 			#endif
 
 			// Bind this OpenGL ES 3 element array buffer and upload the data
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mOpenGLES2ElementArrayBuffer);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(numberOfBytes), data, Mapping::getOpenGLES2Type(bufferUsage));
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mOpenGLES3ElementArrayBuffer);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(numberOfBytes), data, Mapping::getOpenGLES3Type(bufferUsage));
 
 			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous bound OpenGL ES 3 element array buffer
@@ -78,7 +78,7 @@ namespace OpenGLES3Renderer
 	{
 		// Destroy the OpenGL ES 3 element array buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteBuffers(1, &mOpenGLES2ElementArrayBuffer);
+		glDeleteBuffers(1, &mOpenGLES3ElementArrayBuffer);
 	}
 
 

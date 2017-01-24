@@ -28,9 +28,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t VertexArrayVao::getOpenGLES2VertexArray() const
+	inline uint32_t VertexArrayVao::getOpenGLES3VertexArray() const
 	{
-		return mOpenGLES2VertexArray;
+		return mOpenGLES3VertexArray;
 	}
 
 

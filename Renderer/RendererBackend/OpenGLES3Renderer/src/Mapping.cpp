@@ -37,7 +37,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	int Mapping::getOpenGLES2MagFilterMode(Renderer::FilterMode filterMode)
+	int Mapping::getOpenGLES3MagFilterMode(Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -100,7 +100,7 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	int Mapping::getOpenGLES2MinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps)
+	int Mapping::getOpenGLES3MinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps)
 	{
 		switch (filterMode)
 		{
@@ -163,13 +163,13 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	int Mapping::getOpenGLES2CompareMode(Renderer::FilterMode)
+	int Mapping::getOpenGLES3CompareMode(Renderer::FilterMode)
 	{
 		// "GL_COMPARE_REF_TO_TEXTURE" is not supported by OpenGL ES 3
 		return GL_NONE;
 	}
 
-	int Mapping::getOpenGLES2TextureAddressMode(Renderer::TextureAddressMode textureAddressMode)
+	int Mapping::getOpenGLES3TextureAddressMode(Renderer::TextureAddressMode textureAddressMode)
 	{
 		static const GLint MAPPING[] =
 		{
@@ -182,7 +182,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[static_cast<int>(textureAddressMode) - 1];	// Lookout! The "Renderer::TextureAddressMode"-values start with 1, not 0
 	}
 
-	int Mapping::getOpenGLES2ComparisonFunc(Renderer::ComparisonFunc comparisonFunc)
+	int Mapping::getOpenGLES3ComparisonFunc(Renderer::ComparisonFunc comparisonFunc)
 	{
 		static const GLint MAPPING[] =
 		{
@@ -198,7 +198,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[static_cast<int>(comparisonFunc) - 1];	// Lookout! The "Renderer::ComparisonFunc"-values start with 1, not 0
 	}
 
-	int Mapping::getOpenGLES2Size(Renderer::VertexAttributeFormat vertexAttributeFormat)
+	int Mapping::getOpenGLES3Size(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
 		static const GLint MAPPING[] =
 		{
@@ -214,7 +214,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::getOpenGLES2Type(Renderer::VertexAttributeFormat vertexAttributeFormat)
+	uint32_t Mapping::getOpenGLES3Type(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -230,7 +230,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::isOpenGLES2VertexAttributeFormatNormalized(Renderer::VertexAttributeFormat vertexAttributeFormat)
+	uint32_t Mapping::isOpenGLES3VertexAttributeFormatNormalized(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -246,7 +246,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::getOpenGLES2Type(Renderer::BufferUsage bufferUsage)
+	uint32_t Mapping::getOpenGLES3Type(Renderer::BufferUsage bufferUsage)
 	{
 		// OpenGL ES 3 only supports: "STREAM_DRAW", "STATIC_DRAW" and "DYNAMIC_DRAW"
 
@@ -272,7 +272,7 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	uint32_t Mapping::getOpenGLES2Type(Renderer::IndexBufferFormat::Enum indexBufferFormat)
+	uint32_t Mapping::getOpenGLES3Type(Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -283,7 +283,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[indexBufferFormat];
 	}
 
-	uint32_t Mapping::getOpenGLES2InternalFormat(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getOpenGLES3InternalFormat(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const uint32_t MAPPING[] =
 		{
@@ -310,7 +310,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[textureFormat];
 	}
 
-	uint32_t Mapping::getOpenGLES2Format(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getOpenGLES3Format(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const uint32_t MAPPING[] =
 		{
@@ -337,7 +337,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[textureFormat];
 	}
 
-	uint32_t Mapping::getOpenGLES2Type(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getOpenGLES3Type(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -364,7 +364,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[textureFormat];
 	}
 
-	uint32_t Mapping::getOpenGLES2Type(Renderer::PrimitiveTopology prmitive)
+	uint32_t Mapping::getOpenGLES3Type(Renderer::PrimitiveTopology prmitive)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -377,7 +377,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[static_cast<int>(prmitive) - 1];	// Lookout! The "Renderer::PrimitiveTopology"-values start with 1, not 0
 	}
 
-	uint32_t Mapping::getOpenGLES2MapType(Renderer::MapType mapType)
+	uint32_t Mapping::getOpenGLES3MapType(Renderer::MapType mapType)
 	{
 		// The "GL_OES_mapbuffer" OPENGL ES 2 extension only defines "GL_WRITE_ONLY_OES"
 		static const GLenum MAPPING[] =
@@ -391,7 +391,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[static_cast<int>(mapType) - 1];	// Lookout! The "Renderer::MapType"-values start with 1, not 0
 	}
 
-	uint32_t Mapping::getOpenGLES2MapRangeType(Renderer::MapType mapType)
+	uint32_t Mapping::getOpenGLES3MapRangeType(Renderer::MapType mapType)
 	{
 		// OpenGL ES 3 defines access bits for "glMapBufferRange()"
 		static const GLbitfield MAPPING[] =
@@ -405,7 +405,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[static_cast<int>(mapType) - 1];	// Lookout! The "Renderer::MapType"-values start with 1, not 0
 	}
 
-	uint32_t Mapping::getOpenGLES2BlendType(Renderer::Blend blend)
+	uint32_t Mapping::getOpenGLES3BlendType(Renderer::Blend blend)
 	{
 		if (blend <= Renderer::Blend::SRC_ALPHA_SAT)
 		{

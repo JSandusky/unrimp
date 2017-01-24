@@ -98,7 +98,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    The OpenGL ES 3 shader, can be zero if no resource is allocated, do not destroy the returned resource
 		*/
-		inline uint32_t getOpenGLES2Shader() const;
+		inline uint32_t getOpenGLES3Shader() const;
 
 
 	//[-------------------------------------------------------]
@@ -112,7 +112,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t mOpenGLES2Shader;	///< OpenGL ES 3 shader, can be zero if no resource is allocated
+		uint32_t mOpenGLES3Shader;	///< OpenGL ES 3 shader, can be zero if no resource is allocated
 
 
 	};

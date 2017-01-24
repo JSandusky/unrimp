@@ -28,9 +28,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t FragmentShaderGlsl::getOpenGLES2Shader() const
+	inline uint32_t FragmentShaderGlsl::getOpenGLES3Shader() const
 	{
-		return mOpenGLES2Shader;
+		return mOpenGLES3Shader;
 	}
 
 

@@ -68,7 +68,7 @@ namespace OpenGLES3Renderer
 			glBindTexture(GL_TEXTURE_BUFFER_EXT, mOpenGLESTexture);
 
 			// Attaches the storage for the buffer object to the active buffer texture
-			glTexBufferEXT(GL_TEXTURE_BUFFER_EXT, Mapping::getOpenGLES2InternalFormat(textureFormat), mOpenGLESTextureBuffer);
+			glTexBufferEXT(GL_TEXTURE_BUFFER_EXT, Mapping::getOpenGLES3InternalFormat(textureFormat), mOpenGLESTextureBuffer);
 
 			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous bound OpenGL texture

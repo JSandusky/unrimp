@@ -47,7 +47,7 @@ namespace OpenGLES3Renderer
 		// Nothing here
 	}
 
-	void RasterizerState::setOpenGLES2RasterizerStates() const
+	void RasterizerState::setOpenGLES3RasterizerStates() const
 	{
 		// Renderer::RasterizerState::fillMode
 		switch (mRasterizerState.fillMode)

@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
-#include "OpenGLES3Renderer/OpenGLES2Debug.h"	// For "OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "OpenGLES3Renderer/OpenGLES3Debug.h"	// For "OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "OpenGLES3Renderer/Mapping.h"
 #include "OpenGLES3Renderer/IExtensions.h"
 #include "OpenGLES3Renderer/RootSignature.h"
@@ -298,12 +298,12 @@ namespace OpenGLES3Renderer
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
-		mOpenGLES2CopyResourceFramebuffer(0),
+		mOpenGLES3CopyResourceFramebuffer(0),
 		mVertexArray(nullptr),
-		mOpenGLES2PrimitiveTopology(0xFFFF),	// Unknown default setting
+		mOpenGLES3PrimitiveTopology(0xFFFF),	// Unknown default setting
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
-		mOpenGLES2Program(0)
+		mOpenGLES3Program(0)
 	{
 		// Initialize the context
 		if (mContext->initialize(0))
@@ -369,7 +369,7 @@ namespace OpenGLES3Renderer
 
 		// Destroy the OpenGL ES 3 framebuffer used by "OpenGLES3Renderer::OpenGLES3Renderer::copyResource()"
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteFramebuffers(1, &mOpenGLES2CopyResourceFramebuffer);
+		glDeleteFramebuffers(1, &mOpenGLES3CopyResourceFramebuffer);
 
 		// Set no vertex array reference, in case we have one
 		if (nullptr != mVertexArray)
@@ -523,17 +523,17 @@ namespace OpenGLES3Renderer
 							else if (resourceType == Renderer::ResourceType::TEXTURE_2D_ARRAY)
 							{
 								// No extension check required, if we in here we already know it must exist
-								glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLES2Texture());
+								glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLES3Texture());
 							}
 							else
 							{
-								glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLES2Texture());
+								glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLES3Texture());
 							}
 
 							if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 							{
 								// Set the OpenGL ES 3 sampler states
-								mGraphicsRootSignature->setOpenGLES2SamplerStates(descriptorRange->samplerRootParameterIndex);
+								mGraphicsRootSignature->setOpenGLES3SamplerStates(descriptorRange->samplerRootParameterIndex);
 							}
 
 							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
@@ -653,7 +653,7 @@ namespace OpenGLES3Renderer
 					mVertexArray->addReference();
 
 					// Bind OpenGL ES 3 vertex array
-					glBindVertexArrayOES(static_cast<VertexArrayVao*>(mVertexArray)->getOpenGLES2VertexArray());
+					glBindVertexArrayOES(static_cast<VertexArrayVao*>(mVertexArray)->getOpenGLES3VertexArray());
 				}
 				else
 				{
@@ -661,7 +661,7 @@ namespace OpenGLES3Renderer
 					if (nullptr != mVertexArray)
 					{
 						// Disable OpenGL ES 3 vertex attribute arrays
-						static_cast<VertexArrayNoVao*>(mVertexArray)->disableOpenGLES2VertexAttribArrays();
+						static_cast<VertexArrayNoVao*>(mVertexArray)->disableOpenGLES3VertexAttribArrays();
 
 						// Release reference
 						mVertexArray->releaseReference();
@@ -672,7 +672,7 @@ namespace OpenGLES3Renderer
 					mVertexArray->addReference();
 
 					// Enable OpenGL ES 3 vertex attribute arrays
-					static_cast<VertexArrayNoVao*>(mVertexArray)->enableOpenGLES2VertexAttribArrays();
+					static_cast<VertexArrayNoVao*>(mVertexArray)->enableOpenGLES3VertexAttribArrays();
 				}
 			}
 			else
@@ -689,7 +689,7 @@ namespace OpenGLES3Renderer
 					else
 					{
 						// Traditional version
-						static_cast<VertexArrayNoVao*>(mVertexArray)->disableOpenGLES2VertexAttribArrays();
+						static_cast<VertexArrayNoVao*>(mVertexArray)->disableOpenGLES3VertexAttribArrays();
 					}
 
 					// Release reference
@@ -703,7 +703,7 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
 	{
 		// Map and backup the set OpenGL ES 3 primitive topology
-		mOpenGLES2PrimitiveTopology = Mapping::getOpenGLES2Type(primitiveTopology);
+		mOpenGLES3PrimitiveTopology = Mapping::getOpenGLES3Type(primitiveTopology);
 	}
 
 
@@ -825,7 +825,7 @@ namespace OpenGLES3Renderer
 						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 						// Bind the OpenGL ES 3 framebuffer
-						glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->getOpenGLES2Framebuffer());
+						glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->getOpenGLES3Framebuffer());
 
 						// Define the OpenGL buffers to draw into
 						{
@@ -987,13 +987,13 @@ namespace OpenGLES3Renderer
 					// Copy resource by using a framebuffer
 					const GLint width = static_cast<GLint>(openGlEs2DestinationTexture2D.getWidth());
 					const GLint height = static_cast<GLint>(openGlEs2DestinationTexture2D.getHeight());
-					if (0 == mOpenGLES2CopyResourceFramebuffer)
+					if (0 == mOpenGLES3CopyResourceFramebuffer)
 					{
-						glGenFramebuffers(1, &mOpenGLES2CopyResourceFramebuffer);
+						glGenFramebuffers(1, &mOpenGLES3CopyResourceFramebuffer);
 					}
-					glBindFramebuffer(GL_FRAMEBUFFER, mOpenGLES2CopyResourceFramebuffer);
-					glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, openGlEs2SourceTexture2D.getOpenGLES2Texture(), 0);
-					glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, openGlEs2DestinationTexture2D.getOpenGLES2Texture(), 0);
+					glBindFramebuffer(GL_FRAMEBUFFER, mOpenGLES3CopyResourceFramebuffer);
+					glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, openGlEs2SourceTexture2D.getOpenGLES3Texture(), 0);
+					glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, openGlEs2DestinationTexture2D.getOpenGLES3Texture(), 0);
 					static const GLenum OPENGL_DRAW_BUFFER[1] =
 					{
 						GL_COLOR_ATTACHMENT1
@@ -1059,13 +1059,13 @@ namespace OpenGLES3Renderer
 				if (drawInstancedArguments.instanceCount > 1)
 				{
 					// With instancing
-					glDrawArraysInstanced(mOpenGLES2PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount));
+					glDrawArraysInstanced(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount));
 				}
 				else
 				{
 					// Without instancing
 					assert(drawInstancedArguments.instanceCount <= 1);
-					glDrawArrays(mOpenGLES2PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance));
+					glDrawArrays(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance));
 				}
 				emulationData += sizeof(Renderer::DrawInstancedArguments);
 			}
@@ -1102,7 +1102,7 @@ namespace OpenGLES3Renderer
 							if (mContext->getExtensions().isGL_EXT_draw_elements_base_vertex())
 							{
 								// Draw with base vertex location
-								glDrawElementsInstancedBaseVertexEXT(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES2Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
+								glDrawElementsInstancedBaseVertexEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
 							}
 							else
 							{
@@ -1113,7 +1113,7 @@ namespace OpenGLES3Renderer
 						else
 						{
 							// Draw without base vertex location
-							glDrawElementsInstanced(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES2Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount));
+							glDrawElementsInstanced(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount));
 						}
 					}
 					else
@@ -1129,7 +1129,7 @@ namespace OpenGLES3Renderer
 							if (mContext->getExtensions().isGL_EXT_draw_elements_base_vertex())
 							{
 								// Draw with base vertex location
-								glDrawElementsBaseVertexEXT(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES2Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
+								glDrawElementsBaseVertexEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
 							}
 							else
 							{
@@ -1139,7 +1139,7 @@ namespace OpenGLES3Renderer
 						else
 						{
 							// Draw and advance
-							glDrawElements(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES2Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())));
+							glDrawElements(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())));
 							emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
 						}
 					}
@@ -1182,7 +1182,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	const char *OpenGLES3Renderer::getName() const
 	{
-		return "OpenGLES2";
+		return "OpenGLES3";
 	}
 
 	bool OpenGLES3Renderer::isInitialized() const
@@ -1314,16 +1314,16 @@ namespace OpenGLES3Renderer
 				#endif
 
 				// Bind this OpenGL ES 3 element buffer and upload the data
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES3ElementArrayBuffer());
 
 				// Map
 				if (mContext->getExtensions().isGL_OES_mapbuffer())
 				{
-					mappedSubresource.data = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+					mappedSubresource.data = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES3MapType(mapType));
 				}
 				else
 				{
-					mappedSubresource.data = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<IndexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES2MapRangeType(mapType));
+					mappedSubresource.data = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<IndexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES3MapRangeType(mapType));
 				}
 				mappedSubresource.rowPitch   = 0;
 				mappedSubresource.depthPitch = 0;
@@ -1348,16 +1348,16 @@ namespace OpenGLES3Renderer
 				#endif
 
 				// Bind this OpenGL ES 3 array buffer and upload the data
-				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
+				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES3ArrayBuffer());
 
 				// Map
 				if (mContext->getExtensions().isGL_OES_mapbuffer())
 				{
-					mappedSubresource.data = glMapBufferOES(GL_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+					mappedSubresource.data = glMapBufferOES(GL_ARRAY_BUFFER, Mapping::getOpenGLES3MapType(mapType));
 				}
 				else
 				{
-					mappedSubresource.data = glMapBufferRange(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<VertexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES2MapRangeType(mapType));
+					mappedSubresource.data = glMapBufferRange(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<VertexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES3MapRangeType(mapType));
 				}
 				mappedSubresource.rowPitch   = 0;
 				mappedSubresource.depthPitch = 0;
@@ -1482,7 +1482,7 @@ namespace OpenGLES3Renderer
 				#endif
 
 				// Bind this OpenGL ES 3 element buffer and upload the data
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES3ElementArrayBuffer());
 
 				// Unmap
 				if (mContext->getExtensions().isGL_OES_mapbuffer())
@@ -1510,7 +1510,7 @@ namespace OpenGLES3Renderer
 				#endif
 
 				// Bind this OpenGL ES 3 array buffer and upload the data
-				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
+				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES3ArrayBuffer());
 
 				// Unmap
 				if (mContext->getExtensions().isGL_OES_mapbuffer())
@@ -1851,10 +1851,10 @@ namespace OpenGLES3Renderer
 			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
 			// Backup OpenGL ES 3 program identifier
-			mOpenGLES2Program = static_cast<ProgramGlsl*>(program)->getOpenGLES2Program();
+			mOpenGLES3Program = static_cast<ProgramGlsl*>(program)->getOpenGLES3Program();
 
 			// Bind the program
-			glUseProgram(mOpenGLES2Program);
+			glUseProgram(mOpenGLES3Program);
 		}
 		else
 		{
@@ -1862,7 +1862,7 @@ namespace OpenGLES3Renderer
 			glUseProgram(0);
 
 			// Reset OpenGL ES 3 program identifier
-			mOpenGLES2Program = 0;
+			mOpenGLES3Program = 0;
 		}
 	}
 

@@ -28,14 +28,14 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t IndexBuffer::getOpenGLES2ElementArrayBuffer() const
+	inline uint32_t IndexBuffer::getOpenGLES3ElementArrayBuffer() const
 	{
-		return mOpenGLES2ElementArrayBuffer;
+		return mOpenGLES3ElementArrayBuffer;
 	}
 
-	inline uint32_t IndexBuffer::getOpenGLES2Type() const
+	inline uint32_t IndexBuffer::getOpenGLES3Type() const
 	{
-		return mOpenGLES2Type;
+		return mOpenGLES3Type;
 	}
 
 	inline uint32_t IndexBuffer::getIndexSizeInBytes() const

@@ -41,12 +41,12 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	VertexArrayVao::VertexArrayVao(OpenGLES3Renderer &openGLES3Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		VertexArray(openGLES3Renderer, indexBuffer),
-		mOpenGLES2VertexArray(0),
+		mOpenGLES3VertexArray(0),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
 		mVertexBuffers((mNumberOfVertexBuffers > 0) ? new VertexBuffer*[mNumberOfVertexBuffers] : nullptr)	// Guaranteed to be filled below, so we don't need to care to initialize the content in here
 	{
 		// Create the OpenGL ES 3 vertex array
-		glGenVertexArraysOES(1, &mOpenGLES2VertexArray);
+		glGenVertexArraysOES(1, &mOpenGLES3VertexArray);
 
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES 3 array buffer
@@ -63,7 +63,7 @@ namespace OpenGLES3Renderer
 		#endif
 
 		// Bind this OpenGL ES 3 vertex array
-		glBindVertexArrayOES(mOpenGLES2VertexArray);
+		glBindVertexArrayOES(mOpenGLES3VertexArray);
 
 		{ // Add a reference to the used vertex buffers
 			VertexBuffer **currentVertexBuffers = mVertexBuffers;
@@ -86,11 +86,11 @@ namespace OpenGLES3Renderer
 			{
 				// Set the OpenGL ES 3 vertex attribute pointer
 				const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
-				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES2ArrayBuffer());
+				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES3ArrayBuffer());
 				glVertexAttribPointer(attributeLocation,
-									  Mapping::getOpenGLES2Size(attribute->vertexAttributeFormat),
-									  Mapping::getOpenGLES2Type(attribute->vertexAttributeFormat),
-									  static_cast<GLboolean>(Mapping::isOpenGLES2VertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
+									  Mapping::getOpenGLES3Size(attribute->vertexAttributeFormat),
+									  Mapping::getOpenGLES3Type(attribute->vertexAttributeFormat),
+									  static_cast<GLboolean>(Mapping::isOpenGLES3VertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
 									  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
 									  reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 
@@ -103,7 +103,7 @@ namespace OpenGLES3Renderer
 			if (nullptr != indexBuffer)
 			{
 				// Bind OpenGL ES 3 element array buffer
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->getOpenGLES2ElementArrayBuffer());
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->getOpenGLES3ElementArrayBuffer());
 			}
 		}
 
@@ -123,7 +123,7 @@ namespace OpenGLES3Renderer
 	{
 		// Destroy the OpenGL ES 3 vertex array
 		// -> Silently ignores 0's and names that do not correspond to existing vertex array objects
-		glDeleteVertexArraysOES(1, &mOpenGLES2VertexArray);
+		glDeleteVertexArraysOES(1, &mOpenGLES3VertexArray);
 
 		// Release the reference to the used vertex buffers
 		if (nullptr != mVertexBuffers)

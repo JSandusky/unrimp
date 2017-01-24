@@ -101,7 +101,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    The OpenGL ES 3 program, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline uint32_t getOpenGLES2Program() const;
+		inline uint32_t getOpenGLES3Program() const;
 
 
 	//[-------------------------------------------------------]
@@ -124,7 +124,7 @@ namespace OpenGLES3Renderer
 	private:
 		uint32_t mNumberOfRootSignatureParameters;				///< Number of root signature parameters
 		int32_t* mRootSignatureParameterIndexToUniformLocation;	///< Root signature parameter index to OpenGL ES 3 uniform location mapping, can be a null pointer (type "GLint" not used in here in order to keep the header slim)
-		uint32_t mOpenGLES2Program;								///< OpenGL ES 3 program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES3Program;								///< OpenGL ES 3 program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

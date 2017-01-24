@@ -123,7 +123,7 @@ namespace OpenGLES3Renderer
 								HINSTANCE moduleHandle = ::GetModuleHandle(nullptr);
 								WNDCLASS windowClass;
 								windowClass.hInstance	  = moduleHandle;
-								windowClass.lpszClassName = TEXT("OpenGLES2DummyNativeWindow");
+								windowClass.lpszClassName = TEXT("OpenGLES3DummyNativeWindow");
 								windowClass.lpfnWndProc	  = DefWindowProc;
 								windowClass.style		  = 0;
 								windowClass.hIcon		  = nullptr;
@@ -133,7 +133,7 @@ namespace OpenGLES3Renderer
 								windowClass.cbWndExtra	  = 0;
 								windowClass.hbrBackground = nullptr;
 								::RegisterClass(&windowClass);
-								mDummyNativeWindow = ::CreateWindow(TEXT("OpenGLES2DummyNativeWindow"), TEXT("PFormat"), WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, 8, 8, HWND_DESKTOP, nullptr, moduleHandle, nullptr);
+								mDummyNativeWindow = ::CreateWindow(TEXT("OpenGLES3DummyNativeWindow"), TEXT("PFormat"), WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, 8, 8, HWND_DESKTOP, nullptr, moduleHandle, nullptr);
 							#endif
 							#if (defined(LINUX) && !defined(ANDROID))
 								// Create dummy window
@@ -266,7 +266,7 @@ namespace OpenGLES3Renderer
 				if (NULL_HANDLE == mNativeWindowHandle && NULL_HANDLE != mDummyNativeWindow)
 				{
 					::DestroyWindow(mDummyNativeWindow);
-					::UnregisterClass(TEXT("OpenGLES2DummyNativeWindow"), ::GetModuleHandle(nullptr));
+					::UnregisterClass(TEXT("OpenGLES3DummyNativeWindow"), ::GetModuleHandle(nullptr));
 				}
 			#endif
 			#if (defined(LINUX) && !defined(ANDROID))

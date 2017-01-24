@@ -41,15 +41,15 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	SamplerState::SamplerState(OpenGLES3Renderer &openGLES3Renderer, const Renderer::SamplerState &samplerState) :
 		ISamplerState(openGLES3Renderer),
-		mOpenGLMagFilterMode(Mapping::getOpenGLES2MagFilterMode(samplerState.filter)),
-		mOpenGLMinFilterMode(Mapping::getOpenGLES2MinFilterMode(samplerState.filter, samplerState.maxLOD > 0.0f)),
-		mOpenGLTextureAddressModeS(Mapping::getOpenGLES2TextureAddressMode(samplerState.addressU)),
-		mOpenGLTextureAddressModeT(Mapping::getOpenGLES2TextureAddressMode(samplerState.addressV)),
-		mOpenGLTextureAddressModeR(Mapping::getOpenGLES2TextureAddressMode(samplerState.addressW)),
+		mOpenGLMagFilterMode(Mapping::getOpenGLES3MagFilterMode(samplerState.filter)),
+		mOpenGLMinFilterMode(Mapping::getOpenGLES3MinFilterMode(samplerState.filter, samplerState.maxLOD > 0.0f)),
+		mOpenGLTextureAddressModeS(Mapping::getOpenGLES3TextureAddressMode(samplerState.addressU)),
+		mOpenGLTextureAddressModeT(Mapping::getOpenGLES3TextureAddressMode(samplerState.addressV)),
+		mOpenGLTextureAddressModeR(Mapping::getOpenGLES3TextureAddressMode(samplerState.addressW)),
 		mMipLODBias(samplerState.mipLODBias),
 		mMaxAnisotropy(static_cast<float>(samplerState.maxAnisotropy)),	// Maximum anisotropy is "uint32_t" in Direct3D 10 & 11
-		mOpenGLCompareMode(Mapping::getOpenGLES2CompareMode(samplerState.filter)),
-		mOpenGLComparisonFunc(Mapping::getOpenGLES2ComparisonFunc(samplerState.comparisonFunc)),
+		mOpenGLCompareMode(Mapping::getOpenGLES3CompareMode(samplerState.filter)),
+		mOpenGLComparisonFunc(Mapping::getOpenGLES3ComparisonFunc(samplerState.comparisonFunc)),
 		mMinLOD(samplerState.minLOD),
 		mMaxLOD(samplerState.maxLOD)
 	{
@@ -64,7 +64,7 @@ namespace OpenGLES3Renderer
 		// Nothing here
 	}
 
-	void SamplerState::setOpenGLES2SamplerStates() const
+	void SamplerState::setOpenGLES3SamplerStates() const
 	{
 		// TODO(co) Support other targets, not just "GL_TEXTURE_2D"
 
