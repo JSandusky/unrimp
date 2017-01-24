@@ -3,73 +3,73 @@
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\OpenGLES2Renderer\Shader\VertexShaderGlsl.inl">
+    <None Include="include\OpenGLES3Renderer\Shader\VertexShaderGlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.inl">
+    <None Include="include\OpenGLES3Renderer\Shader\FragmentShaderGlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.inl">
+    <None Include="include\OpenGLES3Renderer\ExtensionsRuntimeLinking.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\IContext.inl">
+    <None Include="include\OpenGLES3Renderer\IContext.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\OpenGLES2Renderer.inl">
+    <None Include="include\OpenGLES3Renderer\OpenGLES3Renderer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\RootSignature.inl">
+    <None Include="include\OpenGLES3Renderer\RootSignature.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Shader\ProgramGlsl.inl">
+    <None Include="include\OpenGLES3Renderer\Shader\ProgramGlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Texture\Texture2D.inl">
+    <None Include="include\OpenGLES3Renderer\Texture\Texture2D.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Texture\Texture2DArray.inl">
+    <None Include="include\OpenGLES3Renderer\Texture\Texture2DArray.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\RenderTarget\SwapChain.inl">
+    <None Include="include\OpenGLES3Renderer\RenderTarget\SwapChain.inl">
       <Filter>Source Files\RenderTarget</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\RenderTarget\Framebuffer.inl">
+    <None Include="include\OpenGLES3Renderer\RenderTarget\Framebuffer.inl">
       <Filter>Source Files\RenderTarget</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\State\PipelineState.inl">
+    <None Include="include\OpenGLES3Renderer\State\PipelineState.inl">
       <Filter>Source Files\State</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\State\RasterizerState.inl">
+    <None Include="include\OpenGLES3Renderer\State\RasterizerState.inl">
       <Filter>Source Files\State</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\State\IState.inl">
+    <None Include="include\OpenGLES3Renderer\State\IState.inl">
       <Filter>Source Files\State</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Texture\TextureManager.inl">
+    <None Include="include\OpenGLES3Renderer\Texture\TextureManager.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\TextureBuffer.inl">
+    <None Include="include\OpenGLES3Renderer\Buffer\TextureBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\UniformBuffer.inl">
+    <None Include="include\OpenGLES3Renderer\Buffer\UniformBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\VertexArray.inl">
+    <None Include="include\OpenGLES3Renderer\Buffer\VertexArray.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.inl">
+    <None Include="include\OpenGLES3Renderer\Buffer\VertexArrayVao.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\VertexBuffer.inl">
+    <None Include="include\OpenGLES3Renderer\Buffer\VertexBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\BufferManager.inl">
+    <None Include="include\OpenGLES3Renderer\Buffer\BufferManager.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.inl">
+    <None Include="include\OpenGLES3Renderer\Buffer\IndexBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Buffer\IndirectBuffer.inl">
+    <None Include="include\OpenGLES3Renderer\Buffer\IndirectBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
   </ItemGroup>
@@ -94,106 +94,106 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\ShaderLanguageGlsl.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Shader\ShaderLanguageGlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\VertexShaderGlsl.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Shader\VertexShaderGlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Shader\FragmentShaderGlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\ProgramGlsl.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Shader\ProgramGlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\ContextRuntimeLinking.h">
+    <ClInclude Include="include\OpenGLES3Renderer\ContextRuntimeLinking.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.h">
+    <ClInclude Include="include\OpenGLES3Renderer\ExtensionsRuntimeLinking.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\IContext.h">
+    <ClInclude Include="include\OpenGLES3Renderer\IContext.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\IExtensions.h">
+    <ClInclude Include="include\OpenGLES3Renderer\IExtensions.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Mapping.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Mapping.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Debug.h">
+    <ClInclude Include="include\OpenGLES3Renderer\OpenGLES3Debug.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Renderer.h">
+    <ClInclude Include="include\OpenGLES3Renderer\OpenGLES3Renderer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\RootSignature.h">
+    <ClInclude Include="include\OpenGLES3Renderer\RootSignature.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2DArray.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Texture\Texture2DArray.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2D.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Texture\Texture2D.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\RenderTarget\SwapChain.h">
+    <ClInclude Include="include\OpenGLES3Renderer\RenderTarget\SwapChain.h">
       <Filter>Source Files\RenderTarget</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\RenderTarget\Framebuffer.h">
+    <ClInclude Include="include\OpenGLES3Renderer\RenderTarget\Framebuffer.h">
       <Filter>Source Files\RenderTarget</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\State\PipelineState.h">
+    <ClInclude Include="include\OpenGLES3Renderer\State\PipelineState.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\State\RasterizerState.h">
+    <ClInclude Include="include\OpenGLES3Renderer\State\RasterizerState.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\State\BlendState.h">
+    <ClInclude Include="include\OpenGLES3Renderer\State\BlendState.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\State\DepthStencilState.h">
+    <ClInclude Include="include\OpenGLES3Renderer\State\DepthStencilState.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\State\IState.h">
+    <ClInclude Include="include\OpenGLES3Renderer\State\IState.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\State\SamplerState.h">
+    <ClInclude Include="include\OpenGLES3Renderer\State\SamplerState.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Texture\TextureManager.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Texture\TextureManager.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\TextureBuffer.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\TextureBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\TextureBufferBind.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\TextureBufferBind.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\UniformBuffer.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\UniformBufferBind.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBufferBind.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArray.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArray.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayNoVao.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArrayNoVao.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArrayVao.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexBuffer.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\BufferManager.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\BufferManager.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\IndexBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\IndirectBuffer.h">
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\IndirectBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
@@ -222,7 +222,7 @@
     <ClCompile Include="src\Mapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenGLES2Renderer.cpp">
+    <ClCompile Include="src\OpenGLES3Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ContextRuntimeLinking.cpp">

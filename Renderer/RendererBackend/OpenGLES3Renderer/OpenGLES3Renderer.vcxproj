@@ -36,66 +36,66 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\OpenGLES2Renderer\Buffer\BufferManager.inl" />
-    <None Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.inl" />
-    <None Include="include\OpenGLES2Renderer\Buffer\IndirectBuffer.inl" />
-    <None Include="include\OpenGLES2Renderer\Buffer\TextureBuffer.inl" />
-    <None Include="include\OpenGLES2Renderer\Buffer\UniformBuffer.inl" />
-    <None Include="include\OpenGLES2Renderer\Buffer\VertexArray.inl" />
-    <None Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.inl" />
-    <None Include="include\OpenGLES2Renderer\Buffer\VertexBuffer.inl" />
-    <None Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.inl" />
-    <None Include="include\OpenGLES2Renderer\IContext.inl" />
-    <None Include="include\OpenGLES2Renderer\OpenGLES2Renderer.inl" />
-    <None Include="include\OpenGLES2Renderer\RenderTarget\Framebuffer.inl" />
-    <None Include="include\OpenGLES2Renderer\RenderTarget\SwapChain.inl" />
-    <None Include="include\OpenGLES2Renderer\RootSignature.inl" />
-    <None Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.inl" />
-    <None Include="include\OpenGLES2Renderer\Shader\ProgramGlsl.inl" />
-    <None Include="include\OpenGLES2Renderer\Shader\VertexShaderGlsl.inl" />
-    <None Include="include\OpenGLES2Renderer\State\IState.inl" />
-    <None Include="include\OpenGLES2Renderer\State\PipelineState.inl" />
-    <None Include="include\OpenGLES2Renderer\State\RasterizerState.inl" />
-    <None Include="include\OpenGLES2Renderer\Texture\Texture2D.inl" />
-    <None Include="include\OpenGLES2Renderer\Texture\Texture2DArray.inl" />
-    <None Include="include\OpenGLES2Renderer\Texture\TextureManager.inl" />
+    <None Include="include\OpenGLES3Renderer\Buffer\BufferManager.inl" />
+    <None Include="include\OpenGLES3Renderer\Buffer\IndexBuffer.inl" />
+    <None Include="include\OpenGLES3Renderer\Buffer\IndirectBuffer.inl" />
+    <None Include="include\OpenGLES3Renderer\Buffer\TextureBuffer.inl" />
+    <None Include="include\OpenGLES3Renderer\Buffer\UniformBuffer.inl" />
+    <None Include="include\OpenGLES3Renderer\Buffer\VertexArray.inl" />
+    <None Include="include\OpenGLES3Renderer\Buffer\VertexArrayVao.inl" />
+    <None Include="include\OpenGLES3Renderer\Buffer\VertexBuffer.inl" />
+    <None Include="include\OpenGLES3Renderer\ExtensionsRuntimeLinking.inl" />
+    <None Include="include\OpenGLES3Renderer\IContext.inl" />
+    <None Include="include\OpenGLES3Renderer\OpenGLES3Renderer.inl" />
+    <None Include="include\OpenGLES3Renderer\RenderTarget\Framebuffer.inl" />
+    <None Include="include\OpenGLES3Renderer\RenderTarget\SwapChain.inl" />
+    <None Include="include\OpenGLES3Renderer\RootSignature.inl" />
+    <None Include="include\OpenGLES3Renderer\Shader\FragmentShaderGlsl.inl" />
+    <None Include="include\OpenGLES3Renderer\Shader\ProgramGlsl.inl" />
+    <None Include="include\OpenGLES3Renderer\Shader\VertexShaderGlsl.inl" />
+    <None Include="include\OpenGLES3Renderer\State\IState.inl" />
+    <None Include="include\OpenGLES3Renderer\State\PipelineState.inl" />
+    <None Include="include\OpenGLES3Renderer\State\RasterizerState.inl" />
+    <None Include="include\OpenGLES3Renderer\Texture\Texture2D.inl" />
+    <None Include="include\OpenGLES3Renderer\Texture\Texture2DArray.inl" />
+    <None Include="include\OpenGLES3Renderer\Texture\TextureManager.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\BufferManager.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\IndirectBuffer.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\TextureBuffer.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\TextureBufferBind.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\UniformBuffer.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\UniformBufferBind.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArray.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayNoVao.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexBuffer.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\ContextRuntimeLinking.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\IContext.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\IExtensions.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Mapping.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Debug.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Renderer.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\RenderTarget\Framebuffer.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\RenderTarget\SwapChain.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\RootSignature.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\ProgramGlsl.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\ShaderLanguageGlsl.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\VertexShaderGlsl.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\State\BlendState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\State\DepthStencilState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\State\IState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\State\PipelineState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\State\RasterizerState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\State\SamplerState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2D.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2DArray.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Texture\TextureManager.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\BufferManager.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\IndirectBuffer.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\TextureBuffer.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\TextureBufferBind.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBuffer.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBufferBind.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArray.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArrayNoVao.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArrayVao.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexBuffer.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\ContextRuntimeLinking.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\ExtensionsRuntimeLinking.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\IContext.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\IExtensions.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Mapping.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\OpenGLES3Debug.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\OpenGLES3Renderer.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\RenderTarget\Framebuffer.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\RenderTarget\SwapChain.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\RootSignature.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Shader\FragmentShaderGlsl.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Shader\ProgramGlsl.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Shader\ShaderLanguageGlsl.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Shader\VertexShaderGlsl.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\State\BlendState.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\State\DepthStencilState.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\State\IState.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\State\PipelineState.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\State\RasterizerState.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\State\SamplerState.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Texture\Texture2D.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Texture\Texture2DArray.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Texture\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
@@ -114,7 +114,7 @@
     <ClCompile Include="src\IContext.cpp" />
     <ClCompile Include="src\IExtensions.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
-    <ClCompile Include="src\OpenGLES2Renderer.cpp" />
+    <ClCompile Include="src\OpenGLES3Renderer.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
@@ -133,7 +133,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{161E1929-E33D-4074-A059-54030DB947AA}</ProjectGuid>
-    <RootNamespace>OpenGLES2Renderer</RootNamespace>
+    <RootNamespace>OpenGLES3Renderer</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'" Label="Configuration">
@@ -261,7 +261,7 @@
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;OPENGLES2RENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;OPENGLES3RENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -286,7 +286,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_static\
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;OPENGLES2RENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;OPENGLES3RENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -311,7 +311,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_static\
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;OPENGLES2RENDERER_EXPORTS;OPENGLES2RENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;OPENGLES3RENDERER_EXPORTS;OPENGLES3RENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -339,7 +339,7 @@ copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;OPENGLES2RENDERER_EXPORTS;OPENGLES2RENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;OPENGLES3RENDERER_EXPORTS;OPENGLES3RENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -369,7 +369,7 @@ copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;OPENGLES2RENDERER_NO_STATE_CLEANUP;OPENGLES2RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;OPENGLES3RENDERER_NO_STATE_CLEANUP;OPENGLES3RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -404,7 +404,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_static\
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;OPENGLES2RENDERER_NO_STATE_CLEANUP;OPENGLES2RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;OPENGLES3RENDERER_NO_STATE_CLEANUP;OPENGLES3RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -438,7 +438,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_static\
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;OPENGLES2RENDERER_EXPORTS;OPENGLES2RENDERER_NO_STATE_CLEANUP;OPENGLES2RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;OPENGLES3RENDERER_EXPORTS;OPENGLES3RENDERER_NO_STATE_CLEANUP;OPENGLES3RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -476,7 +476,7 @@ copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)_dynamic\
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;OPENGLES2RENDERER_EXPORTS;OPENGLES2RENDERER_NO_STATE_CLEANUP;OPENGLES2RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;OPENGLES3RENDERER_EXPORTS;OPENGLES3RENDERER_NO_STATE_CLEANUP;OPENGLES3RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
