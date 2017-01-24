@@ -21,23 +21,23 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
-#include "OpenGLES2Renderer/Shader/VertexShaderGlsl.h"
-#include "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
-#include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+#include "OpenGLES3Renderer/Shader/VertexShaderGlsl.h"
+#include "OpenGLES3Renderer/Shader/ShaderLanguageGlsl.h"
+#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderGlsl::VertexShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const uint8_t *, uint32_t) :
+	VertexShaderGlsl::VertexShaderGlsl(OpenGLES3Renderer &openGLES2Renderer, const uint8_t *, uint32_t) :
 		IVertexShader(openGLES2Renderer),
 		mOpenGLES2Shader(0)
 	{
@@ -45,7 +45,7 @@ namespace OpenGLES2Renderer
 		// Nothing here
 	}
 
-	VertexShaderGlsl::VertexShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const char *sourceCode) :
+	VertexShaderGlsl::VertexShaderGlsl(OpenGLES3Renderer &openGLES2Renderer, const char *sourceCode) :
 		IVertexShader(openGLES2Renderer),
 		mOpenGLES2Shader(ShaderLanguageGlsl::loadShader(GL_VERTEX_SHADER, sourceCode))
 	{
@@ -72,4 +72,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

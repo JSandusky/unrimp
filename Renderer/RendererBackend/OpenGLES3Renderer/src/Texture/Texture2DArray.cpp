@@ -21,23 +21,23 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Texture/Texture2DArray.h"
-#include "OpenGLES2Renderer/Mapping.h"
-#include "OpenGLES2Renderer/IExtensions.h"
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
+#include "OpenGLES3Renderer/Texture/Texture2DArray.h"
+#include "OpenGLES3Renderer/Mapping.h"
+#include "OpenGLES3Renderer/IExtensions.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArray::Texture2DArray(OpenGLES2Renderer &openGLES2Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	Texture2DArray::Texture2DArray(OpenGLES3Renderer &openGLES2Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
 		ITexture2DArray(openGLES2Renderer, width, height, numberOfSlices),
 		mOpenGLES2Texture(0)
 	{
@@ -95,4 +95,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

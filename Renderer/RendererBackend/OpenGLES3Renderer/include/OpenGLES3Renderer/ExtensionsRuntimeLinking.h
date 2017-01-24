@@ -27,14 +27,14 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/IContext.h"
-#include "OpenGLES2Renderer/IExtensions.h"
+#include "OpenGLES3Renderer/IContext.h"
+#include "OpenGLES3Renderer/IExtensions.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -77,7 +77,7 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLES2Renderer::IExtensions methods ]
+	//[ Public virtual OpenGLES3Renderer::IExtensions methods ]
 	//[-------------------------------------------------------]
 	public:
 		///////////////////////////////////////////////////////////
@@ -369,10 +369,10 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/ExtensionsRuntimeLinking.inl"
+#include "OpenGLES3Renderer/ExtensionsRuntimeLinking.inl"

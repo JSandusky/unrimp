@@ -21,25 +21,25 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Texture/TextureManager.h"
-#include "OpenGLES2Renderer/Texture/Texture2D.h"
-#include "OpenGLES2Renderer/Texture/Texture2DArray.h"
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
-#include "OpenGLES2Renderer/IExtensions.h"
-#include "OpenGLES2Renderer/IContext.h"
+#include "OpenGLES3Renderer/Texture/TextureManager.h"
+#include "OpenGLES3Renderer/Texture/Texture2D.h"
+#include "OpenGLES3Renderer/Texture/Texture2DArray.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+#include "OpenGLES3Renderer/IExtensions.h"
+#include "OpenGLES3Renderer/IContext.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureManager::TextureManager(OpenGLES2Renderer& openGLES2Renderer) :
+	TextureManager::TextureManager(OpenGLES3Renderer& openGLES2Renderer) :
 		ITextureManager(openGLES2Renderer),
 		mExtensions(&openGLES2Renderer.getContext().getExtensions())
 	{
@@ -57,7 +57,7 @@ namespace OpenGLES2Renderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
 		{
-			return new Texture2D(static_cast<OpenGLES2Renderer&>(getRenderer()), width, height, textureFormat, data, flags);
+			return new Texture2D(static_cast<OpenGLES3Renderer&>(getRenderer()), width, height, textureFormat, data, flags);
 		}
 		else
 		{
@@ -72,7 +72,7 @@ namespace OpenGLES2Renderer
 		// Check whether or not the given texture dimension is valid, "GL_EXT_texture_array" extension required
 		if (width > 0 && height > 0 && numberOfSlices > 0 && mExtensions->isGL_EXT_texture_array())
 		{
-			return new Texture2DArray(static_cast<OpenGLES2Renderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
+			return new Texture2DArray(static_cast<OpenGLES3Renderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
 		}
 		else
 		{
@@ -84,4 +84,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

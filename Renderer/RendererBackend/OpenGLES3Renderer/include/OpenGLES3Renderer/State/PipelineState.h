@@ -38,19 +38,19 @@ namespace Renderer
 	class IProgram;
 	struct PipelineState;
 }
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 	class BlendState;
 	class RasterizerState;
 	class DepthStencilState;
-	class OpenGLES2Renderer;
+	class OpenGLES3Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -78,7 +78,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] pipelineState
 		*    Pipeline state to use
 		*/
-		PipelineState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::PipelineState &pipelineState);
+		PipelineState(OpenGLES3Renderer &openGLES2Renderer, const Renderer::PipelineState &pipelineState);
 
 		/**
 		*  @brief
@@ -109,10 +109,10 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/State/PipelineState.inl"
+#include "OpenGLES3Renderer/State/PipelineState.inl"

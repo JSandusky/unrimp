@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/IContext.h"
+#include "OpenGLES3Renderer/IContext.h"
 
 #include <EGL/eglext.h>
 
@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -65,7 +65,7 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLES2Renderer::IContext methods    ]
+	//[ Public virtual OpenGLES3Renderer::IContext methods    ]
 	//[-------------------------------------------------------]
 	bool IContext::initialize(uint32_t multisampleAntialiasingSamples)
 	{
@@ -295,7 +295,7 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual OpenGLES2Renderer::IContext methods ]
+	//[ Protected virtual OpenGLES3Renderer::IContext methods ]
 	//[-------------------------------------------------------]
 	EGLConfig IContext::chooseConfig(uint32_t multisampleAntialiasingSamples) const
 	{
@@ -363,4 +363,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

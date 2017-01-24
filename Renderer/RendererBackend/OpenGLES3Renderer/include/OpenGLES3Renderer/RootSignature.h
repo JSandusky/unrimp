@@ -34,17 +34,17 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 	class SamplerState;
-	class OpenGLES2Renderer;
+	class OpenGLES3Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -72,7 +72,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] rootSignature
 		*    Root signature to use
 		*/
-		RootSignature(OpenGLES2Renderer &openGLES2Renderer, const Renderer::RootSignature &rootSignature);
+		RootSignature(OpenGLES3Renderer &openGLES2Renderer, const Renderer::RootSignature &rootSignature);
 
 		/**
 		*  @brief
@@ -124,10 +124,10 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/RootSignature.inl"
+#include "OpenGLES3Renderer/RootSignature.inl"

@@ -21,23 +21,23 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Texture/Texture2D.h"
-#include "OpenGLES2Renderer/Mapping.h"
-#include "OpenGLES2Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
+#include "OpenGLES3Renderer/Texture/Texture2D.h"
+#include "OpenGLES3Renderer/Mapping.h"
+#include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(OpenGLES2Renderer &openGLES2Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	Texture2D::Texture2D(OpenGLES3Renderer &openGLES2Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
 		ITexture2D(openGLES2Renderer, width, height),
 		mOpenGLES2Texture(0),
 		mGenerateMipmaps(false)

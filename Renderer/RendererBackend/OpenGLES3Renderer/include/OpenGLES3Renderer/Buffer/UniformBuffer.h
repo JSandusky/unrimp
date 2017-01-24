@@ -33,16 +33,16 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
-	class OpenGLES2Renderer;
+	class OpenGLES3Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -88,7 +88,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] openGLES2Renderer
 		*    Owner OpenGL ES2 renderer instance
 		*/
-		explicit UniformBuffer(OpenGLES2Renderer &openGLES2Renderer);
+		explicit UniformBuffer(OpenGLES3Renderer &openGLES2Renderer);
 
 
 	//[-------------------------------------------------------]
@@ -104,10 +104,10 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Buffer/UniformBuffer.inl"
+#include "OpenGLES3Renderer/Buffer/UniformBuffer.inl"

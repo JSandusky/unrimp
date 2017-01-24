@@ -33,16 +33,16 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
-	class OpenGLES2Renderer;
+	class OpenGLES3Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -70,7 +70,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] samplerState
 		*    Sampler state to use
 		*/
-		SamplerState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::SamplerState &samplerState);
+		SamplerState(OpenGLES3Renderer &openGLES2Renderer, const Renderer::SamplerState &samplerState);
 
 		/**
 		*  @brief
@@ -109,4 +109,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

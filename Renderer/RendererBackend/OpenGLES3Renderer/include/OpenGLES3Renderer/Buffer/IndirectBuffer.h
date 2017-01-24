@@ -33,16 +33,16 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
-	class OpenGLES2Renderer;
+	class OpenGLES3Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -72,7 +72,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] data
 		*    Indirect buffer data, can be a null pointer (empty buffer)
 		*/
-		IndirectBuffer(OpenGLES2Renderer& openGLES2Renderer, uint32_t numberOfBytes, const void* data = nullptr);
+		IndirectBuffer(OpenGLES3Renderer& openGLES2Renderer, uint32_t numberOfBytes, const void* data = nullptr);
 
 		/**
 		*  @brief
@@ -112,10 +112,10 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Buffer/IndirectBuffer.inl"
+#include "OpenGLES3Renderer/Buffer/IndirectBuffer.inl"

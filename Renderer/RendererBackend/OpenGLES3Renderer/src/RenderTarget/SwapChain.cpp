@@ -21,22 +21,22 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/RenderTarget/SwapChain.h"
-#include "OpenGLES2Renderer/IContext.h"
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
+#include "OpenGLES3Renderer/RenderTarget/SwapChain.h"
+#include "OpenGLES3Renderer/IContext.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(OpenGLES2Renderer &openGLES2Renderer, handle nativeWindowHandle) :
+	SwapChain::SwapChain(OpenGLES3Renderer &openGLES2Renderer, handle nativeWindowHandle) :
 		ISwapChain(openGLES2Renderer),
 		mNativeWindowHandle(nativeWindowHandle)
 	{
@@ -96,7 +96,7 @@ namespace OpenGLES2Renderer
 		#elif defined LINUX && !defined(ANDROID)
 			if (mNativeWindowHandle)
 			{
-				IContext &context = static_cast<OpenGLES2Renderer&>(getRenderer()).getContext();
+				IContext &context = static_cast<OpenGLES3Renderer&>(getRenderer()).getContext();
 
 				// TODO(sw) Resue X11 display from "Frontend" -> for now reuse it from the context
 				Display *display = context.getX11Display();
@@ -151,7 +151,7 @@ namespace OpenGLES2Renderer
 	void SwapChain::present()
 	{
 		// TODO(co) Correct implementation
-		IContext &context = static_cast<OpenGLES2Renderer&>(getRenderer()).getContext();
+		IContext &context = static_cast<OpenGLES3Renderer&>(getRenderer()).getContext();
 		// Swap buffers
 		eglSwapBuffers(context.getEGLDisplay(), context.getEGLDummySurface());
 	}
@@ -176,4 +176,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

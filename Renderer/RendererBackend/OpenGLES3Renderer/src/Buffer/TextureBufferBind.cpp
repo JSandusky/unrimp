@@ -21,22 +21,22 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Buffer/TextureBufferBind.h"
-#include "OpenGLES2Renderer/Mapping.h"
-#include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"
+#include "OpenGLES3Renderer/Buffer/TextureBufferBind.h"
+#include "OpenGLES3Renderer/Mapping.h"
+#include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBufferBind::TextureBufferBind(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage) :
+	TextureBufferBind::TextureBufferBind(OpenGLES3Renderer &openGLES2Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage) :
 		TextureBuffer(openGLES2Renderer)
 	{
 		{ // Buffer part
@@ -108,4 +108,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

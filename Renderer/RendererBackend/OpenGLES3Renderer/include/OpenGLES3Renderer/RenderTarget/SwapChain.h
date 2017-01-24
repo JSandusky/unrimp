@@ -33,16 +33,16 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
-	class OpenGLES2Renderer;
+	class OpenGLES3Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -70,7 +70,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(OpenGLES2Renderer &openGLES2Renderer, handle nativeWindowHandle);
+		SwapChain(OpenGLES3Renderer &openGLES2Renderer, handle nativeWindowHandle);
 
 		/**
 		*  @brief
@@ -110,10 +110,10 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/RenderTarget/SwapChain.inl"
+#include "OpenGLES3Renderer/RenderTarget/SwapChain.inl"

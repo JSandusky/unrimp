@@ -21,14 +21,14 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Buffer/UniformBuffer.h"
-#include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"
+#include "OpenGLES3Renderer/Buffer/UniformBuffer.h"
+#include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -46,7 +46,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(OpenGLES2Renderer &openGLES2Renderer) :
+	UniformBuffer::UniformBuffer(OpenGLES3Renderer &openGLES2Renderer) :
 		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES2Renderer)),
 		mOpenGLESUniformBuffer(0)
 	{
@@ -58,4 +58,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

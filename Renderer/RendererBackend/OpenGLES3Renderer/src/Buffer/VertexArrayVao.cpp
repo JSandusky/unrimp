@@ -21,25 +21,25 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Buffer/VertexArrayVao.h"
-#include "OpenGLES2Renderer/Buffer/IndexBuffer.h"
-#include "OpenGLES2Renderer/Buffer/VertexBuffer.h"
-#include "OpenGLES2Renderer/Mapping.h"
-#include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
+#include "OpenGLES3Renderer/Buffer/VertexArrayVao.h"
+#include "OpenGLES3Renderer/Buffer/IndexBuffer.h"
+#include "OpenGLES3Renderer/Buffer/VertexBuffer.h"
+#include "OpenGLES3Renderer/Mapping.h"
+#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayVao::VertexArrayVao(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArrayVao::VertexArrayVao(OpenGLES3Renderer &openGLES2Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		VertexArray(openGLES2Renderer, indexBuffer),
 		mOpenGLES2VertexArray(0),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
@@ -144,4 +144,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

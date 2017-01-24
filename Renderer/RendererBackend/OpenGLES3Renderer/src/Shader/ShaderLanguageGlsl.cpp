@@ -21,18 +21,18 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"	// Must be included before "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
-#include "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
-#include "OpenGLES2Renderer/Shader/FragmentShaderGlsl.h"
-#include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
-#include "OpenGLES2Renderer/Shader/VertexShaderGlsl.h"
-#include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"	// Must be included before "OpenGLES3Renderer/Shader/ShaderLanguageGlsl.h"
+#include "OpenGLES3Renderer/Shader/ShaderLanguageGlsl.h"
+#include "OpenGLES3Renderer/Shader/FragmentShaderGlsl.h"
+#include "OpenGLES3Renderer/Shader/ProgramGlsl.h"
+#include "OpenGLES3Renderer/Shader/VertexShaderGlsl.h"
+#include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -100,7 +100,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ShaderLanguageGlsl::ShaderLanguageGlsl(OpenGLES2Renderer &openGLES2Renderer) :
+	ShaderLanguageGlsl::ShaderLanguageGlsl(OpenGLES3Renderer &openGLES2Renderer) :
 		IShaderLanguage(openGLES2Renderer)
 	{
 		// Nothing here
@@ -123,13 +123,13 @@ namespace OpenGLES2Renderer
 	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const uint8_t *bytecode, uint32_t numberOfBytes)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderGlsl(static_cast<OpenGLES2Renderer&>(getRenderer()), bytecode, numberOfBytes);
+		return new VertexShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), bytecode, numberOfBytes);
 	}
 
 	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderGlsl(static_cast<OpenGLES2Renderer&>(getRenderer()), sourceCode);
+		return new VertexShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), sourceCode);
 	}
 
 	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const uint8_t *, uint32_t )
@@ -171,13 +171,13 @@ namespace OpenGLES2Renderer
 	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderGlsl(static_cast<OpenGLES2Renderer&>(getRenderer()), bytecode, numberOfBytes);
+		return new FragmentShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), bytecode, numberOfBytes);
 	}
 
 	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderGlsl(static_cast<OpenGLES2Renderer&>(getRenderer()), sourceCode);
+		return new FragmentShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), sourceCode);
 	}
 
 	Renderer::IProgram *ShaderLanguageGlsl::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
@@ -209,7 +209,7 @@ namespace OpenGLES2Renderer
 		else
 		{
 			// Create the program
-			return new ProgramGlsl(static_cast<OpenGLES2Renderer&>(getRenderer()), rootSignature, vertexAttributes, static_cast<VertexShaderGlsl*>(vertexShader), static_cast<FragmentShaderGlsl*>(fragmentShader));
+			return new ProgramGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), rootSignature, vertexAttributes, static_cast<VertexShaderGlsl*>(vertexShader), static_cast<FragmentShaderGlsl*>(fragmentShader));
 		}
 
 		// Error! Shader language mismatch!
@@ -233,4 +233,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

@@ -21,14 +21,14 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Buffer/VertexArray.h"
-#include "OpenGLES2Renderer/Buffer/IndexBuffer.h"
+#include "OpenGLES3Renderer/Buffer/VertexArray.h"
+#include "OpenGLES3Renderer/Buffer/IndexBuffer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -63,4 +63,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

@@ -21,9 +21,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/RootSignature.h"
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
-#include "OpenGLES2Renderer/State/SamplerState.h"
+#include "OpenGLES3Renderer/RootSignature.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+#include "OpenGLES3Renderer/State/SamplerState.h"
 
 #include <memory.h>
 
@@ -80,14 +80,14 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RootSignature::RootSignature(OpenGLES2Renderer &openGLES2Renderer, const Renderer::RootSignature &rootSignature) :
+	RootSignature::RootSignature(OpenGLES3Renderer &openGLES2Renderer, const Renderer::RootSignature &rootSignature) :
 		IRootSignature(openGLES2Renderer),
 		mRootSignature(rootSignature),
 		mSamplerStates(nullptr)
@@ -210,4 +210,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

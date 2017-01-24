@@ -21,12 +21,12 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLES2Renderer::IExtensions methods ]
+	//[ Public virtual OpenGLES3Renderer::IExtensions methods ]
 	//[-------------------------------------------------------]
 	// EXT
 	inline bool ExtensionsRuntimeLinking::isGL_EXT_texture_compression_s3tc() const
@@ -153,4 +153,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

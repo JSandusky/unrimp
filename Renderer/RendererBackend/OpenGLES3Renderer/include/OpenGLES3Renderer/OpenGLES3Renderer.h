@@ -40,7 +40,7 @@ namespace Renderer
 	class IRenderTarget;
 	class IIndirectBuffer;
 }
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 	class IContext;
 	class SwapChain;
@@ -66,7 +66,7 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -77,7 +77,7 @@ namespace OpenGLES2Renderer
 	*  @brief
 	*    OpenGL ES 2 renderer class
 	*/
-	class OpenGLES2Renderer : public Renderer::IRenderer
+	class OpenGLES3Renderer : public Renderer::IRenderer
 	{
 
 
@@ -103,13 +103,13 @@ namespace OpenGLES2Renderer
 		*  @note
 		*    - Do never ever use a not properly initialized renderer! Use "Renderer::IRenderer::isInitialized()" to check the initialization state.
 		*/
-		explicit OpenGLES2Renderer(handle nativeWindowHandle, bool useExternalContext);
+		explicit OpenGLES3Renderer(handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~OpenGLES2Renderer();
+		virtual ~OpenGLES3Renderer();
 
 		/**
 		*  @brief
@@ -255,7 +255,7 @@ namespace OpenGLES2Renderer
 		Renderer::IShaderLanguage *mShaderLanguageGlsl;					///< GLSL shader language instance (we keep a reference to it), can be a null pointer
 		RootSignature			  *mGraphicsRootSignature;				///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState	  *mDefaultSamplerState;				///< Default rasterizer state (we keep a reference to it), can be a null pointer
-		uint32_t				   mOpenGLES2CopyResourceFramebuffer;	///< OpenGL ES 2 framebuffer ("container" object, not shared between OpenGL ES 2 contexts) used by "OpenGLES2Renderer::OpenGLES2Renderer::copyResource()", can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t				   mOpenGLES2CopyResourceFramebuffer;	///< OpenGL ES 2 framebuffer ("container" object, not shared between OpenGL ES 2 contexts) used by "OpenGLES3Renderer::OpenGLES3Renderer::copyResource()", can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
@@ -264,7 +264,7 @@ namespace OpenGLES2Renderer
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
-		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "OpenGLES2Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
+		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "OpenGLES3Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget *mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
 		//[-------------------------------------------------------]
 		//[ States                                                ]
@@ -278,10 +278,10 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/OpenGLES2Renderer.inl"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.inl"

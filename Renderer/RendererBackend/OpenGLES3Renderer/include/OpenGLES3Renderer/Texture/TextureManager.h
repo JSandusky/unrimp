@@ -33,17 +33,17 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 	class IExtensions;
-	class OpenGLES2Renderer;
+	class OpenGLES3Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -69,7 +69,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] openGLES2Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*/
-		explicit TextureManager(OpenGLES2Renderer& openGLES2Renderer);
+		explicit TextureManager(OpenGLES3Renderer& openGLES2Renderer);
 
 		/**
 		*  @brief
@@ -99,10 +99,10 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Texture/TextureManager.inl"
+#include "OpenGLES3Renderer/Texture/TextureManager.inl"

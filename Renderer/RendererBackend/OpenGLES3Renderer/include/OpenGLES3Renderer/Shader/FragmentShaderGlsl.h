@@ -33,16 +33,16 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
-	class OpenGLES2Renderer;
+	class OpenGLES3Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -72,7 +72,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] numberOfBytes
 		*    Number of bytes in the bytecode
 		*/
-		FragmentShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		FragmentShaderGlsl(OpenGLES3Renderer &openGLES2Renderer, const uint8_t *bytecode, uint32_t numberOfBytes);
 
 		/**
 		*  @brief
@@ -83,7 +83,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		FragmentShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const char *sourceCode);
+		FragmentShaderGlsl(OpenGLES3Renderer &openGLES2Renderer, const char *sourceCode);
 
 		/**
 		*  @brief
@@ -121,10 +121,10 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Shader/FragmentShaderGlsl.inl"
+#include "OpenGLES3Renderer/Shader/FragmentShaderGlsl.inl"

@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #define EXTENSIONS_DEFINERUNTIMELINKING
 
-#include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"
+#include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
 #ifdef LINUX
 	#include <string.h>
 #endif
@@ -32,7 +32,7 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -267,4 +267,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

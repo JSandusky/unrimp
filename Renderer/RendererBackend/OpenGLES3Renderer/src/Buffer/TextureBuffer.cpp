@@ -21,14 +21,14 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Buffer/TextureBuffer.h"
-#include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"
+#include "OpenGLES3Renderer/Buffer/TextureBuffer.h"
+#include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -50,7 +50,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(OpenGLES2Renderer &openGLES2Renderer) :
+	TextureBuffer::TextureBuffer(OpenGLES3Renderer &openGLES2Renderer) :
 		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES2Renderer)),
 		mOpenGLESTextureBuffer(0),
 		mOpenGLESTexture(0)
@@ -66,4 +66,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

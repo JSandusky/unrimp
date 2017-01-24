@@ -33,16 +33,16 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
-	class OpenGLES2Renderer;
+	class OpenGLES3Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -94,7 +94,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] openGLES2Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*/
-		explicit ShaderLanguageGlsl(OpenGLES2Renderer &openGLES2Renderer);
+		explicit ShaderLanguageGlsl(OpenGLES3Renderer &openGLES2Renderer);
 
 		/**
 		*  @brief
@@ -127,4 +127,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

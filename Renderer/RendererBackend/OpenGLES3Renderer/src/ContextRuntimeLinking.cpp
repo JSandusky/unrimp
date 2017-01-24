@@ -23,8 +23,8 @@
 //[-------------------------------------------------------]
 #define CONTEXT_DEFINERUNTIMELINKING
 
-#include "OpenGLES2Renderer/ContextRuntimeLinking.h"
-#include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"
+#include "OpenGLES3Renderer/ContextRuntimeLinking.h"
+#include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
 
 #include <EGL/eglext.h> // For "EGL_OPENGL_ES3_BIT_KHR"
 
@@ -37,7 +37,7 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -113,7 +113,7 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLES2Renderer::IContext methods    ]
+	//[ Public virtual OpenGLES3Renderer::IContext methods    ]
 	//[-------------------------------------------------------]
 	bool ContextRuntimeLinking::initialize(uint32_t multisampleAntialiasingSamples)
 	{
@@ -142,7 +142,7 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual OpenGLES2Renderer::IContext methods ]
+	//[ Protected virtual OpenGLES3Renderer::IContext methods ]
 	//[-------------------------------------------------------]
 	EGLConfig ContextRuntimeLinking::chooseConfig(uint32_t multisampleAntialiasingSamples) const
 	{
@@ -623,4 +623,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

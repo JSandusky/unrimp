@@ -53,7 +53,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 	class IExtensions;
 }
@@ -62,7 +62,7 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -159,7 +159,7 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLES2Renderer::IContext methods    ]
+	//[ Public virtual OpenGLES3Renderer::IContext methods    ]
 	//[-------------------------------------------------------]
 	public:
 		/**
@@ -228,7 +228,7 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual OpenGLES2Renderer::IContext methods ]
+	//[ Protected virtual OpenGLES3Renderer::IContext methods ]
 	//[-------------------------------------------------------]
 	protected:
 		/**
@@ -272,11 +272,11 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation includes                               ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/IContext.inl"
-#include "OpenGLES2Renderer/ContextRuntimeLinking.h"	// Required in here because we redefine the OpenGL ES 2 functions for dynamic runtime linking
+#include "OpenGLES3Renderer/IContext.inl"
+#include "OpenGLES3Renderer/ContextRuntimeLinking.h"	// Required in here because we redefine the OpenGL ES 2 functions for dynamic runtime linking

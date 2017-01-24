@@ -21,25 +21,25 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/State/PipelineState.h"
-#include "OpenGLES2Renderer/State/BlendState.h"
-#include "OpenGLES2Renderer/State/RasterizerState.h"
-#include "OpenGLES2Renderer/State/DepthStencilState.h"
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
-#include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
+#include "OpenGLES3Renderer/State/PipelineState.h"
+#include "OpenGLES3Renderer/State/BlendState.h"
+#include "OpenGLES3Renderer/State/RasterizerState.h"
+#include "OpenGLES3Renderer/State/DepthStencilState.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+#include "OpenGLES3Renderer/Shader/ProgramGlsl.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::PipelineState& pipelineState) :
+	PipelineState::PipelineState(OpenGLES3Renderer &openGLES2Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(openGLES2Renderer),
 		mProgram(pipelineState.program),
 		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
@@ -66,7 +66,7 @@ namespace OpenGLES2Renderer
 
 	void PipelineState::bindPipelineState() const
 	{
-		static_cast<OpenGLES2Renderer&>(getRenderer()).setProgram(mProgram);
+		static_cast<OpenGLES3Renderer&>(getRenderer()).setProgram(mProgram);
 
 		// Set the OpenGL ES 2 rasterizer state
 		mRasterizerState->setOpenGLES2RasterizerStates();
@@ -82,4 +82,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

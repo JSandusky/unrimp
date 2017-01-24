@@ -38,10 +38,10 @@ namespace Renderer
 	class IRootSignature;
 	struct VertexAttributes;
 }
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 	class VertexShaderGlsl;
-	class OpenGLES2Renderer;
+	class OpenGLES3Renderer;
 	class FragmentShaderGlsl;
 }
 
@@ -49,7 +49,7 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -86,7 +86,7 @@ namespace OpenGLES2Renderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
+		ProgramGlsl(OpenGLES3Renderer &openGLES2Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
 
 		/**
 		*  @brief
@@ -133,10 +133,10 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Shader/ProgramGlsl.inl"
+#include "OpenGLES3Renderer/Shader/ProgramGlsl.inl"

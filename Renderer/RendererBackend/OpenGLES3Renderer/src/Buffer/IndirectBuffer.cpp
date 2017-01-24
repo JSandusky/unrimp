@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Buffer/IndirectBuffer.h"
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
+#include "OpenGLES3Renderer/Buffer/IndirectBuffer.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <cstring>	// For "memcpy"
 
@@ -30,14 +30,14 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndirectBuffer::IndirectBuffer(OpenGLES2Renderer& openGLES2Renderer, uint32_t numberOfBytes, const void* data) :
+	IndirectBuffer::IndirectBuffer(OpenGLES3Renderer& openGLES2Renderer, uint32_t numberOfBytes, const void* data) :
 		IIndirectBuffer(openGLES2Renderer),
 		mNumberOfBytes(numberOfBytes),
 		mData(nullptr)
@@ -79,4 +79,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

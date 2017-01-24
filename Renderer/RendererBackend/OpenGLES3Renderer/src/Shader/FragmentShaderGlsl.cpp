@@ -21,23 +21,23 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
-#include "OpenGLES2Renderer/Shader/FragmentShaderGlsl.h"
-#include "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
-#include "OpenGLES2Renderer/IExtensions.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+#include "OpenGLES3Renderer/Shader/FragmentShaderGlsl.h"
+#include "OpenGLES3Renderer/Shader/ShaderLanguageGlsl.h"
+#include "OpenGLES3Renderer/IExtensions.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const uint8_t *, uint32_t) :
+	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES3Renderer &openGLES2Renderer, const uint8_t *, uint32_t) :
 		IFragmentShader(openGLES2Renderer),
 		mOpenGLES2Shader(0)
 	{
@@ -45,7 +45,7 @@ namespace OpenGLES2Renderer
 		// Nothing here
 	}
 
-	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const char *sourceCode) :
+	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES3Renderer &openGLES2Renderer, const char *sourceCode) :
 		IFragmentShader(openGLES2Renderer),
 		mOpenGLES2Shader(ShaderLanguageGlsl::loadShader(GL_FRAGMENT_SHADER, sourceCode))
 	{
@@ -72,4 +72,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

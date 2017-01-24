@@ -33,16 +33,16 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
-	class OpenGLES2Renderer;
+	class OpenGLES3Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -97,7 +97,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] openGLES2Renderer
 		*    Owner OpenGL ES renderer instance
 		*/
-		explicit TextureBuffer(OpenGLES2Renderer &openGLES2Renderer);
+		explicit TextureBuffer(OpenGLES3Renderer &openGLES2Renderer);
 
 
 	//[-------------------------------------------------------]
@@ -120,4 +120,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Buffer/TextureBuffer.inl"
+#include "OpenGLES3Renderer/Buffer/TextureBuffer.inl"

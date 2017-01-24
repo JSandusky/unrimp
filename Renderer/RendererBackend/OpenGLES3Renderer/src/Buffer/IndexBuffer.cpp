@@ -21,23 +21,23 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Buffer/IndexBuffer.h"
-#include "OpenGLES2Renderer/Mapping.h"
-#include "OpenGLES2Renderer/IExtensions.h"
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
+#include "OpenGLES3Renderer/Buffer/IndexBuffer.h"
+#include "OpenGLES3Renderer/Mapping.h"
+#include "OpenGLES3Renderer/IExtensions.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
+	IndexBuffer::IndexBuffer(OpenGLES3Renderer &openGLES2Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
 		IIndexBuffer(openGLES2Renderer),
 		mOpenGLES2ElementArrayBuffer(0),
 		mOpenGLES2Type(GL_UNSIGNED_SHORT),
@@ -85,4 +85,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

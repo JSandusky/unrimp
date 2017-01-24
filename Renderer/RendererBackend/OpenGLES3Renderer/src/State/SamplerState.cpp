@@ -21,10 +21,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/State/SamplerState.h"
-#include "OpenGLES2Renderer/Mapping.h"
-#include "OpenGLES2Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
+#include "OpenGLES3Renderer/State/SamplerState.h"
+#include "OpenGLES3Renderer/Mapping.h"
+#include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <GLES3/gl3.h>
 
@@ -32,14 +32,14 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerState::SamplerState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::SamplerState &samplerState) :
+	SamplerState::SamplerState(OpenGLES3Renderer &openGLES2Renderer, const Renderer::SamplerState &samplerState) :
 		ISamplerState(openGLES2Renderer),
 		mOpenGLMagFilterMode(Mapping::getOpenGLES2MagFilterMode(samplerState.filter)),
 		mOpenGLMinFilterMode(Mapping::getOpenGLES2MinFilterMode(samplerState.filter, samplerState.maxLOD > 0.0f)),
@@ -108,4 +108,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

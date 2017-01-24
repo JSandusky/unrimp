@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -57,7 +57,7 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLES2Renderer::IExtensions methods ]
+	//[ Public virtual OpenGLES3Renderer::IExtensions methods ]
 	//[-------------------------------------------------------]
 	public:
 		///////////////////////////////////////////////////////////
@@ -132,10 +132,10 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation includes                               ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"	// Required in here because we define the OpenGL ES 2 extension functions for dynamic runtime linking
+#include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"	// Required in here because we define the OpenGL ES 2 extension functions for dynamic runtime linking

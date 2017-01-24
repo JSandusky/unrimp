@@ -27,13 +27,13 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/IContext.h"
+#include "OpenGLES3Renderer/IContext.h"
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 	class ExtensionsRuntimeLinking;
 }
@@ -42,7 +42,7 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
@@ -97,7 +97,7 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLES2Renderer::IContext methods    ]
+	//[ Public virtual OpenGLES3Renderer::IContext methods    ]
 	//[-------------------------------------------------------]
 	public:
 		virtual bool initialize(uint32_t multisampleAntialiasingSamples) override;
@@ -105,7 +105,7 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual OpenGLES2Renderer::IContext methods ]
+	//[ Protected virtual OpenGLES3Renderer::IContext methods ]
 	//[-------------------------------------------------------]
 	protected:
 		virtual EGLConfig chooseConfig(uint32_t multisampleAntialiasingSamples) const override;
@@ -574,4 +574,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer

@@ -21,30 +21,30 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
-#include "OpenGLES2Renderer/OpenGLES2Debug.h"	// For "OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN()"
-#include "OpenGLES2Renderer/Mapping.h"
-#include "OpenGLES2Renderer/IExtensions.h"
-#include "OpenGLES2Renderer/RootSignature.h"
-#include "OpenGLES2Renderer/ContextRuntimeLinking.h"
-#include "OpenGLES2Renderer/RenderTarget/SwapChain.h"
-#include "OpenGLES2Renderer/RenderTarget/Framebuffer.h"
-#include "OpenGLES2Renderer/Buffer/BufferManager.h"
-#include "OpenGLES2Renderer/Buffer/IndexBuffer.h"
-#include "OpenGLES2Renderer/Buffer/TextureBufferBind.h"
-#include "OpenGLES2Renderer/Buffer/UniformBufferBind.h"
-#include "OpenGLES2Renderer/Buffer/VertexBuffer.h"
-#include "OpenGLES2Renderer/Buffer/VertexArrayVao.h"
-#include "OpenGLES2Renderer/Buffer/VertexArrayNoVao.h"
-#include "OpenGLES2Renderer/Buffer/IndirectBuffer.h"
-#include "OpenGLES2Renderer/Texture/TextureManager.h"
-#include "OpenGLES2Renderer/Texture/Texture2D.h"
-#include "OpenGLES2Renderer/Texture/Texture2DArray.h"
-#include "OpenGLES2Renderer/State/SamplerState.h"
-#include "OpenGLES2Renderer/State/PipelineState.h"
-#include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
-#include "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
-#include "OpenGLES2Renderer/ContextRuntimeLinking.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+#include "OpenGLES3Renderer/OpenGLES2Debug.h"	// For "OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "OpenGLES3Renderer/Mapping.h"
+#include "OpenGLES3Renderer/IExtensions.h"
+#include "OpenGLES3Renderer/RootSignature.h"
+#include "OpenGLES3Renderer/ContextRuntimeLinking.h"
+#include "OpenGLES3Renderer/RenderTarget/SwapChain.h"
+#include "OpenGLES3Renderer/RenderTarget/Framebuffer.h"
+#include "OpenGLES3Renderer/Buffer/BufferManager.h"
+#include "OpenGLES3Renderer/Buffer/IndexBuffer.h"
+#include "OpenGLES3Renderer/Buffer/TextureBufferBind.h"
+#include "OpenGLES3Renderer/Buffer/UniformBufferBind.h"
+#include "OpenGLES3Renderer/Buffer/VertexBuffer.h"
+#include "OpenGLES3Renderer/Buffer/VertexArrayVao.h"
+#include "OpenGLES3Renderer/Buffer/VertexArrayNoVao.h"
+#include "OpenGLES3Renderer/Buffer/IndirectBuffer.h"
+#include "OpenGLES3Renderer/Texture/TextureManager.h"
+#include "OpenGLES3Renderer/Texture/Texture2D.h"
+#include "OpenGLES3Renderer/Texture/Texture2DArray.h"
+#include "OpenGLES3Renderer/State/SamplerState.h"
+#include "OpenGLES3Renderer/State/PipelineState.h"
+#include "OpenGLES3Renderer/Shader/ProgramGlsl.h"
+#include "OpenGLES3Renderer/Shader/ShaderLanguageGlsl.h"
+#include "OpenGLES3Renderer/ContextRuntimeLinking.h"
 
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
@@ -61,14 +61,14 @@
 #else
 	#define OPENGLES2RENDERER_API_EXPORT
 #endif
-OPENGLES2RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES2RendererInstance2(handle nativeWindowHandle, bool useExternalContext)
+OPENGLES2RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES3RendererInstance2(handle nativeWindowHandle, bool useExternalContext)
 {
-	return new OpenGLES2Renderer::OpenGLES2Renderer(nativeWindowHandle, useExternalContext);
+	return new OpenGLES3Renderer::OpenGLES3Renderer(nativeWindowHandle, useExternalContext);
 }
 
-OPENGLES2RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES2RendererInstance(handle nativeWindowHandle)
+OPENGLES2RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES3RendererInstance(handle nativeWindowHandle)
 {
-	return new OpenGLES2Renderer::OpenGLES2Renderer(nativeWindowHandle, false);
+	return new OpenGLES3Renderer::OpenGLES3Renderer(nativeWindowHandle, false);
 }
 #undef OPENGLES2RENDERER_API_EXPORT
 
@@ -108,13 +108,13 @@ namespace
 			void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::SetGraphicsRootSignature* realData = static_cast<const Renderer::Command::SetGraphicsRootSignature*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
 			}
 
 			void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
 			}
 
 			//[-------------------------------------------------------]
@@ -123,7 +123,7 @@ namespace
 			void SetPipelineState(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::SetPipelineState* realData = static_cast<const Renderer::Command::SetPipelineState*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).setPipelineState(realData->pipelineState);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).setPipelineState(realData->pipelineState);
 			}
 
 			//[-------------------------------------------------------]
@@ -132,13 +132,13 @@ namespace
 			void SetVertexArray(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
 			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
 			}
 
 			//[-------------------------------------------------------]
@@ -147,13 +147,13 @@ namespace
 			void SetViewports(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::SetViewports* realData = static_cast<const Renderer::Command::SetViewports*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).rsSetViewports(realData->numberOfViewports, (nullptr != realData->viewports) ? realData->viewports : reinterpret_cast<const Renderer::Viewport*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
 			}
 
 			void SetScissorRectangles(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::SetScissorRectangles* realData = static_cast<const Renderer::Command::SetScissorRectangles*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).rsSetScissorRectangles(realData->numberOfScissorRectangles, (nullptr != realData->scissorRectangles) ? realData->scissorRectangles : reinterpret_cast<const Renderer::ScissorRectangle*>(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData)));
 			}
 
 			//[-------------------------------------------------------]
@@ -162,7 +162,7 @@ namespace
 			void SetRenderTarget(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::SetRenderTarget* realData = static_cast<const Renderer::Command::SetRenderTarget*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).omSetRenderTarget(realData->renderTarget);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).omSetRenderTarget(realData->renderTarget);
 			}
 
 			//[-------------------------------------------------------]
@@ -171,19 +171,19 @@ namespace
 			void Clear(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::Clear* realData = static_cast<const Renderer::Command::Clear*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).clear(realData->flags, realData->color, realData->z, realData->stencil);
 			}
 
 			void ResolveMultisampleFramebuffer(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::ResolveMultisampleFramebuffer* realData = static_cast<const Renderer::Command::ResolveMultisampleFramebuffer*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).resolveMultisampleFramebuffer(*realData->destinationRenderTarget, *realData->sourceMultisampleFramebuffer);
 			}
 
 			void CopyResource(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::CopyResource* realData = static_cast<const Renderer::Command::CopyResource*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).copyResource(*realData->destinationResource, *realData->sourceResource);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).copyResource(*realData->destinationResource, *realData->sourceResource);
 			}
 
 			//[-------------------------------------------------------]
@@ -195,11 +195,11 @@ namespace
 				if (nullptr != realData->indirectBuffer)
 				{
 					// No resource owner security check in here, we only support emulated indirect buffer
-					static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
 				}
 				else
 				{
-					static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
 				}
 			}
 
@@ -209,11 +209,11 @@ namespace
 				if (nullptr != realData->indirectBuffer)
 				{
 					// No resource owner security check in here, we only support emulated indirect buffer
-					static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
 				}
 				else
 				{
-					static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+					static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
 				}
 			}
 
@@ -223,18 +223,18 @@ namespace
 			void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).setDebugMarker(realData->name);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).setDebugMarker(realData->name);
 			}
 
 			void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).beginDebugEvent(realData->name);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).beginDebugEvent(realData->name);
 			}
 
 			void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
 			{
-				static_cast<OpenGLES2Renderer::OpenGLES2Renderer&>(renderer).endDebugEvent();
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).endDebugEvent();
 			}
 
 
@@ -286,14 +286,14 @@ namespace
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	OpenGLES2Renderer::OpenGLES2Renderer(handle nativeWindowHandle, bool useExternalContext) :
+	OpenGLES3Renderer::OpenGLES3Renderer(handle nativeWindowHandle, bool useExternalContext) :
 		mContext(new ContextRuntimeLinking(nativeWindowHandle, useExternalContext)),
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
@@ -326,7 +326,7 @@ namespace OpenGLES2Renderer
 					// by default all messages are enabled and this is good this way
 
 					// Set the debug message callback function
-					glDebugMessageCallbackKHR(&OpenGLES2Renderer::debugMessageCallback, nullptr);
+					glDebugMessageCallbackKHR(&OpenGLES3Renderer::debugMessageCallback, nullptr);
 				}
 			#endif
 
@@ -348,7 +348,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	OpenGLES2Renderer::~OpenGLES2Renderer()
+	OpenGLES3Renderer::~OpenGLES3Renderer()
 	{
 		// Release instances
 		if (nullptr != mMainSwapChain)
@@ -367,7 +367,7 @@ namespace OpenGLES2Renderer
 			mDefaultSamplerState = nullptr;
 		}
 
-		// Destroy the OpenGL ES 2 framebuffer used by "OpenGLES2Renderer::OpenGLES2Renderer::copyResource()"
+		// Destroy the OpenGL ES 2 framebuffer used by "OpenGLES3Renderer::OpenGLES3Renderer::copyResource()"
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteFramebuffers(1, &mOpenGLES2CopyResourceFramebuffer);
 
@@ -417,7 +417,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::setGraphicsRootSignature(Renderer::IRootSignature* rootSignature)
+	void OpenGLES3Renderer::setGraphicsRootSignature(Renderer::IRootSignature* rootSignature)
 	{
 		if (nullptr != mGraphicsRootSignature)
 		{
@@ -433,7 +433,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
+	void OpenGLES3Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
 	{
 		// Security checks
 		#ifndef OPENGLES2RENDERER_NO_DEBUG
@@ -607,7 +607,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
+	void OpenGLES3Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
 		if (nullptr != pipelineState)
 		{
@@ -627,7 +627,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
+	void OpenGLES3Renderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
 	{
 		// New vertex array?
 		if (mVertexArray != vertexArray)
@@ -700,7 +700,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
+	void OpenGLES3Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
 	{
 		// Map and backup the set OpenGL ES 2 primitive topology
 		mOpenGLES2PrimitiveTopology = Mapping::getOpenGLES2Type(primitiveTopology);
@@ -710,7 +710,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
+	void OpenGLES3Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
 	{
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
@@ -739,7 +739,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void OpenGLES3Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
 	{
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
@@ -772,7 +772,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
+	void OpenGLES3Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
 	{
 		// New render target?
 		if (mRenderTarget != renderTarget)
@@ -899,7 +899,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
+	void OpenGLES3Renderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
 	{
 		// Get API flags
 		uint32_t flagsAPI = 0;
@@ -955,12 +955,12 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget&, Renderer::IFramebuffer&)
+	void OpenGLES3Renderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget&, Renderer::IFramebuffer&)
 	{
 		// TODO(co) Implement me
 	}
 
-	void OpenGLES2Renderer::copyResource(Renderer::IResource& destinationResource, Renderer::IResource& sourceResource)
+	void OpenGLES3Renderer::copyResource(Renderer::IResource& destinationResource, Renderer::IResource& sourceResource)
 	{
 		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
 		OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationResource)
@@ -1041,7 +1041,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void OpenGLES3Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		if (nullptr != mVertexArray && numberOfDraws > 0)
 		{
@@ -1072,7 +1072,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	void OpenGLES3Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Is currently an vertex array?
 		if (nullptr != mVertexArray && numberOfDraws > 0)
@@ -1152,7 +1152,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::setDebugMarker(const char *)
+	void OpenGLES3Renderer::setDebugMarker(const char *)
 	{
 		// TODO(co) Implement me. See
 		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
@@ -1160,7 +1160,7 @@ namespace OpenGLES2Renderer
 		// - https://www.opengl.org/registry/specs/KHR/debug.txt
 	}
 
-	void OpenGLES2Renderer::beginDebugEvent(const char *)
+	void OpenGLES3Renderer::beginDebugEvent(const char *)
 	{
 		// TODO(co) Implement me. See
 		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
@@ -1168,7 +1168,7 @@ namespace OpenGLES2Renderer
 		// - https://www.opengl.org/registry/specs/KHR/debug.txt
 	}
 
-	void OpenGLES2Renderer::endDebugEvent()
+	void OpenGLES3Renderer::endDebugEvent()
 	{
 		// TODO(co) Implement me. See
 		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
@@ -1180,18 +1180,18 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
-	const char *OpenGLES2Renderer::getName() const
+	const char *OpenGLES3Renderer::getName() const
 	{
 		return "OpenGLES2";
 	}
 
-	bool OpenGLES2Renderer::isInitialized() const
+	bool OpenGLES3Renderer::isInitialized() const
 	{
 		// Is the context initialized?
 		return  mContext->isInitialized();
 	}
 
-	bool OpenGLES2Renderer::isDebugEnabled()
+	bool OpenGLES3Renderer::isDebugEnabled()
 	{
 		// OpenGL ES 2 has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
 
@@ -1199,7 +1199,7 @@ namespace OpenGLES2Renderer
 		return false;
 	}
 
-	Renderer::ISwapChain *OpenGLES2Renderer::getMainSwapChain() const
+	Renderer::ISwapChain *OpenGLES3Renderer::getMainSwapChain() const
 	{
 		return mMainSwapChain;
 	}
@@ -1208,12 +1208,12 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Shader language                                       ]
 	//[-------------------------------------------------------]
-	uint32_t OpenGLES2Renderer::getNumberOfShaderLanguages() const
+	uint32_t OpenGLES3Renderer::getNumberOfShaderLanguages() const
 	{
 		return 1;
 	}
 
-	const char *OpenGLES2Renderer::getShaderLanguageName(uint32_t index) const
+	const char *OpenGLES3Renderer::getShaderLanguageName(uint32_t index) const
 	{
 		// Evaluate the provided index
 		switch (index)
@@ -1226,7 +1226,7 @@ namespace OpenGLES2Renderer
 		return nullptr;
 	}
 
-	Renderer::IShaderLanguage *OpenGLES2Renderer::getShaderLanguage(const char *shaderLanguageName)
+	Renderer::IShaderLanguage *OpenGLES3Renderer::getShaderLanguage(const char *shaderLanguageName)
 	{
 		// In case "shaderLanguage" is a null pointer, use the default shader language
 		if (nullptr != shaderLanguageName)
@@ -1257,39 +1257,39 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *OpenGLES2Renderer::createSwapChain(handle nativeWindowHandle)
+	Renderer::ISwapChain *OpenGLES3Renderer::createSwapChain(handle nativeWindowHandle)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *OpenGLES2Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	Renderer::IFramebuffer *OpenGLES3Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
 	{
 		// Validation is done inside the framebuffer implementation
 		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
 	}
 
-	Renderer::IBufferManager *OpenGLES2Renderer::createBufferManager()
+	Renderer::IBufferManager *OpenGLES3Renderer::createBufferManager()
 	{
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITextureManager *OpenGLES2Renderer::createTextureManager()
+	Renderer::ITextureManager *OpenGLES3Renderer::createTextureManager()
 	{
 		return new TextureManager(*this);
 	}
 
-	Renderer::IRootSignature *OpenGLES2Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	Renderer::IRootSignature *OpenGLES3Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
 	{
 		return new RootSignature(*this, rootSignature);
 	}
 
-	Renderer::IPipelineState *OpenGLES2Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
+	Renderer::IPipelineState *OpenGLES3Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::ISamplerState *OpenGLES2Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	Renderer::ISamplerState *OpenGLES3Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
 	{
 		return new SamplerState(*this, samplerState);
 	}
@@ -1298,7 +1298,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool OpenGLES2Renderer::map(Renderer::IResource& resource, uint32_t, Renderer::MapType mapType, uint32_t, Renderer::MappedSubresource& mappedSubresource)
+	bool OpenGLES3Renderer::map(Renderer::IResource& resource, uint32_t, Renderer::MapType mapType, uint32_t, Renderer::MappedSubresource& mappedSubresource)
 	{
 		// Evaluate the resource type
 		switch (resource.getResourceType())
@@ -1468,7 +1468,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::unmap(Renderer::IResource& resource, uint32_t)
+	void OpenGLES3Renderer::unmap(Renderer::IResource& resource, uint32_t)
 	{
 		// Evaluate the resource type
 		switch (resource.getResourceType())
@@ -1603,7 +1603,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	bool OpenGLES2Renderer::beginScene()
+	bool OpenGLES3Renderer::beginScene()
 	{
 		// Not required when using OpenGL ES 2
 
@@ -1611,7 +1611,7 @@ namespace OpenGLES2Renderer
 		return true;
 	}
 
-	void OpenGLES2Renderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
+	void OpenGLES3Renderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
 	{
 		// Loop through all commands
 		uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
@@ -1631,7 +1631,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::endScene()
+	void OpenGLES3Renderer::endScene()
 	{
 		// We need to forget about the currently set render target
 		omSetRenderTarget(nullptr);
@@ -1644,12 +1644,12 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Synchronization                                       ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::flush()
+	void OpenGLES3Renderer::flush()
 	{
 		glFlush();
 	}
 
-	void OpenGLES2Renderer::finish()
+	void OpenGLES3Renderer::finish()
 	{
 		glFinish();
 	}
@@ -1658,7 +1658,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char *message, const void *)
+	void OpenGLES3Renderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char *message, const void *)
 	{
 		// Source to string
 		char debugSource[20]{0};
@@ -1765,7 +1765,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::initializeCapabilities()
+	void OpenGLES3Renderer::initializeCapabilities()
 	{
 		GLint openGLValue = 0;
 
@@ -1843,7 +1843,7 @@ namespace OpenGLES2Renderer
 		mCapabilities.fragmentShader = true;
 	}
 
-	void OpenGLES2Renderer::setProgram(Renderer::IProgram *program)
+	void OpenGLES3Renderer::setProgram(Renderer::IProgram *program)
 	{
 		if (nullptr != program)
 		{
@@ -1870,4 +1870,4 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLES3Renderer
