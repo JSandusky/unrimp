@@ -26,7 +26,7 @@
 
 #include <imgui/imgui.h>
 
-#include <X11/keysym.h>
+#include <X11/Xutil.h>
 #include <sys/time.h>
 
 
@@ -40,69 +40,67 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void DebugGuiManagerLinux::onXEvent(XEvent& event)
+	void DebugGuiManagerLinux::onWindowResize(uint32_t width, uint32_t heigth)
+	{
+		mWindowWidth = width;
+		mWindowHeigth = heigth;
+	}
+
+	void DebugGuiManagerLinux::onKeyInput(uint32_t keySym, const char character, bool pressed)
+	{
+		ImGuiIO& imGuiIo = ImGui::GetIO();
+		if (keySym < 512)
+		{
+			imGuiIo.KeysDown[keySym] = pressed;
+		}
+		else if (keySym == XK_Alt_L)
+		{
+			imGuiIo.KeyAlt = pressed;
+		}
+		else if (keySym == XK_Shift_L)
+		{
+			imGuiIo.KeyShift = pressed;
+		}
+		else if (keySym == XK_Control_L )
+		{
+			imGuiIo.KeyCtrl = pressed;
+		}
+		else if (keySym == XK_Super_L)
+		{
+			imGuiIo.KeySuper = pressed;
+		}
+		else if ((keySym & 0xff00) == 0xff00)
+		{
+			// It is a special key (e.g. tab key) map the value to a range between 0x0ff and 0x1ff
+			imGuiIo.KeysDown[(keySym & 0x1ff)] = pressed;
+		}
+
+		if (pressed && character > 0)
+		{
+			imGuiIo.AddInputCharacter(character);
+		}
+	}
+
+	void DebugGuiManagerLinux::onMouseMoveInput(int x, int y)
+	{
+		updateMousePosition(x,y);
+	}
+
+	void DebugGuiManagerLinux::onMouseButtonInput(uint32_t button, bool pressed)
 	{
 		ImGuiIO& imGuiIo = ImGui::GetIO();
 		
-		switch (event.type)
+		// The mouse buttons on X11 starts at index 1 for the left mouse button. In ImGui the left mouse button is at index 0. Compensate it
+		if (button > 0 && button <= 5)
 		{
-			case ConfigureNotify:
-				mWindowWidth = event.xconfigure.width;
-				mWindowHeigth = event.xconfigure.height;
-				break;
-			case KeyPress:
-			case KeyRelease:
-			{
-				// TODO(sw) Some keysyms are a 16 bit value (e.g. for tab key) map the keysym to a value which is in range of 0-512
-				const uint32_t keySym = XLookupKeysym(&event.xkey, 0);
-				if (keySym < 512)
-				{
-					imGuiIo.KeysDown[keySym] = event.type == KeyPress;
-				}
-				
-				if (keySym == XK_Alt_L)
-				{
-					imGuiIo.KeyAlt = event.type == KeyPress;
-				}
-				else if (keySym == XK_Shift_L)
-				{
-					imGuiIo.KeyShift = event.type == KeyPress;
-				}
-				else if (keySym == XK_Control_L )
-				{
-					imGuiIo.KeyCtrl = event.type == KeyPress;
-				}
-				else if (keySym == XK_Super_L)
-				{
-					imGuiIo.KeySuper = event.type == KeyPress;
-				}
-				break;
-			}
-
-			case ButtonPress:
-			case ButtonRelease:
-			{
-				if (event.xbutton.button == 1)
-				{
-					imGuiIo.MouseDown[0] = event.type == ButtonPress;
-				}
-				else if (event.xbutton.button == 3)
-				{
-					imGuiIo.MouseDown[1] = event.type == ButtonPress;
-				}
-				else if (event.type == ButtonPress && (event.xbutton.button == 4 || event.xbutton.button == 5)) // Wheel buttons
-				{
-					imGuiIo.MouseWheel += (event.xbutton.button == 4) ? 1.0f : -1.0f;
-				}
-				break;
-			}
-
-			case MotionNotify:
-			{
-				updateMousePosition(event.xmotion.x, event.xmotion.y);
-				break;
-			}
+			imGuiIo.MouseDown[button - 1] = pressed;
 		}
+	}
+
+	void DebugGuiManagerLinux::onMouseWheelInput(bool scrollUp)
+	{
+		ImGuiIO& imGuiIo = ImGui::GetIO();
+		imGuiIo.MouseWheel += scrollUp ? -1.0f : 1.0f;
 	}
 
 
@@ -114,20 +112,20 @@ namespace RendererRuntime
 	{
 		// Keyboard mapping. ImGui will use those indices to peek into the imGuiIo.KeyDown[] array that we will update during the application lifetime.
 		ImGuiIO& imGuiIo = ImGui::GetIO();
-		// TODO(sw) These keysyms are 16bit values with an value > 512
-// 		imGuiIo.KeyMap[ImGuiKey_Tab]		= XK_Tab;
-// 		imGuiIo.KeyMap[ImGuiKey_LeftArrow]	= XK_Left;
-// 		imGuiIo.KeyMap[ImGuiKey_RightArrow]	= XK_Right;
-// 		imGuiIo.KeyMap[ImGuiKey_UpArrow]	= XK_Up;
-// 		imGuiIo.KeyMap[ImGuiKey_DownArrow]	= XK_Down;
-// 		imGuiIo.KeyMap[ImGuiKey_PageUp]		= XK_Page_Up;
-// 		imGuiIo.KeyMap[ImGuiKey_PageDown]	= XK_Page_Down;
-// 		imGuiIo.KeyMap[ImGuiKey_Home]		= XK_Home;
-// 		imGuiIo.KeyMap[ImGuiKey_End]		= XK_End;
-// 		imGuiIo.KeyMap[ImGuiKey_Delete]		= XK_Delete;
-// 		imGuiIo.KeyMap[ImGuiKey_Backspace]	= XK_BackSpace;
-// 		imGuiIo.KeyMap[ImGuiKey_Enter]		= XK_Return;
-// 		imGuiIo.KeyMap[ImGuiKey_Escape]		= XK_Escape;
+		// TODO(sw) These keysyms are 16bit values with an value > 512. We map them to a range between 0x0ff and 0x1ff
+		imGuiIo.KeyMap[ImGuiKey_Tab]		= XK_Tab & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_LeftArrow]	= XK_Left & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_RightArrow]	= XK_Right & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_UpArrow]	= XK_Up & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_DownArrow]	= XK_Down & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_PageUp]		= XK_Page_Up & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_PageDown]	= XK_Page_Down & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_Home]		= XK_Home & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_End]		= XK_End & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_Delete]		= XK_Delete & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_Backspace]	= XK_BackSpace & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_Enter]		= XK_Return & 0x1ff;
+		imGuiIo.KeyMap[ImGuiKey_Escape]		= XK_Escape & 0x1ff;
 		imGuiIo.KeyMap[ImGuiKey_A]			= XK_a;
 		imGuiIo.KeyMap[ImGuiKey_C]			= XK_c;
 		imGuiIo.KeyMap[ImGuiKey_V]			= XK_v;
@@ -149,8 +147,6 @@ namespace RendererRuntime
 			renderTarget.getWidthAndHeight(width, height);
 			imGuiIo.DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
 		}
-
-		// TODO(sw) implement me
 		
 		{ // Setup time step
 			timeval currentTimeValue;
@@ -159,16 +155,6 @@ namespace RendererRuntime
 			imGuiIo.DeltaTime = static_cast<float>(currentTime - mTime) / 1000000.0f;
 			mTime = currentTime;
 		}
-// 
-// 		// Read keyboard modifiers inputs
-// 		imGuiIo.KeyCtrl  = ((::GetKeyState(VK_CONTROL) & 0x8000) != 0);
-// 		imGuiIo.KeyShift = ((::GetKeyState(VK_SHIFT) & 0x8000) != 0);
-// 		imGuiIo.KeyAlt   = ((::GetKeyState(VK_MENU) & 0x8000) != 0);
-// 		imGuiIo.KeySuper = false;
-// 		// imGuiIo.KeysDown : filled by WM_KEYDOWN/WM_KEYUP events
-// 		// imGuiIo.MousePos : filled by WM_MOUSEMOVE events
-// 		// imGuiIo.MouseDown : filled by WM_*BUTTON* events
-// 		// imGuiIo.MouseWheel : filled by WM_MOUSEWHEEL events
 	}
 
 

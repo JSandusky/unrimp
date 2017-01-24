@@ -29,7 +29,7 @@
 
 #include <RendererRuntime/DebugGui/Detail/DebugGuiManagerLinux.h>
 
-#include <X11/keysym.h>
+#include <X11/Xutil.h>
 
 #include <unordered_map>
 
@@ -101,12 +101,11 @@ public:
 					XEvent nev;
 					XPeekEvent(event.xany.display, &nev);
 
-					// Filter out key repeats. This is simulated by a key press directly after an key relase
+					// Filter out key repeats. This is simulated by a key press directly after an key release
+					// Ignore the key release in this case
 					if (nev.type == KeyPress && nev.xkey.time == event.xkey.time &&
 						nev.xkey.keycode == event.xkey.keycode)
 					{
-						// Delete retriggered KeyPress event
-						XNextEvent (event.xany.display, &nev);
 						is_retriggered = true;
 					}
 				}
@@ -168,7 +167,47 @@ public:
 			const RendererRuntime::IRendererRuntime* rendererRuntime = applicationRendererRuntime->getRendererRuntime();
 			if (nullptr != rendererRuntime)
 			{
-				static_cast<RendererRuntime::DebugGuiManagerLinux&>(rendererRuntime->getDebugGuiManager()).onXEvent(event);
+				RendererRuntime::DebugGuiManagerLinux& debugGuiLinux = static_cast<RendererRuntime::DebugGuiManagerLinux&>(rendererRuntime->getDebugGuiManager());
+				switch(event.type)
+				{
+					case ConfigureNotify:
+					{
+						debugGuiLinux.onWindowResize(event.xconfigure.width, event.xconfigure.height);
+						break;
+					}
+					case KeyPress:
+					case KeyRelease:
+					{
+						const int buffer_size = 2;
+						char buffer[buffer_size + 1];
+						KeySym keySym;
+						int count = XLookupString(&event.xkey, buffer, buffer_size, &keySym, nullptr);
+						buffer[count] = 0;
+
+						debugGuiLinux.onKeyInput(keySym, buffer[0], event.type == KeyPress);
+						break;
+					}
+					case ButtonRelease:
+					case ButtonPress:
+					{
+						const bool isPressed = event.type == ButtonPress;
+						if (isPressed && (event.xbutton.button == 4 || event.xbutton.button == 5)) // Wheel buttons
+						{
+							debugGuiLinux.onMouseWheelInput(event.xbutton.button == 4);
+						}
+						else
+						{
+							debugGuiLinux.onMouseButtonInput(event.xbutton.button, isPressed);
+						}
+						break;
+					}
+
+					case MotionNotify:
+					{
+						debugGuiLinux.onMouseMoveInput(event.xmotion.x, event.xmotion.y);
+						break;
+					}
+				}
 			}
 		}
 		return false;

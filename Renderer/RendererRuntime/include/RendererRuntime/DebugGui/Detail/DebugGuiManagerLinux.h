@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/DebugGui/DebugGuiManager.h"
 
-#include <X11/Xlib.h> // Needed for XEvent
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -42,7 +40,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	// TODO(sw) implement me
 	class DebugGuiManagerLinux : public DebugGuiManager
 	{
 
@@ -56,8 +53,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	// TODO(sw) Move this into base class, because these methods are input/windowing agnostic?
 	public:
-		void onXEvent(XEvent& event);
+		void onWindowResize(uint32_t width, uint32_t heigth);
+		void onKeyInput(uint32_t keySym, const char character, bool pressed);
+		void onMouseMoveInput(int x, int y);
+		void onMouseButtonInput(uint32_t button, bool pressed);
+		void onMouseWheelInput(bool scrollUp);
 
 
 	//[-------------------------------------------------------]
