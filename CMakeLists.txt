@@ -204,9 +204,6 @@ if(ANDROID)
 	#          For now we need to use gnustl_shared
 	#set(ANDROID_STL "c++_shared" CACHE STRING "")
 	set(ANDROID_STL "gnustl_shared" CACHE STRING "")
-
-	# L"" in macros don't work with Android GCC -> so renderer debug disabled
-	add_definitions("-DANDROID -DRENDERER_NO_DEBUG")
 endif()
 
 if (${ARCHITECTURE_X64})
