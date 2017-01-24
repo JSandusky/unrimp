@@ -154,12 +154,17 @@ namespace RendererRuntime
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
-		// TODO(co) This is just a dummy implementation
+		// TODO(co) This is just a dummy implementation. For example automatic instancing has to be incorporated as well as more efficient buffer management.
 
 		const MaterialResources& materialResources = mRendererRuntime.getMaterialResourceManager().getMaterialResources();
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 		InstanceBufferManager& instanceBufferManager = materialBlueprintResourceManager.getInstanceBufferManager();
 		LightBufferManager& lightBufferManager = materialBlueprintResourceManager.getLightBufferManager();
+
+		// Track currently bound renderer resources and states to void generating redundant commands
+		Renderer::IVertexArray* currentVertexArray = nullptr;
+		Renderer::PrimitiveTopology currentPrimitiveTopology = Renderer::PrimitiveTopology::UNKNOWN;
+		Renderer::IPipelineState* currentPipelineState = nullptr;
 
 		// Process all render queues
 		// -> When adding renderables from renderable manager we could build up a minimum/maximum used render queue index to sometimes reduce
@@ -194,10 +199,18 @@ namespace RendererRuntime
 					if (nullptr != vertexArrayPtr)
 					{
 						// Setup input assembly (IA): Set the used vertex array
-						Renderer::Command::SetVertexArray::create(commandBuffer, vertexArrayPtr);
+						if (currentVertexArray != vertexArrayPtr)
+						{
+							currentVertexArray = vertexArrayPtr;
+							Renderer::Command::SetVertexArray::create(commandBuffer, currentVertexArray);
+						}
 
 						// Setup input assembly (IA): Set the primitive topology used for draw calls
-						Renderer::Command::SetPrimitiveTopology::create(commandBuffer, renderable.getPrimitiveTopology());
+						if (currentPrimitiveTopology != renderable.getPrimitiveTopology())
+						{
+							currentPrimitiveTopology = renderable.getPrimitiveTopology();
+							Renderer::Command::SetPrimitiveTopology::create(commandBuffer, currentPrimitiveTopology);
+						}
 
 						// Material resource
 						const MaterialResource* materialResource = materialResources.tryGetElementById(renderable.getMaterialResourceId());
@@ -289,7 +302,11 @@ namespace RendererRuntime
 										materialTechnique->fillCommandBuffer(mRendererRuntime, commandBuffer);
 
 										// Set the used pipeline state object (PSO)
-										Renderer::Command::SetPipelineState::create(commandBuffer, pipelineStatePtr);
+										if (currentPipelineState != pipelineStatePtr)
+										{
+											currentPipelineState = pipelineStatePtr;
+											Renderer::Command::SetPipelineState::create(commandBuffer, currentPipelineState);
+										}
 
 										// Fill the instance buffer manager
 										instanceBufferManager.fillBuffer(materialBlueprintResource->getPassBufferManager(), materialBlueprintResource->getInstanceUniformBuffer(), materialBlueprintResource->getInstanceTextureBuffer(), renderable.getRenderableManager().getTransform(), *materialTechnique, commandBuffer);
