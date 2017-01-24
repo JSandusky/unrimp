@@ -187,7 +187,7 @@ namespace RendererRuntime
 																		   0.0f,  0.0f, 0.5f, 0.0f,
 																		   0.5f,  0.5f, 0.5f, 1.0f);
 		const char* name = getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getRenderer().getName();
-		return (0 != strcmp(name, "OpenGL") && 0 != strcmp(name, "OpenGLES2")) ? SHADOW_SCALE_BIAS_MATRIX_DIRECT3D : SHADOW_SCALE_BIAS_MATRIX_OPENGL;
+		return (0 != strcmp(name, "OpenGL") && 0 != strcmp(name, "OpenGLES3")) ? SHADOW_SCALE_BIAS_MATRIX_DIRECT3D : SHADOW_SCALE_BIAS_MATRIX_OPENGL;
 	}
 
 

@@ -973,10 +973,10 @@ namespace OpenGLES3Renderer
 				if (sourceResource.getResourceType() == Renderer::ResourceType::TEXTURE_2D)
 				{
 					// Get the OpenGL ES 3 texture 2D instances
-					const Texture2D& openGlEs2DestinationTexture2D = static_cast<const Texture2D&>(destinationResource);
-					const Texture2D& openGlEs2SourceTexture2D = static_cast<const Texture2D&>(sourceResource);
-					assert(openGlEs2DestinationTexture2D.getWidth() == openGlEs2SourceTexture2D.getWidth());
-					assert(openGlEs2DestinationTexture2D.getHeight() == openGlEs2SourceTexture2D.getHeight());
+					const Texture2D& openGlEs3DestinationTexture2D = static_cast<const Texture2D&>(destinationResource);
+					const Texture2D& openGlEs3SourceTexture2D = static_cast<const Texture2D&>(sourceResource);
+					assert(openGlEs3DestinationTexture2D.getWidth() == openGlEs3SourceTexture2D.getWidth());
+					assert(openGlEs3DestinationTexture2D.getHeight() == openGlEs3SourceTexture2D.getHeight());
 
 					#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 						// Backup the currently bound OpenGL ES 3 framebuffer
@@ -985,15 +985,15 @@ namespace OpenGLES3Renderer
 					#endif
 
 					// Copy resource by using a framebuffer
-					const GLint width = static_cast<GLint>(openGlEs2DestinationTexture2D.getWidth());
-					const GLint height = static_cast<GLint>(openGlEs2DestinationTexture2D.getHeight());
+					const GLint width = static_cast<GLint>(openGlEs3DestinationTexture2D.getWidth());
+					const GLint height = static_cast<GLint>(openGlEs3DestinationTexture2D.getHeight());
 					if (0 == mOpenGLES3CopyResourceFramebuffer)
 					{
 						glGenFramebuffers(1, &mOpenGLES3CopyResourceFramebuffer);
 					}
 					glBindFramebuffer(GL_FRAMEBUFFER, mOpenGLES3CopyResourceFramebuffer);
-					glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, openGlEs2SourceTexture2D.getOpenGLES3Texture(), 0);
-					glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, openGlEs2DestinationTexture2D.getOpenGLES3Texture(), 0);
+					glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, openGlEs3SourceTexture2D.getOpenGLES3Texture(), 0);
+					glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, openGlEs3DestinationTexture2D.getOpenGLES3Texture(), 0);
 					static const GLenum OPENGL_DRAW_BUFFER[1] =
 					{
 						GL_COLOR_ATTACHMENT1

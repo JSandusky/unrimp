@@ -61,10 +61,10 @@
 		extern Renderer::IRenderer *createOpenGLRendererInstance(Renderer::handle);
 	#endif
 
-	// OpenGLES2
+	// OpenGLES3
 	#ifndef RENDERER_NO_OPENGLES3
-		// "createOpenGLES2RendererInstance()" signature
-		extern Renderer::IRenderer *createOpenGLES2RendererInstance(Renderer::handle);
+		// "createOpenGLES3RendererInstance()" signature
+		extern Renderer::IRenderer *createOpenGLES3RendererInstance(Renderer::handle);
 	#endif
 
 	// Direct3D 9
@@ -115,7 +115,7 @@ namespace Renderer
 		*
 		*  @param[in] rendererName
 		*    Case sensitive ASCII name of the renderer to instance, must be valid.
-		*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
+		*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 		*  @param[in] rendererName
 		*    Native window handle TODO(co) A renderer instance fixed connected to a native window handle? This can't be right. If it's about OpenGL context sharing we surely can find a better solution.
 		*/
@@ -217,12 +217,12 @@ namespace Renderer
 					}
 				#endif
 
-				// OpenGLES2
+				// OpenGLES3
 				#ifndef RENDERER_NO_OPENGLES3
-					if (0 == strcmp(rendererName, "OpenGLES2"))
+					if (0 == strcmp(rendererName, "OpenGLES3"))
 					{
 						// Create the renderer instance
-						mRenderer = createOpenGLES2RendererInstance(nativeWindowHandle);
+						mRenderer = createOpenGLES3RendererInstance(nativeWindowHandle);
 					}
 				#endif
 

@@ -22,7 +22,7 @@
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
 #ifndef RENDERER_NO_OPENGLES3
-if (0 == strcmp(renderer->getName(), "OpenGLES2"))
+if (0 == strcmp(renderer->getName(), "OpenGLES3"))
 {
 
 
