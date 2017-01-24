@@ -136,11 +136,11 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void IndirectBuffer::setDebugName(const char *)
-	{
-		// TODO(co) Direct3D 12 update
-		/*
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+	#if !defined(DIRECT3D12RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+		void IndirectBuffer::setDebugName(const char *)
+		{
+			// TODO(co) Direct3D 12 update
+			/*
 			RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "IndirectBufferObject", 23);	// 23 = "IndirectBufferObject: " including terminating zero
 
 			// Assign a debug name to the shader resource view
@@ -160,9 +160,14 @@ namespace Direct3D12Renderer
 				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(detailedName)), detailedName);
 			}
-		#endif
 		*/
-	}
+		}
+	#else
+		void IndirectBuffer::setDebugName(const char *)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

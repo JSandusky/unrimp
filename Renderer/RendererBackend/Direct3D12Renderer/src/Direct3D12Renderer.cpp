@@ -431,6 +431,7 @@ namespace Direct3D12Renderer
 			mRenderTarget = nullptr;
 		}
 
+		#ifndef RENDERER_NO_STATISTICS
 		{ // For debugging: At this point there should be no resource instances left, validate this!
 			// -> Are the currently any resource instances?
 			const unsigned long numberOfCurrentResources = getStatistics().getNumberOfCurrentResources();
@@ -450,6 +451,7 @@ namespace Direct3D12Renderer
 				getStatistics().debugOutputCurrentResouces();
 			}
 		}
+		#endif
 
 		// Release the Direct3D 12 query instance used for flush, in case we have one
 		// TODO(co) Direct3D 12 update

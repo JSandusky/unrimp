@@ -28,6 +28,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/Buffer/ITextureBuffer.h>
+#include <Renderer/Buffer/BufferTypes.h>
+#include <Renderer/Texture/TextureTypes.h>
 
 
 //[-------------------------------------------------------]

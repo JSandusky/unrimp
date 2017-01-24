@@ -126,9 +126,9 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void IndexBuffer::setDebugName(const char *name)
-	{
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+	#if !defined(DIRECT3D12RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+		void IndexBuffer::setDebugName(const char *name)
+		{
 			// Valid Direct3D 12 index buffer?
 			if (nullptr != mD3D12Resource)
 			{
@@ -138,8 +138,13 @@ namespace Direct3D12Renderer
 				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(detailedName)), detailedName);
 			}
-		#endif
-	}
+		}
+	#else
+		void IndexBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

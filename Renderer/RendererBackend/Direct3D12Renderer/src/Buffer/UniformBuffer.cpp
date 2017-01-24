@@ -131,9 +131,9 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::setDebugName(const char *name)
-	{
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+	#if !defined(DIRECT3D12RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+		void UniformBuffer::setDebugName(const char *name)
+		{
 			RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "UBO", 6);	// 6 = "UBO: " including terminating zero!
 
 			// Valid Direct3D 12 uniform buffer?
@@ -151,8 +151,13 @@ namespace Direct3D12Renderer
 				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(detailedName)), detailedName);
 			}
-		#endif
-	}
+		}
+	#else
+		void UniformBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

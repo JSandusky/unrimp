@@ -38,10 +38,12 @@ namespace Renderer
 		return mCapabilities;
 	}
 
-	inline const Statistics &IRenderer::getStatistics() const
-	{
-		return mStatistics;
-	}
+	#ifndef RENDERER_NO_STATISTICS
+		inline const Statistics &IRenderer::getStatistics() const
+		{
+			return mStatistics;
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]
@@ -63,10 +65,12 @@ namespace Renderer
 		return *this;
 	}
 
-	inline Statistics &IRenderer::getStatistics()
-	{
-		return mStatistics;
-	}
+	#ifndef RENDERER_NO_STATISTICS
+		inline Statistics &IRenderer::getStatistics()
+		{
+			return mStatistics;
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

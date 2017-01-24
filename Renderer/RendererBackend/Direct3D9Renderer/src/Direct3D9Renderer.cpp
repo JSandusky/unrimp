@@ -397,6 +397,7 @@ namespace Direct3D9Renderer
 			mGraphicsRootSignature = nullptr;
 		}
 
+		#ifndef RENDERER_NO_STATISTICS
 		{ // For debugging: At this point there should be no resource instances left, validate this!
 			// -> Are the currently any resource instances?
 			const unsigned long numberOfCurrentResources = getStatistics().getNumberOfCurrentResources();
@@ -416,6 +417,7 @@ namespace Direct3D9Renderer
 				getStatistics().debugOutputCurrentResouces();
 			}
 		}
+		#endif
 
 		// Release the Direct3D 9 query instance used for flush, in case we have one
 		if (nullptr != mDirect3DQuery9Flush)

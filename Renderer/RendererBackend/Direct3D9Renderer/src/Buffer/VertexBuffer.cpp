@@ -74,9 +74,9 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void VertexBuffer::setDebugName(const char *name)
-	{
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+	#if !defined(DIRECT3D9RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+		void VertexBuffer::setDebugName(const char *name)
+		{
 			// Valid Direct3D 9 vertex buffer?
 			if (nullptr != mDirect3DVertexBuffer9)
 			{
@@ -86,8 +86,13 @@ namespace Direct3D9Renderer
 				mDirect3DVertexBuffer9->SetPrivateData(WKPDID_D3DDebugObjectName, nullptr, 0, 0);
 				mDirect3DVertexBuffer9->SetPrivateData(WKPDID_D3DDebugObjectName, detailedName, static_cast<UINT>(strlen(detailedName)), 0);
 			}
-		#endif
-	}
+		}
+	#else
+		void VertexBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

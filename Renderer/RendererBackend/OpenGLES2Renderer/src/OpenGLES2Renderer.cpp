@@ -383,6 +383,7 @@ namespace OpenGLES2Renderer
 			mGraphicsRootSignature->releaseReference();
 		}
 
+		#ifndef RENDERER_NO_STATISTICS
 		{ // For debugging: At this point there should be no resource instances left, validate this!
 			// -> Are the currently any resource instances?
 			const unsigned long numberOfCurrentResources = getStatistics().getNumberOfCurrentResources();
@@ -402,6 +403,7 @@ namespace OpenGLES2Renderer
 				getStatistics().debugOutputCurrentResouces();
 			}
 		}
+		#endif
 
 		// Release the GLSL shader language instance, in case we have one
 		if (nullptr != mShaderLanguageGlsl)
@@ -1752,12 +1754,12 @@ namespace OpenGLES2Renderer
 		}
 
 		// Output the debug message
-		#ifdef _DEBUG
-			RENDERER_OUTPUT_DEBUG_PRINTF("OpenGLES error: OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
-		#else
+		#ifdef RENDERER_NO_DEBUG
 			// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
 			id = id;
 			message = message;
+		#else
+			RENDERER_OUTPUT_DEBUG_PRINTF("OpenGLES error: OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
 		#endif
 	}
 

@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture/Texture2DArray.h"
 
+#include <Renderer/Texture/TextureTypes.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

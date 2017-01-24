@@ -132,9 +132,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void IndirectBuffer::setDebugName(const char *name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+	#if !defined(DIRECT3D11RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+		void IndirectBuffer::setDebugName(const char *name)
+		{
 			RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "IndirectBufferObject", 23);	// 23 = "IndirectBufferObject: " including terminating zero
 
 			// Assign a debug name to the shader resource view
@@ -154,8 +154,13 @@ namespace Direct3D11Renderer
 				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(detailedName)), detailedName);
 			}
-		#endif
-	}
+		}
+	#else
+		void IndirectBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

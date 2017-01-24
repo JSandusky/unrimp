@@ -450,6 +450,7 @@ namespace Direct3D10Renderer
 			mGraphicsRootSignature = nullptr;
 		}
 
+		#ifndef RENDERER_NO_STATISTICS
 		{ // For debugging: At this point there should be no resource instances left, validate this!
 			// -> Are the currently any resource instances?
 			const unsigned long numberOfCurrentResources = getStatistics().getNumberOfCurrentResources();
@@ -469,6 +470,7 @@ namespace Direct3D10Renderer
 				getStatistics().debugOutputCurrentResouces();
 			}
 		}
+		#endif
 
 		// Release the Direct3D 10 query instance used for flush, in case we have one
 		if (nullptr != mD3D10QueryFlush)
@@ -1331,7 +1333,7 @@ namespace Direct3D10Renderer
 		// -> Maybe a debugger/profiler ignores the debug state
 		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
 		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
-		return (D3DPERF_GetStatus() != 0);
+		return (nullptr != D3DPERF_GetStatus && D3DPERF_GetStatus() != 0);
 	}
 
 	Renderer::ISwapChain *Direct3D10Renderer::getMainSwapChain() const

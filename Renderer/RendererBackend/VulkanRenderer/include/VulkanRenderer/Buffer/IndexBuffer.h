@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include <Renderer/Buffer/IIndexBuffer.h>
 #include <Renderer/Buffer/IndexBufferTypes.h>
+#include <Renderer/Buffer/BufferTypes.h>
 
 
 //[-------------------------------------------------------]

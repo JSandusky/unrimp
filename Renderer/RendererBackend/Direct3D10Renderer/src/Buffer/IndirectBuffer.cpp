@@ -24,6 +24,8 @@
 #include "Direct3D10Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
+#include <cstring>	// For "memcpy()"
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -87,9 +87,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void VertexBuffer::setDebugName(const char *name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+	#if !defined(DIRECT3D11RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+		void VertexBuffer::setDebugName(const char *name)
+		{
 			// Valid Direct3D 11 vertex buffer?
 			if (nullptr != mD3D11Buffer)
 			{
@@ -99,8 +99,13 @@ namespace Direct3D11Renderer
 				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(detailedName)), detailedName);
 			}
-		#endif
-	}
+		}
+	#else
+		void VertexBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

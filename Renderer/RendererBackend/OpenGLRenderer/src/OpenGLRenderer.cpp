@@ -432,6 +432,7 @@ namespace OpenGLRenderer
 			mGraphicsRootSignature->releaseReference();
 		}
 
+		#ifndef RENDERER_NO_STATISTICS
 		{ // For debugging: At this point there should be no resource instances left, validate this!
 			// -> Are the currently any resource instances?
 			const unsigned long numberOfCurrentResources = getStatistics().getNumberOfCurrentResources();
@@ -451,6 +452,7 @@ namespace OpenGLRenderer
 				getStatistics().debugOutputCurrentResouces();
 			}
 		}
+		#endif
 
 		// Release the shader language instance, in case we have one
 		if (nullptr != mShaderLanguage)
@@ -2272,12 +2274,12 @@ namespace OpenGLRenderer
 		}
 
 		// Output the debug message
-		#if defined(_DEBUG) && !defined(RENDERER_NO_DEBUG)
-			RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
-		#else
+		#if RENDERER_NO_DEBUG
 			// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
 			id = id;
 			message = message;
+		#else
+			RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
 		#endif
 	}
 

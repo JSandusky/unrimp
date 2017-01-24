@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/Texture/ITexture2D.h>
+#include <Renderer/Texture/TextureTypes.h>
 
 
 //[-------------------------------------------------------]

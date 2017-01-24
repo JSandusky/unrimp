@@ -125,18 +125,20 @@ namespace Renderer
 		*/
 		inline const Capabilities &getCapabilities() const;
 
-		/**
-		*  @brief
-		*    Return the statistics of the renderer instance
-		*
-		*  @return
-		*    The statistics of the renderer instance
-		*
-		*  @note
-		*    - Do not free the memory the returned reference is pointing to
-		*    - It's possible that the statistics or part of it are disabled, e.g. due to hight performance constrains
-		*/
-		inline const Statistics &getStatistics() const;
+		#ifndef RENDERER_NO_STATISTICS
+			/**
+			*  @brief
+			*    Return the statistics of the renderer instance
+			*
+			*  @return
+			*    The statistics of the renderer instance
+			*
+			*  @note
+			*    - Do not free the memory the returned reference is pointing to
+			*    - It's possible that the statistics or part of it are disabled, e.g. due to hight performance constrains
+			*/
+			inline const Statistics &getStatistics() const;
+		#endif
 
 
 	//[-------------------------------------------------------]

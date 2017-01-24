@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/Texture/ITexture2DArray.h>
+#include <Renderer/Texture/TextureTypes.h>
 
 
 //[-------------------------------------------------------]
