@@ -188,7 +188,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>NullRendererStaticD.lib;OpenGLRendererStaticD.lib;OpenGLES2RendererStaticD.lib;Direct3D9RendererStaticD.lib;Direct3D10RendererStaticD.lib;Direct3D11RendererStaticD.lib;RendererRuntimeStaticD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>NullRendererStaticD.lib;OpenGLRendererStaticD.lib;OpenGLES3RendererStaticD.lib;Direct3D9RendererStaticD.lib;Direct3D10RendererStaticD.lib;Direct3D11RendererStaticD.lib;RendererRuntimeStaticD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMT</IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -217,7 +217,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>NullRendererStaticD.lib;OpenGLRendererStaticD.lib;OpenGLES2RendererStaticD.lib;Direct3D9RendererStaticD.lib;Direct3D10RendererStaticD.lib;Direct3D11RendererStaticD.lib;RendererRuntimeStaticD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>NullRendererStaticD.lib;OpenGLRendererStaticD.lib;OpenGLES3RendererStaticD.lib;Direct3D9RendererStaticD.lib;Direct3D10RendererStaticD.lib;Direct3D11RendererStaticD.lib;RendererRuntimeStaticD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMT</IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -313,7 +313,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>NullRendererStatic.lib;OpenGLRendererStatic.lib;OpenGLES2RendererStatic.lib;Direct3D9RendererStatic.lib;Direct3D10RendererStatic.lib;Direct3D11RendererStatic.lib;RendererRuntimeStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>NullRendererStatic.lib;OpenGLRendererStatic.lib;OpenGLES3RendererStatic.lib;Direct3D9RendererStatic.lib;Direct3D10RendererStatic.lib;Direct3D11RendererStatic.lib;RendererRuntimeStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
@@ -353,7 +353,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>NullRendererStatic.lib;OpenGLRendererStatic.lib;OpenGLES2RendererStatic.lib;Direct3D9RendererStatic.lib;Direct3D10RendererStatic.lib;Direct3D11RendererStatic.lib;RendererRuntimeStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>NullRendererStatic.lib;OpenGLRendererStatic.lib;OpenGLES3RendererStatic.lib;Direct3D9RendererStatic.lib;Direct3D10RendererStatic.lib;Direct3D11RendererStatic.lib;RendererRuntimeStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>

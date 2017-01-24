@@ -46,7 +46,7 @@ int programEntryPoint()
 		//	project->compileAllAssets("Direct3D9_30");
 			project->compileAllAssets("Direct3D11_50");
 		//	project->compileAllAssets("Direct3D12_50");
-		//	project->compileAllAssets("OpenGLES2_100");
+		//	project->compileAllAssets("OpenGLES_300");
 		}
 		catch (const std::exception& e)
 		{

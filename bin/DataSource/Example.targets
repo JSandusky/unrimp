@@ -112,12 +112,12 @@
 			},
 			"OpenGLES_100":
 			{
-				"RendererBackend": "OpenGLES2",
+				"RendererBackend": "OpenGLES3",
 				"ShaderVersion": "1.00"
 			},
 			"OpenGLES_300":
 			{
-				"RendererBackend": "OpenGLES2",
+				"RendererBackend": "OpenGLES3",
 				"ShaderVersion": "3.00"
 			}
 		},
