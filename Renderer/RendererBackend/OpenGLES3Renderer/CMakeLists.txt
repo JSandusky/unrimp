@@ -27,11 +27,11 @@ cmake_minimum_required(VERSION 3.2.2)
 if(NOT RENDERER_DEBUG)
 	add_definitions(-DRENDERER_NO_DEBUG)
 endif()
-if(RENDERER_OPENGLES2_NO_STATE_CLEANUP)
-	add_definitions(-DOPENGLES2RENDERER_NO_STATE_CLEANUP)
+if(RENDERER_OPENGLES3_NO_STATE_CLEANUP)
+	add_definitions(-DOPENGLES3RENDERER_NO_STATE_CLEANUP)
 endif()
-if(RENDERER_OPENGLES2_NO_RENDERERMATCHCHECK)
-	add_definitions(-DOPENGLES2RENDERER_NO_RENDERERMATCHCHECK)
+if(RENDERER_OPENGLES3_NO_RENDERERMATCHCHECK)
+	add_definitions(-DOPENGLES3RENDERER_NO_RENDERERMATCHCHECK)
 endif()
 
 
@@ -64,7 +64,7 @@ set(SOURCE_CODES
 	src/IContext.cpp
 	src/IExtensions.cpp
 	src/Mapping.cpp
-	src/OpenGLES2Renderer.cpp
+	src/OpenGLES3Renderer.cpp
 	src/RenderTarget/Framebuffer.cpp
 	src/RenderTarget/SwapChain.cpp
 	src/RootSignature.cpp
@@ -87,15 +87,15 @@ set(SOURCE_CODES
 ## Libraries
 ##################################################
 if(STATIC_LIBRARY)
-	add_library(OpenGLES2RendererStatic STATIC ${SOURCE_CODES})
+	add_library(OpenGLES3RendererStatic STATIC ${SOURCE_CODES})
 endif()
 if(SHARED_LIBRARY)
-	add_library(OpenGLES2Renderer SHARED ${SOURCE_CODES})
-	set_target_properties(OpenGLES2Renderer PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DOPENGLES2RENDERER_EXPORTS")
+	add_library(OpenGLES3Renderer SHARED ${SOURCE_CODES})
+	set_target_properties(OpenGLES3Renderer PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DOPENGLES2RENDERER_EXPORTS")
 
 	if (ANDROID)
 		# It references ANativeWindow_setBuffersGeometry so link agains Android library
-		target_link_libraries(OpenGLES2Renderer android)
+		target_link_libraries(OpenGLES3Renderer android)
 	endif()
 endif()
 
@@ -105,18 +105,18 @@ endif()
 ##################################################
 if(STATIC_LIBRARY)
 	# Copy static library
-	add_custom_command(TARGET OpenGLES2RendererStatic
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}OpenGLES2RendererStatic${CMAKE_STATIC_LIBRARY_SUFFIX}" ${OUTPUT_LIB_DIR}
+	add_custom_command(TARGET OpenGLES3RendererStatic
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}OpenGLES3RendererStatic${CMAKE_STATIC_LIBRARY_SUFFIX}" ${OUTPUT_LIB_DIR}
 	)
 endif()
 if(SHARED_LIBRARY)
 	# Copy shared library
-	add_custom_command(TARGET OpenGLES2Renderer
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}OpenGLES2Renderer${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
+	add_custom_command(TARGET OpenGLES3Renderer
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}OpenGLES3Renderer${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
 	)
 	if(WIN32)
-		add_custom_command(TARGET OpenGLES2Renderer
-			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/OpenGLES2Renderer.lib" ${OUTPUT_LIB_DIR}
+		add_custom_command(TARGET OpenGLES3Renderer
+			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/OpenGLES3Renderer.lib" ${OUTPUT_LIB_DIR}
 		)
 	endif()
 endif()

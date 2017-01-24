@@ -159,7 +159,7 @@ Standalone renderer examples.
 For only supporting a particular renderer:
 - "RENDERER_ONLY_NULL":			 Do only support Null
 - "RENDERER_ONLY_OPENGL":		 Do only support OpenGL
-- "RENDERER_ONLY_OPENGLES2":	 Do only support OpenGL ES 2
+- "RENDERER_ONLY_OPENGLES3":	 Do only support OpenGL ES 3
 - "RENDERER_ONLY_DIRECT3D9":	 Do only support Direct3D 9
 - "RENDERER_ONLY_DIRECT3D10":	 Do only support Direct3D 10
 - "RENDERER_ONLY_DIRECT3D11":	 Do only support Direct3D 11
@@ -169,7 +169,7 @@ For only supporting a particular renderer:
 For disabling supporting a particular renderer:
 - "RENDERER_NO_NULL":		Do not support Null
 - "RENDERER_NO_OPENGL":		Do not support OpenGL
-- "RENDERER_NO_OPENGLES2":	Do not support OpenGL ES 2
+- "RENDERER_NO_OPENGLES3":	Do not support OpenGL ES 3
 - "RENDERER_NO_DIRECT3D9":	Do not support Direct3D 9
 - "RENDERER_NO_DIRECT3D10":	Do not support Direct3D 10
 - "RENDERER_NO_DIRECT3D11":	Do not support Direct3D 11
