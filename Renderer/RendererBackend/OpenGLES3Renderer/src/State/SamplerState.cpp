@@ -39,8 +39,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerState::SamplerState(OpenGLES3Renderer &openGLES2Renderer, const Renderer::SamplerState &samplerState) :
-		ISamplerState(openGLES2Renderer),
+	SamplerState::SamplerState(OpenGLES3Renderer &openGLES3Renderer, const Renderer::SamplerState &samplerState) :
+		ISamplerState(openGLES3Renderer),
 		mOpenGLMagFilterMode(Mapping::getOpenGLES2MagFilterMode(samplerState.filter)),
 		mOpenGLMinFilterMode(Mapping::getOpenGLES2MinFilterMode(samplerState.filter, samplerState.maxLOD > 0.0f)),
 		mOpenGLTextureAddressModeS(Mapping::getOpenGLES2TextureAddressMode(samplerState.addressU)),

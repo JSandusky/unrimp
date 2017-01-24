@@ -36,8 +36,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBufferBind::TextureBufferBind(OpenGLES3Renderer &openGLES2Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage) :
-		TextureBuffer(openGLES2Renderer)
+	TextureBufferBind::TextureBufferBind(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage) :
+		TextureBuffer(openGLES3Renderer)
 	{
 		{ // Buffer part
 			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP

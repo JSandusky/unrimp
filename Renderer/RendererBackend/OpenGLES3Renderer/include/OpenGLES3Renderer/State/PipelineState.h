@@ -73,12 +73,12 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] pipelineState
 		*    Pipeline state to use
 		*/
-		PipelineState(OpenGLES3Renderer &openGLES2Renderer, const Renderer::PipelineState &pipelineState);
+		PipelineState(OpenGLES3Renderer &openGLES3Renderer, const Renderer::PipelineState &pipelineState);
 
 		/**
 		*  @brief

@@ -39,8 +39,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(OpenGLES3Renderer &openGLES2Renderer, const Renderer::PipelineState& pipelineState) :
-		IPipelineState(openGLES2Renderer),
+	PipelineState::PipelineState(OpenGLES3Renderer &openGLES3Renderer, const Renderer::PipelineState& pipelineState) :
+		IPipelineState(openGLES3Renderer),
 		mProgram(pipelineState.program),
 		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
 		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),

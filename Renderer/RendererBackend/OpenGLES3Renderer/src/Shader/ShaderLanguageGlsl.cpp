@@ -100,8 +100,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ShaderLanguageGlsl::ShaderLanguageGlsl(OpenGLES3Renderer &openGLES2Renderer) :
-		IShaderLanguage(openGLES2Renderer)
+	ShaderLanguageGlsl::ShaderLanguageGlsl(OpenGLES3Renderer &openGLES3Renderer) :
+		IShaderLanguage(openGLES3Renderer)
 	{
 		// Nothing here
 	}

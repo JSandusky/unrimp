@@ -65,14 +65,14 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Default constructor
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the indirect buffer, must be valid
 		*  @param[in] data
 		*    Indirect buffer data, can be a null pointer (empty buffer)
 		*/
-		IndirectBuffer(OpenGLES3Renderer& openGLES2Renderer, uint32_t numberOfBytes, const void* data = nullptr);
+		IndirectBuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfBytes, const void* data = nullptr);
 
 		/**
 		*  @brief

@@ -36,8 +36,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(OpenGLES3Renderer &openGLES2Renderer, handle nativeWindowHandle) :
-		ISwapChain(openGLES2Renderer),
+	SwapChain::SwapChain(OpenGLES3Renderer &openGLES3Renderer, handle nativeWindowHandle) :
+		ISwapChain(openGLES3Renderer),
 		mNativeWindowHandle(nativeWindowHandle)
 	{
 		// TODO(co) Implement me

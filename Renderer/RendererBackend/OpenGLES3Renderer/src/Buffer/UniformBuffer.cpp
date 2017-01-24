@@ -46,8 +46,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(OpenGLES3Renderer &openGLES2Renderer) :
-		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES2Renderer)),
+	UniformBuffer::UniformBuffer(OpenGLES3Renderer &openGLES3Renderer) :
+		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES3Renderer)),
 		mOpenGLESUniformBuffer(0)
 	{
 		// Create the OpenGL uniform buffer

@@ -65,25 +65,25 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor for creating a fragment shader from shader bytecode
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] bytecode
 		*    Shader bytecode, must be valid
 		*  @param[in] numberOfBytes
 		*    Number of bytes in the bytecode
 		*/
-		FragmentShaderGlsl(OpenGLES3Renderer &openGLES2Renderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		FragmentShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const uint8_t *bytecode, uint32_t numberOfBytes);
 
 		/**
 		*  @brief
 		*    Constructor for creating a fragment shader from shader source code
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		FragmentShaderGlsl(OpenGLES3Renderer &openGLES2Renderer, const char *sourceCode);
+		FragmentShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode);
 
 		/**
 		*  @brief

@@ -69,7 +69,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] numberOfColorTextures
 		*    Number of color render target textures
@@ -82,7 +82,7 @@ namespace OpenGLES3Renderer
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(OpenGLES3Renderer &openGLES2Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
+		Framebuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
 
 		/**
 		*  @brief

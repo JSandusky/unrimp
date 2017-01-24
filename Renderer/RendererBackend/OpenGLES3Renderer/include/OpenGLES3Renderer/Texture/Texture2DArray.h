@@ -65,7 +65,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] width
 		*    Texture width, must be >1
@@ -80,7 +80,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*/
-		Texture2DArray(OpenGLES3Renderer &openGLES2Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags);
+		Texture2DArray(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags);
 
 		/**
 		*  @brief

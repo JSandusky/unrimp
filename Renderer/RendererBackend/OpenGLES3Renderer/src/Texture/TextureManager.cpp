@@ -39,9 +39,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureManager::TextureManager(OpenGLES3Renderer& openGLES2Renderer) :
-		ITextureManager(openGLES2Renderer),
-		mExtensions(&openGLES2Renderer.getContext().getExtensions())
+	TextureManager::TextureManager(OpenGLES3Renderer& openGLES3Renderer) :
+		ITextureManager(openGLES3Renderer),
+		mExtensions(&openGLES3Renderer.getContext().getExtensions())
 	{
 		// Nothing here
 	}

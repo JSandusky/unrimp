@@ -91,10 +91,10 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*/
-		explicit ShaderLanguageGlsl(OpenGLES3Renderer &openGLES2Renderer);
+		explicit ShaderLanguageGlsl(OpenGLES3Renderer &openGLES3Renderer);
 
 		/**
 		*  @brief

@@ -72,7 +72,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] rootSignature
 		*    Root signature
@@ -86,7 +86,7 @@ namespace OpenGLES3Renderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramGlsl(OpenGLES3Renderer &openGLES2Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
+		ProgramGlsl(OpenGLES3Renderer &openGLES3Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
 
 		/**
 		*  @brief

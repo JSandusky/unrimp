@@ -66,7 +66,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the vertex buffer, must be valid
@@ -75,7 +75,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		VertexBuffer(OpenGLES3Renderer &openGLES2Renderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		VertexBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief

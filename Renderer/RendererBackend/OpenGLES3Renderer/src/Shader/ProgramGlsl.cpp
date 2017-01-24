@@ -41,8 +41,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramGlsl::ProgramGlsl(OpenGLES3Renderer &openGLES2Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
-		IProgram(openGLES2Renderer),
+	ProgramGlsl::ProgramGlsl(OpenGLES3Renderer &openGLES3Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
+		IProgram(openGLES3Renderer),
 		mNumberOfRootSignatureParameters(0),
 		mRootSignatureParameterIndexToUniformLocation(nullptr),
 		mOpenGLES2Program(0)

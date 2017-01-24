@@ -37,15 +37,15 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(OpenGLES3Renderer &openGLES2Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
-		IIndexBuffer(openGLES2Renderer),
+	IndexBuffer::IndexBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
+		IIndexBuffer(openGLES3Renderer),
 		mOpenGLES2ElementArrayBuffer(0),
 		mOpenGLES2Type(GL_UNSIGNED_SHORT),
 		mIndexSizeInBytes(Renderer::IndexBufferFormat::getNumberOfBytesPerElement(indexBufferFormat)),
 		mBufferSize(numberOfBytes)
 	{
 		// "GL_UNSIGNED_INT" is only allowed when the "GL_OES_element_index_uint" extension is there
-		if (Renderer::IndexBufferFormat::UNSIGNED_INT != indexBufferFormat || openGLES2Renderer.getContext().getExtensions().isGL_OES_element_index_uint())
+		if (Renderer::IndexBufferFormat::UNSIGNED_INT != indexBufferFormat || openGLES3Renderer.getContext().getExtensions().isGL_OES_element_index_uint())
 		{
 			// Create the OpenGL ES 2 element array buffer
 			glGenBuffers(1, &mOpenGLES2ElementArrayBuffer);

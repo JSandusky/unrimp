@@ -44,8 +44,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayNoVao::VertexArrayNoVao(OpenGLES3Renderer &openGLES2Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
-		VertexArray(openGLES2Renderer, indexBuffer),
+	VertexArrayNoVao::VertexArrayNoVao(OpenGLES3Renderer &openGLES3Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+		VertexArray(openGLES3Renderer, indexBuffer),
 		mNumberOfAttributes(vertexAttributes.numberOfAttributes),
 		mAttributes(mNumberOfAttributes ? new Renderer::VertexAttribute[mNumberOfAttributes] : nullptr),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),

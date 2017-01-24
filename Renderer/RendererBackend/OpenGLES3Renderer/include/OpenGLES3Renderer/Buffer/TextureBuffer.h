@@ -94,10 +94,10 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES renderer instance
 		*/
-		explicit TextureBuffer(OpenGLES3Renderer &openGLES2Renderer);
+		explicit TextureBuffer(OpenGLES3Renderer &openGLES3Renderer);
 
 
 	//[-------------------------------------------------------]

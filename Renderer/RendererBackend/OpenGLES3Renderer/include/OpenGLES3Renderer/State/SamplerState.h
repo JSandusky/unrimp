@@ -65,12 +65,12 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] samplerState
 		*    Sampler state to use
 		*/
-		SamplerState(OpenGLES3Renderer &openGLES2Renderer, const Renderer::SamplerState &samplerState);
+		SamplerState(OpenGLES3Renderer &openGLES3Renderer, const Renderer::SamplerState &samplerState);
 
 		/**
 		*  @brief

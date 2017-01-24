@@ -44,9 +44,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	BufferManager::BufferManager(OpenGLES3Renderer& openGLES2Renderer) :
-		IBufferManager(openGLES2Renderer),
-		mExtensions(&openGLES2Renderer.getContext().getExtensions())
+	BufferManager::BufferManager(OpenGLES3Renderer& openGLES3Renderer) :
+		IBufferManager(openGLES3Renderer),
+		mExtensions(&openGLES3Renderer.getContext().getExtensions())
 	{
 		// Nothing here
 	}

@@ -39,8 +39,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayVao::VertexArrayVao(OpenGLES3Renderer &openGLES2Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
-		VertexArray(openGLES2Renderer, indexBuffer),
+	VertexArrayVao::VertexArrayVao(OpenGLES3Renderer &openGLES3Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+		VertexArray(openGLES3Renderer, indexBuffer),
 		mOpenGLES2VertexArray(0),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
 		mVertexBuffers((mNumberOfVertexBuffers > 0) ? new VertexBuffer*[mNumberOfVertexBuffers] : nullptr)	// Guaranteed to be filled below, so we don't need to care to initialize the content in here

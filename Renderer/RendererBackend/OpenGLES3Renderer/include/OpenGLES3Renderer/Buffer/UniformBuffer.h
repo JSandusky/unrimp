@@ -85,10 +85,10 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES2 renderer instance
 		*/
-		explicit UniformBuffer(OpenGLES3Renderer &openGLES2Renderer);
+		explicit UniformBuffer(OpenGLES3Renderer &openGLES3Renderer);
 
 
 	//[-------------------------------------------------------]

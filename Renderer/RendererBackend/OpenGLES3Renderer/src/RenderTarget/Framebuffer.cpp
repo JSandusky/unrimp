@@ -39,8 +39,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(OpenGLES3Renderer &openGLES2Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
-		IFramebuffer(openGLES2Renderer),
+	Framebuffer::Framebuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
+		IFramebuffer(openGLES3Renderer),
 		mOpenGLES2Framebuffer(0),
 		mDepthRenderbuffer(0),
 		mNumberOfColorTextures(numberOfColorTextures),
@@ -86,7 +86,7 @@ namespace OpenGLES3Renderer
 
 					// Security check: Is the given resource owned by this renderer?
 					#ifndef OPENGLES2RENDERER_NO_RENDERERMATCHCHECK
-						if (&openGLES2Renderer != &(*colorTexture)->getRenderer())
+						if (&openGLES3Renderer != &(*colorTexture)->getRenderer())
 						{
 							// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
 							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: The given color texture at index %d is owned by another renderer instance", colorTexture - colorTextures)

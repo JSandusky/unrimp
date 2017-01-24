@@ -50,8 +50,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(OpenGLES3Renderer &openGLES2Renderer) :
-		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES2Renderer)),
+	TextureBuffer::TextureBuffer(OpenGLES3Renderer &openGLES3Renderer) :
+		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES3Renderer)),
 		mOpenGLESTextureBuffer(0),
 		mOpenGLESTexture(0)
 	{

@@ -35,8 +35,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBufferBind::UniformBufferBind(OpenGLES3Renderer &openGLES2Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
-		UniformBuffer(openGLES2Renderer)
+	UniformBufferBind::UniformBufferBind(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
+		UniformBuffer(openGLES3Renderer)
 	{
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES uniform buffer

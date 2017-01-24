@@ -67,12 +67,12 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
+		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] rootSignature
 		*    Root signature to use
 		*/
-		RootSignature(OpenGLES3Renderer &openGLES2Renderer, const Renderer::RootSignature &rootSignature);
+		RootSignature(OpenGLES3Renderer &openGLES3Renderer, const Renderer::RootSignature &rootSignature);
 
 		/**
 		*  @brief

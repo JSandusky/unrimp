@@ -37,8 +37,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndirectBuffer::IndirectBuffer(OpenGLES3Renderer& openGLES2Renderer, uint32_t numberOfBytes, const void* data) :
-		IIndirectBuffer(openGLES2Renderer),
+	IndirectBuffer::IndirectBuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfBytes, const void* data) :
+		IIndirectBuffer(openGLES3Renderer),
 		mNumberOfBytes(numberOfBytes),
 		mData(nullptr)
 	{
