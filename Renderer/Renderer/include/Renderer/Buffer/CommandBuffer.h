@@ -210,6 +210,9 @@ namespace Renderer
 			mCommandPacketBuffer(nullptr),
 			mPreviousCommandPacketByteIndex(~0u),
 			mCurrentCommandPacketByteIndex(0)
+			#ifndef RENDERER_NO_STATISTICS
+				, mNumberOfCommands(0)
+			#endif
 		{
 			// Nothing here
 		}
@@ -238,6 +241,23 @@ namespace Renderer
 			return (~0u == mPreviousCommandPacketByteIndex);
 		}
 
+		#ifndef RENDERER_NO_STATISTICS
+			/**
+			*  @brief
+			*    Return the number of commands inside the command buffer
+			*
+			*  @return
+			*    The number of commands inside the command buffer
+			*
+			*  @note
+			*    - Counting the number of commands inside the command buffer is only a debugging feature and not used in optimized builds
+			*/
+			inline uint32_t getNumberOfCommands() const
+			{
+				return mNumberOfCommands;
+			}
+		#endif
+
 		/**
 		*  @brief
 		*    Clear the command buffer
@@ -246,6 +266,9 @@ namespace Renderer
 		{
 			mPreviousCommandPacketByteIndex = ~0u;
 			mCurrentCommandPacketByteIndex = 0;
+			#ifndef RENDERER_NO_STATISTICS
+				mNumberOfCommands = 0;
+			#endif
 		}
 
 		/**
@@ -301,6 +324,9 @@ namespace Renderer
 			mCurrentCommandPacketByteIndex += numberOfCommandBytes;
 
 			// Done
+			#ifndef RENDERER_NO_STATISTICS
+				++mNumberOfCommands;
+			#endif
 			return CommandPacketHelper::getCommand<U>(commandPacket);
 		}
 
@@ -365,6 +391,9 @@ namespace Renderer
 		// Current state
 		uint32_t mPreviousCommandPacketByteIndex;
 		uint32_t mCurrentCommandPacketByteIndex;
+		#ifndef RENDERER_NO_STATISTICS
+			uint32_t mNumberOfCommands;
+		#endif
 
 
 	};

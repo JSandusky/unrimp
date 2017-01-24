@@ -2519,6 +2519,9 @@ namespace Renderer
 				mCommandPacketBuffer(nullptr),
 				mPreviousCommandPacketByteIndex(~0u),
 				mCurrentCommandPacketByteIndex(0)
+				#ifndef RENDERER_NO_STATISTICS
+					, mNumberOfCommands(0)
+				#endif
 			{}
 			inline ~CommandBuffer()
 			{
@@ -2531,10 +2534,19 @@ namespace Renderer
 			{
 				return (~0u == mPreviousCommandPacketByteIndex);
 			}
+			#ifndef RENDERER_NO_STATISTICS
+				inline uint32_t getNumberOfCommands() const
+				{
+					return mNumberOfCommands;
+				}
+			#endif
 			inline void clear()
 			{
 				mPreviousCommandPacketByteIndex = ~0u;
 				mCurrentCommandPacketByteIndex = 0;
+				#ifndef RENDERER_NO_STATISTICS
+					mNumberOfCommands = 0;
+				#endif
 			}
 			template <typename U>
 			U* addCommand(uint32_t numberOfAuxiliaryBytes = 0)
@@ -2564,6 +2576,9 @@ namespace Renderer
 				CommandPacketHelper::storeBackendDispatchFunctionIndex(commandPacket, U::COMMAND_DISPATCH_FUNCTION_INDEX);
 				mPreviousCommandPacketByteIndex = mCurrentCommandPacketByteIndex;
 				mCurrentCommandPacketByteIndex += numberOfCommandBytes;
+				#ifndef RENDERER_NO_STATISTICS
+					++mNumberOfCommands;
+				#endif
 				return CommandPacketHelper::getCommand<U>(commandPacket);
 			}
 			inline void submit(IRenderer& renderer) const
@@ -2582,6 +2597,9 @@ namespace Renderer
 			uint8_t* mCommandPacketBuffer;
 			uint32_t mPreviousCommandPacketByteIndex;
 			uint32_t mCurrentCommandPacketByteIndex;
+			#ifndef RENDERER_NO_STATISTICS
+				uint32_t mNumberOfCommands;
+			#endif
 		};
 		namespace Command
 		{
