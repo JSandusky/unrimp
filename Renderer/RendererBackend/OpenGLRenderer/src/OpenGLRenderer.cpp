@@ -2274,7 +2274,7 @@ namespace OpenGLRenderer
 		}
 
 		// Output the debug message
-		#if RENDERER_NO_DEBUG
+		#ifdef RENDERER_NO_DEBUG
 			// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
 			id = id;
 			message = message;
