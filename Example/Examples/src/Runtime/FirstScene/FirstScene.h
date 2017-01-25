@@ -161,6 +161,7 @@ private:
 	// Timing
 	Stopwatch mStopwatch;	///< Stopwatch instance
 	float	  mGlobalTimer;	///< Global timer
+	float	  mRotation;
 	// States for runtime-fun
 	Compositor mInstancedCompositor;
 	int		   mCurrentCompositor;

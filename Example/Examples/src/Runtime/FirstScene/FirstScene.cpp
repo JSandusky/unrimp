@@ -89,6 +89,7 @@ FirstScene::FirstScene() :
 	mLightSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mGlobalTimer(0.0f),
+	mRotation(0.0f),
 	mInstancedCompositor(Compositor::DEFERRED),
 	mCurrentCompositor(mInstancedCompositor),
 	mCurrentMsaa(Msaa::NONE),
@@ -217,6 +218,7 @@ void FirstScene::onUpdate()
 		// No one likes huge time jumps
 		pastMilliseconds = 60.0f;
 	}
+	mGlobalTimer += pastMilliseconds / 1000.0f;
 
 	{ // Tell the material blueprint resource manager about our global material properties
 		RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
@@ -226,16 +228,17 @@ void FirstScene::onUpdate()
 			globalMaterialProperties.setPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunLightColor[0] * 2.0f, mSunLightColor[1] * 2.0f, mSunLightColor[2] * 2.0f));
 			globalMaterialProperties.setPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
 			globalMaterialProperties.setPropertyById("PastSecondsSinceLastFrame", RendererRuntime::MaterialPropertyValue::fromFloat(pastMilliseconds / 1000.0f));
+			globalMaterialProperties.setPropertyById("GlobalTimeInSeconds", RendererRuntime::MaterialPropertyValue::fromFloat(mGlobalTimer));
 		}
 	}
 
 	// Update the scene node rotation
 	if (nullptr != mSceneNode && mRotationSpeed > 0.0f)
 	{
-		mSceneNode->setRotation(glm::angleAxis(mGlobalTimer, glm::vec3(0.0f, 1.0f, 0.0f)));
+		mSceneNode->setRotation(glm::angleAxis(mRotation, glm::vec3(0.0f, 1.0f, 0.0f)));
 
 		// Update the global timer (FPS independent movement)
-		mGlobalTimer += pastMilliseconds * 0.0005f * mRotationSpeed;
+		mRotation += pastMilliseconds * 0.0005f * mRotationSpeed;
 	}
 
 	// Update controller

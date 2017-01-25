@@ -58,6 +58,7 @@ OUTPUT_END
 struct PassDataStruct
 {
 	float2 InverseViewportSize;
+	float  GlobalTimeInSeconds;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -68,6 +69,22 @@ SAMPLER_STATE(SamplerLinear, 0)
 
 // Textures
 TEXTURE_2D(ColorMap, 0)
+
+
+//[-------------------------------------------------------]
+//[ Functions                                             ]
+//[-------------------------------------------------------]
+// Iestyn's RGB dither (7 asm instructions) from Portal2 X360, slightly modified for VR
+// -> See "Iestyn's RGB dither" - https://www.shadertoy.com/view/MtBGDD
+// -> See "Advanced VR Rendering" - http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf - page 49
+// -> "Valve's screen space dither" https://www.shadertoy.com/view/4dcSRX - shows the effect nicely
+float3 ScreenSpaceDither(float2 screenPosition)
+{
+	float ditherFactor = dot(float2(171.0f, 231.0f), screenPosition.xy + PassData.GlobalTimeInSeconds);
+	float3 dither = float3(ditherFactor, ditherFactor, ditherFactor);
+	dither.rgb = frac(dither.rgb / float3(103.0f, 71.0f, 97.0f)) - float3(0.5f, 0.5f, 0.5f);
+	return (dither.rgb / 255.0f) * 0.375f;
+}
 
 
 //[-------------------------------------------------------]
@@ -112,6 +129,9 @@ MAIN_BEGIN
 	@property(!Fxaa)
 		color = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
 	@end
+
+	// Apply screen space dither
+	color.rgb += ScreenSpaceDither(MAIN_INPUT(TexCoordVS) * (1.0f / PassData.InverseViewportSize));
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = SATURATE(color);
