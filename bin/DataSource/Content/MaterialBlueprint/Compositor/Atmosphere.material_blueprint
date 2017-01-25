@@ -1,0 +1,223 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "1"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"NumberOfMultisamples":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "INTEGER",
+				"Value": "0",
+				"Description": "Number of multisamples. Valid values are 0, 2, 4, 8. Use 0 to disable multisample.",
+				"VisualImportance": "100",
+				"MaximumIntegerValue": "8",
+				"ValidIntegerValues": [ 0, 2, 4, 8 ]
+			},
+			"AtmosphereFogDensity":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.05",
+				"MinimumValue": "0.0",
+				"MaximumValue": "100.0",
+				"StepSize": "0.01",
+				"Description": "Atmosphere fog density"
+			},
+			"DiffuseFogColor":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT_3",
+				"Value": "1.0 1.0 1.0",
+				"Description": "Diffuse fog color"
+			},
+			"ColorMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
+				"Description": "Color map"
+			},
+			"DepthMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/BlackMap",
+				"Description": "Depth map"
+			}
+		},
+		"RootSignature":
+		{
+			"RootParameters":
+			{
+				"0":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "PassUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"2":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "ColorMap",
+							"SamplerRootParameterIndex": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"3":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "DepthMap",
+							"SamplerRootParameterIndex": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				}
+			}
+		},
+		"PipelineState":
+		{
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprintAssetId": "100",
+				"FragmentShaderBlueprintAssetId": "138"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "NONE"
+			},
+			"DepthStencilState":
+			{
+				"DepthEnable": "FALSE",
+				"DepthWriteMask": "ZERO"
+			}
+		},
+		"Resources":
+		{
+			"UniformBuffers":
+			{
+				"PassUniformBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"ClipSpaceToViewSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@CLIP_SPACE_TO_VIEW_SPACE_MATRIX"
+						},
+						"ViewSpaceSunLightDirection":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@VIEW_SPACE_SUN_LIGHT_DIRECTION"
+						},
+						"AtmosphereFogDensity":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@AtmosphereFogDensity"
+						},
+						"AmbientColor":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@AmbientColor"
+						},
+						"SunLightColor":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@SunLightColor"
+						},
+						"DiffuseFogColor":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@DiffuseFogColor"
+						},
+						"InverseViewportSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@INVERSE_VIEWPORT_SIZE"
+						},
+						"ProjectionParameters":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@PROJECTION_PARAMETERS"
+						}
+					}
+				}
+			},
+			"SamplerStates":
+			{
+				"SamplerPoint":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Filter": "MIN_MAG_MIP_POINT",
+					"MaxLOD": "0.0"
+				}
+			},
+			"Textures":
+			{
+				"ColorMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@ColorMap"
+				},
+				"DepthMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@DepthMap"
+				}
+			}
+		}
+	}
+}

@@ -142,6 +142,8 @@
 		"134": "MaterialBlueprint/Compositor/Scale.asset",
 		"135": "Texture/Compositor/DirtyLens.asset",
 		"136": "ShaderBlueprint/Compositor/DepthOfFieldFragment.asset",
-		"137": "MaterialBlueprint/Compositor/DepthOfField.asset"
+		"137": "MaterialBlueprint/Compositor/DepthOfField.asset",
+		"138": "ShaderBlueprint/Compositor/AtmosphereFragment.asset",
+		"139": "MaterialBlueprint/Compositor/Atmosphere.asset"
 	}
 }

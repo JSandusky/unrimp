@@ -65,6 +65,7 @@ namespace
 		static const RendererRuntime::AssetId ImrodMaterialAssetId("Example/Material/Character/Imrod");
 		static const RendererRuntime::AssetId FinalMaterialAssetId("Example/MaterialBlueprint/Compositor/Final");
 		static const RendererRuntime::AssetId DeferredAmbientCompositorMaterialAssetId("Example/MaterialBlueprint/Deferred/AmbientCompositor");
+		static const RendererRuntime::AssetId AtmosphereCompositorMaterialAssetId("Example/MaterialBlueprint/Compositor/Atmosphere");
 		static const RendererRuntime::AssetId DepthOfFieldCompositorMaterialAssetId("Example/MaterialBlueprint/Compositor/DepthOfField");
 
 
@@ -225,6 +226,7 @@ void FirstScene::onUpdate()
 		if (nullptr != rendererRuntime)
 		{
 			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
+			globalMaterialProperties.setPropertyById("AmbientColor", RendererRuntime::MaterialPropertyValue::fromFloat3(0.2f, 0.2f, 0.2f));
 			globalMaterialProperties.setPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunLightColor[0] * 2.0f, mSunLightColor[1] * 2.0f, mSunLightColor[2] * 2.0f));
 			globalMaterialProperties.setPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
 			globalMaterialProperties.setPropertyById("PastSecondsSinceLastFrame", RendererRuntime::MaterialPropertyValue::fromFloat(pastMilliseconds / 1000.0f));
@@ -489,6 +491,11 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					numberOfMultisamples = 0;
 				}
 				RendererRuntime::MaterialResource* materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::DeferredAmbientCompositorMaterialAssetId);
+				if (nullptr != materialResource)
+				{
+					materialResource->setPropertyById("NumberOfMultisamples", RendererRuntime::MaterialPropertyValue::fromInteger(numberOfMultisamples));
+				}
+				materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::AtmosphereCompositorMaterialAssetId);
 				if (nullptr != materialResource)
 				{
 					materialResource->setPropertyById("NumberOfMultisamples", RendererRuntime::MaterialPropertyValue::fromInteger(numberOfMultisamples));

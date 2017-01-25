@@ -13,30 +13,34 @@
 		},
 		"RenderTargetTextures":
 		{
-			"Example/Texture/Dynamic/GBufferRenderTarget0":
+			"Example/Texture/Dynamic/MultisampleGBufferRenderTarget0":
 			{
 				"Description": "GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)",
 				"TextureFormat": "R8G8B8A8",
 				"AllowMultisample": "TRUE"
 			},
-			"Example/Texture/Dynamic/GBufferRenderTarget1":
+			"Example/Texture/Dynamic/MultisampleGBufferRenderTarget1":
 			{
 				"Description": "GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic",
 				"TextureFormat": "R16G16B16A16F",
 				"AllowMultisample": "TRUE"
 			},
-			"Example/Texture/Dynamic/GBufferRenderTarget2":
+			"Example/Texture/Dynamic/MultisampleGBufferRenderTarget2":
 			{
 				"Description": "GBuffer 2: rgb = emissive color, a = glossiness",
 				"TextureFormat": "R11G11B10F",
 				"AllowMultisample": "TRUE"
 			},
-			"Example/Texture/Dynamic/DepthStencilRenderTarget":
+			"Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget":
 			{
 				"TextureFormat": "D32_FLOAT",
 				"AllowMultisample": "TRUE"
 			},
-			"Example/Texture/Dynamic/HdrColorRenderTarget":
+			"Example/Texture/Dynamic/HdrColorRenderTarget0":
+			{
+				"TextureFormat": "R16G16B16A16F"
+			},
+			"Example/Texture/Dynamic/HdrColorRenderTarget1":
 			{
 				"TextureFormat": "R16G16B16A16F"
 			},
@@ -127,12 +131,16 @@
 			"GBufferFramebuffer":
 			{
 				"Description": "GBuffer render target",
-				"ColorTextures": [ "Example/Texture/Dynamic/GBufferRenderTarget0", "Example/Texture/Dynamic/GBufferRenderTarget1", "Example/Texture/Dynamic/GBufferRenderTarget2" ],
-				"DepthStencilTexture": "Example/Texture/Dynamic/DepthStencilRenderTarget"
+				"ColorTextures": [ "Example/Texture/Dynamic/MultisampleGBufferRenderTarget0", "Example/Texture/Dynamic/MultisampleGBufferRenderTarget1", "Example/Texture/Dynamic/MultisampleGBufferRenderTarget2" ],
+				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			},
-			"HdrFramebuffer":
+			"HdrFramebuffer0":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget0" ]
+			},
+			"HdrFramebuffer1":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget1" ]
 			},
 			"LuminanceFramebuffer":
 			{
@@ -213,7 +221,7 @@
 					"MaterialTechnique": "Deferred"
 				}
 			},
-			"HdrFramebuffer":
+			"HdrFramebuffer0":
 			{
 				"Clear":
 				{
@@ -226,11 +234,24 @@
 					"MaterialBlueprintAssetId": "115",
 					"SetMaterialProperties":
 					{
-						"GBufferMap0": "Example/Texture/Dynamic/GBufferRenderTarget0",
-						"GBufferMap1": "Example/Texture/Dynamic/GBufferRenderTarget1",
-						"GBufferMap2": "Example/Texture/Dynamic/GBufferRenderTarget2",
-						"DepthMap": "Example/Texture/Dynamic/DepthStencilRenderTarget",
+						"GBufferMap0": "Example/Texture/Dynamic/MultisampleGBufferRenderTarget0",
+						"GBufferMap1": "Example/Texture/Dynamic/MultisampleGBufferRenderTarget1",
+						"GBufferMap2": "Example/Texture/Dynamic/MultisampleGBufferRenderTarget2",
+						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
 						"ShadowMap": "Example/Texture/Dynamic/ShadowMapRenderTarget"
+					}
+				}
+			},
+			"HdrFramebuffer1":
+			{
+				"Quad":
+				{
+					"Description": "Atmosphere pass (fog)",
+					"MaterialBlueprintAssetId": "139",
+					"SetMaterialProperties":
+					{
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
+						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 					}
 				}
 			},
@@ -242,7 +263,7 @@
 					"MaterialBlueprintAssetId": "126",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget"
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1"
 					}
 				}
 			},
@@ -289,7 +310,7 @@
 					"MaterialBlueprintAssetId": "131",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
 						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
 					}
 				}
@@ -391,7 +412,7 @@
 					"MaterialBlueprintAssetId": "124",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
 						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget",
 						"BloomMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
 					}
@@ -471,7 +492,7 @@
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0",
-						"DepthMap": "Example/Texture/Dynamic/DepthStencilRenderTarget",
+						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
 						"BlurMap": "Example/Texture/Dynamic/GaussianBlurDownscale2ColorRenderTarget"
 					}
 				}

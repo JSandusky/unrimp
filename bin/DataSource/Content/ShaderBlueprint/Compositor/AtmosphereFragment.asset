@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "138",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "AtmosphereFragment",
+			"AssetDependencies": [ "15" ],
+			"FileDependencies": [ "AtmosphereFragment.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "AtmosphereFragment.shader_blueprint"
+		}
+	}
+}

@@ -23,7 +23,11 @@
 				"TextureFormat": "D32_FLOAT",
 				"AllowMultisample": "TRUE"
 			},
-			"Example/Texture/Dynamic/HdrColorRenderTarget":
+			"Example/Texture/Dynamic/HdrColorRenderTarget0":
+			{
+				"TextureFormat": "R16G16B16A16F"
+			},
+			"Example/Texture/Dynamic/HdrColorRenderTarget1":
 			{
 				"TextureFormat": "R16G16B16A16F"
 			},
@@ -116,9 +120,13 @@
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrMultisampleColorRenderTarget" ],
 				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			},
-			"HdrFramebuffer":
+			"HdrFramebuffer0":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget0" ]
+			},
+			"HdrFramebuffer1":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget1" ]
 			},
 			"LuminanceFramebuffer":
 			{
@@ -191,11 +199,24 @@
 					"MaterialTechnique": "Forward"
 				}
 			},
-			"HdrFramebuffer":
+			"HdrFramebuffer0":
 			{
 				"ResolveMultisample":
 				{
 					"SourceMultisampleFramebuffer": "HdrMultisampleFramebuffer"
+				}
+			},
+			"HdrFramebuffer1":
+			{
+				"Quad":
+				{
+					"Description": "Atmosphere pass (fog)",
+					"MaterialBlueprintAssetId": "139",
+					"SetMaterialProperties":
+					{
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
+						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
+					}
 				}
 			},
 			"LuminanceFramebuffer":
@@ -206,7 +227,7 @@
 					"MaterialBlueprintAssetId": "126",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget"
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1"
 					}
 				}
 			},
@@ -253,7 +274,7 @@
 					"MaterialBlueprintAssetId": "131",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
 						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
 					}
 				}
@@ -355,7 +376,7 @@
 					"MaterialBlueprintAssetId": "124",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
 						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget",
 						"BloomMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
 					}

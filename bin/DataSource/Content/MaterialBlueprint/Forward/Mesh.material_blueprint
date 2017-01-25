@@ -332,6 +332,12 @@
 							"ValueType": "FLOAT",
 							"Value": "@Wetness"
 						},
+						"AmbientColor":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@AmbientColor"
+						},
 						"SunLightColor":
 						{
 							"Usage": "GLOBAL_REFERENCE",

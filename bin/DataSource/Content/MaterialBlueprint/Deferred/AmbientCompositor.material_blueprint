@@ -228,17 +228,23 @@
 							"ValueType": "FLOAT",
 							"Value": "@Wetness"
 						},
-						"SunLightColor":
+						"AmbientColor":
 						{
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "@SunLightColor"
+							"Value": "@AmbientColor"
 						},
 						"NumberOfLights":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "INTEGER",
 							"Value": "@NUMBER_OF_LIGHTS"
+						},
+						"SunLightColor":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@SunLightColor"
 						},
 						"ViewportSize":
 						{

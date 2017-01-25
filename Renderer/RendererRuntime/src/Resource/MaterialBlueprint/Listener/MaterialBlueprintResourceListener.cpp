@@ -68,6 +68,7 @@ namespace
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_QUATERNION)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_QUATERNION)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
+			DEFINE_CONSTANT(CLIP_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(CLIP_SPACE_TO_WORLD_SPACE_MATRIX)
 			DEFINE_CONSTANT(PROJECTION_PARAMETERS)
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
@@ -162,6 +163,7 @@ namespace RendererRuntime
 		}
 		mPassData->worldSpaceToViewSpaceQuaternion = glm::quat(mPassData->worldSpaceToViewSpaceMatrix);
 		mPassData->worldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;
+		mPassData->viewSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix;
 	}
 
 	bool MaterialBlueprintResourceListener::fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes)
@@ -189,6 +191,11 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix), numberOfBytes);
+		}
+		else if (::detail::CLIP_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->viewSpaceToClipSpaceMatrix)), numberOfBytes);
 		}
 		else if (::detail::CLIP_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
 		{

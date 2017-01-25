@@ -1,0 +1,161 @@
+/*********************************************************\
+ * Copyright (c) 2012-2017 The Unrimp Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+@includepiece(15)	// "Core.shader_piece"
+
+
+//[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_COLOR(0)
+OUTPUT_END
+
+// Uniform buffers
+struct PassDataStruct
+{
+	float4x4 ClipSpaceToViewSpaceMatrix;
+	float3	 ViewSpaceSunLightDirection;
+	float	 AtmosphereFogDensity;
+	float3	 AmbientColor;
+	float3	 SunLightColor;
+	float3   DiffuseFogColor;
+	float2	 InverseViewportSize;
+	float2	 ProjectionParameters;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
+
+// Samplers
+SAMPLER_STATE(SamplerPoint, 0)
+
+// Textures
+TEXTURE_2D(ColorMap, 0)
+@property(NumberOfMultisamples)
+	TEXTURE_2D_MS(DepthMap, @value(NumberOfMultisamples), 1)
+@end
+@property(!NumberOfMultisamples)
+	TEXTURE_2D(DepthMap, 1)
+@end
+
+
+//[-------------------------------------------------------]
+//[ Functions                                             ]
+//[-------------------------------------------------------]
+// TODO(co) Make this to a shader piece
+float GetDepthValue(float2 textureCoordinate, int sampleIndex)
+{
+	@property(NumberOfMultisamples)
+		return SAMPLE_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex).r;
+	@end
+	@property(!NumberOfMultisamples)
+		return SAMPLE_2D_LOD(DepthMap, SamplerPoint, float4(textureCoordinate, 0.0f, 0.0f)).r;
+	@end
+}
+
+// TODO(co) Make this to a shader piece
+float GetLinearDepth(float depth)
+{
+	return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
+}
+
+// TODO(co) Put into shader piece
+float3 GetViewSpacePositionByScreenSpacePosition(float2 screenSpacePosition, float depth)
+{
+	// API coordinate system related differences
+	@property(HLSL)
+		screenSpacePosition.y = 1.0f - screenSpacePosition.y;
+	@end
+	@property(GLSL || GLSLES)
+		// 0..1 -> -1..1
+		depth = depth * 2.0f - 1.0f;
+	@end
+
+	// Get x/w and y/w from the screen space position
+	float x = screenSpacePosition.x * 2.0f - 1.0f;
+	float y = screenSpacePosition.y * 2.0f - 1.0f;
+	float4 projectedPosition = float4(x, y, depth, 1.0f);
+
+	// Get world-space position
+	float4 inversePosition = MATRIX_MUL(PassData.ClipSpaceToViewSpaceMatrix, projectedPosition);
+	return inversePosition.xyz / inversePosition.w;
+}
+
+float3 CalculateFoggedColor(float3 color, float2 screenSpacePosition, int sampleIndex)
+{
+	float depthValue = GetDepthValue(screenSpacePosition, sampleIndex);
+	float linearDepth = GetLinearDepth(depthValue);
+
+	// Traditional depth fog
+	// -> Depth fog: Exponential^2 (see e.g. http://developer.download.nvidia.com/assets/gamedev/docs/Fog2.pdf?display=style-table )
+	float factor = linearDepth * PassData.AtmosphereFogDensity;
+	factor *= factor;
+	float fogDepth = 1.0f - SATURATE(1.0f / exp(factor));
+
+	// Fog lighting direction
+	float3 viewSpaceCameraDirection = -normalize(GetViewSpacePositionByScreenSpacePosition(screenSpacePosition, depthValue));	// In view space, we always look along the positive z-axis
+	float fogDirection = SATURATE(dot(viewSpaceCameraDirection, -PassData.ViewSpaceSunLightDirection));
+	fogDirection = pow(fogDirection, 15.0f);
+
+	// Calculate fogged color
+	float3 ambientFogDiffuseColor = PassData.AmbientColor * PassData.DiffuseFogColor;
+	float3 sunFogDiffuseColor = PassData.SunLightColor * PassData.DiffuseFogColor;
+	float3 litFog = LERP(ambientFogDiffuseColor, ambientFogDiffuseColor + sunFogDiffuseColor, fogDirection);
+	return LERP(color, litFog, fogDepth);
+}
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
+
+	@property(NumberOfMultisamples)
+		// Custom MSAA resolve
+		float3 finalColor = float3(0.0f, 0.0f, 0.0f);
+		@foreach(NumberOfMultisamples, i, 0)
+		{
+			finalColor += CalculateFoggedColor(color.rgb, MAIN_INPUT(TexCoordVS), @i);
+		}
+		@end
+		finalColor /= @value(NumberOfMultisamples);
+	@end
+	@property(!NumberOfMultisamples)
+		float3 finalColor = CalculateFoggedColor(color.rgb, MAIN_INPUT(TexCoordVS), 0);
+	@end
+
+	// Done
+	MAIN_OUTPUT_COLOR(0) = float4(SATURATE(finalColor), 1.0f);
+MAIN_END

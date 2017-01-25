@@ -56,8 +56,9 @@ struct PassDataStruct
 	float4x4 ShadowMatrix;
 	float3   ViewSpaceSunLightDirection;
 	float    Wetness;
-	float3   SunLightColor;
+	float3   AmbientColor;
 	int		 NumberOfLights;
+	float3   SunLightColor;
 	float2   ViewportSize;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
@@ -90,7 +91,7 @@ TEXTURE_2D(ShadowMap, 5)
 //[ Pieces                                                ]
 //[-------------------------------------------------------]
 // TODO(co) Put into shader piece
-float3 getWorldSpacePositionByScreenSpacePosition(float2 screenSpacePosition, float depth)
+float3 GetWorldSpacePositionByScreenSpacePosition(float2 screenSpacePosition, float depth)
 {
 	// API coordinate system related differences
 	@property(HLSL)
@@ -112,7 +113,7 @@ float3 getWorldSpacePositionByScreenSpacePosition(float2 screenSpacePosition, fl
 }
 
 // TODO(co) Just a first test, need reusable shader piece for this
-float3 calculateLighting(float3 lightDirection, float3 lightColor, float3 normal, float3 diffuseValue, float specularValue)
+float3 CalculateLighting(float3 lightDirection, float3 lightColor, float3 normal, float3 diffuseValue, float specularValue)
 {
 	// Perform standard Blinn-Phong diffuse and specular lighting
 
@@ -138,7 +139,7 @@ float3 calculateLighting(float3 lightDirection, float3 lightColor, float3 normal
 	return color;
 }
 
-float3 calculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depthValue)
+float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depthValue)
 {
 	// Gather GBuffer data
 	float3 diffuseValue = gbuffer0Value.rgb;
@@ -147,7 +148,7 @@ float3 calculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 	float3 emissiveValue = gbuffer2Value.rgb;
 
 	// Derive data
-	float3 worldSpacePosition = getWorldSpacePositionByScreenSpacePosition(screenSpacePosition, depthValue);
+	float3 worldSpacePosition = GetWorldSpacePositionByScreenSpacePosition(screenSpacePosition, depthValue);
 
 	// TODO(co) Shadow: Totally primitive to have something to start with
 	float shadowVisibility = 1.0f;
@@ -160,12 +161,12 @@ float3 calculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 	}
 
 	// Ambient term
-	float3 color = float3(0.2f, 0.2f, 0.2f) * diffuseValue;
+	float3 color = PassData.AmbientColor * diffuseValue;
 
 	// Primary directional light
 	if (shadowVisibility > 0.0f)
 	{
-		color += calculateLighting(PassData.ViewSpaceSunLightDirection, PassData.SunLightColor, normal, diffuseValue, specularValue);
+		color += CalculateLighting(PassData.ViewSpaceSunLightDirection, PassData.SunLightColor, normal, diffuseValue, specularValue);
 	}
 
 	// Point and spot lights
@@ -180,7 +181,7 @@ float3 calculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 		float distance = sqrt(dot(direction, direction));
 		if (distance < lightPositionRadius.w)
 		{
-			color += calculateLighting(normalize(direction), lightColor.rgb, normal, diffuseValue, specularValue);
+			color += CalculateLighting(normalize(direction), lightColor.rgb, normal, diffuseValue, specularValue);
 		}
 	}
 
@@ -213,7 +214,7 @@ MAIN_BEGIN
 				float4 gbuffer2Value = SAMPLE_2D_MS(GBufferMap2, textureCoordinate, @i);
 
 				// Calculate color by GBuffer
-				color += calculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue);
+				color += CalculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue);
 				++numberOfValues;
 			}
 		}
@@ -244,7 +245,7 @@ MAIN_BEGIN
 		float4 gbuffer2Value = SAMPLE_2D_LOD(GBufferMap2, SamplerPoint, textureCoordinate);
 
 		// Calculate color by GBuffer
-		float3 color = calculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue);
+		float3 color = CalculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue);
 	@end
 
 	// Done

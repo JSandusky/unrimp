@@ -84,7 +84,7 @@ namespace RendererRuntime
 			glm::mat4 worldSpaceToClipSpaceMatrix;
 			glm::mat4 worldSpaceToViewSpaceMatrix;
 			glm::quat worldSpaceToViewSpaceQuaternion;
-			glm::mat4 viewSpaceToWorldSpaceMatrix;
+			glm::mat4 viewSpaceToClipSpaceMatrix;
 		};
 
 

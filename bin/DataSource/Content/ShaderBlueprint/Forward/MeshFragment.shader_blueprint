@@ -59,6 +59,7 @@ struct PassDataStruct
 	float4	 WorldSpaceToViewSpaceQuaternion;
 	float3	 ViewSpaceSunLightDirection;
 	float	 Wetness;
+	float3	 AmbientColor;
 	float3	 SunLightColor;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
@@ -148,7 +149,7 @@ MAIN_BEGIN
 	float3 diffuseValue = material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
 
 	// Ambient term
-	float3 color = float3(0.2f, 0.2f, 0.2f) * diffuseValue;
+	float3 color = PassData.AmbientColor * diffuseValue;
 
 	// Diffuse term
 	color += diffuseLightColor * diffuseValue;
