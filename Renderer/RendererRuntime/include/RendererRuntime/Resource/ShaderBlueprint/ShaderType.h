@@ -48,7 +48,7 @@ namespace RendererRuntime
 		Geometry,				///< GS
 		Fragment				///< FS, "pixel shader" in Direct3D terminology
 	};
-	static constexpr uint8_t NUMBER_OF_SHADER_TYPES = static_cast<uint8_t>(ShaderType::Fragment) + 1;	///< Total number of shader types
+	static const uint8_t NUMBER_OF_SHADER_TYPES = static_cast<uint8_t>(ShaderType::Fragment) + 1;	///< Total number of shader types
 
 
 //[-------------------------------------------------------]
