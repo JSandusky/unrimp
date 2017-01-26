@@ -128,7 +128,6 @@ namespace RendererRuntime
 				const Texture& texture = textures[i];
 
 				// Due to background texture loading, some textures might not be ready, yet
-				// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
 				const TextureResource* textureResource  = textureResources.tryGetElementById(texture.textureResourceId);
 				if (nullptr != textureResource)
 				{
@@ -137,6 +136,16 @@ namespace RendererRuntime
 					{
 						Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, texture.rootParameterIndex, texturePtr);
 					}
+					else
+					{
+						// Error! There should always be e.g. a fallback texture if background loading is still in progress.
+						assert(false);
+					}
+				}
+				else
+				{
+					// Error! Referencing none existing texture resources should never ever happen.
+					assert(false);
 				}
 			}
 		}

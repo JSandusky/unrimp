@@ -144,6 +144,12 @@
 		"136": "ShaderBlueprint/Compositor/DepthOfFieldFragment.asset",
 		"137": "MaterialBlueprint/Compositor/DepthOfField.asset",
 		"138": "ShaderBlueprint/Compositor/AtmosphereFragment.asset",
-		"139": "MaterialBlueprint/Compositor/Atmosphere.asset"
+		"139": "MaterialBlueprint/Compositor/Atmosphere.asset",
+		"140": "ShaderBlueprint/Compositor/LensFlareThresholdFragment.asset",
+		"141": "MaterialBlueprint/Compositor/LensFlareThreshold.asset",
+		"142": "ShaderBlueprint/Compositor/LensFlareFeatureGenerationFragment.asset",
+		"143": "MaterialBlueprint/Compositor/LensFlareFeatureGeneration.asset",
+		"144": "Texture/Compositor/LensColor.asset",
+		"145": "Texture/Compositor/LensStar.asset"
 	}
 }

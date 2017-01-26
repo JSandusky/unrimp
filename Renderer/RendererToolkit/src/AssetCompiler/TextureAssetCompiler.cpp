@@ -449,6 +449,13 @@ namespace
 				params.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
 			}
 
+			// The 4x4 block size based DXT compression format has no support for 1D textures
+			if (src_tex.get_width() == 1 || src_tex.get_height() == 1)
+			{
+				params.m_dst_format = crnlib::PIXEL_FMT_A8R8G8B8;
+				params.m_mipmap_params.m_mode = cCRNMipModeNoMips;
+			}
+
 			crnlib::texture_conversion::convert_stats stats;
 
 			bool status = crnlib::texture_conversion::process(params, stats);
@@ -653,10 +660,15 @@ namespace RendererToolkit
 		// Read configuration
 		// TODO(co) Add required properties
 		std::string inputFile;
+		std::string assetFileFormat;
 		{
 			// Read texture asset compiler configuration
 			const rapidjson::Value& rapidJsonValueTextureAssetCompiler = rapidJsonValueAsset["TextureAssetCompiler"];
 			inputFile = rapidJsonValueTextureAssetCompiler["InputFile"].GetString();
+			if (rapidJsonValueTextureAssetCompiler.HasMember("FileFormat"))
+			{
+				assetFileFormat = rapidJsonValueTextureAssetCompiler["FileFormat"].GetString();
+			}
 		}
 
 		const std::string inputAssetFilename = assetInputDirectory + inputFile;
@@ -676,9 +688,13 @@ namespace RendererToolkit
 				textureTargetName = rapidJsonValueRendererTarget["TextureTarget"].GetString();
 			}
 			{
-				const rapidjson::Value& rapidJsonValueTextureTargets = rapidJsonValueTargets["TextureTargets"];
-				const rapidjson::Value& rapidJsonValueTextureTarget = rapidJsonValueTextureTargets[textureTargetName.c_str()];
-				const std::string fileFormat = rapidJsonValueTextureTarget["FileFormat"].GetString();
+				std::string fileFormat = assetFileFormat;
+				if (fileFormat.empty())
+				{
+					const rapidjson::Value& rapidJsonValueTextureTargets = rapidJsonValueTargets["TextureTargets"];
+					const rapidjson::Value& rapidJsonValueTextureTarget = rapidJsonValueTextureTargets[textureTargetName.c_str()];
+					fileFormat = rapidJsonValueTextureTarget["FileFormat"].GetString();
+				}
 
 				outputAssetFilename = assetOutputDirectory + assetName + '.' + fileFormat;
 				if (fileFormat == "crn")
@@ -789,6 +805,7 @@ namespace RendererToolkit
          params.push_back(desc);
       }
 
+	  detail::m_params.clear();
       if (!detail::m_params.parse(pCommand_line, params.size(), params.get_ptr(), true))
       {
 		  // Error!

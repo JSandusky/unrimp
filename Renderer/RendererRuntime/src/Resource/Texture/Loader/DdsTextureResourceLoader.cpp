@@ -281,6 +281,7 @@ namespace RendererRuntime
 
 						default:
 							// Error: Unsupported format
+							assert(false);
 							return;
 					}
 				}
@@ -388,6 +389,7 @@ namespace RendererRuntime
 									else
 									{
 										// Error: Unsupported format
+										assert(false);
 										return;
 									}
 									break;
@@ -410,12 +412,14 @@ namespace RendererRuntime
 									else
 									{
 										// Error: Unsupported format
+										assert(false);
 										return;
 									}
 									break;
 
 								default:
 									// Error: Unsupported format
+									assert(false);
 									return;
 							}
 					}
@@ -468,7 +472,17 @@ namespace RendererRuntime
 
 			mWidth = ddsHeader.width;
 			mHeight = ddsHeader.height;
-			mTextureFormat = static_cast<uint8_t>(mTextureResource->isRgbHardwareGammaCorrection() ? Renderer::TextureFormat::BC1_SRGB : Renderer::TextureFormat::BC1);	// TODO(co) Make this dynamic
+
+			// TODO(co) Make this dynamic
+			if (1 == mWidth || 1 == mHeight)
+			{
+				// The 4x4 block size based DXT compression format has no support for 1D textures
+				mTextureFormat = static_cast<uint8_t>(mTextureResource->isRgbHardwareGammaCorrection() ? Renderer::TextureFormat::R8G8B8A8_SRGB : Renderer::TextureFormat::R8G8B8A8);
+			}
+			else
+			{
+				mTextureFormat = static_cast<uint8_t>(mTextureResource->isRgbHardwareGammaCorrection() ? Renderer::TextureFormat::BC1_SRGB : Renderer::TextureFormat::BC1);
+			}
 
 			{ // Loop through all faces
 				uint32_t width = mWidth;
@@ -476,12 +490,12 @@ namespace RendererRuntime
 				mNumberOfUsedImageDataBytes = 0;
 				while (width > 1 && height > 1)
 				{
-					mNumberOfUsedImageDataBytes += ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
+					mNumberOfUsedImageDataBytes += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), width, height);
 
 					width /= 2;
 					height /= 2;
 				}
-				mNumberOfUsedImageDataBytes += ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
+				mNumberOfUsedImageDataBytes += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), width, height);
 
 				if (mNumberOfImageDataBytes < mNumberOfUsedImageDataBytes)
 				{

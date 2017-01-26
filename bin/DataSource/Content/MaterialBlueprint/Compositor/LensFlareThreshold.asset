@@ -1,0 +1,25 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "141",
+			"AssetType": "MaterialBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "LensFlareThreshold",
+			"AssetDependencies": [ "100", "140" ],
+			"FileDependencies": [ "LensFlareThreshold.material_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team",
+			"Description": "Basing on 'Pseudo Lens Flare' from John Chapman - http://john-chapman-graphics.blogspot.de/2013/02/pseudo-lens-flare.html"
+		},
+		"MaterialBlueprintAssetCompiler":
+		{
+			"InputFile": "LensFlareThreshold.material_blueprint"
+		}
+	}
+}

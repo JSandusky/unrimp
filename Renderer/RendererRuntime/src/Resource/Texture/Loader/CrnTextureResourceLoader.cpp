@@ -90,6 +90,7 @@ namespace RendererRuntime
 		if (!crnd::crnd_get_texture_info(mFileData, mNumberOfFileDataBytes, &crnTextureInfo))
 		{
 			//return error("crnd_get_texture_info() failed!\n");
+			assert(false);
 			return;
 		}
 		mWidth  = crnTextureInfo.m_width;
@@ -130,6 +131,7 @@ namespace RendererRuntime
 			default:
 				// Error!
 				// TODO(co)
+				assert(false);
 				return;
 		}
 
@@ -137,6 +139,7 @@ namespace RendererRuntime
 		if (nullptr == crndUnpackContext)
 		{
 		//	return error("crnd_unpack_begin() failed!\n");
+			assert(false);
 			return;
 		}
 
@@ -191,6 +194,7 @@ namespace RendererRuntime
 					crnd::crnd_unpack_end(crndUnpackContext);
 
 					// return error("Failed transcoding texture!");
+					assert(false);
 					return;
 				}
 			}

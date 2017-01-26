@@ -80,6 +80,7 @@ namespace
 			DEFINE_CONSTANT(SHADOW_CASCADE_SPLITS)
 			DEFINE_CONSTANT(SHADOW_CASCADE_OFFSETS)
 			DEFINE_CONSTANT(SHADOW_CASCADE_SCALES)
+			DEFINE_CONSTANT(LENS_STAR_MATRIX)
 
 			// Instance
 			DEFINE_CONSTANT(INSTANCE_INDICES)
@@ -323,6 +324,38 @@ namespace RendererRuntime
 				assert(false);
 				memset(buffer, 0, numberOfBytes);
 			}
+		}
+		else if (::detail::LENS_STAR_MATRIX == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+
+			// The following is basing on 'Pseudo Lens Flare' from John Chapman - http://john-chapman-graphics.blogspot.de/2013/02/pseudo-lens-flare.html
+
+			// Get the camera rotation; it just needs to change continuously as the camera rotates
+			glm::vec3 cameraX = mPassData->worldSpaceToViewSpaceMatrix[0];	// Camera x (left) vector
+			glm::vec3 cameraZ = mPassData->worldSpaceToViewSpaceMatrix[1];	// Camera z (forward) vector
+			const float cameraRotation = glm::dot(cameraX, glm::vec3(0.0f, 0.0f, 1.0f)) + glm::dot(cameraZ, glm::vec3(0.0f, 1.0f, 0.0f));
+
+			// Calculate the lens star matrix
+			const glm::mat3 scaleBias1(
+				2.0f, 0.0f, -1.0f,
+				0.0f, 2.0f, -1.0f,
+				0.0f, 0.0f,  1.0f
+			);
+			const glm::mat3 rotation(
+				glm::cos(cameraRotation), -glm::sin(cameraRotation),  0.0f,
+				glm::sin(cameraRotation),  glm::cos(cameraRotation),  0.0f,
+				0.0f,                      0.0f,                      1.0f
+			);
+			const glm::mat3 scaleBias2(
+				0.5f, 0.0f, 0.5f,
+				0.0f, 0.5f, 0.5f,
+				0.0f, 0.0f, 1.0f
+			);
+			const glm::mat4 uLensStarMatrix = scaleBias2 * rotation * scaleBias1;
+
+			// Copy the matrix over
+			memcpy(buffer, glm::value_ptr(uLensStarMatrix), numberOfBytes);
 		}
 		else
 		{

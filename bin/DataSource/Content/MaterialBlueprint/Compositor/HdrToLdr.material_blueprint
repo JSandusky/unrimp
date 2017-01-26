@@ -49,12 +49,26 @@
 				"Value": "Unrimp/Texture/Dynamic/BlackMap",
 				"Description": "Bloom map"
 			},
+			"LensFlareMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/BlackMap",
+				"Description": "Lens flare map"
+			},
 			"DirtyLensMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "135",
 				"Description": "Dirty lens map"
+			},
+			"LensStarMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "145",
+				"Description": "Lens star map for diffraction starburst"
 			}
 		},
 		"RootSignature":
@@ -155,7 +169,37 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
+							"BaseShaderRegisterName": "LensFlareMap",
+							"SamplerRootParameterIndex": "2"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"7":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "4",
 							"BaseShaderRegisterName": "DirtyLensMap",
+							"SamplerRootParameterIndex": "2"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"8":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "5",
+							"BaseShaderRegisterName": "LensStarMap",
 							"SamplerRootParameterIndex": "2"
 						}
 					},
@@ -191,6 +235,12 @@
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
+						"LensStarMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@LENS_STAR_MATRIX"
+						},
 						"ToneMapKeyValue":
 						{
 							"Usage": "MATERIAL_REFERENCE",
@@ -244,12 +294,28 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@BloomMap"
 				},
+				"LensFlareMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@LensFlareMap"
+				},
 				"DirtyLensMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DirtyLensMap"
+					"Value": "@DirtyLensMap",
+					"RgbHardwareGammaCorrection": "TRUE"
+				},
+				"LensStarMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@LensStarMap",
+					"RgbHardwareGammaCorrection": "TRUE"
 				}
 			}
 		}

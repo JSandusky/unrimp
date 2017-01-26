@@ -22,7 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 @includepiece(15)	// "Core.shader_piece"
-@includepiece(132)	// "Color.shader_piece"
 
 
 //[-------------------------------------------------------]
@@ -45,43 +44,73 @@ OUTPUT_END
 // Uniform buffers
 struct PassDataStruct
 {
-	float ToneMapKeyValue;
-	float BloomThreshold;
+	float2 InverseViewportSize;
+	int    NumberOfGhostSamples;
+	float  GhostDispersalFactor;
+	float  ChromaticDistortion;
+	float  HaloWidth;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 
 // Samplers
-SAMPLER_STATE(SamplerPoint, 0)
+SAMPLER_STATE(SamplerLinear, 0)
+SAMPLER_STATE(SamplerPoint, 1)
 
 // Textures
 TEXTURE_2D(ColorMap, 0)
-TEXTURE_2D(LuminanceMap, 1)
+TEXTURE_2D(LensColorMap, 1)
 
 
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@insertpiece(DefineCalculateExposedColor)
+float3 GetDistortedTexture(float2 textureCoordinate, float2 direction, float3 distortion)
+{
+	return float3(
+		SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(textureCoordinate + direction * distortion.r, 0.0f, 0.0f)).r,
+		SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(textureCoordinate + direction * distortion.g, 0.0f, 0.0f)).g,
+		SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(textureCoordinate + direction * distortion.b, 0.0f, 0.0f)).b
+	);
+}
 
 
 //[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	float3 color = SAMPLE_2D_LOD(ColorMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).rgb;
-	float averageLuminance = SAMPLE_2D_LOD(LuminanceMap, SamplerPoint, float4(0.5f, 0.5f, 0.0f, 0.0f)).r;
+	float2 textureCoordinate = -MAIN_INPUT(TexCoordVS) + float2(1.0f, 1.0f);	// Flip texture coordinates
+	float2 texelSize = PassData.InverseViewportSize;
 
-	// Use a lower exposure to produce a value suitable for a bloom pass
-	// -> Tone map it to threshold
-	float exposure = 0.0f;
-	color = CalculateExposedColor(color, averageLuminance, PassData.BloomThreshold, exposure);
-	if (dot(color, float3(0.333f, 0.333f, 0.333f)) <= 0.001f)
+	float2 ghostVector = (float2(0.5f, 0.5f) - textureCoordinate) * PassData.GhostDispersalFactor;
+	float2 normalizedGhostVector = normalize(ghostVector);
+	float2 haloVec = normalizedGhostVector * PassData.HaloWidth;
+
+	float3 distortion = float3(-texelSize.x * PassData.ChromaticDistortion, 0.0, texelSize.x * PassData.ChromaticDistortion);
+	float halfVectorLength = length(float2(0.5f, 0.5f));
+
+	// Sample ghosts
+	float3 result = float3(0.0f, 0.0f, 0.0f);
+	for (int i = 0; i < PassData.NumberOfGhostSamples; ++i)
 	{
-		color = float3(0.0f, 0.0f, 0.0f);
+		float2 offset = frac(textureCoordinate + ghostVector * float(i));
+
+		// Linear falloff
+		float weight = SATURATE(length(float2(0.5f, 0.5f) - offset) / halfVectorLength);
+		weight = pow(1.0f - weight, 10.0f);
+
+		result += GetDistortedTexture(offset, normalizedGhostVector, distortion) * weight;
 	}
 
+	// Tint ghost
+	result *= SAMPLE_2D_LOD(LensColorMap, SamplerPoint, float4(length(float2(0.5f, 0.5f) - textureCoordinate) / halfVectorLength, 0.0f, 0.0f, 0.0f)).bgr;
+
+	// Sample halo
+	float weight = SATURATE(length(float2(0.5f, 0.5f) - frac(textureCoordinate + haloVec)) / halfVectorLength);
+	weight = pow(1.0f - weight, 10.0f);
+	result += GetDistortedTexture(frac(textureCoordinate + haloVec), normalize(ghostVector), distortion) * weight;
+
 	// Done
-	MAIN_OUTPUT_COLOR(0) = float4(color, 1.0f);
+	MAIN_OUTPUT_COLOR(0) = float4(result, 1.0f);
 MAIN_END

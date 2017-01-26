@@ -1,0 +1,240 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "1"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"NumberOfGhostSamples":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "INTEGER",
+				"Value": "8",
+				"MinimumValue": "1",
+				"MaximumValue": "20",
+				"StepSize": "1",
+				"Description": "Number of ghost samples"
+			},
+			"GhostDispersalFactor":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.1",
+				"MinimumValue": "0.0",
+				"MaximumValue": "10.0",
+				"StepSize": "0.01",
+				"Description": "Ghost dispersal factor"
+			},
+			"ChromaticDistortion":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "5.0",
+				"MinimumValue": "0.0",
+				"MaximumValue": "10.0",
+				"StepSize": "0.01",
+				"Description": "Chromatic distortion"
+			},
+			"HaloWidth":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.1",
+				"MinimumValue": "0.0",
+				"MaximumValue": "10.0",
+				"StepSize": "0.01",
+				"Description": "Halo width"
+			},
+			"ColorMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
+				"Description": "Color map"
+			},
+			"LensColorMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "144",
+				"Description": "Lens color map"
+			}
+		},
+		"RootSignature":
+		{
+			"RootParameters":
+			{
+				"0":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "PassUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"2":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"3":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "ColorMap",
+							"SamplerRootParameterIndex": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"4":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "LensColorMap",
+							"SamplerRootParameterIndex": "2"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				}
+			}
+		},
+		"PipelineState":
+		{
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprintAssetId": "100",
+				"FragmentShaderBlueprintAssetId": "142"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "NONE"
+			},
+			"DepthStencilState":
+			{
+				"DepthEnable": "FALSE",
+				"DepthWriteMask": "ZERO"
+			}
+		},
+		"Resources":
+		{
+			"UniformBuffers":
+			{
+				"PassUniformBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"InverseViewportSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@INVERSE_VIEWPORT_SIZE"
+						},
+						"NumberOfGhostSamples":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@NumberOfGhostSamples"
+						},
+						"GhostDispersalFactor":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@GhostDispersalFactor"
+						},
+						"ChromaticDistortion":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@ChromaticDistortion"
+						},
+						"HaloWidth":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@HaloWidth"
+						}
+					}
+				}
+			},
+			"SamplerStates":
+			{
+				"SamplerLinear":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
+					"MaxLOD": "0.0"
+				},
+				"SamplerPoint":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Filter": "MIN_MAG_MIP_POINT",
+					"AddressU": "WRAP",
+					"AddressV": "WRAP",
+					"MaxLOD": "0.0"
+				}
+			},
+			"Textures":
+			{
+				"ColorMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@ColorMap"
+				},
+				"LensColorMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@LensColorMap",
+					"RgbHardwareGammaCorrection": "TRUE"
+				}
+			}
+		}
+	}
+}

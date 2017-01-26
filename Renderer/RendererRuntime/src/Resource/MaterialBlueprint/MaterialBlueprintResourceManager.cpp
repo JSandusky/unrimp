@@ -132,6 +132,8 @@ namespace RendererRuntime
 					2167712998 == assetId ||	// "MaterialBlueprint/Compositor/HdrToLdrBloomThreshold"
 					738992981 == assetId ||		// "MaterialBlueprint/Compositor/Scale"
 					1259586825 == assetId ||	// "MaterialBlueprint/Compositor/Atmosphere"
+					1378819984 == assetId ||	// "MaterialBlueprint/Compositor/LensFlareThreshold"
+					2734089221 == assetId ||	// "MaterialBlueprint/Compositor/LensFlareFeatureGeneration"
 					1243189953 == assetId)		// "MaterialBlueprint/Compositor/DepthOfField"
 				{
 					Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(materialBlueprintResource->getVertexAttributes());

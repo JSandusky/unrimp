@@ -41,6 +41,16 @@ OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
 OUTPUT_END
 
+// Uniform buffers
+struct PassDataStruct
+{
+	float3 ColorScale;
+	float3 ColorBias;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
+
 // Samplers
 SAMPLER_STATE(SamplerLinear, 0)
 
@@ -52,6 +62,8 @@ TEXTURE_2D(ColorMap, 0)
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	// Using hardware bilinear filtering for upscaling or downscaling
-	MAIN_OUTPUT_COLOR(0) = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
+	float3 color = max(float3(0.0f, 0.0f, 0.0f), SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).rgb + PassData.ColorBias) * PassData.ColorScale;
+
+	// Done
+	MAIN_OUTPUT_COLOR(0) = float4(color, 1.0f);
 MAIN_END
