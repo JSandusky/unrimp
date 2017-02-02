@@ -31,6 +31,7 @@
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
+#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/Vr/IVrManager.h"
@@ -48,6 +49,8 @@ PRAGMA_WARNING_PUSH
 	#include <glm/gtc/matrix_transform.hpp>
 	#include <glm/gtx/quaternion.hpp>
 PRAGMA_WARNING_POP
+
+#include <random>
 
 
 //[-------------------------------------------------------]
@@ -68,6 +71,8 @@ namespace
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_QUATERNION)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_QUATERNION)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
+			DEFINE_CONSTANT(VIEW_SPACE_TO_CLIP_SPACE_MATRIX)
+			DEFINE_CONSTANT(VIEW_SPACE_TO_TEXTURE_SPACE_MATRIX)
 			DEFINE_CONSTANT(CLIP_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(CLIP_SPACE_TO_WORLD_SPACE_MATRIX)
 			DEFINE_CONSTANT(PROJECTION_PARAMETERS)
@@ -88,6 +93,97 @@ namespace
 		#undef DEFINE_CONSTANT
 
 
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Create screen space ambient occlusion sample kernel texture
+		*
+		*  @remarks
+		*    The sample kernel requirements are that:
+		*    - Sample positions fall within the unit hemisphere
+		*    - Sample positions are more densely clustered towards the origin. This effectively attenuates the occlusion contribution
+		*      according to distance from the kernel center - samples closer to a point occlude it more than samples further away
+		*
+		*  @note
+		*    - Basing on "SSAO Tutorial" from John Chapman - http://john-chapman-graphics.blogspot.de/2013/01/ssao-tutorial.html
+		*    - Kernel size is 16, since the samples are randomly distributed this doesn't mean that a shader has to use all samples
+		*    - Resulting texture asset ID is "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel"
+		*/
+		RendererRuntime::TextureResourceId createScreenSpaceAmbientOcclusionSampleKernelTexture(const RendererRuntime::IRendererRuntime& rendererRuntime)
+		{
+			static const uint32_t KERNEL_SIZE = 16;
+			glm::vec4 kernel[KERNEL_SIZE];
+
+			{ // Create the kernel
+				std::mt19937 randomGenerator;
+				std::uniform_real_distribution<float> randomDistributionHalf(0.0f, 1.0f);
+				std::uniform_real_distribution<float> randomDistributionFull(-1.0f, 1.0f);
+				for (int i = 0; i < KERNEL_SIZE; ++i)
+				{
+					// Create a sample point on the surface of a hemisphere oriented along the z axis
+					kernel[i] = glm::vec4(randomDistributionFull(randomGenerator), randomDistributionFull(randomGenerator), randomDistributionHalf(randomGenerator), 0.0f);
+					kernel[i] = glm::normalize(kernel[i]);
+
+					// Distribute the sample position within the hemisphere
+					kernel[i] *= randomDistributionHalf(randomGenerator);
+
+					// Apply accelerating interpolation function to generate more points closer to the origin
+					float scale = float(i) / float(KERNEL_SIZE);
+					scale = glm::mix(0.1f, 1.0f, scale * scale);	// Linear interpolation (= "lerp" = "mix")
+					kernel[i] *= scale;
+				}
+			}
+
+			// Create the renderer texture resource
+			Renderer::ITexturePtr texturePtr(rendererRuntime.getTextureManager().createTexture2D(KERNEL_SIZE, 1, Renderer::TextureFormat::R32G32B32A32F, kernel));	// TODO(co) 1D texture
+			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "Screen space ambient occlusion sample kernel texture")
+
+			// Create dynamic texture asset
+			return rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel", *texturePtr);
+		}
+
+		/**
+		*  @brief
+		*    Create screen space ambient occlusion 4x4 noise texture
+		*
+		*  @remarks
+		*    When used for screen space ambient occlusion, the noise which is tiled over the screen is used to rotate the sample kernel. This will effectively increase the
+		*    sample count and minimize "banding" artifacts. The tiling of the texture causes the orientation of the kernel to be repeated and introduces regularity into the
+		*    result. By keeping the texture size small we can make this regularity occur at a high frequency, which can then be removed with a blur step that preserves the
+		*    low-frequency detail of the image. Using a 4x4 texture and blur kernel produces excellent results at minimal cost. This is the same approach as used in Crysis.
+		*
+		*  @note
+		*    - Basing on "SSAO Tutorial" from John Chapman - http://john-chapman-graphics.blogspot.de/2013/01/ssao-tutorial.html
+		*    - Noise texture size is 4x4
+		*    - Resulting texture asset ID is "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4"
+		*/
+		RendererRuntime::TextureResourceId createScreenSpaceAmbientOcclusionNoiseTexture4x4(const RendererRuntime::IRendererRuntime& rendererRuntime)
+		{
+			static const uint32_t NOISE_SIZE = 4;
+			static const uint32_t SQUARED_NOISE_SIZE = NOISE_SIZE * NOISE_SIZE;
+			glm::vec4 noise[SQUARED_NOISE_SIZE];
+
+			{ // Create the noise
+				std::mt19937 randomGenerator;
+				std::uniform_real_distribution<float> randomDistribution(-1.0f, 1.0f);
+				for (int i = 0; i < SQUARED_NOISE_SIZE; ++i)
+				{
+					noise[i] = glm::vec4(randomDistribution(randomGenerator), randomDistribution(randomGenerator), 0.0f, 0.0f);
+					noise[i] = glm::normalize(noise[i]);
+				}
+			}
+
+			// Create the renderer texture resource
+			Renderer::ITexturePtr texturePtr(rendererRuntime.getTextureManager().createTexture2D(NOISE_SIZE, NOISE_SIZE, Renderer::TextureFormat::R32G32B32A32F, noise));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "Screen space ambient occlusion 4x4 noise texture")
+
+			// Create dynamic texture asset
+			return rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4", *texturePtr);
+		}
+
+
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
@@ -105,6 +201,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
 	//[-------------------------------------------------------]
+	void MaterialBlueprintResourceListener::onStartup(const IRendererRuntime& rendererRuntime)
+	{
+		mScreenSpaceAmbientOcclusionSampleKernelTextureResourceId = ::detail::createScreenSpaceAmbientOcclusionSampleKernelTexture(rendererRuntime);
+		mScreenSpaceAmbientOcclusionNoiseTexture4x4ResourceId = ::detail::createScreenSpaceAmbientOcclusionNoiseTexture4x4(rendererRuntime);
+	}
+
+	void MaterialBlueprintResourceListener::onShutdown(const IRendererRuntime& rendererRuntime)
+	{
+		TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
+		textureResourceManager.destroyTextureResource(mScreenSpaceAmbientOcclusionSampleKernelTextureResourceId);
+		textureResourceManager.destroyTextureResource(mScreenSpaceAmbientOcclusionNoiseTexture4x4ResourceId);
+	}
+
 	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, PassBufferManager::PassData& passData)
 	{
 		// Remember the pass data memory address of the current scope
@@ -192,6 +301,16 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix), numberOfBytes);
+		}
+		else if (::detail::VIEW_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->viewSpaceToClipSpaceMatrix), numberOfBytes);
+		}
+		else if (::detail::VIEW_SPACE_TO_TEXTURE_SPACE_MATRIX == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(Math::getTextureScaleBiasMatrix(mRendererRuntime->getRenderer()) * mPassData->viewSpaceToClipSpaceMatrix), numberOfBytes);
 		}
 		else if (::detail::CLIP_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
 		{

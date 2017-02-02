@@ -36,6 +36,14 @@
 				"TextureFormat": "D32_FLOAT",
 				"AllowMultisample": "TRUE"
 			},
+			"Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget":
+			{
+				"TextureFormat": "R32_FLOAT"
+			},
+			"Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget":
+			{
+				"TextureFormat": "R32_FLOAT"
+			},
 			"Example/Texture/Dynamic/HdrColorRenderTarget0":
 			{
 				"TextureFormat": "R16G16B16A16F"
@@ -140,6 +148,14 @@
 				"ColorTextures": [ "Example/Texture/Dynamic/MultisampleGBufferRenderTarget0", "Example/Texture/Dynamic/MultisampleGBufferRenderTarget1", "Example/Texture/Dynamic/MultisampleGBufferRenderTarget2" ],
 				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			},
+			"ScreenSpaceAmbientOcclusionFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget" ]
+			},
+			"BlurredScreenSpaceAmbientOcclusionFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget" ]
+			},
 			"HdrFramebuffer0":
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget0" ]
@@ -231,6 +247,31 @@
 					"MaterialTechnique": "Deferred"
 				}
 			},
+			"ScreenSpaceAmbientOcclusionFramebuffer":
+			{
+				"Quad":
+				{
+					"Description": "Screen space ambient occlusion (SSAO) generation",
+					"MaterialBlueprintAssetId": "147",
+					"SetMaterialProperties":
+					{
+						"GBufferMap1": "Example/Texture/Dynamic/MultisampleGBufferRenderTarget1",
+						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
+					}
+				}
+			},
+			"BlurredScreenSpaceAmbientOcclusionFramebuffer":
+			{
+				"Quad":
+				{
+					"Description": "Screen space ambient occlusion (SSAO) blur",
+					"MaterialBlueprintAssetId": "149",
+					"SetMaterialProperties":
+					{
+						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget"
+					}
+				}
+			},
 			"HdrFramebuffer0":
 			{
 				"Clear":
@@ -248,7 +289,8 @@
 						"GBufferMap1": "Example/Texture/Dynamic/MultisampleGBufferRenderTarget1",
 						"GBufferMap2": "Example/Texture/Dynamic/MultisampleGBufferRenderTarget2",
 						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
-						"ShadowMap": "Example/Texture/Dynamic/ShadowMapRenderTarget"
+						"ShadowMap": "Example/Texture/Dynamic/ShadowMapRenderTarget",
+						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget"
 					}
 				}
 			},

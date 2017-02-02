@@ -150,6 +150,10 @@
 		"142": "ShaderBlueprint/Compositor/LensFlareFeatureGenerationFragment.asset",
 		"143": "MaterialBlueprint/Compositor/LensFlareFeatureGeneration.asset",
 		"144": "Texture/Compositor/LensColor.asset",
-		"145": "Texture/Compositor/LensStar.asset"
+		"145": "Texture/Compositor/LensStar.asset",
+		"146": "ShaderBlueprint/Compositor/ScreenSpaceAmbientOcclusionGenerationFragment.asset",
+		"147": "MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionGeneration.asset",
+		"148": "ShaderBlueprint/Compositor/ScreenSpaceAmbientOcclusionBlurFragment.asset",
+		"149": "MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionBlur.asset"
 	}
 }

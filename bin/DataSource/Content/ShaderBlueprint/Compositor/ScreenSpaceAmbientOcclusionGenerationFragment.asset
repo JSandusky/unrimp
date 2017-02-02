@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "146",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "ScreenSpaceAmbientOcclusionGenerationFragment",
+			"AssetDependencies": [ "15" ],
+			"FileDependencies": [ "ScreenSpaceAmbientOcclusionGenerationFragment.shader_blueprint" ],
+			"Copyright": "Basing on 'SSAO Tutorial' from John Chapman http://john-chapman-graphics.blogspot.de/2013/01/ssao-tutorial.html"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "ScreenSpaceAmbientOcclusionGenerationFragment.shader_blueprint"
+		}
+	}
+}

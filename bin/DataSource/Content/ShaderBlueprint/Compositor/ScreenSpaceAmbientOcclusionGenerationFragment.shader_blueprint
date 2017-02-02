@@ -1,0 +1,193 @@
+/*********************************************************\
+ * Copyright (c) 2012-2017 The Unrimp Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+@includepiece(15)	// "Core.shader_piece"
+
+
+//[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_COLOR(0)
+OUTPUT_END
+
+// Uniform buffers
+struct PassDataStruct
+{
+	float4x4 ViewSpaceToTextureSpaceMatrix;
+	float4x4 ClipSpaceToViewSpaceMatrix;
+	float2   InverseViewportSize;
+	float2   ProjectionParameters;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
+
+// Samplers
+SAMPLER_STATE(SamplerPointClamp, 0)
+SAMPLER_STATE(SamplerPointWrap, 1)
+
+// Textures
+@property(NumberOfMultisamples)
+	TEXTURE_2D_MS(GBufferMap1, @value(NumberOfMultisamples), 0)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
+	TEXTURE_2D_MS(DepthMap, @value(NumberOfMultisamples), 1)
+@end
+@property(!NumberOfMultisamples)
+	TEXTURE_2D(GBufferMap1, 0)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
+	TEXTURE_2D(DepthMap, 1)
+@end
+TEXTURE_2D(ScreenSpaceAmbientOcclusionSampleKernelMap, 2)
+TEXTURE_2D(ScreenSpaceAmbientOcclusionNoise4x4Map, 3)
+
+
+//[-------------------------------------------------------]
+//[ Functions                                             ]
+//[-------------------------------------------------------]
+// TODO(co) Make this to a shader piece
+float GetLinearDepth(float depth)
+{
+	return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
+}
+
+// TODO(co) Make this to a shader piece
+float GetDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
+{
+	@property(NumberOfMultisamples)
+		return SAMPLE_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex).r;
+	@end
+	@property(!NumberOfMultisamples)
+		return SAMPLE_2D_LOD(DepthMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f)).r;
+	@end
+}
+
+// TODO(co) Make this to a shader piece
+float3 GetNormalFromGBufferMap1(float2 textureCoordinate, int sampleIndex)
+{
+	@property(NumberOfMultisamples)
+		return SAMPLE_2D_MS(GBufferMap1, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex).xyz;
+	@end
+	@property(!NumberOfMultisamples)
+		return SAMPLE_2D_LOD(GBufferMap1, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f)).xyz;
+	@end
+}
+
+// TODO(co) Put into shader piece
+float3 GetViewSpacePositionByScreenSpacePosition(float2 screenSpacePosition, float depth)
+{
+	// API coordinate system related differences
+	@property(HLSL)
+		screenSpacePosition.y = 1.0f - screenSpacePosition.y;
+	@end
+	@property(GLSL || GLSLES)
+		// 0..1 -> -1..1
+		depth = depth * 2.0f - 1.0f;
+	@end
+
+	// Get x/w and y/w from the screen space position
+	float x = screenSpacePosition.x * 2.0f - 1.0f;
+	float y = screenSpacePosition.y * 2.0f - 1.0f;
+	float4 projectedPosition = float4(x, y, depth, 1.0f);
+
+	// Get world-space position
+	float4 inversePosition = MATRIX_MUL(PassData.ClipSpaceToViewSpaceMatrix, projectedPosition);
+	return inversePosition.xyz / inversePosition.w;
+}
+
+float CalculateOcclusion(float2 textureCoordinate, int sampleIndex)
+{
+	// Get the view space position and normal of the fragment
+	float depth = GetDepthFromDepthMap(textureCoordinate, sampleIndex);
+	float linearDepth = GetLinearDepth(depth);
+	float3 origin = GetViewSpacePositionByScreenSpacePosition(textureCoordinate, depth);
+	float3 normal = GetNormalFromGBufferMap1(textureCoordinate, sampleIndex);
+
+	// Construct a change-of-basis matrix to reorient the sample kernel along the origin's normal
+	// -> Using the Gram-Schmidt process to compute an orthogonal basis
+	float2 noiseScale = (1.0f / PassData.InverseViewportSize) / 4.0f;
+	float3 randomRotation = SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionNoise4x4Map, SamplerPointWrap, float4(textureCoordinate * noiseScale, 0.0f, 0.0f)).xyz;
+	float3 tangent = normalize(randomRotation - normal * dot(randomRotation, normal));
+	float3 bitangent = cross(normal, tangent);
+	float3x3 tbn = ROW_MATRIX_3x3(tangent, bitangent, normal);
+
+	// TODO(co) "PassData"
+	int SampleKernelSize = 16;
+	float Radius = 0.3f;
+
+	// Calculate occlusion
+	float occlusion = 0.0f;
+	for (int i = 0; i < SampleKernelSize; ++i)
+	{
+		// Get sample position
+		float3 samplePosition = MATRIX_MUL(SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionSampleKernelMap, SamplerPointClamp, float4(float(i) / float(SampleKernelSize), 0.0f, 0.0f, 0.0f)).xyz, tbn);
+		samplePosition = samplePosition * Radius + origin;
+
+		// Project sample position
+		float4 offset = float4(samplePosition, 1.0f);
+		offset = MATRIX_MUL(PassData.ViewSpaceToTextureSpaceMatrix, offset);
+		offset.xy /= offset.w;	// To normalized device space (NDC)
+
+		// Compute occlusion based on the (scaled) Z difference
+		float linearSampleDepth = GetLinearDepth(GetDepthFromDepthMap(offset.xy, sampleIndex));
+		float zd = SATURATE(linearDepth - linearSampleDepth);
+		occlusion += SATURATE(pow(1.0f - zd, 8.0f) + pow(zd, 12));
+	}
+
+	// Done
+	return (occlusion / float(SampleKernelSize));
+}
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	@property(NumberOfMultisamples)
+		// Custom MSAA resolve
+		float sum = 0.0f;
+		@foreach(NumberOfMultisamples, i, 0)
+		{
+			sum += CalculateOcclusion(MAIN_INPUT(TexCoordVS), @i);
+		}
+		@end
+		sum /= @value(NumberOfMultisamples);
+	@end
+	@property(!NumberOfMultisamples)
+		float sum = CalculateOcclusion(MAIN_INPUT(TexCoordVS), 0);
+	@end
+
+	// Increase SSAO strength to make it more visible
+	sum = pow(sum, 4.0f);	// TODO(co) "PassData"
+
+	// Done
+	MAIN_OUTPUT_COLOR(0) = float4(sum, sum, sum, sum);
+MAIN_END

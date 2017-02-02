@@ -42,6 +42,15 @@ PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class IRenderer;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -106,6 +115,18 @@ namespace RendererRuntime
 		*    - In case of violating the interface specification by swapping minimum/maximum the result will not be different to the one of the correct order
 		*/
 		RENDERERRUNTIME_API_EXPORT static float wrapToInterval(float value, float minimum, float maximum);
+
+		/**
+		*  @brief
+		*    Get renderer dependent texture scale bias matrix
+		*
+		*  @param[in] renderer
+		*    Used renderer
+		*
+		*  @return
+		*    Renderer dependent texture scale bias matrix
+		*/
+		RENDERERRUNTIME_API_EXPORT static const glm::mat4& getTextureScaleBiasMatrix(const Renderer::IRenderer& renderer);
 
 		//[-------------------------------------------------------]
 		//[ Hash                                                  ]

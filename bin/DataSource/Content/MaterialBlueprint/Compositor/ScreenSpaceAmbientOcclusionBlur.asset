@@ -1,0 +1,25 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "149",
+			"AssetType": "MaterialBlueprint",
+			"AssetCategory": "Compositor",
+			"AssetName": "ScreenSpaceAmbientOcclusionBlur",
+			"AssetDependencies": [ "100", "148" ],
+			"FileDependencies": [ "ScreenSpaceAmbientOcclusionBlur.material_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team",
+			"Description": "Basing on 'SSAO Tutorial' from John Chapman http://john-chapman-graphics.blogspot.de/2013/01/ssao-tutorial.html"
+		},
+		"MaterialBlueprintAssetCompiler":
+		{
+			"InputFile": "ScreenSpaceAmbientOcclusionBlur.material_blueprint"
+		}
+	}
+}

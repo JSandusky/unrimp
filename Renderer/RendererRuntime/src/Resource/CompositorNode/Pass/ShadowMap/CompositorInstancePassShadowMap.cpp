@@ -105,7 +105,7 @@ namespace RendererRuntime
 			// Apply the scale/offset matrix, which transforms from [-1,1]
 			// post-projection space to [0,1] UV space
 			glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix;
-			glm::mat4 depthBiasMVP = getShadowScaleBiasMatrix() * depthMVP;
+			glm::mat4 depthBiasMVP = Math::getTextureScaleBiasMatrix(getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getRenderer()) * depthMVP;
 			mPassData.shadowMatrix = depthBiasMVP;
 
 			// Reset to previous render target
@@ -174,20 +174,6 @@ namespace RendererRuntime
 
 		// Release the framebuffer and other renderer resources referenced by the framebuffer
 		mFramebufferPtr = nullptr;
-	}
-
-	const glm::mat4& CompositorInstancePassShadowMap::getShadowScaleBiasMatrix() const
-	{
-		static const glm::mat4 SHADOW_SCALE_BIAS_MATRIX_DIRECT3D = glm::mat4(0.5f,  0.0f, 0.0f, 0.0f,
-																			 0.0f, -0.5f, 0.0f, 0.0f,
-																			 0.0f,  0.0f, 1.0f, 0.0f,
-																			 0.5f,  0.5f, 0.0f, 1.0f);
-		static const glm::mat4 SHADOW_SCALE_BIAS_MATRIX_OPENGL = glm::mat4(0.5f,  0.0f, 0.0f, 0.0f,
-																		   0.0f,  0.5f, 0.0f, 0.0f,
-																		   0.0f,  0.0f, 0.5f, 0.0f,
-																		   0.5f,  0.5f, 0.5f, 1.0f);
-		const char* name = getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getRenderer().getName();
-		return (0 != strcmp(name, "OpenGL") && 0 != strcmp(name, "OpenGLES3")) ? SHADOW_SCALE_BIAS_MATRIX_DIRECT3D : SHADOW_SCALE_BIAS_MATRIX_OPENGL;
 	}
 
 

@@ -63,10 +63,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class PassBufferManager;			// Is calling the protected interface methods
-		friend class MaterialBlueprintResource;	// Is calling the protected interface methods
-		friend class MaterialBufferManager;		// Is calling the protected interface methods
-		friend class InstanceBufferManager;		// Is calling the protected interface methods
+		friend class PassBufferManager;					// Is calling the protected interface methods
+		friend class MaterialBlueprintResource;			// Is calling the protected interface methods
+		friend class MaterialBufferManager;				// Is calling the protected interface methods
+		friend class InstanceBufferManager;				// Is calling the protected interface methods
+		friend class MaterialBlueprintResourceManager;	// Is calling the protected interface methods
 
 
 	//[-------------------------------------------------------]
@@ -103,6 +104,8 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
 	//[-------------------------------------------------------]
 	protected:
+		virtual void onStartup(const IRendererRuntime& rendererRuntime) = 0;	// Becomes the currently used material blueprint resource listener
+		virtual void onShutdown(const IRendererRuntime& rendererRuntime) = 0;	// Is no longer the currently used material blueprint resource listener
 		virtual void beginFillUnknown() = 0;
 		virtual bool fillUnknownValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
 		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, PassBufferManager::PassData& passData) = 0;

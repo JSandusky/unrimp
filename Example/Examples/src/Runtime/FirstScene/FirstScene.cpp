@@ -64,6 +64,7 @@ namespace
 		static const RendererRuntime::AssetId VrDeviceMaterialAssetId("Example/Material/Default/VrDevice");
 		static const RendererRuntime::AssetId ImrodMaterialAssetId("Example/Material/Character/Imrod");
 		static const RendererRuntime::AssetId FinalMaterialAssetId("Example/MaterialBlueprint/Compositor/Final");
+		static const RendererRuntime::AssetId ScreenSpaceAmbientOcclusionGenerationCompositorMaterialAssetId("Example/MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionGeneration");
 		static const RendererRuntime::AssetId DeferredAmbientCompositorMaterialAssetId("Example/MaterialBlueprint/Deferred/AmbientCompositor");
 		static const RendererRuntime::AssetId AtmosphereCompositorMaterialAssetId("Example/MaterialBlueprint/Compositor/Atmosphere");
 		static const RendererRuntime::AssetId DepthOfFieldCompositorMaterialAssetId("Example/MaterialBlueprint/Compositor/DepthOfField");
@@ -490,7 +491,12 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				{
 					numberOfMultisamples = 0;
 				}
-				RendererRuntime::MaterialResource* materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::DeferredAmbientCompositorMaterialAssetId);
+				RendererRuntime::MaterialResource* materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::ScreenSpaceAmbientOcclusionGenerationCompositorMaterialAssetId);
+				if (nullptr != materialResource)
+				{
+					materialResource->setPropertyById("NumberOfMultisamples", RendererRuntime::MaterialPropertyValue::fromInteger(numberOfMultisamples));
+				}
+				materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::DeferredAmbientCompositorMaterialAssetId);
 				if (nullptr != materialResource)
 				{
 					materialResource->setPropertyById("NumberOfMultisamples", RendererRuntime::MaterialPropertyValue::fromInteger(numberOfMultisamples));

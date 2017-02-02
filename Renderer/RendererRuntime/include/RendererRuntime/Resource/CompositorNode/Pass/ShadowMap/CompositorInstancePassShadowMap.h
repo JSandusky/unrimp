@@ -115,7 +115,6 @@ namespace RendererRuntime
 		CompositorInstancePassShadowMap& operator=(const CompositorInstancePassShadowMap&) = delete;
 		void createShadowMapRenderTarget();
 		void destroyShadowMapRenderTarget();
-		const glm::mat4& getShadowScaleBiasMatrix() const;
 
 
 	//[-------------------------------------------------------]

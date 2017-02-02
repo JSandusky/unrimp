@@ -976,10 +976,8 @@ namespace RendererToolkit
 				{
 					if (RendererRuntime::MaterialProperty::ValueType::TEXTURE_ASSET_ID == valueType)
 					{
-						// Mandatory asset ID: Map the source asset ID to the compiled asset ID
-						const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(rapidJsonValueTexture["Value"].GetString()));
-						SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(sourceAssetId);
-						const RendererRuntime::MaterialPropertyValue materialPropertyValue = RendererRuntime::MaterialPropertyValue::fromTextureAssetId((iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0);
+						// Mandatory asset ID
+						const RendererRuntime::MaterialPropertyValue materialPropertyValue = RendererRuntime::MaterialPropertyValue::fromTextureAssetId(StringHelper::getAssetIdByString(rapidJsonValueTexture["Value"].GetString(), input));
 
 						// Write down the texture
 						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, materialPropertyValue), rgbHardwareGammaCorrection);

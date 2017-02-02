@@ -85,6 +85,7 @@ SAMPLER_STATE(SamplerPoint, 0)
 	TEXTURE_2D(DepthMap, 4)
 @end
 TEXTURE_2D(ShadowMap, 5)
+TEXTURE_2D(ScreenSpaceAmbientOcclusionMap, 6)
 
 
 //[-------------------------------------------------------]
@@ -139,7 +140,7 @@ float3 CalculateLighting(float3 lightDirection, float3 lightColor, float3 normal
 	return color;
 }
 
-float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depthValue)
+float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depthValue, float screenSpaceAmbientOcclusion)
 {
 	// Gather GBuffer data
 	float3 diffuseValue = gbuffer0Value.rgb;
@@ -185,6 +186,9 @@ float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 		}
 	}
 
+	// Apply screen space ambient occlusion
+	color *= float3(screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion);
+
 	// Emissive term
 	color += emissiveValue;
 
@@ -197,6 +201,10 @@ float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
+	// Gather screen space ambient occlusion value
+	float screenSpaceAmbientOcclusion = SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).r;
+
+	// Calculate color by GBuffer
 	@property(NumberOfMultisamples)
 		// Custom MSAA resolve
 		int2 textureCoordinate = int2(MAIN_INPUT(TexCoordVS) * PassData.ViewportSize);
@@ -214,7 +222,7 @@ MAIN_BEGIN
 				float4 gbuffer2Value = SAMPLE_2D_MS(GBufferMap2, textureCoordinate, @i);
 
 				// Calculate color by GBuffer
-				color += CalculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue);
+				color += CalculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue, screenSpaceAmbientOcclusion);
 				++numberOfValues;
 			}
 		}
@@ -245,7 +253,7 @@ MAIN_BEGIN
 		float4 gbuffer2Value = SAMPLE_2D_LOD(GBufferMap2, SamplerPoint, textureCoordinate);
 
 		// Calculate color by GBuffer
-		float3 color = CalculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue);
+		float3 color = CalculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue, screenSpaceAmbientOcclusion);
 	@end
 
 	// Done

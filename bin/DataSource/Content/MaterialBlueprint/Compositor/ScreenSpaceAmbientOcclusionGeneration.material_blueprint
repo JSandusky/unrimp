@@ -18,13 +18,6 @@
 				"MaximumIntegerValue": "8",
 				"ValidIntegerValues": [ 0, 2, 4, 8 ]
 			},
-			"GBufferMap0":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)"
-			},
 			"GBufferMap1":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -32,33 +25,12 @@
 				"Value": "Unrimp/Texture/Dynamic/BlackMap",
 				"Description": "GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic"
 			},
-			"GBufferMap2":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "GBuffer 2: rgb = emissive color, a = glossiness"
-			},
 			"DepthMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/Dynamic/BlackMap",
 				"Description": "Depth map"
-			},
-			"ShadowMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "Shadow map"
-			},
-			"ScreenSpaceAmbientOcclusionMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
-				"Description": "Screen space ambient occlusion (SSAO) map"
 			}
 		},
 		"RootSignature":
@@ -86,9 +58,8 @@
 					{
 						"0":
 						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "LightTextureBuffer"
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -101,7 +72,7 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"BaseShaderRegister": "1"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -114,9 +85,9 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "GBufferMap0",
-							"SamplerRootParameterIndex": "2"
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "GBufferMap1",
+							"SamplerRootParameterIndex": "1"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -129,9 +100,9 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "GBufferMap1",
-							"SamplerRootParameterIndex": "2"
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "DepthMap",
+							"SamplerRootParameterIndex": "1"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -144,8 +115,8 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "3",
-							"BaseShaderRegisterName": "GBufferMap2",
+							"BaseShaderRegister": "2",
+							"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionSampleKernelMap",
 							"SamplerRootParameterIndex": "2"
 						}
 					},
@@ -159,38 +130,8 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "4",
-							"BaseShaderRegisterName": "DepthMap",
-							"SamplerRootParameterIndex": "2"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"7":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "5",
-							"BaseShaderRegisterName": "ShadowMap",
-							"SamplerRootParameterIndex": "2"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"8":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "6",
-							"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionMap",
+							"BaseShaderRegister": "3",
+							"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionNoise4x4Map",
 							"SamplerRootParameterIndex": "2"
 						}
 					},
@@ -203,7 +144,7 @@
 			"ShaderBlueprints":
 			{
 				"VertexShaderBlueprintAssetId": "100",
-				"FragmentShaderBlueprintAssetId": "114"
+				"FragmentShaderBlueprintAssetId": "146"
 			},
 			"RasterizerState":
 			{
@@ -226,98 +167,58 @@
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
-						"ClipSpaceToWorldSpaceMatrix":
+						"ViewSpaceToTextureSpaceMatrix":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
-							"Value": "@CLIP_SPACE_TO_WORLD_SPACE_MATRIX"
+							"Value": "@VIEW_SPACE_TO_TEXTURE_SPACE_MATRIX"
 						},
-						"ShadowMatrix":
+						"ClipSpaceToViewSpaceMatrix":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
-							"Value": "@SHADOW_MATRIX"
+							"Value": "@CLIP_SPACE_TO_VIEW_SPACE_MATRIX"
 						},
-						"ViewSpaceSunLightDirection":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@VIEW_SPACE_SUN_LIGHT_DIRECTION"
-						},
-						"Wetness":
-						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT",
-							"Value": "@Wetness"
-						},
-						"AmbientColor":
-						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@AmbientColor"
-						},
-						"NumberOfLights":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "INTEGER",
-							"Value": "@NUMBER_OF_LIGHTS"
-						},
-						"SunLightColor":
-						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@SunLightColor"
-						},
-						"ViewportSize":
+						"InverseViewportSize":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_2",
-							"Value": "@VIEWPORT_SIZE"
+							"Value": "@INVERSE_VIEWPORT_SIZE"
+						},
+						"ProjectionParameters":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@PROJECTION_PARAMETERS"
 						}
 					}
 				}
 			},
-			"TextureBuffers":
-			{
-				"LightTextureBuffer":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"BufferUsage": "LIGHT",
-					"ValueType": "FLOAT_4",
-					"Value": "@LIGHT"
-				}
-			},
 			"SamplerStates":
 			{
-				"SamplerPoint":
+				"SamplerPointClamp":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_POINT",
+					"MaxLOD": "0.0"
+				},
+				"SamplerPointWrap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Filter": "MIN_MAG_MIP_POINT",
+					"AddressU": "WRAP",
+					"AddressV": "WRAP",
 					"MaxLOD": "0.0"
 				}
 			},
 			"Textures":
 			{
-				"GBufferMap0":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@GBufferMap0"
-				},
 				"GBufferMap1":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@GBufferMap1"
-				},
-				"GBufferMap2":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@GBufferMap2"
 				},
 				"DepthMap":
 				{
@@ -326,19 +227,19 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DepthMap"
 				},
-				"ShadowMap":
+				"ScreenSpaceAmbientOcclusionSampleKernelMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
+					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@ShadowMap"
+					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel"
 				},
-				"ScreenSpaceAmbientOcclusionMap":
+				"ScreenSpaceAmbientOcclusionNoise4x4Map":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
+					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@ScreenSpaceAmbientOcclusionMap"
+					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4"
 				}
 			}
 		}

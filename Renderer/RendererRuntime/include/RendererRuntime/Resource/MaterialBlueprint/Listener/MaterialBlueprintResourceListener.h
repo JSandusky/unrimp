@@ -47,6 +47,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t TextureResourceId;	///< POD texture resource identifier
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
@@ -87,6 +93,8 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
 	//[-------------------------------------------------------]
 	protected:
+		RENDERERRUNTIME_API_EXPORT virtual void onStartup(const IRendererRuntime& rendererRuntime) override;
+		RENDERERRUNTIME_API_EXPORT virtual void onShutdown(const IRendererRuntime& rendererRuntime) override;
 		inline virtual void beginFillUnknown() override;
 		inline virtual bool fillUnknownValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
 		RENDERERRUNTIME_API_EXPORT virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, PassBufferManager::PassData& passData) override;
@@ -101,6 +109,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		// Resource
+		TextureResourceId mScreenSpaceAmbientOcclusionSampleKernelTextureResourceId;
+		TextureResourceId mScreenSpaceAmbientOcclusionNoiseTexture4x4ResourceId;
+
 		// Pass
 		IRendererRuntime*			 mRendererRuntime;	///< Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be a null pointer outside the correct scope, don't destroy the memory
 		PassBufferManager::PassData* mPassData;			///< Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be a null pointer outside the correct scope, don't destroy the memory

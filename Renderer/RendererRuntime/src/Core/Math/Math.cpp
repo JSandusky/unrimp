@@ -24,6 +24,8 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/Math/Math.h"
 
+#include <Renderer/Public/Renderer.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -89,6 +91,20 @@ namespace RendererRuntime
 		// -> Check interval in order to avoid an evil division through zero
 		const float interval = (maximum - minimum);
 		return interval ? (value - floor((value - minimum) / interval) * (maximum - minimum)) : minimum;
+	}
+
+	const glm::mat4& Math::getTextureScaleBiasMatrix(const Renderer::IRenderer& renderer)
+	{
+		static const glm::mat4 SHADOW_SCALE_BIAS_MATRIX_DIRECT3D = glm::mat4(0.5f,  0.0f, 0.0f, 0.0f,
+																			 0.0f, -0.5f, 0.0f, 0.0f,
+																			 0.0f,  0.0f, 1.0f, 0.0f,
+																			 0.5f,  0.5f, 0.0f, 1.0f);
+		static const glm::mat4 SHADOW_SCALE_BIAS_MATRIX_OPENGL = glm::mat4(0.5f,  0.0f, 0.0f, 0.0f,
+																		   0.0f,  0.5f, 0.0f, 0.0f,
+																		   0.0f,  0.0f, 0.5f, 0.0f,
+																		   0.5f,  0.5f, 0.5f, 1.0f);
+		const char* name = renderer.getName();
+		return (0 != strcmp(name, "OpenGL") && 0 != strcmp(name, "OpenGLES3")) ? SHADOW_SCALE_BIAS_MATRIX_DIRECT3D : SHADOW_SCALE_BIAS_MATRIX_OPENGL;
 	}
 
 	uint32_t Math::calculateFNV1a(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash)

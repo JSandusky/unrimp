@@ -134,6 +134,8 @@ namespace RendererRuntime
 					1259586825 == assetId ||	// "MaterialBlueprint/Compositor/Atmosphere"
 					1378819984 == assetId ||	// "MaterialBlueprint/Compositor/LensFlareThreshold"
 					2734089221 == assetId ||	// "MaterialBlueprint/Compositor/LensFlareFeatureGeneration"
+					3076058624 == assetId ||	// "MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionGeneration"
+					2859523677 == assetId ||	// "MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionBlur"
 					1243189953 == assetId)		// "MaterialBlueprint/Compositor/DepthOfField"
 				{
 					Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(materialBlueprintResource->getVertexAttributes());
@@ -215,7 +217,14 @@ namespace RendererRuntime
 	void MaterialBlueprintResourceManager::setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener)
 	{
 		// There must always be a valid material blueprint resource listener instance
-		mMaterialBlueprintResourceListener = (nullptr != materialBlueprintResourceListener) ? materialBlueprintResourceListener : &::detail::defaultMaterialBlueprintResourceListener;
+		if (mMaterialBlueprintResourceListener != materialBlueprintResourceListener)
+		{
+			// We know there must be a currently set material blueprint resource listener
+			assert(nullptr != mMaterialBlueprintResourceListener);
+			mMaterialBlueprintResourceListener->onShutdown(mRendererRuntime);
+			mMaterialBlueprintResourceListener = (nullptr != materialBlueprintResourceListener) ? materialBlueprintResourceListener : &::detail::defaultMaterialBlueprintResourceListener;
+			mMaterialBlueprintResourceListener->onStartup(mRendererRuntime);
+		}
 	}
 
 
@@ -268,6 +277,10 @@ namespace RendererRuntime
 		mInstanceBufferManager(nullptr),
 		mLightBufferManager(nullptr)
 	{
+		// Startup material blueprint resource listener
+		mMaterialBlueprintResourceListener->onStartup(mRendererRuntime);
+
+		// Create buffer managers
 		const Renderer::Capabilities& capabilities = rendererRuntime.getRenderer().getCapabilities();
 		if (capabilities.maximumUniformBufferSize > 0 && capabilities.maximumTextureBufferSize > 0)
 		{
@@ -278,6 +291,7 @@ namespace RendererRuntime
 
 	MaterialBlueprintResourceManager::~MaterialBlueprintResourceManager()
 	{
+		// Destroy buffer managers
 		if (nullptr != mInstanceBufferManager)
 		{
 			delete mInstanceBufferManager;
@@ -286,6 +300,10 @@ namespace RendererRuntime
 		{
 			delete mLightBufferManager;
 		}
+
+		// Shutdown material blueprint resource listener (we know there must be such an instance)
+		assert(nullptr != mMaterialBlueprintResourceListener);
+		mMaterialBlueprintResourceListener->onShutdown(mRendererRuntime);
 	}
 
 	IResourceLoader* MaterialBlueprintResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
