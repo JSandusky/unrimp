@@ -281,7 +281,6 @@ namespace RendererRuntime
 		bool valueFilled = true;
 
 		// Resolve the reference value
-		// TODO(co) Add more of those standard property values
 		if (::detail::WORLD_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);

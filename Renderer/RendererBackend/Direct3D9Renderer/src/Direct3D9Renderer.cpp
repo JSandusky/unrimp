@@ -292,9 +292,14 @@ namespace Direct3D9Renderer
 		mDirect3DQuery9Flush(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
+		// Input-assembler (IA) stage
 		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
+		// Output-merger (OM) stage
 		mMainSwapChain(nullptr),
-		mRenderTarget(nullptr)
+		mRenderTarget(nullptr),
+		// State cache to avoid making redundant Direct3D 9 calls
+		mDirect3DVertexShader9(nullptr),
+		mDirect3DPixelShader9(nullptr)
 	{
 		// Is Direct3D 9 available?
 		if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
@@ -1687,29 +1692,42 @@ namespace Direct3D9Renderer
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
-		// TODO(co) Avoid changing already set program
-
 		if (nullptr != program)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
-			// TODO(co) HLSL buffer settings, unset previous program
-
 			// Get shaders
 			const ProgramHlsl		 *programHlsl		 = static_cast<ProgramHlsl*>(program);
 			const VertexShaderHlsl	 *vertexShaderHlsl	 = programHlsl->getVertexShaderHlsl();
 			const FragmentShaderHlsl *fragmentShaderHlsl = programHlsl->getFragmentShaderHlsl();
+			IDirect3DVertexShader9 *direct3DVertexShader9 = vertexShaderHlsl  ? vertexShaderHlsl->getDirect3DVertexShader9()  : nullptr;
+			IDirect3DPixelShader9  *direct3DPixelShader9  = fragmentShaderHlsl ? fragmentShaderHlsl->getDirect3DPixelShader9() : nullptr;
 
 			// Set shaders
-			mDirect3DDevice9->SetVertexShader(vertexShaderHlsl  ? vertexShaderHlsl->getDirect3DVertexShader9()  : nullptr);
-			mDirect3DDevice9->SetPixelShader(fragmentShaderHlsl ? fragmentShaderHlsl->getDirect3DPixelShader9() : nullptr);
+			if (mDirect3DVertexShader9 != direct3DVertexShader9)
+			{
+				mDirect3DVertexShader9 = direct3DVertexShader9;
+				mDirect3DDevice9->SetVertexShader(mDirect3DVertexShader9);
+			}
+			if (mDirect3DPixelShader9 != direct3DPixelShader9)
+			{
+				mDirect3DPixelShader9 = direct3DPixelShader9;
+				mDirect3DDevice9->SetPixelShader(mDirect3DPixelShader9);
+			}
 		}
 		else
 		{
-			// TODO(co) HLSL buffer settings
-			mDirect3DDevice9->SetVertexShader(nullptr);
-			mDirect3DDevice9->SetPixelShader(nullptr);
+			if (nullptr != mDirect3DVertexShader9)
+			{
+				mDirect3DDevice9->SetVertexShader(nullptr);
+				mDirect3DVertexShader9 = nullptr;
+			}
+			if (nullptr != mDirect3DPixelShader9)
+			{
+				mDirect3DDevice9->SetPixelShader(nullptr);
+				mDirect3DPixelShader9 = nullptr;
+			}
 		}
 
 		// End debug event

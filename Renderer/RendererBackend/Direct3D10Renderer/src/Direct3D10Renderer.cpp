@@ -324,7 +324,10 @@ namespace Direct3D10Renderer
 		mD3D10QueryFlush(nullptr),
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
-		mGraphicsRootSignature(nullptr)
+		mGraphicsRootSignature(nullptr),
+		mD3d10VertexShader(nullptr),
+		mD3d10GeometryShader(nullptr),
+		mD3d10PixelShader(nullptr)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -1839,32 +1842,54 @@ namespace Direct3D10Renderer
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
-		// TODO(co) Avoid changing already set program
-
 		if (nullptr != program)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
-			// TODO(co) HLSL buffer settings, unset previous program
-
 			// Get shaders
-			const ProgramHlsl		 *programHlsl		 = static_cast<ProgramHlsl*>(program);
-			const VertexShaderHlsl	 *vertexShaderHlsl	 = programHlsl->getVertexShaderHlsl();
-			const GeometryShaderHlsl *geometryShaderHlsl = programHlsl->getGeometryShaderHlsl();
-			const FragmentShaderHlsl *fragmentShaderHlsl = programHlsl->getFragmentShaderHlsl();
+			const ProgramHlsl					   *programHlsl						 = static_cast<ProgramHlsl*>(program);
+			const VertexShaderHlsl				   *vertexShaderHlsl				 = programHlsl->getVertexShaderHlsl();
+			const GeometryShaderHlsl			   *geometryShaderHlsl				 = programHlsl->getGeometryShaderHlsl();
+			const FragmentShaderHlsl			   *fragmentShaderHlsl				 = programHlsl->getFragmentShaderHlsl();
+			ID3D10VertexShader   *d3d10VertexShader   = (nullptr != vertexShaderHlsl)	? vertexShaderHlsl->getD3D10VertexShader()	   : nullptr;
+			ID3D10GeometryShader *d3d10GeometryShader = (nullptr != geometryShaderHlsl) ? geometryShaderHlsl->getD3D10GeometryShader() : nullptr;
+			ID3D10PixelShader	 *d3d10PixelShader    = (nullptr != fragmentShaderHlsl) ? fragmentShaderHlsl->getD3D10PixelShader()	   : nullptr;
 
 			// Set shaders
-			mD3D10Device->VSSetShader(vertexShaderHlsl	 ? vertexShaderHlsl->  getD3D10VertexShader()	: nullptr);
-			mD3D10Device->GSSetShader(geometryShaderHlsl ? geometryShaderHlsl->getD3D10GeometryShader() : nullptr);
-			mD3D10Device->PSSetShader(fragmentShaderHlsl ? fragmentShaderHlsl->getD3D10PixelShader()	: nullptr);
+			if (mD3d10VertexShader != d3d10VertexShader)
+			{
+				mD3d10VertexShader = d3d10VertexShader;
+				mD3D10Device->VSSetShader(mD3d10VertexShader);
+			}
+			if (mD3d10GeometryShader != d3d10GeometryShader)
+			{
+				mD3d10GeometryShader = d3d10GeometryShader;
+				mD3D10Device->GSSetShader(mD3d10GeometryShader);
+			}
+			if (mD3d10PixelShader != d3d10PixelShader)
+			{
+				mD3d10PixelShader = d3d10PixelShader;
+				mD3D10Device->PSSetShader(mD3d10PixelShader);
+			}
 		}
 		else
 		{
-			// TODO(co) HLSL buffer settings
-			mD3D10Device->VSSetShader(nullptr);
-			mD3D10Device->GSSetShader(nullptr);
-			mD3D10Device->PSSetShader(nullptr);
+			if (nullptr != mD3d10VertexShader)
+			{
+				mD3D10Device->VSSetShader(nullptr);
+				mD3d10VertexShader = nullptr;
+			}
+			if (nullptr != mD3d10GeometryShader)
+			{
+				mD3D10Device->GSSetShader(nullptr);
+				mD3d10GeometryShader = nullptr;
+			}
+			if (nullptr != mD3d10PixelShader)
+			{
+				mD3D10Device->PSSetShader(nullptr);
+				mD3d10PixelShader = nullptr;
+			}
 		}
 
 		// End debug event

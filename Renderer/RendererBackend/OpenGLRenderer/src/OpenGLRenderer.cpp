@@ -320,11 +320,17 @@ namespace OpenGLRenderer
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mOpenGLCopyResourceFramebuffer(0),
+		// States
 		mPipelineState(nullptr),
+		// Input-assembler (IA) stage
 		mVertexArray(nullptr),
 		mOpenGLPrimitiveTopology(0xFFFF),	// Unknown default setting
+		// Output-merger (OM) stage
 		mMainSwapChain(nullptr),
-		mRenderTarget(nullptr)
+		mRenderTarget(nullptr),
+		// State cache to avoid making redundant OpenGL calls
+		mOpenGLProgramPipeline(0),
+		mOpenGLProgram(0)
 	{
 		// Is OpenGL available?
 		if (mOpenGLRuntimeLinking->isOpenGLAvaiable())
@@ -2446,8 +2452,6 @@ namespace OpenGLRenderer
 
 	void OpenGLRenderer::setProgram(Renderer::IProgram *program)
 	{
-		// TODO(co) Avoid changing already set program
-
 		if (nullptr != program)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
@@ -2456,29 +2460,45 @@ namespace OpenGLRenderer
 			// Prefer "GL_ARB_separate_shader_objects" over "GL_ARB_shader_objects"
 			if (mExtensions->isGL_ARB_separate_shader_objects())
 			{
-				// Bind the program pipeline
-				glBindProgramPipeline(static_cast<ProgramSeparate*>(program)->getOpenGLProgramPipeline());
+				// Bind the program pipeline, if required
+				const uint32_t openGLProgramPipeline = static_cast<ProgramSeparate*>(program)->getOpenGLProgramPipeline();
+				if (openGLProgramPipeline != mOpenGLProgramPipeline)
+				{
+					mOpenGLProgramPipeline = openGLProgramPipeline;
+					glBindProgramPipeline(mOpenGLProgramPipeline);
+				}
 			}
 			else if (mExtensions->isGL_ARB_shader_objects())
 			{
-				// Bind the program
-				glUseProgramObjectARB(static_cast<ProgramMonolithic*>(program)->getOpenGLProgram());
+				// Bind the program, if required
+				const uint32_t openGLProgram = static_cast<ProgramMonolithic*>(program)->getOpenGLProgram();
+				if (openGLProgram != mOpenGLProgram)
+				{
+					mOpenGLProgram = openGLProgram;
+					glUseProgramObjectARB(mOpenGLProgram);
+				}
 			}
 		}
 		else
 		{
-			// TODO(co) GLSL buffer settings
-
 			// Prefer "GL_ARB_separate_shader_objects" over "GL_ARB_shader_objects"
 			if (mExtensions->isGL_ARB_separate_shader_objects())
 			{
-				// Unbind the program pipeline
-				glBindProgramPipeline(0);
+				// Unbind the program pipeline, if required
+				if (0 != mOpenGLProgramPipeline)
+				{
+					glBindProgramPipeline(0);
+					mOpenGLProgramPipeline = 0;
+				}
 			}
 			else if (mExtensions->isGL_ARB_shader_objects())
 			{
-				// Unbind the program
-				glUseProgramObjectARB(0);
+				// Unbind the program, if required
+				if (0 != mOpenGLProgram)
+				{
+					glUseProgramObjectARB(0);
+					mOpenGLProgram = 0;
+				}
 			}
 		}
 	}

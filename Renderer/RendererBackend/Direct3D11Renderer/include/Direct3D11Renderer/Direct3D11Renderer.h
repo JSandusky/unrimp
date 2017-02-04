@@ -35,7 +35,12 @@
 //[-------------------------------------------------------]
 struct ID3D11Query;
 struct ID3D11Device;
+struct ID3D11HullShader;
+struct ID3D11PixelShader;
+struct ID3D11DomainShader;
+struct ID3D11VertexShader;
 struct ID3D11DeviceContext;
+struct ID3D11GeometryShader;
 namespace Renderer
 {
 	class IRenderTarget;
@@ -236,6 +241,12 @@ namespace Direct3D11Renderer
 		SwapChain					  *mMainSwapChain;				///< In case the optional native main window handle within the "Direct3D11Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget		  *mRenderTarget;				///< Currently set render target (we keep a reference to it), can be a null pointer
 		RootSignature				  *mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
+		// State cache to avoid making redundant Direct3D 11 calls
+		ID3D11VertexShader   *mD3d11VertexShader;
+		ID3D11HullShader     *mD3d11HullShader;
+		ID3D11DomainShader   *mD3d11DomainShader;
+		ID3D11GeometryShader *mD3d11GeometryShader;
+		ID3D11PixelShader	 *mD3d11PixelShader;
 
 
 	};

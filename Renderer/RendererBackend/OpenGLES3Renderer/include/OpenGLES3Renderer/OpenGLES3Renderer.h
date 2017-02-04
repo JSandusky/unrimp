@@ -256,19 +256,13 @@ namespace OpenGLES3Renderer
 		RootSignature			  *mGraphicsRootSignature;				///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState	  *mDefaultSamplerState;				///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		uint32_t				   mOpenGLES3CopyResourceFramebuffer;	///< OpenGL ES 3 framebuffer ("container" object, not shared between OpenGL ES 3 contexts) used by "OpenGLES3Renderer::OpenGLES3Renderer::copyResource()", can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		//[-------------------------------------------------------]
-		//[ Input-assembler (IA) stage                            ]
-		//[-------------------------------------------------------]
+		// Input-assembler (IA) stage
 		VertexArray *mVertexArray;					///< Currently set vertex array (we keep a reference to it), can be a null pointer
 		uint32_t	 mOpenGLES3PrimitiveTopology;	///< OpenGL ES 3 primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
-		//[-------------------------------------------------------]
-		//[ Output-merger (OM) stage                              ]
-		//[-------------------------------------------------------]
+		// Output-merger (OM) stage
 		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "OpenGLES3Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget *mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
-		//[-------------------------------------------------------]
-		//[ States                                                ]
-		//[-------------------------------------------------------]
+		// State cache to avoid making redundant OpenGL ES 3 calls
 		uint32_t mOpenGLES3Program;	///< Currently set OpenGL ES 3 program, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
 
 

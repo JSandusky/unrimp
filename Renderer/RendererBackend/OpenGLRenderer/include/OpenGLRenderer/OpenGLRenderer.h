@@ -287,20 +287,17 @@ namespace OpenGLRenderer
 		RootSignature			  *mGraphicsRootSignature;			///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState	  *mDefaultSamplerState;			///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		uint32_t				   mOpenGLCopyResourceFramebuffer;	///< OpenGL framebuffer ("container" object, not shared between OpenGL contexts) used by "OpenGLRenderer::OpenGLRenderer::copyResource()" if the "GL_ARB_copy_image"-extension isn't available, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		//[-------------------------------------------------------]
-		//[ States                                                ]
-		//[-------------------------------------------------------]
+		// States
 		PipelineState *mPipelineState;	///< Currently set pipeline state (we keep a reference to it), can be a null pointer
-		//[-------------------------------------------------------]
-		//[ Input-assembler (IA) stage                            ]
-		//[-------------------------------------------------------]
+		// Input-assembler (IA) stage
 		VertexArray	*mVertexArray;				///< Currently set vertex array (we keep a reference to it), can be a null pointer
 		uint32_t	 mOpenGLPrimitiveTopology;	///< OpenGL primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
-		//[-------------------------------------------------------]
-		//[ Output-merger (OM) stage                              ]
-		//[-------------------------------------------------------]
+		// Output-merger (OM) stage
 		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "OpenGLRenderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget *mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
+		// State cache to avoid making redundant OpenGL calls
+		uint32_t mOpenGLProgramPipeline;	///< Currently set OpenGL program pipeline, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLProgram;			///< Currently set OpenGL program, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

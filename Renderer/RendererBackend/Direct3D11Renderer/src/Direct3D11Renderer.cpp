@@ -339,7 +339,12 @@ namespace Direct3D11Renderer
 		mD3D11QueryFlush(nullptr),
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
-		mGraphicsRootSignature(nullptr)
+		mGraphicsRootSignature(nullptr),
+		mD3d11VertexShader(nullptr),
+		mD3d11HullShader(nullptr),
+		mD3d11DomainShader(nullptr),
+		mD3d11GeometryShader(nullptr),
+		mD3d11PixelShader(nullptr)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -1975,14 +1980,10 @@ namespace Direct3D11Renderer
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
-		// TODO(co) Avoid changing already set program
-
 		if (nullptr != program)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
-
-			// TODO(co) HLSL buffer settings, unset previous program
 
 			// Get shaders
 			const ProgramHlsl					   *programHlsl						 = static_cast<ProgramHlsl*>(program);
@@ -1991,22 +1992,66 @@ namespace Direct3D11Renderer
 			const TessellationEvaluationShaderHlsl *tessellationEvaluationShaderHlsl = programHlsl->getTessellationEvaluationShaderHlsl();
 			const GeometryShaderHlsl			   *geometryShaderHlsl				 = programHlsl->getGeometryShaderHlsl();
 			const FragmentShaderHlsl			   *fragmentShaderHlsl				 = programHlsl->getFragmentShaderHlsl();
+			ID3D11VertexShader   *d3d11VertexShader   = (nullptr != vertexShaderHlsl)				  ? vertexShaderHlsl->getD3D11VertexShader()				 : nullptr;
+			ID3D11HullShader     *d3d11HullShader     = (nullptr != tessellationControlShaderHlsl)	  ? tessellationControlShaderHlsl->getD3D11HullShader()		 : nullptr;
+			ID3D11DomainShader   *d3d11DomainShader   = (nullptr != tessellationEvaluationShaderHlsl) ? tessellationEvaluationShaderHlsl->getD3D11DomainShader() : nullptr;
+			ID3D11GeometryShader *d3d11GeometryShader = (nullptr != geometryShaderHlsl)				  ? geometryShaderHlsl->getD3D11GeometryShader()			 : nullptr;
+			ID3D11PixelShader	 *d3d11PixelShader    = (nullptr != fragmentShaderHlsl)				  ? fragmentShaderHlsl->getD3D11PixelShader()				 : nullptr;
 
 			// Set shaders
-			mD3D11DeviceContext->VSSetShader(vertexShaderHlsl				  ? vertexShaderHlsl->getD3D11VertexShader()				 : nullptr, nullptr, 0);
-			mD3D11DeviceContext->HSSetShader(tessellationControlShaderHlsl	  ? tessellationControlShaderHlsl->getD3D11HullShader()		 : nullptr, nullptr, 0);
-			mD3D11DeviceContext->DSSetShader(tessellationEvaluationShaderHlsl ? tessellationEvaluationShaderHlsl->getD3D11DomainShader() : nullptr, nullptr, 0);
-			mD3D11DeviceContext->GSSetShader(geometryShaderHlsl				  ? geometryShaderHlsl->getD3D11GeometryShader()			 : nullptr, nullptr, 0);
-			mD3D11DeviceContext->PSSetShader(fragmentShaderHlsl				  ? fragmentShaderHlsl->getD3D11PixelShader()				 : nullptr, nullptr, 0);
+			if (mD3d11VertexShader != d3d11VertexShader)
+			{
+				mD3d11VertexShader = d3d11VertexShader;
+				mD3D11DeviceContext->VSSetShader(mD3d11VertexShader, nullptr, 0);
+			}
+			if (mD3d11HullShader != d3d11HullShader)
+			{
+				mD3d11HullShader = d3d11HullShader;
+				mD3D11DeviceContext->HSSetShader(mD3d11HullShader, nullptr, 0);
+			}
+			if (mD3d11DomainShader != d3d11DomainShader)
+			{
+				mD3d11DomainShader = d3d11DomainShader;
+				mD3D11DeviceContext->DSSetShader(mD3d11DomainShader, nullptr, 0);
+			}
+			if (mD3d11GeometryShader != d3d11GeometryShader)
+			{
+				mD3d11GeometryShader = d3d11GeometryShader;
+				mD3D11DeviceContext->GSSetShader(mD3d11GeometryShader, nullptr, 0);
+			}
+			if (mD3d11PixelShader != d3d11PixelShader)
+			{
+				mD3d11PixelShader = d3d11PixelShader;
+				mD3D11DeviceContext->PSSetShader(mD3d11PixelShader, nullptr, 0);
+			}
 		}
 		else
 		{
-			// TODO(co) HLSL buffer settings
-			mD3D11DeviceContext->VSSetShader(nullptr, nullptr, 0);
-			mD3D11DeviceContext->HSSetShader(nullptr, nullptr, 0);
-			mD3D11DeviceContext->DSSetShader(nullptr, nullptr, 0);
-			mD3D11DeviceContext->GSSetShader(nullptr, nullptr, 0);
-			mD3D11DeviceContext->PSSetShader(nullptr, nullptr, 0);
+			if (nullptr != mD3d11VertexShader)
+			{
+				mD3D11DeviceContext->VSSetShader(nullptr, nullptr, 0);
+				mD3d11VertexShader = nullptr;
+			}
+			if (nullptr != mD3d11HullShader)
+			{
+				mD3D11DeviceContext->HSSetShader(nullptr, nullptr, 0);
+				mD3d11HullShader = nullptr;
+			}
+			if (nullptr != mD3d11DomainShader)
+			{
+				mD3D11DeviceContext->DSSetShader(nullptr, nullptr, 0);
+				mD3d11DomainShader = nullptr;
+			}
+			if (nullptr != mD3d11GeometryShader)
+			{
+				mD3D11DeviceContext->GSSetShader(nullptr, nullptr, 0);
+				mD3d11GeometryShader = nullptr;
+			}
+			if (nullptr != mD3d11PixelShader)
+			{
+				mD3D11DeviceContext->PSSetShader(nullptr, nullptr, 0);
+				mD3d11PixelShader = nullptr;
+			}
 		}
 
 		// End debug event

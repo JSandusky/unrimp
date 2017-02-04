@@ -299,10 +299,13 @@ namespace OpenGLES3Renderer
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mOpenGLES3CopyResourceFramebuffer(0),
+		// Input-assembler (IA) stage
 		mVertexArray(nullptr),
 		mOpenGLES3PrimitiveTopology(0xFFFF),	// Unknown default setting
+		// Output-merger (OM) stage
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
+		// State cache to avoid making redundant OpenGL ES 3 calls
 		mOpenGLES3Program(0)
 	{
 		// Initialize the context
@@ -1852,18 +1855,18 @@ namespace OpenGLES3Renderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
-			// Backup OpenGL ES 3 program identifier
-			mOpenGLES3Program = static_cast<ProgramGlsl*>(program)->getOpenGLES3Program();
-
-			// Bind the program
-			glUseProgram(mOpenGLES3Program);
+			// Bind the program, if required
+			const uint32_t openGLES3Program = static_cast<ProgramGlsl*>(program)->getOpenGLES3Program();
+			if (openGLES3Program != mOpenGLES3Program)
+			{
+				mOpenGLES3Program = openGLES3Program;
+				glUseProgram(mOpenGLES3Program);
+			}
 		}
-		else
+		else if (0 != mOpenGLES3Program)
 		{
 			// Unbind the program
 			glUseProgram(0);
-
-			// Reset OpenGL ES 3 program identifier
 			mOpenGLES3Program = 0;
 		}
 	}

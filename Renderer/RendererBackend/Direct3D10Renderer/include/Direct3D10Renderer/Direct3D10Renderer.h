@@ -35,6 +35,9 @@
 //[-------------------------------------------------------]
 struct ID3D10Query;
 struct ID3D10Device;
+struct ID3D10PixelShader;
+struct ID3D10VertexShader;
+struct ID3D10GeometryShader;
 namespace Renderer
 {
 	class IRenderTarget;
@@ -225,6 +228,10 @@ namespace Direct3D10Renderer
 		SwapChain					  *mMainSwapChain;				///< In case the optional native main window handle within the "Direct3D10Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget		  *mRenderTarget;				///< Currently set render target (we keep a reference to it), can be a null pointer
 		RootSignature				  *mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
+		// State cache to avoid making redundant Direct3D 10 calls
+		ID3D10VertexShader   *mD3d10VertexShader;
+		ID3D10GeometryShader *mD3d10GeometryShader;
+		ID3D10PixelShader	 *mD3d10PixelShader;
 
 
 	};

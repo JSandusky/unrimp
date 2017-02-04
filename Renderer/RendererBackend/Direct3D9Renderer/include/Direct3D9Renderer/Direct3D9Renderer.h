@@ -36,6 +36,8 @@
 struct IDirect3D9;
 struct IDirect3DQuery9;
 struct IDirect3DDevice9;
+struct IDirect3DPixelShader9;
+struct IDirect3DVertexShader9;
 namespace Renderer
 {
 	class IRenderTarget;
@@ -226,22 +228,21 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D9RuntimeLinking		  *mDirect3D9RuntimeLinking;	///< Direct3D 9 runtime linking instance, always valid
-		IDirect3D9					  *mDirect3D9;					///< Instance of the Direct3D 9 object, can be a null pointer (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
-		IDirect3DDevice9			  *mDirect3DDevice9;			///< Direct3D 9 rendering device, can be a null pointer (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
-		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
-		IDirect3DQuery9				  *mDirect3DQuery9Flush;		///< Direct3D 9 query used for flush, can be a null pointer
-		RootSignature				  *mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
-		Renderer::ISamplerState		  *mDefaultSamplerState;		///< Default rasterizer state (we keep a reference to it), can be a null pointer
-		//[-------------------------------------------------------]
-		//[ Input-assembler (IA) stage                            ]
-		//[-------------------------------------------------------]
-		Renderer::PrimitiveTopology mPrimitiveTopology;		///< Primitive topology describing the type of primitive to render
-		//[-------------------------------------------------------]
-		//[ Output-merger (OM) stage                              ]
-		//[-------------------------------------------------------]
-		SwapChain					 *mMainSwapChain;				///< In case the optional native main window handle within the "Direct3D9Renderer::Direct3D9Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
-		Renderer::IRenderTarget		 *mRenderTarget;				///< Currently set render target (we keep a reference to it), can be a null pointer
+		Direct3D9RuntimeLinking	  *mDirect3D9RuntimeLinking;	///< Direct3D 9 runtime linking instance, always valid
+		IDirect3D9				  *mDirect3D9;					///< Instance of the Direct3D 9 object, can be a null pointer (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		IDirect3DDevice9		  *mDirect3DDevice9;			///< Direct3D 9 rendering device, can be a null pointer (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		Renderer::IShaderLanguage *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
+		IDirect3DQuery9			  *mDirect3DQuery9Flush;		///< Direct3D 9 query used for flush, can be a null pointer
+		RootSignature			  *mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
+		Renderer::ISamplerState	  *mDefaultSamplerState;		///< Default rasterizer state (we keep a reference to it), can be a null pointer
+		// Input-assembler (IA) stage
+		Renderer::PrimitiveTopology mPrimitiveTopology;	///< Primitive topology describing the type of primitive to render
+		// Output-merger (OM) stage
+		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "Direct3D9Renderer::Direct3D9Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
+		Renderer::IRenderTarget *mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
+		// State cache to avoid making redundant Direct3D 9 calls
+		IDirect3DVertexShader9 *mDirect3DVertexShader9;
+		IDirect3DPixelShader9  *mDirect3DPixelShader9;
 
 
 	};
