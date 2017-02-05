@@ -92,8 +92,11 @@ namespace Renderer
 		friend class IUniformBuffer;
 		friend class ITextureBuffer;
 		friend class IIndirectBuffer;
+		friend class ITexture1D;
 		friend class ITexture2D;
 		friend class ITexture2DArray;
+		friend class ITexture3D;
+		friend class ITextureCube;
 		friend class IPipelineState;
 		friend class ISamplerState;
 		friend class IVertexShader;

@@ -22,7 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "NullRenderer/Texture/TextureManager.h"
+#include "NullRenderer/Texture/Texture1D.h"
 #include "NullRenderer/Texture/Texture2D.h"
+#include "NullRenderer/Texture/Texture3D.h"
+#include "NullRenderer/Texture/TextureCube.h"
 #include "NullRenderer/Texture/Texture2DArray.h"
 #include "NullRenderer/NullRenderer.h"
 
@@ -47,14 +50,69 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
+	Renderer::ITexture1D *TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
+	{
+		// Check whether or not the given texture dimension is valid
+		if (width > 0)
+		{
+			return new Texture1D(static_cast<NullRenderer&>(getRenderer()), width);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
 	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage, uint8_t, const Renderer::OptimizedTextureClearValue*)
 	{
-		return new Texture2D(static_cast<NullRenderer&>(getRenderer()), width, height);
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0)
+		{
+			return new Texture2D(static_cast<NullRenderer&>(getRenderer()), width, height);
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 
 	Renderer::ITexture2DArray *TextureManager::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
 	{
-		return new Texture2DArray(static_cast<NullRenderer&>(getRenderer()), width, height, numberOfSlices);
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0 && numberOfSlices > 0)
+		{
+			return new Texture2DArray(static_cast<NullRenderer&>(getRenderer()), width, height, numberOfSlices);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	Renderer::ITexture3D *TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
+	{
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0 && depth > 0)
+		{
+			return new Texture3D(static_cast<NullRenderer&>(getRenderer()), width, height, depth);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	Renderer::ITextureCube *TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
+	{
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0)
+		{
+			return new TextureCube(static_cast<NullRenderer&>(getRenderer()), width, height);
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 
 

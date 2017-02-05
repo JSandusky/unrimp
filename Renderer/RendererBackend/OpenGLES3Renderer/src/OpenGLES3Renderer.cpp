@@ -38,7 +38,10 @@
 #include "OpenGLES3Renderer/Buffer/VertexArrayNoVao.h"
 #include "OpenGLES3Renderer/Buffer/IndirectBuffer.h"
 #include "OpenGLES3Renderer/Texture/TextureManager.h"
+#include "OpenGLES3Renderer/Texture/Texture1D.h"
 #include "OpenGLES3Renderer/Texture/Texture2D.h"
+#include "OpenGLES3Renderer/Texture/Texture3D.h"
+#include "OpenGLES3Renderer/Texture/TextureCube.h"
 #include "OpenGLES3Renderer/Texture/Texture2DArray.h"
 #include "OpenGLES3Renderer/State/SamplerState.h"
 #include "OpenGLES3Renderer/State/PipelineState.h"
@@ -500,8 +503,11 @@ namespace OpenGLES3Renderer
 				}
 
 				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::TEXTURE_1D:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::TEXTURE_3D:
+				case Renderer::ResourceType::TEXTURE_CUBE:
 				{
 					switch (rootParameter.shaderVisibility)
 					{
@@ -519,16 +525,30 @@ namespace OpenGLES3Renderer
 							// TODO(co) Some security checks might be wise *maximum number of texture units*
 							glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + descriptorRange->baseShaderRegister));
 
-							// Bind texture buffer
+							// Bind texture or texture buffer
 							if (resourceType == Renderer::ResourceType::TEXTURE_BUFFER)
 							{
 								glBindTexture(GL_TEXTURE_BUFFER_EXT, static_cast<TextureBuffer*>(resource)->getOpenGLESTexture());
 							}
-							// Bind texture
+							else if (resourceType == Renderer::ResourceType::TEXTURE_1D)
+							{
+								// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
+								glBindTexture(GL_TEXTURE_2D, static_cast<Texture1D*>(resource)->getOpenGLES3Texture());
+							}
 							else if (resourceType == Renderer::ResourceType::TEXTURE_2D_ARRAY)
 							{
 								// No extension check required, if we in here we already know it must exist
 								glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLES3Texture());
+							}
+							else if (resourceType == Renderer::ResourceType::TEXTURE_3D)
+							{
+								// No extension check required, if we in here we already know it must exist
+								glBindTexture(GL_TEXTURE_3D, static_cast<Texture3D*>(resource)->getOpenGLES3Texture());
+							}
+							else if (resourceType == Renderer::ResourceType::TEXTURE_CUBE)
+							{
+								// No extension check required, if we in here we already know it must exist
+								glBindTexture(GL_TEXTURE_CUBE_MAP, static_cast<TextureCube*>(resource)->getOpenGLES3Texture());
 							}
 							else
 							{
@@ -858,8 +878,11 @@ namespace OpenGLES3Renderer
 					case Renderer::ResourceType::UNIFORM_BUFFER:
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
 					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::SAMPLER_STATE:
 					case Renderer::ResourceType::VERTEX_SHADER:
@@ -1028,7 +1051,10 @@ namespace OpenGLES3Renderer
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_1D:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::TEXTURE_3D:
+			case Renderer::ResourceType::TEXTURE_CUBE:
 			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:
 			case Renderer::ResourceType::VERTEX_SHADER:
@@ -1392,6 +1418,12 @@ namespace OpenGLES3Renderer
 				mappedSubresource.depthPitch = 0;
 				return true;
 
+			case Renderer::ResourceType::TEXTURE_1D:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
 				bool result = false;
@@ -1448,6 +1480,18 @@ namespace OpenGLES3Renderer
 
 				// Done
 				return result;
+			}
+
+			case Renderer::ResourceType::TEXTURE_3D:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+			{
+				// TODO(co) Implement me
+				return false;
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
@@ -1548,6 +1592,12 @@ namespace OpenGLES3Renderer
 				// Nothing here, it's a software emulated indirect buffer
 				break;
 
+			case Renderer::ResourceType::TEXTURE_1D:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
 				// TODO(co) Implement me
@@ -1583,6 +1633,18 @@ namespace OpenGLES3Renderer
 					d3d11Resource->Release();
 				}
 				*/
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_3D:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+			{
+				// TODO(co) Implement me
 				break;
 			}
 

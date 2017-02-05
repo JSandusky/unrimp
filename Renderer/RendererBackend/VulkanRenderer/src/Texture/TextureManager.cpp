@@ -22,7 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Texture/TextureManager.h"
+#include "VulkanRenderer/Texture/Texture1D.h"
 #include "VulkanRenderer/Texture/Texture2D.h"
+#include "VulkanRenderer/Texture/Texture3D.h"
+#include "VulkanRenderer/Texture/TextureCube.h"
 #include "VulkanRenderer/Texture/Texture2DArray.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 
@@ -47,6 +50,21 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
+	Renderer::ITexture1D *TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	{
+		// The indication of the texture usage is only relevant for Direct3D, Vulkan has no texture usage indication
+
+		// Check whether or not the given texture dimension is valid
+		if (width > 0)
+		{
+			return new Texture1D(static_cast<VulkanRenderer&>(getRenderer()), width, textureFormat, data, flags);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
 	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, uint8_t numberOfMultisamples, const Renderer::OptimizedTextureClearValue*)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, Vulkan has no texture usage indication
@@ -70,6 +88,36 @@ namespace VulkanRenderer
 		if (width > 0 && height > 0 && numberOfSlices > 0)
 		{
 			return new Texture2DArray(static_cast<VulkanRenderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	Renderer::ITexture3D *TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	{
+		// The indication of the texture usage is only relevant for Direct3D, Vulkan has no texture usage indication
+
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0 && depth > 0)
+		{
+			return new Texture3D(static_cast<VulkanRenderer&>(getRenderer()), width, height, depth, textureFormat, data, flags);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	Renderer::ITextureCube *TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	{
+		// The indication of the texture usage is only relevant for Direct3D, Vulkan has no texture usage indication
+
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0)
+		{
+			return new TextureCube(static_cast<VulkanRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
 		}
 		else
 		{

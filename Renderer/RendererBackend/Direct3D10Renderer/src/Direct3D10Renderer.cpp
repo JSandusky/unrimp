@@ -38,7 +38,10 @@
 #include "Direct3D10Renderer/Buffer/TextureBuffer.h"
 #include "Direct3D10Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D10Renderer/Texture/TextureManager.h"
+#include "Direct3D10Renderer/Texture/Texture1D.h"
 #include "Direct3D10Renderer/Texture/Texture2D.h"
+#include "Direct3D10Renderer/Texture/Texture3D.h"
+#include "Direct3D10Renderer/Texture/TextureCube.h"
 #include "Direct3D10Renderer/Texture/Texture2DArray.h"
 #include "Direct3D10Renderer/State/SamplerState.h"
 #include "Direct3D10Renderer/State/PipelineState.h"
@@ -615,8 +618,11 @@ namespace Direct3D10Renderer
 				}
 
 				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::TEXTURE_1D:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::TEXTURE_3D:
+				case Renderer::ResourceType::TEXTURE_CUBE:
 				{
 					ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
 					switch (resourceType)
@@ -625,12 +631,24 @@ namespace Direct3D10Renderer
 							d3d10ShaderResourceView = static_cast<TextureBuffer*>(resource)->getD3D10ShaderResourceView();
 							break;
 
+						case Renderer::ResourceType::TEXTURE_1D:
+							d3d10ShaderResourceView = static_cast<Texture1D*>(resource)->getD3D10ShaderResourceView();
+							break;
+
 						case Renderer::ResourceType::TEXTURE_2D:
 							d3d10ShaderResourceView = static_cast<Texture2D*>(resource)->getD3D10ShaderResourceView();
 							break;
 
 						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 							d3d10ShaderResourceView = static_cast<Texture2DArray*>(resource)->getD3D10ShaderResourceView();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_3D:
+							d3d10ShaderResourceView = static_cast<Texture3D*>(resource)->getD3D10ShaderResourceView();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_CUBE:
+							d3d10ShaderResourceView = static_cast<TextureCube*>(resource)->getD3D10ShaderResourceView();
 							break;
 
 						case Renderer::ResourceType::ROOT_SIGNATURE:
@@ -906,8 +924,11 @@ namespace Direct3D10Renderer
 					case Renderer::ResourceType::UNIFORM_BUFFER:
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
 					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::SAMPLER_STATE:
 					case Renderer::ResourceType::VERTEX_SHADER:
@@ -1034,8 +1055,11 @@ namespace Direct3D10Renderer
 				case Renderer::ResourceType::UNIFORM_BUFFER:
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::INDIRECT_BUFFER:
+				case Renderer::ResourceType::TEXTURE_1D:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::TEXTURE_3D:
+				case Renderer::ResourceType::TEXTURE_CUBE:
 				case Renderer::ResourceType::PIPELINE_STATE:
 				case Renderer::ResourceType::SAMPLER_STATE:
 				case Renderer::ResourceType::VERTEX_SHADER:
@@ -1117,8 +1141,11 @@ namespace Direct3D10Renderer
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_1D:
 			case Renderer::ResourceType::TEXTURE_2D:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::TEXTURE_3D:
+			case Renderer::ResourceType::TEXTURE_CUBE:
 			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:
 			case Renderer::ResourceType::VERTEX_SHADER:
@@ -1168,7 +1195,10 @@ namespace Direct3D10Renderer
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_1D:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::TEXTURE_3D:
+			case Renderer::ResourceType::TEXTURE_CUBE:
 			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:
 			case Renderer::ResourceType::VERTEX_SHADER:
@@ -1477,6 +1507,10 @@ namespace Direct3D10Renderer
 				mappedSubresource.depthPitch = 0;
 				return true;
 
+			case Renderer::ResourceType::TEXTURE_1D:
+				// TODO(co) Implement Direct3D 10 1D texture
+				return false;
+
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
 				bool result = false;
@@ -1574,6 +1608,14 @@ namespace Direct3D10Renderer
 				// Done
 				return result;
 			}
+
+			case Renderer::ResourceType::TEXTURE_3D:
+				// TODO(co) Implement Direct3D 10 3D texture
+				return false;
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+				// TODO(co) Implement Direct3D 10 cube texture
+				return false;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
 			case Renderer::ResourceType::PROGRAM:
@@ -1623,6 +1665,10 @@ namespace Direct3D10Renderer
 				// Nothing here, it's a software emulated indirect buffer
 				break;
 
+			case Renderer::ResourceType::TEXTURE_1D:
+				// TODO(co) Implement Direct3D 10 1D texture
+				break;
+
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
 				// Begin debug event
@@ -1668,6 +1714,14 @@ namespace Direct3D10Renderer
 				RENDERER_END_DEBUG_EVENT(this)
 				break;
 			}
+
+			case Renderer::ResourceType::TEXTURE_3D:
+				// TODO(co) Implement Direct3D 10 3D texture
+				break;
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+				// TODO(co) Implement Direct3D 10 cube texture
+				break;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
 			case Renderer::ResourceType::PROGRAM:

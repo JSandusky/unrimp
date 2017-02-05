@@ -83,8 +83,11 @@
     <ClInclude Include="include\Renderer\State\SamplerStateTypes.h" />
     <ClInclude Include="include\Renderer\Statistics.h" />
     <ClInclude Include="include\Renderer\Texture\ITexture.h" />
+    <ClInclude Include="include\Renderer\Texture\ITexture1D.h" />
     <ClInclude Include="include\Renderer\Texture\ITexture2D.h" />
     <ClInclude Include="include\Renderer\Texture\ITexture2DArray.h" />
+    <ClInclude Include="include\Renderer\Texture\ITexture3D.h" />
+    <ClInclude Include="include\Renderer\Texture\ITextureCube.h" />
     <ClInclude Include="include\Renderer\Texture\ITextureManager.h" />
     <ClInclude Include="include\Renderer\Texture\TextureTypes.h" />
     <ClInclude Include="include\Renderer\WindowsHeader.h" />
@@ -126,8 +129,11 @@
     <None Include="include\Renderer\State\RasterizerStateTypes.inl" />
     <None Include="include\Renderer\Statistics.inl" />
     <None Include="include\Renderer\Texture\ITexture.inl" />
+    <None Include="include\Renderer\Texture\ITexture1D.inl" />
     <None Include="include\Renderer\Texture\ITexture2D.inl" />
     <None Include="include\Renderer\Texture\ITexture2DArray.inl" />
+    <None Include="include\Renderer\Texture\ITexture3D.inl" />
+    <None Include="include\Renderer\Texture\ITextureCube.inl" />
     <None Include="include\Renderer\Texture\ITextureManager.inl" />
     <None Include="include\Renderer\Texture\TextureTypes.inl" />
     <None Include="Readme.txt" />

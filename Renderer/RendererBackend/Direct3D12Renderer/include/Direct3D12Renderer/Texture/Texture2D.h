@@ -71,9 +71,9 @@ namespace Direct3D12Renderer
 		*  @param[in] direct3D12Renderer
 		*    Owner Direct3D 12 renderer instance
 		*  @param[in] width
-		*    Texture width, must be >1
+		*    Texture width, must be >0
 		*  @param[in] height
-		*    Texture height, must be >1
+		*    Texture height, must be >0
 		*  @param[in] textureFormat
 		*    Texture format
 		*  @param[in] data

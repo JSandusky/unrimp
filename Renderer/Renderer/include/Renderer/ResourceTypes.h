@@ -53,17 +53,20 @@ namespace Renderer
 		TEXTURE_BUFFER				   = 8,		///< Texture buffer object (TBO)
 		INDIRECT_BUFFER				   = 9,		///< Indirect buffer object
 		// ITexture
-		TEXTURE_2D					   = 10,	///< Texture 2D
-		TEXTURE_2D_ARRAY			   = 11,	///< Texture 2D array
+		TEXTURE_1D					   = 10,	///< Texture 1D
+		TEXTURE_2D					   = 11,	///< Texture 2D
+		TEXTURE_2D_ARRAY			   = 12,	///< Texture 2D array
+		TEXTURE_3D					   = 13,	///< Texture 3D
+		TEXTURE_CUBE				   = 14,	///< Texture cube
 		// IState
-		PIPELINE_STATE				   = 12,	///< Pipeline state (PSO)
-		SAMPLER_STATE				   = 13,	///< Sampler state
+		PIPELINE_STATE				   = 15,	///< Pipeline state (PSO)
+		SAMPLER_STATE				   = 16,	///< Sampler state
 		// IShader
-		VERTEX_SHADER				   = 14,	///< Vertex shader (VS)
-		TESSELLATION_CONTROL_SHADER	   = 15,	///< Tessellation control shader (TCS, "hull shader" in Direct3D terminology)
-		TESSELLATION_EVALUATION_SHADER = 16,	///< Tessellation evaluation shader (TES, "domain shader" in Direct3D terminology)
-		GEOMETRY_SHADER				   = 17,	///< Geometry shader (GS)
-		FRAGMENT_SHADER				   = 18		///< Fragment shader (FS, "pixel shader" in Direct3D terminology)
+		VERTEX_SHADER				   = 17,	///< Vertex shader (VS)
+		TESSELLATION_CONTROL_SHADER	   = 18,	///< Tessellation control shader (TCS, "hull shader" in Direct3D terminology)
+		TESSELLATION_EVALUATION_SHADER = 19,	///< Tessellation evaluation shader (TES, "domain shader" in Direct3D terminology)
+		GEOMETRY_SHADER				   = 20,	///< Geometry shader (GS)
+		FRAGMENT_SHADER				   = 21		///< Fragment shader (FS, "pixel shader" in Direct3D terminology)
 	};
 
 

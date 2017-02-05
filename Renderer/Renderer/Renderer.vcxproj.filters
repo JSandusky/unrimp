@@ -184,6 +184,15 @@
     <ClInclude Include="include\Renderer\LinuxHeader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Texture\ITexture1D.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Texture\ITexture3D.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Texture\ITextureCube.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -303,6 +312,15 @@
       <Filter>Header Files\Buffer</Filter>
     </None>
     <None Include="include\Renderer\Texture\ITextureManager.inl">
+      <Filter>Header Files\Texture</Filter>
+    </None>
+    <None Include="include\Renderer\Texture\ITexture1D.inl">
+      <Filter>Header Files\Texture</Filter>
+    </None>
+    <None Include="include\Renderer\Texture\ITexture3D.inl">
+      <Filter>Header Files\Texture</Filter>
+    </None>
+    <None Include="include\Renderer\Texture\ITextureCube.inl">
       <Filter>Header Files\Texture</Filter>
     </None>
   </ItemGroup>

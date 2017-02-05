@@ -22,7 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/Texture/TextureManager.h"
+#include "OpenGLES3Renderer/Texture/Texture1D.h"
 #include "OpenGLES3Renderer/Texture/Texture2D.h"
+#include "OpenGLES3Renderer/Texture/Texture3D.h"
+#include "OpenGLES3Renderer/Texture/TextureCube.h"
 #include "OpenGLES3Renderer/Texture/Texture2DArray.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/IExtensions.h"
@@ -50,6 +53,21 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
+	Renderer::ITexture1D *TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	{
+		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 3 has no texture usage indication
+
+		// Check whether or not the given texture dimension is valid
+		if (width > 0)
+		{
+			return new Texture1D(static_cast<OpenGLES3Renderer&>(getRenderer()), width, textureFormat, data, flags);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
 	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, uint8_t, const Renderer::OptimizedTextureClearValue*)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 3 has no texture usage indication
@@ -73,6 +91,36 @@ namespace OpenGLES3Renderer
 		if (width > 0 && height > 0 && numberOfSlices > 0 && mExtensions->isGL_EXT_texture_array())
 		{
 			return new Texture2DArray(static_cast<OpenGLES3Renderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	Renderer::ITexture3D *TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	{
+		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 3 has no texture usage indication
+
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0 && depth > 0)
+		{
+			return new Texture3D(static_cast<OpenGLES3Renderer&>(getRenderer()), width, height, depth, textureFormat, data, flags);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	Renderer::ITextureCube *TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	{
+		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 3 has no texture usage indication
+
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0)
+		{
+			return new TextureCube(static_cast<OpenGLES3Renderer&>(getRenderer()), width, height, textureFormat, data, flags);
 		}
 		else
 		{

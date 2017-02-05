@@ -103,7 +103,10 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::UNIFORM_BUFFER:
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::INDIRECT_BUFFER:
+				case Renderer::ResourceType::TEXTURE_1D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::TEXTURE_3D:
+				case Renderer::ResourceType::TEXTURE_CUBE:
 				case Renderer::ResourceType::PIPELINE_STATE:
 				case Renderer::ResourceType::SAMPLER_STATE:
 				case Renderer::ResourceType::VERTEX_SHADER:

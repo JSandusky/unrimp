@@ -64,8 +64,11 @@ namespace Renderer
 			class IIndirectBuffer;
 		class ITextureManager;
 		class ITexture;
+			class ITexture1D;
 			class ITexture2D;
 			class ITexture2DArray;
+			class ITexture3D;
+			class ITextureCube;
 		class IState;
 			class IPipelineState;
 			class ISamplerState;
@@ -272,15 +275,18 @@ namespace Renderer
 			UNIFORM_BUFFER				   = 7,
 			TEXTURE_BUFFER				   = 8,
 			INDIRECT_BUFFER				   = 9,
-			TEXTURE_2D					   = 10,
-			TEXTURE_2D_ARRAY			   = 11,
-			PIPELINE_STATE				   = 12,
-			SAMPLER_STATE				   = 13,
-			VERTEX_SHADER				   = 14,
-			TESSELLATION_CONTROL_SHADER	   = 15,
-			TESSELLATION_EVALUATION_SHADER = 16,
-			GEOMETRY_SHADER				   = 17,
-			FRAGMENT_SHADER				   = 18
+			TEXTURE_1D					   = 10,
+			TEXTURE_2D					   = 11,
+			TEXTURE_2D_ARRAY			   = 12,
+			TEXTURE_3D					   = 13,
+			TEXTURE_CUBE				   = 14,
+			PIPELINE_STATE				   = 15,
+			SAMPLER_STATE				   = 16,
+			VERTEX_SHADER				   = 17,
+			TESSELLATION_CONTROL_SHADER	   = 18,
+			TESSELLATION_EVALUATION_SHADER = 19,
+			GEOMETRY_SHADER				   = 20,
+			FRAGMENT_SHADER				   = 21
 		};
 	#endif
 
@@ -1667,10 +1673,16 @@ namespace Renderer
 			std::atomic<uint32_t> numberOfCreatedTextureBuffers;
 			std::atomic<uint32_t> currentNumberOfIndirectBuffers;
 			std::atomic<uint32_t> numberOfCreatedIndirectBuffers;
+			std::atomic<uint32_t> currentNumberOfTexture1Ds;
+			std::atomic<uint32_t> numberOfCreatedTexture1Ds;
 			std::atomic<uint32_t> currentNumberOfTexture2Ds;
 			std::atomic<uint32_t> numberOfCreatedTexture2Ds;
 			std::atomic<uint32_t> currentNumberOfTexture2DArrays;
 			std::atomic<uint32_t> numberOfCreatedTexture2DArrays;
+			std::atomic<uint32_t> currentNumberOfTexture3Ds;
+			std::atomic<uint32_t> numberOfCreatedTexture3Ds;
+			std::atomic<uint32_t> currentNumberOfTextureCubes;
+			std::atomic<uint32_t> numberOfCreatedTextureCubes;
 			std::atomic<uint32_t> currentNumberOfPipelineStates;
 			std::atomic<uint32_t> numberOfCreatedPipelineStates;
 			std::atomic<uint32_t> currentNumberOfSamplerStates;
@@ -1707,10 +1719,16 @@ namespace Renderer
 				numberOfCreatedTextureBuffers(0),
 				currentNumberOfIndirectBuffers(0),
 				numberOfCreatedIndirectBuffers(0),
+				currentNumberOfTexture1Ds(0),
+				numberOfCreatedTexture1Ds(0),
 				currentNumberOfTexture2Ds(0),
 				numberOfCreatedTexture2Ds(0),
 				currentNumberOfTexture2DArrays(0),
 				numberOfCreatedTexture2DArrays(0),
+				currentNumberOfTexture3Ds(0),
+				numberOfCreatedTexture3Ds(0),
+				currentNumberOfTextureCubes(0),
+				numberOfCreatedTextureCubes(0),
 				currentNumberOfPipelineStates(0),
 				numberOfCreatedPipelineStates(0),
 				currentNumberOfSamplerStates(0),
@@ -1750,10 +1768,16 @@ namespace Renderer
 				numberOfCreatedTextureBuffers(0),
 				currentNumberOfIndirectBuffers(0),
 				numberOfCreatedIndirectBuffers(0),
+				currentNumberOfTexture1Ds(0),
+				numberOfCreatedTexture1Ds(0),
 				currentNumberOfTexture2Ds(0),
 				numberOfCreatedTexture2Ds(0),
 				currentNumberOfTexture2DArrays(0),
 				numberOfCreatedTexture2DArrays(0),
+				currentNumberOfTexture3Ds(0),
+				numberOfCreatedTexture3Ds(0),
+				currentNumberOfTextureCubes(0),
+				numberOfCreatedTextureCubes(0),
 				currentNumberOfPipelineStates(0),
 				numberOfCreatedPipelineStates(0),
 				currentNumberOfSamplerStates(0),
@@ -2196,8 +2220,11 @@ namespace Renderer
 				return mRenderer;
 			}
 		public:
+			virtual ITexture1D* createTexture1D(uint32_t width, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
 			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, uint8_t numberOfMultisamples = 1, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
 			virtual ITexture2DArray* createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
+			virtual ITexture3D* createTexture3D(uint32_t width, uint32_t height, uint32_t depth, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
+			virtual ITextureCube* createTextureCube(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
 		protected:
 			inline explicit ITextureManager(IRenderer& renderer);
 			inline explicit ITextureManager(const ITextureManager& source);
@@ -2221,6 +2248,27 @@ namespace Renderer
 			ITexture& operator =(const ITexture& source);
 		};
 		typedef SmartRefCount<ITexture> ITexturePtr;
+	#endif
+
+	// Renderer/Texture/ITexture1D.h
+	#ifndef __RENDERER_ITEXTURE1D_H__
+	#define __RENDERER_ITEXTURE1D_H__
+		class ITexture1D : public ITexture
+		{
+		public:
+			virtual ~ITexture1D();
+			inline uint32_t getWidth() const
+			{
+				return mWidth;
+			}
+		protected:
+			ITexture1D(IRenderer& renderer, uint32_t width);
+			explicit ITexture1D(const ITexture1D& source);
+			ITexture1D& operator =(const ITexture1D& source);
+		private:
+			uint32_t mWidth;
+		};
+		typedef SmartRefCount<ITexture1D> ITexture1DPtr;
 	#endif
 
 	// Renderer/Texture/ITexture2D.h
@@ -2278,6 +2326,63 @@ namespace Renderer
 			uint32_t mNumberOfSlices;
 		};
 		typedef SmartRefCount<ITexture2DArray> ITexture2DArrayPtr;
+	#endif
+
+	// Renderer/Texture/ITexture3D.h
+	#ifndef __RENDERER_ITEXTURE3D_H__
+	#define __RENDERER_ITEXTURE3D_H__
+		class ITexture3D : public ITexture
+		{
+		public:
+			virtual ~ITexture3D();
+			inline uint32_t getWidth() const
+			{
+				return mWidth;
+			}
+			inline uint32_t getHeight() const
+			{
+				return mHeight;
+			}
+			inline uint32_t getDepth() const
+			{
+				return mDepth;
+			}
+		protected:
+			ITexture3D(IRenderer& renderer, uint32_t width, uint32_t height, uint32_t depth);
+			explicit ITexture3D(const ITexture3D& source);
+			ITexture3D& operator =(const ITexture3D& source);
+		private:
+			uint32_t mWidth;
+			uint32_t mHeight;
+			uint32_t mDepth;
+		};
+		typedef SmartRefCount<ITexture3D> ITexture3DPtr;
+	#endif
+
+	// Renderer/Texture/ITextureCube.h
+	#ifndef __RENDERER_ITEXTURECUBE_H__
+	#define __RENDERER_ITEXTURECUBE_H__
+		class ITextureCube : public ITexture
+		{
+		public:
+			virtual ~ITextureCube();
+			inline uint32_t getWidth() const
+			{
+				return mWidth;
+			}
+			inline uint32_t getHeight() const
+			{
+				return mHeight;
+			}
+		protected:
+			ITextureCube(IRenderer& renderer, uint32_t width, uint32_t height);
+			explicit ITextureCube(const ITextureCube& source);
+			ITextureCube& operator =(const ITextureCube& source);
+		private:
+			uint32_t mWidth;
+			uint32_t mHeight;
+		};
+		typedef SmartRefCount<ITextureCube> ITextureCubePtr;
 	#endif
 
 	// Renderer/State/IState.h

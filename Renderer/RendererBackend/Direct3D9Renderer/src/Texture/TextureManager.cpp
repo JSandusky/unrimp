@@ -22,7 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D9Renderer/Texture/TextureManager.h"
+#include "Direct3D9Renderer/Texture/Texture1D.h"
 #include "Direct3D9Renderer/Texture/Texture2D.h"
+#include "Direct3D9Renderer/Texture/Texture3D.h"
+#include "Direct3D9Renderer/Texture/TextureCube.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
 
@@ -46,6 +49,19 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
+	Renderer::ITexture1D *TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	{
+		// Check whether or not the given texture dimension is valid
+		if (width > 0)
+		{
+			return new Texture1D(static_cast<Direct3D9Renderer&>(getRenderer()), width, textureFormat, data, flags, textureUsage);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
 	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, uint8_t, const Renderer::OptimizedTextureClearValue*)
 	{
 		// Check whether or not the given texture dimension is valid
@@ -63,6 +79,32 @@ namespace Direct3D9Renderer
 	{
 		// Direct3D 9 has no 2D texture arrays
 		return nullptr;
+	}
+
+	Renderer::ITexture3D *TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	{
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0 && depth > 0)
+		{
+			return new Texture3D(static_cast<Direct3D9Renderer&>(getRenderer()), width, height, depth, textureFormat, data, flags, textureUsage);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	Renderer::ITextureCube *TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	{
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0)
+		{
+			return new TextureCube(static_cast<Direct3D9Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage);
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 
 

@@ -99,6 +99,15 @@
     <None Include="include\Direct3D11Renderer\Texture\TextureManager.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
+    <None Include="include\Direct3D11Renderer\Texture\Texture3D.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Texture\TextureCube.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Texture\Texture1D.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D11Renderer\Shader\ShaderLanguageHlsl.h">
@@ -200,6 +209,15 @@
     <ClInclude Include="include\Direct3D11Renderer\Texture\TextureManager.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Texture\TextureCube.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Texture\Texture1D.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Texture\Texture3D.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\ShaderLanguageHlsl.cpp">
@@ -290,6 +308,15 @@
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="src\Texture\TextureManager.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture3D.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureCube.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture1D.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
   </ItemGroup>

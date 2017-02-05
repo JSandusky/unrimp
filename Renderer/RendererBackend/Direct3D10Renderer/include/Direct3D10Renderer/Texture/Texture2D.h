@@ -71,9 +71,9 @@ namespace Direct3D10Renderer
 		*  @param[in] direct3D10Renderer
 		*    Owner Direct3D 10 renderer instance
 		*  @param[in] width
-		*    Texture width, must be >1
+		*    Texture width, must be >0
 		*  @param[in] height
-		*    Texture height, must be >1
+		*    Texture height, must be >0
 		*  @param[in] textureFormat
 		*    Texture format
 		*  @param[in] data

@@ -36,8 +36,11 @@
 #include "Direct3D12Renderer/Buffer/UniformBuffer.h"
 #include "Direct3D12Renderer/Buffer/TextureBuffer.h"
 #include "Direct3D12Renderer/Buffer/IndirectBuffer.h"
-#include "Direct3D12Renderer/Texture/TextureManager.h"
+#include "Direct3D12Renderer/Texture/Texture1D.h"
 #include "Direct3D12Renderer/Texture/Texture2D.h"
+#include "Direct3D12Renderer/Texture/Texture3D.h"
+#include "Direct3D12Renderer/Texture/TextureCube.h"
+#include "Direct3D12Renderer/Texture/TextureManager.h"
 #include "Direct3D12Renderer/Texture/Texture2DArray.h"
 #include "Direct3D12Renderer/State/SamplerState.h"
 #include "Direct3D12Renderer/State/PipelineState.h"
@@ -549,9 +552,68 @@ namespace Direct3D12Renderer
 					break;
 				}
 
+				case Renderer::ResourceType::TEXTURE_1D:
+				{
+					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<Texture1D*>(resource)->getD3D12DescriptorHeap();
+					if (nullptr != d3D12DescriptorHeap)
+					{
+						// TODO(co) Just a first Direct3D 12 test, don't call "ID3D12GraphicsCommandList::SetDescriptorHeaps()" that often (pipeline flush)
+						ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
+						mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+						mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+					}
+					break;
+				}
+
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
 					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<Texture2D*>(resource)->getD3D12DescriptorHeap();
+					if (nullptr != d3D12DescriptorHeap)
+					{
+						// TODO(co) Just a first Direct3D 12 test, don't call "ID3D12GraphicsCommandList::SetDescriptorHeaps()" that often (pipeline flush)
+						ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
+						mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+						mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+					}
+					break;
+				}
+
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				{
+					// TODO(co) Implement 2D texture array
+					/*
+					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<Texture2DArray*>(resource)->getD3D12DescriptorHeap();
+					if (nullptr != d3D12DescriptorHeap)
+					{
+						// TODO(co) Just a first Direct3D 12 test, don't call "ID3D12GraphicsCommandList::SetDescriptorHeaps()" that often (pipeline flush)
+						ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
+						mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+						mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+					}
+					*/
+					break;
+				}
+
+				case Renderer::ResourceType::TEXTURE_3D:
+				{
+					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<Texture3D*>(resource)->getD3D12DescriptorHeap();
+					if (nullptr != d3D12DescriptorHeap)
+					{
+						// TODO(co) Just a first Direct3D 12 test, don't call "ID3D12GraphicsCommandList::SetDescriptorHeaps()" that often (pipeline flush)
+						ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
+						mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+						mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+					}
+					break;
+				}
+
+				case Renderer::ResourceType::TEXTURE_CUBE:
+				{
+					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<TextureCube*>(resource)->getD3D12DescriptorHeap();
 					if (nullptr != d3D12DescriptorHeap)
 					{
 						// TODO(co) Just a first Direct3D 12 test, don't call "ID3D12GraphicsCommandList::SetDescriptorHeaps()" that often (pipeline flush)
@@ -586,7 +648,6 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::VERTEX_BUFFER:
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::INDIRECT_BUFFER:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::PIPELINE_STATE:
 				case Renderer::ResourceType::VERTEX_SHADER:
 				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
@@ -739,8 +800,11 @@ namespace Direct3D12Renderer
 					case Renderer::ResourceType::UNIFORM_BUFFER:
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
 					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::SAMPLER_STATE:
 					case Renderer::ResourceType::VERTEX_SHADER:
@@ -840,8 +904,11 @@ namespace Direct3D12Renderer
 					case Renderer::ResourceType::UNIFORM_BUFFER:
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
 					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::SAMPLER_STATE:
 					case Renderer::ResourceType::VERTEX_SHADER:
@@ -957,8 +1024,11 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::UNIFORM_BUFFER:
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::INDIRECT_BUFFER:
+				case Renderer::ResourceType::TEXTURE_1D:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::TEXTURE_3D:
+				case Renderer::ResourceType::TEXTURE_CUBE:
 				case Renderer::ResourceType::PIPELINE_STATE:
 				case Renderer::ResourceType::SAMPLER_STATE:
 				case Renderer::ResourceType::VERTEX_SHADER:

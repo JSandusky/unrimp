@@ -529,6 +529,11 @@ namespace Direct3D9Renderer
 					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no texture buffer support")
 					break;
 
+				case Renderer::ResourceType::TEXTURE_1D:
+					// TODO(co) Implement Direct3D 9 1D texture
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 1D texture not implemented, yet")
+					break;
+
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
 					const UINT startSlot = descriptorRange->baseShaderRegister;
@@ -622,6 +627,16 @@ namespace Direct3D9Renderer
 
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no 2D array textures support")
+					break;
+
+				case Renderer::ResourceType::TEXTURE_3D:
+					// TODO(co) Implement Direct3D 9 3D texture
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 3D texture not implemented, yet")
+					break;
+
+				case Renderer::ResourceType::TEXTURE_CUBE:
+					// TODO(co) Implement Direct3D 9 cube texture
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: cube texture not implemented, yet")
 					break;
 
 				case Renderer::ResourceType::SAMPLER_STATE:
@@ -851,8 +866,11 @@ namespace Direct3D9Renderer
 					case Renderer::ResourceType::UNIFORM_BUFFER:
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
 					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::SAMPLER_STATE:
 					case Renderer::ResourceType::VERTEX_SHADER:
@@ -1391,6 +1409,11 @@ namespace Direct3D9Renderer
 				mappedSubresource.depthPitch = 0;
 				return true;
 
+			case Renderer::ResourceType::TEXTURE_1D:
+				// TODO(co) Implement Direct3D 9 1D texture
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 1D texture not implemented, yet")
+				return false;
+
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
 				bool result = false;
@@ -1478,6 +1501,16 @@ namespace Direct3D9Renderer
 				return result;
 			}
 
+			case Renderer::ResourceType::TEXTURE_3D:
+				// TODO(co) Implement Direct3D 9 3D texture
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 3D texture not implemented, yet")
+				return false;
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+				// TODO(co) Implement Direct3D 9 cube texture
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Cube texture not implemented, yet")
+				return false;
+
 			case Renderer::ResourceType::ROOT_SIGNATURE:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
@@ -1521,8 +1554,23 @@ namespace Direct3D9Renderer
 				// Nothing here, it's a software emulated indirect buffer
 				break;
 
+			case Renderer::ResourceType::TEXTURE_1D:
+				// TODO(co) Implement Direct3D 9 1D texture
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 1D texture not implemented, yet")
+				break;
+
 			case Renderer::ResourceType::TEXTURE_2D:
 				static_cast<Texture2D&>(resource).getDirect3DTexture9()->UnlockRect(subresource);
+				break;
+
+			case Renderer::ResourceType::TEXTURE_3D:
+				// TODO(co) Implement Direct3D 9 3D texture
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 3D texture not implemented, yet")
+				break;
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+				// TODO(co) Implement Direct3D 9 cube texture
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Cube texture not implemented, yet")
 				break;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:

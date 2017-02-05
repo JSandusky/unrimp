@@ -133,6 +133,15 @@
     <ClInclude Include="include\VulkanRenderer\Texture\TextureManager.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Texture\TextureCube.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Texture\Texture1D.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Texture\Texture3D.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -240,6 +249,15 @@
     <ClCompile Include="src\Texture\TextureManager.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="src\Texture\Texture3D.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureCube.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture1D.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -323,6 +341,15 @@
       <Filter>Source Files\Buffer</Filter>
     </None>
     <None Include="include\VulkanRenderer\Texture\TextureManager.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Texture\Texture3D.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Texture\TextureCube.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Texture\Texture1D.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
   </ItemGroup>

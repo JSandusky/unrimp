@@ -43,7 +43,10 @@
 #include "OpenGLRenderer/Buffer/VertexArrayVaoBind.h"
 #include "OpenGLRenderer/Buffer/IndirectBuffer.h"
 #include "OpenGLRenderer/Texture/TextureManager.h"
+#include "OpenGLRenderer/Texture/Texture1D.h"
 #include "OpenGLRenderer/Texture/Texture2D.h"
+#include "OpenGLRenderer/Texture/Texture3D.h"
+#include "OpenGLRenderer/Texture/TextureCube.h"
 #include "OpenGLRenderer/Texture/Texture2DArray.h"
 #include "OpenGLRenderer/State/SamplerStateSo.h"
 #include "OpenGLRenderer/State/SamplerStateDsa.h"
@@ -560,8 +563,11 @@ namespace OpenGLRenderer
 					break;
 
 				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::TEXTURE_1D:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::TEXTURE_3D:
+				case Renderer::ResourceType::TEXTURE_CUBE:
 				{
 					// In OpenGL, all shaders share the same texture units (= "Renderer::RootParameter::shaderVisibility" stays unused)
 
@@ -590,6 +596,19 @@ namespace OpenGLRenderer
 								}
 								break;
 
+							case Renderer::ResourceType::TEXTURE_1D:
+								if (isArbDsa)
+								{
+									glBindTextureUnit(unit, static_cast<Texture1D*>(resource)->getOpenGLTexture());
+								}
+								else
+								{
+									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+									const Texture1D* texture1D = static_cast<Texture1D*>(resource);
+									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_1D, texture1D->getOpenGLTexture());
+								}
+								break;
+
 							case Renderer::ResourceType::TEXTURE_2D:
 								if (isArbDsa)
 								{
@@ -613,6 +632,32 @@ namespace OpenGLRenderer
 								{
 									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
 									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
+								}
+								break;
+
+							case Renderer::ResourceType::TEXTURE_3D:
+								if (isArbDsa)
+								{
+									glBindTextureUnit(unit, static_cast<Texture3D*>(resource)->getOpenGLTexture());
+								}
+								else
+								{
+									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+									const Texture3D* texture3D = static_cast<Texture3D*>(resource);
+									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_3D, texture3D->getOpenGLTexture());
+								}
+								break;
+
+							case Renderer::ResourceType::TEXTURE_CUBE:
+								if (isArbDsa)
+								{
+									glBindTextureUnit(unit, static_cast<TextureCube*>(resource)->getOpenGLTexture());
+								}
+								else
+								{
+									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+									const TextureCube* textureCube = static_cast<TextureCube*>(resource);
+									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_CUBE_MAP, textureCube->getOpenGLTexture());
 								}
 								break;
 
@@ -704,16 +749,28 @@ namespace OpenGLRenderer
 									glBindTexture(GL_TEXTURE_BUFFER_ARB, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
 									break;
 
+								case Renderer::ResourceType::TEXTURE_1D:
+									glBindTexture(GL_TEXTURE_1D, static_cast<Texture1D*>(resource)->getOpenGLTexture());
+									break;
+
 								case Renderer::ResourceType::TEXTURE_2D:
 								{
 									const Texture2D* texture2D = static_cast<Texture2D*>(resource);
-									glBindTexture(static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), static_cast<Texture2D*>(resource)->getOpenGLTexture());
+									glBindTexture(static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture());
 									break;
 								}
 
 								case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 									// No extension check required, if we in here we already know it must exist
 									glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
+									break;
+
+								case Renderer::ResourceType::TEXTURE_3D:
+									glBindTexture(GL_TEXTURE_3D, static_cast<Texture3D*>(resource)->getOpenGLTexture());
+									break;
+
+								case Renderer::ResourceType::TEXTURE_CUBE:
+									glBindTexture(GL_TEXTURE_CUBE_MAP, static_cast<TextureCube*>(resource)->getOpenGLTexture());
 									break;
 
 								case Renderer::ResourceType::ROOT_SIGNATURE:
@@ -1084,8 +1141,11 @@ namespace OpenGLRenderer
 					case Renderer::ResourceType::UNIFORM_BUFFER:
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
 					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::SAMPLER_STATE:
 					case Renderer::ResourceType::VERTEX_SHADER:
@@ -1241,8 +1301,11 @@ namespace OpenGLRenderer
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_1D:
 			case Renderer::ResourceType::TEXTURE_2D:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::TEXTURE_3D:
+			case Renderer::ResourceType::TEXTURE_CUBE:
 			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:
 			case Renderer::ResourceType::VERTEX_SHADER:
@@ -1329,7 +1392,10 @@ namespace OpenGLRenderer
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_1D:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::TEXTURE_3D:
+			case Renderer::ResourceType::TEXTURE_CUBE:
 			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:
 			case Renderer::ResourceType::VERTEX_SHADER:
@@ -1894,6 +1960,12 @@ namespace OpenGLRenderer
 				// return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
 				return false;
 
+			case Renderer::ResourceType::TEXTURE_1D:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
 				bool result = false;
@@ -1950,6 +2022,18 @@ namespace OpenGLRenderer
 
 				// Done
 				return result;
+			}
+
+			case Renderer::ResourceType::TEXTURE_3D:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+			{
+				// TODO(co) Implement me
+				return false;
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
@@ -2071,6 +2155,12 @@ namespace OpenGLRenderer
 				// mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
 				break;
 
+			case Renderer::ResourceType::TEXTURE_1D:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
 			case Renderer::ResourceType::TEXTURE_2D:
 			{
 				// TODO(co) Implement me
@@ -2106,6 +2196,18 @@ namespace OpenGLRenderer
 					d3d11Resource->Release();
 				}
 				*/
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_3D:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+			{
+				// TODO(co) Implement me
 				break;
 			}
 

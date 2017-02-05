@@ -232,6 +232,33 @@
     <ClInclude Include="include\OpenGLRenderer\Texture\TextureManager.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture3DBind.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture3DDsa.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\TextureCube.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\TextureCubeBind.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\TextureCubeDsa.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture1D.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture1DBind.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture1DDsa.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture3D.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -432,6 +459,33 @@
     <ClCompile Include="src\Texture\TextureManager.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="src\Texture\Texture3DDsa.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureCube.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureCubeBind.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureCubeDsa.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture1D.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture1DBind.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture1DDsa.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture3D.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture3DBind.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -539,6 +593,15 @@
       <Filter>Source Files\Buffer</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Texture\TextureManager.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Texture\TextureCube.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Texture\Texture1D.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Texture\Texture3D.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
   </ItemGroup>

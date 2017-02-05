@@ -56,8 +56,11 @@
     <None Include="include\OpenGLES3Renderer\State\IState.inl" />
     <None Include="include\OpenGLES3Renderer\State\PipelineState.inl" />
     <None Include="include\OpenGLES3Renderer\State\RasterizerState.inl" />
+    <None Include="include\OpenGLES3Renderer\Texture\Texture1D.inl" />
     <None Include="include\OpenGLES3Renderer\Texture\Texture2D.inl" />
     <None Include="include\OpenGLES3Renderer\Texture\Texture2DArray.inl" />
+    <None Include="include\OpenGLES3Renderer\Texture\Texture3D.inl" />
+    <None Include="include\OpenGLES3Renderer\Texture\TextureCube.inl" />
     <None Include="include\OpenGLES3Renderer\Texture\TextureManager.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -93,8 +96,11 @@
     <ClInclude Include="include\OpenGLES3Renderer\State\PipelineState.h" />
     <ClInclude Include="include\OpenGLES3Renderer\State\RasterizerState.h" />
     <ClInclude Include="include\OpenGLES3Renderer\State\SamplerState.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Texture\Texture1D.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Texture\Texture2D.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Texture\Texture2DArray.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Texture\Texture3D.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Texture\TextureCube.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Texture\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -127,8 +133,11 @@
     <ClCompile Include="src\State\PipelineState.cpp" />
     <ClCompile Include="src\State\RasterizerState.cpp" />
     <ClCompile Include="src\State\SamplerState.cpp" />
+    <ClCompile Include="src\Texture\Texture1D.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
+    <ClCompile Include="src\Texture\Texture3D.cpp" />
+    <ClCompile Include="src\Texture\TextureCube.cpp" />
     <ClCompile Include="src\Texture\TextureManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

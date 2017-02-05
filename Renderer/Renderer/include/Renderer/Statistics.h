@@ -84,10 +84,16 @@ namespace Renderer
 		std::atomic<uint32_t> currentNumberOfIndirectBuffers;				///< Current number of indirect buffer object instances
 		std::atomic<uint32_t> numberOfCreatedIndirectBuffers;				///< Number of created indirect buffer object instances
 		// ITexture
+		std::atomic<uint32_t> currentNumberOfTexture1Ds;					///< Current number of texture 1D instances
+		std::atomic<uint32_t> numberOfCreatedTexture1Ds;					///< Number of created texture 1D instances
 		std::atomic<uint32_t> currentNumberOfTexture2Ds;					///< Current number of texture 2D instances
 		std::atomic<uint32_t> numberOfCreatedTexture2Ds;					///< Number of created texture 2D instances
 		std::atomic<uint32_t> currentNumberOfTexture2DArrays;				///< Current number of texture 2D array instances
 		std::atomic<uint32_t> numberOfCreatedTexture2DArrays;				///< Number of created texture 2D array instances
+		std::atomic<uint32_t> currentNumberOfTexture3Ds;					///< Current number of texture 3D instances
+		std::atomic<uint32_t> numberOfCreatedTexture3Ds;					///< Number of created texture 3D instances
+		std::atomic<uint32_t> currentNumberOfTextureCubes;					///< Current number of texture cube instances
+		std::atomic<uint32_t> numberOfCreatedTextureCubes;					///< Number of created texture cube instances
 		// IState
 		std::atomic<uint32_t> currentNumberOfPipelineStates;				///< Current number of pipeline state (PSO) instances
 		std::atomic<uint32_t> numberOfCreatedPipelineStates;				///< Number of created pipeline state (PSO) instances

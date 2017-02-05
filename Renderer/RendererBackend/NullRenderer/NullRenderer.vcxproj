@@ -65,8 +65,11 @@
     <ClInclude Include="include\NullRenderer\Shader\VertexShader.h" />
     <ClInclude Include="include\NullRenderer\State\PipelineState.h" />
     <ClInclude Include="include\NullRenderer\State\SamplerState.h" />
+    <ClInclude Include="include\NullRenderer\Texture\Texture1D.h" />
     <ClInclude Include="include\NullRenderer\Texture\Texture2D.h" />
     <ClInclude Include="include\NullRenderer\Texture\Texture2DArray.h" />
+    <ClInclude Include="include\NullRenderer\Texture\Texture3D.h" />
+    <ClInclude Include="include\NullRenderer\Texture\TextureCube.h" />
     <ClInclude Include="include\NullRenderer\Texture\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -90,8 +93,11 @@
     <ClCompile Include="src\Shader\VertexShader.cpp" />
     <ClCompile Include="src\State\PipelineState.cpp" />
     <ClCompile Include="src\State\SamplerState.cpp" />
+    <ClCompile Include="src\Texture\Texture1D.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
+    <ClCompile Include="src\Texture\Texture3D.cpp" />
+    <ClCompile Include="src\Texture\TextureCube.cpp" />
     <ClCompile Include="src\Texture\TextureManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

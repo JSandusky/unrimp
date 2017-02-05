@@ -22,8 +22,14 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture/TextureManager.h"
+#include "OpenGLRenderer/Texture/Texture1DDsa.h"
 #include "OpenGLRenderer/Texture/Texture2DDsa.h"
+#include "OpenGLRenderer/Texture/Texture3DDsa.h"
+#include "OpenGLRenderer/Texture/TextureCubeDsa.h"
+#include "OpenGLRenderer/Texture/Texture1DBind.h"
 #include "OpenGLRenderer/Texture/Texture2DBind.h"
+#include "OpenGLRenderer/Texture/Texture3DBind.h"
+#include "OpenGLRenderer/Texture/TextureCubeBind.h"
 #include "OpenGLRenderer/Texture/Texture2DArrayDsa.h"
 #include "OpenGLRenderer/Texture/Texture2DArrayBind.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
@@ -51,6 +57,31 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
+	Renderer::ITexture1D *TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	{
+		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
+
+		// Check whether or not the given texture dimension is valid
+		if (width > 0)
+		{
+			// Is "GL_EXT_direct_state_access" there?
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
+			{
+				// Effective direct state access (DSA)
+				return new Texture1DDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, textureFormat, data, flags);
+			}
+			else
+			{
+				// Traditional bind version
+				return new Texture1DBind(static_cast<OpenGLRenderer&>(getRenderer()), width, textureFormat, data, flags);
+			}
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
 	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, uint8_t numberOfMultisamples, const Renderer::OptimizedTextureClearValue*)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
@@ -93,6 +124,56 @@ namespace OpenGLRenderer
 			{
 				// Traditional bind version
 				return new Texture2DArrayBind(static_cast<OpenGLRenderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
+			}
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	Renderer::ITexture3D *TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	{
+		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
+
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0 && depth > 0)
+		{
+			// Is "GL_EXT_direct_state_access" there?
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
+			{
+				// Effective direct state access (DSA)
+				return new Texture3DDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, height, depth, textureFormat, data, flags);
+			}
+			else
+			{
+				// Traditional bind version
+				return new Texture3DBind(static_cast<OpenGLRenderer&>(getRenderer()), width, height, depth, textureFormat, data, flags);
+			}
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	Renderer::ITextureCube *TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	{
+		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
+
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0)
+		{
+			// Is "GL_EXT_direct_state_access" there?
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
+			{
+				// Effective direct state access (DSA)
+				return new TextureCubeDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
+			}
+			else
+			{
+				// Traditional bind version
+				return new TextureCubeBind(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
 			}
 		}
 		else

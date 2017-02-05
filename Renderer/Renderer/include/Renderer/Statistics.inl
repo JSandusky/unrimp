@@ -58,10 +58,16 @@ namespace Renderer
 		currentNumberOfIndirectBuffers(0),
 		numberOfCreatedIndirectBuffers(0),
 		// ITexture
+		currentNumberOfTexture1Ds(0),
+		numberOfCreatedTexture1Ds(0),
 		currentNumberOfTexture2Ds(0),
 		numberOfCreatedTexture2Ds(0),
 		currentNumberOfTexture2DArrays(0),
 		numberOfCreatedTexture2DArrays(0),
+		currentNumberOfTexture3Ds(0),
+		numberOfCreatedTexture3Ds(0),
+		currentNumberOfTextureCubes(0),
+		numberOfCreatedTextureCubes(0),
 		// IState
 		currentNumberOfPipelineStates(0),
 		numberOfCreatedPipelineStates(0),
@@ -103,8 +109,11 @@ namespace Renderer
 				currentNumberOfTextureBuffers +
 				currentNumberOfIndirectBuffers +
 				// ITexture
+				currentNumberOfTexture1Ds +
 				currentNumberOfTexture2Ds +
 				currentNumberOfTexture2DArrays +
+				currentNumberOfTexture3Ds +
+				currentNumberOfTextureCubes +
 				// IState
 				currentNumberOfPipelineStates +
 				currentNumberOfSamplerStates +
@@ -138,8 +147,11 @@ namespace Renderer
 		RENDERER_OUTPUT_DEBUG_PRINTF("Indirect buffers: %d\n", currentNumberOfIndirectBuffers.load())
 
 		// ITexture
+		RENDERER_OUTPUT_DEBUG_PRINTF("1D textures: %d\n", currentNumberOfTexture1Ds.load())
 		RENDERER_OUTPUT_DEBUG_PRINTF("2D textures: %d\n", currentNumberOfTexture2Ds.load())
 		RENDERER_OUTPUT_DEBUG_PRINTF("2D texture arrays: %d\n", currentNumberOfTexture2DArrays.load())
+		RENDERER_OUTPUT_DEBUG_PRINTF("3D textures: %d\n", currentNumberOfTexture3Ds.load())
+		RENDERER_OUTPUT_DEBUG_PRINTF("Cube textures: %d\n", currentNumberOfTextureCubes.load())
 
 		// IState
 		RENDERER_OUTPUT_DEBUG_PRINTF("Pipeline states: %d\n", currentNumberOfPipelineStates.load())
@@ -184,10 +196,16 @@ namespace Renderer
 		currentNumberOfIndirectBuffers(0),
 		numberOfCreatedIndirectBuffers(0),
 		// ITexture
+		currentNumberOfTexture1Ds(0),
+		numberOfCreatedTexture1Ds(0),
 		currentNumberOfTexture2Ds(0),
 		numberOfCreatedTexture2Ds(0),
 		currentNumberOfTexture2DArrays(0),
 		numberOfCreatedTexture2DArrays(0),
+		currentNumberOfTexture3Ds(0),
+		numberOfCreatedTexture3Ds(0),
+		currentNumberOfTextureCubes(0),
+		numberOfCreatedTextureCubes(0),
 		// IState
 		currentNumberOfPipelineStates(0),
 		numberOfCreatedPipelineStates(0),

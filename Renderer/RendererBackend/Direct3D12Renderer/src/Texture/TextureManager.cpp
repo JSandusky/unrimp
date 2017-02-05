@@ -22,7 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Texture/TextureManager.h"
+#include "Direct3D12Renderer/Texture/Texture1D.h"
 #include "Direct3D12Renderer/Texture/Texture2D.h"
+#include "Direct3D12Renderer/Texture/Texture3D.h"
+#include "Direct3D12Renderer/Texture/TextureCube.h"
 #include "Direct3D12Renderer/Texture/Texture2DArray.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
@@ -47,14 +50,69 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
+	Renderer::ITexture1D *TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	{
+		// Check whether or not the given texture dimension is valid
+		if (width > 0)
+		{
+			return new Texture1D(static_cast<Direct3D12Renderer&>(getRenderer()), width, textureFormat, data, flags, textureUsage);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
 	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, uint8_t numberOfMultisamples, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue)
 	{
-		return new Texture2D(static_cast<Direct3D12Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage, numberOfMultisamples, optimizedTextureClearValue);
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0)
+		{
+			return new Texture2D(static_cast<Direct3D12Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage, numberOfMultisamples, optimizedTextureClearValue);
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 
 	Renderer::ITexture2DArray *TextureManager::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
 	{
-		return new Texture2DArray(static_cast<Direct3D12Renderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0 && numberOfSlices > 0)
+		{
+			return new Texture2DArray(static_cast<Direct3D12Renderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	Renderer::ITexture3D *TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	{
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0 && depth > 0)
+		{
+			return new Texture3D(static_cast<Direct3D12Renderer&>(getRenderer()), width, height, depth, textureFormat, data, flags, textureUsage);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	Renderer::ITextureCube *TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	{
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0)
+		{
+			return new TextureCube(static_cast<Direct3D12Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage);
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 
 

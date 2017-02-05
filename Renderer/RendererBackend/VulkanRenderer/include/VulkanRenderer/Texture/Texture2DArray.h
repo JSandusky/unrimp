@@ -69,11 +69,11 @@ namespace VulkanRenderer
 		*  @param[in] vulkanRenderer
 		*    Owner Vulkan renderer instance
 		*  @param[in] width
-		*    Texture width, must be >1
+		*    Texture width, must be >0
 		*  @param[in] height
-		*    Texture height, must be >1
+		*    Texture height, must be >0
 		*  @param[in] numberOfSlices
-		*    Number of slices, must be >1
+		*    Number of slices, must be >0
 		*  @param[in] textureFormat
 		*    Texture format
 		*  @param[in] data

@@ -37,7 +37,10 @@
 namespace Renderer
 {
 	class IRenderer;
+	class ITexture1D;
 	class ITexture2D;
+	class ITexture3D;
+	class ITextureCube;
 	class ITexture2DArray;
 }
 
@@ -58,8 +61,11 @@ namespace Renderer
 	*
 	*  @remarks
 	*    The texture manager is responsible for managing fine granular instances of
+	*    - 1D texture ("Renderer::ITexture1D")
 	*    - 2D texture ("Renderer::ITexture2D")
 	*    - 2D texture array ("Renderer::ITexture2DArray")
+	*    - 3D texture ("Renderer::ITexture3D")
+	*    - Cube texture ("Renderer::ITextureCube")
 	*/
 	class ITextureManager : public RefCount<ITextureManager>
 	{
@@ -94,12 +100,38 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
+		*    Create a 1D texture instance
+		*
+		*  @param[in] width
+		*    Texture width, must be >0 else a null pointer is returned
+		*  @param[in] textureFormat
+		*    Texture format
+		*  @param[in] data
+		*    Texture data, can be a null pointer, the data is internally copied and you have to free your memory if you no longer need it
+		*  @param[in] flags
+		*    Texture flags, see "Renderer::TextureFlag::Enum"
+		*  @param[in] textureUsage
+		*    Indication of the texture usage, (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*
+		*  @return
+		*    The created 1D texture instance, null pointer on error. Release the returned instance if you no longer need it.
+		*
+		*  @remarks
+		*    The texture data has to be in CRN-texture layout, which means organized in mip-major order, like this:
+		*    - Mip0: Face0, Face1, Face2, Face3, Face4, Face5
+		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+		*    (DDS-texture layout is using face-major order)
+		*/
+		virtual ITexture1D *createTexture1D(uint32_t width, TextureFormat::Enum textureFormat, const void *data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
+
+		/**
+		*  @brief
 		*    Create a 2D texture instance
 		*
 		*  @param[in] width
-		*    Texture width, must be >1 else a null pointer is returned
+		*    Texture width, must be >0 else a null pointer is returned
 		*  @param[in] height
-		*    Texture height, must be >1 else a null pointer is returned
+		*    Texture height, must be >0 else a null pointer is returned
 		*  @param[in] textureFormat
 		*    Texture data format
 		*  @param[in] data
@@ -132,11 +164,11 @@ namespace Renderer
 		*    Create a 2D array texture instance
 		*
 		*  @param[in] width
-		*    Texture width, must be >1 else a null pointer is returned
+		*    Texture width, must be >0 else a null pointer is returned
 		*  @param[in] height
-		*    Texture height, must be >1 else a null pointer is returned
+		*    Texture height, must be >0 else a null pointer is returned
 		*  @param[in] numberOfSlices
-		*    Number of slices, must be >1 else a null pointer is returned
+		*    Number of slices, must be >0 else a null pointer is returned
 		*  @param[in] textureFormat
 		*    Texture format
 		*  @param[in] data
@@ -157,6 +189,64 @@ namespace Renderer
 		*    (DDS-texture layout is using face-major order)
 		*/
 		virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, const void *data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
+
+		/**
+		*  @brief
+		*    Create a 3D texture instance
+		*
+		*  @param[in] width
+		*    Texture width, must be >0 else a null pointer is returned
+		*  @param[in] height
+		*    Texture height, must be >0 else a null pointer is returned
+		*  @param[in] depth
+		*    Texture depth, must be >0 else a null pointer is returned
+		*  @param[in] textureFormat
+		*    Texture format
+		*  @param[in] data
+		*    Texture data, can be a null pointer, the data is internally copied and you have to free your memory if you no longer need it
+		*  @param[in] flags
+		*    Texture flags, see "Renderer::TextureFlag::Enum"
+		*  @param[in] textureUsage
+		*    Indication of the texture usage, (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*
+		*  @return
+		*    The created 3D texture instance, null pointer on error. Release the returned instance if you no longer need it.
+		*
+		*  @remarks
+		*    The texture data has to be in CRN-texture layout, which means organized in mip-major order, like this:
+		*    - Mip0: Face0, Face1, Face2, Face3, Face4, Face5
+		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+		*    (DDS-texture layout is using face-major order)
+		*/
+		virtual ITexture3D *createTexture3D(uint32_t width, uint32_t height, uint32_t depth, TextureFormat::Enum textureFormat, const void *data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
+
+		/**
+		*  @brief
+		*    Create a cube texture instance
+		*
+		*  @param[in] width
+		*    Texture width, must be >0 else a null pointer is returned
+		*  @param[in] height
+		*    Texture height, must be >0 else a null pointer is returned
+		*  @param[in] textureFormat
+		*    Texture format
+		*  @param[in] data
+		*    Texture data, can be a null pointer, the data is internally copied and you have to free your memory if you no longer need it
+		*  @param[in] flags
+		*    Texture flags, see "Renderer::TextureFlag::Enum"
+		*  @param[in] textureUsage
+		*    Indication of the texture usage, (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*
+		*  @return
+		*    The created cube texture instance, null pointer on error. Release the returned instance if you no longer need it.
+		*
+		*  @remarks
+		*    The texture data has to be in CRN-texture layout, which means organized in mip-major order, like this:
+		*    - Mip0: Face0, Face1, Face2, Face3, Face4, Face5
+		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+		*    (DDS-texture layout is using face-major order)
+		*/
+		virtual ITextureCube *createTextureCube(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void *data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
 
 
 	//[-------------------------------------------------------]
