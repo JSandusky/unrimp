@@ -105,12 +105,21 @@ set(SOURCE_CODES
 	src/State/SamplerStateBind.cpp
 	src/State/SamplerStateDsa.cpp
 	src/State/SamplerStateSo.cpp
+	src/Texture/Texture1D.cpp
+	src/Texture/Texture1DBind.cpp
+	src/Texture/Texture1DDsa.cpp
 	src/Texture/Texture2D.cpp
+	src/Texture/Texture2DBind.cpp
+	src/Texture/Texture2DDsa.cpp
 	src/Texture/Texture2DArray.cpp
 	src/Texture/Texture2DArrayBind.cpp
 	src/Texture/Texture2DArrayDsa.cpp
-	src/Texture/Texture2DBind.cpp
-	src/Texture/Texture2DDsa.cpp
+	src/Texture/Texture3D.cpp
+	src/Texture/Texture3DBind.cpp
+	src/Texture/Texture3DDsa.cpp
+	src/Texture/TextureCube.cpp
+	src/Texture/TextureCubeBind.cpp
+	src/Texture/TextureCubeDsa.cpp
 	src/Texture/TextureManager.cpp
 )
 if(WIN32)

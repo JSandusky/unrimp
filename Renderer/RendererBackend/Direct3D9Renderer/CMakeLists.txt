@@ -44,29 +44,32 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
-	src/Direct3D9RuntimeLinking.cpp
-	src/Framebuffer.cpp
-	src/Guid.cpp
-	src/IndexBuffer.cpp
-	src/Mapping.cpp
-	src/PipelineState.cpp
-	src/Direct3D9Renderer.cpp
-	src/SamplerState.cpp
-	src/SwapChain.cpp
-	src/Texture2D.cpp
-	src/VertexArray.cpp
-	src/VertexBuffer.cpp
+	src/Buffer/BufferManager.cpp
+	src/Buffer/IndexBuffer.cpp
+	src/Buffer/IndirectBuffer.cpp
+	src/Buffer/VertexArray.cpp
+	src/Buffer/VertexBuffer.cpp
+	src/RenderTarget/Framebuffer.cpp
+	src/RenderTarget/SwapChain.cpp
+	src/Shader/FragmentShaderHlsl.cpp
+	src/Shader/ProgramHlsl.cpp
+	src/Shader/ShaderLanguageHlsl.cpp
+	src/Shader/VertexShaderHlsl.cpp
 	src/State/BlendState.cpp
 	src/State/DepthStencilState.cpp
+	src/State/PipelineState.cpp
 	src/State/RasterizerState.cpp
-	src/Shader/FragmentShader.cpp
-	src/Shader/FragmentShaderHlsl.cpp
-	src/Shader/Program.cpp
-	src/Shader/ProgramHlsl.cpp
-	src/Shader/ShaderLanguage.cpp
-	src/Shader/ShaderLanguageHlsl.cpp
-	src/Shader/VertexShader.cpp
-	src/Shader/VertexShaderHlsl.cpp
+	src/State/SamplerState.cpp
+	src/Texture/Texture1D.cpp
+	src/Texture/Texture2D.cpp
+	src/Texture/Texture3D.cpp
+	src/Texture/TextureCube.cpp
+	src/Texture/TextureManager.cpp
+	src/Direct3D9Renderer.cpp
+	src/Direct3D9RuntimeLinking.cpp
+	src/Guid.cpp
+	src/Mapping.cpp
+	src/RootSignature.cpp
 )
 
 

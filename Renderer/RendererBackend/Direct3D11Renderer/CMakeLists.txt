@@ -44,38 +44,39 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
-	src/Direct3D11RuntimeLinking.cpp
-	src/Framebuffer.cpp
-	src/Guid.cpp
-	src/IndexBuffer.cpp
-	src/Mapping.cpp
-	src/PipelineState.cpp
-	src/Direct3D11Renderer.cpp
-	src/SamplerState.cpp
-	src/SwapChain.cpp
-	src/Texture2D.cpp
-	src/Texture2DArray.cpp
-	src/TextureBuffer.cpp
-	src/VertexArray.cpp
-	src/VertexBuffer.cpp
-	src/UniformBuffer.cpp
+	src/Buffer/BufferManager.cpp
+	src/Buffer/IndexBuffer.cpp
+	src/Buffer/IndirectBuffer.cpp
+	src/Buffer/TextureBuffer.cpp
+	src/Buffer/UniformBuffer.cpp
+	src/Buffer/VertexArray.cpp
+	src/Buffer/VertexBuffer.cpp
+	src/RenderTarget/Framebuffer.cpp
+	src/RenderTarget/SwapChain.cpp
+	src/Shader/FragmentShaderHlsl.cpp
+	src/Shader/GeometryShaderHlsl.cpp
+	src/Shader/ProgramHlsl.cpp
+	src/Shader/ShaderLanguageHlsl.cpp
+	src/Shader/TessellationControlShaderHlsl.cpp
+	src/Shader/TessellationEvaluationShaderHlsl.cpp
+	src/Shader/VertexShaderHlsl.cpp
 	src/State/BlendState.cpp
 	src/State/DepthStencilState.cpp
+	src/State/PipelineState.cpp
 	src/State/RasterizerState.cpp
-	src/Shader/FragmentShader.cpp
-	src/Shader/FragmentShaderHlsl.cpp
-	src/Shader/GeometryShader.cpp
-	src/Shader/GeometryShaderHlsl.cpp
-	src/Shader/Program.cpp
-	src/Shader/ProgramHlsl.cpp
-	src/Shader/ShaderLanguage.cpp
-	src/Shader/ShaderLanguageHlsl.cpp
-	src/Shader/TessellationControlShader.cpp
-	src/Shader/TessellationControlShaderHlsl.cpp
-	src/Shader/TessellationEvaluationShader.cpp
-	src/Shader/TessellationEvaluationShaderHlsl.cpp
-	src/Shader/VertexShader.cpp
-	src/Shader/VertexShaderHlsl.cpp
+	src/State/SamplerState.cpp
+	src/Texture/Texture1D.cpp
+	src/Texture/Texture2D.cpp
+	src/Texture/Texture2DArray.cpp
+	src/Texture/Texture3D.cpp
+	src/Texture/TextureCube.cpp
+	src/Texture/TextureManager.cpp
+	src/Direct3D9RuntimeLinking.cpp
+	src/Direct3D11Renderer.cpp
+	src/Direct3D11RuntimeLinking.cpp
+	src/Guid.cpp
+	src/Mapping.cpp
+	src/RootSignature.cpp
 )
 if(NOT DIRECT3D11RENDERER_NO_DEBUG)
 	# Support Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features

@@ -77,8 +77,11 @@ set(SOURCE_CODES
 	src/State/PipelineState.cpp
 	src/State/RasterizerState.cpp
 	src/State/SamplerState.cpp
+	src/Texture/Texture1D.cpp
 	src/Texture/Texture2D.cpp
 	src/Texture/Texture2DArray.cpp
+	src/Texture/Texture3D.cpp
+	src/Texture/TextureCube.cpp
 	src/Texture/TextureManager.cpp
 )
 

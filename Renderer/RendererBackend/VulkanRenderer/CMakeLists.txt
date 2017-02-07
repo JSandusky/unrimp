@@ -45,62 +45,40 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/Vulkan/include
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
-	src/Extensions.cpp
-	src/Framebuffer.cpp
-	src/FramebufferDsa.cpp
-	src/FramebufferBind.cpp
-	src/IContext.cpp
-	src/IndexBuffer.cpp
-	src/IndexBufferBind.cpp
-	src/IndexBufferDsa.cpp
-	src/Mapping.cpp
-	src/VulkanRuntimeLinking.cpp
-	src/PipelineState.cpp
-	src/VulkanRenderer.cpp
-	src/SamplerState.cpp
-	src/SamplerStateBind.cpp
-	src/SamplerStateDsa.cpp
-	src/SamplerStateSo.cpp
-	src/SwapChain.cpp
-	src/Texture2D.cpp
-	src/Texture2DArray.cpp
-	src/Texture2DArrayBind.cpp
-	src/Texture2DArrayDsa.cpp
-	src/Texture2DBind.cpp
-	src/Texture2DDsa.cpp
-	src/TextureBuffer.cpp
-	src/TextureBufferBind.cpp
-	src/TextureBufferDsa.cpp
-	src/VertexArray.cpp
-	src/VertexArrayNoVao.cpp
-	src/VertexArrayVao.cpp
-	src/VertexArrayVaoBind.cpp
-	src/VertexArrayVaoDsa.cpp
-	src/VertexBuffer.cpp
-	src/VertexBufferBind.cpp
-	src/VertexBufferDsa.cpp
-	src/UniformBuffer.cpp
-	src/UniformBufferGlsl.cpp
-	src/UniformBufferGlslBind.cpp
-	src/UniformBufferGlslDsa.cpp
+	src/Buffer/BufferManager.cpp
+	src/Buffer/IndexBuffer.cpp
+	src/Buffer/IndirectBuffer.cpp
+	src/Buffer/TextureBuffer.cpp
+	src/Buffer/UniformBuffer.cpp
+	src/Buffer/VertexArray.cpp
+	src/Buffer/VertexBuffer.cpp
+	src/RenderTarget/Framebuffer.cpp
+	src/RenderTarget/SwapChain.cpp
+	src/Shader/FragmentShaderHlsl.cpp
+	src/Shader/GeometryShaderHlsl.cpp
+	src/Shader/ProgramHlsl.cpp
+	src/Shader/ShaderLanguageHlsl.cpp
+	src/Shader/TessellationControlShaderHlsl.cpp
+	src/Shader/TessellationEvaluationShaderHlsl.cpp
+	src/Shader/VertexShaderHlsl.cpp
 	src/State/BlendState.cpp
 	src/State/DepthStencilState.cpp
+	src/State/PipelineState.cpp
 	src/State/RasterizerState.cpp
-	src/Shader/FragmentShader.cpp
-	src/Shader/FragmentShaderGlsl.cpp
-	src/Shader/GeometryShader.cpp
-	src/Shader/GeometryShaderGlsl.cpp
-	src/Shader/Program.cpp
-	src/Shader/ProgramGlsl.cpp
-	src/Shader/ProgramGlslDsa.cpp
-	src/Shader/ShaderLanguage.cpp
-	src/Shader/ShaderLanguageGlsl.cpp
-	src/Shader/TessellationControlShader.cpp
-	src/Shader/TessellationControlShaderGlsl.cpp
-	src/Shader/TessellationEvaluationShader.cpp
-	src/Shader/TessellationEvaluationShaderGlsl.cpp
-	src/Shader/VertexShader.cpp
-	src/Shader/VertexShaderGlsl.cpp
+	src/State/SamplerState.cpp
+	src/Texture/Texture1D.cpp
+	src/Texture/Texture2D.cpp
+	src/Texture/Texture2DArray.cpp
+	src/Texture/Texture3D.cpp
+	src/Texture/TextureCube.cpp
+	src/Texture/TextureManager.cpp
+	src/Extensions.cpp
+	src/Helper.cpp
+	src/IContext.cpp
+	src/Mapping.cpp
+	src/RootSignature.cpp
+	src/VulkanRenderer.cpp
+	src/VulkanRuntimeLinking.cpp
 )
 if(WIN32)
 	# Windows source codes
