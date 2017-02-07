@@ -41,7 +41,7 @@
 *    Demonstrates:
 *    - Vertex buffer object (VBO)
 *    - Vertex array object (VAO)
-*    - 2D texture
+*    - 1D and 2D texture
 *    - Sampler state object
 *    - Vertex shader (VS) and fragment shader (FS)
 *    - Root signature
@@ -90,6 +90,7 @@ private:
 private:
 	Renderer::IBufferManagerPtr  mBufferManager;	///< Buffer manager, can be a null pointer
 	Renderer::ITextureManagerPtr mTextureManager;	///< Texture manager, can be a null pointer
+	Renderer::ITexture1DPtr		 mTexture1D;		///< 1D texture, can be a null pointer
 	Renderer::ITexture2DPtr		 mTexture2D;		///< 2D texture, can be a null pointer
 	Renderer::ISamplerStatePtr	 mSamplerState;		///< Sampler state, can be a null pointer
 	Renderer::IRootSignaturePtr	 mRootSignature;	///< Root signature, can be a null pointer

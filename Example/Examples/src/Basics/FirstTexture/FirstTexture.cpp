@@ -61,7 +61,28 @@ void FirstTexture::onInitialization()
 		mBufferManager = renderer->createBufferManager();
 		mTextureManager = renderer->createTextureManager();
 
-		{ // Create the texture
+		{ // Create the 1D texture
+			static const uint32_t TEXTURE_WIDTH   = 256;
+			static const uint32_t TEXEL_ELEMENTS  = 1;
+			static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH;
+
+			// Allocate memory for the texture
+			uint8_t *data = new uint8_t[NUMBER_OF_BYTES];
+
+			// Fill the texture data with a color gradient
+			for (int n = 0; n < NUMBER_OF_BYTES; n += TEXEL_ELEMENTS)
+			{
+				data[n] = static_cast<uint8_t>(n);
+			}
+
+			// Create the texture instance
+			mTexture1D = mTextureManager->createTexture1D(TEXTURE_WIDTH, Renderer::TextureFormat::A8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
+
+			// Free texture memory
+			delete [] data;
+		}
+
+		{ // Create the 2D texture
 			static const uint32_t TEXTURE_WIDTH   = 128;
 			static const uint32_t TEXTURE_HEIGHT  = 128;
 			static const uint32_t TEXEL_ELEMENTS  = 4;
@@ -115,13 +136,15 @@ void FirstTexture::onInitialization()
 		}
 
 		{ // Create the root signature
-			Renderer::DescriptorRangeBuilder ranges[2];
+			Renderer::DescriptorRangeBuilder ranges[3];
 			ranges[0].initializeSampler(1, 0);
-			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
+			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GradientMap", 0);
+			ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "DiffuseMap", 0);
 
-			Renderer::RootParameterBuilder rootParameters[2];
+			Renderer::RootParameterBuilder rootParameters[3];
 			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
 			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
+			rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
@@ -220,6 +243,7 @@ void FirstTexture::onDeinitialization()
 	mPipelineState = nullptr;
 	mRootSignature = nullptr;
 	mSamplerState = nullptr;
+	mTexture1D = nullptr;
 	mTexture2D = nullptr;
 	mBufferManager = nullptr;
 	mTextureManager = nullptr;
@@ -248,6 +272,7 @@ void FirstTexture::fillCommandBuffer()
 	// Sanity checks
 	assert(nullptr != mRootSignature);
 	assert(nullptr != mSamplerState);
+	assert(nullptr != mTexture1D);
 	assert(nullptr != mTexture2D);
 	assert(nullptr != mPipelineState);
 	assert(nullptr != mVertexArray);
@@ -264,7 +289,8 @@ void FirstTexture::fillCommandBuffer()
 
 	// Set diffuse map
 	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 0, mSamplerState);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mTexture2D);
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mTexture1D);
+	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, mTexture2D);
 
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);

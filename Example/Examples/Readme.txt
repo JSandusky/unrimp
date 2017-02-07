@@ -45,7 +45,7 @@ Standalone renderer examples.
 	- "FirstTexture" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
-		- 2D texture
+		- 1D and 2D texture
 		- Sampler state object
 		- Vertex shader (VS) and fragment shader (FS)
 		- Root signature

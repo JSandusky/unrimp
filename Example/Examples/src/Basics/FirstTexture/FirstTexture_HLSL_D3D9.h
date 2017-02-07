@@ -63,13 +63,14 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode = STRINGIFY(
 // Uniforms
-uniform sampler2D DiffuseMap : register(s0);
+uniform sampler1D GradientMap : register(s0);
+uniform sampler2D DiffuseMap  : register(s1);
 
 // Programs
 float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	return tex2D(DiffuseMap, TexCoord).bgra;	// Direct3D 9 is using BGR, the world is using RGB
+	return tex1D(GradientMap, TexCoord.x).a * tex2D(DiffuseMap, TexCoord).bgra;	// Direct3D 9 is using BGR, the world is using RGB
 }
 );	// STRINGIFY
 

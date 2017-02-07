@@ -65,13 +65,14 @@ in mediump vec2 TexCoord;		// Normalized texture coordinate as input
 out highp vec4 FragmentColor;	// Output variable for fragment color
 
 // Uniforms
+uniform mediump sampler2D GradientMap;
 uniform mediump sampler2D DiffuseMap;
 
 // Programs
 void main()
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	FragmentColor = texture(DiffuseMap, TexCoord);
+	FragmentColor = texture(GradientMap, TexCoord.x).a * texture(DiffuseMap, TexCoord);
 }
 );	// STRINGIFY
 

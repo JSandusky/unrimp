@@ -68,13 +68,14 @@ STRINGIFY(
 in vec2 TexCoord;	// Normalized texture coordinate as input
 
 // Uniforms
+uniform sampler1D GradientMap;
 uniform sampler2D DiffuseMap;
 
 // Programs
 void main()
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	gl_FragColor = texture2D(DiffuseMap, TexCoord);
+	gl_FragColor = texture1D(GradientMap, TexCoord.x).a * texture2D(DiffuseMap, TexCoord);
 }
 );	// STRINGIFY
 
