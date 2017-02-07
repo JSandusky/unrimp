@@ -375,10 +375,12 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glProgramUniform4fvEXT)
 			IMPORT_FUNC(glProgramUniformMatrix3fvEXT)
 			IMPORT_FUNC(glProgramUniformMatrix4fvEXT)
+			IMPORT_FUNC(glTextureImage1DEXT)
 			IMPORT_FUNC(glTextureImage2DEXT)
 			IMPORT_FUNC(glTextureImage3DEXT)
 			IMPORT_FUNC(glTextureParameteriEXT)
 			IMPORT_FUNC(glGenerateTextureMipmapEXT)
+			IMPORT_FUNC(glCompressedTextureImage1DEXT)
 			IMPORT_FUNC(glCompressedTextureImage2DEXT)
 			IMPORT_FUNC(glVertexArrayVertexAttribOffsetEXT)
 			IMPORT_FUNC(glEnableVertexArrayAttribEXT)
@@ -457,6 +459,7 @@ namespace OpenGLRenderer
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
+			IMPORT_FUNC(glCompressedTexImage1DARB)
 			IMPORT_FUNC(glCompressedTexImage2DARB)
 			mGL_ARB_texture_compression = result;
 		}
@@ -726,7 +729,9 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glNamedFramebufferTexture)
 			IMPORT_FUNC(glTextureBuffer)
 			IMPORT_FUNC(glBindTextureUnit)
+			IMPORT_FUNC(glCompressedTextureSubImage1D)
 			IMPORT_FUNC(glCompressedTextureSubImage2D)
+			IMPORT_FUNC(glTextureSubImage1D)
 			IMPORT_FUNC(glTextureSubImage2D)
 			IMPORT_FUNC(glTextureSubImage3D)
 			IMPORT_FUNC(glVertexArrayAttribFormat)
@@ -743,6 +748,7 @@ namespace OpenGLRenderer
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
+			IMPORT_FUNC(glTextureStorage1D)
 			IMPORT_FUNC(glTextureStorage2D)
 			IMPORT_FUNC(glTextureStorage3D)
 			IMPORT_FUNC(glTextureStorage2DMultisample)

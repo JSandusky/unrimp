@@ -75,7 +75,7 @@ uniform sampler2D DiffuseMap;
 void main()
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	gl_FragColor = texture1D(GradientMap, TexCoord.x).a * texture2D(DiffuseMap, TexCoord);
+	gl_FragColor = texture1D(GradientMap, TexCoord.y).r * texture2D(DiffuseMap, TexCoord);
 }
 );	// STRINGIFY
 

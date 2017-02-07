@@ -71,7 +71,7 @@ Texture2D DiffuseMap  : register(t1);
 float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	return GradientMap.Sample(SamplerLinear, TexCoord.x).a * DiffuseMap.Sample(SamplerLinear, TexCoord);
+	return GradientMap.Sample(SamplerLinear, TexCoord.y).a * DiffuseMap.Sample(SamplerLinear, TexCoord);
 }
 );	// STRINGIFY
 

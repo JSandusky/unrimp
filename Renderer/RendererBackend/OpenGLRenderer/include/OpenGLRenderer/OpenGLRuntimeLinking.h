@@ -175,6 +175,7 @@ namespace OpenGLRenderer
 	FNDEF_GL(void,		glTexParameteri,	(GLenum, GLenum, GLint));
 	FNDEF_GL(void,		glGenTextures,		(GLsizei, GLuint *));
 	FNDEF_GL(void,		glDeleteTextures,	(GLsizei, const GLuint *));
+	FNDEF_GL(void,		glTexImage1D,		(GLenum, GLint, GLint, GLsizei, GLint, GLenum, GLenum, const GLvoid *));
 	FNDEF_GL(void,		glTexImage2D,		(GLenum, GLint, GLint, GLsizei, GLsizei, GLint, GLenum, GLenum, const GLvoid *));
 	FNDEF_GL(void,		glPixelStorei,		(GLenum, GLint));
 	FNDEF_GL(void,		glDepthMask,		(GLboolean));
@@ -238,6 +239,7 @@ namespace OpenGLRenderer
 	#define glTexParameteri		FNPTR(glTexParameteri)
 	#define glGenTextures		FNPTR(glGenTextures)
 	#define glDeleteTextures	FNPTR(glDeleteTextures)
+	#define glTexImage1D		FNPTR(glTexImage1D)
 	#define glTexImage2D		FNPTR(glTexImage2D)
 	#define glPixelStorei		FNPTR(glPixelStorei)
 	#define glDepthMask			FNPTR(glDepthMask)

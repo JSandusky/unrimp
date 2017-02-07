@@ -38,16 +38,13 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture1D::Texture1D(Direct3D11Renderer &direct3D11Renderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *, uint32_t, Renderer::TextureUsage) :
+	Texture1D::Texture1D(Direct3D11Renderer &direct3D11Renderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture1D(direct3D11Renderer, width),
 		mTextureFormat(textureFormat),
 		mGenerateMipmaps(false),
 		mD3D11Texture1D(nullptr),
 		mD3D11ShaderResourceViewTexture(nullptr)
 	{
-		// TODO(co) Implement Direct3D 11 1D texture
-		/*
-
 		// Sanity checks
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
 
@@ -57,23 +54,20 @@ namespace Direct3D11Renderer
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
-		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
+		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, 1) : 1;
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Direct3D 11 1D texture description
 		DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
 		D3D11_TEXTURE1D_DESC d3d11Texture1DDesc;
-		d3d11Texture1DDesc.Width			  = width;
-		d3d11Texture1DDesc.Height			  = height;
-		d3d11Texture1DDesc.MipLevels		  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 11 allocate the complete mipmap chain for us
-		d3d11Texture1DDesc.ArraySize		  = 1;
-		d3d11Texture1Desc.Format			  = dxgiFormat;
-		d3d11Texture1DDesc.SampleDesc.Count	  = 1;
-		d3d11Texture1DDesc.SampleDesc.Quality = 0;
-		d3d11Texture1DDesc.Usage			  = static_cast<D3D11_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
-		d3d11Texture1DDesc.BindFlags		  = D3D11_BIND_SHADER_RESOURCE;
-		d3d11Texture1DDesc.CPUAccessFlags	  = 0;
-		d3d11Texture1DDesc.MiscFlags		  = mGenerateMipmaps ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0u;
+		d3d11Texture1DDesc.Width		  = width;
+		d3d11Texture1DDesc.MipLevels	  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 11 allocate the complete mipmap chain for us
+		d3d11Texture1DDesc.ArraySize	  = 1;
+		d3d11Texture1DDesc.Format		  = dxgiFormat;
+		d3d11Texture1DDesc.Usage		  = static_cast<D3D11_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
+		d3d11Texture1DDesc.BindFlags	  = D3D11_BIND_SHADER_RESOURCE;
+		d3d11Texture1DDesc.CPUAccessFlags = 0;
+		d3d11Texture1DDesc.MiscFlags	  = mGenerateMipmaps ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0u;
 
 		// Use this texture as render target?
 		const bool isDepthFormat = Renderer::TextureFormat::isDepth(textureFormat);
@@ -106,7 +100,7 @@ namespace Direct3D11Renderer
 				{
 					{ // Update Direct3D 11 subresource data of the base-map
 						const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-						const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+						const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, 1);
 						direct3D11Renderer.getD3D11DeviceContext()->UpdateSubresource(mD3D11Texture1D, 0, nullptr, data, bytesPerRow, bytesPerSlice);
 					}
 
@@ -131,12 +125,11 @@ namespace Direct3D11Renderer
 						D3D11_SUBRESOURCE_DATA& currentD3d11SubresourceData = d3d11SubresourceData[mipmap];
 						currentD3d11SubresourceData.pSysMem			 = data;
 						currentD3d11SubresourceData.SysMemPitch		 = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-						currentD3d11SubresourceData.SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+						currentD3d11SubresourceData.SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, 1);
 
 						// Move on to the next mipmap
 						data = static_cast<const uint8_t*>(data) + currentD3d11SubresourceData.SysMemSlicePitch;
 						width = std::max(width >> 1, 1u);	// /= 2
-						height = std::max(height >> 1, 1u);	// /= 2
 					}
 				}
 				else
@@ -144,7 +137,7 @@ namespace Direct3D11Renderer
 					// The user only provided us with the base texture, no mipmaps
 					d3d11SubresourceData->pSysMem		   = data;
 					d3d11SubresourceData->SysMemPitch	   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-					d3d11SubresourceData->SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+					d3d11SubresourceData->SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, 1);
 				}
 				direct3D11Renderer.getD3D11Device()->CreateTexture1D(&d3d11Texture1DDesc, d3d11SubresourceData, &mD3D11Texture1D);
 			}
@@ -176,7 +169,6 @@ namespace Direct3D11Renderer
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
-		*/
 	}
 
 	Texture1D::~Texture1D()
@@ -185,13 +177,10 @@ namespace Direct3D11Renderer
 		{
 			mD3D11ShaderResourceViewTexture->Release();
 		}
-		// TODO(co) Implement Direct3D 11 1D texture
-		/*
 		if (nullptr != mD3D11Texture1D)
 		{
 			mD3D11Texture1D->Release();
 		}
-		*/
 	}
 
 
@@ -212,13 +201,10 @@ namespace Direct3D11Renderer
 				// Do also set the given debug name to the Direct3D 11 resource referenced by the Direct3D resource view
 				if (nullptr != mD3D11Texture1D)
 				{
-					// TODO(co) Implement Direct3D 11 1D texture
-					/*
 					// Set the debug name
 					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 					mD3D11Texture1D->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 					mD3D11Texture1D->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
-					*/
 				}
 			}
 		#endif

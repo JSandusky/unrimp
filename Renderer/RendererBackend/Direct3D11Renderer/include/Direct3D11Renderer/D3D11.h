@@ -833,6 +833,19 @@ struct D3D11_TEX3D_RTV
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
+typedef struct D3D11_TEXTURE1D_DESC
+{
+	UINT Width;
+	UINT MipLevels;
+	UINT ArraySize;
+	DXGI_FORMAT Format;
+	D3D11_USAGE Usage;
+	UINT BindFlags;
+	UINT CPUAccessFlags;
+	UINT MiscFlags;
+} D3D11_TEXTURE1D_DESC;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
 struct D3D11_TEXTURE2D_DESC
 {
 	UINT Width;
@@ -1352,6 +1365,14 @@ struct ID3D11Buffer : public ID3D11Resource
 {
 	public:
 		virtual void STDMETHODCALLTYPE GetDesc(__out D3D11_BUFFER_DESC *pDesc) = 0;
+};
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
+MIDL_INTERFACE("f8fb5c27-c6b3-4f75-a4c8-439af2ef564c")
+ID3D11Texture1D : public ID3D11Resource
+{
+	public:
+		virtual void STDMETHODCALLTYPE GetDesc(_Out_ D3D11_TEXTURE1D_DESC *pDesc) = 0;
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"

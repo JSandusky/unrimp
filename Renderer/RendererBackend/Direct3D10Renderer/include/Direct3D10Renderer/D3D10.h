@@ -700,6 +700,19 @@ struct D3D10_TEX3D_RTV
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"
+typedef struct D3D10_TEXTURE1D_DESC
+{
+	UINT Width;
+	UINT MipLevels;
+	UINT ArraySize;
+	DXGI_FORMAT Format;
+	D3D10_USAGE Usage;
+	UINT BindFlags;
+	UINT CPUAccessFlags;
+	UINT MiscFlags;
+} D3D10_TEXTURE1D_DESC;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"
 struct D3D10_TEXTURE2D_DESC
 {
 	UINT Width;
@@ -1176,6 +1189,16 @@ struct ID3D10Buffer : public ID3D10Resource
 		virtual HRESULT STDMETHODCALLTYPE Map(__in D3D10_MAP MapType, __in UINT MapFlags, __out void **ppData) = 0;
 		virtual void STDMETHODCALLTYPE Unmap(void) = 0;
 		virtual void STDMETHODCALLTYPE GetDesc(__out D3D10_BUFFER_DESC *pDesc) = 0;
+};
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"
+MIDL_INTERFACE("9B7E4C03-342C-4106-A19F-4F2704F689F0")
+ID3D10Texture1D : public ID3D10Resource
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE Map(_In_ UINT Subresource, _In_ D3D10_MAP MapType, _In_ UINT MapFlags, _Out_ void **ppData) = 0;
+		virtual void STDMETHODCALLTYPE Unmap(_In_ UINT Subresource) = 0;
+		virtual void STDMETHODCALLTYPE GetDesc(_Out_ D3D10_TEXTURE1D_DESC *pDesc) = 0;
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"

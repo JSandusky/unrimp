@@ -34,7 +34,10 @@
 #include "Direct3D9Renderer/Buffer/VertexBuffer.h"
 #include "Direct3D9Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D9Renderer/Texture/TextureManager.h"
+#include "Direct3D9Renderer/Texture/Texture1D.h"
 #include "Direct3D9Renderer/Texture/Texture2D.h"
+#include "Direct3D9Renderer/Texture/Texture3D.h"
+#include "Direct3D9Renderer/Texture/TextureCube.h"
 #include "Direct3D9Renderer/State/SamplerState.h"
 #include "Direct3D9Renderer/State/PipelineState.h"
 #include "Direct3D9Renderer/Shader/ProgramHlsl.h"
@@ -530,13 +533,57 @@ namespace Direct3D9Renderer
 					break;
 
 				case Renderer::ResourceType::TEXTURE_1D:
-					// TODO(co) Implement Direct3D 9 1D texture
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 1D texture not implemented, yet")
-					break;
-
 				case Renderer::ResourceType::TEXTURE_2D:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::TEXTURE_3D:
+				case Renderer::ResourceType::TEXTURE_CUBE:
 				{
 					const UINT startSlot = descriptorRange->baseShaderRegister;
+
+					// Get Direct3D 9 texture
+					IDirect3DBaseTexture9* direct3DBaseTexture9 = nullptr;
+					switch (resource->getResourceType())
+					{
+						case Renderer::ResourceType::TEXTURE_1D:
+							direct3DBaseTexture9 = static_cast<Texture1D*>(resource)->getDirect3DTexture9();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_2D:
+							direct3DBaseTexture9 = static_cast<Texture2D*>(resource)->getDirect3DTexture9();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no 2D array textures support")
+							break;
+
+						case Renderer::ResourceType::TEXTURE_3D:
+							direct3DBaseTexture9 = static_cast<Texture3D*>(resource)->getDirect3DTexture9();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_CUBE:
+							direct3DBaseTexture9 = static_cast<TextureCube*>(resource)->getDirect3DTexture9();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_BUFFER:
+						case Renderer::ResourceType::SAMPLER_STATE:
+						case Renderer::ResourceType::ROOT_SIGNATURE:
+						case Renderer::ResourceType::PROGRAM:
+						case Renderer::ResourceType::VERTEX_ARRAY:
+						case Renderer::ResourceType::SWAP_CHAIN:
+						case Renderer::ResourceType::FRAMEBUFFER:
+						case Renderer::ResourceType::INDEX_BUFFER:
+						case Renderer::ResourceType::VERTEX_BUFFER:
+						case Renderer::ResourceType::UNIFORM_BUFFER:
+						case Renderer::ResourceType::INDIRECT_BUFFER:
+						case Renderer::ResourceType::PIPELINE_STATE:
+						case Renderer::ResourceType::VERTEX_SHADER:
+						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+						case Renderer::ResourceType::GEOMETRY_SHADER:
+						case Renderer::ResourceType::FRAGMENT_SHADER:
+							// Nothing here
+							break;
+					}
 
 					// Information about vertex texture fetch in Direct3D 9 can be found within:
 					// Whitepaper: ftp://download.nvidia.com/developer/Papers/2004/Vertex_Textures/Vertex_Textures.pdf
@@ -563,11 +610,9 @@ namespace Direct3D9Renderer
 							// Begin debug event
 							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
-							{ // Set texture
-								IDirect3DTexture9* direct3DTexture9 = static_cast<Texture2D*>(resource)->getDirect3DTexture9();
-								mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DTexture9);
-								mDirect3DDevice9->SetTexture(startSlot, direct3DTexture9);
-							}
+							// Set texture
+							mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DBaseTexture9);
+							mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
 
 							{ // Set sampler
 								const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
@@ -585,7 +630,7 @@ namespace Direct3D9Renderer
 							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
 							// Set texture
-							mDirect3DDevice9->SetTexture(vertexFetchStartSlot, static_cast<Texture2D*>(resource)->getDirect3DTexture9());
+							mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DBaseTexture9);
 
 							// Set sampler
 							mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex)->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
@@ -613,7 +658,7 @@ namespace Direct3D9Renderer
 							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
 							// Set texture
-							mDirect3DDevice9->SetTexture(startSlot, static_cast<Texture2D*>(resource)->getDirect3DTexture9());
+							mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
 
 							// Set sampler
 							mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex)->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
@@ -625,26 +670,10 @@ namespace Direct3D9Renderer
 					break;
 				}
 
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no 2D array textures support")
-					break;
-
-				case Renderer::ResourceType::TEXTURE_3D:
-					// TODO(co) Implement Direct3D 9 3D texture
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 3D texture not implemented, yet")
-					break;
-
-				case Renderer::ResourceType::TEXTURE_CUBE:
-					// TODO(co) Implement Direct3D 9 cube texture
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: cube texture not implemented, yet")
-					break;
-
 				case Renderer::ResourceType::SAMPLER_STATE:
-				{
 					// Unlike Direct3D >=10, Direct3D 9 directly attaches the sampler settings to texture stages
 					mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
-				}
 
 				case Renderer::ResourceType::ROOT_SIGNATURE:
 				case Renderer::ResourceType::PROGRAM:
