@@ -74,8 +74,8 @@ namespace RendererRuntime
 	*
 	*  @remarks
 	*    == Regarding shader combination explosion ==
-	*    The texture manager automatically generates some dynamic default texture assets like "Unrimp/Texture/Dynamic/IdentityDiffuseMap" or
-	*    "Unrimp/Texture/Dynamic/IdentityNormalMap" one can reference e.g. inside material blueprint resources. Especially the identity texture maps
+	*    The texture manager automatically generates some dynamic default texture assets like "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D" or
+	*    "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D" one can reference e.g. inside material blueprint resources. Especially the identity texture maps
 	*    can be used as default material property value. While it's tempting to add shader combination material properties like "UseDiffuseMap",
 	*    "UseNormalMap" etc. one has to keep the problem of shader combination explosion in mind. Especially in more complex material blueprints the
 	*    number of shader combinations can quickly reach a point were it's practically impossible to e.g. generate a shader cache for shipped products

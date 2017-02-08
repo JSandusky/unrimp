@@ -66,7 +66,7 @@ SAMPLER_STATE(SamplerPointWrap, 1)
 	TEXTURE_2D(GBufferMap1, 0)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
 	TEXTURE_2D(DepthMap, 1)
 @end
-TEXTURE_2D(ScreenSpaceAmbientOcclusionSampleKernelMap, 2)
+TEXTURE_1D(ScreenSpaceAmbientOcclusionSampleKernelMap, 2)
 TEXTURE_2D(ScreenSpaceAmbientOcclusionNoise4x4Map, 3)
 
 
@@ -148,7 +148,7 @@ float CalculateOcclusion(float2 textureCoordinate, int sampleIndex)
 	for (int i = 0; i < SampleKernelSize; ++i)
 	{
 		// Get sample position
-		float3 samplePosition = MATRIX_MUL(SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionSampleKernelMap, SamplerPointClamp, float4(float(i) / float(SampleKernelSize), 0.0f, 0.0f, 0.0f)).xyz, tbn);
+		float3 samplePosition = MATRIX_MUL(SAMPLE_1D_LOD(ScreenSpaceAmbientOcclusionSampleKernelMap, SamplerPointClamp, float4(float(i) / float(SampleKernelSize), 0.0f, 0.0f, 0.0f)).xyz, tbn);
 		samplePosition = samplePosition * Radius + origin;
 
 		// Project sample position

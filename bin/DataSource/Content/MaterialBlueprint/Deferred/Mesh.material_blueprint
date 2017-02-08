@@ -49,8 +49,8 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/IdentityDiffuseMap",
-				"Description": "Material diffuse map"
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
+				"Description": "2D material diffuse map"
 			},
 			"UseAlphaMap":
 			{
@@ -64,8 +64,8 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/IdentityAlphaMap",
-				"Description": "Material alpha map"
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",
+				"Description": "2D material alpha map"
 			},
 			"AlphaReference":
 			{
@@ -89,8 +89,8 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/IdentityEmissiveMap",
-				"Description": "Material emissive map"
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",
+				"Description": "2D material emissive map"
 			},
 			"EmissiveIntensity":
 			{
@@ -110,8 +110,8 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/IdentityNormalMap",
-				"Description": "Material tangent space normal map"
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",
+				"Description": "2D material tangent space normal map"
 			},
 			"UseSpecularMap":
 			{
@@ -124,8 +124,8 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/IdentitySpecularMap",
-				"Description": "Material specular map"
+				"Value": "Unrimp/Texture/DynamicByCode/IdentitySpecularMap2D",
+				"Description": "2D material specular map"
 			}
 		},
 		"RootSignature":

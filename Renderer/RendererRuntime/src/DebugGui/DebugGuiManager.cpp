@@ -365,10 +365,10 @@ namespace RendererRuntime
 
 			// Upload texture to renderer
 			mTexture2D = mRendererRuntime.getTextureManager().createTexture2D(static_cast<uint32_t>(width), static_cast<uint32_t>(height), Renderer::TextureFormat::A8, pixels, Renderer::TextureFlag::GENERATE_MIPMAPS);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(mTexture2D, "Debug GUI glyph texture atlas")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(mTexture2D, "Debug 2D GUI glyph texture atlas")
 
 			// Tell the texture resource manager about our render target texture so it can be referenced inside e.g. compositor nodes
-			mRendererRuntime.getTextureResourceManager().createTextureResourceByAssetId(StringId("Unrimp/Texture/Dynamic/ImGuiGlyphMap"), *mTexture2D);
+			mRendererRuntime.getTextureResourceManager().createTextureResourceByAssetId(StringId("Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D"), *mTexture2D);
 		}
 	}
 

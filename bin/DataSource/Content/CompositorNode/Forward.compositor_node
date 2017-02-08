@@ -537,7 +537,7 @@
 					"MaterialBlueprintAssetId": "121",
 					"SetMaterialProperties":
 					{
-						"GlyphMap": "Unrimp/Texture/Dynamic/ImGuiGlyphMap",
+						"GlyphMap": "Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D",
 						"BackgroundMap": "Example/Texture/Dynamic/GaussianBlurDownscale2ColorRenderTarget"
 					}
 				}

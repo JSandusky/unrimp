@@ -12,15 +12,15 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/IdentityAlphaMap",
-				"Description": "Glyph map"
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",
+				"Description": "2D glyph map"
 			},
 			"BackgroundMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "Background map"
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D background map"
 			}
 		},
 		"RootSignature":

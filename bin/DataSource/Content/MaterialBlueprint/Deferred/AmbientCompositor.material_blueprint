@@ -22,43 +22,43 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)"
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)"
 			},
 			"GBufferMap1":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic"
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic"
 			},
 			"GBufferMap2":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "GBuffer 2: rgb = emissive color, a = glossiness"
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D GBuffer 2: rgb = emissive color, a = glossiness"
 			},
 			"DepthMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "Depth map"
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D depth map"
 			},
 			"ShadowMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "Shadow map"
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D shadow map"
 			},
 			"ScreenSpaceAmbientOcclusionMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
-				"Description": "Screen space ambient occlusion (SSAO) map"
+				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+				"Description": "2D screen space ambient occlusion (SSAO) map"
 			}
 		},
 		"RootSignature":

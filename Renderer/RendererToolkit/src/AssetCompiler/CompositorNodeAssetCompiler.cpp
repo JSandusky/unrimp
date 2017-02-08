@@ -528,14 +528,14 @@ namespace RendererToolkit
 			// Write down the compositor render target textures
 			std::unordered_set<uint32_t> renderTargetTextureAssetIds;	// "RendererRuntime::AssetId"-type
 			{ // TODO(co) Make this somehow more generic
-				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/WhiteMap"));
-				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/BlackMap"));
-				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityDiffuseMap"));
-				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityAlphaMap"));
-				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityNormalMap"));
-				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentitySpecularMap"));
-				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/IdentityEmissiveMap"));
-				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/Dynamic/ImGuiGlyphMap"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/WhiteMap2D"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/BlackMap2D"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentitySpecularMap2D"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D"));
 			}
 			if (rapidJsonValueCompositorNodeAsset.HasMember("RenderTargetTextures"))
 			{

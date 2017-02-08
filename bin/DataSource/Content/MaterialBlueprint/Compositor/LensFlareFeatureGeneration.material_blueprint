@@ -52,15 +52,15 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
-				"Description": "Color map"
+				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+				"Description": "2D color map"
 			},
 			"LensColorMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "144",
-				"Description": "Lens color map"
+				"Description": "1D lens color map"
 			}
 		},
 		"RootSignature":

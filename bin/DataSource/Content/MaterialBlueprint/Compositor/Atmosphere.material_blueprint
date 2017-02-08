@@ -39,15 +39,15 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
-				"Description": "Color map"
+				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+				"Description": "2D color map"
 			},
 			"DepthMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "Depth map"
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D depth map"
 			}
 		},
 		"RootSignature":

@@ -137,7 +137,7 @@ namespace
 			}
 
 			// Create the renderer texture resource
-			Renderer::ITexturePtr texturePtr(rendererRuntime.getTextureManager().createTexture2D(KERNEL_SIZE, 1, Renderer::TextureFormat::R32G32B32A32F, kernel));	// TODO(co) 1D texture
+			Renderer::ITexturePtr texturePtr(rendererRuntime.getTextureManager().createTexture1D(KERNEL_SIZE, Renderer::TextureFormat::R32G32B32A32F, kernel));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "Screen space ambient occlusion sample kernel texture")
 
 			// Create dynamic texture asset

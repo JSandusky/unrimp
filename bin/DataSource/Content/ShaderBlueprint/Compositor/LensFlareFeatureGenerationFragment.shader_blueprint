@@ -60,7 +60,7 @@ SAMPLER_STATE(SamplerPoint, 1)
 
 // Textures
 TEXTURE_2D(ColorMap, 0)
-TEXTURE_2D(LensColorMap, 1)
+TEXTURE_1D(LensColorMap, 1)
 
 
 //[-------------------------------------------------------]
@@ -104,7 +104,7 @@ MAIN_BEGIN
 	}
 
 	// Tint ghost
-	result *= SAMPLE_2D_LOD(LensColorMap, SamplerPoint, float4(length(float2(0.5f, 0.5f) - textureCoordinate) / halfVectorLength, 0.0f, 0.0f, 0.0f)).bgr;
+	result *= SAMPLE_1D_LOD(LensColorMap, SamplerPoint, float4(length(float2(0.5f, 0.5f) - textureCoordinate) / halfVectorLength, 0.0f, 0.0f, 0.0f)).bgr;
 
 	// Sample halo
 	float weight = SATURATE(length(float2(0.5f, 0.5f) - frac(textureCoordinate + haloVec)) / halfVectorLength);

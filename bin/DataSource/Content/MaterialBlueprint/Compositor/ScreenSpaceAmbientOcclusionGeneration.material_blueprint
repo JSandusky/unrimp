@@ -22,15 +22,15 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic"
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic"
 			},
 			"DepthMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "Depth map"
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D depth map"
 			}
 		},
 		"RootSignature":
@@ -232,14 +232,16 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel"
+					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel",
+					"Description": "1D screen space ambient occlusion sample kernel map"
 				},
 				"ScreenSpaceAmbientOcclusionNoise4x4Map":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4"
+					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4",
+					"Description": "2D screen space ambient occlusion 4x4 noise map"
 				}
 			}
 		}

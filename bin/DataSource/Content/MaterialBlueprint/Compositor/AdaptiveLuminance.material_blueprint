@@ -30,15 +30,15 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
-				"Description": "Current luminance map"
+				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+				"Description": "Current 2D luminance map"
 			},
 			"PreviousLuminanceMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
-				"Description": "Previous luminance map"
+				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+				"Description": "Previous 2D luminance map"
 			}
 		},
 		"RootSignature":

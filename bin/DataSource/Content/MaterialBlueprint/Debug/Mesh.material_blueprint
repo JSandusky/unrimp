@@ -43,8 +43,8 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/IdentityDiffuseMap",
-				"Description": "Material diffuse map"
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
+				"Description": "2D material diffuse map"
 			}
 		},
 		"RootSignature":

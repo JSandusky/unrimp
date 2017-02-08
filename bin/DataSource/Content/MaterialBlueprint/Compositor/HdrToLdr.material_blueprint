@@ -32,43 +32,43 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
-				"Description": "Color map"
+				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+				"Description": "2D color map"
 			},
 			"LuminanceMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/WhiteMap",
-				"Description": "Luminance map"
+				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+				"Description": "2D luminance map"
 			},
 			"BloomMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "Bloom map"
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D bloom map"
 			},
 			"LensFlareMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/Dynamic/BlackMap",
-				"Description": "Lens flare map"
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D lens flare map"
 			},
 			"DirtyLensMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "135",
-				"Description": "Dirty lens map"
+				"Description": "2D dirty lens map"
 			},
 			"LensStarMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "145",
-				"Description": "Lens star map for diffraction starburst"
+				"Description": "2D lens star map for diffraction starburst"
 			}
 		},
 		"RootSignature":

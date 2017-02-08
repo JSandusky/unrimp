@@ -60,6 +60,9 @@ namespace RendererRuntime
 	*    Supports two command buffer fill modes:
 	*    - Using fixed build in renderer configuration, including shaders
 	*    - Using a material resource blueprint set by the caller
+	*
+	*    Automatically creates a texture map  with the name
+	*    - "Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D"
 	*/
 	class DebugGuiManager : private Manager
 	{

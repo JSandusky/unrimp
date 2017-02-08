@@ -289,7 +289,7 @@
 		#define TEXEL_FETCH(name, index) texelFetch(name, int(index + drawId.y / 16))	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
 
 		// Texture
-		#define TEXTURE_1D(name, index) uniform highp sampler1D name;
+		#define TEXTURE_1D(name, index) uniform highp sampler2D name;	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
 		#define TEXTURE_2D(name, index) uniform highp sampler2D name;
 		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) uniform sampler2DMS name;
 		#define TEXTURE_3D(name, index) uniform highp sampler3D name;
@@ -299,8 +299,8 @@
 		// Sampler
 		#define SAMPLER_STATE(name, index) int name = index;	// We need something to pass into functions
 		#define SAMPLER_COMPARISON_STATE(name, index)
-		#define SAMPLE_1D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
-		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.x, coordinate.w)
+		#define SAMPLE_1D(textureObject, samplerObject, coordinate) texture(textureObject, vec2(coordinate, 0.0f))							// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
+		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, vec2(coordinate.x, 0.0f), coordinate.w)	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w)
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
