@@ -260,21 +260,24 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@ColorMap"
+					"Value": "@ColorMap",
+					"MipmapsUsed": "FALSE"
 				},
 				"DepthMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DepthMap"
+					"Value": "@DepthMap",
+					"MipmapsUsed": "FALSE"
 				},
 				"BlurMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@BlurMap"
+					"Value": "@BlurMap",
+					"MipmapsUsed": "FALSE"
 				}
 			}
 		}

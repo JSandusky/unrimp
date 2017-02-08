@@ -303,42 +303,48 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@GBufferMap0"
+					"Value": "@GBufferMap0",
+					"MipmapsUsed": "FALSE"
 				},
 				"GBufferMap1":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@GBufferMap1"
+					"Value": "@GBufferMap1",
+					"MipmapsUsed": "FALSE"
 				},
 				"GBufferMap2":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@GBufferMap2"
+					"Value": "@GBufferMap2",
+					"MipmapsUsed": "FALSE"
 				},
 				"DepthMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DepthMap"
+					"Value": "@DepthMap",
+					"MipmapsUsed": "FALSE"
 				},
 				"ShadowMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@ShadowMap"
+					"Value": "@ShadowMap",
+					"MipmapsUsed": "FALSE"
 				},
 				"ScreenSpaceAmbientOcclusionMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@ScreenSpaceAmbientOcclusionMap"
+					"Value": "@ScreenSpaceAmbientOcclusionMap",
+					"MipmapsUsed": "FALSE"
 				}
 			}
 		}

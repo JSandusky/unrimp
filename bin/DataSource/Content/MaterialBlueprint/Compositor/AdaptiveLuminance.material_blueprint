@@ -169,7 +169,8 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@PreviousLuminanceMap"
+					"Value": "@PreviousLuminanceMap",
+					"MipmapsUsed": "FALSE"
 				}
 			}
 		}

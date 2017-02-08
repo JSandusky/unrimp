@@ -27,6 +27,7 @@
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/PlatformTypes.h"
+#include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 
@@ -360,8 +361,7 @@ namespace
 		  return true;
 	   }
 
-
-		convert_status convert_file(const char* pSrc_filename, const char* pDst_filename, crnlib::texture_file_types::format out_file_type)
+		convert_status convert_file(const char* pSrc_filename, const char* pDst_filename, crnlib::texture_file_types::format out_file_type, bool createMipmaps)
 		{
 			crnlib::texture_file_types::format src_file_format = crnlib::texture_file_types::determine_file_format(pSrc_filename);
 			if (src_file_format == crnlib::texture_file_types::cFormatInvalid)
@@ -453,8 +453,10 @@ namespace
 			if (src_tex.get_width() == 1 || src_tex.get_height() == 1)
 			{
 				params.m_dst_format = crnlib::PIXEL_FMT_A8R8G8B8;
-				params.m_mipmap_params.m_mode = cCRNMipModeNoMips;
 			}
+
+			// Create mipmaps?
+			params.m_mipmap_params.m_mode = createMipmaps ? cCRNMipModeGenerateMips : cCRNMipModeNoMips;
 
 			crnlib::texture_conversion::convert_stats stats;
 
@@ -661,6 +663,7 @@ namespace RendererToolkit
 		// TODO(co) Add required properties
 		std::string inputFile;
 		std::string assetFileFormat;
+		bool createMipmaps = true;
 		{
 			// Read texture asset compiler configuration
 			const rapidjson::Value& rapidJsonValueTextureAssetCompiler = rapidJsonValueAsset["TextureAssetCompiler"];
@@ -669,6 +672,7 @@ namespace RendererToolkit
 			{
 				assetFileFormat = rapidJsonValueTextureAssetCompiler["FileFormat"].GetString();
 			}
+			JsonHelper::optionalBooleanProperty(rapidJsonValueTextureAssetCompiler, "CreateMipmaps", createMipmaps);
 		}
 
 		const std::string inputAssetFilename = assetInputDirectory + inputFile;

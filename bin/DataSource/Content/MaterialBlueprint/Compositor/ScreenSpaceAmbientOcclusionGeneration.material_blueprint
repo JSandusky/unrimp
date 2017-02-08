@@ -218,14 +218,16 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@GBufferMap1"
+					"Value": "@GBufferMap1",
+					"MipmapsUsed": "FALSE"
 				},
 				"DepthMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DepthMap"
+					"Value": "@DepthMap",
+					"MipmapsUsed": "FALSE"
 				},
 				"ScreenSpaceAmbientOcclusionSampleKernelMap":
 				{
@@ -233,7 +235,8 @@
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel",
-					"Description": "1D screen space ambient occlusion sample kernel map"
+					"Description": "1D screen space ambient occlusion sample kernel map",
+					"MipmapsUsed": "FALSE"
 				},
 				"ScreenSpaceAmbientOcclusionNoise4x4Map":
 				{
@@ -241,7 +244,8 @@
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4",
-					"Description": "2D screen space ambient occlusion 4x4 noise map"
+					"Description": "2D screen space ambient occlusion 4x4 noise map",
+					"MipmapsUsed": "FALSE"
 				}
 			}
 		}

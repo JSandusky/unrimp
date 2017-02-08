@@ -278,28 +278,32 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@ColorMap"
+					"Value": "@ColorMap",
+					"MipmapsUsed": "FALSE"
 				},
 				"LuminanceMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@LuminanceMap"
+					"Value": "@LuminanceMap",
+					"MipmapsUsed": "FALSE"
 				},
 				"BloomMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@BloomMap"
+					"Value": "@BloomMap",
+					"MipmapsUsed": "FALSE"
 				},
 				"LensFlareMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@LensFlareMap"
+					"Value": "@LensFlareMap",
+					"MipmapsUsed": "FALSE"
 				},
 				"DirtyLensMap":
 				{
@@ -307,7 +311,8 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DirtyLensMap",
-					"RgbHardwareGammaCorrection": "TRUE"
+					"RgbHardwareGammaCorrection": "TRUE",
+					"MipmapsUsed": "FALSE"
 				},
 				"LensStarMap":
 				{
@@ -315,7 +320,8 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LensStarMap",
-					"RgbHardwareGammaCorrection": "TRUE"
+					"RgbHardwareGammaCorrection": "TRUE",
+					"MipmapsUsed": "FALSE"
 				}
 			}
 		}

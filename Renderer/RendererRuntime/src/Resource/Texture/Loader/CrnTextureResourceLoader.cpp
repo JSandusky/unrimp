@@ -135,6 +135,9 @@ namespace RendererRuntime
 				return;
 		}
 
+		// Does the data contain mipmaps?
+		mDataContainsMipmaps = (crnTextureInfo.m_levels > 1);
+
 		crnd::crnd_unpack_context crndUnpackContext = crnd::crnd_unpack_begin(mFileData, mNumberOfFileDataBytes);
 		if (nullptr == crndUnpackContext)
 		{
@@ -229,12 +232,12 @@ namespace RendererRuntime
 		if (1 == mWidth || 1 == mHeight)
 		{
 			// 1D texture
-			texture = mRendererRuntime.getTextureManager().createTexture1D((1 == mWidth) ? mHeight : mWidth, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+			texture = mRendererRuntime.getTextureManager().createTexture1D((1 == mWidth) ? mHeight : mWidth, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, mDataContainsMipmaps ? Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS : 0u);
 		}
 		else
 		{
 			// 2D texture
-			texture = mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+			texture = mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, mDataContainsMipmaps ? Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS : 0u);
 		}
 		RENDERER_SET_RESOURCE_DEBUG_NAME(texture, getAsset().assetFilename)
 		return texture;

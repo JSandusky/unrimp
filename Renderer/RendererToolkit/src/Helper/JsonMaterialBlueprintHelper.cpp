@@ -967,6 +967,8 @@ namespace RendererToolkit
 			bool rgbHardwareGammaCorrection = false;
 			JsonHelper::optionalBooleanProperty(rapidJsonValueTexture, "RgbHardwareGammaCorrection", rgbHardwareGammaCorrection);
 
+			// "MipmapsUsed" with the default value "TRUE" isn't used, but it should be defined if mipmaps are not used to support debugging and optimization possibility spotting
+
 			// Mandatory usage
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(rapidJsonValueTexture);
 			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValueTexture);

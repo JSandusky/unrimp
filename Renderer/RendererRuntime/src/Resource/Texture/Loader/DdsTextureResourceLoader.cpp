@@ -155,6 +155,9 @@ namespace RendererRuntime
 		//	EColorFormat nInternalColorFormat;
 		//	ECompression nCompression = CompressionNone;
 
+			// Does the data contain mipmaps?
+			mDataContainsMipmaps = (ddsHeader.mipMapCount > 0);
+
 			// Get the depth
 			const uint32_t depth = ddsHeader.depth ? ddsHeader.depth : 1;
 
@@ -664,12 +667,12 @@ namespace RendererRuntime
 		if (1 == mWidth || 1 == mHeight)
 		{
 			// 1D texture
-			texture = mRendererRuntime.getTextureManager().createTexture1D((1 == mWidth) ? mHeight : mWidth, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+			texture = mRendererRuntime.getTextureManager().createTexture1D((1 == mWidth) ? mHeight : mWidth, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, mDataContainsMipmaps ? Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS : 0u);
 		}
 		else
 		{
 			// 2D texture
-			texture = mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+			texture = mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, mDataContainsMipmaps ? Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS : 0u);
 		}
 		RENDERER_SET_RESOURCE_DEBUG_NAME(texture, getAsset().assetFilename)
 		return texture;

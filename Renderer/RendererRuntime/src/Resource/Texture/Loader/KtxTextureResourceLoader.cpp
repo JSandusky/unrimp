@@ -76,6 +76,9 @@ namespace RendererRuntime
 		mHeight = ktxHeader.pixelHeight;
 		mTextureFormat = Renderer::TextureFormat::ETC1;	// TODO(co) Make this dynamic
 
+		// Does the data contain mipmaps?
+		mDataContainsMipmaps = (ktxHeader.numberOfMipmapLevels > 1);
+
 		// Get the size of the compressed image
 		mNumberOfUsedImageDataBytes = 0;
 		{
@@ -137,12 +140,12 @@ namespace RendererRuntime
 		if (1 == mWidth || 1 == mHeight)
 		{
 			// 1D texture
-			texture = mRendererRuntime.getTextureManager().createTexture1D((1 == mWidth) ? mHeight : mWidth, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+			texture = mRendererRuntime.getTextureManager().createTexture1D((1 == mWidth) ? mHeight : mWidth, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, mDataContainsMipmaps ? Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS : 0u);
 		}
 		else
 		{
 			// 2D texture
-			texture = mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+			texture = mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, mDataContainsMipmaps ? Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS : 0u);
 		}
 		RENDERER_SET_RESOURCE_DEBUG_NAME(texture, getAsset().assetFilename)
 		return texture;
