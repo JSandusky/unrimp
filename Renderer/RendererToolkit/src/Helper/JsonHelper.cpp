@@ -154,7 +154,7 @@ namespace RendererToolkit
 		if (rapidJsonValue.HasMember(propertyName))
 		{
 			std::vector<std::string> elements;
-			RendererToolkit::StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
 			if (elements.size() == numberOfComponents)
 			{
 				for (size_t i = 0; i < numberOfComponents; ++i)
@@ -182,7 +182,7 @@ namespace RendererToolkit
 		if (rapidJsonValue.HasMember(propertyName))
 		{
 			std::vector<std::string> elements;
-			RendererToolkit::StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
 			if (elements.size() == numberOfComponents)
 			{
 				for (size_t i = 0; i < numberOfComponents; ++i)
@@ -223,7 +223,7 @@ namespace RendererToolkit
 		if (rapidJsonValue.HasMember(propertyName))
 		{
 			std::vector<std::string> elements;
-			RendererToolkit::StringHelper::splitString(rapidJsonValue[propertyName].GetString(), separator, elements);
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), separator, elements);
 			if (elements.size() == numberOfComponents)
 			{
 				for (size_t i = 0; i < numberOfComponents; ++i)
@@ -270,7 +270,7 @@ namespace RendererToolkit
 		{
 			clearFlags = 0;
 			std::vector<std::string> flagsAsString;
-			RendererToolkit::StringHelper::splitString(rapidJsonValue[propertyName].GetString(), '|', flagsAsString);
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), '|', flagsAsString);
 			if (!flagsAsString.empty())
 			{
 				// Define helper macros
@@ -311,13 +311,13 @@ namespace RendererToolkit
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
-			compiledAssetId = input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(rapidJsonValue[propertyName].GetString())));
+			compiledAssetId = input.getCompiledAssetIdBySourceAssetId(StringHelper::getAssetIdByString(rapidJsonValue[propertyName].GetString(), input));
 		}
 	}
 
 	RendererRuntime::AssetId JsonHelper::getCompiledAssetId(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName)
 	{
-		return input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(rapidJsonValue[propertyName].GetString())));
+		return input.getCompiledAssetIdBySourceAssetId(StringHelper::getAssetIdByString(rapidJsonValue[propertyName].GetString(), input));
 	}
 
 	Renderer::TextureFormat::Enum JsonHelper::mandatoryTextureFormat(const rapidjson::Value& rapidJsonValue)

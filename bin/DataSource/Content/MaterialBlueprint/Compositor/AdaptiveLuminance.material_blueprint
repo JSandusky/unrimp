@@ -162,7 +162,8 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@CurrentLuminanceMap"
+					"Value": "@CurrentLuminanceMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D"
 				},
 				"PreviousLuminanceMap":
 				{
@@ -170,6 +171,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@PreviousLuminanceMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

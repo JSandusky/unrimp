@@ -170,6 +170,7 @@ namespace RendererRuntime
 			// Loaded from material blueprint
 			uint32_t		  rootParameterIndex;
 			MaterialProperty  materialProperty;
+			AssetId			  fallbackTextureAssetId;
 			bool			  rgbHardwareGammaCorrection;
 
 			// Derived data

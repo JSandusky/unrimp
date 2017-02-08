@@ -416,6 +416,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DiffuseMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				},
 				"AlphaMap":
@@ -423,7 +424,8 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@AlphaMap"
+					"Value": "@AlphaMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
 				},
 				"EmissiveMap":
 				{
@@ -431,6 +433,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@EmissiveMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				},
 				"NormalMap":
@@ -438,7 +441,8 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@NormalMap"
+					"Value": "@NormalMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
 				},
 				"SpecularMap":
 				{
@@ -446,6 +450,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@SpecularMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentitySpecularMap2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				}
 			}

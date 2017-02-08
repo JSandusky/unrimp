@@ -44,41 +44,44 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		Renderer::ITexturePtr createDefaultDynamicTextureAssets(RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::TextureResourceManager& textureResourceManager)
+		void createDefaultDynamicTextureAssets(RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::TextureResourceManager& textureResourceManager)
 		{
 			Renderer::ITextureManager& textureManager = rendererRuntime.getTextureManager();
 
-			// White 2D RGB texture
+			// White RGB texture
 			const uint8_t whiteRgbData[] = { 255, 255, 255, 255 };
-			Renderer::ITexturePtr whiteRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, whiteRgbData));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgbTexturePtr, "White 2D RGB texture")
+			Renderer::ITexturePtr whiteRgb1DTexturePtr(textureManager.createTexture1D(1, Renderer::TextureFormat::R8G8B8A8, whiteRgbData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgb1DTexturePtr, "White 1D RGB texture")
+			Renderer::ITexturePtr whiteRgb2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, whiteRgbData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgb2DTexturePtr, "White 2D RGB texture")
 
-			// 2D normal map identity texture
+			// Normal map identity texture
 			const uint8_t normalMapIdentityData[] = { 128, 128, 255, 255 };
-			Renderer::ITexturePtr normalMapIdentityTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, normalMapIdentityData));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(normalMapIdentityTexturePtr, "2D normal map identity texture")
+			Renderer::ITexturePtr normalMapIdentity2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, normalMapIdentityData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(normalMapIdentity2DTexturePtr, "2D normal map identity texture")
 
-			// White 2D alpha texture
+			// White alpha texture
 			const uint8_t whiteAData[] = { 255 };
-			Renderer::ITexturePtr whiteATexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::A8, whiteAData));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteATexturePtr, "White 2D alpha texture")
+			Renderer::ITexturePtr whiteA2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::A8, whiteAData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteA2DTexturePtr, "White 2D alpha texture")
 
-			// Black 2D RGB texture
+			// Black RGB texture
 			const uint8_t blackRgbData[] = { 0, 0, 0, 0 };
-			Renderer::ITexturePtr blackRgbTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, blackRgbData));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgbTexturePtr, "Black 2D RGB texture")
+			Renderer::ITexturePtr blackRgb1DTexturePtr(textureManager.createTexture1D(1, Renderer::TextureFormat::R8G8B8A8, blackRgbData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgb1DTexturePtr, "Black 1D RGB texture")
+			Renderer::ITexturePtr blackRgb2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, blackRgbData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgb2DTexturePtr, "Black 2D RGB texture")
 
 			// Create default dynamic texture assets
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/WhiteMap2D",			*whiteRgbTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMap2D",			*blackRgbTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",	*whiteRgbTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",	*whiteATexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",	*normalMapIdentityTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentitySpecularMap2D",	*whiteATexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",	*blackRgbTexturePtr);
-
-			// Done
-			return blackRgbTexturePtr;
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/WhiteMap1D",			*whiteRgb1DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/WhiteMap2D",			*whiteRgb2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMap1D",			*blackRgb1DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMap2D",			*blackRgb2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",	*whiteRgb2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",	*whiteA2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",	*normalMapIdentity2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentitySpecularMap2D",	*whiteA2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",	*blackRgb2DTexturePtr);
 		}
 
 
@@ -122,7 +125,7 @@ namespace RendererRuntime
 	}
 
 	// TODO(co) Work-in-progress
-	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool rgbHardwareGammaCorrection, bool reload)
+	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, AssetId fallbackTextureAssetId, bool rgbHardwareGammaCorrection, bool reload)
 	{
 		TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
 
@@ -168,10 +171,26 @@ namespace RendererRuntime
 					resourceStreamerLoadRequest.resourceLoader = textureResourceLoader;
 					mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 
-					// Since it might take a moment to load the texture resource, we'll use a placeholder renderer texture resource so we don't have to wait until the real thing is there
-					// TODO(co) This is currently totally primitive. Later on we need different texture types (3D etc.) and also want to have at least a rough texture preview (need to store lowest mipmaps inside the asset package). Currently e.g. normal maps will look totally wrong for a moment.
-					textureResource->mTexture = mPlaceholderTexturePtr;
-					textureResource->setLoadingState(IResource::LoadingState::LOADED);
+					// Since it might take a moment to load the texture resource, we'll use a fallback placeholder renderer texture resource so we don't have to wait until the real thing is there
+					if (isInitialized(fallbackTextureAssetId))
+					{
+						const TextureResource* fallbackTextureResource = getTextureResourceByAssetId(fallbackTextureAssetId);
+						if (nullptr != fallbackTextureResource)
+						{
+							textureResource->mTexture = fallbackTextureResource->getTexture();
+							textureResource->setLoadingState(IResource::LoadingState::LOADED);
+						}
+						else
+						{
+							// Error! Fallback texture asset ID not found.
+							assert(false);
+						}
+					}
+					else
+					{
+						// Hiccups / lags warning: There should always be a fallback texture asset ID (better be safe than sorry)
+						assert(false);
+					}
 				}
 			}
 			else
@@ -214,7 +233,7 @@ namespace RendererRuntime
 			const TextureResource& textureResource = mTextureResources.getElementByIndex(i);
 			if (textureResource.getAssetId() == assetId)
 			{
-				loadTextureResourceByAssetId(assetId, nullptr, textureResource.isRgbHardwareGammaCorrection(), true);
+				loadTextureResourceByAssetId(assetId, nullptr, getUninitialized<AssetId>(), textureResource.isRgbHardwareGammaCorrection(), true);
 				break;
 			}
 		}
@@ -232,7 +251,7 @@ namespace RendererRuntime
 	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime)
 	{
-		mPlaceholderTexturePtr = ::detail::createDefaultDynamicTextureAssets(rendererRuntime, *this);
+		::detail::createDefaultDynamicTextureAssets(rendererRuntime, *this);
 	}
 
 	IResourceLoader* TextureResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)

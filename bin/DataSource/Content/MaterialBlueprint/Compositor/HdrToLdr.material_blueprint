@@ -279,6 +279,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"LuminanceMap":
@@ -287,6 +288,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LuminanceMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"BloomMap":
@@ -295,6 +297,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@BloomMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"LensFlareMap":
@@ -303,6 +306,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LensFlareMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"DirtyLensMap":
@@ -312,6 +316,7 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DirtyLensMap",
 					"RgbHardwareGammaCorrection": "TRUE",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"LensStarMap":
@@ -321,6 +326,7 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LensStarMap",
 					"RgbHardwareGammaCorrection": "TRUE",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

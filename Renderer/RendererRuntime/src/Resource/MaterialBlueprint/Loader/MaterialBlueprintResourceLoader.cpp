@@ -329,10 +329,11 @@ namespace RendererRuntime
 				MaterialBlueprintResource::Texture& texture = textures[i];
 				texture.rootParameterIndex = materialBlueprintTexture->rootParameterIndex;
 				const MaterialProperty& materialProperty = texture.materialProperty = materialBlueprintTexture->materialProperty;
+				texture.fallbackTextureAssetId = materialBlueprintTexture->fallbackTextureAssetId;
 				texture.rgbHardwareGammaCorrection = materialBlueprintTexture->rgbHardwareGammaCorrection;
 				if (materialProperty.getValueType() == MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
 				{
-					texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(materialProperty.getTextureAssetIdValue(), nullptr, texture.rgbHardwareGammaCorrection);
+					texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(materialProperty.getTextureAssetIdValue(), nullptr, texture.fallbackTextureAssetId, texture.rgbHardwareGammaCorrection);
 				}
 			}
 		}

@@ -225,6 +225,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"LensColorMap":
@@ -233,6 +234,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LensColorMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap1D",
 					"RgbHardwareGammaCorrection": "TRUE",
 					"MipmapsUsed": "FALSE"
 				}

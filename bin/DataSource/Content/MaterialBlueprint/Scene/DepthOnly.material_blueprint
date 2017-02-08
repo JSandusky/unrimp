@@ -224,7 +224,8 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@AlphaMap"
+					"Value": "@AlphaMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
 				}
 			}
 		}

@@ -963,6 +963,11 @@ namespace RendererToolkit
 			// Mandatory root parameter index
 			const uint32_t rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueTexture["RootParameterIndex"].GetString(), shaderProperties);
 
+			// Mandatory fallback texture asset ID
+			// -> We could make this optional, but it's better to be totally restrictive in here so asynchronous texture loading always works nicely (easy when done from the beginning, hard to add this afterwards)
+			// -> Often, but not always this value is identical to a texture asset referencing material property. So, we really have to define an own property for this.
+			const RendererRuntime::AssetId fallbackTextureAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueTexture, "FallbackTextureAssetId");
+
 			// Optional RGB hardware gamma correction
 			bool rgbHardwareGammaCorrection = false;
 			JsonHelper::optionalBooleanProperty(rapidJsonValueTexture, "RgbHardwareGammaCorrection", rgbHardwareGammaCorrection);
@@ -982,7 +987,7 @@ namespace RendererToolkit
 						const RendererRuntime::MaterialPropertyValue materialPropertyValue = RendererRuntime::MaterialPropertyValue::fromTextureAssetId(StringHelper::getAssetIdByString(rapidJsonValueTexture["Value"].GetString(), input));
 
 						// Write down the texture
-						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, materialPropertyValue), rgbHardwareGammaCorrection);
+						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, materialPropertyValue), fallbackTextureAssetId, rgbHardwareGammaCorrection);
 						outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 
 						// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
@@ -1016,7 +1021,7 @@ namespace RendererToolkit
 									// TODO(co) Error handling: Usage mismatch etc.
 
 									// Write down the texture
-									const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, materialProperty), rgbHardwareGammaCorrection);
+									const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, materialProperty), fallbackTextureAssetId, rgbHardwareGammaCorrection);
 									outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 								}
 							}

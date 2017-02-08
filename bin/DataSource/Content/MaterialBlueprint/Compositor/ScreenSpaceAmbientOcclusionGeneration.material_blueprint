@@ -219,6 +219,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@GBufferMap1",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"DepthMap":
@@ -227,6 +228,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DepthMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"ScreenSpaceAmbientOcclusionSampleKernelMap":
@@ -236,6 +238,7 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel",
 					"Description": "1D screen space ambient occlusion sample kernel map",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap1D",
 					"MipmapsUsed": "FALSE"
 				},
 				"ScreenSpaceAmbientOcclusionNoise4x4Map":
@@ -245,6 +248,7 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4",
 					"Description": "2D screen space ambient occlusion 4x4 noise map",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

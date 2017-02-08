@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/GetUninitialized.h"
 #include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
@@ -66,7 +67,9 @@ namespace RendererRuntime
 	*
 	*  @remarks
 	*    The texture manager automatically generates some dynamic default texture assets one can reference e.g. inside material blueprint resources:
+	*    - "Unrimp/Texture/DynamicByCode/WhiteMap1D"
 	*    - "Unrimp/Texture/DynamicByCode/WhiteMap2D"
+	*    - "Unrimp/Texture/DynamicByCode/BlackMap1D"
 	*    - "Unrimp/Texture/DynamicByCode/BlackMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
@@ -90,7 +93,7 @@ namespace RendererRuntime
 	public:
 		inline const TextureResources& getTextureResources() const;
 		RENDERERRUNTIME_API_EXPORT TextureResource* getTextureResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
-		RENDERERRUNTIME_API_EXPORT TextureResourceId loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool rgbHardwareGammaCorrection = false, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT TextureResourceId loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, AssetId fallbackTextureAssetId = getUninitialized<AssetId>(), bool rgbHardwareGammaCorrection = false, bool reload = false);	// Asynchronous
 		RENDERERRUNTIME_API_EXPORT TextureResourceId createTextureResourceByAssetId(AssetId assetId, Renderer::ITexture& texture, bool rgbHardwareGammaCorrection = false);	// Texture resource is not allowed to exist, yet
 		inline void destroyTextureResource(TextureResourceId textureResourceId);
 
@@ -120,9 +123,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&	  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		TextureResources	  mTextureResources;
-		Renderer::ITexturePtr mPlaceholderTexturePtr;
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		TextureResources  mTextureResources;
 
 
 	};

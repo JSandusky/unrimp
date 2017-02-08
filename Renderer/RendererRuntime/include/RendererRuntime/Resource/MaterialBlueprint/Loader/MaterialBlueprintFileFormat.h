@@ -114,6 +114,7 @@ namespace RendererRuntime
 			{
 				uint32_t		 rootParameterIndex;
 				MaterialProperty materialProperty;
+				AssetId			 fallbackTextureAssetId;
 				bool			 rgbHardwareGammaCorrection;
 
 				Texture() :
@@ -123,9 +124,10 @@ namespace RendererRuntime
 					// Nothing here
 				}
 
-				Texture(uint32_t _rootParameterIndex, MaterialProperty _materialProperty, bool _rgbHardwareGammaCorrection) :
+				Texture(uint32_t _rootParameterIndex, MaterialProperty _materialProperty, AssetId _fallbackTextureAssetId, bool _rgbHardwareGammaCorrection) :
 					rootParameterIndex(_rootParameterIndex),
 					materialProperty(_materialProperty),
+					fallbackTextureAssetId(_fallbackTextureAssetId),
 					rgbHardwareGammaCorrection(_rgbHardwareGammaCorrection)
 				{
 					// Nothing here

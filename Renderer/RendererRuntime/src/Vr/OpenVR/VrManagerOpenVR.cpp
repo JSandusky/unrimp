@@ -256,7 +256,7 @@ namespace
 			// Check whether or not we need to generate the runtime texture asset right now
 			RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
 			const bool rgbHardwareGammaCorrection = true;	// TODO(co) It must be possible to set the property name from the outside: Ask the material blueprint whether or not hardware gamma correction should be used
-			RendererRuntime::TextureResourceId textureResourceId = textureResourceManager.loadTextureResourceByAssetId(diffuseTextureAssetId, nullptr, rgbHardwareGammaCorrection);
+			RendererRuntime::TextureResourceId textureResourceId = textureResourceManager.loadTextureResourceByAssetId(diffuseTextureAssetId, nullptr, RendererRuntime::getUninitialized<RendererRuntime::AssetId>(), rgbHardwareGammaCorrection);
 			if (RendererRuntime::isUninitialized(textureResourceId))
 			{
 				// Load the render model texture

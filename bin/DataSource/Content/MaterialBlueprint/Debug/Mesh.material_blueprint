@@ -222,6 +222,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DiffuseMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				}
 			}
