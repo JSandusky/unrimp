@@ -28,6 +28,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline uint8_t TextureResourceManager::getNumberOfTopMipmapsToRemove() const
+	{
+		return mNumberOfTopMipmapsToRemove;
+	}
+
 	inline const TextureResources& TextureResourceManager::getTextureResources() const
 	{
 		return mTextureResources;

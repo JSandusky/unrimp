@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Texture/Loader/CrnTextureResourceLoader.h"
-#include "RendererRuntime/Resource/Texture/TextureResource.h"
+#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -146,11 +146,25 @@ namespace RendererRuntime
 			return;
 		}
 
+		// Handle optional top mipmap removal
+		// TODO(co) Possible optimization of optional top mipmap removal: Don't load in the skipped mipmaps into memory in the first place ("mFileData")
+		int startLevelIndex = mRendererRuntime.getTextureResourceManager().getNumberOfTopMipmapsToRemove();
+		if (startLevelIndex >= static_cast<int>(crnTextureInfo.m_levels))
+		{
+			startLevelIndex = 0;
+		}
+
+		// Optional top mipmap removal: Ensure we don't go below 4x4 to not get into troubles with 4x4 blocked based compression
+		while (startLevelIndex > 0 && (std::max(1U, mWidth >> startLevelIndex) < 4 || std::max(1U, mHeight >> startLevelIndex) < 4))
+		{
+			--startLevelIndex;
+		}
+
 		// Allocate resulting image data
 		const crn_uint32 numberOfBytesPerDxtBlock = crnd::crnd_get_bytes_per_dxt_block(crnTextureInfo.m_format);
 		{
 			mNumberOfUsedImageDataBytes = 0;
-			for (crn_uint32 levelIndex = 0; levelIndex < crnTextureInfo.m_levels; ++levelIndex)
+			for (crn_uint32 levelIndex = static_cast<crn_uint32>(startLevelIndex); levelIndex < crnTextureInfo.m_levels; ++levelIndex)
 			{
 				const crn_uint32 width = std::max(1U, mWidth >> levelIndex);
 				const crn_uint32 height = std::max(1U, mHeight >> levelIndex);
@@ -172,7 +186,7 @@ namespace RendererRuntime
 
 		{ // Now transcode all face and mipmap levels into memory, one mip level at a time
 			uint8_t* currentImageData = mImageData;
-			for (crn_uint32 levelIndex = 0; levelIndex < crnTextureInfo.m_levels; ++levelIndex)
+			for (crn_uint32 levelIndex = static_cast<crn_uint32>(startLevelIndex); levelIndex < crnTextureInfo.m_levels; ++levelIndex)
 			{
 				// Compute the face's width, height, number of DXT blocks per row/col, etc.
 				const crn_uint32 width = std::max(1U, mWidth >> levelIndex);
@@ -205,6 +219,13 @@ namespace RendererRuntime
 
 		// Free allocated memory
 		crnd::crnd_unpack_end(crndUnpackContext);
+
+		// In case we removed top level mipmaps, we need to update the texture dimension
+		if (0 != startLevelIndex)
+		{
+			mWidth = std::max(1U, mWidth >> startLevelIndex);
+			mHeight = std::max(1U, mHeight >> startLevelIndex);
+		}
 
 		// Can we create the renderer resource asynchronous as well?
 		if (mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading)

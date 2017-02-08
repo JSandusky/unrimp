@@ -136,6 +136,7 @@ namespace RendererRuntime
 	void DdsTextureResourceLoader::onDeserialization(IFile& file)
 	{
 		// TODO(co) Cleanup and complete, currently just a prototype
+		// TODO(co) Add optional top mipmap removal support (see "RendererRuntime::TextureResourceManager::NumberOfTopMipmapsToRemove")
 
 		#define MCHAR4(a, b, c, d) (a | (b << 8) | (c << 16) | (d << 24))
 

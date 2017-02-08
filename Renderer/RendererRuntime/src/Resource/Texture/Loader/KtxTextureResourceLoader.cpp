@@ -48,6 +48,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void KtxTextureResourceLoader::onDeserialization(IFile& file)
 	{
+		// TODO(co) Add optional top mipmap removal support (see "RendererRuntime::TextureResourceManager::NumberOfTopMipmapsToRemove")
+
 		// Read in the image header
 		#pragma pack(push)
 		#pragma pack(1)

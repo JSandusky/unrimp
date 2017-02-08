@@ -167,6 +167,7 @@ private:
 	int		   mCurrentCompositor;
 	int		   mCurrentMsaa;
 	float	   mResolutionScale;
+	int		   mNumberOfTopTextureMipmapsToRemove;
 	bool	   mPerformFxaa;
 	float	   mRotationSpeed;
 	float	   mSunLightColor[3];

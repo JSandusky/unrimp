@@ -43,6 +43,7 @@
 #include <RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
 #include <RendererRuntime/Resource/Material/MaterialResourceManager.h>
+#include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
 
 #include <imgui/imgui.h>
 
@@ -96,6 +97,7 @@ FirstScene::FirstScene() :
 	mCurrentCompositor(mInstancedCompositor),
 	mCurrentMsaa(Msaa::NONE),
 	mResolutionScale(1.0f),
+	mNumberOfTopTextureMipmapsToRemove(0),
 	mPerformFxaa(false),
 	mRotationSpeed(1.0f),
 	mSunLightColor{1.0f, 1.0f, 1.0f},
@@ -437,6 +439,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					}
 				}
 				ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
+				ImGui::SliderInt("Mipmaps to Remove", &mNumberOfTopTextureMipmapsToRemove, 0, 8);
 				ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
 
 				// Scene
@@ -461,6 +464,9 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				mInstancedCompositor = static_cast<Compositor>(mCurrentCompositor);
 				createCompositorWorkspace();
 			}
+
+			// Update texture resource manager
+			rendererRuntime.getTextureResourceManager().setNumberOfTopMipmapsToRemove(static_cast<uint8_t>(mNumberOfTopTextureMipmapsToRemove));
 
 			// Update compositor workspace
 			{ // MSAA

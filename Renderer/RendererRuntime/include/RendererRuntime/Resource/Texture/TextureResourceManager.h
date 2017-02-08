@@ -91,6 +91,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		inline uint8_t getNumberOfTopMipmapsToRemove() const;
+		RENDERERRUNTIME_API_EXPORT void setNumberOfTopMipmapsToRemove(uint8_t numberOfTopMipmapsToRemove);
 		inline const TextureResources& getTextureResources() const;
 		RENDERERRUNTIME_API_EXPORT TextureResource* getTextureResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
 		RENDERERRUNTIME_API_EXPORT TextureResourceId loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, AssetId fallbackTextureAssetId = getUninitialized<AssetId>(), bool rgbHardwareGammaCorrection = false, bool reload = false);	// Asynchronous
@@ -123,7 +125,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		IRendererRuntime& mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
+		uint8_t			  mNumberOfTopMipmapsToRemove;	///< The number of top mipmaps to remove while loading textures for efficient texture quality reduction. By setting this to e.g. two a 4096x4096 texture will become 1024x1024.
 		TextureResources  mTextureResources;
 
 

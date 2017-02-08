@@ -102,6 +102,27 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	void TextureResourceManager::setNumberOfTopMipmapsToRemove(uint8_t numberOfTopMipmapsToRemove)
+	{
+		if (mNumberOfTopMipmapsToRemove != numberOfTopMipmapsToRemove)
+		{
+			mNumberOfTopMipmapsToRemove = numberOfTopMipmapsToRemove;
+
+			// Update the already loaded textures, but really only textures loaded from texture assets and not e.g. textures dynamically created during runtime
+			const AssetManager& assetManager = mRendererRuntime.getAssetManager();
+			const uint32_t numberOfElements = mTextureResources.getNumberOfElements();
+			for (uint32_t i = 0; i < numberOfElements; ++i)
+			{
+				const TextureResource& textureResource = mTextureResources.getElementByIndex(i);
+				const AssetId assetId = textureResource.getAssetId();
+				if (nullptr != assetManager.getAssetByAssetId(assetId))
+				{
+					loadTextureResourceByAssetId(assetId, nullptr, getUninitialized<AssetId>(), textureResource.isRgbHardwareGammaCorrection(), true);
+				}
+			}
+		}
+	}
+
 	TextureResource* TextureResourceManager::getTextureResourceByAssetId(AssetId assetId) const
 	{
 		TextureResource* textureResource = nullptr;
@@ -172,24 +193,28 @@ namespace RendererRuntime
 					mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 
 					// Since it might take a moment to load the texture resource, we'll use a fallback placeholder renderer texture resource so we don't have to wait until the real thing is there
-					if (isInitialized(fallbackTextureAssetId))
+					// -> In case there's already a renderer texture, keep that as long as possible (for example there might be a change in the number of top mipmaps to remove)
+					if (nullptr == textureResource->mTexture)
 					{
-						const TextureResource* fallbackTextureResource = getTextureResourceByAssetId(fallbackTextureAssetId);
-						if (nullptr != fallbackTextureResource)
+						if (isInitialized(fallbackTextureAssetId))
 						{
-							textureResource->mTexture = fallbackTextureResource->getTexture();
-							textureResource->setLoadingState(IResource::LoadingState::LOADED);
+							const TextureResource* fallbackTextureResource = getTextureResourceByAssetId(fallbackTextureAssetId);
+							if (nullptr != fallbackTextureResource)
+							{
+								textureResource->mTexture = fallbackTextureResource->getTexture();
+								textureResource->setLoadingState(IResource::LoadingState::LOADED);
+							}
+							else
+							{
+								// Error! Fallback texture asset ID not found.
+								assert(false);
+							}
 						}
 						else
 						{
-							// Error! Fallback texture asset ID not found.
+							// Hiccups / lags warning: There should always be a fallback texture asset ID (better be safe than sorry)
 							assert(false);
 						}
-					}
-					else
-					{
-						// Hiccups / lags warning: There should always be a fallback texture asset ID (better be safe than sorry)
-						assert(false);
 					}
 				}
 			}
@@ -249,7 +274,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+		mRendererRuntime(rendererRuntime),
+		mNumberOfTopMipmapsToRemove(3)	// TODO(co) Local test
 	{
 		::detail::createDefaultDynamicTextureAssets(rendererRuntime, *this);
 	}
