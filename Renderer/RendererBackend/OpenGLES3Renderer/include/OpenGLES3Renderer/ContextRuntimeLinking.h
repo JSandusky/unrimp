@@ -245,6 +245,7 @@ namespace OpenGLES3Renderer
 	FNDEF_GL(void,				glColorMask,							(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha));
 	FNDEF_GL(void,				glCompileShader,						(GLuint shader));
 	FNDEF_GL(void,				glCompressedTexImage2D,					(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const GLvoid* data));
+	FNDEF_GL(void,				glCompressedTexImage3D,					(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const GLvoid* data));
 	FNDEF_GL(void,				glCompressedTexSubImage2D,				(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const GLvoid* data));
 	FNDEF_GL(void,				glCopyTexImage2D,						(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border));
 	FNDEF_GL(void,				glCopyTexSubImage2D,					(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height));
@@ -332,6 +333,7 @@ namespace OpenGLES3Renderer
 	FNDEF_GL(void,				glStencilOp,							(GLenum fail, GLenum zfail, GLenum zpass));
 	FNDEF_GL(void,				glStencilOpSeparate,					(GLenum face, GLenum fail, GLenum zfail, GLenum zpass));
 	FNDEF_GL(void,				glTexImage2D,							(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid* pixels));
+	FNDEF_GL(void,				glTexImage3D,							(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid* pixels));
 	FNDEF_GL(void,				glTexParameterf,						(GLenum target, GLenum pname, GLfloat param));
 	FNDEF_GL(void,				glTexParameterfv,						(GLenum target, GLenum pname, const GLfloat* params));
 	FNDEF_GL(void,				glTexParameteri,						(GLenum target, GLenum pname, GLint param));
@@ -440,6 +442,7 @@ namespace OpenGLES3Renderer
 	#define	glColorMask								FNPTR(glColorMask)
 	#define	glCompileShader							FNPTR(glCompileShader)
 	#define	glCompressedTexImage2D					FNPTR(glCompressedTexImage2D)
+	#define	glCompressedTexImage3D					FNPTR(glCompressedTexImage3D)
 	#define	glCompressedTexSubImage2D				FNPTR(glCompressedTexSubImage2D)
 	#define	glCopyTexImage2D						FNPTR(glCopyTexImage2D)
 	#define	glCopyTexSubImage2D						FNPTR(glCopyTexSubImage2D)
@@ -527,6 +530,7 @@ namespace OpenGLES3Renderer
 	#define	glStencilOp								FNPTR(glStencilOp)
 	#define	glStencilOpSeparate						FNPTR(glStencilOpSeparate)
 	#define	glTexImage2D							FNPTR(glTexImage2D)
+	#define	glTexImage3D							FNPTR(glTexImage3D)
 	#define	glTexParameterf							FNPTR(glTexParameterf)
 	#define	glTexParameterfv						FNPTR(glTexParameterfv)
 	#define	glTexParameteri							FNPTR(glTexParameteri)

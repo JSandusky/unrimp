@@ -861,6 +861,20 @@ struct D3D11_TEXTURE2D_DESC
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
+typedef struct D3D11_TEXTURE3D_DESC
+{
+	UINT Width;
+	UINT Height;
+	UINT Depth;
+	UINT MipLevels;
+	DXGI_FORMAT Format;
+	D3D11_USAGE Usage;
+	UINT BindFlags;
+	UINT CPUAccessFlags;
+	UINT MiscFlags;
+} D3D11_TEXTURE3D_DESC;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
 struct D3D11_TEX1D_DSV
 {
 	UINT MipSlice;
@@ -1381,6 +1395,14 @@ ID3D11Texture2D : public ID3D11Resource
 {
 	public:
 		virtual void STDMETHODCALLTYPE GetDesc(__out D3D11_TEXTURE2D_DESC *pDesc) = 0;
+};
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
+MIDL_INTERFACE("037e866e-f56d-4357-a8af-9dabbe6e250e")
+ID3D11Texture3D : public ID3D11Resource
+{
+	public:
+		virtual void STDMETHODCALLTYPE GetDesc(_Out_ D3D11_TEXTURE3D_DESC *pDesc) = 0;
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"

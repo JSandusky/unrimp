@@ -484,6 +484,7 @@ namespace OpenGLES3Renderer
 		IMPORT_FUNC(glColorMask);
 		IMPORT_FUNC(glCompileShader);
 		IMPORT_FUNC(glCompressedTexImage2D);
+		IMPORT_FUNC(glCompressedTexImage3D);
 		IMPORT_FUNC(glCompressedTexSubImage2D);
 		IMPORT_FUNC(glCopyTexImage2D);
 		IMPORT_FUNC(glCopyTexSubImage2D);
@@ -571,6 +572,7 @@ namespace OpenGLES3Renderer
 		IMPORT_FUNC(glStencilOp);
 		IMPORT_FUNC(glStencilOpSeparate);
 		IMPORT_FUNC(glTexImage2D);
+		IMPORT_FUNC(glTexImage3D);
 		IMPORT_FUNC(glTexParameterf);
 		IMPORT_FUNC(glTexParameterfv);
 		IMPORT_FUNC(glTexParameteri);

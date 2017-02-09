@@ -98,7 +98,50 @@ namespace
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    Create screen space ambient occlusion sample kernel texture
+		*    Create 3D identity color correction lookup table (LUT)
+		*
+		*  @note
+		*    - Basing on "GPU Gems 2" - "Chapter 24. Using Lookup Tables to Accelerate Color Transformations" by Jeremy Selan, Sony Pictures Imageworks - http://http.developer.nvidia.com/GPUGems2/gpugems2_chapter24.html
+		*    - A way for artists to create color correction lookup tables is described at https://docs.unrealengine.com/latest/INT/Engine/Rendering/PostProcessEffects/ColorGrading/
+		*    - Color correction lookup table size is 16
+		*    - Resulting texture asset ID is "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D"
+		*/
+		RendererRuntime::TextureResourceId createIdentityColorCorrectionLookupTable3D(const RendererRuntime::IRendererRuntime& rendererRuntime)
+		{
+			static const uint8_t SIZE = 16;
+			static const uint8_t NUMBER_OF_COMPONENTS = 4;
+			static const uint32_t NUMBER_OF_BYTES = SIZE * SIZE * SIZE * NUMBER_OF_COMPONENTS;
+			uint8_t data[NUMBER_OF_BYTES];
+
+			{ // Create the identity color correction lookup table 3D data
+				uint8_t* currentData = data;
+				for (uint8_t z = 0; z < SIZE; ++z)
+				{
+					for (uint8_t y = 0; y < SIZE; ++y)
+					{
+						for (uint8_t x = 0; x < SIZE; ++x)
+						{
+							currentData[0] = static_cast<uint8_t>((static_cast<float>(x) / static_cast<float>(SIZE)) * 255.0f);
+							currentData[1] = static_cast<uint8_t>((static_cast<float>(y) / static_cast<float>(SIZE)) * 255.0f);
+							currentData[2] = static_cast<uint8_t>((static_cast<float>(z) / static_cast<float>(SIZE)) * 255.0f);
+							// currentData[3] = 0;	// Unused
+							currentData += NUMBER_OF_COMPONENTS;
+						}
+					}
+				}
+			}
+
+			// Create the renderer texture resource
+			Renderer::ITexturePtr texturePtr(rendererRuntime.getTextureManager().createTexture3D(SIZE, SIZE, SIZE, Renderer::TextureFormat::R8G8B8A8, data));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "3D identity color correction lookup table (LUT) texture")
+
+			// Create dynamic texture asset
+			return rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D", *texturePtr);
+		}
+
+		/**
+		*  @brief
+		*    Create 1D screen space ambient occlusion sample kernel texture
 		*
 		*  @remarks
 		*    The sample kernel requirements are that:
@@ -138,7 +181,7 @@ namespace
 
 			// Create the renderer texture resource
 			Renderer::ITexturePtr texturePtr(rendererRuntime.getTextureManager().createTexture1D(KERNEL_SIZE, Renderer::TextureFormat::R32G32B32A32F, kernel));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "Screen space ambient occlusion sample kernel texture")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "1D screen space ambient occlusion sample kernel texture")
 
 			// Create dynamic texture asset
 			return rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel", *texturePtr);
@@ -146,7 +189,7 @@ namespace
 
 		/**
 		*  @brief
-		*    Create screen space ambient occlusion 4x4 noise texture
+		*    Create 2D screen space ambient occlusion 4x4 noise texture
 		*
 		*  @remarks
 		*    When used for screen space ambient occlusion, the noise which is tiled over the screen is used to rotate the sample kernel. This will effectively increase the
@@ -177,7 +220,7 @@ namespace
 
 			// Create the renderer texture resource
 			Renderer::ITexturePtr texturePtr(rendererRuntime.getTextureManager().createTexture2D(NOISE_SIZE, NOISE_SIZE, Renderer::TextureFormat::R32G32B32A32F, noise));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "Screen space ambient occlusion 4x4 noise texture")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "2D screen space ambient occlusion 4x4 noise texture")
 
 			// Create dynamic texture asset
 			return rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4", *texturePtr);
@@ -203,6 +246,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void MaterialBlueprintResourceListener::onStartup(const IRendererRuntime& rendererRuntime)
 	{
+		mIdentityColorCorrectionLookupTable3D = ::detail::createIdentityColorCorrectionLookupTable3D(rendererRuntime);
 		mScreenSpaceAmbientOcclusionSampleKernelTextureResourceId = ::detail::createScreenSpaceAmbientOcclusionSampleKernelTexture(rendererRuntime);
 		mScreenSpaceAmbientOcclusionNoiseTexture4x4ResourceId = ::detail::createScreenSpaceAmbientOcclusionNoiseTexture4x4(rendererRuntime);
 	}
@@ -210,6 +254,7 @@ namespace RendererRuntime
 	void MaterialBlueprintResourceListener::onShutdown(const IRendererRuntime& rendererRuntime)
 	{
 		TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
+		textureResourceManager.destroyTextureResource(mIdentityColorCorrectionLookupTable3D);
 		textureResourceManager.destroyTextureResource(mScreenSpaceAmbientOcclusionSampleKernelTextureResourceId);
 		textureResourceManager.destroyTextureResource(mScreenSpaceAmbientOcclusionNoiseTexture4x4ResourceId);
 	}

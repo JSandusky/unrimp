@@ -37,14 +37,11 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture3D::Texture3D(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum, const void *, uint32_t) :
+	Texture3D::Texture3D(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
 		ITexture3D(openGLES3Renderer, width, height, depth),
 		mOpenGLES3Texture(0),
 		mGenerateMipmaps(false)
 	{
-		// TODO(co) Implement 3D texture support
-
-		/*
 		// Sanity checks
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
 
@@ -57,7 +54,7 @@ namespace OpenGLES3Renderer
 
 			// Backup the currently bound OpenGL ES 3 texture
 			GLint openGLES3TextureBackup = 0;
-			glGetIntegerv(GL_TEXTURE_BINDING_2D, &openGLES3TextureBackup);
+			glGetIntegerv(GL_TEXTURE_BINDING_3D, &openGLES3TextureBackup);
 		#endif
 
 		// Set correct alignment
@@ -66,12 +63,12 @@ namespace OpenGLES3Renderer
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
-		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
+		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height, depth) : 1;
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Create the OpenGL ES 3 texture instance
 		glGenTextures(1, &mOpenGLES3Texture);
-		glBindTexture(GL_TEXTURE_2D, mOpenGLES3Texture);
+		glBindTexture(GL_TEXTURE_3D, mOpenGLES3Texture);
 
 		// Upload the texture data
 		if (Renderer::TextureFormat::isCompressed(textureFormat))
@@ -84,19 +81,20 @@ namespace OpenGLES3Renderer
 				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 				{
 					// Upload the current mipmap
-					const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
-					glCompressedTexImage2D(GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
+					const GLsizei numberOfBytesPerMipmap = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height) * depth);
+					glCompressedTexImage3D(GL_TEXTURE_3D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(depth), 0, numberOfBytesPerMipmap, data);
 
 					// Move on to the next mipmap
-					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
+					data = static_cast<const uint8_t*>(data) + numberOfBytesPerMipmap;
 					width = std::max(width >> 1, 1u);	// /= 2
 					height = std::max(height >> 1, 1u);	// /= 2
+					depth = std::max(depth >> 1, 1u);	// /= 2
 				}
 			}
 			else
 			{
 				// The user only provided us with the base texture, no mipmaps
-				glCompressedTexImage2D(GL_TEXTURE_2D, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
+				glCompressedTexImage3D(GL_TEXTURE_3D, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(depth), 0, static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
 			}
 		}
 		else
@@ -113,42 +111,42 @@ namespace OpenGLES3Renderer
 				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 				{
 					// Upload the current mipmap
-					const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
-					glTexImage2D(GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, format, type, data);
+					const GLsizei numberOfBytesPerMipmap = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height) * depth);
+					glTexImage3D(GL_TEXTURE_3D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(depth), 0, format, type, data);
 
 					// Move on to the next mipmap
-					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
+					data = static_cast<const uint8_t*>(data) + numberOfBytesPerMipmap;
 					width = std::max(width >> 1, 1u);	// /= 2
 					height = std::max(height >> 1, 1u);	// /= 2
+					depth = std::max(depth >> 1, 1u);	// /= 2
 				}
 			}
 			else
 			{
 				// The user only provided us with the base texture, no mipmaps
-				glTexImage2D(GL_TEXTURE_2D, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, Mapping::getOpenGLES3Format(textureFormat), Mapping::getOpenGLES3Type(textureFormat), data);
+				glTexImage3D(GL_TEXTURE_3D, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(depth), 0, Mapping::getOpenGLES3Format(textureFormat), Mapping::getOpenGLES3Type(textureFormat), data);
 			}
 		}
 
 		// Build mipmaps automatically on the GPU? (or GPU driver)
 		if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
 		{
-			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			glGenerateMipmap(GL_TEXTURE_3D);
+			glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 		}
 		else
 		{
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		}
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 texture
-			glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(openGLES3TextureBackup));
+			glBindTexture(GL_TEXTURE_3D, static_cast<GLuint>(openGLES3TextureBackup));
 
 			// Restore previous alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, openGLES3AlignmentBackup);
 		#endif
-		*/
 	}
 
 	Texture3D::~Texture3D()

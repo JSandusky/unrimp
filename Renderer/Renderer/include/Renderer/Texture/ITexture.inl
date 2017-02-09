@@ -38,6 +38,15 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
+	inline uint32_t ITexture::getNumberOfMipmaps(uint32_t width)
+	{
+		// Don't write "return static_cast<uint32_t>(1 + std::floor(std::log2(width)));"
+		// -> Android GNU STL has no "std::log2()", poor but no disaster in here because we can use another solution
+		// -> log2(x) = log(x) / log(2)
+		// -> log(2) = 0.69314718055994529
+		return static_cast<uint32_t>(1 + std::floor(std::log(width) / 0.69314718055994529));
+	}
+
 	inline uint32_t ITexture::getNumberOfMipmaps(uint32_t width, uint32_t height)
 	{
 		// Don't write "return static_cast<uint32_t>(1 + std::floor(std::log2(std::max(width, height))));"
@@ -45,6 +54,15 @@ namespace Renderer
 		// -> log2(x) = log(x) / log(2)
 		// -> log(2) = 0.69314718055994529
 		return static_cast<uint32_t>(1 + std::floor(std::log(std::max(width, height)) / 0.69314718055994529));
+	}
+
+	inline uint32_t ITexture::getNumberOfMipmaps(uint32_t width, uint32_t height, uint32_t depth)
+	{
+		// Don't write "return static_cast<uint32_t>(1 + std::floor(std::log2(std::max(width, std::max(height, depth)))));"
+		// -> Android GNU STL has no "std::log2()", poor but no disaster in here because we can use another solution
+		// -> log2(x) = log(x) / log(2)
+		// -> log(2) = 0.69314718055994529
+		return static_cast<uint32_t>(1 + std::floor(std::log(std::max(width, std::max(height, depth))) / 0.69314718055994529));
 	}
 
 

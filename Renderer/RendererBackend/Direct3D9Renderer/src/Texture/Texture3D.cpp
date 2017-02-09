@@ -86,7 +86,7 @@ namespace Direct3D9Renderer
 			if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
 			{
 				// Calculate the number of mipmaps
-				const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
+				const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height, depth);
 
 				// Upload all mipmaps
 				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)

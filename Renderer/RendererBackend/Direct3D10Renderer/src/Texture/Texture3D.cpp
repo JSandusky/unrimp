@@ -38,15 +38,13 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture3D::Texture3D(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *, uint32_t, Renderer::TextureUsage) :
+	Texture3D::Texture3D(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture3D(direct3D10Renderer, width, height, depth),
 		mTextureFormat(textureFormat),
 		mGenerateMipmaps(false),
 		mD3D10Texture3D(nullptr),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
-		// TODO(co) Implement Direct3D 10 1D texture
-		/*
 		// Sanity checks
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
 
@@ -56,23 +54,21 @@ namespace Direct3D10Renderer
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
-		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
+		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height, depth) : 1;
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Direct3D 10 3D texture description
 		DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(textureFormat));
 		D3D10_TEXTURE3D_DESC d3d10Texture3DDesc;
-		d3d10Texture3DDesc.Width			  = width;
-		d3d10Texture3DDesc.Height			  = height;
-		d3d10Texture3DDesc.MipLevels		  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 10 allocate the complete mipmap chain for us
-		d3d10Texture3DDesc.ArraySize		  = 1;
-		d3d10Texture3DDesc.Format			  = dxgiFormat;
-		d3d10Texture3DDesc.SampleDesc.Count	  = 1;
-		d3d10Texture3DDesc.SampleDesc.Quality = 0;
-		d3d10Texture3DDesc.Usage			  = static_cast<D3D10_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
-		d3d10Texture3DDesc.BindFlags		  = D3D10_BIND_SHADER_RESOURCE;
-		d3d10Texture3DDesc.CPUAccessFlags	  = 0;
-		d3d10Texture3DDesc.MiscFlags		  = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET)) ? D3D10_RESOURCE_MISC_GENERATE_MIPS : 0u;
+		d3d10Texture3DDesc.Width		  = width;
+		d3d10Texture3DDesc.Height		  = height;
+		d3d10Texture3DDesc.Depth		  = depth;
+		d3d10Texture3DDesc.MipLevels	  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 10 allocate the complete mipmap chain for us
+		d3d10Texture3DDesc.Format		  = dxgiFormat;
+		d3d10Texture3DDesc.Usage		  = static_cast<D3D10_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
+		d3d10Texture3DDesc.BindFlags	  = D3D10_BIND_SHADER_RESOURCE;
+		d3d10Texture3DDesc.CPUAccessFlags = 0;
+		d3d10Texture3DDesc.MiscFlags	  = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET)) ? D3D10_RESOURCE_MISC_GENERATE_MIPS : 0u;
 
 		// Use this texture as render target?
 		const bool isDepthFormat = Renderer::TextureFormat::isDepth(textureFormat);
@@ -133,9 +129,10 @@ namespace Direct3D10Renderer
 						currentD3d10SubresourceData.SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
 
 						// Move on to the next mipmap
-						data = static_cast<const uint8_t*>(data) + currentD3d10SubresourceData.SysMemSlicePitch;
+						data = static_cast<const uint8_t*>(data) + currentD3d10SubresourceData.SysMemSlicePitch * depth;
 						width = std::max(width >> 1, 1u);	// /= 2
 						height = std::max(height >> 1, 1u);	// /= 2
+						depth = std::max(depth >> 1, 1u);	// /= 2
 					}
 				}
 				else
@@ -175,7 +172,6 @@ namespace Direct3D10Renderer
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(&direct3D10Renderer)
-		*/
 	}
 
 	Texture3D::~Texture3D()
@@ -184,13 +180,10 @@ namespace Direct3D10Renderer
 		{
 			mD3D10ShaderResourceViewTexture->Release();
 		}
-		// TODO(co) Implement Direct3D 10 1D texture
-		/*
 		if (nullptr != mD3D10Texture3D)
 		{
 			mD3D10Texture3D->Release();
 		}
-		*/
 	}
 
 
@@ -211,13 +204,10 @@ namespace Direct3D10Renderer
 				// Do also set the given debug name to the Direct3D 10 resource referenced by the Direct3D resource view
 				if (nullptr != mD3D10Texture3D)
 				{
-					// TODO(co) Implement Direct3D 10 1D texture
-					/*
 					// Set the debug name
 					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 					mD3D10Texture3D->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 					mD3D10Texture3D->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
-					*/
 				}
 			}
 		#endif

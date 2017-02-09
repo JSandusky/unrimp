@@ -58,6 +58,12 @@ namespace RendererRuntime
 	/**
 	*  @brief
 	*    Material blueprint resource listener
+	*
+	*  @remarks
+	*    The material blueprint resource listener automatically generates some dynamic default texture assets one can reference e.g. inside material blueprint resources:
+	*    - "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D"
+	*    - "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel"
+	*    - "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4"
 	*/
 	class MaterialBlueprintResourceListener : public IMaterialBlueprintResourceListener
 	{
@@ -110,6 +116,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		// Resource
+		TextureResourceId mIdentityColorCorrectionLookupTable3D;
 		TextureResourceId mScreenSpaceAmbientOcclusionSampleKernelTextureResourceId;
 		TextureResourceId mScreenSpaceAmbientOcclusionNoiseTexture4x4ResourceId;
 

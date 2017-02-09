@@ -64,6 +64,7 @@ TEXTURE_2D(BloomMap, 2)
 TEXTURE_2D(LensFlareMap, 3)
 TEXTURE_2D(DirtyLensMap, 4)
 TEXTURE_2D(LensStarMap, 5)
+TEXTURE_3D(ColorCorrectionLookupTableMap, 6)
 
 
 //[-------------------------------------------------------]
@@ -121,6 +122,19 @@ MAIN_BEGIN
 		color += (bloom * dirtyLenseIntensity * dirtyLens + bloom * (1.0f - dirtyLenseIntensity)) * PassData.BloomIntensity;
 	}
 
+	// Ensure we're in a 0..1 range
+	color = SATURATE(color);
+
+	{ // Apply 3D identity color correction lookup table (LUT)
+	  // - Basing on "GPU Gems 2" - "Chapter 24. Using Lookup Tables to Accelerate Color Transformations" by Jeremy Selan, Sony Pictures Imageworks - http://http.developer.nvidia.com/GPUGems2/gpugems2_chapter24.html
+	  // - A way for artists to create color correction lookup tables is described at https://docs.unrealengine.com/latest/INT/Engine/Rendering/PostProcessEffects/ColorGrading/
+	  // - Color correction lookup table size is 16
+		float3 LUT_SIZE = float3(16.0f, 16.0f, 16.0f);
+		float3 LUT_SCALE = (LUT_SIZE - 1.0f) / LUT_SIZE;
+		float3 LUT_OFFSET = 1.0f / (2.0f * LUT_SIZE);
+		color = SAMPLE_3D_LOD(ColorCorrectionLookupTableMap, SamplerLinear, float4(LUT_SCALE * color + LUT_OFFSET, 0.0f)).rgb;
+	}
+
 	// Done
-	MAIN_OUTPUT_COLOR(0) = float4(SATURATE(color), 1.0f);
+	MAIN_OUTPUT_COLOR(0) = float4(color, 1.0f);
 MAIN_END

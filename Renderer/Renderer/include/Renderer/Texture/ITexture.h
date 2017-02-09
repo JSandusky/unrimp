@@ -54,7 +54,22 @@ namespace Renderer
 	public:
 		/**
 		*  @brief
-		*    Calculate the number of mipmaps
+		*    Calculate the number of mipmaps for a 1D texture
+		*
+		*  @param[in] width
+		*    Texture width
+		*
+		*  @return
+		*    Number of mipmaps
+		*
+		*  @note
+		*    - Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
+		*/
+		static inline uint32_t getNumberOfMipmaps(uint32_t width);
+
+		/**
+		*  @brief
+		*    Calculate the number of mipmaps for a 2D texture
 		*
 		*  @param[in] width
 		*    Texture width
@@ -68,6 +83,25 @@ namespace Renderer
 		*    - Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
 		*/
 		static inline uint32_t getNumberOfMipmaps(uint32_t width, uint32_t height);
+
+		/**
+		*  @brief
+		*    Calculate the number of mipmaps for a 3D texture
+		*
+		*  @param[in] width
+		*    Texture width
+		*  @param[in] height
+		*    Texture height
+		*  @param[in] depth
+		*    Texture depth
+		*
+		*  @return
+		*    Number of mipmaps
+		*
+		*  @note
+		*    - Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
+		*/
+		static inline uint32_t getNumberOfMipmaps(uint32_t width, uint32_t height, uint32_t depth);
 
 
 	//[-------------------------------------------------------]

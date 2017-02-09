@@ -382,6 +382,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glGenerateTextureMipmapEXT)
 			IMPORT_FUNC(glCompressedTextureImage1DEXT)
 			IMPORT_FUNC(glCompressedTextureImage2DEXT)
+			IMPORT_FUNC(glCompressedTextureImage3DEXT)
 			IMPORT_FUNC(glVertexArrayVertexAttribOffsetEXT)
 			IMPORT_FUNC(glEnableVertexArrayAttribEXT)
 			IMPORT_FUNC(glBindMultiTextureEXT)
@@ -461,6 +462,7 @@ namespace OpenGLRenderer
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glCompressedTexImage1DARB)
 			IMPORT_FUNC(glCompressedTexImage2DARB)
+			IMPORT_FUNC(glCompressedTexImage3DARB)
 			mGL_ARB_texture_compression = result;
 		}
 
@@ -731,6 +733,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glBindTextureUnit)
 			IMPORT_FUNC(glCompressedTextureSubImage1D)
 			IMPORT_FUNC(glCompressedTextureSubImage2D)
+			IMPORT_FUNC(glCompressedTextureSubImage3D)
 			IMPORT_FUNC(glTextureSubImage1D)
 			IMPORT_FUNC(glTextureSubImage2D)
 			IMPORT_FUNC(glTextureSubImage3D)
