@@ -187,7 +187,10 @@ float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 	}
 
 	// Apply screen space ambient occlusion
-	color *= float3(screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion);
+	// TODO(co) Currently doesn't look right with OpenGL and OpenGL ES 3 (coordinate system differences)
+	@property(!GLSL && !GLSLES)
+		color *= float3(screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion);
+	@end
 
 	// Emissive term
 	color += emissiveValue;
