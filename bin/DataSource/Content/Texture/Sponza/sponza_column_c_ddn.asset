@@ -18,7 +18,7 @@
 		"TextureAssetCompiler":
 		{
 			"InputFile": "sponza_column_c_ddn.tga",
-			"TextureSemantic": "NormalMap"
+			"TextureSemantic": "NORMAL_MAP"
 		}
 	}
 }

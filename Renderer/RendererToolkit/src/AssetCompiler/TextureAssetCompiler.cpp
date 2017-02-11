@@ -94,6 +94,20 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Texture asset compiler texture semantic; used to automatically set semantic appropriate texture processing settings like "cCRNCompFlagPerceptual"-flags
+		*/
+		enum class TextureSemantic
+		{
+			DIFFUSE_MAP,
+			ALPHA_MAP,
+			NORMAL_MAP,
+			SPECULAR_MAP,
+			EMISSIVE_MAP,
+			UNKNOWN
+		};
+
 		const int cDefaultCRNQualityLevel = 128;
 		crnlib::command_line_params m_params;
 		enum convert_status
@@ -108,6 +122,35 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
+		void optionalTextureSemanticProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, TextureSemantic& value)
+		{
+			if (rapidJsonValue.HasMember(propertyName))
+			{
+				const rapidjson::Value& rapidJsonValueValue = rapidJsonValue[propertyName];
+				const char* valueAsString = rapidJsonValueValue.GetString();
+				const rapidjson::SizeType valueStringLength = rapidJsonValueValue.GetStringLength();
+
+				// Define helper macros
+				#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = TextureSemantic::name;
+				#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = TextureSemantic::name;
+
+				// Evaluate value
+				IF_VALUE(DIFFUSE_MAP)
+				ELSE_IF_VALUE(ALPHA_MAP)
+				ELSE_IF_VALUE(NORMAL_MAP)
+				ELSE_IF_VALUE(SPECULAR_MAP)
+				ELSE_IF_VALUE(EMISSIVE_MAP)
+				else
+				{
+					throw std::runtime_error(std::string("Unknown texture semantic \"") + valueAsString + '\"');
+				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
+			}
+		}
+
 		static crn_bool progress_callback_func(crn_uint32 phase_index, crn_uint32 total_phases, crn_uint32 subphase_index, crn_uint32 total_subphases, void* pUser_data_ptr)
 		{
 			int percentage_complete = (int)(.5f + (phase_index + float(subphase_index) / total_subphases) * 100.0f) / total_phases;
@@ -361,7 +404,7 @@ namespace
 		  return true;
 	   }
 
-		convert_status convert_file(const char* pSrc_filename, const char* pDst_filename, crnlib::texture_file_types::format out_file_type, bool createMipmaps)
+		convert_status convert_file(const char* pSrc_filename, const char* pDst_filename, crnlib::texture_file_types::format out_file_type, TextureSemantic textureSemantic, bool createMipmaps)
 		{
 			crnlib::texture_file_types::format src_file_format = crnlib::texture_file_types::determine_file_format(pSrc_filename);
 			if (src_file_format == crnlib::texture_file_types::cFormatInvalid)
@@ -444,15 +487,40 @@ namespace
 			if (!parse_scale_params(params.m_mipmap_params))
 				return cCSBadParam;
 
-			if (params.m_texture_type == crnlib::cTextureTypeNormalMap)
-			{
-				params.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
-			}
-
 			// The 4x4 block size based DXT compression format has no support for 1D textures
 			if (src_tex.get_width() == 1 || src_tex.get_height() == 1)
 			{
 				params.m_dst_format = crnlib::PIXEL_FMT_A8R8G8B8;
+			}
+
+			// Evaluate texture semantic
+			switch (textureSemantic)
+			{
+				case TextureSemantic::DIFFUSE_MAP:
+					// Nothing here, just a regular texture
+					break;
+
+				case TextureSemantic::ALPHA_MAP:
+					params.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
+					break;
+
+				case TextureSemantic::NORMAL_MAP:
+				//	params.m_texture_type = crnlib::cTextureTypeNormalMap;	// Don't set this
+					params.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
+					params.m_mipmap_params.m_renormalize = true;
+					break;
+
+				case TextureSemantic::SPECULAR_MAP:
+					params.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
+					break;
+
+				case TextureSemantic::EMISSIVE_MAP:
+					// Nothing here, just a regular texture
+					break;
+
+				case TextureSemantic::UNKNOWN:
+					// Nothing here, just a regular texture
+					break;
 			}
 
 			// Create mipmaps?
@@ -663,6 +731,7 @@ namespace RendererToolkit
 		// TODO(co) Add required properties
 		std::string inputFile;
 		std::string assetFileFormat;
+		::detail::TextureSemantic textureSemantic = ::detail::TextureSemantic::UNKNOWN;
 		bool createMipmaps = true;
 		{
 			// Read texture asset compiler configuration
@@ -672,6 +741,7 @@ namespace RendererToolkit
 			{
 				assetFileFormat = rapidJsonValueTextureAssetCompiler["FileFormat"].GetString();
 			}
+			::detail::optionalTextureSemanticProperty(rapidJsonValueTextureAssetCompiler, "TextureSemantic", textureSemantic);
 			JsonHelper::optionalBooleanProperty(rapidJsonValueTextureAssetCompiler, "CreateMipmaps", createMipmaps);
 		}
 
@@ -863,7 +933,7 @@ namespace RendererToolkit
             }
          }
 
-	  detail::convert_file(inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type);
+	  detail::convert_file(inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type, textureSemantic, createMipmaps);
 
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();

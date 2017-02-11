@@ -18,7 +18,7 @@
 		"TextureAssetCompiler":
 		{
 			"InputFile": "sponza_curtain_blue_diff.tga",
-			"TextureSemantic": "DiffuseMap"
+			"TextureSemantic": "DIFFUSE_MAP"
 		}
 	}
 }

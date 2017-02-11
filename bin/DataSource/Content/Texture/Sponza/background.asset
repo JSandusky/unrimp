@@ -18,7 +18,7 @@
 		"TextureAssetCompiler":
 		{
 			"InputFile": "background.tga",
-			"TextureSemantic": "DiffuseMap"
+			"TextureSemantic": "DIFFUSE_MAP"
 		}
 	}
 }

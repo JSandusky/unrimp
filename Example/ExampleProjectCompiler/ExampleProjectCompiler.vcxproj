@@ -259,7 +259,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\..\External\Windows_x86\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
+copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -417,7 +417,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
-copy "..\..\External\Windows_x86\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)_dynamic\"
+copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

@@ -18,7 +18,7 @@
 		"TextureAssetCompiler":
 		{
 			"InputFile": "sponza_details_diff.tga",
-			"TextureSemantic": "DiffuseMap"
+			"TextureSemantic": "DIFFUSE_MAP"
 		}
 	}
 }

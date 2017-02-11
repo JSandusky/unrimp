@@ -18,7 +18,7 @@
 		"TextureAssetCompiler":
 		{
 			"InputFile": "sponza_column_c_spec.tga",
-			"TextureSemantic": "SpecularMap"
+			"TextureSemantic": "SPECULAR_MAP"
 		}
 	}
 }
