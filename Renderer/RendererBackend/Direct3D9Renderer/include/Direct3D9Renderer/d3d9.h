@@ -65,7 +65,6 @@ struct D3DMATERIAL9;
 struct D3DGAMMARAMP;
 struct ID3DXInclude;
 struct D3DLOCKED_RECT;
-struct D3DDISPLAYMODE;
 struct D3DCLIPSTATUS9;
 struct IDirect3DQuery9;
 struct D3DSURFACE_DESC;
@@ -688,6 +687,15 @@ struct D3DVERTEXELEMENT9
 	BYTE	UsageIndex;
 };
 
+// "Microsoft Direct3D SDK (June 2010)" -> "d3d9types.h"
+typedef struct _D3DDISPLAYMODE
+{
+	UINT		Width;
+	UINT		Height;
+	UINT		RefreshRate;
+	D3DFORMAT	Format;
+} D3DDISPLAYMODE;
+
 // "Microsoft Direct3D SDK (June 2010)" -> "d3d9xshader.h"
 typedef __interface ID3DXInclude *LPD3DXINCLUDE;
 #ifndef D3DXFX_LARGEADDRESS_HANDLE
@@ -1166,3 +1174,7 @@ DECLARE_INTERFACE_(IDirect3DSwapChain9, IUnknown)
 	STDMETHOD(GetDevice)(THIS_ IDirect3DDevice9** ppDevice) PURE;
 	STDMETHOD(GetPresentParameters)(THIS_ D3DPRESENT_PARAMETERS* pPresentationParameters) PURE;
 };
+
+// See "Advanced DX9 Capabilities for ATI Radeon Cards" by "AMD Graphics Products Group" - "Texture Formats: ATI2N and ATI1N" - http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/Advanced-DX9-Capabilities-for-ATI-Radeon-Cards_v2.pdf
+#define FOURCC_ATI1N ((D3DFORMAT)MAKEFOURCC('A', 'T', 'I', '1'))
+#define FOURCC_ATI2N ((D3DFORMAT)MAKEFOURCC('A', 'T', 'I', '2'))

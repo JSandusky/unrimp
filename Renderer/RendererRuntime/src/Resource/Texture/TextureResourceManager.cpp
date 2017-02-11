@@ -275,7 +275,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mNumberOfTopMipmapsToRemove(3)	// TODO(co) Local test
+		mNumberOfTopMipmapsToRemove(0)
 	{
 		::detail::createDefaultDynamicTextureAssets(rendererRuntime, *this);
 	}

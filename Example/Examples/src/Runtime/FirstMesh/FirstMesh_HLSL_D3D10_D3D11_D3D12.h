@@ -131,11 +131,10 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 	float3 ViewSpaceLightDirection = normalize(float3(0.5f, 0.5f, 1.0f));	// View space light direction
 	float3 ViewSpaceViewVector     = float3(0.0f, 0.0f, 1.0f);				// In view space, we always look along the positive z-axis
 
-	// Get the per fragment normal [0..1] by using a tangent space normal map
-	float3 normal = NormalMap.Sample(SamplerLinear, input.TexCoord).rgb;
-
-	// Transform the normal from [0..1] to [-1..1]
-	normal = (normal - 0.5f) * 2.0f;
+	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
+	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
+	float3 normal = NormalMap.Sample(SamplerLinear, input.TexCoord).yxx * 2.0f - 1.0f;
+	normal.z = sqrt(1.0f - dot(normal.xy, normal.xy));
 
 	// Transform the tangent space normal into view space
 	normal = normalize(mul(normal, input.TangentFrame));

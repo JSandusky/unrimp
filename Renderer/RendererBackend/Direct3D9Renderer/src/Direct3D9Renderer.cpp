@@ -1762,6 +1762,24 @@ namespace Direct3D9Renderer
 
 		// Is there support for fragment shaders (FS)?
 		mCapabilities.fragmentShader = true;
+
+		// We only target graphics hardware which also supports ATI1N and ATI2N, so no need to add this inside the capabilities
+		// -> The following is for debugging only, don't delete it
+		#if 0
+		{
+			D3DDISPLAYMODE d3dDisplayMode;
+			mDirect3D9->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3dDisplayMode);
+
+			// Check if ATI1N is supported
+			bool ati1NSupported = (mDirect3D9->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, d3dDisplayMode.Format, 0, D3DRTYPE_TEXTURE, FOURCC_ATI1N) == D3D_OK);
+			ati1NSupported = ati1NSupported;
+
+			// Check if ATI2N is supported
+			bool ati2NSupported = (mDirect3D9->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, d3dDisplayMode.Format, 0, D3DRTYPE_TEXTURE, FOURCC_ATI2N) == D3D_OK);
+			ati2NSupported = ati2NSupported;
+			NOP;
+		}
+		#endif
 	}
 
 	void Direct3D9Renderer::setProgram(Renderer::IProgram *program)

@@ -111,7 +111,7 @@
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",
-				"Description": "2D material tangent space normal map"
+				"Description": "2D material tangent space BC5/3DC/ATI2N stored normal map"
 			},
 			"UseSpecularMap":
 			{

@@ -119,11 +119,10 @@ void main()
 	vec3 ViewSpaceLightDirection = normalize(vec3(0.5, 0.5, 1.0));	// View space light direction
 	vec3 ViewSpaceViewVector     = vec3(0.0, 0.0, 1.0);				// In view space, we always look along the positive z-axis
 
-	// Get the per fragment normal [0..1] by using a tangent space normal map
-	vec3 normal = texture2D(NormalMap, TexCoordVs).rgb;
-
-	// Transform the normal from [0..1] to [-1..1]
-	normal = (normal - 0.5) * 2.0;
+	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
+	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
+	vec3 normal = texture2D(NormalMap, TexCoordVs).yxx * 2.0f - 1.0f;
+	normal.z = sqrt(1.0f - dot(normal.xy, normal.xy));
 
 	// Transform the tangent space normal into view space
 	normal = normalize(normal.x * TangentVs + normal.y * BinormalVs + normal.z * NormalVs);

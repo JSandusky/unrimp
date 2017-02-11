@@ -505,9 +505,16 @@ namespace
 					break;
 
 				case TextureSemantic::NORMAL_MAP:
-				//	params.m_texture_type = crnlib::cTextureTypeNormalMap;	// Don't set this
+					params.m_texture_type = crnlib::cTextureTypeNormalMap;
 					params.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
 					params.m_mipmap_params.m_renormalize = true;
+
+					// Do never ever store normal maps standard DXT1 compressed to not get horrible artefact's due to compressing vector data using algorithms design for color data
+					// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
+					if (cCRNFmtDXT1 == params.m_dst_format)
+					{
+						params.m_dst_format = crnlib::PIXEL_FMT_3DC;
+					}
 					break;
 
 				case TextureSemantic::SPECULAR_MAP:

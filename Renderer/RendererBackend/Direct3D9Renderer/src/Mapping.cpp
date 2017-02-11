@@ -374,7 +374,6 @@ namespace Direct3D9Renderer
 	uint32_t Mapping::getDirect3D9Format(Renderer::TextureFormat::Enum textureFormat)
 	{
 		// D3DFORMAT
-		#define MCHAR4(a, b, c, d) (a | (b << 8) | (c << 16) | (d << 24))
 		static const uint32_t MAPPING[] =
 		{
 			D3DFMT_A8,					// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
@@ -390,14 +389,13 @@ namespace Direct3D9Renderer
 			D3DFMT_DXT3,				// Renderer::TextureFormat::BC2_SRGB      - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block); sRGB = RGB hardware gamma correction, the alpha channel always remains linear	- TODO(co) DirectX 9 sRGB format
 			D3DFMT_DXT5,				// Renderer::TextureFormat::BC3           - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
 			D3DFMT_DXT5,				// Renderer::TextureFormat::BC3_SRGB      - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block); sRGB = RGB hardware gamma correction, the alpha channel always remains linear	- TODO(co) DirectX 9 sRGB format
-			MCHAR4('A', 'T', 'I', '1'),	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
-			MCHAR4('A', 'T', 'I', '2'),	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)
+			FOURCC_ATI1N,				// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - See "Advanced DX9 Capabilities for ATI Radeon Cards" by "AMD Graphics Products Group" - "Texture Formats: ATI2N and ATI1N" - http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/Advanced-DX9-Capabilities-for-ATI-Radeon-Cards_v2.pdf
+			FOURCC_ATI2N,				// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - See "Advanced DX9 Capabilities for ATI Radeon Cards" by "AMD Graphics Products Group" - "Texture Formats: ATI2N and ATI1N" - http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/Advanced-DX9-Capabilities-for-ATI-Radeon-Cards_v2.pdf
 			D3DFMT_UNKNOWN,				// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - not supported in Direct3D 9
 			D3DFMT_R32F,				// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			D3DFMT_D32F_LOCKABLE,		// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format	TODO(co) Check this
 			D3DFMT_UNKNOWN				// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
-		#undef MCHAR4
 		return MAPPING[textureFormat];
 	}
 
