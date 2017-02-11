@@ -261,7 +261,10 @@ namespace RendererRuntime
 					break;
 
 				case MaterialProperty::Usage::TEXTURE_REFERENCE:
-					// TODO(co)
+					for (MaterialTechnique* materialTechnique : mSortedMaterialTechniqueVector)
+					{
+						materialTechnique->mTextures.clear();
+					}
 					break;
 
 				case MaterialProperty::Usage::STATIC:

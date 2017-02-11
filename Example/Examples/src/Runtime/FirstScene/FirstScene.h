@@ -169,6 +169,7 @@ private:
 	float	   mResolutionScale;
 	int		   mNumberOfTopTextureMipmapsToRemove;
 	bool	   mPerformFxaa;
+	bool	   mPerformSepiaColorCorrection;
 	float	   mRotationSpeed;
 	float	   mSunLightColor[3];
 	float	   mWetness;

@@ -159,9 +159,6 @@ namespace RendererRuntime
 			// Does the data contain mipmaps?
 			mDataContainsMipmaps = (ddsHeader.mipMapCount > 0);
 
-			// Get the depth
-			const uint32_t depth = ddsHeader.depth ? ddsHeader.depth : 1;
-
 			// Is this image compressed?
 			if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_FOURCC)
 			{
@@ -476,6 +473,7 @@ namespace RendererRuntime
 
 			mWidth = ddsHeader.width;
 			mHeight = ddsHeader.height;
+			mDepth = ddsHeader.depth ? ddsHeader.depth : 1;
 
 			// TODO(co) Make this dynamic
 			if (1 == mWidth || 1 == mHeight)
@@ -485,21 +483,30 @@ namespace RendererRuntime
 			}
 			else
 			{
-				mTextureFormat = static_cast<uint8_t>(mTextureResource->isRgbHardwareGammaCorrection() ? Renderer::TextureFormat::BC1_SRGB : Renderer::TextureFormat::BC1);
+				if (mDepth > 1)
+				{
+					mTextureFormat = Renderer::TextureFormat::R8G8B8A8;
+				}
+				else
+				{
+					mTextureFormat = static_cast<uint8_t>(mTextureResource->isRgbHardwareGammaCorrection() ? Renderer::TextureFormat::BC1_SRGB : Renderer::TextureFormat::BC1);
+				}
 			}
 
 			{ // Loop through all faces
 				uint32_t width = mWidth;
 				uint32_t height = mHeight;
+				uint32_t depth = mDepth;
 				mNumberOfUsedImageDataBytes = 0;
-				while (width > 1 && height > 1)
+				while (width > 1 && height > 1 && depth > 1)
 				{
-					mNumberOfUsedImageDataBytes += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), width, height);
+					mNumberOfUsedImageDataBytes += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), width, height) * depth;
 
 					width /= 2;
 					height /= 2;
+					depth /= 2;
 				}
-				mNumberOfUsedImageDataBytes += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), width, height);
+				mNumberOfUsedImageDataBytes += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), width, height) * depth;
 
 				if (mNumberOfImageDataBytes < mNumberOfUsedImageDataBytes)
 				{
@@ -669,6 +676,11 @@ namespace RendererRuntime
 		{
 			// 1D texture
 			texture = mRendererRuntime.getTextureManager().createTexture1D((1 == mWidth) ? mHeight : mWidth, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, mDataContainsMipmaps ? Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS : 0u);
+		}
+		else if (mDepth > 1)
+		{
+			// 3D texture
+			texture = mRendererRuntime.getTextureManager().createTexture3D(mWidth, mHeight, mDepth, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, mDataContainsMipmaps ? Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS : 0u);
 		}
 		else
 		{

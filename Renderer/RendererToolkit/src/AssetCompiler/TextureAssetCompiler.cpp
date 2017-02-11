@@ -105,6 +105,7 @@ namespace
 			NORMAL_MAP,
 			SPECULAR_MAP,
 			EMISSIVE_MAP,
+			COLOR_CORRECTION_LOOKUP_TABLE,
 			UNKNOWN
 		};
 
@@ -140,6 +141,7 @@ namespace
 				ELSE_IF_VALUE(NORMAL_MAP)
 				ELSE_IF_VALUE(SPECULAR_MAP)
 				ELSE_IF_VALUE(EMISSIVE_MAP)
+				ELSE_IF_VALUE(COLOR_CORRECTION_LOOKUP_TABLE)
 				else
 				{
 					throw std::runtime_error(std::string("Unknown texture semantic \"") + valueAsString + '\"');
@@ -525,6 +527,10 @@ namespace
 					// Nothing here, just a regular texture
 					break;
 
+				case TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE:
+					// Nothing here, handled elsewhere
+					break;
+
 				case TextureSemantic::UNKNOWN:
 					// Nothing here, just a regular texture
 					break;
@@ -548,6 +554,68 @@ namespace
 			}
 
 			return cCSSucceeded;
+		}
+
+		void convertColorCorrectionLookupTable(const char* sourceFilename, const char* destinationFilename)
+		{
+			// Load the 2D source image
+			crnlib::image_u8 sourceImage;
+			crnlib::image_utils::read_from_file(sourceImage, sourceFilename);
+
+			// Sanity checks
+			if (sourceImage.get_width() < sourceImage.get_height())
+			{
+				throw std::runtime_error("Color correction lookup table width must be equal or greater as the height");
+			}
+			if (!sourceImage.has_rgb() || sourceImage.has_alpha())
+			{
+				throw std::runtime_error("Color correction lookup table must be RGB");
+			}
+
+			// Create the 3D texture destination data which always has four components per texel
+			const uint32_t width = sourceImage.get_height();	// Each 3D texture layer is a square
+			const uint32_t height = sourceImage.get_height();
+			const uint32_t numberOfTexelsPerLayer = width * height;
+			const uint32_t depth = sourceImage.get_width() / height;
+			crnlib::color_quad_u8* destinationData = new crnlib::color_quad_u8[numberOfTexelsPerLayer * depth];
+			{
+				crnlib::color_quad_u8* currentDestinationData = destinationData;
+				uint32_t sourceX = 0;
+				for (uint32_t z = 0; z < depth; ++z, sourceX += width, currentDestinationData += numberOfTexelsPerLayer)
+				{
+					if (!sourceImage.extract_block(currentDestinationData, sourceX, 0, width, height))
+					{
+						throw std::runtime_error("Color correction lookup table failed to extract block");
+					}
+				}
+			}
+
+			// Fill dds header ("PIXEL_FMT_A8R8G8B8" pixel format)
+			crnlib::DDSURFACEDESC2 ddsSurfaceDesc2 = {};
+			ddsSurfaceDesc2.dwSize								= sizeof(crnlib::DDSURFACEDESC2);
+			ddsSurfaceDesc2.dwFlags								= crnlib::DDSD_WIDTH | crnlib::DDSD_HEIGHT | crnlib::DDSD_DEPTH | crnlib::DDSD_PIXELFORMAT | crnlib::DDSD_CAPS | crnlib::DDSD_LINEARSIZE;
+			ddsSurfaceDesc2.dwHeight							= height;
+			ddsSurfaceDesc2.dwWidth								= width;
+			ddsSurfaceDesc2.dwBackBufferCount					= depth;
+			ddsSurfaceDesc2.ddsCaps.dwCaps						= crnlib::DDSCAPS_TEXTURE | crnlib::DDSCAPS_COMPLEX;
+			ddsSurfaceDesc2.ddsCaps.dwCaps2						= crnlib::DDSCAPS2_VOLUME;
+			ddsSurfaceDesc2.ddpfPixelFormat.dwSize				= sizeof(crnlib::DDPIXELFORMAT);
+			ddsSurfaceDesc2.ddpfPixelFormat.dwFlags			   |= (crnlib::DDPF_RGB | crnlib::DDPF_ALPHAPIXELS);
+			ddsSurfaceDesc2.ddpfPixelFormat.dwRGBBitCount		= 32;
+			ddsSurfaceDesc2.ddpfPixelFormat.dwRBitMask			= 0xFF0000;
+			ddsSurfaceDesc2.ddpfPixelFormat.dwGBitMask			= 0x00FF00;
+			ddsSurfaceDesc2.ddpfPixelFormat.dwBBitMask			= 0x0000FF;
+			ddsSurfaceDesc2.ddpfPixelFormat.dwRGBAlphaBitMask	= 0xFF000000;
+			ddsSurfaceDesc2.lPitch								= (ddsSurfaceDesc2.dwWidth * ddsSurfaceDesc2.ddpfPixelFormat.dwRGBBitCount) >> 3;
+
+			// Write down the 3D destination texture
+			std::ofstream outputFileStream(destinationFilename, std::ios::binary);
+			outputFileStream.write("DDS ", sizeof(uint32));
+			outputFileStream.write(reinterpret_cast<const char*>(&ddsSurfaceDesc2), sizeof(crnlib::DDSURFACEDESC2));
+			outputFileStream.write(reinterpret_cast<const char*>(destinationData), sizeof(crnlib::color_quad_u8) * numberOfTexelsPerLayer * depth);
+
+			// Done
+			delete [] destinationData;
 		}
 
 
@@ -750,6 +818,13 @@ namespace RendererToolkit
 			}
 			::detail::optionalTextureSemanticProperty(rapidJsonValueTextureAssetCompiler, "TextureSemantic", textureSemantic);
 			JsonHelper::optionalBooleanProperty(rapidJsonValueTextureAssetCompiler, "CreateMipmaps", createMipmaps);
+
+			// Texture semantic overrules manual settings
+			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
+			{
+				assetFileFormat = "dds";
+				createMipmaps = false;
+			}
 		}
 
 		const std::string inputAssetFilename = assetInputDirectory + inputFile;
@@ -940,7 +1015,14 @@ namespace RendererToolkit
             }
          }
 
-	  detail::convert_file(inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type, textureSemantic, createMipmaps);
+		if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
+		{
+			detail::convertColorCorrectionLookupTable(inputAssetFilename.c_str(), outputAssetFilename.c_str());
+		}
+		else
+		{
+			detail::convert_file(inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type, textureSemantic, createMipmaps);
+		}
 
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
