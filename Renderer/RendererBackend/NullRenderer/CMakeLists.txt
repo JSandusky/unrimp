@@ -50,13 +50,13 @@ set(SOURCE_CODES
 	src/Buffer/VertexBuffer.cpp
 	src/RenderTarget/Framebuffer.cpp
 	src/RenderTarget/SwapChain.cpp
-	src/Shader/FragmentShaderHlsl.cpp
-	src/Shader/GeometryShaderHlsl.cpp
-	src/Shader/ProgramHlsl.cpp
-	src/Shader/ShaderLanguageHlsl.cpp
-	src/Shader/TessellationControlShaderHlsl.cpp
-	src/Shader/TessellationEvaluationShaderHlsl.cpp
-	src/Shader/VertexShaderHlsl.cpp
+	src/Shader/FragmentShader.cpp
+	src/Shader/GeometryShader.cpp
+	src/Shader/Program.cpp
+	src/Shader/ShaderLanguage.cpp
+	src/Shader/TessellationControlShader.cpp
+	src/Shader/TessellationEvaluationShader.cpp
+	src/Shader/VertexShader.cpp
 	src/State/PipelineState.cpp
 	src/State/SamplerState.cpp
 	src/Texture/Texture1D.cpp
