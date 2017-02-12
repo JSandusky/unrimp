@@ -12,7 +12,7 @@
 			"AssetType": "Texture",
 			"AssetCategory": "CubeMap",
 			"AssetName": "Maskonaive3",
-			"FileDependencies": [ "negx.jpg",  "negy.jpg", "negz.jpg", "posx.jpg", "posy.jpg", "posz.jpg" ],
+			"FileDependencies": [ "posx.jpg", "negx.jpg", "posy.jpg", "negy.jpg", "posz.jpg", "negz.jpg" ],
 			"Copyright": "Måskonåive 3 cube map by Emil Persson - 'Creative Commons Attribution 3.0 Unported License' - http://humus.name/index.php?page=Textures&start=56 - http://humus.name/Textures/Maskonaive3.zip "
 		},
 		"TextureAssetCompiler":
@@ -20,8 +20,8 @@
 			"TextureSemantic": "REFLECTION_CUBE_MAP",
 			"PositiveXInputFile": "posx.jpg",
 			"NegativeXInputFile": "negx.jpg",
-			"NegativeYInputFile": "negy.jpg",
 			"PositiveYInputFile": "posy.jpg",
+			"NegativeYInputFile": "negy.jpg",
 			"PositiveZInputFile": "posz.jpg",
 			"NegativeZInputFile": "negz.jpg"
 		}

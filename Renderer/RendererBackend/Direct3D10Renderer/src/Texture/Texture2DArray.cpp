@@ -139,13 +139,13 @@ namespace Direct3D10Renderer
 				else
 				{
 					// The user only provided us with the base texture, no mipmaps
-					const uint32_t  bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-					const uint32_t  bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+					const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+					const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
 					for (uint32_t arraySlice = 0; arraySlice < numberOfSlices; ++arraySlice)
 					{
 						D3D10_SUBRESOURCE_DATA& currentD3d10SubresourceData = d3d10SubresourceData[arraySlice];
-						currentD3d10SubresourceData.pSysMem		     = data;
-						currentD3d10SubresourceData.SysMemPitch	     = bytesPerRow;
+						currentD3d10SubresourceData.pSysMem			 = data;
+						currentD3d10SubresourceData.SysMemPitch		 = bytesPerRow;
 						currentD3d10SubresourceData.SysMemSlicePitch = 0;	// Only relevant for 3D textures
 
 						// Move on to the next slice
