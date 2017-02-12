@@ -40,27 +40,33 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	Texture2DArray::Texture2DArray(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2DArray(direct3D10Renderer, width, height, numberOfSlices),
+		mGenerateMipmaps(false),
+		mD3D10Texture2D(nullptr),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D10Renderer)
 
-		// Generate mipmaps?
-		const bool mipmaps = (flags & Renderer::TextureFlag::GENERATE_MIPMAPS) != 0;
+		// Calculate the number of mipmaps
+		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
+		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
+		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Direct3D 10 2D array texture description
+		const DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(textureFormat));
 		D3D10_TEXTURE2D_DESC d3d10Texture2DDesc;
 		d3d10Texture2DDesc.Width			  = width;
 		d3d10Texture2DDesc.Height			  = height;
-		d3d10Texture2DDesc.MipLevels		  = mipmaps ? 0u : 1u;	// 0 = Let Direct3D 10 allocate the complete mipmap chain for us
+		d3d10Texture2DDesc.MipLevels		  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 10 allocate the complete mipmap chain for us
 		d3d10Texture2DDesc.ArraySize		  = numberOfSlices;
-		d3d10Texture2DDesc.Format			  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(textureFormat));
+		d3d10Texture2DDesc.Format			  = dxgiFormat;
 		d3d10Texture2DDesc.SampleDesc.Count	  = 1;
 		d3d10Texture2DDesc.SampleDesc.Quality = 0;
 		d3d10Texture2DDesc.Usage			  = static_cast<D3D10_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
 		d3d10Texture2DDesc.BindFlags		  = D3D10_BIND_SHADER_RESOURCE;
 		d3d10Texture2DDesc.CPUAccessFlags	  = 0;
-		d3d10Texture2DDesc.MiscFlags		  = 0;
+		d3d10Texture2DDesc.MiscFlags		  = mGenerateMipmaps ? D3D10_RESOURCE_MISC_GENERATE_MIPS : 0u;
 
 		// Use this texture as render target?
 		if (flags & Renderer::TextureFlag::RENDER_TARGET)
@@ -68,48 +74,110 @@ namespace Direct3D10Renderer
 			d3d10Texture2DDesc.BindFlags |= D3D10_BIND_RENDER_TARGET;
 		}
 
-		// Create the Direct3D 10 2D array texture instance
-		// -> Do not provide the data at once or creating mipmaps will get somewhat complicated
-		ID3D10Texture2D *d3d10Texture2D = nullptr;
-		direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, nullptr, &d3d10Texture2D);
-		if (nullptr != d3d10Texture2D)
+		// Create the Direct3D 10 2D texture instance
+		// Did the user provided us with any texture data?
+		ID3D10Device *d3d10Device = direct3D10Renderer.getD3D10Device();
+		if (nullptr != data)
 		{
-			// Calculate the number of mipmaps
-			const uint32_t numberOfMipmaps = mipmaps ? getNumberOfMipmaps(width, height) : 1;
-
-			// Data given?
-			if (nullptr != data)
+			if (generateMipmaps)
 			{
-				{ // Update Direct3D 10 subresource data of the base-map
-					const uint32_t  bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-					const uint32_t  bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
-					const uint8_t  *dataCurrent   = static_cast<const uint8_t*>(data);
-					for (uint32_t arraySlice = 0; arraySlice < numberOfSlices; ++arraySlice, dataCurrent += bytesPerSlice)
-					{
-						direct3D10Renderer.getD3D10Device()->UpdateSubresource(d3d10Texture2D, D3D10CalcSubresource(0, arraySlice, numberOfMipmaps), nullptr, dataCurrent, bytesPerRow, bytesPerSlice);
-					}
-				}
-
-				// Let Direct3D 10 generate the mipmaps for us automatically?
-				if (mipmaps)
+				// Let Direct3D 10 generate the mipmaps for us automatically
+				// -> Sadly, it's impossible to use initialization data in this use-case
+				d3d10Device->CreateTexture2D(&d3d10Texture2DDesc, nullptr, &mD3D10Texture2D);
+				if (nullptr != mD3D10Texture2D)
 				{
-					D3DX10FilterTexture(d3d10Texture2D, 0, D3DX10_DEFAULT);
+					{ // Update Direct3D 10 subresource data of the base-map
+						const uint32_t  bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+						const uint32_t  bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+						for (uint32_t arraySlice = 0; arraySlice < numberOfSlices; ++arraySlice)
+						{
+							d3d10Device->UpdateSubresource(mD3D10Texture2D, D3D10CalcSubresource(0, arraySlice, numberOfMipmaps), nullptr, data, bytesPerRow, bytesPerSlice);
+
+							// Move on to the next slice
+							data = static_cast<const uint8_t*>(data) + bytesPerSlice;
+						}
+					}
+
+					// Let Direct3D 10 generate the mipmaps for us automatically
+					D3DX10FilterTexture(mD3D10Texture2D, 0, D3DX10_DEFAULT);
 				}
 			}
+			else
+			{
+				// We don't want dynamic allocations, so we limit the maximum number of mipmaps and hence are able to use the efficient C runtime stack
+				static const uint32_t MAXIMUM_NUMBER_OF_MIPMAPS = 15;	// A 16384x16384 texture has 15 mipmaps
+				static const uint32_t MAXIMUM_NUMBER_OF_SLICES = 10;
+				assert(numberOfMipmaps <= MAXIMUM_NUMBER_OF_MIPMAPS);
+				D3D10_SUBRESOURCE_DATA d3d10SubresourceDataStack[MAXIMUM_NUMBER_OF_SLICES * MAXIMUM_NUMBER_OF_MIPMAPS];
+				D3D10_SUBRESOURCE_DATA* d3d10SubresourceData = (numberOfSlices <= MAXIMUM_NUMBER_OF_SLICES) ? d3d10SubresourceDataStack : new D3D10_SUBRESOURCE_DATA[numberOfSlices];
 
+				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
+				if (dataContainsMipmaps)
+				{
+					// Upload all mipmaps
+					uint32_t d3d10SubresourceDataIndex = 0;
+					for (uint32_t arraySlice = 0; arraySlice < numberOfSlices; ++arraySlice)
+					{
+						uint32_t currentWidth = width;
+						uint32_t currentHeight = height;
+						for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+						{
+							// Upload the current mipmap
+							D3D10_SUBRESOURCE_DATA& currentD3d10SubresourceData = d3d10SubresourceData[d3d10SubresourceDataIndex];
+							currentD3d10SubresourceData.pSysMem			 = data;
+							currentD3d10SubresourceData.SysMemPitch		 = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, currentWidth);
+							currentD3d10SubresourceData.SysMemSlicePitch = 0;	// Only relevant for 3D textures
+
+							// Move on to the next mipmap
+							++d3d10SubresourceDataIndex;
+							data = static_cast<const uint8_t*>(data) + Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, currentWidth, currentHeight);
+							currentWidth = std::max(currentWidth >> 1, 1u);		// /= 2
+							currentHeight = std::max(currentHeight >> 1, 1u);	// /= 2
+						}
+					}
+				}
+				else
+				{
+					// The user only provided us with the base texture, no mipmaps
+					const uint32_t  bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+					const uint32_t  bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+					for (uint32_t arraySlice = 0; arraySlice < numberOfSlices; ++arraySlice)
+					{
+						D3D10_SUBRESOURCE_DATA& currentD3d10SubresourceData = d3d10SubresourceData[arraySlice];
+						currentD3d10SubresourceData.pSysMem		     = data;
+						currentD3d10SubresourceData.SysMemPitch	     = bytesPerRow;
+						currentD3d10SubresourceData.SysMemSlicePitch = 0;	// Only relevant for 3D textures
+
+						// Move on to the next slice
+						data = static_cast<const uint8_t*>(data) + bytesPerSlice;
+					}
+				}
+				d3d10Device->CreateTexture2D(&d3d10Texture2DDesc, d3d10SubresourceData, &mD3D10Texture2D);
+				if (numberOfSlices > MAXIMUM_NUMBER_OF_SLICES)
+				{
+					delete [] d3d10SubresourceData;
+				}
+			}
+		}
+		else
+		{
+			// The user did not provide us with texture data
+			d3d10Device->CreateTexture2D(&d3d10Texture2DDesc, nullptr, &mD3D10Texture2D);
+		}
+
+		// Create the Direct3D 10 shader resource view instance
+		if (nullptr != mD3D10Texture2D)
+		{
 			// Direct3D 10 shader resource view description
 			D3D10_SHADER_RESOURCE_VIEW_DESC d3d10ShaderResourceViewDesc = {};
-			d3d10ShaderResourceViewDesc.Format						   = d3d10Texture2DDesc.Format;
-			d3d10ShaderResourceViewDesc.ViewDimension				   = D3D10_SRV_DIMENSION_TEXTURE2DARRAY;
-			d3d10ShaderResourceViewDesc.Texture2DArray.MipLevels	   = numberOfMipmaps;
-			d3d10ShaderResourceViewDesc.Texture2DArray.MostDetailedMip = 0;
-			d3d10ShaderResourceViewDesc.Texture2DArray.ArraySize	   = numberOfSlices;
+			d3d10ShaderResourceViewDesc.Format							= dxgiFormat;
+			d3d10ShaderResourceViewDesc.ViewDimension					= D3D10_SRV_DIMENSION_TEXTURE2DARRAY;
+			d3d10ShaderResourceViewDesc.Texture2DArray.MipLevels		= numberOfMipmaps;
+			d3d10ShaderResourceViewDesc.Texture2DArray.MostDetailedMip	= 0;
+			d3d10ShaderResourceViewDesc.Texture2DArray.ArraySize		= numberOfSlices;
 
 			// Create the Direct3D 10 shader resource view instance
-			direct3D10Renderer.getD3D10Device()->CreateShaderResourceView(d3d10Texture2D, &d3d10ShaderResourceViewDesc, &mD3D10ShaderResourceViewTexture);
-
-			// Release the Direct3D 10 2D array texture instance
-			d3d10Texture2D->Release();
+			direct3D10Renderer.getD3D10Device()->CreateShaderResourceView(mD3D10Texture2D, &d3d10ShaderResourceViewDesc, &mD3D10ShaderResourceViewTexture);
 		}
 
 		// Assign a default name to the resource for debugging purposes

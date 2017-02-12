@@ -69,8 +69,10 @@ namespace RendererRuntime
 	*    The texture manager automatically generates some dynamic default texture assets one can reference e.g. inside material blueprint resources:
 	*    - "Unrimp/Texture/DynamicByCode/WhiteMap1D"
 	*    - "Unrimp/Texture/DynamicByCode/WhiteMap2D"
+	*    - "Unrimp/Texture/DynamicByCode/WhiteMapCube"
 	*    - "Unrimp/Texture/DynamicByCode/BlackMap1D"
 	*    - "Unrimp/Texture/DynamicByCode/BlackMap2D"
+	*    - "Unrimp/Texture/DynamicByCode/BlackMapCube"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"

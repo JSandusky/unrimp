@@ -28,6 +28,16 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline bool Texture2DArray::getGenerateMipmaps() const
+	{
+		return mGenerateMipmaps;
+	}
+
+	inline ID3D11Texture2D *Texture2DArray::getD3D11Texture2D() const
+	{
+		return mD3D11Texture2D;
+	}
+
 	inline ID3D11ShaderResourceView *Texture2DArray::getD3D11ShaderResourceView() const
 	{
 		return mD3D11ShaderResourceViewTexture;

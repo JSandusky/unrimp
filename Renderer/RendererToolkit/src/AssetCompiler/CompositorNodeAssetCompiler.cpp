@@ -530,8 +530,10 @@ namespace RendererToolkit
 			{ // TODO(co) Make this somehow more generic
 				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/WhiteMap1D"));
 				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/WhiteMap2D"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/WhiteMapCube"));
 				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/BlackMap1D"));
 				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/BlackMap2D"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/BlackMapCube"));
 				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D"));
 				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"));
 				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"));

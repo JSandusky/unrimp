@@ -416,7 +416,8 @@ namespace
 			crnlib::mipmapped_texture src_tex;
 			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
 			{
-				static const std::string FACE_NAMES[6] = { "NegativeXInputFile", "NegativeYInputFile", "NegativeZInputFile", "PositiveXInputFile", "PositiveYInputFile", "PositiveZInputFile" };
+				// The face order must be: +X, –X, –Y, +Y, +Z, –Z
+				static const std::string FACE_NAMES[6] = { "PositiveXInputFile", "NegativeXInputFile", "NegativeYInputFile", "PositiveYInputFile", "PositiveZInputFile", "NegativeZInputFile" };
 				for (int faceIndex = 0; faceIndex < 6; ++faceIndex)
 				{
 					// Load the 2D source image
@@ -572,7 +573,7 @@ namespace
 					break;
 
 				case TextureSemantic::REFLECTION_CUBE_MAP:
-					// Nothing here, just a regular texture
+					params.m_texture_type = crnlib::cTextureTypeCubemap;
 					break;
 
 				case TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE:

@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 		return mGenerateMipmaps;
 	}
 
-	inline ID3D10TextureCube *TextureCube::getD3D10TextureCube() const
+	inline ID3D10Texture2D *TextureCube::getD3D10TextureCube() const
 	{
 		return mD3D10TextureCube;
 	}

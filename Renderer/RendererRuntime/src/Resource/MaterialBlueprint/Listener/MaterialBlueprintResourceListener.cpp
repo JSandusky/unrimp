@@ -75,6 +75,7 @@ namespace
 			DEFINE_CONSTANT(VIEW_SPACE_TO_TEXTURE_SPACE_MATRIX)
 			DEFINE_CONSTANT(CLIP_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(CLIP_SPACE_TO_WORLD_SPACE_MATRIX)
+			DEFINE_CONSTANT(CAMERA_WORLD_SPACE_POSITION)
 			DEFINE_CONSTANT(PROJECTION_PARAMETERS)
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_SUN_LIGHT_DIRECTION)
@@ -365,6 +366,12 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToClipSpaceMatrix)), numberOfBytes);
+		}
+		else if (::detail::CAMERA_WORLD_SPACE_POSITION == referenceValue)
+		{
+			assert(sizeof(float) * 3 == numberOfBytes);
+			const CameraSceneItem* cameraSceneItem = mCompositorContextData->getCameraSceneItem();
+			memcpy(buffer, glm::value_ptr((nullptr != cameraSceneItem) ? cameraSceneItem->getParentSceneNodeSafe().getTransform().position : Math::ZERO_VECTOR), numberOfBytes);
 		}
 		else if (::detail::PROJECTION_PARAMETERS == referenceValue)
 		{

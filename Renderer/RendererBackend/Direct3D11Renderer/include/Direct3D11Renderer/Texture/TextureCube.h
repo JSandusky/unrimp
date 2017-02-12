@@ -34,7 +34,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D11TextureCube;
+struct ID3D11Texture2D;
 struct ID3D11ShaderResourceView;
 namespace Direct3D11Renderer
 {
@@ -123,7 +123,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The Direct3D texture cube resource instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11TextureCube *getD3D11TextureCube() const;
+		inline ID3D11Texture2D *getD3D11TextureCube() const;
 
 		/**
 		*  @brief
@@ -153,7 +153,7 @@ namespace Direct3D11Renderer
 	private:
 		Renderer::TextureFormat::Enum  mTextureFormat;
 		bool						   mGenerateMipmaps;
-		ID3D11TextureCube			  *mD3D11TextureCube;				///< Direct3D 11 texture cube resource, can be a null pointer
+		ID3D11Texture2D				  *mD3D11TextureCube;				///< Direct3D 11 texture cube resource, can be a null pointer
 		ID3D11ShaderResourceView	  *mD3D11ShaderResourceViewTexture;	///< Direct3D 11 shader resource view, can be a null pointer
 
 

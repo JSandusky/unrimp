@@ -18,12 +18,12 @@
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "REFLECTION_CUBE_MAP",
+			"PositiveXInputFile": "posx.jpg",
 			"NegativeXInputFile": "negx.jpg",
 			"NegativeYInputFile": "negy.jpg",
-			"NegativeZInputFile": "negz.jpg",
-			"PositiveXInputFile": "posx.jpg",
 			"PositiveYInputFile": "posy.jpg",
-			"PositiveZInputFile": "posz.jpg"
+			"PositiveZInputFile": "posz.jpg",
+			"NegativeZInputFile": "negz.jpg"
 		}
 	}
 }
