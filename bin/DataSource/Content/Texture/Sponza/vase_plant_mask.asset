@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "vase_plant_mask.tga",
-			"TextureSemantic": "ALPHA_MAP"
+			"TextureSemantic": "ALPHA_MAP",
+			"InputFile": "vase_plant_mask.tga"
 		}
 	}
 }

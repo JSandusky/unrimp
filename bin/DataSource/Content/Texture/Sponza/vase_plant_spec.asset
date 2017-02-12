@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "vase_plant_spec.tga",
-			"TextureSemantic": "SPECULAR_MAP"
+			"TextureSemantic": "SPECULAR_MAP",
+			"InputFile": "vase_plant_spec.tga"
 		}
 	}
 }

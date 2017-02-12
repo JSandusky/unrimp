@@ -105,6 +105,7 @@ namespace
 			NORMAL_MAP,
 			SPECULAR_MAP,
 			EMISSIVE_MAP,
+			REFLECTION_CUBE_MAP,
 			COLOR_CORRECTION_LOOKUP_TABLE,
 			UNKNOWN
 		};
@@ -141,6 +142,7 @@ namespace
 				ELSE_IF_VALUE(NORMAL_MAP)
 				ELSE_IF_VALUE(SPECULAR_MAP)
 				ELSE_IF_VALUE(EMISSIVE_MAP)
+				ELSE_IF_VALUE(REFLECTION_CUBE_MAP)
 				ELSE_IF_VALUE(COLOR_CORRECTION_LOOKUP_TABLE)
 				else
 				{
@@ -406,26 +408,74 @@ namespace
 		  return true;
 	   }
 
-		convert_status convert_file(const char* pSrc_filename, const char* pDst_filename, crnlib::texture_file_types::format out_file_type, TextureSemantic textureSemantic, bool createMipmaps)
+		convert_status convert_file(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* pSrc_filename, const char* pDst_filename, crnlib::texture_file_types::format out_file_type, TextureSemantic textureSemantic, bool createMipmaps)
 		{
-			crnlib::texture_file_types::format src_file_format = crnlib::texture_file_types::determine_file_format(pSrc_filename);
-			if (src_file_format == crnlib::texture_file_types::cFormatInvalid)
-			{
-			//	console::error("Unrecognized file type: %s", pSrc_filename);
-				return cCSFailed;
-			}
+			crnlib::texture_file_types::format src_file_format = crnlib::texture_file_types::cFormatInvalid;
+			crnlib::texture_conversion::convert_params params;
 
 			crnlib::mipmapped_texture src_tex;
-			if (!src_tex.read_from_file(pSrc_filename, src_file_format))
+			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
 			{
-				/*
-				if (src_tex.get_last_error().is_empty())
-					console::error("Failed reading source file: \"%s\"", pSrc_filename);
-				else
-					console::error("%s", src_tex.get_last_error().get_ptr());
-				*/
+				static const std::string FACE_NAMES[6] = { "NegativeXInputFile", "NegativeYInputFile", "NegativeZInputFile", "PositiveXInputFile", "PositiveYInputFile", "PositiveZInputFile" };
+				for (int faceIndex = 0; faceIndex < 6; ++faceIndex)
+				{
+					// Load the 2D source image
+					crnlib::image_u8* source2DImage = crnlib::crnlib_new<crnlib::image_u8>();
+					const std::string inputFile = std::string(pSrc_filename) + rapidJsonValueTextureAssetCompiler[FACE_NAMES[faceIndex].c_str()].GetString();
+					if (!crnlib::image_utils::read_from_file(*source2DImage, inputFile.c_str()))
+					{
+						throw std::runtime_error(std::string("Failed to load image \"") + inputFile + '\"');
+					}
 
-				return cCSFailed;
+					// Sanity check
+					const uint32 width = source2DImage->get_width();
+					if (width != source2DImage->get_height())
+					{
+						throw std::runtime_error("Cube map faces must have a width which is identical to the height");
+					}
+					
+					// Process 2D source image
+					const crnlib::pixel_format pixelFormat = source2DImage->has_alpha() ? crnlib::PIXEL_FMT_A8R8G8B8 : crnlib::PIXEL_FMT_R8G8B8;
+					if (0 == faceIndex)
+					{
+						src_tex.init(width, width, 1, 6, pixelFormat, "", crnlib::cDefaultOrientationFlags);
+					}
+					else if (src_tex.get_format() != pixelFormat)
+					{
+						throw std::runtime_error("The pixel format of all cube map faces must be identical");
+					}
+					else if (src_tex.get_width() != source2DImage->get_width())
+					{
+						throw std::runtime_error("The size of all cube map faces must be identical");
+					}
+					src_tex.get_level(faceIndex, 0)->assign(source2DImage);
+				}
+			}
+			else
+			{
+				crnlib::texture_file_types::format src_file_format = crnlib::texture_file_types::determine_file_format(pSrc_filename);
+				if (src_file_format == crnlib::texture_file_types::cFormatInvalid)
+				{
+				//	console::error("Unrecognized file type: %s", pSrc_filename);
+					return cCSFailed;
+				}
+
+				if (!src_tex.read_from_file(pSrc_filename, src_file_format))
+				{
+					/*
+					if (src_tex.get_last_error().is_empty())
+						console::error("Failed reading source file: \"%s\"", pSrc_filename);
+					else
+						console::error("%s", src_tex.get_last_error().get_ptr());
+					*/
+
+					return cCSFailed;
+				}
+
+				if (crnlib::texture_file_types::supports_mipmaps(src_file_format))
+				{
+					params.m_mipmap_params.m_mode = cCRNMipModeUseSourceMips;
+				}
 			}
 
 			if (m_params.get_value_as_bool("converttoluma"))
@@ -433,7 +483,6 @@ namespace
 			if (m_params.get_value_as_bool("setalphatoluma"))
 				src_tex.convert(crnlib::image_utils::cConversion_Y_To_A);
 
-			crnlib::texture_conversion::convert_params params;
 			params.m_texture_type = src_tex.determine_texture_type();
 			params.m_pInput_texture = &src_tex;
 			params.m_dst_filename = pDst_filename;
@@ -473,11 +522,6 @@ namespace
 					params.m_dst_format = trial_fmt;
 					break;
 				}
-			}
-
-			if (crnlib::texture_file_types::supports_mipmaps(src_file_format))
-			{
-				params.m_mipmap_params.m_mode = cCRNMipModeUseSourceMips;
 			}
 
 			if (!parse_mipmap_params(params.m_mipmap_params))
@@ -524,6 +568,10 @@ namespace
 					break;
 
 				case TextureSemantic::EMISSIVE_MAP:
+					// Nothing here, just a regular texture
+					break;
+
+				case TextureSemantic::REFLECTION_CUBE_MAP:
 					// Nothing here, just a regular texture
 					break;
 
@@ -802,21 +850,23 @@ namespace RendererToolkit
 		// Get the JSON asset object
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
-		// Read configuration
+		// Read texture asset compiler configuration
 		// TODO(co) Add required properties
 		std::string inputFile;
 		std::string assetFileFormat;
 		::detail::TextureSemantic textureSemantic = ::detail::TextureSemantic::UNKNOWN;
 		bool createMipmaps = true;
+		const rapidjson::Value& rapidJsonValueTextureAssetCompiler = rapidJsonValueAsset["TextureAssetCompiler"];
 		{
-			// Read texture asset compiler configuration
-			const rapidjson::Value& rapidJsonValueTextureAssetCompiler = rapidJsonValueAsset["TextureAssetCompiler"];
-			inputFile = rapidJsonValueTextureAssetCompiler["InputFile"].GetString();
+			::detail::optionalTextureSemanticProperty(rapidJsonValueTextureAssetCompiler, "TextureSemantic", textureSemantic);
+			if (rapidJsonValueTextureAssetCompiler.HasMember("InputFile"))
+			{
+				inputFile = rapidJsonValueTextureAssetCompiler["InputFile"].GetString();
+			}
 			if (rapidJsonValueTextureAssetCompiler.HasMember("FileFormat"))
 			{
 				assetFileFormat = rapidJsonValueTextureAssetCompiler["FileFormat"].GetString();
 			}
-			::detail::optionalTextureSemanticProperty(rapidJsonValueTextureAssetCompiler, "TextureSemantic", textureSemantic);
 			JsonHelper::optionalBooleanProperty(rapidJsonValueTextureAssetCompiler, "CreateMipmaps", createMipmaps);
 
 			// Texture semantic overrules manual settings
@@ -825,6 +875,12 @@ namespace RendererToolkit
 				assetFileFormat = "dds";
 				createMipmaps = false;
 			}
+		}
+
+		// Sanity checks
+		if (::detail::TextureSemantic::REFLECTION_CUBE_MAP != textureSemantic && inputFile.empty())
+		{
+			throw std::runtime_error("Input file must be defined");
 		}
 
 		const std::string inputAssetFilename = assetInputDirectory + inputFile;
@@ -1021,7 +1077,7 @@ namespace RendererToolkit
 		}
 		else
 		{
-			detail::convert_file(inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type, textureSemantic, createMipmaps);
+			detail::convert_file(rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type, textureSemantic, createMipmaps);
 		}
 
 		{ // Update the output asset package

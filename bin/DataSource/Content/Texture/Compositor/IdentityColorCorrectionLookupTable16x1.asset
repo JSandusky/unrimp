@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "IdentityColorCorrectionLookupTable16x1.tga",
-			"TextureSemantic": "COLOR_CORRECTION_LOOKUP_TABLE"
+			"TextureSemantic": "COLOR_CORRECTION_LOOKUP_TABLE",
+			"InputFile": "IdentityColorCorrectionLookupTable16x1.tga"
 		}
 	}
 }

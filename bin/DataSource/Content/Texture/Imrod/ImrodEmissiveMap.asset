@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "ImrodEmissiveMap.tga",
-			"TextureSemantic": "EMISSIVE_MAP"
+			"TextureSemantic": "EMISSIVE_MAP",
+			"InputFile": "ImrodEmissiveMap.tga"
 		}
 	}
 }

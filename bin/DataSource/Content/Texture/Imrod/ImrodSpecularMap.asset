@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "ImrodSpecularMap.tga",
-			"TextureSemantic": "SPECULAR_MAP"
+			"TextureSemantic": "SPECULAR_MAP",
+			"InputFile": "ImrodSpecularMap.tga"
 		}
 	}
 }
