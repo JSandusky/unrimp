@@ -37,14 +37,11 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCube::TextureCube(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void *, uint32_t) :
+	TextureCube::TextureCube(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
 		ITextureCube(openGLES3Renderer, width, height),
 		mOpenGLES3Texture(0),
 		mGenerateMipmaps(false)
 	{
-		// TODO(co) Implement cube texture support
-
-		/*
 		// Sanity checks
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
 
@@ -57,7 +54,7 @@ namespace OpenGLES3Renderer
 
 			// Backup the currently bound OpenGL ES 3 texture
 			GLint openGLES3TextureBackup = 0;
-			glGetIntegerv(GL_TEXTURE_BINDING_2D, &openGLES3TextureBackup);
+			glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, &openGLES3TextureBackup);
 		#endif
 
 		// Set correct alignment
@@ -71,7 +68,7 @@ namespace OpenGLES3Renderer
 
 		// Create the OpenGL ES 3 texture instance
 		glGenTextures(1, &mOpenGLES3Texture);
-		glBindTexture(GL_TEXTURE_2D, mOpenGLES3Texture);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, mOpenGLES3Texture);
 
 		// Upload the texture data
 		if (Renderer::TextureFormat::isCompressed(textureFormat))
@@ -79,24 +76,35 @@ namespace OpenGLES3Renderer
 			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 			if (dataContainsMipmaps)
 			{
-				// Upload all mipmaps
+				// Upload all mipmaps of all faces
 				const uint32_t internalFormat = Mapping::getOpenGLES3InternalFormat(textureFormat);
-				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+				for (uint32_t face = 0; face < 6; ++face)
 				{
-					// Upload the current mipmap
-					const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
-					glCompressedTexImage2D(GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
+					uint32_t currentWidth = width;
+					uint32_t currentHeight = height;
+					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+					{
+						// Upload the current mipmap
+						const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, currentWidth, currentHeight));
+						glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(currentWidth), static_cast<GLsizei>(currentHeight), 0, numberOfBytesPerSlice, data);
 
-					// Move on to the next mipmap
-					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
-					width = std::max(width >> 1, 1u);	// /= 2
-					height = std::max(height >> 1, 1u);	// /= 2
+						// Move on to the next mipmap
+						data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
+						currentWidth = std::max(currentWidth >> 1, 1u);		// /= 2
+						currentHeight = std::max(currentHeight >> 1, 1u);	// /= 2
+					}
 				}
 			}
 			else
 			{
 				// The user only provided us with the base texture, no mipmaps
-				glCompressedTexImage2D(GL_TEXTURE_2D, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
+				const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
+				const uint32_t openGLES3InternalFormat = Mapping::getOpenGLES3InternalFormat(textureFormat);
+				for (uint32_t face = 0; face < 6; ++face)
+				{
+					glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, openGLES3InternalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
+					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
+				}
 			}
 		}
 		else
@@ -106,49 +114,61 @@ namespace OpenGLES3Renderer
 			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 			if (dataContainsMipmaps)
 			{
-				// Upload all mipmaps
+				// Upload all mipmaps of all faces
 				const uint32_t internalFormat = Mapping::getOpenGLES3InternalFormat(textureFormat);
 				const uint32_t format = Mapping::getOpenGLES3Format(textureFormat);
 				const uint32_t type = Mapping::getOpenGLES3Type(textureFormat);
-				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+				for (uint32_t face = 0; face < 6; ++face)
 				{
-					// Upload the current mipmap
-					const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
-					glTexImage2D(GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, format, type, data);
+					uint32_t currentWidth = width;
+					uint32_t currentHeight = height;
+					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+					{
+						// Upload the current mipmap
+						const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, currentWidth, currentHeight));
+						glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(currentWidth), static_cast<GLsizei>(currentHeight), 0, format, type, data);
 
-					// Move on to the next mipmap
-					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
-					width = std::max(width >> 1, 1u);	// /= 2
-					height = std::max(height >> 1, 1u);	// /= 2
+						// Move on to the next mipmap
+						data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
+						currentWidth = std::max(currentWidth >> 1, 1u);		// /= 2
+						currentHeight = std::max(currentHeight >> 1, 1u);	// /= 2
+					}
 				}
 			}
 			else
 			{
 				// The user only provided us with the base texture, no mipmaps
-				glTexImage2D(GL_TEXTURE_2D, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, Mapping::getOpenGLES3Format(textureFormat), Mapping::getOpenGLES3Type(textureFormat), data);
+				const uint32_t numberOfBytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+				const uint32_t openGLES3InternalFormat = Mapping::getOpenGLES3InternalFormat(textureFormat);
+				const uint32_t openGLES3Format = Mapping::getOpenGLES3Format(textureFormat);
+				const uint32_t openGLES3Type = Mapping::getOpenGLES3Type(textureFormat);
+				for (uint32_t face = 0; face < 6; ++face)
+				{
+					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, openGLES3InternalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, openGLES3Format, openGLES3Type, data);
+					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
+				}
 			}
 		}
 
 		// Build mipmaps automatically on the GPU? (or GPU driver)
 		if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
 		{
-			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 		}
 		else
 		{
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		}
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 texture
-			glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(openGLES3TextureBackup));
+			glBindTexture(GL_TEXTURE_CUBE_MAP, static_cast<GLuint>(openGLES3TextureBackup));
 
 			// Restore previous alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, openGLES3AlignmentBackup);
 		#endif
-		*/
 	}
 
 	TextureCube::~TextureCube()
