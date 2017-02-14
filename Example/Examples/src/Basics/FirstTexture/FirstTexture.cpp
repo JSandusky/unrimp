@@ -70,7 +70,7 @@ void FirstTexture::onInitialization()
 			uint8_t *data = new uint8_t[NUMBER_OF_BYTES];
 
 			// Fill the texture data with a color gradient
-			for (int n = 0; n < NUMBER_OF_BYTES; n += TEXEL_ELEMENTS)
+			for (uint32_t n = 0; n < NUMBER_OF_BYTES; n += TEXEL_ELEMENTS)
 			{
 				data[n] = static_cast<uint8_t>(n);
 			}
