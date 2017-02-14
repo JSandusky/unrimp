@@ -164,7 +164,7 @@ namespace
 				std::mt19937 randomGenerator;
 				std::uniform_real_distribution<float> randomDistributionHalf(0.0f, 1.0f);
 				std::uniform_real_distribution<float> randomDistributionFull(-1.0f, 1.0f);
-				for (int i = 0; i < KERNEL_SIZE; ++i)
+				for (uint32_t i = 0; i < KERNEL_SIZE; ++i)
 				{
 					// Create a sample point on the surface of a hemisphere oriented along the z axis
 					kernel[i] = glm::vec4(randomDistributionFull(randomGenerator), randomDistributionFull(randomGenerator), randomDistributionHalf(randomGenerator), 0.0f);
@@ -212,7 +212,7 @@ namespace
 			{ // Create the noise
 				std::mt19937 randomGenerator;
 				std::uniform_real_distribution<float> randomDistribution(-1.0f, 1.0f);
-				for (int i = 0; i < SQUARED_NOISE_SIZE; ++i)
+				for (uint32_t i = 0; i < SQUARED_NOISE_SIZE; ++i)
 				{
 					noise[i] = glm::vec4(randomDistribution(randomGenerator), randomDistribution(randomGenerator), 0.0f, 0.0f);
 					noise[i] = glm::normalize(noise[i]);

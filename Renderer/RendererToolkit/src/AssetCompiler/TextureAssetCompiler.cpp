@@ -558,7 +558,7 @@ namespace
 
 					// Do never ever store normal maps standard DXT1 compressed to not get horrible artefact's due to compressing vector data using algorithms design for color data
 					// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
-					if (cCRNFmtDXT1 == params.m_dst_format)
+					if (crnlib::pixel_format::PIXEL_FMT_INVALID == params.m_dst_format || crnlib::pixel_format::PIXEL_FMT_DXT1 == params.m_dst_format)
 					{
 						params.m_dst_format = crnlib::PIXEL_FMT_3DC;
 					}
