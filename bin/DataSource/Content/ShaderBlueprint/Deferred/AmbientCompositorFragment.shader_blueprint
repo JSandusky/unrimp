@@ -186,8 +186,8 @@ float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 	for (int i = 0; i < PassData.NumberOfLights; ++i)
 	{
 		// Fetch the light data
-		float4 lightPositionRadius = TEXEL_FETCH(LightTextureBuffer, i * 2);
-		float4 lightColor = TEXEL_FETCH(LightTextureBuffer, i * 2 + 1);
+		float4 lightPositionRadius = TEXEL_FETCH(LightTextureBuffer, i * 2u);
+		float4 lightColor = TEXEL_FETCH(LightTextureBuffer, i * 2u + 1u);
 
 		// Check if the fragment is inside the bounding volume of the light
 		float3 direction = lightPositionRadius.xyz - worldSpacePosition;

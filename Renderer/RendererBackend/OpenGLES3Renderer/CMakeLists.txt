@@ -53,6 +53,7 @@ set(SOURCE_CODES
 	src/Buffer/IndirectBuffer.cpp
 	src/Buffer/TextureBuffer.cpp
 	src/Buffer/TextureBufferBind.cpp
+	src/Buffer/TextureBufferBindEmulation.cpp
 	src/Buffer/UniformBuffer.cpp
 	src/Buffer/UniformBufferBind.cpp
 	src/Buffer/VertexArray.cpp

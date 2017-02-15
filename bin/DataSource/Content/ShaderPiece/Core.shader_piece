@@ -232,9 +232,9 @@
 	// - https://msdn.microsoft.com/en-us/library/windows/apps/dn166865.aspx
 	// for a shader language mapping
 	@piece(SetCrossPlatformSettings)
-		#version 310 es	// OpenGL ES 3.1. We need at least opengl es 3.1 support due texture buffer handling
+		#version 300 es	// OpenGL ES 3.1. We need at least OpenGL ES 3.1 support due texture buffer handling	- TODO(co) But currently we can only use OpenGL ES 3.0 inside our test
 
-		#extension GL_EXT_texture_buffer : enable
+		// #extension GL_EXT_texture_buffer : enable	// TODO(co) Currently we only emulate texture buffer using limited uniform buffer
 		precision highp float;
 
 		// Shader attribute input// Shader attribute input
@@ -252,7 +252,7 @@
 
 		// Shader attribute output
 		#define OUTPUT_BEGIN
-			#define OUTPUT_POSITION // gl_Position is still defined in opengl es 300 glsl
+			#define OUTPUT_POSITION // gl_Position is still defined in OpenGL ES 300 GLSL
 			#define OUTPUT_COLOR(index) layout(location = ##index) out highp vec4 OutputColor##index;
 			#define OUTPUT_TEXTURE_COORDINATE(type, name, index) out highp type name;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(type, name, index) flat out highp type name;
@@ -262,7 +262,7 @@
 		#define MAIN_BEGIN void main() {
 		#define MAIN_BEGIN_NO_OUTPUT void main() {
 			#define MAIN_INPUT(name) name
-			#define MAIN_INPUT_DRAW_ID (drawId.x + gl_InstanceID)
+			#define MAIN_INPUT_DRAW_ID (drawId.x + uint(gl_InstanceID))
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(index) OutputColor##index
@@ -281,12 +281,15 @@
 		#define DDY(x) dFdy(x)
 
 		// Uniform buffer
-		#define UNIFORM_BUFFER_BEGIN(name, index) uniform
-		#define UNIFORM_BUFFER_END
+		#define UNIFORM_BUFFER_BEGIN(name, index) layout(std140) uniform name {
+		#define UNIFORM_BUFFER_END };
 
 		// Texture buffer
-		#define TEXTURE_BUFFER(type, name, index) uniform highp samplerBuffer name;
-		#define TEXEL_FETCH(name, index) texelFetch(name, int(index + drawId.y / 16))	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
+		// TODO(co) Currently we only emulate texture buffer using limited uniform buffer
+		// #define TEXTURE_BUFFER(type, name, index) uniform highp samplerBuffer name;
+		// #define TEXEL_FETCH(name, index) texelFetch(name, int(index + drawId.y / 16u))	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
+		#define TEXTURE_BUFFER(type, name, index) layout(std140) uniform name { highp float4 nameTest[4096]; };
+		#define TEXEL_FETCH(name, index) nameTest[int(index + drawId.y / 16u)]	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
 
 		// Texture
 		#define TEXTURE_1D(name, index) uniform highp sampler2D name;	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one

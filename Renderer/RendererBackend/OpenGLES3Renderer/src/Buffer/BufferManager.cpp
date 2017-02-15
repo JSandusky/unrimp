@@ -28,6 +28,7 @@
 #include "OpenGLES3Renderer/Buffer/VertexBuffer.h"
 #include "OpenGLES3Renderer/Buffer/IndexBuffer.h"
 #include "OpenGLES3Renderer/Buffer/TextureBufferBind.h"
+#include "OpenGLES3Renderer/Buffer/TextureBufferBindEmulation.h"
 #include "OpenGLES3Renderer/Buffer/UniformBufferBind.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/IExtensions.h"
@@ -95,6 +96,15 @@ namespace OpenGLES3Renderer
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 			return new TextureBufferBind(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
 		}
+
+		// We can only emulate the "Renderer::TextureFormat::R32G32B32A32F" texture format using an uniform buffer
+		else if (Renderer::TextureFormat::R32G32B32A32F == textureFormat)
+		{
+			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+			return new TextureBufferBindEmulation(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
+		}
+
+		// Error!
 		return nullptr;
 	}
 

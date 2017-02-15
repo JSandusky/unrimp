@@ -95,14 +95,16 @@ namespace
 			//[-------------------------------------------------------]
 			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
-			void CopyUniformBufferData(const void*, Renderer::IRenderer&)
+			void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
 			{
-				// Not supported by OpenGL ES 3
+				const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
+				realData->uniformBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
 			}
 
-			void CopyTextureBufferData(const void*, Renderer::IRenderer&)
+			void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
 			{
-				// Not supported by OpenGL ES 3
+				const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
+				realData->textureBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
 			}
 
 			//[-------------------------------------------------------]
@@ -507,6 +509,21 @@ namespace OpenGLES3Renderer
 				}
 
 				case Renderer::ResourceType::TEXTURE_BUFFER:
+					if (mContext->getExtensions().isGL_EXT_texture_buffer())
+					{
+						// Fall through by intent
+					}
+					else
+					{
+						// We can only emulate the "Renderer::TextureFormat::R32G32B32A32F" texture format using an uniform buffer
+
+						// Attach the buffer to the given UBO binding point
+						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+						// -> Direct3D 10 and Direct3D 11 have explicit binding points
+						glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<TextureBuffer*>(resource)->getOpenGLESTextureBuffer());
+						break;
+					}
+
 				case Renderer::ResourceType::TEXTURE_1D:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
@@ -1877,7 +1894,8 @@ namespace OpenGLES3Renderer
 		}
 		else
 		{
-			mCapabilities.maximumTextureBufferSize = 0;
+			// We can only emulate the "Renderer::TextureFormat::R32G32B32A32F" texture format using an uniform buffer
+			mCapabilities.maximumTextureBufferSize = sizeof(float) * 4 * 4096;	// 64 KiB
 		}
 
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)

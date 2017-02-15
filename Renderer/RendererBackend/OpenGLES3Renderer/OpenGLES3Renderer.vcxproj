@@ -70,6 +70,7 @@
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\IndirectBuffer.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\TextureBuffer.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\TextureBufferBind.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\TextureBufferBindEmulation.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBufferBind.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArray.h" />
@@ -109,6 +110,7 @@
     <ClCompile Include="src\Buffer\IndirectBuffer.cpp" />
     <ClCompile Include="src\Buffer\TextureBuffer.cpp" />
     <ClCompile Include="src\Buffer\TextureBufferBind.cpp" />
+    <ClCompile Include="src\Buffer\TextureBufferBindEmulation.cpp" />
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\UniformBufferBind.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
