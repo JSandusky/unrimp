@@ -95,7 +95,9 @@ namespace OpenGLES3Renderer
 					// Create context (request an version 3 client)
 					const EGLint contextAttribs[] = {
 						EGL_CONTEXT_CLIENT_VERSION, 3,
-						//EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR, // TODO(sw) make it possible to enable it from outside
+						#ifdef RENDERER_OUTPUT_DEBUG
+							EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR, // TODO(sw) make it possible to enable it from outside during runtime
+						#endif
 						EGL_NONE
 					};
 					mContext = eglCreateContext(mDisplay, mConfig, EGL_NO_CONTEXT, contextAttribs);
