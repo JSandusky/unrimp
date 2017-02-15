@@ -375,7 +375,11 @@ namespace OpenGLES3Renderer
 
 		// Destroy the OpenGL ES 3 framebuffer used by "OpenGLES3Renderer::OpenGLES3Renderer::copyResource()"
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteFramebuffers(1, &mOpenGLES3CopyResourceFramebuffer);
+		// -> Null test in here only to handle the situation of OpenGL ES 3 initialization failure, meaning "glDeleteFramebuffers" itself is a null pointer
+		if (0 != mOpenGLES3CopyResourceFramebuffer)
+		{
+			glDeleteFramebuffers(1, &mOpenGLES3CopyResourceFramebuffer);
+		}
 
 		// Set no vertex array reference, in case we have one
 		if (nullptr != mVertexArray)
