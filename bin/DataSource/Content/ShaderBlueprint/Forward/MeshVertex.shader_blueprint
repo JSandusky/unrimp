@@ -62,6 +62,7 @@ struct PassDataStruct
 	float4	 WorldSpaceToViewSpaceQuaternion;
 	float3	 ViewSpaceSunLightDirection;
 	float	 Wetness;
+	float3	 AmbientColor;
 	float3	 SunLightColor;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
