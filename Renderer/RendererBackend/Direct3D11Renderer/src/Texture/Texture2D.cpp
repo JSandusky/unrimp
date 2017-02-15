@@ -134,10 +134,10 @@ namespace Direct3D11Renderer
 						D3D11_SUBRESOURCE_DATA& currentD3d11SubresourceData = d3d11SubresourceData[mipmap];
 						currentD3d11SubresourceData.pSysMem			 = data;
 						currentD3d11SubresourceData.SysMemPitch		 = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-						currentD3d11SubresourceData.SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+						currentD3d11SubresourceData.SysMemSlicePitch = 0;	// Only relevant for 3D textures
 
 						// Move on to the next mipmap
-						data = static_cast<const uint8_t*>(data) + currentD3d11SubresourceData.SysMemSlicePitch;
+						data = static_cast<const uint8_t*>(data) + Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
 						width = std::max(width >> 1, 1u);	// /= 2
 						height = std::max(height >> 1, 1u);	// /= 2
 					}
@@ -147,7 +147,7 @@ namespace Direct3D11Renderer
 					// The user only provided us with the base texture, no mipmaps
 					d3d11SubresourceData->pSysMem		   = data;
 					d3d11SubresourceData->SysMemPitch	   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-					d3d11SubresourceData->SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+					d3d11SubresourceData->SysMemSlicePitch = 0;	// Only relevant for 3D textures
 				}
 				direct3D11Renderer.getD3D11Device()->CreateTexture2D(&d3d11Texture2DDesc, d3d11SubresourceData, &mD3D11Texture2D);
 			}

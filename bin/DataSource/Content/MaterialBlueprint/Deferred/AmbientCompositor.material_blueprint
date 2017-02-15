@@ -59,6 +59,13 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 				"Description": "2D screen space ambient occlusion (SSAO) map"
+			},
+			"ReflectionCubeMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "152",
+				"Description": "Reflection cube map"
 			}
 		},
 		"RootSignature":
@@ -113,6 +120,19 @@
 					{
 						"0":
 						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"4":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
 							"BaseShaderRegisterName": "GBufferMap0",
@@ -121,7 +141,7 @@
 					},
 					"ShaderVisibility": "FRAGMENT"
 				},
-				"4":
+				"5":
 				{
 					"ParameterType": "DESCRIPTOR_TABLE",
 					"DescriptorRanges":
@@ -136,7 +156,7 @@
 					},
 					"ShaderVisibility": "FRAGMENT"
 				},
-				"5":
+				"6":
 				{
 					"ParameterType": "DESCRIPTOR_TABLE",
 					"DescriptorRanges":
@@ -151,7 +171,7 @@
 					},
 					"ShaderVisibility": "FRAGMENT"
 				},
-				"6":
+				"7":
 				{
 					"ParameterType": "DESCRIPTOR_TABLE",
 					"DescriptorRanges":
@@ -166,7 +186,7 @@
 					},
 					"ShaderVisibility": "FRAGMENT"
 				},
-				"7":
+				"8":
 				{
 					"ParameterType": "DESCRIPTOR_TABLE",
 					"DescriptorRanges":
@@ -181,7 +201,7 @@
 					},
 					"ShaderVisibility": "FRAGMENT"
 				},
-				"8":
+				"9":
 				{
 					"ParameterType": "DESCRIPTOR_TABLE",
 					"DescriptorRanges":
@@ -192,6 +212,21 @@
 							"BaseShaderRegister": "6",
 							"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionMap",
 							"SamplerRootParameterIndex": "2"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"10":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "7",
+							"BaseShaderRegisterName": "ReflectionCubeMap",
+							"SamplerRootParameterIndex": "3"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -262,11 +297,23 @@
 							"ValueType": "INTEGER",
 							"Value": "@NUMBER_OF_LIGHTS"
 						},
+						"ViewSpaceToWorldSpaceQuaternion":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4",
+							"Value": "@VIEW_SPACE_TO_WORLD_SPACE_QUATERNION"
+						},
 						"SunLightColor":
 						{
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@SunLightColor"
+						},
+						"CameraWorldSpacePosition":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@CAMERA_WORLD_SPACE_POSITION"
 						},
 						"ViewportSize":
 						{
@@ -294,6 +341,10 @@
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_POINT",
 					"MaxLOD": "0.0"
+				},
+				"SamplerLinear":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)"
 				}
 			},
 			"Textures":
@@ -351,6 +402,14 @@
 					"Value": "@ScreenSpaceAmbientOcclusionMap",
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
+				},
+				"ReflectionCubeMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@ReflectionCubeMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMapCube"
 				}
 			}
 		}

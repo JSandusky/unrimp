@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "sponza_thorn_mask.tga",
-			"TextureSemantic": "ALPHA_MAP"
+			"TextureSemantic": "ALPHA_MAP",
+			"InputFile": "sponza_thorn_mask.tga"
 		}
 	}
 }

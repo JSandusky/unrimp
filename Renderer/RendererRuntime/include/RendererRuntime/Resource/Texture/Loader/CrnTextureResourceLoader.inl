@@ -50,6 +50,7 @@ namespace RendererRuntime
 		mWidth(0),
 		mHeight(0),
 		mTextureFormat(0),
+		mCubeMap(false),
 		mDataContainsMipmaps(false),
 		mNumberOfFileDataBytes(0),
 		mNumberOfUsedFileDataBytes(0),

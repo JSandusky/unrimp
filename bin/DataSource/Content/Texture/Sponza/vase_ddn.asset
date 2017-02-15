@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "vase_ddn.tga",
-			"TextureSemantic": "NORMAL_MAP"
+			"TextureSemantic": "NORMAL_MAP",
+			"InputFile": "vase_ddn.tga"
 		}
 	}
 }

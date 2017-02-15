@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "ImrodDiffuseMap.tga",
-			"TextureSemantic": "DIFFUSE_MAP"
+			"TextureSemantic": "DIFFUSE_MAP",
+			"InputFile": "ImrodDiffuseMap.tga"
 		}
 	}
 }

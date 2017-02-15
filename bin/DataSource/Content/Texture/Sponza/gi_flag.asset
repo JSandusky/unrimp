@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "gi_flag.tga",
-			"TextureSemantic": "DIFFUSE_MAP"
+			"TextureSemantic": "DIFFUSE_MAP",
+			"InputFile": "gi_flag.tga"
 		}
 	}
 }

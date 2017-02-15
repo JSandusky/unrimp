@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "spnza_bricks_a_spec.tga",
-			"TextureSemantic": "SPECULAR_MAP"
+			"TextureSemantic": "SPECULAR_MAP",
+			"InputFile": "spnza_bricks_a_spec.tga"
 		}
 	}
 }

@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "background_ddn.tga",
-			"TextureSemantic": "NORMAL_MAP"
+			"TextureSemantic": "NORMAL_MAP",
+			"InputFile": "background_ddn.tga"
 		}
 	}
 }

@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "chain_texture_mask.tga",
-			"TextureSemantic": "ALPHA_MAP"
+			"TextureSemantic": "ALPHA_MAP",
+			"InputFile": "chain_texture_mask.tga"
 		}
 	}
 }

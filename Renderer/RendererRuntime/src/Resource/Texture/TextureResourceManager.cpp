@@ -49,11 +49,20 @@ namespace
 			Renderer::ITextureManager& textureManager = rendererRuntime.getTextureManager();
 
 			// White RGB texture
-			const uint8_t whiteRgbData[] = { 255, 255, 255, 255 };
+			const uint8_t whiteRgbData[] = {
+				255, 255, 255, 255,	// Face 0
+				255, 255, 255, 255,	// Face 1
+				255, 255, 255, 255,	// Face 2
+				255, 255, 255, 255,	// Face 3
+				255, 255, 255, 255,	// Face 4
+				255, 255, 255, 255	// Face 5
+			};
 			Renderer::ITexturePtr whiteRgb1DTexturePtr(textureManager.createTexture1D(1, Renderer::TextureFormat::R8G8B8A8, whiteRgbData));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgb1DTexturePtr, "White 1D RGB texture")
 			Renderer::ITexturePtr whiteRgb2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, whiteRgbData));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgb2DTexturePtr, "White 2D RGB texture")
+			Renderer::ITexturePtr whiteRgbCubeTexturePtr(textureManager.createTextureCube(1, 1, Renderer::TextureFormat::R8G8B8A8, whiteRgbData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgbCubeTexturePtr, "White cube RGB texture")
 
 			// Normal map identity texture
 			const uint8_t normalMapIdentityData[] = { 128, 128, 255, 255 };
@@ -66,17 +75,28 @@ namespace
 			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteA2DTexturePtr, "White 2D alpha texture")
 
 			// Black RGB texture
-			const uint8_t blackRgbData[] = { 0, 0, 0, 0 };
+			const uint8_t blackRgbData[] = {
+				0, 0, 0, 0,	// Face 0
+				0, 0, 0, 0,	// Face 1
+				0, 0, 0, 0,	// Face 2
+				0, 0, 0, 0,	// Face 3
+				0, 0, 0, 0,	// Face 4
+				0, 0, 0, 0	// Face 5
+			};
 			Renderer::ITexturePtr blackRgb1DTexturePtr(textureManager.createTexture1D(1, Renderer::TextureFormat::R8G8B8A8, blackRgbData));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgb1DTexturePtr, "Black 1D RGB texture")
 			Renderer::ITexturePtr blackRgb2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, blackRgbData));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgb2DTexturePtr, "Black 2D RGB texture")
+			Renderer::ITexturePtr blackRgbCubeTexturePtr(textureManager.createTextureCube(1, 1, Renderer::TextureFormat::R8G8B8A8, blackRgbData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgbCubeTexturePtr, "Black cube RGB texture")
 
 			// Create default dynamic texture assets
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/WhiteMap1D",			*whiteRgb1DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/WhiteMap2D",			*whiteRgb2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/WhiteMapCube",			*whiteRgbCubeTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMap1D",			*blackRgb1DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMap2D",			*blackRgb2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMapCube",			*blackRgbCubeTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",	*whiteRgb2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",	*whiteA2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",	*normalMapIdentity2DTexturePtr);

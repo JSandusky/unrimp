@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "chain_texture.tga",
-			"TextureSemantic": "DIFFUSE_MAP"
+			"TextureSemantic": "DIFFUSE_MAP",
+			"InputFile": "chain_texture.tga"
 		}
 	}
 }

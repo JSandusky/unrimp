@@ -38,17 +38,14 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCube::TextureCube(Direct3D11Renderer &direct3D11Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *, uint32_t, Renderer::TextureUsage) :
+	TextureCube::TextureCube(Direct3D11Renderer &direct3D11Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITextureCube(direct3D11Renderer, width, height),
 		mTextureFormat(textureFormat),
 		mGenerateMipmaps(false),
 		mD3D11TextureCube(nullptr),
 		mD3D11ShaderResourceViewTexture(nullptr)
 	{
-		// TODO(co) Implement Direct3D 11 1D texture
-		/*
-		// Sanity checks
-		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
+		static const uint32_t NUMBER_OF_SLICES = 6;	// In Direct3D 11, a cube map is a 2D array texture with six slices
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)
@@ -59,40 +56,28 @@ namespace Direct3D11Renderer
 		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
-		// Direct3D 11 cube texture description
-		DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
-		D3D11_TEXTURECUBE_DESC d3d11TextureCubeDesc;
-		d3d11TextureCubeDesc.Width				= width;
-		d3d11TextureCubeDesc.Height				= height;
-		d3d11TextureCubeDesc.MipLevels			= (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 11 allocate the complete mipmap chain for us
-		d3d11TextureCubeDesc.ArraySize			= 1;
-		d3d11TextureCubeDesc.Format				= dxgiFormat;
-		d3d11TextureCubeDesc.SampleDesc.Count	= 1;
-		d3d11TextureCubeDesc.SampleDesc.Quality	= 0;
-		d3d11TextureCubeDesc.Usage				= static_cast<D3D11_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
-		d3d11TextureCubeDesc.BindFlags			= D3D11_BIND_SHADER_RESOURCE;
-		d3d11TextureCubeDesc.CPUAccessFlags		= 0;
-		d3d11TextureCubeDesc.MiscFlags			= mGenerateMipmaps ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0u;
+		// Direct3D 11 2D array texture description
+		const DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
+		D3D11_TEXTURE2D_DESC d3d11Texture2DDesc;
+		d3d11Texture2DDesc.Width			  = width;
+		d3d11Texture2DDesc.Height			  = height;
+		d3d11Texture2DDesc.MipLevels		  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 11 allocate the complete mipmap chain for us
+		d3d11Texture2DDesc.ArraySize		  = NUMBER_OF_SLICES;
+		d3d11Texture2DDesc.Format			  = dxgiFormat;
+		d3d11Texture2DDesc.SampleDesc.Count	  = 1;
+		d3d11Texture2DDesc.SampleDesc.Quality = 0;
+		d3d11Texture2DDesc.Usage			  = static_cast<D3D11_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
+		d3d11Texture2DDesc.BindFlags		  = D3D11_BIND_SHADER_RESOURCE;
+		d3d11Texture2DDesc.CPUAccessFlags	  = 0;
+		d3d11Texture2DDesc.MiscFlags		  = (mGenerateMipmaps ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0u) | D3D11_RESOURCE_MISC_TEXTURECUBE;
 
 		// Use this texture as render target?
-		const bool isDepthFormat = Renderer::TextureFormat::isDepth(textureFormat);
 		if (flags & Renderer::TextureFlag::RENDER_TARGET)
 		{
-			if (isDepthFormat)
-			{
-				d3d11TextureCubeDesc.BindFlags |= D3D11_BIND_DEPTH_STENCIL;
-
-				// See "Direct3D11Renderer::TextureCube::getTextureFormat()" for details
-				d3d11TextureCubeDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-				dxgiFormat = DXGI_FORMAT_R32_FLOAT;
-			}
-			else
-			{
-				d3d11TextureCubeDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
-			}
+			d3d11Texture2DDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
 		}
 
-		// Create the Direct3D 11 cube texture instance
+		// Create the Direct3D 11 2D texture instance
 		// Did the user provided us with any texture data?
 		if (nullptr != data)
 		{
@@ -100,17 +85,25 @@ namespace Direct3D11Renderer
 			{
 				// Let Direct3D 11 generate the mipmaps for us automatically
 				// -> Sadly, it's impossible to use initialization data in this use-case
-				direct3D11Renderer.getD3D11Device()->CreateTextureCube(&d3d11TextureCubeDesc, nullptr, &mD3D11TextureCube);
+				direct3D11Renderer.getD3D11Device()->CreateTexture2D(&d3d11Texture2DDesc, nullptr, &mD3D11TextureCube);
 				if (nullptr != mD3D11TextureCube)
 				{
+					ID3D11DeviceContext* d3d11DeviceContext = direct3D11Renderer.getD3D11DeviceContext();
+
 					{ // Update Direct3D 11 subresource data of the base-map
-						const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-						const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
-						direct3D11Renderer.getD3D11DeviceContext()->UpdateSubresource(mD3D11TextureCube, 0, nullptr, data, bytesPerRow, bytesPerSlice);
+						const uint32_t  bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+						const uint32_t  bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+						for (uint32_t arraySlice = 0; arraySlice < NUMBER_OF_SLICES; ++arraySlice)
+						{
+							d3d11DeviceContext->UpdateSubresource(mD3D11TextureCube, D3D11CalcSubresource(0, arraySlice, numberOfMipmaps), nullptr, data, bytesPerRow, bytesPerSlice);
+
+							// Move on to the next slice
+							data = static_cast<const uint8_t*>(data) + bytesPerSlice;
+						}
 					}
 
 					// Let Direct3D 11 generate the mipmaps for us automatically
-					D3DX11FilterTexture(direct3D11Renderer.getD3D11DeviceContext(), mD3D11TextureCube, 0, D3DX11_DEFAULT);
+					D3DX11FilterTexture(d3d11DeviceContext, mD3D11TextureCube, 0, D3DX11_DEFAULT);
 				}
 			}
 			else
@@ -118,40 +111,56 @@ namespace Direct3D11Renderer
 				// We don't want dynamic allocations, so we limit the maximum number of mipmaps and hence are able to use the efficient C runtime stack
 				static const uint32_t MAXIMUM_NUMBER_OF_MIPMAPS = 15;	// A 16384x16384 texture has 15 mipmaps
 				assert(numberOfMipmaps <= MAXIMUM_NUMBER_OF_MIPMAPS);
-				D3D11_SUBRESOURCE_DATA d3d11SubresourceData[MAXIMUM_NUMBER_OF_MIPMAPS];
+				D3D11_SUBRESOURCE_DATA d3d11SubresourceData[NUMBER_OF_SLICES * MAXIMUM_NUMBER_OF_MIPMAPS];
 
 				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 				if (dataContainsMipmaps)
 				{
 					// Upload all mipmaps
-					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+					uint32_t d3d11SubresourceDataIndex = 0;
+					for (uint32_t arraySlice = 0; arraySlice < NUMBER_OF_SLICES; ++arraySlice)
 					{
-						// Upload the current mipmap
-						D3D11_SUBRESOURCE_DATA& currentD3d11SubresourceData = d3d11SubresourceData[mipmap];
-						currentD3d11SubresourceData.pSysMem			 = data;
-						currentD3d11SubresourceData.SysMemPitch		 = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-						currentD3d11SubresourceData.SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+						uint32_t currentWidth = width;
+						uint32_t currentHeight = height;
+						for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+						{
+							// Upload the current mipmap
+							D3D11_SUBRESOURCE_DATA& currentD3d11SubresourceData = d3d11SubresourceData[d3d11SubresourceDataIndex];
+							currentD3d11SubresourceData.pSysMem			 = data;
+							currentD3d11SubresourceData.SysMemPitch		 = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, currentWidth);
+							currentD3d11SubresourceData.SysMemSlicePitch = 0;	// Only relevant for 3D textures
 
-						// Move on to the next mipmap
-						data = static_cast<const uint8_t*>(data) + currentD3d11SubresourceData.SysMemSlicePitch;
-						width = std::max(width >> 1, 1u);	// /= 2
-						height = std::max(height >> 1, 1u);	// /= 2
+							// Move on to the next mipmap
+							++d3d11SubresourceDataIndex;
+							data = static_cast<const uint8_t*>(data) + Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, currentWidth, currentHeight);
+							currentWidth = std::max(currentWidth >> 1, 1u);		// /= 2
+							currentHeight = std::max(currentHeight >> 1, 1u);	// /= 2
+						}
 					}
 				}
 				else
 				{
 					// The user only provided us with the base texture, no mipmaps
-					d3d11SubresourceData->pSysMem		   = data;
-					d3d11SubresourceData->SysMemPitch	   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-					d3d11SubresourceData->SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+					const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+					const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+					for (uint32_t arraySlice = 0; arraySlice < NUMBER_OF_SLICES; ++arraySlice)
+					{
+						D3D11_SUBRESOURCE_DATA& currentD3d11SubresourceData = d3d11SubresourceData[arraySlice];
+						currentD3d11SubresourceData.pSysMem			 = data;
+						currentD3d11SubresourceData.SysMemPitch		 = bytesPerRow;
+						currentD3d11SubresourceData.SysMemSlicePitch = 0;	// Only relevant for 3D textures
+
+						// Move on to the next slice
+						data = static_cast<const uint8_t*>(data) + bytesPerSlice;
+					}
 				}
-				direct3D11Renderer.getD3D11Device()->CreateTextureCube(&d3d11TextureCubeDesc, d3d11SubresourceData, &mD3D11TextureCube);
+				direct3D11Renderer.getD3D11Device()->CreateTexture2D(&d3d11Texture2DDesc, d3d11SubresourceData, &mD3D11TextureCube);
 			}
 		}
 		else
 		{
 			// The user did not provide us with texture data
-			direct3D11Renderer.getD3D11Device()->CreateTextureCube(&d3d11TextureCubeDesc, nullptr, &mD3D11TextureCube);
+			direct3D11Renderer.getD3D11Device()->CreateTexture2D(&d3d11Texture2DDesc, nullptr, &mD3D11TextureCube);
 		}
 
 		// Create the Direct3D 11 shader resource view instance
@@ -175,7 +184,6 @@ namespace Direct3D11Renderer
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
-		*/
 	}
 
 	TextureCube::~TextureCube()
@@ -184,13 +192,10 @@ namespace Direct3D11Renderer
 		{
 			mD3D11ShaderResourceViewTexture->Release();
 		}
-		// TODO(co) Implement Direct3D 11 1D texture
-		/*
 		if (nullptr != mD3D11TextureCube)
 		{
 			mD3D11TextureCube->Release();
 		}
-		*/
 	}
 
 
@@ -211,13 +216,10 @@ namespace Direct3D11Renderer
 				// Do also set the given debug name to the Direct3D 11 resource referenced by the Direct3D resource view
 				if (nullptr != mD3D11TextureCube)
 				{
-					// TODO(co) Implement Direct3D 11 1D texture
-					/*
 					// Set the debug name
 					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 					mD3D11TextureCube->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 					mD3D11TextureCube->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
-					*/
 				}
 			}
 		#endif

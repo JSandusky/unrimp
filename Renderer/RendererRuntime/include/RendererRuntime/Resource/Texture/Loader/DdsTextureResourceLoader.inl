@@ -54,6 +54,7 @@ namespace RendererRuntime
 		mTexture(nullptr),
 		mWidth(0),
 		mHeight(0),
+		mDepth(0),
 		mTextureFormat(0),
 		mDataContainsMipmaps(false),
 		mNumberOfImageDataBytes(0),

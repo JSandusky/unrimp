@@ -95,6 +95,10 @@ namespace RendererRuntime
 		}
 		mWidth  = crnTextureInfo.m_width;
 		mHeight = crnTextureInfo.m_height;
+		mCubeMap = (crnTextureInfo.m_faces > 1);
+
+		// Sanity check
+		assert(!mCubeMap || mWidth == mHeight);
 
 		// Get the renderer texture format
 		switch (crnTextureInfo.m_format)
@@ -185,7 +189,20 @@ namespace RendererRuntime
 		}
 
 		{ // Now transcode all face and mipmap levels into memory, one mip level at a time
-			uint8_t* currentImageData = mImageData;
+			void* decompressedImages[cCRNMaxFaces];
+			if (1 == crnTextureInfo.m_faces)
+			{
+				decompressedImages[0] = mImageData;
+			}
+			else
+			{
+				const crn_uint32 totalFaceSize = mNumberOfUsedImageDataBytes / crnTextureInfo.m_faces;
+				uint8_t* currentImageData = mImageData;
+				for (crn_uint32 faceIndex = 0; faceIndex < crnTextureInfo.m_faces; ++faceIndex, currentImageData += totalFaceSize)
+				{
+					decompressedImages[faceIndex] = currentImageData;
+				}
+			}
 			for (crn_uint32 levelIndex = static_cast<crn_uint32>(startLevelIndex); levelIndex < crnTextureInfo.m_levels; ++levelIndex)
 			{
 				// Compute the face's width, height, number of DXT blocks per row/col, etc.
@@ -196,14 +213,6 @@ namespace RendererRuntime
 				const crn_uint32 rowPitch = blocksX * numberOfBytesPerDxtBlock;
 				const crn_uint32 totalFaceSize = rowPitch * blocksY;
 
-				// Prepare the face pointer array needed by "crnd_unpack_level()"
-				// TODO(co) We could get rid of this pointer list by changing the "crunch"-library implementation
-				void* decompressedImages[cCRNMaxFaces];
-				for (crn_uint32 faceIndex = 0; faceIndex < crnTextureInfo.m_faces; ++faceIndex, currentImageData += totalFaceSize)
-				{
-					decompressedImages[faceIndex] = currentImageData;
-				}
-
 				// Now transcode the level to raw DXTn
 				if (!crnd::crnd_unpack_level(crndUnpackContext, decompressedImages, totalFaceSize, rowPitch, levelIndex))
 				{
@@ -213,6 +222,12 @@ namespace RendererRuntime
 					// return error("Failed transcoding texture!");
 					assert(false);
 					return;
+				}
+
+				// Update the face pointer array needed by "crnd_unpack_level()"
+				for (crn_uint32 faceIndex = 0; faceIndex < crnTextureInfo.m_faces; ++faceIndex)
+				{
+					decompressedImages[faceIndex] = static_cast<uint8_t*>(decompressedImages[faceIndex]) + totalFaceSize;
 				}
 			}
 		}
@@ -250,7 +265,12 @@ namespace RendererRuntime
 	Renderer::ITexture* CrnTextureResourceLoader::createRendererTexture()
 	{
 		Renderer::ITexture* texture = nullptr;
-		if (1 == mWidth || 1 == mHeight)
+		if (mCubeMap)
+		{
+			// Cube texture
+			texture = mRendererRuntime.getTextureManager().createTextureCube(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, mDataContainsMipmaps ? Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS : 0u);
+		}
+		else if (1 == mWidth || 1 == mHeight)
 		{
 			// 1D texture
 			texture = mRendererRuntime.getTextureManager().createTexture1D((1 == mWidth) ? mHeight : mWidth, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, mDataContainsMipmaps ? Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS : 0u);

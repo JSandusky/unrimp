@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "lion.tga",
-			"TextureSemantic": "DIFFUSE_MAP"
+			"TextureSemantic": "DIFFUSE_MAP",
+			"InputFile": "lion.tga"
 		}
 	}
 }

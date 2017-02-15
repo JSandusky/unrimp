@@ -17,8 +17,8 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "vase_round.tga",
-			"TextureSemantic": "DIFFUSE_MAP"
+			"TextureSemantic": "DIFFUSE_MAP",
+			"InputFile": "vase_round.tga"
 		}
 	}
 }

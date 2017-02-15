@@ -58,7 +58,9 @@ struct PassDataStruct
 	float    Wetness;
 	float3   AmbientColor;
 	int		 NumberOfLights;
+	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float3   SunLightColor;
+	float3	 CameraWorldSpacePosition;
 	float2   ViewportSize;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
@@ -70,6 +72,7 @@ TEXTURE_BUFFER(float4, LightTextureBuffer, 0)	// "LIGHT"
 
 // Samplers
 SAMPLER_STATE(SamplerPoint, 0)
+SAMPLER_STATE(SamplerLinear, 1)
 
 // Textures
 @property(NumberOfMultisamples)
@@ -86,6 +89,7 @@ SAMPLER_STATE(SamplerPoint, 0)
 @end
 TEXTURE_2D(ShadowMap, 5)
 TEXTURE_2D(ScreenSpaceAmbientOcclusionMap, 6)
+TEXTURE_CUBE(ReflectionCubeMap, 7)
 
 
 //[-------------------------------------------------------]
@@ -164,6 +168,14 @@ float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 	// Ambient term
 	float3 color = PassData.AmbientColor * diffuseValue;
 
+	{ // Reflection term
+		float3 worldSpaceNormal = normalize(MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, normal));
+		float3 incident = normalize(PassData.CameraWorldSpacePosition - worldSpacePosition);
+		float3 reflectionVector = reflect(incident, worldSpaceNormal);
+		float3 reflectionColor = SAMPLE_CUBE_LOD(ReflectionCubeMap, SamplerLinear, float4(reflectionVector, 0.0f)).rgb;
+		color = LERP(color, reflectionColor, specularValue * 0.1f);	// TODO(co) Later on mipmap stores roughness, reflection will be incoorperated in another way
+	}
+
 	// Primary directional light
 	if (shadowVisibility > 0.0f)
 	{
@@ -196,7 +208,7 @@ float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 	color += emissiveValue;
 
 	// Done
-	return color;	
+	return color;
 }
 
 

@@ -60,10 +60,14 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
+		// Referenced assets
 		static const RendererRuntime::AssetId CompositorWorkspaceAssetId[3] = { "Example/CompositorWorkspace/Default/Debug", "Example/CompositorWorkspace/Default/Forward", "Example/CompositorWorkspace/Default/Deferred" };
 		static const RendererRuntime::AssetId SceneAssetId("Example/Scene/Default/FirstScene");
 		static const RendererRuntime::AssetId VrDeviceMaterialAssetId("Example/Material/Default/VrDevice");
 		static const RendererRuntime::AssetId ImrodMaterialAssetId("Example/Material/Character/Imrod");
+		static const RendererRuntime::AssetId HdrToLdrMaterialAssetId("Example/MaterialBlueprint/Compositor/HdrToLdr");
+		static const RendererRuntime::AssetId IdentityColorCorrectionLookupTableTextureAssetId("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D");
+		static const RendererRuntime::AssetId SepiaColorCorrectionLookupTableTextureAssetId("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
 		static const RendererRuntime::AssetId FinalMaterialAssetId("Example/MaterialBlueprint/Compositor/Final");
 		static const RendererRuntime::AssetId ScreenSpaceAmbientOcclusionGenerationCompositorMaterialAssetId("Example/MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionGeneration");
 		static const RendererRuntime::AssetId DeferredAmbientCompositorMaterialAssetId("Example/MaterialBlueprint/Deferred/AmbientCompositor");
@@ -99,6 +103,7 @@ FirstScene::FirstScene() :
 	mResolutionScale(1.0f),
 	mNumberOfTopTextureMipmapsToRemove(0),
 	mPerformFxaa(false),
+	mPerformSepiaColorCorrection(false),
 	mRotationSpeed(1.0f),
 	mSunLightColor{1.0f, 1.0f, 1.0f},
 	mWetness(1.0f),
@@ -441,6 +446,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
 				ImGui::SliderInt("Mipmaps to Remove", &mNumberOfTopTextureMipmapsToRemove, 0, 8);
 				ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
+				ImGui::Checkbox("Perform Sepia Color Correction", &mPerformSepiaColorCorrection);
 
 				// Scene
 				ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
@@ -524,8 +530,15 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime.getMaterialResourceManager();
 				const RendererRuntime::MaterialResources& materialResources = materialResourceManager.getMaterialResources();
 
+				// HDR to LDR compositor material
+				RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId(::detail::HdrToLdrMaterialAssetId);
+				if (nullptr != materialResource)
+				{
+					materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? ::detail::SepiaColorCorrectionLookupTableTextureAssetId : ::detail::IdentityColorCorrectionLookupTableTextureAssetId));
+				}
+
 				// Final compositor material
-				RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId(::detail::FinalMaterialAssetId);
+				materialResource = materialResourceManager.getMaterialResourceByAssetId(::detail::FinalMaterialAssetId);
 				if (nullptr != materialResource)
 				{
 					materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));

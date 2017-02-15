@@ -102,6 +102,7 @@ namespace RendererRuntime
 		uint32_t mWidth;
 		uint32_t mHeight;
 		uint8_t  mTextureFormat;	// "Renderer::TextureFormat", don't want to include the header in here
+		bool	 mCubeMap;
 		bool	 mDataContainsMipmaps;
 		// Temporary file data
 		uint32_t mNumberOfFileDataBytes;
