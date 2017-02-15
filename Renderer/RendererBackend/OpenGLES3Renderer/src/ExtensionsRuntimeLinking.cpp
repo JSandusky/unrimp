@@ -137,7 +137,7 @@ namespace OpenGLES3Renderer
 		}
 
 		mGL_EXT_draw_elements_base_vertex = (nullptr != strstr(extensions, "GL_EXT_draw_elements_base_vertex"));
-		if (mGL_EXT_texture_buffer)
+		if (mGL_EXT_draw_elements_base_vertex)
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
