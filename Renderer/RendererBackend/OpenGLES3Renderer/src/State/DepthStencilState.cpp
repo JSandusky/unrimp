@@ -42,11 +42,6 @@ namespace OpenGLES3Renderer
 		// Nothing here
 	}
 
-	DepthStencilState::~DepthStencilState()
-	{
-		// Nothing here
-	}
-
 	void DepthStencilState::setOpenGLES3DepthStencilStates() const
 	{
 		// Renderer::DepthStencilState::depthEnable

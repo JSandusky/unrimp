@@ -92,6 +92,13 @@ namespace OpenGLES3Renderer
 		*/
 		void bindPipelineState() const;
 
+		//[-------------------------------------------------------]
+		//[ Detail state access                                   ]
+		//[-------------------------------------------------------]
+		const Renderer::RasterizerState& getRasterizerState() const;
+		const Renderer::DepthStencilState& getDepthStencilState() const;
+		const Renderer::BlendState& getBlendState() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]

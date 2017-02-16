@@ -78,6 +78,21 @@ namespace OpenGLES3Renderer
 		mBlendState->setOpenGLES3BlendStates();
 	}
 
+	const Renderer::RasterizerState& PipelineState::getRasterizerState() const
+	{
+		return mRasterizerState->getRasterizerState();
+	}
+
+	const Renderer::DepthStencilState& PipelineState::getDepthStencilState() const
+	{
+		return mDepthStencilState->getDepthStencilState();
+	}
+
+	const Renderer::BlendState& PipelineState::getBlendState() const
+	{
+		return mBlendState->getBlendState();
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

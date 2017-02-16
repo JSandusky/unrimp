@@ -28,6 +28,11 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline RasterizerState::~RasterizerState()
+	{
+		// Nothing here
+	}
+
 	inline const Renderer::RasterizerState &RasterizerState::getRasterizerState() const
 	{
 		return mRasterizerState;

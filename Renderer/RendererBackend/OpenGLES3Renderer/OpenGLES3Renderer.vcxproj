@@ -53,6 +53,8 @@
     <None Include="include\OpenGLES3Renderer\Shader\FragmentShaderGlsl.inl" />
     <None Include="include\OpenGLES3Renderer\Shader\ProgramGlsl.inl" />
     <None Include="include\OpenGLES3Renderer\Shader\VertexShaderGlsl.inl" />
+    <None Include="include\OpenGLES3Renderer\State\BlendState.inl" />
+    <None Include="include\OpenGLES3Renderer\State\DepthStencilState.inl" />
     <None Include="include\OpenGLES3Renderer\State\IState.inl" />
     <None Include="include\OpenGLES3Renderer\State\PipelineState.inl" />
     <None Include="include\OpenGLES3Renderer\State\RasterizerState.inl" />

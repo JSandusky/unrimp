@@ -256,6 +256,8 @@ namespace OpenGLES3Renderer
 		RootSignature			  *mGraphicsRootSignature;				///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState	  *mDefaultSamplerState;				///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		uint32_t				   mOpenGLES3CopyResourceFramebuffer;	///< OpenGL ES 3 framebuffer ("container" object, not shared between OpenGL ES 3 contexts) used by "OpenGLES3Renderer::OpenGLES3Renderer::copyResource()", can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		// States
+		PipelineState *mPipelineState;	///< Currently set pipeline state (we keep a reference to it), can be a null pointer
 		// Input-assembler (IA) stage
 		VertexArray *mVertexArray;					///< Currently set vertex array (we keep a reference to it), can be a null pointer
 		uint32_t	 mOpenGLES3PrimitiveTopology;	///< OpenGL ES 3 primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)

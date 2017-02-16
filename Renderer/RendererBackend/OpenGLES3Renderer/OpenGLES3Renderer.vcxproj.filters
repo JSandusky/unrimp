@@ -81,6 +81,12 @@
     <None Include="include\OpenGLES3Renderer\Texture\Texture1D.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
+    <None Include="include\OpenGLES3Renderer\State\DepthStencilState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\OpenGLES3Renderer\State\BlendState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

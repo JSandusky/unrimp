@@ -304,6 +304,8 @@ namespace OpenGLES3Renderer
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mOpenGLES3CopyResourceFramebuffer(0),
+		// States
+		mPipelineState(nullptr),
 		// Input-assembler (IA) stage
 		mVertexArray(nullptr),
 		mOpenGLES3PrimitiveTopology(0xFFFF),	// Unknown default setting
@@ -358,6 +360,12 @@ namespace OpenGLES3Renderer
 
 	OpenGLES3Renderer::~OpenGLES3Renderer()
 	{
+		// Set no pipeline state reference, in case we have one
+		if (nullptr != mPipelineState)
+		{
+			setPipelineState(nullptr);
+		}
+
 		// Release instances
 		if (nullptr != mMainSwapChain)
 		{
@@ -655,17 +663,30 @@ namespace OpenGLES3Renderer
 
 	void OpenGLES3Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
-		if (nullptr != pipelineState)
+		if (mPipelineState != pipelineState)
 		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
+			if (nullptr != pipelineState)
+			{
+				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+				OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
-			// Set pipeline state
-			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
-		}
-		else
-		{
-			// TODO(co) Handle this situation?
+				// Set new pipeline state and add a reference to it
+				if (nullptr != mPipelineState)
+				{
+					mPipelineState->releaseReference();
+				}
+				mPipelineState = static_cast<PipelineState*>(pipelineState);
+				mPipelineState->addReference();
+
+				// Set pipeline state
+				mPipelineState->bindPipelineState();
+			}
+			else if (nullptr != mPipelineState)
+			{
+				// TODO(co) Handle this situation by resetting OpenGL states?
+				mPipelineState->releaseReference();
+				mPipelineState = nullptr;
+			}
 		}
 	}
 
@@ -951,22 +972,22 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
 	{
 		// Get API flags
-		uint32_t flagsAPI = 0;
+		uint32_t flagsApi = 0;
 		if (flags & Renderer::ClearFlag::COLOR)
 		{
-			flagsAPI |= GL_COLOR_BUFFER_BIT;
+			flagsApi |= GL_COLOR_BUFFER_BIT;
 		}
 		if (flags & Renderer::ClearFlag::DEPTH)
 		{
-			flagsAPI |= GL_DEPTH_BUFFER_BIT;
+			flagsApi |= GL_DEPTH_BUFFER_BIT;
 		}
 		if (flags & Renderer::ClearFlag::STENCIL)
 		{
-			flagsAPI |= GL_STENCIL_BUFFER_BIT;
+			flagsApi |= GL_STENCIL_BUFFER_BIT;
 		}
 
 		// Are API flags set?
-		if (flagsAPI)
+		if (0 != flagsApi)
 		{
 			// Set clear settings
 			if (flags & Renderer::ClearFlag::COLOR)
@@ -976,6 +997,10 @@ namespace OpenGLES3Renderer
 			if (flags & Renderer::ClearFlag::DEPTH)
 			{
 				glClearDepthf(z);
+				if (nullptr != mPipelineState && Renderer::DepthWriteMask::ALL != mPipelineState->getDepthStencilState().depthWriteMask)
+				{
+					glDepthMask(GL_TRUE);
+				}
 			}
 			if (flags & Renderer::ClearFlag::STENCIL)
 			{
@@ -985,21 +1010,23 @@ namespace OpenGLES3Renderer
 			// Unlike OpenGL ES 3, when using Direct3D 10 & 11 the scissor rectangle(s) do not affect the clear operation
 			// -> We have to compensate the OpenGL ES 3 behaviour in here
 
-			// Disable OpenGL scissor test, in case it's not disabled, yet
-			// TODO(co) Pipeline state update
-			// if (mRasterizerState->getRasterizerState().scissorEnable)
+			// Disable OpenGL ES 3 scissor test, in case it's not disabled, yet
+			if (nullptr != mPipelineState && mPipelineState->getRasterizerState().scissorEnable)
 			{
 				glDisable(GL_SCISSOR_TEST);
 			}
 
 			// Clear
-			glClear(flagsAPI);
+			glClear(flagsApi);
 
-			// Restore the previously set OpenGL viewport
-			// TODO(co) Pipeline state update
-			// if (mRasterizerState->getRasterizerState().scissorEnable)
+			// Restore the previously set OpenGL ES 3 states
+			if (nullptr != mPipelineState && mPipelineState->getRasterizerState().scissorEnable)
 			{
 				glEnable(GL_SCISSOR_TEST);
+			}
+			if ((flags & Renderer::ClearFlag::DEPTH) && nullptr != mPipelineState && Renderer::DepthWriteMask::ALL != mPipelineState->getDepthStencilState().depthWriteMask)
+			{
+				glDepthMask(GL_FALSE);
 			}
 		}
 	}

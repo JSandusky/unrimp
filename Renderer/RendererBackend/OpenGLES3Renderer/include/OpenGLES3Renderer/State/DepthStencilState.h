@@ -76,7 +76,16 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~DepthStencilState();
+		inline virtual ~DepthStencilState();
+
+		/**
+		*  @brief
+		*    Return the depth stencil state
+		*
+		*  @return
+		*    The depth stencil state
+		*/
+		inline const Renderer::DepthStencilState &getDepthStencilState() const;
 
 		/**
 		*  @brief
@@ -99,3 +108,9 @@ namespace OpenGLES3Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLES3Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLES3Renderer/State/DepthStencilState.inl"

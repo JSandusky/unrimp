@@ -76,7 +76,16 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~BlendState();
+		inline virtual ~BlendState();
+
+		/**
+		*  @brief
+		*    Return the blend state
+		*
+		*  @return
+		*    The blend state
+		*/
+		inline const Renderer::BlendState &getBlendState() const;
 
 		/**
 		*  @brief
@@ -101,3 +110,9 @@ namespace OpenGLES3Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLES3Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLES3Renderer/State/BlendState.inl"

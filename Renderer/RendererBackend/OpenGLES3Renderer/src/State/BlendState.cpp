@@ -45,11 +45,6 @@ namespace OpenGLES3Renderer
 		// Nothing here
 	}
 
-	BlendState::~BlendState()
-	{
-		// Nothing here
-	}
-
 	void BlendState::setOpenGLES3BlendStates() const
 	{
 		if (mBlendState.renderTarget[0].blendEnable)
