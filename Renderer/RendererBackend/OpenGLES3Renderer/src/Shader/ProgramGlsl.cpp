@@ -103,8 +103,19 @@ namespace OpenGLES3Renderer
 						{
 							const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
 
-							// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
-							if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
+							// Ignore sampler range types in here (OpenGL ES 3 handles samplers in a different way then Direct3D 10>=)
+							if (Renderer::DescriptorRangeType::UBV == descriptorRange->rangeType)
+							{
+								// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
+								// for backward compatibility, ask for the uniform block index
+								const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLES3Program, descriptorRange->baseShaderRegisterName);
+								if (GL_INVALID_INDEX != uniformBlockIndex)
+								{
+									// Associate the uniform block with the given binding point
+									glUniformBlockBinding(mOpenGLES3Program, uniformBlockIndex, parameterIndex);
+								}
+							}
+							else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
 							{
 								const GLint uniformLocation = glGetUniformLocation(mOpenGLES3Program, descriptorRange->baseShaderRegisterName);
 								if (uniformLocation >= 0)

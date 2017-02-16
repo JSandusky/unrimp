@@ -1267,7 +1267,7 @@ namespace OpenGLES3Renderer
 	bool OpenGLES3Renderer::isInitialized() const
 	{
 		// Is the context initialized?
-		return  mContext->isInitialized();
+		return mContext->isInitialized();
 	}
 
 	bool OpenGLES3Renderer::isDebugEnabled()

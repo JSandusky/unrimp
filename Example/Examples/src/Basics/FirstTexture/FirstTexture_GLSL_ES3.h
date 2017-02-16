@@ -41,7 +41,7 @@ vertexShaderSourceCode =
 STRINGIFY(
 // Attribute input/output
 in  highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
-out highp vec2 TexCoord;			// Normalized texture coordinate as output
+out highp vec2 TexCoord;	// Normalized texture coordinate as output
 
 // Programs
 void main()
