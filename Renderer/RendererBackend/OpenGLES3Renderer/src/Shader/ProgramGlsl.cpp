@@ -89,6 +89,7 @@ namespace OpenGLES3Renderer
 			{
 				mRootSignatureParameterIndexToUniformLocation = new int32_t[numberOfParameters];
 				memset(mRootSignatureParameterIndexToUniformLocation, -1, sizeof(int32_t) * numberOfParameters);
+				const bool isGL_EXT_texture_buffer = openGLES3Renderer.getContext().getExtensions().isGL_EXT_texture_buffer();
 				for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
 				{
 					const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[parameterIndex];
@@ -117,41 +118,59 @@ namespace OpenGLES3Renderer
 							}
 							else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
 							{
-								const GLint uniformLocation = glGetUniformLocation(mOpenGLES3Program, descriptorRange->baseShaderRegisterName);
-								if (uniformLocation >= 0)
+								// We can only emulate the "Renderer::TextureFormat::R32G32B32A32F" texture format using an uniform buffer
+								// -> Check for something like "InstanceTextureBuffer". Yes, this only works when one sticks to the naming convention.
+								if (!isGL_EXT_texture_buffer && nullptr != strstr(descriptorRange->baseShaderRegisterName, "TextureBuffer"))
 								{
-									mRootSignatureParameterIndexToUniformLocation[parameterIndex] = uniformLocation;
+									// Texture buffer emulation using uniform buffer
 
-									// OpenGL ES 3/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
-									// -> When using OpenGL or OpenGL ES 3 this is required
-									// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-									//    in GLSL shader) , for backward compatibility we don't use it in here
-									// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
-									//    to use is usually defined directly within the shader by using the "register"-keyword
-									// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
-									#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-										// Backup the currently used OpenGL ES 3 program
-										GLint openGLES3ProgramBackup = 0;
-										glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES3ProgramBackup);
-										if (openGLES3ProgramBackup == static_cast<GLint>(mOpenGLES3Program))
-										{
-											// Set uniform, please note that for this our program must be the currently used one
-											glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-										}
-										else
-										{
+									// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
+									// for backward compatibility, ask for the uniform block index
+									const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLES3Program, descriptorRange->baseShaderRegisterName);
+									if (GL_INVALID_INDEX != uniformBlockIndex)
+									{
+										// Associate the uniform block with the given binding point
+										glUniformBlockBinding(mOpenGLES3Program, uniformBlockIndex, parameterIndex);
+									}
+								}
+								else
+								{
+									const GLint uniformLocation = glGetUniformLocation(mOpenGLES3Program, descriptorRange->baseShaderRegisterName);
+									if (uniformLocation >= 0)
+									{
+										mRootSignatureParameterIndexToUniformLocation[parameterIndex] = uniformLocation;
+
+										// OpenGL ES 3/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
+										// -> When using OpenGL or OpenGL ES 3 this is required
+										// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
+										//    in GLSL shader) , for backward compatibility we don't use it in here
+										// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
+										//    to use is usually defined directly within the shader by using the "register"-keyword
+										// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
+										#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
+											// Backup the currently used OpenGL ES 3 program
+											GLint openGLES3ProgramBackup = 0;
+											glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES3ProgramBackup);
+											if (openGLES3ProgramBackup == static_cast<GLint>(mOpenGLES3Program))
+											{
+												// Set uniform, please note that for this our program must be the currently used one
+												glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+											}
+											else
+											{
+												// Set uniform, please note that for this our program must be the currently used one
+												glUseProgram(mOpenGLES3Program);
+												glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+
+												// Be polite and restore the previous used OpenGL ES 3 program
+												glUseProgram(static_cast<GLuint>(openGLES3ProgramBackup));
+											}
+										#else
 											// Set uniform, please note that for this our program must be the currently used one
 											glUseProgram(mOpenGLES3Program);
 											glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-
-											// Be polite and restore the previous used OpenGL ES 3 program
-											glUseProgram(static_cast<GLuint>(openGLES3ProgramBackup));
-										}
-									#else
-										// Set uniform, please note that for this our program must be the currently used one
-										glUseProgram(mOpenGLES3Program);
-										glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-									#endif
+										#endif
+									}
 								}
 							}
 						}
