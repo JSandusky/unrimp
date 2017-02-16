@@ -276,9 +276,6 @@
     <ClInclude Include="src\Runtime\FirstCompositor\FirstCompositor.h">
       <Filter>Runtime\FirstCompositor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_ES2.h">
-      <Filter>Runtime\FirstMesh</Filter>
-    </ClInclude>
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_HLSL_D3D9.h">
       <Filter>Runtime\FirstMesh</Filter>
     </ClInclude>
@@ -425,6 +422,9 @@
     </ClInclude>
     <ClInclude Include="src\Framework\QtRunner\ExampleRunnerQt4.h">
       <Filter>Framework\QtRunner</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_ES3.h">
+      <Filter>Runtime\FirstMesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

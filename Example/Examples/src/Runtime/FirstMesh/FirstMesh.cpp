@@ -71,16 +71,12 @@ void FirstMesh::onInitialization()
 	{
 		Renderer::IRendererPtr renderer(getRenderer());
 
-		// Create uniform buffers
-		// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
+		// Create uniform buffer
+		// -> Direct3D 9 does not support uniform buffers
 		// -> Direct3D 10, 11 and 12 do not support individual uniforms
 		// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-		// -> Don't use "renderer.getCapabilities().maximumUniformBufferSize > 0" here since for OpenGL we're not using uniform buffers in here
-		if (0 != strcmp(renderer->getName(), "OpenGL") && 0 != strcmp(renderer->getName(), "OpenGLES3"))
-		{
-			// Allocate enough memory for two 4x4 floating point matrices
-			mUniformBuffer = rendererRuntime->getBufferManager().createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-		}
+		// -> Allocate enough memory for two 4x4 floating point matrices
+		mUniformBuffer = rendererRuntime->getBufferManager().createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
@@ -162,7 +158,7 @@ void FirstMesh::onInitialization()
 				const char *fragmentShaderProfile = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
 				#include "FirstMesh_GLSL_410.h"
-				#include "FirstMesh_GLSL_ES2.h"
+				#include "FirstMesh_GLSL_ES3.h"
 				#include "FirstMesh_HLSL_D3D9.h"
 				#include "FirstMesh_HLSL_D3D10_D3D11_D3D12.h"
 				#include "FirstMesh_Null.h"

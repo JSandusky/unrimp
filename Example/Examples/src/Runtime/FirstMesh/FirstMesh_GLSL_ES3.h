@@ -49,8 +49,11 @@ out vec3 BinormalVs;		// Tangent space to view space, y-axis
 out vec3 NormalVs;			// Tangent space to view space, z-axis
 
 // Uniforms
-uniform highp mat4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
-uniform highp mat3 ObjectSpaceToViewSpaceMatrix;	// Object space to view space matrix
+layout(std140) uniform UniformBlockDynamicVs
+{
+	mat4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
+	mat4 ObjectSpaceToViewSpaceMatrix;	// Object space to view space matrix
+};
 
 // Functions
 mat3 GetTangentFrame(mat3 objectSpaceToViewSpaceMatrix, vec4 q)
@@ -81,7 +84,7 @@ void main()
 	// Calculate the tangent space to view space tangent, binormal and normal
 	// - 16 bit QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 	//   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
-	mat3 tangentFrame = GetTangentFrame(ObjectSpaceToViewSpaceMatrix, QTangent / 32767.0);
+	mat3 tangentFrame = GetTangentFrame(mat3(ObjectSpaceToViewSpaceMatrix), QTangent / 32767.0);
 	TangentVs = tangentFrame[0];
 	BinormalVs = tangentFrame[1];
 	NormalVs = tangentFrame[2];

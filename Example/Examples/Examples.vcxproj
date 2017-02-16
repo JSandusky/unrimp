@@ -554,7 +554,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Runtime\FirstCompositor\FirstCompositor.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_410.h" />
-    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_ES2.h" />
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_ES3.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_HLSL_D3D9.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_Null.h" />
