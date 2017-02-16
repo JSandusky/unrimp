@@ -199,7 +199,7 @@ void VertexBuffer::onInitialization()
 			const char *vertexShaderSourceCode = nullptr;
 			const char *fragmentShaderSourceCode = nullptr;
 			#include "VertexBuffer_GLSL_410.h"
-			#include "VertexBuffer_GLSL_ES2.h"
+			#include "VertexBuffer_GLSL_ES3.h"
 			#include "VertexBuffer_HLSL_D3D9_D3D10_D3D11_D3D12.h"
 			#include "VertexBuffer_Null.h"
 

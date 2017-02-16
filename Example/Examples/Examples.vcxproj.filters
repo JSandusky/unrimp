@@ -153,9 +153,6 @@
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing.h">
       <Filter>Basics\FirstInstancing</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_ES2.h">
-      <Filter>Basics\FirstMultipleRenderTargets</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D9.h">
       <Filter>Basics\FirstMultipleRenderTargets</Filter>
     </ClInclude>
@@ -165,17 +162,11 @@
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets.h">
       <Filter>Basics\FirstMultipleRenderTargets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_ES2.h">
-      <Filter>Basics\FirstMultipleSwapChains</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_Null.h">
       <Filter>Basics\FirstMultipleSwapChains</Filter>
     </ClInclude>
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains.h">
       <Filter>Basics\FirstMultipleSwapChains</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_ES2.h">
-      <Filter>Basics\FirstRenderToTexture</Filter>
     </ClInclude>
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D9.h">
       <Filter>Basics\FirstRenderToTexture</Filter>
@@ -192,9 +183,6 @@
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_Null.h">
       <Filter>Basics\FirstTessellation</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_ES2.h">
-      <Filter>Basics\FirstTexture</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstTexture\FirstTexture_HLSL_D3D9.h">
       <Filter>Basics\FirstTexture</Filter>
     </ClInclude>
@@ -204,26 +192,17 @@
     <ClInclude Include="src\Basics\FirstTexture\FirstTexture.h">
       <Filter>Basics\FirstTexture</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_ES2.h">
-      <Filter>Basics\FirstTriangle</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_Null.h">
       <Filter>Basics\FirstTriangle</Filter>
     </ClInclude>
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle.h">
       <Filter>Basics\FirstTriangle</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_ES2.h">
-      <Filter>Basics\VertexBuffer</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_Null.h">
       <Filter>Basics\VertexBuffer</Filter>
     </ClInclude>
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer.h">
       <Filter>Basics\VertexBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_ES2.h">
-      <Filter>Advanced\FirstGpgpu</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_HLSL_D3D9.h">
       <Filter>Advanced\FirstGpgpu</Filter>
@@ -425,6 +404,27 @@
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_ES3.h">
       <Filter>Runtime\FirstMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_ES3.h">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_ES3.h">
+      <Filter>Basics\FirstMultipleSwapChains</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_ES3.h">
+      <Filter>Basics\FirstRenderToTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_ES3.h">
+      <Filter>Basics\FirstTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_ES3.h">
+      <Filter>Basics\FirstTriangle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_ES3.h">
+      <Filter>Basics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_ES3.h">
+      <Filter>Advanced\FirstGpgpu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

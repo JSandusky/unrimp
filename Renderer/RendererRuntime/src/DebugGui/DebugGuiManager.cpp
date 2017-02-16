@@ -432,7 +432,7 @@ namespace RendererRuntime
 					const char *vertexShaderSourceCode = nullptr;
 					const char *fragmentShaderSourceCode = nullptr;
 					#include "Detail/Shader/DebugGui_GLSL_410.h"
-					#include "Detail/Shader/DebugGui_GLSL_ES2.h"
+					#include "Detail/Shader/DebugGui_GLSL_ES3.h"
 					#include "Detail/Shader/DebugGui_HLSL_D3D9.h"
 					#include "Detail/Shader/DebugGui_HLSL_D3D10_D3D11_D3D12.h"
 					#include "Detail/Shader/DebugGui_Null.h"

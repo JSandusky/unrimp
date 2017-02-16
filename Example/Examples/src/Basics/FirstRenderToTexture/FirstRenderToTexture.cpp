@@ -148,7 +148,7 @@ void FirstRenderToTexture::onInitialization()
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
 				#include "FirstRenderToTexture_GLSL_410.h"
-				#include "FirstRenderToTexture_GLSL_ES2.h"
+				#include "FirstRenderToTexture_GLSL_ES3.h"
 				#include "FirstRenderToTexture_HLSL_D3D9.h"
 				#include "FirstRenderToTexture_HLSL_D3D10_D3D11_D3D12.h"
 				#include "FirstRenderToTexture_Null.h"

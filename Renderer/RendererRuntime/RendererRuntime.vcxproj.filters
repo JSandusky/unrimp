@@ -813,9 +813,6 @@
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_Null.h">
       <Filter>Source Files\DebugGui\Detail\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_ES2.h">
-      <Filter>Source Files\DebugGui\Detail\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_HLSL_D3D9.h">
       <Filter>Source Files\DebugGui\Detail\Shader</Filter>
     </ClInclude>
@@ -1019,6 +1016,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerLinux.h">
       <Filter>Source Files\DebugGui\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_ES3.h">
+      <Filter>Source Files\DebugGui\Detail\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

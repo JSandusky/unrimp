@@ -37,7 +37,7 @@ if (0 == strcmp(mRenderer->getName(), "OpenGLES3"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
 attribute highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
@@ -63,7 +63,7 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode_ContentGeneration =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
 varying mediump vec2 TexCoord;	// Normalized texture coordinate as input
@@ -82,7 +82,7 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode_ContentProcessing =
-"#version 100\n"	// OpenGL ES 2.0
+"#version 300 es\n"	// OpenGL ES 3.0
 STRINGIFY(
 // Attribute input/output
 varying mediump vec2 TexCoord;	// Normalized texture coordinate as input
