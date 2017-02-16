@@ -304,6 +304,8 @@ namespace OpenGLES3Renderer
 	FNDEF_GL(void,				glGetUniformfv,							(GLuint program, GLint location, GLfloat* params));
 	FNDEF_GL(void,				glGetUniformiv,							(GLuint program, GLint location, GLint* params));
 	FNDEF_GL(int,				glGetUniformLocation,					(GLuint program, const GLchar* name));
+	FNDEF_GL(GLuint,			glGetUniformBlockIndex,					(GLuint program, const GLchar *uniformBlockName));
+	FNDEF_GL(void,				glUniformBlockBinding,					(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding));
 	FNDEF_GL(void,				glGetVertexAttribfv,					(GLuint index, GLenum pname, GLfloat* params));
 	FNDEF_GL(void,				glGetVertexAttribiv,					(GLuint index, GLenum pname, GLint* params));
 	FNDEF_GL(void,				glGetVertexAttribPointerv,				(GLuint index, GLenum pname, GLvoid** pointer));
@@ -501,6 +503,8 @@ namespace OpenGLES3Renderer
 	#define	glGetUniformfv							FNPTR(glGetUniformfv)
 	#define	glGetUniformiv							FNPTR(glGetUniformiv)
 	#define	glGetUniformLocation					FNPTR(glGetUniformLocation)
+	#define	glGetUniformBlockIndex					FNPTR(glGetUniformBlockIndex)
+	#define	glUniformBlockBinding					FNPTR(glUniformBlockBinding)
 	#define	glGetVertexAttribfv						FNPTR(glGetVertexAttribfv)
 	#define	glGetVertexAttribiv						FNPTR(glGetVertexAttribiv)
 	#define	glGetVertexAttribPointerv				FNPTR(glGetVertexAttribPointerv)

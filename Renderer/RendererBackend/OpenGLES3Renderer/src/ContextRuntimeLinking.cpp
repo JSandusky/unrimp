@@ -543,6 +543,8 @@ namespace OpenGLES3Renderer
 		IMPORT_FUNC(glGetUniformfv);
 		IMPORT_FUNC(glGetUniformiv);
 		IMPORT_FUNC(glGetUniformLocation);
+		IMPORT_FUNC(glGetUniformBlockIndex);
+		IMPORT_FUNC(glUniformBlockBinding);
 		IMPORT_FUNC(glGetVertexAttribfv);
 		IMPORT_FUNC(glGetVertexAttribiv);
 		IMPORT_FUNC(glGetVertexAttribPointerv);
