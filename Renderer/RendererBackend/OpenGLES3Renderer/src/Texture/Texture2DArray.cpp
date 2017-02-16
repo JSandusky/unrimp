@@ -77,7 +77,7 @@ namespace OpenGLES3Renderer
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 texture
-			glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, openGLES3TextureBackup);
+			glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<GLuint>(openGLES3TextureBackup));
 
 			// Restore previous alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, openGLES3AlignmentBackup);

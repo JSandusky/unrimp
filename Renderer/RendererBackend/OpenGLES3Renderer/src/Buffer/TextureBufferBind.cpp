@@ -53,7 +53,7 @@ namespace OpenGLES3Renderer
 
 			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous bound OpenGL texture buffer
-				glBindBuffer(GL_TEXTURE_BUFFER_ARB, static_cast<GLuint>(openGLESTextureBufferBackup));
+				glBindBuffer(GL_TEXTURE_BUFFER_EXT, static_cast<GLuint>(openGLESTextureBufferBackup));
 			#endif
 		}
 
