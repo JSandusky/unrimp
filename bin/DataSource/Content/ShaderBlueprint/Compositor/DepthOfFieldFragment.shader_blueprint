@@ -115,9 +115,9 @@ float GetLinearDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
 float4 CalculateSum(float2 textureCoordinate, int sampleIndex)
 {
 	// Depth of field basing on https://developer.amd.com/wordpress/media/2012/10/Scheuermann_DepthOfField.pdf
-	float2 pixelSizeScene = PassData.InverseViewportSize;		// Pixel size of full resolution image
-	float2 pixelSizeBlur = 1.0f / GET_TEXTURE_SIZE(BlurMap);	// Pixel size of downsampled and blurred image
-	float2 poisson[12];											// Containts poisson-distributed positions on the unit circle for 12 taps
+	float2 pixelSizeScene = PassData.InverseViewportSize;	// Pixel size of full resolution image
+	float2 pixelSizeBlur = float2(1.0f, 1.0f) / CAST_TO(GET_TEXTURE_SIZE(BlurMap), float2);	// Pixel size of downsampled and blurred image
+	float2 poisson[12];	// Containts poisson-distributed positions on the unit circle for 12 taps
 	poisson[ 0] = float2( 0.00f,  0.00f);
 	poisson[ 1] = float2( 0.07f, -0.45f);
 	poisson[ 2] = float2(-0.15f, -0.33f);

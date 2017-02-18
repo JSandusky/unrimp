@@ -57,7 +57,7 @@ struct PassDataStruct
 	float3   ViewSpaceSunLightDirection;
 	float    Wetness;
 	float3   AmbientColor;
-	int		 NumberOfLights;
+	uint	 NumberOfLights;
 	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float3   SunLightColor;
 	float3	 CameraWorldSpacePosition;
@@ -183,7 +183,7 @@ float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 	}
 
 	// Point and spot lights
-	for (int i = 0; i < PassData.NumberOfLights; ++i)
+	for (uint i = 0u; i < PassData.NumberOfLights; ++i)
 	{
 		// Fetch the light data
 		float4 lightPositionRadius = TEXEL_FETCH(LightTextureBuffer, i * 2u);

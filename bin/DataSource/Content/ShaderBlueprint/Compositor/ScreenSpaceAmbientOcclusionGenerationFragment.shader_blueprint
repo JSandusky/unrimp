@@ -159,7 +159,7 @@ float CalculateOcclusion(float2 textureCoordinate, int sampleIndex)
 		// Compute occlusion based on the (scaled) Z difference
 		float linearSampleDepth = GetLinearDepth(GetDepthFromDepthMap(offset.xy, sampleIndex));
 		float zd = SATURATE(linearDepth - linearSampleDepth);
-		occlusion += SATURATE(pow(1.0f - zd, 8.0f) + pow(zd, 12));
+		occlusion += SATURATE(pow(1.0f - zd, 8.0f) + pow(zd, 12.0f));
 	}
 
 	// Done
