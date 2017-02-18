@@ -170,6 +170,21 @@
 						"Radius": "2.5"
 					}
 				}
+			},
+			"11":
+			{
+				"Properties":
+				{
+					"Position": "-1.0 0.0 1.5",
+					"Scale": "0.03 0.03 0.03"
+				},
+				"Items":
+				{
+					"MeshSceneItem":
+					{
+						"MeshAssetId": "153"
+					}
+				}
 			}
 		}
 	}

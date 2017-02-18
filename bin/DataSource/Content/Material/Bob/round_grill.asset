@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "163",
+			"AssetType": "Material",
+			"AssetCategory": "Character",
+			"AssetName": "round_grill",
+			"AssetDependencies": [ "158" ],
+			"FileDependencies": [ "round_grill.material" ],
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
+		},
+		"MaterialAssetCompiler":
+		{
+			"InputFile": "round_grill.material"
+		}
+	}
+}

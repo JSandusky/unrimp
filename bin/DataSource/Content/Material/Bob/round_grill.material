@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "MaterialAsset",
+		"Version": "1"
+	},
+	"MaterialAsset":
+	{
+		"Techniques":
+		{
+			"Default": "110",
+			"Debug": "110",
+			"Forward": "14",
+			"Deferred": "113",
+			"DepthOnly": "0"
+		},
+		"Properties":
+		{
+			"UseDiffuseMap": "TRUE",
+			"DiffuseMap": "158"
+		}
+	}
+}

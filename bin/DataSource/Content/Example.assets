@@ -16,7 +16,7 @@
 		"8": "Scene/FirstScene.asset",
 		"9": "CompositorNode/First.asset",
 		"10": "CompositorWorkspace/First.asset",
-		"11": "Skeleton/FirstSkeleton.asset",
+		"11": "Skeleton/Bob/Bob.asset",
 		"12": "ShaderBlueprint/Forward/MeshVertex.asset",
 		"13": "ShaderBlueprint/Forward/MeshFragment.asset",
 		"14": "MaterialBlueprint/Forward/Mesh.asset",
@@ -157,6 +157,17 @@
 		"149": "MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionBlur.asset",
 		"150": "Texture/Compositor/IdentityColorCorrectionLookupTable16x1.asset",
 		"151": "Texture/Compositor/SepiaColorCorrectionLookupTable16x1.asset",
-		"152": "Texture/CubeMap/Maskonaive3/Maskonaive3.asset"
+		"152": "Texture/CubeMap/Maskonaive3/Maskonaive3.asset",
+		"153": "Mesh/Bob/Bob.asset",
+		"154": "Texture/Bob/guard1_body.asset",
+		"155": "Texture/Bob/guard1_face.asset",
+		"156": "Texture/Bob/guard1_helmet.asset",
+		"157": "Texture/Bob/iron_grill.asset",
+		"158": "Texture/Bob/round_grill.asset",
+		"159": "Material/Bob/guard1_body.asset",
+		"160": "Material/Bob/guard1_face.asset",
+		"161": "Material/Bob/guard1_helmet.asset",
+		"162": "Material/Bob/iron_grill.asset",
+		"163": "Material/Bob/round_grill.asset"
 	}
 }
