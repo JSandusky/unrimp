@@ -104,14 +104,12 @@ namespace
 
 				{ // Add sub-mesh
 					// Get the source material asset ID
-					// TODO(co) Error handling: Do we need to validate the material index or material name?
 					aiString materialName;
 					assimpScene.mMaterials[assimpMesh.mMaterialIndex]->Get(AI_MATKEY_NAME, materialName);
-					const uint32_t sourceMaterialAssetId = static_cast<uint32_t>(std::atoi(materialName.C_Str()));
 
 					// Add sub-mesh
 					RendererRuntime::v1Mesh::SubMesh subMesh;
-					subMesh.materialAssetId		= input.getCompiledAssetIdBySourceAssetId(sourceMaterialAssetId);
+					subMesh.materialAssetId		= RendererToolkit::StringHelper::getAssetIdByString(materialName.C_Str(), input);
 					subMesh.primitiveTopology	= static_cast<uint8_t>(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 					subMesh.startIndexLocation	= previousNumberOfIndices;
 					subMesh.numberOfIndices		= numberOfIndices - previousNumberOfIndices;
