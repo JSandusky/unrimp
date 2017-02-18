@@ -18,7 +18,8 @@
 		},
 		"MeshAssetCompiler":
 		{
-			"InputFile": "Bob.md5mesh"
+			"InputFile": "Bob.md5mesh",
+			"InvertNormals": "TRUE"
 		}
 	}
 }
