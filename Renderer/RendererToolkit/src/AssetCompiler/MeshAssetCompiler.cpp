@@ -107,6 +107,21 @@ namespace
 					aiString materialName;
 					assimpScene.mMaterials[assimpMesh.mMaterialIndex]->Get(AI_MATKEY_NAME, materialName);
 
+					// In case the ASSIMP "aiProcess_RemoveRedundantMaterials"-flag is set materials might get merged, we need to take this into account
+					if (nullptr != strstr(materialName.C_Str(), "JoinedMaterial_"))
+					{
+						// If we're in luck, the diffuse texture 0 stores the material name
+						assimpScene.mMaterials[assimpMesh.mMaterialIndex]->Get(AI_MATKEY_TEXTURE_DIFFUSE(0), materialName);
+
+						// The ASSIMP MD5 mesh loader modifies "shader" inside "MD5Loader.cpp"
+						const char* diffuseExtension = strstr(materialName.C_Str(), "_d.tga");
+						if (nullptr != diffuseExtension)
+						{
+							// Const-casts are evil in general, but in this situation in here this is the most-simple solution to cut off "_d.tga"
+							*const_cast<char*>(diffuseExtension) = '\0';
+						}
+					}
+
 					// Add sub-mesh
 					RendererRuntime::v1Mesh::SubMesh subMesh;
 					subMesh.materialAssetId		= RendererToolkit::StringHelper::getAssetIdByString(materialName.C_Str(), input);
