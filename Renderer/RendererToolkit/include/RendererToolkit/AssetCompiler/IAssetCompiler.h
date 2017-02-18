@@ -33,6 +33,7 @@
 
 #include <rapidjson/fwd.h>
 
+#include <string>
 #include <unordered_map>
 
 
@@ -92,9 +93,11 @@ namespace RendererToolkit
 			uint32_t getCompiledAssetIdBySourceAssetId(uint32_t sourceAssetId) const
 			{
 				SourceAssetIdToCompiledAssetId::const_iterator iterator = sourceAssetIdToCompiledAssetId.find(sourceAssetId);
-				const uint32_t compiledAssetId = (iterator != sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : sourceAssetId;
-				// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
-				return compiledAssetId;
+				if (iterator == sourceAssetIdToCompiledAssetId.cend())
+				{
+					throw std::runtime_error(std::string("Source asset ID ") + std::to_string(sourceAssetId) + " is unknown");
+				}
+				return iterator->second;
 			}
 			Input(const Input&) = delete;
 			Input& operator=(const Input&) = delete;

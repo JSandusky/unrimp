@@ -311,13 +311,13 @@ namespace RendererToolkit
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
-			compiledAssetId = input.getCompiledAssetIdBySourceAssetId(StringHelper::getAssetIdByString(rapidJsonValue[propertyName].GetString(), input));
+			compiledAssetId = StringHelper::getAssetIdByString(rapidJsonValue[propertyName].GetString(), input);
 		}
 	}
 
 	RendererRuntime::AssetId JsonHelper::getCompiledAssetId(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName)
 	{
-		return input.getCompiledAssetIdBySourceAssetId(StringHelper::getAssetIdByString(rapidJsonValue[propertyName].GetString(), input));
+		return StringHelper::getAssetIdByString(rapidJsonValue[propertyName].GetString(), input);
 	}
 
 	Renderer::TextureFormat::Enum JsonHelper::mandatoryTextureFormat(const rapidjson::Value& rapidJsonValue)
