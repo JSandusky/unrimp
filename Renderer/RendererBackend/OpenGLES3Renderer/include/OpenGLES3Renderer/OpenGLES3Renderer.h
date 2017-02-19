@@ -46,6 +46,7 @@ namespace OpenGLES3Renderer
 	class SwapChain;
 	class VertexArray;
 	class RootSignature;
+	class PipelineState;
 }
 
 
