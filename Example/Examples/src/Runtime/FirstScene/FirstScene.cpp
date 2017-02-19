@@ -144,14 +144,14 @@ void FirstScene::onInitialization()
 
 		// Load the material resource we're going to clone
 		mMaterialResourceId = rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::ImrodMaterialAssetId, this);
-	}
 
-	{ // Startup the VR-manager
-		RendererRuntime::IVrManager& vrManager = rendererRuntime->getVrManager();
-		if (vrManager.isHmdPresent())
-		{
-			vrManager.setSceneResource(mSceneResource);
-			vrManager.startup(::detail::VrDeviceMaterialAssetId);
+		{ // Startup the VR-manager
+			RendererRuntime::IVrManager& vrManager = rendererRuntime->getVrManager();
+			if (vrManager.isHmdPresent())
+			{
+				vrManager.setSceneResource(mSceneResource);
+				vrManager.startup(::detail::VrDeviceMaterialAssetId);
+			}
 		}
 	}
 }
