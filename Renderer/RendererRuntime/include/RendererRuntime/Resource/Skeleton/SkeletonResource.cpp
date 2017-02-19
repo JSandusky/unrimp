@@ -19,6 +19,13 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -28,73 +35,17 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint8_t SkeletonResource::getNumberOfBones() const
+	void SkeletonResource::localToGlobalPose()
 	{
-		return mNumberOfBones;
-	}
+		// The root has no parent
+		mGlobalBonePoses[0] = mLocalBonePoses[0];
 
-	inline const uint8_t* SkeletonResource::getBoneHierarchy() const
-	{
-		return mBoneHierarchy;
-	}
-
-	inline const glm::mat4* SkeletonResource::getLocalBonePoses() const
-	{
-		return mLocalBonePoses;
-	}
-
-	inline const glm::mat4* SkeletonResource::getGlobalBonePoses() const
-	{
-		return mGlobalBonePoses;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline SkeletonResource::SkeletonResource() :
-		mNumberOfBones(0),
-		mBoneHierarchy(nullptr),
-		mLocalBonePoses(nullptr),
-		mGlobalBonePoses(nullptr)
-	{
-		// Nothing here
-	}
-
-	inline SkeletonResource::~SkeletonResource()
-	{
-		// Sanity checks
-		assert(0 == mNumberOfBones);
-		assert(nullptr == mBoneHierarchy);
-		assert(nullptr == mLocalBonePoses);
-		assert(nullptr == mGlobalBonePoses);
-	}
-
-	inline void SkeletonResource::initializeElement(SkeletonResourceId skeletonResourceId)
-	{
-		// Sanity checks
-		assert(0 == mNumberOfBones);
-		assert(nullptr == mBoneHierarchy);
-		assert(nullptr == mLocalBonePoses);
-		assert(nullptr == mGlobalBonePoses);
-
-		// Call base implementation
-		IResource::initializeElement(skeletonResourceId);
-	}
-
-	inline void SkeletonResource::deinitializeElement()
-	{
-		// Reset everything
-		mNumberOfBones = 0;
-		delete [] mBoneHierarchy;
-		mBoneHierarchy = nullptr;
-		delete [] mLocalBonePoses;
-		mLocalBonePoses = nullptr;
-		delete [] mGlobalBonePoses;
-		mGlobalBonePoses = nullptr;
-
-		// Call base implementation
-		IResource::deinitializeElement();
+		// Due to cache friendly depth-first rolled up bone hierarchy, the global parent bone pose is already up-to-date
+		for (uint8_t i = 1; i < mNumberOfBones; ++i)
+		{
+			const uint8_t parentBone = mBoneHierarchy[i];
+			mGlobalBonePoses[i] = mGlobalBonePoses[parentBone] * mLocalBonePoses[i];
+		}
 	}
 
 

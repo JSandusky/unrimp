@@ -134,6 +134,7 @@ namespace RendererRuntime
 					const Renderer::IVertexArrayPtr vertexArrayPtr = meshResource->getVertexArrayPtr();
 
 					// Set material resource ID of each sub-mesh
+					const SkeletonResourceId skeletonResourceId = meshResource->getSkeletonResourceId();
 					MaterialResourceManager& materialResourceManager = rendererRuntime.getMaterialResourceManager();
 					const SubMeshes& subMeshes = static_cast<const MeshResource&>(resource).getSubMeshes();
 					const size_t numberOfSubMeshes = subMeshes.size();
@@ -141,7 +142,7 @@ namespace RendererRuntime
 					for (size_t i = 0; i < numberOfSubMeshes; ++i)
 					{
 						const SubMesh& subMesh = subMeshes[i];
-						renderables.emplace_back(mRenderableManager, vertexArrayPtr, subMesh.getPrimitiveTopology(), true, subMesh.getStartIndexLocation(), subMesh.getNumberOfIndices(), materialResourceManager, subMesh.getMaterialResourceId());
+						renderables.emplace_back(mRenderableManager, vertexArrayPtr, subMesh.getPrimitiveTopology(), true, subMesh.getStartIndexLocation(), subMesh.getNumberOfIndices(), materialResourceManager, subMesh.getMaterialResourceId(), skeletonResourceId);
 					}
 
 					// Handle overwritten sub-meshes

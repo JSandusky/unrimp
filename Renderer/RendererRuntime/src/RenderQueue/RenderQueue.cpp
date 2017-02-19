@@ -309,7 +309,7 @@ namespace RendererRuntime
 										}
 
 										// Fill the instance buffer manager
-										instanceBufferManager.fillBuffer(materialBlueprintResource->getPassBufferManager(), materialBlueprintResource->getInstanceUniformBuffer(), materialBlueprintResource->getInstanceTextureBuffer(), renderable.getRenderableManager().getTransform(), *materialTechnique, commandBuffer);
+										instanceBufferManager.fillBuffer(materialBlueprintResource->getPassBufferManager(), materialBlueprintResource->getInstanceUniformBuffer(), materialBlueprintResource->getInstanceTextureBuffer(), renderable, *materialTechnique, commandBuffer);
 
 										// Render the specified geometric primitive, based on indexing into an array of vertices
 										// -> Please note that it's valid that there are no indices, for example "RendererRuntime::CompositorInstancePassDebugGui" is using the render queue only to set the material resource blueprint

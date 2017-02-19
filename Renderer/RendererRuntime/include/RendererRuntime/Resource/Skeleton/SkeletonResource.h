@@ -29,7 +29,13 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResource.h"
 
-#include <string>
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+	#include <glm/fwd.hpp>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
@@ -62,6 +68,10 @@ namespace RendererRuntime
 	/**
 	*  @brief
 	*    Skeleton resource
+	*
+	*  @note
+	*    - Each skeleton must have at least one bone
+	*    - Bone data is cache friendly depth-first rolled up, see "Molecular Musings" - "Adventures in data-oriented design – Part 2: Hierarchical data" - https://blog.molecular-matters.com/2013/02/22/adventures-in-data-oriented-design-part-2-hierarchical-data/
 	*/
 	class SkeletonResource : public IResource
 	{
@@ -79,7 +89,11 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		// TODO(co)
+		inline uint8_t getNumberOfBones() const;
+		inline const uint8_t* getBoneHierarchy() const;
+		inline const glm::mat4* getLocalBonePoses() const;
+		inline const glm::mat4* getGlobalBonePoses() const;
+		void localToGlobalPose();
 
 
 	//[-------------------------------------------------------]
@@ -102,7 +116,11 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co)
+		uint8_t		mNumberOfBones;		///< Number of bones
+		// Structure-of-arrays (SoA)
+		uint8_t*	mBoneHierarchy;		///< Cache friendly depth-first rolled up bone hierarchy, null pointer only in case of horrible error, free the memory if no longer required
+		glm::mat4*	mLocalBonePoses;	///< Cache friendly depth-first rolled up local bone poses, null pointer only in case of horrible error, free the memory if no longer required
+		glm::mat4*	mGlobalBonePoses;	///< Cache friendly depth-first rolled up global bone poses, null pointer only in case of horrible error, free the memory if no longer required
 
 
 	};

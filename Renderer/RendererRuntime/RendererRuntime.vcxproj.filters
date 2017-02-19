@@ -1349,5 +1349,8 @@
     <ClCompile Include="src\Resource\Skeleton\SkeletonResourceManager.cpp">
       <Filter>Source Files\Resource\Skeleton</Filter>
     </ClCompile>
+    <ClCompile Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.cpp">
+      <Filter>Source Files\Resource\Skeleton</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

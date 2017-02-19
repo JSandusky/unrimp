@@ -26,6 +26,9 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
+#include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
+#include "RendererRuntime/RenderQueue/Renderable.h"
+#include "RendererRuntime/RenderQueue/RenderableManager.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -93,7 +96,7 @@ namespace RendererRuntime
 		mTextureBuffer->releaseReference();
 	}
 
-	void InstanceBufferManager::fillBuffer(PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer, const MaterialBlueprintResource::TextureBuffer*, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer)
+	void InstanceBufferManager::fillBuffer(PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer, const MaterialBlueprintResource::TextureBuffer*, const Renderable& renderable, MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer)
 	{
 		// TODO(co) This is just a placeholder implementation until "RendererRuntime::InstanceBufferManager" is ready
 
@@ -106,6 +109,7 @@ namespace RendererRuntime
 		// TODO(co) Implement automatic instancing
 		assert(1 == instanceUniformBuffer->numberOfElements);
 
+		const Transform& objectSpaceToWorldSpaceTransform = renderable.getRenderableManager().getTransform();
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
 
@@ -205,6 +209,21 @@ namespace RendererRuntime
 			objectSpaceToWorldSpaceMatrix = glm::transpose(objectSpaceToWorldSpaceMatrix);
 			memcpy(scratchTextureBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceMatrix), sizeof(float) * 4 * 4);
 			*/
+
+			// Do we also need to pass on bone transform matrices?
+			const SkeletonResourceId skeletonResourceId = renderable.getSkeletonResourceId();
+			if (isInitialized(skeletonResourceId))
+			{
+				const SkeletonResource& skeletonResource = static_cast<SkeletonResource&>(mRendererRuntime.getSkeletonResourceManager().getResourceByResourceId(skeletonResourceId));
+				const uint8_t numberOfBones = skeletonResource.getNumberOfBones();
+				assert(0 != numberOfBones);	// Each skeleton must have at least one bone
+				const glm::mat4* globalBonePoses = skeletonResource.getGlobalBonePoses();
+				assert(nullptr != globalBonePoses);
+				// TODO(co) Bone transform matrices can consume up to 16 KiB, our texture buffer is at least 64 KiB. So, currently no security checks required, but will be later on.
+				const size_t numberOfBytes = sizeof(glm::mat4) * numberOfBones;
+				memcpy(scratchTextureBufferPointer, globalBonePoses, numberOfBytes);
+				scratchTextureBufferPointer += numberOfBytes / sizeof(float);
+			}
 		}
 
 		// Update the uniform and texture buffer by using our scratch buffer

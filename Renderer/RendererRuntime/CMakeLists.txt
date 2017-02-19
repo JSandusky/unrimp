@@ -143,6 +143,7 @@ set(SOURCE_CODES
 	src/Resource/ShaderPiece/Loader/ShaderPieceResourceLoader.cpp
 	src/Resource/ShaderPiece/ShaderPieceResourceManager.cpp
 	src/Resource/Skeleton/Loader/SkeletonResourceLoader.cpp
+	src/Resource/Skeleton/SkeletonResource.cpp
 	src/Resource/Skeleton/SkeletonResourceManager.cpp
 	src/Resource/Texture/Loader/CrnTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/DdsTextureResourceLoader.cpp

@@ -378,6 +378,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.cpp" />
     <ClCompile Include="src\Asset\AssetManager.cpp" />
     <ClCompile Include="src\Asset\AssetPackage.cpp" />
     <ClCompile Include="src\Asset\Serializer\AssetPackageSerializer.cpp" />

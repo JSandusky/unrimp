@@ -111,6 +111,16 @@ namespace RendererRuntime
 		calculateSortingKey();
 	}
 
+	inline SkeletonResourceId Renderable::getSkeletonResourceId() const
+	{
+		return mSkeletonResourceId;
+	}
+
+	inline void Renderable::setSkeletonResourceId(SkeletonResourceId skeletonResourceId)
+	{
+		mSkeletonResourceId = skeletonResourceId;
+	}
+
 	inline uint8_t Renderable::getRenderQueueIndex() const
 	{
 		return mRenderQueueIndex;

@@ -54,8 +54,9 @@ namespace RendererRuntime
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
 	typedef std::vector<SubMesh>									 SubMeshes;
-	typedef uint32_t												 MeshResourceId;	///< POD mesh resource identifier
+	typedef uint32_t												 MeshResourceId;		///< POD mesh resource identifier
 	typedef PackedElementManager<MeshResource, MeshResourceId, 4096> MeshResources;
+	typedef uint32_t												 SkeletonResourceId;	///< POD skeleton resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -99,6 +100,8 @@ namespace RendererRuntime
 		inline void setVertexArray(Renderer::IVertexArray* vertexArray);
 		inline const SubMeshes& getSubMeshes() const;
 		inline SubMeshes& getSubMeshes();
+		inline SkeletonResourceId getSkeletonResourceId() const;
+		inline void setSkeletonResourceId(SkeletonResourceId skeletonResourceId);
 
 
 	//[-------------------------------------------------------]
@@ -125,6 +128,7 @@ namespace RendererRuntime
 		uint32_t				  mNumberOfIndices;		///< Number of indices
 		Renderer::IVertexArrayPtr mVertexArray;			///< Vertex array object (VAO), can be a null pointer
 		SubMeshes				  mSubMeshes;			///< Sub-meshes
+		SkeletonResourceId		  mSkeletonResourceId;	///< Resource ID of the used skeleton, can be uninitialized
 
 
 	};

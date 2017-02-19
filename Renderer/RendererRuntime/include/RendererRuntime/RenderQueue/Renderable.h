@@ -53,6 +53,7 @@ namespace RendererRuntime
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
 	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
+	typedef uint32_t SkeletonResourceId;	///< POD skeleton resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -80,7 +81,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT Renderable();
-		RENDERERRUNTIME_API_EXPORT Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, bool drawIndexed, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId);
+		RENDERERRUNTIME_API_EXPORT Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, bool drawIndexed, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId, SkeletonResourceId skeletonResourceId);
 		inline ~Renderable();
 
 		//[-------------------------------------------------------]
@@ -105,6 +106,8 @@ namespace RendererRuntime
 		inline MaterialResourceId getMaterialResourceId() const;
 		RENDERERRUNTIME_API_EXPORT void setMaterialResourceId(const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId);
 		inline void unsetMaterialResourceId();
+		inline SkeletonResourceId getSkeletonResourceId() const;
+		inline void setSkeletonResourceId(SkeletonResourceId skeletonResourceId);
 
 		//[-------------------------------------------------------]
 		//[ Cached material data                                  ]
@@ -135,6 +138,7 @@ namespace RendererRuntime
 		uint32_t						mStartIndexLocation;
 		uint32_t						mNumberOfIndices;
 		MaterialResourceId				mMaterialResourceId;
+		SkeletonResourceId				mSkeletonResourceId;
 		bool							mDrawIndexed;			///< Placed at this location due to padding
 		// Cached material data
 		uint8_t							mRenderQueueIndex;

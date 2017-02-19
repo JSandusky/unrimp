@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -68,13 +74,24 @@ namespace RendererRuntime
 		return mSubMeshes;
 	}
 
+	inline SkeletonResourceId MeshResource::getSkeletonResourceId() const
+	{
+		return mSkeletonResourceId;
+	}
+
+	inline void MeshResource::setSkeletonResourceId(SkeletonResourceId skeletonResourceId)
+	{
+		mSkeletonResourceId = skeletonResourceId;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline MeshResource::MeshResource() :
 		mNumberOfVertices(0),
-		mNumberOfIndices(0)
+		mNumberOfIndices(0),
+		mSkeletonResourceId(getUninitialized<SkeletonResourceId>())
 	{
 		// Nothing here
 	}
@@ -86,6 +103,7 @@ namespace RendererRuntime
 		assert(0 == mNumberOfIndices);
 		assert(nullptr == mVertexArray.getPointer());
 		assert(mSubMeshes.empty());
+		assert(isUninitialized(mSkeletonResourceId));
 	}
 
 	inline void MeshResource::initializeElement(MeshResourceId meshResourceId)
@@ -95,6 +113,7 @@ namespace RendererRuntime
 		assert(0 == mNumberOfIndices);
 		assert(nullptr == mVertexArray.getPointer());
 		assert(mSubMeshes.empty());
+		assert(isUninitialized(mSkeletonResourceId));
 
 		// Call base implementation
 		IResource::initializeElement(meshResourceId);
@@ -107,6 +126,7 @@ namespace RendererRuntime
 		mNumberOfIndices = 0;
 		mVertexArray = nullptr;
 		mSubMeshes.clear();
+		setUninitialized(mSkeletonResourceId);
 
 		// Call base implementation
 		IResource::deinitializeElement();

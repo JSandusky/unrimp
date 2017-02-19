@@ -37,6 +37,7 @@
 namespace RendererRuntime
 {
 	class Transform;
+	class Renderable;
 	class IRendererRuntime;
 	class MaterialTechnique;
 	class PassBufferManager;
@@ -90,15 +91,15 @@ namespace RendererRuntime
 		*    Instance uniform buffer instance to use, can be a null pointer
 		*  @param[in] instanceTextureBuffer
 		*    Instance texture buffer instance to use, can be a null pointer
-		*  @param[in] objectSpaceToWorldSpaceTransform
-		*    Object space to world space transform
+		*  @param[in] renderable
+		*    Renderable to fill the buffer for
 		*  @param[in] materialTechnique
 		*    Used material technique
 		*  @param[out] commandBuffer
 		*    Command buffer to fill
 		*/
 		void fillBuffer(PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer,
-						const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer, const Transform& objectSpaceToWorldSpaceTransform,
+						const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer, const Renderable& renderable,
 						MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer);
 
 		/**

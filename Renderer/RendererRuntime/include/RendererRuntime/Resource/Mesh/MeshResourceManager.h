@@ -103,7 +103,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		MeshResources	  mMeshResources;
 
 
