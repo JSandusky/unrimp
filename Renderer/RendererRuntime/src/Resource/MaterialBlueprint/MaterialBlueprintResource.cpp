@@ -349,7 +349,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MaterialBlueprintResource::MaterialBlueprintResource() :
 		mPipelineStateCacheManager(*this),
-		mVertexAttributes(MeshResource::VERTEX_ATTRIBUTES.numberOfAttributes, MeshResource::VERTEX_ATTRIBUTES.attributes),
+		mVertexAttributes(MeshResource::SKINNED_VERTEX_ATTRIBUTES.numberOfAttributes, MeshResource::SKINNED_VERTEX_ATTRIBUTES.attributes),
 		mPipelineState(Renderer::PipelineStateBuilder()),
 		mPassUniformBuffer(nullptr),
 		mMaterialUniformBuffer(nullptr),

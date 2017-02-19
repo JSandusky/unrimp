@@ -85,6 +85,7 @@ namespace
 			uint32_t*	 boneIds;			///< Cache friendly depth-first rolled up bone IDs ("RendererRuntime::StringId" on bone name), null pointer only in case of horrible error, don't free the memory because it's owned by "boneParents"
 			aiMatrix4x4* localBonePoses;	///< Cache friendly depth-first rolled up local bone poses, null pointer only in case of horrible error, don't free the memory because it's owned by "boneParents"
 			aiMatrix4x4* globalBonePoses;	///< Cache friendly depth-first rolled up global bone poses, null pointer only in case of horrible error, don't free the memory because it's owned by "boneParents"
+			aiMatrix4x4* boneOffsetMatrix;	///< Cache friendly depth-first rolled up bone offset matrix (object space to bone space), null pointer only in case of horrible error, free the memory if no longer required, only used inside renderer toolkit
 
 
 		//[-------------------------------------------------------]
@@ -96,7 +97,8 @@ namespace
 				boneParents(nullptr),
 				boneIds(nullptr),
 				localBonePoses(nullptr),
-				globalBonePoses(nullptr)
+				globalBonePoses(nullptr),
+				boneOffsetMatrix((_numberOfBones > 0) ? new aiMatrix4x4[_numberOfBones] : nullptr)
 			{
 				if (numberOfBones > 0)
 				{
@@ -133,6 +135,7 @@ namespace
 			~Skeleton()
 			{
 				delete [] getSkeletonData();
+				delete [] boneOffsetMatrix;
 			}
 
 			uint32_t getNumberOfSkeletonDataBytes() const
@@ -450,6 +453,7 @@ namespace
 						{
 							throw std::runtime_error(std::string("Invalid Assimp bone name \"") + assimpBone->mName.C_Str() + '\"');
 						}
+						skeleton.boneOffsetMatrix[boneIndex] = assimpBone->mOffsetMatrix;
 
 						// Loop through the Assimp bone weights
 						for (unsigned int weight = 0; weight < assimpBone->mNumWeights; ++weight)
@@ -658,6 +662,12 @@ namespace RendererToolkit
 			// Write down the optional skeleton
 			if (skeleton.numberOfBones > 0)
 			{
+				aiMatrix4x4 globalInverseTransform = assimpScene->mRootNode->mTransformation;
+				globalInverseTransform.Inverse();
+				for (uint8_t i = 0; i < skeleton.numberOfBones; ++i)
+				{
+					skeleton.globalBonePoses[i] = globalInverseTransform * skeleton.globalBonePoses[i] * skeleton.boneOffsetMatrix[i];
+				}
 				outputFileStream.write(reinterpret_cast<const char*>(skeleton.getSkeletonData()), static_cast<std::streamsize>(skeleton.getNumberOfSkeletonDataBytes()));
 			}
 		}

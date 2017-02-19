@@ -38,6 +38,10 @@
 INPUT_BEGIN
 	INPUT_VERTEX_POSITION(float3, Position)			// Object space vertex position
 	INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)	// 32 bit texture coordinate
+	@property(UseGpuSkinning)
+		INPUT_VERTEX_BLEND_INDICES(uint4, blendIndices)
+		INPUT_VERTEX_BLEND_WEIGHTS(float4, blendWeights)
+	@end
 	INPUT_VERTEX_DRAW_ID							// Draw ID
 INPUT_END
 OUTPUT_BEGIN
@@ -82,8 +86,43 @@ MAIN_BEGIN
 	float4 rotationQuaternion = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 1u);
 	float3 scale			  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 2u).xyz;
 
+	// Get the object space position
+	float3 objectSpacePosition = MAIN_INPUT(Position);
+
+	// GPU skinning
+	@property(UseGpuSkinning)
+	{
+		float4 objectSpaceToWorldSpaceMatrix[3];
+		uint textureBufferIndex = instanceIndices.x + 3u;
+
+		// First bone
+		uint textureBufferBoneOffset = textureBufferIndex + MAIN_INPUT(blendIndices[0]) * 4;
+		float boneWeight = MAIN_INPUT(blendWeights[0]);
+		objectSpaceToWorldSpaceMatrix[0] = TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 0u) * boneWeight;
+		objectSpaceToWorldSpaceMatrix[1] = TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 1u) * boneWeight;
+		objectSpaceToWorldSpaceMatrix[2] = TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 2u) * boneWeight;
+
+		// The other bones
+		for (int i = 1; i < 4; ++i)
+		{
+			textureBufferBoneOffset = textureBufferIndex + MAIN_INPUT(blendIndices[i]) * 4;
+			boneWeight = MAIN_INPUT(blendWeights[i]);
+			objectSpaceToWorldSpaceMatrix[0] += TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 0u) * boneWeight;
+			objectSpaceToWorldSpaceMatrix[1] += TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 1u) * boneWeight;
+			objectSpaceToWorldSpaceMatrix[2] += TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 2u) * boneWeight;
+		}
+
+		// Transform
+		float3 transformedPosition;
+		transformedPosition.x = dot(objectSpaceToWorldSpaceMatrix[0], float4(objectSpacePosition, 1.0f));
+		transformedPosition.y = dot(objectSpaceToWorldSpaceMatrix[1], float4(objectSpacePosition, 1.0f));
+		transformedPosition.z = dot(objectSpaceToWorldSpaceMatrix[2], float4(objectSpacePosition, 1.0f));
+		objectSpacePosition = transformedPosition;
+	}
+	@end
+
 	// Calculate the world space vertex position
-	float3 worldSpacePosition = MultiplyQuaternionVector(rotationQuaternion, MAIN_INPUT(Position) * scale) + position;
+	float3 worldSpacePosition = MultiplyQuaternionVector(rotationQuaternion, objectSpacePosition * scale) + position;
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, float4(worldSpacePosition, 1.0f));

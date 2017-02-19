@@ -271,6 +271,20 @@ namespace RendererRuntime
 											}
 										}
 									}
+
+									// Automatic "UseGpuSkinning"-property setting
+									// TODO(co) GPU skinning is work-in-progress
+									/*
+									if (isInitialized(renderable.getSkeletonResourceId()))
+									{
+										static const StringId USE_GPU_SKINNING("UseGpuSkinning");
+										if (nullptr != materialBlueprintResource->getMaterialProperties().getPropertyById(USE_GPU_SKINNING))
+										{
+											shaderProperties.setPropertyValue(USE_GPU_SKINNING, 1);
+										}
+									}
+									*/
+
 									materialBlueprintResource->optimizeShaderProperties(shaderProperties);
 
 									Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(shaderProperties, dynamicShaderPieces, false);
