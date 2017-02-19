@@ -81,6 +81,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend SkeletonResources;	// Type definition of template class
+		friend class MeshResourceLoader;
 		friend class SkeletonResourceLoader;
 		friend class SkeletonResourceManager;
 
@@ -104,6 +105,7 @@ namespace RendererRuntime
 		inline virtual ~SkeletonResource();
 		SkeletonResource(const SkeletonResource&) = delete;
 		SkeletonResource& operator=(const SkeletonResource&) = delete;
+		inline void clearSkeletonData();
 
 		//[-------------------------------------------------------]
 		//[ "RendererRuntime::PackedElementManager" management    ]

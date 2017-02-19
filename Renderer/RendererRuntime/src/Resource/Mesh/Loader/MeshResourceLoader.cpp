@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 #include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -99,6 +100,16 @@ namespace RendererRuntime
 		}
 		file.read(mSubMeshes, sizeof(v1Mesh::SubMesh) * mNumberOfUsedSubMeshes);
 
+		// Read in optional skeleton
+		mNumberOfBones = meshHeader.numberOfBones;
+		if (mNumberOfBones > 0)
+		{
+			// Read in the skeleton data in a single burst
+			const uint32_t numberOfSkeletonDataBytes = (sizeof(uint8_t) + sizeof(glm::mat4) * 2) * mNumberOfBones;
+			mSkeletonData = new uint8_t[numberOfSkeletonDataBytes];
+			file.read(mSkeletonData, numberOfSkeletonDataBytes);
+		}
+
 		// Can we create the renderer resource asynchronous as well?
 		if (mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading)
 		{
@@ -130,6 +141,39 @@ namespace RendererRuntime
 				// Sanity check
 				assert(isInitialized(subMesh.mMaterialResourceId));
 			}
+		}
+
+		// Optional skeleton
+		if (mNumberOfBones > 0)
+		{
+			SkeletonResourceManager& skeletonResourceManager = mRendererRuntime.getSkeletonResourceManager();
+
+			// Get/create skeleton resource
+			SkeletonResource* skeletonResource = nullptr;
+			if (isInitialized(mMeshResource->getSkeletonResourceId()))
+			{
+				// Reuse existing skeleton resource
+				skeletonResource = &static_cast<SkeletonResource&>(skeletonResourceManager.getResourceByResourceId(mMeshResource->getSkeletonResourceId()));
+				skeletonResource->clearSkeletonData();
+			}
+			else
+			{
+				// Create new skeleton resource
+				const SkeletonResourceId skeletonResourceId = skeletonResourceManager.createSkeletonResourceByAssetId(getAsset().assetId);
+				mMeshResource->setSkeletonResourceId(skeletonResourceId);
+				skeletonResource = &static_cast<SkeletonResource&>(skeletonResourceManager.getResourceByResourceId(skeletonResourceId));
+			}
+
+			// Pass on the skeleton data to the skeleton resource
+			skeletonResource->mNumberOfBones = mNumberOfBones;
+			skeletonResource->mBoneHierarchy = mSkeletonData;
+			mSkeletonData += sizeof(uint8_t) * mNumberOfBones;
+			skeletonResource->mLocalBonePoses = reinterpret_cast<glm::mat4*>(mSkeletonData);
+			mSkeletonData += sizeof(glm::mat4) * mNumberOfBones;
+			skeletonResource->mGlobalBonePoses = reinterpret_cast<glm::mat4*>(mSkeletonData);
+
+			// Skeleton data has been passed on
+			mSkeletonData = nullptr;
 		}
 
 		// Fully loaded?
@@ -165,19 +209,26 @@ namespace RendererRuntime
 		mBufferManager(rendererRuntime.getBufferManager()),
 		mVertexArray(nullptr),
 		mMeshResource(nullptr),
+		// Temporary vertex buffer
 		mNumberOfVertexBufferDataBytes(0),
 		mNumberOfUsedVertexBufferDataBytes(0),
 		mVertexBufferData(nullptr),
+		// Temporary index buffer
 		mNumberOfIndexBufferDataBytes(0),
 		mNumberOfUsedIndexBufferDataBytes(0),
 		mIndexBufferData(nullptr),
 		mIndexBufferFormat(0),
+		// Temporary vertex attributes
 		mNumberOfVertexAttributes(0),
 		mNumberOfUsedVertexAttributes(0),
 		mVertexAttributes(nullptr),
+		// Temporary sub-meshes
 		mNumberOfSubMeshes(0),
 		mNumberOfUsedSubMeshes(0),
-		mSubMeshes(nullptr)
+		mSubMeshes(nullptr),
+		// Optional temporary skeleton
+		mNumberOfBones(0),
+		mSkeletonData(nullptr)
 	{
 		// Nothing here
 	}
@@ -188,6 +239,7 @@ namespace RendererRuntime
 		delete [] mIndexBufferData;
 		delete [] mVertexAttributes;
 		delete [] mSubMeshes;
+		delete [] mSkeletonData;	// In case the mesh resource loaded was never dispatched
 	}
 
 	Renderer::IVertexArray* MeshResourceLoader::createVertexArray() const

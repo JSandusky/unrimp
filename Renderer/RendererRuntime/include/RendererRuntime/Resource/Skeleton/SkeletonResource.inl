@@ -70,6 +70,17 @@ namespace RendererRuntime
 		assert(nullptr == mGlobalBonePoses);
 	}
 
+	inline void SkeletonResource::clearSkeletonData()
+	{
+		mNumberOfBones = 0;
+		delete [] mBoneHierarchy;
+		mBoneHierarchy = nullptr;
+		delete [] mLocalBonePoses;
+		mLocalBonePoses = nullptr;
+		delete [] mGlobalBonePoses;
+		mGlobalBonePoses = nullptr;
+	}
+
 	inline void SkeletonResource::initializeElement(SkeletonResourceId skeletonResourceId)
 	{
 		// Sanity checks
@@ -85,13 +96,7 @@ namespace RendererRuntime
 	inline void SkeletonResource::deinitializeElement()
 	{
 		// Reset everything
-		mNumberOfBones = 0;
-		delete [] mBoneHierarchy;
-		mBoneHierarchy = nullptr;
-		delete [] mLocalBonePoses;
-		mLocalBonePoses = nullptr;
-		delete [] mGlobalBonePoses;
-		mGlobalBonePoses = nullptr;
+		clearSkeletonData();
 
 		// Call base implementation
 		IResource::deinitializeElement();

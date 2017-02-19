@@ -126,6 +126,9 @@ namespace RendererRuntime
 		uint32_t		 mNumberOfSubMeshes;
 		uint32_t		 mNumberOfUsedSubMeshes;
 		v1Mesh::SubMesh* mSubMeshes;
+		// Optional temporary skeleton
+		uint8_t  mNumberOfBones;
+		uint8_t* mSkeletonData;
 
 
 	};

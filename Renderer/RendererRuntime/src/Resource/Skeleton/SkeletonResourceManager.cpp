@@ -100,6 +100,21 @@ namespace RendererRuntime
 		return getUninitialized<SkeletonResourceId>();
 	}
 
+	SkeletonResourceId SkeletonResourceManager::createSkeletonResourceByAssetId(AssetId assetId)
+	{
+		// Skeleton resource is not allowed to exist, yet
+		assert(isUninitialized(loadSkeletonResourceByAssetId(assetId)));
+
+		// Create the skeleton resource instance
+		SkeletonResource& skeletonResource = mSkeletonResources.addElement();
+		skeletonResource.setResourceManager(this);
+		skeletonResource.setAssetId(assetId);
+
+		// Done
+		setResourceLoadingState(skeletonResource, IResource::LoadingState::LOADED);
+		return skeletonResource.getId();
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]

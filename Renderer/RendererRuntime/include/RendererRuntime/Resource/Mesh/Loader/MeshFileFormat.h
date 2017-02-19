@@ -73,6 +73,8 @@ namespace RendererRuntime
 				uint8_t  numberOfVertexAttributes;
 				// Sub-meshes
 				uint8_t  numberOfSubMeshes;
+				// Optional skeleton
+				uint8_t  numberOfBones;
 			};
 
 			struct SubMesh
