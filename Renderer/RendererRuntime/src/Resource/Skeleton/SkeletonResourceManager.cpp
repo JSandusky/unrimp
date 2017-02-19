@@ -42,27 +42,29 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
+	SkeletonResource* SkeletonResourceManager::getSkeletonResourceByAssetId(AssetId assetId) const
+	{
+		const uint32_t numberOfElements = mSkeletonResources.getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
+		{
+			SkeletonResource& SkeletonResource = mSkeletonResources.getElementByIndex(i);
+			if (SkeletonResource.getAssetId() == assetId)
+			{
+				return &SkeletonResource;
+			}
+		}
+
+		// There's no skeleton resource using the given asset ID
+		return nullptr;
+	}
+
 	SkeletonResourceId SkeletonResourceManager::loadSkeletonResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
 			// Get or create the instance
-			SkeletonResource* skeletonResource = nullptr;
-			{
-				const uint32_t numberOfElements = mSkeletonResources.getNumberOfElements();
-				for (uint32_t i = 0; i < numberOfElements; ++i)
-				{
-					SkeletonResource& currentSkeletonResource = mSkeletonResources.getElementByIndex(i);
-					if (currentSkeletonResource.getAssetId() == assetId)
-					{
-						skeletonResource = &currentSkeletonResource;
-
-						// Get us out of the loop
-						i = numberOfElements;
-					}
-				}
-			}
+			SkeletonResource* skeletonResource = getSkeletonResourceByAssetId(assetId);
 
 			// Create the resource instance
 			bool load = reload;
@@ -103,7 +105,7 @@ namespace RendererRuntime
 	SkeletonResourceId SkeletonResourceManager::createSkeletonResourceByAssetId(AssetId assetId)
 	{
 		// Skeleton resource is not allowed to exist, yet
-		assert(isUninitialized(loadSkeletonResourceByAssetId(assetId)));
+		assert(nullptr == getSkeletonResourceByAssetId(assetId));
 
 		// Create the skeleton resource instance
 		SkeletonResource& skeletonResource = mSkeletonResources.addElement();

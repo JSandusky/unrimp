@@ -79,6 +79,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline const SkeletonResources& getSkeletonResources() const;
+		RENDERERRUNTIME_API_EXPORT SkeletonResource* getSkeletonResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
 		RENDERERRUNTIME_API_EXPORT SkeletonResourceId loadSkeletonResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 		RENDERERRUNTIME_API_EXPORT SkeletonResourceId createSkeletonResourceByAssetId(AssetId assetId);	// Skeleton resource is not allowed to exist, yet
 

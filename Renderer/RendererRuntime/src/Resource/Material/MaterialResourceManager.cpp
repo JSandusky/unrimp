@@ -125,7 +125,7 @@ namespace RendererRuntime
 	MaterialResourceId MaterialResourceManager::createMaterialResourceByAssetId(AssetId assetId, AssetId materialBlueprintAssetId, MaterialTechniqueId materialTechniqueId)
 	{
 		// Material resource is not allowed to exist, yet
-		assert(isUninitialized(getMaterialResourceIdByAssetId(assetId)));
+		assert(nullptr == getMaterialResourceByAssetId(assetId));
 
 		// Create the material resource instance
 		MaterialResource& materialResource = mMaterialResources.addElement();

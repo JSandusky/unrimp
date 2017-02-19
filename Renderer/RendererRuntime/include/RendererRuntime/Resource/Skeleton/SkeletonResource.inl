@@ -33,9 +33,14 @@ namespace RendererRuntime
 		return mNumberOfBones;
 	}
 
-	inline const uint8_t* SkeletonResource::getBoneHierarchy() const
+	inline const uint8_t* SkeletonResource::getBoneParents() const
 	{
-		return mBoneHierarchy;
+		return mBoneParents;
+	}
+
+	inline const uint32_t* SkeletonResource::getBoneIds() const
+	{
+		return mBoneIds;
 	}
 
 	inline const glm::mat4* SkeletonResource::getLocalBonePoses() const
@@ -54,7 +59,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline SkeletonResource::SkeletonResource() :
 		mNumberOfBones(0),
-		mBoneHierarchy(nullptr),
+		mBoneParents(nullptr),
+		mBoneIds(nullptr),
 		mLocalBonePoses(nullptr),
 		mGlobalBonePoses(nullptr)
 	{
@@ -65,7 +71,8 @@ namespace RendererRuntime
 	{
 		// Sanity checks
 		assert(0 == mNumberOfBones);
-		assert(nullptr == mBoneHierarchy);
+		assert(nullptr == mBoneParents);
+		assert(nullptr == mBoneIds);
 		assert(nullptr == mLocalBonePoses);
 		assert(nullptr == mGlobalBonePoses);
 	}
@@ -73,11 +80,13 @@ namespace RendererRuntime
 	inline void SkeletonResource::clearSkeletonData()
 	{
 		mNumberOfBones = 0;
-		delete [] mBoneHierarchy;
-		mBoneHierarchy = nullptr;
-		delete [] mLocalBonePoses;
+		delete [] mBoneParents;
+		mBoneParents = nullptr;
+		// delete [] mBoneIds;			// The complete skeleton data is sequential in memory, so, deleting "mBoneParents" is does it all
+		mBoneIds = nullptr;
+		// delete [] mLocalBonePoses;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParents" is does it all
 		mLocalBonePoses = nullptr;
-		delete [] mGlobalBonePoses;
+		// delete [] mGlobalBonePoses;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParents" is does it all
 		mGlobalBonePoses = nullptr;
 	}
 
@@ -85,7 +94,8 @@ namespace RendererRuntime
 	{
 		// Sanity checks
 		assert(0 == mNumberOfBones);
-		assert(nullptr == mBoneHierarchy);
+		assert(nullptr == mBoneParents);
+		assert(nullptr == mBoneIds);
 		assert(nullptr == mLocalBonePoses);
 		assert(nullptr == mGlobalBonePoses);
 

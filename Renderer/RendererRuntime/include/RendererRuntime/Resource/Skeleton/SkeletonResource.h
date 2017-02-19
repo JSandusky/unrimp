@@ -72,6 +72,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Each skeleton must have at least one bone
 	*    - Bone data is cache friendly depth-first rolled up, see "Molecular Musings" - "Adventures in data-oriented design – Part 2: Hierarchical data" - https://blog.molecular-matters.com/2013/02/22/adventures-in-data-oriented-design-part-2-hierarchical-data/
+	*    - The complete skeleton data is sequential in memory
 	*/
 	class SkeletonResource : public IResource
 	{
@@ -91,9 +92,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline uint8_t getNumberOfBones() const;
-		inline const uint8_t* getBoneHierarchy() const;
+		inline const uint8_t* getBoneParents() const;
+		inline const uint32_t* getBoneIds() const;
 		inline const glm::mat4* getLocalBonePoses() const;
 		inline const glm::mat4* getGlobalBonePoses() const;
+		uint32_t getBoneIndexByBoneId(uint32_t boneId) const;	// Bone IDs = "RendererRuntime::StringId" on bone name, "RendererRuntime::getUninitialized<uint32_t>()" if unknown bone ID
 		void localToGlobalPose();
 
 
@@ -120,9 +123,10 @@ namespace RendererRuntime
 	private:
 		uint8_t		mNumberOfBones;		///< Number of bones
 		// Structure-of-arrays (SoA)
-		uint8_t*	mBoneHierarchy;		///< Cache friendly depth-first rolled up bone hierarchy, null pointer only in case of horrible error, free the memory if no longer required
-		glm::mat4*	mLocalBonePoses;	///< Cache friendly depth-first rolled up local bone poses, null pointer only in case of horrible error, free the memory if no longer required
-		glm::mat4*	mGlobalBonePoses;	///< Cache friendly depth-first rolled up global bone poses, null pointer only in case of horrible error, free the memory if no longer required
+		uint8_t*	mBoneParents;		///< Cache friendly depth-first rolled up bone parents, null pointer only in case of horrible error, free the memory if no longer required
+		uint32_t*	mBoneIds;			///< Cache friendly depth-first rolled up bone IDs ("RendererRuntime::StringId" on bone name), null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParents"
+		glm::mat4*	mLocalBonePoses;	///< Cache friendly depth-first rolled up local bone poses, null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParents"
+		glm::mat4*	mGlobalBonePoses;	///< Cache friendly depth-first rolled up global bone poses, null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParents"
 
 
 	};

@@ -251,7 +251,7 @@ namespace RendererRuntime
 	TextureResourceId TextureResourceManager::createTextureResourceByAssetId(AssetId assetId, Renderer::ITexture& texture, bool rgbHardwareGammaCorrection)
 	{
 		// Texture resource is not allowed to exist, yet
-		assert(isUninitialized(loadTextureResourceByAssetId(assetId)));
+		assert(nullptr == getTextureResourceByAssetId(assetId));
 
 		// Create the texture resource instance
 		TextureResource& textureResource = mTextureResources.addElement();

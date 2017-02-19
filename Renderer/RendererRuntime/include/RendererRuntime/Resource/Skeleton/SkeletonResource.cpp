@@ -35,6 +35,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	uint32_t SkeletonResource::getBoneIndexByBoneId(uint32_t boneId) const
+	{
+		// TODO(co) Maybe it makes sense to store the bone IDs in some order to speed up the following
+		for (uint8_t boneIndex = 0; boneIndex < mNumberOfBones; ++boneIndex)
+		{
+			if (mBoneIds[boneIndex] == boneId)
+			{
+				return boneIndex;
+			}
+		}
+		return getUninitialized<uint32_t>();
+	}
+
 	void SkeletonResource::localToGlobalPose()
 	{
 		// The root has no parent
@@ -43,7 +56,7 @@ namespace RendererRuntime
 		// Due to cache friendly depth-first rolled up bone hierarchy, the global parent bone pose is already up-to-date
 		for (uint8_t i = 1; i < mNumberOfBones; ++i)
 		{
-			const uint8_t parentBone = mBoneHierarchy[i];
+			const uint8_t parentBone = mBoneParents[i];
 			mGlobalBonePoses[i] = mGlobalBonePoses[parentBone] * mLocalBonePoses[i];
 		}
 	}

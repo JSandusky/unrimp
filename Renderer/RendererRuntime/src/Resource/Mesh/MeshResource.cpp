@@ -77,6 +77,69 @@ namespace
 				0											// instancesPerElement (uint32_t)
 			}
 		};
+		const Renderer::VertexAttribute SkinnedVertexAttributesLayout[] =
+		{
+			{ // Attribute 0
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_3,		// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+				"Position",										// name[32] (char)
+				"POSITION",										// semanticName[32] (char)
+				0,												// semanticIndex (uint32_t)
+				// Data source
+				0,												// inputSlot (uint32_t)
+				0,												// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0												// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 1
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_2,		// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+				"TexCoord",										// name[32] (char)
+				"TEXCOORD",										// semanticName[32] (char)
+				0,												// semanticIndex (uint32_t)
+				// Data source
+				0,												// inputSlot (uint32_t)
+				sizeof(float) * 3,								// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0												// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 2
+				// Data destination
+				Renderer::VertexAttributeFormat::SHORT_4,		// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+				"QTangent",										// name[32] (char)
+				"TEXCOORD",										// semanticName[32] (char)
+				1,												// semanticIndex (uint32_t)
+				// Data source
+				0,												// inputSlot (uint32_t)
+				sizeof(float) * 3 + sizeof(float) * 2,			// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0												// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 3
+				// Data destination
+				Renderer::VertexAttributeFormat::R8G8B8A8_UINT,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+				"BlendIndices",									// name[32] (char)
+				"BLENDINDICES",									// semanticName[32] (char)
+				0,												// semanticIndex (uint32_t)
+				// Data source
+				0,												// inputSlot (uint32_t)
+				sizeof(float) * 3 + sizeof(float) * 2 + sizeof(short) * 4,	// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0												// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 4
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_4,		// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+				"BlendWeights",									// name[32] (char)
+				"BLENDWEIGHT",									// semanticName[32] (char)
+				0,												// semanticIndex (uint32_t)
+				// Data source
+				0,												// inputSlot (uint32_t)
+				sizeof(float) * 3 + sizeof(float) * 2 + sizeof(short) * 4 + sizeof(uint8_t) * 4,	// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0												// instancesPerElement (uint32_t)
+			}
+		};
 
 
 //[-------------------------------------------------------]
@@ -97,6 +160,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	const Renderer::VertexAttributes MeshResource::VERTEX_ATTRIBUTES(static_cast<uint32_t>(glm::countof(::detail::VertexAttributesLayout)), ::detail::VertexAttributesLayout);
+	const Renderer::VertexAttributes MeshResource::SKINNED_VERTEX_ATTRIBUTES(static_cast<uint32_t>(glm::countof(::detail::SkinnedVertexAttributesLayout)), ::detail::SkinnedVertexAttributesLayout);
 
 
 //[-------------------------------------------------------]

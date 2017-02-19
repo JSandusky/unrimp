@@ -42,26 +42,28 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
+	MeshResource* MeshResourceManager::getMeshResourceByAssetId(AssetId assetId) const
+	{
+		const uint32_t numberOfElements = mMeshResources.getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
+		{
+			MeshResource& MeshResource = mMeshResources.getElementByIndex(i);
+			if (MeshResource.getAssetId() == assetId)
+			{
+				return &MeshResource;
+			}
+		}
+
+		// There's no mesh resource using the given asset ID
+		return nullptr;
+	}
+
 	MeshResourceId MeshResourceManager::loadMeshResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		MeshResourceId meshResourceId = getUninitialized<MeshResourceId>();
 
 		// Get or create the instance
-		MeshResource* meshResource = nullptr;
-		{
-			const uint32_t numberOfElements = mMeshResources.getNumberOfElements();
-			for (uint32_t i = 0; i < numberOfElements; ++i)
-			{
-				MeshResource& currentMeshResource = mMeshResources.getElementByIndex(i);
-				if (currentMeshResource.getAssetId() == assetId)
-				{
-					meshResource = &currentMeshResource;
-
-					// Get us out of the loop
-					i = numberOfElements;
-				}
-			}
-		}
+		MeshResource* meshResource = getMeshResourceByAssetId(assetId);
 
 		// Create the resource instance
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
@@ -103,7 +105,7 @@ namespace RendererRuntime
 	MeshResourceId MeshResourceManager::createEmptyMeshResourceByAssetId(AssetId assetId)
 	{
 		// Mesh resource is not allowed to exist, yet
-		assert(isUninitialized(loadMeshResourceByAssetId(assetId)));
+		assert(nullptr == getMeshResourceByAssetId(assetId));
 
 		// Create the mesh resource instance
 		MeshResource& meshResource = mMeshResources.addElement();
