@@ -31,6 +31,16 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+	class SkeletonResource;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -61,21 +71,32 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization(IFile& file) override;
-		virtual void onProcessing() override;
-		virtual bool onDispatch() override;
-		virtual bool isFullyLoaded() override;
+		inline virtual void onProcessing() override;
+		inline virtual bool onDispatch() override;
+		inline virtual bool isFullyLoaded() override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline SkeletonResourceLoader(IResourceManager& resourceManager) {}
-		inline virtual ~SkeletonResourceLoader() {}
+		inline SkeletonResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
+		inline virtual ~SkeletonResourceLoader();
 		SkeletonResourceLoader(const SkeletonResourceLoader&) = delete;
 		SkeletonResourceLoader& operator=(const SkeletonResourceLoader&) = delete;
+		inline void initialize(const Asset& asset, SkeletonResource& skeletonResource);
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		IRendererRuntime& mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
+		SkeletonResource* mSkeletonResource;	///< Destination resource
+		// Temporary data
+		// TODO(co)
 
 
 	};
@@ -85,3 +106,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonResourceLoader.inl"

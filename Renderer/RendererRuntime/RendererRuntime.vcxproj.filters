@@ -522,6 +522,15 @@
     <None Include="include\RendererRuntime\Core\File\IFile.inl">
       <Filter>Source Files\Core\File</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonResourceLoader.inl">
+      <Filter>Source Files\Resource\Skeleton\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.inl">
+      <Filter>Source Files\Resource\Skeleton</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Skeleton\SkeletonResourceManager.inl">
+      <Filter>Source Files\Resource\Skeleton</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -650,12 +659,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneResource.h">
       <Filter>Source Files\Resource\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Skeleton\SkeletonResourceManager.h">
-      <Filter>Source Files\Resource\Skeleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonResourceLoader.h">
-      <Filter>Source Files\Resource\Skeleton\Loader</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.h">
       <Filter>Source Files\Resource\MaterialBlueprint</Filter>
@@ -1020,6 +1023,18 @@
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_ES3.h">
       <Filter>Source Files\DebugGui\Detail\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonResourceLoader.h">
+      <Filter>Source Files\Resource\Skeleton\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonFileFormat.h">
+      <Filter>Source Files\Resource\Skeleton\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.h">
+      <Filter>Source Files\Resource\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Skeleton\SkeletonResourceManager.h">
+      <Filter>Source Files\Resource\Skeleton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1081,9 +1096,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\ISceneResource.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Skeleton\SkeletonResourceManager.cpp">
-      <Filter>Source Files\Resource\Skeleton</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint</Filter>
@@ -1330,6 +1342,12 @@
     </ClCompile>
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerLinux.cpp">
       <Filter>Source Files\DebugGui\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Skeleton\Loader\SkeletonResourceLoader.cpp">
+      <Filter>Source Files\Resource\Skeleton\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Skeleton\SkeletonResourceManager.cpp">
+      <Filter>Source Files\Resource\Skeleton</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

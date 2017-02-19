@@ -23,8 +23,12 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
+#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonResourceLoader.h"
+#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
+#include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
-#include <cassert>
+#include <unordered_set>
 
 
 //[-------------------------------------------------------]
@@ -35,25 +39,83 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	// TODO(co) Work-in-progress
+	SkeletonResourceId SkeletonResourceManager::loadSkeletonResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
+	{
+		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		if (nullptr != asset)
+		{
+			// Get or create the instance
+			SkeletonResource* skeletonResource = nullptr;
+			{
+				const uint32_t numberOfElements = mSkeletonResources.getNumberOfElements();
+				for (uint32_t i = 0; i < numberOfElements; ++i)
+				{
+					SkeletonResource& currentSkeletonResource = mSkeletonResources.getElementByIndex(i);
+					if (currentSkeletonResource.getAssetId() == assetId)
+					{
+						skeletonResource = &currentSkeletonResource;
+
+						// Get us out of the loop
+						i = numberOfElements;
+					}
+				}
+			}
+
+			// Create the resource instance
+			bool load = reload;
+			if (nullptr == skeletonResource)
+			{
+				skeletonResource = &mSkeletonResources.addElement();
+				skeletonResource->setResourceManager(this);
+				skeletonResource->setAssetId(assetId);
+				load = true;
+			}
+			if (nullptr != skeletonResource && nullptr != resourceListener)
+			{
+				skeletonResource->connectResourceListener(*resourceListener);
+			}
+
+			// Load the resource, if required
+			if (load)
+			{
+				// Prepare the resource loader
+				SkeletonResourceLoader* skeletonResourceLoader = static_cast<SkeletonResourceLoader*>(acquireResourceLoaderInstance(SkeletonResourceLoader::TYPE_ID));
+				skeletonResourceLoader->initialize(*asset, *skeletonResource);
+
+				// Commit resource streamer asset load request
+				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+				resourceStreamerLoadRequest.resource = skeletonResource;
+				resourceStreamerLoadRequest.resourceLoader = skeletonResourceLoader;
+				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+			}
+
+			// Done
+			return skeletonResource->getId();
+		}
+
+		// Error!
+		return getUninitialized<SkeletonResourceId>();
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	IResource& SkeletonResourceManager::getResourceByResourceId(ResourceId resourceId) const
-	{
-		IResource* resource = tryGetResourceByResourceId(resourceId);
-		assert(nullptr != resource);
-		return *resource;
-	}
-
-	IResource* SkeletonResourceManager::tryGetResourceByResourceId(ResourceId) const
-	{
-		// TODO(co) Implement me
-		return nullptr;
-	}
-
 	void SkeletonResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Implement me
-		assetId = assetId;
+		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
+		const uint32_t numberOfElements = mSkeletonResources.getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
+		{
+			if (mSkeletonResources.getElementByIndex(i).getAssetId() == assetId)
+			{
+				loadSkeletonResourceByAssetId(assetId, nullptr, true);
+				break;
+			}
+		}
 	}
 
 	void SkeletonResourceManager::update()
@@ -65,15 +127,22 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	SkeletonResourceManager::SkeletonResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+	IResourceLoader* SkeletonResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		// Nothing here
-	}
+		// Can we recycle an already existing resource loader instance?
+		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
 
-	SkeletonResourceManager::~SkeletonResourceManager()
-	{
-		// Nothing here
+		// We need to create a new resource loader instance
+		if (nullptr == resourceLoader)
+		{
+			// We only support our own skeleton format
+			assert(resourceLoaderTypeId == SkeletonResourceLoader::TYPE_ID);
+			resourceLoader = new SkeletonResourceLoader(*this, mRendererRuntime);
+			mUsedResourceLoaderInstances.push_back(resourceLoader);
+		}
+
+		// Done
+		return resourceLoader;
 	}
 
 

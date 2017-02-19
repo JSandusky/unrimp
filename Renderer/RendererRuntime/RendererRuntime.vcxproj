@@ -141,6 +141,9 @@
     <None Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.inl" />
+    <None Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.inl" />
+    <None Include="include\RendererRuntime\Resource\Skeleton\SkeletonResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\ITextureResourceLoader.inl" />
@@ -301,7 +304,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Skeleton\SkeletonResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.h" />
@@ -593,6 +598,7 @@
     <ClCompile Include="src\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.cpp" />
     <ClCompile Include="src\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.cpp" />
     <ClCompile Include="src\Resource\ShaderPiece\ShaderPieceResourceManager.cpp" />
+    <ClCompile Include="src\Resource\Skeleton\Loader\SkeletonResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Skeleton\SkeletonResourceManager.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\DdsTextureResourceLoader.cpp" />

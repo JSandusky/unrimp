@@ -27,10 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Core/PackedElementManager.h"
-#include "RendererRuntime/Resource/Detail/IResourceManager.h"
-#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
+#include "RendererRuntime/Resource/Detail/IResource.h"
+
+#include <string>
 
 
 //[-------------------------------------------------------]
@@ -38,8 +37,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IRendererRuntime;
-	class IResourceListener;
+	class SkeletonResource;
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 }
 
 
@@ -62,53 +61,48 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Skeleton resource manager
+	*    Skeleton resource
 	*/
-	class SkeletonResourceManager : private IResourceManager
+	class SkeletonResource : public IResource
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class RendererRuntimeImpl;
+		friend SkeletonResources;	// Type definition of template class
+		friend class SkeletonResourceLoader;
+		friend class SkeletonResourceManager;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline const SkeletonResources& getSkeletonResources() const;
-		RENDERERRUNTIME_API_EXPORT SkeletonResourceId loadSkeletonResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	public:
-		inline virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
-		inline virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
-		virtual void reloadResourceByAssetId(AssetId assetId) override;
-		virtual void update() override;
+		// TODO(co)
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline explicit SkeletonResourceManager(IRendererRuntime& rendererRuntime);
-		inline virtual ~SkeletonResourceManager();
-		SkeletonResourceManager(const SkeletonResourceManager&) = delete;
-		SkeletonResourceManager& operator=(const SkeletonResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
+		inline SkeletonResource();
+		inline virtual ~SkeletonResource();
+		SkeletonResource(const SkeletonResource&) = delete;
+		SkeletonResource& operator=(const SkeletonResource&) = delete;
+
+		//[-------------------------------------------------------]
+		//[ "RendererRuntime::PackedElementManager" management    ]
+		//[-------------------------------------------------------]
+		inline void initializeElement(SkeletonResourceId skeletonResourceId);
+		inline void deinitializeElement();
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		SkeletonResources mSkeletonResources;
+		// TODO(co)
 
 
 	};
@@ -123,4 +117,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.inl"
+#include "RendererRuntime/Resource/Skeleton/SkeletonResource.inl"
