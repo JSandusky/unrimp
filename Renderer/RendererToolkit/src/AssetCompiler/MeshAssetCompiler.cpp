@@ -84,8 +84,7 @@ namespace
 			uint8_t*	 boneParents;		///< Cache friendly depth-first rolled up bone parents, null pointer only in case of horrible error, free the memory if no longer required
 			uint32_t*	 boneIds;			///< Cache friendly depth-first rolled up bone IDs ("RendererRuntime::StringId" on bone name), null pointer only in case of horrible error, don't free the memory because it's owned by "boneParents"
 			aiMatrix4x4* localBonePoses;	///< Cache friendly depth-first rolled up local bone poses, null pointer only in case of horrible error, don't free the memory because it's owned by "boneParents"
-			aiMatrix4x4* globalBonePoses;	///< Cache friendly depth-first rolled up global bone poses, null pointer only in case of horrible error, don't free the memory because it's owned by "boneParents"
-			aiMatrix4x4* boneOffsetMatrix;	///< Cache friendly depth-first rolled up bone offset matrix (object space to bone space), null pointer only in case of horrible error, free the memory if no longer required, only used inside renderer toolkit
+			aiMatrix4x4* boneOffsetMatrix;	///< Cache friendly depth-first rolled up bone offset matrix (object space to bone space), null pointer only in case of horrible error, free the memory if no longer required
 
 
 		//[-------------------------------------------------------]
@@ -97,8 +96,7 @@ namespace
 				boneParents(nullptr),
 				boneIds(nullptr),
 				localBonePoses(nullptr),
-				globalBonePoses(nullptr),
-				boneOffsetMatrix((_numberOfBones > 0) ? new aiMatrix4x4[_numberOfBones] : nullptr)
+				boneOffsetMatrix(nullptr)
 			{
 				if (numberOfBones > 0)
 				{
@@ -110,7 +108,7 @@ namespace
 					skeletonData += sizeof(uint32_t) * numberOfBones;
 					localBonePoses = reinterpret_cast<aiMatrix4x4*>(skeletonData);
 					skeletonData += sizeof(aiMatrix4x4) * numberOfBones;
-					globalBonePoses = reinterpret_cast<aiMatrix4x4*>(skeletonData);
+					boneOffsetMatrix = reinterpret_cast<aiMatrix4x4*>(skeletonData);
 
 					// MD5: The MD5 bones hierarchy is stored inside an Assimp node names "<MD5_Hierarchy>"
 					if (assimpNode.mName == aiString("<MD5_Root>"))
@@ -124,7 +122,7 @@ namespace
 								{
 									throw std::runtime_error("\"<MD5_Hierarchy>\" can only have a single root bone");
 								}
-								fillSkeletonRecursive(assimpNode.mTransformation, *assimpChildNode->mChildren[0], 0, 0);
+								fillSkeletonRecursive(*assimpChildNode->mChildren[0], 0, 0);
 								break;
 							}
 						}
@@ -135,7 +133,6 @@ namespace
 			~Skeleton()
 			{
 				delete [] getSkeletonData();
-				delete [] boneOffsetMatrix;
 			}
 
 			uint32_t getNumberOfSkeletonDataBytes() const
@@ -166,7 +163,7 @@ namespace
 		//[ Private methods                                       ]
 		//[-------------------------------------------------------]
 		private:
-			uint8_t fillSkeletonRecursive(const aiMatrix4x4& sceneTransform, const aiNode& assimpNode, uint8_t parentBoneIndex, uint8_t currentBoneIndex)
+			uint8_t fillSkeletonRecursive(const aiNode& assimpNode, uint8_t parentBoneIndex, uint8_t currentBoneIndex)
 			{
 				// Sanity check
 				const uint32_t boneId = RendererRuntime::StringId(assimpNode.mName.C_Str());
@@ -178,15 +175,14 @@ namespace
 				// Gather bone data
 				boneParents[currentBoneIndex] = parentBoneIndex;
 				boneIds[currentBoneIndex] = boneId;
-				localBonePoses[currentBoneIndex] = (parentBoneIndex == currentBoneIndex) ? aiMatrix4x4() : assimpNode.mTransformation;
-				globalBonePoses[currentBoneIndex] = (parentBoneIndex == currentBoneIndex) ? (sceneTransform * assimpNode.mTransformation) : (globalBonePoses[parentBoneIndex] * assimpNode.mTransformation);
+				localBonePoses[currentBoneIndex] = assimpNode.mTransformation;
 				parentBoneIndex = currentBoneIndex;
 				++currentBoneIndex;
 
 				// Loop through the child bones
 				for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
 				{
-					currentBoneIndex = fillSkeletonRecursive(sceneTransform, *assimpNode.mChildren[i], parentBoneIndex, currentBoneIndex);
+					currentBoneIndex = fillSkeletonRecursive(*assimpNode.mChildren[i], parentBoneIndex, currentBoneIndex);
 				}
 
 				// Done
@@ -663,12 +659,10 @@ namespace RendererToolkit
 			// Write down the optional skeleton
 			if (skeleton.numberOfBones > 0)
 			{
-				aiMatrix4x4 globalInverseTransform = assimpScene->mRootNode->mTransformation;
-				globalInverseTransform.Inverse();
 				for (uint8_t i = 0; i < skeleton.numberOfBones; ++i)
 				{
-					skeleton.globalBonePoses[i] = globalInverseTransform * skeleton.globalBonePoses[i] * skeleton.boneOffsetMatrix[i];
-					skeleton.globalBonePoses[i].Transpose();
+					skeleton.localBonePoses[i].Transpose();
+					skeleton.boneOffsetMatrix[i].Transpose();
 				}
 				outputFileStream.write(reinterpret_cast<const char*>(skeleton.getSkeletonData()), static_cast<std::streamsize>(skeleton.getNumberOfSkeletonDataBytes()));
 			}

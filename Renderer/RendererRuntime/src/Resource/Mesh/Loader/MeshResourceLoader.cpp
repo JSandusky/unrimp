@@ -106,7 +106,7 @@ namespace RendererRuntime
 		{
 			// Read in the skeleton data in a single burst
 			const uint32_t numberOfSkeletonDataBytes = (sizeof(uint8_t) + sizeof(uint32_t) + sizeof(glm::mat4) * 2) * mNumberOfBones;
-			mSkeletonData = new uint8_t[numberOfSkeletonDataBytes];
+			mSkeletonData = new uint8_t[numberOfSkeletonDataBytes + sizeof(glm::mat4) * mNumberOfBones];	// "RendererRuntime::SkeletonResource::mGlobalBonePoses" isn't serialized
 			file.read(mSkeletonData, numberOfSkeletonDataBytes);
 		}
 
@@ -172,7 +172,10 @@ namespace RendererRuntime
 			mSkeletonData += sizeof(uint32_t) * mNumberOfBones;
 			skeletonResource->mLocalBonePoses = reinterpret_cast<glm::mat4*>(mSkeletonData);
 			mSkeletonData += sizeof(glm::mat4) * mNumberOfBones;
+			skeletonResource->mBoneOffsetMatrix = reinterpret_cast<glm::mat4*>(mSkeletonData);
+			mSkeletonData += sizeof(glm::mat4) * mNumberOfBones;
 			skeletonResource->mGlobalBonePoses = reinterpret_cast<glm::mat4*>(mSkeletonData);
+			skeletonResource->localToGlobalPose();
 
 			// Skeleton data has been passed on
 			mSkeletonData = nullptr;

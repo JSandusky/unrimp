@@ -48,6 +48,11 @@ namespace RendererRuntime
 		return mLocalBonePoses;
 	}
 
+	inline const glm::mat4* SkeletonResource::getBoneOffsetMatrix() const
+	{
+		return mBoneOffsetMatrix;
+	}
+
 	inline const glm::mat4* SkeletonResource::getGlobalBonePoses() const
 	{
 		return mGlobalBonePoses;
@@ -62,6 +67,7 @@ namespace RendererRuntime
 		mBoneParents(nullptr),
 		mBoneIds(nullptr),
 		mLocalBonePoses(nullptr),
+		mBoneOffsetMatrix(nullptr),
 		mGlobalBonePoses(nullptr)
 	{
 		// Nothing here
@@ -74,6 +80,7 @@ namespace RendererRuntime
 		assert(nullptr == mBoneParents);
 		assert(nullptr == mBoneIds);
 		assert(nullptr == mLocalBonePoses);
+		assert(nullptr == mBoneOffsetMatrix);
 		assert(nullptr == mGlobalBonePoses);
 	}
 
@@ -86,6 +93,8 @@ namespace RendererRuntime
 		mBoneIds = nullptr;
 		// delete [] mLocalBonePoses;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParents" is does it all
 		mLocalBonePoses = nullptr;
+		// delete [] mBoneOffsetMatrix;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParents" is does it all
+		mBoneOffsetMatrix = nullptr;
 		// delete [] mGlobalBonePoses;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParents" is does it all
 		mGlobalBonePoses = nullptr;
 	}
@@ -97,6 +106,7 @@ namespace RendererRuntime
 		assert(nullptr == mBoneParents);
 		assert(nullptr == mBoneIds);
 		assert(nullptr == mLocalBonePoses);
+		assert(nullptr == mBoneOffsetMatrix);
 		assert(nullptr == mGlobalBonePoses);
 
 		// Call base implementation

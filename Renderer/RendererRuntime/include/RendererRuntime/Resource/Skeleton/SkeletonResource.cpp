@@ -59,6 +59,10 @@ namespace RendererRuntime
 			const uint8_t parentBone = mBoneParents[i];
 			mGlobalBonePoses[i] = mGlobalBonePoses[parentBone] * mLocalBonePoses[i];
 		}
+		for (uint8_t i = 0; i < mNumberOfBones; ++i)
+		{
+			mGlobalBonePoses[i] *= mBoneOffsetMatrix[i];
+		}
 	}
 
 
