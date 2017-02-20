@@ -93,7 +93,7 @@ namespace RendererRuntime
 						{
 							// TODO(co) Error handling: Usage mismatch etc.
 							texture.materialProperty = *materialProperty;
-							texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(texture.materialProperty.getTextureAssetIdValue(), nullptr, blueprintTexture.fallbackTextureAssetId, blueprintTexture.rgbHardwareGammaCorrection);
+							texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(texture.materialProperty.getTextureAssetIdValue(), blueprintTexture.fallbackTextureAssetId, nullptr, blueprintTexture.rgbHardwareGammaCorrection);
 						}
 					}
 

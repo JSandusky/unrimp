@@ -333,7 +333,7 @@ namespace RendererRuntime
 				texture.rgbHardwareGammaCorrection = materialBlueprintTexture->rgbHardwareGammaCorrection;
 				if (materialProperty.getValueType() == MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
 				{
-					texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(materialProperty.getTextureAssetIdValue(), nullptr, texture.fallbackTextureAssetId, texture.rgbHardwareGammaCorrection);
+					texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(materialProperty.getTextureAssetIdValue(), texture.fallbackTextureAssetId, nullptr, texture.rgbHardwareGammaCorrection);
 				}
 			}
 		}

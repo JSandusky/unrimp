@@ -137,7 +137,7 @@ namespace RendererRuntime
 				const AssetId assetId = textureResource.getAssetId();
 				if (nullptr != assetManager.getAssetByAssetId(assetId))
 				{
-					loadTextureResourceByAssetId(assetId, nullptr, getUninitialized<AssetId>(), textureResource.isRgbHardwareGammaCorrection(), true);
+					loadTextureResourceByAssetId(assetId, getUninitialized<AssetId>(), nullptr, textureResource.isRgbHardwareGammaCorrection(), true);
 				}
 			}
 		}
@@ -166,7 +166,7 @@ namespace RendererRuntime
 	}
 
 	// TODO(co) Work-in-progress
-	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, AssetId fallbackTextureAssetId, bool rgbHardwareGammaCorrection, bool reload)
+	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, AssetId fallbackTextureAssetId, IResourceListener* resourceListener, bool rgbHardwareGammaCorrection, bool reload)
 	{
 		TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
 
@@ -278,7 +278,7 @@ namespace RendererRuntime
 			const TextureResource& textureResource = mTextureResources.getElementByIndex(i);
 			if (textureResource.getAssetId() == assetId)
 			{
-				loadTextureResourceByAssetId(assetId, nullptr, getUninitialized<AssetId>(), textureResource.isRgbHardwareGammaCorrection(), true);
+				loadTextureResourceByAssetId(assetId, getUninitialized<AssetId>(), nullptr, textureResource.isRgbHardwareGammaCorrection(), true);
 				break;
 			}
 		}
