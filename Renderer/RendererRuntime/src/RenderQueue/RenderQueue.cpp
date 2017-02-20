@@ -273,8 +273,6 @@ namespace RendererRuntime
 									}
 
 									// Automatic "UseGpuSkinning"-property setting
-									// TODO(co) GPU skinning is work-in-progress
-									/*
 									if (isInitialized(renderable.getSkeletonResourceId()))
 									{
 										static const StringId USE_GPU_SKINNING("UseGpuSkinning");
@@ -283,7 +281,6 @@ namespace RendererRuntime
 											shaderProperties.setPropertyValue(USE_GPU_SKINNING, 1);
 										}
 									}
-									*/
 
 									materialBlueprintResource->optimizeShaderProperties(shaderProperties);
 

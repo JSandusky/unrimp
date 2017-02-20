@@ -124,7 +124,7 @@ namespace
 								{
 									throw std::runtime_error("\"<MD5_Hierarchy>\" can only have a single root bone");
 								}
-								fillSkeletonRecursive(*assimpChildNode->mChildren[0], 0, 0);
+								fillSkeletonRecursive(assimpNode.mTransformation, *assimpChildNode->mChildren[0], 0, 0);
 								break;
 							}
 						}
@@ -166,7 +166,7 @@ namespace
 		//[ Private methods                                       ]
 		//[-------------------------------------------------------]
 		private:
-			uint8_t fillSkeletonRecursive(const aiNode& assimpNode, uint8_t parentBoneIndex, uint8_t currentBoneIndex)
+			uint8_t fillSkeletonRecursive(const aiMatrix4x4& sceneTransform, const aiNode& assimpNode, uint8_t parentBoneIndex, uint8_t currentBoneIndex)
 			{
 				// Sanity check
 				const uint32_t boneId = RendererRuntime::StringId(assimpNode.mName.C_Str());
@@ -179,13 +179,14 @@ namespace
 				boneParents[currentBoneIndex] = parentBoneIndex;
 				boneIds[currentBoneIndex] = boneId;
 				localBonePoses[currentBoneIndex] = (parentBoneIndex == currentBoneIndex) ? aiMatrix4x4() : assimpNode.mTransformation;
-				globalBonePoses[currentBoneIndex] = (parentBoneIndex == currentBoneIndex) ? assimpNode.mTransformation : (globalBonePoses[parentBoneIndex] * assimpNode.mTransformation);
+				globalBonePoses[currentBoneIndex] = (parentBoneIndex == currentBoneIndex) ? (sceneTransform * assimpNode.mTransformation) : (globalBonePoses[parentBoneIndex] * assimpNode.mTransformation);
+				parentBoneIndex = currentBoneIndex;
 				++currentBoneIndex;
 
 				// Loop through the child bones
 				for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
 				{
-					currentBoneIndex = fillSkeletonRecursive(*assimpNode.mChildren[i], currentBoneIndex, currentBoneIndex);
+					currentBoneIndex = fillSkeletonRecursive(sceneTransform, *assimpNode.mChildren[i], parentBoneIndex, currentBoneIndex);
 				}
 
 				// Done
@@ -667,6 +668,7 @@ namespace RendererToolkit
 				for (uint8_t i = 0; i < skeleton.numberOfBones; ++i)
 				{
 					skeleton.globalBonePoses[i] = globalInverseTransform * skeleton.globalBonePoses[i] * skeleton.boneOffsetMatrix[i];
+					skeleton.globalBonePoses[i].Transpose();
 				}
 				outputFileStream.write(reinterpret_cast<const char*>(skeleton.getSkeletonData()), static_cast<std::streamsize>(skeleton.getNumberOfSkeletonDataBytes()));
 			}
