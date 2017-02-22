@@ -98,7 +98,7 @@ namespace RendererToolkit
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".skeleton";
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-		// TODO(co) Implement me
+		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
 
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();

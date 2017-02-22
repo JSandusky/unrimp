@@ -27,7 +27,15 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
+#include "RendererRuntime/Resource/Detail/IResource.h"
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+	#include <glm/fwd.hpp>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
@@ -35,8 +43,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IRendererRuntime;
-	class SkeletonResource;
+	class SkeletonAnimationResource;
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 }
 
 
@@ -48,55 +56,64 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t																		   SkeletonAnimationResourceId;	///< POD skeleton animation resource identifier
+	typedef PackedElementManager<SkeletonAnimationResource, SkeletonAnimationResourceId, 2048> SkeletonAnimationResources;
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SkeletonResourceLoader : protected IResourceLoader
+	/**
+	*  @brief
+	*    Skeleton animation resource
+	*/
+	class SkeletonAnimationResource : public IResource
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SkeletonResourceManager;
+		friend SkeletonAnimationResources;	// Type definition of template class
+		friend class SkeletonAnimationResourceLoader;
+		friend class SkeletonAnimationResourceManager;
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		static const ResourceLoaderTypeId TYPE_ID;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void onDeserialization(IFile& file) override;
-		inline virtual void onProcessing() override;
-		inline virtual bool onDispatch() override;
-		inline virtual bool isFullyLoaded() override;
+		inline uint8_t getNumberOfChannels() const;
+		inline float getDurationInTicks() const;
+		inline float getTicksPerSecond() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline SkeletonResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~SkeletonResourceLoader();
-		SkeletonResourceLoader(const SkeletonResourceLoader&) = delete;
-		SkeletonResourceLoader& operator=(const SkeletonResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, SkeletonResource& skeletonResource);
+		inline SkeletonAnimationResource();
+		inline virtual ~SkeletonAnimationResource();
+		SkeletonAnimationResource(const SkeletonAnimationResource&) = delete;
+		SkeletonAnimationResource& operator=(const SkeletonAnimationResource&) = delete;
+		inline void clearSkeletonAnimationData();
+
+		//[-------------------------------------------------------]
+		//[ "RendererRuntime::PackedElementManager" management    ]
+		//[-------------------------------------------------------]
+		inline void initializeElement(SkeletonAnimationResourceId skeletonAnimationResourceId);
+		inline void deinitializeElement();
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
-		SkeletonResource* mSkeletonResource;	///< Destination resource
-		// Temporary data
-		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
+		uint8_t mNumberOfChannels;	///< The number of bone animation channels; each channel affects a single node
+		float	mDurationInTicks;	///< Duration of the animation in ticks
+		float	mTicksPerSecond;	///< Ticks per second; 0 if not specified in the imported file
 
 
 	};
@@ -111,4 +128,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonResourceLoader.inl"
+#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResource.inl"

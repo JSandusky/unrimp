@@ -9,13 +9,13 @@
 		"AssetMetadata":
 		{
 			"AssetId": "11",
-			"AssetType": "Skeleton",
+			"AssetType": "SkeletonAnimation",
 			"AssetCategory": "Character",
 			"AssetName": "Bob",
 			"FileDependencies": [ "Bob.md5anim" ],
 			"Copyright": "Copyright © 2009 KatsBits - Ken Beyer (kat) - http://www.katsbits.com"
 		},
-		"SkeletonAssetCompiler":
+		"SkeletonAnimationAssetCompiler":
 		{
 			"InputFile": "Bob.md5anim"
 		}

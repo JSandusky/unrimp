@@ -36,7 +36,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
-	class SkeletonResource;
+	class SkeletonAnimationResource;
 }
 
 
@@ -50,14 +50,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SkeletonResourceLoader : protected IResourceLoader
+	class SkeletonAnimationResourceLoader : protected IResourceLoader
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SkeletonResourceManager;
+		friend class SkeletonAnimationResourceManager;
 
 
 	//[-------------------------------------------------------]
@@ -82,21 +82,21 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline SkeletonResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~SkeletonResourceLoader();
-		SkeletonResourceLoader(const SkeletonResourceLoader&) = delete;
-		SkeletonResourceLoader& operator=(const SkeletonResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, SkeletonResource& skeletonResource);
+		inline SkeletonAnimationResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
+		inline virtual ~SkeletonAnimationResourceLoader();
+		SkeletonAnimationResourceLoader(const SkeletonAnimationResourceLoader&) = delete;
+		SkeletonAnimationResourceLoader& operator=(const SkeletonAnimationResourceLoader&) = delete;
+		inline void initialize(const Asset& asset, SkeletonAnimationResource& skeletonAnimationResource);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
-		SkeletonResource* mSkeletonResource;	///< Destination resource
+		IRendererRuntime&		   mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
+		SkeletonAnimationResource* mSkeletonAnimationResource;	///< Destination resource
 		// Temporary data
-		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
+		// TODO(co)
 
 
 	};
@@ -111,4 +111,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonResourceLoader.inl"
+#include "RendererRuntime/Resource/SkeletonAnimation/Loader/SkeletonAnimationResourceLoader.inl"

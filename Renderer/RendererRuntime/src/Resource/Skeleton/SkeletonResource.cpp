@@ -22,12 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
-#include "RendererRuntime/Resource/Scene/SceneResource.h"
-#include "RendererRuntime/Resource/Scene/Node/SceneNode.h"
-#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h"
+#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
 
 
 //[-------------------------------------------------------]
@@ -38,60 +33,37 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ISceneFactory methods ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ISceneResource* SceneFactory::createSceneResource(SceneResourceTypeId sceneResourceTypeId, IRendererRuntime& rendererRuntime, ResourceId resourceId) const
+	uint32_t SkeletonResource::getBoneIndexByBoneId(uint32_t boneId) const
 	{
-		ISceneResource* sceneResource = nullptr;
-
-		// Evaluate the scene node type
-		if (sceneResourceTypeId == SceneResource::TYPE_ID)
+		// TODO(co) Maybe it makes sense to store the bone IDs in some order to speed up the following
+		for (uint8_t boneIndex = 0; boneIndex < mNumberOfBones; ++boneIndex)
 		{
-			sceneResource = new SceneResource(rendererRuntime, resourceId);
+			if (mBoneIds[boneIndex] == boneId)
+			{
+				return boneIndex;
+			}
 		}
-
-		// Done
-		return sceneResource;
+		return getUninitialized<uint32_t>();
 	}
 
-	ISceneNode* SceneFactory::createSceneNode(SceneNodeTypeId sceneNodeTypeId, const Transform& transform) const
+	void SkeletonResource::localToGlobalPose()
 	{
-		ISceneNode* sceneNode = nullptr;
+		// The root has no parent
+		mGlobalBonePoses[0] = mLocalBonePoses[0];
 
-		// Evaluate the scene node type
-		if (sceneNodeTypeId == SceneNode::TYPE_ID)
+		// Due to cache friendly depth-first rolled up bone hierarchy, the global parent bone pose is already up-to-date
+		// TODO(co) Ensure that in the end SIMD intrinsics in GLM are used in here
+		for (uint8_t i = 1; i < mNumberOfBones; ++i)
 		{
-			sceneNode = new SceneNode(transform);
+			const uint8_t parentBone = mBoneParents[i];
+			mGlobalBonePoses[i] = mGlobalBonePoses[parentBone] * mLocalBonePoses[i];
 		}
-
-		// Done
-		return sceneNode;
-	}
-
-	ISceneItem* SceneFactory::createSceneItem(const SceneItemTypeId& sceneItemTypeId, ISceneResource& sceneResource) const
-	{
-		ISceneItem* sceneItem = nullptr;
-
-		// Evaluate the scene item type, sorted by usual frequency
-		if (sceneItemTypeId == MeshSceneItem::TYPE_ID)
+		for (uint8_t i = 0; i < mNumberOfBones; ++i)
 		{
-			sceneItem = new MeshSceneItem(sceneResource);
+			mGlobalBonePoses[i] *= mBoneOffsetMatrix[i];
 		}
-		else if (sceneItemTypeId == LightSceneItem::TYPE_ID)
-		{
-			sceneItem = new LightSceneItem(sceneResource);
-		}
-		else if (sceneItemTypeId == SkeletonMeshSceneItem::TYPE_ID)
-		{
-			sceneItem = new SkeletonMeshSceneItem(sceneResource);
-		}
-		else if (sceneItemTypeId == CameraSceneItem::TYPE_ID)
-		{
-			sceneItem = new CameraSceneItem(sceneResource);
-		}
-
-		// Done
-		return sceneItem;
 	}
 
 

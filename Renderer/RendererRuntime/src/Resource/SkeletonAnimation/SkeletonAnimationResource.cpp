@@ -22,12 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
-#include "RendererRuntime/Resource/Scene/SceneResource.h"
-#include "RendererRuntime/Resource/Scene/Node/SceneNode.h"
-#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h"
+#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResource.h"
 
 
 //[-------------------------------------------------------]
@@ -38,61 +33,9 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ISceneFactory methods ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ISceneResource* SceneFactory::createSceneResource(SceneResourceTypeId sceneResourceTypeId, IRendererRuntime& rendererRuntime, ResourceId resourceId) const
-	{
-		ISceneResource* sceneResource = nullptr;
-
-		// Evaluate the scene node type
-		if (sceneResourceTypeId == SceneResource::TYPE_ID)
-		{
-			sceneResource = new SceneResource(rendererRuntime, resourceId);
-		}
-
-		// Done
-		return sceneResource;
-	}
-
-	ISceneNode* SceneFactory::createSceneNode(SceneNodeTypeId sceneNodeTypeId, const Transform& transform) const
-	{
-		ISceneNode* sceneNode = nullptr;
-
-		// Evaluate the scene node type
-		if (sceneNodeTypeId == SceneNode::TYPE_ID)
-		{
-			sceneNode = new SceneNode(transform);
-		}
-
-		// Done
-		return sceneNode;
-	}
-
-	ISceneItem* SceneFactory::createSceneItem(const SceneItemTypeId& sceneItemTypeId, ISceneResource& sceneResource) const
-	{
-		ISceneItem* sceneItem = nullptr;
-
-		// Evaluate the scene item type, sorted by usual frequency
-		if (sceneItemTypeId == MeshSceneItem::TYPE_ID)
-		{
-			sceneItem = new MeshSceneItem(sceneResource);
-		}
-		else if (sceneItemTypeId == LightSceneItem::TYPE_ID)
-		{
-			sceneItem = new LightSceneItem(sceneResource);
-		}
-		else if (sceneItemTypeId == SkeletonMeshSceneItem::TYPE_ID)
-		{
-			sceneItem = new SkeletonMeshSceneItem(sceneResource);
-		}
-		else if (sceneItemTypeId == CameraSceneItem::TYPE_ID)
-		{
-			sceneItem = new CameraSceneItem(sceneResource);
-		}
-
-		// Done
-		return sceneItem;
-	}
+	// TODO(co)
 
 
 //[-------------------------------------------------------]

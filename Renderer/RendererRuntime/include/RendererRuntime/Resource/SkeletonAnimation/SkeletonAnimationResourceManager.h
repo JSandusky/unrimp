@@ -27,7 +27,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/PackedElementManager.h"
+#include "RendererRuntime/Resource/Detail/IResourceManager.h"
+#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResource.h"
 
 
 //[-------------------------------------------------------]
@@ -36,7 +39,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
-	class SkeletonResource;
+	class IResourceListener;
 }
 
 
@@ -48,55 +51,66 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t																		   SkeletonAnimationResourceId;	///< POD skeleton animation resource identifier
+	typedef PackedElementManager<SkeletonAnimationResource, SkeletonAnimationResourceId, 2048> SkeletonAnimationResources;
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SkeletonResourceLoader : protected IResourceLoader
+	/**
+	*  @brief
+	*    Skeleton animation resource manager
+	*/
+	class SkeletonAnimationResourceManager : private IResourceManager
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SkeletonResourceManager;
+		friend class RendererRuntimeImpl;
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		static const ResourceLoaderTypeId TYPE_ID;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void onDeserialization(IFile& file) override;
-		inline virtual void onProcessing() override;
-		inline virtual bool onDispatch() override;
-		inline virtual bool isFullyLoaded() override;
+		inline const SkeletonAnimationResources& getSkeletonAnimationResources() const;
+		RENDERERRUNTIME_API_EXPORT SkeletonAnimationResource* getSkeletonAnimationResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
+		RENDERERRUNTIME_API_EXPORT SkeletonAnimationResourceId loadSkeletonAnimationResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT SkeletonAnimationResourceId createSkeletonAnimationResourceByAssetId(AssetId assetId);	// Skeleton animation resource is not allowed to exist, yet
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
+		inline virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
+		virtual void reloadResourceByAssetId(AssetId assetId) override;
+		virtual void update() override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline SkeletonResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~SkeletonResourceLoader();
-		SkeletonResourceLoader(const SkeletonResourceLoader&) = delete;
-		SkeletonResourceLoader& operator=(const SkeletonResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, SkeletonResource& skeletonResource);
+		inline explicit SkeletonAnimationResourceManager(IRendererRuntime& rendererRuntime);
+		inline virtual ~SkeletonAnimationResourceManager();
+		SkeletonAnimationResourceManager(const SkeletonAnimationResourceManager&) = delete;
+		SkeletonAnimationResourceManager& operator=(const SkeletonAnimationResourceManager&) = delete;
+		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
-		SkeletonResource* mSkeletonResource;	///< Destination resource
-		// Temporary data
-		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
+		IRendererRuntime&		   mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		SkeletonAnimationResources mSkeletonAnimationResources;
 
 
 	};
@@ -111,4 +125,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonResourceLoader.inl"
+#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResourceManager.inl"

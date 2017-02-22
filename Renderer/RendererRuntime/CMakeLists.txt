@@ -126,6 +126,7 @@ set(SOURCE_CODES
 	src/Resource/Scene/Item/CameraSceneItem.cpp
 	src/Resource/Scene/Item/LightSceneItem.cpp
 	src/Resource/Scene/Item/MeshSceneItem.cpp
+	src/Resource/Scene/Item/SkeletonMeshSceneItem.cpp
 	src/Resource/Scene/Loader/SceneResourceLoader.cpp
 	src/Resource/Scene/Node/ISceneNode.cpp
 	src/Resource/Scene/Node/SceneNode.cpp
@@ -145,6 +146,9 @@ set(SOURCE_CODES
 	src/Resource/Skeleton/Loader/SkeletonResourceLoader.cpp
 	src/Resource/Skeleton/SkeletonResource.cpp
 	src/Resource/Skeleton/SkeletonResourceManager.cpp
+	src/Resource/SkeletonAnimation/Loader/SkeletonAnimationResourceLoader.cpp
+	src/Resource/SkeletonAnimation/SkeletonAnimationResource.cpp
+	src/Resource/SkeletonAnimation/SkeletonAnimationResourceManager.cpp
 	src/Resource/Texture/Loader/CrnTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/DdsTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/KtxTextureResourceLoader.cpp

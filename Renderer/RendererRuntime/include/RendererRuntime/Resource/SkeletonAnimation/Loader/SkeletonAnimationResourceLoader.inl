@@ -19,13 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -33,36 +26,51 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	uint32_t SkeletonResource::getBoneIndexByBoneId(uint32_t boneId) const
+	inline ResourceLoaderTypeId SkeletonAnimationResourceLoader::getResourceLoaderTypeId() const
 	{
-		// TODO(co) Maybe it makes sense to store the bone IDs in some order to speed up the following
-		for (uint8_t boneIndex = 0; boneIndex < mNumberOfBones; ++boneIndex)
-		{
-			if (mBoneIds[boneIndex] == boneId)
-			{
-				return boneIndex;
-			}
-		}
-		return getUninitialized<uint32_t>();
+		return TYPE_ID;
 	}
 
-	void SkeletonResource::localToGlobalPose()
+	inline void SkeletonAnimationResourceLoader::onProcessing()
 	{
-		// The root has no parent
-		mGlobalBonePoses[0] = mLocalBonePoses[0];
+		// Nothing here
+	}
 
-		// Due to cache friendly depth-first rolled up bone hierarchy, the global parent bone pose is already up-to-date
-		for (uint8_t i = 1; i < mNumberOfBones; ++i)
-		{
-			const uint8_t parentBone = mBoneParents[i];
-			mGlobalBonePoses[i] = mGlobalBonePoses[parentBone] * mLocalBonePoses[i];
-		}
-		for (uint8_t i = 0; i < mNumberOfBones; ++i)
-		{
-			mGlobalBonePoses[i] *= mBoneOffsetMatrix[i];
-		}
+	inline bool SkeletonAnimationResourceLoader::onDispatch()
+	{
+		// Fully loaded
+		return true;
+	}
+
+	inline bool SkeletonAnimationResourceLoader::isFullyLoaded()
+	{
+		// Fully loaded
+		return true;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline SkeletonAnimationResourceLoader::SkeletonAnimationResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+		IResourceLoader(resourceManager),
+		mRendererRuntime(rendererRuntime),
+		mSkeletonAnimationResource(nullptr)
+	{
+		// Nothing here
+	}
+
+	inline SkeletonAnimationResourceLoader::~SkeletonAnimationResourceLoader()
+	{
+		// Nothing here
+	}
+
+	inline void SkeletonAnimationResourceLoader::initialize(const Asset& asset, SkeletonAnimationResource& skeletonAnimationResource)
+	{
+		IResourceLoader::initialize(asset);
+		mSkeletonAnimationResource = &skeletonAnimationResource;
 	}
 
 

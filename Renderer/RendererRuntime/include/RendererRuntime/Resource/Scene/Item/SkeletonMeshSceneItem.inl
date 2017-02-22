@@ -19,16 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonResourceLoader.h"
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonFileFormat.h"
-#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
-#include "RendererRuntime/Core/File/IFile.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -36,21 +26,36 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	const ResourceLoaderTypeId SkeletonResourceLoader::TYPE_ID("skeleton");
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
-	//[-------------------------------------------------------]
-	void SkeletonResourceLoader::onDeserialization(IFile& file)
+	inline SkeletonAnimationResourceId SkeletonMeshSceneItem::getSkeletonAnimationResourceId() const
 	{
-		// Read in the skeleton header
-		v1Skeleton::Header skeletonHeader;
-		file.read(&skeletonHeader, sizeof(v1Skeleton::Header));
+		return mSkeletonAnimationResourceId;
+	}
 
-		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[-------------------------------------------------------]
+	inline SceneItemTypeId SkeletonMeshSceneItem::getSceneItemTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline SkeletonMeshSceneItem::SkeletonMeshSceneItem(ISceneResource& sceneResource) :
+		MeshSceneItem(sceneResource),
+		mSkeletonAnimationResourceId(getUninitialized<SkeletonAnimationResourceId>())
+	{
+		// Nothing here
+	}
+
+	inline SkeletonMeshSceneItem::~SkeletonMeshSceneItem()
+	{
+		// Nothing here
 	}
 
 

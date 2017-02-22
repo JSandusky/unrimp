@@ -16,7 +16,7 @@
 		"8": "Scene/FirstScene.asset",
 		"9": "CompositorNode/First.asset",
 		"10": "CompositorWorkspace/First.asset",
-		"11": "Skeleton/Bob/Bob.asset",
+		"11": "SkeletonAnimation/Bob/Bob.asset",
 		"12": "ShaderBlueprint/Forward/MeshVertex.asset",
 		"13": "ShaderBlueprint/Forward/MeshFragment.asset",
 		"14": "MaterialBlueprint/Forward/Mesh.asset",

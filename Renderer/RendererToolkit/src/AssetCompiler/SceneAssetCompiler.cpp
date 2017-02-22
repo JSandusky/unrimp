@@ -26,9 +26,9 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
-#include <RendererRuntime/Resource/Scene/Item/MeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/LightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -232,10 +232,14 @@ namespace RendererToolkit
 							{
 								numberOfBytes = sizeof(RendererRuntime::v1Scene::LightItem);
 							}
-							else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId)
+							else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 							{
 								const uint32_t numberOfSubMeshMaterialAssetIds = rapidJsonValueItem.HasMember("SubMeshMaterialAssetIds") ? rapidJsonValueItem["SubMeshMaterialAssetIds"].Size() : 0;
 								numberOfBytes = sizeof(RendererRuntime::v1Scene::MeshItem) + sizeof(RendererRuntime::AssetId) * numberOfSubMeshMaterialAssetIds;
+								if (RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
+								{
+									numberOfBytes += sizeof(RendererRuntime::v1Scene::SkeletonMeshItem);
+								}
 							}
 
 							{ // Write down the scene item header
@@ -278,8 +282,21 @@ namespace RendererToolkit
 									// Write down
 									outputFileStream.write(reinterpret_cast<const char*>(&lightItem), sizeof(RendererRuntime::v1Scene::LightItem));
 								}
-								else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId)
+								else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 								{
+									// Skeleton mesh scene item
+									if (RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
+									{
+										RendererRuntime::v1Scene::SkeletonMeshItem skeletonMeshItem;
+
+										// Map the source asset ID to the compiled asset ID
+										skeletonMeshItem.skeletonAnimationAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "SkeletonAnimationAssetId");
+
+										// Write down
+										outputFileStream.write(reinterpret_cast<const char*>(&skeletonMeshItem), sizeof(RendererRuntime::v1Scene::SkeletonMeshItem));
+									}
+
+									// Mesh scene item
 									RendererRuntime::v1Scene::MeshItem meshItem;
 
 									// Map the source asset ID to the compiled asset ID

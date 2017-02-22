@@ -125,6 +125,7 @@
     <None Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\LightSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.inl" />
+    <None Include="include\RendererRuntime\Resource\Scene\Item\SkeletonMeshSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneNodeMemoryManager.inl" />
@@ -141,6 +142,9 @@
     <None Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.inl" />
+    <None Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResource.inl" />
+    <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.inl" />
     <None Include="include\RendererRuntime\Resource\Skeleton\SkeletonResourceManager.inl" />
@@ -280,6 +284,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\LightSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\SkeletonMeshSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.h" />
@@ -304,6 +309,10 @@
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationFileFormat.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResource.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.h" />
@@ -378,7 +387,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.cpp" />
     <ClCompile Include="src\Asset\AssetManager.cpp" />
     <ClCompile Include="src\Asset\AssetPackage.cpp" />
     <ClCompile Include="src\Asset\Serializer\AssetPackageSerializer.cpp" />
@@ -483,6 +491,7 @@
     <ClCompile Include="src\Resource\Scene\Item\CameraSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\LightSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\MeshSceneItem.cpp" />
+    <ClCompile Include="src\Resource\Scene\Item\SkeletonMeshSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Loader\SceneResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Scene\Node\ISceneNode.cpp" />
     <ClCompile Include="src\Resource\Scene\Node\SceneNode.cpp" />
@@ -599,7 +608,11 @@
     <ClCompile Include="src\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.cpp" />
     <ClCompile Include="src\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.cpp" />
     <ClCompile Include="src\Resource\ShaderPiece\ShaderPieceResourceManager.cpp" />
+    <ClCompile Include="src\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.cpp" />
+    <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationResource.cpp" />
+    <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.cpp" />
     <ClCompile Include="src\Resource\Skeleton\Loader\SkeletonResourceLoader.cpp" />
+    <ClCompile Include="src\Resource\Skeleton\SkeletonResource.cpp" />
     <ClCompile Include="src\Resource\Skeleton\SkeletonResourceManager.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\DdsTextureResourceLoader.cpp" />

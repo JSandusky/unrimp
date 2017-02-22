@@ -584,6 +584,7 @@ namespace RendererToolkit
 
 		// Create an instance of the Assimp importer class
 		Assimp::Importer assimpImporter;
+		// assimpImporter.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4);	// We're using the "aiProcess_LimitBoneWeights"-flag, 4 is already the default value (don't delete this reminder comment)
 
 		// Load the given mesh
 		// -> "aiProcess_MakeLeftHanded" is added because the rasterizer states directly map to Direct3D

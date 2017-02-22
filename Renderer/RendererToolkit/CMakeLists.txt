@@ -63,6 +63,7 @@ set(SOURCE_CODES
 	src/AssetCompiler/ShaderBlueprintAssetCompiler.cpp
 	src/AssetCompiler/ShaderPieceAssetCompiler.cpp
 	src/AssetCompiler/SkeletonAssetCompiler.cpp
+	src/AssetCompiler/SkeletonAnimationAssetCompiler.cpp
 	src/AssetCompiler/TextureAssetCompiler.cpp
 	src/Helper/JsonHelper.cpp
 	src/Helper/JsonMaterialBlueprintHelper.cpp

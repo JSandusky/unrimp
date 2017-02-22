@@ -27,17 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class IRendererRuntime;
-	class SkeletonResource;
-}
+#include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -48,55 +38,79 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t SkeletonAnimationResourceId;	///< POD skeleton animation resource identifier
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SkeletonResourceLoader : protected IResourceLoader
+	/**
+	*  @brief
+	*    Skeleton mesh scene item class
+	*
+	*  @todo
+	*    - TODO(co) Right now only a single skeleton animation at one and the same time is supported to have something to start with.
+	*               This isn't practical, of course, and in reality one has multiple animation sources at one and the same time which
+	*               are blended together. But well, as mentioned, one has to start somewhere.
+	*/
+	class SkeletonMeshSceneItem : public MeshSceneItem
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SkeletonResourceManager;
+		friend class SceneFactory;	// Needs to be able to create scene item instances
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const ResourceLoaderTypeId TYPE_ID;
+		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void onDeserialization(IFile& file) override;
-		inline virtual void onProcessing() override;
-		inline virtual bool onDispatch() override;
-		inline virtual bool isFullyLoaded() override;
+		inline SkeletonAnimationResourceId getSkeletonAnimationResourceId() const;
+		RENDERERRUNTIME_API_EXPORT void setSkeletonAnimationResourceId(SkeletonAnimationResourceId skeletonAnimationResourceId);
+		RENDERERRUNTIME_API_EXPORT void setSkeletonAnimationResourceIdByAssetId(AssetId skeletonAnimationAssetId);
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	private:
-		inline SkeletonResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~SkeletonResourceLoader();
-		SkeletonResourceLoader(const SkeletonResourceLoader&) = delete;
-		SkeletonResourceLoader& operator=(const SkeletonResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, SkeletonResource& skeletonResource);
+	public:
+		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
+		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		inline explicit SkeletonMeshSceneItem(ISceneResource& sceneResource);
+		inline virtual ~SkeletonMeshSceneItem();
+		SkeletonMeshSceneItem(const SkeletonMeshSceneItem&) = delete;
+		SkeletonMeshSceneItem& operator=(const SkeletonMeshSceneItem&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void onLoadingStateChange(const IResource& resource) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
-		SkeletonResource* mSkeletonResource;	///< Destination resource
-		// Temporary data
-		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
+		SkeletonAnimationResourceId mSkeletonAnimationResourceId;	///< Skeleton animation resource ID, can be set to uninitialized value
 
 
 	};
@@ -111,4 +125,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonResourceLoader.inl"
+#include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.inl"

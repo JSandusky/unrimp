@@ -27,9 +27,14 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/Math/Transform.h"
-#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	#include <glm/gtc/quaternion.hpp>
+PRAGMA_WARNING_POP
+
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
 //[-------------------------------------------------------]
@@ -39,23 +44,20 @@ namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
-	typedef StringId AssetId;			///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
-
-
-	// -> Scene file format content:
-	//    - Scene header
-	namespace v1Scene
+	// -> Skeleton animation file format content:
+	//    - Skeleton animation header
+	//    - n bone channels
+	//      - 1..n position keys
+	//      - 1..n rotation keys
+	//      - 1..n scale keys
+	namespace v1SkeletonAnimation
 	{
 
 
 		//[-------------------------------------------------------]
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
-		static const uint32_t FORMAT_TYPE	 = StringId("Scene");
+		static const uint32_t FORMAT_TYPE	 = StringId("SkeletonAnimation");
 		static const uint32_t FORMAT_VERSION = 1;
 
 		#pragma pack(push)
@@ -64,55 +66,28 @@ namespace RendererRuntime
 			{
 				uint32_t formatType;
 				uint16_t formatVersion;
+				uint8_t  numberOfChannels;	///< The number of bone animation channels; each channel affects a single node
+				float	 durationInTicks;	///< Duration of the animation in ticks
+				float	 ticksPerSecond;	///< Ticks per second; 0 if not specified in the imported file
 			};
-
-			struct Nodes
+			// TODO(co) We also need to store the skeleton hierarchy so we can perform a runtime matching and retargeting if required
+			// TODO(co) We might also want to add a frame-key table to speed up pose calculation during runtime
+			struct BoneChannelHeader
 			{
-				uint32_t numberOfNodes;
+				uint32_t boneId;				///< Bone ID ("RendererRuntime::StringId" on bone name)
+				uint32_t numberOfPositionKeys;	///< Number of position keys, must be at least one
+				uint32_t numberOfRotationKeys;	///< Number of rotation keys, must be at least one
+				uint32_t numberOfScaleKeys;		///< Number of scale keys, must be at least one
 			};
-
-			struct Node
+			struct Vector3Key
 			{
-				Transform transform;
-				uint32_t  numberOfItems;
+				float	  time;		///< The time of this key
+				glm::vec3 value;	///< The value of this key
 			};
-
-			struct ItemHeader
+			struct QuaternionKey
 			{
-				SceneItemTypeId typeId;
-				uint32_t		numberOfBytes;
-			};
-
-			struct CameraItem
-			{
-			};
-
-			struct LightItem
-			{
-				LightSceneItem::LightType lightType;
-				float					  color[3];
-				float					  radius;
-
-				LightItem() :
-					lightType(LightSceneItem::LightType::POINT),
-					color{ 1.0f, 1.0f, 1.0f },
-					radius(1.0f)
-				{};
-			};
-
-			struct MeshItem
-			{
-				AssetId  meshAssetId;
-				uint32_t numberOfSubMeshMaterialAssetIds;
-
-				MeshItem() :
-					numberOfSubMeshMaterialAssetIds(0)
-				{};
-			};
-
-			struct SkeletonMeshItem	// : public MeshItem -> Not derived by intent to be able to reuse the mesh item serialization 1:1
-			{
-				AssetId skeletonAnimationAssetId;
+				float	  time;		///< The time of this key
+				glm::quat value;	///< The value of this key
 			};
 		#pragma pack(pop)
 
@@ -120,5 +95,5 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-	} // v1Scene
+	} // v1SkeletonAnimation
 } // RendererRuntime

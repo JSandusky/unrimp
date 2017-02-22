@@ -19,6 +19,7 @@
 			},
 			"1":
 			{
+				"Description": "Sun light",
 				"Properties":
 				{
 					"Rotation": "-0.630880237 -0.317013383 0.315440148 0.634026885"
@@ -34,6 +35,7 @@
 			},
 			"2":
 			{
+				"Description": "Imrod character",
 				"Properties":
 				{
 					"Scale": "0.07 0.07 0.07"
@@ -48,6 +50,7 @@
 			},
 			"3":
 			{
+				"Description": "Imrod character",
 				"Properties":
 				{
 					"Position": "-4.0 0.0 1.0",
@@ -64,6 +67,7 @@
 			},
 			"4":
 			{
+				"Description": "Imrod character",
 				"Properties":
 				{
 					"Position": "2.0 0.0 -5.0",
@@ -79,6 +83,7 @@
 			},
 			"5":
 			{
+				"Description": "Sponza scene",
 				"Properties":
 				{
 					"Scale": "0.01 0.01 0.01"
@@ -173,6 +178,7 @@
 			},
 			"11":
 			{
+				"Description": "Bob character",
 				"Properties":
 				{
 					"Position": "-1.0 0.0 1.5",
@@ -180,9 +186,10 @@
 				},
 				"Items":
 				{
-					"MeshSceneItem":
+					"SkeletonMeshSceneItem":
 					{
-						"MeshAssetId": "153"
+						"MeshAssetId": "153",
+						"SkeletonAnimationAssetId": "11"
 					}
 				}
 			}

@@ -19,16 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonResourceLoader.h"
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonFileFormat.h"
-#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
-#include "RendererRuntime/Core/File/IFile.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -36,21 +26,40 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	const ResourceLoaderTypeId SkeletonResourceLoader::TYPE_ID("skeleton");
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
-	//[-------------------------------------------------------]
-	void SkeletonResourceLoader::onDeserialization(IFile& file)
+	inline const SkeletonAnimationResources& SkeletonAnimationResourceManager::getSkeletonAnimationResources() const
 	{
-		// Read in the skeleton header
-		v1Skeleton::Header skeletonHeader;
-		file.read(&skeletonHeader, sizeof(v1Skeleton::Header));
+		return mSkeletonAnimationResources;
+	}
 
-		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	inline IResource& SkeletonAnimationResourceManager::getResourceByResourceId(ResourceId resourceId) const
+	{
+		return mSkeletonAnimationResources.getElementById(resourceId);
+	}
+
+	inline IResource* SkeletonAnimationResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
+	{
+		return mSkeletonAnimationResources.tryGetElementById(resourceId);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline SkeletonAnimationResourceManager::SkeletonAnimationResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
+	{
+		// Nothing here
+	}
+
+	inline SkeletonAnimationResourceManager::~SkeletonAnimationResourceManager()
+	{
+		// Nothing here
 	}
 
 

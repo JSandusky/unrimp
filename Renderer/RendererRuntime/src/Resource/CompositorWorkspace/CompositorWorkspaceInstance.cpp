@@ -37,8 +37,8 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
-#include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h"
 #include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
 #include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
@@ -447,7 +447,7 @@ namespace RendererRuntime
 			for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
 			{
 				const ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
-				if (sceneItem->getSceneItemTypeId() == MeshSceneItem::TYPE_ID)
+				if (sceneItem->getSceneItemTypeId() == MeshSceneItem::TYPE_ID || sceneItem->getSceneItemTypeId() == SkeletonMeshSceneItem::TYPE_ID)
 				{
 					RenderableManager& renderableManager = const_cast<RenderableManager&>(static_cast<const MeshSceneItem*>(sceneItem)->getRenderableManager());	// TODO(co) Get rid of the evil const-cast
 					if (renderableManager.isVisible())

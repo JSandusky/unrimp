@@ -134,6 +134,9 @@
     <ClInclude Include="include\RendererToolkit\Helper\FileSystemHelper.h">
       <Filter>Source Files\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\SkeletonAnimationAssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -197,6 +200,9 @@
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\CompositorNodeAssetCompiler.cpp">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetCompiler\SkeletonAnimationAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
   </ItemGroup>

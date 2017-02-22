@@ -27,98 +27,50 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/Math/Transform.h"
-#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
+#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace RendererToolkit
 {
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
-	typedef StringId AssetId;			///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
-
-
-	// -> Scene file format content:
-	//    - Scene header
-	namespace v1Scene
+	class SkeletonAnimationAssetCompiler : public IAssetCompiler
 	{
 
 
-		//[-------------------------------------------------------]
-		//[ Definitions                                           ]
-		//[-------------------------------------------------------]
-		static const uint32_t FORMAT_TYPE	 = StringId("Scene");
-		static const uint32_t FORMAT_VERSION = 1;
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const AssetCompilerTypeId TYPE_ID;
 
-		#pragma pack(push)
-		#pragma pack(1)
-			struct Header
-			{
-				uint32_t formatType;
-				uint16_t formatVersion;
-			};
 
-			struct Nodes
-			{
-				uint32_t numberOfNodes;
-			};
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		SkeletonAnimationAssetCompiler();
+		virtual ~SkeletonAnimationAssetCompiler();
 
-			struct Node
-			{
-				Transform transform;
-				uint32_t  numberOfItems;
-			};
 
-			struct ItemHeader
-			{
-				SceneItemTypeId typeId;
-				uint32_t		numberOfBytes;
-			};
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual AssetCompilerTypeId getAssetCompilerTypeId() const override;
+		virtual void compile(const Input& input, const Configuration& configuration, Output& output) override;
 
-			struct CameraItem
-			{
-			};
 
-			struct LightItem
-			{
-				LightSceneItem::LightType lightType;
-				float					  color[3];
-				float					  radius;
-
-				LightItem() :
-					lightType(LightSceneItem::LightType::POINT),
-					color{ 1.0f, 1.0f, 1.0f },
-					radius(1.0f)
-				{};
-			};
-
-			struct MeshItem
-			{
-				AssetId  meshAssetId;
-				uint32_t numberOfSubMeshMaterialAssetIds;
-
-				MeshItem() :
-					numberOfSubMeshMaterialAssetIds(0)
-				{};
-			};
-
-			struct SkeletonMeshItem	// : public MeshItem -> Not derived by intent to be able to reuse the mesh item serialization 1:1
-			{
-				AssetId skeletonAnimationAssetId;
-			};
-		#pragma pack(pop)
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-	} // v1Scene
-} // RendererRuntime
+} // RendererToolkit

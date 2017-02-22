@@ -176,6 +176,12 @@
     <Filter Include="Source Files\Core\File">
       <UniqueIdentifier>{a6a59f93-d647-4744-b65e-c8a67e021337}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\SkeletonAnimation">
+      <UniqueIdentifier>{f0040d03-ec33-4098-916d-90ff527b0293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\SkeletonAnimation\Loader">
+      <UniqueIdentifier>{1477c08b-3bcc-4cca-8564-1289c853f295}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -530,6 +536,18 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Skeleton\SkeletonResourceManager.inl">
       <Filter>Source Files\Resource\Skeleton</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.inl">
+      <Filter>Source Files\Resource\SkeletonAnimation\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResource.inl">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.inl">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\SkeletonMeshSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1035,6 +1053,21 @@
     <ClInclude Include="include\RendererRuntime\Resource\Skeleton\SkeletonResourceManager.h">
       <Filter>Source Files\Resource\Skeleton</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.h">
+      <Filter>Source Files\Resource\SkeletonAnimation\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationFileFormat.h">
+      <Filter>Source Files\Resource\SkeletonAnimation\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResource.h">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.h">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\SkeletonMeshSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1349,8 +1382,20 @@
     <ClCompile Include="src\Resource\Skeleton\SkeletonResourceManager.cpp">
       <Filter>Source Files\Resource\Skeleton</Filter>
     </ClCompile>
-    <ClCompile Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.cpp">
+    <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.cpp">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.cpp">
+      <Filter>Source Files\Resource\SkeletonAnimation\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Skeleton\SkeletonResource.cpp">
       <Filter>Source Files\Resource\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationResource.cpp">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\SkeletonMeshSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

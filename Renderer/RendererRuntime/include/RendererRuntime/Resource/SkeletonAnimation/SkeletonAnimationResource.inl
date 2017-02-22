@@ -19,16 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonResourceLoader.h"
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonFileFormat.h"
-#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
-#include "RendererRuntime/Core/File/IFile.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -36,21 +26,68 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	const ResourceLoaderTypeId SkeletonResourceLoader::TYPE_ID("skeleton");
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
-	//[-------------------------------------------------------]
-	void SkeletonResourceLoader::onDeserialization(IFile& file)
+	inline uint8_t SkeletonAnimationResource::getNumberOfChannels() const
 	{
-		// Read in the skeleton header
-		v1Skeleton::Header skeletonHeader;
-		file.read(&skeletonHeader, sizeof(v1Skeleton::Header));
+		return mNumberOfChannels;
+	}
 
-		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
+	inline float SkeletonAnimationResource::getDurationInTicks() const
+	{
+		return mDurationInTicks;
+	}
+
+	inline float SkeletonAnimationResource::getTicksPerSecond() const
+	{
+		return mTicksPerSecond;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline SkeletonAnimationResource::SkeletonAnimationResource() :
+		mNumberOfChannels(0),
+		mDurationInTicks(0.0f),
+		mTicksPerSecond(0.0f)
+	{
+		// Nothing here
+	}
+
+	inline SkeletonAnimationResource::~SkeletonAnimationResource()
+	{
+		// Sanity checks
+		assert(0 == mNumberOfChannels);
+		assert(0.0f == mDurationInTicks);
+		assert(0.0f == mTicksPerSecond);
+	}
+
+	inline void SkeletonAnimationResource::clearSkeletonAnimationData()
+	{
+		mNumberOfChannels = 0;
+		mDurationInTicks  = 0.0f;
+		mTicksPerSecond   = 0.0f;
+	}
+
+	inline void SkeletonAnimationResource::initializeElement(SkeletonAnimationResourceId skeletonAnimationResourceId)
+	{
+		// Sanity checks
+		assert(0 == mNumberOfChannels);
+		assert(0.0f == mDurationInTicks);
+		assert(0.0f == mTicksPerSecond);
+
+		// Call base implementation
+		IResource::initializeElement(skeletonAnimationResourceId);
+	}
+
+	inline void SkeletonAnimationResource::deinitializeElement()
+	{
+		// Reset everything
+		clearSkeletonAnimationData();
+
+		// Call base implementation
+		IResource::deinitializeElement();
 	}
 
 

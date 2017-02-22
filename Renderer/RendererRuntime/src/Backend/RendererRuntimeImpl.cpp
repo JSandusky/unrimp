@@ -35,6 +35,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCompiler.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
+#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResourceManager.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.h"
 #ifdef WIN32
@@ -94,6 +95,7 @@ namespace RendererRuntime
 		mMaterialBlueprintResourceManager = new MaterialBlueprintResourceManager(*this);
 		mMaterialResourceManager = new MaterialResourceManager(*this);
 		mSkeletonResourceManager = new SkeletonResourceManager(*this);
+		mSkeletonAnimationResourceManager = new SkeletonAnimationResourceManager(*this);
 		mMeshResourceManager = new MeshResourceManager(*this);
 		mSceneResourceManager = new SceneResourceManager(*this);
 		mCompositorNodeResourceManager = new CompositorNodeResourceManager(*this);
@@ -106,6 +108,7 @@ namespace RendererRuntime
 		mResourceManagers.push_back(mMaterialBlueprintResourceManager);
 		mResourceManagers.push_back(mMaterialResourceManager);
 		mResourceManagers.push_back(mSkeletonResourceManager);
+		mResourceManagers.push_back(mSkeletonAnimationResourceManager);
 		mResourceManagers.push_back(mMeshResourceManager);
 		mResourceManagers.push_back(mSceneResourceManager);
 		mResourceManagers.push_back(mCompositorNodeResourceManager);

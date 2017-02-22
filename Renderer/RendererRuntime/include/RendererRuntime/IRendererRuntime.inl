@@ -98,6 +98,11 @@ namespace RendererRuntime
 		return *mSkeletonResourceManager;
 	}
 
+	inline SkeletonAnimationResourceManager& IRendererRuntime::getSkeletonAnimationResourceManager() const
+	{
+		return *mSkeletonAnimationResourceManager;
+	}
+
 	inline MeshResourceManager& IRendererRuntime::getMeshResourceManager() const
 	{
 		return *mMeshResourceManager;
@@ -157,6 +162,7 @@ namespace RendererRuntime
 		mMaterialBlueprintResourceManager(nullptr),
 		mMaterialResourceManager(nullptr),
 		mSkeletonResourceManager(nullptr),
+		mSkeletonAnimationResourceManager(nullptr),
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
 		mCompositorNodeResourceManager(nullptr),
@@ -185,6 +191,7 @@ namespace RendererRuntime
 		mMaterialBlueprintResourceManager(nullptr),
 		mMaterialResourceManager(nullptr),
 		mSkeletonResourceManager(nullptr),
+		mSkeletonAnimationResourceManager(nullptr),
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
 		mCompositorNodeResourceManager(nullptr),
