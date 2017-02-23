@@ -549,6 +549,9 @@
     <None Include="include\RendererRuntime\Resource\Scene\Item\SkeletonMeshSceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.inl">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1068,6 +1071,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\SkeletonMeshSceneItem.h">
       <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.h">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1391,11 +1397,11 @@
     <ClCompile Include="src\Resource\Skeleton\SkeletonResource.cpp">
       <Filter>Source Files\Resource\Skeleton</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationResource.cpp">
-      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\SkeletonMeshSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.cpp">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -95,6 +95,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline const ResourceConnections& getResourceConnections() const;
+		RENDERERRUNTIME_API_EXPORT void disconnectFromResourceById(ResourceId resourceId);
 		RENDERERRUNTIME_API_EXPORT void disconnectFromAllResources();
 
 

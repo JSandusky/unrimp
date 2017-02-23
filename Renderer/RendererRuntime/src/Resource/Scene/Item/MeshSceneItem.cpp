@@ -49,7 +49,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void MeshSceneItem::setMeshResourceId(MeshResourceId meshResourceId)
 	{
-		disconnectFromAllResources();
+		if (isInitialized(mMeshResourceId))
+		{
+			disconnectFromResourceById(mMeshResourceId);
+		}
 		mMeshResourceId = meshResourceId;
 		if (isInitialized(meshResourceId))
 		{
@@ -59,7 +62,10 @@ namespace RendererRuntime
 
 	void MeshSceneItem::setMeshResourceIdByAssetId(AssetId meshAssetId)
 	{
-		disconnectFromAllResources();
+		if (isInitialized(mMeshResourceId))
+		{
+			disconnectFromResourceById(mMeshResourceId);
+		}
 		mMeshResourceId = getSceneResource().getRendererRuntime().getMeshResourceManager().loadMeshResourceByAssetId(meshAssetId, this);
 	}
 

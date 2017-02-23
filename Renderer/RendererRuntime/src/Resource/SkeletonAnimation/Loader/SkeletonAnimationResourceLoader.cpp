@@ -60,6 +60,8 @@ namespace RendererRuntime
 		// Read in the data of all bone channels in one big chunk
 		mSkeletonAnimationResource->mChannelData.resize(skeletonAnimationHeader.numberOfChannelDataBytes);
 		file.read(mSkeletonAnimationResource->mChannelData.data(), sizeof(uint8_t) * mSkeletonAnimationResource->mChannelData.size());
+
+		// That's all folks. There are no more memory allocations to see here. Please go on.
 	}
 
 

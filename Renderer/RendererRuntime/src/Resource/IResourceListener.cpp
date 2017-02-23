@@ -36,6 +36,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	void IResourceListener::disconnectFromResourceById(ResourceId resourceId)
+	{
+		assert(isInitialized(resourceId));
+		ResourceConnections resourceConnectionsToDisconnect;
+		resourceConnectionsToDisconnect.reserve(mResourceConnections.size());
+		for (const ResourceConnection& resourceConnection : mResourceConnections)
+		{
+			if (resourceConnection.resourceId == resourceId)
+			{
+				resourceConnectionsToDisconnect.push_back(resourceConnection);
+			}
+		}
+		for (const ResourceConnection& resourceConnection : resourceConnectionsToDisconnect)
+		{
+			resourceConnection.resourceManager->getResourceByResourceId(resourceConnection.resourceId).disconnectResourceListener(*this);
+		}
+	}
+
 	void IResourceListener::disconnectFromAllResources()
 	{
 		// Disconnect all resource connections

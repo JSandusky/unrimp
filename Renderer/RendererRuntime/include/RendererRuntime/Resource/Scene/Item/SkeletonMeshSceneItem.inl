@@ -48,12 +48,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline SkeletonMeshSceneItem::SkeletonMeshSceneItem(ISceneResource& sceneResource) :
 		MeshSceneItem(sceneResource),
-		mSkeletonAnimationResourceId(getUninitialized<SkeletonAnimationResourceId>())
-	{
-		// Nothing here
-	}
-
-	inline SkeletonMeshSceneItem::~SkeletonMeshSceneItem()
+		mSkeletonAnimationResourceId(getUninitialized<SkeletonAnimationResourceId>()),
+		mSkeletonAnimationEvaluator(nullptr)
 	{
 		// Nothing here
 	}

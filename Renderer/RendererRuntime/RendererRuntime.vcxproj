@@ -143,6 +143,7 @@
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.inl" />
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResource.inl" />
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonResourceLoader.inl" />
@@ -311,6 +312,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.h" />
     <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonFileFormat.h" />
@@ -609,7 +611,7 @@
     <ClCompile Include="src\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.cpp" />
     <ClCompile Include="src\Resource\ShaderPiece\ShaderPieceResourceManager.cpp" />
     <ClCompile Include="src\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.cpp" />
-    <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationResource.cpp" />
+    <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.cpp" />
     <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.cpp" />
     <ClCompile Include="src\Resource\Skeleton\Loader\SkeletonResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Skeleton\SkeletonResource.cpp" />

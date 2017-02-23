@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResource.h"
+#include "RendererRuntime/Core/NonCopyable.h"
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -35,8 +35,11 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
 	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
 	#include <glm/glm.hpp>
-	#include <glm/gtc/quaternion.hpp>
 PRAGMA_WARNING_POP
+
+#include <tuple>
+#include <vector>
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
 //[-------------------------------------------------------]
@@ -44,8 +47,7 @@ PRAGMA_WARNING_POP
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class SkeletonAnimationResource;
-	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
+	class SkeletonAnimationResourceManager;
 }
 
 
@@ -59,8 +61,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t																		   SkeletonAnimationResourceId;	///< POD skeleton animation resource identifier
-	typedef PackedElementManager<SkeletonAnimationResource, SkeletonAnimationResourceId, 2048> SkeletonAnimationResources;
+	typedef uint32_t SkeletonAnimationResourceId;	///< POD skeleton animation resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -68,82 +69,86 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Skeleton animation resource
+	*    Skeleton animation evaluator which calculates transformations for a given timestamp
+	*
+	*  @note
+	*    - Basing on "AssimpView::AnimEvaluator" ( https://github.com/assimp/assimp/blob/master/tools/assimp_view/AnimEvaluator.cpp )
 	*/
-	class SkeletonAnimationResource : public IResource
+	class SkeletonAnimationEvaluator : public NonCopyable
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend SkeletonAnimationResources;	// Type definition of template class
-		friend class SkeletonAnimationResourceLoader;
-		friend class SkeletonAnimationResourceManager;
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<uint32_t> ChannelByteOffsets;
-		typedef std::vector<uint8_t>  ChannelData;
-		struct ChannelHeader
-		{
-			uint32_t boneId;				///< Bone ID ("RendererRuntime::StringId" on bone name)
-			uint32_t numberOfPositionKeys;	///< Number of position keys, must be at least one
-			uint32_t numberOfRotationKeys;	///< Number of rotation keys, must be at least one
-			uint32_t numberOfScaleKeys;		///< Number of scale keys, must be at least one
-		};
-		struct Vector3Key
-		{
-			float	  timeInTicks;	///< The time of this key in ticks
-			glm::vec3 value;		///< The value of this key
-		};
-		struct QuaternionKey
-		{
-			float	  timeInTicks;	///< The time of this key in ticks
-			glm::quat value;		///< The value of this key
-		};
+		typedef std::vector<glm::mat4> TransformMatrices;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline uint8_t getNumberOfChannels() const;
-		inline float getDurationInTicks() const;
-		inline float getTicksPerSecond() const;
-		inline const ChannelByteOffsets& getChannelByteOffsets() const;
-		inline const ChannelData& getChannelData() const;
+		/**
+		*  @brief
+		*    Constructor on a given animation; the animation is fixed throughout the lifetime of the object
+		*
+		*  @param[in] skeletonAnimationResourceManager
+		*    Skeleton animation resource manager to use
+		*  @param[in] skeletonAnimationResourceId
+		*    Skeleton animation resource ID
+		*/
+		inline SkeletonAnimationEvaluator(SkeletonAnimationResourceManager& skeletonAnimationResourceManager, SkeletonAnimationResourceId skeletonAnimationResourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline ~SkeletonAnimationEvaluator();
+
+		/**
+		*  @brief
+		*    Evaluates the animation tracks for a given time stamp; the calculated pose can be retrieved as a array of transformation matrices afterwards by calling "RendererRuntime::SkeletonAnimationEvaluator::getTransformMatrices()"
+		*
+		*  @param[in] timeInSeconds
+		*    The time for which you want to evaluate the animation, in seconds. Will be mapped into the animation cycle, so it can be an arbitrary value. Best use with ever-increasing time stamps.
+		*/
+		void evaluate(float timeInSeconds);
+
+		/**
+		*  @brief
+		*    Return the transform matrices calculated at the last "RendererRuntime::SkeletonAnimationEvaluator::evaluate()" call
+		*
+		*  @return
+		*    The transform matrices
+		*/
+		inline const TransformMatrices& getTransformMatrices() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline SkeletonAnimationResource();
-		inline virtual ~SkeletonAnimationResource();
-		SkeletonAnimationResource(const SkeletonAnimationResource&) = delete;
-		SkeletonAnimationResource& operator=(const SkeletonAnimationResource&) = delete;
-		inline void clearSkeletonAnimationData();
+		SkeletonAnimationEvaluator(const SkeletonAnimationEvaluator&) = delete;
+		SkeletonAnimationEvaluator& operator=(const SkeletonAnimationEvaluator&) = delete;
 
-		//[-------------------------------------------------------]
-		//[ "RendererRuntime::PackedElementManager" management    ]
-		//[-------------------------------------------------------]
-		inline void initializeElement(SkeletonAnimationResourceId skeletonAnimationResourceId);
-		inline void deinitializeElement();
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<std::tuple<uint32_t, uint32_t, uint32_t>> LastPositions;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint8_t			   mNumberOfChannels;	///< The number of bone animation channels; each channel affects a single node
-		float			   mDurationInTicks;	///< Duration of the animation in ticks
-		float			   mTicksPerSecond;		///< Ticks per second; 0 if not specified in the imported file
-		ChannelByteOffsets mChannelByteOffsets;	///< Channel byte offsets
-		ChannelData		   mChannelData;		///< The data of all bone channels in one big chunk
+		SkeletonAnimationResourceManager& mSkeletonAnimationResourceManager;	///< Skeleton animation resource manager to use
+		SkeletonAnimationResourceId		  mSkeletonAnimationResourceId;			///< Skeleton animation resource ID
+		TransformMatrices				  mTransformMatrices;					///< The transform matrices calculated at the last "RendererRuntime::SkeletonAnimationEvaluator::evaluate()" call
+		float							  mLastTimeInTicks;
+		LastPositions					  mLastPositions;						///< At which frame the last evaluation happened for each channel; useful to quickly find the corresponding frame for slightly increased time stamps
 
 
 	};
@@ -158,4 +163,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResource.inl"
+#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationEvaluator.inl"

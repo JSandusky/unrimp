@@ -43,6 +43,16 @@ namespace RendererRuntime
 		return mTicksPerSecond;
 	}
 
+	inline const SkeletonAnimationResource::ChannelByteOffsets& SkeletonAnimationResource::getChannelByteOffsets() const
+	{
+		return mChannelByteOffsets;
+	}
+
+	inline const SkeletonAnimationResource::ChannelData& SkeletonAnimationResource::getChannelData() const
+	{
+		return mChannelData;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

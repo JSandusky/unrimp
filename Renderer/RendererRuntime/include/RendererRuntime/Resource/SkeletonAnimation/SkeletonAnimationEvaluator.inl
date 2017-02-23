@@ -19,13 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResource.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -35,7 +28,23 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co)
+	inline SkeletonAnimationEvaluator::SkeletonAnimationEvaluator(SkeletonAnimationResourceManager& skeletonAnimationResourceManager, SkeletonAnimationResourceId skeletonAnimationResourceId) :
+		mSkeletonAnimationResourceManager(skeletonAnimationResourceManager),
+		mSkeletonAnimationResourceId(skeletonAnimationResourceId),
+		mLastTimeInTicks(0.0f)
+	{
+		// Nothing here
+	}
+
+	inline SkeletonAnimationEvaluator::~SkeletonAnimationEvaluator()
+	{
+		// Nothing here
+	}
+
+	inline const SkeletonAnimationEvaluator::TransformMatrices& SkeletonAnimationEvaluator::getTransformMatrices() const
+	{
+		return mTransformMatrices;
+	}
 
 
 //[-------------------------------------------------------]

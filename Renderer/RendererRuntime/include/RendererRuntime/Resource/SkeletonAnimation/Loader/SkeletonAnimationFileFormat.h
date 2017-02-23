@@ -73,23 +73,6 @@ namespace RendererRuntime
 				uint32_t numberOfChannelDataBytes;	///< The number of bytes required to store the complete animation data
 			};
 			// TODO(co) We also need to store the skeleton hierarchy so we can perform a runtime matching and retargeting if required
-			struct BoneChannelHeader
-			{
-				uint32_t boneId;				///< Bone ID ("RendererRuntime::StringId" on bone name)
-				uint32_t numberOfPositionKeys;	///< Number of position keys, must be at least one
-				uint32_t numberOfRotationKeys;	///< Number of rotation keys, must be at least one
-				uint32_t numberOfScaleKeys;		///< Number of scale keys, must be at least one
-			};
-			struct Vector3Key
-			{
-				float	  time;		///< The time of this key
-				glm::vec3 value;	///< The value of this key
-			};
-			struct QuaternionKey
-			{
-				float	  time;		///< The time of this key
-				glm::quat value;	///< The value of this key
-			};
 		#pragma pack(pop)
 
 

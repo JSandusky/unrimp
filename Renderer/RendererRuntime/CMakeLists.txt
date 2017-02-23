@@ -147,8 +147,8 @@ set(SOURCE_CODES
 	src/Resource/Skeleton/SkeletonResource.cpp
 	src/Resource/Skeleton/SkeletonResourceManager.cpp
 	src/Resource/SkeletonAnimation/Loader/SkeletonAnimationResourceLoader.cpp
-	src/Resource/SkeletonAnimation/SkeletonAnimationResource.cpp
 	src/Resource/SkeletonAnimation/SkeletonAnimationResourceManager.cpp
+	src/Resource/SkeletonAnimation/SkeletonAnimationEvaluator.cpp
 	src/Resource/Texture/Loader/CrnTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/DdsTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/KtxTextureResourceLoader.cpp

@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class SkeletonAnimationEvaluator;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -54,6 +63,8 @@ namespace RendererRuntime
 	*    - TODO(co) Right now only a single skeleton animation at one and the same time is supported to have something to start with.
 	*               This isn't practical, of course, and in reality one has multiple animation sources at one and the same time which
 	*               are blended together. But well, as mentioned, one has to start somewhere.
+	*    - TODO(co) Currently "RendererRuntime::SkeletonAnimationEvaluator" is directly used, probably it makes sense to manage those
+	*               and then update all of them in parallel using multi-threading
 	*/
 	class SkeletonMeshSceneItem : public MeshSceneItem
 	{
@@ -94,7 +105,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline explicit SkeletonMeshSceneItem(ISceneResource& sceneResource);
-		inline virtual ~SkeletonMeshSceneItem();
+		virtual ~SkeletonMeshSceneItem();
 		SkeletonMeshSceneItem(const SkeletonMeshSceneItem&) = delete;
 		SkeletonMeshSceneItem& operator=(const SkeletonMeshSceneItem&) = delete;
 
@@ -111,6 +122,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		SkeletonAnimationResourceId mSkeletonAnimationResourceId;	///< Skeleton animation resource ID, can be set to uninitialized value
+		SkeletonAnimationEvaluator* mSkeletonAnimationEvaluator;	///< Skeleton animation evaluator instance, can be a null pointer, destroy the instance if you no longer need it
 
 
 	};

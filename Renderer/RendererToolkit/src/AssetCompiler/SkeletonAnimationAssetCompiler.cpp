@@ -27,6 +27,7 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Core/GetUninitialized.h>
+#include <RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResource.h>
 #include <RendererRuntime/Resource/SkeletonAnimation/Loader/SkeletonAnimationFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -149,10 +150,10 @@ namespace RendererToolkit
 			{
 				const aiNodeAnim* assimpNodeAnim = assimpAnimation->mChannels[channel];
 				channelByteOffsets[channel] = numberOfChannelDataBytes;
-				numberOfChannelDataBytes += sizeof(RendererRuntime::v1SkeletonAnimation::BoneChannelHeader);
-				numberOfChannelDataBytes += sizeof(RendererRuntime::v1SkeletonAnimation::Vector3Key) * assimpNodeAnim->mNumPositionKeys;
-				numberOfChannelDataBytes += sizeof(RendererRuntime::v1SkeletonAnimation::QuaternionKey) * assimpNodeAnim->mNumRotationKeys;
-				numberOfChannelDataBytes += sizeof(RendererRuntime::v1SkeletonAnimation::Vector3Key) * assimpNodeAnim->mNumScalingKeys;
+				numberOfChannelDataBytes += sizeof(RendererRuntime::SkeletonAnimationResource::ChannelHeader);
+				numberOfChannelDataBytes += sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumPositionKeys;
+				numberOfChannelDataBytes += sizeof(RendererRuntime::SkeletonAnimationResource::QuaternionKey) * assimpNodeAnim->mNumRotationKeys;
+				numberOfChannelDataBytes += sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumScalingKeys;
 			}
 
 			{ // Skeleton animation header
@@ -177,60 +178,60 @@ namespace RendererToolkit
 				const aiNodeAnim* assimpNodeAnim = assimpAnimation->mChannels[channel];
 
 				{ // Bone channel header
-					RendererRuntime::v1SkeletonAnimation::BoneChannelHeader boneChannelHeader;
-					boneChannelHeader.boneId			   = RendererRuntime::StringId(assimpNodeAnim->mNodeName.C_Str());
-					boneChannelHeader.numberOfPositionKeys = assimpNodeAnim->mNumPositionKeys;
-					boneChannelHeader.numberOfRotationKeys = assimpNodeAnim->mNumRotationKeys;
-					boneChannelHeader.numberOfScaleKeys	   = assimpNodeAnim->mNumScalingKeys;
+					RendererRuntime::SkeletonAnimationResource::ChannelHeader channelHeader;
+					channelHeader.boneId			   = RendererRuntime::StringId(assimpNodeAnim->mNodeName.C_Str());
+					channelHeader.numberOfPositionKeys = assimpNodeAnim->mNumPositionKeys;
+					channelHeader.numberOfRotationKeys = assimpNodeAnim->mNumRotationKeys;
+					channelHeader.numberOfScaleKeys	   = assimpNodeAnim->mNumScalingKeys;
 
 					// Write down the bone channel header
-					outputFileStream.write(reinterpret_cast<const char*>(&boneChannelHeader), sizeof(RendererRuntime::v1SkeletonAnimation::BoneChannelHeader));
+					outputFileStream.write(reinterpret_cast<const char*>(&channelHeader), sizeof(RendererRuntime::SkeletonAnimationResource::ChannelHeader));
 				}
 
 				{ // Write bone channel position data
-					std::vector<RendererRuntime::v1SkeletonAnimation::Vector3Key> positionKeys;
+					std::vector<RendererRuntime::SkeletonAnimationResource::Vector3Key> positionKeys;
 					positionKeys.resize(assimpNodeAnim->mNumPositionKeys);
 					for (unsigned int i = 0; i < assimpNodeAnim->mNumPositionKeys; ++i)
 					{
 						const aiVectorKey& assimpVectorKey = assimpNodeAnim->mPositionKeys[i];
-						RendererRuntime::v1SkeletonAnimation::Vector3Key& vector3Key = positionKeys[i];
-						vector3Key.time    = static_cast<float>(assimpVectorKey.mTime);
-						vector3Key.value.x = assimpVectorKey.mValue.x;
-						vector3Key.value.y = assimpVectorKey.mValue.y;
-						vector3Key.value.z = assimpVectorKey.mValue.z;
+						RendererRuntime::SkeletonAnimationResource::Vector3Key& vector3Key = positionKeys[i];
+						vector3Key.timeInTicks = static_cast<float>(assimpVectorKey.mTime);
+						vector3Key.value.x	   = assimpVectorKey.mValue.x;
+						vector3Key.value.y	   = assimpVectorKey.mValue.y;
+						vector3Key.value.z	   = assimpVectorKey.mValue.z;
 					}
-					outputFileStream.write(reinterpret_cast<const char*>(positionKeys.data()), sizeof(RendererRuntime::v1SkeletonAnimation::Vector3Key) * assimpNodeAnim->mNumPositionKeys);
+					outputFileStream.write(reinterpret_cast<const char*>(positionKeys.data()), sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumPositionKeys);
 				}
 
 				{ // Write bone channel rotation data
-					std::vector<RendererRuntime::v1SkeletonAnimation::QuaternionKey> rotationKeys;
+					std::vector<RendererRuntime::SkeletonAnimationResource::QuaternionKey> rotationKeys;
 					rotationKeys.resize(assimpNodeAnim->mNumRotationKeys);
 					for (unsigned int i = 0; i < assimpNodeAnim->mNumRotationKeys; ++i)
 					{
 						const aiQuatKey& assimpQuatKey = assimpNodeAnim->mRotationKeys[i];
-						RendererRuntime::v1SkeletonAnimation::QuaternionKey& quaternionKey = rotationKeys[i];
-						quaternionKey.time    = static_cast<float>(assimpQuatKey.mTime);
-						quaternionKey.value.x = assimpQuatKey.mValue.x;
-						quaternionKey.value.y = assimpQuatKey.mValue.y;
-						quaternionKey.value.z = assimpQuatKey.mValue.z;
-						quaternionKey.value.w = assimpQuatKey.mValue.w;
+						RendererRuntime::SkeletonAnimationResource::QuaternionKey& quaternionKey = rotationKeys[i];
+						quaternionKey.timeInTicks = static_cast<float>(assimpQuatKey.mTime);
+						quaternionKey.value.x	  = assimpQuatKey.mValue.x;
+						quaternionKey.value.y	  = assimpQuatKey.mValue.y;
+						quaternionKey.value.z	  = assimpQuatKey.mValue.z;
+						quaternionKey.value.w	  = assimpQuatKey.mValue.w;
 					}
-					outputFileStream.write(reinterpret_cast<const char*>(rotationKeys.data()), sizeof(RendererRuntime::v1SkeletonAnimation::QuaternionKey) * assimpNodeAnim->mNumRotationKeys);
+					outputFileStream.write(reinterpret_cast<const char*>(rotationKeys.data()), sizeof(RendererRuntime::SkeletonAnimationResource::QuaternionKey) * assimpNodeAnim->mNumRotationKeys);
 				}
 
 				{ // Write bone channel scale data
-					std::vector<RendererRuntime::v1SkeletonAnimation::Vector3Key> scaleKeys;
+					std::vector<RendererRuntime::SkeletonAnimationResource::Vector3Key> scaleKeys;
 					scaleKeys.resize(assimpNodeAnim->mNumScalingKeys);
 					for (unsigned int i = 0; i < assimpNodeAnim->mNumScalingKeys; ++i)
 					{
 						const aiVectorKey& assimpVectorKey = assimpNodeAnim->mScalingKeys[i];
-						RendererRuntime::v1SkeletonAnimation::Vector3Key& vector3Key = scaleKeys[i];
-						vector3Key.time    = static_cast<float>(assimpVectorKey.mTime);
-						vector3Key.value.x = assimpVectorKey.mValue.x;
-						vector3Key.value.y = assimpVectorKey.mValue.y;
-						vector3Key.value.z = assimpVectorKey.mValue.z;
+						RendererRuntime::SkeletonAnimationResource::Vector3Key& vector3Key = scaleKeys[i];
+						vector3Key.timeInTicks = static_cast<float>(assimpVectorKey.mTime);
+						vector3Key.value.x	   = assimpVectorKey.mValue.x;
+						vector3Key.value.y	   = assimpVectorKey.mValue.y;
+						vector3Key.value.z	   = assimpVectorKey.mValue.z;
 					}
-					outputFileStream.write(reinterpret_cast<const char*>(scaleKeys.data()), sizeof(RendererRuntime::v1SkeletonAnimation::Vector3Key) * assimpNodeAnim->mNumScalingKeys);
+					outputFileStream.write(reinterpret_cast<const char*>(scaleKeys.data()), sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumScalingKeys);
 				}
 			}
 		}
