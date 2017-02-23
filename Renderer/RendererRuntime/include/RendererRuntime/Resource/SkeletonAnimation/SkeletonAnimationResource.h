@@ -108,12 +108,29 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<uint32_t> ChannelByteOffsets;
+		typedef std::vector<uint8_t>  ChannelData;
+		struct ChannelHeader
+		{
+			uint32_t boneId;				///< Bone ID ("RendererRuntime::StringId" on bone name)
+			uint32_t numberOfPositionKeys;	///< Number of position keys, must be at least one
+			uint32_t numberOfRotationKeys;	///< Number of rotation keys, must be at least one
+			uint32_t numberOfScaleKeys;		///< Number of scale keys, must be at least one
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint8_t mNumberOfChannels;	///< The number of bone animation channels; each channel affects a single node
-		float	mDurationInTicks;	///< Duration of the animation in ticks
-		float	mTicksPerSecond;	///< Ticks per second; 0 if not specified in the imported file
+		uint8_t			   mNumberOfChannels;	///< The number of bone animation channels; each channel affects a single node
+		float			   mDurationInTicks;	///< Duration of the animation in ticks
+		float			   mTicksPerSecond;		///< Ticks per second; 0 if not specified in the imported file
+		ChannelByteOffsets mChannelByteOffsets;	///< Channel byte offsets
+		ChannelData		   mChannelData;		///< The data of all bone channels in one big chunk
 
 
 	};

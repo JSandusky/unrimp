@@ -141,19 +141,37 @@ namespace RendererToolkit
 			}
 			const aiAnimation* assimpAnimation = assimpScene->mAnimations[animationIndex];
 
+			// Calculate the number of bytes required to store the complete animation data
+			std::vector<uint32_t> channelByteOffsets;
+			channelByteOffsets.resize(assimpAnimation->mNumChannels);
+			uint32_t numberOfChannelDataBytes = 0;
+			for (unsigned int channel = 0; channel < assimpAnimation->mNumChannels; ++channel)
+			{
+				const aiNodeAnim* assimpNodeAnim = assimpAnimation->mChannels[channel];
+				channelByteOffsets[channel] = numberOfChannelDataBytes;
+				numberOfChannelDataBytes += sizeof(RendererRuntime::v1SkeletonAnimation::BoneChannelHeader);
+				numberOfChannelDataBytes += sizeof(RendererRuntime::v1SkeletonAnimation::Vector3Key) * assimpNodeAnim->mNumPositionKeys;
+				numberOfChannelDataBytes += sizeof(RendererRuntime::v1SkeletonAnimation::QuaternionKey) * assimpNodeAnim->mNumRotationKeys;
+				numberOfChannelDataBytes += sizeof(RendererRuntime::v1SkeletonAnimation::Vector3Key) * assimpNodeAnim->mNumScalingKeys;
+			}
+
 			{ // Skeleton animation header
 				RendererRuntime::v1SkeletonAnimation::Header skeletonAnimationHeader;
-				skeletonAnimationHeader.formatType		 = RendererRuntime::v1SkeletonAnimation::FORMAT_TYPE;
-				skeletonAnimationHeader.formatVersion	 = RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION;
-				skeletonAnimationHeader.numberOfChannels = static_cast<uint8_t>(assimpAnimation->mNumChannels);
-				skeletonAnimationHeader.durationInTicks	 = static_cast<float>(assimpAnimation->mDuration);
-				skeletonAnimationHeader.ticksPerSecond	 = static_cast<float>(assimpAnimation->mTicksPerSecond);
+				skeletonAnimationHeader.formatType				 = RendererRuntime::v1SkeletonAnimation::FORMAT_TYPE;
+				skeletonAnimationHeader.formatVersion			 = RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION;
+				skeletonAnimationHeader.numberOfChannels		 = static_cast<uint8_t>(assimpAnimation->mNumChannels);
+				skeletonAnimationHeader.durationInTicks			 = static_cast<float>(assimpAnimation->mDuration);
+				skeletonAnimationHeader.ticksPerSecond			 = static_cast<float>(assimpAnimation->mTicksPerSecond);
+				skeletonAnimationHeader.numberOfChannelDataBytes = numberOfChannelDataBytes;
 
 				// Write down the skeleton animation header
 				outputFileStream.write(reinterpret_cast<const char*>(&skeletonAnimationHeader), sizeof(RendererRuntime::v1SkeletonAnimation::Header));
 			}
 
-			// Bone channels
+			// Write down the channel byte offsets
+			outputFileStream.write(reinterpret_cast<const char*>(channelByteOffsets.data()), sizeof(uint32_t) * channelByteOffsets.size());
+
+			// Bone channels, all the skeleton animation data in one big chunk
 			for (unsigned int channel = 0; channel < assimpAnimation->mNumChannels; ++channel)
 			{
 				const aiNodeAnim* assimpNodeAnim = assimpAnimation->mChannels[channel];

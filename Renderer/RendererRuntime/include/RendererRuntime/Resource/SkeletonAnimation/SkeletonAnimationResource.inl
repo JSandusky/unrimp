@@ -61,6 +61,8 @@ namespace RendererRuntime
 		assert(0 == mNumberOfChannels);
 		assert(0.0f == mDurationInTicks);
 		assert(0.0f == mTicksPerSecond);
+		assert(mChannelByteOffsets.empty());
+		assert(mChannelData.empty());
 	}
 
 	inline void SkeletonAnimationResource::clearSkeletonAnimationData()
@@ -68,6 +70,8 @@ namespace RendererRuntime
 		mNumberOfChannels = 0;
 		mDurationInTicks  = 0.0f;
 		mTicksPerSecond   = 0.0f;
+		mChannelByteOffsets.clear();
+		mChannelData.clear();
 	}
 
 	inline void SkeletonAnimationResource::initializeElement(SkeletonAnimationResourceId skeletonAnimationResourceId)
@@ -76,6 +80,8 @@ namespace RendererRuntime
 		assert(0 == mNumberOfChannels);
 		assert(0.0f == mDurationInTicks);
 		assert(0.0f == mTicksPerSecond);
+		assert(mChannelByteOffsets.empty());
+		assert(mChannelData.empty());
 
 		// Call base implementation
 		IResource::initializeElement(skeletonAnimationResourceId);

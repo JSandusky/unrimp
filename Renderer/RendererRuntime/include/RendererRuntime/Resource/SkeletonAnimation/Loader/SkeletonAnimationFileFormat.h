@@ -46,7 +46,8 @@ namespace RendererRuntime
 
 	// -> Skeleton animation file format content:
 	//    - Skeleton animation header
-	//    - n bone channels
+	//    - Channel byte offsets
+	//    - n bone channels, all the skeleton animation data in one big chunk
 	//      - 1..n position keys
 	//      - 1..n rotation keys
 	//      - 1..n scale keys
@@ -66,12 +67,12 @@ namespace RendererRuntime
 			{
 				uint32_t formatType;
 				uint16_t formatVersion;
-				uint8_t  numberOfChannels;	///< The number of bone animation channels; each channel affects a single node
-				float	 durationInTicks;	///< Duration of the animation in ticks
-				float	 ticksPerSecond;	///< Ticks per second; 0 if not specified in the imported file
+				uint8_t  numberOfChannels;			///< The number of bone animation channels; each channel affects a single node
+				float	 durationInTicks;			///< Duration of the animation in ticks
+				float	 ticksPerSecond;			///< Ticks per second; 0 if not specified in the imported file
+				uint32_t numberOfChannelDataBytes;	///< The number of bytes required to store the complete animation data
 			};
 			// TODO(co) We also need to store the skeleton hierarchy so we can perform a runtime matching and retargeting if required
-			// TODO(co) We might also want to add a frame-key table to speed up pose calculation during runtime
 			struct BoneChannelHeader
 			{
 				uint32_t boneId;				///< Bone ID ("RendererRuntime::StringId" on bone name)

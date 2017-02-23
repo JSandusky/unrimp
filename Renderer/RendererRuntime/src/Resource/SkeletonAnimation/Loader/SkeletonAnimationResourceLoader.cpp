@@ -53,7 +53,13 @@ namespace RendererRuntime
 		mSkeletonAnimationResource->mDurationInTicks  = skeletonAnimationHeader.durationInTicks;
 		mSkeletonAnimationResource->mTicksPerSecond   = skeletonAnimationHeader.ticksPerSecond;
 
-		// TODO(co)
+		// Read in the channel byte offsets
+		mSkeletonAnimationResource->mChannelByteOffsets.resize(skeletonAnimationHeader.numberOfChannels);
+		file.read(mSkeletonAnimationResource->mChannelByteOffsets.data(), sizeof(uint32_t) * mSkeletonAnimationResource->mChannelByteOffsets.size());
+
+		// Read in the data of all bone channels in one big chunk
+		mSkeletonAnimationResource->mChannelData.resize(skeletonAnimationHeader.numberOfChannelDataBytes);
+		file.read(mSkeletonAnimationResource->mChannelData.data(), sizeof(uint8_t) * mSkeletonAnimationResource->mChannelData.size());
 	}
 
 
