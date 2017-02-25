@@ -29,6 +29,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
+#include "RendererRuntime/Core/Time/TimeManager.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -264,7 +265,9 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResourceManager::update()
 	{
-		// TODO(co) Implement me
+		const TimeManager& timeManager = mRendererRuntime.getTimeManager();
+		mGlobalMaterialProperties.setPropertyById("PastSecondsSinceLastFrame", MaterialPropertyValue::fromFloat(timeManager.getPastSecondsSinceLastFrame()));
+		mGlobalMaterialProperties.setPropertyById("GlobalTimeInSeconds", MaterialPropertyValue::fromFloat(timeManager.getGlobalTimeInSeconds()));
 	}
 
 

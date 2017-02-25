@@ -40,6 +40,7 @@
 namespace RendererRuntime
 {
 	class IVrManager;
+	class TimeManager;
 	class IFileManager;
 	class AssetManager;
 	class ThreadManager;
@@ -159,6 +160,15 @@ namespace RendererRuntime
 		*    The asset manager instance, do not release the returned instance
 		*/
 		inline AssetManager& getAssetManager() const;
+
+		/**
+		*  @brief
+		*    Return the time manager instance
+		*
+		*  @return
+		*    The time manager instance, do not release the returned instance
+		*/
+		inline TimeManager& getTimeManager() const;
 
 		//[-------------------------------------------------------]
 		//[ Resource                                              ]
@@ -383,6 +393,7 @@ namespace RendererRuntime
 		IFileManager*			   mFileManager;	///< The used file manager instance, always valid
 		ThreadManager*			   mThreadManager;
 		AssetManager*			   mAssetManager;
+		TimeManager*			   mTimeManager;
 		// Resource
 		ResourceStreamer*					mResourceStreamer;
 		TextureResourceManager*				mTextureResourceManager;

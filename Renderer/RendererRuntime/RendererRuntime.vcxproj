@@ -52,6 +52,8 @@
     <None Include="include\RendererRuntime\Core\StringId.inl" />
     <None Include="include\RendererRuntime\Core\Thread\ThreadManager.inl" />
     <None Include="include\RendererRuntime\Core\Thread\ThreadPool.inl" />
+    <None Include="include\RendererRuntime\Core\Time\Stopwatch.inl" />
+    <None Include="include\RendererRuntime\Core\Time\TimeManager.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
     <None Include="include\RendererRuntime\RenderQueue\IndirectBufferManager.inl" />
     <None Include="include\RendererRuntime\RenderQueue\Renderable.inl" />
@@ -198,6 +200,8 @@
     <ClInclude Include="include\RendererRuntime\Core\SwizzleVectorElementRemove.h" />
     <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadPool.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Time\Stopwatch.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Time\TimeManager.h" />
     <ClInclude Include="include\RendererRuntime\DebugGui\DebugGuiManager.h" />
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerLinux.h" />
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerWindows.h" />
@@ -404,6 +408,8 @@
     <ClCompile Include="src\Core\Renderer\RenderTargetTextureManager.cpp" />
     <ClCompile Include="src\Core\Renderer\RenderTargetTextureSignature.cpp" />
     <ClCompile Include="src\Core\String.cpp" />
+    <ClCompile Include="src\Core\Time\Stopwatch.cpp" />
+    <ClCompile Include="src\Core\Time\TimeManager.cpp" />
     <ClCompile Include="src\DebugGui\DebugGuiManager.cpp" />
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerLinux.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>

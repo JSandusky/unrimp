@@ -28,15 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class IFile;
-}
+#include "RendererRuntime/Core/Time/Stopwatch.h"
 
 
 //[-------------------------------------------------------]
@@ -51,46 +43,46 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract file manager interface
+	*    Time manager
 	*/
-	class IFileManager : public Manager
+	class TimeManager : public Manager
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IFileManager methods  ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Open a file
-		*
-		*  @param[in] filename
-		*    ASCII name of the file to open for reading, never ever a null pointer and always finished by a terminating zero
-		*
-		*  @return
-		*    The file interface, can be a null pointer if horrible things are happening (total failure)
-		*/
-		virtual IFile* openFile(const char* filename) = 0;
+		inline TimeManager();
+		inline ~TimeManager();
+		inline float getPastSecondsSinceLastFrame() const;
+		inline float getGlobalTimeInSeconds() const;
 
 		/**
 		*  @brief
-		*    Close a file
+		*    Time manager update
 		*
-		*  @param[in] file
-		*    File to close
+		*  @note
+		*    - Call this once per frame
 		*/
-		virtual void closeFile(IFile& file) = 0;
+		void update();
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline IFileManager();
-		inline virtual ~IFileManager();
-		IFileManager(const IFileManager&) = delete;
-		IFileManager& operator=(const IFileManager&) = delete;
+		TimeManager(const TimeManager&) = delete;
+		TimeManager& operator=(const TimeManager&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		Stopwatch mStopwatch;
+		float	  mPastSecondsSinceLastFrame;
+		float	  mGlobalTimeInSeconds;
 
 
 	};
@@ -105,4 +97,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/File/IFileManager.inl"
+#include "RendererRuntime/Core/Time/TimeManager.inl"

@@ -27,8 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/Stopwatch.h"
 #include "Framework/ExampleBase.h"
+
+#include <RendererRuntime/Core/Time/Stopwatch.h>
 
 
 //[-------------------------------------------------------]
@@ -109,13 +110,13 @@ private:
 	uint32_t				mNumberOfCubeInstances;	///< Number of cube instances
 	Renderer::CommandBuffer mCommandBuffer;			///< Command buffer
 	// The rest is for timing and statistics
-	Stopwatch mStopwatch;			///< Stopwatch instance
-	float	  mGlobalTimer;			///< Global timer
-	float	  mGlobalScale;			///< Global scale
-	bool	  mDisplayStatistics;	///< Display statistics?
-	float	  mFPSUpdateTimer;		///< Timer for FPS update
-	int		  mFramesSinceCheck;	///< Number of frames since last FPS update
-	float	  mFramesPerSecond;		///< Current frames per second
+	RendererRuntime::Stopwatch mStopwatch;			///< Stopwatch instance
+	float					   mGlobalTimer;		///< Global timer
+	float					   mGlobalScale;		///< Global scale
+	bool					   mDisplayStatistics;	///< Display statistics?
+	float					   mFPSUpdateTimer;		///< Timer for FPS update
+	int						   mFramesSinceCheck;	///< Number of frames since last FPS update
+	float					   mFramesPerSecond;	///< Current frames per second
 
 
 };

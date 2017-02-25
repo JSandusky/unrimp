@@ -21,46 +21,58 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "PrecompiledHeader.h"
-#include "Framework/PlatformTypes.h"
-#include "Framework/Stopwatch.h"
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Core/Time/Stopwatch.h"
 #ifdef WIN32
-	#include "Framework/WindowsHeader.h"
+	#include "RendererRuntime/Core/Platform/WindowsHeader.h"
 #elif defined LINUX
 	#include <sys/time.h>
 #endif
 
 
 //[-------------------------------------------------------]
-//[ Private methods                                       ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-uint32_t Stopwatch::getSystemMicroseconds() const
+namespace RendererRuntime
 {
-	#ifdef WIN32
-		// Frequency of the performance counter
-		static LARGE_INTEGER performanceFrequency;
-		static bool performanceFrequencyInitialized = false;
-		if (!performanceFrequencyInitialized)
-		{
-			::QueryPerformanceFrequency(&performanceFrequency);
-			performanceFrequencyInitialized = true;
-		}
 
-		// Get past time
-		LARGE_INTEGER curTime;
-		::QueryPerformanceCounter(&curTime);
-		double newTicks = static_cast<double>(curTime.QuadPart);
 
-		// Scale by 1000000 in order to get microsecond precision
-		newTicks *= static_cast<double>(1000000.0)/static_cast<double>(performanceFrequency.QuadPart);
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	std::time_t Stopwatch::getSystemMicroseconds() const
+	{
+		#ifdef WIN32
+			// Frequency of the performance counter
+			static LARGE_INTEGER performanceFrequency;
+			static bool performanceFrequencyInitialized = false;
+			if (!performanceFrequencyInitialized)
+			{
+				::QueryPerformanceFrequency(&performanceFrequency);
+				performanceFrequencyInitialized = true;
+			}
 
-		// Return past time
-		return static_cast<uint32_t>(newTicks);
-	#elif defined LINUX
-		struct timeval now;
-		gettimeofday(&now, nullptr);
-		return static_cast<uint32_t>(now.tv_sec*1000000 + now.tv_usec);
-	#else
-		#error "Unsupported platform"
-	#endif
-}
+			// Get past time
+			LARGE_INTEGER curTime;
+			::QueryPerformanceCounter(&curTime);
+			double newTicks = static_cast<double>(curTime.QuadPart);
+
+			// Scale by 1000000 in order to get microsecond precision
+			newTicks *= static_cast<double>(1000000.0) / static_cast<double>(performanceFrequency.QuadPart);
+
+			// Return past time
+			return static_cast<std::time_t>(newTicks);
+		#elif defined LINUX
+			struct timeval now;
+			gettimeofday(&now, nullptr);
+			return static_cast<std::time_t>(now.tv_sec * 1000000 + now.tv_usec);
+		#else
+			#error "Unsupported platform"
+		#endif
+	}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // RendererRuntime

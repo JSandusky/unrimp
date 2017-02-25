@@ -182,6 +182,9 @@
     <Filter Include="Source Files\Resource\SkeletonAnimation\Loader">
       <UniqueIdentifier>{1477c08b-3bcc-4cca-8564-1289c853f295}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Time">
+      <UniqueIdentifier>{8ef6badd-8966-4c64-bf44-e5c35310fab1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -551,6 +554,12 @@
     </None>
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.inl">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\Time\Stopwatch.inl">
+      <Filter>Source Files\Core\Time</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\Time\TimeManager.inl">
+      <Filter>Source Files\Core\Time</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1074,6 +1083,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.h">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Time\Stopwatch.h">
+      <Filter>Source Files\Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Time\TimeManager.h">
+      <Filter>Source Files\Core\Time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1402,6 +1417,12 @@
     </ClCompile>
     <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.cpp">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Time\Stopwatch.cpp">
+      <Filter>Source Files\Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Time\TimeManager.cpp">
+      <Filter>Source Files\Core\Time</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

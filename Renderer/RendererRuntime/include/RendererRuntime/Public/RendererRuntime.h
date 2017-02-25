@@ -45,6 +45,7 @@
 namespace RendererRuntime
 {
 	class IVrManager;
+	class TimeManager;
 	class IFileManager;
 	class AssetManager;
 	class ThreadManager;
@@ -113,6 +114,10 @@ namespace RendererRuntime
 		inline AssetManager& getAssetManager() const
 		{
 			return *mAssetManager;
+		}
+		inline TimeManager& getTimeManager() const
+		{
+			return *mTimeManager;
 		}
 		inline ResourceStreamer& getResourceStreamer() const
 		{
@@ -192,6 +197,7 @@ namespace RendererRuntime
 		IFileManager*						mFileManager;
 		ThreadManager*						mThreadManager;
 		AssetManager*						mAssetManager;
+		TimeManager*						mTimeManager;
 		ResourceStreamer*					mResourceStreamer;
 		TextureResourceManager*				mTextureResourceManager;
 		ShaderPieceResourceManager*			mShaderPieceResourceManager;

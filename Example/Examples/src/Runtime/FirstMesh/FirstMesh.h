@@ -27,8 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/Stopwatch.h"
 #include "Framework/ExampleBase.h"
+
+#include <RendererRuntime/Core/Time/Stopwatch.h>
 
 
 //[-------------------------------------------------------]
@@ -114,8 +115,8 @@ private:
 	handle	 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE
 	handle	 mObjectSpaceToViewSpaceMatrixUniformHandle;	///< Object space to view space matrix uniform handle, can be NULL_HANDLE
 	// For timing
-	Stopwatch mStopwatch;	///< Stopwatch instance
-	float	  mGlobalTimer;	///< Global timer
+	RendererRuntime::Stopwatch mStopwatch;		///< Stopwatch instance
+	float					   mGlobalTimer;	///< Global timer
 
 
 };

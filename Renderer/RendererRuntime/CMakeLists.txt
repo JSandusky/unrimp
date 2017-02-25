@@ -61,6 +61,8 @@ set(SOURCE_CODES
 	src/Core/Math/Transform.cpp
 	src/Core/Math/Vector3.cpp
 	src/Core/Platform/PlatformManager.cpp
+	src/Core/Time/TimeManager.cpp
+	src/Core/Time/Stopwatch.cpp
 	src/Core/Renderer/FramebufferManager.cpp
 	src/Core/Renderer/FramebufferSignature.cpp
 	src/Core/Renderer/RenderTargetTextureManager.cpp

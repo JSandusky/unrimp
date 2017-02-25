@@ -30,6 +30,7 @@
 
 #include <RendererRuntime/Vr/IVrManager.h>
 #include <RendererRuntime/Core/Math/Transform.h>
+#include <RendererRuntime/Core/Time/TimeManager.h>
 #include <RendererRuntime/DebugGui/DebugGuiManager.h>
 #include <RendererRuntime/Resource/Scene/ISceneResource.h>
 #include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
@@ -95,7 +96,6 @@ FirstScene::FirstScene() :
 	mCameraSceneItem(nullptr),
 	mLightSceneItem(nullptr),
 	mSceneNode(nullptr),
-	mGlobalTimer(0.0f),
 	mRotation(0.0f),
 	mInstancedCompositor(Compositor::DEFERRED),
 	mCurrentCompositor(mInstancedCompositor),
@@ -219,46 +219,31 @@ void FirstScene::onUpdate()
 	// Call the base implementation
 	ExampleBase::onUpdate();
 
-	// Stop the stopwatch and get the milliseconds
-	mStopwatch.stop();
-	float pastMilliseconds = mStopwatch.getMilliseconds();
-	if (pastMilliseconds > 60.0f)
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+	if (nullptr != rendererRuntime)
 	{
-		// No one likes huge time jumps
-		pastMilliseconds = 60.0f;
-	}
-	mGlobalTimer += pastMilliseconds / 1000.0f;
-
-	{ // Tell the material blueprint resource manager about our global material properties
-		RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
-		if (nullptr != rendererRuntime)
-		{
+		{ // Tell the material blueprint resource manager about our global material properties
 			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
 			globalMaterialProperties.setPropertyById("AmbientColor", RendererRuntime::MaterialPropertyValue::fromFloat3(0.2f, 0.2f, 0.2f));
 			globalMaterialProperties.setPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunLightColor[0] * 2.0f, mSunLightColor[1] * 2.0f, mSunLightColor[2] * 2.0f));
 			globalMaterialProperties.setPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
-			globalMaterialProperties.setPropertyById("PastSecondsSinceLastFrame", RendererRuntime::MaterialPropertyValue::fromFloat(pastMilliseconds / 1000.0f));
-			globalMaterialProperties.setPropertyById("GlobalTimeInSeconds", RendererRuntime::MaterialPropertyValue::fromFloat(mGlobalTimer));
+		}
+
+		// Update the scene node rotation
+		if (nullptr != mSceneNode && mRotationSpeed > 0.0f)
+		{
+			mSceneNode->setRotation(glm::angleAxis(mRotation, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+			// Update the global timer (FPS independent movement)
+			mRotation += rendererRuntime->getTimeManager().getPastSecondsSinceLastFrame() * 0.5f * mRotationSpeed;
+		}
+
+		// Update controller
+		if (nullptr != mController)
+		{
+			mController->onUpdate(rendererRuntime->getTimeManager().getPastSecondsSinceLastFrame());
 		}
 	}
-
-	// Update the scene node rotation
-	if (nullptr != mSceneNode && mRotationSpeed > 0.0f)
-	{
-		mSceneNode->setRotation(glm::angleAxis(mRotation, glm::vec3(0.0f, 1.0f, 0.0f)));
-
-		// Update the global timer (FPS independent movement)
-		mRotation += pastMilliseconds * 0.0005f * mRotationSpeed;
-	}
-
-	// Update controller
-	if (nullptr != mController)
-	{
-		mController->onUpdate(pastMilliseconds);
-	}
-
-	// Start the stopwatch
-	mStopwatch.start();
 
 	// TODO(co) We need to get informed when the mesh scene item received the mesh resource loading finished signal
 	trySetCustomMaterialResource();

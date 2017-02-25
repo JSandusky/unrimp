@@ -63,6 +63,11 @@ namespace RendererRuntime
 		return *mAssetManager;
 	}
 
+	inline TimeManager& IRendererRuntime::getTimeManager() const
+	{
+		return *mTimeManager;
+	}
+
 	inline ResourceStreamer& IRendererRuntime::getResourceStreamer() const
 	{
 		return *mResourceStreamer;
@@ -154,6 +159,7 @@ namespace RendererRuntime
 		mTextureManager(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
+		mTimeManager(nullptr),
 		// Resource
 		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),
@@ -183,6 +189,7 @@ namespace RendererRuntime
 		mTextureManager(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
+		mTimeManager(nullptr),
 		// Resource
 		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),

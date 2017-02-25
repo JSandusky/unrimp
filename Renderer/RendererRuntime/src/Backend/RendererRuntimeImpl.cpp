@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Backend/RendererRuntimeImpl.h"
 #include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/Core/Time/TimeManager.h"
 #include "RendererRuntime/Core/Thread/ThreadManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
@@ -86,6 +87,7 @@ namespace RendererRuntime
 		// Create the core manager instances
 		mThreadManager = new ThreadManager();
 		mAssetManager = new AssetManager(*this);
+		mTimeManager = new TimeManager();
 
 		// Create the resource manager instances
 		mResourceStreamer = new ResourceStreamer(*this);
@@ -159,6 +161,7 @@ namespace RendererRuntime
 		delete mResourceStreamer;
 
 		// Destroy the core manager instances
+		delete mTimeManager;
 		delete mAssetManager;
 		delete mThreadManager;
 
@@ -183,6 +186,9 @@ namespace RendererRuntime
 
 	void RendererRuntimeImpl::update()
 	{
+		// Update the time manager
+		mTimeManager->update();
+
 		{ // Handle resource reloading requests
 			std::unique_lock<std::mutex> resourcesToReloadMutexLock(mResourcesToReloadMutex);
 			if (!mResourcesToReload.empty())

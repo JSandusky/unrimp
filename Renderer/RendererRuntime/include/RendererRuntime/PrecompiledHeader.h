@@ -82,6 +82,7 @@ PRAGMA_WARNING_POP
 #include <condition_variable>
 #include <functional>
 #include <chrono>
+#include <ctime>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH

@@ -90,6 +90,11 @@ namespace RendererRuntime
 		*
 		*  @return
 		*    The global material properties
+		*
+		*  @remarks
+		*    The material blueprint resource manager itself is setting the following global material properties:
+		*    - Floating point property "PastSecondsSinceLastFrame"
+		*    - Floating point property "GlobalTimeInSeconds"
 		*/
 		inline MaterialProperties& getGlobalMaterialProperties();
 		inline const MaterialProperties& getGlobalMaterialProperties() const;

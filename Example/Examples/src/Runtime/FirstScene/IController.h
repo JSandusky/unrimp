@@ -124,10 +124,10 @@ public:
 	*  @brief
 	*    Called on update request
 	*
-	*  @param[in] pastMilliseconds
-	*    Past time in milliseconds
+	*  @param[in] pastSecondsSinceLastFrame
+	*    Past seconds since last frame
 	*/
-	virtual void onUpdate(float pastMilliseconds);
+	virtual void onUpdate(float pastSecondsSinceLastFrame);
 
 
 //[-------------------------------------------------------]

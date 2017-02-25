@@ -65,7 +65,7 @@ public:
 //[ Public virtual IController methods                    ]
 //[-------------------------------------------------------]
 public:
-	virtual void onUpdate(float pastMilliseconds) override;
+	virtual void onUpdate(float pastSecondsSinceLastFrame) override;
 
 
 //[-------------------------------------------------------]

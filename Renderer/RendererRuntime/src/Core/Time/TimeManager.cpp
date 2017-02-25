@@ -19,84 +19,40 @@
 
 
 //[-------------------------------------------------------]
-//[ Public methods                                        ]
+//[ Includes                                              ]
 //[-------------------------------------------------------]
-inline Stopwatch::Stopwatch() :
-	mRunning(false),
-	mStart(0),
-	mStop(0)
-{
-	// Nothing here
-}
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Core/Time/TimeManager.h"
 
-inline Stopwatch::Stopwatch(bool startAtOnce) :
-	mRunning(false),
-	mStart(0),
-	mStop(0)
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
 {
-	if (startAtOnce)
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	void TimeManager::update()
 	{
-		start();
+		// Stop the stopwatch and get the past milliseconds
+		mStopwatch.stop();
+		mPastSecondsSinceLastFrame = mStopwatch.getSeconds();
+		if (mPastSecondsSinceLastFrame > 0.06f)
+		{
+			// No one likes huge time jumps
+			mPastSecondsSinceLastFrame = 0.06f;
+		}
+		mGlobalTimeInSeconds += mPastSecondsSinceLastFrame;
+
+		// Start the stopwatch
+		mStopwatch.start();
 	}
-}
 
-inline Stopwatch::~Stopwatch()
-{
-	// Nothing here
-}
 
-inline void Stopwatch::start()
-{
-	mRunning = true;
-	mStart   = getSystemMicroseconds();
-}
-
-inline unsigned long Stopwatch::stop()
-{
-	// Is the stopwatch currently running?
-	if (mRunning)
-	{
-		mStop    = getSystemMicroseconds();
-		mRunning = false;
-		return mStop - mStart;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-inline float Stopwatch::getWeeks() const
-{
-	return getDays() / 7.0f;
-}
-
-inline float Stopwatch::getDays() const
-{
-	return getHours() / 24.0f;
-}
-
-inline float Stopwatch::getHours() const
-{
-	return getMinutes() / 60.0f;
-}
-
-inline float Stopwatch::getMinutes() const
-{
-	return getSeconds() / 60.0f;
-}
-
-inline float Stopwatch::getSeconds() const
-{
-	return getMilliseconds() / 1000.0f;
-}
-
-inline float Stopwatch::getMilliseconds() const
-{
-	return getMicroseconds() / 1000.0f;
-}
-
-inline unsigned long Stopwatch::getMicroseconds() const
-{
-	return mRunning ? (getSystemMicroseconds() - mStart) : (mStop - mStart);
-}
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // RendererRuntime

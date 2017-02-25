@@ -27,9 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/Stopwatch.h"
 #include "Framework/ExampleBase.h"
 
+#include <RendererRuntime/Core/Time/Stopwatch.h>
 #include <RendererRuntime/Resource/IResourceListener.h>
 
 
@@ -159,9 +159,7 @@ private:
 	RendererRuntime::LightSceneItem*  mLightSceneItem;
 	RendererRuntime::ISceneNode*	  mSceneNode;
 	// Timing
-	Stopwatch mStopwatch;	///< Stopwatch instance
-	float	  mGlobalTimer;	///< Global timer
-	float	  mRotation;
+	float mRotation;
 	// States for runtime-fun
 	Compositor mInstancedCompositor;
 	int		   mCurrentCompositor;

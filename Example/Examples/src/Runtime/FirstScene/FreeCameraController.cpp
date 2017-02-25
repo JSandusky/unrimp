@@ -48,7 +48,7 @@ FreeCameraController::~FreeCameraController()
 //[-------------------------------------------------------]
 //[ Public virtual IController methods                    ]
 //[-------------------------------------------------------]
-void FreeCameraController::onUpdate(float pastMilliseconds)
+void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 {
 	RendererRuntime::ISceneNode* sceneNode = mCameraSceneItem.getParentSceneNode();
 	if (nullptr != sceneNode && (!mPressedKeys.empty() || !mPressedMouseButtons.empty()))
@@ -60,7 +60,7 @@ void FreeCameraController::onUpdate(float pastMilliseconds)
 		if (!mPressedKeys.empty())
 		{
 			// Get the movement speed
-			float movementSpeed = pastMilliseconds * 0.002f;
+			float movementSpeed = pastSecondsSinceLastFrame * 2.0f;
 			{
 				// Speed up = "left shift"-key
 				if (isKeyPressed(16))
@@ -166,5 +166,5 @@ void FreeCameraController::onUpdate(float pastMilliseconds)
 	}
 
 	// Call the base implementation
-	IController::onUpdate(pastMilliseconds);
+	IController::onUpdate(pastSecondsSinceLastFrame);
 }
