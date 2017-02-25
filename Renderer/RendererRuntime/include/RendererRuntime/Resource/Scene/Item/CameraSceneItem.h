@@ -40,6 +40,15 @@ PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class Transform;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -68,22 +77,37 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_NEAR_Z;
 		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_FAR_Z;
 
-		// TODO(co) Just a test: Implement decent custom matrices
-		public:
-			glm::mat4* mViewSpaceToClipSpaceMatrix;
-			glm::mat4* mWorldSpaceToViewSpaceMatrix;
-
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		//[-------------------------------------------------------]
+		//[ Data                                                  ]
+		//[-------------------------------------------------------]
 		inline float getFovY() const;
 		inline void setFovY(float fovY);
 		inline float getNearZ() const;
 		inline void setNearZ(float nearZ);
 		inline float getFarZ() const;
 		inline void setFarZ(float farZ);
+
+		//[-------------------------------------------------------]
+		//[ Derived or custom data                                ]
+		//[-------------------------------------------------------]
+		// World space to view space matrix (Aka "view matrix")
+		RENDERERRUNTIME_API_EXPORT const Transform& getWorldSpaceToViewSpaceTransform() const;
+		RENDERERRUNTIME_API_EXPORT const glm::mat4& getWorldSpaceToViewSpaceMatrix() const;
+		inline bool hasCustomWorldSpaceToViewSpaceMatrix() const;
+		inline void unsetCustomWorldSpaceToViewSpaceMatrix();
+		inline void setCustomWorldSpaceToViewSpaceMatrix(const glm::mat4& customWorldSpaceToViewSpaceMatrix);
+
+		// View space to clip space matrix (aka "projection matrix")
+		inline const glm::mat4& getViewSpaceToClipSpaceMatrix() const;	// No matrix update, just returning that's there
+		RENDERERRUNTIME_API_EXPORT const glm::mat4& getViewSpaceToClipSpaceMatrix(float aspectRatio) const;
+		inline bool hasCustomViewSpaceToClipSpaceMatrix() const;
+		inline void unsetCustomViewSpaceToClipSpaceMatrix();
+		inline void setCustomViewSpaceToClipSpaceMatrix(const glm::mat4& customViewSpaceToClipSpaceMatrix);
 
 
 	//[-------------------------------------------------------]
@@ -108,9 +132,15 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		// Data
 		float mFovY;
 		float mNearZ;
 		float mFarZ;
+		// Derived or custom data
+		mutable glm::mat4 mWorldSpaceToViewSpaceMatrix;				// Aka "view matrix"
+		mutable glm::mat4 mViewSpaceToClipSpaceMatrix;				// Aka "projection matrix"
+		bool			  mHasCustomWorldSpaceToViewSpaceMatrix;	// Aka "view matrix"
+		bool			  mHasCustomViewSpaceToClipSpaceMatrix;		// Aka "projection matrix"
 
 
 	};

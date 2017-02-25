@@ -23,7 +23,16 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
+#include "RendererRuntime/Core/Math/Math.h"
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+	#include <glm/gtc/matrix_transform.hpp>
+PRAGMA_WARNING_POP
 
 #include <cassert>
 
@@ -42,6 +51,41 @@ namespace RendererRuntime
 	const float CameraSceneItem::DEFAULT_FOV_Y  = 45.0f;
 	const float CameraSceneItem::DEFAULT_NEAR_Z = 0.1f;
 	const float CameraSceneItem::DEFAULT_FAR_Z  = 1000.0f;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	const Transform& CameraSceneItem::getWorldSpaceToViewSpaceTransform() const
+	{
+		const ISceneNode* parentSceneNode = getParentSceneNode();
+		return (nullptr != parentSceneNode) ? parentSceneNode->getTransform() : Transform::IDENTITY;
+	}
+
+	const glm::mat4& CameraSceneItem::getWorldSpaceToViewSpaceMatrix() const
+	{
+		// Calculate the world space to view space matrix (Aka "view matrix")
+		if (!mHasCustomWorldSpaceToViewSpaceMatrix)
+		{
+			const Transform& worldSpaceToViewSpaceTransform = getWorldSpaceToViewSpaceTransform();
+			mWorldSpaceToViewSpaceMatrix = glm::lookAt(worldSpaceToViewSpaceTransform.position, worldSpaceToViewSpaceTransform.position + worldSpaceToViewSpaceTransform.rotation * Math::FORWARD_VECTOR, Math::UP_VECTOR);
+		}
+
+		// Done
+		return mWorldSpaceToViewSpaceMatrix;
+	}
+
+	const glm::mat4& CameraSceneItem::getViewSpaceToClipSpaceMatrix(float aspectRatio) const
+	{
+		// Calculate the view space to clip space matrix (aka "projection matrix")
+		if (!mHasCustomViewSpaceToClipSpaceMatrix)
+		{
+			mViewSpaceToClipSpaceMatrix = glm::perspective(mFovY, aspectRatio, mNearZ, mFarZ);
+		}
+
+		// Done
+		return mViewSpaceToClipSpaceMatrix;
+	}
 
 
 	//[-------------------------------------------------------]

@@ -272,7 +272,6 @@ namespace RendererRuntime
 
 		// Get camera settings
 		const CameraSceneItem* cameraSceneItem = compositorContextData.getCameraSceneItem();
-		const float fovY  = (nullptr != cameraSceneItem) ? cameraSceneItem->getFovY()  : CameraSceneItem::DEFAULT_FOV_Y;
 		mNearZ = (nullptr != cameraSceneItem) ? cameraSceneItem->getNearZ() : CameraSceneItem::DEFAULT_NEAR_Z;
 		mFarZ  = (nullptr != cameraSceneItem) ? cameraSceneItem->getFarZ()  : CameraSceneItem::DEFAULT_FAR_Z;
 
@@ -280,42 +279,36 @@ namespace RendererRuntime
 		glm::mat4 viewTranslateMatrix;
 		glm::mat4 viewSpaceToClipSpaceMatrix;
 		const IVrManager& vrManager = rendererRuntime.getVrManager();
-		const Transform& worldSpaceToViewSpaceTransform = (nullptr != cameraSceneItem && nullptr != cameraSceneItem->getParentSceneNode()) ? cameraSceneItem->getParentSceneNode()->getTransform() : Transform::IDENTITY;
-		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye() && nullptr == cameraSceneItem->mViewSpaceToClipSpaceMatrix && nullptr == cameraSceneItem->mWorldSpaceToViewSpaceMatrix)
+		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye() && !cameraSceneItem->hasCustomWorldSpaceToViewSpaceMatrix() && !cameraSceneItem->hasCustomViewSpaceToClipSpaceMatrix())
 		{
+			// Virtual reality rendering
 			const IVrManager::VrEye vrEye = static_cast<IVrManager::VrEye>(getCurrentRenderedVrEye());
 			viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, mNearZ, mFarZ);
 			viewTranslateMatrix = vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye) * vrManager.getHmdPoseMatrix();
 
 			// Calculate the final matrices
+			const Transform& worldSpaceToViewSpaceTransform = (nullptr != cameraSceneItem) ? cameraSceneItem->getWorldSpaceToViewSpaceTransform() : Transform::IDENTITY;
 			mPassData->worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
+		}
+		else if (nullptr != cameraSceneItem)
+		{
+			// Standard rendering using a camera scene item
+
+			// Get world space to view space matrix (Aka "view matrix")
+			mPassData->worldSpaceToViewSpaceMatrix = cameraSceneItem->getWorldSpaceToViewSpaceMatrix();
+
+			// Get view space to clip space matrix (aka "projection matrix")
+			viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrix(static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight);
 		}
 		else
 		{
-			// Get the aspect ratio
-			const float aspectRatio = static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight;
+			// Standard rendering
 
-			// Calculate the view space to clip space matrix
-			// TODO(co) Just a test: Implement decent custom matrices
-			if (nullptr != cameraSceneItem->mViewSpaceToClipSpaceMatrix)
-			{
-				viewSpaceToClipSpaceMatrix = *cameraSceneItem->mViewSpaceToClipSpaceMatrix;
-			}
-			else
-			{
-				viewSpaceToClipSpaceMatrix = glm::perspective(fovY, aspectRatio, mNearZ, mFarZ);
-			}
+			// Get world space to view space matrix (Aka "view matrix")
+			mPassData->worldSpaceToViewSpaceMatrix = glm::lookAt(Transform::IDENTITY.position, Transform::IDENTITY.position + Transform::IDENTITY.rotation * Math::FORWARD_VECTOR, Math::UP_VECTOR);
 
-			// Calculate the final matrices
-			// TODO(co) Just a test: Implement decent custom matrices
-			if (nullptr != cameraSceneItem->mWorldSpaceToViewSpaceMatrix)
-			{
-				mPassData->worldSpaceToViewSpaceMatrix = *cameraSceneItem->mWorldSpaceToViewSpaceMatrix;
-			}
-			else
-			{
-				mPassData->worldSpaceToViewSpaceMatrix = glm::lookAt(worldSpaceToViewSpaceTransform.position, worldSpaceToViewSpaceTransform.position + worldSpaceToViewSpaceTransform.rotation * Math::FORWARD_VECTOR, Math::UP_VECTOR);
-			}
+			// Get view space to clip space matrix (aka "projection matrix")
+			viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_NEAR_Z, CameraSceneItem::DEFAULT_FAR_Z);
 		}
 		mPassData->worldSpaceToViewSpaceQuaternion = glm::quat(mPassData->worldSpaceToViewSpaceMatrix);
 		mPassData->worldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;

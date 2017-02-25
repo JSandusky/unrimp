@@ -72,9 +72,9 @@ namespace RendererRuntime
 			glm::mat4 depthProjectionMatrix = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, -40.0f, 20.0f);
 			glm::mat4 depthViewMatrix = glm::lookAt(worldSpaceSunLightDirection, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-			// TODO(co) Just a test: Implement decent custom matrices
-			const_cast<CameraSceneItem*>(cameraSceneItem)->mViewSpaceToClipSpaceMatrix = &depthProjectionMatrix;
-			const_cast<CameraSceneItem*>(cameraSceneItem)->mWorldSpaceToViewSpaceMatrix = &depthViewMatrix;
+			// Set custom camera matrices
+			const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomWorldSpaceToViewSpaceMatrix(depthViewMatrix);
+			const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomViewSpaceToClipSpaceMatrix(depthProjectionMatrix);
 
 			{ // Render shadow casters
 				// Begin debug event
@@ -98,9 +98,9 @@ namespace RendererRuntime
 				COMMAND_END_DEBUG_EVENT(commandBuffer)
 			}
 
-			// TODO(co) Just a test: Implement decent custom matrices
-			const_cast<CameraSceneItem*>(cameraSceneItem)->mViewSpaceToClipSpaceMatrix = nullptr;
-			const_cast<CameraSceneItem*>(cameraSceneItem)->mWorldSpaceToViewSpaceMatrix = nullptr;
+			// Unset custom camera matrices
+			const_cast<CameraSceneItem*>(cameraSceneItem)->unsetCustomWorldSpaceToViewSpaceMatrix();
+			const_cast<CameraSceneItem*>(cameraSceneItem)->unsetCustomViewSpaceToClipSpaceMatrix();
 
 			// Apply the scale/offset matrix, which transforms from [-1,1]
 			// post-projection space to [0,1] UV space

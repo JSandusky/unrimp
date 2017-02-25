@@ -58,6 +58,43 @@ namespace RendererRuntime
 		mFarZ = farZ;
 	}
 
+	inline bool CameraSceneItem::hasCustomWorldSpaceToViewSpaceMatrix() const
+	{
+		return mHasCustomWorldSpaceToViewSpaceMatrix;
+	}
+
+	inline void CameraSceneItem::unsetCustomWorldSpaceToViewSpaceMatrix()
+	{
+		mHasCustomWorldSpaceToViewSpaceMatrix = false;
+	}
+
+	inline void CameraSceneItem::setCustomWorldSpaceToViewSpaceMatrix(const glm::mat4& customWorldSpaceToViewSpaceMatrix)
+	{
+		mWorldSpaceToViewSpaceMatrix = customWorldSpaceToViewSpaceMatrix;
+		mHasCustomWorldSpaceToViewSpaceMatrix = true;
+	}
+
+	inline const glm::mat4& CameraSceneItem::getViewSpaceToClipSpaceMatrix() const
+	{
+		return mViewSpaceToClipSpaceMatrix;
+	}
+
+	inline bool CameraSceneItem::hasCustomViewSpaceToClipSpaceMatrix() const
+	{
+		return mHasCustomViewSpaceToClipSpaceMatrix;
+	}
+
+	inline void CameraSceneItem::unsetCustomViewSpaceToClipSpaceMatrix()
+	{
+		mHasCustomViewSpaceToClipSpaceMatrix = false;
+	}
+
+	inline void CameraSceneItem::setCustomViewSpaceToClipSpaceMatrix(const glm::mat4& customViewSpaceToClipSpaceMatrix)
+	{
+		mViewSpaceToClipSpaceMatrix = customViewSpaceToClipSpaceMatrix;
+		mHasCustomViewSpaceToClipSpaceMatrix = true;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
@@ -73,11 +110,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline CameraSceneItem::CameraSceneItem(ISceneResource& sceneResource) :
 		ISceneItem(sceneResource),
-		mViewSpaceToClipSpaceMatrix(nullptr),
-		mWorldSpaceToViewSpaceMatrix(nullptr),
 		mFovY(DEFAULT_FOV_Y),
 		mNearZ(DEFAULT_NEAR_Z),
-		mFarZ(DEFAULT_FAR_Z)
+		mFarZ(DEFAULT_FAR_Z),
+		mHasCustomWorldSpaceToViewSpaceMatrix(false),
+		mHasCustomViewSpaceToClipSpaceMatrix(false)
 	{
 		// Nothing here
 	}
