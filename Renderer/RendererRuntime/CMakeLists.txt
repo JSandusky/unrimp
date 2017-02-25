@@ -39,6 +39,7 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGuizmo/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenVR/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
@@ -51,6 +52,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
 set(SOURCE_CODES
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/src/imgui.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/src/imgui_draw.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGuizmo/src/ImGuizmo.cpp
 	src/Asset/AssetManager.cpp
 	src/Asset/AssetPackage.cpp
 	src/Asset/Serializer/AssetPackageSerializer.cpp
@@ -69,6 +71,7 @@ set(SOURCE_CODES
 	src/Core/Renderer/RenderTargetTextureSignature.cpp
 	src/Core/String.cpp
 	src/DebugGui/DebugGuiManager.cpp
+	src/DebugGui/DebugGuiHelper.cpp
 	src/RenderQueue/IndirectBufferManager.cpp
 	src/RenderQueue/Renderable.cpp
 	src/RenderQueue/RenderableManager.cpp

@@ -23,18 +23,16 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/DebugGui/DebugGuiManager.h"
+#include "RendererRuntime/DebugGui/DebugGuiHelper.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
+
+#include <imguizmo/ImGuizmo.h>
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
 #include <glm/detail/setup.hpp>	// For "glm::countof()"
-
-#include <string>
-#ifdef ANDROID
-	#include <cstdio>	// For implementing own "std::to_string()"
-#endif
 
 
 //[-------------------------------------------------------]
@@ -92,26 +90,6 @@ namespace
 		const Renderer::VertexAttributes VertexAttributes(static_cast<uint32_t>(glm::countof(VertexAttributesLayout)), VertexAttributesLayout);
 
 
-		//[-------------------------------------------------------]
-		//[ Global functions                                      ]
-		//[-------------------------------------------------------]
-		std::string own_to_string(uint32_t value)
-		{
-			// Own "std::to_string()" implementation similar to the one used in GCC STL
-			// -> We need it on Android because GNU STL doesn't implement it, which is part of the Android NDK
-			// -> We need to support GNU STL because Qt-runtime uses Qt Android which currently only supports GNU STL as C++ runtime
-			#ifdef ANDROID
-				// We convert only an uint32 value which has a maximum value of 4294967295 -> 11 characters so with 16 we are on the safe side
-				const size_t bufferSize = 16;
-				char buffer[bufferSize] = {0};
-				const int length = snprintf(buffer, bufferSize, "%u", value);
-				return std::string(buffer, buffer + length);
-			#else
-				return std::to_string(value);
-			#endif
-		}
-
-
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
@@ -138,33 +116,13 @@ namespace RendererRuntime
 			mIsRunning = true;
 		}
 
-		// Reset the draw text counter
-		mDrawTextCounter = 0;
-
 		// Call the platform specific implementation
 		onNewFrame(renderTarget);
 
 		// Start the frame
 		ImGui::NewFrame();
-	}
-
-	void DebugGuiManager::drawText(const char* text, float x, float y, bool drawBackground)
-	{
-		if (!drawBackground)
-		{
-			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 0.0f, 0.0f, 0.0f));
-		}
-		// TODO(co) Get rid of "std::to_string()" later on in case it's a problem (memory allocations inside)
-		// TODO(sw) the gnustl on android (Currently needed to be used in conjunction with Qt) doesn't have std::to_string
-		ImGui::Begin(("RendererRuntime::DebugGuiManager::drawText_" + ::detail::own_to_string(mDrawTextCounter)).c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoFocusOnAppearing);
-			ImGui::Text("%s", text);	// Use "%s" as format instead of the text itself to avoid compiler warning "-Wformat-security"
-			ImGui::SetWindowPos(ImVec2(x, y));
-		ImGui::End();
-		if (!drawBackground)
-		{
-			ImGui::PopStyleColor();
-		}
-		++mDrawTextCounter;
+		ImGuizmo::BeginFrame();
+		DebugGuiHelper::beginFrame();
 	}
 
 	Renderer::IVertexArrayPtr DebugGuiManager::getFillVertexArrayPtr()
@@ -379,7 +337,6 @@ namespace RendererRuntime
 	DebugGuiManager::DebugGuiManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mIsRunning(false),
-		mDrawTextCounter(0),
 		mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 		mNumberOfAllocatedVertices(0),
 		mNumberOfAllocatedIndices(0)

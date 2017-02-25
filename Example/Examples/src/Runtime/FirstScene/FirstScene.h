@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "Framework/ExampleBase.h"
 
-#include <RendererRuntime/Core/Time/Stopwatch.h>
+#include <RendererRuntime/DebugGui/DebugGuiHelper.h>
 #include <RendererRuntime/Resource/IResourceListener.h>
 
 
@@ -158,8 +158,8 @@ private:
 	RendererRuntime::CameraSceneItem* mCameraSceneItem;
 	RendererRuntime::LightSceneItem*  mLightSceneItem;
 	RendererRuntime::ISceneNode*	  mSceneNode;
-	// Timing
-	float mRotation;
+	// States for runtime-editing
+	RendererRuntime::DebugGuiHelper::GizmoSettings mGizmoSettings;
 	// States for runtime-fun
 	Compositor mInstancedCompositor;
 	int		   mCurrentCompositor;

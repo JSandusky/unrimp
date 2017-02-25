@@ -170,7 +170,7 @@ namespace RendererToolkit
 			}
 
 			// Write down the channel byte offsets
-			outputFileStream.write(reinterpret_cast<const char*>(channelByteOffsets.data()), sizeof(uint32_t) * channelByteOffsets.size());
+			outputFileStream.write(reinterpret_cast<const char*>(channelByteOffsets.data()), static_cast<std::streamsize>(sizeof(uint32_t) * channelByteOffsets.size()));
 
 			// Bone channels, all the skeleton animation data in one big chunk
 			for (unsigned int channel = 0; channel < assimpAnimation->mNumChannels; ++channel)
@@ -200,7 +200,7 @@ namespace RendererToolkit
 						vector3Key.value.y	   = assimpVectorKey.mValue.y;
 						vector3Key.value.z	   = assimpVectorKey.mValue.z;
 					}
-					outputFileStream.write(reinterpret_cast<const char*>(positionKeys.data()), sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumPositionKeys);
+					outputFileStream.write(reinterpret_cast<const char*>(positionKeys.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumPositionKeys));
 				}
 
 				{ // Write bone channel rotation data
@@ -216,7 +216,7 @@ namespace RendererToolkit
 						quaternionKey.value.z	  = assimpQuatKey.mValue.z;
 						quaternionKey.value.w	  = assimpQuatKey.mValue.w;
 					}
-					outputFileStream.write(reinterpret_cast<const char*>(rotationKeys.data()), sizeof(RendererRuntime::SkeletonAnimationResource::QuaternionKey) * assimpNodeAnim->mNumRotationKeys);
+					outputFileStream.write(reinterpret_cast<const char*>(rotationKeys.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::SkeletonAnimationResource::QuaternionKey) * assimpNodeAnim->mNumRotationKeys));
 				}
 
 				{ // Write bone channel scale data
@@ -231,7 +231,7 @@ namespace RendererToolkit
 						vector3Key.value.y	   = assimpVectorKey.mValue.y;
 						vector3Key.value.z	   = assimpVectorKey.mValue.z;
 					}
-					outputFileStream.write(reinterpret_cast<const char*>(scaleKeys.data()), sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumScalingKeys);
+					outputFileStream.write(reinterpret_cast<const char*>(scaleKeys.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumScalingKeys));
 				}
 			}
 		}

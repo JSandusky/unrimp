@@ -185,6 +185,9 @@
     <Filter Include="Source Files\Core\Time">
       <UniqueIdentifier>{8ef6badd-8966-4c64-bf44-e5c35310fab1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\DebugGui\Detail\ImGuizmo">
+      <UniqueIdentifier>{d7c7f29c-b86e-4d2d-8eb0-d0005aa30263}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -1095,6 +1098,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationController.h">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\External\ImGuizmo\include\imguizmo\ImGuizmo.h">
+      <Filter>Source Files\DebugGui\Detail\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\DebugGui\DebugGuiHelper.h">
+      <Filter>Source Files\DebugGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1432,6 +1441,12 @@
     </ClCompile>
     <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationController.cpp">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\ImGuizmo\src\ImGuizmo.cpp">
+      <Filter>Source Files\DebugGui\Detail\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugGui\DebugGuiHelper.cpp">
+      <Filter>Source Files\DebugGui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

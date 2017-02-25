@@ -164,6 +164,7 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\External\ImGuizmo\include\imguizmo\ImGuizmo.h" />
     <ClInclude Include="..\..\External\ImGui\include\imgui\imconfig.h" />
     <ClInclude Include="..\..\External\ImGui\include\imgui\imgui.h" />
     <ClInclude Include="..\..\External\ImGui\include\imgui\imgui_internal.h" />
@@ -203,6 +204,7 @@
     <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadPool.h" />
     <ClInclude Include="include\RendererRuntime\Core\Time\Stopwatch.h" />
     <ClInclude Include="include\RendererRuntime\Core\Time\TimeManager.h" />
+    <ClInclude Include="include\RendererRuntime\DebugGui\DebugGuiHelper.h" />
     <ClInclude Include="include\RendererRuntime\DebugGui\DebugGuiManager.h" />
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerLinux.h" />
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerWindows.h" />
@@ -343,6 +345,16 @@
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_Null.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\External\ImGuizmo\src\ImGuizmo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\External\ImGui\src\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">NotUsing</PrecompiledHeader>
@@ -412,6 +424,7 @@
     <ClCompile Include="src\Core\String.cpp" />
     <ClCompile Include="src\Core\Time\Stopwatch.cpp" />
     <ClCompile Include="src\Core\Time\TimeManager.cpp" />
+    <ClCompile Include="src\DebugGui\DebugGuiHelper.cpp" />
     <ClCompile Include="src\DebugGui\DebugGuiManager.cpp" />
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerLinux.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
@@ -769,7 +782,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -802,7 +815,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -835,7 +848,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -868,7 +881,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -903,7 +916,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -949,7 +962,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -994,7 +1007,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -1038,7 +1051,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>

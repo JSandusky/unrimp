@@ -28,6 +28,7 @@
 #include "Framework/Color4.h"
 
 #include <RendererRuntime/DebugGui/DebugGuiManager.h>
+#include <RendererRuntime/DebugGui/DebugGuiHelper.h>
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -227,21 +228,21 @@ void InstancedCubes::onDraw()
 
 					// Number of cubes
 					sprintf(text, "Number of cubes: %d", mNumberOfCubeInstances);
-					debugGuiManager.drawText(text, 10.0f, 10.0f);
+					RendererRuntime::DebugGuiHelper::drawText(text, 10.0f, 10.0f);
 
 					// Frames per second
 					sprintf(text, "Frames per second: %.2f", mFramesPerSecond);
-					debugGuiManager.drawText(text, 10.0f, 40.0f);
+					RendererRuntime::DebugGuiHelper::drawText(text, 10.0f, 40.0f);
 
 					// Cubes per second
 					// -> In every frame we draw n-cubes...
 					// -> TODO(co) This number can get huge... had over 1 million cubes with >25 FPS... million cubes at ~2.4 FPS...
 					sprintf(text, "Cubes per second: %u", static_cast<uint32_t>(mFramesPerSecond) * mNumberOfCubeInstances);
-					debugGuiManager.drawText(text, 10.0f, 70.0f);
+					RendererRuntime::DebugGuiHelper::drawText(text, 10.0f, 70.0f);
 				}
 				else
 				{
-					debugGuiManager.drawText("No cube renderer instance", 10.0f, 10.0f);
+					RendererRuntime::DebugGuiHelper::drawText("No cube renderer instance", 10.0f, 10.0f);
 				}
 				debugGuiManager.fillCommandBufferUsingFixedBuildInRendererConfiguration(mCommandBuffer);
 

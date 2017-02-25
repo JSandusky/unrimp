@@ -27,13 +27,18 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/Math/Vector3.h"
-#include "RendererRuntime/Core/Math/Quaternion.h"
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/NonCopyable.h"
 
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4251)	// warning C4251: "needs to have dll-interface to be used by clients of class "
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class Transform;
+	class CameraSceneItem;
+}
 
 
 //[-------------------------------------------------------]
@@ -48,39 +53,66 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Transform class containing position, rotation and scale
+	*    Debug GUI helper generating ImGui ( https://github.com/ocornut/imgui ) commands
 	*/
-	class RENDERERRUNTIME_API_EXPORT Transform
+	class DebugGuiHelper : private NonCopyable
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class DebugGuiManager;	// Calls "RendererRuntime::DebugGuiHelper::beginFrame()"
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const Transform IDENTITY;	///< Identity transform
+		enum class GizmoOperation
+		{
+			TRANSLATE,
+			ROTATE,
+			SCALE
+		};
+		enum class GizmoMode
+		{
+			LOCAL,
+			WORLD
+		};
+		struct GizmoSettings
+		{
+			GizmoOperation	currentGizmoOperation = GizmoOperation::TRANSLATE;
+			GizmoMode		currentGizmoMode	  = GizmoMode::WORLD;
+			bool			useSnap				  = false;
+			float			snap[3]					{1.0f, 1.0f, 1.0f};
+		};
 
 
 	//[-------------------------------------------------------]
-	//[ Public data                                           ]
+	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
-		glm::vec3	position;
-		glm::quat	rotation;
-		glm::vec3	scale;
+		RENDERERRUNTIME_API_EXPORT static void drawText(const char* text, float x, float y, bool drawBackground = true);
+		RENDERERRUNTIME_API_EXPORT static void drawGizmo(GizmoSettings& gizmoSettings, const CameraSceneItem& cameraSceneItem, Transform& transform);	// Using "ImGuizmo" ( https://github.com/CedricGuillemet/ImGuizmo )
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	public:
-		inline Transform();
-		inline explicit Transform(const glm::vec3& position);
-		inline explicit Transform(const glm::mat4& transformMatrix);
-		inline Transform(const glm::vec3& position, const glm::quat& rotation);
-		inline Transform(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& scale);
-		void getAsMatrix(glm::mat4& objectSpaceToWorldSpace) const;
-		void setByMatrix(const glm::mat4& objectSpaceToWorldSpace);
+	private:
+		DebugGuiHelper() = delete;
+		~DebugGuiHelper() = delete;
+		DebugGuiHelper(const DebugGuiHelper&) = delete;
+		DebugGuiHelper& operator=(const DebugGuiHelper&) = delete;
+		static void beginFrame();
+
+
+	//[-------------------------------------------------------]
+	//[ Private static data                                   ]
+	//[-------------------------------------------------------]
+	private:
+		static uint32_t mDrawTextCounter;
 
 
 	};
@@ -90,13 +122,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/Math/Transform.inl"
-
-
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_POP

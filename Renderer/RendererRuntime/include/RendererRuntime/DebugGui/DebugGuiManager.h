@@ -54,7 +54,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Debug GUI manager
+	*    Debug GUI manager using ImGui ( https://github.com/ocornut/imgui )
 	*
 	*  @remarks
 	*    Supports two command buffer fill modes:
@@ -79,7 +79,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT void newFrame(Renderer::IRenderTarget& renderTarget);
-		RENDERERRUNTIME_API_EXPORT void drawText(const char* text, float x, float y, bool drawBackground = true);
 		RENDERERRUNTIME_API_EXPORT Renderer::IVertexArrayPtr getFillVertexArrayPtr();
 		RENDERERRUNTIME_API_EXPORT void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer);
 		RENDERERRUNTIME_API_EXPORT void fillCommandBufferUsingFixedBuildInRendererConfiguration(Renderer::CommandBuffer& commandBuffer);
@@ -110,7 +109,6 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime&			mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		bool						mIsRunning;			///< The debug GUI manager will be initialized lazy when "RendererRuntime::DebugGuiManager::newFrame()" is called for the first time
-		uint32_t					mDrawTextCounter;
 		Renderer::ITexture2DPtr		mTexture2D;
 		// Fixed build in renderer configuration resources
 		Renderer::IRootSignaturePtr	mRootSignature;

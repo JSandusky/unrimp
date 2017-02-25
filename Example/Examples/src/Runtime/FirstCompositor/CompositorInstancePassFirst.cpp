@@ -38,6 +38,7 @@
 
 #include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/DebugGui/DebugGuiManager.h>
+#include <RendererRuntime/DebugGui/DebugGuiHelper.h>
 #include <RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h>
 #include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h>
 
@@ -51,7 +52,7 @@ void CompositorInstancePassFirst::onFillCommandBuffer(const Renderer::IRenderTar
 	const RendererRuntime::CompositorWorkspaceInstance& compositorWorkspaceInstance = getCompositorNodeInstance().getCompositorWorkspaceInstance();
 	RendererRuntime::DebugGuiManager& debugGuiManager = compositorWorkspaceInstance.getRendererRuntime().getDebugGuiManager();
 	debugGuiManager.newFrame(*compositorWorkspaceInstance.getExecutionRenderTarget());	// We know that the render target must be valid if we're in here
-	debugGuiManager.drawText("42", 100.0f, 100.0f);
+	RendererRuntime::DebugGuiHelper::drawText("42", 100.0f, 100.0f);
 	debugGuiManager.fillCommandBufferUsingFixedBuildInRendererConfiguration(commandBuffer);
 }
 

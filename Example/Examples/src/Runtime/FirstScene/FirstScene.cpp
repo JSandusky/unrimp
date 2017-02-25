@@ -30,6 +30,7 @@
 
 #include <RendererRuntime/Vr/IVrManager.h>
 #include <RendererRuntime/Core/Math/Transform.h>
+#include <RendererRuntime/Core/Math/EulerAngles.h>
 #include <RendererRuntime/Core/Time/TimeManager.h>
 #include <RendererRuntime/DebugGui/DebugGuiManager.h>
 #include <RendererRuntime/Resource/Scene/ISceneResource.h>
@@ -96,7 +97,6 @@ FirstScene::FirstScene() :
 	mCameraSceneItem(nullptr),
 	mLightSceneItem(nullptr),
 	mSceneNode(nullptr),
-	mRotation(0.0f),
 	mInstancedCompositor(Compositor::DEFERRED),
 	mCurrentCompositor(mInstancedCompositor),
 	mCurrentMsaa(Msaa::NONE),
@@ -104,7 +104,7 @@ FirstScene::FirstScene() :
 	mNumberOfTopTextureMipmapsToRemove(0),
 	mPerformFxaa(false),
 	mPerformSepiaColorCorrection(false),
-	mRotationSpeed(1.0f),
+	mRotationSpeed(0.5f),
 	mSunLightColor{1.0f, 1.0f, 1.0f},
 	mWetness(1.0f),
 	mPerformLighting(true),
@@ -232,10 +232,9 @@ void FirstScene::onUpdate()
 		// Update the scene node rotation
 		if (nullptr != mSceneNode && mRotationSpeed > 0.0f)
 		{
-			mSceneNode->setRotation(glm::angleAxis(mRotation, glm::vec3(0.0f, 1.0f, 0.0f)));
-
-			// Update the global timer (FPS independent movement)
-			mRotation += rendererRuntime->getTimeManager().getPastSecondsSinceLastFrame() * 0.5f * mRotationSpeed;
+			glm::vec3 eulerAngles = RendererRuntime::EulerAngles::matrixToEuler(glm::mat3_cast(mSceneNode->getTransform().rotation));
+			eulerAngles.x += rendererRuntime->getTimeManager().getPastSecondsSinceLastFrame() * mRotationSpeed;
+			mSceneNode->setRotation(RendererRuntime::EulerAngles::eulerToQuaternion(eulerAngles));
 		}
 
 		// Update controller
@@ -434,19 +433,31 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				ImGui::Checkbox("Perform Sepia Color Correction", &mPerformSepiaColorCorrection);
 
 				// Scene
+				ImGui::Separator();
 				ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
 
 				// Global material properties
+				ImGui::Separator();
 				ImGui::ColorEdit3("Sun Light Color", mSunLightColor);
 				ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
 
 				// Material properties
+				ImGui::Separator();
 				ImGui::Checkbox("Perform Lighting", &mPerformLighting);
 				ImGui::Checkbox("Use Diffuse Map", &mUseDiffuseMap);
 				ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
 				ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
 				ImGui::Checkbox("Use Specular Map", &mUseSpecularMap);
 				ImGui::ColorEdit3("Diffuse Color", mDiffuseColor);
+
+				// Scene node transform using gizmo
+				if (nullptr != mCameraSceneItem && nullptr != mSceneNode)
+				{
+					ImGui::Separator();
+					RendererRuntime::Transform transform = mSceneNode->getTransform();
+					RendererRuntime::DebugGuiHelper::drawGizmo(mGizmoSettings, *mCameraSceneItem, transform);
+					mSceneNode->setTransform(transform);
+				}
 			ImGui::End();
 
 			// Recreate the compositor workspace instance, if required
