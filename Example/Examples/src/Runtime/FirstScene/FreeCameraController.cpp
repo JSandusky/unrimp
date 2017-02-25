@@ -50,6 +50,9 @@ FreeCameraController::~FreeCameraController()
 //[-------------------------------------------------------]
 void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 {
+	// Sanity check: No negative time, no useless update calls
+	assert(pastSecondsSinceLastFrame > 0.0f);
+
 	RendererRuntime::ISceneNode* sceneNode = mCameraSceneItem.getParentSceneNode();
 	if (nullptr != sceneNode && (!mPressedKeys.empty() || !mPressedMouseButtons.empty()))
 	{

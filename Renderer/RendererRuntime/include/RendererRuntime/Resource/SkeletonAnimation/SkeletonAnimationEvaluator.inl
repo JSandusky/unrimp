@@ -41,6 +41,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline const SkeletonAnimationEvaluator::BoneIds& SkeletonAnimationEvaluator::getBoneIds() const
+	{
+		return mBoneIds;
+	}
+
 	inline const SkeletonAnimationEvaluator::TransformMatrices& SkeletonAnimationEvaluator::getTransformMatrices() const
 	{
 		return mTransformMatrices;

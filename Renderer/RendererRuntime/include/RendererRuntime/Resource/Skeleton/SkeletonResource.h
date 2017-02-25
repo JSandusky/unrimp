@@ -94,6 +94,7 @@ namespace RendererRuntime
 		inline uint8_t getNumberOfBones() const;
 		inline const uint8_t* getBoneParents() const;
 		inline const uint32_t* getBoneIds() const;
+		inline glm::mat4* getLocalBonePoses();
 		inline const glm::mat4* getLocalBonePoses() const;
 		inline const glm::mat4* getBoneOffsetMatrix() const;
 		inline const glm::mat4* getGlobalBonePoses() const;

@@ -40,7 +40,12 @@ namespace RendererRuntime
 		// Stop the stopwatch and get the past milliseconds
 		mStopwatch.stop();
 		mPastSecondsSinceLastFrame = mStopwatch.getSeconds();
-		if (mPastSecondsSinceLastFrame > 0.06f)
+		if (mPastSecondsSinceLastFrame <= 0.0f)
+		{
+			// Don't allow zero or time advancing enforcement asserts will get more complicated
+			mPastSecondsSinceLastFrame = std::numeric_limits<float>::min();
+		}
+		else if (mPastSecondsSinceLastFrame > 0.06f)
 		{
 			// No one likes huge time jumps
 			mPastSecondsSinceLastFrame = 0.06f;

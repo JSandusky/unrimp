@@ -43,6 +43,11 @@ namespace RendererRuntime
 		return mBoneIds;
 	}
 
+	inline glm::mat4* SkeletonResource::getLocalBonePoses()
+	{
+		return mLocalBonePoses;
+	}
+
 	inline const glm::mat4* SkeletonResource::getLocalBonePoses() const
 	{
 		return mLocalBonePoses;

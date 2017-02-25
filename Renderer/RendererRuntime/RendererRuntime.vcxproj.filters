@@ -561,6 +561,9 @@
     <None Include="include\RendererRuntime\Core\Time\TimeManager.inl">
       <Filter>Source Files\Core\Time</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationController.inl">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1089,6 +1092,9 @@
     <ClInclude Include="include\RendererRuntime\Core\Time\TimeManager.h">
       <Filter>Source Files\Core\Time</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationController.h">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1423,6 +1429,9 @@
     </ClCompile>
     <ClCompile Include="src\Core\Time\TimeManager.cpp">
       <Filter>Source Files\Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationController.cpp">
+      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

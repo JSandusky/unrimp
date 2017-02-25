@@ -23,8 +23,10 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResourceManager.h"
+#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationController.h"
 #include "RendererRuntime/Resource/SkeletonAnimation/Loader/SkeletonAnimationResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
+#include "RendererRuntime/Core/Time/TimeManager.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -137,7 +139,12 @@ namespace RendererRuntime
 
 	void SkeletonAnimationResourceManager::update()
 	{
-		// TODO(co) Implement me
+		// Update skeleton animation controllers
+		const float pastSecondsSinceLastFrame = mRendererRuntime.getTimeManager().getPastSecondsSinceLastFrame();
+		for (SkeletonAnimationController* skeletonAnimationController : mSkeletonAnimationControllers)
+		{
+			skeletonAnimationController->update(pastSecondsSinceLastFrame);
+		}
 	}
 
 

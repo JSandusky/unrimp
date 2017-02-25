@@ -48,8 +48,16 @@ namespace RendererRuntime
 		const SkeletonAnimationResource::ChannelData& channelData = skeletonAnimationResource.getChannelData();
 		if (mTransformMatrices.empty())
 		{
+			// Allocate memory
+			mBoneIds.resize(numberOfChannels);
 			mTransformMatrices.resize(numberOfChannels);
 			mLastPositions.resize(numberOfChannels, std::make_tuple(0, 0, 0));
+
+			// Backup bone IDs
+			for (uint8_t i = 0; i < numberOfChannels; ++i)
+			{
+				mBoneIds[i] = reinterpret_cast<const SkeletonAnimationResource::ChannelHeader&>(*(channelData.data() + channelByteOffsets[i])).boneId;
+			}
 		}
 
 		// Extract ticks per second; assume default value if not given

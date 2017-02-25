@@ -328,6 +328,9 @@ const RendererRuntime::LightSceneItem& VrController::getTeleportIndicationLightS
 //[-------------------------------------------------------]
 void VrController::onUpdate(float pastSecondsSinceLastFrame)
 {
+	// Sanity check: No negative time, no useless update calls
+	assert(pastSecondsSinceLastFrame > 0.0f);
+
 	// The first VR controller is used for teleporting
 	// -> A green light indicates the position one will end up
 	// -> When pressing the trigger button one teleports to this position

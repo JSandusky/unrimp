@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -28,29 +34,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline AssetId SkeletonMeshSceneItem::getSkeletonAnimationAssetId() const
-	{
-		return mSkeletonAnimationAssetId;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneItem methods            ]
-	//[-------------------------------------------------------]
-	inline SceneItemTypeId SkeletonMeshSceneItem::getSceneItemTypeId() const
-	{
-		return TYPE_ID;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	inline SkeletonMeshSceneItem::SkeletonMeshSceneItem(ISceneResource& sceneResource) :
-		MeshSceneItem(sceneResource),
-		mSkeletonAnimationController(nullptr)
+	inline SkeletonAnimationController::SkeletonAnimationController(const IRendererRuntime& rendererRuntime, SkeletonResourceId skeletonResourceId) :
+		mRendererRuntime(rendererRuntime),
+		mSkeletonResourceId(skeletonResourceId),
+		mSkeletonAnimationResourceId(getUninitialized<SkeletonAnimationResourceId>()),
+		mSkeletonAnimationEvaluator(nullptr),
+		mTimeInSeconds(0.0f)
 	{
 		// Nothing here
+	}
+
+	inline SkeletonAnimationController::~SkeletonAnimationController()
+	{
+		clear();
 	}
 
 

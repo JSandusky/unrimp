@@ -35,7 +35,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class SkeletonAnimationEvaluator;
+	class SkeletonAnimationController;
 }
 
 
@@ -47,24 +47,11 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef uint32_t SkeletonAnimationResourceId;	///< POD skeleton animation resource identifier
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
 	*    Skeleton mesh scene item class
-	*
-	*  @todo
-	*    - TODO(co) Right now only a single skeleton animation at one and the same time is supported to have something to start with.
-	*               This isn't practical, of course, and in reality one has multiple animation sources at one and the same time which
-	*               are blended together. But well, as mentioned, one has to start somewhere.
-	*    - TODO(co) Currently "RendererRuntime::SkeletonAnimationEvaluator" is directly used, probably it makes sense to manage those
-	*               and then update all of them in parallel using multi-threading
 	*/
 	class SkeletonMeshSceneItem : public MeshSceneItem
 	{
@@ -87,9 +74,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline SkeletonAnimationResourceId getSkeletonAnimationResourceId() const;
-		RENDERERRUNTIME_API_EXPORT void setSkeletonAnimationResourceId(SkeletonAnimationResourceId skeletonAnimationResourceId);
-		RENDERERRUNTIME_API_EXPORT void setSkeletonAnimationResourceIdByAssetId(AssetId skeletonAnimationAssetId);
+		inline AssetId getSkeletonAnimationAssetId() const;
 
 
 	//[-------------------------------------------------------]
@@ -121,8 +106,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		SkeletonAnimationResourceId mSkeletonAnimationResourceId;	///< Skeleton animation resource ID, can be set to uninitialized value
-		SkeletonAnimationEvaluator* mSkeletonAnimationEvaluator;	///< Skeleton animation evaluator instance, can be a null pointer, destroy the instance if you no longer need it
+		AssetId						 mSkeletonAnimationAssetId;		///< Skeleton animation asset ID, can be set to uninitialized value
+		SkeletonAnimationController* mSkeletonAnimationController;	///< Skeleton animation controller instance, can be a null pointer, destroy the instance if you no longer need it
 
 
 	};

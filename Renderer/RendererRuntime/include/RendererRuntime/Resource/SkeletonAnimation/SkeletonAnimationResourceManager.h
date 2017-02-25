@@ -40,6 +40,7 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class IResourceListener;
+	class SkeletonAnimationController;
 }
 
 
@@ -72,6 +73,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
+		friend class SkeletonAnimationController;	// Registers/unregisters itself inside the skeleton animation resource manager
 
 
 	//[-------------------------------------------------------]
@@ -106,11 +108,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<SkeletonAnimationController*> SkeletonAnimationControllers;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		   mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		SkeletonAnimationResources mSkeletonAnimationResources;
+		IRendererRuntime&			 mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
+		SkeletonAnimationResources   mSkeletonAnimationResources;
+		SkeletonAnimationControllers mSkeletonAnimationControllers;	///< Don't destroy the instanced, they are not owned here
 
 
 	};

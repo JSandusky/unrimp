@@ -27,19 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
-	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
-	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
-	#include <glm/glm.hpp>
-PRAGMA_WARNING_POP
-
-#include <tuple>
-#include <vector>
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
+#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Resource/IResourceListener.h"
 
 
 //[-------------------------------------------------------]
@@ -47,7 +36,8 @@ PRAGMA_WARNING_POP
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class SkeletonAnimationResourceManager;
+	class IRendererRuntime;
+	class SkeletonAnimationEvaluator;
 }
 
 
@@ -61,6 +51,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
+	typedef StringId AssetId;						///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef uint32_t SkeletonResourceId;			///< POD skeleton resource identifier
 	typedef uint32_t SkeletonAnimationResourceId;	///< POD skeleton animation resource identifier
 
 
@@ -69,21 +61,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Skeleton animation evaluator which calculates transformations for a given timestamp
+	*    Skeleton animation controller
 	*
-	*  @note
-	*    - Basing on "AssimpView::AnimEvaluator" ( https://github.com/assimp/assimp/blob/master/tools/assimp_view/AnimEvaluator.cpp )
+	*  @todo
+	*    - TODO(co) Right now only a single skeleton animation at one and the same time is supported to have something to start with.
+	*               This isn't practical, of course, and in reality one has multiple animation sources at one and the same time which
+	*               are blended together. But well, as mentioned, one has to start somewhere.
+	*    - TODO(co) Currently "RendererRuntime::SkeletonAnimationEvaluator" is directly used, probably it makes sense to manage those
+	*               and then update all of them in parallel using multi-threading
+	*    - TODO(co) It might make sense to let the skeleton animation resource manager manage skeleton animation controller instances as well
 	*/
-	class SkeletonAnimationEvaluator : public NonCopyable
+	class SkeletonAnimationController : public IResourceListener
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-	public:
-		typedef std::vector<uint32_t>  BoneIds;
-		typedef std::vector<glm::mat4> TransformMatrices;
+		friend class SkeletonAnimationResourceManager;	// Calls "RendererRuntime::SkeletonAnimationController::update()"
 
 
 	//[-------------------------------------------------------]
@@ -92,74 +87,81 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
-		*    Constructor on a given animation; the animation is fixed throughout the lifetime of the object
+		*    Constructor
 		*
-		*  @param[in] skeletonAnimationResourceManager
-		*    Skeleton animation resource manager to use
-		*  @param[in] skeletonAnimationResourceId
-		*    Skeleton animation resource ID
+		*  @param[in] rendererRuntime
+		*    Renderer runtime to use
+		*  @param[in] skeletonResourceId
+		*    ID of the controlled skeleton resource
 		*/
-		inline SkeletonAnimationEvaluator(SkeletonAnimationResourceManager& skeletonAnimationResourceManager, SkeletonAnimationResourceId skeletonAnimationResourceId);
+		inline SkeletonAnimationController(const IRendererRuntime& rendererRuntime, SkeletonResourceId skeletonResourceId);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		inline ~SkeletonAnimationEvaluator();
+		inline ~SkeletonAnimationController();
 
 		/**
 		*  @brief
-		*    Evaluates the animation tracks for a given time stamp; the calculated pose can be retrieved as a array of transformation matrices afterwards by calling "RendererRuntime::SkeletonAnimationEvaluator::getTransformMatrices()"
+		*    Start skeleton animation by resource ID
 		*
-		*  @param[in] timeInSeconds
-		*    The time for which you want to evaluate the animation, in seconds. Will be mapped into the animation cycle, so it can be an arbitrary value. Best use with ever-increasing time stamps.
+		*  @param[in] skeletonAnimationResourceId
+		*    Skeleton animation resource ID
 		*/
-		void evaluate(float timeInSeconds);
+		void startSkeletonAnimationByResourceId(SkeletonAnimationResourceId skeletonAnimationResourceId);
 
 		/**
 		*  @brief
-		*    Return the bone IDs
+		*    Start skeleton animation by asset ID
 		*
-		*  @return
-		*    The bone IDs
+		*  @param[in] skeletonAnimationAssetId
+		*    Skeleton animation asset ID
 		*/
-		inline const BoneIds& getBoneIds() const;
+		void startSkeletonAnimationByAssetId(AssetId skeletonAnimationAssetId);
 
 		/**
 		*  @brief
-		*    Return the transform matrices calculated at the last "RendererRuntime::SkeletonAnimationEvaluator::evaluate()" call
-		*
-		*  @return
-		*    The transform matrices
+		*    Clear the controller
 		*/
-		inline const TransformMatrices& getTransformMatrices() const;
+		void clear();
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void onLoadingStateChange(const IResource& resource) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		SkeletonAnimationEvaluator(const SkeletonAnimationEvaluator&) = delete;
-		SkeletonAnimationEvaluator& operator=(const SkeletonAnimationEvaluator&) = delete;
+		SkeletonAnimationController(const SkeletonAnimationController&) = delete;
+		SkeletonAnimationController& operator=(const SkeletonAnimationController&) = delete;
+		void createSkeletonAnimationEvaluator();
+		void destroySkeletonAnimationEvaluator();
 
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::vector<std::tuple<uint32_t, uint32_t, uint32_t>> LastPositions;
+		/**
+		*  @brief
+		*    Update the controller
+		*
+		*  @param[in] pastSecondsSinceLastFrame
+		*    Past seconds since last frame
+		*/
+		void update(float pastSecondsSinceLastFrame);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		SkeletonAnimationResourceManager& mSkeletonAnimationResourceManager;	///< Skeleton animation resource manager to use
-		SkeletonAnimationResourceId		  mSkeletonAnimationResourceId;			///< Skeleton animation resource ID
-		BoneIds							  mBoneIds;								///< Bone IDs ("RendererRuntime::StringId" on bone name)
-		TransformMatrices				  mTransformMatrices;					///< The transform matrices calculated at the last "RendererRuntime::SkeletonAnimationEvaluator::evaluate()" call
-		float							  mLastTimeInTicks;
-		LastPositions					  mLastPositions;						///< At which frame the last evaluation happened for each channel; useful to quickly find the corresponding frame for slightly increased time stamps
+		const IRendererRuntime&		mRendererRuntime;				///< Renderer runtime to use
+		SkeletonResourceId			mSkeletonResourceId;			///< ID of the controlled skeleton resource
+		SkeletonAnimationResourceId mSkeletonAnimationResourceId;	///< Skeleton animation resource ID, can be set to uninitialized value
+		SkeletonAnimationEvaluator* mSkeletonAnimationEvaluator;	///< Skeleton animation evaluator instance, can be a null pointer, destroy the instance if you no longer need it
+		float						mTimeInSeconds;					///< Time in seconds
 
 
 	};
@@ -174,4 +176,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationEvaluator.inl"
+#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationController.inl"

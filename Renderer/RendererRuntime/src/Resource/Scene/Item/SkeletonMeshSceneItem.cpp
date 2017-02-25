@@ -25,9 +25,8 @@
 #include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
-#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationEvaluator.h"
-#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResourceManager.h"
-#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationController.h"
+#include "RendererRuntime/Resource/Mesh/MeshResource.h"
 
 
 //[-------------------------------------------------------]
@@ -44,32 +43,6 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	void SkeletonMeshSceneItem::setSkeletonAnimationResourceId(SkeletonAnimationResourceId skeletonAnimationResourceId)
-	{
-		if (isInitialized(mSkeletonAnimationResourceId))
-		{
-			disconnectFromResourceById(mSkeletonAnimationResourceId);
-		}
-		mSkeletonAnimationResourceId = skeletonAnimationResourceId;
-		if (isInitialized(skeletonAnimationResourceId))
-		{
-			getSceneResource().getRendererRuntime().getSkeletonAnimationResourceManager().getSkeletonAnimationResources().getElementById(skeletonAnimationResourceId).connectResourceListener(*this);
-		}
-	}
-
-	void SkeletonMeshSceneItem::setSkeletonAnimationResourceIdByAssetId(AssetId skeletonAnimationAssetId)
-	{
-		if (isInitialized(mSkeletonAnimationResourceId))
-		{
-			disconnectFromResourceById(mSkeletonAnimationResourceId);
-		}
-		mSkeletonAnimationResourceId = getSceneResource().getRendererRuntime().getSkeletonAnimationResourceManager().loadSkeletonAnimationResourceByAssetId(skeletonAnimationAssetId, this);
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
 	void SkeletonMeshSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t* data)
@@ -79,7 +52,7 @@ namespace RendererRuntime
 		const v1Scene::SkeletonMeshItem* skeletonMeshItem = reinterpret_cast<const v1Scene::SkeletonMeshItem*>(data);
 
 		// Read data
-		setSkeletonAnimationResourceIdByAssetId(skeletonMeshItem->skeletonAnimationAssetId);
+		mSkeletonAnimationAssetId = skeletonMeshItem->skeletonAnimationAssetId;
 
 		// Call base implementation
 		MeshSceneItem::deserialize(numberOfBytes - sizeof(v1Scene::SkeletonMeshItem), data + sizeof(v1Scene::SkeletonMeshItem));
@@ -91,10 +64,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	SkeletonMeshSceneItem::~SkeletonMeshSceneItem()
 	{
-		if (nullptr != mSkeletonAnimationEvaluator)
+		if (nullptr != mSkeletonAnimationController)
 		{
-			delete mSkeletonAnimationEvaluator;
-			mSkeletonAnimationEvaluator = nullptr;
+			delete mSkeletonAnimationController;
+			mSkeletonAnimationController = nullptr;
 		}
 	}
 
@@ -104,25 +77,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void SkeletonMeshSceneItem::onLoadingStateChange(const IResource& resource)
 	{
-		// Is this loading state change about our skeleton animation resource?
-		if (resource.getId() == mSkeletonAnimationResourceId)
+		// Create/destroy skeleton animation controller
+		if (resource.getId() == getMeshResourceId())
 		{
 			if (resource.getLoadingState() == IResource::LoadingState::LOADED)
 			{
-				assert(nullptr == mSkeletonAnimationEvaluator);
-				mSkeletonAnimationEvaluator = new SkeletonAnimationEvaluator(getSceneResource().getRendererRuntime().getSkeletonAnimationResourceManager(), mSkeletonAnimationResourceId);
+				assert(nullptr == mSkeletonAnimationController);
+				mSkeletonAnimationController = new SkeletonAnimationController(getSceneResource().getRendererRuntime(), static_cast<const MeshResource&>(resource).getSkeletonResourceId());
+				mSkeletonAnimationController->startSkeletonAnimationByAssetId(mSkeletonAnimationAssetId);
 			}
-			else if (nullptr != mSkeletonAnimationEvaluator)
+			else if (nullptr != mSkeletonAnimationController)
 			{
-				delete mSkeletonAnimationEvaluator;
-				mSkeletonAnimationEvaluator = nullptr;
+				delete mSkeletonAnimationController;
+				mSkeletonAnimationController = nullptr;
 			}
 		}
-		else
-		{
-			// Call the base implementation
-			MeshSceneItem::onLoadingStateChange(resource);
-		}
+
+		// Call the base implementation
+		MeshSceneItem::onLoadingStateChange(resource);
 	}
 
 
