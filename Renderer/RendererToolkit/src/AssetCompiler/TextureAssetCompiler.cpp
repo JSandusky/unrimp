@@ -124,6 +124,11 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
+		std::string widthHeightToString(uint32 width, uint32 height)
+		{
+			return std::to_string(width) + 'x' + std::to_string(height);
+		}
+
 		void optionalTextureSemanticProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, TextureSemantic& value)
 		{
 			if (rapidJsonValue.HasMember(propertyName))
@@ -540,7 +545,8 @@ namespace
 				params.m_dst_format = crnlib::PIXEL_FMT_A8R8G8B8;
 			}
 
-			// Evaluate texture semantic
+			// Evaluate texture semantic and figure out whether or not the destination format will be DXT compressed
+			bool dxtCompressed = (crnlib::pixel_format::PIXEL_FMT_INVALID == params.m_dst_format) ? true : crnlib::pixel_format_helpers::is_dxt(params.m_dst_format);
 			switch (textureSemantic)
 			{
 				case TextureSemantic::DIFFUSE_MAP:
@@ -561,6 +567,7 @@ namespace
 					if (crnlib::pixel_format::PIXEL_FMT_INVALID == params.m_dst_format || crnlib::pixel_format::PIXEL_FMT_DXT1 == params.m_dst_format)
 					{
 						params.m_dst_format = crnlib::PIXEL_FMT_3DC;
+						dxtCompressed = true;
 					}
 					break;
 
@@ -583,6 +590,40 @@ namespace
 				case TextureSemantic::UNKNOWN:
 					// Nothing here, just a regular texture
 					break;
+			}
+
+			// 4x4 block size based DXT compression means the texture dimension must be a multiple of four, for all mipmaps if mipmaps are used
+			if (dxtCompressed)
+			{
+				// Check base mipmap
+				uint32 width = src_tex.get_width();
+				uint32 height = src_tex.get_height();
+				if (0 != (width % 4) || 0 != (height % 4))
+				{
+					throw std::runtime_error("4x4 block size based DXT compression used, but the texture dimension " + widthHeightToString(width, height) + " is no multiple of four");
+				}
+				else if (createMipmaps)
+				{
+					// Check mipmaps and at least inform in case dynamic texture resolution scale will be limited
+					uint32 mipmap = 0;
+					while (width > 4 && height > 4)
+					{
+						// Check mipmap
+						if (0 != (width % 4) || 0 != (height % 4))
+						{
+							// TODO(co) Performance warning via log
+							std::string warning = "4x4 block size based DXT compression used, but the texture dimension " + widthHeightToString(width, height) +
+												  " at mipmap level " + std::to_string(mipmap) + " is no multiple of four. Texture dimension is " +
+												  widthHeightToString(src_tex.get_width(), src_tex.get_height()) + ". Dynamic texture resolution scale will be limited to mipmap level " + std::to_string(mipmap - 1) + '.';
+							break;
+						}
+
+						// Next mipmap
+						++mipmap;
+						width = std::max(width >> 1, 1u);	// /= 2
+						height = std::max(height >> 1, 1u);	// /= 2
+					}
+				}
 			}
 
 			// Create mipmaps?

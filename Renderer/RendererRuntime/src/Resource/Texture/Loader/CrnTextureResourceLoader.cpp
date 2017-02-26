@@ -158,8 +158,14 @@ namespace RendererRuntime
 			startLevelIndex = 0;
 		}
 
-		// Optional top mipmap removal: Ensure we don't go below 4x4 to not get into troubles with 4x4 blocked based compression
+		// Optional top mipmap removal security checks
+		// -> Ensure we don't go below 4x4 to not get into troubles with 4x4 blocked based compression
+		// -> Ensure the base mipmap we tell the renderer about is a multiple of four. Even if the original base mipmap is a multiple of four, one of the lower mipmaps might not be.
 		while (startLevelIndex > 0 && (std::max(1U, mWidth >> startLevelIndex) < 4 || std::max(1U, mHeight >> startLevelIndex) < 4))
+		{
+			--startLevelIndex;
+		}
+		while (startLevelIndex > 0 && (0 != (std::max(1U, mWidth >> startLevelIndex) % 4) || (0 != std::max(1U, mHeight >> startLevelIndex) % 4)))
 		{
 			--startLevelIndex;
 		}
