@@ -92,32 +92,7 @@ MAIN_BEGIN
 	// GPU skinning
 	@property(UseGpuSkinning)
 	{
-		float4 objectSpaceToWorldSpaceMatrix[3];
-		uint textureBufferIndex = instanceIndices.x + 3u;
-
-		// First bone
-		uint textureBufferBoneOffset = textureBufferIndex + MAIN_INPUT(blendIndices)[0] * 4;
-		float boneWeight = MAIN_INPUT(blendWeights)[0];
-		objectSpaceToWorldSpaceMatrix[0] = TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 0u) * boneWeight;
-		objectSpaceToWorldSpaceMatrix[1] = TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 1u) * boneWeight;
-		objectSpaceToWorldSpaceMatrix[2] = TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 2u) * boneWeight;
-
-		// The other bones
-		for (int i = 1; i < 4; ++i)
-		{
-			textureBufferBoneOffset = textureBufferIndex + MAIN_INPUT(blendIndices)[i] * 4;
-			boneWeight = MAIN_INPUT(blendWeights)[i];
-			objectSpaceToWorldSpaceMatrix[0] += TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 0u) * boneWeight;
-			objectSpaceToWorldSpaceMatrix[1] += TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 1u) * boneWeight;
-			objectSpaceToWorldSpaceMatrix[2] += TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 2u) * boneWeight;
-		}
-
-		// Transform
-		float3 transformedPosition;
-		transformedPosition.x = dot(objectSpaceToWorldSpaceMatrix[0], float4(objectSpacePosition, 1.0f));
-		transformedPosition.y = dot(objectSpaceToWorldSpaceMatrix[1], float4(objectSpacePosition, 1.0f));
-		transformedPosition.z = dot(objectSpaceToWorldSpaceMatrix[2], float4(objectSpacePosition, 1.0f));
-		objectSpacePosition = transformedPosition;
+		@insertpiece(GetObjectSpaceToWorldSpaceMatrix)
 	}
 	@end
 

@@ -40,6 +40,10 @@ INPUT_BEGIN
 	@property(UseAlphaMap)	
 		INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)	// 32 bit texture coordinate
 	@end
+	@property(UseGpuSkinning)
+		INPUT_VERTEX_BLEND_INDICES(uint4, blendIndices)
+		INPUT_VERTEX_BLEND_WEIGHTS(float4, blendWeights)
+	@end
 	INPUT_VERTEX_DRAW_ID								// Draw ID
 INPUT_END
 OUTPUT_BEGIN
@@ -86,8 +90,18 @@ MAIN_BEGIN
 	float4 rotationQuaternion = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 1u);
 	float3 scale			  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 2u).xyz;
 
+	// Get the object space position
+	float3 objectSpacePosition = MAIN_INPUT(Position);
+
+	// GPU skinning
+	@property(UseGpuSkinning)
+	{
+		@insertpiece(GetObjectSpaceToWorldSpaceMatrix)
+	}
+	@end
+
 	// Calculate the world space vertex position
-	float3 worldSpacePosition = MultiplyQuaternionVector(rotationQuaternion, MAIN_INPUT(Position) * scale) + position;
+	float3 worldSpacePosition = MultiplyQuaternionVector(rotationQuaternion, objectSpacePosition * scale) + position;
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, float4(worldSpacePosition, 1.0f));
