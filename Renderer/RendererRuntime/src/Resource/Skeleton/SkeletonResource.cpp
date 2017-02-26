@@ -61,7 +61,7 @@ namespace RendererRuntime
 		}
 		for (uint8_t i = 0; i < mNumberOfBones; ++i)
 		{
-			mBoneSpaceMatrices[i] = mGlobalBoneMatrices[i] * mBoneOffsetMatrices[i];
+			mBoneSpaceMatrices[i] = glm::transpose(mGlobalBoneMatrices[i] * mBoneOffsetMatrices[i]);
 		}
 	}
 

@@ -106,6 +106,7 @@ FirstScene::FirstScene() :
 	mPerformFxaa(false),
 	mPerformSepiaColorCorrection(false),
 	mRotationSpeed(0.5f),
+	mShowSkeleton(false),
 	mSunLightColor{1.0f, 1.0f, 1.0f},
 	mWetness(1.0f),
 	mPerformLighting(true),
@@ -446,6 +447,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				// Scene
 				ImGui::Separator();
 				ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
+				ImGui::Checkbox("Show Skeleton", &mShowSkeleton);
 
 				// Global material properties
 				ImGui::Separator();
@@ -465,7 +467,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				if (nullptr != mCameraSceneItem)
 				{
 					// Draw skeleton
-					if (nullptr != mSkeletonMeshSceneItem && nullptr != mSkeletonMeshSceneItem->getParentSceneNode())
+					if (mShowSkeleton && nullptr != mSkeletonMeshSceneItem && nullptr != mSkeletonMeshSceneItem->getParentSceneNode())
 					{
 						RendererRuntime::DebugGuiHelper::drawSkeleton(*mCameraSceneItem, *mSkeletonMeshSceneItem);
 					}

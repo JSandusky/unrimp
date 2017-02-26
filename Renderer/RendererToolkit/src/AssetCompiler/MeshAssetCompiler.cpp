@@ -123,6 +123,9 @@ namespace
 									throw std::runtime_error("\"<MD5_Hierarchy>\" can only have a single root bone");
 								}
 								fillSkeletonRecursive(*assimpChildNode->mChildren[0], 0, 0);
+
+								// Some Assimp importers like the MD5 one compensate coordinate system differences by setting a root node transform, so we need to take this into account
+								localBoneMatrices[0] = assimpNode.mTransformation * localBoneMatrices[0];
 								break;
 							}
 						}
@@ -660,8 +663,13 @@ namespace RendererToolkit
 			// Write down the optional skeleton
 			if (skeleton.numberOfBones > 0)
 			{
+				const aiMatrix4x4& assimpRootTransformation = assimpScene->mRootNode->mTransformation.Inverse();
 				for (uint8_t i = 0; i < skeleton.numberOfBones; ++i)
 				{
+					// Some Assimp importers like the MD5 one compensate coordinate system differences by setting a root node transform, so we need to take this into account
+					skeleton.boneOffsetMatrices[i] = skeleton.boneOffsetMatrices[i] * assimpRootTransformation;
+
+					// Take care of row/column major flipping
 					skeleton.localBoneMatrices[i].Transpose();
 					skeleton.boneOffsetMatrices[i].Transpose();
 				}

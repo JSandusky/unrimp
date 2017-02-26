@@ -171,6 +171,7 @@ private:
 	bool	   mPerformFxaa;
 	bool	   mPerformSepiaColorCorrection;
 	float	   mRotationSpeed;
+	bool	   mShowSkeleton;
 	float	   mSunLightColor[3];
 	float	   mWetness;
 	bool	   mPerformLighting;
