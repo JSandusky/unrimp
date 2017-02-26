@@ -25,7 +25,12 @@
 #include "RendererRuntime/DebugGui/DebugGuiHelper.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/Core/Math/EulerAngles.h"
+#include "RendererRuntime/Resource/Scene/ISceneResource.h"
+#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h"
+#include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 #include <imguizmo/ImGuizmo.h>
 
@@ -63,6 +68,26 @@ namespace
 			#else
 				return std::to_string(value);
 			#endif
+		}
+
+		bool objectSpaceToScreenSpacePosition(const glm::vec3& objectSpacePosition, const glm::mat4& objectSpaceToClipSpaceMatrix, ImVec2& screenSpacePosition)
+		{
+			glm::vec4 position = objectSpaceToClipSpaceMatrix * glm::vec4(objectSpacePosition, 1.0f);
+			if (position.z < 0.0f)
+			{
+				// Behind camera
+				return false;
+			}
+			position *= 0.5f / position.w;
+			position += glm::vec4(0.5f, 0.5f, 0.0f, 0.0f);
+			position.y = 1.0f - position.y;
+			const ImGuiIO& imGuiIO = ImGui::GetIO();
+			position.x *= imGuiIO.DisplaySize.x;
+			position.y *= imGuiIO.DisplaySize.y;
+			screenSpacePosition = ImVec2(position.x, position.y);
+
+			// In front of camera
+			return true;
 		}
 
 
@@ -108,7 +133,7 @@ namespace RendererRuntime
 		++mDrawTextCounter;
 	}
 
-	void DebugGuiHelper::drawGizmo(GizmoSettings& gizmoSettings, const CameraSceneItem& cameraSceneItem, Transform& transform)
+	void DebugGuiHelper::drawGizmo(const CameraSceneItem& cameraSceneItem, GizmoSettings& gizmoSettings, Transform& transform)
 	{
 		// Setup ImGuizmo
 		if (ImGui::RadioButton("Translate", gizmoSettings.currentGizmoOperation == GizmoOperation::TRANSLATE))
@@ -163,10 +188,44 @@ namespace RendererRuntime
 		{ // Let ImGuizmo do its thing
 			glm::mat4 matrix;
 			transform.getAsMatrix(matrix);
-			ImGuizmo::OPERATION operation = static_cast<ImGuizmo::OPERATION>(gizmoSettings.currentGizmoOperation); 
+			ImGuizmo::OPERATION operation = static_cast<ImGuizmo::OPERATION>(gizmoSettings.currentGizmoOperation);
 			ImGuizmo::MODE mode = (operation == ImGuizmo::SCALE) ? ImGuizmo::LOCAL : static_cast<ImGuizmo::MODE>(gizmoSettings.currentGizmoMode);
 			ImGuizmo::Manipulate(glm::value_ptr(cameraSceneItem.getWorldSpaceToViewSpaceMatrix()), glm::value_ptr(cameraSceneItem.getViewSpaceToClipSpaceMatrix()), operation, mode, glm::value_ptr(matrix), nullptr, gizmoSettings.useSnap ? &gizmoSettings.snap[0] : nullptr);
 			transform = Transform(matrix);
+		}
+	}
+
+	void DebugGuiHelper::drawSkeleton(const CameraSceneItem& cameraSceneItem, const SkeletonMeshSceneItem& skeletonMeshSceneItem)
+	{
+		// Get skeleton resource instance
+		const SkeletonResource* skeletonResource = skeletonMeshSceneItem.getSceneResource().getRendererRuntime().getSkeletonResourceManager().getSkeletonResources().tryGetElementById(skeletonMeshSceneItem.getSkeletonResourceId());
+		if (nullptr != skeletonResource)
+		{
+			// Get transform data
+			glm::mat4 objectSpaceToWorldSpace;
+			skeletonMeshSceneItem.getParentSceneNodeSafe().getTransform().getAsMatrix(objectSpaceToWorldSpace);
+			const glm::mat4 objectSpaceToClipSpaceMatrix = cameraSceneItem.getViewSpaceToClipSpaceMatrix() * cameraSceneItem.getWorldSpaceToViewSpaceMatrix() * objectSpaceToWorldSpace;
+
+			// Get skeleton data
+			const uint8_t numberOfBones = skeletonResource->getNumberOfBones();
+			const uint8_t* boneParentIndices = skeletonResource->getBoneParentIndices();
+			const glm::mat4* globalBoneMatrices = skeletonResource->getGlobalBoneMatrices();
+
+			// Draw skeleton hierarchy as lines
+			ImGui::Begin("skeleton", nullptr, ImGui::GetIO().DisplaySize, 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus);
+			static const ImColor whiteImColor(255, 255, 255);
+			ImDrawList* imDrawList = ImGui::GetWindowDrawList();
+			ImVec2 parentBonePosition;
+			ImVec2 bonePosition;
+			for (uint8_t boneIndex = 1; boneIndex < numberOfBones; ++boneIndex)
+			{
+				if (::detail::objectSpaceToScreenSpacePosition(globalBoneMatrices[boneParentIndices[boneIndex]][3], objectSpaceToClipSpaceMatrix, parentBonePosition) &&
+					::detail::objectSpaceToScreenSpacePosition(globalBoneMatrices[boneIndex][3], objectSpaceToClipSpaceMatrix, bonePosition))
+				{
+					imDrawList->AddLine(parentBonePosition, bonePosition, whiteImColor, 6.0f);
+				}
+			}
+			ImGui::End();
 		}
 	}
 

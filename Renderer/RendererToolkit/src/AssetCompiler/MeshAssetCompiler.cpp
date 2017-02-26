@@ -79,12 +79,12 @@ namespace
 		//[ Public data                                           ]
 		//[-------------------------------------------------------]
 		public:
-			uint8_t		 numberOfBones;		///< Number of bones
+			uint8_t		 numberOfBones;			///< Number of bones
 			// Structure-of-arrays (SoA)
-			uint8_t*	 boneParents;		///< Cache friendly depth-first rolled up bone parents, null pointer only in case of horrible error, free the memory if no longer required
-			uint32_t*	 boneIds;			///< Cache friendly depth-first rolled up bone IDs ("RendererRuntime::StringId" on bone name), null pointer only in case of horrible error, don't free the memory because it's owned by "boneParents"
-			aiMatrix4x4* localBonePoses;	///< Cache friendly depth-first rolled up local bone poses, null pointer only in case of horrible error, don't free the memory because it's owned by "boneParents"
-			aiMatrix4x4* boneOffsetMatrix;	///< Cache friendly depth-first rolled up bone offset matrix (object space to bone space), null pointer only in case of horrible error, free the memory if no longer required
+			uint8_t*	 boneParentIndices;		///< Cache friendly depth-first rolled up bone parent indices, null pointer only in case of horrible error, free the memory if no longer required
+			uint32_t*	 boneIds;				///< Cache friendly depth-first rolled up bone IDs ("RendererRuntime::StringId" on bone name), null pointer only in case of horrible error, don't free the memory because it's owned by "boneParentIndices"
+			aiMatrix4x4* localBoneMatrices;		///< Cache friendly depth-first rolled up local bone matrices, null pointer only in case of horrible error, don't free the memory because it's owned by "boneParentIndices"
+			aiMatrix4x4* boneOffsetMatrices;	///< Cache friendly depth-first rolled up bone offset matrices (object space to bone space), null pointer only in case of horrible error, free the memory if no longer required
 
 
 		//[-------------------------------------------------------]
@@ -93,22 +93,22 @@ namespace
 		public:
 			explicit Skeleton(uint8_t _numberOfBones, const aiNode& assimpNode) :
 				numberOfBones(_numberOfBones),
-				boneParents(nullptr),
+				boneParentIndices(nullptr),
 				boneIds(nullptr),
-				localBonePoses(nullptr),
-				boneOffsetMatrix(nullptr)
+				localBoneMatrices(nullptr),
+				boneOffsetMatrices(nullptr)
 			{
 				if (numberOfBones > 0)
 				{
 					// To be able to serialize the data in a single burst we need to have the skeleton data sequential in memory
 					uint8_t* skeletonData = new uint8_t[getNumberOfSkeletonDataBytes()];
-					boneParents = skeletonData;
+					boneParentIndices = skeletonData;
 					skeletonData += sizeof(uint8_t) * numberOfBones;
 					boneIds = reinterpret_cast<uint32_t*>(skeletonData);
 					skeletonData += sizeof(uint32_t) * numberOfBones;
-					localBonePoses = reinterpret_cast<aiMatrix4x4*>(skeletonData);
+					localBoneMatrices = reinterpret_cast<aiMatrix4x4*>(skeletonData);
 					skeletonData += sizeof(aiMatrix4x4) * numberOfBones;
-					boneOffsetMatrix = reinterpret_cast<aiMatrix4x4*>(skeletonData);
+					boneOffsetMatrices = reinterpret_cast<aiMatrix4x4*>(skeletonData);
 
 					// MD5: The MD5 bones hierarchy is stored inside an Assimp node names "<MD5_Hierarchy>"
 					if (assimpNode.mName == aiString("<MD5_Root>"))
@@ -123,6 +123,9 @@ namespace
 									throw std::runtime_error("\"<MD5_Hierarchy>\" can only have a single root bone");
 								}
 								fillSkeletonRecursive(*assimpChildNode->mChildren[0], 0, 0);
+
+								// Some Assimp importers like the MD5 one compensate coordinate system differences by setting a root node transform, so we need to take this into account
+								localBoneMatrices[0] = assimpNode.mTransformation * localBoneMatrices[0];
 								break;
 							}
 						}
@@ -142,7 +145,7 @@ namespace
 
 			const uint8_t* getSkeletonData() const
 			{
-				return boneParents;
+				return boneParentIndices;
 			}
 
 			uint32_t getBoneIndexByBoneId(uint32_t boneId) const
@@ -173,9 +176,9 @@ namespace
 				}
 
 				// Gather bone data
-				boneParents[currentBoneIndex] = parentBoneIndex;
+				boneParentIndices[currentBoneIndex] = parentBoneIndex;
 				boneIds[currentBoneIndex] = boneId;
-				localBonePoses[currentBoneIndex] = assimpNode.mTransformation;
+				localBoneMatrices[currentBoneIndex] = assimpNode.mTransformation;
 				parentBoneIndex = currentBoneIndex;
 				++currentBoneIndex;
 
@@ -450,7 +453,7 @@ namespace
 						{
 							throw std::runtime_error(std::string("Invalid Assimp bone name \"") + assimpBone->mName.C_Str() + '\"');
 						}
-						skeleton.boneOffsetMatrix[boneIndex] = assimpBone->mOffsetMatrix;
+						skeleton.boneOffsetMatrices[boneIndex] = assimpBone->mOffsetMatrix;
 
 						// Loop through the Assimp bone weights
 						for (unsigned int weight = 0; weight < assimpBone->mNumWeights; ++weight)
@@ -660,10 +663,15 @@ namespace RendererToolkit
 			// Write down the optional skeleton
 			if (skeleton.numberOfBones > 0)
 			{
+				const aiMatrix4x4& assimpRootTransformation = assimpScene->mRootNode->mTransformation.Inverse();
 				for (uint8_t i = 0; i < skeleton.numberOfBones; ++i)
 				{
-					skeleton.localBonePoses[i].Transpose();
-					skeleton.boneOffsetMatrix[i].Transpose();
+					// Some Assimp importers like the MD5 one compensate coordinate system differences by setting a root node transform, so we need to take this into account
+					skeleton.boneOffsetMatrices[i] = skeleton.boneOffsetMatrices[i] * assimpRootTransformation;
+
+					// Take care of row/column major flipping
+					skeleton.localBoneMatrices[i].Transpose();
+					skeleton.boneOffsetMatrices[i].Transpose();
 				}
 				outputFileStream.write(reinterpret_cast<const char*>(skeleton.getSkeletonData()), static_cast<std::streamsize>(skeleton.getNumberOfSkeletonDataBytes()));
 			}

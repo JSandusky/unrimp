@@ -117,7 +117,7 @@ namespace RendererRuntime
 				if (timeDifference > 0.0f)
 				{
 					const float factor = float((timeInTicks - key.timeInTicks) / timeDifference);
-					presentPosition = key.value + (nextKey.value - key.value) * factor;	// TODO(co) Use "glm::mix()"
+					presentPosition = glm::mix(key.value, nextKey.value, factor);
 				}
 				else
 				{

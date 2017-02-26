@@ -173,6 +173,16 @@ namespace RendererRuntime
 		static glm::vec3 matrixToEuler(const glm::mat4& mRot, Order order = DefaultOrder);
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		EulerAngles() = delete;
+		~EulerAngles() = delete;
+		EulerAngles(const EulerAngles&) = delete;
+		EulerAngles& operator=(const EulerAngles&) = delete;
+
+
 	};
 
 

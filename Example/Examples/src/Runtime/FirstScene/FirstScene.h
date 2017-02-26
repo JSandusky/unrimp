@@ -43,6 +43,7 @@ namespace RendererRuntime
 	class ISceneResource;
 	class LightSceneItem;
 	class CameraSceneItem;
+	class SkeletonMeshSceneItem;
 	class CompositorWorkspaceInstance;
 }
 
@@ -155,9 +156,10 @@ private:
 	bool										  mCustomMaterialResourceSet;
 	IController*								  mController;
 	// Crazy raw-pointers to point-of-interest scene stuff
-	RendererRuntime::CameraSceneItem* mCameraSceneItem;
-	RendererRuntime::LightSceneItem*  mLightSceneItem;
-	RendererRuntime::ISceneNode*	  mSceneNode;
+	RendererRuntime::CameraSceneItem*		mCameraSceneItem;
+	RendererRuntime::LightSceneItem*		mLightSceneItem;
+	RendererRuntime::SkeletonMeshSceneItem*	mSkeletonMeshSceneItem;
+	RendererRuntime::ISceneNode*			mSceneNode;
 	// States for runtime-editing
 	RendererRuntime::DebugGuiHelper::GizmoSettings mGizmoSettings;
 	// States for runtime-fun
@@ -169,6 +171,7 @@ private:
 	bool	   mPerformFxaa;
 	bool	   mPerformSepiaColorCorrection;
 	float	   mRotationSpeed;
+	bool	   mShowSkeleton;
 	float	   mSunLightColor[3];
 	float	   mWetness;
 	bool	   mPerformLighting;

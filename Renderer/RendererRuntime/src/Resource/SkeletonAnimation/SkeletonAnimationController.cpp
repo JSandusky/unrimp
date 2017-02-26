@@ -127,13 +127,13 @@ namespace RendererRuntime
 			SkeletonResource& skeletonResource = static_cast<SkeletonResource&>(mRendererRuntime.getSkeletonResourceManager().getResourceByResourceId(mSkeletonResourceId));
 			const SkeletonAnimationEvaluator::BoneIds& boneIds = mSkeletonAnimationEvaluator->getBoneIds();
 			const SkeletonAnimationEvaluator::TransformMatrices& transformMatrices = mSkeletonAnimationEvaluator->getTransformMatrices();
-			glm::mat4* localBonePoses = skeletonResource.getLocalBonePoses();
+			glm::mat4* localBoneMatrices = skeletonResource.getLocalBoneMatrices();
 			for (size_t i = 0; i < boneIds.size(); ++i)
 			{
 				const uint32_t boneIndex = skeletonResource.getBoneIndexByBoneId(boneIds[i]);
 				if (isInitialized(boneIndex))
 				{
-					localBonePoses[boneIndex] = transformMatrices[i];
+					localBoneMatrices[boneIndex] = transformMatrices[i];
 				}
 			}
 			skeletonResource.localToGlobalPose();

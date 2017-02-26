@@ -26,7 +26,8 @@
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 #include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationController.h"
-#include "RendererRuntime/Resource/Mesh/MeshResource.h"
+#include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -40,6 +41,16 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	const SceneItemTypeId SkeletonMeshSceneItem::TYPE_ID("SkeletonMeshSceneItem");
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	SkeletonResourceId SkeletonMeshSceneItem::getSkeletonResourceId() const
+	{
+		const MeshResource* meshResource = getSceneResource().getRendererRuntime().getMeshResourceManager().getMeshResources().tryGetElementById(getMeshResourceId());
+		return (nullptr != meshResource) ? meshResource->getSkeletonResourceId() : getUninitialized<SkeletonResourceId>();
+	}
 
 
 	//[-------------------------------------------------------]

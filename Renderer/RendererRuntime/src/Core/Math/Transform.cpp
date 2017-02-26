@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/Math/Transform.h"
-#include "RendererRuntime/Core/Math/EulerAngles.h"
 #include "RendererRuntime/Core/Math/Math.h"
 
 // Disable warnings in external headers, we can't fix them
@@ -59,12 +58,10 @@ namespace RendererRuntime
 
 	void Transform::setByMatrix(const glm::mat4& objectSpaceToWorldSpace)
 	{
-		// TODO(co) "glm::decompose()" quaternion rotation behaves odd, so going over Euler angles to get stability
 		glm::vec3 skew;
 		glm::vec4 perspective;
-		const glm::vec3 eulerAngles = EulerAngles::matrixToEuler(objectSpaceToWorldSpace);
 		glm::decompose(objectSpaceToWorldSpace, scale, rotation, position, skew, perspective);
-		rotation = EulerAngles::eulerToQuaternion(eulerAngles);
+		rotation = glm::conjugate(rotation);
 	}
 
 
