@@ -674,15 +674,13 @@ namespace RendererRuntime
 					glm::vec3 skew;
 					glm::vec4 perspective;
 					glm::decompose(devicePoseMatrix, scale, rotation, translation, skew, perspective);
+					if (vr::k_unTrackedDeviceIndex_Hmd != deviceIndex)
+					{
+						rotation = glm::conjugate(rotation);
+					}
 
 					// Everything must be relative to the camera world space position
 					translation -= cameraPosition;
-
-					// TODO(co) Why is the rotation inverted?
-					if (vr::k_unTrackedDeviceIndex_Hmd != deviceIndex)
-					{
-						rotation = glm::inverse(rotation);
-					}
 
 					// Tell the scene node about the new position and rotation, scale doesn't change
 					sceneNode->setPositionRotation(translation, rotation);
