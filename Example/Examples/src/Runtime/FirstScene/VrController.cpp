@@ -65,6 +65,8 @@ namespace
 			// Pass
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 		#undef DEFINE_CONSTANT
+		static const uint32_t FIRST_CONTROLLER_INDEX  = 1;
+		static const uint32_t SECOND_CONTROLLER_INDEX = 2;
 
 
 		//[-------------------------------------------------------]
@@ -139,7 +141,7 @@ namespace
 						// The first VR controller is used for teleporting
 						// -> A green light indicates the position one will end up
 						// -> When pressing the trigger button one teleports to this position
-						if (mNumberOfVrControllers > 0 && mVrControllerTrackedDeviceIndices[0] == vrVrEvent.trackedDeviceIndex && vrVrEvent.data.controller.button == vr::k_EButton_SteamVR_Trigger && mVrController->getTeleportIndicationLightSceneItemSafe().isVisible())
+						if (mNumberOfVrControllers > 0 && mVrControllerTrackedDeviceIndices[FIRST_CONTROLLER_INDEX] == vrVrEvent.trackedDeviceIndex && vrVrEvent.data.controller.button == vr::k_EButton_SteamVR_Trigger && mVrController->getTeleportIndicationLightSceneItemSafe().isVisible())
 						{
 							// TODO(co) Why inversed position?
 							mVrController->getCameraSceneItem().getParentSceneNodeSafe().setPosition(-mVrController->getTeleportIndicationLightSceneItemSafe().getParentSceneNodeSafe().getTransform().position);
@@ -219,13 +221,13 @@ namespace
 			virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override
 			{
 				// The GUI is placed over the second VR controller
-				if (::detail::IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue && mVrManagerOpenVRListener->getNumberOfVrControllers() >= 2)
+				if (::detail::IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue && mVrManagerOpenVRListener->getNumberOfVrControllers() >= SECOND_CONTROLLER_INDEX)
 				{
 					assert(sizeof(float) * 4 * 4 == numberOfBytes);
 					const ImGuiIO& imGuiIo = ImGui::GetIO();
 					const glm::quat rotationOffset = RendererRuntime::EulerAngles::eulerToQuaternion(glm::vec3(glm::degrees(0.0f), glm::degrees(180.0f), 0.0f));
 					const glm::mat4 guiScaleMatrix = glm::scale(RendererRuntime::Math::IDENTITY_MATRIX, glm::vec3(1.0f / imGuiIo.DisplaySize.x, 1.0f / imGuiIo.DisplaySize.y, 1.0f));
-					const glm::mat4& devicePoseMatrix = mVrManagerOpenVR->getDevicePoseMatrix(mVrManagerOpenVRListener->getVrControllerTrackedDeviceIndices(1));
+					const glm::mat4& devicePoseMatrix = mVrManagerOpenVR->getDevicePoseMatrix(mVrManagerOpenVRListener->getVrControllerTrackedDeviceIndices(SECOND_CONTROLLER_INDEX));
 					const glm::mat4& cameraPositionMatrix = glm::translate(RendererRuntime::Math::IDENTITY_MATRIX, -mVrController->getCameraSceneItem().getParentSceneNodeSafe().getTransform().position);
 					const glm::mat4 objectSpaceToClipSpaceMatrix = getPassData().worldSpaceToClipSpaceMatrix * cameraPositionMatrix * devicePoseMatrix * glm::mat4_cast(rotationOffset) * guiScaleMatrix;
 					memcpy(buffer, glm::value_ptr(objectSpaceToClipSpaceMatrix), numberOfBytes);
@@ -344,7 +346,7 @@ void VrController::onUpdate(float pastSecondsSinceLastFrame)
 		if (hasFocus)
 		{
 			// Get VR controller transform data
-			const glm::mat4& devicePoseMatrix = vrManagerOpenVR.getDevicePoseMatrix(::detail::defaultVrManagerOpenVRListener.getVrControllerTrackedDeviceIndices(0));
+			const glm::mat4& devicePoseMatrix = vrManagerOpenVR.getDevicePoseMatrix(::detail::defaultVrManagerOpenVRListener.getVrControllerTrackedDeviceIndices(::detail::FIRST_CONTROLLER_INDEX));
 			glm::vec3 scale;
 			glm::quat rotation;
 			glm::vec3 translation;
