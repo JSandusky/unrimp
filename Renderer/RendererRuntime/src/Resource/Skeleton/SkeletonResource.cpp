@@ -51,18 +51,17 @@ namespace RendererRuntime
 	void SkeletonResource::localToGlobalPose()
 	{
 		// The root has no parent
-		mGlobalBonePoses[0] = mLocalBonePoses[0];
+		mGlobalBoneMatrices[0] = mLocalBoneMatrices[0];
 
 		// Due to cache friendly depth-first rolled up bone hierarchy, the global parent bone pose is already up-to-date
 		// TODO(co) Ensure that in the end SIMD intrinsics in GLM are used in here
 		for (uint8_t i = 1; i < mNumberOfBones; ++i)
 		{
-			const uint8_t parentBone = mBoneParents[i];
-			mGlobalBonePoses[i] = mGlobalBonePoses[parentBone] * mLocalBonePoses[i];
+			mGlobalBoneMatrices[i] = mGlobalBoneMatrices[mBoneParentIndices[i]] * mLocalBoneMatrices[i];
 		}
 		for (uint8_t i = 0; i < mNumberOfBones; ++i)
 		{
-			mGlobalBonePoses[i] *= mBoneOffsetMatrix[i];
+			mBoneSpaceMatrices[i] = mGlobalBoneMatrices[i] * mBoneOffsetMatrices[i];
 		}
 	}
 

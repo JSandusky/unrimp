@@ -33,9 +33,9 @@ namespace RendererRuntime
 		return mNumberOfBones;
 	}
 
-	inline const uint8_t* SkeletonResource::getBoneParents() const
+	inline const uint8_t* SkeletonResource::getBoneParentIndices() const
 	{
-		return mBoneParents;
+		return mBoneParentIndices;
 	}
 
 	inline const uint32_t* SkeletonResource::getBoneIds() const
@@ -43,24 +43,29 @@ namespace RendererRuntime
 		return mBoneIds;
 	}
 
-	inline glm::mat4* SkeletonResource::getLocalBonePoses()
+	inline glm::mat4* SkeletonResource::getLocalBoneMatrices()
 	{
-		return mLocalBonePoses;
+		return mLocalBoneMatrices;
 	}
 
-	inline const glm::mat4* SkeletonResource::getLocalBonePoses() const
+	inline const glm::mat4* SkeletonResource::getLocalBoneMatrices() const
 	{
-		return mLocalBonePoses;
+		return mLocalBoneMatrices;
 	}
 
-	inline const glm::mat4* SkeletonResource::getBoneOffsetMatrix() const
+	inline const glm::mat4* SkeletonResource::getBoneOffsetMatrices() const
 	{
-		return mBoneOffsetMatrix;
+		return mBoneOffsetMatrices;
 	}
 
-	inline const glm::mat4* SkeletonResource::getGlobalBonePoses() const
+	inline const glm::mat4* SkeletonResource::getGlobalBoneMatrices() const
 	{
-		return mGlobalBonePoses;
+		return mGlobalBoneMatrices;
+	}
+
+	inline const glm::mat4* SkeletonResource::getBoneSpaceMatrices() const
+	{
+		return mBoneSpaceMatrices;
 	}
 
 
@@ -69,11 +74,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline SkeletonResource::SkeletonResource() :
 		mNumberOfBones(0),
-		mBoneParents(nullptr),
+		mBoneParentIndices(nullptr),
 		mBoneIds(nullptr),
-		mLocalBonePoses(nullptr),
-		mBoneOffsetMatrix(nullptr),
-		mGlobalBonePoses(nullptr)
+		mLocalBoneMatrices(nullptr),
+		mBoneOffsetMatrices(nullptr),
+		mGlobalBoneMatrices(nullptr),
+		mBoneSpaceMatrices(nullptr)
 	{
 		// Nothing here
 	}
@@ -82,37 +88,41 @@ namespace RendererRuntime
 	{
 		// Sanity checks
 		assert(0 == mNumberOfBones);
-		assert(nullptr == mBoneParents);
+		assert(nullptr == mBoneParentIndices);
 		assert(nullptr == mBoneIds);
-		assert(nullptr == mLocalBonePoses);
-		assert(nullptr == mBoneOffsetMatrix);
-		assert(nullptr == mGlobalBonePoses);
+		assert(nullptr == mLocalBoneMatrices);
+		assert(nullptr == mBoneOffsetMatrices);
+		assert(nullptr == mGlobalBoneMatrices);
+		assert(nullptr == mBoneSpaceMatrices);
 	}
 
 	inline void SkeletonResource::clearSkeletonData()
 	{
 		mNumberOfBones = 0;
-		delete [] mBoneParents;
-		mBoneParents = nullptr;
-		// delete [] mBoneIds;			// The complete skeleton data is sequential in memory, so, deleting "mBoneParents" is does it all
+		delete [] mBoneParentIndices;
+		mBoneParentIndices = nullptr;
+		// delete [] mBoneIds;				// The complete skeleton data is sequential in memory, so, deleting "mBoneParentIndices" is does it all
 		mBoneIds = nullptr;
-		// delete [] mLocalBonePoses;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParents" is does it all
-		mLocalBonePoses = nullptr;
-		// delete [] mBoneOffsetMatrix;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParents" is does it all
-		mBoneOffsetMatrix = nullptr;
-		// delete [] mGlobalBonePoses;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParents" is does it all
-		mGlobalBonePoses = nullptr;
+		// delete [] mLocalBoneMatrices;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParentIndices" is does it all
+		mLocalBoneMatrices = nullptr;
+		// delete [] mBoneOffsetMatrices;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParentIndices" is does it all
+		mBoneOffsetMatrices = nullptr;
+		// delete [] mGlobalBoneMatrices;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParentIndices" is does it all
+		mGlobalBoneMatrices = nullptr;
+		// delete [] mBoneSpaceMatrices;	// The complete skeleton data is sequential in memory, so, deleting "mBoneParentIndices" is does it all
+		mBoneSpaceMatrices = nullptr;
 	}
 
 	inline void SkeletonResource::initializeElement(SkeletonResourceId skeletonResourceId)
 	{
 		// Sanity checks
 		assert(0 == mNumberOfBones);
-		assert(nullptr == mBoneParents);
+		assert(nullptr == mBoneParentIndices);
 		assert(nullptr == mBoneIds);
-		assert(nullptr == mLocalBonePoses);
-		assert(nullptr == mBoneOffsetMatrix);
-		assert(nullptr == mGlobalBonePoses);
+		assert(nullptr == mLocalBoneMatrices);
+		assert(nullptr == mBoneOffsetMatrices);
+		assert(nullptr == mGlobalBoneMatrices);
+		assert(nullptr == mBoneSpaceMatrices);
 
 		// Call base implementation
 		IResource::initializeElement(skeletonResourceId);

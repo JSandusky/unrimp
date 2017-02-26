@@ -47,6 +47,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t SkeletonResourceId;	///< POD skeleton resource identifier
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
@@ -75,6 +81,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline AssetId getSkeletonAnimationAssetId() const;
+		RENDERERRUNTIME_API_EXPORT SkeletonResourceId getSkeletonResourceId() const;
 
 
 	//[-------------------------------------------------------]

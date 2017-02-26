@@ -36,9 +36,9 @@
 #include <RendererRuntime/Resource/Scene/ISceneResource.h>
 #include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
 #include <RendererRuntime/Resource/Scene/Node/ISceneNode.h>
-#include <RendererRuntime/Resource/Scene/Item/MeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/LightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h>
 #include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h>
@@ -96,6 +96,7 @@ FirstScene::FirstScene() :
 	mController(nullptr),
 	mCameraSceneItem(nullptr),
 	mLightSceneItem(nullptr),
+	mSkeletonMeshSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mInstancedCompositor(Compositor::DEFERRED),
 	mCurrentCompositor(mInstancedCompositor),
@@ -302,6 +303,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 			assert(nullptr == mSceneNode);
 			assert(nullptr == mCameraSceneItem);
 			assert(nullptr == mLightSceneItem);
+			assert(nullptr == mSkeletonMeshSceneItem);
 
 			// Loop through all scene nodes and grab the first found camera, directional light and mesh
 			for (RendererRuntime::ISceneNode* sceneNode : mSceneResource->getSceneNodes())
@@ -338,6 +340,14 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 							}
 						}
 					}
+					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::SkeletonMeshSceneItem::TYPE_ID)
+					{
+						// Grab the first found skeleton mesh scene item
+						if (nullptr == mSkeletonMeshSceneItem)
+						{
+							mSkeletonMeshSceneItem = static_cast<RendererRuntime::SkeletonMeshSceneItem*>(sceneItem);
+						}
+					}
 				}
 			}
 
@@ -364,6 +374,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 		{
 			mCameraSceneItem = nullptr;
 			mLightSceneItem = nullptr;
+			mSkeletonMeshSceneItem = nullptr;
 			if (nullptr != mController)
 			{
 				delete mController;
@@ -450,13 +461,23 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				ImGui::Checkbox("Use Specular Map", &mUseSpecularMap);
 				ImGui::ColorEdit3("Diffuse Color", mDiffuseColor);
 
-				// Scene node transform using gizmo
-				if (nullptr != mCameraSceneItem && nullptr != mSceneNode)
+				// Scene visualizations
+				if (nullptr != mCameraSceneItem)
 				{
-					ImGui::Separator();
-					RendererRuntime::Transform transform = mSceneNode->getTransform();
-					RendererRuntime::DebugGuiHelper::drawGizmo(mGizmoSettings, *mCameraSceneItem, transform);
-					mSceneNode->setTransform(transform);
+					// Draw skeleton
+					if (nullptr != mSkeletonMeshSceneItem && nullptr != mSkeletonMeshSceneItem->getParentSceneNode())
+					{
+						RendererRuntime::DebugGuiHelper::drawSkeleton(*mCameraSceneItem, *mSkeletonMeshSceneItem);
+					}
+
+					// Scene node transform using gizmo
+					if (nullptr != mSceneNode)
+					{
+						ImGui::Separator();
+						RendererRuntime::Transform transform = mSceneNode->getTransform();
+						RendererRuntime::DebugGuiHelper::drawGizmo(*mCameraSceneItem, mGizmoSettings, transform);
+						mSceneNode->setTransform(transform);
+					}
 				}
 			ImGui::End();
 

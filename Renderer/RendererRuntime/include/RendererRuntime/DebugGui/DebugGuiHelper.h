@@ -37,6 +37,7 @@ namespace RendererRuntime
 {
 	class Transform;
 	class CameraSceneItem;
+	class SkeletonMeshSceneItem;
 }
 
 
@@ -93,7 +94,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT static void drawText(const char* text, float x, float y, bool drawBackground = true);
-		RENDERERRUNTIME_API_EXPORT static void drawGizmo(GizmoSettings& gizmoSettings, const CameraSceneItem& cameraSceneItem, Transform& transform);	// Using "ImGuizmo" ( https://github.com/CedricGuillemet/ImGuizmo )
+		RENDERERRUNTIME_API_EXPORT static void drawGizmo(const CameraSceneItem& cameraSceneItem, GizmoSettings& gizmoSettings, Transform& transform);	// Using "ImGuizmo" ( https://github.com/CedricGuillemet/ImGuizmo )
+		RENDERERRUNTIME_API_EXPORT static void drawSkeleton(const CameraSceneItem& cameraSceneItem, const SkeletonMeshSceneItem& skeletonMeshSceneItem);
 
 
 	//[-------------------------------------------------------]
