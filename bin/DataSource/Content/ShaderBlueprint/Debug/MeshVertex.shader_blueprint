@@ -96,7 +96,7 @@ MAIN_BEGIN
 		uint textureBufferIndex = instanceIndices.x + 3u;
 
 		// First bone
-		uint textureBufferBoneOffset = textureBufferIndex + MAIN_INPUT(blendIndices)[0] * 4;
+		uint textureBufferBoneOffset = textureBufferIndex + MAIN_INPUT(blendIndices)[0] * 4u;
 		float boneWeight = MAIN_INPUT(blendWeights)[0];
 		objectSpaceToWorldSpaceMatrix[0] = TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 0u) * boneWeight;
 		objectSpaceToWorldSpaceMatrix[1] = TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 1u) * boneWeight;
@@ -105,7 +105,7 @@ MAIN_BEGIN
 		// The other bones
 		for (int i = 1; i < 4; ++i)
 		{
-			textureBufferBoneOffset = textureBufferIndex + MAIN_INPUT(blendIndices)[i] * 4;
+			textureBufferBoneOffset = textureBufferIndex + MAIN_INPUT(blendIndices)[i] * 4u;
 			boneWeight = MAIN_INPUT(blendWeights)[i];
 			objectSpaceToWorldSpaceMatrix[0] += TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 0u) * boneWeight;
 			objectSpaceToWorldSpaceMatrix[1] += TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 1u) * boneWeight;
