@@ -45,8 +45,8 @@ INPUT_BEGIN
 		INPUT_TEXTURE_COORDINATE(float4, QTangent, 1)	// 16 bit QTangent
 	@end
 	@property(UseGpuSkinning)
-		INPUT_VERTEX_BLEND_INDICES(uint4, blendIndices)
-		INPUT_VERTEX_BLEND_WEIGHTS(float4, blendWeights)
+		INPUT_VERTEX_BLEND_INDICES(uint4, BlendIndices)
+		INPUT_VERTEX_BLEND_WEIGHTS(float4, BlendWeights)
 	@end
 	INPUT_VERTEX_DRAW_ID								// Draw ID
 INPUT_END
