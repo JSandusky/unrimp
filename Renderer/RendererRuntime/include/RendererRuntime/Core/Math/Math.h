@@ -134,6 +134,16 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT static uint32_t calculateFNV1a(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash = FNV1a_INITIAL_HASH);
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		Math() = delete;
+		~Math() = delete;
+		Math(const Math&) = delete;
+		Math& operator=(const Math&) = delete;
+
+
 	};
 
 

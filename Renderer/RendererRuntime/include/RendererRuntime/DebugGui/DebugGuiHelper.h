@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 
 
 //[-------------------------------------------------------]
@@ -55,7 +54,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Debug GUI helper generating ImGui ( https://github.com/ocornut/imgui ) commands
 	*/
-	class DebugGuiHelper : private NonCopyable
+	class DebugGuiHelper
 	{
 
 
