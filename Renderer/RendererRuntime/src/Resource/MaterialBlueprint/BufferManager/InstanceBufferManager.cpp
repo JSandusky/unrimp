@@ -217,10 +217,10 @@ namespace RendererRuntime
 				const SkeletonResource& skeletonResource = static_cast<SkeletonResource&>(mRendererRuntime.getSkeletonResourceManager().getResourceByResourceId(skeletonResourceId));
 				const uint8_t numberOfBones = skeletonResource.getNumberOfBones();
 				assert(0 != numberOfBones);	// Each skeleton must have at least one bone
-				const glm::mat4* boneSpaceMatrices = skeletonResource.getBoneSpaceMatrices();
+				const glm::mat3x4* boneSpaceMatrices = skeletonResource.getBoneSpaceMatrices();
 				assert(nullptr != boneSpaceMatrices);
 				// TODO(co) Bone transform matrices can consume up to 16 KiB, our texture buffer is at least 64 KiB. So, currently no security checks required, but will be later on.
-				const size_t numberOfBytes = sizeof(glm::mat4) * numberOfBones;
+				const size_t numberOfBytes = sizeof(glm::mat3x4) * numberOfBones;
 				memcpy(scratchTextureBufferPointer, boneSpaceMatrices, numberOfBytes);
 				scratchTextureBufferPointer += numberOfBytes / sizeof(float);
 			}
