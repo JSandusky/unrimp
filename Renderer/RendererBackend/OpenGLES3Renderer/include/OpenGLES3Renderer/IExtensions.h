@@ -81,7 +81,6 @@ namespace OpenGLES3Renderer
 		// OES
 		virtual bool isGL_OES_mapbuffer() const = 0;
 		virtual bool isGL_OES_element_index_uint() const = 0;
-		virtual bool isGL_OES_texture_3D() const = 0;
 		virtual bool isGL_OES_packed_depth_stencil() const = 0;
 		virtual bool isGL_OES_depth24() const = 0;
 		virtual bool isGL_OES_depth32() const = 0;

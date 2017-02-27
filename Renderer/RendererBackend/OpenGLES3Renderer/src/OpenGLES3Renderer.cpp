@@ -720,7 +720,7 @@ namespace OpenGLES3Renderer
 					mVertexArray->addReference();
 
 					// Bind OpenGL ES 3 vertex array
-					glBindVertexArrayOES(static_cast<VertexArrayVao*>(mVertexArray)->getOpenGLES3VertexArray());
+					glBindVertexArray(static_cast<VertexArrayVao*>(mVertexArray)->getOpenGLES3VertexArray());
 				}
 				else
 				{
@@ -751,7 +751,7 @@ namespace OpenGLES3Renderer
 					if (mContext->getExtensions().isGL_OES_vertex_array_object())
 					{
 						// Unbind OpenGL ES 3 vertex array
-						glBindVertexArrayOES(0);
+						glBindVertexArray(0);
 					}
 					else
 					{
@@ -1398,7 +1398,7 @@ namespace OpenGLES3Renderer
 				// Map
 				if (mContext->getExtensions().isGL_OES_mapbuffer())
 				{
-					mappedSubresource.data = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES3MapType(mapType));
+					mappedSubresource.data = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES3MapType(mapType));
 				}
 				else
 				{
@@ -1432,7 +1432,7 @@ namespace OpenGLES3Renderer
 				// Map
 				if (mContext->getExtensions().isGL_OES_mapbuffer())
 				{
-					mappedSubresource.data = glMapBufferOES(GL_ARRAY_BUFFER, Mapping::getOpenGLES3MapType(mapType));
+					mappedSubresource.data = glMapBuffer(GL_ARRAY_BUFFER, Mapping::getOpenGLES3MapType(mapType));
 				}
 				else
 				{
@@ -1582,14 +1582,7 @@ namespace OpenGLES3Renderer
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES3ElementArrayBuffer());
 
 				// Unmap
-				if (mContext->getExtensions().isGL_OES_mapbuffer())
-				{
-					glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
-				}
-				else
-				{
-					glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-				}
+				glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 
 				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 3 array element buffer
@@ -1610,14 +1603,7 @@ namespace OpenGLES3Renderer
 				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES3ArrayBuffer());
 
 				// Unmap
-				if (mContext->getExtensions().isGL_OES_mapbuffer())
-				{
-					glUnmapBufferOES(GL_ARRAY_BUFFER);
-				}
-				else
-				{
-					glUnmapBuffer(GL_ARRAY_BUFFER);
-				}
+				glUnmapBuffer(GL_ARRAY_BUFFER);
 
 				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 					// Be polite and restore the previous bound OpenGL ES 3 array buffer

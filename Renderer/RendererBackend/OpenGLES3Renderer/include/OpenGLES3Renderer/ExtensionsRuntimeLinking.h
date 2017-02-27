@@ -101,7 +101,6 @@ namespace OpenGLES3Renderer
 		// OES
 		inline virtual bool isGL_OES_mapbuffer() const override;
 		inline virtual bool isGL_OES_element_index_uint() const override;
-		inline virtual bool isGL_OES_texture_3D() const override;
 		inline virtual bool isGL_OES_packed_depth_stencil() const override;
 		inline virtual bool isGL_OES_depth24() const override;
 		inline virtual bool isGL_OES_depth32() const override;
@@ -136,7 +135,6 @@ namespace OpenGLES3Renderer
 		// OES
 		bool mGL_OES_mapbuffer;
 		bool mGL_OES_element_index_uint;
-		bool mGL_OES_texture_3D;
 		bool mGL_OES_packed_depth_stencil;
 		bool mGL_OES_depth24;
 		bool mGL_OES_depth32;
@@ -280,38 +278,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ OES definitions                                       ]
 	//[-------------------------------------------------------]
-	// GL_OES_mapbuffer
-	#define GL_WRITE_ONLY_OES			0x88B9
-	#define GL_BUFFER_ACCESS_OES		0x88BB
-	#define GL_BUFFER_MAPPED_OES		0x88BC
-	#define GL_BUFFER_MAP_POINTER_OES	0x88BD
-	FNDEF_EX(void,		glGetBufferPointervOES,	(GLenum target, GLenum pname, void **params));
-	FNDEF_EX(void *,	glMapBufferOES,			(GLenum target, GLenum access));
-	FNDEF_EX(GLboolean,	glUnmapBufferOES,		(GLenum target));
-	#define glGetBufferPointervOES	FNPTR(glGetBufferPointervOES)
-	#define glMapBufferOES			FNPTR(glMapBufferOES)
-	#define glUnmapBufferOES		FNPTR(glUnmapBufferOES)
-
 	// GL_OES_element_index_uint
 	#define GL_UNSIGNED_INT	0x1405
-
-	// GL_OES_texture_3D
-	#define GL_TEXTURE_3D_OES			0x806F
-	#define GL_TEXTURE_WRAP_R_OES		0x8072
-	#define GL_MAX_3D_TEXTURE_SIZE_OES	0x8073
-	#define GL_TEXTURE_BINDING_3D_OES	0x806A
-	FNDEF_EX(void,	glTexImage3DOES,				(GLenum target, int level, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, int border, GLenum format, GLenum type, const void *pixels));
-	FNDEF_EX(void,	glTexSubImage3DOES,				(GLenum target, int level, int xoffset, int yoffset, int zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void *pixels));
-	FNDEF_EX(void,	glCopyTexSubImage3DOES,			(GLenum target, int level, int xoffset, int yoffset, int zoffset, int x, int y, GLsizei width, GLsizei height));
-	FNDEF_EX(void,	glCompressedTexImage3DOES,		(GLenum target, int level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, int border, GLsizei imageSize, const void *data));
-	FNDEF_EX(void,	glCompressedTexSubImage3DOES,	(GLenum target, int level, int xoffset, int yoffset, int zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *data));
-	FNDEF_EX(void,	glFramebufferTexture3DOES,		(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, int level, int zoffset));
-	#define glTexImage3DOES					FNPTR(glTexImage3DOES)
-	#define glTexSubImage3DOES				FNPTR(glTexSubImage3DOES)
-	#define glCopyTexSubImage3DOES			FNPTR(glCopyTexSubImage3DOES)
-	#define glCompressedTexImage3DOES		FNPTR(glCompressedTexImage3DOES)
-	#define glCompressedTexSubImage3DOES	FNPTR(glCompressedTexSubImage3DOES)
-	#define glFramebufferTexture3DOES		FNPTR(glFramebufferTexture3DOES)
 
 	// GL_OES_packed_depth_stencil
 	#define GL_DEPTH_STENCIL_OES		0x84F9
@@ -323,14 +291,6 @@ namespace OpenGLES3Renderer
 
 	// GL_OES_depth32
 	#define GL_DEPTH_COMPONENT32_OES	0x81A7
-
-	// GL_OES_vertex_array_object
-	FNDEF_EX(void,	glBindVertexArrayOES,		(GLuint array));
-	FNDEF_EX(void,	glDeleteVertexArraysOES,	(GLsizei n, const GLuint *arrays));
-	FNDEF_EX(void,	glGenVertexArraysOES,		(GLsizei n, GLuint *arrays));
-	#define glBindVertexArrayOES	FNPTR(glBindVertexArrayOES)
-	#define glDeleteVertexArraysOES	FNPTR(glDeleteVertexArraysOES)
-	#define glGenVertexArraysOES	FNPTR(glGenVertexArraysOES)
 
 
 	//[-------------------------------------------------------]

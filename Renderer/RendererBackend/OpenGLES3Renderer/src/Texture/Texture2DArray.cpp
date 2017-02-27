@@ -61,7 +61,7 @@ namespace OpenGLES3Renderer
 		glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, mOpenGLES3Texture);
 
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
-		glTexImage3DOES(GL_TEXTURE_2D_ARRAY_EXT, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLES3Format(textureFormat), Mapping::getOpenGLES3Type(textureFormat), data);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY_EXT, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLES3Format(textureFormat), Mapping::getOpenGLES3Type(textureFormat), data);
 
 		// Build mipmaps automatically on the GPU? (or GPU driver)
 		if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)

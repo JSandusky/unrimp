@@ -58,7 +58,6 @@ namespace OpenGLES3Renderer
 		// OES
 		mGL_OES_mapbuffer(false),
 		mGL_OES_element_index_uint(false),
-		mGL_OES_texture_3D(false),
 		mGL_OES_packed_depth_stencil(false),
 		mGL_OES_depth24(false),
 		mGL_OES_depth32(false),
@@ -106,27 +105,10 @@ namespace OpenGLES3Renderer
 		mGL_EXT_texture_compression_dxt1   = (nullptr != strstr(extensions, "GL_EXT_texture_compression_dxt1"));
 		mGL_EXT_texture_compression_latc   = (nullptr != strstr(extensions, "GL_EXT_texture_compression_latc"));
 		mGL_EXT_texture_filter_anisotropic = (nullptr != strstr(extensions, "GL_EXT_texture_filter_anisotropic"));
-		// TODO(sw) texture array and texture 3d are core features ion opengl es 3.0 which we target as minimum version
-		mGL_EXT_texture_array			   = true; //(nullptr != strstr(extensions, "GL_EXT_texture_array"));
-		if (mGL_EXT_texture_array)
-		{
-			// A funny thing: Tegra 2 has support for the extension "GL_EXT_texture_array", but has no support
-			// for the "GL_OES_texture_3D"-extension. At least it's not listed in the extension string.
-			// "GL_EXT_texture_array" is reusing functions defined by "GL_OES_texture_3D"... and therefore we're
-			// now getting the function pointers of "GL_OES_texture_3D" to be able to use "GL_EXT_texture_array".
-			// Works even when "GL_OES_texture_3D" is not listed. Nice.
+		// TODO(sw) Remove this?
+		mGL_EXT_texture_array			   = true;
 
-			// Load the entry points
-			bool result = true;	// Success by default
-			IMPORT_FUNC(glTexImage3DOES)
-			IMPORT_FUNC(glTexSubImage3DOES)
-			IMPORT_FUNC(glCopyTexSubImage3DOES)
-			IMPORT_FUNC(glCompressedTexImage3DOES)
-			IMPORT_FUNC(glCompressedTexSubImage3DOES)
-			IMPORT_FUNC(glFramebufferTexture3DOES)
-			mGL_EXT_texture_array = result;
-		}
-
+		// TODO(sw) Core in opengles 3.2
 		mGL_EXT_texture_buffer = (nullptr != strstr(extensions, "GL_EXT_texture_buffer"));
 		if (mGL_EXT_texture_buffer)
 		{
@@ -136,6 +118,7 @@ namespace OpenGLES3Renderer
 			mGL_EXT_texture_buffer = result;
 		}
 
+		// TODO(sw) Core in opengles 3.2
 		mGL_EXT_draw_elements_base_vertex = (nullptr != strstr(extensions, "GL_EXT_draw_elements_base_vertex"));
 		if (mGL_EXT_draw_elements_base_vertex)
 		{
@@ -154,6 +137,7 @@ namespace OpenGLES3Renderer
 		//[-------------------------------------------------------]
 		//[ NV                                                    ]
 		//[-------------------------------------------------------]
+		// TODO(sw) Never used. Can it be removed?
 		mGL_NV_get_tex_image = (nullptr != strstr(extensions, "GL_NV_get_tex_image"));
 		if (mGL_NV_get_tex_image)
 		{
@@ -165,8 +149,10 @@ namespace OpenGLES3Renderer
 			IMPORT_FUNC(glGetTexLevelParameterivNV)
 			mGL_NV_get_tex_image = result;
 		}
+
 		mGL_NV_fbo_color_attachments = (nullptr != strstr(extensions, "GL_NV_fbo_color_attachments"));
 		mGL_NV_draw_buffers = (nullptr != strstr(extensions, "GL_NV_draw_buffers"));
+		// TODO(sw) Never used. Can it be removed? And the functionality itself is core in 3.0
 		if (mGL_NV_draw_buffers)
 		{
 			// Load the entry points
@@ -175,6 +161,7 @@ namespace OpenGLES3Renderer
 			mGL_NV_draw_buffers = result;
 		}
 		mGL_NV_read_buffer = (nullptr != strstr(extensions, "GL_NV_read_buffer"));
+		// TODO(sw) Never used. Can it be removed? And the functionality itself is core in 3.0
 		if (mGL_NV_read_buffer)
 		{
 			// Load the entry points
@@ -186,50 +173,21 @@ namespace OpenGLES3Renderer
 		//[-------------------------------------------------------]
 		//[ OES                                                   ]
 		//[-------------------------------------------------------]
-		mGL_OES_mapbuffer = (nullptr != strstr(extensions, "GL_OES_mapbuffer"));
-		if (mGL_OES_mapbuffer)
-		{
-			// Load the entry points
-			bool result = true;	// Success by default
-			IMPORT_FUNC(glGetBufferPointervOES)
-			IMPORT_FUNC(glMapBufferOES)
-			IMPORT_FUNC(glUnmapBufferOES)
-			mGL_OES_mapbuffer = result;
-		}
+		// TODO(sw) Is 3.0 core. Remove this?
+		mGL_OES_mapbuffer = true;
 		mGL_OES_element_index_uint = (nullptr != strstr(extensions, "GL_OES_element_index_uint"));
-
-		// TODO(sw) texture array and texture 3d are core features ion opengl es 3.0 which we target as minimum version
-		mGL_OES_texture_3D		   = true; //(nullptr != strstr(extensions, "GL_OES_texture_3D"));
-		if (mGL_OES_texture_3D && !mGL_EXT_texture_array)
-		{	// See "GL_EXT_texture_array"-comment above
-			// Load the entry points
-			bool result = true;	// Success by default
-			IMPORT_FUNC(glTexImage3DOES)
-			IMPORT_FUNC(glTexSubImage3DOES)
-			IMPORT_FUNC(glCopyTexSubImage3DOES)
-			IMPORT_FUNC(glCompressedTexImage3DOES)
-			IMPORT_FUNC(glCompressedTexSubImage3DOES)
-			IMPORT_FUNC(glFramebufferTexture3DOES)
-			mGL_OES_texture_3D = result;
-		}
 		mGL_OES_packed_depth_stencil = (nullptr != strstr(extensions, "GL_OES_packed_depth_stencil"));
 		mGL_OES_depth24				 = (nullptr != strstr(extensions, "GL_OES_depth24"));
 		mGL_OES_depth32				 = (nullptr != strstr(extensions, "GL_OES_depth32"));
+		// TODO(sw) Is 3.0 core
 		mGL_OES_vertex_half_float	 = (nullptr != strstr(extensions, "GL_OES_vertex_half_float"));
-		mGL_OES_vertex_array_object  = (nullptr != strstr(extensions, "GL_OES_vertex_array_object"));
-		if (mGL_OES_vertex_array_object)
-		{
-			// Load the entry points
-			bool result = true;	// Success by default
-			IMPORT_FUNC(glBindVertexArrayOES)
-			IMPORT_FUNC(glDeleteVertexArraysOES)
-			IMPORT_FUNC(glGenVertexArraysOES)
-			mGL_OES_vertex_array_object = result;
-		}
+		// TODO(sw) Is 3.0 core. Remove this?
+		mGL_OES_vertex_array_object  = true;
 
 		//[-------------------------------------------------------]
 		//[ ANGLE                                                 ]
 		//[-------------------------------------------------------]
+		// TODO(sw) Never used. Can it be removed? And the functionality itself is core in 3.0
 		mGL_ANGLE_framebuffer_blit = (nullptr != strstr(extensions, "GL_ANGLE_framebuffer_blit"));
 		if (mGL_ANGLE_framebuffer_blit)
 		{
@@ -238,6 +196,7 @@ namespace OpenGLES3Renderer
 			IMPORT_FUNC(glBlitFramebufferEXT)
 			mGL_ANGLE_framebuffer_blit = result;
 		}
+		// TODO(sw) Never used. Can it be removed? And the functionality itself is core in 3.0
 		mGL_ANGLE_framebuffer_multisample = (nullptr != strstr(extensions, "GL_ANGLE_framebuffer_multisample"));
 		if (mGL_ANGLE_framebuffer_multisample)
 		{

@@ -102,11 +102,6 @@ namespace OpenGLES3Renderer
 		return mGL_OES_element_index_uint;
 	}
 
-	inline bool ExtensionsRuntimeLinking::isGL_OES_texture_3D() const
-	{
-		return mGL_OES_texture_3D;
-	}
-
 	inline bool ExtensionsRuntimeLinking::isGL_OES_packed_depth_stencil() const
 	{
 		return mGL_OES_packed_depth_stencil;
