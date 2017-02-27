@@ -92,7 +92,7 @@ namespace RendererRuntime
 		inline const glm::mat4* getLocalBoneMatrices() const;
 		inline const glm::mat4* getBoneOffsetMatrices() const;
 		inline const glm::mat4* getGlobalBoneMatrices() const;
-		inline const glm::mat4* getBoneSpaceMatrices() const;
+		inline const glm::mat3x4* getBoneSpaceMatrices() const;
 		uint32_t getBoneIndexByBoneId(uint32_t boneId) const;	// Bone IDs = "RendererRuntime::StringId" on bone name, "RendererRuntime::getUninitialized<uint32_t>()" if unknown bone ID
 		void localToGlobalPose();
 
@@ -118,14 +118,14 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint8_t		mNumberOfBones;		///< Number of bones
+		uint8_t		 mNumberOfBones;		///< Number of bones
 		// Structure-of-arrays (SoA)
-		uint8_t*	mBoneParentIndices;		///< Cache friendly depth-first rolled up bone parent indices, null pointer only in case of horrible error, free the memory if no longer required
-		uint32_t*	mBoneIds;				///< Cache friendly depth-first rolled up bone IDs ("RendererRuntime::StringId" on bone name), null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParentIndices"
-		glm::mat4*	mLocalBoneMatrices;		///< Cache friendly depth-first rolled up local bone matrices, null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParentIndices"
-		glm::mat4*	mBoneOffsetMatrices;	///< Cache friendly depth-first rolled up bone offset matrices (object space to bone space), null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParentIndices"
-		glm::mat4*	mGlobalBoneMatrices;	///< Cache friendly depth-first rolled up global bone matrices, null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParentIndices"
-		glm::mat4*	mBoneSpaceMatrices;		///< Cache friendly depth-first rolled up bone space matrices, null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParentIndices"
+		uint8_t*	 mBoneParentIndices;	///< Cache friendly depth-first rolled up bone parent indices, null pointer only in case of horrible error, free the memory if no longer required
+		uint32_t*	 mBoneIds;				///< Cache friendly depth-first rolled up bone IDs ("RendererRuntime::StringId" on bone name), null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParentIndices"
+		glm::mat4*	 mLocalBoneMatrices;	///< Cache friendly depth-first rolled up local bone matrices, null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParentIndices"
+		glm::mat4*	 mBoneOffsetMatrices;	///< Cache friendly depth-first rolled up bone offset matrices (object space to bone space), null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParentIndices"
+		glm::mat4*	 mGlobalBoneMatrices;	///< Cache friendly depth-first rolled up global bone matrices, null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParentIndices"
+		glm::mat3x4* mBoneSpaceMatrices;	///< Cache friendly depth-first rolled up bone space matrices, null pointer only in case of horrible error, don't free the memory because it's owned by "mBoneParentIndices"
 
 
 	};

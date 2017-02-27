@@ -63,7 +63,7 @@ namespace RendererRuntime
 		return mGlobalBoneMatrices;
 	}
 
-	inline const glm::mat4* SkeletonResource::getBoneSpaceMatrices() const
+	inline const glm::mat3x4* SkeletonResource::getBoneSpaceMatrices() const
 	{
 		return mBoneSpaceMatrices;
 	}
