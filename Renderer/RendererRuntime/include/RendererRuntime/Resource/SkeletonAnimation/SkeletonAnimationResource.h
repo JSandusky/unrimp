@@ -102,8 +102,8 @@ namespace RendererRuntime
 		};
 		struct QuaternionKey
 		{
-			float	  timeInTicks;	///< The time of this key in ticks
-			glm::quat value;		///< The value of this key
+			float timeInTicks;	///< The time of this key in ticks
+			float value[3];		///< The xyz quaternion value of this key, w will be reconstructed during runtime
 		};
 
 

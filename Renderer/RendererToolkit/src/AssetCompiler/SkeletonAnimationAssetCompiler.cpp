@@ -205,6 +205,7 @@ namespace RendererToolkit
 
 				{ // Write bone channel rotation data
 				  // -> Some Assimp importers like the MD5 one compensate coordinate system differences by setting a root node transform, so we need to take this into account
+				  // -> We only store the xyz quaternion value of this key, w will be reconstructed during runtime
 					std::vector<RendererRuntime::SkeletonAnimationResource::QuaternionKey> rotationKeys;
 					rotationKeys.resize(assimpNodeAnim->mNumRotationKeys);
 					const aiQuaternion assimpQuaternionOffset(aiMatrix3x3(assimpScene->mRootNode->mTransformation));
@@ -214,10 +215,9 @@ namespace RendererToolkit
 						RendererRuntime::SkeletonAnimationResource::QuaternionKey& quaternionKey = rotationKeys[i];
 						const aiQuaternion assimpQuaternion = (0 == channel) ? (assimpQuaternionOffset * assimpQuatKey.mValue) : assimpQuatKey.mValue;
 						quaternionKey.timeInTicks = static_cast<float>(assimpQuatKey.mTime);
-						quaternionKey.value.x	  = assimpQuaternion.x;
-						quaternionKey.value.y	  = assimpQuaternion.y;
-						quaternionKey.value.z	  = assimpQuaternion.z;
-						quaternionKey.value.w	  = assimpQuaternion.w;
+						quaternionKey.value[0]	  = assimpQuaternion.x;
+						quaternionKey.value[1]	  = assimpQuaternion.y;
+						quaternionKey.value[2]	  = assimpQuaternion.z;
 					}
 					outputFileStream.write(reinterpret_cast<const char*>(rotationKeys.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::SkeletonAnimationResource::QuaternionKey) * assimpNodeAnim->mNumRotationKeys));
 				}

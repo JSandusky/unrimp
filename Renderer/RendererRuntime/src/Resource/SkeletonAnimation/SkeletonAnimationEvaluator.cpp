@@ -30,6 +30,35 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		inline void convertQuaternion(const float in[3], glm::quat& out)
+		{
+			// We only store the xyz quaternion value of this key, w will be reconstructed during runtime
+			out.x = in[0];
+			out.y = in[1];
+			out.z = in[2];
+			const float t = 1.0f - (in[0] * in[0]) - (in[1] * in[1]) - (in[2] * in[2]);
+			out.w = (t < 0.0f) ? 0.0f : -std::sqrt(t);
+		}
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -151,11 +180,15 @@ namespace RendererRuntime
 				if (timeDifference > 0.0f)
 				{
 					const float factor = float((timeInTicks - key.timeInTicks) / timeDifference);
-					presentRotation = glm::slerp(key.value, nextKey.value, factor);
+					glm::quat keyQuaternion;
+					::detail::convertQuaternion(key.value, keyQuaternion);
+					glm::quat nextKeyQuaternion;
+					::detail::convertQuaternion(nextKey.value, nextKeyQuaternion);
+					presentRotation = glm::slerp(keyQuaternion, nextKeyQuaternion, factor);
 				}
 				else
 				{
-					presentRotation = key.value;
+					::detail::convertQuaternion(key.value, presentRotation);
 				}
 				std::get<1>(mLastPositions[i]) = frame;
 			}
