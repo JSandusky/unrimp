@@ -129,7 +129,7 @@ namespace
 			},
 			{ // Attribute 4
 				// Data destination
-				Renderer::VertexAttributeFormat::FLOAT_4,		// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+				Renderer::VertexAttributeFormat::R8G8B8A8_UINT,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 				"BlendWeights",									// name[32] (char)
 				"BLENDWEIGHT",									// semanticName[32] (char)
 				0,												// semanticIndex (uint32_t)

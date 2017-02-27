@@ -36,13 +36,13 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_VERTEX_POSITION(float3, Position)			// Object space vertex position
-	INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)	// 32 bit texture coordinate
+	INPUT_VERTEX_POSITION(float3, Position)				// Object space vertex position
+	INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)		// 32 bit texture coordinate
 	@property(UseGpuSkinning)
-		INPUT_VERTEX_BLEND_INDICES(uint4, BlendIndices)
-		INPUT_VERTEX_BLEND_WEIGHTS(float4, BlendWeights)
+		INPUT_VERTEX_BLEND_INDICES(uint4, BlendIndices)	// 8 bit bone indices
+		INPUT_VERTEX_BLEND_WEIGHTS(uint4, BlendWeights)	// 8 bit bone weights
 	@end
-	INPUT_VERTEX_DRAW_ID							// Draw ID
+	INPUT_VERTEX_DRAW_ID								// Draw ID
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(uint,   AssignedMaterialSlotVS, 0)	// The assigned material slot inside the material uniform buffer

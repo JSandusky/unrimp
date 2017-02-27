@@ -71,7 +71,7 @@
 
 	// First bone
 	uint textureBufferBoneOffset = textureBufferIndex + uint(MAIN_INPUT(BlendIndices)[0]) * 4u;
-	float boneWeight = MAIN_INPUT(BlendWeights)[0];
+	float boneWeight = MAIN_INPUT(BlendWeights)[0] / 255.0f;	// 8 bit bone weights decoding
 	objectSpaceToWorldSpaceMatrix[0] = TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 0u) * boneWeight;
 	objectSpaceToWorldSpaceMatrix[1] = TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 1u) * boneWeight;
 	objectSpaceToWorldSpaceMatrix[2] = TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 2u) * boneWeight;
@@ -80,7 +80,7 @@
 	for (int i = 1; i < 4; ++i)
 	{
 		textureBufferBoneOffset = textureBufferIndex + uint(MAIN_INPUT(BlendIndices)[i]) * 4u;
-		boneWeight = MAIN_INPUT(BlendWeights)[i];
+		boneWeight = MAIN_INPUT(BlendWeights)[i] / 255.0f;	// 8 bit bone weights decoding
 		objectSpaceToWorldSpaceMatrix[0] += TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 0u) * boneWeight;
 		objectSpaceToWorldSpaceMatrix[1] += TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 1u) * boneWeight;
 		objectSpaceToWorldSpaceMatrix[2] += TEXEL_FETCH(InstanceTextureBuffer, textureBufferBoneOffset + 2u) * boneWeight;

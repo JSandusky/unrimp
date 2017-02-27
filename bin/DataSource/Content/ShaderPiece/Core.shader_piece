@@ -135,7 +135,7 @@
 			#define INPUT_TEXTURE_COORDINATE(type, name, index) in type name;
 			#define INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(type, name, index) flat in type name;
 			#define INPUT_VERTEX_BLEND_INDICES(type, name) in vec4 name;	// TODO(co) "uvec4" doesn't work? (no error or so)
-			#define INPUT_VERTEX_BLEND_WEIGHTS(type, name) in type name;
+			#define INPUT_VERTEX_BLEND_WEIGHTS(type, name) in vec4 name;	// TODO(co) "uvec4" doesn't work? (no error or so)
 		#define INPUT_END
 
 		// Shader attribute output
@@ -247,7 +247,7 @@
 			#define INPUT_TEXTURE_COORDINATE(type, name, index) in highp type name;
 			#define INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(type, name, index) flat in highp type name;
 			#define INPUT_VERTEX_BLEND_INDICES(type, name) in highp vec4 name;	// TODO(co) "uvec4" doesn't work? (no error or so)
-			#define INPUT_VERTEX_BLEND_WEIGHTS(type, name) in highp type name;
+			#define INPUT_VERTEX_BLEND_WEIGHTS(type, name) in highp vec4 name;	// TODO(co) "uvec4" doesn't work? (no error or so)
 		#define INPUT_END
 
 		// Shader attribute output

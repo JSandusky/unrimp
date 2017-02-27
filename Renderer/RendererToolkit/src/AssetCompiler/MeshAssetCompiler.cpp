@@ -64,7 +64,7 @@ namespace
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		static const uint8_t NUMBER_OF_BYTES_PER_VERTEX = 28;										///< Number of bytes per vertex (3 float position, 2 float texture coordinate, 4 short QTangent)
-		static const uint8_t NUMBER_OF_BYTES_PER_SKINNED_VERTEX = NUMBER_OF_BYTES_PER_VERTEX + 20;	///< Number of bytes per skinned vertex (+4 byte bone indices, +4 float bone weights)
+		static const uint8_t NUMBER_OF_BYTES_PER_SKINNED_VERTEX = NUMBER_OF_BYTES_PER_VERTEX + 8;	///< Number of bytes per skinned vertex (+4 byte bone indices, +4 byte bone weights)
 		typedef std::vector<RendererRuntime::v1Mesh::SubMesh> SubMeshes;
 
 
@@ -475,9 +475,9 @@ namespace
 									currentVertex += sizeof(uint8_t) * 4;
 								}
 
-								{ // 32 bit bone weights
-									float* boneWeights = reinterpret_cast<float*>(currentVertex);
-									boneWeights[numberOfVertexWeights] = assimpVertexWeight.mWeight;
+								{ // 8 bit bone weights
+									uint8_t* boneWeights = reinterpret_cast<uint8_t*>(currentVertex);
+									boneWeights[numberOfVertexWeights] = static_cast<uint8_t>(assimpVertexWeight.mWeight * 255);
 								}
 
 								// Update the number of vertex weights
