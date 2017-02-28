@@ -26,6 +26,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
 #include "RendererToolkit/Helper/StringHelper.h"
+#include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/PlatformTypes.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
@@ -966,160 +967,165 @@ namespace RendererToolkit
 			}
 		}
 
-		const char* pCommand_line = testString.c_str();
-      crnlib::command_line_params::param_desc std_params[] =
-      {
-         { "file", 1, true },
-
-         { "out", 1, false },
-         { "outdir", 1, false },
-         { "outsamedir", 0, false },
-         { "deep", 0, false },
-         { "fileformat", 1, false },
-
-         { "helperThreads", 1, false },
-         { "noprogress", 0, false },
-         { "quiet", 0, false },
-         { "ignoreerrors", 0, false },
-         { "logfile", 1, false },
-
-         { "q", 1, false },
-         { "quality", 1, false },
-
-         { "c", 1, false },
-         { "s", 1, false },
-         { "ca", 1, false },
-         { "sa", 1, false },
-
-         { "mipMode", 1, false },
-         { "mipFilter", 1, false },
-         { "gamma", 1, false },
-         { "blurriness", 1, false },
-         { "wrap", 0, false },
-         { "renormalize", 0, false },
-         { "noprogress", 0, false },
-         { "paramdebug", 0, false },
-         { "debug", 0, false },
-         { "quick", 0, false },
-         { "imagestats", 0, false },
-         { "nostats", 0, false },
-         { "mipstats", 0, false },
-
-         { "alphaThreshold", 1, false },
-         { "uniformMetrics", 0, false },
-         { "noAdaptiveBlocks", 0, false },
-         { "compressor", 1, false },
-         { "dxtQuality", 1, false },
-         { "noendpointcaching", 0, false },
-         { "grayscalesampling", 0, false  },
-         { "converttoluma", 0, false  },
-         { "setalphatoluma", 0, false  },
-         { "pause", 0, false  },
-         { "timestamp", 0, false  },
-         { "nooverwrite", 0, false  },
-         { "forcewrite", 0, false  },
-         { "recreate", 0, false  },
-         { "compare", 0, false  },
-         { "info", 0, false  },
-         { "forceprimaryencoding", 0, false },
-         { "usetransparentindicesforblack", 0, false  },
-         { "usesourceformat", 0, false  },
-
-         { "rescalemode", 1, false },
-         { "rescale", 2, false },
-         { "relrescale", 2, false },
-         { "clamp", 2, false },
-         { "clampScale", 2, false },
-         { "window", 4, false },
-
-         { "maxmips", 1, false },
-         { "minmipsize", 1, false },
-
-         { "bitrate", 1, false },
-
-         { "lzmastats", 0, false },
-         { "split", 0, false },
-         { "csvfile", 1, false },
-
-         { "yflip", 0, false },
-         { "unflip", 0, false },
-      };
-
-      crnlib::vector<crnlib::command_line_params::param_desc> params;
-      params.append(std_params, glm::countof(std_params));
-
-      for (uint32 i = 0; i < crnlib::pixel_format_helpers::get_num_formats(); i++)
-      {
-         crnlib::pixel_format fmt = crnlib::pixel_format_helpers::get_pixel_format_by_index(i);
-
-         crnlib::command_line_params::param_desc desc;
-         desc.m_pName = crnlib::pixel_format_helpers::get_pixel_format_string(fmt);
-         desc.m_num_values = 0;
-         desc.m_support_listing_file = false;
-         params.push_back(desc);
-      }
-
-	  detail::m_params.clear();
-      if (!detail::m_params.parse(pCommand_line, params.size(), params.get_ptr(), true))
-      {
-		  // Error!
-         return;
-      }
-
-
-         crnlib::texture_file_types::format out_file_type = crnlib::texture_file_types::cFormatCRN;
-         crnlib::dynamic_string fmt;
-         if (detail::m_params.get_value_as_string("fileformat", 0, fmt))
-         {
-            if (fmt == "tga")
-               out_file_type = crnlib::texture_file_types::cFormatTGA;
-            else if (fmt == "bmp")
-               out_file_type = crnlib::texture_file_types::cFormatBMP;
-            else if (fmt == "dds")
-               out_file_type = crnlib::texture_file_types::cFormatDDS;
-            else if (fmt == "ktx")
-               out_file_type = crnlib::texture_file_types::cFormatKTX;
-            else if (fmt == "crn")
-               out_file_type = crnlib::texture_file_types::cFormatCRN;
-            else if (fmt == "png")
-               out_file_type = crnlib::texture_file_types::cFormatPNG;
-            else
-            {
-              // console::error("Unsupported output file type: %s", fmt.get_ptr());
-               return;
-            }
-         }
-
-         // No explicit output format has been specified - try to determine something doable.
-         if (!detail::m_params.has_key("fileformat"))
-         {
-            if (detail::m_params.has_key("split"))
-            {
-               out_file_type = crnlib::texture_file_types::cFormatPNG;
-            }
-            else
-            {
-               crnlib::texture_file_types::format input_file_type = crnlib::texture_file_types::determine_file_format(inputAssetFilename.c_str());
-               if (input_file_type == crnlib::texture_file_types::cFormatCRN)
-               {
-                  // Automatically transcode CRN->DXTc and write to DDS files, unless the user specifies either the /fileformat or /split options.
-                  out_file_type = crnlib::texture_file_types::cFormatDDS;
-               }
-               else if (input_file_type == crnlib::texture_file_types::cFormatKTX)
-               {
-                  // Default to converting KTX files to PNG
-                  out_file_type = crnlib::texture_file_types::cFormatPNG;
-               }
-            }
-         }
-
-		if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
+		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		if (CacheManager::needsToBeCompiled(configuration.rendererTarget, inputAssetFilename, outputAssetFilename))
 		{
-			detail::convertColorCorrectionLookupTable(inputAssetFilename.c_str(), outputAssetFilename.c_str());
-		}
-		else
-		{
-			detail::convert_file(rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type, textureSemantic, createMipmaps);
+			// We need to compile the source
+			const char* pCommand_line = testString.c_str();
+			crnlib::command_line_params::param_desc std_params[] =
+			{
+				{ "file", 1, true },
+
+				{ "out", 1, false },
+				{ "outdir", 1, false },
+				{ "outsamedir", 0, false },
+				{ "deep", 0, false },
+				{ "fileformat", 1, false },
+
+				{ "helperThreads", 1, false },
+				{ "noprogress", 0, false },
+				{ "quiet", 0, false },
+				{ "ignoreerrors", 0, false },
+				{ "logfile", 1, false },
+
+				{ "q", 1, false },
+				{ "quality", 1, false },
+
+				{ "c", 1, false },
+				{ "s", 1, false },
+				{ "ca", 1, false },
+				{ "sa", 1, false },
+
+				{ "mipMode", 1, false },
+				{ "mipFilter", 1, false },
+				{ "gamma", 1, false },
+				{ "blurriness", 1, false },
+				{ "wrap", 0, false },
+				{ "renormalize", 0, false },
+				{ "noprogress", 0, false },
+				{ "paramdebug", 0, false },
+				{ "debug", 0, false },
+				{ "quick", 0, false },
+				{ "imagestats", 0, false },
+				{ "nostats", 0, false },
+				{ "mipstats", 0, false },
+
+				{ "alphaThreshold", 1, false },
+				{ "uniformMetrics", 0, false },
+				{ "noAdaptiveBlocks", 0, false },
+				{ "compressor", 1, false },
+				{ "dxtQuality", 1, false },
+				{ "noendpointcaching", 0, false },
+				{ "grayscalesampling", 0, false  },
+				{ "converttoluma", 0, false  },
+				{ "setalphatoluma", 0, false  },
+				{ "pause", 0, false  },
+				{ "timestamp", 0, false  },
+				{ "nooverwrite", 0, false  },
+				{ "forcewrite", 0, false  },
+				{ "recreate", 0, false  },
+				{ "compare", 0, false  },
+				{ "info", 0, false  },
+				{ "forceprimaryencoding", 0, false },
+				{ "usetransparentindicesforblack", 0, false  },
+				{ "usesourceformat", 0, false  },
+
+				{ "rescalemode", 1, false },
+				{ "rescale", 2, false },
+				{ "relrescale", 2, false },
+				{ "clamp", 2, false },
+				{ "clampScale", 2, false },
+				{ "window", 4, false },
+
+				{ "maxmips", 1, false },
+				{ "minmipsize", 1, false },
+
+				{ "bitrate", 1, false },
+
+				{ "lzmastats", 0, false },
+				{ "split", 0, false },
+				{ "csvfile", 1, false },
+
+				{ "yflip", 0, false },
+				{ "unflip", 0, false },
+			};
+
+			crnlib::vector<crnlib::command_line_params::param_desc> params;
+			params.append(std_params, glm::countof(std_params));
+
+			for (uint32 i = 0; i < crnlib::pixel_format_helpers::get_num_formats(); i++)
+			{
+				crnlib::pixel_format fmt = crnlib::pixel_format_helpers::get_pixel_format_by_index(i);
+
+				crnlib::command_line_params::param_desc desc;
+				desc.m_pName = crnlib::pixel_format_helpers::get_pixel_format_string(fmt);
+				desc.m_num_values = 0;
+				desc.m_support_listing_file = false;
+				params.push_back(desc);
+			}
+
+			detail::m_params.clear();
+			if (!detail::m_params.parse(pCommand_line, params.size(), params.get_ptr(), true))
+			{
+				// Error!
+				return;
+			}
+
+
+			crnlib::texture_file_types::format out_file_type = crnlib::texture_file_types::cFormatCRN;
+			crnlib::dynamic_string fmt;
+			if (detail::m_params.get_value_as_string("fileformat", 0, fmt))
+			{
+				if (fmt == "tga")
+				out_file_type = crnlib::texture_file_types::cFormatTGA;
+				else if (fmt == "bmp")
+				out_file_type = crnlib::texture_file_types::cFormatBMP;
+				else if (fmt == "dds")
+				out_file_type = crnlib::texture_file_types::cFormatDDS;
+				else if (fmt == "ktx")
+				out_file_type = crnlib::texture_file_types::cFormatKTX;
+				else if (fmt == "crn")
+				out_file_type = crnlib::texture_file_types::cFormatCRN;
+				else if (fmt == "png")
+				out_file_type = crnlib::texture_file_types::cFormatPNG;
+				else
+				{
+					// console::error("Unsupported output file type: %s", fmt.get_ptr());
+					return;
+				}
+			}
+
+			// No explicit output format has been specified - try to determine something doable.
+			if (!detail::m_params.has_key("fileformat"))
+			{
+				if (detail::m_params.has_key("split"))
+				{
+					out_file_type = crnlib::texture_file_types::cFormatPNG;
+				}
+				else
+				{
+				crnlib::texture_file_types::format input_file_type = crnlib::texture_file_types::determine_file_format(inputAssetFilename.c_str());
+				if (input_file_type == crnlib::texture_file_types::cFormatCRN)
+				{
+					// Automatically transcode CRN->DXTc and write to DDS files, unless the user specifies either the /fileformat or /split options.
+					out_file_type = crnlib::texture_file_types::cFormatDDS;
+				}
+				else if (input_file_type == crnlib::texture_file_types::cFormatKTX)
+				{
+					// Default to converting KTX files to PNG
+					out_file_type = crnlib::texture_file_types::cFormatPNG;
+				}
+				}
+			}
+
+			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
+			{
+				detail::convertColorCorrectionLookupTable(inputAssetFilename.c_str(), outputAssetFilename.c_str());
+			}
+			else
+			{
+				detail::convert_file(rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type, textureSemantic, createMipmaps);
+			}
 		}
 
 		{ // Update the output asset package

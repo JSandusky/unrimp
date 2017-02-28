@@ -25,6 +25,7 @@
 #include "RendererToolkit/Project/ProjectAssetMonitor.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
+#include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
@@ -238,6 +239,10 @@ namespace RendererToolkit
 			mProjectDirectory = STD_FILESYSTEM_PATH(filename).parent_path().generic_string() + '/';
 			readAssetsByFilename(rapidJsonValueProject["AssetsFilename"].GetString());
 			readTargetsByFilename(rapidJsonValueProject["TargetsFilename"].GetString());
+
+			// Setup project folder for cache manager, it will store there its data
+			// TODO(sw) For now only prototype. Change this.
+			CacheManager::mProjectDirectory = mProjectDirectory;
 		}
 	}
 
