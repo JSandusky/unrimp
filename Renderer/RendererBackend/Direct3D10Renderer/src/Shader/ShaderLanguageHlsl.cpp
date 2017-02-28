@@ -60,7 +60,7 @@ namespace Direct3D10Renderer
 	ID3DBlob *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint) const
 	{
 		// Get compile flags
-		UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+		UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
 		switch (getOptimizationLevel())
 		{
 			case OptimizationLevel::Debug:

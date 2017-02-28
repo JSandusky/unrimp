@@ -105,15 +105,15 @@ FirstScene::FirstScene() :
 	mNumberOfTopTextureMipmapsToRemove(0),
 	mPerformFxaa(false),
 	mPerformSepiaColorCorrection(false),
-	mRotationSpeed(0.5f),
+	mRotationSpeed(0.0f),
 	mShowSkeleton(false),
 	mSunLightColor{1.0f, 1.0f, 1.0f},
-	mWetness(1.0f),
+	mWetness(0.0f),
 	mPerformLighting(true),
 	mUseDiffuseMap(true),
 	mUseEmissiveMap(true),
 	mUseNormalMap(true),
-	mUseSpecularMap(true),
+	mUseRoughnessMap(true),
 	mDiffuseColor{1.0f, 1.0f, 1.0f}
 {
 	// Nothing here
@@ -460,7 +460,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				ImGui::Checkbox("Use Diffuse Map", &mUseDiffuseMap);
 				ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
 				ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
-				ImGui::Checkbox("Use Specular Map", &mUseSpecularMap);
+				ImGui::Checkbox("Use Roughness Map", &mUseRoughnessMap);
 				ImGui::ColorEdit3("Diffuse Color", mDiffuseColor);
 
 				// Scene visualizations
@@ -577,7 +577,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));
 					materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
 					materialResource->setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
-					materialResource->setPropertyById("UseSpecularMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseSpecularMap));
+					materialResource->setPropertyById("UseRoughnessMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseRoughnessMap));
 					materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
 				}
 			}

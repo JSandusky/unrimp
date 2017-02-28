@@ -22,6 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 @includepiece(15)	// "Core.shader_piece"
+@includepiece(16)	// "TangentFrame.shader_piece"
+@includepiece(164)	// "PhysicallyBasedShading.shader_piece"
 
 
 //[-------------------------------------------------------]
@@ -47,6 +49,9 @@ INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame0VS,		 2)	// Tangent frame
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame1VS,		 3)	// Tangent frame
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame2VS,		 4)	// Tangent frame
+	@property(Lighting)
+		INPUT_TEXTURE_COORDINATE			(float3, WorldSpacePositionVS,	 5)	// World space position
+	@end
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
@@ -56,11 +61,13 @@ OUTPUT_END
 struct PassDataStruct
 {
 	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float4	 WorldSpaceToViewSpaceQuaternion;
 	float3	 ViewSpaceSunLightDirection;
 	float	 Wetness;
 	float3	 AmbientColor;
 	float3	 SunLightColor;
+	float3   CameraWorldSpacePosition;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -87,36 +94,16 @@ TEXTURE_2D(DiffuseMap, 1)
 	TEXTURE_2D(EmissiveMap, 3)
 @end
 TEXTURE_2D(NormalMap, 4)	// Tangent space normal map
-TEXTURE_2D(SpecularMap, 5)
+TEXTURE_2D(RoughnessMap, 5)
+TEXTURE_2D(MetallicMap, 6)
+TEXTURE_CUBE(ReflectionCubeMap, 7)
 
 
 //[-------------------------------------------------------]
-//[ Pieces                                                ]
+//[ Functions                                             ]
 //[-------------------------------------------------------]
-// TODO(co) Just a first test, need reusable shader piece for this
-@property(Lighting)
-	@piece(CalculateLighting)
-		// Perform standard Blinn-Phong diffuse and specular lighting
-
-		// Calculate the diffuse lighting
-		float diffuseLightFactor = max(dot(normal, PassData.ViewSpaceSunLightDirection), 0.0f);
-		float3 diffuseLightColor = PassData.SunLightColor * diffuseLightFactor;
-
-		// Build in variables
-		float3 ViewSpaceCameraDirection = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
-
-		// Calculate the specular lighting
-		float3 viewSpaceHalfVector = normalize(PassData.ViewSpaceSunLightDirection + ViewSpaceCameraDirection);
-		float specularLightFactor = (diffuseLightFactor > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
-		float3 specularLightColor = PassData.Wetness * PassData.SunLightColor * specularLightFactor;
-	@end
-@end
-@property(!Lighting)
-	@piece(CalculateLighting)
-		float diffuseLightColor = 1.0f;
-		float specularLightColor = 0.0f;
-	@end
-@end
+@insertpiece(DefineGetTangentFrame)
+@insertpiece(DefinePhysicallyBasedShading)
 
 
 //[-------------------------------------------------------]
@@ -134,27 +121,34 @@ MAIN_BEGIN
 		}
 	@end
 
+	// Get diffuse, roughness and metallic
+	float3 diffuse = material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+	float roughness = SAMPLE_2D(RoughnessMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r;
+	float metallic = SATURATE(PassData.Wetness + SAMPLE_2D(MetallicMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r);
+
 	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
 	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
-	float3 normal = SAMPLE_2D(NormalMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).yxx * 2.0f - 1.0f;
-	normal.z = sqrt(1.0f - dot(normal.xy, normal.xy));
+	float3 viewSpaceNormal = SAMPLE_2D(NormalMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).yxx * 2.0f - 1.0f;
+	viewSpaceNormal.z = sqrt(1.0f - dot(viewSpaceNormal.xy, viewSpaceNormal.xy));
 
 	// Transform the tangent space normal into view space
-	normal = normalize(normal.x * MAIN_INPUT(TangentFrame0VS) + normal.y * MAIN_INPUT(TangentFrame1VS) + normal.z * MAIN_INPUT(TangentFrame2VS));
+	viewSpaceNormal = normalize(viewSpaceNormal.x * MAIN_INPUT(TangentFrame0VS) + viewSpaceNormal.y * MAIN_INPUT(TangentFrame1VS) + viewSpaceNormal.z * MAIN_INPUT(TangentFrame2VS));
 
-	// Calculate lighting
-	@insertpiece(CalculateLighting)
-
-	float3 diffuseValue = material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+	// Derive data
+	float3 worldSpaceNormal = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceNormal);
 
 	// Ambient term
-	float3 color = PassData.AmbientColor * diffuseValue;
+	float3 color = diffuse * (PassData.AmbientColor.rgb + CalculateHemisphereLighting(worldSpaceNormal.xyz, PassData.AmbientColor.rgb * 0.7f, PassData.AmbientColor.rgb * 0.2f));
 
-	// Diffuse term
-	color += diffuseLightColor * diffuseValue;
+	// Directional sun light, our primary light
+	@property(Lighting)
+		// Get view space incident vector
+		float3 viewSpaceIncident = normalize(MAIN_INPUT(WorldSpacePositionVS) - PassData.CameraWorldSpacePosition);
+		viewSpaceIncident = MultiplyQuaternionVector(PassData.WorldSpaceToViewSpaceQuaternion, viewSpaceIncident);
 
-	// Specular term
-	color += specularLightColor * SAMPLE_2D(SpecularMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r;
+		// Calculate lighting
+		color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
+	@end
 
 	// Emissive term
 	@property(UseEmissiveMap)

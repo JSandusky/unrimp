@@ -25,8 +25,8 @@
 			"EmissiveIntensity": "10.0",
 			"UseNormalMap": "TRUE",
 			"NormalMap": "6",
-			"UseSpecularMap": "TRUE",
-			"SpecularMap": "7"
+			"UseRoughnessMap": "TRUE",
+			"RoughnessMap": "7"
 		}
 	}
 }

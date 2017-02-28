@@ -67,7 +67,7 @@ namespace Direct3D11Renderer
 		HRESULT hr = S_OK;
 
 		// Get compile flags
-		UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+		UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
 		switch (getOptimizationLevel())
 		{
 			case OptimizationLevel::Debug:

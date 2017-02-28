@@ -20,8 +20,8 @@
 			"DiffuseMap": "59",
 			"UseNormalMap": "TRUE",
 			"NormalMap": "60",
-			"UseSpecularMap": "TRUE",
-			"SpecularMap": "61"
+			"UseRoughnessMap": "TRUE",
+			"RoughnessMap": "61"
 		}
 	}
 }

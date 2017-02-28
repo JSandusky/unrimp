@@ -88,14 +88,22 @@
 		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) Texture2DMS<float4, numberOfMultisamples> name : register(t##index);
 		#define TEXTURE_3D(name, index) Texture3D name : register(t##index);
 		#define TEXTURE_CUBE(name, index) TextureCube name : register(t##index);
-		float2 getDirect3DTextureSize(Texture2D textureObject)
+		float2 getDirect3DTexture2DSize(Texture2D textureObject)
 		{
 			uint width;
 			uint height;
 			textureObject.GetDimensions(width, height);
 			return float2(width, height);
 		}
-		#define GET_TEXTURE_SIZE(textureObject) getDirect3DTextureSize(textureObject)
+		#define GET_TEXTURE_2D_SIZE(textureObject) getDirect3DTexture2DSize(textureObject)
+		float2 getDirect3DTextureCubeSize(TextureCube textureObject)
+		{
+			uint width;
+			uint height;
+			textureObject.GetDimensions(width, height);
+			return float2(width, height);
+		}
+		#define GET_TEXTURE_CUBE_SIZE(textureObject) getDirect3DTextureCubeSize(textureObject)
 
 		// Sampler
 		#define SAMPLER_STATE(name, index) SamplerState name : register(s##index);
@@ -182,7 +190,8 @@
 		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) uniform sampler2DMS name;
 		#define TEXTURE_3D(name, index) uniform sampler3D name;
 		#define TEXTURE_CUBE(name, index) uniform samplerCube name;
-		#define GET_TEXTURE_SIZE(textureObject) textureSize(textureObject, 0)
+		#define GET_TEXTURE_2D_SIZE(textureObject) textureSize(textureObject, 0)
+		#define GET_TEXTURE_CUBE_SIZE(textureObject) textureSize(textureObject, 0)
 
 		// Sampler
 		#define SAMPLER_STATE(name, index) int name = index;	// We need something to pass into functions
@@ -297,7 +306,8 @@
 		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) uniform sampler2DMS name;
 		#define TEXTURE_3D(name, index) uniform highp sampler3D name;
 		#define TEXTURE_CUBE(name, index) uniform highp samplerCube name;
-		#define GET_TEXTURE_SIZE(textureObject) textureSize(textureObject, 0)
+		#define GET_TEXTURE_2D_SIZE(textureObject) textureSize(textureObject, 0)
+		#define GET_TEXTURE_CUBE_SIZE(textureObject) textureSize(textureObject, 0)
 
 		// Sampler
 		#define SAMPLER_STATE(name, index) int name = index;	// We need something to pass into functions

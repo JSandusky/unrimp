@@ -103,7 +103,8 @@ namespace
 			DIFFUSE_MAP,
 			ALPHA_MAP,
 			NORMAL_MAP,
-			SPECULAR_MAP,
+			ROUGHNESS_MAP,
+			METALLIC_MAP,
 			EMISSIVE_MAP,
 			REFLECTION_CUBE_MAP,
 			COLOR_CORRECTION_LOOKUP_TABLE,
@@ -145,7 +146,8 @@ namespace
 				IF_VALUE(DIFFUSE_MAP)
 				ELSE_IF_VALUE(ALPHA_MAP)
 				ELSE_IF_VALUE(NORMAL_MAP)
-				ELSE_IF_VALUE(SPECULAR_MAP)
+				ELSE_IF_VALUE(ROUGHNESS_MAP)
+				ELSE_IF_VALUE(METALLIC_MAP)
 				ELSE_IF_VALUE(EMISSIVE_MAP)
 				ELSE_IF_VALUE(REFLECTION_CUBE_MAP)
 				ELSE_IF_VALUE(COLOR_CORRECTION_LOOKUP_TABLE)
@@ -413,7 +415,7 @@ namespace
 		  return true;
 	   }
 
-		convert_status convert_file(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* pSrc_filename, const char* pDst_filename, crnlib::texture_file_types::format out_file_type, TextureSemantic textureSemantic, bool createMipmaps)
+		convert_status convert_file(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* pSrc_filename, const char* pDst_filename, crnlib::texture_file_types::format out_file_type, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness)
 		{
 			crnlib::texture_file_types::format src_file_format = crnlib::texture_file_types::cFormatInvalid;
 			crnlib::texture_conversion::convert_params params;
@@ -555,12 +557,16 @@ namespace
 
 				case TextureSemantic::ALPHA_MAP:
 					params.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
+					params.m_mipmap_params.m_gamma_filtering = false;
+					params.m_mipmap_params.m_gamma = 1.0f;	// Mipmap gamma correction value, default=2.2, use 1.0 for linear
 					break;
 
 				case TextureSemantic::NORMAL_MAP:
 					params.m_texture_type = crnlib::cTextureTypeNormalMap;
 					params.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
 					params.m_mipmap_params.m_renormalize = true;
+					params.m_mipmap_params.m_gamma_filtering = false;
+					params.m_mipmap_params.m_gamma = 1.0f;	// Mipmap gamma correction value, default=2.2, use 1.0 for linear
 
 					// Do never ever store normal maps standard DXT1 compressed to not get horrible artefact's due to compressing vector data using algorithms design for color data
 					// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
@@ -571,8 +577,11 @@ namespace
 					}
 					break;
 
-				case TextureSemantic::SPECULAR_MAP:
+				case TextureSemantic::ROUGHNESS_MAP:
+				case TextureSemantic::METALLIC_MAP:
 					params.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
+					params.m_mipmap_params.m_gamma_filtering = false;
+					params.m_mipmap_params.m_gamma = 1.0f;	// Mipmap gamma correction value, default=2.2, use 1.0 for linear
 					break;
 
 				case TextureSemantic::EMISSIVE_MAP:
@@ -628,6 +637,7 @@ namespace
 
 			// Create mipmaps?
 			params.m_mipmap_params.m_mode = createMipmaps ? cCRNMipModeGenerateMips : cCRNMipModeNoMips;
+			params.m_mipmap_params.m_blurriness = mipmapBlurriness;
 
 			crnlib::texture_conversion::convert_stats stats;
 
@@ -898,6 +908,7 @@ namespace RendererToolkit
 		std::string assetFileFormat;
 		::detail::TextureSemantic textureSemantic = ::detail::TextureSemantic::UNKNOWN;
 		bool createMipmaps = true;
+		float mipmapBlurriness = 0.9f;	// Scale filter kernel, >1=blur, <1=sharpen, .01-8, default=.9, Crunch default "blurriness" factor of 0.9 actually sharpens the output a little
 		const rapidjson::Value& rapidJsonValueTextureAssetCompiler = rapidJsonValueAsset["TextureAssetCompiler"];
 		{
 			::detail::optionalTextureSemanticProperty(rapidJsonValueTextureAssetCompiler, "TextureSemantic", textureSemantic);
@@ -910,6 +921,7 @@ namespace RendererToolkit
 				assetFileFormat = rapidJsonValueTextureAssetCompiler["FileFormat"].GetString();
 			}
 			JsonHelper::optionalBooleanProperty(rapidJsonValueTextureAssetCompiler, "CreateMipmaps", createMipmaps);
+			JsonHelper::optionalFloatProperty(rapidJsonValueTextureAssetCompiler, "MipmapBlurriness", mipmapBlurriness);
 
 			// Texture semantic overrules manual settings
 			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
@@ -1119,7 +1131,7 @@ namespace RendererToolkit
 		}
 		else
 		{
-			detail::convert_file(rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type, textureSemantic, createMipmaps);
+			detail::convert_file(rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type, textureSemantic, createMipmaps, mipmapBlurriness);
 		}
 
 		{ // Update the output asset package

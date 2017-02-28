@@ -30,14 +30,14 @@
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-				"Description": "2D GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic"
+				"Description": "2D GBuffer 1: rgb = view space normal, a = roughness"
 			},
 			"GBufferMap2":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-				"Description": "2D GBuffer 2: rgb = emissive color, a = glossiness"
+				"Description": "2D GBuffer 2: rgb = emissive color, a = metallic"
 			},
 			"DepthMap":
 			{
@@ -261,11 +261,17 @@
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
-						"ClipSpaceToWorldSpaceMatrix":
+						"ClipSpaceToViewSpaceMatrix":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
-							"Value": "@CLIP_SPACE_TO_WORLD_SPACE_MATRIX"
+							"Value": "@CLIP_SPACE_TO_VIEW_SPACE_MATRIX"
+						},
+						"ViewSpaceToWorldSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@VIEW_SPACE_TO_WORLD_SPACE_MATRIX"
 						},
 						"ShadowMatrix":
 						{
@@ -409,7 +415,8 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ReflectionCubeMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMapCube"
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMapCube",
+					"RgbHardwareGammaCorrection": "TRUE"
 				}
 			}
 		}

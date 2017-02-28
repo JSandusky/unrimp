@@ -114,10 +114,10 @@ struct VS_OUTPUT
 };
 
 // Uniforms
-uniform sampler2D DiffuseMap  : register(s0);
-uniform sampler2D EmissiveMap : register(s1);
-uniform sampler2D NormalMap   : register(s2);	// Tangent space normal map
-uniform sampler2D SpecularMap : register(s3);
+uniform sampler2D DiffuseMap   : register(s0);
+uniform sampler2D EmissiveMap  : register(s1);
+uniform sampler2D NormalMap    : register(s2);	// Tangent space normal map
+uniform sampler2D RoughnessMap : register(s3);
 
 // Programs
 float4 main(VS_OUTPUT input) : SV_TARGET
@@ -145,7 +145,7 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 
 	// Calculate the fragment color
 	float4 color = diffuseLight * tex2D(DiffuseMap, input.TexCoord).rgba;	// Diffuse term
-	color.rgb += specularLight * tex2D(SpecularMap, input.TexCoord).rgb;	// Specular term
+	color.rgb += specularLight * tex2D(RoughnessMap, input.TexCoord).rgb;	// Specular term
 	color.rgb += tex2D(EmissiveMap, input.TexCoord).rgb;					// Emissive term
 
 	// Done

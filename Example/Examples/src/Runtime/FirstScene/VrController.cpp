@@ -65,8 +65,8 @@ namespace
 			// Pass
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 		#undef DEFINE_CONSTANT
-		static const uint32_t FIRST_CONTROLLER_INDEX  = 1;
-		static const uint32_t SECOND_CONTROLLER_INDEX = 2;
+		static const uint32_t FIRST_CONTROLLER_INDEX  = 0;
+		static const uint32_t SECOND_CONTROLLER_INDEX = 1;
 
 
 		//[-------------------------------------------------------]

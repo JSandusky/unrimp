@@ -21,14 +21,14 @@
 			},
 			"Example/Texture/Dynamic/MultisampleGBufferRenderTarget1":
 			{
-				"Description": "GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic",
+				"Description": "GBuffer 1: rgb = view space normal, a = roughness",
 				"TextureFormat": "R16G16B16A16F",
 				"AllowMultisample": "TRUE"
 			},
 			"Example/Texture/Dynamic/MultisampleGBufferRenderTarget2":
 			{
-				"Description": "GBuffer 2: rgb = emissive color, a = glossiness",
-				"TextureFormat": "R11G11B10F",
+				"Description": "GBuffer 2: rgb = emissive color, a = metallic",
+				"TextureFormat": "R16G16B16A16F",
 				"AllowMultisample": "TRUE"
 			},
 			"Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget":

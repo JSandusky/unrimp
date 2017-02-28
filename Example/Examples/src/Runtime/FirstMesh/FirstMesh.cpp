@@ -41,7 +41,7 @@ FirstMesh::FirstMesh() :
 	mMeshResourceId(RendererRuntime::getUninitialized<RendererRuntime::MeshResourceId>()),
 	mDiffuseTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	mNormalTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
-	mSpecularTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
+	mRoughnessTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	mEmissiveTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 	mObjectSpaceToViewSpaceMatrixUniformHandle(NULL_HANDLE),
@@ -131,7 +131,7 @@ void FirstMesh::onInitialization()
 				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 1);
 				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "EmissiveMap", 1);
 				ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "NormalMap", 1);
-				ranges[5].initialize(Renderer::DescriptorRangeType::SRV, 1, 3, "SpecularMap", 1);
+				ranges[5].initialize(Renderer::DescriptorRangeType::SRV, 1, 3, "RoughnessMap", 1);
 
 				Renderer::RootParameterBuilder rootParameters[6];
 				rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
@@ -188,14 +188,14 @@ void FirstMesh::onInitialization()
 			// Create mesh instance
 			mMeshResourceId = rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId("Example/Mesh/Character/Imrod");
 
-			{ // Load in the diffuse, emissive, normal and specular texture
+			{ // Load in the diffuse, emissive, normal and roughness texture
 			  // -> The tangent space normal map is stored with three components, two would be enough to recalculate the third component within the fragment shader
-			  // -> The specular map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
+			  // -> The roughness map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-				mDiffuseTextureResourceId  = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodDiffuseMap",  "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D");
-				mNormalTextureResourceId   = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodEmissiveMap", "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D");
-				mSpecularTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodNormalMap",   "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D");
-				mEmissiveTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodSpecularMap", "Unrimp/Texture/DynamicByCode/IdentitySpecularMap2D");
+				mDiffuseTextureResourceId  = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodDiffuseMap",   "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D");
+				mNormalTextureResourceId   = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodEmissiveMap",  "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D");
+				mRoughnessTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodNormalMap",   "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D");
+				mEmissiveTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodRoughnessMap", "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D");
 			}
 
 			{ // Create sampler state
@@ -215,7 +215,7 @@ void FirstMesh::onDeinitialization()
 	mSamplerState = nullptr;
 	RendererRuntime::setUninitialized(mDiffuseTextureResourceId);
 	RendererRuntime::setUninitialized(mNormalTextureResourceId);
-	RendererRuntime::setUninitialized(mSpecularTextureResourceId);
+	RendererRuntime::setUninitialized(mRoughnessTextureResourceId);
 	RendererRuntime::setUninitialized(mEmissiveTextureResourceId);
 	RendererRuntime::setUninitialized(mMeshResourceId);
 	mPipelineState = nullptr;
@@ -254,11 +254,11 @@ void FirstMesh::onDraw()
 	const RendererRuntime::TextureResources& textureResources = rendererRuntime->getTextureResourceManager().getTextureResources();
 	const RendererRuntime::TextureResource* diffuseTextureResource  = textureResources.tryGetElementById(mDiffuseTextureResourceId);
 	const RendererRuntime::TextureResource* normalTextureResource   = textureResources.tryGetElementById(mNormalTextureResourceId);
-	const RendererRuntime::TextureResource* specularTextureResource = textureResources.tryGetElementById(mSpecularTextureResourceId);
+	const RendererRuntime::TextureResource* roughnessTextureResource = textureResources.tryGetElementById(mRoughnessTextureResourceId);
 	const RendererRuntime::TextureResource* emissiveTextureResource = textureResources.tryGetElementById(mEmissiveTextureResourceId);
 	if (nullptr == diffuseTextureResource || nullptr == diffuseTextureResource->getTexture() ||
 		nullptr == normalTextureResource || nullptr == normalTextureResource->getTexture() ||
-		nullptr == specularTextureResource || nullptr == specularTextureResource->getTexture() ||
+		nullptr == roughnessTextureResource || nullptr == roughnessTextureResource->getTexture() ||
 		nullptr == emissiveTextureResource || nullptr == emissiveTextureResource->getTexture())
 	{
 		return;
@@ -298,7 +298,7 @@ void FirstMesh::onDraw()
 		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mSamplerState);
 		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, diffuseTextureResource->getTexture());
 		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 3, normalTextureResource->getTexture());
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, specularTextureResource->getTexture());
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, roughnessTextureResource->getTexture());
 		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 5, emissiveTextureResource->getTexture());
 
 		// Set the used pipeline state object (PSO)

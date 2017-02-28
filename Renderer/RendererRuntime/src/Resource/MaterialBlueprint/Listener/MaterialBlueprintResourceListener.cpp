@@ -68,6 +68,7 @@ namespace
 		#define DEFINE_CONSTANT(name) static const RendererRuntime::StringId name(#name);
 			// Pass
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
+			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_MATRIX)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_QUATERNION)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_QUATERNION)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
@@ -276,7 +277,6 @@ namespace RendererRuntime
 		mFarZ  = (nullptr != cameraSceneItem) ? cameraSceneItem->getFarZ()  : CameraSceneItem::DEFAULT_FAR_Z;
 
 		// Calculate required matrices basing whether or not the VR-manager is currently running
-		glm::mat4 viewTranslateMatrix;
 		glm::mat4 viewSpaceToClipSpaceMatrix;
 		const IVrManager& vrManager = rendererRuntime.getVrManager();
 		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye() && !cameraSceneItem->hasCustomWorldSpaceToViewSpaceMatrix() && !cameraSceneItem->hasCustomViewSpaceToClipSpaceMatrix())
@@ -284,11 +284,8 @@ namespace RendererRuntime
 			// Virtual reality rendering
 			const IVrManager::VrEye vrEye = static_cast<IVrManager::VrEye>(getCurrentRenderedVrEye());
 			viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, mNearZ, mFarZ);
-			viewTranslateMatrix = vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye) * vrManager.getHmdPoseMatrix();
-
-			// Calculate the final matrices
-			const Transform& worldSpaceToViewSpaceTransform = (nullptr != cameraSceneItem) ? cameraSceneItem->getWorldSpaceToViewSpaceTransform() : Transform::IDENTITY;
-			mPassData->worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
+			const glm::mat4 viewTranslateMatrix = vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye) * vrManager.getHmdPoseMatrix();
+			mPassData->worldSpaceToViewSpaceMatrix = viewTranslateMatrix * cameraSceneItem->getWorldSpaceToViewSpaceMatrix();
 		}
 		else if (nullptr != cameraSceneItem)
 		{
@@ -311,7 +308,7 @@ namespace RendererRuntime
 			viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_NEAR_Z, CameraSceneItem::DEFAULT_FAR_Z);
 		}
 		mPassData->worldSpaceToViewSpaceQuaternion = glm::quat(mPassData->worldSpaceToViewSpaceMatrix);
-		mPassData->worldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;
+		mPassData->worldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * mPassData->worldSpaceToViewSpaceMatrix;
 		mPassData->viewSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix;
 	}
 
@@ -324,6 +321,11 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceMatrix), numberOfBytes);
+		}
+		else if (::detail::VIEW_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToViewSpaceMatrix)), numberOfBytes);
 		}
 		else if (::detail::WORLD_SPACE_TO_VIEW_SPACE_QUATERNION == referenceValue)
 		{

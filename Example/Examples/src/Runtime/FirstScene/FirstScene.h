@@ -178,7 +178,7 @@ private:
 	bool	   mUseDiffuseMap;
 	bool	   mUseEmissiveMap;
 	bool	   mUseNormalMap;
-	bool	   mUseSpecularMap;
+	bool	   mUseRoughnessMap;
 	float	   mDiffuseColor[3];
 
 

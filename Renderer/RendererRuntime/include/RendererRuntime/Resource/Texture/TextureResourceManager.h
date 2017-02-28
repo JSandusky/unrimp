@@ -76,7 +76,8 @@ namespace RendererRuntime
 	*    - "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
-	*    - "Unrimp/Texture/DynamicByCode/IdentitySpecularMap2D"
+	*    - "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
+	*    - "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D"
 	*/
 	class TextureResourceManager : private IResourceManager

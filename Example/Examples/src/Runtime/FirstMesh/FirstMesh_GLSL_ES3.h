@@ -110,7 +110,7 @@ out highp vec4 FragmentColor;	// Output variable for fragment color
 uniform mediump sampler2D DiffuseMap;
 uniform mediump sampler2D EmissiveMap;
 uniform mediump sampler2D NormalMap;	// Tangent space normal map
-uniform mediump sampler2D SpecularMap;
+uniform mediump sampler2D RoughnessMap;
 
 // Programs
 void main()
@@ -138,7 +138,7 @@ void main()
 
 	// Calculate the fragment color
 	mediump vec4 color = diffuseLight * texture(DiffuseMap, TexCoordVs);	// Diffuse term
-	color.rgb += specularLight * texture(SpecularMap, TexCoordVs).rgb;		// Specular term
+	color.rgb += specularLight * texture(RoughnessMap, TexCoordVs).rgb;		// Specular term
 	color.rgb += texture(EmissiveMap, TexCoordVs).rgb;						// Emissive term
 
 	// Done

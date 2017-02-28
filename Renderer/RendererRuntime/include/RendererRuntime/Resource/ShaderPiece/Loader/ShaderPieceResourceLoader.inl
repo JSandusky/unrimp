@@ -38,12 +38,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline bool ShaderPieceResourceLoader::onDispatch()
-	{
-		// Fully loaded
-		return true;
-	}
-
 	inline bool ShaderPieceResourceLoader::isFullyLoaded()
 	{
 		// Fully loaded

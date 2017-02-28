@@ -17,7 +17,7 @@
 					{
 						"Compression": "BC1"
 					},
-					"SpecularMap":
+					"RoughnessMap":
 					{
 						"Compression": "BC1"
 					},
@@ -40,7 +40,7 @@
 					{
 						"Compression": "BC1"
 					},
-					"SpecularMap":
+					"RoughnessMap":
 					{
 						"Compression": "BC4"
 					},
@@ -63,7 +63,7 @@
 					{
 						"Compression": "ETC1"
 					},
-					"SpecularMap":
+					"RoughnessMap":
 					{
 						"Compression": "ETC1"
 					},

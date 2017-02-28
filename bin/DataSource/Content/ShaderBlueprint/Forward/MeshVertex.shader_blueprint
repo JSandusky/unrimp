@@ -56,6 +56,9 @@ OUTPUT_BEGIN
 	OUTPUT_TEXTURE_COORDINATE				 (float3, TangentFrame0VS,		  2)	// Tangent frame
 	OUTPUT_TEXTURE_COORDINATE				 (float3, TangentFrame1VS,		  3)	// Tangent frame
 	OUTPUT_TEXTURE_COORDINATE				 (float3, TangentFrame2VS,		  4)	// Tangent frame
+	@property(Lighting)
+		OUTPUT_TEXTURE_COORDINATE			 (float3, WorldSpacePositionVS,	  5)	// World space position
+	@end
 	OUTPUT_POSITION																	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
 OUTPUT_END
 
@@ -110,6 +113,10 @@ MAIN_BEGIN
 
 	// Calculate the world space vertex position
 	float3 worldSpacePosition = MultiplyQuaternionVector(rotationQuaternion, objectSpacePosition * scale) + position;
+	@property(Lighting)
+		// Pass through the world space position
+		MAIN_OUTPUT(WorldSpacePositionVS) = worldSpacePosition;
+	@end
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, float4(worldSpacePosition, 1.0f));
@@ -128,7 +135,7 @@ MAIN_BEGIN
 	@property(UseGpuSkinning)
 	{
 		// Transform normals
-		// TODO(co) Implement more elegant solution
+		// TODO(co) Implement more elegant solution, without transform and scale issues
 		float3 transformedNormal;
 		transformedNormal.x = dot(objectSpaceToWorldSpaceMatrix[0], float4(tangentFrame[0], 1.0f));
 		transformedNormal.y = dot(objectSpaceToWorldSpaceMatrix[1], float4(tangentFrame[0], 1.0f));

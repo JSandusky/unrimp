@@ -59,11 +59,11 @@ SAMPLER_STATE(SamplerPointWrap, 1)
 
 // Textures
 @property(NumberOfMultisamples)
-	TEXTURE_2D_MS(GBufferMap1, @value(NumberOfMultisamples), 0)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
+	TEXTURE_2D_MS(GBufferMap1, @value(NumberOfMultisamples), 0)	// GBuffer 1: rgb = view space normal, a = roughness
 	TEXTURE_2D_MS(DepthMap, @value(NumberOfMultisamples), 1)
 @end
 @property(!NumberOfMultisamples)
-	TEXTURE_2D(GBufferMap1, 0)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
+	TEXTURE_2D(GBufferMap1, 0)	// GBuffer 1: rgb = view space normal, a = roughness
 	TEXTURE_2D(DepthMap, 1)
 @end
 TEXTURE_1D(ScreenSpaceAmbientOcclusionSampleKernelMap, 2)

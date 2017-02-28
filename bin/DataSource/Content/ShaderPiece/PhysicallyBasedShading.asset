@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "164",
+			"AssetType": "ShaderPiece",
+			"AssetCategory": "Default",
+			"AssetName": "PhysicallyBasedShading",
+			"FileDependencies": [ "PhysicallyBasedShading.shader_piece" ],
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
+		},
+		"ShaderPieceAssetCompiler":
+		{
+			"InputFile": "PhysicallyBasedShading.shader_piece"
+		}
+	}
+}

@@ -12,7 +12,7 @@
 		"4": "Texture/Imrod/ImrodDiffuseMap.asset",
 		"5": "Texture/Imrod/ImrodEmissiveMap.asset",
 		"6": "Texture/Imrod/ImrodNormalMap.asset",
-		"7": "Texture/Imrod/ImrodSpecularMap.asset",
+		"7": "Texture/Imrod/ImrodRoughnessMap.asset",
 		"8": "Scene/FirstScene.asset",
 		"9": "CompositorNode/First.asset",
 		"10": "CompositorWorkspace/First.asset",
@@ -168,6 +168,7 @@
 		"160": "Material/Bob/guard1_face.asset",
 		"161": "Material/Bob/guard1_helmet.asset",
 		"162": "Material/Bob/iron_grill.asset",
-		"163": "Material/Bob/round_grill.asset"
+		"163": "Material/Bob/round_grill.asset",
+		"164": "ShaderPiece/PhysicallyBasedShading.asset"
 	}
 }

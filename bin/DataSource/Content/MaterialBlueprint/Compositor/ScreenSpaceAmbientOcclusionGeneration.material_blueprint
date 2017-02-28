@@ -23,7 +23,7 @@
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-				"Description": "2D GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic"
+				"Description": "2D GBuffer 1: rgb = view space normal, a = roughness"
 			},
 			"DepthMap":
 			{

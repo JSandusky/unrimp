@@ -17,13 +17,15 @@
 		},
 		"TextureAssetCompiler":
 		{
+			"Description": "Increase mipmap blurriness, used for physically based shading (PBS) roughness",
 			"TextureSemantic": "REFLECTION_CUBE_MAP",
 			"PositiveXInputFile": "posx.jpg",
 			"NegativeXInputFile": "negx.jpg",
 			"PositiveYInputFile": "posy.jpg",
 			"NegativeYInputFile": "negy.jpg",
 			"PositiveZInputFile": "posz.jpg",
-			"NegativeZInputFile": "negz.jpg"
+			"NegativeZInputFile": "negz.jpg",
+			"MipmapBlurriness": "4.0"
 		}
 	}
 }

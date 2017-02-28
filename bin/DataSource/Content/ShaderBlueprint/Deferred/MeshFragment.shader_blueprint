@@ -50,8 +50,8 @@ INPUT_BEGIN
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
-	OUTPUT_COLOR(1)	// GBuffer 1: rgb = view space normal, a = specular luminance or used as metallic
-	OUTPUT_COLOR(2)	// GBuffer 2: rgb = emissive color, a = glossiness
+	OUTPUT_COLOR(1)	// GBuffer 1: rgb = view space normal, a = roughness
+	OUTPUT_COLOR(2)	// GBuffer 2: rgb = emissive color, a = metallic
 OUTPUT_END
 
 // Uniform buffers
@@ -77,7 +77,8 @@ TEXTURE_2D(DiffuseMap, 1)
 	TEXTURE_2D(EmissiveMap, 3)
 @end
 TEXTURE_2D(NormalMap, 4)	// Tangent space normal map
-TEXTURE_2D(SpecularMap, 5)
+TEXTURE_2D(RoughnessMap, 5)
+TEXTURE_2D(MetallicMap, 6)
 
 
 //[-------------------------------------------------------]
@@ -103,20 +104,21 @@ MAIN_BEGIN
 	// Transform the tangent space normal into view space
 	normal = normalize(normal.x * MAIN_INPUT(TangentFrame0VS) + normal.y * MAIN_INPUT(TangentFrame1VS) + normal.z * MAIN_INPUT(TangentFrame2VS));
 
-	// Diffuse value
-	float3 diffuseValue = material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+	// Diffuse
+	float3 diffuse = material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
 
-	// Specular value
-	float specularValue = SAMPLE_2D(SpecularMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r;
+	// Roughness and metallic
+	float roughness = SAMPLE_2D(RoughnessMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r;
+	float metallic = SAMPLE_2D(MetallicMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r;
 
-	// Emissive value
-	float3 emissiveValue = float3(0.0f, 0.0f, 0.0f);
+	// Emissive
+	float3 emissive = float3(0.0f, 0.0f, 0.0f);
 	@property(UseEmissiveMap)
-		emissiveValue = SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb * material.EmissiveIntensity;
+		emissive = SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb * material.EmissiveIntensity;
 	@end
 
 	// Done
-	MAIN_OUTPUT_COLOR(0) = float4(diffuseValue, 1.0f);
-	MAIN_OUTPUT_COLOR(1) = float4(normal, specularValue);
-	MAIN_OUTPUT_COLOR(2) = float4(emissiveValue, 0.0f);
+	MAIN_OUTPUT_COLOR(0) = float4(diffuse, 1.0f);
+	MAIN_OUTPUT_COLOR(1) = float4(normal, roughness);
+	MAIN_OUTPUT_COLOR(2) = float4(emissive, metallic);
 MAIN_END

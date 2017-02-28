@@ -61,7 +61,7 @@ namespace RendererRuntime
 *    - Root signature
 *    - Pipeline state object (PSO)
 *    - Blinn-Phong shading
-*    - Diffuse, normal, specular and emissive mapping
+*    - Diffuse, normal, roughness and emissive mapping
 *    - Optimization: Cache data to not bother the renderer API to much
 *    - Compact vertex format (32 bit texture coordinate, QTangent, 56 bytes vs. 28 bytes per vertex)
 */
@@ -107,7 +107,7 @@ private:
 	RendererRuntime::MeshResourceId		  mMeshResourceId;			///< Mesh resource ID, can be set to uninitialized value
 	RendererRuntime::TextureResourceId	  mDiffuseTextureResourceId;
 	RendererRuntime::TextureResourceId	  mNormalTextureResourceId;
-	RendererRuntime::TextureResourceId	  mSpecularTextureResourceId;
+	RendererRuntime::TextureResourceId	  mRoughnessTextureResourceId;
 	RendererRuntime::TextureResourceId	  mEmissiveTextureResourceId;
 	Renderer::ISamplerStatePtr			  mSamplerState;			///< Sampler state, can be a null pointer
 	Renderer::CommandBuffer				  mCommandBuffer;			///< Command buffer

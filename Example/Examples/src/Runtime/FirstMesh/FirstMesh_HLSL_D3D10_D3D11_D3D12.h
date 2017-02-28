@@ -119,10 +119,10 @@ struct VS_OUTPUT
 
 // Uniforms
 SamplerState SamplerLinear : register(s0);
-Texture2D DiffuseMap  : register(t0);
-Texture2D EmissiveMap : register(t1);
-Texture2D NormalMap   : register(t2);	// Tangent space normal map
-Texture2D SpecularMap : register(t3);
+Texture2D DiffuseMap   : register(t0);
+Texture2D EmissiveMap  : register(t1);
+Texture2D NormalMap    : register(t2);	// Tangent space normal map
+Texture2D RoughnessMap : register(t3);
 
 // Programs
 float4 main(VS_OUTPUT input) : SV_TARGET
@@ -149,9 +149,9 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 	float specularLight = (diffuseLight > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
 
 	// Calculate the fragment color
-	float4 color = diffuseLight * DiffuseMap.Sample(SamplerLinear, input.TexCoord);		// Diffuse term
-	color.rgb += specularLight * SpecularMap.Sample(SamplerLinear, input.TexCoord).rgb;	// Specular term
-	color.rgb += EmissiveMap.Sample(SamplerLinear, input.TexCoord).rgb;					// Emissive term
+	float4 color = diffuseLight * DiffuseMap.Sample(SamplerLinear, input.TexCoord);			// Diffuse term
+	color.rgb += specularLight * RoughnessMap.Sample(SamplerLinear, input.TexCoord).rgb;	// Specular term
+	color.rgb += EmissiveMap.Sample(SamplerLinear, input.TexCoord).rgb;						// Emissive term
 
 	// Done
 	return min(color, float4(1.0f, 1.0f, 1.0f, 1.0f));

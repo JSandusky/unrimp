@@ -46,7 +46,7 @@ OUTPUT_END
 struct PassDataStruct
 {
 	float4x4 LensStarMatrix;
-	float 	 ToneMapKeyValue;
+	float 	 ToneMapKeyValue;	// TODO(co) Currently unused
 	float 	 BloomIntensity;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
@@ -104,16 +104,16 @@ MAIN_BEGIN
 	// Get dirty lens value
 	float3 dirtyLens = SAMPLE_2D_LOD(DirtyLensMap, SamplerLinear, textureCoordinate).rgb;
 
+	{ // Tone map
+		float exposure = 0.0f;
+		color = ToneMap(color, averageLuminance, 0.0f, exposure);
+	}
+
 	{ // Apply the lens flare with dirty lens
 		float lensFlareIntensity = 5.0f;
 		float3 lensFlare = SAMPLE_2D_LOD(LensFlareMap, SamplerLinear, textureCoordinate).rgb;
 		float2 lensStarTexcoord = (MATRIX_MUL(CAST_TO(PassData.LensStarMatrix, float3x3), float3(MAIN_INPUT(TexCoordVS), 1.0f))).xy;
 		color += lensFlare * (dirtyLens + SAMPLE_2D_LOD(LensStarMap, SamplerLinear, float4(lensStarTexcoord, 0.0f, 0.0f)).rgb) * lensFlareIntensity;
-	}
-
-	{ // Tone map
-		float exposure = 0.0f;
-		color = ToneMap(color, averageLuminance, 0.0f, exposure);
 	}
 
 	{ // Apply the bloom with dirty lens

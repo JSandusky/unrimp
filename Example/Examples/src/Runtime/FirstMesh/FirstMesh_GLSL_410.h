@@ -113,7 +113,7 @@ in vec3 NormalVs;	// Tangent space to view space, z-axis
 uniform sampler2D DiffuseMap;
 uniform sampler2D EmissiveMap;
 uniform sampler2D NormalMap;	// Tangent space normal map
-uniform sampler2D SpecularMap;
+uniform sampler2D RoughnessMap;
 
 // Programs
 void main()
@@ -141,7 +141,7 @@ void main()
 
 	// Calculate the fragment color
 	vec4 color = diffuseLight * texture2D(DiffuseMap, TexCoordVs);			// Diffuse term
-	color.rgb += specularLight * texture2D(SpecularMap, TexCoordVs).rgb;	// Specular term
+	color.rgb += specularLight * texture2D(RoughnessMap, TexCoordVs).rgb;	// Specular term
 	color.rgb += texture2D(EmissiveMap, TexCoordVs).rgb;					// Emissive term
 
 	// Done

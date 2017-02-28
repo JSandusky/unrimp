@@ -17,7 +17,7 @@
 		},
 		"TextureAssetCompiler":
 		{
-			"TextureSemantic": "SPECULAR_MAP",
+			"TextureSemantic": "ROUGHNESS_MAP",
 			"InputFile": "sponza_floor_a_spec.tga"
 		}
 	}

@@ -24,8 +24,8 @@
 			"AlphaReference": "0.2",
 			"UseNormalMap": "TRUE",
 			"NormalMap": "25",
-			"UseSpecularMap": "TRUE",
-			"SpecularMap": "26"
+			"UseRoughnessMap": "TRUE",
+			"RoughnessMap": "26"
 		}
 	}
 }
