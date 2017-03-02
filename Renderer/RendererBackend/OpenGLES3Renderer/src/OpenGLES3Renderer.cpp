@@ -412,7 +412,7 @@ namespace OpenGLES3Renderer
 				// Error!
 				if (numberOfCurrentResources > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: Renderer is going to be destroyed, but there are still %d resource instances left (memory leak)\n", numberOfCurrentResources)
+					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: Renderer is going to be destroyed, but there are still %lu resource instances left (memory leak)\n", numberOfCurrentResources)
 				}
 				else
 				{

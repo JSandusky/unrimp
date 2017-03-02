@@ -143,7 +143,7 @@ namespace OpenGLES3Renderer
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
 						default:
-							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: The type of the given color texture at index %d is not supported", colorTexture - colorTextures)
+							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: The type of the given color texture at index %ld is not supported", colorTexture - colorTextures)
 							break;
 					}
 				}
