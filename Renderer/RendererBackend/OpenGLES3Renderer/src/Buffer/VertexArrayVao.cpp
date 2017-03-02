@@ -109,7 +109,7 @@ namespace OpenGLES3Renderer
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 vertex array
-			glBindVertexArrayOES(static_cast<GLuint>(openGLES3VertexArrayBackup));
+			glBindVertexArray(static_cast<GLuint>(openGLES3VertexArrayBackup));
 
 			// Be polite and restore the previous bound OpenGL ES 3 element array buffer
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ElementArrayBufferBackup));
