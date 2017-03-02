@@ -106,10 +106,8 @@ if(NOT ANDROID)
 endif()
 set(RENDERER_OPENGLES3		"1"	CACHE BOOL "Build OpenGL ES 3 renderer?")
 	# Advanced OpenGL ES 3 renderer options
-	set(RENDERER_OPENGLES3_NO_STATE_CLEANUP			"1"	CACHE BOOL "If true, the previous OpenGL ES 3 state will not be restored after performing an operation (better performance, reduces the binary size slightly, but might result in unexpected behaviour when using OpenGL ES 3 directly beside this renderer)")
 	set(RENDERER_OPENGLES3_NO_RENDERERMATCHCHECK	"1"	CACHE BOOL "If true, remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)")
 	mark_as_advanced(RENDERER_OPENGLES3_NO_STATE_CLEANUP)
-	mark_as_advanced(RENDERER_OPENGLES3_NO_RENDERERMATCHCHECK)
 if(WIN32)
 	# Direct3D is Windows only
 	set(RENDERER_DIRECT3D9	"1"	CACHE BOOL "Build Direct3D 9 renderer?")
