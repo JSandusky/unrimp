@@ -21,12 +21,29 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+// Disable warnings in external headers, we can't fix them -> those warnings here happen apparently when instancing a template
+#include <RendererRuntime/Core/Platform/PlatformTypes.h>
+PRAGMA_WARNING_DISABLE_MSVC(4242)	// warning C4242: '<x>': conversion from '<y>' to '<z>', possible loss of data
+PRAGMA_WARNING_DISABLE_MSVC(4244)	// warning C4244: '<x>': conversion from '<y>' to '<z>', possible loss of data
+
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 
-#include <SQLiteCpp/SQLiteCpp.h>
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: '<x>': assignment operator was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: '<x>': move assignment operator was implicitly defined as deleted
+	#include <SQLiteCpp/SQLiteCpp.h>
+PRAGMA_WARNING_POP
+
 #include <sqlite3.h>
-#include <picosha2/picosha2.h>
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: '<x>': conversion from '<y>' to '<z>', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4100)	// warning C4100: '<x>': unreferenced formal parameter
+	#include <picosha2/picosha2.h>
+PRAGMA_WARNING_POP
 
 #include <fstream>
 #include <iostream>
@@ -69,7 +86,7 @@ namespace RendererToolkit
 			std::vector<char> buffer(32768, 0);
 
 			// Read the file content into chunks and process them
-			while(file.read(buffer.data(), buffer.size()))
+			while(file.read(buffer.data(), static_cast<std::streamsize>(buffer.size())))
 			{
 				// We have read in a fully chunk process it
 				hasher.process(buffer.begin(), buffer.end());
@@ -80,7 +97,7 @@ namespace RendererToolkit
 			if (readInBytes > 0)
 			{
 				// Process the remaining bytes
-				hasher.process(buffer.begin(), buffer.begin()+readInBytes);
+				hasher.process(buffer.begin(), buffer.begin()+static_cast<int>(readInBytes));
 			}
 
 			// We are finished processing the file. Finish up the hashing
@@ -225,13 +242,13 @@ namespace RendererToolkit
 						else
 						{
 							// Source file has changed, store the new hash
-							SQLite::Statement   query(db, "UPDATE FileHash SET hash = ? WHERE fileId = ? AND rendererTarget = ?");
-							query.bind(1, fileHash);
-							query.bind(2, fileId);
-							query.bind(3, rendererTarget);
+							SQLite::Statement   updateQuery(db, "UPDATE FileHash SET hash = ? WHERE fileId = ? AND rendererTarget = ?");
+							updateQuery.bind(1, fileHash);
+							updateQuery.bind(2, fileId);
+							updateQuery.bind(3, rendererTarget);
 							
 							// Execute statement and check if we got a result
-							if (!query.exec())
+							if (!updateQuery.exec())
 							{
 								std::cerr<<"Error updating data to db\n";
 							}
