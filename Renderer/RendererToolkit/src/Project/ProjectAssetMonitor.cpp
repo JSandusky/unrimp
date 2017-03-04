@@ -81,7 +81,7 @@ namespace RendererToolkit
 						// Get the corresponding asset
 						// TODO(co) The current simple solution is not sufficient for large scale projects having ten thousands of assets: Add more efficient asset search
 						// TODO(co) Add support for asset "FileDependencies". The current solution is just a quick'n'dirty prototype which will not work when multiple or other named asset data files are involved.
-						const std::string test = STD_FILESYSTEM_PATH(fileAction.filename).replace_extension("asset").generic_string();
+						const std::string test = STD_FILESYSTEM::path(fileAction.filename).replace_extension("asset").generic_string();
 
 						const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mProjectAssetMonitor.mProjectImpl.getAssetPackage().getSortedAssetVector();
 						const size_t numberOfAssets = sortedAssetVector.size();

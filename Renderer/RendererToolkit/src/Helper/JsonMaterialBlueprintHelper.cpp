@@ -292,7 +292,7 @@ namespace RendererToolkit
 		}
 
 		// Parse material blueprint JSON
-		const std::string absoluteMaterialBlueprintFilename = STD_FILESYSTEM_PATH(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
+		const std::string absoluteMaterialBlueprintFilename = STD_FILESYSTEM::path(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
 		std::ifstream materialBlueprintInputFileStream(absoluteMaterialBlueprintFilename, std::ios::binary);
 		rapidjson::Document rapidJsonDocument;
 		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, materialBlueprintInputFileStream, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "1");

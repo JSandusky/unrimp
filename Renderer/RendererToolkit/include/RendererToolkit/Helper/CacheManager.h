@@ -47,7 +47,7 @@ namespace RendererToolkit
 	*    Cache manager for source assets
 	*
 	*  @note
-	*    This manager caches the content hash of source assets to speed up project compilation when the source doesn't changes 
+	*    - This manager caches the content hash of source assets to speed up project compilation when the source doesn't changes 
 	*/
 	// TODO(sw) For now it simply holds static methods which reopens the connection to the database on each call
 	// FileHash API
@@ -72,7 +72,7 @@ namespace RendererToolkit
 	public:
 		/**
 		*  @brief
-		*    Returns if a asset needs to be compiled
+		*    Return if an asset needs to be compiled
 		* 
 		*  @param[in] rendererTarget
 		*    The renderer target for which the asset should be compiled
@@ -101,12 +101,12 @@ namespace RendererToolkit
 	private:
 		/**
 		*  @brief
-		*    Setups the cache database (sqlite)
-		* 
+		*    Setup the cache database (sqlite)
+		*
 		*  @note
-		*    It creates the cache folder when it doesn't already exists and the cache database file
-		*    Also it checks if the tables exists and if not creates them
-		* 
+		*    - It creates the cache folder when it doesn't already exists and the cache database file
+		*    - Also it checks if the tables exists and if not creates them
+		*
 		*  @return
 		*    True if the database could be successfully be setup, in case of an error false is returned
 		*/
@@ -114,36 +114,36 @@ namespace RendererToolkit
 
 		/**
 		*  @brief
-		*    Returns if for a file a cache entry exists
-		* 
+		*    Return if for a file a cache entry exists
+		*
 		*  @param[in] rendererTarget
 		*    The renderer target for which the asset should be compiled
 		*  @param[in] fileId
-		*    The file id (e.g. string hash of the file path) which represents the file to check
-		* 
+		*    The file ID (e.g. string hash of the file path) which represents the file to check
+		*
 		*  @return
 		*    True if a cache entry exists otherwise false
 		*/
-		static bool hasEntryForFile(const std::string& rendererTarget, const RendererRuntime::StringId fileId);
+		static bool hasEntryForFile(const std::string& rendererTarget, RendererRuntime::StringId fileId);
 
 		/**
 		*  @brief
-		*    Checks if file has changed.
-		* 
+		*    Check if file has changed
+		*
 		*  @param[in] rendererTarget
 		*    The renderer target for which the asset should be compiled
 		*  @param[in] fileHash
-		*    The content hash for the file (e.g. hexadecimal display of an hash using sha256
+		*    The content hash for the file (e.g. hexadecimal display of an hash using sha256)
 		*  @param[in] fileId
-		*    The file id (e.g. string hash of the file path) which represents the file to check
-		* 
+		*    The file ID (e.g. string hash of the file path) which represents the file to check
+		*
 		*  @return
 		*    True if the file has changed otherwise false (aka the stored hash doesn't equals to the current one or file not yet known)
-		* 
+		*
 		*  @note
-		*    When a change was detected the given file hash is stored
+		*    - When a change was detected the given file hash is stored
 		*/
-		static bool checkIfFileChanged(const std::string& rendererTarget, const std::string& fileHash, const RendererRuntime::StringId fileId);
+		static bool checkIfFileChanged(const std::string& rendererTarget, const std::string& fileHash, RendererRuntime::StringId fileId);
 
 
 	};

@@ -980,6 +980,7 @@ namespace RendererToolkit
 		}
 
 		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		// TODO(co) Beside the source asset data, we also need to take the asset metadata into account (e.g. if a asset compiler setting gets edited)
 		if (CacheManager::needsToBeCompiled(configuration.rendererTarget, inputAssetFilename, outputAssetFilename))
 		{
 			const char* pCommand_line = testString.c_str();

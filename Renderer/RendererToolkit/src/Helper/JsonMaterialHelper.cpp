@@ -568,7 +568,7 @@ namespace RendererToolkit
 		}
 
 		// Parse material JSON
-		const std::string absoluteMaterialFilename = STD_FILESYSTEM_PATH(absoluteMaterialAssetFilename).parent_path().generic_string() + '/' + materialInputFile;
+		const std::string absoluteMaterialFilename = STD_FILESYSTEM::path(absoluteMaterialAssetFilename).parent_path().generic_string() + '/' + materialInputFile;
 		std::ifstream materialInputFileStream(absoluteMaterialFilename, std::ios::binary);
 		rapidjson::Document rapidJsonDocument;
 		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, materialInputFileStream, absoluteMaterialFilename, "MaterialAsset", "1");
