@@ -372,10 +372,20 @@ namespace OpenGLES3Renderer
 	FNDEF_GL(void,				glVertexAttrib4fv,						(GLuint indx, const GLfloat* values));
 	FNDEF_GL(void,				glVertexAttribPointer,					(GLuint indx, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* ptr));
 	FNDEF_GL(void,				glViewport,								(GLint x, GLint y, GLsizei width, GLsizei height));
+	// ES 3.0
 	FNDEF_GL(void,				glBindBufferBase,						(GLenum target, GLuint index, GLuint buffer));
 	FNDEF_GL(void,				glUnmapBuffer,							(GLenum target));
 	FNDEF_GL(void*,				glMapBufferRange,						(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access));
 	FNDEF_GL(void*,				glDrawBuffers,							(GLsizei n, const GLenum *bufs));
+	FNDEF_GL(void,				glTexSubImage3D,						(GLenum target, int level, int xoffset, int yoffset, int zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void *pixels));
+	FNDEF_GL(void,				glCopyTexSubImage3D,					(GLenum target, int level, int xoffset, int yoffset, int zoffset, int x, int y, GLsizei width, GLsizei height));
+	FNDEF_GL(void,				glCompressedTexSubImage3D,				(GLenum target, int level, int xoffset, int yoffset, int zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *data));
+	FNDEF_GL(void,				glFramebufferTexture3D,					(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, int level, int zoffset));
+	FNDEF_GL(void,				glGetBufferPointerv,					(GLenum target, GLenum pname, void **params));
+	FNDEF_GL(void *,			glMapBuffer,							(GLenum target, GLenum access));
+	FNDEF_GL(void,				glBindVertexArray,						(GLuint array));
+	FNDEF_GL(void,				glDeleteVertexArrays,					(GLsizei n, const GLuint *arrays));
+	FNDEF_GL(void,				glGenVertexArrays,						(GLsizei n, GLuint *arrays));
 	#undef FNDEF_GL
 
 
@@ -572,11 +582,21 @@ namespace OpenGLES3Renderer
 	#define	glVertexAttribPointer					FNPTR(glVertexAttribPointer)
 	#define	glViewport								FNPTR(glViewport)
 
-	// ES 3
+	// ES 3.0
 	#define	glBindBufferBase						FNPTR(glBindBufferBase)
 	#define	glUnmapBuffer							FNPTR(glUnmapBuffer)
 	#define	glMapBufferRange						FNPTR(glMapBufferRange)
 	#define	glDrawBuffers							FNPTR(glDrawBuffers)
+	#define glTexImage3D							FNPTR(glTexImage3D)
+	#define glTexSubImage3D							FNPTR(glTexSubImage3D)
+	#define glCopyTexSubImage3D						FNPTR(glCopyTexSubImage3D)
+	#define glCompressedTexSubImage3D				FNPTR(glCompressedTexSubImage3D)
+	#define glFramebufferTexture3D					FNPTR(glFramebufferTexture3D)
+	#define glGetBufferPointerv						FNPTR(glGetBufferPointerv)
+	#define glMapBuffer								FNPTR(glMapBuffer)
+	#define glBindVertexArray						FNPTR(glBindVertexArray)
+	#define glDeleteVertexArrays					FNPTR(glDeleteVertexArrays)
+	#define glGenVertexArrays						FNPTR(glGenVertexArrays)
 
 
 //[-------------------------------------------------------]

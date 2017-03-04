@@ -615,6 +615,16 @@ namespace OpenGLES3Renderer
 		IMPORT_FUNC(glUnmapBuffer);
 		IMPORT_FUNC(glMapBufferRange);
 		IMPORT_FUNC(glDrawBuffers);
+		IMPORT_FUNC(glTexImage3D);
+		IMPORT_FUNC(glTexSubImage3D);
+		IMPORT_FUNC(glCopyTexSubImage3D);
+		IMPORT_FUNC(glCompressedTexSubImage3D);
+		IMPORT_FUNC(glFramebufferTexture3D);
+		IMPORT_FUNC(glGetBufferPointerv);
+		IMPORT_FUNC(glMapBuffer);
+		IMPORT_FUNC(glBindVertexArray)
+		IMPORT_FUNC(glDeleteVertexArrays)
+		IMPORT_FUNC(glGenVertexArrays)
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC

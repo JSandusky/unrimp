@@ -106,10 +106,8 @@ if(NOT ANDROID)
 endif()
 set(RENDERER_OPENGLES3		"1"	CACHE BOOL "Build OpenGL ES 3 renderer?")
 	# Advanced OpenGL ES 3 renderer options
-	set(RENDERER_OPENGLES3_NO_STATE_CLEANUP			"1"	CACHE BOOL "If true, the previous OpenGL ES 3 state will not be restored after performing an operation (better performance, reduces the binary size slightly, but might result in unexpected behaviour when using OpenGL ES 3 directly beside this renderer)")
 	set(RENDERER_OPENGLES3_NO_RENDERERMATCHCHECK	"1"	CACHE BOOL "If true, remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)")
 	mark_as_advanced(RENDERER_OPENGLES3_NO_STATE_CLEANUP)
-	mark_as_advanced(RENDERER_OPENGLES3_NO_RENDERERMATCHCHECK)
 if(WIN32)
 	# Direct3D is Windows only
 	set(RENDERER_DIRECT3D9	"1"	CACHE BOOL "Build Direct3D 9 renderer?")
@@ -161,7 +159,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQ
 	# All Unrimp parts except renderer toolkit uses only C++14 features, so we can enable here "globally" C++14 compiler settings
 	# Renderer toolkit only needs C++17 runtime features (filesystem TS) so no C++17 specific compiler features
 	if(COMPILER_SUPPORTS_CXX14)
-		add_compile_options("-std=c++14")
+		add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
 	else()
 		message(FATAL_ERROR "Unrimp needs at least C++14 support but the compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
 	endif()
@@ -174,9 +172,14 @@ if(RENDERER_TOOLKIT AND NOT HAVE_CXX17_FILESYSTEM AND NOT HAVE_CXX1z_FILESYSTEM)
 	message(FATAL_ERROR "Renderer toolkit needs C++ filesystem TS support but the compiler ${CMAKE_CXX_COMPILER} doesn't support C++ filesystem TS. Please use a different C++ compiler.")
 endif()
 
+# Enable visibility hidden support (with gcc/clang this would be -fvisibility=hidden)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+# Enable inline visibility hidden support (with gcc/clang this would be -fvisibility-inlines-hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+
 # Check for visibility support: -fvisibility=hidden -fvisibility-inlines-hidden
-check_cxx_compiler_flag(-fvisibility=hidden GXX_HAS_VISIBILITY_FLAG)
-check_cxx_compiler_flag(-fvisibility-inlines-hidden GXX_HAS_VISIBILITY_INLINES_FLAG)
+# check_cxx_compiler_flag(-fvisibility=hidden GXX_HAS_VISIBILITY_FLAG)
+# check_cxx_compiler_flag(-fvisibility-inlines-hidden GXX_HAS_VISIBILITY_INLINES_FLAG)
 
 # if(GXX_HAS_VISIBILITY_FLAG AND NOT APPLE)
 # 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
@@ -217,6 +220,15 @@ endif()
 add_subdirectory(Renderer)
 if(RENDERER_TOOLKIT)
 	add_subdirectory(External/crunch/crunch)
+
+	# Set some variables to disable optional and not used by us features (e.g. compile/run tests)
+	set(SQLITECPP_RUN_CPPLINT OFF)
+	set(SQLITECPP_RUN_CPPCHECK OFF)
+	set(SQLITECPP_RUN_DOXYGEN OFF)
+	set(SQLITECPP_BUILD_EXAMPLES OFF)
+	set(SQLITECPP_BUILD_TESTS OFF)
+	set(SQLITE_ENABLE_ASSERT_HANDLER OFF)
+	add_subdirectory(External/sqlitecpp/SQLiteCpp/)
 endif()
 if(EXAMPLES)
 	add_subdirectory(Example/Examples)

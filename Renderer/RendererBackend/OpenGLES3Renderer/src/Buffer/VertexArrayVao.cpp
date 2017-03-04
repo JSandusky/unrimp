@@ -46,7 +46,7 @@ namespace OpenGLES3Renderer
 		mVertexBuffers((mNumberOfVertexBuffers > 0) ? new VertexBuffer*[mNumberOfVertexBuffers] : nullptr)	// Guaranteed to be filled below, so we don't need to care to initialize the content in here
 	{
 		// Create the OpenGL ES 3 vertex array
-		glGenVertexArraysOES(1, &mOpenGLES3VertexArray);
+		glGenVertexArrays(1, &mOpenGLES3VertexArray);
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES 3 array buffer
@@ -63,7 +63,7 @@ namespace OpenGLES3Renderer
 		#endif
 
 		// Bind this OpenGL ES 3 vertex array
-		glBindVertexArrayOES(mOpenGLES3VertexArray);
+		glBindVertexArray(mOpenGLES3VertexArray);
 
 		{ // Add a reference to the used vertex buffers
 			VertexBuffer **currentVertexBuffers = mVertexBuffers;
@@ -109,7 +109,7 @@ namespace OpenGLES3Renderer
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 vertex array
-			glBindVertexArrayOES(static_cast<GLuint>(openGLES3VertexArrayBackup));
+			glBindVertexArray(static_cast<GLuint>(openGLES3VertexArrayBackup));
 
 			// Be polite and restore the previous bound OpenGL ES 3 element array buffer
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ElementArrayBufferBackup));
@@ -123,7 +123,7 @@ namespace OpenGLES3Renderer
 	{
 		// Destroy the OpenGL ES 3 vertex array
 		// -> Silently ignores 0's and names that do not correspond to existing vertex array objects
-		glDeleteVertexArraysOES(1, &mOpenGLES3VertexArray);
+		glDeleteVertexArrays(1, &mOpenGLES3VertexArray);
 
 		// Release the reference to the used vertex buffers
 		if (nullptr != mVertexBuffers)
