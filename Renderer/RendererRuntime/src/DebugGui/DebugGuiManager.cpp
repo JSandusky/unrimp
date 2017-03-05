@@ -343,6 +343,7 @@ namespace RendererRuntime
 	{
 		// Change ImGui filenames so one is able to guess where those files come from when using Unrimp
 		// TODO(co) Maybe it makes sense to collect such filenames somewhere so one doesn't need to find those one after another when trying to e.g. keep all files inside the user application directory?
+		// TODO(sw) These files doesn't get read/written via an file interface -> can break on mobile devices
 		ImGuiIO& imGuiIo = ImGui::GetIO();
 		imGuiIo.IniFilename = "UnrimpDebugGuiLayout.ini";
 		imGuiIo.LogFilename = "UnrimpDebugGuiLog.txt";
