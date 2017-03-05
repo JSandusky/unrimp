@@ -175,7 +175,7 @@ namespace RendererToolkit
 		std_filesystem::create_directories(assetOutputDirectory);
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mProjectName, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
+		IAssetCompiler::Input input(mProjectName, absoluteAssetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
 
 		// Asset compiler configuration
 		assert(nullptr != mRapidJsonDocument);

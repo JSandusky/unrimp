@@ -85,17 +85,19 @@ namespace RendererToolkit
 	public:
 		struct Input
 		{
-			std::string							   projectName;
-			std::string							   assetInputDirectory;
-			std::string							   assetOutputDirectory;
-			const SourceAssetIdToCompiledAssetId&  sourceAssetIdToCompiledAssetId;
-			const SourceAssetIdToAbsoluteFilename& sourceAssetIdToAbsoluteFilename;
+			const std::string								projectName;
+			const std::string								assetInputDirectory;
+			const std::string								assetOutputDirectory;
+			const std::string								assetFilename;
+			const SourceAssetIdToCompiledAssetId&	sourceAssetIdToCompiledAssetId;
+			const SourceAssetIdToAbsoluteFilename&	sourceAssetIdToAbsoluteFilename;
 
 			Input() = delete;
-			Input(const std::string _projectName, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToAbsoluteFilename& _sourceAssetIdToAbsoluteFilename) :
+			Input(const std::string _projectName, const std::string& _assetFilename, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToAbsoluteFilename& _sourceAssetIdToAbsoluteFilename) :
 				projectName(_projectName),
 				assetInputDirectory(_assetInputDirectory),
 				assetOutputDirectory(_assetOutputDirectory),
+				assetFilename(_assetFilename),
 				sourceAssetIdToCompiledAssetId(_sourceAssetIdToCompiledAssetId),
 				sourceAssetIdToAbsoluteFilename(_sourceAssetIdToAbsoluteFilename)
 			{

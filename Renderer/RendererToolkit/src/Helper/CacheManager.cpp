@@ -125,7 +125,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& sourceFile, const std::string& destinationFile)
+	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFile, const std::string& sourceFile, const std::string& destinationFile)
 	{
 		// Create "std::filesystem::path" object from the give file paths
 		const std_filesystem::path sourceFilePath(sourceFile);
@@ -143,8 +143,13 @@ namespace RendererToolkit
 			const RendererRuntime::StringId sourceFileStringId(sourceFile.c_str());
 			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFileHash, sourceFileStringId);
 			
-			// File needs to be compiled either destination doesn't exists or the source data has changed
-			return (fileChanged || !destinationExists);
+			// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
+			const std::string assetFileHash = ::detail::hash256_file(assetFile);
+			const RendererRuntime::StringId assetFileStringId(assetFile.c_str());
+			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFileHash, assetFileStringId);
+			
+			// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
+			return (fileChanged || assetFileChanged || !destinationExists);
 		}
 		else
 		{
