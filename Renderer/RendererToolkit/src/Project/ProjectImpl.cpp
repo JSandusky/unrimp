@@ -172,11 +172,7 @@ namespace RendererToolkit
 		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + assetType + '/' + assetCategory + '/';
 
 		// Ensure that the asset output directory exists, else creating output file streams will fail
-		#ifdef WIN32
-			std::tr2::sys::create_directories(assetOutputDirectory);
-		#else
-			std::experimental::filesystem::create_directories(assetOutputDirectory);
-		#endif
+		std_filesystem::create_directories(assetOutputDirectory);
 
 		// Asset compiler input
 		IAssetCompiler::Input input(mProjectName, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
