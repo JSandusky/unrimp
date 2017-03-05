@@ -128,12 +128,12 @@ namespace RendererToolkit
 	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& sourceFile, const std::string& destinationFile)
 	{
 		// Create "std::filesystem::path" object from the give file paths
-		const STD_FILESYSTEM::path sourceFilePath(sourceFile);
-		const STD_FILESYSTEM::path destinationFilePath(destinationFile);
+		const std_filesystem::path sourceFilePath(sourceFile);
+		const std_filesystem::path destinationFilePath(destinationFile);
 
 		// Check if the files exists
-		const bool sourceExists = STD_FILESYSTEM::exists(sourceFilePath);
-		const bool destinationExists = STD_FILESYSTEM::exists(destinationFilePath);
+		const bool sourceExists = std_filesystem::exists(sourceFilePath);
+		const bool destinationExists = std_filesystem::exists(destinationFilePath);
 		if (sourceExists)
 		{
 			// Source exists
@@ -163,7 +163,7 @@ namespace RendererToolkit
 
 		// Ensure that the cache output directory exists
 		const std::string cacheDirectory = mProjectDirectory + "cache";
-		STD_FILESYSTEM::create_directories(cacheDirectory);
+		std_filesystem::create_directories(cacheDirectory);
 
 		try
 		{

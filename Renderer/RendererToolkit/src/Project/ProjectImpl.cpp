@@ -166,7 +166,7 @@ namespace RendererToolkit
 		// TODO(co) Add multithreading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
 
 		// Get the asset input directory and asset output directory
-		const std::string assetInputDirectory = STD_FILESYSTEM::path(absoluteAssetFilename).parent_path().generic_string() + '/';
+		const std::string assetInputDirectory = std_filesystem::path(absoluteAssetFilename).parent_path().generic_string() + '/';
 		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
 		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
 		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + assetType + '/' + assetCategory + '/';
@@ -264,7 +264,7 @@ namespace RendererToolkit
 		mProjectName = rapidJsonValueProject["ProjectMetadata"]["Name"].GetString();
 
 		{ // Read project data
-			mProjectDirectory = STD_FILESYSTEM::path(filename).parent_path().generic_string() + '/';
+			mProjectDirectory = std_filesystem::path(filename).parent_path().generic_string() + '/';
 			readAssetsByFilename(rapidJsonValueProject["AssetsFilename"].GetString());
 			readTargetsByFilename(rapidJsonValueProject["TargetsFilename"].GetString());
 			::detail::optionalQualityStrategy(rapidJsonValueProject, "QualityStrategy", mQualityStrategy);
@@ -368,7 +368,7 @@ namespace RendererToolkit
 		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, absoluteFilename, "Assets", "1");
 
 		// Get the asset package name (includes "/" at the end)
-		mAssetPackageDirectoryName = STD_FILESYSTEM::path(filename).parent_path().generic_string() + '/';
+		mAssetPackageDirectoryName = std_filesystem::path(filename).parent_path().generic_string() + '/';
 
 		// Read project data
 		const rapidjson::Value& rapidJsonValueAssets = rapidJsonDocument["Assets"];
