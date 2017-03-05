@@ -28,14 +28,12 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/Project/IProject.h"
+#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"	// For "RendererToolkit::QualityStrategy"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 
-#include <rapidjson/fwd.h>
-
 #include <thread>
 #include <atomic>
-#include <unordered_map>
 
 
 //[-------------------------------------------------------]
@@ -129,6 +127,7 @@ namespace RendererToolkit
 	private:
 		std::string						mProjectName;
 		std::string						mProjectDirectory;
+		QualityStrategy					mQualityStrategy;
 		RendererRuntime::AssetPackage	mAssetPackage;
 		std::string						mAssetPackageDirectoryName;	///< Asset package name (includes "/" at the end)
 		SourceAssetIdToCompiledAssetId	mSourceAssetIdToCompiledAssetId;

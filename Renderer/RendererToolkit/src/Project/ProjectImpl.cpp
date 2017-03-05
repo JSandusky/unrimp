@@ -71,6 +71,33 @@ namespace
 			return (left.assetId < right.assetId);
 		}
 
+		void optionalQualityStrategy(const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererToolkit::QualityStrategy& value)
+		{
+			if (rapidJsonValue.HasMember(propertyName))
+			{
+				const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+				const char* valueAsString = rapidJsonValueValueType.GetString();
+				const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
+
+				// Define helper macros
+				#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = RendererToolkit::QualityStrategy::name;
+				#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = RendererToolkit::QualityStrategy::name;
+
+				// Evaluate value
+				IF_VALUE(DEBUG)
+				ELSE_IF_VALUE(PRODUCTION)
+				ELSE_IF_VALUE(SHIPPING)
+				else
+				{
+					throw std::runtime_error("Quality strategy must be \"DEBUG\", \"PRODUCTION\" or \"SHIPPING\"");
+				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
+			}
+		}
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -90,6 +117,7 @@ namespace RendererToolkit
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ProjectImpl::ProjectImpl() :
+		mQualityStrategy(QualityStrategy::PRODUCTION),
 		mRapidJsonDocument(nullptr),
 		mProjectAssetMonitor(nullptr),
 		mShutdownThread(false)
@@ -155,7 +183,7 @@ namespace RendererToolkit
 
 		// Asset compiler configuration
 		assert(nullptr != mRapidJsonDocument);
-		const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget);
+		const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget, mQualityStrategy);
 
 		// Asset compiler output
 		IAssetCompiler::Output output;
@@ -239,6 +267,7 @@ namespace RendererToolkit
 			mProjectDirectory = STD_FILESYSTEM::path(filename).parent_path().generic_string() + '/';
 			readAssetsByFilename(rapidJsonValueProject["AssetsFilename"].GetString());
 			readTargetsByFilename(rapidJsonValueProject["TargetsFilename"].GetString());
+			::detail::optionalQualityStrategy(rapidJsonValueProject, "QualityStrategy", mQualityStrategy);
 
 			// Setup project folder for cache manager, it will store there its data
 			// TODO(sw) For now only prototype. Change this.
@@ -315,6 +344,7 @@ namespace RendererToolkit
 	{
 		shutdownAssetMonitor();
 		mProjectName.clear();
+		mQualityStrategy = QualityStrategy::PRODUCTION;
 		mProjectDirectory.clear();
 		mAssetPackage.clear();
 		mAssetPackageDirectoryName.clear();

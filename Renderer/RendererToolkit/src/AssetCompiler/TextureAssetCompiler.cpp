@@ -416,7 +416,7 @@ namespace
 		  return true;
 	   }
 
-		convert_status convert_file(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* pSrc_filename, const char* pDst_filename, crnlib::texture_file_types::format out_file_type, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness)
+		convert_status convert_file(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* pSrc_filename, const char* pDst_filename, crnlib::texture_file_types::format out_file_type, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness)
 		{
 			crnlib::texture_file_types::format src_file_format = crnlib::texture_file_types::cFormatInvalid;
 			crnlib::texture_conversion::convert_params params;
@@ -640,10 +640,45 @@ namespace
 			params.m_mipmap_params.m_mode = createMipmaps ? cCRNMipModeGenerateMips : cCRNMipModeNoMips;
 			params.m_mipmap_params.m_blurriness = mipmapBlurriness;
 
-			crnlib::texture_conversion::convert_stats stats;
+			// Evaluate the quality strategy
+			switch (configuration.qualityStrategy)
+			{
+				case RendererToolkit::QualityStrategy::DEBUG:
+					// Most aggressive option: Reduce texture size
+					params.m_mipmap_params.m_scale_mode = cCRNSMRelative;
+					params.m_mipmap_params.m_scale_x = 0.5f;
+					params.m_mipmap_params.m_scale_y = 0.5f;
 
-			bool status = crnlib::texture_conversion::process(params, stats);
-			if (!status)
+					// Disable several output file optimizations
+					params.m_comp_params.set_flag(cCRNCompFlagQuick, true);
+
+					// Set endpoint optimizer's maximum iteration depth
+					params.m_comp_params.m_dxt_quality = cCRNDXTQualitySuperFast;
+
+					// Set clustered DDS/CRN quality factor [0-255] 255=best
+					params.m_comp_params.m_quality_level = cCRNMinQualityLevel;
+					break;
+
+				case RendererToolkit::QualityStrategy::PRODUCTION:
+					// Set endpoint optimizer's maximum iteration depth
+					params.m_comp_params.m_dxt_quality = cCRNDXTQualityNormal;
+
+					// Set clustered DDS/CRN quality factor [0-255] 255=best
+					params.m_comp_params.m_quality_level = (cCRNMaxQualityLevel - cCRNMinQualityLevel) / 2;
+					break;
+
+				case RendererToolkit::QualityStrategy::SHIPPING:
+					// Set endpoint optimizer's maximum iteration depth
+					params.m_comp_params.m_dxt_quality = cCRNDXTQualityUber;
+
+					// Set clustered DDS/CRN quality factor [0-255] 255=best
+					params.m_comp_params.m_quality_level = cCRNMaxQualityLevel;
+					break;
+			}
+
+			// Compress now
+			crnlib::texture_conversion::convert_stats stats;
+			if (!crnlib::texture_conversion::process(params, stats))
 			{
 				/*
 				if (params.m_error_message.is_empty())
@@ -1136,7 +1171,7 @@ namespace RendererToolkit
 			}
 			else
 			{
-				detail::convert_file(rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type, textureSemantic, createMipmaps, mipmapBlurriness);
+				detail::convert_file(configuration, rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type, textureSemantic, createMipmaps, mipmapBlurriness);
 			}
 		}
 

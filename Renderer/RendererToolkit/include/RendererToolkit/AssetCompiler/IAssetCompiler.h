@@ -60,6 +60,17 @@ namespace RendererToolkit
 	typedef std::unordered_map<uint32_t, uint32_t> SourceAssetIdToCompiledAssetId;		// Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
 	typedef std::unordered_map<uint32_t, std::string> SourceAssetIdToAbsoluteFilename;	// Key = source asset ID, absolute asset filename
 
+	/**
+	*  @brief
+	*    Overall quality strategy which is a trade-off between "fast" and "good"
+	*/
+	enum class QualityStrategy
+	{
+		DEBUG,		///< Best possible speed, quality doesn't matter as long as things can still be identified
+		PRODUCTION,	///< Decent speed and decent quality so e.g. artists can fine tune assets
+		SHIPPING	///< Product is about to be shipped to clients, best possible speed as long as it finishes before the sun burns out
+	};
+
 
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
@@ -74,10 +85,10 @@ namespace RendererToolkit
 	public:
 		struct Input
 		{
-			std::string							  projectName;
-			std::string							  assetInputDirectory;
-			std::string							  assetOutputDirectory;
-			const SourceAssetIdToCompiledAssetId& sourceAssetIdToCompiledAssetId;
+			std::string							   projectName;
+			std::string							   assetInputDirectory;
+			std::string							   assetOutputDirectory;
+			const SourceAssetIdToCompiledAssetId&  sourceAssetIdToCompiledAssetId;
 			const SourceAssetIdToAbsoluteFilename& sourceAssetIdToAbsoluteFilename;
 
 			Input() = delete;
@@ -107,10 +118,12 @@ namespace RendererToolkit
 			const rapidjson::Document& rapidJsonDocumentAsset;
 			const rapidjson::Value&    rapidJsonValueTargets;
 			std::string				   rendererTarget;
-			Configuration(const rapidjson::Document& _rapidJsonDocumentAsset, const rapidjson::Value& _rapidJsonValueTargets, const std::string &_rendererTarget) :
+			QualityStrategy			   qualityStrategy;
+			Configuration(const rapidjson::Document& _rapidJsonDocumentAsset, const rapidjson::Value& _rapidJsonValueTargets, const std::string &_rendererTarget, QualityStrategy _qualityStrategy) :
 				rapidJsonDocumentAsset(_rapidJsonDocumentAsset),
 				rapidJsonValueTargets(_rapidJsonValueTargets),
-				rendererTarget(_rendererTarget)
+				rendererTarget(_rendererTarget),
+				qualityStrategy(_qualityStrategy)
 			{
 				// Nothing here
 			}
