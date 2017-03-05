@@ -43,7 +43,7 @@ namespace Renderer
 		{																														//	Direct3D 11	Direct3D 10	Direct3D 9		OpenGL
 			FillMode::SOLID,					// fillMode (Renderer::FillMode)												"SOLID"			"SOLID"		"SOLID"			"SOLID"
 			CullMode::BACK,						// cullMode (Renderer::CullMode)												"BACK"			"Back"		"BACK" (CCW)	"BACK"
-			false,								// frontCounterClockwise (int)													"false"			"false"		"false" (CCW)	"true"
+			true,								// frontCounterClockwise (int)													"false"			"false"		"false" (CCW)	"true"
 			0,									// depthBias (int)																"0"				"0"			"0"				TODO(co)
 			0.0f,								// depthBiasClamp (float)														"0.0f"			"0.0f"		<unsupported>	TODO(co)
 			0.0f,								// slopeScaledDepthBias (float)													"0.0f"			"0.0f"		"0.0f"			TODO(co)

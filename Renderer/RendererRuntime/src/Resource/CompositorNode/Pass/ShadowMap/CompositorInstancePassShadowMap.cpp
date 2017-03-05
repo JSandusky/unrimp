@@ -69,7 +69,7 @@ namespace RendererRuntime
 
 			// TODO(co) Totally primitive to have something to start with
 			// Compute the MVP matrix from the light's point of view
-			glm::mat4 depthProjectionMatrix = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, -40.0f, 20.0f);
+			glm::mat4 depthProjectionMatrix = glm::ortho(-8.0f, 8.0f, -8.0f, 8.0f, -30.0f, 30.0f);
 			glm::mat4 depthViewMatrix = glm::lookAt(worldSpaceSunLightDirection, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 			// Set custom camera matrices
