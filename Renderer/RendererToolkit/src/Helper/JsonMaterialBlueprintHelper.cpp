@@ -396,7 +396,7 @@ namespace RendererToolkit
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::CULL_MODE:
 			{
-				Renderer::CullMode value = Renderer::CullMode::FRONT;
+				Renderer::CullMode value = Renderer::CullMode::BACK;
 				JsonMaterialHelper::optionalCullModeProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromCullMode(value);
 			}

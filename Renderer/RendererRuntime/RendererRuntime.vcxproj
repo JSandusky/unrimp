@@ -783,7 +783,7 @@
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -816,7 +816,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -849,7 +849,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -882,7 +882,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -917,7 +917,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -963,7 +963,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -1008,7 +1008,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -1052,7 +1052,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

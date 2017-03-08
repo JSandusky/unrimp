@@ -138,9 +138,9 @@ void VertexBuffer::onInitialization()
 			// -> Traditional normalized RGB vertex colors
 			static const float VERTEX_POSITION_COLOR[] =
 			{	 // Position     Color				// Vertex ID	Triangle on screen
-				-0.5f, 0.0f,	0.0f, 0.0f, 1.0f,	// 0			   	0
+				 0.0f, 1.0f,	1.0f, 0.0f, 0.0f,	// 0				0
 				 1.0f, 0.0f,	0.0f, 1.0f, 0.0f,	// 1			   .   .
-				 0.0f, 1.0f,	1.0f, 0.0f, 0.0f	// 2			  2.......1
+				-0.5f, 0.0f,	0.0f, 0.0f, 1.0f	// 2			  2.......1
 			};
 			Renderer::IVertexBufferPtr vertexBufferPositionColor(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION_COLOR), VERTEX_POSITION_COLOR, Renderer::BufferUsage::STATIC_DRAW));
 
@@ -170,9 +170,9 @@ void VertexBuffer::onInitialization()
 			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
 			static const float VERTEX_POSITION[] =
 			{					// Vertex ID	Triangle on screen
-				 0.0f, -1.0f,	// 0			  0.......1
+				-0.5f,  0.0f,	// 0			  0.......1
 				 1.0f,  0.0f,	// 1			   .   .
-				-0.5f,  0.0f	// 2			    2
+				 0.0f, -1.0f	// 2			  	2
 			};
 			Renderer::IVertexBufferPtr vertexBufferPosition(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 

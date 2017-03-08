@@ -282,10 +282,16 @@ namespace RendererRuntime
 		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye() && !cameraSceneItem->hasCustomWorldSpaceToViewSpaceMatrix() && !cameraSceneItem->hasCustomViewSpaceToClipSpaceMatrix())
 		{
 			// Virtual reality rendering
+
+			// Ask the virtual reality manager for the HMD transformation
 			const IVrManager::VrEye vrEye = static_cast<IVrManager::VrEye>(getCurrentRenderedVrEye());
 			viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, mNearZ, mFarZ);
-			const glm::mat4 viewTranslateMatrix = vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye) * vrManager.getHmdPoseMatrix();
-			mPassData->worldSpaceToViewSpaceMatrix = viewTranslateMatrix * cameraSceneItem->getWorldSpaceToViewSpaceMatrix();
+			const glm::mat4& viewTranslateMatrix = glm::inverse(vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye)) * glm::inverse(vrManager.getHmdPoseMatrix());
+
+			// Calculate the world space to view space matrix (Aka "view matrix")
+			const Transform& worldSpaceToViewSpaceTransform = cameraSceneItem->getWorldSpaceToViewSpaceTransform();
+			mPassData->worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
+			mPassData->worldSpaceToViewSpaceMatrix = viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;
 		}
 		else if (nullptr != cameraSceneItem)
 		{

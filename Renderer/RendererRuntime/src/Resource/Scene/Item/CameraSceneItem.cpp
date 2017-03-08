@@ -80,7 +80,7 @@ namespace RendererRuntime
 		// Calculate the view space to clip space matrix (aka "projection matrix")
 		if (!mHasCustomViewSpaceToClipSpaceMatrix)
 		{
-			mViewSpaceToClipSpaceMatrix = glm::perspective(mFovY, aspectRatio, mNearZ, mFarZ);
+			mViewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(mFovY), aspectRatio, mNearZ, mFarZ);
 		}
 
 		// Done

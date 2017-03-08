@@ -74,12 +74,12 @@ out gl_PerVertex
 void main()
 {
 	//				Vertex ID	Triangle on screen
-	// -0.5f, 0.0f,	// 0			0
+	//  0.0f, 1.0f,	// 0			0
 	//  1.0f, 0.0f,	// 1		   .   .
-	//  0.0f, 1.0f	// 2		  2.......1
+	// -0.5f, 0.0f	// 2		  2.......1
 
 	// Emit vertex 0 clip space position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(-0.5, 0.0, 0.0, 1.0);
+	gl_Position = vec4(0.0, 1.0, 0.0, 1.0);
 	EmitVertex();
 
 	// Emit vertex 1 clip space position, left/bottom is (-1,-1) and right/top is (1,1)
@@ -87,7 +87,7 @@ void main()
 	EmitVertex();
 
 	// Emit vertex 2 clip space position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(0.0, 1.0, 0.0, 1.0);
+	gl_Position = vec4(-0.5, 0.0, 0.0, 1.0);
 	EmitVertex();
 
 	// Done

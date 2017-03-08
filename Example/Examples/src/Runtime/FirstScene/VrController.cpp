@@ -221,7 +221,7 @@ namespace
 			virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override
 			{
 				// The GUI is placed over the second VR controller
-				if (::detail::IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue && mVrManagerOpenVRListener->getNumberOfVrControllers() >= SECOND_CONTROLLER_INDEX)
+				if (::detail::IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue && mVrManagerOpenVRListener->getNumberOfVrControllers() > SECOND_CONTROLLER_INDEX)
 				{
 					assert(sizeof(float) * 4 * 4 == numberOfBytes);
 					const ImGuiIO& imGuiIo = ImGui::GetIO();
@@ -360,7 +360,7 @@ void VrController::onUpdate(float pastSecondsSinceLastFrame)
 
 			// Construct ray
 			const glm::vec3& rayOrigin = translation;
-			const glm::vec3 rayDirection = rotation * -RendererRuntime::Math::FORWARD_VECTOR;
+			const glm::vec3 rayDirection = rotation * RendererRuntime::Math::FORWARD_VECTOR;
 
 			// Simple ray-plane intersection
 			static const float MAXIMUM_TELEPORT_DISTANCE = 10.0f;

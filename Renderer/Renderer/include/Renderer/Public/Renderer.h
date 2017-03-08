@@ -1256,7 +1256,7 @@ namespace Renderer
 				{
 					FillMode::SOLID,
 					CullMode::BACK,
-					true,
+					false,
 					0,
 					0.0f,
 					0.0f,

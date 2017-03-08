@@ -105,7 +105,7 @@ namespace Renderer
 	{
 		FillMode						fillMode;						///< Default: "Renderer::FillMode::SOLID"
 		CullMode						cullMode;						///< Default: "Renderer::CullMode::BACK"
-		int								frontCounterClockwise;			///< Select counter-clockwise polygons as front-facing? Boolean value. Default: "true"
+		int								frontCounterClockwise;			///< Select counter-clockwise polygons as front-facing? Boolean value. Default: "false"
 		int								depthBias;						///< Default: "0"
 		float							depthBiasClamp;					///< Default: "0.0f"
 		float							slopeScaledDepthBias;			///< Default: "0.0f"

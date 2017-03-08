@@ -123,8 +123,8 @@ uniform sampler2D RoughnessMap : register(s3);
 float4 main(VS_OUTPUT input) : SV_TARGET
 {
 	// Build in variables
-	float3 ViewSpaceLightDirection = normalize(float3(0.5f, 0.5f, 1.0f));	// View space light direction
-	float3 ViewSpaceViewVector     = float3(0.0f, 0.0f, 1.0f);				// In view space, we always look along the positive z-axis
+	float3 ViewSpaceLightDirection = normalize(float3(0.5f, 0.5f, -1.0f));	// View space light direction
+	float3 ViewSpaceViewVector     = float3(0.0f, 0.0f, -1.0f);				// In view space, we always look along the negative z-axis
 
 	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
 	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html

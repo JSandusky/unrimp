@@ -591,7 +591,7 @@ namespace RendererToolkit
 
 		// Load the given mesh
 		// -> "aiProcess_MakeLeftHanded" is added because the rasterizer states directly map to Direct3D
-		const aiScene *assimpScene = assimpImporter.ReadFile(assetInputDirectory + inputFile, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded);
+		const aiScene *assimpScene = assimpImporter.ReadFile(assetInputDirectory + inputFile, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder);
 		if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 		{
 			// Get the number of bones and skeleton
