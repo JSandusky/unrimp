@@ -48,9 +48,9 @@ namespace RendererToolkit
 	//[ Macros                                                ]
 	//[-------------------------------------------------------]
 	#ifdef WIN32
-		#define STD_FILESYSTEM std::tr2::sys
+		namespace std_filesystem = std::tr2::sys;
 	#else
-		#define STD_FILESYSTEM std::experimental::filesystem
+		namespace std_filesystem = std::experimental::filesystem;
 	#endif
 
 
