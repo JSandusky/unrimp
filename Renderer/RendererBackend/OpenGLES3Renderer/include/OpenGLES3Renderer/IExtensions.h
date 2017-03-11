@@ -67,28 +67,17 @@ namespace OpenGLES3Renderer
 		virtual bool isGL_EXT_texture_compression_s3tc() const = 0;
 		virtual bool isGL_EXT_texture_compression_dxt1() const = 0;
 		virtual bool isGL_EXT_texture_compression_latc() const = 0;
-		virtual bool isGL_EXT_texture_filter_anisotropic() const = 0;
-		virtual bool isGL_EXT_texture_array() const = 0;
 		virtual bool isGL_EXT_texture_buffer() const = 0;
 		virtual bool isGL_EXT_draw_elements_base_vertex() const = 0;
 		// AMD
 		virtual bool isGL_AMD_compressed_3DC_texture() const = 0;
 		// NV
-		virtual bool isGL_NV_get_tex_image() const = 0;
 		virtual bool isGL_NV_fbo_color_attachments() const = 0;
-		virtual bool isGL_NV_draw_buffers() const = 0;
-		virtual bool isGL_NV_read_buffer() const = 0;
 		// OES
-		virtual bool isGL_OES_mapbuffer() const = 0;
 		virtual bool isGL_OES_element_index_uint() const = 0;
 		virtual bool isGL_OES_packed_depth_stencil() const = 0;
 		virtual bool isGL_OES_depth24() const = 0;
 		virtual bool isGL_OES_depth32() const = 0;
-		virtual bool isGL_OES_vertex_half_float() const = 0;
-		virtual bool isGL_OES_vertex_array_object() const = 0;
-		// ANGLE
-		virtual bool isGL_ANGLE_framebuffer_blit() const = 0;
-		virtual bool isGL_ANGLE_framebuffer_multisample() const = 0;
 		// KHR
 		virtual bool isGL_KHR_debug() const = 0;
 

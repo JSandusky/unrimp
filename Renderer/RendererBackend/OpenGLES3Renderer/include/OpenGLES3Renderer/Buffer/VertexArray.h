@@ -33,9 +33,16 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	struct VertexAttributes;
+	struct VertexArrayVertexBuffer;
+}
 namespace OpenGLES3Renderer
 {
 	class IndexBuffer;
+	class VertexBuffer;
+	class OpenGLES3Renderer;
 }
 
 
@@ -51,7 +58,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract OpenGL ES 3 vertex array interface
+	*    OpenGL ES 3 vertex array class, effective vertex array object (VAO)
 	*/
 	class VertexArray : public Renderer::IVertexArray
 	{
@@ -61,6 +68,23 @@ namespace OpenGLES3Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] openGLES3Renderer
+		*    Owner OpenGL ES 3 renderer instance
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
+		*  @param[in] numberOfVertexBuffers
+		*    Number of vertex buffers, having zero vertex buffers is valid
+		*  @param[in] vertexBuffers
+		*    At least numberOfVertexBuffers instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
+		*  @param[in] indexBuffer
+		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
+		*/
+		VertexArray(OpenGLES3Renderer &openGLES3Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+
 		/**
 		*  @brief
 		*    Destructor
@@ -76,28 +100,24 @@ namespace OpenGLES3Renderer
 		*/
 		inline IndexBuffer *getIndexBuffer() const;
 
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
 		/**
 		*  @brief
-		*    Constructor
+		*    Return the OpenGL ES 3 vertex array
 		*
-		*  @param[in] renderer
-		*    Owner renderer instance
-		*  @param[in] indexBuffer
-		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
+		*  @return
+		*    The OpenGL ES 3 vertex array, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		VertexArray(Renderer::IRenderer &renderer, IndexBuffer *indexBuffer);
+		inline uint32_t getOpenGLES3VertexArray() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IndexBuffer *mIndexBuffer; ///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
+		uint32_t	   mOpenGLES3VertexArray;	///< OpenGL ES 3 vertex array, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t	   mNumberOfVertexBuffers;	///< Number of vertex buffers
+		VertexBuffer **mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
+		IndexBuffer   *mIndexBuffer;			///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 
 
 	};

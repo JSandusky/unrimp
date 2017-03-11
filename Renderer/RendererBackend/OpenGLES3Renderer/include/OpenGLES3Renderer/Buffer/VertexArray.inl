@@ -33,6 +33,11 @@ namespace OpenGLES3Renderer
 		return mIndexBuffer;
 	}
 
+	inline uint32_t VertexArray::getOpenGLES3VertexArray() const
+	{
+		return mOpenGLES3VertexArray;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

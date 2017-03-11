@@ -257,18 +257,6 @@ namespace OpenGLES3Renderer
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    "Renderer::MapType" to OpenGL ES 3 type
-		*
-		*  @param[in] mapType
-		*    "Renderer::MapType" to map
-		*
-		*  @return
-		*    OpenGL ES 3 type (type "GLenum" not used in here in order to keep the header slim)
-		*/
-		static uint32_t getOpenGLES3MapType(Renderer::MapType mapType);
-
-		/**
-		*  @brief
 		*    "Renderer::MapType" to OpenGL ES 3 access bit field for "glMapBufferRange()"
 		*
 		*  @param[in] mapType

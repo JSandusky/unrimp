@@ -87,8 +87,8 @@ namespace OpenGLES3Renderer
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 3 has no texture usage indication
 
-		// Check whether or not the given texture dimension is valid, "GL_EXT_texture_array" extension required
-		if (width > 0 && height > 0 && numberOfSlices > 0 && mExtensions->isGL_EXT_texture_array())
+		// Check whether or not the given texture dimension is valid
+		if (width > 0 && height > 0 && numberOfSlices > 0)
 		{
 			return new Texture2DArray(static_cast<OpenGLES3Renderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
 		}

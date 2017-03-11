@@ -56,8 +56,6 @@ set(SOURCE_CODES
 	src/Buffer/UniformBuffer.cpp
 	src/Buffer/UniformBufferBind.cpp
 	src/Buffer/VertexArray.cpp
-	src/Buffer/VertexArrayNoVao.cpp
-	src/Buffer/VertexArrayVao.cpp
 	src/Buffer/VertexBuffer.cpp
 	src/ContextRuntimeLinking.cpp
 	src/ExtensionsRuntimeLinking.cpp

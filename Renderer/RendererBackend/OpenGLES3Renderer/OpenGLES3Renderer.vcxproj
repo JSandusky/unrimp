@@ -42,7 +42,6 @@
     <None Include="include\OpenGLES3Renderer\Buffer\TextureBuffer.inl" />
     <None Include="include\OpenGLES3Renderer\Buffer\UniformBuffer.inl" />
     <None Include="include\OpenGLES3Renderer\Buffer\VertexArray.inl" />
-    <None Include="include\OpenGLES3Renderer\Buffer\VertexArrayVao.inl" />
     <None Include="include\OpenGLES3Renderer\Buffer\VertexBuffer.inl" />
     <None Include="include\OpenGLES3Renderer\ExtensionsRuntimeLinking.inl" />
     <None Include="include\OpenGLES3Renderer\IContext.inl" />
@@ -76,8 +75,6 @@
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBufferBind.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArray.h" />
-    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArrayNoVao.h" />
-    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArrayVao.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexBuffer.h" />
     <ClInclude Include="include\OpenGLES3Renderer\ContextRuntimeLinking.h" />
     <ClInclude Include="include\OpenGLES3Renderer\ExtensionsRuntimeLinking.h" />
@@ -116,8 +113,6 @@
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\UniformBufferBind.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
-    <ClCompile Include="src\Buffer\VertexArrayNoVao.cpp" />
-    <ClCompile Include="src\Buffer\VertexArrayVao.cpp" />
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
     <ClCompile Include="src\ContextRuntimeLinking.cpp" />
     <ClCompile Include="src\ExtensionsRuntimeLinking.cpp" />

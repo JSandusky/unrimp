@@ -22,8 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/Buffer/BufferManager.h"
-#include "OpenGLES3Renderer/Buffer/VertexArrayNoVao.h"
-#include "OpenGLES3Renderer/Buffer/VertexArrayVao.h"
+#include "OpenGLES3Renderer/Buffer/VertexArray.h"
 #include "OpenGLES3Renderer/Buffer/IndirectBuffer.h"
 #include "OpenGLES3Renderer/Buffer/VertexBuffer.h"
 #include "OpenGLES3Renderer/Buffer/IndexBuffer.h"
@@ -68,19 +67,9 @@ namespace OpenGLES3Renderer
 
 	Renderer::IVertexArray* BufferManager::createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, Renderer::IIndexBuffer* indexBuffer)
 	{
-		// Is "GL_OES_vertex_array_object" there?
-		if (mExtensions->isGL_OES_vertex_array_object())
-		{
-			// Effective vertex array object (VAO)
-			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new VertexArrayVao(static_cast<OpenGLES3Renderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-		}
-		else
-		{
-			// Traditional version
-			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new VertexArrayNoVao(static_cast<OpenGLES3Renderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-		}
+		// Effective vertex array object (VAO)
+		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+		return new VertexArray(static_cast<OpenGLES3Renderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 	}
 
 	Renderer::IUniformBuffer* BufferManager::createUniformBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage)

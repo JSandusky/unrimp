@@ -44,16 +44,6 @@ namespace OpenGLES3Renderer
 		return mGL_EXT_texture_compression_latc;
 	}
 
-	inline bool ExtensionsRuntimeLinking::isGL_EXT_texture_filter_anisotropic() const
-	{
-		return mGL_EXT_texture_filter_anisotropic;
-	}
-
-	inline bool ExtensionsRuntimeLinking::isGL_EXT_texture_array() const
-	{
-		return mGL_EXT_texture_array;
-	}
-
 	inline bool ExtensionsRuntimeLinking::isGL_EXT_texture_buffer() const
 	{
 		return mGL_EXT_texture_buffer;
@@ -71,32 +61,12 @@ namespace OpenGLES3Renderer
 	}
 
 	// NV
-	inline bool ExtensionsRuntimeLinking::isGL_NV_get_tex_image() const
-	{
-		return mGL_NV_get_tex_image;
-	}
-
 	inline bool ExtensionsRuntimeLinking::isGL_NV_fbo_color_attachments() const
 	{
 		return mGL_NV_fbo_color_attachments;
 	}
 
-	inline bool ExtensionsRuntimeLinking::isGL_NV_draw_buffers() const
-	{
-		return mGL_NV_draw_buffers;
-	}
-
-	inline bool ExtensionsRuntimeLinking::isGL_NV_read_buffer() const
-	{
-		return mGL_NV_read_buffer;
-	}
-
 	// OES
-	inline bool ExtensionsRuntimeLinking::isGL_OES_mapbuffer() const
-	{
-		return mGL_OES_mapbuffer;
-	}
-
 	inline bool ExtensionsRuntimeLinking::isGL_OES_element_index_uint() const
 	{
 		return mGL_OES_element_index_uint;
@@ -115,27 +85,6 @@ namespace OpenGLES3Renderer
 	inline bool ExtensionsRuntimeLinking::isGL_OES_depth32() const
 	{
 		return mGL_OES_depth32;
-	}
-
-	inline bool ExtensionsRuntimeLinking::isGL_OES_vertex_half_float() const
-	{
-		return mGL_OES_vertex_half_float;
-	}
-
-	inline bool ExtensionsRuntimeLinking::isGL_OES_vertex_array_object() const
-	{
-		return mGL_OES_vertex_array_object;
-	}
-
-	// ANGLE
-	inline bool ExtensionsRuntimeLinking::isGL_ANGLE_framebuffer_blit() const
-	{
-		return mGL_ANGLE_framebuffer_blit;
-	}
-
-	inline bool ExtensionsRuntimeLinking::isGL_ANGLE_framebuffer_multisample() const
-	{
-		return mGL_ANGLE_framebuffer_multisample;
 	}
 
 	// KHR

@@ -54,12 +54,6 @@
     <None Include="include\OpenGLES3Renderer\Buffer\UniformBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
-    <None Include="include\OpenGLES3Renderer\Buffer\VertexArray.inl">
-      <Filter>Source Files\Buffer</Filter>
-    </None>
-    <None Include="include\OpenGLES3Renderer\Buffer\VertexArrayVao.inl">
-      <Filter>Source Files\Buffer</Filter>
-    </None>
     <None Include="include\OpenGLES3Renderer\Buffer\VertexBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
@@ -86,6 +80,9 @@
     </None>
     <None Include="include\OpenGLES3Renderer\State\BlendState.inl">
       <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\OpenGLES3Renderer\Buffer\VertexArray.inl">
+      <Filter>Source Files\Buffer</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -190,15 +187,6 @@
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBufferBind.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArray.h">
-      <Filter>Source Files\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArrayNoVao.h">
-      <Filter>Source Files\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArrayVao.h">
-      <Filter>Source Files\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
@@ -221,6 +209,9 @@
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\TextureBufferBindEmulation.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArray.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
@@ -297,15 +288,6 @@
     <ClCompile Include="src\Buffer\UniformBufferBind.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Buffer\VertexArray.cpp">
-      <Filter>Source Files\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Buffer\VertexArrayNoVao.cpp">
-      <Filter>Source Files\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Buffer\VertexArrayVao.cpp">
-      <Filter>Source Files\Buffer</Filter>
-    </ClCompile>
     <ClCompile Include="src\Buffer\VertexBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
@@ -331,6 +313,9 @@
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer\TextureBufferBindEmulation.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArray.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
