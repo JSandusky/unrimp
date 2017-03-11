@@ -173,20 +173,16 @@ void IcosahedronTessellation::onInitialization()
 
 		// Create uniform buffers and fill the static buffers at once
 		mUniformBufferDynamicTcs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-		{	// "ObjectSpaceToClipSpaceMatrix"
-			// TODO(co) Cleanup, correct aspect ratio
-			glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 3.0f));
-			glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-			glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);
-			glm::mat4 MVP = Projection * View; 
-//				glm::mat4 MVP = Projection * View * Model;
-			mUniformBufferStaticTes = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(MVP), Renderer::BufferUsage::STATIC_DRAW);
-			{	// "NormalMatrix"
-				View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-				Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-				Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);
-				MVP = Projection * View; 
-				glm::mat3 nMVP(MVP);
+		{ // "ObjectSpaceToClipSpaceMatrix"
+			glm::mat4 worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 3.0f));		// Also known as "view matrix"
+			glm::mat4 viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);	// Also known as "projection matrix"
+			glm::mat4 objectSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * worldSpaceToViewSpaceMatrix;			// Also known as "model view projection matrix"
+			mUniformBufferStaticTes = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(objectSpaceToClipSpaceMatrix), Renderer::BufferUsage::STATIC_DRAW);
+			{ // "NormalMatrix"
+				worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+				viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);
+				objectSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * worldSpaceToViewSpaceMatrix;
+				glm::mat3 nMVP(objectSpaceToClipSpaceMatrix);
 				glm::mat4 tMVP(nMVP);
 				mUniformBufferStaticGs = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(tMVP), Renderer::BufferUsage::STATIC_DRAW);
 			}
