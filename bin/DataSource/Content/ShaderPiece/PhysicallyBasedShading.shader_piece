@@ -158,7 +158,7 @@
 		// Reflection part
 		// -> Select mip level based on roughness
 		R = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, R);
-		float2 cubeDimension = GET_TEXTURE_CUBE_SIZE(ReflectionCubeMap);
+		float2 cubeDimension = CAST_TO(GET_TEXTURE_CUBE_SIZE(ReflectionCubeMap), float2);
 		float numberOfCubeMipmaps = log2(max(cubeDimension.x, cubeDimension.y));
 		float3 reflectionColor = horiz * SAMPLE_CUBE_LOD(ReflectionCubeMap, SamplerLinear, float4(R, roughness * numberOfCubeMipmaps)).rgb;
 
