@@ -18,6 +18,26 @@
 				"MaximumIntegerValue": "8",
 				"ValidIntegerValues": [ 0, 2, 4, 8 ]
 			},
+			"Radius":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.5",
+				"MinimumValue": "0.1",
+				"MaximumValue": "2.0",
+				"StepSize": "0.01",
+				"Description": "Radius"
+			},
+			"SampleKernelSize":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "INTEGER",
+				"Value": "8",
+				"MinimumValue": "4",
+				"MaximumValue": "16",
+				"StepSize": "1",
+				"Description": "Sample kernel size"
+			},
 			"GBufferMap1":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -116,7 +136,7 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "2",
 							"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionSampleKernelMap",
-							"SamplerRootParameterIndex": "2"
+							"SamplerRootParameterIndex": "1"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -195,6 +215,18 @@
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_2",
 							"Value": "@PROJECTION_PARAMETERS"
+						},
+						"Radius":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@Radius"
+						},
+						"SampleKernelSize":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@SampleKernelSize"
 						}
 					}
 				}
