@@ -155,9 +155,9 @@ namespace
 		*  @note
 		*    - Basing on "SSAO Tutorial" from John Chapman - http://john-chapman-graphics.blogspot.de/2013/01/ssao-tutorial.html
 		*    - Kernel size is 16, since the samples are randomly distributed this doesn't mean that a shader has to use all samples
-		*    - Resulting texture asset ID is "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel"
+		*    - Resulting texture asset ID is "Unrimp/Texture/DynamicByCode/SsaoSampleKernel"
 		*/
-		RendererRuntime::TextureResourceId createScreenSpaceAmbientOcclusionSampleKernelTexture(const RendererRuntime::IRendererRuntime& rendererRuntime)
+		RendererRuntime::TextureResourceId createSsaoSampleKernelTexture(const RendererRuntime::IRendererRuntime& rendererRuntime)
 		{
 			static const uint32_t KERNEL_SIZE = 16;
 			glm::vec4 kernel[KERNEL_SIZE];
@@ -187,7 +187,7 @@ namespace
 			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "1D screen space ambient occlusion sample kernel texture")
 
 			// Create dynamic texture asset
-			return rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel", *texturePtr);
+			return rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/SsaoSampleKernel", *texturePtr);
 		}
 
 		/**
@@ -203,9 +203,9 @@ namespace
 		*  @note
 		*    - Basing on "SSAO Tutorial" from John Chapman - http://john-chapman-graphics.blogspot.de/2013/01/ssao-tutorial.html
 		*    - Noise texture size is 4x4
-		*    - Resulting texture asset ID is "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4"
+		*    - Resulting texture asset ID is "Unrimp/Texture/DynamicByCode/SsaoNoise4x4"
 		*/
-		RendererRuntime::TextureResourceId createScreenSpaceAmbientOcclusionNoiseTexture4x4(const RendererRuntime::IRendererRuntime& rendererRuntime)
+		RendererRuntime::TextureResourceId createSsaoNoiseTexture4x4(const RendererRuntime::IRendererRuntime& rendererRuntime)
 		{
 			static const uint32_t NOISE_SIZE = 4;
 			static const uint32_t SQUARED_NOISE_SIZE = NOISE_SIZE * NOISE_SIZE;
@@ -226,7 +226,7 @@ namespace
 			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "2D screen space ambient occlusion 4x4 noise texture")
 
 			// Create dynamic texture asset
-			return rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4", *texturePtr);
+			return rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/SsaoNoise4x4", *texturePtr);
 		}
 
 
@@ -250,16 +250,16 @@ namespace RendererRuntime
 	void MaterialBlueprintResourceListener::onStartup(const IRendererRuntime& rendererRuntime)
 	{
 		mIdentityColorCorrectionLookupTable3D = ::detail::createIdentityColorCorrectionLookupTable3D(rendererRuntime);
-		mScreenSpaceAmbientOcclusionSampleKernelTextureResourceId = ::detail::createScreenSpaceAmbientOcclusionSampleKernelTexture(rendererRuntime);
-		mScreenSpaceAmbientOcclusionNoiseTexture4x4ResourceId = ::detail::createScreenSpaceAmbientOcclusionNoiseTexture4x4(rendererRuntime);
+		mSsaoSampleKernelTextureResourceId = ::detail::createSsaoSampleKernelTexture(rendererRuntime);
+		mSsaoNoiseTexture4x4ResourceId = ::detail::createSsaoNoiseTexture4x4(rendererRuntime);
 	}
 
 	void MaterialBlueprintResourceListener::onShutdown(const IRendererRuntime& rendererRuntime)
 	{
 		TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
 		textureResourceManager.destroyTextureResource(mIdentityColorCorrectionLookupTable3D);
-		textureResourceManager.destroyTextureResource(mScreenSpaceAmbientOcclusionSampleKernelTextureResourceId);
-		textureResourceManager.destroyTextureResource(mScreenSpaceAmbientOcclusionNoiseTexture4x4ResourceId);
+		textureResourceManager.destroyTextureResource(mSsaoSampleKernelTextureResourceId);
+		textureResourceManager.destroyTextureResource(mSsaoNoiseTexture4x4ResourceId);
 	}
 
 	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, PassBufferManager::PassData& passData)

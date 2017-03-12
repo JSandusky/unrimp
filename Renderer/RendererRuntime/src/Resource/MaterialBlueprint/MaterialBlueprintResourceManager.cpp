@@ -135,8 +135,8 @@ namespace RendererRuntime
 					1259586825 == assetId ||	// "MaterialBlueprint/Compositor/Atmosphere"
 					1378819984 == assetId ||	// "MaterialBlueprint/Compositor/LensFlareThreshold"
 					2734089221 == assetId ||	// "MaterialBlueprint/Compositor/LensFlareFeatureGeneration"
-					3076058624 == assetId ||	// "MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionGeneration"
-					2859523677 == assetId ||	// "MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionBlur"
+					3076058624 == assetId ||	// "MaterialBlueprint/Compositor/SsaoGeneration"
+					2859523677 == assetId ||	// "MaterialBlueprint/Compositor/SsaoBlur"
 					1243189953 == assetId)		// "MaterialBlueprint/Compositor/DepthOfField"
 				{
 					Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(materialBlueprintResource->getVertexAttributes());

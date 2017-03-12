@@ -135,7 +135,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionSampleKernelMap",
+							"BaseShaderRegisterName": "SsaoSampleKernelMap",
 							"SamplerRootParameterIndex": "1"
 						}
 					},
@@ -150,7 +150,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
-							"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionNoise4x4Map",
+							"BaseShaderRegisterName": "SsaoNoise4x4Map",
 							"SamplerRootParameterIndex": "2"
 						}
 					},
@@ -268,22 +268,22 @@
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				},
-				"ScreenSpaceAmbientOcclusionSampleKernelMap":
+				"SsaoSampleKernelMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel",
+					"Value": "Unrimp/Texture/DynamicByCode/SsaoSampleKernel",
 					"Description": "1D screen space ambient occlusion sample kernel map",
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap1D",
 					"MipmapsUsed": "FALSE"
 				},
-				"ScreenSpaceAmbientOcclusionNoise4x4Map":
+				"SsaoNoise4x4Map":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4",
+					"Value": "Unrimp/Texture/DynamicByCode/SsaoNoise4x4",
 					"Description": "2D screen space ambient occlusion 4x4 noise map",
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"

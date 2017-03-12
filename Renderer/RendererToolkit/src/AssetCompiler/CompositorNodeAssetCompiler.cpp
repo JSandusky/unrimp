@@ -542,8 +542,8 @@ namespace RendererToolkit
 				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D"));
 				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D"));
 				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D"));
-				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel"));
-				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/SsaoSampleKernel"));
+				renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/SsaoNoise4x4"));
 			}
 			if (rapidJsonValueCompositorNodeAsset.HasMember("RenderTargetTextures"))
 			{

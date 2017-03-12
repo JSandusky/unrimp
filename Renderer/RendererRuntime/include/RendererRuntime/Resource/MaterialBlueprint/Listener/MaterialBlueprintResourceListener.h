@@ -62,8 +62,8 @@ namespace RendererRuntime
 	*  @remarks
 	*    The material blueprint resource listener automatically generates some dynamic default texture assets one can reference e.g. inside material blueprint resources:
 	*    - "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D"
-	*    - "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionSampleKernel"
-	*    - "Unrimp/Texture/DynamicByCode/ScreenSpaceAmbientOcclusionNoise4x4"
+	*    - "Unrimp/Texture/DynamicByCode/SsaoSampleKernel"
+	*    - "Unrimp/Texture/DynamicByCode/SsaoNoise4x4"
 	*/
 	class MaterialBlueprintResourceListener : public IMaterialBlueprintResourceListener
 	{
@@ -117,8 +117,8 @@ namespace RendererRuntime
 	private:
 		// Resource
 		TextureResourceId mIdentityColorCorrectionLookupTable3D;
-		TextureResourceId mScreenSpaceAmbientOcclusionSampleKernelTextureResourceId;
-		TextureResourceId mScreenSpaceAmbientOcclusionNoiseTexture4x4ResourceId;
+		TextureResourceId mSsaoSampleKernelTextureResourceId;
+		TextureResourceId mSsaoNoiseTexture4x4ResourceId;
 
 		// Pass
 		IRendererRuntime*			 mRendererRuntime;	///< Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be a null pointer outside the correct scope, don't destroy the memory

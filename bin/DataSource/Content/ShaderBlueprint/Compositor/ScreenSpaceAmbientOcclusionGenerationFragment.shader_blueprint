@@ -70,8 +70,8 @@ SAMPLER_STATE(SamplerPointWrap, 1)
 	TEXTURE_2D(GBufferMap1, 0)	// GBuffer 1: rgb = view space normal, a = roughness
 	TEXTURE_2D(DepthMap, 1)
 @end
-TEXTURE_1D(ScreenSpaceAmbientOcclusionSampleKernelMap, 2)
-TEXTURE_2D(ScreenSpaceAmbientOcclusionNoise4x4Map, 3)
+TEXTURE_1D(SsaoSampleKernelMap, 2)
+TEXTURE_2D(SsaoNoise4x4Map, 3)
 
 
 //[-------------------------------------------------------]
@@ -119,7 +119,7 @@ float CalculateOcclusion(float3 viewRay, float2 textureCoordinate, int sampleInd
 	// Construct a change-of-basis matrix to reorient the sample kernel along the origin's normal
 	// -> Using the Gram-Schmidt process to compute an orthogonal basis
 	float2 noiseScale = (1.0f / PassData.InverseViewportSize) / 4.0f;
-	float3 randomRotation = SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionNoise4x4Map, SamplerPointWrap, float4(textureCoordinate * noiseScale, 0.0f, 0.0f)).xyz;
+	float3 randomRotation = SAMPLE_2D_LOD(SsaoNoise4x4Map, SamplerPointWrap, float4(textureCoordinate * noiseScale, 0.0f, 0.0f)).xyz;
 	float3 tangent = normalize(randomRotation - normal * dot(randomRotation, normal));
 	float3 bitangent = cross(normal, tangent);
 	float3x3 tbn = ROW_MATRIX_3x3(tangent, bitangent, normal);
@@ -129,7 +129,7 @@ float CalculateOcclusion(float3 viewRay, float2 textureCoordinate, int sampleInd
 	for (int i = 0; i < PassData.SampleKernelSize; ++i)
 	{
 		// Rotate sample and get sample position in view space
-		float3 samplePosition = MATRIX_MUL(SAMPLE_1D_LOD(ScreenSpaceAmbientOcclusionSampleKernelMap, SamplerPointClamp, float4(float(i) / float(PassData.SampleKernelSize), 0.0f, 0.0f, 0.0f)).xyz, tbn);
+		float3 samplePosition = MATRIX_MUL(SAMPLE_1D_LOD(SsaoSampleKernelMap, SamplerPointClamp, float4(float(i) / float(PassData.SampleKernelSize), 0.0f, 0.0f, 0.0f)).xyz, tbn);
 		samplePosition = origin + samplePosition * PassData.Radius;
 
 		// Project sample position
