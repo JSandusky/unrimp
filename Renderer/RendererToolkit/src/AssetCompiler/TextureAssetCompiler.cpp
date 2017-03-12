@@ -162,12 +162,11 @@ namespace
 
 		std::array<std::string, 6> getCubemapFilenames(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const std::string& basePath)
 		{
-			std::array<std::string, 6> filenames;
-
-			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
 			static const std::array<std::string, 6> FACE_NAMES = { "PositiveXInputFile", "NegativeXInputFile", "NegativeYInputFile", "PositiveYInputFile", "PositiveZInputFile", "NegativeZInputFile" };
 
-			for (unsigned int faceIndex = 0; faceIndex < FACE_NAMES.size(); ++faceIndex)
+			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
+			std::array<std::string, 6> filenames;
+			for (size_t faceIndex = 0; faceIndex < FACE_NAMES.size(); ++faceIndex)
 			{
 				filenames[faceIndex] = basePath + rapidJsonValueTextureAssetCompiler[FACE_NAMES[faceIndex].c_str()].GetString();
 			}
@@ -178,10 +177,9 @@ namespace
 		{
 			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
 			{
-				// A cube map has 6 source files (For each face one source), so check if any of the six files changes
-				// inputAssetFilename specifies the base directory of the faces source files
+				// A cube map has six source files (for each face one source), so check if any of the six files changes
+				// -> "inputAssetFilename" specifies the base directory of the faces source files
 				const std::array<std::string, 6> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, inputAssetFilename);
-
 				bool cubeMapSourcesChanged = false;
 				for (const std::string& faceFilename : faceFilenames)
 				{
@@ -209,7 +207,7 @@ namespace
 			{
 				// The face order must be: +X, -X, -Y, +Y, +Z, -Z
 				const std::array<std::string, 6> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, sourceFilename);
-				for (unsigned int faceIndex = 0; faceIndex < faceFilenames.size(); ++faceIndex)
+				for (size_t faceIndex = 0; faceIndex < faceFilenames.size(); ++faceIndex)
 				{
 					// Load the 2D source image
 					crnlib::image_u8* source2DImage = crnlib::crnlib_new<crnlib::image_u8>();
@@ -622,7 +620,7 @@ namespace RendererToolkit
 			}
 		}
 
-		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		if (::detail::checkIfChanged(input, configuration, rapidJsonValueTextureAssetCompiler, textureSemantic, inputAssetFilename, outputAssetFilename))
 		{
 			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)

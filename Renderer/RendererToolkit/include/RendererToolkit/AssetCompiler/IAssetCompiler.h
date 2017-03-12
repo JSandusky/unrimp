@@ -44,7 +44,6 @@ namespace RendererRuntime
 {
 	class AssetPackage;
 }
-
 namespace RendererToolkit
 {
 	class CacheManager;
@@ -91,22 +90,22 @@ namespace RendererToolkit
 		struct Input
 		{
 			const std::string						projectName;
+			CacheManager&							cacheManager;
 			const std::string						assetFilename;
 			const std::string						assetInputDirectory;
 			const std::string						assetOutputDirectory;
 			const SourceAssetIdToCompiledAssetId&	sourceAssetIdToCompiledAssetId;
 			const SourceAssetIdToAbsoluteFilename&	sourceAssetIdToAbsoluteFilename;
-			CacheManager& cacheManager;
 
 			Input() = delete;
 			Input(const std::string _projectName, CacheManager& _cacheManager, const std::string& _assetFilename, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToAbsoluteFilename& _sourceAssetIdToAbsoluteFilename) :
 				projectName(_projectName),
+				cacheManager(_cacheManager),
 				assetFilename(_assetFilename),
 				assetInputDirectory(_assetInputDirectory),
 				assetOutputDirectory(_assetOutputDirectory),
 				sourceAssetIdToCompiledAssetId(_sourceAssetIdToCompiledAssetId),
-				sourceAssetIdToAbsoluteFilename(_sourceAssetIdToAbsoluteFilename),
-				cacheManager(_cacheManager)
+				sourceAssetIdToAbsoluteFilename(_sourceAssetIdToAbsoluteFilename)
 			{
 				// Nothing here
 			}

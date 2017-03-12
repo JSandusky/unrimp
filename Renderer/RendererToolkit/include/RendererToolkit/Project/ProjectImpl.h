@@ -138,7 +138,6 @@ namespace RendererToolkit
 		ProjectAssetMonitor*			mProjectAssetMonitor;
 		std::atomic<bool>				mShutdownThread;
 		std::thread						mThread;
-
 		std::unique_ptr<CacheManager>	mCacheManager;
 
 

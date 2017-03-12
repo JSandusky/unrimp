@@ -98,11 +98,6 @@ namespace RendererToolkit
 		*/
 		~CacheManager();
 
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
 		/**
 		*  @brief
 		*    Return if an asset needs to be compiled

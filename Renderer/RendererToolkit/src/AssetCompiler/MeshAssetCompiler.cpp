@@ -581,7 +581,7 @@ namespace RendererToolkit
 		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".mesh";
 
-		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename))
 		{
 			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);

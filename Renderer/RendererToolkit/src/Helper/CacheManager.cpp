@@ -116,6 +116,9 @@ namespace RendererToolkit
 {
 
 
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
 	CacheManager::CacheManager(const std::string& projectPath)
 	{
 		std_filesystem::path cachePath(projectPath);
@@ -145,10 +148,6 @@ namespace RendererToolkit
 		// Nothing here, only needed to support unique_ptr with forward declared classes
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
 	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile)
 	{
 		// Create "std::filesystem::path" object from the give file paths
@@ -156,7 +155,7 @@ namespace RendererToolkit
 		const std_filesystem::path destinationFilePath(destinationFile);
 
 		// Check if the files exists
-		const bool sourceExists = std_filesystem::exists(sourceFilePath) && std_filesystem::is_regular_file(sourceFilePath);
+		const bool sourceExists = (std_filesystem::exists(sourceFilePath) && std_filesystem::is_regular_file(sourceFilePath));
 		const bool destinationExists = std_filesystem::exists(destinationFilePath);
 
 		if (sourceExists)
@@ -164,7 +163,6 @@ namespace RendererToolkit
 			// Source exists
 			// -> Check if source has changed
 			// -> Calculate hash for source file
-
 			const std::string sourceFileHash = ::detail::hash256_file(sourceFile);
 			const RendererRuntime::StringId sourceFileStringId(sourceFile.c_str());
 			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFileHash, sourceFileStringId);
