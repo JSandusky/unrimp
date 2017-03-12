@@ -131,7 +131,7 @@ namespace
 			crnlib::mipmapped_texture crunchMipmappedTexture;
 			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
 			{
-				// The face order must be: +X, –X, –Y, +Y, +Z, –Z
+				// The face order must be: +X, -X, -Y, +Y, +Z, -Z
 				static const std::string FACE_NAMES[6] = { "PositiveXInputFile", "NegativeXInputFile", "NegativeYInputFile", "PositiveYInputFile", "PositiveZInputFile", "NegativeZInputFile" };
 				for (int faceIndex = 0; faceIndex < 6; ++faceIndex)
 				{
