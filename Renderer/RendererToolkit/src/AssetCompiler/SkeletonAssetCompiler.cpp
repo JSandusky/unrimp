@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/SkeletonAssetCompiler.h"
+#include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
@@ -93,10 +94,16 @@ namespace RendererToolkit
 		}
 
 		// Open the input file
-		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
+		const std::string inputFilename = assetInputDirectory + inputFile;
 		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".skeleton";
-		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
+
+		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename))
+		{
+			std::ifstream inputFileStream(inputFilename, std::ios::binary);
+			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
+		}
 
 		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
 

@@ -116,14 +116,38 @@ namespace RendererToolkit
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Public static data                                    ]
-	//[-------------------------------------------------------]
-	std::string CacheManager::mProjectDirectory;
+	CacheManager::CacheManager(const std::string& projectPath)
+	{
+		std_filesystem::path cachePath(projectPath);
+		cachePath /= "cache";
+
+		// Ensure that the cache output directory exists
+		std_filesystem::create_directories(cachePath);
+
+		// Try open the database
+		try
+		{
+			std_filesystem::path databasePath(cachePath);
+			databasePath /= "cache.db3";
+
+			mDatabaseConnection = std::make_unique<SQLite::Database>(databasePath.string(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE | SQLITE_OPEN_NOMUTEX);
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Error opening cache database: " << e.what() << "\n";
+		}
+
+		setupCacheDataBase();
+	}
+
+	CacheManager::~CacheManager()
+	{
+		// Nothing here, only needed to support unique_ptr with forward declared classes
+	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile)
 	{
@@ -132,13 +156,15 @@ namespace RendererToolkit
 		const std_filesystem::path destinationFilePath(destinationFile);
 
 		// Check if the files exists
-		const bool sourceExists = std_filesystem::exists(sourceFilePath);
+		const bool sourceExists = std_filesystem::exists(sourceFilePath) && std_filesystem::is_regular_file(sourceFilePath);
 		const bool destinationExists = std_filesystem::exists(destinationFilePath);
+
 		if (sourceExists)
 		{
 			// Source exists
 			// -> Check if source has changed
 			// -> Calculate hash for source file
+
 			const std::string sourceFileHash = ::detail::hash256_file(sourceFile);
 			const RendererRuntime::StringId sourceFileStringId(sourceFile.c_str());
 			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFileHash, sourceFileStringId);
@@ -147,7 +173,7 @@ namespace RendererToolkit
 			const std::string assetFileHash = ::detail::hash256_file(assetFilename);
 			const RendererRuntime::StringId assetFileStringId(assetFilename.c_str());
 			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFileHash, assetFileStringId);
-			
+
 			// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
 			return (fileChanged || assetFileChanged || !destinationExists);
 		}
@@ -160,47 +186,41 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Private static methods                                ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	bool CacheManager::setupCacheDataBase()
 	{
-		// Setup/load cache to speedup project compilation
-
-		// Ensure that the cache output directory exists
-		const std::string cacheDirectory = mProjectDirectory + "cache";
-		std_filesystem::create_directories(cacheDirectory);
-
-		try
+		// Setup cache to speedup project compilation
+		if (nullptr != mDatabaseConnection)
 		{
-			SQLite::Database db(cacheDirectory + "/cache.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE | SQLITE_OPEN_FULLMUTEX);
-			if (!db.tableExists("FileHash"))
+			try
 			{
-				db.exec("CREATE TABLE FileHash (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
+				if (!mDatabaseConnection->tableExists("FileHash"))
+				{
+					mDatabaseConnection->exec("CREATE TABLE FileHash (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
+				}
+
+				// Done
+				return true;
 			}
-
-			// Done
-			return true;
+			catch (const std::exception& e)
+			{
+				std::cerr << "Error setting up cache database: " << e.what() << "\n";
+			}
 		}
-		catch (const std::exception& e)
-		{
-			std::cerr << "Error setting up cache database: " << e.what() << "\n";
 
-			// Error
-			return false;
-		}
+		// Error
+		return false;
 	}
 
 	bool CacheManager::hasEntryForFile(const std::string& rendererTarget, RendererRuntime::StringId fileId)
 	{
-		if (setupCacheDataBase())
+		if (mDatabaseConnection)
 		{
 			try
 			{
-				const std::string cacheDirectory = mProjectDirectory + "cache";
-				SQLite::Database db(cacheDirectory + "/cache.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE | SQLITE_OPEN_FULLMUTEX);
-
-				// Compile a SQL query, containing one parameter (index 1)
-				SQLite::Statement query(db, "SELECT hash FROM FileHash WHERE fileId = ? AND rendererTarget = ?");
+				// Compile the query to get the hash for a file stored in the db 
+				SQLite::Statement query(*mDatabaseConnection.get(), "SELECT hash FROM FileHash WHERE fileId = ? AND rendererTarget = ?");
 				query.bind(1, fileId);
 				query.bind(2, rendererTarget);
 
@@ -226,17 +246,14 @@ namespace RendererToolkit
 
 	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& fileHash, RendererRuntime::StringId fileId)
 	{
-		if (setupCacheDataBase())
+		if (mDatabaseConnection)
 		{
 			const bool hasFileEntry = hasEntryForFile(rendererTarget, fileId);
 			try
 			{
-				const std::string cacheDirectory = mProjectDirectory + "cache";
-				SQLite::Database db(cacheDirectory + "/cache.db3", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE | SQLITE_OPEN_FULLMUTEX);
-
 				if (hasFileEntry)
 				{
-					SQLite::Statement query(db, "SELECT hash FROM FileHash WHERE fileId = ? AND rendererTarget = ?");
+					SQLite::Statement query(*mDatabaseConnection.get(), "SELECT hash FROM FileHash WHERE fileId = ? AND rendererTarget = ?");
 					query.bind(1, fileId);
 					query.bind(2, rendererTarget);
 
@@ -253,7 +270,7 @@ namespace RendererToolkit
 						else
 						{
 							// Source file has changed, store the new hash
-							SQLite::Statement updateQuery(db, "UPDATE FileHash SET hash = ? WHERE fileId = ? AND rendererTarget = ?");
+							SQLite::Statement updateQuery(*mDatabaseConnection.get(), "UPDATE FileHash SET hash = ? WHERE fileId = ? AND rendererTarget = ?");
 							updateQuery.bind(1, fileHash);
 							updateQuery.bind(2, fileId);
 							updateQuery.bind(3, rendererTarget);
@@ -269,7 +286,7 @@ namespace RendererToolkit
 				else
 				{
 					// No entry in the cache: Store it
-					SQLite::Statement query(db, "INSERT INTO FileHash VALUES(?, ?, ?)");
+					SQLite::Statement query(*mDatabaseConnection.get(), "INSERT INTO FileHash VALUES(?, ?, ?)");
 					query.bind(1, rendererTarget);
 					query.bind(2, fileId);
 					query.bind(3, fileHash);

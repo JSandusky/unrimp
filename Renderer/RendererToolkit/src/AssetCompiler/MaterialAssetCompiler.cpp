@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
+#include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
@@ -97,35 +98,40 @@ namespace RendererToolkit
 
 		// Open the input file
 		const std::string inputFilename = assetInputDirectory + inputFile;
-		std::ifstream inputFileStream(inputFilename, std::ios::binary);
 		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material";
-		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-		{ // Material
-			// Parse JSON
-			rapidjson::Document rapidJsonDocument;
-			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialAsset", "1");
-			std::vector<RendererRuntime::v1Material::Technique> techniques;
-			RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
-			JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId(input, rapidJsonDocument, techniques, sortedMaterialPropertyVector);
+		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename))
+		{
+			std::ifstream inputFileStream(inputFilename, std::ios::binary);
+			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-			{ // Material header
-				RendererRuntime::v1Material::Header materialHeader;
-				materialHeader.formatType		  = RendererRuntime::v1Material::FORMAT_TYPE;
-				materialHeader.formatVersion	  = RendererRuntime::v1Material::FORMAT_VERSION;
-				materialHeader.numberOfTechniques = static_cast<uint32_t>(techniques.size());
-				materialHeader.numberOfProperties = static_cast<uint32_t>(sortedMaterialPropertyVector.size());
+			{ // Material
+				// Parse JSON
+				rapidjson::Document rapidJsonDocument;
+				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialAsset", "1");
+				std::vector<RendererRuntime::v1Material::Technique> techniques;
+				RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
+				JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId(input, rapidJsonDocument, techniques, sortedMaterialPropertyVector);
 
-				// Write down the material header
-				outputFileStream.write(reinterpret_cast<const char*>(&materialHeader), sizeof(RendererRuntime::v1Material::Header));
+				{ // Material header
+					RendererRuntime::v1Material::Header materialHeader;
+					materialHeader.formatType		  = RendererRuntime::v1Material::FORMAT_TYPE;
+					materialHeader.formatVersion	  = RendererRuntime::v1Material::FORMAT_VERSION;
+					materialHeader.numberOfTechniques = static_cast<uint32_t>(techniques.size());
+					materialHeader.numberOfProperties = static_cast<uint32_t>(sortedMaterialPropertyVector.size());
+
+					// Write down the material header
+					outputFileStream.write(reinterpret_cast<const char*>(&materialHeader), sizeof(RendererRuntime::v1Material::Header));
+				}
+
+				// Write down the material techniques
+				outputFileStream.write(reinterpret_cast<const char*>(techniques.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Material::Technique) * techniques.size()));
+
+				// Write down all material properties
+				outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size()));
 			}
-
-			// Write down the material techniques
-			outputFileStream.write(reinterpret_cast<const char*>(techniques.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Material::Technique) * techniques.size()));
-
-			// Write down all material properties
-			outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size()));
 		}
 
 		{ // Update the output asset package

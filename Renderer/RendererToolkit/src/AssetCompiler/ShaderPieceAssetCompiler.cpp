@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/ShaderPieceAssetCompiler.h"
+#include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
@@ -95,39 +96,45 @@ namespace RendererToolkit
 		}
 
 		// Open the input file
-		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
+		const std::string inputFilename = assetInputDirectory + inputFile;
 		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".shader_piece";
-		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-		{ // Shader piece
-			// Get file size and file data
-			std::string sourceCode;
-			{
-				std::string originalSourceCode;
-				inputFileStream.seekg(0, std::ifstream::end);
-				const std::streampos numberOfBytes = inputFileStream.tellg();
-				inputFileStream.seekg(0, std::ifstream::beg);
-				originalSourceCode.resize(static_cast<size_t>(numberOfBytes));
-				inputFileStream.read(const_cast<char*>(originalSourceCode.c_str()), numberOfBytes);
+		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename))
+		{
+			std::ifstream inputFileStream(inputFilename, std::ios::binary);
+			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-				// Strip comments from source code
-				StringHelper::stripCommentsFromSourceCode(originalSourceCode, sourceCode);
+			{ // Shader piece
+				// Get file size and file data
+				std::string sourceCode;
+				{
+					std::string originalSourceCode;
+					inputFileStream.seekg(0, std::ifstream::end);
+					const std::streampos numberOfBytes = inputFileStream.tellg();
+					inputFileStream.seekg(0, std::ifstream::beg);
+					originalSourceCode.resize(static_cast<size_t>(numberOfBytes));
+					inputFileStream.read(const_cast<char*>(originalSourceCode.c_str()), numberOfBytes);
+
+					// Strip comments from source code
+					StringHelper::stripCommentsFromSourceCode(originalSourceCode, sourceCode);
+				}
+				const size_t numberOfBytes = sourceCode.length();
+
+				{ // Shader piece header
+					RendererRuntime::v1ShaderPiece::Header shaderPieceHeader;
+					shaderPieceHeader.formatType					= RendererRuntime::v1ShaderPiece::FORMAT_TYPE;
+					shaderPieceHeader.formatVersion					= RendererRuntime::v1ShaderPiece::FORMAT_VERSION;
+					shaderPieceHeader.numberOfShaderSourceCodeBytes	= static_cast<uint32_t>(numberOfBytes);
+
+					// Write down the shader piece header
+					outputFileStream.write(reinterpret_cast<const char*>(&shaderPieceHeader), sizeof(RendererRuntime::v1ShaderPiece::Header));
+				}
+
+				// Dump the unchanged content into the output file stream
+				outputFileStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
 			}
-			const size_t numberOfBytes = sourceCode.length();
-
-			{ // Shader piece header
-				RendererRuntime::v1ShaderPiece::Header shaderPieceHeader;
-				shaderPieceHeader.formatType					= RendererRuntime::v1ShaderPiece::FORMAT_TYPE;
-				shaderPieceHeader.formatVersion					= RendererRuntime::v1ShaderPiece::FORMAT_VERSION;
-				shaderPieceHeader.numberOfShaderSourceCodeBytes	= static_cast<uint32_t>(numberOfBytes);
-
-				// Write down the shader piece header
-				outputFileStream.write(reinterpret_cast<const char*>(&shaderPieceHeader), sizeof(RendererRuntime::v1ShaderPiece::Header));
-			}
-
-			// Dump the unchanged content into the output file stream
-			outputFileStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
 		}
 
 		{ // Update the output asset package

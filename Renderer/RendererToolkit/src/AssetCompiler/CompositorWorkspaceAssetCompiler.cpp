@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/CompositorWorkspaceAssetCompiler.h"
+#include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
@@ -97,42 +98,47 @@ namespace RendererToolkit
 
 		// Open the input file
 		const std::string inputFilename = assetInputDirectory + inputFile;
-		std::ifstream inputFileStream(inputFilename, std::ios::binary);
 		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".compositor_workspace";
-		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-		{ // Compositor workspace
-			// Parse JSON
-			rapidjson::Document rapidJsonDocument;
-			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "CompositorWorkspaceAsset", "1");
+		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename))
+		{
+			std::ifstream inputFileStream(inputFilename, std::ios::binary);
+			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-			{ // Write down the compositor workspace resource header
-				RendererRuntime::v1CompositorWorkspace::Header compositorWorkspaceHeader;
-				compositorWorkspaceHeader.formatType	= RendererRuntime::v1CompositorWorkspace::FORMAT_TYPE;
-				compositorWorkspaceHeader.formatVersion = RendererRuntime::v1CompositorWorkspace::FORMAT_VERSION;
-				outputFileStream.write(reinterpret_cast<const char*>(&compositorWorkspaceHeader), sizeof(RendererRuntime::v1CompositorWorkspace::Header));
-			}
+			{ // Compositor workspace
+				// Parse JSON
+				rapidjson::Document rapidJsonDocument;
+				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "CompositorWorkspaceAsset", "1");
 
-			// Mandatory main sections of the compositor workspace
-			const rapidjson::Value& rapidJsonValueCompositorWorkspaceAsset = rapidJsonDocument["CompositorWorkspaceAsset"];
-			const rapidjson::Value& rapidJsonValueNodes = rapidJsonValueCompositorWorkspaceAsset["Nodes"];
-
-			{ // Write down the compositor resource nodes
-				RendererRuntime::v1CompositorWorkspace::Nodes nodes;
-				nodes.numberOfNodes = rapidJsonValueNodes.MemberCount();
-				outputFileStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1CompositorWorkspace::Nodes));
-
-				// Loop through all compositor workspace resource nodes
-				RendererRuntime::CompositorWorkspaceResource::CompositorNodeAssetIds compositorNodeAssetIds;
-				compositorNodeAssetIds.reserve(nodes.numberOfNodes);
-				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorNodes = rapidJsonValueNodes.MemberBegin(); rapidJsonMemberIteratorNodes != rapidJsonValueNodes.MemberEnd(); ++rapidJsonMemberIteratorNodes)
-				{
-					compositorNodeAssetIds.push_back(input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(rapidJsonMemberIteratorNodes->name.GetString()))));
+				{ // Write down the compositor workspace resource header
+					RendererRuntime::v1CompositorWorkspace::Header compositorWorkspaceHeader;
+					compositorWorkspaceHeader.formatType	= RendererRuntime::v1CompositorWorkspace::FORMAT_TYPE;
+					compositorWorkspaceHeader.formatVersion = RendererRuntime::v1CompositorWorkspace::FORMAT_VERSION;
+					outputFileStream.write(reinterpret_cast<const char*>(&compositorWorkspaceHeader), sizeof(RendererRuntime::v1CompositorWorkspace::Header));
 				}
 
-				// Write down compositor node asset IDs
-				outputFileStream.write(reinterpret_cast<const char*>(compositorNodeAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * nodes.numberOfNodes));
+				// Mandatory main sections of the compositor workspace
+				const rapidjson::Value& rapidJsonValueCompositorWorkspaceAsset = rapidJsonDocument["CompositorWorkspaceAsset"];
+				const rapidjson::Value& rapidJsonValueNodes = rapidJsonValueCompositorWorkspaceAsset["Nodes"];
+
+				{ // Write down the compositor resource nodes
+					RendererRuntime::v1CompositorWorkspace::Nodes nodes;
+					nodes.numberOfNodes = rapidJsonValueNodes.MemberCount();
+					outputFileStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1CompositorWorkspace::Nodes));
+
+					// Loop through all compositor workspace resource nodes
+					RendererRuntime::CompositorWorkspaceResource::CompositorNodeAssetIds compositorNodeAssetIds;
+					compositorNodeAssetIds.reserve(nodes.numberOfNodes);
+					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorNodes = rapidJsonValueNodes.MemberBegin(); rapidJsonMemberIteratorNodes != rapidJsonValueNodes.MemberEnd(); ++rapidJsonMemberIteratorNodes)
+					{
+						compositorNodeAssetIds.push_back(input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(rapidJsonMemberIteratorNodes->name.GetString()))));
+					}
+
+					// Write down compositor node asset IDs
+					outputFileStream.write(reinterpret_cast<const char*>(compositorNodeAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * nodes.numberOfNodes));
+				}
 			}
 		}
 
