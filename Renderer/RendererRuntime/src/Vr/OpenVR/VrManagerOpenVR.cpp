@@ -592,10 +592,9 @@ namespace RendererRuntime
 	{
 		if (nullptr != mVrSystem)
 		{
-			{ // Release renderer resources
-				mFramebuffer = nullptr;
-				mColorTexture2D = nullptr;
-			}
+			// Release renderer resources
+			mFramebuffer = nullptr;
+			mColorTexture2D = nullptr;
 
 			// De-initialize the OpenVR system
 			vr::VR_Shutdown();

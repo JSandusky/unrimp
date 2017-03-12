@@ -123,23 +123,10 @@ MAIN_BEGIN
 	float3x3 tangentFrame = GetTangentFrame(objectSpaceToViewSpaceQuaternion, MAIN_INPUT(QTangent) / 32767.0f);
 	@property(UseGpuSkinning)
 	{
-		// Transform normals
-		// TODO(co) Implement more elegant solution, without transform and scale issues
-		float3 transformedNormal;
-		transformedNormal.x = dot(objectSpaceToWorldSpaceMatrix[0], float4(tangentFrame[0], 1.0f));
-		transformedNormal.y = dot(objectSpaceToWorldSpaceMatrix[1], float4(tangentFrame[0], 1.0f));
-		transformedNormal.z = dot(objectSpaceToWorldSpaceMatrix[2], float4(tangentFrame[0], 1.0f));
-		tangentFrame[0] = transformedNormal;
-
-		transformedNormal.x = dot(objectSpaceToWorldSpaceMatrix[0], float4(tangentFrame[1], 1.0f));
-		transformedNormal.y = dot(objectSpaceToWorldSpaceMatrix[1], float4(tangentFrame[1], 1.0f));
-		transformedNormal.z = dot(objectSpaceToWorldSpaceMatrix[2], float4(tangentFrame[1], 1.0f));
-		tangentFrame[1] = transformedNormal;
-
-		transformedNormal.x = dot(objectSpaceToWorldSpaceMatrix[0], float4(tangentFrame[2], 1.0f));
-		transformedNormal.y = dot(objectSpaceToWorldSpaceMatrix[1], float4(tangentFrame[2], 1.0f));
-		transformedNormal.z = dot(objectSpaceToWorldSpaceMatrix[2], float4(tangentFrame[2], 1.0f));
-		tangentFrame[2] = transformedNormal;
+		float3x3 normalMatrix = ROW_MATRIX_3x3(objectSpaceToWorldSpaceMatrix[0].xyz, objectSpaceToWorldSpaceMatrix[1].xyz, objectSpaceToWorldSpaceMatrix[2].xyz);
+		tangentFrame[0] = MATRIX_MUL(normalMatrix, tangentFrame[0]);
+		tangentFrame[1] = MATRIX_MUL(normalMatrix, tangentFrame[1]);
+		tangentFrame[2] = MATRIX_MUL(normalMatrix, tangentFrame[2]);
 	}
 	@end
 	MAIN_OUTPUT(TangentFrame0VS) = tangentFrame[0];
