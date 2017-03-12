@@ -164,7 +164,7 @@ namespace RendererToolkit
 			}
 			else
 			{
-				// TODO(co) Error handling
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" needs exactly " + std::to_string(numberOfComponents) + " components, but " + std::to_string(elements.size()) + " components given");
 			}
 		}
 	}
@@ -192,28 +192,33 @@ namespace RendererToolkit
 			}
 			else
 			{
-				// TODO(co) Error handling
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" needs exactly" + std::to_string(numberOfComponents) + " components, but " + std::to_string(elements.size()) + " components given");
 			}
 		}
 	}
 
 	void JsonHelper::optionalStringProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, char* value, uint32_t maximumLength)
 	{
+		if (0 == maximumLength)
+		{
+			throw std::runtime_error('\"' + std::string(propertyName) + "\" maximum number of characters must be greater than zero");
+		}
 		if (rapidJsonValue.HasMember(propertyName))
 		{
 			const rapidjson::Value& rapidJsonValueFound = rapidJsonValue[propertyName];
 			const char* valueAsString = rapidJsonValueFound.GetString();
 			const rapidjson::SizeType valueLength = rapidJsonValueFound.GetStringLength();
 
-			// +1 for the terminating zero
-			if (valueLength + 1 <= maximumLength)
+			// -1 for the terminating zero reserve
+			maximumLength -= 1;
+			if (valueLength <= maximumLength)
 			{
 				memcpy(value, valueAsString, valueLength);
 				value[valueLength] = '\0';
 			}
 			else
 			{
-				// TODO(co) Error handling
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" maximum number of characters is " + std::to_string(maximumLength) + ", but the value \"" + std::string(valueAsString) + "\" has " + std::to_string(valueLength) + " characters");
 			}
 		}
 	}
@@ -233,7 +238,7 @@ namespace RendererToolkit
 			}
 			else
 			{
-				// TODO(co) Error handling
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" needs exactly" + std::to_string(numberOfComponents) + " components, but " + std::to_string(elements.size()) + " components given");
 			}
 		}
 	}
@@ -293,7 +298,7 @@ namespace RendererToolkit
 					// ELSE_IF_VALUE(COLOR_DEPTH)	// Not added by intent, one has to write "COLOR | DEPTH"
 					else
 					{
-						// TODO(co) Error handling
+						throw std::runtime_error('\"' + std::string(propertyName) + "\" doesn't know the flag " + flagAsString + ". Must be \"COLOR\", \"DEPTH\" or \"STENCIL\".");
 					}
 
 					// Apply value
@@ -352,8 +357,7 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(UNKNOWN)
 		else
 		{
-			// TODO(co) Error handling
-			return Renderer::TextureFormat::UNKNOWN;
+			throw std::runtime_error('\"' + std::string(valueAsString) + "\" is no known texture format");
 		}
 
 		// Undefine helper macros
