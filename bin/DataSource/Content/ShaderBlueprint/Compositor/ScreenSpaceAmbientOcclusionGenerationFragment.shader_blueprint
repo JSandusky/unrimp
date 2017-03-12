@@ -87,10 +87,10 @@ float GetLinearDepth(float depth)
 float GetDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
 {
 	@property(NumberOfMultisamples)
-		return SAMPLE_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex).r;
+		return SAMPLE_DEPTH_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex);
 	@end
 	@property(!NumberOfMultisamples)
-		return SAMPLE_2D_LOD(DepthMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f)).r;
+		return SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f));
 	@end
 }
 

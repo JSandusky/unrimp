@@ -60,7 +60,7 @@ UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 UNIFORM_BUFFER_END
 
 // Samplers
-SAMPLER_STATE(SamplerPoint, 0)
+SAMPLER_STATE(SamplerPointClamp, 0)
 
 // Textures
 TEXTURE_2D(ColorMap, 0)
@@ -76,13 +76,13 @@ TEXTURE_2D(ColorMap, 0)
 //[ Functions                                             ]
 //[-------------------------------------------------------]
 // TODO(co) Make this to a shader piece
-float GetDepth(float2 textureCoordinate, int sampleIndex)
+float GetDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
 {
 	@property(NumberOfMultisamples)
-		return SAMPLE_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex).r;
+		return SAMPLE_DEPTH_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex);
 	@end
 	@property(!NumberOfMultisamples)
-		return SAMPLE_2D_LOD(DepthMap, SamplerPoint, float4(textureCoordinate, 0.0f, 0.0f)).r;
+		return SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f));
 	@end
 }
 
@@ -94,7 +94,7 @@ float GetLinearDepth(float depth)
 
 float3 CalculateFoggedColor(float3 viewRay, float3 color, float2 screenSpacePosition, int sampleIndex)
 {
-	float depth = GetDepth(screenSpacePosition, sampleIndex);
+	float depth = GetDepthFromDepthMap(screenSpacePosition, sampleIndex);
 	float linearDepth = GetLinearDepth(depth);
 
 	// Traditional depth fog
@@ -124,7 +124,7 @@ float3 CalculateFoggedColor(float3 viewRay, float3 color, float2 screenSpacePosi
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
+	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
 
 	// Get the normalized view ray
 	float3 viewRay = normalize(MAIN_INPUT(ViewRayVS));

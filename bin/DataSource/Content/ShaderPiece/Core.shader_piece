@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Pieces                                                ]
 //[-------------------------------------------------------]
+// Direct3D: Left-handed coordinate system with clip space depth value range 0..1
 @property(HLSL)
 	// We're using HLSL syntax inside our shaders. So not much to map but only abstract in here so a mapping to GLSL is possible.
 	@piece(SetCrossPlatformSettings)
@@ -115,7 +116,9 @@
 		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.x, coordinate.w)
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
 		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xy, coordinate.w).r
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) textureObject.Load(coordinate, sampleIndex)
+		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) textureObject.Load(coordinate, sampleIndex).r
 		#define SAMPLE_2D_CMP_LEVEL_ZERO(textureObject, samplerObject, coordinate) textureObject.SampleCmpLevelZero(samplerObject, coordinate.xy, coordinate.w)
 		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
@@ -127,6 +130,7 @@
 	@end
 @end
 
+// OpenGL: Right-handed coordinate system with clip space depth value range -1..1
 @property(GLSL)
 	// We're using HLSL syntax inside our shaders. Hence we have to map GLSL to HLSL in here. See e.g.
 	// - http://dench.flatlib.jp/opengl/glsl_hlsl
@@ -205,7 +209,9 @@
 		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.x, coordinate.w)
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
+		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_CMP_LEVEL_ZERO(textureObject, samplerObject, coordinate) vec4(coordinate.w <= textureLod(textureObject, coordinate.xy, 0.0f).r, 0.0f, 0.0f, 0.0f)
 		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
@@ -239,6 +245,7 @@
 	@end
 @end
 
+// OpenGL ES: Right-handed coordinate system with clip space depth value range -1..1
 @property(GLSLES)
 	// We're using HLSL syntax inside our shaders. Hence we have to map GLSL to HLSL in here. See e.g.
 	// - http://dench.flatlib.jp/opengl/glsl_hlsl
@@ -322,8 +329,10 @@
 		#define SAMPLE_1D(textureObject, samplerObject, coordinate) texture(textureObject, vec2(coordinate, 0.0f))							// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
 		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, vec2(coordinate.x, 0.0f), coordinate.w)	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
-		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
+		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_CMP_LEVEL_ZERO(textureObject, samplerObject, coordinate) vec4(coordinate.w <= textureLod(textureObject, coordinate.xy, 0.0f).r, 0.0f, 0.0f, 0.0f)
 		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)

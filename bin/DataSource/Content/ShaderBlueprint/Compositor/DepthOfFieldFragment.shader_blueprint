@@ -56,7 +56,7 @@ UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 UNIFORM_BUFFER_END
 
 // Samplers
-SAMPLER_STATE(SamplerPoint, 0)
+SAMPLER_STATE(SamplerPointClamp, 0)
 SAMPLER_STATE(SamplerLinear, 1)
 
 // Textures
@@ -73,6 +73,29 @@ TEXTURE_2D(BlurMap, 2)	// Blurred low resolution version of the color map
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
+// TODO(co) Make this to a shader piece
+float GetLinearDepth(float depth)
+{
+	return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
+}
+
+// TODO(co) Make this to a shader piece
+float GetDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
+{
+	@property(NumberOfMultisamples)
+		return SAMPLE_DEPTH_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex);
+	@end
+	@property(!NumberOfMultisamples)
+		return SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f));
+	@end
+}
+
+// TODO(co) Make this to a shader piece
+float GetLinearDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
+{
+	return GetLinearDepth(GetDepthFromDepthMap(textureCoordinate, sampleIndex));
+}
+
 float ConvertDepth(float linearDepth)
 {
 	float depth = 0.0f;
@@ -93,23 +116,6 @@ float ConvertDepth(float linearDepth)
 	// Scale and bias into [0, 1] range
 	depth = 0.5f * depth + 0.5f;
 	return depth;
-}
-
-// TODO(co) Make this to a shader piece
-float GetLinearDepth(float depth)
-{
-	return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
-}
-
-// TODO(co) Make this to a shader piece
-float GetLinearDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
-{
-	@property(NumberOfMultisamples)
-		return GetLinearDepth(SAMPLE_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex).r);
-	@end
-	@property(!NumberOfMultisamples)
-		return GetLinearDepth(SAMPLE_2D_LOD(DepthMap, SamplerPoint, float4(textureCoordinate, 0.0f, 0.0f)).r);
-	@end
 }
 
 float4 CalculateSum(float2 textureCoordinate, int sampleIndex)
@@ -150,7 +156,7 @@ float4 CalculateSum(float2 textureCoordinate, int sampleIndex)
 		float4 coordBlur = float4(textureCoordinate + (pixelSizeBlur * poisson[i] * discRadiusBlur), 0.0f, 0.0f);
 
 		// Fetch taps and depth
-		float4 tapScene = SAMPLE_2D_LOD(ColorMap, SamplerPoint, coordScene);
+		float4 tapScene = SAMPLE_2D_LOD(ColorMap, SamplerPointClamp, coordScene);
 		float tapDepth = ConvertDepth(GetLinearDepthFromDepthMap(coordScene.xy, sampleIndex));
 		float4 tapBlur = SAMPLE_2D_LOD(BlurMap, SamplerLinear, coordBlur);
 

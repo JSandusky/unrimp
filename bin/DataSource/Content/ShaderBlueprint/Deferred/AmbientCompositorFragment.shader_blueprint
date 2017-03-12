@@ -162,10 +162,7 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 	}
 
 	// Apply screen space ambient occlusion
-	// TODO(co) Currently doesn't look right with OpenGL and OpenGL ES 3 (coordinate system differences)
-	@property(!GLSL && !GLSLES)
-		color *= float3(screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion);
-	@end
+	color *= float3(screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion);
 
 	// Emissive term
 	color += emissive;
@@ -194,7 +191,7 @@ MAIN_BEGIN
 		@foreach(NumberOfMultisamples, i, 0)
 		{
 			// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
-			float depth = SAMPLE_2D_MS(DepthMap, textureCoordinate, @i).r;
+			float depth = SAMPLE_DEPTH_2D_MS(DepthMap, textureCoordinate, @i);
 			if (1.0f != depth)
 			{
 				// Read GBuffer data
@@ -222,7 +219,7 @@ MAIN_BEGIN
 		float4 textureCoordinate = float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f);
 
 		// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
-		float depth = SAMPLE_2D_LOD(DepthMap, SamplerPoint, textureCoordinate).r;
+		float depth = SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPoint, textureCoordinate);
 		if (1.0f == depth)
 		{
 			discard;

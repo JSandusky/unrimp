@@ -240,7 +240,7 @@
 			},
 			"SamplerStates":
 			{
-				"SamplerPoint":
+				"SamplerPointClamp":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_POINT",
