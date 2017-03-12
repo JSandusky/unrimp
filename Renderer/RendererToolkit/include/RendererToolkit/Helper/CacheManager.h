@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <RendererRuntime/Core/StringId.h>
+#include <RendererRuntime/Core/NonCopyable.h>
 
 #include <string>
 #include <memory> // For std::unique_ptr
@@ -57,21 +58,21 @@ namespace RendererToolkit
 	*    Cache manager for source assets
 	*
 	*  @note
-	*    - This manager caches the content hash of source assets to speed up project compilation when the source doesn't changes 
+	*    - This manager caches the content hash of source assets to speed up project compilation when the source doesn't changes
 	*/
 	// FileHash API
 	/*
-	* Unrimp Cache DB layout
-	* - Inital caches sha256 hashes of input files (mainly textures because they take the longest to be "compiled")
+	* Unrimp cache database layout
+	* - Initial caches sha256 hashes of input files (mainly textures because they take the longest to be "compiled")
 	*   - Table FileHash (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL)
 	* 
-	* SQLite only supports one writer but multiple readers, when a db connection is not shared between threads.
+	* SQLite only supports one writer but multiple readers, when a database connection is not shared between threads.
 	* So make a cache manager which holds one writer object and x reader object (per thread?, std::thread::id this_id = std::this_thread::get_id();)
 	* Should the cache manager operate directly on the database or load it all into memory and only store changes?
 	* Cache manager(Item?) per thread which collects any changes and on the end the changes are written from master thread?
 	* sqlite can compare a string within a where clause to select only those rows with that string -> can be used if hash equals stored one
 	*/
-	class CacheManager
+	class CacheManager : public RendererRuntime::NonCopyable
 	{
 
 
@@ -86,11 +87,11 @@ namespace RendererToolkit
 		*  @param[in] projectPath
 		*    The path to the project for which the cache manager instance is used for
 		*/
-		CacheManager(const std::string& projectPath);
+		explicit CacheManager(const std::string& projectPath);
 
 		/**
 		*  @brief
-		*    Desctructor
+		*    Destructor
 		* 
 		*  @note
 		*    Needed to allow std::unique_ptr with an forward declared class
@@ -170,6 +171,9 @@ namespace RendererToolkit
 		*    - When a change was detected the given file hash is stored
 		*/
 		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& fileHash, RendererRuntime::StringId fileId);
+
+		CacheManager(const CacheManager&) = delete;
+		CacheManager& operator=(const CacheManager&) = delete;
 
 
 	//[-------------------------------------------------------]
