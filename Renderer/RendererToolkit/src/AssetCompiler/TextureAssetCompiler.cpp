@@ -159,6 +159,46 @@ namespace
 			}
 		}
 
+		std::array<std::string, 6> getCubemapFilenames(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const std::string& basePath)
+		{
+			std::array<std::string, 6> filenames;
+
+			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
+			static const std::array<std::string, 6> FACE_NAMES = { "PositiveXInputFile", "NegativeXInputFile", "NegativeYInputFile", "PositiveYInputFile", "PositiveZInputFile", "NegativeZInputFile" };
+
+			for (unsigned int faceIndex = 0; faceIndex < FACE_NAMES.size(); ++faceIndex)
+			{
+				filenames[faceIndex] = basePath + rapidJsonValueTextureAssetCompiler[FACE_NAMES[faceIndex].c_str()].GetString();
+			}
+			return filenames;
+		}
+
+		bool checkIfChanged(const RendererToolkit::IAssetCompiler::Input& input, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, TextureSemantic textureSemantic, const std::string& inputAssetFilename, const std::string& outputAssetFilename)
+		{
+			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
+			{
+				// A cube map has 6 source files (For each face one source), so check if any of the six files changes
+				// inputAssetFilename specifies the base directory of the faces source files
+				const std::array<std::string, 6> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, inputAssetFilename);
+
+				bool cubeMapSourcesChanged = false;
+				for (const std::string& faceFilename : faceFilenames)
+				{
+					if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilename, outputAssetFilename))
+					{
+						// A face source file has changed, mark result as true, but go on to store also for the remaining face source files an cache entry
+						cubeMapSourcesChanged = true;
+					}
+				}
+				return cubeMapSourcesChanged;
+			}
+			else
+			{
+				// Asset has single source file
+				return input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputAssetFilename, outputAssetFilename);
+			}
+		}
+
 		void convertFile(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* sourceFilename, const char* destinationFilename, crnlib::texture_file_types::format outputCrunchTextureFileType, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness)
 		{
 			crnlib::texture_conversion::convert_params crunchConvertParams;
@@ -167,12 +207,12 @@ namespace
 			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
 			{
 				// The face order must be: +X, -X, -Y, +Y, +Z, -Z
-				static const std::string FACE_NAMES[6] = { "PositiveXInputFile", "NegativeXInputFile", "NegativeYInputFile", "PositiveYInputFile", "PositiveZInputFile", "NegativeZInputFile" };
-				for (int faceIndex = 0; faceIndex < 6; ++faceIndex)
+				const std::array<std::string, 6> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, sourceFilename);
+				for (unsigned int faceIndex = 0; faceIndex < faceFilenames.size(); ++faceIndex)
 				{
 					// Load the 2D source image
 					crnlib::image_u8* source2DImage = crnlib::crnlib_new<crnlib::image_u8>();
-					const std::string inputFile = std::string(sourceFilename) + rapidJsonValueTextureAssetCompiler[FACE_NAMES[faceIndex].c_str()].GetString();
+					const std::string& inputFile = faceFilenames[faceIndex];
 					if (!crnlib::image_utils::read_from_file(*source2DImage, inputFile.c_str()))
 					{
 						throw std::runtime_error(std::string("Failed to load image \"") + inputFile + '\"');
@@ -582,7 +622,7 @@ namespace RendererToolkit
 		}
 
 		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
-		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputAssetFilename, outputAssetFilename))
+		if (::detail::checkIfChanged(input, configuration, rapidJsonValueTextureAssetCompiler, textureSemantic, inputAssetFilename, outputAssetFilename))
 		{
 			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
 			{
