@@ -38,6 +38,7 @@ PRAGMA_WARNING_PUSH
 	#include <crunch/dds_defs.h>
 	#include <crunch/crnlib/crn_texture_conversion.h>
 	#include <crunch/crnlib/crn_command_line_params.h>
+	#include <crunch/crnlib/crn_console.h>
 PRAGMA_WARNING_POP
 
 #include <libtiff/tiffio.h>
@@ -85,8 +86,42 @@ namespace
 
 
 		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		static bool g_CrunchInitialized = false;
+
+
+		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
+		bool crunchConsoleOutput(crnlib::eConsoleMessageType type, const char* message, void*)
+		{
+			// Filter Crunch output to ignore messages like "Flipping texture on Y axis" or "Generated 11 mipmap levels in 3.261s"
+			// -> Warnings like "Target bitrate/quality level is not supported for this output file format." don't cause harm either, but just show them so we're aware of possible issues
+			// TODO(co) More context information like which asset is compiled right now might be useful. We need to keep in mind that there can be multiple texture compiler instances
+			//          running at one and the same time. We could use the Crunch console output data to transport this information, on the other hand we need to ensure that we can
+			//          unregister our function when we're done. "crnlib::console::remove_console_output_func() only checks the function pointer.
+			if (crnlib::cMessageConsoleMessage == type || crnlib::cWarningConsoleMessage == type || crnlib::cErrorConsoleMessage == type)
+			{
+				RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(message);
+				RENDERERTOOLKIT_OUTPUT_DEBUG_STRING("\n");
+			}
+
+			// We handled the console output
+			return true;
+		}
+
+		void initializeCrunch()
+		{
+			if (!g_CrunchInitialized)
+			{
+				// The Crunch console is using "printf()" by default if no console output function handles Crunch console output
+				// -> Redirect the Crunch console output into our log so we have an uniform handling of such information
+				crnlib::console::add_console_output_func(crunchConsoleOutput, nullptr);
+				g_CrunchInitialized = true;
+			}
+		}
+
 		std::string widthHeightToString(uint32 width, uint32 height)
 		{
 			return std::to_string(width) + 'x' + std::to_string(height);
@@ -281,10 +316,10 @@ namespace
 						// Check mipmap
 						if (0 != (width % 4) || 0 != (height % 4))
 						{
-							// TODO(co) Performance warning via log
-							std::string warning = "4x4 block size based DXT compression used, but the texture dimension " + widthHeightToString(width, height) +
-												  " at mipmap level " + std::to_string(mipmap) + " is no multiple of four. Texture dimension is " +
-												  widthHeightToString(crunchMipmappedTexture.get_width(), crunchMipmappedTexture.get_height()) + ". Dynamic texture resolution scale will be limited to mipmap level " + std::to_string(mipmap - 1) + '.';
+							const std::string warning = "4x4 block size based DXT compression used, but the texture dimension " + widthHeightToString(width, height) +
+														" at mipmap level " + std::to_string(mipmap) + " is no multiple of four. Texture dimension is " +
+														widthHeightToString(crunchMipmappedTexture.get_width(), crunchMipmappedTexture.get_height()) + ". Dynamic texture resolution scale will be limited to mipmap level " + std::to_string(mipmap - 1) + '.';
+							RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(warning.c_str());
 							break;
 						}
 
@@ -439,12 +474,12 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	TextureAssetCompiler::TextureAssetCompiler()
 	{
-		// Nothing here
+		::detail::initializeCrunch();
 	}
 
 	TextureAssetCompiler::~TextureAssetCompiler()
 	{
-		// Nothing here
+		// Nothing here, a Crunch de-initialization call wouldn't add any benefit in here
 	}
 
 
