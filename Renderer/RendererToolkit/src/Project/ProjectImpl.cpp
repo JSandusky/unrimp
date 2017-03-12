@@ -175,7 +175,7 @@ namespace RendererToolkit
 		std_filesystem::create_directories(assetOutputDirectory);
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mProjectName, absoluteAssetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
+		IAssetCompiler::Input input(mProjectName, *mCacheManager.get(), absoluteAssetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
 
 		// Asset compiler configuration
 		assert(nullptr != mRapidJsonDocument);
@@ -267,7 +267,7 @@ namespace RendererToolkit
 
 			// Setup project folder for cache manager, it will store there its data
 			// TODO(sw) For now only prototype. Change this.
-			CacheManager::mProjectDirectory = mProjectDirectory;
+			mCacheManager = std::make_unique<CacheManager>(mProjectDirectory);
 		}
 	}
 

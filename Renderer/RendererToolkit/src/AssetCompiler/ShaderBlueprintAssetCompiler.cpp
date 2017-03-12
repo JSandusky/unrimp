@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/ShaderBlueprintAssetCompiler.h"
+#include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
@@ -182,84 +183,90 @@ namespace RendererToolkit
 		}
 
 		// Open the input file
-		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
+		const std::string inputFilename = assetInputDirectory + inputFile;
 		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".shader_blueprint";
-		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-		{ // Shader blueprint
-			// Get file size and file data
-			std::string sourceCode;
-			{
-				std::string originalSourceCode;
-				inputFileStream.seekg(0, std::ifstream::end);
-				const std::streampos numberOfBytes = inputFileStream.tellg();
-				inputFileStream.seekg(0, std::ifstream::beg);
-				originalSourceCode.resize(static_cast<size_t>(numberOfBytes));
-				inputFileStream.read(const_cast<char*>(originalSourceCode.c_str()), numberOfBytes);
+		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename))
+		{
+			std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
+			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-				// Strip comments from source code
-				StringHelper::stripCommentsFromSourceCode(originalSourceCode, sourceCode);
-			}
-			const std::size_t numberOfBytes = sourceCode.length();
-
-			// Collect shader piece resources to include
-			std::vector<RendererRuntime::AssetId> includeShaderPieceAssetIds;
-			{
-				// Gather "@includepiece(<asset ID>)" and then remove them from the shader source code
-				// TODO(co) This is hacked on-the-fly, we certainly need something more robust
-				size_t includePiecePosition = sourceCode.find("@includepiece");
-				while (std::string::npos != includePiecePosition)
+			{ // Shader blueprint
+				// Get file size and file data
+				std::string sourceCode;
 				{
-					// ( asset ID )
-					size_t openingPosition = sourceCode.find("(", includePiecePosition);
-					size_t closingPosition = sourceCode.find(")", openingPosition);
-					const size_t numberOfCharacters = closingPosition - openingPosition - 1;
-					const std::string assetIdAsString = sourceCode.substr(openingPosition + 1, numberOfCharacters);
-					includeShaderPieceAssetIds.push_back(static_cast<uint32_t>(std::atoi(assetIdAsString.c_str())));
-					for (size_t i = includePiecePosition; i < closingPosition + 1; ++i)
+					std::string originalSourceCode;
+					inputFileStream.seekg(0, std::ifstream::end);
+					const std::streampos numberOfBytes = inputFileStream.tellg();
+					inputFileStream.seekg(0, std::ifstream::beg);
+					originalSourceCode.resize(static_cast<size_t>(numberOfBytes));
+					inputFileStream.read(const_cast<char*>(originalSourceCode.c_str()), numberOfBytes);
+
+					// Strip comments from source code
+					StringHelper::stripCommentsFromSourceCode(originalSourceCode, sourceCode);
+				}
+				const std::size_t numberOfBytes = sourceCode.length();
+
+				// Collect shader piece resources to include
+				std::vector<RendererRuntime::AssetId> includeShaderPieceAssetIds;
+				{
+					// Gather "@includepiece(<asset ID>)" and then remove them from the shader source code
+					// TODO(co) This is hacked on-the-fly, we certainly need something more robust
+					size_t includePiecePosition = sourceCode.find("@includepiece");
+					while (std::string::npos != includePiecePosition)
 					{
-						sourceCode[i] = ' ';
+						// ( asset ID )
+						size_t openingPosition = sourceCode.find("(", includePiecePosition);
+						size_t closingPosition = sourceCode.find(")", openingPosition);
+						const size_t numberOfCharacters = closingPosition - openingPosition - 1;
+						const std::string assetIdAsString = sourceCode.substr(openingPosition + 1, numberOfCharacters);
+						includeShaderPieceAssetIds.push_back(static_cast<uint32_t>(std::atoi(assetIdAsString.c_str())));
+						for (size_t i = includePiecePosition; i < closingPosition + 1; ++i)
+						{
+							sourceCode[i] = ' ';
+						}
+
+						// Next
+						includePiecePosition = sourceCode.find("@includepiece", closingPosition);
 					}
 
-					// Next
-					includePiecePosition = sourceCode.find("@includepiece", closingPosition);
+					// Map the source asset IDs to the compiled asset IDs
+					for (RendererRuntime::AssetId& assetId : includeShaderPieceAssetIds)
+					{
+						SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(assetId);
+						assetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
+					}
 				}
 
-				// Map the source asset IDs to the compiled asset IDs
-				for (RendererRuntime::AssetId& assetId : includeShaderPieceAssetIds)
-				{
-					SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(assetId);
-					assetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
+				// Gather IDs of shader properties known to the shader blueprint resource
+				// -> Directly use "RendererRuntime::ShaderProperties" to keep things simple, although we don't need a shader property value
+				RendererRuntime::ShaderProperties referencedShaderProperties;
+				::detail::gatherReferencedShaderProperties(sourceCode, "@property", referencedShaderProperties);
+				::detail::gatherReferencedShaderProperties(sourceCode, "@foreach", referencedShaderProperties);
+
+				{ // Shader blueprint header
+					RendererRuntime::v1ShaderBlueprint::Header shaderBlueprintHeader;
+					shaderBlueprintHeader.formatType						 = RendererRuntime::v1ShaderBlueprint::FORMAT_TYPE;
+					shaderBlueprintHeader.formatVersion						 = RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION;
+					shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds = static_cast<uint16_t>(includeShaderPieceAssetIds.size());
+					shaderBlueprintHeader.numberReferencedShaderProperties   = static_cast<uint16_t>(referencedShaderProperties.getSortedPropertyVector().size());
+					shaderBlueprintHeader.numberOfShaderSourceCodeBytes		 = static_cast<uint32_t>(numberOfBytes);
+
+					// Write down the shader blueprint header
+					outputFileStream.write(reinterpret_cast<const char*>(&shaderBlueprintHeader), sizeof(RendererRuntime::v1ShaderBlueprint::Header));
 				}
+
+				// Write down the asset IDs of the shader pieces to include
+				outputFileStream.write(reinterpret_cast<char*>(includeShaderPieceAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * includeShaderPieceAssetIds.size()));
+
+				// Write down the referenced shader properties
+				outputFileStream.write(reinterpret_cast<char*>(referencedShaderProperties.getSortedPropertyVector().data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * referencedShaderProperties.getSortedPropertyVector().size()));
+
+				// Dump the unchanged content into the output file stream
+				outputFileStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
 			}
-
-			// Gather IDs of shader properties known to the shader blueprint resource
-			// -> Directly use "RendererRuntime::ShaderProperties" to keep things simple, although we don't need a shader property value
-			RendererRuntime::ShaderProperties referencedShaderProperties;
-			::detail::gatherReferencedShaderProperties(sourceCode, "@property", referencedShaderProperties);
-			::detail::gatherReferencedShaderProperties(sourceCode, "@foreach", referencedShaderProperties);
-
-			{ // Shader blueprint header
-				RendererRuntime::v1ShaderBlueprint::Header shaderBlueprintHeader;
-				shaderBlueprintHeader.formatType						 = RendererRuntime::v1ShaderBlueprint::FORMAT_TYPE;
-				shaderBlueprintHeader.formatVersion						 = RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION;
-				shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds = static_cast<uint16_t>(includeShaderPieceAssetIds.size());
-				shaderBlueprintHeader.numberReferencedShaderProperties   = static_cast<uint16_t>(referencedShaderProperties.getSortedPropertyVector().size());
-				shaderBlueprintHeader.numberOfShaderSourceCodeBytes		 = static_cast<uint32_t>(numberOfBytes);
-
-				// Write down the shader blueprint header
-				outputFileStream.write(reinterpret_cast<const char*>(&shaderBlueprintHeader), sizeof(RendererRuntime::v1ShaderBlueprint::Header));
-			}
-
-			// Write down the asset IDs of the shader pieces to include
-			outputFileStream.write(reinterpret_cast<char*>(includeShaderPieceAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * includeShaderPieceAssetIds.size()));
-
-			// Write down the referenced shader properties
-			outputFileStream.write(reinterpret_cast<char*>(referencedShaderProperties.getSortedPropertyVector().data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * referencedShaderProperties.getSortedPropertyVector().size()));
-
-			// Dump the unchanged content into the output file stream
-			outputFileStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
 		}
 
 		{ // Update the output asset package

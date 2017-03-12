@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
+#include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
@@ -153,177 +154,183 @@ namespace RendererToolkit
 
 		// Open the input file
 		const std::string inputFilename = assetInputDirectory + inputFile;
-		std::ifstream inputFileStream(inputFilename, std::ios::binary);
+
 		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".scene";
-		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-		{ // Scene
-			// Parse JSON
-			rapidjson::Document rapidJsonDocument;
-			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "SceneAsset", "1");
+		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename))
+		{
+			std::ifstream inputFileStream(inputFilename, std::ios::binary);
+			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-			{ // Write down the scene resource header
-				RendererRuntime::v1Scene::Header sceneHeader;
-				sceneHeader.formatType	  = RendererRuntime::v1Scene::FORMAT_TYPE;
-				sceneHeader.formatVersion = RendererRuntime::v1Scene::FORMAT_VERSION;
-				outputFileStream.write(reinterpret_cast<const char*>(&sceneHeader), sizeof(RendererRuntime::v1Scene::Header));
-			}
+			{ // Scene
+				// Parse JSON
+				rapidjson::Document rapidJsonDocument;
+				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "SceneAsset", "1");
 
-			// Mandatory main sections of the material blueprint
-			const rapidjson::Value& rapidJsonValueSceneAsset = rapidJsonDocument["SceneAsset"];
-			const rapidjson::Value& rapidJsonValueNodes = rapidJsonValueSceneAsset["Nodes"];
+				{ // Write down the scene resource header
+					RendererRuntime::v1Scene::Header sceneHeader;
+					sceneHeader.formatType	  = RendererRuntime::v1Scene::FORMAT_TYPE;
+					sceneHeader.formatVersion = RendererRuntime::v1Scene::FORMAT_VERSION;
+					outputFileStream.write(reinterpret_cast<const char*>(&sceneHeader), sizeof(RendererRuntime::v1Scene::Header));
+				}
 
-			{ // Write down the scene nodes
-				RendererRuntime::v1Scene::Nodes nodes;
-				nodes.numberOfNodes = rapidJsonValueNodes.MemberCount();
-				outputFileStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Scene::Nodes));
+				// Mandatory main sections of the material blueprint
+				const rapidjson::Value& rapidJsonValueSceneAsset = rapidJsonDocument["SceneAsset"];
+				const rapidjson::Value& rapidJsonValueNodes = rapidJsonValueSceneAsset["Nodes"];
 
-				// Loop through all scene nodes
-				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorNodes = rapidJsonValueNodes.MemberBegin(); rapidJsonMemberIteratorNodes != rapidJsonValueNodes.MemberEnd(); ++rapidJsonMemberIteratorNodes)
-				{
-					const rapidjson::Value& rapidJsonValueNode = rapidJsonMemberIteratorNodes->value;
-					const rapidjson::Value* rapidJsonValueItems = rapidJsonValueNode.HasMember("Items") ? &rapidJsonValueNode["Items"] : nullptr;
+				{ // Write down the scene nodes
+					RendererRuntime::v1Scene::Nodes nodes;
+					nodes.numberOfNodes = rapidJsonValueNodes.MemberCount();
+					outputFileStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Scene::Nodes));
 
-					{ // Write down the scene node
-						RendererRuntime::v1Scene::Node node;
-
-						// Get the scene node transform
-						node.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-						if (rapidJsonValueNode.HasMember("Properties"))
-						{
-							const rapidjson::Value& rapidJsonValueProperties = rapidJsonValueNode["Properties"];
-
-							// Position, rotation and scale
-							JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Position", &node.transform.position.x, 3);
-							JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Rotation", &node.transform.rotation.x, 4);	// Rotation quaternion
-							JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Scale", &node.transform.scale.x, 3);
-						}
-
-						{ // Sanity check
-							const float length = glm::length(node.transform.rotation);
-							if (!glm::epsilonEqual(length, 1.0f, 0.0000001f))
-							{
-								throw std::runtime_error("The rotation quaternion of scene node \"" + std::string(rapidJsonMemberIteratorNodes->name.GetString()) + "\" does not appear to be normalized (length is " + std::to_string(length) + ")");
-							}
-						}
-
-						// Write down the scene node
-						node.numberOfItems = (nullptr != rapidJsonValueItems) ? rapidJsonValueItems->MemberCount() : 0;
-						outputFileStream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Scene::Node));
-					}
-
-					// Write down the scene items
-					if (nullptr != rapidJsonValueItems)
+					// Loop through all scene nodes
+					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorNodes = rapidJsonValueNodes.MemberBegin(); rapidJsonMemberIteratorNodes != rapidJsonValueNodes.MemberEnd(); ++rapidJsonMemberIteratorNodes)
 					{
-						for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorItems = rapidJsonValueItems->MemberBegin(); rapidJsonMemberIteratorItems != rapidJsonValueItems->MemberEnd(); ++rapidJsonMemberIteratorItems)
-						{
-							const rapidjson::Value& rapidJsonValueItem = rapidJsonMemberIteratorItems->value;
-							const RendererRuntime::SceneItemTypeId typeId = RendererRuntime::StringId(rapidJsonMemberIteratorItems->name.GetString());
+						const rapidjson::Value& rapidJsonValueNode = rapidJsonMemberIteratorNodes->value;
+						const rapidjson::Value* rapidJsonValueItems = rapidJsonValueNode.HasMember("Items") ? &rapidJsonValueNode["Items"] : nullptr;
 
-							// Get the scene item type specific data number of bytes
-							// TODO(co) Make this more generic via scene factory
-							uint32_t numberOfBytes = 0;
-							if (RendererRuntime::CameraSceneItem::TYPE_ID == typeId)
+						{ // Write down the scene node
+							RendererRuntime::v1Scene::Node node;
+
+							// Get the scene node transform
+							node.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+							if (rapidJsonValueNode.HasMember("Properties"))
 							{
-								// Nothing here
+								const rapidjson::Value& rapidJsonValueProperties = rapidJsonValueNode["Properties"];
+
+								// Position, rotation and scale
+								JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Position", &node.transform.position.x, 3);
+								JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Rotation", &node.transform.rotation.x, 4);	// Rotation quaternion
+								JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Scale", &node.transform.scale.x, 3);
 							}
-							else if (RendererRuntime::LightSceneItem::TYPE_ID == typeId)
-							{
-								numberOfBytes = sizeof(RendererRuntime::v1Scene::LightItem);
-							}
-							else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
-							{
-								const uint32_t numberOfSubMeshMaterialAssetIds = rapidJsonValueItem.HasMember("SubMeshMaterialAssetIds") ? rapidJsonValueItem["SubMeshMaterialAssetIds"].Size() : 0;
-								numberOfBytes = sizeof(RendererRuntime::v1Scene::MeshItem) + sizeof(RendererRuntime::AssetId) * numberOfSubMeshMaterialAssetIds;
-								if (RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
+
+							{ // Sanity check
+								const float length = glm::length(node.transform.rotation);
+								if (!glm::epsilonEqual(length, 1.0f, 0.0000001f))
 								{
-									numberOfBytes += sizeof(RendererRuntime::v1Scene::SkeletonMeshItem);
+									throw std::runtime_error("The rotation quaternion of scene node \"" + std::string(rapidJsonMemberIteratorNodes->name.GetString()) + "\" does not appear to be normalized (length is " + std::to_string(length) + ")");
 								}
 							}
 
-							{ // Write down the scene item header
-								RendererRuntime::v1Scene::ItemHeader itemHeader;
-								itemHeader.typeId		 = typeId;
-								itemHeader.numberOfBytes = numberOfBytes;
-								outputFileStream.write(reinterpret_cast<const char*>(&itemHeader), sizeof(RendererRuntime::v1Scene::ItemHeader));
-							}
+							// Write down the scene node
+							node.numberOfItems = (nullptr != rapidJsonValueItems) ? rapidJsonValueItems->MemberCount() : 0;
+							outputFileStream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Scene::Node));
+						}
 
-							// Write down the scene item type specific data, if there is any
-							if (0 != numberOfBytes)
+						// Write down the scene items
+						if (nullptr != rapidJsonValueItems)
+						{
+							for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorItems = rapidJsonValueItems->MemberBegin(); rapidJsonMemberIteratorItems != rapidJsonValueItems->MemberEnd(); ++rapidJsonMemberIteratorItems)
 							{
+								const rapidjson::Value& rapidJsonValueItem = rapidJsonMemberIteratorItems->value;
+								const RendererRuntime::SceneItemTypeId typeId = RendererRuntime::StringId(rapidJsonMemberIteratorItems->name.GetString());
+
+								// Get the scene item type specific data number of bytes
+								// TODO(co) Make this more generic via scene factory
+								uint32_t numberOfBytes = 0;
 								if (RendererRuntime::CameraSceneItem::TYPE_ID == typeId)
 								{
 									// Nothing here
 								}
 								else if (RendererRuntime::LightSceneItem::TYPE_ID == typeId)
 								{
-									RendererRuntime::v1Scene::LightItem lightItem;
-
-									// Read properties
-									::detail::optionalLightTypeProperty(rapidJsonValueItem, "LightType", lightItem.lightType);
-									JsonHelper::optionalFloatNProperty(rapidJsonValueItem, "Color", lightItem.color, 3);
-									JsonHelper::optionalFloatProperty(rapidJsonValueItem, "Radius", lightItem.radius);
-
-									// Sanity checks
-									if (lightItem.color[0] < 0.0f || lightItem.color[1] < 0.0f || lightItem.color[2] < 0.0f)
-									{
-										throw std::runtime_error("All light item color components must be positive");
-									}
-									if (lightItem.lightType != RendererRuntime::LightSceneItem::LightType::DIRECTIONAL && lightItem.radius <= 0.0f)
-									{
-										throw std::runtime_error("For point or spot light items the radius must be greater as zero");
-									}
-									if (lightItem.lightType == RendererRuntime::LightSceneItem::LightType::DIRECTIONAL && lightItem.radius != 0.0f)
-									{
-										throw std::runtime_error("For directional light items the radius must be zero");
-									}
-
-									// Write down
-									outputFileStream.write(reinterpret_cast<const char*>(&lightItem), sizeof(RendererRuntime::v1Scene::LightItem));
+									numberOfBytes = sizeof(RendererRuntime::v1Scene::LightItem);
 								}
 								else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 								{
-									// Skeleton mesh scene item
+									const uint32_t numberOfSubMeshMaterialAssetIds = rapidJsonValueItem.HasMember("SubMeshMaterialAssetIds") ? rapidJsonValueItem["SubMeshMaterialAssetIds"].Size() : 0;
+									numberOfBytes = sizeof(RendererRuntime::v1Scene::MeshItem) + sizeof(RendererRuntime::AssetId) * numberOfSubMeshMaterialAssetIds;
 									if (RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 									{
-										RendererRuntime::v1Scene::SkeletonMeshItem skeletonMeshItem;
+										numberOfBytes += sizeof(RendererRuntime::v1Scene::SkeletonMeshItem);
+									}
+								}
 
-										// Map the source asset ID to the compiled asset ID
-										skeletonMeshItem.skeletonAnimationAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "SkeletonAnimationAssetId");
+								{ // Write down the scene item header
+									RendererRuntime::v1Scene::ItemHeader itemHeader;
+									itemHeader.typeId		 = typeId;
+									itemHeader.numberOfBytes = numberOfBytes;
+									outputFileStream.write(reinterpret_cast<const char*>(&itemHeader), sizeof(RendererRuntime::v1Scene::ItemHeader));
+								}
+
+								// Write down the scene item type specific data, if there is any
+								if (0 != numberOfBytes)
+								{
+									if (RendererRuntime::CameraSceneItem::TYPE_ID == typeId)
+									{
+										// Nothing here
+									}
+									else if (RendererRuntime::LightSceneItem::TYPE_ID == typeId)
+									{
+										RendererRuntime::v1Scene::LightItem lightItem;
+
+										// Read properties
+										::detail::optionalLightTypeProperty(rapidJsonValueItem, "LightType", lightItem.lightType);
+										JsonHelper::optionalFloatNProperty(rapidJsonValueItem, "Color", lightItem.color, 3);
+										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "Radius", lightItem.radius);
+
+										// Sanity checks
+										if (lightItem.color[0] < 0.0f || lightItem.color[1] < 0.0f || lightItem.color[2] < 0.0f)
+										{
+											throw std::runtime_error("All light item color components must be positive");
+										}
+										if (lightItem.lightType != RendererRuntime::LightSceneItem::LightType::DIRECTIONAL && lightItem.radius <= 0.0f)
+										{
+											throw std::runtime_error("For point or spot light items the radius must be greater as zero");
+										}
+										if (lightItem.lightType == RendererRuntime::LightSceneItem::LightType::DIRECTIONAL && lightItem.radius != 0.0f)
+										{
+											throw std::runtime_error("For directional light items the radius must be zero");
+										}
 
 										// Write down
-										outputFileStream.write(reinterpret_cast<const char*>(&skeletonMeshItem), sizeof(RendererRuntime::v1Scene::SkeletonMeshItem));
+										outputFileStream.write(reinterpret_cast<const char*>(&lightItem), sizeof(RendererRuntime::v1Scene::LightItem));
 									}
-
-									// Mesh scene item
-									RendererRuntime::v1Scene::MeshItem meshItem;
-
-									// Map the source asset ID to the compiled asset ID
-									meshItem.meshAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "MeshAssetId");
-
-									// Optional sub-mesh material asset IDs to be able to overwrite the original material asset ID of sub-meshes
-									std::vector<RendererRuntime::AssetId> subMeshMaterialAssetIds;
-									if (rapidJsonValueItem.HasMember("SubMeshMaterialAssetIds"))
+									else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 									{
-										const rapidjson::Value& rapidJsonValueSubMeshMaterialAssetIds = rapidJsonValueItem["SubMeshMaterialAssetIds"];
-										const uint32_t numberOfSubMeshMaterialAssetIds = rapidJsonValueSubMeshMaterialAssetIds.Size();
-										subMeshMaterialAssetIds.resize(numberOfSubMeshMaterialAssetIds);
-										for (uint32_t i = 0; i < numberOfSubMeshMaterialAssetIds; ++i)
+										// Skeleton mesh scene item
+										if (RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 										{
-											// Empty string means "Don't overwrite the original material asset ID of the sub-mesh"
-											const std::string valueAsString = rapidJsonValueSubMeshMaterialAssetIds[i].GetString();
-											subMeshMaterialAssetIds[i] = valueAsString.empty() ? RendererRuntime::getUninitialized<RendererRuntime::AssetId>() : StringHelper::getAssetIdByString(valueAsString, input);
-										}
-									}
-									meshItem.numberOfSubMeshMaterialAssetIds = static_cast<uint32_t>(subMeshMaterialAssetIds.size());
+											RendererRuntime::v1Scene::SkeletonMeshItem skeletonMeshItem;
 
-									// Write down
-									outputFileStream.write(reinterpret_cast<const char*>(&meshItem), sizeof(RendererRuntime::v1Scene::MeshItem));
-									if (!subMeshMaterialAssetIds.empty())
-									{
-										// Write down all sub-mesh material asset IDs
-										outputFileStream.write(reinterpret_cast<const char*>(subMeshMaterialAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * subMeshMaterialAssetIds.size()));
+											// Map the source asset ID to the compiled asset ID
+											skeletonMeshItem.skeletonAnimationAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "SkeletonAnimationAssetId");
+
+											// Write down
+											outputFileStream.write(reinterpret_cast<const char*>(&skeletonMeshItem), sizeof(RendererRuntime::v1Scene::SkeletonMeshItem));
+										}
+
+										// Mesh scene item
+										RendererRuntime::v1Scene::MeshItem meshItem;
+
+										// Map the source asset ID to the compiled asset ID
+										meshItem.meshAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "MeshAssetId");
+
+										// Optional sub-mesh material asset IDs to be able to overwrite the original material asset ID of sub-meshes
+										std::vector<RendererRuntime::AssetId> subMeshMaterialAssetIds;
+										if (rapidJsonValueItem.HasMember("SubMeshMaterialAssetIds"))
+										{
+											const rapidjson::Value& rapidJsonValueSubMeshMaterialAssetIds = rapidJsonValueItem["SubMeshMaterialAssetIds"];
+											const uint32_t numberOfSubMeshMaterialAssetIds = rapidJsonValueSubMeshMaterialAssetIds.Size();
+											subMeshMaterialAssetIds.resize(numberOfSubMeshMaterialAssetIds);
+											for (uint32_t i = 0; i < numberOfSubMeshMaterialAssetIds; ++i)
+											{
+												// Empty string means "Don't overwrite the original material asset ID of the sub-mesh"
+												const std::string valueAsString = rapidJsonValueSubMeshMaterialAssetIds[i].GetString();
+												subMeshMaterialAssetIds[i] = valueAsString.empty() ? RendererRuntime::getUninitialized<RendererRuntime::AssetId>() : StringHelper::getAssetIdByString(valueAsString, input);
+											}
+										}
+										meshItem.numberOfSubMeshMaterialAssetIds = static_cast<uint32_t>(subMeshMaterialAssetIds.size());
+
+										// Write down
+										outputFileStream.write(reinterpret_cast<const char*>(&meshItem), sizeof(RendererRuntime::v1Scene::MeshItem));
+										if (!subMeshMaterialAssetIds.empty())
+										{
+											// Write down all sub-mesh material asset IDs
+											outputFileStream.write(reinterpret_cast<const char*>(subMeshMaterialAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * subMeshMaterialAssetIds.size()));
+										}
 									}
 								}
 							}

@@ -34,6 +34,7 @@
 
 #include <thread>
 #include <atomic>
+#include <memory> // For std::unique_ptr
 
 
 //[-------------------------------------------------------]
@@ -46,6 +47,7 @@ namespace RendererRuntime
 namespace RendererToolkit
 {
 	class ProjectAssetMonitor;
+	class CacheManager;
 }
 
 
@@ -136,6 +138,8 @@ namespace RendererToolkit
 		ProjectAssetMonitor*			mProjectAssetMonitor;
 		std::atomic<bool>				mShutdownThread;
 		std::thread						mThread;
+
+		std::unique_ptr<CacheManager>	mCacheManager;
 
 
 	};

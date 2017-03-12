@@ -45,6 +45,11 @@ namespace RendererRuntime
 	class AssetPackage;
 }
 
+namespace RendererToolkit
+{
+	class CacheManager;
+}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -91,15 +96,17 @@ namespace RendererToolkit
 			const std::string								assetFilename;
 			const SourceAssetIdToCompiledAssetId&	sourceAssetIdToCompiledAssetId;
 			const SourceAssetIdToAbsoluteFilename&	sourceAssetIdToAbsoluteFilename;
+			CacheManager& cacheManager;
 
 			Input() = delete;
-			Input(const std::string _projectName, const std::string& _assetFilename, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToAbsoluteFilename& _sourceAssetIdToAbsoluteFilename) :
+			Input(const std::string _projectName, CacheManager& _cacheManager, const std::string& _assetFilename, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToAbsoluteFilename& _sourceAssetIdToAbsoluteFilename) :
 				projectName(_projectName),
 				assetInputDirectory(_assetInputDirectory),
 				assetOutputDirectory(_assetOutputDirectory),
 				assetFilename(_assetFilename),
 				sourceAssetIdToCompiledAssetId(_sourceAssetIdToCompiledAssetId),
-				sourceAssetIdToAbsoluteFilename(_sourceAssetIdToAbsoluteFilename)
+				sourceAssetIdToAbsoluteFilename(_sourceAssetIdToAbsoluteFilename),
+				cacheManager(_cacheManager)
 			{
 				// Nothing here
 			}

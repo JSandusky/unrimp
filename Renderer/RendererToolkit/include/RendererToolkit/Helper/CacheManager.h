@@ -30,6 +30,16 @@
 #include <RendererRuntime/Core/StringId.h>
 
 #include <string>
+#include <memory> // For std::unique_ptr
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace SQLite
+{
+	class Database;
+}
 
 
 //[-------------------------------------------------------]
@@ -49,7 +59,6 @@ namespace RendererToolkit
 	*  @note
 	*    - This manager caches the content hash of source assets to speed up project compilation when the source doesn't changes 
 	*/
-	// TODO(sw) For now it simply holds static methods which reopens the connection to the database on each call
 	// FileHash API
 	/*
 	* Unrimp Cache DB layout
@@ -67,7 +76,30 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Constructor
+		* 
+		*  @param[in] projectPath
+		*    The path to the project for which the cache manager instance is used for
+		*/
+		CacheManager(const std::string& projectPath);
+
+		/**
+		*  @brief
+		*    Desctructor
+		* 
+		*  @note
+		*    Needed to allow std::unique_ptr with an forward declared class
+		*/
+		~CacheManager();
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
 		/**
@@ -86,19 +118,11 @@ namespace RendererToolkit
 		*  @return
 		*    True if the file needs to be compiled (aka source changed, destination doesn't exists or is yet unknown file) otherwise false
 		*/
-		static bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFile, const std::string& sourceFile, const std::string& destinationFile);
+		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFile, const std::string& sourceFile, const std::string& destinationFile);
 
 
 	//[-------------------------------------------------------]
-	//[ Public static data                                    ]
-	//[-------------------------------------------------------]
-	public:
-		// TODO(sw) Make this private when reworking how the cache manager is used
-		static std::string mProjectDirectory; //< Holds the project base directory
-
-
-	//[-------------------------------------------------------]
-	//[ Private static methods                                ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
 		/**
@@ -112,7 +136,7 @@ namespace RendererToolkit
 		*  @return
 		*    True if the database could be successfully be setup, in case of an error false is returned
 		*/
-		static bool setupCacheDataBase();
+		bool setupCacheDataBase();
 
 		/**
 		*  @brief
@@ -126,7 +150,7 @@ namespace RendererToolkit
 		*  @return
 		*    True if a cache entry exists otherwise false
 		*/
-		static bool hasEntryForFile(const std::string& rendererTarget, RendererRuntime::StringId fileId);
+		bool hasEntryForFile(const std::string& rendererTarget, RendererRuntime::StringId fileId);
 
 		/**
 		*  @brief
@@ -145,7 +169,14 @@ namespace RendererToolkit
 		*  @note
 		*    - When a change was detected the given file hash is stored
 		*/
-		static bool checkIfFileChanged(const std::string& rendererTarget, const std::string& fileHash, RendererRuntime::StringId fileId);
+		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& fileHash, RendererRuntime::StringId fileId);
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		std::unique_ptr<SQLite::Database> mDatabaseConnection;
 
 
 	};

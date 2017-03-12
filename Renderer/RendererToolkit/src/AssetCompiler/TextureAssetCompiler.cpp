@@ -541,7 +541,7 @@ namespace RendererToolkit
 		}
 
 		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
-		if (CacheManager::needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputAssetFilename, outputAssetFilename))
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputAssetFilename, outputAssetFilename))
 		{
 			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
 			{

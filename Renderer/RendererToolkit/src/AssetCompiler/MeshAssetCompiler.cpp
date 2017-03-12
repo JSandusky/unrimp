@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
+#include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
@@ -583,102 +584,107 @@ namespace RendererToolkit
 		// Open the input and output file
 		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".mesh";
-		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-		// Create an instance of the Assimp importer class
-		Assimp::Importer assimpImporter;
-		// assimpImporter.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4);	// We're using the "aiProcess_LimitBoneWeights"-flag, 4 is already the default value (don't delete this reminder comment)
-
-		// Load the given mesh
-		// -> "aiProcess_MakeLeftHanded" is added because the rasterizer states directly map to Direct3D
-		const aiScene *assimpScene = assimpImporter.ReadFile(assetInputDirectory + inputFile, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded);
-		if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
+		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFile, outputAssetFilename))
 		{
-			// Get the number of bones and skeleton
-			const uint32_t numberOfBones = ::detail::getNumberOfBones(*assimpScene->mRootNode);
-			if (numberOfBones > 255)
+			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
+
+			// Create an instance of the Assimp importer class
+			Assimp::Importer assimpImporter;
+			// assimpImporter.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4);	// We're using the "aiProcess_LimitBoneWeights"-flag, 4 is already the default value (don't delete this reminder comment)
+
+			// Load the given mesh
+			// -> "aiProcess_MakeLeftHanded" is added because the rasterizer states directly map to Direct3D
+			const aiScene *assimpScene = assimpImporter.ReadFile(assetInputDirectory + inputFile, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded);
+			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
-				throw std::runtime_error("Maximum number of supported bones is 255");
-			}
-			::detail::Skeleton skeleton(static_cast<uint8_t>(numberOfBones), *assimpScene->mRootNode);
-
-			// Get the total number of vertices and indices by using the Assimp root node
-			uint32_t numberOfVertices = 0;
-			uint32_t numberOfIndices = 0;
-			::detail::SubMeshes subMeshes;
-			::detail::getNumberOfVerticesAndIndicesRecursive(input, *assimpScene, *assimpScene->mRootNode, numberOfVertices, numberOfIndices, subMeshes);
-
-			// Is there an optional skeleton?
-			const Renderer::VertexAttributes& vertexAttributes = (numberOfBones > 0) ? RendererRuntime::MeshResource::SKINNED_VERTEX_ATTRIBUTES : RendererRuntime::MeshResource::VERTEX_ATTRIBUTES;
-			const uint8_t numberOfBytesPerVertex = (numberOfBones > 0) ? ::detail::NUMBER_OF_BYTES_PER_SKINNED_VERTEX : ::detail::NUMBER_OF_BYTES_PER_VERTEX;
-
-			{ // Mesh header
-				RendererRuntime::v1Mesh::Header meshHeader;
-				meshHeader.formatType				= RendererRuntime::v1Mesh::FORMAT_TYPE;
-				meshHeader.formatVersion			= RendererRuntime::v1Mesh::FORMAT_VERSION;
-				meshHeader.numberOfBytesPerVertex	= numberOfBytesPerVertex;
-				meshHeader.numberOfVertices			= numberOfVertices;
-				meshHeader.indexBufferFormat		= Renderer::IndexBufferFormat::UNSIGNED_SHORT;	// TODO(co) Support of 32 bit indices if there are too many vertices
-				meshHeader.numberOfIndices			= numberOfIndices;
-				meshHeader.numberOfVertexAttributes = static_cast<uint8_t>(vertexAttributes.numberOfAttributes);
-				meshHeader.numberOfSubMeshes		= static_cast<uint8_t>(subMeshes.size());
-				meshHeader.numberOfBones			= skeleton.numberOfBones;
-
-				// Write down the mesh header
-				outputFileStream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(RendererRuntime::v1Mesh::Header));
-			}
-
-			{ // Vertex and index buffer data
-				// Allocate memory for the local vertex and index buffer data
-				// -> Do also initialize the vertex buffer data with zero to handle not filled vertex bone weights
-				uint8_t *vertexBufferData = new uint8_t[numberOfBytesPerVertex * numberOfVertices];
-				memset(vertexBufferData, 0, numberOfBytesPerVertex * numberOfVertices);
-				uint16_t *indexBufferData = new uint16_t[numberOfIndices];
-
-				{ // Fill the mesh data recursively
-					uint32_t numberOfFilledVertices = 0;
-					uint32_t numberOfFilledIndices  = 0;
-					::detail::fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, skeleton, invertNormals, numberOfBytesPerVertex, vertexBufferData, indexBufferData, aiMatrix4x4(), numberOfFilledVertices, numberOfFilledIndices);
-
-					// TODO(co) ?
-					numberOfVertices = numberOfFilledVertices;
-					numberOfIndices  = numberOfFilledIndices;
-				}
-
-				// Write down the vertex and index buffer
-				outputFileStream.write(reinterpret_cast<const char*>(vertexBufferData), numberOfBytesPerVertex * numberOfVertices);
-				outputFileStream.write(reinterpret_cast<const char*>(indexBufferData), static_cast<std::streamsize>(sizeof(uint16_t) * numberOfIndices));
-
-				// Destroy local vertex and input buffer data
-				delete [] vertexBufferData;
-				delete [] indexBufferData;
-			}
-
-			// Write down the vertex array attributes
-			outputFileStream.write(reinterpret_cast<const char*>(vertexAttributes.attributes), static_cast<std::streamsize>(sizeof(Renderer::VertexAttribute) * vertexAttributes.numberOfAttributes));
-
-			// Write down the sub-meshes
-			outputFileStream.write(reinterpret_cast<const char*>(subMeshes.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size()));
-
-			// Write down the optional skeleton
-			if (skeleton.numberOfBones > 0)
-			{
-				const aiMatrix4x4& assimpRootTransformation = assimpScene->mRootNode->mTransformation.Inverse();
-				for (uint8_t i = 0; i < skeleton.numberOfBones; ++i)
+				// Get the number of bones and skeleton
+				const uint32_t numberOfBones = ::detail::getNumberOfBones(*assimpScene->mRootNode);
+				if (numberOfBones > 255)
 				{
-					// Some Assimp importers like the MD5 one compensate coordinate system differences by setting a root node transform, so we need to take this into account
-					skeleton.boneOffsetMatrices[i] = skeleton.boneOffsetMatrices[i] * assimpRootTransformation;
-
-					// Take care of row/column major flipping
-					skeleton.localBoneMatrices[i].Transpose();
-					skeleton.boneOffsetMatrices[i].Transpose();
+					throw std::runtime_error("Maximum number of supported bones is 255");
 				}
-				outputFileStream.write(reinterpret_cast<const char*>(skeleton.getSkeletonData()), static_cast<std::streamsize>(skeleton.getNumberOfSkeletonDataBytes()));
+				::detail::Skeleton skeleton(static_cast<uint8_t>(numberOfBones), *assimpScene->mRootNode);
+
+				// Get the total number of vertices and indices by using the Assimp root node
+				uint32_t numberOfVertices = 0;
+				uint32_t numberOfIndices = 0;
+				::detail::SubMeshes subMeshes;
+				::detail::getNumberOfVerticesAndIndicesRecursive(input, *assimpScene, *assimpScene->mRootNode, numberOfVertices, numberOfIndices, subMeshes);
+
+				// Is there an optional skeleton?
+				const Renderer::VertexAttributes& vertexAttributes = (numberOfBones > 0) ? RendererRuntime::MeshResource::SKINNED_VERTEX_ATTRIBUTES : RendererRuntime::MeshResource::VERTEX_ATTRIBUTES;
+				const uint8_t numberOfBytesPerVertex = (numberOfBones > 0) ? ::detail::NUMBER_OF_BYTES_PER_SKINNED_VERTEX : ::detail::NUMBER_OF_BYTES_PER_VERTEX;
+
+				{ // Mesh header
+					RendererRuntime::v1Mesh::Header meshHeader;
+					meshHeader.formatType				= RendererRuntime::v1Mesh::FORMAT_TYPE;
+					meshHeader.formatVersion			= RendererRuntime::v1Mesh::FORMAT_VERSION;
+					meshHeader.numberOfBytesPerVertex	= numberOfBytesPerVertex;
+					meshHeader.numberOfVertices			= numberOfVertices;
+					meshHeader.indexBufferFormat		= Renderer::IndexBufferFormat::UNSIGNED_SHORT;	// TODO(co) Support of 32 bit indices if there are too many vertices
+					meshHeader.numberOfIndices			= numberOfIndices;
+					meshHeader.numberOfVertexAttributes = static_cast<uint8_t>(vertexAttributes.numberOfAttributes);
+					meshHeader.numberOfSubMeshes		= static_cast<uint8_t>(subMeshes.size());
+					meshHeader.numberOfBones			= skeleton.numberOfBones;
+
+					// Write down the mesh header
+					outputFileStream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(RendererRuntime::v1Mesh::Header));
+				}
+
+				{ // Vertex and index buffer data
+					// Allocate memory for the local vertex and index buffer data
+					// -> Do also initialize the vertex buffer data with zero to handle not filled vertex bone weights
+					uint8_t *vertexBufferData = new uint8_t[numberOfBytesPerVertex * numberOfVertices];
+					memset(vertexBufferData, 0, numberOfBytesPerVertex * numberOfVertices);
+					uint16_t *indexBufferData = new uint16_t[numberOfIndices];
+
+					{ // Fill the mesh data recursively
+						uint32_t numberOfFilledVertices = 0;
+						uint32_t numberOfFilledIndices  = 0;
+						::detail::fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, skeleton, invertNormals, numberOfBytesPerVertex, vertexBufferData, indexBufferData, aiMatrix4x4(), numberOfFilledVertices, numberOfFilledIndices);
+
+						// TODO(co) ?
+						numberOfVertices = numberOfFilledVertices;
+						numberOfIndices  = numberOfFilledIndices;
+					}
+
+					// Write down the vertex and index buffer
+					outputFileStream.write(reinterpret_cast<const char*>(vertexBufferData), numberOfBytesPerVertex * numberOfVertices);
+					outputFileStream.write(reinterpret_cast<const char*>(indexBufferData), static_cast<std::streamsize>(sizeof(uint16_t) * numberOfIndices));
+
+					// Destroy local vertex and input buffer data
+					delete [] vertexBufferData;
+					delete [] indexBufferData;
+				}
+
+				// Write down the vertex array attributes
+				outputFileStream.write(reinterpret_cast<const char*>(vertexAttributes.attributes), static_cast<std::streamsize>(sizeof(Renderer::VertexAttribute) * vertexAttributes.numberOfAttributes));
+
+				// Write down the sub-meshes
+				outputFileStream.write(reinterpret_cast<const char*>(subMeshes.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size()));
+
+				// Write down the optional skeleton
+				if (skeleton.numberOfBones > 0)
+				{
+					const aiMatrix4x4& assimpRootTransformation = assimpScene->mRootNode->mTransformation.Inverse();
+					for (uint8_t i = 0; i < skeleton.numberOfBones; ++i)
+					{
+						// Some Assimp importers like the MD5 one compensate coordinate system differences by setting a root node transform, so we need to take this into account
+						skeleton.boneOffsetMatrices[i] = skeleton.boneOffsetMatrices[i] * assimpRootTransformation;
+
+						// Take care of row/column major flipping
+						skeleton.localBoneMatrices[i].Transpose();
+						skeleton.boneOffsetMatrices[i].Transpose();
+					}
+					outputFileStream.write(reinterpret_cast<const char*>(skeleton.getSkeletonData()), static_cast<std::streamsize>(skeleton.getNumberOfSkeletonDataBytes()));
+				}
 			}
-		}
-		else
-		{
-			throw std::runtime_error("Assimp failed to load in the given mesh");
+			else
+			{
+				throw std::runtime_error("Assimp failed to load in the given mesh");
+			}
 		}
 
 		{ // Update the output asset package

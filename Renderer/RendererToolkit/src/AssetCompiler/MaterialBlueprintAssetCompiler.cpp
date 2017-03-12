@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
+#include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
@@ -100,110 +101,115 @@ namespace RendererToolkit
 
 		// Open the input file
 		const std::string inputFilename = assetInputDirectory + inputFile;
-		std::ifstream inputFileStream(inputFilename, std::ios::binary);
 		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material_blueprint";
-		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-		{ // Material blueprint
-			// Parse JSON
-			rapidjson::Document rapidJsonDocument;
-			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialBlueprintAsset", "1");
+		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename))
+		{
+			std::ifstream inputFileStream(inputFilename, std::ios::binary);
+			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-			// Mandatory and optional main sections of the material blueprint
-			static const rapidjson::Value EMPTY_VALUE;
-			const rapidjson::Value& rapidJsonValueMaterialBlueprintAsset = rapidJsonDocument["MaterialBlueprintAsset"];
-			const rapidjson::Value& rapidJsonValueProperties			 = rapidJsonValueMaterialBlueprintAsset.HasMember("Properties")								   ? rapidJsonValueMaterialBlueprintAsset["Properties"]	: EMPTY_VALUE;
-			const rapidjson::Value& rapidJsonValueResources				 = rapidJsonValueMaterialBlueprintAsset.HasMember("Resources")								   ? rapidJsonValueMaterialBlueprintAsset["Resources"]	: EMPTY_VALUE;
-			const rapidjson::Value& rapidJsonValueUniformBuffers		 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("UniformBuffers")) ? rapidJsonValueResources["UniformBuffers"]			: EMPTY_VALUE;
-			const rapidjson::Value& rapidJsonValueTextureBuffers		 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("TextureBuffers")) ? rapidJsonValueResources["TextureBuffers"]			: EMPTY_VALUE;
-			const rapidjson::Value& rapidJsonValueSamplerStates			 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("SamplerStates"))  ? rapidJsonValueResources["SamplerStates"]			: EMPTY_VALUE;
-			const rapidjson::Value& rapidJsonValueTextures				 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("Textures"))	   ? rapidJsonValueResources["Textures"]				: EMPTY_VALUE;
+			{ // Material blueprint
+				// Parse JSON
+				rapidjson::Document rapidJsonDocument;
+				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialBlueprintAsset", "1");
 
-			// Gather all material properties
-			RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
-			RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
-			RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
-			const RendererRuntime::ShaderProperties::SortedPropertyVector& visualImportanceOfShaderPropertiesVector = visualImportanceOfShaderProperties.getSortedPropertyVector();
-			const RendererRuntime::ShaderProperties::SortedPropertyVector& maximumIntegerValueOfShaderPropertiesVector = maximumIntegerValueOfShaderProperties.getSortedPropertyVector();
-			if (rapidJsonValueProperties.IsObject())
-			{
-				JsonMaterialBlueprintHelper::readProperties(input, rapidJsonValueProperties, sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties);
+				// Mandatory and optional main sections of the material blueprint
+				static const rapidjson::Value EMPTY_VALUE;
+				const rapidjson::Value& rapidJsonValueMaterialBlueprintAsset = rapidJsonDocument["MaterialBlueprintAsset"];
+				const rapidjson::Value& rapidJsonValueProperties			 = rapidJsonValueMaterialBlueprintAsset.HasMember("Properties")								   ? rapidJsonValueMaterialBlueprintAsset["Properties"]	: EMPTY_VALUE;
+				const rapidjson::Value& rapidJsonValueResources				 = rapidJsonValueMaterialBlueprintAsset.HasMember("Resources")								   ? rapidJsonValueMaterialBlueprintAsset["Resources"]	: EMPTY_VALUE;
+				const rapidjson::Value& rapidJsonValueUniformBuffers		 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("UniformBuffers")) ? rapidJsonValueResources["UniformBuffers"]			: EMPTY_VALUE;
+				const rapidjson::Value& rapidJsonValueTextureBuffers		 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("TextureBuffers")) ? rapidJsonValueResources["TextureBuffers"]			: EMPTY_VALUE;
+				const rapidjson::Value& rapidJsonValueSamplerStates			 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("SamplerStates"))  ? rapidJsonValueResources["SamplerStates"]			: EMPTY_VALUE;
+				const rapidjson::Value& rapidJsonValueTextures				 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("Textures"))	   ? rapidJsonValueResources["Textures"]				: EMPTY_VALUE;
 
-				// Child protection: Throw an exception if there are too many shader combination properties to protect the material blueprint designer of over-engineering material blueprints
-				if (!allowCrazyNumberOfShaderCombinations)
+				// Gather all material properties
+				RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
+				RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
+				RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
+				const RendererRuntime::ShaderProperties::SortedPropertyVector& visualImportanceOfShaderPropertiesVector = visualImportanceOfShaderProperties.getSortedPropertyVector();
+				const RendererRuntime::ShaderProperties::SortedPropertyVector& maximumIntegerValueOfShaderPropertiesVector = maximumIntegerValueOfShaderProperties.getSortedPropertyVector();
+				if (rapidJsonValueProperties.IsObject())
 				{
-					uint32_t numberOfShaderCombinationProperties = 0;
-					for (const RendererRuntime::MaterialProperty& materialProperty : sortedMaterialPropertyVector)
+					JsonMaterialBlueprintHelper::readProperties(input, rapidJsonValueProperties, sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties);
+
+					// Child protection: Throw an exception if there are too many shader combination properties to protect the material blueprint designer of over-engineering material blueprints
+					if (!allowCrazyNumberOfShaderCombinations)
 					{
-						if (materialProperty.getUsage() == RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION)
+						uint32_t numberOfShaderCombinationProperties = 0;
+						for (const RendererRuntime::MaterialProperty& materialProperty : sortedMaterialPropertyVector)
 						{
-							++numberOfShaderCombinationProperties;
+							if (materialProperty.getUsage() == RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION)
+							{
+								++numberOfShaderCombinationProperties;
+							}
+						}
+						static const uint32_t MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS = 4;	// This is no technical limit. See "RendererRuntime::MaterialBlueprintResource" class documentation regarding shader combination explosion for background information.
+						if (numberOfShaderCombinationProperties > MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS)
+						{
+							throw std::runtime_error("Material blueprint asset \"" + inputFilename + "\" is using " + std::to_string(numberOfShaderCombinationProperties) + " shader combination material properties. In order to prevent an shader combination explosion, only " + std::to_string(MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS) + " shader combination material properties are allowed. If you know what you're doing, the child protection can be disabled by using \"AllowCrazyNumberOfShaderCombinations\"=\"TRUE\" inside the material blueprint asset compiler configuration.");
 						}
 					}
-					static const uint32_t MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS = 4;	// This is no technical limit. See "RendererRuntime::MaterialBlueprintResource" class documentation regarding shader combination explosion for background information.
-					if (numberOfShaderCombinationProperties > MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS)
+				}
+
+				{ // Material blueprint header
+					RendererRuntime::v1MaterialBlueprint::Header materialBlueprintHeader;
+					materialBlueprintHeader.formatType									= RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE;
+					materialBlueprintHeader.formatVersion								= RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION;
+					materialBlueprintHeader.numberOfProperties							= rapidJsonValueProperties.MemberCount();
+					materialBlueprintHeader.numberOfShaderCombinationProperties			= static_cast<uint32_t>(visualImportanceOfShaderPropertiesVector.size());
+					materialBlueprintHeader.numberOfIntegerShaderCombinationProperties	= static_cast<uint32_t>(maximumIntegerValueOfShaderPropertiesVector.size());	// Each integer shader combination property must have a defined maximum value
+					materialBlueprintHeader.numberOfUniformBuffers						= rapidJsonValueUniformBuffers.IsObject() ? rapidJsonValueUniformBuffers.MemberCount() : 0;
+					materialBlueprintHeader.numberOfTextureBuffers						= rapidJsonValueTextureBuffers.IsObject() ? rapidJsonValueTextureBuffers.MemberCount() : 0;
+					materialBlueprintHeader.numberOfSamplerStates						= rapidJsonValueSamplerStates.IsObject() ? rapidJsonValueSamplerStates.MemberCount() : 0;
+					materialBlueprintHeader.numberOfTextures							= rapidJsonValueTextures.IsObject() ? rapidJsonValueTextures.MemberCount() : 0;
+
+					// Write down the material blueprint header
+					outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintHeader), sizeof(RendererRuntime::v1MaterialBlueprint::Header));
+				}
+
+				// Write down all material properties
+				outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size()));
+
+				// Write down visual importance of shader properties
+				outputFileStream.write(reinterpret_cast<const char*>(visualImportanceOfShaderPropertiesVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * visualImportanceOfShaderPropertiesVector.size()));
+
+				// Write down maximum integer value of shader properties
+				outputFileStream.write(reinterpret_cast<const char*>(maximumIntegerValueOfShaderPropertiesVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * maximumIntegerValueOfShaderPropertiesVector.size()));
+
+				// Root signature
+				RendererRuntime::ShaderProperties shaderProperties;
+				JsonMaterialBlueprintHelper::readRootSignature(rapidJsonValueMaterialBlueprintAsset["RootSignature"], outputFileStream, shaderProperties);
+
+				// Pipeline state object (PSO)
+				JsonMaterialBlueprintHelper::readPipelineStateObject(input, rapidJsonValueMaterialBlueprintAsset["PipelineState"], outputFileStream, sortedMaterialPropertyVector);
+
+				{ // Resources
+					// Uniform buffers
+					if (rapidJsonValueUniformBuffers.IsObject())
 					{
-						throw std::runtime_error("Material blueprint asset \"" + inputFilename + "\" is using " + std::to_string(numberOfShaderCombinationProperties) + " shader combination material properties. In order to prevent an shader combination explosion, only " + std::to_string(MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS) + " shader combination material properties are allowed. If you know what you're doing, the child protection can be disabled by using \"AllowCrazyNumberOfShaderCombinations\"=\"TRUE\" inside the material blueprint asset compiler configuration.");
+						JsonMaterialBlueprintHelper::readUniformBuffers(input, rapidJsonValueUniformBuffers, outputFileStream, shaderProperties);
 					}
-				}
-			}
 
-			{ // Material blueprint header
-				RendererRuntime::v1MaterialBlueprint::Header materialBlueprintHeader;
-				materialBlueprintHeader.formatType									= RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE;
-				materialBlueprintHeader.formatVersion								= RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION;
-				materialBlueprintHeader.numberOfProperties							= rapidJsonValueProperties.MemberCount();
-				materialBlueprintHeader.numberOfShaderCombinationProperties			= static_cast<uint32_t>(visualImportanceOfShaderPropertiesVector.size());
-				materialBlueprintHeader.numberOfIntegerShaderCombinationProperties	= static_cast<uint32_t>(maximumIntegerValueOfShaderPropertiesVector.size());	// Each integer shader combination property must have a defined maximum value
-				materialBlueprintHeader.numberOfUniformBuffers						= rapidJsonValueUniformBuffers.IsObject() ? rapidJsonValueUniformBuffers.MemberCount() : 0;
-				materialBlueprintHeader.numberOfTextureBuffers						= rapidJsonValueTextureBuffers.IsObject() ? rapidJsonValueTextureBuffers.MemberCount() : 0;
-				materialBlueprintHeader.numberOfSamplerStates						= rapidJsonValueSamplerStates.IsObject() ? rapidJsonValueSamplerStates.MemberCount() : 0;
-				materialBlueprintHeader.numberOfTextures							= rapidJsonValueTextures.IsObject() ? rapidJsonValueTextures.MemberCount() : 0;
+					// Texture buffers
+					if (rapidJsonValueTextureBuffers.IsObject())
+					{
+						JsonMaterialBlueprintHelper::readTextureBuffers(rapidJsonValueTextureBuffers, outputFileStream, shaderProperties);
+					}
 
-				// Write down the material blueprint header
-				outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintHeader), sizeof(RendererRuntime::v1MaterialBlueprint::Header));
-			}
+					// Sampler states
+					if (rapidJsonValueSamplerStates.IsObject())
+					{
+						JsonMaterialBlueprintHelper::readSamplerStates(rapidJsonValueSamplerStates, outputFileStream, shaderProperties, sortedMaterialPropertyVector);
+					}
 
-			// Write down all material properties
-			outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size()));
-
-			// Write down visual importance of shader properties
-			outputFileStream.write(reinterpret_cast<const char*>(visualImportanceOfShaderPropertiesVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * visualImportanceOfShaderPropertiesVector.size()));
-
-			// Write down maximum integer value of shader properties
-			outputFileStream.write(reinterpret_cast<const char*>(maximumIntegerValueOfShaderPropertiesVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * maximumIntegerValueOfShaderPropertiesVector.size()));
-
-			// Root signature
-			RendererRuntime::ShaderProperties shaderProperties;
-			JsonMaterialBlueprintHelper::readRootSignature(rapidJsonValueMaterialBlueprintAsset["RootSignature"], outputFileStream, shaderProperties);
-
-			// Pipeline state object (PSO)
-			JsonMaterialBlueprintHelper::readPipelineStateObject(input, rapidJsonValueMaterialBlueprintAsset["PipelineState"], outputFileStream, sortedMaterialPropertyVector);
-
-			{ // Resources
-				// Uniform buffers
-				if (rapidJsonValueUniformBuffers.IsObject())
-				{
-					JsonMaterialBlueprintHelper::readUniformBuffers(input, rapidJsonValueUniformBuffers, outputFileStream, shaderProperties);
-				}
-
-				// Texture buffers
-				if (rapidJsonValueTextureBuffers.IsObject())
-				{
-					JsonMaterialBlueprintHelper::readTextureBuffers(rapidJsonValueTextureBuffers, outputFileStream, shaderProperties);
-				}
-
-				// Sampler states
-				if (rapidJsonValueSamplerStates.IsObject())
-				{
-					JsonMaterialBlueprintHelper::readSamplerStates(rapidJsonValueSamplerStates, outputFileStream, shaderProperties, sortedMaterialPropertyVector);
-				}
-
-				// Textures
-				if (rapidJsonValueTextures.IsObject())
-				{
-					JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, rapidJsonValueTextures, outputFileStream, shaderProperties);
+					// Textures
+					if (rapidJsonValueTextures.IsObject())
+					{
+						JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, rapidJsonValueTextures, outputFileStream, shaderProperties);
+					}
 				}
 			}
 		}
