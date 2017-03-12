@@ -167,17 +167,17 @@
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
-						"ViewSpaceToTextureSpaceMatrix":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4_4",
-							"Value": "@VIEW_SPACE_TO_TEXTURE_SPACE_MATRIX"
-						},
 						"ClipSpaceToViewSpaceMatrix":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
 							"Value": "@CLIP_SPACE_TO_VIEW_SPACE_MATRIX"
+						},
+						"ViewSpaceToClipSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@VIEW_SPACE_TO_CLIP_SPACE_MATRIX"
 						},
 						"InverseViewportSize":
 						{

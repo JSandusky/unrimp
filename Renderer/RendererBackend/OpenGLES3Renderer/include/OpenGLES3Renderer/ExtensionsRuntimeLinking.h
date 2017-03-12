@@ -87,28 +87,17 @@ namespace OpenGLES3Renderer
 		inline virtual bool isGL_EXT_texture_compression_s3tc() const override;
 		inline virtual bool isGL_EXT_texture_compression_dxt1() const override;
 		inline virtual bool isGL_EXT_texture_compression_latc() const override;
-		inline virtual bool isGL_EXT_texture_filter_anisotropic() const override;
-		inline virtual bool isGL_EXT_texture_array() const override;
 		inline virtual bool isGL_EXT_texture_buffer() const override;
 		inline virtual bool isGL_EXT_draw_elements_base_vertex() const override;
 		// AMD
 		inline virtual bool isGL_AMD_compressed_3DC_texture() const override;
 		// NV
-		inline virtual bool isGL_NV_get_tex_image() const override;
 		inline virtual bool isGL_NV_fbo_color_attachments() const override;
-		inline virtual bool isGL_NV_draw_buffers() const override;
-		inline virtual bool isGL_NV_read_buffer() const override;
 		// OES
-		inline virtual bool isGL_OES_mapbuffer() const override;
 		inline virtual bool isGL_OES_element_index_uint() const override;
 		inline virtual bool isGL_OES_packed_depth_stencil() const override;
 		inline virtual bool isGL_OES_depth24() const override;
 		inline virtual bool isGL_OES_depth32() const override;
-		inline virtual bool isGL_OES_vertex_half_float() const override;
-		inline virtual bool isGL_OES_vertex_array_object() const override;
-		// ANGLE
-		inline virtual bool isGL_ANGLE_framebuffer_blit() const override;
-		inline virtual bool isGL_ANGLE_framebuffer_multisample() const override;
 		// KHR
 		inline virtual bool isGL_KHR_debug() const override;
 
@@ -121,28 +110,17 @@ namespace OpenGLES3Renderer
 		bool mGL_EXT_texture_compression_s3tc;
 		bool mGL_EXT_texture_compression_dxt1;
 		bool mGL_EXT_texture_compression_latc;
-		bool mGL_EXT_texture_filter_anisotropic;
-		bool mGL_EXT_texture_array;
 		bool mGL_EXT_texture_buffer;
 		bool mGL_EXT_draw_elements_base_vertex;
 		// AMD
 		bool mGL_AMD_compressed_3DC_texture;
 		// NV
-		bool mGL_NV_get_tex_image;
 		bool mGL_NV_fbo_color_attachments;
-		bool mGL_NV_draw_buffers;
-		bool mGL_NV_read_buffer;
 		// OES
-		bool mGL_OES_mapbuffer;
 		bool mGL_OES_element_index_uint;
 		bool mGL_OES_packed_depth_stencil;
 		bool mGL_OES_depth24;
 		bool mGL_OES_depth32;
-		bool mGL_OES_vertex_half_float;
-		bool mGL_OES_vertex_array_object;
-		// ANGLE
-		bool mGL_ANGLE_framebuffer_blit;
-		bool mGL_ANGLE_framebuffer_multisample;
 		// KHR
 		bool mGL_KHR_debug;
 
@@ -181,25 +159,6 @@ namespace OpenGLES3Renderer
 	#define GL_COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT			0x8C72
 	#define GL_COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT	0x8C73
 
-	// GL_EXT_texture_filter_anisotropic
-	#define GL_TEXTURE_MAX_ANISOTROPY_EXT		0x84FE
-	#define GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT	0x84FF
-
-	// GL_EXT_texture_array
-	#define GL_TEXTURE_1D_ARRAY_EXT						0x8C18
-	#define GL_TEXTURE_2D_ARRAY_EXT						0x8C1A
-	#define GL_PROXY_TEXTURE_2D_ARRAY_EXT				0x8C1B
-	#define GL_PROXY_TEXTURE_1D_ARRAY_EXT				0x8C19
-	#define GL_TEXTURE_BINDING_1D_ARRAY_EXT				0x8C1C
-	#define GL_TEXTURE_BINDING_2D_ARRAY_EXT				0x8C1D
-	#define GL_MAX_ARRAY_TEXTURE_LAYERS_EXT				0x88FF
-	#define GL_COMPARE_REF_DEPTH_TO_TEXTURE_EXT			0x884E
-	#define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER_EXT	0x8CD4
-	#define GL_SAMPLER_1D_ARRAY_EXT						0x8DC0
-	#define GL_SAMPLER_2D_ARRAY_EXT						0x8DC1
-	#define GL_SAMPLER_1D_ARRAY_SHADOW_EXT				0x8DC3
-	#define GL_SAMPLER_2D_ARRAY_SHADOW_EXT				0x8DC4
-
 	// GL_EXT_texture_buffer
 	FNDEF_EX(void,	glTexBufferEXT,	(GLenum target, GLenum internalformat, GLuint buffer));
 	#define glTexBufferEXT	FNPTR(glTexBufferEXT)
@@ -222,31 +181,6 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ NV definitions                                        ]
 	//[-------------------------------------------------------]
-	// GL_NV_get_tex_image
-	#define GL_TEXTURE_WIDTH_NV					0x1000
-	#define GL_TEXTURE_HEIGHT_NV				0x1001
-	#define GL_TEXTURE_INTERNAL_FORMAT_NV		0x1003
-	#define GL_TEXTURE_COMPONENTS_NV			GL_TEXTURE_INTERNAL_FORMAT_NV
-	#define GL_TEXTURE_BORDER_NV				0x1005
-	#define GL_TEXTURE_RED_SIZE_NV				0x805C
-	#define GL_TEXTURE_GREEN_SIZE_NV			0x805D
-	#define GL_TEXTURE_BLUE_SIZE_NV				0x805E
-	#define GL_TEXTURE_ALPHA_SIZE_NV			0x805F
-	#define GL_TEXTURE_LUMINANCE_SIZE_NV		0x8060
-	#define GL_TEXTURE_INTENSITY_SIZE_NV		0x8061
-	#define GL_TEXTURE_DEPTH_NV					0x8071
-	#define GL_TEXTURE_COMPRESSED_IMAGE_SIZE_NV	0x86A0
-	#define GL_TEXTURE_COMPRESSED_NV			0x86A1
-	#define GL_TEXTURE_DEPTH_SIZE_NV			0x884A
-	FNDEF_EX(void,	glGetTexImageNV,			(GLenum target, GLint level, GLenum format, GLenum type, GLvoid *img));
-	FNDEF_EX(void,	glGetCompressedTexImageNV,	(GLenum target, GLint level, GLvoid *img));
-	FNDEF_EX(void,	glGetTexLevelParameterfvNV,	(GLenum target, GLint level, GLenum pname, GLfloat *params));
-	FNDEF_EX(void,	glGetTexLevelParameterivNV,	(GLenum target, GLint level, GLenum pname, GLint *params));
-	#define glGetTexImageNV				FNPTR(glGetTexImageNV)
-	#define glGetCompressedTexImageNV	FNPTR(glGetCompressedTexImageNV)
-	#define glGetTexLevelParameterfvNV	FNPTR(glGetTexLevelParameterfvNV)
-	#define glGetTexLevelParameterivNV	FNPTR(glGetTexLevelParameterivNV)
-
 	// GL_NV_fbo_color_attachments
 	#define GL_COLOR_ATTACHMENT0_NV		0x8CE0	// Same value as GL_COLOR_ATTACHMENT0
 	#define GL_COLOR_ATTACHMENT1_NV		0x8CE1
@@ -265,15 +199,6 @@ namespace OpenGLES3Renderer
 	#define GL_COLOR_ATTACHMENT14_NV	0x8CEE
 	#define GL_COLOR_ATTACHMENT15_NV	0x8CEF
 
-	// GL_NV_draw_buffers
-	FNDEF_EX(void,	glDrawBuffersNV,	(GLsizei n, const GLenum *bufs));
-	#define glDrawBuffersNV	FNPTR(glDrawBuffersNV)
-
-	// GL_NV_read_buffer
-	#define GL_READ_BUFFER_NV	0x0C02
-	FNDEF_EX(void,	glReadBufferNV,	(GLenum src));
-	#define glReadBufferNV	FNPTR(glReadBufferNV)
-
 
 	//[-------------------------------------------------------]
 	//[ OES definitions                                       ]
@@ -291,25 +216,6 @@ namespace OpenGLES3Renderer
 
 	// GL_OES_depth32
 	#define GL_DEPTH_COMPONENT32_OES	0x81A7
-
-
-	//[-------------------------------------------------------]
-	//[ ANGLE definitions                                     ]
-	//[-------------------------------------------------------]
-	// GL_ANGLE_framebuffer_blit
-	#define GL_READ_FRAMEBUFFER_EXT			0x8CA8
-	#define GL_DRAW_FRAMEBUFFER_EXT			0x8CA9
-	#define GL_DRAW_FRAMEBUFFER_BINDING_EXT	0x8CA6
-	#define GL_READ_FRAMEBUFFER_BINDING_EXT	0x8CAA
-	FNDEF_EX(void,	glBlitFramebufferEXT,	(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, GLbitfield mask, GLenum filter));
-	#define glBlitFramebufferEXT	FNPTR(glBlitFramebufferEXT)
-
-	// GL_ANGLE_framebuffer_multisample
-	#define GL_RENDERBUFFER_SAMPLES_ANGLE				0x8CAB
-	#define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE	0x8D56
-	#define GL_MAX_SAMPLES_ANGLE						0x8D57
-	FNDEF_EX(void,	glRenderbufferStorageMultisampleANGLE,	(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height));
-	#define glRenderbufferStorageMultisampleANGLE	FNPTR(glRenderbufferStorageMultisampleANGLE)
 
 
 	//[-------------------------------------------------------]

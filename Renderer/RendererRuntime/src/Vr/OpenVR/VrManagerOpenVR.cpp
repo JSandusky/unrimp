@@ -183,8 +183,8 @@ namespace
 				const float x2 = v3.v[0] - v1.v[0];
 				const float y1 = v2.v[1] - v1.v[1];
 				const float y2 = v3.v[1] - v1.v[1];
-				const float z1 = v2.v[2] - v1.v[2];
-				const float z2 = v3.v[2] - v1.v[2];
+				const float z1 = -v2.v[2] - -v1.v[2];
+				const float z2 = -v3.v[2] - -v1.v[2];
 				const float s1 = w2[0] - w1[0];
 				const float s2 = w3[0] - w1[0];
 				const float t1 = w2[1] - w1[1];
@@ -202,7 +202,7 @@ namespace
 			for (uint32_t i = 0; i < numberOfVertices; ++i)
 			{
 				const vr::HmdVector3_t& vrHmdVector3 = vrRenderModelVertex[i].vNormal;
-				const glm::vec3 n(vrHmdVector3.v[0], vrHmdVector3.v[1], vrHmdVector3.v[2]);
+				const glm::vec3 n(vrHmdVector3.v[0], vrHmdVector3.v[1], -vrHmdVector3.v[2]);
 				const glm::vec3& t = tan1[i];
 
 				// Gram-Schmidt orthogonalize and calculate handedness
@@ -226,23 +226,16 @@ namespace
 			return result;
 		}
 
-		glm::mat4 convertOpenVrMatrixToGlmMat4(const vr::HmdMatrix44_t& vrHmdMatrix34)
+		glm::mat4 convertOpenVrMatrixToGlmMat34(const vr::HmdMatrix34_t& vrHmdMatrix34)
 		{
+			// Transform the OpenGL style transform matrix into a Direct3D style transform matrix as described at http://cv4mar.blogspot.de/2009/03/transformation-matrices-between-opengl.html
+			// -> Direct3D: Left-handed coordinate system
+			// -> OpenGL: Right-handed coordinate system
 			return glm::mat4(
-				vrHmdMatrix34.m[0][0], vrHmdMatrix34.m[1][0], vrHmdMatrix34.m[2][0], vrHmdMatrix34.m[3][0],
-				vrHmdMatrix34.m[0][1], vrHmdMatrix34.m[1][1], vrHmdMatrix34.m[2][1], vrHmdMatrix34.m[3][1],
-				vrHmdMatrix34.m[0][2], vrHmdMatrix34.m[1][2], vrHmdMatrix34.m[2][2], vrHmdMatrix34.m[3][2],
-				vrHmdMatrix34.m[0][3], vrHmdMatrix34.m[1][3], vrHmdMatrix34.m[2][3], vrHmdMatrix34.m[3][3]
-				);
-		}
-
-		glm::mat4 convertOpenVrMatrixToGlmMat4(const vr::HmdMatrix34_t& vrHmdMatrix34)
-		{
-			return glm::mat4(
-				vrHmdMatrix34.m[0][0], vrHmdMatrix34.m[1][0], vrHmdMatrix34.m[2][0], 0.0f,
-				vrHmdMatrix34.m[0][1], vrHmdMatrix34.m[1][1], vrHmdMatrix34.m[2][1], 0.0f,
-				vrHmdMatrix34.m[0][2], vrHmdMatrix34.m[1][2], vrHmdMatrix34.m[2][2], 0.0f,
-				vrHmdMatrix34.m[0][3], vrHmdMatrix34.m[1][3], vrHmdMatrix34.m[2][3], 1.0f
+				 vrHmdMatrix34.m[0][0],  vrHmdMatrix34.m[1][0], -vrHmdMatrix34.m[2][0], 0.0f,
+				 vrHmdMatrix34.m[0][1],  vrHmdMatrix34.m[1][1], -vrHmdMatrix34.m[2][1], 0.0f,
+				-vrHmdMatrix34.m[0][2], -vrHmdMatrix34.m[1][2],  vrHmdMatrix34.m[2][2], 0.0f,
+				 vrHmdMatrix34.m[0][3],  vrHmdMatrix34.m[1][3], -vrHmdMatrix34.m[2][3], 1.0f
 				);
 		}
 
@@ -380,7 +373,7 @@ namespace
 								float* position = reinterpret_cast<float*>(currentTemp);
 								position[0] = currentVrRenderModelVertex->vPosition.v[0];
 								position[1] = currentVrRenderModelVertex->vPosition.v[1];
-								position[2] = currentVrRenderModelVertex->vPosition.v[2];
+								position[2] = -currentVrRenderModelVertex->vPosition.v[2];
 								currentTemp += sizeof(float) * 3;
 							}
 
@@ -599,10 +592,9 @@ namespace RendererRuntime
 	{
 		if (nullptr != mVrSystem)
 		{
-			{ // Release renderer resources
-				mFramebuffer = nullptr;
-				mColorTexture2D = nullptr;
-			}
+			// Release renderer resources
+			mFramebuffer = nullptr;
+			mColorTexture2D = nullptr;
 
 			// De-initialize the OpenVR system
 			vr::VR_Shutdown();
@@ -664,7 +656,7 @@ namespace RendererRuntime
 			if (mVrTrackedDevicePose[deviceIndex].bPoseIsValid)
 			{
 				++mNumberOfValidDevicePoses;
-				const glm::mat4& devicePoseMatrix = mDevicePoseMatrix[deviceIndex] = ::detail::convertOpenVrMatrixToGlmMat4(mVrTrackedDevicePose[deviceIndex].mDeviceToAbsoluteTracking);
+				const glm::mat4& devicePoseMatrix = mDevicePoseMatrix[deviceIndex] = ::detail::convertOpenVrMatrixToGlmMat34(mVrTrackedDevicePose[deviceIndex].mDeviceToAbsoluteTracking);
 				ISceneNode* sceneNode = mSceneNodes[deviceIndex];
 				if (nullptr != sceneNode)
 				{
@@ -674,10 +666,7 @@ namespace RendererRuntime
 					glm::vec3 skew;
 					glm::vec4 perspective;
 					glm::decompose(devicePoseMatrix, scale, rotation, translation, skew, perspective);
-					if (vr::k_unTrackedDeviceIndex_Hmd != deviceIndex)
-					{
-						rotation = glm::conjugate(rotation);
-					}
+					rotation = glm::conjugate(rotation);
 
 					// Everything must be relative to the camera world space position
 					translation -= cameraPosition;
@@ -694,7 +683,7 @@ namespace RendererRuntime
 		// Backup HMD pose
 		if (mVrTrackedDevicePose[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid)
 		{
-			mHmdPoseMatrix = glm::inverse(mDevicePoseMatrix[vr::k_unTrackedDeviceIndex_Hmd]);
+			mHmdPoseMatrix = mDevicePoseMatrix[vr::k_unTrackedDeviceIndex_Hmd];
 		}
 
 		// Update camera scene node transform and hide the HMD scene node in case it's currently used as the camera scene node (we don't want to see the HMD mesh from the inside)
@@ -717,14 +706,25 @@ namespace RendererRuntime
 
 	glm::mat4 VrManagerOpenVR::getHmdViewSpaceToClipSpaceMatrix(VrEye vrEye, float nearZ, float farZ) const
 	{
+		// TODO(co) OpenVR (commit e1507a27547d22a680153862865d40b90fad8c75 - Jun 10, 2016): "vr::IVRSystem::GetProjectionMatrix()" apparently ignores the last "vr::API_OpenGL"/"vr::API_DirectX"-parameter
+		// -> This issue is also described at https://github.com/ValveSoftware/openvr/issues/70 and https://github.com/ValveSoftware/openvr/issues/239 and https://github.com/ValveSoftware/openvr/issues/203
+		// -> Transform the OpenGL style projection matrix into a Direct3D style projection matrix as described at http://cv4mar.blogspot.de/2009/03/transformation-matrices-between-opengl.html
+		// -> Direct3D: Left-handed coordinate system with clip space depth value range 0..1
+		// -> OpenGL: Right-handed coordinate system with clip space depth value range -1..1
 		assert(nullptr != mVrSystem);
-		return ::detail::convertOpenVrMatrixToGlmMat4(mVrSystem->GetProjectionMatrix(static_cast<vr::Hmd_Eye>(vrEye), nearZ, farZ, vr::API_DirectX));
+		const vr::HmdMatrix44_t vrHmdMatrix34 = mVrSystem->GetProjectionMatrix(static_cast<vr::Hmd_Eye>(vrEye), nearZ, farZ, vr::API_DirectX);
+		return glm::mat4(
+			 vrHmdMatrix34.m[0][0],  vrHmdMatrix34.m[1][0],  vrHmdMatrix34.m[2][0],  vrHmdMatrix34.m[3][0],
+			 vrHmdMatrix34.m[0][1],  vrHmdMatrix34.m[1][1],  vrHmdMatrix34.m[2][1],  vrHmdMatrix34.m[3][1],
+			-vrHmdMatrix34.m[0][2], -vrHmdMatrix34.m[1][2], -vrHmdMatrix34.m[2][2], -vrHmdMatrix34.m[3][2],
+			 vrHmdMatrix34.m[0][3],  vrHmdMatrix34.m[1][3],  vrHmdMatrix34.m[2][3],  vrHmdMatrix34.m[3][3]
+			);
 	}
 
 	glm::mat4 VrManagerOpenVR::getHmdEyeSpaceToHeadSpaceMatrix(VrEye vrEye) const
 	{
 		assert(nullptr != mVrSystem);
-		return glm::inverse(::detail::convertOpenVrMatrixToGlmMat4(mVrSystem->GetEyeToHeadTransform(static_cast<vr::Hmd_Eye>(vrEye))));
+		return ::detail::convertOpenVrMatrixToGlmMat34(mVrSystem->GetEyeToHeadTransform(static_cast<vr::Hmd_Eye>(vrEye)));
 	}
 
 	void VrManagerOpenVR::executeCompositorWorkspaceInstance(CompositorWorkspaceInstance& compositorWorkspaceInstance, Renderer::IRenderTarget&, CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem)
@@ -743,6 +743,9 @@ namespace RendererRuntime
 			vr::VRCompositor()->Submit(static_cast<vr::Hmd_Eye>(eyeIndex), &vrTexture);
 		}
 		materialBlueprintResourceListener.setCurrentRenderedVrEye(IMaterialBlueprintResourceListener::VrEye::UNKNOWN);
+
+		// Tell the compositor to begin work immediately instead of waiting for the next "vr::IVRCompositor::WaitGetPoses()" call
+		vr::VRCompositor()->PostPresentHandoff();
 	}
 
 

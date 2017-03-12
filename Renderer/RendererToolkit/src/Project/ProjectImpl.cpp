@@ -143,12 +143,12 @@ namespace RendererToolkit
 	void ProjectImpl::compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)
 	{
 		// Open the input stream
-		const std::string absoluteAssetFilename = mProjectDirectory + asset.assetFilename;
-		std::ifstream inputFileStream(absoluteAssetFilename, std::ios::binary);
+		const std::string assetFilename = mProjectDirectory + asset.assetFilename;
+		std::ifstream inputFileStream(assetFilename, std::ios::binary);
 
 		// Parse JSON
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, absoluteAssetFilename, "Asset", "1");
+		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, assetFilename, "Asset", "1");
 
 		// Mandatory main sections of the asset
 		const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
@@ -166,7 +166,7 @@ namespace RendererToolkit
 		// TODO(co) Add multithreading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
 
 		// Get the asset input directory and asset output directory
-		const std::string assetInputDirectory = std_filesystem::path(absoluteAssetFilename).parent_path().generic_string() + '/';
+		const std::string assetInputDirectory = std_filesystem::path(assetFilename).parent_path().generic_string() + '/';
 		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
 		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
 		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + assetType + '/' + assetCategory + '/';
@@ -175,7 +175,7 @@ namespace RendererToolkit
 		std_filesystem::create_directories(assetOutputDirectory);
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mProjectName, *mCacheManager.get(), absoluteAssetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
+		IAssetCompiler::Input input(mProjectName, *mCacheManager.get(), assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
 
 		// Asset compiler configuration
 		assert(nullptr != mRapidJsonDocument);

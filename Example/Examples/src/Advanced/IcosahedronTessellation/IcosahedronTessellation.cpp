@@ -132,26 +132,26 @@ void IcosahedronTessellation::onInitialization()
 			// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
 			static const uint16_t INDICES[] =
 			{				// Triangle ID
-				2,  1,  0,	// 0
-				3,  2,  0,	// 1
-				4,  3,  0,	// 2
-				5,  4,  0,	// 3
-				1,  5,  0,	// 4
-				11,  6,  7,	// 5
-				11,  7,  8,	// 6
-				11,  8,  9,	// 7
-				11,  9, 10,	// 8
-				11, 10,  6,	// 9
-				1,  2,  6,	// 10
-				2,  3,  7,	// 11
-				3,  4,  8,	// 12
-				4,  5,  9,	// 13
-				5,  1, 10,	// 14
-				2,  7,  6,	// 15
-				3,  8,  7,	// 16
-				4,  9,  8,	// 17
-				5, 10,  9,	// 18
-				1,  6, 10	// 19
+				0,  1,  2,	// 0
+				0,  2,  3,	// 1
+				0,  3,  4,	// 2
+				0,  4,  5,	// 3
+				0,  5,  1,	// 4
+				7,  6,  11,	// 5
+				8,  7,  11,	// 6
+				9,  8,  11,	// 7
+				10,  9, 11,	// 8
+				6, 10,  11,	// 9
+				6,  2,  1,	// 10
+				7,  3,  2,	// 11
+				8,  4,  3,	// 12
+				9,  5,  4,	// 13
+				10,  1, 5,	// 14
+				6,  7,  2,	// 15
+				7,  8,  3,	// 16
+				8,  9,  4,	// 17
+				9, 10,  5,	// 18
+				10,  6, 1	// 19
 			};
 			Renderer::IIndexBuffer *indexBuffer = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
 
@@ -173,21 +173,16 @@ void IcosahedronTessellation::onInitialization()
 
 		// Create uniform buffers and fill the static buffers at once
 		mUniformBufferDynamicTcs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-		{	// "ObjectSpaceToClipSpaceMatrix"
-			// TODO(co) Cleanup, correct aspect ratio
-			glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
-			glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-			glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.001f, 1000.0f);
-			glm::mat4 MVP = Projection * View; 
-//				glm::mat4 MVP = Projection * View * Model;
-			mUniformBufferStaticTes = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(MVP), Renderer::BufferUsage::STATIC_DRAW);
-			{	// "NormalMatrix"
-
-				View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-				Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-				Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.001f, 1000.0f);
-				MVP = Projection * View; 
-				glm::mat3 nMVP(MVP);
+		{ // "ObjectSpaceToClipSpaceMatrix"
+			glm::mat4 worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 3.0f));		// Also known as "view matrix"
+			glm::mat4 viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);	// Also known as "projection matrix"
+			glm::mat4 objectSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * worldSpaceToViewSpaceMatrix;			// Also known as "model view projection matrix"
+			mUniformBufferStaticTes = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(objectSpaceToClipSpaceMatrix), Renderer::BufferUsage::STATIC_DRAW);
+			{ // "NormalMatrix"
+				worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+				viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);
+				objectSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * worldSpaceToViewSpaceMatrix;
+				glm::mat3 nMVP(objectSpaceToClipSpaceMatrix);
 				glm::mat4 tMVP(nMVP);
 				mUniformBufferStaticGs = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(tMVP), Renderer::BufferUsage::STATIC_DRAW);
 			}

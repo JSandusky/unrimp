@@ -50,7 +50,7 @@ namespace OpenGLES3Renderer
 
 			// Backup the currently bound OpenGL ES 3 texture
 			GLint openGLES3TextureBackup = 0;
-			glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY_EXT, &openGLES3TextureBackup);
+			glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY, &openGLES3TextureBackup);
 		#endif
 
 		// Set correct alignment
@@ -58,26 +58,26 @@ namespace OpenGLES3Renderer
 
 		// Create the OpenGL ES 3 texture instance
 		glGenTextures(1, &mOpenGLES3Texture);
-		glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, mOpenGLES3Texture);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, mOpenGLES3Texture);
 
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
-		glTexImage3D(GL_TEXTURE_2D_ARRAY_EXT, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLES3Format(textureFormat), Mapping::getOpenGLES3Type(textureFormat), data);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLES3Format(textureFormat), Mapping::getOpenGLES3Type(textureFormat), data);
 
 		// Build mipmaps automatically on the GPU? (or GPU driver)
 		if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
 		{
-			glGenerateMipmap(GL_TEXTURE_2D_ARRAY_EXT);
-			glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 		}
 		else
 		{
-			glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		}
-		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 texture
-			glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<GLuint>(openGLES3TextureBackup));
+			glBindTexture(GL_TEXTURE_2D_ARRAY, static_cast<GLuint>(openGLES3TextureBackup));
 
 			// Restore previous alignment
 			glPixelStorei(GL_UNPACK_ALIGNMENT, openGLES3AlignmentBackup);

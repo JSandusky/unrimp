@@ -116,8 +116,8 @@ uniform mediump sampler2D RoughnessMap;
 void main()
 {
 	// Build in variables
-	mediump vec3 ViewSpaceLightDirection = normalize(vec3(0.5, 0.5, 1.0));	// View space light direction
-	mediump vec3 ViewSpaceViewVector     = vec3(0.0, 0.0, 1.0);				// In view space, we always look along the positive z-axis
+	mediump vec3 ViewSpaceLightDirection = normalize(vec3(0.5, 0.5, -1.0));	// View space light direction
+	mediump vec3 ViewSpaceViewVector     = vec3(0.0, 0.0, -1.0);			// In view space, we always look along the negative z-axis
 
 	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
 	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html

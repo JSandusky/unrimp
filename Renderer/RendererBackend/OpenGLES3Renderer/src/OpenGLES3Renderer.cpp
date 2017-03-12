@@ -34,8 +34,7 @@
 #include "OpenGLES3Renderer/Buffer/TextureBufferBind.h"
 #include "OpenGLES3Renderer/Buffer/UniformBufferBind.h"
 #include "OpenGLES3Renderer/Buffer/VertexBuffer.h"
-#include "OpenGLES3Renderer/Buffer/VertexArrayVao.h"
-#include "OpenGLES3Renderer/Buffer/VertexArrayNoVao.h"
+#include "OpenGLES3Renderer/Buffer/VertexArray.h"
 #include "OpenGLES3Renderer/Buffer/IndirectBuffer.h"
 #include "OpenGLES3Renderer/Texture/TextureManager.h"
 #include "OpenGLES3Renderer/Texture/Texture1D.h"
@@ -567,7 +566,7 @@ namespace OpenGLES3Renderer
 							else if (resourceType == Renderer::ResourceType::TEXTURE_2D_ARRAY)
 							{
 								// No extension check required, if we in here we already know it must exist
-								glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLES3Texture());
+								glBindTexture(GL_TEXTURE_2D_ARRAY, static_cast<Texture2DArray*>(resource)->getOpenGLES3Texture());
 							}
 							else if (resourceType == Renderer::ResourceType::TEXTURE_3D)
 							{
@@ -705,59 +704,27 @@ namespace OpenGLES3Renderer
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 				OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *vertexArray)
 
-				// Is GL_OES_vertex_array_object there?
-				if (mContext->getExtensions().isGL_OES_vertex_array_object())
+				// Release the vertex array reference, in case we have one
+				if (nullptr != mVertexArray)
 				{
-					// Release the vertex array reference, in case we have one
-					if (nullptr != mVertexArray)
-					{
-						// Release reference
-						mVertexArray->releaseReference();
-					}
-
-					// Set new vertex array and add a reference to it
-					mVertexArray = static_cast<VertexArray*>(vertexArray);
-					mVertexArray->addReference();
-
-					// Bind OpenGL ES 3 vertex array
-					glBindVertexArray(static_cast<VertexArrayVao*>(mVertexArray)->getOpenGLES3VertexArray());
+					// Release reference
+					mVertexArray->releaseReference();
 				}
-				else
-				{
-					// Release the vertex array reference, in case we have one
-					if (nullptr != mVertexArray)
-					{
-						// Disable OpenGL ES 3 vertex attribute arrays
-						static_cast<VertexArrayNoVao*>(mVertexArray)->disableOpenGLES3VertexAttribArrays();
 
-						// Release reference
-						mVertexArray->releaseReference();
-					}
+				// Set new vertex array and add a reference to it
+				mVertexArray = static_cast<VertexArray*>(vertexArray);
+				mVertexArray->addReference();
 
-					// Set new vertex array and add a reference to it
-					mVertexArray = static_cast<VertexArray*>(vertexArray);
-					mVertexArray->addReference();
-
-					// Enable OpenGL ES 3 vertex attribute arrays
-					static_cast<VertexArrayNoVao*>(mVertexArray)->enableOpenGLES3VertexAttribArrays();
-				}
+				// Bind OpenGL ES 3 vertex array
+				glBindVertexArray(static_cast<VertexArray*>(mVertexArray)->getOpenGLES3VertexArray());
 			}
 			else
 			{
 				// Release the vertex array reference, in case we have one
 				if (nullptr != mVertexArray)
 				{
-					// Disable OpenGL ES 3 vertex attribute arrays - Is the "GL_OES_vertex_array_object" extension there?
-					if (mContext->getExtensions().isGL_OES_vertex_array_object())
-					{
-						// Unbind OpenGL ES 3 vertex array
-						glBindVertexArray(0);
-					}
-					else
-					{
-						// Traditional version
-						static_cast<VertexArrayNoVao*>(mVertexArray)->disableOpenGLES3VertexAttribArrays();
-					}
+					// Unbind OpenGL ES 3 vertex array
+					glBindVertexArray(0);
 
 					// Release reference
 					mVertexArray->releaseReference();
@@ -1396,14 +1363,7 @@ namespace OpenGLES3Renderer
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES3ElementArrayBuffer());
 
 				// Map
-				if (mContext->getExtensions().isGL_OES_mapbuffer())
-				{
-					mappedSubresource.data = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES3MapType(mapType));
-				}
-				else
-				{
-					mappedSubresource.data = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<IndexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES3MapRangeType(mapType));
-				}
+				mappedSubresource.data		 = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<IndexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES3MapRangeType(mapType));
 				mappedSubresource.rowPitch   = 0;
 				mappedSubresource.depthPitch = 0;
 
@@ -1430,14 +1390,7 @@ namespace OpenGLES3Renderer
 				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES3ArrayBuffer());
 
 				// Map
-				if (mContext->getExtensions().isGL_OES_mapbuffer())
-				{
-					mappedSubresource.data = glMapBuffer(GL_ARRAY_BUFFER, Mapping::getOpenGLES3MapType(mapType));
-				}
-				else
-				{
-					mappedSubresource.data = glMapBufferRange(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<VertexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES3MapRangeType(mapType));
-				}
+				mappedSubresource.data		 = glMapBufferRange(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<VertexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES3MapRangeType(mapType));
 				mappedSubresource.rowPitch   = 0;
 				mappedSubresource.depthPitch = 0;
 
@@ -1883,15 +1836,8 @@ namespace OpenGLES3Renderer
 		mCapabilities.maximumTextureDimension = static_cast<uint32_t>(openGLValue);
 
 		// Maximum number of 2D texture array slices (usually 512, in case there's no support for 2D texture arrays it's 0)
-		if (mContext->getExtensions().isGL_EXT_texture_array())
-		{
-			glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS_EXT, &openGLValue);
-			mCapabilities.maximumNumberOf2DTextureArraySlices = static_cast<uint32_t>(openGLValue);
-		}
-		else
-		{
-			mCapabilities.maximumNumberOf2DTextureArraySlices = 0;
-		}
+		glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &openGLValue);
+		mCapabilities.maximumNumberOf2DTextureArraySlices = static_cast<uint32_t>(openGLValue);
 
 		// Maximum uniform buffer (UBO) size in bytes (usually at least 16384 bytes, in case there's no support for uniform buffer it's 0)
 		openGLValue = 0;

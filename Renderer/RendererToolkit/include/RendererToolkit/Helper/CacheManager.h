@@ -108,7 +108,7 @@ namespace RendererToolkit
 		* 
 		*  @param[in] rendererTarget
 		*    The renderer target for which the asset should be compiled
-		*  @param[in] assetFile
+		*  @param[in] assetFilename
 		*    The asset file, which contains asset meta data, of the asset
 		*  @param[in] sourceFile
 		*    The source file of the asset
@@ -118,7 +118,7 @@ namespace RendererToolkit
 		*  @return
 		*    True if the file needs to be compiled (aka source changed, destination doesn't exists or is yet unknown file) otherwise false
 		*/
-		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFile, const std::string& sourceFile, const std::string& destinationFile);
+		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile);
 
 
 	//[-------------------------------------------------------]

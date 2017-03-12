@@ -377,20 +377,6 @@ namespace OpenGLES3Renderer
 		return MAPPING[static_cast<int>(prmitive) - 1];	// Lookout! The "Renderer::PrimitiveTopology"-values start with 1, not 0
 	}
 
-	uint32_t Mapping::getOpenGLES3MapType(Renderer::MapType mapType)
-	{
-		// The "GL_OES_mapbuffer" OPENGL ES 2 extension only defines "GL_WRITE_ONLY_OES"
-		static const GLenum MAPPING[] =
-		{
-			GL_WRITE_ONLY_OES,	// Renderer::MapType::READ
-			GL_WRITE_ONLY_OES,	// Renderer::MapType::WRITE
-			GL_WRITE_ONLY_OES,	// Renderer::MapType::READ_WRITE
-			GL_WRITE_ONLY_OES,	// Renderer::MapType::WRITE_DISCARD
-			GL_WRITE_ONLY_OES	// Renderer::MapType::WRITE_NO_OVERWRITE
-		};
-		return MAPPING[static_cast<int>(mapType) - 1];	// Lookout! The "Renderer::MapType"-values start with 1, not 0
-	}
-
 	uint32_t Mapping::getOpenGLES3MapRangeType(Renderer::MapType mapType)
 	{
 		// OpenGL ES 3 defines access bits for "glMapBufferRange()"

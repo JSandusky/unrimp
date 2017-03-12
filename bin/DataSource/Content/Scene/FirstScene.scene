@@ -22,7 +22,7 @@
 				"Description": "Sun light",
 				"Properties":
 				{
-					"Rotation": "-0.630880237 -0.317013383 0.315440148 0.634026885"
+					"Rotation": "-0.723630846 -0.170361593 0.153269514 0.651032865"
 				},
 				"Items":
 				{
@@ -181,7 +181,7 @@
 				"Description": "Bob character",
 				"Properties":
 				{
-					"Position": "-8.0 0.0 1.5",
+					"Position": "8.0 0.0 1.5",
 					"Scale": "0.03 0.03 0.03"
 				},
 				"Items":

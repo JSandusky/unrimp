@@ -90,7 +90,7 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 				// Strafe left = "a"-key
 				if (isKeyPressed(65))
 				{
-					movementVector += transform.rotation * RendererRuntime::Math::RIGHT_VECTOR;
+					movementVector -= transform.rotation * RendererRuntime::Math::RIGHT_VECTOR;
 				}
 
 				// Move backward = "s"-key
@@ -102,7 +102,7 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 				// Strafe right = "d"-key
 				if (isKeyPressed(68))
 				{
-					movementVector -= transform.rotation * RendererRuntime::Math::RIGHT_VECTOR;
+					movementVector += transform.rotation * RendererRuntime::Math::RIGHT_VECTOR;
 				}
 
 				// Strafe up = "page up"-key
@@ -149,7 +149,7 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 			if (0 != mMouseMoveX)
 			{
 				// X rotation axis: Update yaw (also called 'heading', change is turning to the left or right) - in degrees
-				yaw -= mMouseMoveX * rotationSpeed;
+				yaw += mMouseMoveX * rotationSpeed;
 
 				// Limit the yaw (too huge values may cause problems, so, bring them into a well known interval)
 				yaw = RendererRuntime::Math::wrapToInterval(yaw, 0.0f, 360.0f);

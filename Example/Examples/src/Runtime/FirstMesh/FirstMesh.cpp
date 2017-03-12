@@ -307,7 +307,7 @@ void FirstMesh::onDraw()
 		{ // Set uniform
 			// Calculate the object space to clip space matrix
 			const glm::mat4 viewSpaceToClipSpace	= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);
-			const glm::mat4 viewTranslate			= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -7.0f, -25.0f));
+			const glm::mat4 viewTranslate			= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -7.0f, 25.0f));
 			const glm::mat4 worldSpaceToViewSpace	= glm::rotate(viewTranslate, mGlobalTimer, glm::vec3(0.0f, 1.0f, 0.0f));
 			const glm::mat4 objectSpaceToWorldSpace	= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 				  glm::mat4 objectSpaceToViewSpace	= worldSpaceToViewSpace * objectSpaceToWorldSpace;

@@ -335,8 +335,6 @@ namespace
 		*    Assimp node to gather the data from
 		*  @param[in]  skeleton
 		*    Skeleton instance
-		*  @param[in]  invertNormals
-		*    Invert normals?
 		*  @param[in]  numberOfBytesPerVertex
 		*    Number of bytes per vertex
 		*  @param[in]  vertexBuffer
@@ -350,7 +348,7 @@ namespace
 		*  @param[out] numberOfIndices
 		*    Receives the number of processed indices
 		*/
-		void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, const Skeleton& skeleton, bool invertNormals, uint8_t numberOfBytesPerVertex, uint8_t *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
+		void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, const Skeleton& skeleton, uint8_t numberOfBytesPerVertex, uint8_t *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
 		{
 			// Get the absolute transformation matrix of this Assimp node
 			const aiMatrix4x4 currentAssimpTransformation = assimpTransformation * assimpNode.mTransformation;
@@ -406,7 +404,7 @@ namespace
 							// Get the Assimp mesh vertex tangent, binormal and normal
 							aiVector3D tangent = assimpMesh.mTangents[j];
 							aiVector3D binormal = assimpMesh.mBitangents[j];
-							aiVector3D normal = invertNormals ? -assimpMesh.mNormals[j] : assimpMesh.mNormals[j];
+							aiVector3D normal = assimpMesh.mNormals[j];
 
 							// Transform the Assimp mesh vertex data into global space
 							tangent *= currentAssimpNormalTransformation;
@@ -513,7 +511,7 @@ namespace
 			// Loop through all child nodes recursively
 			for (uint32_t assimpChild = 0; assimpChild < assimpNode.mNumChildren; ++assimpChild)
 			{
-				fillMeshRecursive(assimpScene, *assimpNode.mChildren[assimpChild], skeleton, invertNormals, numberOfBytesPerVertex, vertexBuffer, indexBuffer, currentAssimpTransformation, numberOfVertices, numberOfIndices);
+				fillMeshRecursive(assimpScene, *assimpNode.mChildren[assimpChild], skeleton, numberOfBytesPerVertex, vertexBuffer, indexBuffer, currentAssimpTransformation, numberOfVertices, numberOfIndices);
 			}
 		}
 
@@ -571,22 +569,20 @@ namespace RendererToolkit
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// Read configuration
-		// TODO(co) Add required properties
 		std::string inputFile;
-		bool invertNormals = false;
 		{
 			// Read mesh asset compiler configuration
 			const rapidjson::Value& rapidJsonValueMeshAssetCompiler = rapidJsonValueAsset["MeshAssetCompiler"];
 			inputFile = rapidJsonValueMeshAssetCompiler["InputFile"].GetString();
-			JsonHelper::optionalBooleanProperty(rapidJsonValueMeshAssetCompiler, "InvertNormals", invertNormals);
 		}
 
 		// Open the input and output file
+		const std::string inputFilename = assetInputDirectory + inputFile;
 		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".mesh";
 
 		// Ask cache manager if we need to compile the source file (e.g. source changed or target not there)
-		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFile, outputAssetFilename))
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename))
 		{
 			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
@@ -596,7 +592,7 @@ namespace RendererToolkit
 
 			// Load the given mesh
 			// -> "aiProcess_MakeLeftHanded" is added because the rasterizer states directly map to Direct3D
-			const aiScene *assimpScene = assimpImporter.ReadFile(assetInputDirectory + inputFile, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded);
+			const aiScene *assimpScene = assimpImporter.ReadFile(inputFilename, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder);
 			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
 				// Get the number of bones and skeleton
@@ -643,7 +639,7 @@ namespace RendererToolkit
 					{ // Fill the mesh data recursively
 						uint32_t numberOfFilledVertices = 0;
 						uint32_t numberOfFilledIndices  = 0;
-						::detail::fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, skeleton, invertNormals, numberOfBytesPerVertex, vertexBufferData, indexBufferData, aiMatrix4x4(), numberOfFilledVertices, numberOfFilledIndices);
+						::detail::fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, skeleton, numberOfBytesPerVertex, vertexBufferData, indexBufferData, aiMatrix4x4(), numberOfFilledVertices, numberOfFilledIndices);
 
 						// TODO(co) ?
 						numberOfVertices = numberOfFilledVertices;
