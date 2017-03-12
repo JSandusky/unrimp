@@ -159,7 +159,7 @@ namespace
 			}
 		}
 
-		void convertFile(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* pSrc_filename, const char* pDst_filename, crnlib::texture_file_types::format out_file_type, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness)
+		void convertFile(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* sourceFilename, const char* destinationFilename, crnlib::texture_file_types::format outputCrunchTextureFileType, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness)
 		{
 			crnlib::texture_conversion::convert_params crunchConvertParams;
 
@@ -172,7 +172,7 @@ namespace
 				{
 					// Load the 2D source image
 					crnlib::image_u8* source2DImage = crnlib::crnlib_new<crnlib::image_u8>();
-					const std::string inputFile = std::string(pSrc_filename) + rapidJsonValueTextureAssetCompiler[FACE_NAMES[faceIndex].c_str()].GetString();
+					const std::string inputFile = std::string(sourceFilename) + rapidJsonValueTextureAssetCompiler[FACE_NAMES[faceIndex].c_str()].GetString();
 					if (!crnlib::image_utils::read_from_file(*source2DImage, inputFile.c_str()))
 					{
 						throw std::runtime_error(std::string("Failed to load image \"") + inputFile + '\"');
@@ -204,17 +204,17 @@ namespace
 			}
 			else
 			{
-				crnlib::texture_file_types::format crunchSourceFileFormat = crnlib::texture_file_types::determine_file_format(pSrc_filename);
+				crnlib::texture_file_types::format crunchSourceFileFormat = crnlib::texture_file_types::determine_file_format(sourceFilename);
 				if (crunchSourceFileFormat == crnlib::texture_file_types::cFormatInvalid)
 				{
-					throw std::runtime_error("Unrecognized file type \"" + std::string(pSrc_filename) + '\"');
+					throw std::runtime_error("Unrecognized file type \"" + std::string(sourceFilename) + '\"');
 				}
 
-				if (!crunchMipmappedTexture.read_from_file(pSrc_filename, crunchSourceFileFormat))
+				if (!crunchMipmappedTexture.read_from_file(sourceFilename, crunchSourceFileFormat))
 				{
 					if (crunchMipmappedTexture.get_last_error().is_empty())
 					{
-						throw std::runtime_error("Failed reading source file \"" + std::string(pSrc_filename) + '\"');
+						throw std::runtime_error("Failed reading source file \"" + std::string(sourceFilename) + '\"');
 					}
 					else
 					{
@@ -230,8 +230,8 @@ namespace
 
 			crunchConvertParams.m_texture_type = crunchMipmappedTexture.determine_texture_type();
 			crunchConvertParams.m_pInput_texture = &crunchMipmappedTexture;
-			crunchConvertParams.m_dst_filename = pDst_filename;
-			crunchConvertParams.m_dst_file_type = out_file_type;
+			crunchConvertParams.m_dst_filename = destinationFilename;
+			crunchConvertParams.m_dst_file_type = outputCrunchTextureFileType;
 			crunchConvertParams.m_y_flip = true;
 			crunchConvertParams.m_no_stats = true;
 			crunchConvertParams.m_dst_format = crnlib::PIXEL_FMT_INVALID;
@@ -371,13 +371,19 @@ namespace
 					break;
 			}
 
+			// Silence "Target bitrate/quality level is not supported for this output file format." warnings
+			if (crnlib::texture_file_types::format::cFormatKTX == outputCrunchTextureFileType)
+			{
+				crunchConvertParams.m_comp_params.m_quality_level = cCRNMaxQualityLevel;
+			}
+
 			// Compress now
 			crnlib::texture_conversion::convert_stats stats;
 			if (!crnlib::texture_conversion::process(crunchConvertParams, stats))
 			{
 				if (crunchConvertParams.m_error_message.is_empty())
 				{
-					throw std::runtime_error("Failed writing output file \"" + std::string(pDst_filename) + '\"');
+					throw std::runtime_error("Failed writing output file \"" + std::string(destinationFilename) + '\"');
 				}
 				else
 				{
