@@ -36,6 +36,7 @@
 // Attribute input / output
 INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(float3, ViewRayVS,  1)	// View space ray used for view space position reconstruction
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
@@ -44,6 +45,7 @@ OUTPUT_END
 // Uniform buffers
 struct PassDataStruct
 {
+	float4   ViewSpaceFrustumCorners[4];
 	float4x4 ClipSpaceToViewSpaceMatrix;
 	float3	 ViewSpaceSunLightDirection;
 	float	 AtmosphereFogDensity;
@@ -74,7 +76,7 @@ TEXTURE_2D(ColorMap, 0)
 //[ Functions                                             ]
 //[-------------------------------------------------------]
 // TODO(co) Make this to a shader piece
-float GetDepthValue(float2 textureCoordinate, int sampleIndex)
+float GetDepth(float2 textureCoordinate, int sampleIndex)
 {
 	@property(NumberOfMultisamples)
 		return SAMPLE_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex).r;
@@ -90,32 +92,10 @@ float GetLinearDepth(float depth)
 	return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
 }
 
-// TODO(co) Put into shader piece
-float3 GetViewSpacePositionByScreenSpacePosition(float2 screenSpacePosition, float depth)
+float3 CalculateFoggedColor(float3 viewRay, float3 color, float2 screenSpacePosition, int sampleIndex)
 {
-	// API coordinate system related differences
-	@property(HLSL)
-		screenSpacePosition.y = 1.0f - screenSpacePosition.y;
-	@end
-	@property(GLSL || GLSLES)
-		// 0..1 -> -1..1
-		depth = depth * 2.0f - 1.0f;
-	@end
-
-	// Get x/w and y/w from the screen space position
-	float x = screenSpacePosition.x * 2.0f - 1.0f;
-	float y = screenSpacePosition.y * 2.0f - 1.0f;
-	float4 projectedPosition = float4(x, y, depth, 1.0f);
-
-	// Get world-space position
-	float4 inversePosition = MATRIX_MUL(PassData.ClipSpaceToViewSpaceMatrix, projectedPosition);
-	return inversePosition.xyz / inversePosition.w;
-}
-
-float3 CalculateFoggedColor(float3 color, float2 screenSpacePosition, int sampleIndex)
-{
-	float depthValue = GetDepthValue(screenSpacePosition, sampleIndex);
-	float linearDepth = GetLinearDepth(depthValue);
+	float depth = GetDepth(screenSpacePosition, sampleIndex);
+	float linearDepth = GetLinearDepth(depth);
 
 	// Traditional depth fog
 	// -> Depth fog: Exponential^2 (see e.g. http://developer.download.nvidia.com/assets/gamedev/docs/Fog2.pdf?display=style-table )
@@ -123,8 +103,12 @@ float3 CalculateFoggedColor(float3 color, float2 screenSpacePosition, int sample
 	factor *= factor;
 	float fogDepth = 1.0f - SATURATE(1.0f / exp(factor));
 
+	// Scale the view ray by the ratio of the linear z value to the projected view ray
+	// -> For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
+	float3 viewSpacePosition = viewRay * (GetLinearDepth(depth) / dot(float3(0.0f, 0.0f, 1.0f), viewRay));
+
 	// Fog lighting direction
-	float3 viewSpaceCameraDirection = -normalize(GetViewSpacePositionByScreenSpacePosition(screenSpacePosition, depthValue));	// In view space, we always look along the positive z-axis
+	float3 viewSpaceCameraDirection = -normalize(viewSpacePosition);	// In view space, we always look along the positive z-axis
 	float fogDirection = SATURATE(dot(viewSpaceCameraDirection, -PassData.ViewSpaceSunLightDirection));
 	fogDirection = pow(fogDirection, 15.0f);
 
@@ -142,18 +126,21 @@ float3 CalculateFoggedColor(float3 color, float2 screenSpacePosition, int sample
 MAIN_BEGIN
 	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
 
+	// Get the normalized view ray
+	float3 viewRay = normalize(MAIN_INPUT(ViewRayVS));
+
 	@property(NumberOfMultisamples)
 		// Custom MSAA resolve
 		float3 finalColor = float3(0.0f, 0.0f, 0.0f);
 		@foreach(NumberOfMultisamples, i, 0)
 		{
-			finalColor += CalculateFoggedColor(color.rgb, MAIN_INPUT(TexCoordVS), @i);
+			finalColor += CalculateFoggedColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), @i);
 		}
 		@end
 		finalColor /= @value(NumberOfMultisamples);
 	@end
 	@property(!NumberOfMultisamples)
-		float3 finalColor = CalculateFoggedColor(color.rgb, MAIN_INPUT(TexCoordVS), 0);
+		float3 finalColor = CalculateFoggedColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), 0);
 	@end
 
 	// Done

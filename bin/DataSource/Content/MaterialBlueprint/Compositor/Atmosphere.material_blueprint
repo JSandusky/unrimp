@@ -65,8 +65,7 @@
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "PassUniformBuffer"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"1":
 				{
@@ -117,7 +116,7 @@
 		{
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "100",
+				"VertexShaderBlueprintAssetId": "165",
 				"FragmentShaderBlueprintAssetId": "138"
 			},
 			"RasterizerState":
@@ -141,6 +140,12 @@
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
+						"ViewSpaceFrustumCorners":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@VIEW_SPACE_FRUSTUM_CORNERS"
+						},
 						"ClipSpaceToViewSpaceMatrix":
 						{
 							"Usage": "PASS_REFERENCE",

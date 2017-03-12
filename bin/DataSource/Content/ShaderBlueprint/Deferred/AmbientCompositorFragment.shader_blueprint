@@ -38,6 +38,7 @@
 // Attribute input / output
 INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(float3, ViewRayVS,  1)	// View space ray used for view space position reconstruction
 	INPUT_VERTEX_DRAW_ID							// Draw ID
 INPUT_END
 OUTPUT_BEGIN
@@ -47,6 +48,7 @@ OUTPUT_END
 // Uniform buffers
 struct PassDataStruct
 {
+	float4   ViewSpaceFrustumCorners[4];
 	float4x4 ClipSpaceToViewSpaceMatrix;
 	float4x4 ViewSpaceToWorldSpaceMatrix;
 	float4x4 ShadowMatrix;
@@ -58,6 +60,7 @@ struct PassDataStruct
 	float3   SunLightColor;
 	float3	 CameraWorldSpacePosition;
 	float2   ViewportSize;
+	float2 	 ProjectionParameters;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -98,29 +101,13 @@ TEXTURE_CUBE(ReflectionCubeMap, 7)
 //[-------------------------------------------------------]
 //[ Pieces                                                ]
 //[-------------------------------------------------------]
-// TODO(co) Put into shader piece
-float3 GetViewSpacePositionByScreenSpacePosition(float2 screenSpacePosition, float depth)
+// TODO(co) Make this to a shader piece
+float GetLinearDepth(float depth)
 {
-	// API coordinate system related differences
-	@property(HLSL)
-		screenSpacePosition.y = 1.0f - screenSpacePosition.y;
-	@end
-	@property(GLSL || GLSLES)
-		// 0..1 -> -1..1
-		depth = depth * 2.0f - 1.0f;
-	@end
-
-	// Get x/w and y/w from the screen space position
-	float x = screenSpacePosition.x * 2.0f - 1.0f;
-	float y = screenSpacePosition.y * 2.0f - 1.0f;
-	float4 projectedPosition = float4(x, y, depth, 1.0f);
-
-	// Get view-space position
-	float4 inversePosition = MATRIX_MUL(PassData.ClipSpaceToViewSpaceMatrix, projectedPosition);
-	return inversePosition.xyz / inversePosition.w;
+	return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
 }
 
-float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depthValue, float screenSpaceAmbientOcclusion)
+float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depth, float screenSpaceAmbientOcclusion)
 {
 	// Gather GBuffer data
 	float3 diffuse		   = gbuffer0Value.rgb;
@@ -129,8 +116,11 @@ float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 	float3 emissive		   = gbuffer2Value.rgb;
 	float  metallic		   = SATURATE(PassData.Wetness + gbuffer2Value.a);
 
+	// Scale the view ray by the ratio of the linear z value to the projected view ray
+	// -> For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
+	float3 viewSpacePosition = viewRay * (GetLinearDepth(depth) / dot(float3(0.0f, 0.0f, 1.0f), viewRay));
+
 	// Derive data
-	float3 viewSpacePosition = GetViewSpacePositionByScreenSpacePosition(screenSpacePosition, depthValue);
 	float3 viewSpaceIncident = -normalize(viewSpacePosition);	// In view space, the camera is at the origin
 	float3 worldSpacePosition = MATRIX_MUL(PassData.ViewSpaceToWorldSpaceMatrix, float4(viewSpacePosition.xyz, 1.0f)).xyz;
 	float3 worldSpaceNormal = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceNormal);
@@ -189,6 +179,9 @@ float3 CalculateColorByGBuffer(float2 screenSpacePosition, float4 gbuffer0Value,
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
+	// Get the normalized view ray
+	float3 viewRay = normalize(MAIN_INPUT(ViewRayVS));
+
 	// Gather screen space ambient occlusion value
 	float screenSpaceAmbientOcclusion = SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).r;
 
@@ -201,8 +194,8 @@ MAIN_BEGIN
 		@foreach(NumberOfMultisamples, i, 0)
 		{
 			// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
-			float depthValue = SAMPLE_2D_MS(DepthMap, textureCoordinate, @i).r;
-			if (1.0f != depthValue)
+			float depth = SAMPLE_2D_MS(DepthMap, textureCoordinate, @i).r;
+			if (1.0f != depth)
 			{
 				// Read GBuffer data
 				float4 gbuffer0Value = SAMPLE_2D_MS(GBufferMap0, textureCoordinate, @i);
@@ -210,7 +203,7 @@ MAIN_BEGIN
 				float4 gbuffer2Value = SAMPLE_2D_MS(GBufferMap2, textureCoordinate, @i);
 
 				// Calculate color by GBuffer
-				color += CalculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue, screenSpaceAmbientOcclusion);
+				color += CalculateColorByGBuffer(viewRay, MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion);
 				++numberOfValues;
 			}
 		}
@@ -229,8 +222,8 @@ MAIN_BEGIN
 		float4 textureCoordinate = float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f);
 
 		// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
-		float depthValue = SAMPLE_2D_LOD(DepthMap, SamplerPoint, textureCoordinate).r;
-		if (1.0f == depthValue)
+		float depth = SAMPLE_2D_LOD(DepthMap, SamplerPoint, textureCoordinate).r;
+		if (1.0f == depth)
 		{
 			discard;
 		}
@@ -241,7 +234,7 @@ MAIN_BEGIN
 		float4 gbuffer2Value = SAMPLE_2D_LOD(GBufferMap2, SamplerPoint, textureCoordinate);
 
 		// Calculate color by GBuffer
-		float3 color = CalculateColorByGBuffer(MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depthValue, screenSpaceAmbientOcclusion);
+		float3 color = CalculateColorByGBuffer(viewRay, MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion);
 	@end
 
 	// Done

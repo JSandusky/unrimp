@@ -169,6 +169,7 @@
 		"161": "Material/Bob/guard1_helmet.asset",
 		"162": "Material/Bob/iron_grill.asset",
 		"163": "Material/Bob/round_grill.asset",
-		"164": "ShaderPiece/PhysicallyBasedShading.asset"
+		"164": "ShaderPiece/PhysicallyBasedShading.asset",
+		"165": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertexRay.asset"
 	}
 }

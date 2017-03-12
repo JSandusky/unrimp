@@ -52,6 +52,12 @@ TEXTURE_2D(ColorMap, 0)
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
+	// Clip space vertex positions of the full screen triangle, left/bottom is (-1,-1) and right/top is (1,1)
+	//								Vertex ID	Triangle on screen
+	//	-1.0f,  1.0f, 0.0f, 0.0f,	0			  0.......1
+	//	 3.0f,  1.0f, 2.0f, 0.0f,	1			  .   .
+	//	-1.0f, -3.0f, 0.0f, 2.0f	2			  2
+
 	// Transform the object space vertex into clip space
 	MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).xy, 0.0f, 1.0f);
 	@property(GLSL || GLSLES)

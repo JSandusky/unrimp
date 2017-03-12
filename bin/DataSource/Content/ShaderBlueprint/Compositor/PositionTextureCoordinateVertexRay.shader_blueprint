@@ -18,6 +18,38 @@
 \*********************************************************/
 
 
+/*
+This vertex shader also passes through a view space ray used for view space position reconstruction.
+Without it reconstructing the view space position would be more expensive by using the clip space to view space matrix as follows:
+
+float3 GetViewSpacePositionByScreenSpacePosition(float2 screenSpacePosition, float depth)
+{
+	// API coordinate system related differences
+	@property(HLSL)
+		screenSpacePosition.y = 1.0f - screenSpacePosition.y;
+	@end
+	@property(GLSL || GLSLES)
+		// 0..1 -> -1..1
+		depth = depth * 2.0f - 1.0f;
+	@end
+
+	// Get x/w and y/w from the screen space position
+	float x = screenSpacePosition.x * 2.0f - 1.0f;
+	float y = screenSpacePosition.y * 2.0f - 1.0f;
+	float4 projectedPosition = float4(x, y, depth, 1.0f);
+
+	// Get view-space position
+	float4 inversePosition = MATRIX_MUL(PassData.ClipSpaceToViewSpaceMatrix, projectedPosition);
+	return inversePosition.xyz / inversePosition.w;
+}
+
+For more background formation regarding reconstructing position from depth please have a look at:
+- "The Danger Zone" - "Scintillating Snippets: Reconstructing Position From Depth" - "Written by MJPMarch 10, 2009" - https://mynameismjp.wordpress.com/2009/03/10/reconstructing-position-from-depth/
+- "The Danger Zone" - "Reconstructing Position From Depth, Continued" - "Written by MJPMay 5, 2009" - https://mynameismjp.wordpress.com/2009/05/05/reconstructing-position-from-depth-continued/
+- "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
+*/
+
+
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
@@ -35,11 +67,23 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
+	INPUT_VERTEX_ID
 	INPUT_VERTEX_POSITION(float4, PositionTexCoord)		// xy = position, zw = texture coordinate
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_POSITION	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	OUTPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+	OUTPUT_TEXTURE_COORDINATE(float3, ViewRayVS,  1)	// View space ray used for view space position reconstruction
+	OUTPUT_POSITION										// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
 OUTPUT_END
+
+// Uniform buffers
+struct PassDataStruct
+{
+	float4 ViewSpaceFrustumCorners[4];
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
 
 
 //[-------------------------------------------------------]
@@ -57,4 +101,10 @@ MAIN_BEGIN
 	@property(GLSL || GLSLES)
 		MAIN_OUTPUT_POSITION.y = -MAIN_OUTPUT_POSITION.y;
 	@end
+
+	// Pass through the texture coordinates
+	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(PositionTexCoord.zw);
+
+	// Pass through the view space ray used for view space position reconstruction
+	MAIN_OUTPUT(ViewRayVS) = PassData.ViewSpaceFrustumCorners[MAIN_INPUT_VERTEX_ID].xyz;
 MAIN_END

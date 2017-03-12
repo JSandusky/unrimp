@@ -36,6 +36,7 @@
 // Attribute input / output
 INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(float3, ViewRayVS,  1)	// View space ray used for view space position reconstruction
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
@@ -44,6 +45,7 @@ OUTPUT_END
 // Uniform buffers
 struct PassDataStruct
 {
+	float4   ViewSpaceFrustumCorners[4];
 	float4x4 ClipSpaceToViewSpaceMatrix;
 	float4x4 ViewSpaceToClipSpaceMatrix;
 	float2   InverseViewportSize;
@@ -101,35 +103,16 @@ float3 GetNormalFromGBufferMap1(float2 textureCoordinate, int sampleIndex)
 	@end
 }
 
-// TODO(co) Put into shader piece
-float3 GetViewSpacePositionByScreenSpacePosition(float2 screenSpacePosition, float depth)
+float CalculateOcclusion(float3 viewRay, float2 textureCoordinate, int sampleIndex)
 {
-	// API coordinate system related differences
-	@property(HLSL)
-		screenSpacePosition.y = 1.0f - screenSpacePosition.y;
-	@end
-	@property(GLSL || GLSLES)
-		// 0..1 -> -1..1
-		depth = depth * 2.0f - 1.0f;
-	@end
-
-	// Get x/w and y/w from the screen space position
-	float x = screenSpacePosition.x * 2.0f - 1.0f;
-	float y = screenSpacePosition.y * 2.0f - 1.0f;
-	float4 projectedPosition = float4(x, y, depth, 1.0f);
-
-	// Get world-space position
-	float4 inversePosition = MATRIX_MUL(PassData.ClipSpaceToViewSpaceMatrix, projectedPosition);
-	return inversePosition.xyz / inversePosition.w;
-}
-
-float CalculateOcclusion(float2 textureCoordinate, int sampleIndex)
-{
-	// Get the view space position and normal of the fragment
+	// Get depth and normal of the fragment
 	float depth = GetDepthFromDepthMap(textureCoordinate, sampleIndex);
 	float originLinearDepth = GetLinearDepth(depth);
-	float3 origin = GetViewSpacePositionByScreenSpacePosition(textureCoordinate, depth);
 	float3 normal = GetNormalFromGBufferMap1(textureCoordinate, sampleIndex);
+
+	// Scale the view ray by the ratio of the linear z value to the projected view ray
+	// -> For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
+	float3 origin = viewRay * (GetLinearDepth(depth) / dot(float3(0.0f, 0.0f, 1.0f), viewRay));
 
 	// Construct a change-of-basis matrix to reorient the sample kernel along the origin's normal
 	// -> Using the Gram-Schmidt process to compute an orthogonal basis
@@ -177,18 +160,22 @@ float CalculateOcclusion(float2 textureCoordinate, int sampleIndex)
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
+	// Get the normalized view ray
+	float3 viewRay = normalize(MAIN_INPUT(ViewRayVS));
+
+	// Calculate SSAO
 	@property(NumberOfMultisamples)
 		// Custom MSAA resolve
 		float sum = 0.0f;
 		@foreach(NumberOfMultisamples, i, 0)
 		{
-			sum += CalculateOcclusion(MAIN_INPUT(TexCoordVS), @i);
+			sum += CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), @i);
 		}
 		@end
 		sum /= @value(NumberOfMultisamples);
 	@end
 	@property(!NumberOfMultisamples)
-		float sum = CalculateOcclusion(MAIN_INPUT(TexCoordVS), 0);
+		float sum = CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), 0);
 	@end
 
 	// Increase SSAO strength to make it more visible

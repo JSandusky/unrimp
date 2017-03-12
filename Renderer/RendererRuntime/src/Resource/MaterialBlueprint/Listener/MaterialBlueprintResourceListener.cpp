@@ -78,6 +78,7 @@ namespace
 			DEFINE_CONSTANT(CLIP_SPACE_TO_WORLD_SPACE_MATRIX)
 			DEFINE_CONSTANT(CAMERA_WORLD_SPACE_POSITION)
 			DEFINE_CONSTANT(PROJECTION_PARAMETERS)
+			DEFINE_CONSTANT(VIEW_SPACE_FRUSTUM_CORNERS)
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_SUN_LIGHT_DIRECTION)
 			DEFINE_CONSTANT(VIEWPORT_SIZE)
@@ -376,9 +377,54 @@ namespace RendererRuntime
 		}
 		else if (::detail::PROJECTION_PARAMETERS == referenceValue)
 		{
+			// For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
 			assert(sizeof(float) * 2 == numberOfBytes);
 			const float projectionParameters[2] = { mFarZ / (mFarZ - mNearZ), (-mFarZ * mNearZ) / (mFarZ - mNearZ) };
 			memcpy(buffer, &projectionParameters[0], numberOfBytes);
+		}
+		else if (::detail::VIEW_SPACE_FRUSTUM_CORNERS == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+
+			// Calculate the view space frustum corners
+			glm::vec4 viewSpaceFrustumCorners[8] =
+			{
+				// Near
+				glm::vec4(-1.0f,  1.0f, 0.0f, 1.0f),	// 0: Near top left
+				glm::vec4( 1.0f,  1.0f, 0.0f, 1.0f),	// 1: Near top right
+				glm::vec4(-1.0f, -1.0f, 0.0f, 1.0f),	// 2: Near bottom left
+				glm::vec4( 1.0f, -1.0f, 0.0f, 1.0f),	// 3: Near bottom right
+				// Far
+				glm::vec4(-1.0f,  1.0f, 1.0f, 1.0f),	// 4: Far top left
+				glm::vec4( 1.0f,  1.0f, 1.0f, 1.0f),	// 5: Far top right
+				glm::vec4(-1.0f, -1.0f, 1.0f, 1.0f),	// 6: Far bottom left
+				glm::vec4( 1.0f, -1.0f, 1.0f, 1.0f)		// 7: Far bottom right
+			};
+			const glm::mat4 clipSpaceToViewSpaceMatrix = glm::inverse(mPassData->viewSpaceToClipSpaceMatrix);
+			for (int i = 0; i < 8; ++i)
+			{
+				viewSpaceFrustumCorners[i] = clipSpaceToViewSpaceMatrix * viewSpaceFrustumCorners[i];
+				viewSpaceFrustumCorners[i] /= viewSpaceFrustumCorners[i].w;
+			}
+			for (int i = 0; i < 4; ++i)
+			{
+				viewSpaceFrustumCorners[i + 4] -= viewSpaceFrustumCorners[i];
+			}
+
+			{ // Clip space vertex positions of the full screen triangle, left/bottom is (-1,-1) and right/top is (1,1)
+			  //								Vertex ID	Triangle on screen
+			  //	-1.0f,  1.0f, 0.0f, 0.0f,	0			  0.......1
+			  //	 3.0f,  1.0f, 2.0f, 0.0f,	1			  .   .
+			  //	-1.0f, -3.0f, 0.0f, 2.0f	2			  2
+				glm::vec4& topLeft	  = viewSpaceFrustumCorners[4];	// Vertex ID 0
+				glm::vec4& topRight	  = viewSpaceFrustumCorners[5];	// Vertex ID 1
+				glm::vec4& bottomLeft = viewSpaceFrustumCorners[6];	// Vertex ID 2
+				topRight.x   = glm::mix(topLeft.x, topRight.x, 2.0f);
+				bottomLeft.y = glm::mix(topLeft.y, bottomLeft.y, 2.0f);
+			}
+
+			// Copy over the data, we're using 4 * float4 by intent in order to avoid alignment problems, 3 * float3 would be sufficient for our full screen triangle
+			memcpy(buffer, glm::value_ptr(viewSpaceFrustumCorners[4]), numberOfBytes);
 		}
 		else if (::detail::IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{

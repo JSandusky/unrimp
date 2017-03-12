@@ -26,6 +26,8 @@
 	@piece(SetCrossPlatformSettings)
 		// Shader attribute input
 		#define INPUT_BEGIN struct SHADER_INPUT {
+			#define INPUT_VERTEX_ID uint vertexId : SV_VERTEXID;
+
 			// TODO(co) Add "DRAWID" semantic
 			#define INPUT_VERTEX_DRAW_ID	// "DRAWID" is a special vertex attribute semantic introduced
 			//#define INPUT_VERTEX_DRAW_ID uint drawId : DRAWID;	// "DRAWID" is a special vertex attribute semantic introduced
@@ -52,6 +54,7 @@
 		#define MAIN_BEGIN SHADER_OUTPUT main(SHADER_INPUT ShaderInput) { SHADER_OUTPUT shaderOutput;
 		#define MAIN_BEGIN_NO_OUTPUT void main(SHADER_INPUT ShaderInput) {
 			#define MAIN_INPUT(name) ShaderInput.name
+			#define MAIN_INPUT_VERTEX_ID ShaderInput.vertexId
 
 			// TODO(co) Add "DRAWID" semantic
 			#define MAIN_INPUT_DRAW_ID 0
@@ -135,6 +138,7 @@
 
 		// Shader attribute input
 		#define INPUT_BEGIN
+			#define INPUT_VERTEX_ID
 			#define INPUT_VERTEX_DRAW_ID uniform uvec2 drawId;	// TODO(co) We're using OpenGL only for Mac OS X 10.11 which hasn't support for e.g. "glDrawElementsInstancedBaseVertexBaseInstance()", so we have to hack around. Mac OS X 10.11 also has no "glTexBufferRange()". On decent platforms this should be: #define INPUT_VERTEX_DRAW_ID in uint drawId;
 			#define INPUT_VERTEX_POSITION(type, name) in type name;
 			#define INPUT_VERTEX_COLOR(type, name) in type name;
@@ -158,6 +162,7 @@
 		#define MAIN_BEGIN void main() {
 		#define MAIN_BEGIN_NO_OUTPUT void main() {
 			#define MAIN_INPUT(name) name
+			#define MAIN_INPUT_VERTEX_ID gl_VertexID
 			#define MAIN_INPUT_DRAW_ID (drawId.x + gl_InstanceID)
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
@@ -248,6 +253,7 @@
 
 		// Shader attribute input// Shader attribute input
 		#define INPUT_BEGIN
+			#define INPUT_VERTEX_ID
 			#define INPUT_VERTEX_DRAW_ID uniform highp uvec2 drawId;	// TODO(co) We're using OpenGL only for Mac OS X 10.11 which hasn't support for e.g. "glDrawElementsInstancedBaseVertexBaseInstance()", so we have to hack around. Mac OS X 10.11 also has no "glTexBufferRange()". On decent platforms this should be: #define INPUT_VERTEX_DRAW_ID in uint drawId; TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.0
 			#define INPUT_VERTEX_POSITION(type, name) in highp type name;
 			#define INPUT_VERTEX_COLOR(type, name) in highp type name;
@@ -271,6 +277,7 @@
 		#define MAIN_BEGIN void main() {
 		#define MAIN_BEGIN_NO_OUTPUT void main() {
 			#define MAIN_INPUT(name) name
+			#define MAIN_INPUT_VERTEX_ID gl_VertexID
 			#define MAIN_INPUT_DRAW_ID (drawId.x + uint(gl_InstanceID))
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
