@@ -118,6 +118,24 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		struct CacheEntry
+		{
+			RendererRuntime::StringId fileId;	///< Id of the file (string hash of the file name)
+			std::string rendererTarget;			///< The renderer target
+			std::string fileHash;				// The sha256 hash of the file content (as hex string)
+			int64_t fileSize;					// The file size. SQLite doesn't support 64Bit unsigned integers only 64 bit signed ones
+			int64_t fileTime;					// The file time (last write time). SQLite doesn't support 64Bit unsigned integers only 64 bit signed ones
+
+			CacheEntry() : fileSize(0), fileTime(0)
+			{}
+
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
@@ -136,17 +154,19 @@ namespace RendererToolkit
 
 		/**
 		*  @brief
-		*    Return if for a file a cache entry exists
+		*    Fills an cache entry with the stored data, if it exists
 		*
 		*  @param[in] rendererTarget
 		*    The renderer target for which the asset should be compiled
 		*  @param[in] fileId
 		*    The file ID (e.g. string hash of the file path) which represents the file to check
+		*  @param[out] cacheEntry
+		*    The cache entry content. Unchanged when nothing found
 		*
 		*  @return
 		*    True if a cache entry exists otherwise false
 		*/
-		bool hasEntryForFile(const std::string& rendererTarget, RendererRuntime::StringId fileId);
+		bool fillEntryForFile(const std::string& rendererTarget, RendererRuntime::StringId fileId, CacheEntry& cacheEntry);
 
 		/**
 		*  @brief
@@ -154,18 +174,27 @@ namespace RendererToolkit
 		*
 		*  @param[in] rendererTarget
 		*    The renderer target for which the asset should be compiled
-		*  @param[in] fileHash
-		*    The content hash for the file (e.g. hexadecimal display of an hash using sha256)
-		*  @param[in] fileId
-		*    The file ID (e.g. string hash of the file path) which represents the file to check
+		*  @param[in] fileName
+		*    The filename to check
 		*
 		*  @return
 		*    True if the file has changed otherwise false (aka the stored hash doesn't equals to the current one or file not yet known)
 		*
 		*  @note
-		*    - When a change was detected the given file hash is stored
+		*    - When a change was detected the an cache entry is stored/updated
 		*/
-		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& fileHash, RendererRuntime::StringId fileId);
+		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& fileName);
+
+		/**
+		*  @brief
+		*    Stores a new cache entry or updates an existing one
+		*
+		*  @param[in] cacheEntry
+		*    The cache entry data to store / update
+		*  @param[in] isNewEntry
+		*    Indicates of the given cache entry data should be inserted instead of updating an existing one
+		*/
+		void storeOrUpdateCacheEntryInDatabase(const CacheEntry& cacheEntry, bool isNewEntry);
 
 		CacheManager(const CacheManager&) = delete;
 		CacheManager& operator=(const CacheManager&) = delete;

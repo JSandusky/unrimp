@@ -162,15 +162,10 @@ namespace RendererToolkit
 		{
 			// Source exists
 			// -> Check if source has changed
-			// -> Calculate hash for source file
-			const std::string sourceFileHash = ::detail::hash256_file(sourceFile);
-			const RendererRuntime::StringId sourceFileStringId(sourceFile.c_str());
-			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFileHash, sourceFileStringId);
-			
+			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile);
+
 			// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
-			const std::string assetFileHash = ::detail::hash256_file(assetFilename);
-			const RendererRuntime::StringId assetFileStringId(assetFilename.c_str());
-			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFileHash, assetFileStringId);
+			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename);
 
 			// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
 			return (fileChanged || assetFileChanged || !destinationExists);
@@ -193,9 +188,23 @@ namespace RendererToolkit
 		{
 			try
 			{
-				if (!mDatabaseConnection->tableExists("FileHash"))
+				if (!mDatabaseConnection->tableExists("FileInfo"))
 				{
-					mDatabaseConnection->exec("CREATE TABLE FileHash (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
+					mDatabaseConnection->exec("CREATE TABLE FileInfo (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, fileTime integer NOT NULL, fileSize integer NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
+				}
+
+				if (mDatabaseConnection->tableExists("FileHash"))
+				{
+					// Migrate old data
+					SQLite::Transaction transaction(*mDatabaseConnection.get());
+
+					// Copy old data to the new table
+					mDatabaseConnection->exec("INSERT INTO FileInfo (rendererTarget, fileId, hash, fileTime, fileSize)  SELECT rendererTarget, fileId, hash, 0, 0  FROM FileHash");
+
+					// Drop old table
+					mDatabaseConnection->exec("DROP TABLE FileHash");
+					
+					transaction.commit();
 				}
 
 				// Done
@@ -211,20 +220,26 @@ namespace RendererToolkit
 		return false;
 	}
 
-	bool CacheManager::hasEntryForFile(const std::string& rendererTarget, RendererRuntime::StringId fileId)
+	bool CacheManager::fillEntryForFile(const std::string& rendererTarget, RendererRuntime::StringId fileId, CacheManager::CacheEntry& cacheEntry)
 	{
 		if (mDatabaseConnection)
 		{
 			try
 			{
 				// Compile the query to get the hash for a file stored in the db 
-				SQLite::Statement query(*mDatabaseConnection.get(), "SELECT hash FROM FileHash WHERE fileId = ? AND rendererTarget = ?");
+				SQLite::Statement query(*mDatabaseConnection.get(), "SELECT hash, fileSize, fileTime FROM FileInfo WHERE fileId = ? AND rendererTarget = ?");
 				query.bind(1, fileId);
 				query.bind(2, rendererTarget);
 
 				// Execute statement and check if we got a result
 				if (query.executeStep())
 				{
+					cacheEntry.rendererTarget = rendererTarget;
+					cacheEntry.fileId = fileId;
+					cacheEntry.fileHash = query.getColumn(0).getString();
+					cacheEntry.fileSize = query.getColumn(1).getInt64();
+					cacheEntry.fileTime = query.getColumn(2).getInt64();
+
 					// Done
 					return true;
 				}
@@ -242,58 +257,78 @@ namespace RendererToolkit
 		return false;
 	}
 
-	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& fileHash, RendererRuntime::StringId fileId)
+	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& fileName)
 	{
 		if (mDatabaseConnection)
 		{
-			const bool hasFileEntry = hasEntryForFile(rendererTarget, fileId);
+			// Gather file data
+			const std_filesystem::path filePath(fileName);
+
+#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
+			// Get the last write time
+			auto lastWriteTime = std_filesystem::last_write_time(filePath);
+			const int64_t fileTime = satic_cast<int64_t>(decltype(lastWriteTime)::clock::to_time_t(lastWriteTime));
+
+			// TODO(sw) std::filesystem::file_size returns uintmax_t which is a unsigned 64bit value (Under 64Bit OS), but SQLite only supportes signed 64Bit integers (For file size in bytes this would mean a max supporte size of ~8 388 607 Terabytes)
+			const int64_t fileSize = static_cast<int64_t>(std_filesystem::file_size(filePath));
+#else
+			// No file time and size checks, but the values are stored
+			const int64_t fileTime = 0;
+			const int64_t fileSize = 0;
+#endif
+
+			// Get cache entry data if an entry exists
+			RendererRuntime::StringId fileId(fileName.c_str());
+			CacheEntry localCacheEntry;
+			const bool hasFileEntry = fillEntryForFile(rendererTarget, fileId, localCacheEntry);
 			try
 			{
 				if (hasFileEntry)
 				{
-					SQLite::Statement query(*mDatabaseConnection.get(), "SELECT hash FROM FileHash WHERE fileId = ? AND rendererTarget = ?");
-					query.bind(1, fileId);
-					query.bind(2, rendererTarget);
-
-					// Execute statement and check if we got a result
-					if (query.executeStep())
+#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
+					// First and faster step: check file size and file time
+					if (localCacheEntry.fileSize == fileSize && localCacheEntry.fileTime == fileTime)
 					{
-						// We have a result, check the stored hash against the new one
-						const std::string hash = query.getColumn(0);
-						if (hash == fileHash)
+						// Source file didn't changed
+						return false;
+					}
+					else
+#endif
+					{
+						// Current file differs in file size and/or file time do the second step:
+						// Check the sha256 hash
+						const std::string fileHash = ::detail::hash256_file(fileName);
+						if (localCacheEntry.fileHash == fileHash)
 						{
+							// Hash of the file didn't changed but store the changed fileSize/fileTime
+							localCacheEntry.fileSize = fileSize;
+							localCacheEntry.fileTime = fileTime;
+							storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
+
 							// Source file didn't changed
 							return false;
 						}
 						else
 						{
-							// Source file has changed, store the new hash
-							SQLite::Statement updateQuery(*mDatabaseConnection.get(), "UPDATE FileHash SET hash = ? WHERE fileId = ? AND rendererTarget = ?");
-							updateQuery.bind(1, fileHash);
-							updateQuery.bind(2, fileId);
-							updateQuery.bind(3, rendererTarget);
+							localCacheEntry.fileSize = fileSize;
+							localCacheEntry.fileTime = fileTime;
+							localCacheEntry.fileHash = fileHash;
 
-							// Execute statement and check if we got a result
-							if (!updateQuery.exec())
-							{
-								std::cerr << "Error updating data to database\n";
-							}
+							// Source file has changed, store the new data
+							storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
 						}
 					}
 				}
 				else
 				{
-					// No entry in the cache: Store it
-					SQLite::Statement query(*mDatabaseConnection.get(), "INSERT INTO FileHash VALUES(?, ?, ?)");
-					query.bind(1, rendererTarget);
-					query.bind(2, fileId);
-					query.bind(3, fileHash);
-
-					// Execute statement and check if we got a result
-					if (!query.exec())
-					{
-						std::cerr << "Error inserting data to database\n";
-					}
+					// No cache entry exists yet. Store the data
+					localCacheEntry.rendererTarget = rendererTarget;
+					localCacheEntry.fileId = fileId;
+					localCacheEntry.fileSize = fileSize;
+					localCacheEntry.fileTime = fileTime;
+					localCacheEntry.fileHash = ::detail::hash256_file(fileName);
+					
+					storeOrUpdateCacheEntryInDatabase(localCacheEntry, true);
 				}
 			}
 			catch (const std::exception& e)
@@ -304,6 +339,43 @@ namespace RendererToolkit
 
 		// Default file has changed to do not break compilation, if cache doesn't work
 		return true;
+	}
+	
+	void CacheManager::storeOrUpdateCacheEntryInDatabase(const CacheEntry& cacheEntry, bool isNewEntry)
+	{
+		// This method should only be called when a database connection exists so no need to do a check here
+		if (isNewEntry)
+		{
+			// No entry in the cache: Store it
+			SQLite::Statement query(*mDatabaseConnection.get(), "INSERT INTO FileInfo VALUES(?, ?, ?, ?, ?)");
+			query.bind(1, cacheEntry.rendererTarget);
+			query.bind(2, cacheEntry.fileId);
+			query.bind(3, cacheEntry.fileHash);
+			query.bind(4, static_cast<long long>(cacheEntry.fileTime));
+			query.bind(5, static_cast<long long>(cacheEntry.fileSize));
+
+			// Execute statement and check if we got a result
+			if (!query.exec())
+			{
+				std::cerr << "Error inserting data to database\n";
+			}
+		}
+		else
+		{
+			// Entry exists, update stored values
+			SQLite::Statement updateQuery(*mDatabaseConnection.get(), "UPDATE FileInfo SET hash = ?, fileTime = ?, fileSize = ? WHERE fileId = ? AND rendererTarget = ?");
+			updateQuery.bind(1, cacheEntry.fileHash);
+			updateQuery.bind(2, static_cast<long long>(cacheEntry.fileTime));
+			updateQuery.bind(3, static_cast<long long>(cacheEntry.fileSize));
+			updateQuery.bind(4, cacheEntry.fileId);
+			updateQuery.bind(5, cacheEntry.rendererTarget);
+
+			// Execute statement and check if we got a result
+			if (!updateQuery.exec())
+			{
+				std::cerr << "Error updating data to database\n";
+			}
+		}
 	}
 
 
