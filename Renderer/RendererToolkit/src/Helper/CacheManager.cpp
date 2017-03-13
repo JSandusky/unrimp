@@ -300,11 +300,12 @@ namespace RendererToolkit
 						const std::string fileHash = ::detail::hash256_file(fileName);
 						if (localCacheEntry.fileHash == fileHash)
 						{
+#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
 							// Hash of the file didn't changed but store the changed fileSize/fileTime
 							localCacheEntry.fileSize = fileSize;
 							localCacheEntry.fileTime = fileTime;
 							storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
-
+#endif
 							// Source file didn't changed
 							return false;
 						}
