@@ -123,13 +123,15 @@ namespace RendererToolkit
 	private:
 		struct CacheEntry
 		{
-			RendererRuntime::StringId fileId;	///< Id of the file (string hash of the file name)
-			std::string rendererTarget;			///< The renderer target
-			std::string fileHash;				// The sha256 hash of the file content (as hex string)
-			int64_t fileSize;					// The file size. SQLite doesn't support 64Bit unsigned integers only 64 bit signed ones
-			int64_t fileTime;					// The file time (last write time). SQLite doesn't support 64Bit unsigned integers only 64 bit signed ones
+			RendererRuntime::StringId fileId;			///< ID of the file (string hash of the filename)
+			std::string				  rendererTarget;	///< The renderer target
+			std::string				  fileHash;			///< The sha256 hash of the file content (as hex string)
+			int64_t					  fileSize;			///< The file size; SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
+			int64_t					  fileTime;			///< The file time (last write time); SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
 
-			CacheEntry() : fileSize(0), fileTime(0)
+			CacheEntry() :
+				fileSize(0),
+				fileTime(0)
 			{}
 
 		};
@@ -154,14 +156,14 @@ namespace RendererToolkit
 
 		/**
 		*  @brief
-		*    Fills an cache entry with the stored data, if it exists
+		*    Fill an cache entry with the stored data, if it exists
 		*
 		*  @param[in] rendererTarget
 		*    The renderer target for which the asset should be compiled
 		*  @param[in] fileId
 		*    The file ID (e.g. string hash of the file path) which represents the file to check
 		*  @param[out] cacheEntry
-		*    The cache entry content. Unchanged when nothing found
+		*    The cache entry content, unchanged when nothing found
 		*
 		*  @return
 		*    True if a cache entry exists otherwise false
@@ -174,7 +176,7 @@ namespace RendererToolkit
 		*
 		*  @param[in] rendererTarget
 		*    The renderer target for which the asset should be compiled
-		*  @param[in] fileName
+		*  @param[in] filename
 		*    The filename to check
 		*
 		*  @return
@@ -183,11 +185,11 @@ namespace RendererToolkit
 		*  @note
 		*    - When a change was detected the an cache entry is stored/updated
 		*/
-		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& fileName);
+		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& filename);
 
 		/**
 		*  @brief
-		*    Stores a new cache entry or updates an existing one
+		*    Store a new cache entry or update an existing one
 		*
 		*  @param[in] cacheEntry
 		*    The cache entry data to store / update

@@ -257,55 +257,56 @@ namespace RendererToolkit
 		return false;
 	}
 
-	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& fileName)
+	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& filename)
 	{
 		if (mDatabaseConnection)
 		{
 			// Gather file data
-			const std_filesystem::path filePath(fileName);
+			const std_filesystem::path filePath(filename);
 
-#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-			// Get the last write time
-			auto lastWriteTime = std_filesystem::last_write_time(filePath);
-			const int64_t fileTime = satic_cast<int64_t>(decltype(lastWriteTime)::clock::to_time_t(lastWriteTime));
+			#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
+				// Get the last write time
+				auto lastWriteTime = std_filesystem::last_write_time(filePath);
+				const int64_t fileTime = static_cast<int64_t>(decltype(lastWriteTime)::clock::to_time_t(lastWriteTime));
 
-			// TODO(sw) std::filesystem::file_size returns uintmax_t which is a unsigned 64bit value (Under 64Bit OS), but SQLite only supportes signed 64Bit integers (For file size in bytes this would mean a max supporte size of ~8 388 607 Terabytes)
-			const int64_t fileSize = static_cast<int64_t>(std_filesystem::file_size(filePath));
-#else
-			// No file time and size checks, but the values are stored
-			const int64_t fileTime = 0;
-			const int64_t fileSize = 0;
-#endif
+				// TODO(sw) std::filesystem::file_size returns uintmax_t which is a unsigned 64 bit value (under 64 bit OS), but SQLite only supports signed 64 bit integers (for file size in bytes this would mean a maximum supported size of ~8 388 607 Terabytes)
+				const int64_t fileSize = static_cast<int64_t>(std_filesystem::file_size(filePath));
+			#else
+				// No file time and size checks, but the values are stored
+				const int64_t fileTime = 0;
+				const int64_t fileSize = 0;
+			#endif
 
 			// Get cache entry data if an entry exists
-			RendererRuntime::StringId fileId(fileName.c_str());
+			RendererRuntime::StringId fileId(filename.c_str());
 			CacheEntry localCacheEntry;
 			const bool hasFileEntry = fillEntryForFile(rendererTarget, fileId, localCacheEntry);
 			try
 			{
 				if (hasFileEntry)
 				{
-#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-					// First and faster step: check file size and file time
-					if (localCacheEntry.fileSize == fileSize && localCacheEntry.fileTime == fileTime)
-					{
-						// Source file didn't changed
-						return false;
-					}
-					else
-#endif
+					#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
+						// First and faster step: check file size and file time
+						if (localCacheEntry.fileSize == fileSize && localCacheEntry.fileTime == fileTime)
+						{
+							// Source file didn't changed
+							return false;
+						}
+						else
+					#endif
 					{
 						// Current file differs in file size and/or file time do the second step:
 						// Check the sha256 hash
-						const std::string fileHash = ::detail::hash256_file(fileName);
+						const std::string fileHash = ::detail::hash256_file(filename);
 						if (localCacheEntry.fileHash == fileHash)
 						{
-#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-							// Hash of the file didn't changed but store the changed fileSize/fileTime
-							localCacheEntry.fileSize = fileSize;
-							localCacheEntry.fileTime = fileTime;
-							storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
-#endif
+							#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
+								// Hash of the file didn't changed but store the changed fileSize/fileTime
+								localCacheEntry.fileSize = fileSize;
+								localCacheEntry.fileTime = fileTime;
+								storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
+							#endif
+
 							// Source file didn't changed
 							return false;
 						}
@@ -322,12 +323,12 @@ namespace RendererToolkit
 				}
 				else
 				{
-					// No cache entry exists yet. Store the data
+					// No cache entry exists yet: Store the data
 					localCacheEntry.rendererTarget = rendererTarget;
 					localCacheEntry.fileId = fileId;
 					localCacheEntry.fileSize = fileSize;
 					localCacheEntry.fileTime = fileTime;
-					localCacheEntry.fileHash = ::detail::hash256_file(fileName);
+					localCacheEntry.fileHash = ::detail::hash256_file(filename);
 					
 					storeOrUpdateCacheEntryInDatabase(localCacheEntry, true);
 				}
