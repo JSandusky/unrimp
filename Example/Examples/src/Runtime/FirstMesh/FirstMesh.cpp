@@ -186,7 +186,7 @@ void FirstMesh::onInitialization()
 			}
 
 			// Create mesh instance
-			mMeshResourceId = rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId("Example/Mesh/Character/Imrod");
+			rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId("Example/Mesh/Character/Imrod", mMeshResourceId);
 
 			{ // Load in the diffuse, emissive, normal and roughness texture
 			  // -> The tangent space normal map is stored with three components, two would be enough to recalculate the third component within the fragment shader

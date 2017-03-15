@@ -66,7 +66,7 @@ namespace RendererRuntime
 		{
 			disconnectFromResourceById(mMeshResourceId);
 		}
-		mMeshResourceId = getSceneResource().getRendererRuntime().getMeshResourceManager().loadMeshResourceByAssetId(meshAssetId, this);
+		getSceneResource().getRendererRuntime().getMeshResourceManager().loadMeshResourceByAssetId(meshAssetId, mMeshResourceId, this);
 	}
 
 	void MeshSceneItem::setMaterialResourceIdOfSubMesh(uint32_t subMeshIndex, MaterialResourceId materialResourceId)

@@ -804,18 +804,25 @@ namespace RendererRuntime
 		const AssetId assetId(renderModelName.c_str());
 
 		// Check whether or not we need to generate the runtime mesh asset right now
-		MeshResourceManager& meshResourceManager = mRendererRuntime.getMeshResourceManager();
-		MeshResourceId meshResourceId = meshResourceManager.loadMeshResourceByAssetId(assetId);
-		if (isUninitialized(meshResourceId))
+		MeshResourceId meshResourceId = getUninitialized<MeshResourceId>();
 		{
-			// We need to generate the runtime mesh asset right now
-			meshResourceId = meshResourceManager.createEmptyMeshResourceByAssetId(assetId);
-			if (isInitialized(meshResourceId))
+			MeshResourceManager& meshResourceManager = mRendererRuntime.getMeshResourceManager();
+			MeshResource* meshResource = meshResourceManager.getMeshResourceByAssetId(assetId);
+			if (nullptr != meshResource)
 			{
-				MeshResource* meshResource = meshResourceManager.getMeshResources().tryGetElementById(meshResourceId);
-				if (nullptr != meshResource)
+				meshResourceId = meshResource->getId();
+			}
+			else
+			{
+				// We need to generate the runtime mesh asset right now
+				meshResourceId = meshResourceManager.createEmptyMeshResourceByAssetId(assetId);
+				if (isInitialized(meshResourceId))
 				{
-					::detail::setupRenderModel(mRendererRuntime, renderModelName, *meshResource, mVrDeviceMaterialResourceId);
+					meshResource = meshResourceManager.getMeshResources().tryGetElementById(meshResourceId);
+					if (nullptr != meshResource)
+					{
+						::detail::setupRenderModel(mRendererRuntime, renderModelName, *meshResource, mVrDeviceMaterialResourceId);
+					}
 				}
 			}
 		}

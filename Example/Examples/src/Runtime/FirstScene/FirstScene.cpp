@@ -262,21 +262,23 @@ void FirstScene::onDraw()
 			if (nullptr != mCompositorWorkspaceInstance)
 			{
 				createDebugGui(*mainRenderTarget);
-
-				// Decide whether or not the VR-manager is used for rendering
-				RendererRuntime::IVrManager& vrManager = mCompositorWorkspaceInstance->getRendererRuntime().getVrManager();
-				if (vrManager.isRunning())
+				if (nullptr != mSceneResource && mSceneResource->getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
 				{
-					// Update the VR-manager just before rendering
-					vrManager.updateHmdMatrixPose(mCameraSceneItem);
+					// Decide whether or not the VR-manager is used for rendering
+					RendererRuntime::IVrManager& vrManager = mCompositorWorkspaceInstance->getRendererRuntime().getVrManager();
+					if (vrManager.isRunning())
+					{
+						// Update the VR-manager just before rendering
+						vrManager.updateHmdMatrixPose(mCameraSceneItem);
 
-					// Execute the compositor workspace instance
-					vrManager.executeCompositorWorkspaceInstance(*mCompositorWorkspaceInstance, *mainRenderTarget, mCameraSceneItem, mLightSceneItem);
-				}
-				else
-				{
-					// Execute the compositor workspace instance
-					mCompositorWorkspaceInstance->execute(*mainRenderTarget, mCameraSceneItem, mLightSceneItem);
+						// Execute the compositor workspace instance
+						vrManager.executeCompositorWorkspaceInstance(*mCompositorWorkspaceInstance, *mainRenderTarget, mCameraSceneItem, mLightSceneItem);
+					}
+					else
+					{
+						// Execute the compositor workspace instance
+						mCompositorWorkspaceInstance->execute(*mainRenderTarget, mCameraSceneItem, mLightSceneItem);
+					}
 				}
 			}
 		}

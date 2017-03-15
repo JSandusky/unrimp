@@ -450,7 +450,7 @@ namespace RendererRuntime
 				if (sceneItem->getSceneItemTypeId() == MeshSceneItem::TYPE_ID || sceneItem->getSceneItemTypeId() == SkeletonMeshSceneItem::TYPE_ID)
 				{
 					RenderableManager& renderableManager = const_cast<RenderableManager&>(static_cast<const MeshSceneItem*>(sceneItem)->getRenderableManager());	// TODO(co) Get rid of the evil const-cast
-					if (renderableManager.isVisible())
+					if (renderableManager.isVisible() && !renderableManager.getRenderables().empty())
 					{
 						renderableManager.setCachedDistanceToCamera(distanceToCamera);
 

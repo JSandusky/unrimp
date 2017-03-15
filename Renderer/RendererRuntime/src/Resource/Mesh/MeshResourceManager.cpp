@@ -58,10 +58,8 @@ namespace RendererRuntime
 		return nullptr;
 	}
 
-	MeshResourceId MeshResourceManager::loadMeshResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
+	void MeshResourceManager::loadMeshResourceByAssetId(AssetId assetId, MeshResourceId& meshResourceId, IResourceListener* resourceListener, bool reload)
 	{
-		MeshResourceId meshResourceId = getUninitialized<MeshResourceId>();
-
 		// Get or create the instance
 		MeshResource* meshResource = getMeshResourceByAssetId(assetId);
 
@@ -75,13 +73,19 @@ namespace RendererRuntime
 			meshResource->setAssetId(assetId);
 			load = true;
 		}
+
+		// Before connecting a resource listener, ensure we set the output resource ID at once so it can already directly be used inside the resource listener
 		if (nullptr != meshResource)
 		{
+			meshResourceId = meshResource->getId();
 			if (nullptr != resourceListener)
 			{
 				meshResource->connectResourceListener(*resourceListener);
 			}
-			meshResourceId = meshResource->getId();
+		}
+		else
+		{
+			meshResourceId = getUninitialized<MeshResourceId>();
 		}
 
 		// Load the resource, if required
@@ -97,9 +101,6 @@ namespace RendererRuntime
 			resourceStreamerLoadRequest.resourceLoader = meshResourceLoader;
 			mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 		}
-
-		// Done
-		return meshResourceId;
 	}
 
 	MeshResourceId MeshResourceManager::createEmptyMeshResourceByAssetId(AssetId assetId)
@@ -129,7 +130,8 @@ namespace RendererRuntime
 		{
 			if (mMeshResources.getElementByIndex(i).getAssetId() == assetId)
 			{
-				loadMeshResourceByAssetId(assetId, nullptr, true);
+				MeshResourceId meshResourceId = getUninitialized<MeshResourceId>();
+				loadMeshResourceByAssetId(assetId, meshResourceId, nullptr, true);
 				break;
 			}
 		}

@@ -75,7 +75,7 @@ namespace RendererRuntime
 	public:
 		inline const MeshResources& getMeshResources() const;
 		RENDERERRUNTIME_API_EXPORT MeshResource* getMeshResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
-		RENDERERRUNTIME_API_EXPORT MeshResourceId loadMeshResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadMeshResourceByAssetId(AssetId assetId, MeshResourceId& meshResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 		RENDERERRUNTIME_API_EXPORT MeshResourceId createEmptyMeshResourceByAssetId(AssetId assetId);	// Mesh resource is not allowed to exist, yet
 
 
