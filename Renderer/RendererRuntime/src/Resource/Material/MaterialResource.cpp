@@ -97,10 +97,10 @@ namespace RendererRuntime
 			destroyAllMaterialTechniques();
 
 			// Unregister from previous parent material resource
-			const MaterialResources& materialResources = getResourceManager<MaterialResourceManager>().getMaterialResources();
+			const MaterialResourceManager& materialResourceManager = getResourceManager<MaterialResourceManager>();
 			if (isInitialized(mParentMaterialResourceId))
 			{
-				MaterialResource& parentMaterialResource = materialResources.getElementById(mParentMaterialResourceId);
+				MaterialResource& parentMaterialResource = static_cast<MaterialResource&>(materialResourceManager.getResourceByResourceId(mParentMaterialResourceId));
 				SortedChildMaterialResourceIds::const_iterator iterator = std::lower_bound(parentMaterialResource.mSortedChildMaterialResourceIds.cbegin(), parentMaterialResource.mSortedChildMaterialResourceIds.cend(), materialResourceId, ::detail::OrderByMaterialResourceId());
 				assert(iterator != parentMaterialResource.mSortedChildMaterialResourceIds.end() && *iterator == materialResourceId);
 				parentMaterialResource.mSortedChildMaterialResourceIds.erase(iterator);
@@ -111,8 +111,7 @@ namespace RendererRuntime
 			if (isInitialized(mParentMaterialResourceId))
 			{
 				// Register to new parent material resource
-				assert(materialResources.isElementIdValid(mParentMaterialResourceId));
-				MaterialResource& parentMaterialResource = const_cast<MaterialResource&>(materialResources.getElementById(mParentMaterialResourceId));
+				MaterialResource& parentMaterialResource = static_cast<MaterialResource&>(materialResourceManager.getResourceByResourceId(mParentMaterialResourceId));
 				assert(parentMaterialResource.getLoadingState() == IResource::LoadingState::LOADED);
 				SortedChildMaterialResourceIds::const_iterator iterator = std::lower_bound(parentMaterialResource.mSortedChildMaterialResourceIds.cbegin(), parentMaterialResource.mSortedChildMaterialResourceIds.cend(), materialResourceId, ::detail::OrderByMaterialResourceId());
 				assert(iterator == parentMaterialResource.mSortedChildMaterialResourceIds.end() || *iterator != materialResourceId);
@@ -212,12 +211,11 @@ namespace RendererRuntime
 		// Inform child material resources, if required
 		if (!mSortedChildMaterialResourceIds.empty())
 		{
-			const MaterialResources& materialResources = static_cast<MaterialResourceManager&>(getResourceManager()).getMaterialResources();
+			const MaterialResourceManager& materialResourceManager = static_cast<MaterialResourceManager&>(getResourceManager());
 			while (!mSortedChildMaterialResourceIds.empty())
 			{
 				const MaterialResourceId materialResourceId = mSortedChildMaterialResourceIds.front();
-				assert(materialResources.isElementIdValid(materialResourceId));
-				materialResources.getElementById(materialResourceId).setParentMaterialResourceId(getUninitialized<MaterialResourceId>());
+				static_cast<MaterialResource&>(materialResourceManager.getResourceByResourceId(materialResourceId)).setParentMaterialResourceId(getUninitialized<MaterialResourceId>());
 			}
 			mSortedChildMaterialResourceIds.clear();
 		}
@@ -321,11 +319,10 @@ namespace RendererRuntime
 			}
 
 			// Inform child material resources, if required
-			const MaterialResources& materialResources = static_cast<MaterialResourceManager&>(getResourceManager()).getMaterialResources();
+			const MaterialResourceManager& materialResourceManager = static_cast<MaterialResourceManager&>(getResourceManager());
 			for (MaterialResourceId materialResourceId : mSortedChildMaterialResourceIds)
 			{
-				assert(materialResources.isElementIdValid(materialResourceId));
-				materialResources.getElementById(materialResourceId).setPropertyByIdInternal(materialPropertyId, materialPropertyValue, materialPropertyUsage, false);
+				static_cast<MaterialResource&>(materialResourceManager.getResourceByResourceId(materialResourceId)).setPropertyByIdInternal(materialPropertyId, materialPropertyValue, materialPropertyUsage, false);
 			}
 
 			// Material property change detected

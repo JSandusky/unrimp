@@ -49,7 +49,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline KtxTextureResourceLoader::KtxTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		ITextureResourceLoader(resourceManager),
+		ITextureResourceLoader(resourceManager, rendererRuntime),
 		mRendererRuntime(rendererRuntime),
 		mTexture(nullptr),
 		mWidth(0),

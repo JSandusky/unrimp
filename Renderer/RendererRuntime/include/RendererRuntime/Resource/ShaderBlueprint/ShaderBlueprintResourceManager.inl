@@ -38,37 +38,9 @@ namespace RendererRuntime
 		return mRendererShaderProperties;
 	}
 
-	inline const ShaderBlueprintResources& ShaderBlueprintResourceManager::getShaderBlueprintResources() const
-	{
-		return mShaderBlueprintResources;
-	}
-
 	inline ShaderCacheManager& ShaderBlueprintResourceManager::getShaderCacheManager()
 	{
 		return mShaderCacheManager;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	inline IResource& ShaderBlueprintResourceManager::getResourceByResourceId(ResourceId resourceId) const
-	{
-		return mShaderBlueprintResources.getElementById(resourceId);
-	}
-
-	inline IResource* ShaderBlueprintResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
-	{
-		return mShaderBlueprintResources.tryGetElementById(resourceId);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline ShaderBlueprintResourceManager::~ShaderBlueprintResourceManager()
-	{
-		// Nothing here
 	}
 
 

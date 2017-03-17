@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationEvaluator.h"
 #include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResourceManager.h"
+#include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResource.h"
 #include "RendererRuntime/Core/Math/Math.h"
 
 #include <glm/gtc/matrix_transform.hpp>

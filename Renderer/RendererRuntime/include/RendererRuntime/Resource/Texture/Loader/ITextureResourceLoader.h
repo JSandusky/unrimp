@@ -36,6 +36,8 @@
 namespace RendererRuntime
 {
 	class TextureResource;
+	class IRendererRuntime;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -44,6 +46,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t TextureResourceId;	///< POD texture resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -57,13 +65,32 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class TextureResourceManager;
+		friend ResourceManagerTemplate<TextureResource, ITextureResourceLoader, TextureResourceId, 2048>;	// Type definition of template class
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const ResourceLoaderTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		inline virtual void onDeserialization(IFile& file) override;
+		inline virtual void onProcessing() override;
+		inline virtual bool onDispatch() override;
+		inline virtual bool isFullyLoaded() override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline ITextureResourceLoader(IResourceManager& resourceManager);
+		inline ITextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~ITextureResourceLoader();
 		ITextureResourceLoader(const ITextureResourceLoader&) = delete;
 		ITextureResourceLoader& operator=(const ITextureResourceLoader&) = delete;

@@ -27,8 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/PackedElementManager.h"
-#include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
 
 
@@ -37,8 +35,10 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class MeshResource;
 	class IRendererRuntime;
-	class IResourceListener;
+	class MeshResourceLoader;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -52,8 +52,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t												 MeshResourceId;	///< POD mesh resource identifier
-	typedef PackedElementManager<MeshResource, MeshResourceId, 4096> MeshResources;
+	typedef uint32_t MeshResourceId;	///< POD mesh resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -82,29 +81,36 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
-		inline virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
+		virtual uint32_t getNumberOfResources() const override;
+		virtual IResource& getResourceByIndex(uint32_t index) const override;
+		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
+		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	private:
+		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline explicit MeshResourceManager(IRendererRuntime& rendererRuntime);
-		inline virtual ~MeshResourceManager();
+		explicit MeshResourceManager(IRendererRuntime& rendererRuntime);
+		virtual ~MeshResourceManager();
 		MeshResourceManager(const MeshResourceManager&) = delete;
 		MeshResourceManager& operator=(const MeshResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		MeshResources	  mMeshResources;
+		ResourceManagerTemplate<MeshResource, MeshResourceLoader, MeshResourceId, 4096>* mInternalResourceManager;
 
 
 	};
@@ -114,9 +120,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Mesh/MeshResourceManager.inl"

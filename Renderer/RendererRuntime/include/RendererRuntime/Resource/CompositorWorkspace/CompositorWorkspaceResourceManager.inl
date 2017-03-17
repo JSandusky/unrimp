@@ -34,11 +34,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const CompositorWorkspaceResources& CompositorWorkspaceResourceManager::getCompositorWorkspaceResources() const
-	{
-		return mCompositorWorkspaceResources;
-	}
-
 	inline RenderTargetTextureManager& CompositorWorkspaceResourceManager::getRenderTargetTextureManager()
 	{
 		assert(nullptr != mRenderTargetTextureManager);
@@ -49,20 +44,6 @@ namespace RendererRuntime
 	{
 		assert(nullptr != mFramebufferManager);
 		return *mFramebufferManager;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	inline IResource& CompositorWorkspaceResourceManager::getResourceByResourceId(ResourceId resourceId) const
-	{
-		return mCompositorWorkspaceResources.getElementById(resourceId);
-	}
-
-	inline IResource* CompositorWorkspaceResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
-	{
-		return mCompositorWorkspaceResources.tryGetElementById(resourceId);
 	}
 
 

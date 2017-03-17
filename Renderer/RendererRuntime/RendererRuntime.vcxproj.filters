@@ -336,14 +336,8 @@
     <None Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.inl">
       <Filter>Source Files\Resource\Material</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.inl">
-      <Filter>Source Files\Resource\Mesh</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.inl">
       <Filter>Source Files\Resource\Texture</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.inl">
-      <Filter>Source Files\Resource\ShaderPiece</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Detail\IResourceLoader.inl">
       <Filter>Source Files\Resource\Detail</Filter>
@@ -540,16 +534,10 @@
     <None Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.inl">
       <Filter>Source Files\Resource\Skeleton</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Skeleton\SkeletonResourceManager.inl">
-      <Filter>Source Files\Resource\Skeleton</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.inl">
       <Filter>Source Files\Resource\SkeletonAnimation\Loader</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResource.inl">
-      <Filter>Source Files\Resource\SkeletonAnimation</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.inl">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Scene\Item\SkeletonMeshSceneItem.inl">
@@ -567,6 +555,13 @@
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationController.inl">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.inl">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.inl">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.h.vsspell" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1104,6 +1099,12 @@
     <ClInclude Include="include\RendererRuntime\DebugGui\DebugGuiHelper.h">
       <Filter>Source Files\DebugGui</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.h">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.h">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1221,9 +1222,6 @@
       <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Detail\IResource.cpp">
-      <Filter>Source Files\Resource\Detail</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Detail\IResourceManager.cpp">
       <Filter>Source Files\Resource\Detail</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp">
@@ -1447,6 +1445,12 @@
     </ClCompile>
     <ClCompile Include="src\DebugGui\DebugGuiHelper.cpp">
       <Filter>Source Files\DebugGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Detail\ResourceManagerTemplateBase.cpp">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Texture\Loader\ITextureResourceLoader.cpp">
+      <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

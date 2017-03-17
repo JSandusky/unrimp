@@ -23,11 +23,11 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/Loader/MaterialResourceLoader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
-#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
-#include "RendererRuntime/Asset/AssetManager.h"
-#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
 
 
 //[-------------------------------------------------------]
@@ -46,80 +46,20 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Work-in-progress
 	MaterialResource* MaterialResourceManager::getMaterialResourceByAssetId(AssetId assetId) const
 	{
-		const uint32_t numberOfElements = mMaterialResources.getNumberOfElements();
-		for (uint32_t i = 0; i < numberOfElements; ++i)
-		{
-			MaterialResource& materialResource = mMaterialResources.getElementByIndex(i);
-			if (materialResource.getAssetId() == assetId)
-			{
-				return &materialResource;
-			}
-		}
-
-		// There's no material resource using the given asset ID
-		return nullptr;
+		return mInternalResourceManager->getResourceByAssetId(assetId);
 	}
 
-	// TODO(co) Work-in-progress
-	MaterialResourceId MaterialResourceManager::loadMaterialResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
+	MaterialResourceId MaterialResourceManager::getMaterialResourceIdByAssetId(AssetId assetId) const
 	{
-		MaterialResourceId materialResourceId = getUninitialized<MaterialResourceId>();
+		const MaterialResource* materialResource = getMaterialResourceByAssetId(assetId);
+		return (nullptr != materialResource) ? materialResource->getId() : getUninitialized<MaterialResourceId>();
+	}
 
-		// Get or create the instance
-		MaterialResource* materialResource = nullptr;
-		{
-			const uint32_t numberOfElements = mMaterialResources.getNumberOfElements();
-			for (uint32_t i = 0; i < numberOfElements; ++i)
-			{
-				MaterialResource& currentMaterialResource = mMaterialResources.getElementByIndex(i);
-				if (currentMaterialResource.getAssetId() == assetId)
-				{
-					materialResource = &currentMaterialResource;
-
-					// Get us out of the loop
-					i = numberOfElements;
-				}
-			}
-		}
-
-		// Create the resource instance
-		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
-		bool load = (reload && nullptr != asset);
-		if (nullptr == materialResource && nullptr != asset)
-		{
-			materialResource = &mMaterialResources.addElement();
-			materialResource->setResourceManager(this);
-			materialResource->setAssetId(assetId);
-			load = true;
-		}
-		if (nullptr != materialResource)
-		{
-			if (nullptr != resourceListener)
-			{
-				materialResource->connectResourceListener(*resourceListener);
-			}
-			materialResourceId = materialResource->getId();
-		}
-
-		// Load the resource, if required
-		if (load)
-		{
-			// Prepare the resource loader
-			MaterialResourceLoader* materialResourceLoader = static_cast<MaterialResourceLoader*>(acquireResourceLoaderInstance(MaterialResourceLoader::TYPE_ID));
-			materialResourceLoader->initialize(*asset, *materialResource);
-
-			// Commit resource streamer asset load request
-			ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-			resourceStreamerLoadRequest.resource = materialResource;
-			resourceStreamerLoadRequest.resourceLoader = materialResourceLoader;
-			mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-		}
-
-		// Done
-		return materialResourceId;
+	void MaterialResourceManager::loadMaterialResourceByAssetId(AssetId assetId, MaterialResourceId& materialResourceId, IResourceListener* resourceListener, bool reload)
+	{
+		mInternalResourceManager->loadResourceByAssetId(assetId, materialResourceId, resourceListener, reload);
 	}
 
 	MaterialResourceId MaterialResourceManager::createMaterialResourceByAssetId(AssetId assetId, AssetId materialBlueprintAssetId, MaterialTechniqueId materialTechniqueId)
@@ -128,15 +68,16 @@ namespace RendererRuntime
 		assert(nullptr == getMaterialResourceByAssetId(assetId));
 
 		// Create the material resource instance
-		MaterialResource& materialResource = mMaterialResources.addElement();
+		MaterialResource& materialResource = mInternalResourceManager->getResources().addElement();
 		materialResource.setResourceManager(this);
 		materialResource.setAssetId(assetId);
 
 		{ // Setup material resource instance
 			// Copy over the material properties of the material blueprint resource
 			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
-			const MaterialBlueprintResourceId materialBlueprintResourceId = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(materialBlueprintAssetId);
-			MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResourceManager.getMaterialBlueprintResources().tryGetElementById(materialBlueprintResourceId);
+			MaterialBlueprintResourceId materialBlueprintResourceId = getUninitialized<MaterialBlueprintResourceId>();
+			materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(materialBlueprintAssetId, materialBlueprintResourceId);
+			MaterialBlueprintResource* materialBlueprintResource = static_cast<MaterialBlueprintResource*>(materialBlueprintResourceManager.tryGetResourceByResourceId(materialBlueprintResourceId));
 			if (nullptr != materialBlueprintResource)
 			{
 				materialResource.mMaterialProperties = materialBlueprintResource->mMaterialProperties;
@@ -158,11 +99,10 @@ namespace RendererRuntime
 
 	MaterialResourceId MaterialResourceManager::createMaterialResourceByCloning(MaterialResourceId parentMaterialResourceId, AssetId assetId)
 	{
-		assert(mMaterialResources.isElementIdValid(parentMaterialResourceId));
-		assert(mMaterialResources.getElementById(parentMaterialResourceId).getLoadingState() == IResource::LoadingState::LOADED);
+		assert(mInternalResourceManager->getResources().getElementById(parentMaterialResourceId).getLoadingState() == IResource::LoadingState::LOADED);
 
 		// Create the material resource instance
-		MaterialResource& materialResource = mMaterialResources.addElement();
+		MaterialResource& materialResource = mInternalResourceManager->getResources().addElement();
 		materialResource.setResourceManager(this);
 		materialResource.setAssetId(assetId);
 		materialResource.setParentMaterialResourceId(parentMaterialResourceId);
@@ -172,22 +112,38 @@ namespace RendererRuntime
 		return materialResource.getId();
 	}
 
+	void MaterialResourceManager::destroyMaterialResource(MaterialResourceId materialResourceId)
+	{
+		mInternalResourceManager->getResources().removeElement(materialResourceId);
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
+	uint32_t MaterialResourceManager::getNumberOfResources() const
+	{
+		return mInternalResourceManager->getResources().getNumberOfElements();
+	}
+
+	IResource& MaterialResourceManager::getResourceByIndex(uint32_t index) const
+	{
+		return mInternalResourceManager->getResources().getElementByIndex(index);
+	}
+
+	IResource& MaterialResourceManager::getResourceByResourceId(ResourceId resourceId) const
+	{
+		return mInternalResourceManager->getResources().getElementById(resourceId);
+	}
+
+	IResource* MaterialResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
+	{
+		return mInternalResourceManager->getResources().tryGetElementById(resourceId);
+	}
+
 	void MaterialResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		const uint32_t numberOfElements = mMaterialResources.getNumberOfElements();
-		for (uint32_t i = 0; i < numberOfElements; ++i)
-		{
-			if (mMaterialResources.getElementByIndex(i).getAssetId() == assetId)
-			{
-				loadMaterialResourceByAssetId(assetId, nullptr, true);
-				break;
-			}
-		}
+		return mInternalResourceManager->reloadResourceByAssetId(assetId);
 	}
 
 	void MaterialResourceManager::update()
@@ -197,24 +153,26 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	void MaterialResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	{
+		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	IResourceLoader* MaterialResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	MaterialResourceManager::MaterialResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
-		// Can we recycle an already existing resource loader instance?
-		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+		mInternalResourceManager = new ResourceManagerTemplate<MaterialResource, MaterialResourceLoader, MaterialResourceId, 4096>(rendererRuntime, *this);
+	}
 
-		// We need to create a new resource loader instance
-		if (nullptr == resourceLoader)
-		{
-			// We only support our own material format
-			assert(resourceLoaderTypeId == MaterialResourceLoader::TYPE_ID);
-			resourceLoader = new MaterialResourceLoader(*this, mRendererRuntime);
-			mUsedResourceLoaderInstances.push_back(resourceLoader);
-		}
-
-		// Done
-		return resourceLoader;
+	MaterialResourceManager::~MaterialResourceManager()
+	{
+		delete mInternalResourceManager;
 	}
 
 

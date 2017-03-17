@@ -27,8 +27,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-#include "RendererRuntime/Asset/Asset.h"
+#include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Core/StringId.h"
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -36,8 +38,9 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IFile;
+	class IResourceLoader;
 	class IResourceManager;
+	class IRendererRuntime;
 }
 
 
@@ -57,100 +60,52 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class IResourceLoader : protected NonCopyable
+	/**
+	*  @brief
+	*    Internal resource manager template base; not public used to keep template instantiation overhead under control
+	*/
+	class ResourceManagerTemplateBase : private Manager
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-		friend class ResourceManagerTemplateBase;
+	public:
+		typedef std::vector<IResourceLoader*> ResourceLoaders;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Return the owner resource manager
-		*
-		*  @return
-		*    The owner resource manager
-		*/
+		inline ResourceManagerTemplateBase(IRendererRuntime& rendererRuntime, IResourceManager& resourceManager);
+		~ResourceManagerTemplateBase();
+		inline IRendererRuntime& getRendererRuntime() const;
 		inline IResourceManager& getResourceManager() const;
-
-		/**
-		*  @brief
-		*    Return the asset the resource is using
-		*
-		*  @return
-		*    The asset the resource is using
-		*/
-		inline const Asset& getAsset() const;
+		inline ResourceLoaders& getFreeResourceLoaderInstances();
+		inline ResourceLoaders& getUsedResourceLoaderInstances();
+		void releaseResourceLoaderInstance(IResourceLoader& resourceLoader);
+		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Return the resource loader type ID
-		*/
-		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const = 0;
-
-		/**
-		*  @brief
-		*    Called when the resource loader has to deserialize (usually from file) the internal data into memory
-		*
-		*  @param[in] file
-		*    File to read from
-		*/
-		virtual void onDeserialization(IFile& file) = 0;
-
-		/**
-		*  @brief
-		*    Called when the resource loader has to perform internal in-memory data processing
-		*/
-		virtual void onProcessing() = 0;
-
-		/**
-		*  @brief
-		*    Called when the resource loader has to dispatch the data (e.g. to the renderer backend)
-		*
-		*  @return
-		*    "true" if the resource is fully loaded, else "false" (e.g. asset dependencies are not fully loaded, yet) meaning this method will be called later on again
-		*/
-		virtual bool onDispatch() = 0;
-
-		/**
-		*  @brief
-		*    Called when the resource loader is about to switch the resource into the loaded state
-		*
-		*  @return
-		*    "true" if the resource is fully loaded, else "false" (e.g. asset dependencies are not fully loaded, yet) meaning this method will be called later on again
-		*/
-		virtual bool isFullyLoaded() = 0;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		inline IResourceLoader(IResourceManager& resourceManager);
-		inline virtual ~IResourceLoader();
-		IResourceLoader(const IResourceLoader&) = delete;
-		IResourceLoader& operator=(const IResourceLoader&) = delete;
-		inline void initialize(const Asset& asset);
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		IResourceManager& mResourceManager;	///< Owner resource manager
-		Asset			  mAsset;			///< In order to be multi-threading safe in here, we need an asset copy
+		ResourceManagerTemplateBase(const ResourceManagerTemplateBase&) = delete;
+		ResourceManagerTemplateBase& operator=(const ResourceManagerTemplateBase&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected data                                        ]
+	//[-------------------------------------------------------]
+	protected:
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		IResourceManager& mResourceManager;
+		// Resource loader instances
+		ResourceLoaders mFreeResourceLoaderInstances;
+		ResourceLoaders mUsedResourceLoaderInstances;
 
 
 	};
@@ -165,4 +120,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceLoader.inl"
+#include "RendererRuntime/Resource/Detail/ResourceManagerTemplateBase.inl"

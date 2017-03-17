@@ -93,6 +93,8 @@
     <None Include="include\RendererRuntime\Resource\Detail\IResource.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\IResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\IResourceManager.inl" />
+    <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.inl" />
+    <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\LightBufferManager.inl" />
@@ -117,9 +119,9 @@
     <None Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialTechnique.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\Detail\SubMesh.inl" />
+    <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.h.vsspell" />
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResource.inl" />
-    <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Factory\ISceneFactory.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Factory\SceneFactory.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\ISceneResource.inl" />
@@ -143,15 +145,12 @@
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.inl" />
-    <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationController.inl" />
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.inl" />
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResource.inl" />
-    <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Skeleton\SkeletonResource.inl" />
-    <None Include="include\RendererRuntime\Resource\Skeleton\SkeletonResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\ITextureResourceLoader.inl" />
@@ -253,6 +252,8 @@
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceBufferManager.h" />
@@ -484,7 +485,7 @@
     <ClCompile Include="src\Resource\CompositorWorkspace\CompositorWorkspaceResourceManager.cpp" />
     <ClCompile Include="src\Resource\CompositorWorkspace\Loader\CompositorWorkspaceResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Detail\IResource.cpp" />
-    <ClCompile Include="src\Resource\Detail\IResourceManager.cpp" />
+    <ClCompile Include="src\Resource\Detail\ResourceManagerTemplateBase.cpp" />
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp" />
     <ClCompile Include="src\Resource\IResourceListener.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\InstanceBufferManager.cpp" />
@@ -640,6 +641,7 @@
     <ClCompile Include="src\Resource\Skeleton\SkeletonResourceManager.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\DdsTextureResourceLoader.cpp" />
+    <ClCompile Include="src\Resource\Texture\Loader\ITextureResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\KtxTextureResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
     <ClCompile Include="src\Vr\OpenVR\OpenVRRuntimeLinking.cpp" />

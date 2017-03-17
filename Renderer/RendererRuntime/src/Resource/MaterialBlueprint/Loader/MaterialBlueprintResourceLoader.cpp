@@ -224,7 +224,7 @@ namespace RendererRuntime
 			ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
 			for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 			{
-				mMaterialBlueprintResource->mShaderBlueprintResourceId[i] = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mShaderBlueprintAssetId[i]);
+				shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mShaderBlueprintAssetId[i], mMaterialBlueprintResource->mShaderBlueprintResourceId[i]);
 			}
 		}
 
@@ -333,7 +333,7 @@ namespace RendererRuntime
 				texture.rgbHardwareGammaCorrection = materialBlueprintTexture->rgbHardwareGammaCorrection;
 				if (materialProperty.getValueType() == MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
 				{
-					texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(materialProperty.getTextureAssetIdValue(), texture.fallbackTextureAssetId, nullptr, texture.rgbHardwareGammaCorrection);
+					textureResourceManager.loadTextureResourceByAssetId(materialProperty.getTextureAssetIdValue(), texture.fallbackTextureAssetId, texture.textureResourceId, nullptr, texture.rgbHardwareGammaCorrection);
 				}
 			}
 		}

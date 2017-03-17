@@ -39,6 +39,7 @@ namespace RendererRuntime
 {
 	class Renderable;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -69,10 +70,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class Renderable;													// Must be able to attach/detach itself from the material resource
-		friend PackedElementManager<MaterialResource, MaterialResourceId, 4096>;	// Type definition of template class
+		friend class Renderable;																			// Must be able to attach/detach itself from the material resource
 		friend class MaterialResourceLoader;
 		friend class MaterialResourceManager;
+		friend ResourceManagerTemplate<MaterialResource, MaterialResourceLoader, MaterialResourceId, 4096>;	// Type definition of template class
+		friend PackedElementManager<MaterialResource, MaterialResourceId, 4096>;							// Type definition of template class
 
 
 	//[-------------------------------------------------------]

@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
+#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
 #include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -133,7 +134,7 @@ namespace RendererRuntime
 				const v1Mesh::SubMesh& v1SubMesh = mSubMeshes[i];
 
 				// Setup sub-mesh
-				subMesh.mMaterialResourceId = materialResourceManager.loadMaterialResourceByAssetId(v1SubMesh.materialAssetId);
+				materialResourceManager.loadMaterialResourceByAssetId(v1SubMesh.materialAssetId, subMesh.mMaterialResourceId);
 				subMesh.mPrimitiveTopology  = static_cast<Renderer::PrimitiveTopology>(v1SubMesh.primitiveTopology);
 				subMesh.mStartIndexLocation = v1SubMesh.startIndexLocation;
 				subMesh.mNumberOfIndices	= v1SubMesh.numberOfIndices;

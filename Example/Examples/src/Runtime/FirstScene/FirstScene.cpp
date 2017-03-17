@@ -45,6 +45,7 @@
 #include <RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
 #include <RendererRuntime/Resource/Material/MaterialResourceManager.h>
+#include <RendererRuntime/Resource/Material/MaterialResource.h>
 #include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
 
 #include <imgui/imgui.h>
@@ -145,7 +146,7 @@ void FirstScene::onInitialization()
 		mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId(::detail::SceneAssetId, this);
 
 		// Load the material resource we're going to clone
-		mMaterialResourceId = rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::ImrodMaterialAssetId, this);
+		rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::ImrodMaterialAssetId, mMaterialResourceId, this);
 
 		{ // Startup the VR-manager
 			RendererRuntime::IVrManager& vrManager = rendererRuntime->getVrManager();
@@ -549,7 +550,6 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 
 			{ // Update the material resource instance
 				const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime.getMaterialResourceManager();
-				const RendererRuntime::MaterialResources& materialResources = materialResourceManager.getMaterialResources();
 
 				// HDR to LDR compositor material
 				RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId(::detail::HdrToLdrMaterialAssetId);
@@ -566,14 +566,14 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				}
 
 				// Imrod material
-				materialResource = materialResources.tryGetElementById(mMaterialResourceId);
+				materialResource = static_cast<RendererRuntime::MaterialResource*>(materialResourceManager.tryGetResourceByResourceId(mMaterialResourceId));
 				if (nullptr != materialResource)
 				{
 					materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
 				}
 
 				// Imrod material clone
-				materialResource = materialResources.tryGetElementById(mCloneMaterialResourceId);
+				materialResource = static_cast<RendererRuntime::MaterialResource*>(materialResourceManager.tryGetResourceByResourceId(mCloneMaterialResourceId));
 				if (nullptr != materialResource)
 				{
 					materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));

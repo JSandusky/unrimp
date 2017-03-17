@@ -27,9 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/Material/MaterialProperties.h"
 
 
 //[-------------------------------------------------------]
@@ -38,10 +37,12 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
-	class IResourceListener;
 	class LightBufferManager;
 	class InstanceBufferManager;
+	class MaterialBlueprintResource;
+	class MaterialBlueprintResourceLoader;
 	class IMaterialBlueprintResourceListener;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -55,8 +56,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t																		 MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
-	typedef PackedElementManager<MaterialBlueprintResource, MaterialBlueprintResourceId, 64> MaterialBlueprintResources;
+	typedef uint32_t MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -78,8 +78,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline IRendererRuntime& getRendererRuntime() const;
-		inline const MaterialBlueprintResources& getMaterialBlueprintResources() const;
-		RENDERERRUNTIME_API_EXPORT MaterialBlueprintResourceId loadMaterialBlueprintResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadMaterialBlueprintResourceByAssetId(AssetId assetId, MaterialBlueprintResourceId& materialBlueprintResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 
 		inline IMaterialBlueprintResourceListener& getMaterialBlueprintResourceListener() const;
 		RENDERERRUNTIME_API_EXPORT void setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener);	// Does not take over the control of the memory
@@ -107,10 +106,19 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
-		inline virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
+		virtual uint32_t getNumberOfResources() const override;
+		virtual IResource& getResourceByIndex(uint32_t index) const override;
+		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
+		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	private:
+		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) override;
 
 
 	//[-------------------------------------------------------]
@@ -121,7 +129,6 @@ namespace RendererRuntime
 		virtual ~MaterialBlueprintResourceManager();
 		MaterialBlueprintResourceManager(const MaterialBlueprintResourceManager&) = delete;
 		MaterialBlueprintResourceManager& operator=(const MaterialBlueprintResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
@@ -129,11 +136,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&					mRendererRuntime;					///< Renderer runtime instance, do not destroy the instance
-		MaterialBlueprintResources			mMaterialBlueprintResources;
 		IMaterialBlueprintResourceListener*	mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
 		MaterialProperties					mGlobalMaterialProperties;			///< Global material properties
 		InstanceBufferManager*				mInstanceBufferManager;				///< Instance buffer manager, always valid in a sane none-legacy environment
 		LightBufferManager*					mLightBufferManager;				///< Light buffer manager, always valid in a sane none-legacy environment
+
+		// Internal resource manager implementation
+		ResourceManagerTemplate<MaterialBlueprintResource, MaterialBlueprintResourceLoader, MaterialBlueprintResourceId, 64>* mInternalResourceManager;
 
 
 	};

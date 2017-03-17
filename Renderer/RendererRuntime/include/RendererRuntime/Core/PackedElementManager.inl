@@ -83,6 +83,7 @@ namespace RendererRuntime
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
 	inline ELEMENT_TYPE& PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::getElementById(ID_TYPE id) const
 	{
+		assert(isElementIdValid(id));
 		return mElements[mIndices[id & INDEX_MASK].index];
 	}
 

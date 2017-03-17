@@ -38,8 +38,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class ShaderBlueprintResource;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -71,9 +71,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend PackedElementManager<ShaderBlueprintResource, ShaderBlueprintResourceId, 64>;	// Type definition of template class
 		friend class ShaderBlueprintResourceLoader;
-		friend class ShaderBlueprintResourceManager;
+		friend PackedElementManager<ShaderBlueprintResource, ShaderBlueprintResourceId, 64>;									// Type definition of template class
+		friend ResourceManagerTemplate<ShaderBlueprintResource, ShaderBlueprintResourceLoader, ShaderBlueprintResourceId, 64>;	// Type definition of template class
 
 
 	//[-------------------------------------------------------]

@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationEvaluator.h"
 #include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
+#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -45,14 +46,14 @@ namespace RendererRuntime
 		mSkeletonAnimationResourceId = skeletonAnimationResourceId;
 		if (isInitialized(skeletonAnimationResourceId))
 		{
-			mRendererRuntime.getSkeletonAnimationResourceManager().getSkeletonAnimationResources().getElementById(skeletonAnimationResourceId).connectResourceListener(*this);
+			mRendererRuntime.getSkeletonAnimationResourceManager().getResourceByResourceId(skeletonAnimationResourceId).connectResourceListener(*this);
 		}
 	}
 
 	void SkeletonAnimationController::startSkeletonAnimationByAssetId(AssetId skeletonAnimationAssetId)
 	{
 		clear();
-		mSkeletonAnimationResourceId = mRendererRuntime.getSkeletonAnimationResourceManager().loadSkeletonAnimationResourceByAssetId(skeletonAnimationAssetId, this);
+		mRendererRuntime.getSkeletonAnimationResourceManager().loadSkeletonAnimationResourceByAssetId(skeletonAnimationAssetId, mSkeletonAnimationResourceId, this);
 	}
 
 	void SkeletonAnimationController::clear()

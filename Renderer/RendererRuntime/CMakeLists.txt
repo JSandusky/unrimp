@@ -102,7 +102,6 @@ set(SOURCE_CODES
 	src/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.cpp
 	src/Resource/CompositorWorkspace/Loader/CompositorWorkspaceResourceLoader.cpp
 	src/Resource/Detail/IResource.cpp
-	src/Resource/Detail/IResourceManager.cpp
 	src/Resource/Detail/ResourceStreamer.cpp
 	src/Resource/IResourceListener.cpp
 	src/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.cpp
@@ -156,6 +155,7 @@ set(SOURCE_CODES
 	src/Resource/SkeletonAnimation/SkeletonAnimationResourceManager.cpp
 	src/Resource/SkeletonAnimation/SkeletonAnimationEvaluator.cpp
 	src/Resource/SkeletonAnimation/SkeletonAnimationController.cpp
+	src/Resource/Texture/Loader/ITextureResourceLoader.cpp
 	src/Resource/Texture/Loader/CrnTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/DdsTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/KtxTextureResourceLoader.cpp

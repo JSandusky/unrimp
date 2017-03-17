@@ -26,9 +26,11 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCache.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCache.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Core/Platform/PlatformManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 #include "RendererRuntime/Core/Math/Math.h"
@@ -219,9 +221,7 @@ namespace RendererRuntime
 	void PipelineStateCompiler::builderThreadWorker()
 	{
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
-		const MaterialBlueprintResources& materialBlueprintResources = materialBlueprintResourceManager.getMaterialBlueprintResources();
 		ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
-		const ShaderBlueprintResources& shaderBlueprintResources = shaderBlueprintResourceManager.getShaderBlueprintResources();
 		ShaderCacheManager& shaderCacheManager = shaderBlueprintResourceManager.getShaderCacheManager();
 		const ShaderPieceResourceManager& shaderPieceResourceManager = mRendererRuntime.getShaderPieceResourceManager();
 		ShaderBuilder shaderBuilder;
@@ -241,7 +241,7 @@ namespace RendererRuntime
 
 				{ // Do the work: Building the shader source code for the required combination
 					const PipelineStateSignature& pipelineStateSignature = compilerRequest.pipelineStateCache.getPipelineStateSignature();
-					const MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResources.getElementById(pipelineStateSignature.getMaterialBlueprintResourceId());
+					const MaterialBlueprintResource& materialBlueprintResource = static_cast<MaterialBlueprintResource&>(materialBlueprintResourceManager.getResourceByResourceId(pipelineStateSignature.getMaterialBlueprintResourceId()));
 
 					for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 					{
@@ -264,7 +264,7 @@ namespace RendererRuntime
 							else
 							{
 								// Try to create the new program cache instance
-								const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(shaderBlueprintResourceId);
+								const ShaderBlueprintResource* shaderBlueprintResource = static_cast<ShaderBlueprintResource*>(shaderBlueprintResourceManager.tryGetResourceByResourceId(shaderBlueprintResourceId));
 								if (nullptr != shaderBlueprintResource)
 								{
 									// Build the shader source code
@@ -327,7 +327,7 @@ namespace RendererRuntime
 		Renderer::IShaderLanguagePtr shaderLanguage(mRendererRuntime.getRenderer().getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			const MaterialBlueprintResources& materialBlueprintResources = mRendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources();
+			const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 			RENDERER_RUNTIME_SET_CURRENT_THREAD_DEBUG_NAME("PSC: Stage 2", "Renderer runtime: Pipeline state compiler stage: 2. Asynchronous shader compilation");
 			while (!mShutdownCompilerThread)
 			{
@@ -367,7 +367,7 @@ namespace RendererRuntime
 									switch (static_cast<ShaderType>(i))
 									{
 										case ShaderType::Vertex:
-											shader = shaderLanguage->createVertexShaderFromSourceCode(materialBlueprintResources.getElementById(compilerRequest.pipelineStateCache.getPipelineStateSignature().getMaterialBlueprintResourceId()).getVertexAttributes(), shaderSourceCode.c_str());
+											shader = shaderLanguage->createVertexShaderFromSourceCode(static_cast<MaterialBlueprintResource&>(materialBlueprintResourceManager.getResourceByResourceId(compilerRequest.pipelineStateCache.getPipelineStateSignature().getMaterialBlueprintResourceId())).getVertexAttributes(), shaderSourceCode.c_str());
 											break;
 
 										case ShaderType::TessellationControl:
@@ -400,7 +400,7 @@ namespace RendererRuntime
 					{
 						{ // Create the pipeline state object (PSO)
 							const PipelineStateSignature& pipelineStateSignature = compilerRequest.pipelineStateCache.getPipelineStateSignature();
-							MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResources.getElementById(pipelineStateSignature.getMaterialBlueprintResourceId());
+							MaterialBlueprintResource& materialBlueprintResource = static_cast<MaterialBlueprintResource&>(materialBlueprintResourceManager.getResourceByResourceId(pipelineStateSignature.getMaterialBlueprintResourceId()));
 
 							// Create the program
 							Renderer::IProgram* program = shaderLanguage->createProgram(*materialBlueprintResource.getRootSignaturePtr(), materialBlueprintResource.getVertexAttributes(),

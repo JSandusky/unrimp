@@ -57,7 +57,9 @@ THE SOFTWARE.
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/Preprocessor/Preprocessor.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
+#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
 
 #include <algorithm>
 
@@ -783,11 +785,10 @@ namespace RendererRuntime
 
 		{ // Process the shader piece resources to include
 			const ShaderBlueprintResource::IncludeShaderPieceResourceIds& includeShaderPieceResourceIds = shaderBlueprintResource.getIncludeShaderPieceResourceIds();
-			const ShaderPieceResources& shaderPieceResources = shaderPieceResourceManager.getShaderPieceResources();
 			const size_t numberOfShaderPieces = includeShaderPieceResourceIds.size();
 			for (size_t i = 0; i < numberOfShaderPieces; ++i)
 			{
-				const ShaderPieceResource* shaderPieceResource = shaderPieceResources.tryGetElementById(includeShaderPieceResourceIds[i]);
+				const ShaderPieceResource* shaderPieceResource = static_cast<ShaderPieceResource*>(shaderPieceResourceManager.tryGetResourceByResourceId(includeShaderPieceResourceIds[i]));
 				if (nullptr != shaderPieceResource)
 				{
 					// Initialize

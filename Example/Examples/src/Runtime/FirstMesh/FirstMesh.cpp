@@ -192,10 +192,10 @@ void FirstMesh::onInitialization()
 			  // -> The tangent space normal map is stored with three components, two would be enough to recalculate the third component within the fragment shader
 			  // -> The roughness map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-				mDiffuseTextureResourceId  = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodDiffuseMap",   "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D");
-				mNormalTextureResourceId   = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodEmissiveMap",  "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D");
-				mRoughnessTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodNormalMap",   "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D");
-				mEmissiveTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodRoughnessMap", "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D");
+				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodDiffuseMap",   "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",   mDiffuseTextureResourceId);
+				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodEmissiveMap",  "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",  mNormalTextureResourceId);
+				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodNormalMap",    "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",    mRoughnessTextureResourceId);
+				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodRoughnessMap", "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D", mEmissiveTextureResourceId);
 			}
 
 			{ // Create sampler state
@@ -251,11 +251,11 @@ void FirstMesh::onDraw()
 	}
 
 	// Due to background texture loading, some textures might not be ready, yet
-	const RendererRuntime::TextureResources& textureResources = rendererRuntime->getTextureResourceManager().getTextureResources();
-	const RendererRuntime::TextureResource* diffuseTextureResource  = textureResources.tryGetElementById(mDiffuseTextureResourceId);
-	const RendererRuntime::TextureResource* normalTextureResource   = textureResources.tryGetElementById(mNormalTextureResourceId);
-	const RendererRuntime::TextureResource* roughnessTextureResource = textureResources.tryGetElementById(mRoughnessTextureResourceId);
-	const RendererRuntime::TextureResource* emissiveTextureResource = textureResources.tryGetElementById(mEmissiveTextureResourceId);
+	const RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
+	const RendererRuntime::TextureResource* diffuseTextureResource = static_cast<RendererRuntime::TextureResource*>(textureResourceManager.tryGetResourceByResourceId(mDiffuseTextureResourceId));
+	const RendererRuntime::TextureResource* normalTextureResource = static_cast<RendererRuntime::TextureResource*>(textureResourceManager.tryGetResourceByResourceId(mNormalTextureResourceId));
+	const RendererRuntime::TextureResource* roughnessTextureResource = static_cast<RendererRuntime::TextureResource*>(textureResourceManager.tryGetResourceByResourceId(mRoughnessTextureResourceId));
+	const RendererRuntime::TextureResource* emissiveTextureResource = static_cast<RendererRuntime::TextureResource*>(textureResourceManager.tryGetResourceByResourceId(mEmissiveTextureResourceId));
 	if (nullptr == diffuseTextureResource || nullptr == diffuseTextureResource->getTexture() ||
 		nullptr == normalTextureResource || nullptr == normalTextureResource->getTexture() ||
 		nullptr == roughnessTextureResource || nullptr == roughnessTextureResource->getTexture() ||

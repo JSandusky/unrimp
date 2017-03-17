@@ -27,9 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
-#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResource.h"
 
 
 //[-------------------------------------------------------]
@@ -40,6 +38,9 @@ namespace RendererRuntime
 	class IRendererRuntime;
 	class FramebufferManager;
 	class RenderTargetTextureManager;
+	class CompositorWorkspaceResource;
+	class CompositorWorkspaceResourceLoader;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -53,8 +54,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t																			 CompositorWorkspaceResourceId;	///< POD compositor workspace resource identifier
-	typedef PackedElementManager<CompositorWorkspaceResource, CompositorWorkspaceResourceId, 32> CompositorWorkspaceResources;
+	typedef uint32_t CompositorWorkspaceResourceId;	///< POD compositor workspace resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -74,8 +74,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline const CompositorWorkspaceResources& getCompositorWorkspaceResources() const;
-		RENDERERRUNTIME_API_EXPORT CompositorWorkspaceResourceId loadCompositorWorkspaceResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadCompositorWorkspaceResourceByAssetId(AssetId assetId, CompositorWorkspaceResourceId& compositorWorkspaceResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 		inline RenderTargetTextureManager& getRenderTargetTextureManager();
 		inline FramebufferManager& getFramebufferManager();
 
@@ -84,10 +83,19 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
-		inline virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
+		virtual uint32_t getNumberOfResources() const override;
+		virtual IResource& getResourceByIndex(uint32_t index) const override;
+		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
+		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	private:
+		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) override;
 
 
 	//[-------------------------------------------------------]
@@ -98,17 +106,17 @@ namespace RendererRuntime
 		virtual ~CompositorWorkspaceResourceManager();
 		CompositorWorkspaceResourceManager(const CompositorWorkspaceResourceManager&) = delete;
 		CompositorWorkspaceResourceManager& operator=(const CompositorWorkspaceResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&			 mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
-		CompositorWorkspaceResources mCompositorWorkspaceResources;
-		RenderTargetTextureManager*	 mRenderTargetTextureManager;	///< Render target texture manager, always valid, we're responsible for destroying it if we no longer need it
-		FramebufferManager*			 mFramebufferManager;			///< Framebuffer manager, always valid, we're responsible for destroying it if we no longer need it
+		RenderTargetTextureManager*	mRenderTargetTextureManager;	///< Render target texture manager, always valid, we're responsible for destroying it if we no longer need it
+		FramebufferManager*			mFramebufferManager;			///< Framebuffer manager, always valid, we're responsible for destroying it if we no longer need it
+
+		// Internal resource manager implementation
+		ResourceManagerTemplate<CompositorWorkspaceResource, CompositorWorkspaceResourceLoader, CompositorWorkspaceResourceId, 32>* mInternalResourceManager;
 
 
 	};

@@ -23,12 +23,9 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
+#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
 #include "RendererRuntime/Resource/ShaderPiece/Loader/ShaderPieceResourceLoader.h"
-#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
-#include "RendererRuntime/Asset/AssetManager.h"
-#include "RendererRuntime/IRendererRuntime.h"
-
-#include <unordered_set>
+#include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
 
 
 //[-------------------------------------------------------]
@@ -41,81 +38,38 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Work-in-progress
-	ShaderPieceResourceId ShaderPieceResourceManager::loadShaderPieceResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
+	void ShaderPieceResourceManager::loadShaderPieceResourceByAssetId(AssetId assetId, ShaderPieceResourceId& shaderPieceResourceId, IResourceListener* resourceListener, bool reload)
 	{
-		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
-		if (nullptr != asset)
-		{
-			// Get or create the instance
-			ShaderPieceResource* shaderPieceResource = nullptr;
-			{
-				const uint32_t numberOfElements = mShaderPieceResources.getNumberOfElements();
-				for (uint32_t i = 0; i < numberOfElements; ++i)
-				{
-					ShaderPieceResource& currentShaderPieceResource = mShaderPieceResources.getElementByIndex(i);
-					if (currentShaderPieceResource.getAssetId() == assetId)
-					{
-						shaderPieceResource = &currentShaderPieceResource;
-
-						// Get us out of the loop
-						i = numberOfElements;
-					}
-				}
-			}
-
-			// Create the resource instance
-			bool load = reload;
-			if (nullptr == shaderPieceResource)
-			{
-				shaderPieceResource = &mShaderPieceResources.addElement();
-				shaderPieceResource->setResourceManager(this);
-				shaderPieceResource->setAssetId(assetId);
-				load = true;
-			}
-			if (nullptr != shaderPieceResource && nullptr != resourceListener)
-			{
-				shaderPieceResource->connectResourceListener(*resourceListener);
-			}
-
-			// Load the resource, if required
-			if (load)
-			{
-				// Prepare the resource loader
-				ShaderPieceResourceLoader* shaderPieceResourceLoader = static_cast<ShaderPieceResourceLoader*>(acquireResourceLoaderInstance(ShaderPieceResourceLoader::TYPE_ID));
-				shaderPieceResourceLoader->initialize(*asset, *shaderPieceResource);
-
-				// Commit resource streamer asset load request
-				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-				resourceStreamerLoadRequest.resource = shaderPieceResource;
-				resourceStreamerLoadRequest.resourceLoader = shaderPieceResourceLoader;
-				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-			}
-
-			// Done
-			return shaderPieceResource->getId();
-		}
-
-		// Error!
-		return getUninitialized<ShaderPieceResourceId>();
+		mInternalResourceManager->loadResourceByAssetId(assetId, shaderPieceResourceId, resourceListener, reload);
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
+	uint32_t ShaderPieceResourceManager::getNumberOfResources() const
+	{
+		return mInternalResourceManager->getResources().getNumberOfElements();
+	}
+
+	IResource& ShaderPieceResourceManager::getResourceByIndex(uint32_t index) const
+	{
+		return mInternalResourceManager->getResources().getElementByIndex(index);
+	}
+
+	IResource& ShaderPieceResourceManager::getResourceByResourceId(ResourceId resourceId) const
+	{
+		return mInternalResourceManager->getResources().getElementById(resourceId);
+	}
+
+	IResource* ShaderPieceResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
+	{
+		return mInternalResourceManager->getResources().tryGetElementById(resourceId);
+	}
+
 	void ShaderPieceResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		const uint32_t numberOfElements = mShaderPieceResources.getNumberOfElements();
-		for (uint32_t i = 0; i < numberOfElements; ++i)
-		{
-			if (mShaderPieceResources.getElementByIndex(i).getAssetId() == assetId)
-			{
-				loadShaderPieceResourceByAssetId(assetId, nullptr, true);
-				break;
-			}
-		}
+		return mInternalResourceManager->reloadResourceByAssetId(assetId);
 	}
 
 	void ShaderPieceResourceManager::update()
@@ -125,24 +79,25 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	void ShaderPieceResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	{
+		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	IResourceLoader* ShaderPieceResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	ShaderPieceResourceManager::ShaderPieceResourceManager(IRendererRuntime& rendererRuntime)
 	{
-		// Can we recycle an already existing resource loader instance?
-		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+		mInternalResourceManager = new ResourceManagerTemplate<ShaderPieceResource, ShaderPieceResourceLoader, ShaderPieceResourceId, 64>(rendererRuntime, *this);
+	}
 
-		// We need to create a new resource loader instance
-		if (nullptr == resourceLoader)
-		{
-			// We only support our own shader piece format
-			assert(resourceLoaderTypeId == ShaderPieceResourceLoader::TYPE_ID);
-			resourceLoader = new ShaderPieceResourceLoader(*this, mRendererRuntime);
-			mUsedResourceLoaderInstances.push_back(resourceLoader);
-		}
-
-		// Done
-		return resourceLoader;
+	ShaderPieceResourceManager::~ShaderPieceResourceManager()
+	{
+		delete mInternalResourceManager;
 	}
 
 

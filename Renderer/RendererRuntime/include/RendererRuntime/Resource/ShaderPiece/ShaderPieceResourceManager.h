@@ -27,10 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
-#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
 
 
 //[-------------------------------------------------------]
@@ -39,7 +36,9 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
-	class IResourceListener;
+	class ShaderPieceResource;
+	class ShaderPieceResourceLoader;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -53,8 +52,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t															 ShaderPieceResourceId;	///< POD shader piece resource identifier
-	typedef PackedElementManager<ShaderPieceResource, ShaderPieceResourceId, 64> ShaderPieceResources;
+	typedef uint32_t ShaderPieceResourceId;	///< POD shader piece resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -78,37 +76,43 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline const ShaderPieceResources& getShaderPieceResources() const;
-		RENDERERRUNTIME_API_EXPORT ShaderPieceResourceId loadShaderPieceResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadShaderPieceResourceByAssetId(AssetId assetId, ShaderPieceResourceId& shaderPieceResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
-		inline virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
+		virtual uint32_t getNumberOfResources() const override;
+		virtual IResource& getResourceByIndex(uint32_t index) const override;
+		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
+		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	private:
+		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline explicit ShaderPieceResourceManager(IRendererRuntime& rendererRuntime);
-		inline virtual ~ShaderPieceResourceManager();
+		explicit ShaderPieceResourceManager(IRendererRuntime& rendererRuntime);
+		virtual ~ShaderPieceResourceManager();
 		ShaderPieceResourceManager(const ShaderPieceResourceManager&) = delete;
 		ShaderPieceResourceManager& operator=(const ShaderPieceResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&	  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		ShaderPieceResources  mShaderPieceResources;
+		ResourceManagerTemplate<ShaderPieceResource, ShaderPieceResourceLoader, ShaderPieceResourceId, 64>* mInternalResourceManager;
 
 
 	};
@@ -118,9 +122,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.inl"

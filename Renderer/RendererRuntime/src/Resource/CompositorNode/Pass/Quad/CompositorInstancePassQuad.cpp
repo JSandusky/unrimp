@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -151,7 +152,8 @@ namespace RendererRuntime
 		if (isInitialized(compositorResourcePassQuad.getMaterialAssetId()))
 		{
 			// Get or load material resource
-			materialResourceManager.loadMaterialResourceByAssetId(compositorResourcePassQuad.getMaterialAssetId(), this);
+			MaterialResourceId materialResourceId = getUninitialized<MaterialResourceId>();
+			materialResourceManager.loadMaterialResourceByAssetId(compositorResourcePassQuad.getMaterialAssetId(), materialResourceId, this);
 		}
 		else
 		{
@@ -216,7 +218,7 @@ namespace RendererRuntime
 			const MaterialProperties::SortedPropertyVector& sortedPropertyVector = static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialProperties().getSortedPropertyVector();
 			if (!sortedPropertyVector.empty())
 			{
-				MaterialResource& materialResource = materialResourceManager.getMaterialResources().getElementById(mMaterialResourceId);
+				MaterialResource& materialResource = static_cast<MaterialResource&>(materialResourceManager.getResourceByResourceId(mMaterialResourceId));
 				for (const MaterialProperty& materialProperty : sortedPropertyVector)
 				{
 					if (materialProperty.isOverwritten())

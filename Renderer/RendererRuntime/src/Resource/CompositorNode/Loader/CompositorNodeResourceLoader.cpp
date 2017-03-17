@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
+#include "RendererRuntime/Resource/CompositorNode/CompositorNodeResource.h"
 #include "RendererRuntime/Core/File/IFile.h"
 
 

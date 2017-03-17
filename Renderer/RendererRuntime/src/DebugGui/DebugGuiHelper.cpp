@@ -30,6 +30,7 @@
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
+#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <imguizmo/ImGuizmo.h>
@@ -198,7 +199,7 @@ namespace RendererRuntime
 	void DebugGuiHelper::drawSkeleton(const CameraSceneItem& cameraSceneItem, const SkeletonMeshSceneItem& skeletonMeshSceneItem)
 	{
 		// Get skeleton resource instance
-		const SkeletonResource* skeletonResource = skeletonMeshSceneItem.getSceneResource().getRendererRuntime().getSkeletonResourceManager().getSkeletonResources().tryGetElementById(skeletonMeshSceneItem.getSkeletonResourceId());
+		const SkeletonResource* skeletonResource = static_cast<SkeletonResource*>(skeletonMeshSceneItem.getSceneResource().getRendererRuntime().getSkeletonResourceManager().tryGetResourceByResourceId(skeletonMeshSceneItem.getSkeletonResourceId()));
 		if (nullptr != skeletonResource)
 		{
 			// Get transform data

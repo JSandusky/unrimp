@@ -38,8 +38,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class MeshResource;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -72,9 +72,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend PackedElementManager<MeshResource, MeshResourceId, 4096>;	// Type definition of template class
 		friend class MeshResourceLoader;
-		friend class MeshResourceManager;
+		friend PackedElementManager<MeshResource, MeshResourceId, 4096>;						// Type definition of template class
+		friend ResourceManagerTemplate<MeshResource, MeshResourceLoader, MeshResourceId, 4096>;	// Type definition of template class
 
 
 	//[-------------------------------------------------------]

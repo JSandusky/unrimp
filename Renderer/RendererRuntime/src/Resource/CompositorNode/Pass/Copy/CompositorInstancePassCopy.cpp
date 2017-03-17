@@ -28,6 +28,7 @@
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Resource/Texture/TextureResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 

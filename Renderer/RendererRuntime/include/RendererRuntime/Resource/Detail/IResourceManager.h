@@ -28,10 +28,16 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
-#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/IResource.h"
 
-#include <vector>
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IResourceLoader;
+}
 
 
 //[-------------------------------------------------------]
@@ -51,6 +57,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Public abstract resource manager interface
+	*/
 	class IResourceManager : private Manager
 	{
 
@@ -66,10 +76,12 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual uint32_t getNumberOfResources() const = 0;
+		virtual IResource& getResourceByIndex(uint32_t index) const = 0;
 		virtual IResource& getResourceByResourceId(ResourceId resourceId) const = 0;
 		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const = 0;
 		virtual void reloadResourceByAssetId(AssetId assetId) = 0;
-		virtual void update() = 0;	// TODO(co) Remove this method if not required
+		virtual void update() = 0;
 
 
 	//[-------------------------------------------------------]
@@ -77,28 +89,17 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline IResourceManager();
-		virtual ~IResourceManager();
+		inline virtual ~IResourceManager();
 		IResourceManager(const IResourceManager&) = delete;
 		IResourceManager& operator=(const IResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
-		void releaseResourceLoaderInstance(IResourceLoader& resourceLoader);
 		inline void setResourceLoadingState(IResource& resource, IResource::LoadingState loadingState);
 
 
 	//[-------------------------------------------------------]
-	//[ Protected definitions                                 ]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	protected:
-		typedef std::vector<IResourceLoader*> ResourceLoaderVector;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected data                                        ]
-	//[-------------------------------------------------------]
-	protected:
-		// Resource loader instances
-		ResourceLoaderVector mFreeResourceLoaderInstances;
-		ResourceLoaderVector mUsedResourceLoaderInstances;
+	private:
+		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) = 0;
 
 
 	};

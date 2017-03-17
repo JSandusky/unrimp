@@ -40,6 +40,7 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class MaterialBlueprintResource;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 	namespace v1MaterialBlueprint
 	{
 		struct Texture;
@@ -56,6 +57,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	class MaterialBlueprintResourceLoader : protected IResourceLoader
@@ -66,6 +73,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class MaterialBlueprintResourceManager;
+		friend ResourceManagerTemplate<MaterialBlueprintResource, MaterialBlueprintResourceLoader, MaterialBlueprintResourceId, 64>;	// Type definition of template class
 
 
 	//[-------------------------------------------------------]

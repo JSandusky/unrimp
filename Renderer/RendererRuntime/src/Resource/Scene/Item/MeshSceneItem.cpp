@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -161,7 +162,8 @@ namespace RendererRuntime
 						{
 							if (isInitialized(mSubMeshMaterialAssetIds[i]))
 							{
-								materialResourceManager.loadMaterialResourceByAssetId(mSubMeshMaterialAssetIds[i], this);
+								MaterialResourceId materialResourceId = getUninitialized<MaterialResourceId>();
+								materialResourceManager.loadMaterialResourceByAssetId(mSubMeshMaterialAssetIds[i], materialResourceId, this);
 							}
 						}
 					}

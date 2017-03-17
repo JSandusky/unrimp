@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
+#include "RendererRuntime/Resource/Detail/ResourceManagerTemplateBase.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -138,6 +139,17 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
+	uint32_t SceneResourceManager::getNumberOfResources() const
+	{
+		return static_cast<uint32_t>(mSceneResources.size());
+	}
+
+	IResource& SceneResourceManager::getResourceByIndex(uint32_t index) const
+	{
+		assert(nullptr != mSceneResources[index]);
+		return *mSceneResources[index];
+	}
+
 	IResource& SceneResourceManager::getResourceByResourceId(ResourceId resourceId) const
 	{
 		IResource* resource = tryGetResourceByResourceId(resourceId);
@@ -182,19 +194,33 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	void SceneResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	{
+		mResourceManagerTemplateBase->releaseResourceLoaderInstance(resourceLoader);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	SceneResourceManager::SceneResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mSceneFactory(&::detail::defaultSceneFactory)
 	{
-		// Nothing here
+		mResourceManagerTemplateBase = new ResourceManagerTemplateBase(rendererRuntime, *this);
+	}
+
+	SceneResourceManager::~SceneResourceManager()
+	{
+		delete mResourceManagerTemplateBase;
 	}
 
 	IResourceLoader* SceneResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Can we recycle an already existing resource loader instance?
-		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+		IResourceLoader* resourceLoader = mResourceManagerTemplateBase->acquireResourceLoaderInstance(resourceLoaderTypeId);
 
 		// We need to create a new resource loader instance
 		if (nullptr == resourceLoader)
@@ -202,7 +228,7 @@ namespace RendererRuntime
 			// We only support our own scene format
 			assert(resourceLoaderTypeId == SceneResourceLoader::TYPE_ID);
 			resourceLoader = new SceneResourceLoader(*this, mRendererRuntime);
-			mUsedResourceLoaderInstances.push_back(resourceLoader);
+			mResourceManagerTemplateBase->getUsedResourceLoaderInstances().push_back(resourceLoader);
 		}
 
 		// Done

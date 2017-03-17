@@ -33,39 +33,6 @@ namespace RendererRuntime
 		return mNumberOfTopMipmapsToRemove;
 	}
 
-	inline const TextureResources& TextureResourceManager::getTextureResources() const
-	{
-		return mTextureResources;
-	}
-
-	inline void TextureResourceManager::destroyTextureResource(TextureResourceId textureResourceId)
-	{
-		mTextureResources.removeElement(textureResourceId);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	inline IResource& TextureResourceManager::getResourceByResourceId(ResourceId resourceId) const
-	{
-		return mTextureResources.getElementById(resourceId);
-	}
-
-	inline IResource* TextureResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
-	{
-		return mTextureResources.tryGetElementById(resourceId);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline TextureResourceManager::~TextureResourceManager()
-	{
-		// Nothing here
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

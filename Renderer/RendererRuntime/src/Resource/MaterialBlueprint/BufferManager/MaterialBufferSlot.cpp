@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferSlot.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
 
 
 //[-------------------------------------------------------]
@@ -49,7 +50,7 @@ namespace RendererRuntime
 
 	const MaterialResource& MaterialBufferSlot::getMaterialResource() const
 	{
-		return mMaterialResourceManager->getMaterialResources().getElementById(mMaterialResourceId);
+		return static_cast<MaterialResource&>(mMaterialResourceManager->getResourceByResourceId(mMaterialResourceId));
 	}
 
 

@@ -30,9 +30,11 @@
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Core/Math/Transform.h"
@@ -249,7 +251,8 @@ namespace
 			// Check whether or not we need to generate the runtime texture asset right now
 			RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
 			const bool rgbHardwareGammaCorrection = true;	// TODO(co) It must be possible to set the property name from the outside: Ask the material blueprint whether or not hardware gamma correction should be used
-			RendererRuntime::TextureResourceId textureResourceId = textureResourceManager.loadTextureResourceByAssetId(diffuseTextureAssetId, RendererRuntime::getUninitialized<RendererRuntime::AssetId>(), nullptr, rgbHardwareGammaCorrection);
+			RendererRuntime::TextureResourceId textureResourceId = RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>();
+			textureResourceManager.loadTextureResourceByAssetId(diffuseTextureAssetId, RendererRuntime::getUninitialized<RendererRuntime::AssetId>(), textureResourceId, nullptr, rgbHardwareGammaCorrection);
 			if (RendererRuntime::isUninitialized(textureResourceId))
 			{
 				// Load the render model texture
@@ -296,14 +299,15 @@ namespace
 
 			// Check whether or not we need to generate the runtime material asset right now
 			RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime.getMaterialResourceManager();
-			RendererRuntime::MaterialResourceId materialResourceId = materialResourceManager.loadMaterialResourceByAssetId(materialAssetId);
+			RendererRuntime::MaterialResourceId materialResourceId = RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>();
+			materialResourceManager.loadMaterialResourceByAssetId(materialAssetId, materialResourceId);
 			if (RendererRuntime::isUninitialized(materialResourceId))
 			{
 				// We need to generate the runtime material asset right now
 				materialResourceId = materialResourceManager.createMaterialResourceByCloning(vrDeviceMaterialResourceId, materialAssetId);
 				if (RendererRuntime::isInitialized(materialResourceId))
 				{
-					RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResources().tryGetElementById(materialResourceId);
+					RendererRuntime::MaterialResource* materialResource = static_cast<RendererRuntime::MaterialResource*>(materialResourceManager.tryGetResourceByResourceId(materialResourceId));
 					if (nullptr != materialResource)
 					{
 						// TODO(co) It must be possible to set the property name from the outside
@@ -563,7 +567,11 @@ namespace RendererRuntime
 
 			// Try to load the device material resource material
 			mVrDeviceMaterialResourceLoaded = false;
-			mVrDeviceMaterialResourceId = isInitialized(vrDeviceMaterialAssetId) ? mRendererRuntime.getMaterialResourceManager().loadMaterialResourceByAssetId(vrDeviceMaterialAssetId, this) : getUninitialized<MaterialResourceId>();
+			mVrDeviceMaterialResourceId = getUninitialized<MaterialResourceId>();
+			if (isInitialized(vrDeviceMaterialAssetId))
+			{
+				mRendererRuntime.getMaterialResourceManager().loadMaterialResourceByAssetId(vrDeviceMaterialAssetId, mVrDeviceMaterialResourceId, this);
+			}
 
 			{ // Create renderer resources
 				// Create the texture instance

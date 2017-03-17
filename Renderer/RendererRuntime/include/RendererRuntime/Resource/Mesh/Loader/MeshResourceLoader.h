@@ -43,6 +43,7 @@ namespace RendererRuntime
 {
 	class MeshResource;
 	class IRendererRuntime;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 	namespace v1Mesh
 	{
 		struct SubMesh;
@@ -58,6 +59,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t MeshResourceId;	///< POD mesh resource identifier
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	class MeshResourceLoader : protected IResourceLoader
@@ -67,7 +74,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class MeshResourceManager;
+		friend ResourceManagerTemplate<MeshResource, MeshResourceLoader, MeshResourceId, 4096>;	// Type definition of template class
 
 
 	//[-------------------------------------------------------]

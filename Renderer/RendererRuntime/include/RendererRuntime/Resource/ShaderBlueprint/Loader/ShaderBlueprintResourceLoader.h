@@ -37,6 +37,7 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class ShaderBlueprintResource;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -45,6 +46,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t ShaderBlueprintResourceId;	///< POD shader blueprint resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -57,7 +64,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class ShaderBlueprintResourceManager;
+		friend ResourceManagerTemplate<ShaderBlueprintResource, ShaderBlueprintResourceLoader, ShaderBlueprintResourceId, 64>;	// Type definition of template class
 
 
 	//[-------------------------------------------------------]

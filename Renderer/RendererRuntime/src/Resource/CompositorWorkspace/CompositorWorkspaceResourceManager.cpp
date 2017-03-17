@@ -23,12 +23,11 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.h"
+#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResource.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/Loader/CompositorWorkspaceResourceLoader.h"
-#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
 #include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
-#include "RendererRuntime/Asset/AssetManager.h"
-#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
 
 
 //[-------------------------------------------------------]
@@ -41,80 +40,38 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorWorkspaceResourceId CompositorWorkspaceResourceManager::loadCompositorWorkspaceResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
+	void CompositorWorkspaceResourceManager::loadCompositorWorkspaceResourceByAssetId(AssetId assetId, CompositorWorkspaceResourceId& compositorWorkspaceResourceId, IResourceListener* resourceListener, bool reload)
 	{
-		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
-		if (nullptr != asset)
-		{
-			// Get or create the instance
-			CompositorWorkspaceResource* compositorWorkspaceResource = nullptr;
-			{
-				const uint32_t numberOfElements = mCompositorWorkspaceResources.getNumberOfElements();
-				for (uint32_t i = 0; i < numberOfElements; ++i)
-				{
-					CompositorWorkspaceResource& currentCompositorWorkspaceResource = mCompositorWorkspaceResources.getElementByIndex(i);
-					if (currentCompositorWorkspaceResource.getAssetId() == assetId)
-					{
-						compositorWorkspaceResource = &currentCompositorWorkspaceResource;
-
-						// Get us out of the loop
-						i = numberOfElements;
-					}
-				}
-			}
-
-			// Create the resource instance
-			bool load = reload;
-			if (nullptr == compositorWorkspaceResource)
-			{
-				compositorWorkspaceResource = &mCompositorWorkspaceResources.addElement();
-				compositorWorkspaceResource->setResourceManager(this);
-				compositorWorkspaceResource->setAssetId(assetId);
-				load = true;
-			}
-			if (nullptr != compositorWorkspaceResource && nullptr != resourceListener)
-			{
-				compositorWorkspaceResource->connectResourceListener(*resourceListener);
-			}
-
-			// Load the resource, if required
-			if (load)
-			{
-				// Prepare the resource loader
-				CompositorWorkspaceResourceLoader* compositorWorkspaceResourceLoader = static_cast<CompositorWorkspaceResourceLoader*>(acquireResourceLoaderInstance(CompositorWorkspaceResourceLoader::TYPE_ID));
-				compositorWorkspaceResourceLoader->initialize(*asset, *compositorWorkspaceResource);
-
-				// Commit resource streamer asset load request
-				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-				resourceStreamerLoadRequest.resource = compositorWorkspaceResource;
-				resourceStreamerLoadRequest.resourceLoader = compositorWorkspaceResourceLoader;
-				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-			}
-
-			// Done
-			return compositorWorkspaceResource->getId();
-		}
-
-		// Error!
-		return getUninitialized<CompositorWorkspaceResourceId>();
+		mInternalResourceManager->loadResourceByAssetId(assetId, compositorWorkspaceResourceId, resourceListener, reload);
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
+	uint32_t CompositorWorkspaceResourceManager::getNumberOfResources() const
+	{
+		return mInternalResourceManager->getResources().getNumberOfElements();
+	}
+
+	IResource& CompositorWorkspaceResourceManager::getResourceByIndex(uint32_t index) const
+	{
+		return mInternalResourceManager->getResources().getElementByIndex(index);
+	}
+
+	IResource& CompositorWorkspaceResourceManager::getResourceByResourceId(ResourceId resourceId) const
+	{
+		return mInternalResourceManager->getResources().getElementById(resourceId);
+	}
+
+	IResource* CompositorWorkspaceResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
+	{
+		return mInternalResourceManager->getResources().tryGetElementById(resourceId);
+	}
+
 	void CompositorWorkspaceResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		const uint32_t numberOfElements = mCompositorWorkspaceResources.getNumberOfElements();
-		for (uint32_t i = 0; i < numberOfElements; ++i)
-		{
-			if (mCompositorWorkspaceResources.getElementByIndex(i).getAssetId() == assetId)
-			{
-				loadCompositorWorkspaceResourceByAssetId(assetId, nullptr, true);
-				break;
-			}
-		}
+		return mInternalResourceManager->reloadResourceByAssetId(assetId);
 	}
 
 	void CompositorWorkspaceResourceManager::update()
@@ -124,38 +81,29 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	void CompositorWorkspaceResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	{
+		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	CompositorWorkspaceResourceManager::CompositorWorkspaceResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime),
-		mRenderTargetTextureManager(new RenderTargetTextureManager(mRendererRuntime)),
+		mRenderTargetTextureManager(new RenderTargetTextureManager(rendererRuntime)),
 		mFramebufferManager(new FramebufferManager(*mRenderTargetTextureManager))
 	{
-		// Nothing here
+		mInternalResourceManager = new ResourceManagerTemplate<CompositorWorkspaceResource, CompositorWorkspaceResourceLoader, CompositorWorkspaceResourceId, 32>(rendererRuntime, *this);
 	}
 
 	CompositorWorkspaceResourceManager::~CompositorWorkspaceResourceManager()
 	{
 		delete mFramebufferManager;
 		delete mRenderTargetTextureManager;
-	}
-
-	IResourceLoader* CompositorWorkspaceResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
-	{
-		// Can we recycle an already existing resource loader instance?
-		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
-
-		// We need to create a new resource loader instance
-		if (nullptr == resourceLoader)
-		{
-			// We only support our own compositor workspace format
-			assert(resourceLoaderTypeId == CompositorWorkspaceResourceLoader::TYPE_ID);
-			resourceLoader = new CompositorWorkspaceResourceLoader(*this, mRendererRuntime);
-			mUsedResourceLoaderInstances.push_back(resourceLoader);
-		}
-
-		// Done
-		return resourceLoader;
+		delete mInternalResourceManager;
 	}
 
 

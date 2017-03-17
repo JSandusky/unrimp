@@ -27,20 +27,22 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Core/GetUninitialized.h"
-#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
-#include "RendererRuntime/Resource/Texture/TextureResource.h"
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class ITexture;
+}
 namespace RendererRuntime
 {
+	class TextureResource;
 	class IRendererRuntime;
-	class IResourceListener;
+	class ITextureResourceLoader;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -54,8 +56,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t													   TextureResourceId;	///< POD texture resource identifier
-	typedef PackedElementManager<TextureResource, TextureResourceId, 2048> TextureResources;
+	typedef uint32_t TextureResourceId;		///< POD texture resource identifier
+	typedef StringId ResourceLoaderTypeId;	///< Resource loader type identifier, internally just a POD "uint32_t", usually created by hashing the file format extension (if the resource loader is processing file data in the first place)
 
 
 	//[-------------------------------------------------------]
@@ -96,21 +98,29 @@ namespace RendererRuntime
 	public:
 		inline uint8_t getNumberOfTopMipmapsToRemove() const;
 		RENDERERRUNTIME_API_EXPORT void setNumberOfTopMipmapsToRemove(uint8_t numberOfTopMipmapsToRemove);
-		inline const TextureResources& getTextureResources() const;
 		RENDERERRUNTIME_API_EXPORT TextureResource* getTextureResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
-		RENDERERRUNTIME_API_EXPORT TextureResourceId loadTextureResourceByAssetId(AssetId assetId, AssetId fallbackTextureAssetId, IResourceListener* resourceListener = nullptr, bool rgbHardwareGammaCorrection = false, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadTextureResourceByAssetId(AssetId assetId, AssetId fallbackTextureAssetId, TextureResourceId& textureResourceId, IResourceListener* resourceListener = nullptr, bool rgbHardwareGammaCorrection = false, bool reload = false);	// Asynchronous
 		RENDERERRUNTIME_API_EXPORT TextureResourceId createTextureResourceByAssetId(AssetId assetId, Renderer::ITexture& texture, bool rgbHardwareGammaCorrection = false);	// Texture resource is not allowed to exist, yet
-		inline void destroyTextureResource(TextureResourceId textureResourceId);
+		RENDERERRUNTIME_API_EXPORT void destroyTextureResource(TextureResourceId textureResourceId);
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
-		inline virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
+		virtual uint32_t getNumberOfResources() const override;
+		virtual IResource& getResourceByIndex(uint32_t index) const override;
+		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
+		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	private:
+		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) override;
 
 
 	//[-------------------------------------------------------]
@@ -118,7 +128,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit TextureResourceManager(IRendererRuntime& rendererRuntime);
-		inline virtual ~TextureResourceManager();
+		virtual ~TextureResourceManager();
 		TextureResourceManager(const TextureResourceManager&) = delete;
 		TextureResourceManager& operator=(const TextureResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
@@ -128,9 +138,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
-		uint8_t			  mNumberOfTopMipmapsToRemove;	///< The number of top mipmaps to remove while loading textures for efficient texture quality reduction. By setting this to e.g. two a 4096x4096 texture will become 1024x1024.
-		TextureResources  mTextureResources;
+		uint8_t mNumberOfTopMipmapsToRemove;	///< The number of top mipmaps to remove while loading textures for efficient texture quality reduction. By setting this to e.g. two a 4096x4096 texture will become 1024x1024.
+
+		// Internal resource manager implementation
+		ResourceManagerTemplate<TextureResource, ITextureResourceLoader, TextureResourceId, 2048>* mInternalResourceManager;
 
 
 	};

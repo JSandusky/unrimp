@@ -27,9 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCacheManager.h"
 
 
@@ -39,7 +38,9 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
-	class IResourceListener;
+	class ShaderBlueprintResource;
+	class ShaderBlueprintResourceLoader;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -53,8 +54,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t																	 ShaderBlueprintResourceId;	///< POD shader blueprint resource identifier
-	typedef PackedElementManager<ShaderBlueprintResource, ShaderBlueprintResourceId, 64> ShaderBlueprintResources;
+	typedef uint32_t ShaderBlueprintResourceId;	///< POD shader blueprint resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -72,7 +72,6 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
- 		friend class ShaderBuilder;	// Needed so that inside this classes an static_cast<CompositorNodeResourceManager*>(IResourceManager*) works
 
 
 	//[-------------------------------------------------------]
@@ -94,8 +93,7 @@ namespace RendererRuntime
 		*/
 		inline const ShaderProperties& getRendererShaderProperties() const;
 
-		inline const ShaderBlueprintResources& getShaderBlueprintResources() const;
-		RENDERERRUNTIME_API_EXPORT ShaderBlueprintResourceId loadShaderBlueprintResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadShaderBlueprintResourceByAssetId(AssetId assetId, ShaderBlueprintResourceId& shaderBlueprintResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 
 		/**
 		*  @brief
@@ -111,10 +109,19 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
-		inline virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
+		virtual uint32_t getNumberOfResources() const override;
+		virtual IResource& getResourceByIndex(uint32_t index) const override;
+		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
+		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	private:
+		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) override;
 
 
 	//[-------------------------------------------------------]
@@ -122,20 +129,21 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime);
-		inline virtual ~ShaderBlueprintResourceManager();
+		virtual ~ShaderBlueprintResourceManager();
 		ShaderBlueprintResourceManager(const ShaderBlueprintResourceManager&) = delete;
 		ShaderBlueprintResourceManager& operator=(const ShaderBlueprintResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		 mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
-		ShaderProperties		 mRendererShaderProperties;
-		ShaderBlueprintResources mShaderBlueprintResources;
-		ShaderCacheManager		 mShaderCacheManager;
+		IRendererRuntime&  mRendererRuntime;
+		ShaderProperties   mRendererShaderProperties;
+		ShaderCacheManager mShaderCacheManager;
+
+		// Internal resource manager implementation
+		ResourceManagerTemplate<ShaderBlueprintResource, ShaderBlueprintResourceLoader, ShaderBlueprintResourceId, 64>* mInternalResourceManager;
 
 
 	};

@@ -27,9 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
-#include "RendererRuntime/Resource/CompositorNode/CompositorNodeResource.h"
 
 
 //[-------------------------------------------------------]
@@ -40,7 +38,10 @@ namespace RendererRuntime
 	class IRendererRuntime;
 	class FramebufferManager;
 	class ICompositorPassFactory;
+	class CompositorNodeResource;
 	class RenderTargetTextureManager;
+	class CompositorNodeResourceLoader;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -54,8 +55,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t																   CompositorNodeResourceId;	///< POD compositor node resource identifier
-	typedef PackedElementManager<CompositorNodeResource, CompositorNodeResourceId, 32> CompositorNodeResources;
+	typedef uint32_t CompositorNodeResourceId;	///< POD compositor node resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -69,8 +69,6 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
-		friend class IResource; 					// Needed so that inside this classes an static_cast<CompositorNodeResourceManager*>(IResourceManager*) works
-		friend class CompositorNodeResourceLoader;	// Needed so that inside this classes an static_cast<CompositorNodeResourceManager*>(IResourceManager*) works
 
 
 	//[-------------------------------------------------------]
@@ -78,13 +76,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline IRendererRuntime& getRendererRuntime() const;
-
-		inline const CompositorNodeResources& getCompositorNodeResources() const;
-		RENDERERRUNTIME_API_EXPORT CompositorNodeResourceId loadCompositorNodeResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
-
+		RENDERERRUNTIME_API_EXPORT void loadCompositorNodeResourceByAssetId(AssetId assetId, CompositorNodeResourceId& compositorNodeResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 		inline const ICompositorPassFactory& getCompositorPassFactory() const;
 		RENDERERRUNTIME_API_EXPORT void setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory);
-
 		inline RenderTargetTextureManager& getRenderTargetTextureManager();
 		inline FramebufferManager& getFramebufferManager();
 
@@ -93,10 +87,19 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
-		inline virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
+		virtual uint32_t getNumberOfResources() const override;
+		virtual IResource& getResourceByIndex(uint32_t index) const override;
+		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
+		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	private:
+		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) override;
 
 
 	//[-------------------------------------------------------]
@@ -107,7 +110,6 @@ namespace RendererRuntime
 		virtual ~CompositorNodeResourceManager();
 		CompositorNodeResourceManager(const CompositorNodeResourceManager&) = delete;
 		CompositorNodeResourceManager& operator=(const CompositorNodeResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
@@ -115,10 +117,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&			  mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
-		CompositorNodeResources		  mCompositorNodeResources;
 		const ICompositorPassFactory* mCompositorPassFactory;		///< Compositor pass factory, always valid, do not destroy the instance
 		RenderTargetTextureManager*	  mRenderTargetTextureManager;	///< Render target texture manager, always valid, we're responsible for destroying it if we no longer need it
 		FramebufferManager*			  mFramebufferManager;			///< Framebuffer manager, always valid, we're responsible for destroying it if we no longer need it
+
+		// Internal resource manager implementation
+		ResourceManagerTemplate<CompositorNodeResource, CompositorNodeResourceLoader, CompositorNodeResourceId, 32>* mInternalResourceManager;
 
 
 	};

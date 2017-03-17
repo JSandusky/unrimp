@@ -25,9 +25,11 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintFileFormat.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -94,7 +96,7 @@ namespace RendererRuntime
 			const AssetId* includeShaderPieceAssetIds = mIncludeShaderPieceAssetIds;
 			for (size_t i = 0; i < numberOfShaderPieceResources; ++i, ++includeShaderPieceAssetIds)
 			{
-				includeShaderPieceResourceIds[i] = shaderPieceResourceManager.loadShaderPieceResourceByAssetId(*includeShaderPieceAssetIds);
+				shaderPieceResourceManager.loadShaderPieceResourceByAssetId(*includeShaderPieceAssetIds, includeShaderPieceResourceIds[i]);
 			}
 		}
 
@@ -102,11 +104,11 @@ namespace RendererRuntime
 			const ShaderBlueprintResourceId shaderBlueprintResourceId = mShaderBlueprintResource->getId();
 			typedef std::unordered_set<MaterialBlueprintResource*> MaterialBlueprintResourcePointers;
 			MaterialBlueprintResourcePointers materialBlueprintResourcePointers;
-			const MaterialBlueprintResources& materialBlueprintResources = mRendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources();
-			const uint32_t numberOfElements = materialBlueprintResources.getNumberOfElements();
+			const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
+			const uint32_t numberOfElements = materialBlueprintResourceManager.getNumberOfResources();
 			for (uint32_t i = 0; i < numberOfElements; ++i)
 			{
-				MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResources.getElementByIndex(i);
+				MaterialBlueprintResource& materialBlueprintResource = static_cast<MaterialBlueprintResource&>(materialBlueprintResourceManager.getResourceByIndex(i));
 				for (uint8_t shaderType = 0; shaderType < NUMBER_OF_SHADER_TYPES; ++shaderType)
 				{
 					if (materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(shaderType)) == shaderBlueprintResourceId)

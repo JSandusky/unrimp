@@ -26,21 +26,33 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IResourceManager::IResourceManager()
+	inline ResourceManagerTemplateBase::ResourceManagerTemplateBase(IRendererRuntime& rendererRuntime, IResourceManager& resourceManager) :
+		mRendererRuntime(rendererRuntime),
+		mResourceManager(resourceManager)
 	{
 		// Nothing here
 	}
 
-	inline IResourceManager::~IResourceManager()
+	inline IRendererRuntime& ResourceManagerTemplateBase::getRendererRuntime() const
 	{
-		// Noting here
+		return mRendererRuntime;
 	}
 
-	inline void IResourceManager::setResourceLoadingState(IResource& resource, IResource::LoadingState loadingState)
+	inline IResourceManager& ResourceManagerTemplateBase::getResourceManager() const
 	{
-		resource.setLoadingState(loadingState);
+		return mResourceManager;
+	}
+
+	inline ResourceManagerTemplateBase::ResourceLoaders& ResourceManagerTemplateBase::getFreeResourceLoaderInstances()
+	{
+		return mFreeResourceLoaderInstances;
+	}
+
+	inline ResourceManagerTemplateBase::ResourceLoaders& ResourceManagerTemplateBase::getUsedResourceLoaderInstances()
+	{
+		return mUsedResourceLoaderInstances;
 	}
 
 

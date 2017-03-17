@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.h"
+#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResource.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeResource.h"
@@ -70,7 +71,7 @@ namespace RendererRuntime
 		mFramebufferManagerInitialized(false),
 		mCompositorInstancePassShadowMap(nullptr)
 	{
-		mCompositorWorkspaceResourceId = rendererRuntime.getCompositorWorkspaceResourceManager().loadCompositorWorkspaceResourceByAssetId(compositorWorkspaceAssetId, this);
+		rendererRuntime.getCompositorWorkspaceResourceManager().loadCompositorWorkspaceResourceByAssetId(compositorWorkspaceAssetId, mCompositorWorkspaceResourceId, this);
 	}
 
 	CompositorWorkspaceInstance::~CompositorWorkspaceInstance()
@@ -128,7 +129,7 @@ namespace RendererRuntime
 		clearRenderQueueIndexRangesRenderableManagers();
 
 		// Is the compositor workspace resource ready?
-		const CompositorWorkspaceResource* compositorWorkspaceResource = mRendererRuntime.getCompositorWorkspaceResourceManager().getCompositorWorkspaceResources().tryGetElementById(mCompositorWorkspaceResourceId);
+		const CompositorWorkspaceResource* compositorWorkspaceResource = static_cast<CompositorWorkspaceResource*>(mRendererRuntime.getCompositorWorkspaceResourceManager().tryGetResourceByResourceId(mCompositorWorkspaceResourceId));
 		if (nullptr != compositorWorkspaceResource && compositorWorkspaceResource->getLoadingState() == IResource::LoadingState::LOADED)
 		{
 			// Add reference to the render target
@@ -261,8 +262,9 @@ namespace RendererRuntime
 			for (size_t nodeIndex = 0; nodeIndex < numberOfCompositorResourceNodes; ++nodeIndex)
 			{
 				// Get the compositor node resource instance
-				const CompositorNodeResourceId compositorNodeResourceId = compositorNodeResourceManager.loadCompositorNodeResourceByAssetId(compositorNodeAssetIds[nodeIndex]);
-				CompositorNodeResource& compositorNodeResource = compositorNodeResourceManager.getCompositorNodeResources().getElementById(compositorNodeResourceId);
+				CompositorNodeResourceId compositorNodeResourceId = getUninitialized<CompositorNodeResourceId>();
+				compositorNodeResourceManager.loadCompositorNodeResourceByAssetId(compositorNodeAssetIds[nodeIndex], compositorNodeResourceId);
+				CompositorNodeResource& compositorNodeResource = static_cast<CompositorNodeResource&>(compositorNodeResourceManager.getResourceByResourceId(compositorNodeResourceId));
 
 				// TODO(co) Ensure compositor node resource loading is done. Such blocking waiting is no good thing.
 				compositorNodeResource.enforceFullyLoaded();

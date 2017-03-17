@@ -24,9 +24,12 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Resource/Texture/TextureResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -66,7 +69,7 @@ namespace RendererRuntime
 		// Need for gathering the textures now?
 		if (mTextures.empty())
 		{
-			const MaterialBlueprintResource* materialBlueprintResource = rendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources().tryGetElementById(mMaterialBlueprintResourceId);
+			const MaterialBlueprintResource* materialBlueprintResource = static_cast<MaterialBlueprintResource*>(rendererRuntime.getMaterialBlueprintResourceManager().tryGetResourceByResourceId(mMaterialBlueprintResourceId));
 			if (nullptr != materialBlueprintResource)
 			{
 				const MaterialResource& materialResource = getMaterialResource();
@@ -93,7 +96,7 @@ namespace RendererRuntime
 						{
 							// TODO(co) Error handling: Usage mismatch etc.
 							texture.materialProperty = *materialProperty;
-							texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(texture.materialProperty.getTextureAssetIdValue(), blueprintTexture.fallbackTextureAssetId, nullptr, blueprintTexture.rgbHardwareGammaCorrection);
+							textureResourceManager.loadTextureResourceByAssetId(texture.materialProperty.getTextureAssetIdValue(), blueprintTexture.fallbackTextureAssetId, texture.textureResourceId, nullptr, blueprintTexture.rgbHardwareGammaCorrection);
 						}
 					}
 
@@ -122,13 +125,13 @@ namespace RendererRuntime
 		{ // Graphics root descriptor table: Set textures
 			const Textures& textures = getTextures(rendererRuntime);
 			const size_t numberOfTextures = textures.size();
-			const TextureResources& textureResources = rendererRuntime.getTextureResourceManager().getTextureResources();
+			const TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
 			for (size_t i = 0; i < numberOfTextures; ++i)
 			{
 				const Texture& texture = textures[i];
 
 				// Due to background texture loading, some textures might not be ready, yet
-				const TextureResource* textureResource  = textureResources.tryGetElementById(texture.textureResourceId);
+				const TextureResource* textureResource  = static_cast<TextureResource*>(textureResourceManager.tryGetResourceByResourceId(texture.textureResourceId));
 				if (nullptr != textureResource)
 				{
 					Renderer::ITexturePtr texturePtr = textureResource->getTexture();
@@ -158,7 +161,7 @@ namespace RendererRuntime
 	MaterialBufferManager* MaterialTechnique::getMaterialBufferManager() const
 	{
 		// It's valid if a material blueprint resource doesn't contain a material uniform buffer (usually the case for compositor material blueprint resources)
-		const MaterialBlueprintResource* materialBlueprintResource = getMaterialResourceManager().getRendererRuntime().getMaterialBlueprintResourceManager().getMaterialBlueprintResources().tryGetElementById(mMaterialBlueprintResourceId);
+		const MaterialBlueprintResource* materialBlueprintResource = static_cast<MaterialBlueprintResource*>(getMaterialResourceManager().getRendererRuntime().getMaterialBlueprintResourceManager().tryGetResourceByResourceId(mMaterialBlueprintResourceId));
 		return (nullptr != materialBlueprintResource) ? materialBlueprintResource->getMaterialBufferManager() : nullptr;
 	}
 

@@ -27,9 +27,7 @@
 #include "RendererRuntime/Resource/Texture/Loader/CrnTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Texture/Loader/KtxTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Texture/Loader/DdsTextureResourceLoader.h"
-#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
-#include "RendererRuntime/Asset/AssetManager.h"
-#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
 
 
 //[-------------------------------------------------------]
@@ -135,15 +133,16 @@ namespace RendererRuntime
 			mNumberOfTopMipmapsToRemove = numberOfTopMipmapsToRemove;
 
 			// Update the already loaded textures, but really only textures loaded from texture assets and not e.g. textures dynamically created during runtime
-			const AssetManager& assetManager = mRendererRuntime.getAssetManager();
-			const uint32_t numberOfElements = mTextureResources.getNumberOfElements();
+			const AssetManager& assetManager = mInternalResourceManager->getRendererRuntime().getAssetManager();
+			const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
 			for (uint32_t i = 0; i < numberOfElements; ++i)
 			{
-				const TextureResource& textureResource = mTextureResources.getElementByIndex(i);
+				const TextureResource& textureResource = mInternalResourceManager->getResources().getElementByIndex(i);
 				const AssetId assetId = textureResource.getAssetId();
 				if (nullptr != assetManager.getAssetByAssetId(assetId))
 				{
-					loadTextureResourceByAssetId(assetId, getUninitialized<AssetId>(), nullptr, textureResource.isRgbHardwareGammaCorrection(), true);
+					TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
+					loadTextureResourceByAssetId(assetId, getUninitialized<AssetId>(), textureResourceId, nullptr, textureResource.isRgbHardwareGammaCorrection(), true);
 				}
 			}
 		}
@@ -151,52 +150,39 @@ namespace RendererRuntime
 
 	TextureResource* TextureResourceManager::getTextureResourceByAssetId(AssetId assetId) const
 	{
-		TextureResource* textureResource = nullptr;
-
-		// TODO(co) Just a quick'n'dirty implementation
-		const uint32_t numberOfElements = mTextureResources.getNumberOfElements();
-		for (uint32_t i = 0; i < numberOfElements; ++i)
-		{
-			TextureResource& currentTextureResource = mTextureResources.getElementByIndex(i);
-			if (currentTextureResource.getAssetId() == assetId)
-			{
-				textureResource = &currentTextureResource;
-
-				// Get us out of the loop
-				i = numberOfElements;
-			}
-		}
-
-		// Done
-		return textureResource;
+		return mInternalResourceManager->getResourceByAssetId(assetId);
 	}
 
-	// TODO(co) Work-in-progress
-	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, AssetId fallbackTextureAssetId, IResourceListener* resourceListener, bool rgbHardwareGammaCorrection, bool reload)
+	void TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, AssetId fallbackTextureAssetId, TextureResourceId& textureResourceId, IResourceListener* resourceListener, bool rgbHardwareGammaCorrection, bool reload)
 	{
-		TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
-
 		// Check whether or not the texture resource already exists
 		TextureResource* textureResource = getTextureResourceByAssetId(assetId);
 
 		// Create the resource instance
-		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		const IRendererRuntime& rendererRuntime = mInternalResourceManager->getRendererRuntime();
+		const Asset* asset = rendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		bool load = (reload && nullptr != asset);
 		if (nullptr == textureResource && nullptr != asset)
 		{
-			textureResource = &mTextureResources.addElement();
+			textureResource = &mInternalResourceManager->getResources().addElement();
 			textureResource->setResourceManager(this);
 			textureResource->setAssetId(assetId);
 			textureResource->mRgbHardwareGammaCorrection = rgbHardwareGammaCorrection;
 			load = true;
 		}
+
+		// Before connecting a resource listener, ensure we set the output resource ID at once so it can already directly be used inside the resource listener
 		if (nullptr != textureResource)
 		{
+			textureResourceId = textureResource->getId();
 			if (nullptr != resourceListener)
 			{
 				textureResource->connectResourceListener(*resourceListener);
 			}
-			textureResourceId = textureResource->getId();
+		}
+		else
+		{
+			textureResourceId = getUninitialized<TextureResourceId>();
 		}
 
 		// Load the resource, if required
@@ -216,7 +202,7 @@ namespace RendererRuntime
 					ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
 					resourceStreamerLoadRequest.resource = textureResource;
 					resourceStreamerLoadRequest.resourceLoader = textureResourceLoader;
-					mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+					rendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 
 					// Since it might take a moment to load the texture resource, we'll use a fallback placeholder renderer texture resource so we don't have to wait until the real thing is there
 					// -> In case there's already a renderer texture, keep that as long as possible (for example there might be a change in the number of top mipmaps to remove)
@@ -249,9 +235,6 @@ namespace RendererRuntime
 				// TODO(co) Error handling
 			}
 		}
-
-		// Done
-		return textureResourceId;
 	}
 
 	TextureResourceId TextureResourceManager::createTextureResourceByAssetId(AssetId assetId, Renderer::ITexture& texture, bool rgbHardwareGammaCorrection)
@@ -260,7 +243,7 @@ namespace RendererRuntime
 		assert(nullptr == getTextureResourceByAssetId(assetId));
 
 		// Create the texture resource instance
-		TextureResource& textureResource = mTextureResources.addElement();
+		TextureResource& textureResource = mInternalResourceManager->getResources().addElement();
 		textureResource.setResourceManager(this);
 		textureResource.setAssetId(assetId);
 		textureResource.mRgbHardwareGammaCorrection = rgbHardwareGammaCorrection;	// TODO(co) We might need to extend "Renderer::ITexture" so we can readback the texture format
@@ -271,20 +254,46 @@ namespace RendererRuntime
 		return textureResource.getId();
 	}
 
+	void TextureResourceManager::destroyTextureResource(TextureResourceId textureResourceId)
+	{
+		mInternalResourceManager->getResources().removeElement(textureResourceId);
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
+	uint32_t TextureResourceManager::getNumberOfResources() const
+	{
+		return mInternalResourceManager->getResources().getNumberOfElements();
+	}
+
+	IResource& TextureResourceManager::getResourceByIndex(uint32_t index) const
+	{
+		return mInternalResourceManager->getResources().getElementByIndex(index);
+	}
+
+	IResource& TextureResourceManager::getResourceByResourceId(ResourceId resourceId) const
+	{
+		return mInternalResourceManager->getResources().getElementById(resourceId);
+	}
+
+	IResource* TextureResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
+	{
+		return mInternalResourceManager->getResources().tryGetElementById(resourceId);
+	}
+
 	void TextureResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		const uint32_t numberOfElements = mTextureResources.getNumberOfElements();
+		const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
 		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			const TextureResource& textureResource = mTextureResources.getElementByIndex(i);
+			const TextureResource& textureResource = mInternalResourceManager->getResources().getElementByIndex(i);
 			if (textureResource.getAssetId() == assetId)
 			{
-				loadTextureResourceByAssetId(assetId, getUninitialized<AssetId>(), nullptr, textureResource.isRgbHardwareGammaCorrection(), true);
+				TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
+				loadTextureResourceByAssetId(assetId, getUninitialized<AssetId>(), textureResourceId, nullptr, textureResource.isRgbHardwareGammaCorrection(), true);
 				break;
 			}
 		}
@@ -297,34 +306,48 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	void TextureResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	{
+		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime),
 		mNumberOfTopMipmapsToRemove(0)
 	{
+		mInternalResourceManager = new ResourceManagerTemplate<TextureResource, ITextureResourceLoader, TextureResourceId, 2048>(rendererRuntime, *this);
 		::detail::createDefaultDynamicTextureAssets(rendererRuntime, *this);
+	}
+
+	TextureResourceManager::~TextureResourceManager()
+	{
+		delete mInternalResourceManager;
 	}
 
 	IResourceLoader* TextureResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Can we recycle an already existing resource loader instance?
-		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+		IResourceLoader* resourceLoader = static_cast<ResourceManagerTemplateBase*>(mInternalResourceManager)->acquireResourceLoaderInstance(resourceLoaderTypeId);
 
 		// We need to create a new resource loader instance
 		if (nullptr == resourceLoader)
 		{
 			if (resourceLoaderTypeId == CrnTextureResourceLoader::TYPE_ID)
 			{
-				resourceLoader = new CrnTextureResourceLoader(*this, mRendererRuntime);
+				resourceLoader = new CrnTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
 			}
 			else if (resourceLoaderTypeId == KtxTextureResourceLoader::TYPE_ID)
 			{
-				resourceLoader = new KtxTextureResourceLoader(*this, mRendererRuntime);
+				resourceLoader = new KtxTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
 			}
 			else if (resourceLoaderTypeId == DdsTextureResourceLoader::TYPE_ID)
 			{
-				resourceLoader = new DdsTextureResourceLoader(*this, mRendererRuntime);
+				resourceLoader = new DdsTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
 			}
 			else
 			{
@@ -333,7 +356,7 @@ namespace RendererRuntime
 			}
 			if (nullptr != resourceLoader)
 			{
-				mUsedResourceLoaderInstances.push_back(resourceLoader);
+				mInternalResourceManager->getUsedResourceLoaderInstances().push_back(resourceLoader);
 			}
 		}
 

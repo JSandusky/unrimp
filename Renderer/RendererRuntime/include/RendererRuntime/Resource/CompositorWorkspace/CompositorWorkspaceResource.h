@@ -37,8 +37,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class CompositorWorkspaceResource;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -65,9 +65,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend PackedElementManager<CompositorWorkspaceResource, CompositorWorkspaceResourceId, 32>;	// Type definition of template class
 		friend class CompositorWorkspaceResourceLoader;
-		friend class CompositorWorkspaceResourceManager;
+		friend PackedElementManager<CompositorWorkspaceResource, CompositorWorkspaceResourceId, 32>;										// Type definition of template class
+		friend ResourceManagerTemplate<CompositorWorkspaceResource, CompositorWorkspaceResourceLoader, CompositorWorkspaceResourceId, 32>;	// Type definition of template class
 
 
 	//[-------------------------------------------------------]

@@ -33,51 +33,6 @@ namespace RendererRuntime
 		return mRendererRuntime;
 	}
 
-	inline const MaterialResources& MaterialResourceManager::getMaterialResources() const
-	{
-		return mMaterialResources;
-	}
-
-	inline MaterialResourceId MaterialResourceManager::getMaterialResourceIdByAssetId(AssetId assetId) const
-	{
-		const MaterialResource* materialResource = getMaterialResourceByAssetId(assetId);
-		return (nullptr != materialResource) ? materialResource->getId() : getUninitialized<MaterialResourceId>();
-	}
-
-	inline void MaterialResourceManager::destroyMaterialResource(MaterialResourceId materialResourceId)
-	{
-		mMaterialResources.removeElement(materialResourceId);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	inline IResource& MaterialResourceManager::getResourceByResourceId(ResourceId resourceId) const
-	{
-		return mMaterialResources.getElementById(resourceId);
-	}
-
-	inline IResource* MaterialResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
-	{
-		return mMaterialResources.tryGetElementById(resourceId);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline MaterialResourceManager::MaterialResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
-	{
-		// Nothing here
-	}
-
-	inline MaterialResourceManager::~MaterialResourceManager()
-	{
-		// Nothing here
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

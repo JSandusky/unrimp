@@ -25,9 +25,7 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintResourceLoader.h"
-#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
-#include "RendererRuntime/Asset/AssetManager.h"
-#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
 
 
 // Disable warnings
@@ -45,86 +43,52 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Work-in-progress
-	ShaderBlueprintResourceId ShaderBlueprintResourceManager::loadShaderBlueprintResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
+	void ShaderBlueprintResourceManager::loadShaderBlueprintResourceByAssetId(AssetId assetId, ShaderBlueprintResourceId& shaderBlueprintResourceId, IResourceListener* resourceListener, bool reload)
 	{
-		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
-		if (nullptr != asset)
-		{
-			// Get or create the instance
-			ShaderBlueprintResource* shaderBlueprintResource = nullptr;
-			{
-				const uint32_t numberOfElements = mShaderBlueprintResources.getNumberOfElements();
-				for (uint32_t i = 0; i < numberOfElements; ++i)
-				{
-					ShaderBlueprintResource& currentShaderBlueprintResource = mShaderBlueprintResources.getElementByIndex(i);
-					if (currentShaderBlueprintResource.getAssetId() == assetId)
-					{
-						shaderBlueprintResource = &currentShaderBlueprintResource;
-
-						// Get us out of the loop
-						i = numberOfElements;
-					}
-				}
-			}
-
-			// Create the resource instance
-			bool load = reload;
-			if (nullptr == shaderBlueprintResource)
-			{
-				shaderBlueprintResource = &mShaderBlueprintResources.addElement();
-				shaderBlueprintResource->setResourceManager(this);
-				shaderBlueprintResource->setAssetId(assetId);
-				load = true;
-			}
-			if (nullptr != shaderBlueprintResource && nullptr != resourceListener)
-			{
-				shaderBlueprintResource->connectResourceListener(*resourceListener);
-			}
-
-			// Load the resource, if required
-			if (load)
-			{
-				// Prepare the resource loader
-				ShaderBlueprintResourceLoader* shaderBlueprintResourceLoader = static_cast<ShaderBlueprintResourceLoader*>(acquireResourceLoaderInstance(ShaderBlueprintResourceLoader::TYPE_ID));
-				shaderBlueprintResourceLoader->initialize(*asset, *shaderBlueprintResource);
-
-				// Commit resource streamer asset load request
-				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-				resourceStreamerLoadRequest.resource = shaderBlueprintResource;
-				resourceStreamerLoadRequest.resourceLoader = shaderBlueprintResourceLoader;
-				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-			}
-
-			// Done
-			return shaderBlueprintResource->getId();
-		}
-
-		// Error!
-		return getUninitialized<ShaderBlueprintResourceId>();
+		mInternalResourceManager->loadResourceByAssetId(assetId, shaderBlueprintResourceId, resourceListener, reload);
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
+	uint32_t ShaderBlueprintResourceManager::getNumberOfResources() const
+	{
+		return mInternalResourceManager->getResources().getNumberOfElements();
+	}
+
+	IResource& ShaderBlueprintResourceManager::getResourceByIndex(uint32_t index) const
+	{
+		return mInternalResourceManager->getResources().getElementByIndex(index);
+	}
+
+	IResource& ShaderBlueprintResourceManager::getResourceByResourceId(ResourceId resourceId) const
+	{
+		return mInternalResourceManager->getResources().getElementById(resourceId);
+	}
+
+	IResource* ShaderBlueprintResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
+	{
+		return mInternalResourceManager->getResources().tryGetElementById(resourceId);
+	}
+
 	void ShaderBlueprintResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		const uint32_t numberOfElements = mShaderBlueprintResources.getNumberOfElements();
-		for (uint32_t i = 0; i < numberOfElements; ++i)
-		{
-			if (mShaderBlueprintResources.getElementByIndex(i).getAssetId() == assetId)
-			{
-				loadShaderBlueprintResourceByAssetId(assetId, nullptr, true);
-				break;
-			}
-		}
+		return mInternalResourceManager->reloadResourceByAssetId(assetId);
 	}
 
 	void ShaderBlueprintResourceManager::update()
 	{
 		// TODO(co) Implement me
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	void ShaderBlueprintResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	{
+		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
 	}
 
 
@@ -135,6 +99,8 @@ namespace RendererRuntime
 		mRendererRuntime(rendererRuntime),
 		mShaderCacheManager(*this)
 	{
+		mInternalResourceManager = new ResourceManagerTemplate<ShaderBlueprintResource, ShaderBlueprintResourceLoader, ShaderBlueprintResourceId, 64>(rendererRuntime, *this);
+
 		// Gather renderer shader properties
 		// -> Write the renderer name as well as the shader language name into the shader properties so shaders can perform renderer specific handling if required
 		// -> We really need both, usually shader language name is sufficient, but if more fine granular information is required it's accessible
@@ -147,22 +113,9 @@ namespace RendererRuntime
 		}
 	}
 
-	IResourceLoader* ShaderBlueprintResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	ShaderBlueprintResourceManager::~ShaderBlueprintResourceManager()
 	{
-		// Can we recycle an already existing resource loader instance?
-		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
-
-		// We need to create a new resource loader instance
-		if (nullptr == resourceLoader)
-		{
-			// We only support our own shader blueprint format
-			assert(resourceLoaderTypeId == ShaderBlueprintResourceLoader::TYPE_ID);
-			resourceLoader = new ShaderBlueprintResourceLoader(*this, mRendererRuntime);
-			mUsedResourceLoaderInstances.push_back(resourceLoader);
-		}
-
-		// Done
-		return resourceLoader;
+		delete mInternalResourceManager;
 	}
 
 

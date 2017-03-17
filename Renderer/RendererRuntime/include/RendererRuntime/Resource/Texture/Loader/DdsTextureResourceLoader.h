@@ -37,10 +37,6 @@ namespace Renderer
 {
 	class ITexture;
 }
-namespace RendererRuntime
-{
-	class IRendererRuntime;
-}
 
 
 //[-------------------------------------------------------]

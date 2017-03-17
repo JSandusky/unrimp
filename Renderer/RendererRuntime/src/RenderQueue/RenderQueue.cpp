@@ -27,6 +27,7 @@
 #include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
@@ -156,7 +157,7 @@ namespace RendererRuntime
 
 		// TODO(co) This is just a dummy implementation. For example automatic instancing has to be incorporated as well as more efficient buffer management.
 
-		const MaterialResources& materialResources = mRendererRuntime.getMaterialResourceManager().getMaterialResources();
+		const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 		InstanceBufferManager& instanceBufferManager = materialBlueprintResourceManager.getInstanceBufferManager();
 		LightBufferManager& lightBufferManager = materialBlueprintResourceManager.getLightBufferManager();
@@ -213,7 +214,7 @@ namespace RendererRuntime
 						}
 
 						// Material resource
-						const MaterialResource* materialResource = materialResources.tryGetElementById(renderable.getMaterialResourceId());
+						const MaterialResource* materialResource = static_cast<MaterialResource*>(materialResourceManager.tryGetResourceByResourceId(renderable.getMaterialResourceId()));
 						if (nullptr != materialResource)
 						{
 							MaterialTechnique* materialTechnique = materialResource->getMaterialTechniqueById(materialTechniqueId);

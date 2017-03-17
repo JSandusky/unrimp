@@ -33,11 +33,6 @@ namespace RendererRuntime
 		return mRendererRuntime;
 	}
 
-	inline const MaterialBlueprintResources& MaterialBlueprintResourceManager::getMaterialBlueprintResources() const
-	{
-		return mMaterialBlueprintResources;
-	}
-
 	inline IMaterialBlueprintResourceListener& MaterialBlueprintResourceManager::getMaterialBlueprintResourceListener() const
 	{
 		// We know this pointer must always be valid
@@ -67,20 +62,6 @@ namespace RendererRuntime
 		// We know this pointer must always be valid
 		assert(nullptr != mLightBufferManager);
 		return *mLightBufferManager;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	inline IResource& MaterialBlueprintResourceManager::getResourceByResourceId(ResourceId resourceId) const
-	{
-		return mMaterialBlueprintResources.getElementById(resourceId);
-	}
-
-	inline IResource* MaterialBlueprintResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
-	{
-		return mMaterialBlueprintResources.tryGetElementById(resourceId);
 	}
 
 

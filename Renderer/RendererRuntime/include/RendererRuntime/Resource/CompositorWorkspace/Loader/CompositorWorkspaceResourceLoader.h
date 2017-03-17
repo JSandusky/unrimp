@@ -41,6 +41,7 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class CompositorWorkspaceResource;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -49,6 +50,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t CompositorWorkspaceResourceId;	///< POD compositor workspace resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -61,7 +68,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class CompositorWorkspaceResourceManager;
+		friend ResourceManagerTemplate<CompositorWorkspaceResource, CompositorWorkspaceResourceLoader, CompositorWorkspaceResourceId, 32>;	// Type definition of template class
 
 
 	//[-------------------------------------------------------]

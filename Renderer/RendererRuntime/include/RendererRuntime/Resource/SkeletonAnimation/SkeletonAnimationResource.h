@@ -44,8 +44,8 @@ PRAGMA_WARNING_POP
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class SkeletonAnimationResource;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -76,9 +76,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend PackedElementManager<SkeletonAnimationResource, SkeletonAnimationResourceId, 2048>;	// Type definition of template class
 		friend class SkeletonAnimationResourceLoader;
-		friend class SkeletonAnimationResourceManager;
+		friend PackedElementManager<SkeletonAnimationResource, SkeletonAnimationResourceId, 2048>;										// Type definition of template class
+		friend ResourceManagerTemplate<SkeletonAnimationResource, SkeletonAnimationResourceLoader, SkeletonAnimationResourceId, 2048>;	// Type definition of template class
 
 
 	//[-------------------------------------------------------]

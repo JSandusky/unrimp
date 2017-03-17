@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Resource/Texture/TextureResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <algorithm>

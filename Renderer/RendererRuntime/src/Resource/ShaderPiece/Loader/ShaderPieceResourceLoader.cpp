@@ -26,8 +26,10 @@
 #include "RendererRuntime/Resource/ShaderPiece/Loader/ShaderPieceFileFormat.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -71,20 +73,20 @@ namespace RendererRuntime
 	{
 		{ // TODO(co) Cleanup: Get all influenced material blueprint resources
 			const ShaderPieceResourceId shaderPieceResourceId = mShaderPieceResource->getId();
-			const ShaderBlueprintResources& shaderBlueprintResources = mRendererRuntime.getShaderBlueprintResourceManager().getShaderBlueprintResources();
+			const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
 			typedef std::unordered_set<MaterialBlueprintResource*> MaterialBlueprintResourcePointers;
 			MaterialBlueprintResourcePointers materialBlueprintResourcePointers;
-			const MaterialBlueprintResources& materialBlueprintResources = mRendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources();
-			const uint32_t numberOfElements = materialBlueprintResources.getNumberOfElements();
+			const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
+			const uint32_t numberOfElements = materialBlueprintResourceManager.getNumberOfResources();
 			for (uint32_t i = 0; i < numberOfElements; ++i)
 			{
-				MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResources.getElementByIndex(i);
+				MaterialBlueprintResource& materialBlueprintResource = static_cast<MaterialBlueprintResource&>(materialBlueprintResourceManager.getResourceByIndex(i));
 				for (uint8_t shaderType = 0; shaderType < NUMBER_OF_SHADER_TYPES; ++shaderType)
 				{
 					const ShaderBlueprintResourceId shaderBlueprintResourceId = materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(shaderType));
 					if (isInitialized(shaderBlueprintResourceId))
 					{
-						const ShaderBlueprintResource::IncludeShaderPieceResourceIds& includeShaderPieceResourceIds = shaderBlueprintResources.getElementById(shaderBlueprintResourceId).getIncludeShaderPieceResourceIds();
+						const ShaderBlueprintResource::IncludeShaderPieceResourceIds& includeShaderPieceResourceIds = static_cast<ShaderBlueprintResource&>(shaderBlueprintResourceManager.getResourceByResourceId(shaderBlueprintResourceId)).getIncludeShaderPieceResourceIds();
 						if (std::find(includeShaderPieceResourceIds.cbegin(), includeShaderPieceResourceIds.cend(), shaderPieceResourceId) != includeShaderPieceResourceIds.cend())
 						{
 							materialBlueprintResourcePointers.insert(&materialBlueprintResource);

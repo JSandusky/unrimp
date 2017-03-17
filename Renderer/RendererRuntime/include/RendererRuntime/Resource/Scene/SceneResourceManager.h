@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
 
 
@@ -40,6 +39,7 @@ namespace RendererRuntime
 	class ISceneResource;
 	class IRendererRuntime;
 	class IResourceListener;
+	class ResourceManagerTemplateBase;
 }
 
 
@@ -48,6 +48,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId ResourceLoaderTypeId;	///< Resource loader type identifier, internally just a POD "uint32_t", usually created by hashing the file format extension (if the resource loader is processing file data in the first place)
 
 
 	//[-------------------------------------------------------]
@@ -78,6 +84,8 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual uint32_t getNumberOfResources() const override;
+		virtual IResource& getResourceByIndex(uint32_t index) const override;
 		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
 		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
@@ -85,11 +93,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	private:
+		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
 		explicit SceneResourceManager(IRendererRuntime& rendererRuntime);
-		inline virtual ~SceneResourceManager();
+		virtual ~SceneResourceManager();
 		SceneResourceManager(const SceneResourceManager&) = delete;
 		SceneResourceManager& operator=(const SceneResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
@@ -106,9 +121,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&	 mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		const ISceneFactory* mSceneFactory;		///< Scene factory, always valid, do not destroy the instance
-		SceneResources		 mSceneResources;
+		IRendererRuntime&			 mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		const ISceneFactory*		 mSceneFactory;		///< Scene factory, always valid, do not destroy the instance
+		SceneResources				 mSceneResources;
+		ResourceManagerTemplateBase* mResourceManagerTemplateBase;
 
 
 	};

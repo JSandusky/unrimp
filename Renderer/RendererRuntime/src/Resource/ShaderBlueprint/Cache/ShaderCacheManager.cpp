@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCache.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateSignature.h"
 #include "RendererRuntime/Core/Math/Math.h"
@@ -63,7 +64,7 @@ namespace RendererRuntime
 			else
 			{
 				// Try to create the new program cache instance
-				const ShaderBlueprintResource* shaderBlueprintResource = mShaderBlueprintResourceManager.getShaderBlueprintResources().tryGetElementById(shaderBlueprintResourceId);
+				const ShaderBlueprintResource* shaderBlueprintResource = static_cast<ShaderBlueprintResource*>(mShaderBlueprintResourceManager.tryGetResourceByResourceId(shaderBlueprintResourceId));
 				if (nullptr != shaderBlueprintResource)
 				{
 					// Build the shader source code

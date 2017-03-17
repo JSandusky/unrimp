@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCompiler.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCache.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 

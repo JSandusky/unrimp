@@ -19,6 +19,13 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Resource/Texture/Loader/ITextureResourceLoader.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -26,41 +33,9 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	inline const SkeletonResources& SkeletonResourceManager::getSkeletonResources() const
-	{
-		return mSkeletonResources;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	inline IResource& SkeletonResourceManager::getResourceByResourceId(ResourceId resourceId) const
-	{
-		return mSkeletonResources.getElementById(resourceId);
-	}
-
-	inline IResource* SkeletonResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
-	{
-		return mSkeletonResources.tryGetElementById(resourceId);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline SkeletonResourceManager::SkeletonResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
-	{
-		// Nothing here
-	}
-
-	inline SkeletonResourceManager::~SkeletonResourceManager()
-	{
-		// Nothing here
-	}
+	const ResourceLoaderTypeId ITextureResourceLoader::TYPE_ID("invalid_abstract_type");
 
 
 //[-------------------------------------------------------]

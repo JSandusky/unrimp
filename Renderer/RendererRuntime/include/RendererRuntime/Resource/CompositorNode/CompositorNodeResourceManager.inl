@@ -39,11 +39,6 @@ namespace RendererRuntime
 		return mRendererRuntime;
 	}
 
-	inline const CompositorNodeResources& CompositorNodeResourceManager::getCompositorNodeResources() const
-	{
-		return mCompositorNodeResources;
-	}
-
 	inline const ICompositorPassFactory& CompositorNodeResourceManager::getCompositorPassFactory() const
 	{
 		// We know that this pointer is always valid
@@ -60,20 +55,6 @@ namespace RendererRuntime
 	{
 		assert(nullptr != mFramebufferManager);
 		return *mFramebufferManager;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	inline IResource& CompositorNodeResourceManager::getResourceByResourceId(ResourceId resourceId) const
-	{
-		return mCompositorNodeResources.getElementById(resourceId);
-	}
-
-	inline IResource* CompositorNodeResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
-	{
-		return mCompositorNodeResources.tryGetElementById(resourceId);
 	}
 
 
