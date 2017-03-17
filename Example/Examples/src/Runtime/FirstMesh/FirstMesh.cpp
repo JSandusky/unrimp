@@ -343,7 +343,7 @@ void FirstMesh::onDraw()
 		}
 
 		{ // Draw mesh instance
-			const RendererRuntime::MeshResource* meshResource = rendererRuntime->getMeshResourceManager().getMeshResources().tryGetElementById(mMeshResourceId);
+			const RendererRuntime::MeshResource* meshResource = static_cast<const RendererRuntime::MeshResource*>(rendererRuntime->getMeshResourceManager().tryGetResourceByResourceId(mMeshResourceId));
 			if (nullptr != meshResource)
 			{
 				{ // Setup input assembly (IA)

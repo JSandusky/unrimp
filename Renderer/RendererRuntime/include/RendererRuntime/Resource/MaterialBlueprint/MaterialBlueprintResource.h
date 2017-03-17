@@ -57,12 +57,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId																		 AssetId;						///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
-	typedef uint32_t																		 TextureResourceId;				///< POD texture resource identifier
-	typedef uint32_t																		 ShaderBlueprintResourceId;		///< POD shader blueprint resource identifier
-	typedef uint32_t																		 MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
-	typedef StringId																		 ShaderPropertyId;				///< Shader property identifier, internally just a POD "uint32_t", result of hashing the property name
-	typedef PackedElementManager<MaterialBlueprintResource, MaterialBlueprintResourceId, 64> MaterialBlueprintResources;
+	typedef StringId AssetId;						///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef uint32_t TextureResourceId;				///< POD texture resource identifier
+	typedef uint32_t ShaderBlueprintResourceId;		///< POD shader blueprint resource identifier
+	typedef uint32_t MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
+	typedef StringId ShaderPropertyId;				///< Shader property identifier, internally just a POD "uint32_t", result of hashing the property name
 
 
 	//[-------------------------------------------------------]
@@ -96,7 +95,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend MaterialBlueprintResources;			// Type definition of template class
+		friend PackedElementManager<MaterialBlueprintResource, MaterialBlueprintResourceId, 64>;	// Type definition of template class
 		friend class MaterialBlueprintResourceLoader;
 		friend class MaterialBlueprintResourceManager;
 		friend class MaterialResourceLoader;		// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.) - remove this

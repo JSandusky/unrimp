@@ -26,15 +26,6 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	inline const MeshResources& MeshResourceManager::getMeshResources() const
-	{
-		return mMeshResources;
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	inline IResource& MeshResourceManager::getResourceByResourceId(ResourceId resourceId) const

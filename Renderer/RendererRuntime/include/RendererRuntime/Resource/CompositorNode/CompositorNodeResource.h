@@ -53,8 +53,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t																   CompositorNodeResourceId;	///< POD compositor node resource identifier
-	typedef PackedElementManager<CompositorNodeResource, CompositorNodeResourceId, 32> CompositorNodeResources;
+	typedef uint32_t CompositorNodeResourceId;	///< POD compositor node resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -67,7 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend CompositorNodeResources;	// Type definition of template class
+		friend PackedElementManager<CompositorNodeResource, CompositorNodeResourceId, 32>;	// Type definition of template class
 		friend class CompositorNodeResourceLoader;
 		friend class CompositorNodeResourceManager;
 

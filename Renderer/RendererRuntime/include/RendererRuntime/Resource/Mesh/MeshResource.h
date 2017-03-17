@@ -53,10 +53,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef std::vector<SubMesh>									 SubMeshes;
-	typedef uint32_t												 MeshResourceId;		///< POD mesh resource identifier
-	typedef PackedElementManager<MeshResource, MeshResourceId, 4096> MeshResources;
-	typedef uint32_t												 SkeletonResourceId;	///< POD skeleton resource identifier
+	typedef std::vector<SubMesh> SubMeshes;
+	typedef uint32_t			 MeshResourceId;		///< POD mesh resource identifier
+	typedef uint32_t			 SkeletonResourceId;	///< POD skeleton resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -73,7 +72,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend MeshResources;	// Type definition of template class
+		friend PackedElementManager<MeshResource, MeshResourceId, 4096>;	// Type definition of template class
 		friend class MeshResourceLoader;
 		friend class MeshResourceManager;
 

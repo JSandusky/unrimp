@@ -36,26 +36,6 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	void IResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
-	{
-		for (ResourceLoaderVector::iterator iterator = mUsedResourceLoaderInstances.begin(); iterator != mUsedResourceLoaderInstances.end(); ++iterator)
-		{
-			if (*iterator == &resourceLoader)
-			{
-				mUsedResourceLoaderInstances.erase(iterator);
-				mFreeResourceLoaderInstances.push_back(&resourceLoader);
-				return;
-			}
-		}
-
-		// There's something funny going on here, an resource loader instance has been released which is not owned by this resource manager
-		assert(false);
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	IResourceManager::~IResourceManager()
@@ -89,6 +69,22 @@ namespace RendererRuntime
 
 		// Sorry, no free resource loader instance left
 		return nullptr;
+	}
+
+	void IResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	{
+		for (ResourceLoaderVector::iterator iterator = mUsedResourceLoaderInstances.begin(); iterator != mUsedResourceLoaderInstances.end(); ++iterator)
+		{
+			if (*iterator == &resourceLoader)
+			{
+				mUsedResourceLoaderInstances.erase(iterator);
+				mFreeResourceLoaderInstances.push_back(&resourceLoader);
+				return;
+			}
+		}
+
+		// There's something funny going on here, an resource loader instance has been released which is not owned by this resource manager
+		assert(false);
 	}
 
 

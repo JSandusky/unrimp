@@ -59,13 +59,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;	// Needs to be able to destroy resource manager instances
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		void releaseResourceLoaderInstance(IResourceLoader& resourceLoader);
+		friend class ResourceStreamer;		// Needs to be able to release resource loader instances
 
 
 	//[-------------------------------------------------------]
@@ -87,6 +81,7 @@ namespace RendererRuntime
 		IResourceManager(const IResourceManager&) = delete;
 		IResourceManager& operator=(const IResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
+		void releaseResourceLoaderInstance(IResourceLoader& resourceLoader);
 		inline void setResourceLoadingState(IResource& resource, IResource::LoadingState loadingState);
 
 

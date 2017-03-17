@@ -52,8 +52,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t															 ShaderPieceResourceId;	///< POD shader piece resource identifier
-	typedef PackedElementManager<ShaderPieceResource, ShaderPieceResourceId, 64> ShaderPieceResources;
+	typedef uint32_t ShaderPieceResourceId;	///< POD shader piece resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -70,7 +69,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend ShaderPieceResources;	// Type definition of template class
+		friend PackedElementManager<ShaderPieceResource, ShaderPieceResourceId, 64>;	// Type definition of template class
 		friend class ShaderPieceResourceLoader;
 		friend class ShaderPieceResourceManager;
 

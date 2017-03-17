@@ -56,7 +56,7 @@ namespace RendererRuntime
 		mMeshResourceId = meshResourceId;
 		if (isInitialized(meshResourceId))
 		{
-			getSceneResource().getRendererRuntime().getMeshResourceManager().getMeshResources().getElementById(meshResourceId).connectResourceListener(*this);
+			getSceneResource().getRendererRuntime().getMeshResourceManager().getResourceByResourceId(meshResourceId).connectResourceListener(*this);
 		}
 	}
 
@@ -133,7 +133,7 @@ namespace RendererRuntime
 
 				// Get mesh resource instance
 				const IRendererRuntime& rendererRuntime = getSceneResource().getRendererRuntime();
-				const MeshResource* meshResource = rendererRuntime.getMeshResourceManager().getMeshResources().tryGetElementById(mMeshResourceId);
+				const MeshResource* meshResource = static_cast<const MeshResource*>(rendererRuntime.getMeshResourceManager().tryGetResourceByResourceId(mMeshResourceId));
 				if (nullptr != meshResource)
 				{
 					// Get vertex array instance

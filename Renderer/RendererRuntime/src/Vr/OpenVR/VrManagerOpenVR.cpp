@@ -818,7 +818,7 @@ namespace RendererRuntime
 				meshResourceId = meshResourceManager.createEmptyMeshResourceByAssetId(assetId);
 				if (isInitialized(meshResourceId))
 				{
-					meshResource = meshResourceManager.getMeshResources().tryGetElementById(meshResourceId);
+					meshResource = static_cast<MeshResource*>(meshResourceManager.tryGetResourceByResourceId(meshResourceId));
 					if (nullptr != meshResource)
 					{
 						::detail::setupRenderModel(mRendererRuntime, renderModelName, *meshResource, mVrDeviceMaterialResourceId);

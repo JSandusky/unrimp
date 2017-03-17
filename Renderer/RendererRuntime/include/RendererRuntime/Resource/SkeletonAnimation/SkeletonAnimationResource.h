@@ -59,8 +59,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t																		   SkeletonAnimationResourceId;	///< POD skeleton animation resource identifier
-	typedef PackedElementManager<SkeletonAnimationResource, SkeletonAnimationResourceId, 2048> SkeletonAnimationResources;
+	typedef uint32_t SkeletonAnimationResourceId;	///< POD skeleton animation resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -77,7 +76,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend SkeletonAnimationResources;	// Type definition of template class
+		friend PackedElementManager<SkeletonAnimationResource, SkeletonAnimationResourceId, 2048>;	// Type definition of template class
 		friend class SkeletonAnimationResourceLoader;
 		friend class SkeletonAnimationResourceManager;
 

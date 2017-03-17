@@ -52,8 +52,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t													   TextureResourceId;	///< POD texture resource identifier
-	typedef PackedElementManager<TextureResource, TextureResourceId, 2048> TextureResources;
+	typedef uint32_t TextureResourceId;	///< POD texture resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -70,7 +69,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend TextureResources;				// Type definition of template class
+		friend PackedElementManager<TextureResource, TextureResourceId, 2048>;	// Type definition of template class
 		friend class TextureResourceLoader;
 		friend class TextureResourceManager;
 		friend class CrnTextureResourceLoader;	// TODO(co) Get rid of this
