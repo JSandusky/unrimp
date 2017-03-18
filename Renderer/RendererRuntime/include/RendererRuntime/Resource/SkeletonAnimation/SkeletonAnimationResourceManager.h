@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
 
-#include <vector>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
