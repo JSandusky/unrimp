@@ -52,13 +52,13 @@ namespace RendererRuntime
 		// Read data
 		const v1Scene::LightItem* lightItem = reinterpret_cast<const v1Scene::LightItem*>(data);
 		mLightType = lightItem->lightType;
-		memcpy(glm::value_ptr(mColor), lightItem->color, sizeof(float) * 3);
-		mRadius = lightItem->radius;
+		memcpy(glm::value_ptr(mPackedShaderData.color), lightItem->color, sizeof(float) * 3);
+		mPackedShaderData.radius = lightItem->radius;
 
 		// Sanity checks
-		assert(mColor.r >= 0.0f && mColor.g >= 0.0f && mColor.b >= 0.0f);
-		assert(mLightType == LightType::DIRECTIONAL || mRadius > 0.0f);
-		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mRadius);
+		assert(mPackedShaderData.color.r >= 0.0f && mPackedShaderData.color.g >= 0.0f && mPackedShaderData.color.b >= 0.0f);
+		assert(mLightType == LightType::DIRECTIONAL || mPackedShaderData.radius > 0.0f);
+		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mPackedShaderData.radius);
 	}
 
 

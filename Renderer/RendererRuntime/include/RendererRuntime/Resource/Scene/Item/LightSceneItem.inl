@@ -44,45 +44,45 @@ namespace RendererRuntime
 		mLightType = lightType;
 
 		// Sanity checks
-		assert(mLightType == LightType::DIRECTIONAL || mRadius > 0.0f);
-		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mRadius);
+		assert(mLightType == LightType::DIRECTIONAL || mPackedShaderData.radius > 0.0f);
+		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mPackedShaderData.radius);
 	}
 
 	inline void LightSceneItem::setLightTypeAndRadius(LightType lightType, float radius)
 	{
 		mLightType = lightType;
-		mRadius = radius;
+		mPackedShaderData.radius = radius;
 
 		// Sanity checks
-		assert(mLightType == LightType::DIRECTIONAL || mRadius > 0.0f);
-		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mRadius);
+		assert(mLightType == LightType::DIRECTIONAL || mPackedShaderData.radius > 0.0f);
+		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mPackedShaderData.radius);
 	}
 
 	inline const glm::vec3& LightSceneItem::getColor() const
 	{
-		return mColor;
+		return mPackedShaderData.color;
 	}
 
 	inline void LightSceneItem::setColor(const glm::vec3& color)
 	{
-		mColor = color;
+		mPackedShaderData.color = color;
 
 		// Sanity checks
-		assert(mColor.r >= 0.0f && mColor.g >= 0.0f && mColor.b >= 0.0f);
+		assert(mPackedShaderData.color.r >= 0.0f && mPackedShaderData.color.g >= 0.0f && mPackedShaderData.color.b >= 0.0f);
 	}
 
 	inline float LightSceneItem::getRadius() const
 	{
-		return mRadius;
+		return mPackedShaderData.radius;
 	}
 
 	inline void LightSceneItem::setRadius(float radius)
 	{
-		mRadius = radius;
+		mPackedShaderData.radius = radius;
 
 		// Sanity checks
-		assert(mLightType == LightType::DIRECTIONAL || mRadius > 0.0f);
-		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mRadius);
+		assert(mLightType == LightType::DIRECTIONAL || mPackedShaderData.radius > 0.0f);
+		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mPackedShaderData.radius);
 	}
 
 	inline bool LightSceneItem::isVisible() const
@@ -111,8 +111,6 @@ namespace RendererRuntime
 	inline LightSceneItem::LightSceneItem(ISceneResource& sceneResource) :
 		ISceneItem(sceneResource),
 		mLightType(LightType::POINT),
-		mColor(1.0f, 1.0f, 1.0f),
-		mRadius(1.0f),
 		mVisible(true)
 	{
 		// Nothing here

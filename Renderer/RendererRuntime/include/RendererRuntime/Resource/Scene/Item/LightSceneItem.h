@@ -56,7 +56,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneFactory;	// Needs to be able to create scene item instances
+		friend class SceneFactory;			// Needs to be able to create scene item instances
+		friend class LightBufferManager;	// Needs access to "RendererRuntime::LightSceneItem::mPackedShaderData"
 
 
 	//[-------------------------------------------------------]
@@ -106,13 +107,39 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		/**
+		*  @brief
+		*    Light data packed into a form which can be directly 1:1 copied into a GPU buffer; don't change the layout in here without updating the shaders using the data
+		*/
+		struct PackedShaderData
+		{
+			// float4 0: xyz = world space light position, w = light radius
+			glm::vec3 position;
+			float	  radius = 1.0f;
+			// float4 1: xyz = RGB light diffuse color, w = unused
+			glm::vec3 color{1.0f, 1.0f, 1.0f};
+			float	  unused1 = 0.0f;
+			// float4 2: x = spot-light cone height, y = spot-light near clip distance, z = spot-light inner angle in radians, w = spot-light outer angle in radians
+			float coneHeight       = 0.0f;
+			float nearClipDistance = 0.0f;
+			float innerAngle       = 0.0f;
+			float outerAngle       = 0.0f;
+			// float4 3: xyz = normalized view space light direction, w = unused
+			glm::vec3 direction;
+			float	  unused2 = 0.0f;
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		LightType mLightType;
-		glm::vec3 mColor;
-		float	  mRadius;	///< Must be zero for directional lights and none zero for point and spot lights
-		bool	  mVisible;
+		LightType		 mLightType;
+		bool			 mVisible;
+		PackedShaderData mPackedShaderData;
 
 
 	};

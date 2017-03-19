@@ -46,8 +46,6 @@ namespace
 		static uint32_t DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES = 64 * 1024;	// 64 KiB
 		// static uint32_t DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES = 512 * 1024;	// 512 KiB
 
-		static uint32_t NUMBER_OF_BYTES_PER_LIGHT = sizeof(float) * 4 * 2;
-
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -88,42 +86,36 @@ namespace RendererRuntime
 
 		// Loop through all scene nodes and look for point and spot lights
 		mNumberOfLights = 0;
-		float* scratchBufferPointer = reinterpret_cast<float*>(mTextureScratchBuffer.data());
+		uint8_t* scratchBufferPointer = mTextureScratchBuffer.data();
 		for (const RendererRuntime::ISceneNode* sceneNode : sceneResource.getSceneNodes())
 		{
 			// Loop through all scene items attached to the current scene node
-			for (const RendererRuntime::ISceneItem* sceneItem : sceneNode->getAttachedSceneItems())
+			for (RendererRuntime::ISceneItem* sceneItem : sceneNode->getAttachedSceneItems())
 			{
 				if (sceneItem->getSceneItemTypeId() == RendererRuntime::LightSceneItem::TYPE_ID)
 				{
-					const RendererRuntime::LightSceneItem* lightSceneItem = static_cast<const RendererRuntime::LightSceneItem*>(sceneItem);
+					RendererRuntime::LightSceneItem* lightSceneItem = static_cast<RendererRuntime::LightSceneItem*>(sceneItem);
 					if (lightSceneItem->getLightType() != RendererRuntime::LightSceneItem::LightType::DIRECTIONAL && lightSceneItem->isVisible())
 					{
 						++mNumberOfLights;
 
-						// xyz position
-						memcpy(scratchBufferPointer, glm::value_ptr(sceneNode->getTransform().position), sizeof(float) * 3);
-						scratchBufferPointer += 3;
+						// Update the world space light position
+						LightSceneItem::PackedShaderData& packedShaderData = lightSceneItem->mPackedShaderData;
+						packedShaderData.position = sceneNode->getTransform().position;
 
-						// Radius
-						*scratchBufferPointer = lightSceneItem->getRadius();
-						++scratchBufferPointer;
-
-						// rgb color
-						memcpy(scratchBufferPointer, glm::value_ptr(lightSceneItem->getColor()), sizeof(float) * 3);
-						scratchBufferPointer += 3;
-
-						// Padding
-						++scratchBufferPointer;
+						// Copy the light data into the texture scratch buffer
+						memcpy(scratchBufferPointer, &packedShaderData, sizeof(LightSceneItem::PackedShaderData));
+						scratchBufferPointer += sizeof(LightSceneItem::PackedShaderData);
 					}
 				}
 			}
 		}
 
 		// Update the texture buffer by using our scratch buffer
-		if (0 != mNumberOfLights)
+		const uint32_t numberOfBytes = static_cast<uint32_t>(scratchBufferPointer - mTextureScratchBuffer.data());
+		if (0 != numberOfBytes)
 		{
-			Renderer::Command::CopyTextureBufferData::create(commandBuffer, mTextureBuffer, mNumberOfLights * ::detail::NUMBER_OF_BYTES_PER_LIGHT, mTextureScratchBuffer.data());
+			Renderer::Command::CopyTextureBufferData::create(commandBuffer, mTextureBuffer, numberOfBytes, mTextureScratchBuffer.data());
 		}
 	}
 

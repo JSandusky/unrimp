@@ -149,15 +149,22 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 	for (uint i = 0u; i < PassData.NumberOfLights; ++i)
 	{
 		// Fetch the light data
-		float4 lightPositionRadius = TEXEL_FETCH(LightTextureBuffer, i * 2u);
-		float4 lightColor = TEXEL_FETCH(LightTextureBuffer, i * 2u + 1u);
+		float4 lightPositionRadius = TEXEL_FETCH(LightTextureBuffer, i * 4u);
+		float4 lightColorAttenuationFalloffSmooth = TEXEL_FETCH(LightTextureBuffer, i * 4u + 1u);
 
 		// Check if the fragment is inside the bounding volume of the light
 		float3 direction = lightPositionRadius.xyz - worldSpacePosition;
 		float distance = sqrt(dot(direction, direction));
 		if (distance < lightPositionRadius.w)
 		{
-			color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, normalize(direction), lightColor.rgb);
+			// Attenuation by using inverse-square falloff for higher quality falloff
+			// -> Physically accurate inverse-square falloff as described in "Real Shading in Unreal Engine 4" by Brian Karis, Epic Games - "Lighting Model" on page 12 - http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
+			float distanceLightRadius = distance / lightPositionRadius.w;
+			float t1 = SATURATE(1.0f - distanceLightRadius * distanceLightRadius * distanceLightRadius * distanceLightRadius);
+			float lightIntensity = t1 / (distance * distance + 1.0f);
+
+			// Calculate lighting
+			color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, normalize(direction), lightColorAttenuationFalloffSmooth.rgb * lightIntensity);
 		}
 	}
 
