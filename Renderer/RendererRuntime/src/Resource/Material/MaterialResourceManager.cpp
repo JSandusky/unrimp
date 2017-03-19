@@ -77,7 +77,7 @@ namespace RendererRuntime
 			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 			MaterialBlueprintResourceId materialBlueprintResourceId = getUninitialized<MaterialBlueprintResourceId>();
 			materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(materialBlueprintAssetId, materialBlueprintResourceId);
-			MaterialBlueprintResource* materialBlueprintResource = static_cast<MaterialBlueprintResource*>(materialBlueprintResourceManager.tryGetResourceByResourceId(materialBlueprintResourceId));
+			MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResourceManager.tryGetById(materialBlueprintResourceId);
 			if (nullptr != materialBlueprintResource)
 			{
 				materialResource.mMaterialProperties = materialBlueprintResource->mMaterialProperties;

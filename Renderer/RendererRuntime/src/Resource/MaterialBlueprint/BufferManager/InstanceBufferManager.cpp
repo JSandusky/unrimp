@@ -215,7 +215,7 @@ namespace RendererRuntime
 			const SkeletonResourceId skeletonResourceId = renderable.getSkeletonResourceId();
 			if (isInitialized(skeletonResourceId))
 			{
-				const SkeletonResource& skeletonResource = static_cast<SkeletonResource&>(mRendererRuntime.getSkeletonResourceManager().getResourceByResourceId(skeletonResourceId));
+				const SkeletonResource& skeletonResource = mRendererRuntime.getSkeletonResourceManager().getById(skeletonResourceId);
 				const uint8_t numberOfBones = skeletonResource.getNumberOfBones();
 				assert(0 != numberOfBones);	// Each skeleton must have at least one bone
 				const glm::mat3x4* boneSpaceMatrices = skeletonResource.getBoneSpaceMatrices();

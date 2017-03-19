@@ -129,7 +129,7 @@ namespace RendererRuntime
 		clearRenderQueueIndexRangesRenderableManagers();
 
 		// Is the compositor workspace resource ready?
-		const CompositorWorkspaceResource* compositorWorkspaceResource = static_cast<CompositorWorkspaceResource*>(mRendererRuntime.getCompositorWorkspaceResourceManager().tryGetResourceByResourceId(mCompositorWorkspaceResourceId));
+		const CompositorWorkspaceResource* compositorWorkspaceResource = mRendererRuntime.getCompositorWorkspaceResourceManager().tryGetById(mCompositorWorkspaceResourceId);
 		if (nullptr != compositorWorkspaceResource && compositorWorkspaceResource->getLoadingState() == IResource::LoadingState::LOADED)
 		{
 			// Add reference to the render target
@@ -264,7 +264,7 @@ namespace RendererRuntime
 				// Get the compositor node resource instance
 				CompositorNodeResourceId compositorNodeResourceId = getUninitialized<CompositorNodeResourceId>();
 				compositorNodeResourceManager.loadCompositorNodeResourceByAssetId(compositorNodeAssetIds[nodeIndex], compositorNodeResourceId);
-				CompositorNodeResource& compositorNodeResource = static_cast<CompositorNodeResource&>(compositorNodeResourceManager.getResourceByResourceId(compositorNodeResourceId));
+				CompositorNodeResource& compositorNodeResource = compositorNodeResourceManager.getById(compositorNodeResourceId);
 
 				// TODO(co) Ensure compositor node resource loading is done. Such blocking waiting is no good thing.
 				compositorNodeResource.enforceFullyLoaded();

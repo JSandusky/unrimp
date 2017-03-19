@@ -49,7 +49,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	SkeletonResourceId SkeletonMeshSceneItem::getSkeletonResourceId() const
 	{
-		const MeshResource* meshResource = static_cast<const MeshResource*>(getSceneResource().getRendererRuntime().getMeshResourceManager().tryGetResourceByResourceId(getMeshResourceId()));
+		const MeshResource* meshResource = getSceneResource().getRendererRuntime().getMeshResourceManager().tryGetById(getMeshResourceId());
 		return (nullptr != meshResource) ? meshResource->getSkeletonResourceId() : getUninitialized<SkeletonResourceId>();
 	}
 

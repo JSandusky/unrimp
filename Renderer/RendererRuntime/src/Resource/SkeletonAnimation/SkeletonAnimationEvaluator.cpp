@@ -71,7 +71,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void SkeletonAnimationEvaluator::evaluate(float timeInSeconds)
 	{
-		const SkeletonAnimationResource& skeletonAnimationResource = static_cast<const SkeletonAnimationResource&>(mSkeletonAnimationResourceManager.getResourceByResourceId(mSkeletonAnimationResourceId));
+		const SkeletonAnimationResource& skeletonAnimationResource = mSkeletonAnimationResourceManager.getById(mSkeletonAnimationResourceId);
 		const uint8_t numberOfChannels = skeletonAnimationResource.getNumberOfChannels();
 		const float durationInTicks = skeletonAnimationResource.getDurationInTicks();
 		const SkeletonAnimationResource::ChannelByteOffsets& channelByteOffsets = skeletonAnimationResource.getChannelByteOffsets();

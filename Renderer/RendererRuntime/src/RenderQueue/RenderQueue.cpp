@@ -214,13 +214,13 @@ namespace RendererRuntime
 						}
 
 						// Material resource
-						const MaterialResource* materialResource = static_cast<MaterialResource*>(materialResourceManager.tryGetResourceByResourceId(renderable.getMaterialResourceId()));
+						const MaterialResource* materialResource = materialResourceManager.tryGetById(renderable.getMaterialResourceId());
 						if (nullptr != materialResource)
 						{
 							MaterialTechnique* materialTechnique = materialResource->getMaterialTechniqueById(materialTechniqueId);
 							if (nullptr != materialTechnique)
 							{
-								MaterialBlueprintResource* materialBlueprintResource = static_cast<MaterialBlueprintResource*>(materialBlueprintResourceManager.tryGetResourceByResourceId(materialTechnique->getMaterialBlueprintResourceId()));
+								MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResourceManager.tryGetById(materialTechnique->getMaterialBlueprintResourceId());
 								if (nullptr != materialBlueprintResource && IResource::LoadingState::LOADED == materialBlueprintResource->getLoadingState())
 								{
 									// TODO(co) Pass shader properties (later on we cache as much as possible of this work inside the renderable)

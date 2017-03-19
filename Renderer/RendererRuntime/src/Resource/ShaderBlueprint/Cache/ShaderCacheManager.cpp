@@ -64,7 +64,7 @@ namespace RendererRuntime
 			else
 			{
 				// Try to create the new program cache instance
-				const ShaderBlueprintResource* shaderBlueprintResource = static_cast<ShaderBlueprintResource*>(mShaderBlueprintResourceManager.tryGetResourceByResourceId(shaderBlueprintResourceId));
+				const ShaderBlueprintResource* shaderBlueprintResource = mShaderBlueprintResourceManager.tryGetById(shaderBlueprintResourceId);
 				if (nullptr != shaderBlueprintResource)
 				{
 					// Build the shader source code

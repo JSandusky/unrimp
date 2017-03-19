@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceManager.h"
+#include "RendererRuntime/Resource/Detail/ResourceManager.h"
 
 
 //[-------------------------------------------------------]
@@ -59,7 +59,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneResourceManager : private IResourceManager
+	class SceneResourceManager : public ResourceManager<ISceneResource>
 	{
 
 

@@ -218,7 +218,7 @@ namespace RendererRuntime
 			const MaterialProperties::SortedPropertyVector& sortedPropertyVector = static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialProperties().getSortedPropertyVector();
 			if (!sortedPropertyVector.empty())
 			{
-				MaterialResource& materialResource = static_cast<MaterialResource&>(materialResourceManager.getResourceByResourceId(mMaterialResourceId));
+				MaterialResource& materialResource = materialResourceManager.getById(mMaterialResourceId);
 				for (const MaterialProperty& materialProperty : sortedPropertyVector)
 				{
 					if (materialProperty.isOverwritten())

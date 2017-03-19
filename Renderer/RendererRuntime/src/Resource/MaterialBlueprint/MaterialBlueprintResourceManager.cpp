@@ -259,7 +259,7 @@ namespace RendererRuntime
 				const uint32_t numberOfMaterialResources = materialResourceManager.getNumberOfResources();
 				for (uint32_t elementIndex = 0; elementIndex < numberOfMaterialResources; ++elementIndex)
 				{
-					MaterialResource& materialResource = static_cast<MaterialResource&>(materialResourceManager.getResourceByIndex(elementIndex));
+					MaterialResource& materialResource = materialResourceManager.getByIndex(elementIndex);
 					// TODO(co)
 				//	if (materialResource->getMaterialBlueprintResource() == materialBlueprintResource)
 					{

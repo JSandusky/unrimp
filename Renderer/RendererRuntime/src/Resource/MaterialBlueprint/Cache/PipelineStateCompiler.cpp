@@ -241,7 +241,7 @@ namespace RendererRuntime
 
 				{ // Do the work: Building the shader source code for the required combination
 					const PipelineStateSignature& pipelineStateSignature = compilerRequest.pipelineStateCache.getPipelineStateSignature();
-					const MaterialBlueprintResource& materialBlueprintResource = static_cast<MaterialBlueprintResource&>(materialBlueprintResourceManager.getResourceByResourceId(pipelineStateSignature.getMaterialBlueprintResourceId()));
+					const MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResourceManager.getById(pipelineStateSignature.getMaterialBlueprintResourceId());
 
 					for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 					{
@@ -264,7 +264,7 @@ namespace RendererRuntime
 							else
 							{
 								// Try to create the new program cache instance
-								const ShaderBlueprintResource* shaderBlueprintResource = static_cast<ShaderBlueprintResource*>(shaderBlueprintResourceManager.tryGetResourceByResourceId(shaderBlueprintResourceId));
+								const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResourceManager.tryGetById(shaderBlueprintResourceId);
 								if (nullptr != shaderBlueprintResource)
 								{
 									// Build the shader source code
@@ -367,7 +367,7 @@ namespace RendererRuntime
 									switch (static_cast<ShaderType>(i))
 									{
 										case ShaderType::Vertex:
-											shader = shaderLanguage->createVertexShaderFromSourceCode(static_cast<MaterialBlueprintResource&>(materialBlueprintResourceManager.getResourceByResourceId(compilerRequest.pipelineStateCache.getPipelineStateSignature().getMaterialBlueprintResourceId())).getVertexAttributes(), shaderSourceCode.c_str());
+											shader = shaderLanguage->createVertexShaderFromSourceCode(materialBlueprintResourceManager.getById(compilerRequest.pipelineStateCache.getPipelineStateSignature().getMaterialBlueprintResourceId()).getVertexAttributes(), shaderSourceCode.c_str());
 											break;
 
 										case ShaderType::TessellationControl:
@@ -400,7 +400,7 @@ namespace RendererRuntime
 					{
 						{ // Create the pipeline state object (PSO)
 							const PipelineStateSignature& pipelineStateSignature = compilerRequest.pipelineStateCache.getPipelineStateSignature();
-							MaterialBlueprintResource& materialBlueprintResource = static_cast<MaterialBlueprintResource&>(materialBlueprintResourceManager.getResourceByResourceId(pipelineStateSignature.getMaterialBlueprintResourceId()));
+							MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResourceManager.getById(pipelineStateSignature.getMaterialBlueprintResourceId());
 
 							// Create the program
 							Renderer::IProgram* program = shaderLanguage->createProgram(*materialBlueprintResource.getRootSignaturePtr(), materialBlueprintResource.getVertexAttributes(),

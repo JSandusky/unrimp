@@ -252,10 +252,10 @@ void FirstMesh::onDraw()
 
 	// Due to background texture loading, some textures might not be ready, yet
 	const RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-	const RendererRuntime::TextureResource* diffuseTextureResource = static_cast<RendererRuntime::TextureResource*>(textureResourceManager.tryGetResourceByResourceId(mDiffuseTextureResourceId));
-	const RendererRuntime::TextureResource* normalTextureResource = static_cast<RendererRuntime::TextureResource*>(textureResourceManager.tryGetResourceByResourceId(mNormalTextureResourceId));
-	const RendererRuntime::TextureResource* roughnessTextureResource = static_cast<RendererRuntime::TextureResource*>(textureResourceManager.tryGetResourceByResourceId(mRoughnessTextureResourceId));
-	const RendererRuntime::TextureResource* emissiveTextureResource = static_cast<RendererRuntime::TextureResource*>(textureResourceManager.tryGetResourceByResourceId(mEmissiveTextureResourceId));
+	const RendererRuntime::TextureResource* diffuseTextureResource = textureResourceManager.tryGetById(mDiffuseTextureResourceId);
+	const RendererRuntime::TextureResource* normalTextureResource = textureResourceManager.tryGetById(mNormalTextureResourceId);
+	const RendererRuntime::TextureResource* roughnessTextureResource = textureResourceManager.tryGetById(mRoughnessTextureResourceId);
+	const RendererRuntime::TextureResource* emissiveTextureResource = textureResourceManager.tryGetById(mEmissiveTextureResourceId);
 	if (nullptr == diffuseTextureResource || nullptr == diffuseTextureResource->getTexture() ||
 		nullptr == normalTextureResource || nullptr == normalTextureResource->getTexture() ||
 		nullptr == roughnessTextureResource || nullptr == roughnessTextureResource->getTexture() ||
@@ -343,7 +343,7 @@ void FirstMesh::onDraw()
 		}
 
 		{ // Draw mesh instance
-			const RendererRuntime::MeshResource* meshResource = static_cast<const RendererRuntime::MeshResource*>(rendererRuntime->getMeshResourceManager().tryGetResourceByResourceId(mMeshResourceId));
+			const RendererRuntime::MeshResource* meshResource = rendererRuntime->getMeshResourceManager().tryGetById(mMeshResourceId);
 			if (nullptr != meshResource)
 			{
 				{ // Setup input assembly (IA)

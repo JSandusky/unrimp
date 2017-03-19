@@ -134,7 +134,7 @@ namespace RendererRuntime
 
 				// Get mesh resource instance
 				const IRendererRuntime& rendererRuntime = getSceneResource().getRendererRuntime();
-				const MeshResource* meshResource = static_cast<const MeshResource*>(rendererRuntime.getMeshResourceManager().tryGetResourceByResourceId(mMeshResourceId));
+				const MeshResource* meshResource = rendererRuntime.getMeshResourceManager().tryGetById(mMeshResourceId);
 				if (nullptr != meshResource)
 				{
 					// Get vertex array instance

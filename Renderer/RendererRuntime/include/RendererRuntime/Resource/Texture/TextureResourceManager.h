@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceManager.h"
+#include "RendererRuntime/Resource/Detail/ResourceManager.h"
 
 
 //[-------------------------------------------------------]
@@ -82,7 +82,7 @@ namespace RendererRuntime
 	*    - "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D"
 	*/
-	class TextureResourceManager : private IResourceManager
+	class TextureResourceManager : public ResourceManager<TextureResource>
 	{
 
 

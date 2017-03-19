@@ -199,7 +199,7 @@ namespace RendererRuntime
 	void DebugGuiHelper::drawSkeleton(const CameraSceneItem& cameraSceneItem, const SkeletonMeshSceneItem& skeletonMeshSceneItem)
 	{
 		// Get skeleton resource instance
-		const SkeletonResource* skeletonResource = static_cast<SkeletonResource*>(skeletonMeshSceneItem.getSceneResource().getRendererRuntime().getSkeletonResourceManager().tryGetResourceByResourceId(skeletonMeshSceneItem.getSkeletonResourceId()));
+		const SkeletonResource* skeletonResource = skeletonMeshSceneItem.getSceneResource().getRendererRuntime().getSkeletonResourceManager().tryGetById(skeletonMeshSceneItem.getSkeletonResourceId());
 		if (nullptr != skeletonResource)
 		{
 			// Get transform data

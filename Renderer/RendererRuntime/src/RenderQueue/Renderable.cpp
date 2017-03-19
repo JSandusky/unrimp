@@ -120,7 +120,7 @@ namespace RendererRuntime
 			unsetMaterialResourceIdInternal();
 
 			// Renderables can only be attached to really existing material resources
-			MaterialResource* materialResource = static_cast<MaterialResource*>(materialResourceManager.tryGetResourceByResourceId(materialResourceId));
+			MaterialResource* materialResource = materialResourceManager.tryGetById(materialResourceId);
 			if (nullptr != materialResource)
 			{
 				// Sanity checks
@@ -206,7 +206,7 @@ namespace RendererRuntime
 			assert(isInitialized(mMaterialResourceAttachmentIndex));
 
 			// Get the material resource we're going to detach from
-			MaterialResource& materialResource = static_cast<MaterialResource&>(mMaterialResourceManager->getResourceByResourceId(mMaterialResourceId));
+			MaterialResource& materialResource = mMaterialResourceManager->getById(mMaterialResourceId);
 
 			// Sanity checks
 			assert(mMaterialResourceAttachmentIndex < static_cast<int>(materialResource.mAttachedRenderables.size()));

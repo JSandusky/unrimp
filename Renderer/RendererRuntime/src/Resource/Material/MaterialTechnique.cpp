@@ -69,7 +69,7 @@ namespace RendererRuntime
 		// Need for gathering the textures now?
 		if (mTextures.empty())
 		{
-			const MaterialBlueprintResource* materialBlueprintResource = static_cast<MaterialBlueprintResource*>(rendererRuntime.getMaterialBlueprintResourceManager().tryGetResourceByResourceId(mMaterialBlueprintResourceId));
+			const MaterialBlueprintResource* materialBlueprintResource = rendererRuntime.getMaterialBlueprintResourceManager().tryGetById(mMaterialBlueprintResourceId);
 			if (nullptr != materialBlueprintResource)
 			{
 				const MaterialResource& materialResource = getMaterialResource();
@@ -131,7 +131,7 @@ namespace RendererRuntime
 				const Texture& texture = textures[i];
 
 				// Due to background texture loading, some textures might not be ready, yet
-				const TextureResource* textureResource  = static_cast<TextureResource*>(textureResourceManager.tryGetResourceByResourceId(texture.textureResourceId));
+				const TextureResource* textureResource  = textureResourceManager.tryGetById(texture.textureResourceId);
 				if (nullptr != textureResource)
 				{
 					Renderer::ITexturePtr texturePtr = textureResource->getTexture();
@@ -161,7 +161,7 @@ namespace RendererRuntime
 	MaterialBufferManager* MaterialTechnique::getMaterialBufferManager() const
 	{
 		// It's valid if a material blueprint resource doesn't contain a material uniform buffer (usually the case for compositor material blueprint resources)
-		const MaterialBlueprintResource* materialBlueprintResource = static_cast<MaterialBlueprintResource*>(getMaterialResourceManager().getRendererRuntime().getMaterialBlueprintResourceManager().tryGetResourceByResourceId(mMaterialBlueprintResourceId));
+		const MaterialBlueprintResource* materialBlueprintResource = getMaterialResourceManager().getRendererRuntime().getMaterialBlueprintResourceManager().tryGetById(mMaterialBlueprintResourceId);
 		return (nullptr != materialBlueprintResource) ? materialBlueprintResource->getMaterialBufferManager() : nullptr;
 	}
 

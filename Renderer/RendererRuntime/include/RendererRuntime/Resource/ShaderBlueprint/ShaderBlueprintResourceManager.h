@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceManager.h"
+#include "RendererRuntime/Resource/Detail/ResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCacheManager.h"
 
@@ -64,7 +64,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Shader blueprint resource manager
 	*/
-	class ShaderBlueprintResourceManager : public IResourceManager
+	class ShaderBlueprintResourceManager : public ResourceManager<ShaderBlueprintResource>
 	{
 
 

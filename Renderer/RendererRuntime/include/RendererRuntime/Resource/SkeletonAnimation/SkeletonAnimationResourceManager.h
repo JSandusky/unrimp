@@ -27,9 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceManager.h"
-
-#include <vector>
+#include "RendererRuntime/Resource/Detail/ResourceManager.h"
 
 
 //[-------------------------------------------------------]
@@ -65,7 +63,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Skeleton animation resource manager
 	*/
-	class SkeletonAnimationResourceManager : private IResourceManager
+	class SkeletonAnimationResourceManager : public ResourceManager<SkeletonAnimationResource>
 	{
 
 

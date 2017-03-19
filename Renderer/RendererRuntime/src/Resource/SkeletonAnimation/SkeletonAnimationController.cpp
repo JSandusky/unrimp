@@ -125,7 +125,7 @@ namespace RendererRuntime
 		mSkeletonAnimationEvaluator->evaluate(mTimeInSeconds);
 
 		{ // Tell the controlled skeleton resource about the new state
-			SkeletonResource& skeletonResource = static_cast<SkeletonResource&>(mRendererRuntime.getSkeletonResourceManager().getResourceByResourceId(mSkeletonResourceId));
+			SkeletonResource& skeletonResource = mRendererRuntime.getSkeletonResourceManager().getById(mSkeletonResourceId);
 			const SkeletonAnimationEvaluator::BoneIds& boneIds = mSkeletonAnimationEvaluator->getBoneIds();
 			const SkeletonAnimationEvaluator::TransformMatrices& transformMatrices = mSkeletonAnimationEvaluator->getTransformMatrices();
 			glm::mat4* localBoneMatrices = skeletonResource.getLocalBoneMatrices();

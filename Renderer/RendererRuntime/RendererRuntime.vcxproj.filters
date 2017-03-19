@@ -562,6 +562,9 @@
       <Filter>Source Files\Resource\Detail</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.h.vsspell" />
+    <None Include="include\RendererRuntime\Resource\Detail\ResourceManager.inl">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1103,6 +1106,9 @@
       <Filter>Source Files\Resource\Detail</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.h">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManager.h">
       <Filter>Source Files\Resource\Detail</Filter>
     </ClInclude>
   </ItemGroup>

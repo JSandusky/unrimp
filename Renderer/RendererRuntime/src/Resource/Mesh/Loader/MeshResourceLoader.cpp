@@ -154,7 +154,7 @@ namespace RendererRuntime
 			if (isInitialized(mMeshResource->getSkeletonResourceId()))
 			{
 				// Reuse existing skeleton resource
-				skeletonResource = &static_cast<SkeletonResource&>(skeletonResourceManager.getResourceByResourceId(mMeshResource->getSkeletonResourceId()));
+				skeletonResource = &skeletonResourceManager.getById(mMeshResource->getSkeletonResourceId());
 				skeletonResource->clearSkeletonData();
 			}
 			else
@@ -162,7 +162,7 @@ namespace RendererRuntime
 				// Create new skeleton resource
 				const SkeletonResourceId skeletonResourceId = skeletonResourceManager.createSkeletonResourceByAssetId(getAsset().assetId);
 				mMeshResource->setSkeletonResourceId(skeletonResourceId);
-				skeletonResource = &static_cast<SkeletonResource&>(skeletonResourceManager.getResourceByResourceId(skeletonResourceId));
+				skeletonResource = &skeletonResourceManager.getById(skeletonResourceId);
 			}
 
 			// Pass on the skeleton data to the skeleton resource

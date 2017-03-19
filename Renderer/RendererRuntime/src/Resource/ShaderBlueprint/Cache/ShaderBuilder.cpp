@@ -788,7 +788,7 @@ namespace RendererRuntime
 			const size_t numberOfShaderPieces = includeShaderPieceResourceIds.size();
 			for (size_t i = 0; i < numberOfShaderPieces; ++i)
 			{
-				const ShaderPieceResource* shaderPieceResource = static_cast<ShaderPieceResource*>(shaderPieceResourceManager.tryGetResourceByResourceId(includeShaderPieceResourceIds[i]));
+				const ShaderPieceResource* shaderPieceResource = shaderPieceResourceManager.tryGetById(includeShaderPieceResourceIds[i]);
 				if (nullptr != shaderPieceResource)
 				{
 					// Initialize

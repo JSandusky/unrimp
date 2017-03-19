@@ -119,7 +119,7 @@ namespace RendererRuntime
 		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = materialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getShaderBlueprintResourceManager();
 		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 		{
-			const ShaderBlueprintResource* shaderBlueprintResource = static_cast<ShaderBlueprintResource*>(shaderBlueprintResourceManager.tryGetResourceByResourceId(materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(i))));
+			const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResourceManager.tryGetById(materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(i)));
 			if (nullptr != shaderBlueprintResource)
 			{
 				const uint32_t hash = mShaderCombinationId[i] = ::detail::generateShaderCombinationId(*shaderBlueprintResource, mShaderProperties, mDynamicShaderPieces[i]);

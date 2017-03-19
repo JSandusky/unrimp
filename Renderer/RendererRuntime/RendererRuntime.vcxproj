@@ -93,6 +93,7 @@
     <None Include="include\RendererRuntime\Resource\Detail\IResource.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\IResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\IResourceManager.inl" />
+    <None Include="include\RendererRuntime\Resource\Detail\ResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl" />
@@ -252,6 +253,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.h" />

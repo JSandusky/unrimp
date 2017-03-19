@@ -307,7 +307,7 @@ namespace
 				materialResourceId = materialResourceManager.createMaterialResourceByCloning(vrDeviceMaterialResourceId, materialAssetId);
 				if (RendererRuntime::isInitialized(materialResourceId))
 				{
-					RendererRuntime::MaterialResource* materialResource = static_cast<RendererRuntime::MaterialResource*>(materialResourceManager.tryGetResourceByResourceId(materialResourceId));
+					RendererRuntime::MaterialResource* materialResource = materialResourceManager.tryGetById(materialResourceId);
 					if (nullptr != materialResource)
 					{
 						// TODO(co) It must be possible to set the property name from the outside
@@ -826,7 +826,7 @@ namespace RendererRuntime
 				meshResourceId = meshResourceManager.createEmptyMeshResourceByAssetId(assetId);
 				if (isInitialized(meshResourceId))
 				{
-					meshResource = static_cast<MeshResource*>(meshResourceManager.tryGetResourceByResourceId(meshResourceId));
+					meshResource = meshResourceManager.tryGetById(meshResourceId);
 					if (nullptr != meshResource)
 					{
 						::detail::setupRenderModel(mRendererRuntime, renderModelName, *meshResource, mVrDeviceMaterialResourceId);

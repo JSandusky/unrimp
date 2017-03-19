@@ -566,14 +566,14 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				}
 
 				// Imrod material
-				materialResource = static_cast<RendererRuntime::MaterialResource*>(materialResourceManager.tryGetResourceByResourceId(mMaterialResourceId));
+				materialResource = materialResourceManager.tryGetById(mMaterialResourceId);
 				if (nullptr != materialResource)
 				{
 					materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
 				}
 
 				// Imrod material clone
-				materialResource = static_cast<RendererRuntime::MaterialResource*>(materialResourceManager.tryGetResourceByResourceId(mCloneMaterialResourceId));
+				materialResource = materialResourceManager.tryGetById(mCloneMaterialResourceId);
 				if (nullptr != materialResource)
 				{
 					materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));

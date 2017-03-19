@@ -50,7 +50,7 @@ namespace RendererRuntime
 
 	const MaterialResource& MaterialBufferSlot::getMaterialResource() const
 	{
-		return static_cast<MaterialResource&>(mMaterialResourceManager->getResourceByResourceId(mMaterialResourceId));
+		return mMaterialResourceManager->getById(mMaterialResourceId);
 	}
 
 

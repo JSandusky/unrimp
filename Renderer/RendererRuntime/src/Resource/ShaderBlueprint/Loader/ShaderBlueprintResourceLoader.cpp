@@ -108,7 +108,7 @@ namespace RendererRuntime
 			const uint32_t numberOfElements = materialBlueprintResourceManager.getNumberOfResources();
 			for (uint32_t i = 0; i < numberOfElements; ++i)
 			{
-				MaterialBlueprintResource& materialBlueprintResource = static_cast<MaterialBlueprintResource&>(materialBlueprintResourceManager.getResourceByIndex(i));
+				MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResourceManager.getByIndex(i);
 				for (uint8_t shaderType = 0; shaderType < NUMBER_OF_SHADER_TYPES; ++shaderType)
 				{
 					if (materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(shaderType)) == shaderBlueprintResourceId)

@@ -116,7 +116,7 @@ namespace RendererRuntime
 					const uint32_t numberOfCompositorWorkspaceResources = compositorWorkspaceResourceManager.getNumberOfResources();
 					for (uint32_t compositorWorkspaceResourceIndex = 0; compositorWorkspaceResourceIndex < numberOfCompositorWorkspaceResources; ++compositorWorkspaceResourceIndex)
 					{
-						const CompositorWorkspaceResource& compositorWorkspaceResource = static_cast<CompositorWorkspaceResource&>(compositorWorkspaceResourceManager.getResourceByIndex(compositorWorkspaceResourceIndex));
+						const CompositorWorkspaceResource& compositorWorkspaceResource = compositorWorkspaceResourceManager.getByIndex(compositorWorkspaceResourceIndex);
 						const CompositorWorkspaceResource::CompositorNodeAssetIds& compositorNodeAssetIds = compositorWorkspaceResource.getCompositorNodeAssetIds();
 						for (AssetId currentAssetId : compositorNodeAssetIds)
 						{
