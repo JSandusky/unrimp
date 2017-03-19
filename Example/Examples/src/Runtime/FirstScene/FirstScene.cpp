@@ -95,10 +95,12 @@ FirstScene::FirstScene() :
 	mCloneMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
 	mCustomMaterialResourceSet(false),
 	mController(nullptr),
+	// Crazy raw-pointers to point-of-interest scene stuff
 	mCameraSceneItem(nullptr),
 	mLightSceneItem(nullptr),
 	mSkeletonMeshSceneItem(nullptr),
 	mSceneNode(nullptr),
+	// States for runtime-fun
 	mInstancedCompositor(Compositor::DEFERRED),
 	mCurrentCompositor(mInstancedCompositor),
 	mCurrentMsaa(Msaa::NONE),
@@ -115,15 +117,16 @@ FirstScene::FirstScene() :
 	mUseEmissiveMap(true),
 	mUseNormalMap(true),
 	mUseRoughnessMap(true),
-	mDiffuseColor{1.0f, 1.0f, 1.0f}
+	mDiffuseColor{1.0f, 1.0f, 1.0f},
+	// Scene hot-reloading memory
+	mHasCameraTransformBackup(false)
 {
 	// Nothing here
 }
 
 FirstScene::~FirstScene()
 {
-	// The resources are released within "onDeinitialization()"
-	// Nothing here
+	// Nothing here, the resources are released within "onDeinitialization()"
 }
 
 
@@ -245,6 +248,13 @@ void FirstScene::onUpdate()
 		{
 			mController->onUpdate(rendererRuntime->getTimeManager().getPastSecondsSinceLastFrame());
 		}
+
+		// Scene hot-reloading memory
+		if (nullptr != mCameraSceneItem)
+		{
+			mHasCameraTransformBackup = true;
+			mCameraTransformBackup = mCameraSceneItem->getParentSceneNodeSafe().getTransform();
+		}
 	}
 
 	// TODO(co) We need to get informed when the mesh scene item received the mesh resource loading finished signal
@@ -330,6 +340,11 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 						if (nullptr == mCameraSceneItem)
 						{
 							mCameraSceneItem = static_cast<RendererRuntime::CameraSceneItem*>(sceneItem);
+							if (mHasCameraTransformBackup)
+							{
+								// Scene hot-reloading memory
+								mCameraSceneItem->getParentSceneNodeSafe().setTransform(mCameraTransformBackup);
+							}
 						}
 					}
 					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::LightSceneItem::TYPE_ID)
@@ -368,9 +383,12 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 					mController = new FreeCameraController(*mCameraSceneItem);
 
 					// Set initial camera position if virtual reality is disabled
-					RendererRuntime::ISceneNode* sceneNode = mCameraSceneItem->getParentSceneNode();
-					sceneNode->setPosition(glm::vec3(-3.12873816f, 0.6473912f, 2.20889306f));
-					sceneNode->setRotation(glm::quat(0.412612021f, -0.0201802868f, 0.909596086f, 0.0444870926f));
+					if (!mHasCameraTransformBackup)
+					{
+						RendererRuntime::ISceneNode* sceneNode = mCameraSceneItem->getParentSceneNode();
+						sceneNode->setPosition(glm::vec3(-3.12873816f, 0.6473912f, 2.20889306f));
+						sceneNode->setRotation(glm::quat(0.412612021f, -0.0201802868f, 0.909596086f, 0.0444870926f));
+					}
 				}
 			}
 		}

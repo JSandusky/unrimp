@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "Framework/ExampleBase.h"
 
+#include <RendererRuntime/Core/Math/Transform.h>
 #include <RendererRuntime/DebugGui/DebugGuiHelper.h>
 #include <RendererRuntime/Resource/IResourceListener.h>
 
@@ -180,6 +181,9 @@ private:
 	bool	   mUseNormalMap;
 	bool	   mUseRoughnessMap;
 	float	   mDiffuseColor[3];
+	// Scene hot-reloading memory
+	bool					   mHasCameraTransformBackup;
+	RendererRuntime::Transform mCameraTransformBackup;
 
 
 };
