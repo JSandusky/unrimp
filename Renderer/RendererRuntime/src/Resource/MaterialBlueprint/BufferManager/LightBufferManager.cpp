@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
+#include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -99,9 +100,15 @@ namespace RendererRuntime
 					{
 						++mNumberOfLights;
 
-						// Update the world space light position
+						// Update the world space light position and the normalized view space light direction
 						LightSceneItem::PackedShaderData& packedShaderData = lightSceneItem->mPackedShaderData;
-						packedShaderData.position = sceneNode->getTransform().position;
+						const Transform& transform = sceneNode->getTransform();
+						packedShaderData.position  = transform.position;
+						packedShaderData.direction = transform.rotation * Math::FORWARD_VECTOR;
+
+						// TODO(co) Calculate only once
+						packedShaderData.innerAngle = glm::cos(glm::radians(lightSceneItem->mInnerAngle));
+						packedShaderData.outerAngle = glm::cos(glm::radians(lightSceneItem->mOuterAngle));
 
 						// Copy the light data into the texture scratch buffer
 						memcpy(scratchBufferPointer, &packedShaderData, sizeof(LightSceneItem::PackedShaderData));

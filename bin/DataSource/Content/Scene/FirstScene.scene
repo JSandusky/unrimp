@@ -192,6 +192,22 @@
 						"SkeletonAnimationAssetId": "11"
 					}
 				}
+			},
+			"12":
+			{
+				"Properties":
+				{
+					"Position": "0.0 0.1 -1.5"
+				},
+				"Items":
+				{
+					"LightSceneItem":
+					{
+						"LightType": "SPOT",
+						"Color": "10.0 10.0 10.0",
+						"Radius": "5.0"
+					}
+				}
 			}
 		}
 	}

@@ -155,12 +155,19 @@ namespace
 			{
 				if (mVrManagerOpenVR->getVrSystem()->GetTrackedDeviceClass(trackedDeviceIndex) == vr::TrackedDeviceClass_Controller)
 				{
+					// Attach a light to controllers, this way they can be seen easier and it's possible to illuminate the scene by using the hands
+					RendererRuntime::LightSceneItem* lightSceneItem = meshSceneItem.getSceneResource().createSceneItem<RendererRuntime::LightSceneItem>(meshSceneItem.getParentSceneNodeSafe());
+					if (0 == mNumberOfVrControllers && nullptr != lightSceneItem)
+					{
+						// Spot light for the first VR controller
+						lightSceneItem->setLightType(RendererRuntime::LightSceneItem::LightType::SPOT);
+						lightSceneItem->setRadius(5.0f);
+						lightSceneItem->setColor(glm::vec3(10.0f, 10.0f, 10.0f));
+					}
+
 					// Remember the VR controller tracked device index
 					mVrControllerTrackedDeviceIndices[mNumberOfVrControllers] = trackedDeviceIndex;
 					++mNumberOfVrControllers;
-
-					// Attach a point light to controllers, this way they can be seen easier and it's possible to illuminate the scene by using the hands
-					meshSceneItem.getSceneResource().createSceneItem<RendererRuntime::LightSceneItem>(meshSceneItem.getParentSceneNodeSafe());
 				}
 			}
 

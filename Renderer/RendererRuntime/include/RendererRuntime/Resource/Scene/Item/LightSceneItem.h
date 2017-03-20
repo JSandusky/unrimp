@@ -121,15 +121,15 @@ namespace RendererRuntime
 			float	  radius = 1.0f;
 			// float4 1: xyz = RGB light diffuse color, w = unused
 			glm::vec3 color{1.0f, 1.0f, 1.0f};
-			float	  unused1 = 0.0f;
-			// float4 2: x = spot-light cone height, y = spot-light near clip distance, z = spot-light inner angle in radians, w = spot-light outer angle in radians
-			float coneHeight       = 0.0f;
-			float nearClipDistance = 0.0f;
+			float	  lightType = static_cast<float>(LightType::POINT);
+			// float4 2: Only used for spot-light: x = spot-light inner angle in radians, y = spot-light outer angle in radians, z = spot-light near clip distance, w = unused
 			float innerAngle       = 0.0f;
 			float outerAngle       = 0.0f;
-			// float4 3: xyz = normalized view space light direction, w = unused
+			float nearClipDistance = 0.0f;
+			float unused           = 0.0f;
+			// float4 3: Only used for spot-light: xyz = normalized view space light direction, w = unused
 			glm::vec3 direction;
-			float	  unused2 = 0.0f;
+			uint32_t  visible = 1;	// Boolean, not used inside the shader but well, there's currently space left in here so we're using it
 		};
 
 
@@ -137,9 +137,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		LightType		 mLightType;
-		bool			 mVisible;
 		PackedShaderData mPackedShaderData;
+		float			 mInnerAngle;	///< Inner angle in degrees
+		float			 mOuterAngle;	///< Outer angle in degrees
 
 
 	};

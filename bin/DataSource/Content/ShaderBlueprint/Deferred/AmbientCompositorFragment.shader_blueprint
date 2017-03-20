@@ -148,23 +148,49 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 	// TODO(co) Just a quick'n'dirty test to have something to start with
 	for (uint i = 0u; i < PassData.NumberOfLights; ++i)
 	{
-		// Fetch the light data
-		float4 lightPositionRadius = TEXEL_FETCH(LightTextureBuffer, i * 4u);
-		float4 lightColorAttenuationFalloffSmooth = TEXEL_FETCH(LightTextureBuffer, i * 4u + 1u);
-
 		// Check if the fragment is inside the bounding volume of the light
+		float4 lightPositionRadius = TEXEL_FETCH(LightTextureBuffer, i * 4u);
 		float3 direction = lightPositionRadius.xyz - worldSpacePosition;
-		float distance = sqrt(dot(direction, direction));
+		float distance = length(direction);
 		if (distance < lightPositionRadius.w)
 		{
+			float4 lightColorType = TEXEL_FETCH(LightTextureBuffer, i * 4u + 1u);
+			float lightIntensity = 1.0f;
+
+			// Normalize the direction
+			direction /= distance;
+
+			// Spot-light attenuation
+			if (2.0f == lightColorType.w)
+			{
+				float4 innerOuterNearClip = TEXEL_FETCH(LightTextureBuffer, i * 4u + 2u);
+				if (distance < innerOuterNearClip.z)
+				{
+					// Early escape: Not influenced by the light
+					continue;
+				}
+				float3 spotlightDirection = TEXEL_FETCH(LightTextureBuffer, i * 4u + 3u).xyz;
+				float spotlightAngle = SATURATE(dot(spotlightDirection, -direction));
+				float spotlightFalloff = SATURATE((spotlightAngle - innerOuterNearClip.x) / (innerOuterNearClip.y - innerOuterNearClip.x));
+				lightIntensity *= (1.0f - spotlightFalloff);
+			}
+
 			// Attenuation by using inverse-square falloff for higher quality falloff
 			// -> Physically accurate inverse-square falloff as described in "Real Shading in Unreal Engine 4" by Brian Karis, Epic Games - "Lighting Model" on page 12 - http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 			float distanceLightRadius = distance / lightPositionRadius.w;
 			float t1 = SATURATE(1.0f - distanceLightRadius * distanceLightRadius * distanceLightRadius * distanceLightRadius);
-			float lightIntensity = t1 / (distance * distance + 1.0f);
+			lightIntensity *= t1 / (distance * distance + 1.0f);
 
 			// Calculate lighting
-			color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, normalize(direction), lightColorAttenuationFalloffSmooth.rgb * lightIntensity);
+			if (lightIntensity > 0.0f)
+			{
+				float3 worldSpaceNormal = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceNormal);
+				if (dot(worldSpaceNormal, direction) > 0.0f)
+				{
+					float3 worldSpaceIncident = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceIncident);
+					color += CalculateLighting(diffuse, roughness, metallic, worldSpaceNormal, worldSpaceIncident, direction, lightColorType.rgb * lightIntensity);
+				}
+			}
 		}
 	}
 

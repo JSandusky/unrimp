@@ -36,26 +36,26 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline LightSceneItem::LightType LightSceneItem::getLightType() const
 	{
-		return mLightType;
+		return static_cast<LightType>(static_cast<int>(mPackedShaderData.lightType));
 	}
 
 	inline void LightSceneItem::setLightType(LightType lightType)
 	{
-		mLightType = lightType;
+		mPackedShaderData.lightType = static_cast<float>(lightType);
 
 		// Sanity checks
-		assert(mLightType == LightType::DIRECTIONAL || mPackedShaderData.radius > 0.0f);
-		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mPackedShaderData.radius);
+		assert(lightType == LightType::DIRECTIONAL || mPackedShaderData.radius > 0.0f);
+		assert(lightType != LightType::DIRECTIONAL || 0.0f == mPackedShaderData.radius);
 	}
 
 	inline void LightSceneItem::setLightTypeAndRadius(LightType lightType, float radius)
 	{
-		mLightType = lightType;
+		mPackedShaderData.lightType = static_cast<float>(lightType);
 		mPackedShaderData.radius = radius;
 
 		// Sanity checks
-		assert(mLightType == LightType::DIRECTIONAL || mPackedShaderData.radius > 0.0f);
-		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mPackedShaderData.radius);
+		assert(lightType == LightType::DIRECTIONAL || mPackedShaderData.radius > 0.0f);
+		assert(lightType != LightType::DIRECTIONAL || 0.0f == mPackedShaderData.radius);
 	}
 
 	inline const glm::vec3& LightSceneItem::getColor() const
@@ -81,13 +81,13 @@ namespace RendererRuntime
 		mPackedShaderData.radius = radius;
 
 		// Sanity checks
-		assert(mLightType == LightType::DIRECTIONAL || mPackedShaderData.radius > 0.0f);
-		assert(mLightType != LightType::DIRECTIONAL || 0.0f == mPackedShaderData.radius);
+		assert(mPackedShaderData.lightType == static_cast<float>(LightType::DIRECTIONAL) || mPackedShaderData.radius > 0.0f);
+		assert(mPackedShaderData.lightType != static_cast<float>(LightType::DIRECTIONAL) || 0.0f == mPackedShaderData.radius);
 	}
 
 	inline bool LightSceneItem::isVisible() const
 	{
-		return mVisible;
+		return (mPackedShaderData.visible != 0);
 	}
 
 
@@ -101,7 +101,7 @@ namespace RendererRuntime
 
 	inline void LightSceneItem::setVisible(bool visible)
 	{
-		mVisible = visible;
+		mPackedShaderData.visible = static_cast<uint32_t>(visible);
 	}
 
 
@@ -110,8 +110,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline LightSceneItem::LightSceneItem(ISceneResource& sceneResource) :
 		ISceneItem(sceneResource),
-		mLightType(LightType::POINT),
-		mVisible(true)
+		mInnerAngle(40.0f),
+		mOuterAngle(50.0f)
 	{
 		// Nothing here
 	}
