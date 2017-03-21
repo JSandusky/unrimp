@@ -270,6 +270,9 @@ namespace RendererToolkit
 										::detail::optionalLightTypeProperty(rapidJsonValueItem, "LightType", lightItem.lightType);
 										JsonHelper::optionalFloatNProperty(rapidJsonValueItem, "Color", lightItem.color, 3);
 										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "Radius", lightItem.radius);
+										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "InnerAngle", lightItem.innerAngle);
+										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "OuterAngle", lightItem.outerAngle);
+										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "NearClipDistance", lightItem.nearClipDistance);
 
 										// Sanity checks
 										if (lightItem.color[0] < 0.0f || lightItem.color[1] < 0.0f || lightItem.color[2] < 0.0f)
@@ -283,6 +286,22 @@ namespace RendererToolkit
 										if (lightItem.lightType == RendererRuntime::LightSceneItem::LightType::DIRECTIONAL && lightItem.radius != 0.0f)
 										{
 											throw std::runtime_error("For directional light items the radius must be zero");
+										}
+										if (lightItem.innerAngle < 0.0f)
+										{
+											throw std::runtime_error("The inner spot light angle must be >= 0 degrees");
+										}
+										if (lightItem.outerAngle >= 90.0f)
+										{
+											throw std::runtime_error("The outer spot light angle must be < 90 degrees");
+										}
+										if (lightItem.innerAngle >= lightItem.outerAngle)
+										{
+											throw std::runtime_error("The inner spot light angle must be smaller as the outer spot light angle");
+										}
+										if (lightItem.nearClipDistance < 0.0f)
+										{
+											throw std::runtime_error("The spot light near clip distance must be greater as zero");
 										}
 
 										// Write down

@@ -106,10 +106,6 @@ namespace RendererRuntime
 						packedShaderData.position  = transform.position;
 						packedShaderData.direction = transform.rotation * Math::FORWARD_VECTOR;
 
-						// TODO(co) Calculate only once
-						packedShaderData.innerAngle = glm::cos(glm::radians(lightSceneItem->mInnerAngle));
-						packedShaderData.outerAngle = glm::cos(glm::radians(lightSceneItem->mOuterAngle));
-
 						// Copy the light data into the texture scratch buffer
 						memcpy(scratchBufferPointer, &packedShaderData, sizeof(LightSceneItem::PackedShaderData));
 						scratchBufferPointer += sizeof(LightSceneItem::PackedShaderData);

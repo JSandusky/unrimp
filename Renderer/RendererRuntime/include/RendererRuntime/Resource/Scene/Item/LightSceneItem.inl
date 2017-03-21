@@ -85,6 +85,68 @@ namespace RendererRuntime
 		assert(mPackedShaderData.lightType != static_cast<float>(LightType::DIRECTIONAL) || 0.0f == mPackedShaderData.radius);
 	}
 
+	inline float LightSceneItem::getInnerAngle() const
+	{
+		return mInnerAngle;
+	}
+
+	inline void LightSceneItem::setInnerAngle(float innerAngle)
+	{
+		mInnerAngle = innerAngle;
+
+		// Derive data
+		mPackedShaderData.innerAngle = glm::cos(glm::radians(mInnerAngle));
+
+		// Sanity checks
+		assert(mInnerAngle >= 0.0f);
+		assert(mInnerAngle < mOuterAngle);
+	}
+
+	inline float LightSceneItem::getOuterAngle() const
+	{
+		return mOuterAngle;
+	}
+
+	inline void LightSceneItem::setOuterAngle(float outerAngle)
+	{
+		mOuterAngle = outerAngle;
+
+		// Derive data
+		mPackedShaderData.outerAngle = glm::cos(glm::radians(mOuterAngle));
+
+		// Sanity checks
+		assert(mOuterAngle < 90.0f);
+		assert(mInnerAngle < mOuterAngle);
+	}
+
+	inline void LightSceneItem::setInnerOuterAngle(float innerAngle, float outerAngle)
+	{
+		mInnerAngle = innerAngle;
+		mOuterAngle = outerAngle;
+
+		// Derive data
+		mPackedShaderData.innerAngle = glm::cos(glm::radians(mInnerAngle));
+		mPackedShaderData.outerAngle = glm::cos(glm::radians(mOuterAngle));
+
+		// Sanity checks
+		assert(mInnerAngle >= 0.0f);
+		assert(mOuterAngle < 90.0f);
+		assert(mInnerAngle < mOuterAngle);
+	}
+
+	inline float LightSceneItem::getNearClipDistance() const
+	{
+		return mPackedShaderData.nearClipDistance;
+	}
+
+	inline void LightSceneItem::setNearClipDistance(float nearClipDistance)
+	{
+		mPackedShaderData.nearClipDistance = nearClipDistance;
+
+		// Sanity check
+		assert(mPackedShaderData.nearClipDistance >= 0.0f);
+	}
+
 	inline bool LightSceneItem::isVisible() const
 	{
 		return (mPackedShaderData.visible != 0);

@@ -84,6 +84,13 @@ namespace RendererRuntime
 		inline void setColor(const glm::vec3& color);
 		inline float getRadius() const;
 		inline void setRadius(float radius);
+		inline float getInnerAngle() const;
+		inline void setInnerAngle(float innerAngle);
+		inline float getOuterAngle() const;
+		inline void setOuterAngle(float outerAngle);
+		inline void setInnerOuterAngle(float innerAngle, float outerAngle);
+		inline float getNearClipDistance() const;
+		inline void setNearClipDistance(float nearClipDistance);
 		inline bool isVisible() const;
 
 
@@ -117,19 +124,19 @@ namespace RendererRuntime
 		struct PackedShaderData
 		{
 			// float4 0: xyz = world space light position, w = light radius
-			glm::vec3 position;
+			glm::vec3 position;				///< Parent scene node world space position
 			float	  radius = 1.0f;
 			// float4 1: xyz = RGB light diffuse color, w = unused
 			glm::vec3 color{1.0f, 1.0f, 1.0f};
 			float	  lightType = static_cast<float>(LightType::POINT);
 			// float4 2: Only used for spot-light: x = spot-light inner angle in radians, y = spot-light outer angle in radians, z = spot-light near clip distance, w = unused
-			float innerAngle       = 0.0f;
-			float outerAngle       = 0.0f;
+			float innerAngle       = 0.0f;	///< Cosine of the inner angle in radians; interval in degrees: 0..90, must be smaller as the outer angle
+			float outerAngle       = 0.0f;	///< Cosine of the outer angle in radians; interval in degrees: 0..90, must be greater as the inner angle
 			float nearClipDistance = 0.0f;
 			float unused           = 0.0f;
 			// float4 3: Only used for spot-light: xyz = normalized view space light direction, w = unused
-			glm::vec3 direction;
-			uint32_t  visible = 1;	// Boolean, not used inside the shader but well, there's currently space left in here so we're using it
+			glm::vec3 direction;			///< Derived from the parent scene node world space rotation
+			uint32_t  visible = 1;			///< Boolean, not used inside the shader but well, there's currently space left in here so we're using it
 		};
 
 
@@ -138,8 +145,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		PackedShaderData mPackedShaderData;
-		float			 mInnerAngle;	///< Inner angle in degrees
-		float			 mOuterAngle;	///< Outer angle in degrees
+		float			 mInnerAngle;	///< Inner angle in degrees; interval in degrees: 0..90, must be smaller as the outer angle
+		float			 mOuterAngle;	///< Outer angle in degrees; interval in degrees: 0..90, must be greater as the inner angle
 
 
 	};

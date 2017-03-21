@@ -54,11 +54,17 @@ namespace RendererRuntime
 		mPackedShaderData.lightType = static_cast<float>(lightItem->lightType);
 		memcpy(glm::value_ptr(mPackedShaderData.color), lightItem->color, sizeof(float) * 3);
 		mPackedShaderData.radius = lightItem->radius;
+		setInnerOuterAngle(lightItem->innerAngle, lightItem->outerAngle);
+		mPackedShaderData.nearClipDistance = lightItem->nearClipDistance;
 
 		// Sanity checks
 		assert(mPackedShaderData.color.r >= 0.0f && mPackedShaderData.color.g >= 0.0f && mPackedShaderData.color.b >= 0.0f);
 		assert(lightItem->lightType == LightType::DIRECTIONAL || mPackedShaderData.radius > 0.0f);
 		assert(lightItem->lightType != LightType::DIRECTIONAL || 0.0f == mPackedShaderData.radius);
+		assert(mInnerAngle >= 0.0f);
+		assert(mOuterAngle < 90.0f);
+		assert(mInnerAngle < mOuterAngle);
+		assert(mPackedShaderData.nearClipDistance >= 0.0f);
 	}
 
 

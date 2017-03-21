@@ -89,25 +89,18 @@ namespace RendererRuntime
 
 			struct LightItem
 			{
-				LightSceneItem::LightType lightType;
-				float					  color[3];
-				float					  radius;
-
-				LightItem() :
-					lightType(LightSceneItem::LightType::POINT),
-					color{ 1.0f, 1.0f, 1.0f },
-					radius(1.0f)
-				{};
+				LightSceneItem::LightType lightType		   = LightSceneItem::LightType::POINT;
+				float					  color[3]		   = { 1.0f, 1.0f, 1.0f };
+				float					  radius		   = 1.0f;
+				float					  innerAngle       = 40.0f;
+				float					  outerAngle	   = 50.0f;
+				float					  nearClipDistance = 0.0f;
 			};
 
 			struct MeshItem
 			{
 				AssetId  meshAssetId;
-				uint32_t numberOfSubMeshMaterialAssetIds;
-
-				MeshItem() :
-					numberOfSubMeshMaterialAssetIds(0)
-				{};
+				uint32_t numberOfSubMeshMaterialAssetIds = 0;
 			};
 
 			struct SkeletonMeshItem	// : public MeshItem -> Not derived by intent to be able to reuse the mesh item serialization 1:1
