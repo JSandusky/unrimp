@@ -60,6 +60,12 @@ namespace
 
 
 		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		static const uint16_t ASSET_FORMAT_VERSION = 1;
+
+
+		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
 		// Hashes a file with using sha256
@@ -148,7 +154,7 @@ namespace RendererToolkit
 		// Nothing here, only needed to support unique_ptr with forward declared classes
 	}
 
-	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile)
+	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t formatVersion)
 	{
 		// Create "std::filesystem::path" object from the give file paths
 		const std_filesystem::path sourceFilePath(sourceFile);
@@ -162,10 +168,10 @@ namespace RendererToolkit
 		{
 			// Source exists
 			// -> Check if source has changed
-			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile);
+			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile, formatVersion);
 
 			// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
-			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename);
+			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION);
 
 			// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
 			return (fileChanged || assetFileChanged || !destinationExists);
@@ -190,7 +196,7 @@ namespace RendererToolkit
 			{
 				if (!mDatabaseConnection->tableExists("FileInfo"))
 				{
-					mDatabaseConnection->exec("CREATE TABLE FileInfo (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, fileTime integer NOT NULL, fileSize integer NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
+					mDatabaseConnection->exec("CREATE TABLE FileInfo (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, fileTime integer NOT NULL, fileSize integer NOT NULL, formatVersion integer NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
 				}
 
 				if (mDatabaseConnection->tableExists("FileHash"))
@@ -199,7 +205,7 @@ namespace RendererToolkit
 					SQLite::Transaction transaction(*mDatabaseConnection.get());
 
 					// Copy old data to the new table
-					mDatabaseConnection->exec("INSERT INTO FileInfo (rendererTarget, fileId, hash, fileTime, fileSize)  SELECT rendererTarget, fileId, hash, 0, 0  FROM FileHash");
+					mDatabaseConnection->exec("INSERT INTO FileInfo (rendererTarget, fileId, hash, fileTime, fileSize, formatVersion)  SELECT rendererTarget, fileId, hash, 0, 0  FROM FileHash");
 
 					// Drop old table
 					mDatabaseConnection->exec("DROP TABLE FileHash");
@@ -226,8 +232,8 @@ namespace RendererToolkit
 		{
 			try
 			{
-				// Compile the query to get the hash for a file stored in the db 
-				SQLite::Statement query(*mDatabaseConnection.get(), "SELECT hash, fileSize, fileTime FROM FileInfo WHERE fileId = ? AND rendererTarget = ?");
+				// Compile the query to get the hash for a file stored in the database
+				SQLite::Statement query(*mDatabaseConnection.get(), "SELECT hash, fileSize, fileTime, formatVersion FROM FileInfo WHERE fileId = ? AND rendererTarget = ?");
 				query.bind(1, fileId);
 				query.bind(2, rendererTarget);
 
@@ -239,6 +245,7 @@ namespace RendererToolkit
 					cacheEntry.fileHash = query.getColumn(0).getString();
 					cacheEntry.fileSize = query.getColumn(1).getInt64();
 					cacheEntry.fileTime = query.getColumn(2).getInt64();
+					cacheEntry.formatVersion = query.getColumn(3).getUInt();
 
 					// Done
 					return true;
@@ -257,7 +264,7 @@ namespace RendererToolkit
 		return false;
 	}
 
-	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& filename)
+	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t formatVersion)
 	{
 		if (mDatabaseConnection)
 		{
@@ -286,10 +293,10 @@ namespace RendererToolkit
 				if (hasFileEntry)
 				{
 					#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-						// First and faster step: check file size and file time
-						if (localCacheEntry.fileSize == fileSize && localCacheEntry.fileTime == fileTime)
+						// First and faster step: check file size and file time as well as the format version
+						if (localCacheEntry.fileSize == fileSize && localCacheEntry.fileTime == fileTime && localCacheEntry.formatVersion == formatVersion)
 						{
-							// Source file didn't changed
+							// Source file didn't changed nor did the format version
 							return false;
 						}
 						else
@@ -301,9 +308,10 @@ namespace RendererToolkit
 						if (localCacheEntry.fileHash == fileHash)
 						{
 							#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-								// Hash of the file didn't changed but store the changed fileSize/fileTime
+								// Hash of the file didn't changed but store the changed fileSize/fileTime/formatVersion
 								localCacheEntry.fileSize = fileSize;
 								localCacheEntry.fileTime = fileTime;
+								localCacheEntry.formatVersion = formatVersion;
 								storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
 							#endif
 
@@ -315,6 +323,7 @@ namespace RendererToolkit
 							localCacheEntry.fileSize = fileSize;
 							localCacheEntry.fileTime = fileTime;
 							localCacheEntry.fileHash = fileHash;
+							localCacheEntry.formatVersion = formatVersion;
 
 							// Source file has changed, store the new data
 							storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
@@ -329,7 +338,8 @@ namespace RendererToolkit
 					localCacheEntry.fileSize = fileSize;
 					localCacheEntry.fileTime = fileTime;
 					localCacheEntry.fileHash = ::detail::hash256_file(filename);
-					
+					localCacheEntry.formatVersion = formatVersion;
+
 					storeOrUpdateCacheEntryInDatabase(localCacheEntry, true);
 				}
 			}
@@ -349,12 +359,13 @@ namespace RendererToolkit
 		if (isNewEntry)
 		{
 			// No entry in the cache: Store it
-			SQLite::Statement query(*mDatabaseConnection.get(), "INSERT INTO FileInfo VALUES(?, ?, ?, ?, ?)");
+			SQLite::Statement query(*mDatabaseConnection.get(), "INSERT INTO FileInfo VALUES(?, ?, ?, ?, ?, ?)");
 			query.bind(1, cacheEntry.rendererTarget);
 			query.bind(2, cacheEntry.fileId);
 			query.bind(3, cacheEntry.fileHash);
 			query.bind(4, static_cast<long long>(cacheEntry.fileTime));
 			query.bind(5, static_cast<long long>(cacheEntry.fileSize));
+			query.bind(6, cacheEntry.formatVersion);
 
 			// Execute statement and check if we got a result
 			if (!query.exec())
@@ -365,12 +376,13 @@ namespace RendererToolkit
 		else
 		{
 			// Entry exists, update stored values
-			SQLite::Statement updateQuery(*mDatabaseConnection.get(), "UPDATE FileInfo SET hash = ?, fileTime = ?, fileSize = ? WHERE fileId = ? AND rendererTarget = ?");
+			SQLite::Statement updateQuery(*mDatabaseConnection.get(), "UPDATE FileInfo SET hash = ?, fileTime = ?, fileSize = ?, formatVersion = ? WHERE fileId = ? AND rendererTarget = ?");
 			updateQuery.bind(1, cacheEntry.fileHash);
 			updateQuery.bind(2, static_cast<long long>(cacheEntry.fileTime));
 			updateQuery.bind(3, static_cast<long long>(cacheEntry.fileSize));
-			updateQuery.bind(4, cacheEntry.fileId);
-			updateQuery.bind(5, cacheEntry.rendererTarget);
+			updateQuery.bind(4, cacheEntry.formatVersion);
+			updateQuery.bind(5, cacheEntry.fileId);
+			updateQuery.bind(6, cacheEntry.rendererTarget);
 
 			// Execute statement and check if we got a result
 			if (!updateQuery.exec())

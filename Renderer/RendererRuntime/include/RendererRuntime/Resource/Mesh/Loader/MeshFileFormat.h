@@ -64,7 +64,7 @@ namespace RendererRuntime
 			{
 				// Format
 				uint32_t formatType;
-				uint16_t formatVersion;
+				uint32_t formatVersion;
 				// Vertex and index data
 				uint8_t  numberOfBytesPerVertex;
 				uint32_t numberOfVertices;

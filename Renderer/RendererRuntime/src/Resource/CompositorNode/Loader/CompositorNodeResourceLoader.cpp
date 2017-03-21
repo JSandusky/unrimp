@@ -166,6 +166,8 @@ namespace RendererRuntime
 		// Read in the compositor node header
 		v1CompositorNode::Header compositorNodeHeader;
 		file.read(&compositorNodeHeader, sizeof(v1CompositorNode::Header));
+		assert(v1CompositorNode::FORMAT_TYPE == compositorNodeHeader.formatType);
+		assert(v1CompositorNode::FORMAT_VERSION == compositorNodeHeader.formatVersion);
 
 		// Read in the compositor node resource
 		::detail::nodeDeserialization(file, compositorNodeHeader, *mCompositorNodeResource, static_cast<CompositorNodeResourceManager&>(getResourceManager()).getCompositorPassFactory());

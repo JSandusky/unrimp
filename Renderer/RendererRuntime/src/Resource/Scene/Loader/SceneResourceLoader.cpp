@@ -137,6 +137,8 @@ namespace RendererRuntime
 		// Read in the scene header
 		v1Scene::Header sceneHeader;
 		file.read(&sceneHeader, sizeof(v1Scene::Header));
+		assert(v1Scene::FORMAT_TYPE == sceneHeader.formatType);
+		assert(v1Scene::FORMAT_VERSION == sceneHeader.formatVersion);
 
 		// Read in the scene resource nodes
 		::detail::nodesDeserialization(file, *mSceneResource);

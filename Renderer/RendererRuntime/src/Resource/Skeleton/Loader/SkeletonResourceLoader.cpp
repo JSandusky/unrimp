@@ -49,6 +49,8 @@ namespace RendererRuntime
 		// Read in the skeleton header
 		v1Skeleton::Header skeletonHeader;
 		file.read(&skeletonHeader, sizeof(v1Skeleton::Header));
+		assert(v1Skeleton::FORMAT_TYPE == skeletonHeader.formatType);
+		assert(v1Skeleton::FORMAT_VERSION == skeletonHeader.formatVersion);
 
 		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
 	}

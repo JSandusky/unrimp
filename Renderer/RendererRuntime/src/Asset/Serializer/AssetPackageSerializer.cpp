@@ -48,12 +48,14 @@ namespace RendererRuntime
 			struct AssetPackageHeader
 			{
 				uint32_t formatType;
-				uint16_t formatVersion;
+				uint32_t formatVersion;
 				uint32_t numberOfAssets;
 			};
 		#pragma pack(pop)
 		AssetPackageHeader assetPackageHeader;
 		file.read(&assetPackageHeader, sizeof(AssetPackageHeader));
+		assert(RendererRuntime::StringId("AssetPackage") == assetPackageHeader.formatType);
+		assert(1 == assetPackageHeader.formatVersion);
 
 		// Read in the asset package content in one single burst
 		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage->getWritableSortedAssetVector();

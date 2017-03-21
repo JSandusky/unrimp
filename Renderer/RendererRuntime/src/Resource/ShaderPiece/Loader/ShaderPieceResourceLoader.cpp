@@ -55,6 +55,8 @@ namespace RendererRuntime
 		// Read in the shader piece header
 		v1ShaderPiece::Header shaderPieceHeader;
 		file.read(&shaderPieceHeader, sizeof(v1ShaderPiece::Header));
+		assert(v1ShaderPiece::FORMAT_TYPE == shaderPieceHeader.formatType);
+		assert(v1ShaderPiece::FORMAT_VERSION == shaderPieceHeader.formatVersion);
 
 		// Allocate more temporary memory, if required
 		if (mMaximumNumberOfShaderSourceCodeBytes < shaderPieceHeader.numberOfShaderSourceCodeBytes)

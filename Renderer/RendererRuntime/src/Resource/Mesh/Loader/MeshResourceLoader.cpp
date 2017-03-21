@@ -55,6 +55,8 @@ namespace RendererRuntime
 		// Read in the mesh header
 		v1Mesh::Header meshHeader;
 		file.read(&meshHeader, sizeof(v1Mesh::Header));
+		assert(v1Mesh::FORMAT_TYPE == meshHeader.formatType);
+		assert(v1Mesh::FORMAT_VERSION == meshHeader.formatVersion);
 		mMeshResource->mNumberOfVertices = meshHeader.numberOfVertices;
 		mMeshResource->mNumberOfIndices  = meshHeader.numberOfIndices;
 

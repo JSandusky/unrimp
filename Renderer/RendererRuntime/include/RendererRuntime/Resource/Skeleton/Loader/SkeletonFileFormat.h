@@ -55,7 +55,7 @@ namespace RendererRuntime
 			struct Header
 			{
 				uint32_t formatType;
-				uint16_t formatVersion;
+				uint32_t formatVersion;
 				// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
 			};
 		#pragma pack(pop)

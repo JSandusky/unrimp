@@ -57,6 +57,8 @@ namespace RendererRuntime
 		// Read in the shader blueprint header
 		v1ShaderBlueprint::Header shaderBlueprintHeader;
 		file.read(&shaderBlueprintHeader, sizeof(v1ShaderBlueprint::Header));
+		assert(v1ShaderBlueprint::FORMAT_TYPE == shaderBlueprintHeader.formatType);
+		assert(v1ShaderBlueprint::FORMAT_VERSION == shaderBlueprintHeader.formatVersion);
 
 		// Allocate more temporary memory, if required
 		if (mMaximumNumberOfIncludeShaderPieceAssetIds < shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds)

@@ -300,7 +300,7 @@ namespace RendererToolkit
 				struct AssetPackageHeader
 				{
 					uint32_t formatType;
-					uint16_t formatVersion;
+					uint32_t formatVersion;
 					uint32_t numberOfAssets;
 				};
 			#pragma pack(pop)

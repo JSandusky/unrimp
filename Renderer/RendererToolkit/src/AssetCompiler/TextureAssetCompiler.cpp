@@ -85,6 +85,8 @@ namespace
 			UNKNOWN
 		};
 
+		static const uint16_t TEXTURE_FORMAT_VERSION = 0;
+
 
 		//[-------------------------------------------------------]
 		//[ Global variables                                      ]
@@ -183,7 +185,7 @@ namespace
 				bool cubeMapSourcesChanged = false;
 				for (const std::string& faceFilename : faceFilenames)
 				{
-					if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilename, outputAssetFilename))
+					if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilename, outputAssetFilename, TEXTURE_FORMAT_VERSION))
 					{
 						// A face source file has changed, mark result as true, but go on to store also for the remaining face source files an cache entry
 						cubeMapSourcesChanged = true;
@@ -194,7 +196,7 @@ namespace
 			else
 			{
 				// Asset has single source file
-				return input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputAssetFilename, outputAssetFilename);
+				return input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputAssetFilename, outputAssetFilename, TEXTURE_FORMAT_VERSION);
 			}
 		}
 

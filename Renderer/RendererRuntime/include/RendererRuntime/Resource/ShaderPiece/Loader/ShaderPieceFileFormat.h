@@ -55,7 +55,7 @@ namespace RendererRuntime
 			struct Header
 			{
 				uint32_t formatType;
-				uint16_t formatVersion;
+				uint32_t formatVersion;
 				uint32_t numberOfShaderSourceCodeBytes;
 			};
 		#pragma pack(pop)

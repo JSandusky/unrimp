@@ -66,7 +66,7 @@ namespace RendererRuntime
 			struct Header
 			{
 				uint32_t formatType;
-				uint16_t formatVersion;
+				uint32_t formatVersion;
 				uint8_t  numberOfChannels;			///< The number of bone animation channels; each channel affects a single node
 				float	 durationInTicks;			///< Duration of the animation in ticks
 				float	 ticksPerSecond;			///< Ticks per second; 0 if not specified in the imported file

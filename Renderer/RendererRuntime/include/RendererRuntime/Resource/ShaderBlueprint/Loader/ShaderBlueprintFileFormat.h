@@ -56,7 +56,7 @@ namespace RendererRuntime
 			struct Header
 			{
 				uint32_t formatType;
-				uint16_t formatVersion;
+				uint32_t formatVersion;
 				uint16_t numberOfIncludeShaderPieceAssetIds;
 				uint16_t numberReferencedShaderProperties;
 				uint32_t numberOfShaderSourceCodeBytes;

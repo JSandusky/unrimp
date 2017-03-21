@@ -89,6 +89,8 @@ namespace RendererRuntime
 		// Read in the compositor workspace header
 		v1CompositorWorkspace::Header compositorWorkspaceHeader;
 		file.read(&compositorWorkspaceHeader, sizeof(v1CompositorWorkspace::Header));
+		assert(v1CompositorWorkspace::FORMAT_TYPE == compositorWorkspaceHeader.formatType);
+		assert(v1CompositorWorkspace::FORMAT_VERSION == compositorWorkspaceHeader.formatVersion);
 
 		// Read in the compositor workspace resource nodes
 		::detail::nodesDeserialization(file, *mCompositorWorkspaceResource);

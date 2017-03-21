@@ -49,6 +49,8 @@ namespace RendererRuntime
 		// Read in the skeleton animation header
 		v1SkeletonAnimation::Header skeletonAnimationHeader;
 		file.read(&skeletonAnimationHeader, sizeof(v1SkeletonAnimation::Header));
+		assert(v1SkeletonAnimation::FORMAT_TYPE == skeletonAnimationHeader.formatType);
+		assert(v1SkeletonAnimation::FORMAT_VERSION == skeletonAnimationHeader.formatVersion);
 		mSkeletonAnimationResource->mNumberOfChannels = skeletonAnimationHeader.numberOfChannels;
 		mSkeletonAnimationResource->mDurationInTicks  = skeletonAnimationHeader.durationInTicks;
 		mSkeletonAnimationResource->mTicksPerSecond   = skeletonAnimationHeader.ticksPerSecond;

@@ -53,6 +53,8 @@ namespace RendererRuntime
 		// Read in the material blueprint header
 		v1MaterialBlueprint::Header materialBlueprintHeader;
 		file.read(&materialBlueprintHeader, sizeof(v1MaterialBlueprint::Header));
+		assert(v1MaterialBlueprint::FORMAT_TYPE == materialBlueprintHeader.formatType);
+		assert(v1MaterialBlueprint::FORMAT_VERSION == materialBlueprintHeader.formatVersion);
 
 		{ // Read properties
 			// TODO(co) Get rid of the evil const-cast

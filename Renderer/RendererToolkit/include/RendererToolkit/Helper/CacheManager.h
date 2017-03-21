@@ -83,7 +83,7 @@ namespace RendererToolkit
 		/**
 		*  @brief
 		*    Constructor
-		* 
+		*
 		*  @param[in] projectPath
 		*    The path to the project for which the cache manager instance is used for
 		*/
@@ -92,16 +92,16 @@ namespace RendererToolkit
 		/**
 		*  @brief
 		*    Destructor
-		* 
+		*
 		*  @note
-		*    Needed to allow std::unique_ptr with an forward declared class
+		*    - Needed to allow std::unique_ptr with an forward declared class
 		*/
 		~CacheManager();
 
 		/**
 		*  @brief
 		*    Return if an asset needs to be compiled
-		* 
+		*
 		*  @param[in] rendererTarget
 		*    The renderer target for which the asset should be compiled
 		*  @param[in] assetFilename
@@ -110,11 +110,13 @@ namespace RendererToolkit
 		*    The source file of the asset
 		*  @param[in] destinationFile
 		*    The destination file of the asset which contains the compiled data of the source
-		* 
+		*  @param[in] formatVersion
+		*    Format version so we can detect file format version changes and enforce compiling even if the source data has not been changed
+		*
 		*  @return
 		*    True if the file needs to be compiled (aka source changed, destination doesn't exists or is yet unknown file) otherwise false
 		*/
-		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile);
+		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t formatVersion);
 
 
 	//[-------------------------------------------------------]
@@ -128,10 +130,12 @@ namespace RendererToolkit
 			std::string				  fileHash;			///< The sha256 hash of the file content (as hex string)
 			int64_t					  fileSize;			///< The file size; SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
 			int64_t					  fileTime;			///< The file time (last write time); SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
+			uint32_t				  formatVersion;	///< Format version so we can detect file format version changes and enforce compiling even if the source data has not been changed
 
 			CacheEntry() :
 				fileSize(0),
-				fileTime(0)
+				fileTime(0),
+				formatVersion(0)
 			{}
 
 		};
@@ -145,12 +149,12 @@ namespace RendererToolkit
 		*  @brief
 		*    Setup the cache database (sqlite)
 		*
+		*  @return
+		*    True if the database could be successfully be setup, in case of an error false is returned
+		*
 		*  @note
 		*    - It creates the cache folder when it doesn't already exists and the cache database file
 		*    - Also it checks if the tables exists and if not creates them
-		*
-		*  @return
-		*    True if the database could be successfully be setup, in case of an error false is returned
 		*/
 		bool setupCacheDataBase();
 
@@ -178,6 +182,8 @@ namespace RendererToolkit
 		*    The renderer target for which the asset should be compiled
 		*  @param[in] filename
 		*    The filename to check
+		*  @param[in] formatVersion
+		*    Format version so we can detect file format version changes and enforce compiling even if the source data has not been changed
 		*
 		*  @return
 		*    True if the file has changed otherwise false (aka the stored hash doesn't equals to the current one or file not yet known)
@@ -185,7 +191,7 @@ namespace RendererToolkit
 		*  @note
 		*    - When a change was detected the an cache entry is stored/updated
 		*/
-		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& filename);
+		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t formatVersion);
 
 		/**
 		*  @brief

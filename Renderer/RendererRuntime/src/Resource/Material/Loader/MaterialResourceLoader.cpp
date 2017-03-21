@@ -52,6 +52,8 @@ namespace RendererRuntime
 		// Read in the material header
 		v1Material::Header materialHeader;
 		file.read(&materialHeader, sizeof(v1Material::Header));
+		assert(v1Material::FORMAT_TYPE == materialHeader.formatType);
+		assert(v1Material::FORMAT_VERSION == materialHeader.formatVersion);
 
 		{ // Read techniques
 			mNumberOfTechniques = materialHeader.numberOfTechniques;
