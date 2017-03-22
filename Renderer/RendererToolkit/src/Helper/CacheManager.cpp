@@ -203,10 +203,10 @@ namespace RendererToolkit
 				if (!mDatabaseConnection->tableExists("VersionInfo"))
 				{
 					SQLite::Transaction transaction(*mDatabaseConnection.get());
-					mDatabaseConnection->exec("CREATE TABLE VersionInfo (schemaVersion integer NOT NULL, PRIMARY KEY (schemaVersion))");
+					mDatabaseConnection->exec("CREATE TABLE VersionInfo (schemaVersion integer NOT NULL)");
 					
 					SQLite::Statement query(*mDatabaseConnection.get(), "INSERT INTO VersionInfo (schemaVersion) VALUES(?)");
-					query.bind(detail::DATABASE_SCHEMA_VERSION);
+					query.bind(1, detail::DATABASE_SCHEMA_VERSION);
 					query.exec();
 
 					transaction.commit();
@@ -304,22 +304,22 @@ namespace RendererToolkit
 				if (hasFileEntry)
 				{
 					#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-						// First and faster step: check file size and file time as well as the format version
+						// First and faster step: check file size and file time as well as the compiler version (needed so that we also detect compiler version changes here too)
 						if (localCacheEntry.fileSize == fileSize && localCacheEntry.fileTime == fileTime && localCacheEntry.compilerVersion == compilerVersion)
 						{
-							// Source file didn't changed nor did the format version
+							// Source file didn't changed
 							return false;
 						}
 						else
 					#endif
 					{
 						// Current file differs in file size and/or file time do the second step:
-						// Check the sha256 hash
+						// Check the compiler version and the sha256 hash
 						const std::string fileHash = ::detail::hash256_file(filename);
-						if (localCacheEntry.fileHash == fileHash)
+						if (localCacheEntry.fileHash == fileHash && localCacheEntry.compilerVersion == compilerVersion)
 						{
 							#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-								// Hash of the file didn't changed but store the changed fileSize/fileTime/compilerVersion
+								// Hash of the file and compiler version didn't changed but store the changed fileSize/fileTime
 								localCacheEntry.fileSize = fileSize;
 								localCacheEntry.fileTime = fileTime;
 								localCacheEntry.compilerVersion = compilerVersion;
@@ -336,7 +336,7 @@ namespace RendererToolkit
 							localCacheEntry.fileHash = fileHash;
 							localCacheEntry.compilerVersion = compilerVersion;
 
-							// Source file has changed, store the new data
+							// Source file and/or compiler version has changed, store the new data
 							storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
 						}
 					}
@@ -428,7 +428,7 @@ namespace RendererToolkit
 		// Update schema version in database
 		// We can use here a update statement even when the oldSchemaVersion = 0 (VersionInfo table doesn't exists already) because in this case the table was created before this method is called
 		SQLite::Statement query(*mDatabaseConnection.get(), "UPDATE VersionInfo  SET schemaVersion = ?");
-		query.bind(detail::DATABASE_SCHEMA_VERSION);
+		query.bind(1, detail::DATABASE_SCHEMA_VERSION);
 		query.exec();
 
 		// Done updating execute commit transaction
