@@ -48,6 +48,7 @@ namespace Renderer
 			true,	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - when being uncompressed
 			true,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - when being uncompressed
 			true,	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices
+			false,	// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
 			false,	// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			false,	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 			false	// Renderer::TextureFormat::UNKNOWN       - Unknown
@@ -75,6 +76,7 @@ namespace Renderer
 			false,	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - when being uncompressed
 			false,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - when being uncompressed
 			false,	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices
+			false,	// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
 			false,	// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			true,	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 			false	// Renderer::TextureFormat::UNKNOWN       - Unknown
@@ -102,6 +104,7 @@ namespace Renderer
 			sizeof(uint8_t) * 1,	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - when being uncompressed
 			sizeof(uint8_t) * 2,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - when being uncompressed
 			sizeof(uint8_t) * 3,	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - when being uncompressed
+			sizeof(uint32_t),		// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
 			sizeof(float),			// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			sizeof(float),			// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 			0						// Renderer::TextureFormat::UNKNOWN       - Unknown
@@ -165,7 +168,11 @@ namespace Renderer
 			case ETC1:
 				return (width >> 1);
 
-			// 32-bit float depth format
+			// 32-bit unsigned integer format
+			case R32_UINT:
+				return sizeof(uint32_t) * width;
+
+			// 32-bit float red/depth format
 			case R32_FLOAT:
 			case D32_FLOAT:
 				return sizeof(float) * width;
@@ -239,6 +246,10 @@ namespace Renderer
 				const uint32_t numberOfBytesPerSlice = (width * height) >> 1;
 				return (numberOfBytesPerSlice > 8) ? numberOfBytesPerSlice : 8;
 			}
+
+			// 32-bit unsigned integer format
+			case R32_UINT:
+				return sizeof(uint32_t) * width * height;
 
 			// 32-bit float depth format
 			case R32_FLOAT:

@@ -750,10 +750,11 @@ namespace Renderer
 				BC4				  = 13,
 				BC5				  = 14,
 				ETC1			  = 15,
-				R32_FLOAT		  = 16,
-				D32_FLOAT		  = 17,
-				UNKNOWN			  = 18,
-				NUMBER_OF_FORMATS = 19
+				R32_UINT		  = 16,
+				R32_FLOAT		  = 17,
+				D32_FLOAT		  = 18,
+				UNKNOWN			  = 19,
+				NUMBER_OF_FORMATS = 20
 			};
 			inline static bool isCompressed(Enum textureFormat)
 			{
@@ -777,6 +778,7 @@ namespace Renderer
 					true,
 					false,
 					false,
+					false,
 					false
 				};
 				return MAPPING[textureFormat];
@@ -785,6 +787,7 @@ namespace Renderer
 			{
 				static bool MAPPING[] =
 				{
+					false,
 					false,
 					false,
 					false,
@@ -827,6 +830,7 @@ namespace Renderer
 					sizeof(uint8_t) * 1,
 					sizeof(uint8_t) * 2,
 					sizeof(uint8_t) * 3,
+					sizeof(uint32_t),
 					sizeof(float),
 					sizeof(float),
 					0
@@ -865,6 +869,8 @@ namespace Renderer
 						return ((width + 3) >> 2) * 16;
 					case ETC1:
 						return (width >> 1);
+					case R32_UINT:
+						return sizeof(uint32_t) * width;
 					case R32_FLOAT:
 					case D32_FLOAT:
 						return sizeof(float) * width;
@@ -910,6 +916,8 @@ namespace Renderer
 						const uint32_t numberOfBytesPerSlice = (width * height) >> 1;
 						return (numberOfBytesPerSlice > 8) ? numberOfBytesPerSlice : 8;
 					}
+					case R32_UINT:
+						return sizeof(uint32_t) * width * height;
 					case R32_FLOAT:
 					case D32_FLOAT:
 						return sizeof(float) * width * height;
