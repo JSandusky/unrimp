@@ -118,6 +118,7 @@ namespace RendererRuntime
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
 	inline void PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::removeElement(ID_TYPE id)
 	{
+		assert(isElementIdValid(id));
 		Index& index = mIndices[id & INDEX_MASK];
 		ELEMENT_TYPE& element = mElements[index.index];
 

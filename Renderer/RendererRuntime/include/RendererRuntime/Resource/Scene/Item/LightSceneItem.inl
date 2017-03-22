@@ -172,10 +172,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline LightSceneItem::LightSceneItem(ISceneResource& sceneResource) :
 		ISceneItem(sceneResource),
-		mInnerAngle(40.0f),
-		mOuterAngle(50.0f)
+		mInnerAngle(0.0f),
+		mOuterAngle(0.1f)
 	{
-		// Nothing here
+		setInnerOuterAngle(40.0f, 50.0f);
 	}
 
 	inline LightSceneItem::~LightSceneItem()

@@ -163,6 +163,8 @@ namespace
 						lightSceneItem->setLightType(RendererRuntime::LightSceneItem::LightType::SPOT);
 						lightSceneItem->setRadius(5.0f);
 						lightSceneItem->setColor(glm::vec3(10.0f, 10.0f, 10.0f));
+						lightSceneItem->setInnerOuterAngle(20.0f, 30.0f);
+						lightSceneItem->setNearClipDistance(0.05f);
 					}
 
 					// Remember the VR controller tracked device index
