@@ -92,9 +92,9 @@ TEXTURE_BUFFER(float4, InstanceTextureBuffer, 0)	// "POSITION_ROTATION_SCALE"
 MAIN_BEGIN
 	// Get object space to world space data
 	uint4  instanceIndices	  = InstanceIndicesArray[MAIN_INPUT_DRAW_ID];
-	float3 position			  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x).xyz;
-	float4 rotationQuaternion = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 1u);
-	float3 scale			  = TEXEL_FETCH(InstanceTextureBuffer, instanceIndices.x + 2u).xyz;
+	float3 position			  = TEXTURE_BUFFER_FETCH(InstanceTextureBuffer, instanceIndices.x).xyz;
+	float4 rotationQuaternion = TEXTURE_BUFFER_FETCH(InstanceTextureBuffer, instanceIndices.x + 1u);
+	float3 scale			  = TEXTURE_BUFFER_FETCH(InstanceTextureBuffer, instanceIndices.x + 2u).xyz;
 
 	// Get the object space position
 	float3 objectSpacePosition = MAIN_INPUT(Position);

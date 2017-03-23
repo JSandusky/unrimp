@@ -55,10 +55,11 @@ struct PassDataStruct
 	float3   ViewSpaceSunLightDirection;
 	float    Wetness;
 	float3   AmbientColor;
-	uint	 NumberOfLights;
 	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float3   SunLightColor;
 	float3	 CameraWorldSpacePosition;
+	float3	 LightClustersScale;
+	float3	 LightClustersBias;
 	float2   ViewportSize;
 	float2 	 ProjectionParameters;
 };
@@ -89,6 +90,7 @@ SAMPLER_STATE(SamplerLinear, 1)
 TEXTURE_2D(ShadowMap, 5)
 TEXTURE_2D(ScreenSpaceAmbientOcclusionMap, 6)
 TEXTURE_CUBE(ReflectionCubeMap, 7)
+TEXTURE_3D_UINT(LightClustersMap3D, 8)
 
 
 //[-------------------------------------------------------]
@@ -144,17 +146,30 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 		color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
 	}
 
-	// Point and spot lights
-	// TODO(co) Just a quick'n'dirty test to have something to start with
-	for (uint i = 0u; i < PassData.NumberOfLights; ++i)
+	// Compute light cluster and fetch its light mask: Basing on the clustered shading demo from Emil Persson - http://humus.name/index.php?page=3D
+	// "
+	// We're using a 32bit integer format where each set bit enables the light of that index.
+	// This supports up to 32 lights, which is enough for this demo, and probably for some games. It's possible to expand if more lights are needed,
+	// for instance RGBA32_UINT for up to 128 lights in a single fetch, which is enough for many AAA titles. At some point, a list of indices becomes
+	// more compact in practice, so if thousands of lights are needed, that's probably the way to go. Using a fixed bitmask has the advantage of fixed
+	// size storage, simple addressing, and one indirection less in the inner loop.
+	// "
+	uint lightMask = TEXTURE_FETCH_3D(LightClustersMap3D, int4(worldSpacePosition * PassData.LightClustersScale + PassData.LightClustersBias, 0)).x;
+
+	// Point and spot lights using clustered shading
+	while (lightMask)
 	{
+		// Extract a light from the mask and disable that bit
+		uint lightIndex = firstbitlow(lightMask);
+		lightMask &= ~(1 << lightIndex);
+		
 		// Check if the fragment is inside the bounding volume of the light
-		float4 lightPositionRadius = TEXEL_FETCH(LightTextureBuffer, i * 4u);
+		float4 lightPositionRadius = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u);
 		float3 direction = lightPositionRadius.xyz - worldSpacePosition;
 		float distance = length(direction);
 		if (distance < lightPositionRadius.w)
 		{
-			float4 lightColorType = TEXEL_FETCH(LightTextureBuffer, i * 4u + 1u);
+			float4 lightColorType = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u + 1u);
 			float lightIntensity = 1.0f;
 
 			// Normalize the direction
@@ -163,13 +178,13 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 			// Spot-light attenuation
 			if (2.0f == lightColorType.w)
 			{
-				float4 innerOuterNearClip = TEXEL_FETCH(LightTextureBuffer, i * 4u + 2u);
+				float4 innerOuterNearClip = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u + 2u);
 				if (distance < innerOuterNearClip.z)
 				{
 					// Early escape: Not influenced by the light
 					continue;
 				}
-				float3 spotlightDirection = TEXEL_FETCH(LightTextureBuffer, i * 4u + 3u).xyz;
+				float3 spotlightDirection = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u + 3u).xyz;
 				float spotlightAngle = SATURATE(dot(spotlightDirection, -direction));
 				float spotlightFalloff = SATURATE((spotlightAngle - innerOuterNearClip.x) / (innerOuterNearClip.y - innerOuterNearClip.x));
 				lightIntensity *= (1.0f - spotlightFalloff);

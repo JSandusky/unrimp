@@ -24,6 +24,8 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Resource/Texture/TextureResource.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
@@ -47,6 +49,11 @@ namespace
 		static uint32_t DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES = 64 * 1024;	// 64 KiB
 		// static uint32_t DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES = 512 * 1024;	// 512 KiB
 
+		// TODO(co) Just for the clusters shading kickoff
+		static const uint32_t CLUSTER_X = 32;
+		static const uint32_t CLUSTER_Y = 8;
+		static const uint32_t CLUSTER_Z = 32;
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -68,38 +75,77 @@ namespace RendererRuntime
 	LightBufferManager::LightBufferManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mTextureBuffer(nullptr),
-		mNumberOfLights(0)
+		mClusters3DTextureResourceId(getUninitialized<TextureResourceId>()),
+		mLightClustersAabbMinimum(-16.0f, -0.5f, -6.0f),	// TODO(co) Just for the clusters shading kickoff
+		mLightClustersAabbMaximum(14.0f, 15.0f, 7.0f)		// TODO(co) Just for the clusters shading kickoff
 	{
 		// Create texture buffer instance
 		mTextureScratchBuffer.resize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumTextureBufferSize, ::detail::DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES));
 		mTextureBuffer = rendererRuntime.getBufferManager().createTextureBuffer(static_cast<uint32_t>(mTextureScratchBuffer.size()), Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		RENDERER_SET_RESOURCE_DEBUG_NAME(mTextureBuffer, "Light buffer manager")
+
+		{ // Create the clusters 3D texture resource
+			// Create the renderer texture resource
+			Renderer::ITexturePtr texturePtr(rendererRuntime.getTextureManager().createTexture3D(::detail::CLUSTER_X, ::detail::CLUSTER_Y, ::detail::CLUSTER_Z, Renderer::TextureFormat::R32_UINT, nullptr, 0, Renderer::TextureUsage::DYNAMIC));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "Clusters 3D texture resource")
+
+			// Create dynamic texture asset
+			mClusters3DTextureResourceId = rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/LightClustersMap3D", *texturePtr);
+		}
 	}
 
 	LightBufferManager::~LightBufferManager()
 	{
 		mTextureBuffer->releaseReference();
+		mRendererRuntime.getTextureResourceManager().destroyTextureResource(mClusters3DTextureResourceId);
 	}
 
 	void LightBufferManager::fillBuffer(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer)
 	{
+		fillTextureBuffer(sceneResource, commandBuffer);
+		fillClusters3DTexture(sceneResource, commandBuffer);
+	}
+
+	void LightBufferManager::fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer)
+	{
+		// Light texture buffer
+		const MaterialBlueprintResource::TextureBuffer* lightTextureBuffer = materialBlueprintResource.getLightTextureBuffer();
+		if (nullptr != lightTextureBuffer)
+		{
+			Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, lightTextureBuffer->rootParameterIndex, mTextureBuffer);
+		}
+	}
+
+	glm::vec3 LightBufferManager::getLightClustersScale() const
+	{
+		return glm::vec3(static_cast<float>(::detail::CLUSTER_X), static_cast<float>(::detail::CLUSTER_Y), static_cast<float>(::detail::CLUSTER_Z)) / (mLightClustersAabbMaximum - mLightClustersAabbMinimum);
+	}
+
+	glm::vec3 LightBufferManager::getLightClustersBias() const
+	{
+		return glm::vec3(-static_cast<float>(::detail::CLUSTER_X), -static_cast<float>(::detail::CLUSTER_Y), -static_cast<float>(::detail::CLUSTER_Z)) / (mLightClustersAabbMaximum - mLightClustersAabbMinimum) * mLightClustersAabbMinimum;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	void LightBufferManager::fillTextureBuffer(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer)
+	{
 		// TODO(co) This is just a placeholder implementation until "RendererRuntime::LightBufferManager" is ready (containing e.g. reasonable optimizations)
 
 		// Loop through all scene nodes and look for point and spot lights
-		mNumberOfLights = 0;
 		uint8_t* scratchBufferPointer = mTextureScratchBuffer.data();
-		for (const RendererRuntime::ISceneNode* sceneNode : sceneResource.getSceneNodes())
+		for (const ISceneNode* sceneNode : sceneResource.getSceneNodes())
 		{
 			// Loop through all scene items attached to the current scene node
-			for (RendererRuntime::ISceneItem* sceneItem : sceneNode->getAttachedSceneItems())
+			for (ISceneItem* sceneItem : sceneNode->getAttachedSceneItems())
 			{
-				if (sceneItem->getSceneItemTypeId() == RendererRuntime::LightSceneItem::TYPE_ID)
+				if (sceneItem->getSceneItemTypeId() == LightSceneItem::TYPE_ID)
 				{
-					RendererRuntime::LightSceneItem* lightSceneItem = static_cast<RendererRuntime::LightSceneItem*>(sceneItem);
-					if (lightSceneItem->getLightType() != RendererRuntime::LightSceneItem::LightType::DIRECTIONAL && lightSceneItem->isVisible())
+					LightSceneItem* lightSceneItem = static_cast<LightSceneItem*>(sceneItem);
+					if (lightSceneItem->getLightType() != LightSceneItem::LightType::DIRECTIONAL && lightSceneItem->isVisible())
 					{
-						++mNumberOfLights;
-
 						// Update the world space light position and the normalized view space light direction
 						LightSceneItem::PackedShaderData& packedShaderData = lightSceneItem->mPackedShaderData;
 						const Transform& transform = sceneNode->getTransform();
@@ -122,13 +168,113 @@ namespace RendererRuntime
 		}
 	}
 
-	void LightBufferManager::fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer)
+	void LightBufferManager::fillClusters3DTexture(ISceneResource& sceneResource, Renderer::CommandBuffer&)
 	{
-		// Light texture buffer
-		const MaterialBlueprintResource::TextureBuffer* lightTextureBuffer = materialBlueprintResource.getLightTextureBuffer();
-		if (nullptr != lightTextureBuffer)
+		// Basing on the clustered shading demo from Emil Persson - http://humus.name/index.php?page=3D
+		// "
+		// We're using a 32bit integer format where each set bit enables the light of that index.
+		// This supports up to 32 lights, which is enough for this demo, and probably for some games. It's possible to expand if more lights are needed,
+		// for instance RGBA32_UINT for up to 128 lights in a single fetch, which is enough for many AAA titles. At some point, a list of indices becomes
+		// more compact in practice, so if thousands of lights are needed, that's probably the way to go. Using a fixed bitmask has the advantage of fixed
+		// size storage, simple addressing, and one indirection less in the inner loop.
+		// "
+
+		// TODO(co) This is just a placeholder implementation until "RendererRuntime::LightBufferManager" is ready
+		//          - Containing e.g. reasonable optimizations
+		//          - Processing on the GPU instead of CPU
+		//          - Using a dynamic light clusters AABB
+		uint32_t lights[::detail::CLUSTER_Z][::detail::CLUSTER_Y][::detail::CLUSTER_X] = {};
+		const glm::vec3 scale = glm::vec3(static_cast<float>(::detail::CLUSTER_X), static_cast<float>(::detail::CLUSTER_Y), static_cast<float>(::detail::CLUSTER_Z)) / (mLightClustersAabbMaximum - mLightClustersAabbMinimum);
+		const glm::vec3 inverseScale = 1.0f / scale;
+
+		// Loop through all scene nodes and look for point and spot lights
+		uint32_t currentLightIndex = 0;
+		for (const ISceneNode* sceneNode : sceneResource.getSceneNodes())
 		{
-			Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, lightTextureBuffer->rootParameterIndex, mTextureBuffer);
+			// Loop through all scene items attached to the current scene node
+			for (ISceneItem* sceneItem : sceneNode->getAttachedSceneItems())
+			{
+				assert(currentLightIndex < 32);
+				if (sceneItem->getSceneItemTypeId() == LightSceneItem::TYPE_ID && currentLightIndex < 32)
+				{
+					LightSceneItem* lightSceneItem = static_cast<LightSceneItem*>(sceneItem);
+					if (lightSceneItem->getLightType() != LightSceneItem::LightType::DIRECTIONAL && lightSceneItem->isVisible())
+					{
+						const LightSceneItem::PackedShaderData& packedShaderData = lightSceneItem->mPackedShaderData;
+
+						const glm::vec3 p = (packedShaderData.position - mLightClustersAabbMinimum);
+						const glm::vec3 p_min = (p - packedShaderData.radius) * scale;
+						const glm::vec3 p_max = (p + packedShaderData.radius) * scale;
+
+						// Cluster for the center of the light
+						const int px = static_cast<int>(std::floorf(p.x * scale.x));
+						const int py = static_cast<int>(std::floorf(p.y * scale.y));
+						const int pz = static_cast<int>(std::floorf(p.z * scale.z));
+
+						// Cluster bounds for the light
+						const int x0 = std::max(static_cast<int>(std::floorf(p_min.x)), 0);
+						const int x1 = std::min(static_cast<int>(std::ceilf(p_max.x)), static_cast<int>(::detail::CLUSTER_X));
+						const int y0 = std::max(static_cast<int>(std::floorf(p_min.y)), 0);
+						const int y1 = std::min(static_cast<int>(std::ceilf(p_max.y)), static_cast<int>(::detail::CLUSTER_Y));
+						const int z0 = std::max(static_cast<int>(std::floorf(p_min.z)), 0);
+						const int z1 = std::min(static_cast<int>(std::ceilf(p_max.z)), static_cast<int>(::detail::CLUSTER_Z));
+
+						const float squaredRadius = packedShaderData.radius * packedShaderData.radius;
+						const int mask = (1 << currentLightIndex);
+
+						// Do AABB <-> sphere tests to figure out which clusters are actually intersected by the light
+						for (int z = z0; z < z1; ++z)
+						{
+							float dz = (pz == z) ? 0.0f : mLightClustersAabbMinimum.z + ((pz < z) ? z : z + 1) * inverseScale.z - packedShaderData.position.z;
+							dz *= dz;
+
+							for (int y = y0; y < y1; ++y)
+							{
+								float dy = (py == y) ? 0.0f : mLightClustersAabbMinimum.y + ((py < y) ? y : y + 1) * inverseScale.y - packedShaderData.position.y;
+								dy *= dy;
+								dy += dz;
+
+								for (int x = x0; x < x1; ++x)
+								{
+									float dx = (px == x) ? 0.0f : mLightClustersAabbMinimum.x + ((px < x) ? x : x + 1) * inverseScale.x - packedShaderData.position.x;
+									dx *= dx;
+									dx += dy;
+
+									if (dx < squaredRadius)
+									{
+										lights[z][y][x] |= mask;
+									}
+								}
+							}
+						}
+
+						// Done, next light
+						++currentLightIndex;
+					}
+				}
+			}
+		}
+
+		// Upload the cluster data to a volume texture
+		Renderer::MappedSubresource mappedSubresource;
+		Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+		Renderer::ITexturePtr texturePtr = mRendererRuntime.getTextureResourceManager().getById(mClusters3DTextureResourceId).getTexture();
+		if (renderer.map(*texturePtr, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource))
+		{
+			// Get the processed content pointer
+			uint8_t *data = static_cast<uint8_t*>(mappedSubresource.data);
+
+			// Fill
+			for (uint32_t z = 0; z < ::detail::CLUSTER_Z; ++z)
+			{
+				for (uint32_t y = 0; y < ::detail::CLUSTER_Y; ++y)
+				{
+					memcpy(data + z * mappedSubresource.depthPitch + y * mappedSubresource.rowPitch, lights[z][y], ::detail::CLUSTER_X * sizeof(uint32_t));
+				}
+			}
+
+			// Unmap the texture holding the processed content
+			renderer.unmap(*texturePtr, 0);
 		}
 	}
 

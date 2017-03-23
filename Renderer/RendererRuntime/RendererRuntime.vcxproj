@@ -98,7 +98,6 @@
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\LightBufferManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialBufferSlot.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassBufferManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.inl" />

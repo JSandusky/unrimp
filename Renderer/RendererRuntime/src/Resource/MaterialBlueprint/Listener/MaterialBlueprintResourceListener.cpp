@@ -83,7 +83,8 @@ namespace
 			DEFINE_CONSTANT(VIEW_SPACE_SUN_LIGHT_DIRECTION)
 			DEFINE_CONSTANT(VIEWPORT_SIZE)
 			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
-			DEFINE_CONSTANT(NUMBER_OF_LIGHTS)
+			DEFINE_CONSTANT(LIGHT_CLUSTERS_SCALE)
+			DEFINE_CONSTANT(LIGHT_CLUSTERS_BIAS)
 			DEFINE_CONSTANT(SHADOW_MATRIX)
 			DEFINE_CONSTANT(SHADOW_CASCADE_SPLITS)
 			DEFINE_CONSTANT(SHADOW_CASCADE_OFFSETS)
@@ -490,10 +491,15 @@ namespace RendererRuntime
 			floatBuffer[0] = 1.0f / static_cast<float>(mRenderTargetWidth);
 			floatBuffer[1] = 1.0f / static_cast<float>(mRenderTargetHeight);
 		}
-		else if (::detail::NUMBER_OF_LIGHTS == referenceValue)
+		else if (::detail::LIGHT_CLUSTERS_SCALE == referenceValue)
 		{
-			assert(sizeof(int) == numberOfBytes);
-			*reinterpret_cast<int*>(buffer) = static_cast<int>(mRendererRuntime->getMaterialBlueprintResourceManager().getLightBufferManager().getNumberOfLights());
+			assert(sizeof(float) * 3 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mRendererRuntime->getMaterialBlueprintResourceManager().getLightBufferManager().getLightClustersScale()), numberOfBytes);
+		}
+		else if (::detail::LIGHT_CLUSTERS_BIAS == referenceValue)
+		{
+			assert(sizeof(float) * 3 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mRendererRuntime->getMaterialBlueprintResourceManager().getLightBufferManager().getLightClustersBias()), numberOfBytes);
 		}
 		else if (::detail::SHADOW_MATRIX == referenceValue)
 		{
