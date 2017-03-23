@@ -1498,6 +1498,23 @@ namespace Direct3D11Renderer
 		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 constants, do not change them
 		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
 
+		// Define helper macro
+		#define TEXTURE_RESOURCE(type, typeClass) \
+			case type: \
+			{ \
+				bool result = false; \
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this) \
+				ID3D11Resource *d3d11Resource = nullptr; \
+				static_cast<typeClass&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource); \
+				if (nullptr != d3d11Resource) \
+				{ \
+					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource))); \
+					d3d11Resource->Release(); \
+				} \
+				RENDERER_END_DEBUG_EVENT(this) \
+				return result; \
+			}
+
 		// Evaluate the resource type
 		switch (resource.getResourceType())
 		{
@@ -1521,69 +1538,11 @@ namespace Direct3D11Renderer
 				mappedSubresource.depthPitch = 0;
 				return true;
 
-			case Renderer::ResourceType::TEXTURE_1D:
-				// TODO(co) Implement Direct3D 10 1D texture
-				return false;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				bool result = false;
-
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Map the Direct3D 11 resource
-					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				bool result = false;
-
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Map the Direct3D 11 resource
-					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::TEXTURE_3D:
-				// TODO(co) Implement Direct3D 10 3D texture
-				return false;
-
-			case Renderer::ResourceType::TEXTURE_CUBE:
-				// TODO(co) Implement Direct3D 10 cube texture
-				return false;
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_1D, Texture1D)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_2D, Texture2D)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_2D_ARRAY, Texture2DArray)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_3D, Texture3D)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_CUBE, TextureCube)
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
 			case Renderer::ResourceType::PROGRAM:
@@ -1606,10 +1565,27 @@ namespace Direct3D11Renderer
 				// Error!
 				return false;
 		}
+
+		// Undefine helper macro
+		#undef TEXTURE_RESOURCE
 	}
 
 	void Direct3D11Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
 	{
+		// Define helper macro
+		#define TEXTURE_RESOURCE(type, typeClass) \
+			case type: \
+			{ \
+				ID3D11Resource *d3d11Resource = nullptr; \
+				static_cast<typeClass&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource); \
+				if (nullptr != d3d11Resource) \
+				{ \
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource); \
+					d3d11Resource->Release(); \
+				} \
+				break; \
+			}
+
 		// Evaluate the resource type
 		switch (resource.getResourceType())
 		{
@@ -1634,49 +1610,11 @@ namespace Direct3D11Renderer
 				// mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
 				break;
 
-			case Renderer::ResourceType::TEXTURE_1D:
-				// TODO(co) Implement Direct3D 10 1D texture
-				break;
-
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Unmap the Direct3D 11 resource
-					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-				break;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
-				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
-				if (nullptr != d3d11Resource)
-				{
-					// Unmap the Direct3D 11 resource
-					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
-
-					// Release the Direct3D 11 resource instance
-					d3d11Resource->Release();
-				}
-				break;
-			}
-
-			case Renderer::ResourceType::TEXTURE_3D:
-				// TODO(co) Implement Direct3D 10 3D texture
-				break;
-
-			case Renderer::ResourceType::TEXTURE_CUBE:
-				// TODO(co) Implement Direct3D 10 cube texture
-				break;
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_1D, Texture1D)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_2D, Texture2D)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_2D_ARRAY, Texture2DArray)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_3D, Texture3D)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_CUBE, TextureCube)
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
 			case Renderer::ResourceType::PROGRAM:
@@ -1694,6 +1632,9 @@ namespace Direct3D11Renderer
 				// Nothing we can unmap
 				break;
 		}
+
+		// Undefine helper macro
+		#undef TEXTURE_RESOURCE
 	}
 
 
