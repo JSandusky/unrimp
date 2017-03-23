@@ -110,13 +110,13 @@ namespace RendererToolkit
 		*    The source file of the asset
 		*  @param[in] destinationFile
 		*    The destination file of the asset which contains the compiled data of the source
-		*  @param[in] formatVersion
-		*    Format version so we can detect file format version changes and enforce compiling even if the source data has not been changed
+		*  @param[in] compilerVersion
+		*    Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
 		*
 		*  @return
 		*    True if the file needs to be compiled (aka source changed, destination doesn't exists or is yet unknown file) otherwise false
 		*/
-		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t formatVersion);
+		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t compilerVersion);
 
 
 	//[-------------------------------------------------------]
@@ -130,12 +130,12 @@ namespace RendererToolkit
 			std::string				  fileHash;			///< The sha256 hash of the file content (as hex string)
 			int64_t					  fileSize;			///< The file size; SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
 			int64_t					  fileTime;			///< The file time (last write time); SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
-			uint32_t				  formatVersion;	///< Format version so we can detect file format version changes and enforce compiling even if the source data has not been changed
+			uint32_t				  compilerVersion;	///< Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
 
 			CacheEntry() :
 				fileSize(0),
 				fileTime(0),
-				formatVersion(0)
+				compilerVersion(0)
 			{}
 
 		};
@@ -182,8 +182,8 @@ namespace RendererToolkit
 		*    The renderer target for which the asset should be compiled
 		*  @param[in] filename
 		*    The filename to check
-		*  @param[in] formatVersion
-		*    Format version so we can detect file format version changes and enforce compiling even if the source data has not been changed
+		*  @param[in] compilerVersion
+		*    Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
 		*
 		*  @return
 		*    True if the file has changed otherwise false (aka the stored hash doesn't equals to the current one or file not yet known)
@@ -191,7 +191,7 @@ namespace RendererToolkit
 		*  @note
 		*    - When a change was detected the an cache entry is stored/updated
 		*/
-		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t formatVersion);
+		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t compilerVersion);
 
 		/**
 		*  @brief
@@ -203,6 +203,9 @@ namespace RendererToolkit
 		*    Indicates of the given cache entry data should be inserted instead of updating an existing one
 		*/
 		void storeOrUpdateCacheEntryInDatabase(const CacheEntry& cacheEntry, bool isNewEntry);
+
+		uint32_t getSchemaVersionOfDatabase();
+		void updateDatabaseDueSchemaChange(uint32_t oldSchemaVersion);
 
 		CacheManager(const CacheManager&) = delete;
 		CacheManager& operator=(const CacheManager&) = delete;

@@ -63,6 +63,7 @@ namespace
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		static const uint16_t ASSET_FORMAT_VERSION = 1;
+		static const uint32_t DATABASE_SCHEMA_VERSION = 1; // Database schema versioning
 
 
 		//[-------------------------------------------------------]
@@ -154,7 +155,7 @@ namespace RendererToolkit
 		// Nothing here, only needed to support unique_ptr with forward declared classes
 	}
 
-	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t formatVersion)
+	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t compilerVersion)
 	{
 		// Create "std::filesystem::path" object from the give file paths
 		const std_filesystem::path sourceFilePath(sourceFile);
@@ -168,7 +169,7 @@ namespace RendererToolkit
 		{
 			// Source exists
 			// -> Check if source has changed
-			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile, formatVersion);
+			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile, compilerVersion);
 
 			// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
 			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION);
@@ -196,21 +197,31 @@ namespace RendererToolkit
 			{
 				if (!mDatabaseConnection->tableExists("FileInfo"))
 				{
-					mDatabaseConnection->exec("CREATE TABLE FileInfo (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, fileTime integer NOT NULL, fileSize integer NOT NULL, formatVersion integer NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
+					mDatabaseConnection->exec("CREATE TABLE FileInfo (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, fileTime integer NOT NULL, fileSize integer NOT NULL, compilerVersion integer NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
 				}
 
-				if (mDatabaseConnection->tableExists("FileHash"))
+				if (!mDatabaseConnection->tableExists("VersionInfo"))
 				{
-					// Migrate old data
 					SQLite::Transaction transaction(*mDatabaseConnection.get());
-
-					// Copy old data to the new table
-					mDatabaseConnection->exec("INSERT INTO FileInfo (rendererTarget, fileId, hash, fileTime, fileSize, formatVersion)  SELECT rendererTarget, fileId, hash, 0, 0  FROM FileHash");
-
-					// Drop old table
-					mDatabaseConnection->exec("DROP TABLE FileHash");
+					mDatabaseConnection->exec("CREATE TABLE VersionInfo (schemaVersion integer NOT NULL)");
 					
+					SQLite::Statement query(*mDatabaseConnection.get(), "INSERT INTO VersionInfo (schemaVersion) VALUES(?)");
+					query.bind(1, detail::DATABASE_SCHEMA_VERSION);
+					query.exec();
+
 					transaction.commit();
+
+					// Pre VersionInfo Schema version update database
+					updateDatabaseDueSchemaChange(0);
+				}
+				else
+				{
+					const uint32_t schemaVersion = getSchemaVersionOfDatabase();
+
+					if (schemaVersion != detail::DATABASE_SCHEMA_VERSION)
+					{
+						updateDatabaseDueSchemaChange(schemaVersion);
+					}
 				}
 
 				// Done
@@ -233,7 +244,7 @@ namespace RendererToolkit
 			try
 			{
 				// Compile the query to get the hash for a file stored in the database
-				SQLite::Statement query(*mDatabaseConnection.get(), "SELECT hash, fileSize, fileTime, formatVersion FROM FileInfo WHERE fileId = ? AND rendererTarget = ?");
+				SQLite::Statement query(*mDatabaseConnection.get(), "SELECT hash, fileSize, fileTime, compilerVersion FROM FileInfo WHERE fileId = ? AND rendererTarget = ?");
 				query.bind(1, fileId);
 				query.bind(2, rendererTarget);
 
@@ -245,7 +256,7 @@ namespace RendererToolkit
 					cacheEntry.fileHash = query.getColumn(0).getString();
 					cacheEntry.fileSize = query.getColumn(1).getInt64();
 					cacheEntry.fileTime = query.getColumn(2).getInt64();
-					cacheEntry.formatVersion = query.getColumn(3).getUInt();
+					cacheEntry.compilerVersion = query.getColumn(3).getUInt();
 
 					// Done
 					return true;
@@ -264,7 +275,7 @@ namespace RendererToolkit
 		return false;
 	}
 
-	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t formatVersion)
+	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t compilerVersion)
 	{
 		if (mDatabaseConnection)
 		{
@@ -293,25 +304,25 @@ namespace RendererToolkit
 				if (hasFileEntry)
 				{
 					#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-						// First and faster step: check file size and file time as well as the format version
-						if (localCacheEntry.fileSize == fileSize && localCacheEntry.fileTime == fileTime && localCacheEntry.formatVersion == formatVersion)
+						// First and faster step: check file size and file time as well as the compiler version (needed so that we also detect compiler version changes here too)
+						if (localCacheEntry.fileSize == fileSize && localCacheEntry.fileTime == fileTime && localCacheEntry.compilerVersion == compilerVersion)
 						{
-							// Source file didn't changed nor did the format version
+							// Source file didn't changed
 							return false;
 						}
 						else
 					#endif
 					{
 						// Current file differs in file size and/or file time do the second step:
-						// Check the sha256 hash
+						// Check the compiler version and the sha256 hash
 						const std::string fileHash = ::detail::hash256_file(filename);
-						if (localCacheEntry.fileHash == fileHash)
+						if (localCacheEntry.fileHash == fileHash && localCacheEntry.compilerVersion == compilerVersion)
 						{
 							#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-								// Hash of the file didn't changed but store the changed fileSize/fileTime/formatVersion
+								// Hash of the file and compiler version didn't changed but store the changed fileSize/fileTime
 								localCacheEntry.fileSize = fileSize;
 								localCacheEntry.fileTime = fileTime;
-								localCacheEntry.formatVersion = formatVersion;
+								localCacheEntry.compilerVersion = compilerVersion;
 								storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
 							#endif
 
@@ -323,9 +334,9 @@ namespace RendererToolkit
 							localCacheEntry.fileSize = fileSize;
 							localCacheEntry.fileTime = fileTime;
 							localCacheEntry.fileHash = fileHash;
-							localCacheEntry.formatVersion = formatVersion;
+							localCacheEntry.compilerVersion = compilerVersion;
 
-							// Source file has changed, store the new data
+							// Source file and/or compiler version has changed, store the new data
 							storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
 						}
 					}
@@ -338,7 +349,7 @@ namespace RendererToolkit
 					localCacheEntry.fileSize = fileSize;
 					localCacheEntry.fileTime = fileTime;
 					localCacheEntry.fileHash = ::detail::hash256_file(filename);
-					localCacheEntry.formatVersion = formatVersion;
+					localCacheEntry.compilerVersion = compilerVersion;
 
 					storeOrUpdateCacheEntryInDatabase(localCacheEntry, true);
 				}
@@ -365,7 +376,7 @@ namespace RendererToolkit
 			query.bind(3, cacheEntry.fileHash);
 			query.bind(4, static_cast<long long>(cacheEntry.fileTime));
 			query.bind(5, static_cast<long long>(cacheEntry.fileSize));
-			query.bind(6, cacheEntry.formatVersion);
+			query.bind(6, cacheEntry.compilerVersion);
 
 			// Execute statement and check if we got a result
 			if (!query.exec())
@@ -376,11 +387,11 @@ namespace RendererToolkit
 		else
 		{
 			// Entry exists, update stored values
-			SQLite::Statement updateQuery(*mDatabaseConnection.get(), "UPDATE FileInfo SET hash = ?, fileTime = ?, fileSize = ?, formatVersion = ? WHERE fileId = ? AND rendererTarget = ?");
+			SQLite::Statement updateQuery(*mDatabaseConnection.get(), "UPDATE FileInfo SET hash = ?, fileTime = ?, fileSize = ?, compilerVersion = ? WHERE fileId = ? AND rendererTarget = ?");
 			updateQuery.bind(1, cacheEntry.fileHash);
 			updateQuery.bind(2, static_cast<long long>(cacheEntry.fileTime));
 			updateQuery.bind(3, static_cast<long long>(cacheEntry.fileSize));
-			updateQuery.bind(4, cacheEntry.formatVersion);
+			updateQuery.bind(4, cacheEntry.compilerVersion);
 			updateQuery.bind(5, cacheEntry.fileId);
 			updateQuery.bind(6, cacheEntry.rendererTarget);
 
@@ -390,6 +401,38 @@ namespace RendererToolkit
 				std::cerr << "Error updating data to database\n";
 			}
 		}
+	}
+
+	uint32_t CacheManager::getSchemaVersionOfDatabase()
+	{
+		SQLite::Statement query(*mDatabaseConnection.get(), "SELECT schemaVersion FROM VersionInfo");
+
+		// Execute statement and check if we got a result
+		if (query.executeStep())
+		{
+			return static_cast<uint32_t>(query.getColumn(0).getUInt());
+		}
+		return 0;
+	}
+
+	void CacheManager::updateDatabaseDueSchemaChange(uint32_t oldSchemaVersion)
+	{
+		SQLite::Transaction transaction(*mDatabaseConnection.get());
+		if (oldSchemaVersion == 0)
+		{
+			// Pre VersionInfo table
+			// Add compilerVersion to the FileInfo table
+			mDatabaseConnection->exec("ALTER TABLE FileInfo ADD compilerVersion integer DEFAULT 0 NOT NULL");
+		}
+
+		// Update schema version in database
+		// We can use here a update statement even when the oldSchemaVersion = 0 (VersionInfo table doesn't exists already) because in this case the table was created before this method is called
+		SQLite::Statement query(*mDatabaseConnection.get(), "UPDATE VersionInfo  SET schemaVersion = ?");
+		query.bind(1, detail::DATABASE_SCHEMA_VERSION);
+		query.exec();
+
+		// Done updating execute commit transaction
+		transaction.commit();
 	}
 
 
