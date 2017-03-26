@@ -24,8 +24,20 @@
 #include "VulkanRenderer/IContext.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 
-#include <array>
-#include <vector>
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4987)	// warning C4987: nonstandard extension used: 'throw (...)'
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: '<x>': conversion from '<y>' to '<z>', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4623)	// warning C4623: '<x>': default constructor was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: '<x>': assignment operator was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: '<x>': move assignment operator was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
+	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: '<x>': copy constructor was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(5026)	// warning C5026: '<x>': move constructor was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: '<x>' : format string expected in argument 3 is not a string literal
+	#include <array>
+	#include <vector>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

@@ -24,8 +24,14 @@
 // This is for the internal implementation only, other projects will use the public "Renderer/Public/Renderer.h"-header,
 // so it's acceptable to make an include in here
 #include <cmath>
-#include <algorithm>
 #include <inttypes.h>
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4987)	// warning C4987: nonstandard extension used: 'throw (...)'
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'return': conversion from 'int' to 'std::char_traits<wchar_t>::int_type', signed/unsigned mismatch
+	#include <algorithm>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

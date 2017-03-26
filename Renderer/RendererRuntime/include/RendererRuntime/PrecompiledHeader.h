@@ -63,28 +63,7 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 // C++ standard headers
-#include <inttypes.h>
-#include <cassert>
-#include <limits>
-#include <cstring>
-#include <queue>
-#include <deque>
-#include <string>
-#include <vector>
-#include <map>
-#include <unordered_map>
-#include <unordered_set>
-#include <algorithm>
-#include <type_traits>
-#include <mutex>
-#include <atomic>
-#include <thread>
-#include <condition_variable>
-#include <functional>
-#include <chrono>
-#include <ctime>
-
-// Disable warnings in external headers, we can't fix them
+// -> Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4355)	// warning C4355: 'this': used in base member initializer list
 	PRAGMA_WARNING_DISABLE_MSVC(4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
@@ -93,7 +72,32 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
 	PRAGMA_WARNING_DISABLE_MSVC(5026)	// warning C5026: 'Concurrency::details::_RunAllParam<Concurrency::details::_Unit_type>': move constructor was implicitly defined as deleted
 	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: 'Concurrency::details::_RunAllParam<Concurrency::details::_Unit_type>': move assignment operator was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(4987)	// warning C4987: nonstandard extension used: 'throw (...)'
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: '<x>': conversion from '<y>' to '<z>', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4623)	// warning C4623: '<x>': default constructor was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: '<x>' : format string expected in argument 3 is not a string literal
+	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator '<x>' in switch of enum '<y>' is not explicitly handled by a case label
 	#include <future>
+	#include <vector>
+	#include <algorithm>
+	#include <inttypes.h>
+	#include <cassert>
+	#include <limits>
+	#include <cstring>
+	#include <queue>
+	#include <deque>
+	#include <string>
+	#include <map>
+	#include <unordered_map>
+	#include <unordered_set>
+	#include <type_traits>
+	#include <mutex>
+	#include <atomic>
+	#include <thread>
+	#include <condition_variable>
+	#include <functional>
+	#include <chrono>
+	#include <ctime>
 PRAGMA_WARNING_POP
 
 
