@@ -207,6 +207,8 @@ namespace RendererToolkit
 		uint32_t getSchemaVersionOfDatabase() const;
 		void updateDatabaseDueSchemaChange(uint32_t oldSchemaVersion);
 
+		bool getIfDataBaseIsNew();
+
 		CacheManager(const CacheManager&) = delete;
 		CacheManager& operator=(const CacheManager&) = delete;
 

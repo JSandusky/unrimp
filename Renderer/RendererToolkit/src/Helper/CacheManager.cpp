@@ -195,20 +195,14 @@ namespace RendererToolkit
 		{
 			try
 			{
+				const bool isNewDatabase = getIfDataBaseIsNew();
+
 				if (!mDatabaseConnection->tableExists("FileInfo"))
 				{
 					mDatabaseConnection->exec("CREATE TABLE FileInfo (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, fileTime integer NOT NULL, fileSize integer NOT NULL, compilerVersion integer NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
 				}
 
-				if (mDatabaseConnection->tableExists("VersionInfo"))
-				{
-					const uint32_t schemaVersion = getSchemaVersionOfDatabase();
-					if (schemaVersion != detail::DATABASE_SCHEMA_VERSION)
-					{
-						updateDatabaseDueSchemaChange(schemaVersion);
-					}
-				}
-				else
+				if (!mDatabaseConnection->tableExists("VersionInfo"))
 				{
 					SQLite::Transaction transaction(*mDatabaseConnection.get());
 					mDatabaseConnection->exec("CREATE TABLE VersionInfo (schemaVersion integer NOT NULL)");
@@ -219,8 +213,18 @@ namespace RendererToolkit
 
 					transaction.commit();
 
-					// Pre VersionInfo Schema version update database
-					updateDatabaseDueSchemaChange(0);
+					// Pre VersionInfo Schema version update database, but only do this when the database wasn't just created
+					if (!isNewDatabase)
+						updateDatabaseDueSchemaChange(0);
+				}
+				else
+				{
+					const uint32_t schemaVersion = getSchemaVersionOfDatabase();
+
+					if (schemaVersion != detail::DATABASE_SCHEMA_VERSION)
+					{
+						updateDatabaseDueSchemaChange(schemaVersion);
+					}
 				}
 
 				// Done
@@ -421,8 +425,7 @@ namespace RendererToolkit
 		{
 			// Pre VersionInfo table
 			// Add compilerVersion to the FileInfo table
-			// TODO(co) Disabled this line due to exception when there's no previous database. Please review or remove.
-			// mDatabaseConnection->exec("ALTER TABLE FileInfo ADD compilerVersion integer DEFAULT 0 NOT NULL");
+			mDatabaseConnection->exec("ALTER TABLE FileInfo ADD compilerVersion integer DEFAULT 0 NOT NULL");
 		}
 
 		// Update schema version in database
@@ -433,6 +436,13 @@ namespace RendererToolkit
 
 		// Done updating execute commit transaction
 		transaction.commit();
+	}
+
+	bool CacheManager::getIfDataBaseIsNew()
+	{
+		// A newly created database has a schema_version of zero (http://www.sqlite.org/pragma.html#pragma_schema_version)
+		const int64_t sqlite_schema_version = mDatabaseConnection->execAndGet("PRAGMA schema_version").getInt64();
+		return sqlite_schema_version == 0;
 	}
 
 
