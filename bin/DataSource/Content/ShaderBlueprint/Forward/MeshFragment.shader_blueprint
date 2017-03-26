@@ -61,6 +61,7 @@ OUTPUT_END
 struct PassDataStruct
 {
 	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4x4 ShadowMatrix;
 	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float4	 WorldSpaceToViewSpaceQuaternion;
 	float3	 ViewSpaceSunLightDirection;
@@ -88,7 +89,8 @@ UNIFORM_BUFFER_END
 TEXTURE_BUFFER(float4, LightTextureBuffer, 1)	// "LIGHT"
 
 // Samplers
-SAMPLER_STATE(SamplerLinear, 0)
+SAMPLER_STATE(SamplerPoint, 0)
+SAMPLER_STATE(SamplerLinear, 1)
 
 // Textures
 TEXTURE_2D(DiffuseMap, 2)
@@ -101,8 +103,9 @@ TEXTURE_2D(DiffuseMap, 2)
 TEXTURE_2D(NormalMap, 5)	// Tangent space normal map
 TEXTURE_2D(RoughnessMap, 6)
 TEXTURE_2D(MetallicMap, 7)
-TEXTURE_CUBE(ReflectionCubeMap, 8)
-TEXTURE_3D_UINT(LightClustersMap3D, 9)
+TEXTURE_2D(ShadowMap, 8)
+TEXTURE_CUBE(ReflectionCubeMap, 9)
+TEXTURE_3D_UINT(LightClustersMap3D, 10)
 
 
 //[-------------------------------------------------------]
@@ -148,13 +151,27 @@ MAIN_BEGIN
 
 	// Directional sun light, our primary light
 	@property(Lighting)
-		// Get view space incident vector
 		float3 worldSpacePosition = MAIN_INPUT(WorldSpacePositionVS);
+
+		// TODO(co) Shadow: Totally primitive to have something to start with
+		float shadowVisibility = 1.0f;
+		{
+			float4 shadowTextureCoordinate = MATRIX_MUL(PassData.ShadowMatrix, float4(worldSpacePosition, 1.0f));
+			if (SAMPLE_2D_LOD(ShadowMap, SamplerPoint, float4(shadowTextureCoordinate.xy, 0.0f, 0.0f)).r < shadowTextureCoordinate.z - 0.001f)
+			{
+				shadowVisibility = 0.0f;
+			}
+		}
+
+		// Get view space incident vector
 		float3 viewSpaceIncident = normalize(PassData.CameraWorldSpacePosition - worldSpacePosition);
 		viewSpaceIncident = MultiplyQuaternionVector(PassData.WorldSpaceToViewSpaceQuaternion, viewSpaceIncident);
 
-		// Calculate lighting
-		color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
+		// Directional sun light, our primary light
+		if (shadowVisibility > 0.0f)
+		{
+			color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
+		}
 
 		// Perform clustered shading
 		@insertpiece(PerformClusteredShading)

@@ -197,6 +197,14 @@
 		},
 		"Targets":
 		{
+			"OutputRenderTarget":
+			{
+				"ShadowMap":
+				{
+					"MaterialTechnique": "DepthOnly",
+					"TextureAssetId": "Example/Texture/Dynamic/ShadowMapRenderTarget"
+				}
+			},
 			"HdrMultisampleFramebuffer":
 			{
 				"Clear":
