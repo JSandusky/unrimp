@@ -52,6 +52,7 @@ INPUT_BEGIN
 	@property(Lighting)
 		INPUT_TEXTURE_COORDINATE			(float3, WorldSpacePositionVS,	 5)	// World space position
 	@end
+	INPUT_VERTEX_DRAW_ID														// Draw ID
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
