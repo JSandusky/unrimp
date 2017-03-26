@@ -82,6 +82,13 @@ namespace OpenGLRenderer
 		virtual ~Texture3DBind();
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ITexture3D methods           ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
+
+
 	};
 
 

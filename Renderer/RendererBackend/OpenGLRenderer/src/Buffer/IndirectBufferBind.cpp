@@ -70,6 +70,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	void IndirectBufferBind::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
+		// Sanity check
+		assert(nullptr != data);
+
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL indirect buffer
 			GLint openGLIndirectBufferBackup = 0;

@@ -126,7 +126,8 @@ namespace Direct3D10Renderer
 	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
 		// Check resource pointers
-		if (nullptr != mD3D10Buffer && nullptr != data)
+		assert(nullptr != data);
+		if (nullptr != mD3D10Buffer)
 		{
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&static_cast<Direct3D10Renderer&>(getRenderer()))

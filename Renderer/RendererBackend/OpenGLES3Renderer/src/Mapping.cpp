@@ -331,7 +331,7 @@ namespace OpenGLES3Renderer
 			0,					// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - Compressed format, so not supported in here
 			0,					// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - Compressed format, so not supported in here
 			0,					// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - Compressed format, so not supported in here
-			GL_RED,				// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
+			GL_RED_INTEGER,		// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
 			GL_RED,				// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			GL_DEPTH_COMPONENT,	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 			0					// Renderer::TextureFormat::UNKNOWN       - Unknown

@@ -84,7 +84,7 @@ namespace Renderer
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the indirect buffer, must be valid
 		*  @param[in] data
-		*    Indirect buffer data, can be a null pointer (nothing happens)
+		*    Indirect buffer data, must be valid
 		*/
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
 

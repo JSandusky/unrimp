@@ -106,14 +106,16 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	void TextureBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
+		// Sanity check
+		assert(nullptr != data);
+
+		// Upload the data
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
 		{
-			// Upload the data
 			glNamedBufferSubData(mOpenGLTextureBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
 		}
 		else
 		{
-			// Upload the data
 			glNamedBufferSubDataEXT(mOpenGLTextureBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
 		}
 	}

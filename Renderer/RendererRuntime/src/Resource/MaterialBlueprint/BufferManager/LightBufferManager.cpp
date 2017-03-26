@@ -256,26 +256,10 @@ namespace RendererRuntime
 		}
 
 		// Upload the cluster data to a volume texture
-		Renderer::MappedSubresource mappedSubresource;
-		Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
 		Renderer::ITexturePtr texturePtr = mRendererRuntime.getTextureResourceManager().getById(mClusters3DTextureResourceId).getTexture();
-		if (renderer.map(*texturePtr, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource))
-		{
-			// Get the processed content pointer
-			uint8_t *data = static_cast<uint8_t*>(mappedSubresource.data);
-
-			// Fill
-			for (uint32_t z = 0; z < ::detail::CLUSTER_Z; ++z)
-			{
-				for (uint32_t y = 0; y < ::detail::CLUSTER_Y; ++y)
-				{
-					memcpy(data + z * mappedSubresource.depthPitch + y * mappedSubresource.rowPitch, lights[z][y], ::detail::CLUSTER_X * sizeof(uint32_t));
-				}
-			}
-
-			// Unmap the texture holding the processed content
-			renderer.unmap(*texturePtr, 0);
-		}
+		assert(nullptr != texturePtr.getPointer());
+		assert(Renderer::ResourceType::TEXTURE_3D == texturePtr.getPointer()->getResourceType());
+		static_cast<Renderer::ITexture3D*>(texturePtr.getPointer())->copyDataFrom(::detail::CLUSTER_X * ::detail::CLUSTER_Y * ::detail::CLUSTER_Z * sizeof(uint32_t), lights);
 	}
 
 

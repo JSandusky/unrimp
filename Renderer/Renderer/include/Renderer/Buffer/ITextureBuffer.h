@@ -84,7 +84,7 @@ namespace Renderer
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the texture buffer, must be valid
 		*  @param[in] data
-		*    Texture buffer data, can be a null pointer (nothing happens)
+		*    Texture buffer data, must be valid
 		*/
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
 

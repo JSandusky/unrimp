@@ -47,6 +47,15 @@ namespace VulkanRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ITexture3D methods           ]
+	//[-------------------------------------------------------]
+	void Texture3D::copyDataFrom(uint32_t, const void*)
+	{
+		// TODO(co) Implement me
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

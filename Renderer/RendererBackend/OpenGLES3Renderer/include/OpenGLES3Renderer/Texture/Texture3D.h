@@ -109,6 +109,13 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ITexture3D methods           ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
@@ -119,8 +126,9 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t mOpenGLES3Texture;	///< OpenGL ES 3 texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		bool	 mGenerateMipmaps;
+		Renderer::TextureFormat::Enum mTextureFormat;
+		uint32_t					  mOpenGLES3Texture;	///< OpenGL ES 3 texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		bool						  mGenerateMipmaps;
 
 
 	};

@@ -109,16 +109,19 @@ namespace OpenGLRenderer
 		*    The height of the texture
 		*  @param[in] depth
 		*    The depth of the texture
+		*  @param[in] textureFormat
+		*    Texture format
 		*/
-		Texture3D(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t depth);
+		Texture3D(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat);
 
 
 	//[-------------------------------------------------------]
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		uint32_t mOpenGLTexture;	///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		bool	 mGenerateMipmaps;
+		Renderer::TextureFormat::Enum mTextureFormat;
+		uint32_t					  mOpenGLTexture;	///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		bool						  mGenerateMipmaps;
 
 
 	};

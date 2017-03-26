@@ -188,6 +188,28 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ITexture3D methods           ]
+	//[-------------------------------------------------------]
+	void Texture3D::copyDataFrom(uint32_t numberOfBytes, const void* data)
+	{
+		// Sanity checks
+		assert(nullptr != data);
+		assert(nullptr != mD3D10ShaderResourceViewTexture);
+
+		// Copy data
+		Direct3D10Renderer& direct3D10Renderer = static_cast<Direct3D10Renderer&>(getRenderer());
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D10Renderer)
+		D3D10_MAPPED_TEXTURE3D d3d10MappedTexture3D = {};
+		if (S_OK == mD3D10Texture3D->Map(0, D3D10_MAP_WRITE_DISCARD, 0, &d3d10MappedTexture3D))
+		{
+			memcpy(d3d10MappedTexture3D.pData, data, numberOfBytes);
+			mD3D10Texture3D->Unmap(0);
+		}
+		RENDERER_END_DEBUG_EVENT(&direct3D10Renderer)
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	void Texture3D::setDebugName(const char *name)
