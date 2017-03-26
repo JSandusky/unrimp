@@ -231,8 +231,9 @@
 					{
 						"0":
 						{
-							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"RangeType": "SRV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "LightTextureBuffer"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -244,10 +245,8 @@
 					{
 						"0":
 						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "DiffuseMap",
-							"SamplerRootParameterIndex": "4"
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -261,8 +260,8 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "AlphaMap",
-							"SamplerRootParameterIndex": "4"
+							"BaseShaderRegisterName": "DiffuseMap",
+							"SamplerRootParameterIndex": "5"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -276,8 +275,8 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
-							"BaseShaderRegisterName": "EmissiveMap",
-							"SamplerRootParameterIndex": "4"
+							"BaseShaderRegisterName": "AlphaMap",
+							"SamplerRootParameterIndex": "5"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -291,8 +290,8 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "4",
-							"BaseShaderRegisterName": "NormalMap",
-							"SamplerRootParameterIndex": "4"
+							"BaseShaderRegisterName": "EmissiveMap",
+							"SamplerRootParameterIndex": "5"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -306,8 +305,8 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "5",
-							"BaseShaderRegisterName": "RoughnessMap",
-							"SamplerRootParameterIndex": "4"
+							"BaseShaderRegisterName": "NormalMap",
+							"SamplerRootParameterIndex": "5"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -321,8 +320,8 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "6",
-							"BaseShaderRegisterName": "MetallicMap",
-							"SamplerRootParameterIndex": "4"
+							"BaseShaderRegisterName": "RoughnessMap",
+							"SamplerRootParameterIndex": "5"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -336,8 +335,38 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "7",
+							"BaseShaderRegisterName": "MetallicMap",
+							"SamplerRootParameterIndex": "5"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"12":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "8",
 							"BaseShaderRegisterName": "ReflectionCubeMap",
-							"SamplerRootParameterIndex": "4"
+							"SamplerRootParameterIndex": "5"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"13":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "9",
+							"BaseShaderRegisterName": "LightClustersMap3D",
+							"SamplerRootParameterIndex": "5"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -414,6 +443,18 @@
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@CAMERA_WORLD_SPACE_POSITION"
+						},
+						"LightClustersScale":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@LIGHT_CLUSTERS_SCALE"
+						},
+						"LightClustersBias":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@LIGHT_CLUSTERS_BIAS"
 						}
 					}
 				},
@@ -468,6 +509,13 @@
 					"BufferUsage": "INSTANCE",
 					"ValueType": "FLOAT_4",
 					"Value": "@POSITION_ROTATION_SCALE"
+				},
+				"LightTextureBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "LIGHT",
+					"ValueType": "FLOAT_4",
+					"Value": "@LIGHT"
 				}
 			},
 			"SamplerStates":
@@ -539,6 +587,14 @@
 					"Value": "@ReflectionCubeMap",
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMapCube",
 					"RgbHardwareGammaCorrection": "TRUE"
+				},
+				"LightClustersMap3D":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "STATIC",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/LightClustersMap3D"
 				}
 			}
 		}

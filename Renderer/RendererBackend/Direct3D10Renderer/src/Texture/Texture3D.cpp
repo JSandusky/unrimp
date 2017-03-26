@@ -197,14 +197,14 @@ namespace Direct3D10Renderer
 		assert(nullptr != mD3D10ShaderResourceViewTexture);
 
 		// Copy data
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&getRenderer())
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&static_cast<Direct3D10Renderer&>(getRenderer()))
 		D3D10_MAPPED_TEXTURE3D d3d10MappedTexture3D = {};
 		if (S_OK == mD3D10Texture3D->Map(0, D3D10_MAP_WRITE_DISCARD, 0, &d3d10MappedTexture3D))
 		{
 			memcpy(d3d10MappedTexture3D.pData, data, numberOfBytes);
 			mD3D10Texture3D->Unmap(0);
 		}
-		RENDERER_END_DEBUG_EVENT(&getRenderer())
+		RENDERER_END_DEBUG_EVENT(&static_cast<Direct3D10Renderer&>(getRenderer()))
 	}
 
 

@@ -66,12 +66,15 @@ OUTPUT_END
 struct PassDataStruct
 {
 	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float4	 WorldSpaceToViewSpaceQuaternion;
 	float3	 ViewSpaceSunLightDirection;
 	float	 Wetness;
 	float3	 AmbientColor;
 	float3	 SunLightColor;
-};
+	float3   CameraWorldSpacePosition;
+	float3	 LightClustersScale;
+	float3	 LightClustersBias;};
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END

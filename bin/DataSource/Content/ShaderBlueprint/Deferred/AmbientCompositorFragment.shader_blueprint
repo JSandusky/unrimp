@@ -146,68 +146,8 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 		color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
 	}
 
-	// Compute light cluster and fetch its light mask: Basing on the clustered shading demo from Emil Persson - http://humus.name/index.php?page=3D
-	// "
-	// We're using a 32bit integer format where each set bit enables the light of that index.
-	// This supports up to 32 lights, which is enough for this demo, and probably for some games. It's possible to expand if more lights are needed,
-	// for instance RGBA32_UINT for up to 128 lights in a single fetch, which is enough for many AAA titles. At some point, a list of indices becomes
-	// more compact in practice, so if thousands of lights are needed, that's probably the way to go. Using a fixed bitmask has the advantage of fixed
-	// size storage, simple addressing, and one indirection less in the inner loop.
-	// "
-	uint lightMask = TEXTURE_FETCH_3D(LightClustersMap3D, int4(worldSpacePosition * PassData.LightClustersScale + PassData.LightClustersBias, 0)).x;
-
-	// Point and spot lights using clustered shading
-	while (lightMask)
-	{
-		// Extract a light from the mask and disable that bit
-		uint lightIndex = firstbitlow(lightMask);
-		lightMask &= ~(1 << lightIndex);
-		
-		// Check if the fragment is inside the bounding volume of the light
-		float4 lightPositionRadius = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u);
-		float3 direction = lightPositionRadius.xyz - worldSpacePosition;
-		float distance = length(direction);
-		if (distance < lightPositionRadius.w)
-		{
-			float4 lightColorType = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u + 1u);
-			float lightIntensity = 1.0f;
-
-			// Normalize the direction
-			direction /= distance;
-
-			// Spot-light attenuation
-			if (2.0f == lightColorType.w)
-			{
-				float4 innerOuterNearClip = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u + 2u);
-				if (distance < innerOuterNearClip.z)
-				{
-					// Early escape: Not influenced by the light
-					continue;
-				}
-				float3 spotlightDirection = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u + 3u).xyz;
-				float spotlightAngle = SATURATE(dot(spotlightDirection, -direction));
-				float spotlightFalloff = SATURATE((spotlightAngle - innerOuterNearClip.x) / (innerOuterNearClip.y - innerOuterNearClip.x));
-				lightIntensity *= (1.0f - spotlightFalloff);
-			}
-
-			// Attenuation by using inverse-square falloff for higher quality falloff
-			// -> Physically accurate inverse-square falloff as described in "Real Shading in Unreal Engine 4" by Brian Karis, Epic Games - "Lighting Model" on page 12 - http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-			float distanceLightRadius = distance / lightPositionRadius.w;
-			float t1 = SATURATE(1.0f - distanceLightRadius * distanceLightRadius * distanceLightRadius * distanceLightRadius);
-			lightIntensity *= t1 / (distance * distance + 1.0f);
-
-			// Calculate lighting
-			if (lightIntensity > 0.0f)
-			{
-				float3 worldSpaceNormal = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceNormal);
-				if (dot(worldSpaceNormal, direction) > 0.0f)
-				{
-					float3 worldSpaceIncident = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceIncident);
-					color += CalculateLighting(diffuse, roughness, metallic, worldSpaceNormal, worldSpaceIncident, direction, lightColorType.rgb * lightIntensity);
-				}
-			}
-		}
-	}
+	// Perform clustered shading
+	@insertpiece(PerformClusteredShading)
 
 	// Apply screen space ambient occlusion
 	color *= float3(screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion);
