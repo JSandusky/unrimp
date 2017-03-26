@@ -200,7 +200,15 @@ namespace RendererToolkit
 					mDatabaseConnection->exec("CREATE TABLE FileInfo (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, fileTime integer NOT NULL, fileSize integer NOT NULL, compilerVersion integer NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
 				}
 
-				if (!mDatabaseConnection->tableExists("VersionInfo"))
+				if (mDatabaseConnection->tableExists("VersionInfo"))
+				{
+					const uint32_t schemaVersion = getSchemaVersionOfDatabase();
+					if (schemaVersion != detail::DATABASE_SCHEMA_VERSION)
+					{
+						updateDatabaseDueSchemaChange(schemaVersion);
+					}
+				}
+				else
 				{
 					SQLite::Transaction transaction(*mDatabaseConnection.get());
 					mDatabaseConnection->exec("CREATE TABLE VersionInfo (schemaVersion integer NOT NULL)");
@@ -213,15 +221,6 @@ namespace RendererToolkit
 
 					// Pre VersionInfo Schema version update database
 					updateDatabaseDueSchemaChange(0);
-				}
-				else
-				{
-					const uint32_t schemaVersion = getSchemaVersionOfDatabase();
-
-					if (schemaVersion != detail::DATABASE_SCHEMA_VERSION)
-					{
-						updateDatabaseDueSchemaChange(schemaVersion);
-					}
 				}
 
 				// Done
@@ -422,7 +421,8 @@ namespace RendererToolkit
 		{
 			// Pre VersionInfo table
 			// Add compilerVersion to the FileInfo table
-			mDatabaseConnection->exec("ALTER TABLE FileInfo ADD compilerVersion integer DEFAULT 0 NOT NULL");
+			// TODO(co) Disabled this line due to exception when there's no previous database. Please review or remove.
+			// mDatabaseConnection->exec("ALTER TABLE FileInfo ADD compilerVersion integer DEFAULT 0 NOT NULL");
 		}
 
 		// Update schema version in database
