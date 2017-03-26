@@ -195,6 +195,8 @@ namespace RendererToolkit
 		{
 			try
 			{
+				const bool isNewDatabase = getIfDataBaseIsNew();
+
 				if (!mDatabaseConnection->tableExists("FileInfo"))
 				{
 					mDatabaseConnection->exec("CREATE TABLE FileInfo (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, fileTime integer NOT NULL, fileSize integer NOT NULL, compilerVersion integer NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
@@ -211,8 +213,9 @@ namespace RendererToolkit
 
 					transaction.commit();
 
-					// Pre VersionInfo Schema version update database
-					updateDatabaseDueSchemaChange(0);
+					// Pre VersionInfo Schema version update database, but only do this when the database wasn't just created
+					if (!isNewDatabase)
+						updateDatabaseDueSchemaChange(0);
 				}
 				else
 				{
@@ -433,6 +436,13 @@ namespace RendererToolkit
 
 		// Done updating execute commit transaction
 		transaction.commit();
+	}
+
+	bool CacheManager::getIfDataBaseIsNew()
+	{
+		// A newly created database has a schema_version of zero (http://www.sqlite.org/pragma.html#pragma_schema_version)
+		const int64_t sqlite_schema_version = mDatabaseConnection->execAndGet("PRAGMA schema_version").getInt64();
+		return sqlite_schema_version == 0;
 	}
 
 
