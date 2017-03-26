@@ -29,6 +29,14 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
 
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+	#include <glm/glm.hpp>
+PRAGMA_WARNING_POP
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -54,11 +62,21 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t TextureResourceId;	///< POD texture resource identifier
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
 	*    Light buffer manager
+	*
+	*  @remarks
+	*    The light buffer manager automatically generates some dynamic default texture assets one can reference e.g. inside material blueprint resources:
+	*    - "Unrimp/Texture/DynamicByCode/LightClustersMap3D"
 	*/
 	class LightBufferManager : private Manager
 	{
@@ -96,15 +114,6 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the current number of recorded lights inside the texture buffer
-		*
-		*  @return
-		*    The current number of recorded lights inside the texture buffer
-		*/
-		inline uint32_t getNumberOfLights() const;
-
-		/**
-		*  @brief
 		*    Bind the light buffer manager into the given commando buffer
 		*
 		*  @param[in] materialBlueprintResource
@@ -114,6 +123,24 @@ namespace RendererRuntime
 		*/
 		void fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer);
 
+		/**
+		*  @brief
+		*    Get light clusters scale
+		*
+		*  @return
+		*    Light clusters scale
+		*/
+		glm::vec3 getLightClustersScale() const;
+
+		/**
+		*  @brief
+		*    Get light clusters bias
+		*
+		*  @return
+		*    Light clusters bias
+		*/
+		glm::vec3 getLightClustersBias() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -121,6 +148,8 @@ namespace RendererRuntime
 	private:
 		LightBufferManager(const LightBufferManager&) = delete;
 		LightBufferManager& operator=(const LightBufferManager&) = delete;
+		void fillTextureBuffer(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer);
+		void fillClusters3DTexture(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]
@@ -137,7 +166,9 @@ namespace RendererRuntime
 		IRendererRuntime&		  mRendererRuntime;	///< Renderer runtime instance to use
 		Renderer::ITextureBuffer* mTextureBuffer;	///< Texture buffer instance, always valid
 		ScratchBuffer			  mTextureScratchBuffer;
-		uint32_t				  mNumberOfLights;	///< Current number of recorded lights inside the texture buffer
+		TextureResourceId		  mClusters3DTextureResourceId;
+		glm::vec3				  mLightClustersAabbMinimum;
+		glm::vec3				  mLightClustersAabbMaximum;
 
 
 	};
@@ -147,9 +178,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.inl"

@@ -204,7 +204,7 @@ namespace RendererToolkit
 		*/
 		void storeOrUpdateCacheEntryInDatabase(const CacheEntry& cacheEntry, bool isNewEntry);
 
-		uint32_t getSchemaVersionOfDatabase();
+		uint32_t getSchemaVersionOfDatabase() const;
 		void updateDatabaseDueSchemaChange(uint32_t oldSchemaVersion);
 
 		bool getIfDataBaseIsNew();

@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture/Texture3D.h"
 
-#include <Renderer/Texture/TextureTypes.h>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -80,6 +78,13 @@ namespace OpenGLRenderer
 		*    Destructor
 		*/
 		virtual ~Texture3DDsa();
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ITexture3D methods           ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 
 	};

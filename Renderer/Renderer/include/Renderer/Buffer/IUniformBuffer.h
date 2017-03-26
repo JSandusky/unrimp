@@ -83,7 +83,7 @@ namespace Renderer
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the uniform buffer, must be valid
 		*  @param[in] data
-		*    Uniform buffer data, can be a null pointer (nothing happens)
+		*    Uniform buffer data, must be valid
 		*/
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
 

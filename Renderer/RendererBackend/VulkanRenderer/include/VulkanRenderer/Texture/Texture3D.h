@@ -91,6 +91,13 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ITexture3D methods           ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

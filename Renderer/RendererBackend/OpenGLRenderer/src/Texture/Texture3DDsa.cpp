@@ -40,7 +40,7 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	Texture3DDsa::Texture3DDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
-		Texture3D(openGLRenderer, width, height, depth)
+		Texture3D(openGLRenderer, width, height, depth, textureFormat)
 	{
 		// Sanity checks
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
@@ -225,6 +225,26 @@ namespace OpenGLRenderer
 	Texture3DDsa::~Texture3DDsa()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ITexture3D methods           ]
+	//[-------------------------------------------------------]
+	void Texture3DDsa::copyDataFrom(uint32_t, const void* data)
+	{
+		// Sanity check
+		assert(nullptr != data);
+
+		// Copy data
+		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
+		{
+			glTextureSubImage3D(mOpenGLTexture, 0, 0, 0, 0, static_cast<GLsizei>(getWidth()), static_cast<GLsizei>(getHeight()), static_cast<GLsizei>(getDepth()), Mapping::getOpenGLFormat(mTextureFormat), Mapping::getOpenGLType(mTextureFormat), data);
+		}
+		else
+		{
+			glTextureImage3DEXT(mOpenGLTexture, GL_TEXTURE_3D, 0, static_cast<GLint>(Mapping::getOpenGLInternalFormat(mTextureFormat)), static_cast<GLsizei>(getWidth()), static_cast<GLsizei>(getHeight()), static_cast<GLsizei>(getDepth()), 0, Mapping::getOpenGLFormat(mTextureFormat), Mapping::getOpenGLType(mTextureFormat), data);
+		}
 	}
 
 

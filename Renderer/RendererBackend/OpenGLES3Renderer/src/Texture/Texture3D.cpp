@@ -39,6 +39,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	Texture3D::Texture3D(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
 		ITexture3D(openGLES3Renderer, width, height, depth),
+		mTextureFormat(textureFormat),
 		mOpenGLES3Texture(0),
 		mGenerateMipmaps(false)
 	{
@@ -154,6 +155,19 @@ namespace OpenGLES3Renderer
 		// Destroy the OpenGL ES 3 texture instance
 		// -> Silently ignores 0's and names that do not correspond to existing textures
 		glDeleteTextures(1, &mOpenGLES3Texture);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ITexture3D methods           ]
+	//[-------------------------------------------------------]
+	void Texture3D::copyDataFrom(uint32_t, const void* data)
+	{
+		// Sanity check
+		assert(nullptr != data);
+
+		// Copy data
+		glTexImage3D(GL_TEXTURE_3D, 0, Mapping::getOpenGLES3InternalFormat(mTextureFormat), static_cast<GLsizei>(getWidth()), static_cast<GLsizei>(getHeight()), static_cast<GLsizei>(getDepth()), 0, Mapping::getOpenGLES3Format(mTextureFormat), Mapping::getOpenGLES3Type(mTextureFormat), data);
 	}
 
 

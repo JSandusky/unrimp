@@ -68,6 +68,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	void UniformBufferBind::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
+		// Sanity check
+		assert(nullptr != data);
+
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL uniform buffer
 			GLint openGLESUniformBufferBackup = 0;

@@ -67,7 +67,7 @@ namespace Direct3D10Renderer
 		d3d10Texture3DDesc.Format		  = dxgiFormat;
 		d3d10Texture3DDesc.Usage		  = static_cast<D3D10_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
 		d3d10Texture3DDesc.BindFlags	  = D3D10_BIND_SHADER_RESOURCE;
-		d3d10Texture3DDesc.CPUAccessFlags = 0;
+		d3d10Texture3DDesc.CPUAccessFlags = (Renderer::TextureUsage::DYNAMIC == textureUsage) ? D3D10_CPU_ACCESS_WRITE : 0u;
 		d3d10Texture3DDesc.MiscFlags	  = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET)) ? D3D10_RESOURCE_MISC_GENERATE_MIPS : 0u;
 
 		// Use this texture as render target?
@@ -184,6 +184,27 @@ namespace Direct3D10Renderer
 		{
 			mD3D10Texture3D->Release();
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ITexture3D methods           ]
+	//[-------------------------------------------------------]
+	void Texture3D::copyDataFrom(uint32_t numberOfBytes, const void* data)
+	{
+		// Sanity checks
+		assert(nullptr != data);
+		assert(nullptr != mD3D10ShaderResourceViewTexture);
+
+		// Copy data
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&static_cast<Direct3D10Renderer&>(getRenderer()))
+		D3D10_MAPPED_TEXTURE3D d3d10MappedTexture3D = {};
+		if (S_OK == mD3D10Texture3D->Map(0, D3D10_MAP_WRITE_DISCARD, 0, &d3d10MappedTexture3D))
+		{
+			memcpy(d3d10MappedTexture3D.pData, data, numberOfBytes);
+			mD3D10Texture3D->Unmap(0);
+		}
+		RENDERER_END_DEBUG_EVENT(&static_cast<Direct3D10Renderer&>(getRenderer()))
 	}
 
 

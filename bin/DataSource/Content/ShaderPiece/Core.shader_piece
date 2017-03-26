@@ -84,13 +84,14 @@
 
 		// Texture buffer
 		#define TEXTURE_BUFFER(type, name, index) Buffer<type> name : register(t##index);
-		#define TEXEL_FETCH(name, index) name.Load(index)
+		#define TEXTURE_BUFFER_FETCH(name, index) name.Load(index)
 
 		// Texture
 		#define TEXTURE_1D(name, index) Texture1D name : register(t##index);
 		#define TEXTURE_2D(name, index) Texture2D name : register(t##index);
 		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) Texture2DMS<float4, numberOfMultisamples> name : register(t##index);
 		#define TEXTURE_3D(name, index) Texture3D name : register(t##index);
+		#define TEXTURE_3D_UINT(name, index) Texture3D<uint> name : register(t##index);
 		#define TEXTURE_CUBE(name, index) TextureCube name : register(t##index);
 		float2 getDirect3DTexture2DSize(Texture2D textureObject)
 		{
@@ -123,6 +124,9 @@
 		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
+
+		// Load/fetch
+		#define TEXTURE_FETCH_3D(name, index) name.Load(index)
 
 		// Fragment shader only
 		#define DECLARE_IS_FRONT_FACE bool IsFrontFace : SV_IsFrontFace;
@@ -191,13 +195,14 @@
 
 		// Texture buffer
 		#define TEXTURE_BUFFER(type, name, index) uniform samplerBuffer name;
-		#define TEXEL_FETCH(name, index) texelFetch(name, int(index + drawId.y / 16))	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way
+		#define TEXTURE_BUFFER_FETCH(name, index) texelFetch(name, int(index + drawId.y / 16))	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way
 
 		// Texture
 		#define TEXTURE_1D(name, index) uniform sampler1D name;
 		#define TEXTURE_2D(name, index) uniform sampler2D name;
 		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) uniform sampler2DMS name;
 		#define TEXTURE_3D(name, index) uniform sampler3D name;
+		#define TEXTURE_3D_UINT(name, index) uniform isampler3D name;
 		#define TEXTURE_CUBE(name, index) uniform samplerCube name;
 		#define GET_TEXTURE_2D_SIZE(textureObject) textureSize(textureObject, 0)
 		#define GET_TEXTURE_CUBE_SIZE(textureObject) textureSize(textureObject, 0)
@@ -238,10 +243,16 @@
 		#define uint3 uvec3
 		#define uint4 uvec4
 
+		// Load/fetch
+		#define TEXTURE_FETCH_3D(name, index) texelFetch(name, index.xyz, index.w)
+
 		// HLSL math functions
 		#define rsqrt(x) inversesqrt(x)
 		#define frac(x) fract(x)
 		#define rcp(x) (1.0f / x)
+
+		// HLSL bit functions
+		#define firstbitlow(x) findLSB(x)
 	@end
 @end
 
@@ -310,15 +321,16 @@
 		// Texture buffer
 		// TODO(co) Currently we only emulate texture buffer using limited uniform buffer
 		// #define TEXTURE_BUFFER(type, name, index) uniform highp samplerBuffer name;
-		// #define TEXEL_FETCH(name, index) texelFetch(name, int(index + drawId.y / 16u))	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
+		// #define TEXTURE_BUFFER_FETCH(name, index) texelFetch(name, int(index + drawId.y / 16u))	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
 		#define TEXTURE_BUFFER(type, name, index) layout(std140) uniform name { highp float4 textureBufferEmulation_##name[4096]; };
-		#define TEXEL_FETCH(name, index) textureBufferEmulation_##name[int(index + drawId.y / 16u)]	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
+		#define TEXTURE_BUFFER_FETCH(name, index) textureBufferEmulation_##name[int(index + drawId.y / 16u)]	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
 
 		// Texture
 		#define TEXTURE_1D(name, index) uniform highp sampler2D name;	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
 		#define TEXTURE_2D(name, index) uniform highp sampler2D name;
 		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) uniform sampler2DMS name;
 		#define TEXTURE_3D(name, index) uniform highp sampler3D name;
+		#define TEXTURE_3D_UINT(name, index) uniform highp isampler3D name;
 		#define TEXTURE_CUBE(name, index) uniform highp samplerCube name;
 		#define GET_TEXTURE_2D_SIZE(textureObject) textureSize(textureObject, 0)
 		#define GET_TEXTURE_CUBE_SIZE(textureObject) textureSize(textureObject, 0)
@@ -359,9 +371,15 @@
 		#define uint3 uvec3
 		#define uint4 uvec4
 
+		// Load/fetch
+		#define TEXTURE_FETCH_3D(name, index) texelFetch(name, index.xyz, index.w)
+
 		// HLSL math functions
 		#define rsqrt(x) inversesqrt(x)
 		#define frac(x) fract(x)
 		#define rcp(x) (1.0f / x)
+
+		// HLSL bit functions
+		#define firstbitlow(x) findLSB(x)	// OpenGL ES 3.10
 	@end
 @end

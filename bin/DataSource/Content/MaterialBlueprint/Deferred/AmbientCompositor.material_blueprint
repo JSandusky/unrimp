@@ -229,6 +229,21 @@
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
+				},
+				"11":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "8",
+							"BaseShaderRegisterName": "LightClustersMap3D",
+							"SamplerRootParameterIndex": "3"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
 				}
 			}
 		},
@@ -302,12 +317,6 @@
 							"ValueType": "FLOAT_3",
 							"Value": "@AmbientColor"
 						},
-						"NumberOfLights":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "INTEGER",
-							"Value": "@NUMBER_OF_LIGHTS"
-						},
 						"ViewSpaceToWorldSpaceQuaternion":
 						{
 							"Usage": "PASS_REFERENCE",
@@ -325,6 +334,18 @@
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@CAMERA_WORLD_SPACE_POSITION"
+						},
+						"LightClustersScale":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@LIGHT_CLUSTERS_SCALE"
+						},
+						"LightClustersBias":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@LIGHT_CLUSTERS_BIAS"
 						},
 						"ViewportSize":
 						{
@@ -428,6 +449,14 @@
 					"Value": "@ReflectionCubeMap",
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMapCube",
 					"RgbHardwareGammaCorrection": "TRUE"
+				},
+				"LightClustersMap3D":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "STATIC",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/LightClustersMap3D"
 				}
 			}
 		}

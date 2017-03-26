@@ -87,6 +87,22 @@ namespace Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual ITexture3D methods                     ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Copy data into the 3D texture
+		*
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the 3D texture, must be valid
+		*  @param[in] data
+		*    3D texture data, must be valid
+		*/
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:

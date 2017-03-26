@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/Preprocessor/Preprocessor.h"
 #include "RendererRuntime/Core/Platform/PlatformTypes.h"	// For "RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF()"
 #define MOJOSHADER_NO_VERSION_INCLUDE

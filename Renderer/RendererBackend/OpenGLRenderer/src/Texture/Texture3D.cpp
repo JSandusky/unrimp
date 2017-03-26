@@ -46,8 +46,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	Texture3D::Texture3D(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t depth) :
+	Texture3D::Texture3D(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat) :
 		ITexture3D(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height, depth),
+		mTextureFormat(textureFormat),
 		mOpenGLTexture(0),
 		mGenerateMipmaps(false)
 	{

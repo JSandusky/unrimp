@@ -40,7 +40,7 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	Texture3DBind::Texture3DBind(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
-		Texture3D(openGLRenderer, width, height, depth)
+		Texture3D(openGLRenderer, width, height, depth, textureFormat)
 	{
 		// Sanity checks
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
@@ -152,6 +152,40 @@ namespace OpenGLRenderer
 	Texture3DBind::~Texture3DBind()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ITexture3D methods           ]
+	//[-------------------------------------------------------]
+	void Texture3DBind::copyDataFrom(uint32_t, const void* data)
+	{
+		// Sanity check
+		assert(nullptr != data);
+
+		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+			// Backup the currently set alignment
+			GLint openGLAlignmentBackup = 0;
+			glGetIntegerv(GL_UNPACK_ALIGNMENT, &openGLAlignmentBackup);
+
+			// Backup the currently bound OpenGL texture
+			GLint openGLTextureBackup = 0;
+			glGetIntegerv(GL_TEXTURE_BINDING_3D, &openGLTextureBackup);
+		#endif
+
+		// Make this OpenGL texture instance to the currently used one
+		glBindTexture(GL_TEXTURE_3D, mOpenGLTexture);
+
+		// Copy data
+		glTexImage3DEXT(GL_TEXTURE_3D, 0, static_cast<GLenum>(Mapping::getOpenGLInternalFormat(mTextureFormat)), static_cast<GLsizei>(getWidth()), static_cast<GLsizei>(getHeight()), static_cast<GLsizei>(getDepth()), 0, Mapping::getOpenGLFormat(mTextureFormat), Mapping::getOpenGLType(mTextureFormat), data);
+
+		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+			// Be polite and restore the previous bound OpenGL texture
+			glBindTexture(GL_TEXTURE_3D, static_cast<GLuint>(openGLTextureBackup));
+
+			// Restore previous alignment
+			glPixelStorei(GL_UNPACK_ALIGNMENT, openGLAlignmentBackup);
+		#endif
 	}
 
 

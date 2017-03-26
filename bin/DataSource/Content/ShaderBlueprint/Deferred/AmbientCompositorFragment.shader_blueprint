@@ -55,10 +55,11 @@ struct PassDataStruct
 	float3   ViewSpaceSunLightDirection;
 	float    Wetness;
 	float3   AmbientColor;
-	uint	 NumberOfLights;
 	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float3   SunLightColor;
 	float3	 CameraWorldSpacePosition;
+	float3	 LightClustersScale;
+	float3	 LightClustersBias;
 	float2   ViewportSize;
 	float2 	 ProjectionParameters;
 };
@@ -89,6 +90,7 @@ SAMPLER_STATE(SamplerLinear, 1)
 TEXTURE_2D(ShadowMap, 5)
 TEXTURE_2D(ScreenSpaceAmbientOcclusionMap, 6)
 TEXTURE_CUBE(ReflectionCubeMap, 7)
+TEXTURE_3D_UINT(LightClustersMap3D, 8)
 
 
 //[-------------------------------------------------------]
@@ -144,55 +146,8 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 		color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
 	}
 
-	// Point and spot lights
-	// TODO(co) Just a quick'n'dirty test to have something to start with
-	for (uint i = 0u; i < PassData.NumberOfLights; ++i)
-	{
-		// Check if the fragment is inside the bounding volume of the light
-		float4 lightPositionRadius = TEXEL_FETCH(LightTextureBuffer, i * 4u);
-		float3 direction = lightPositionRadius.xyz - worldSpacePosition;
-		float distance = length(direction);
-		if (distance < lightPositionRadius.w)
-		{
-			float4 lightColorType = TEXEL_FETCH(LightTextureBuffer, i * 4u + 1u);
-			float lightIntensity = 1.0f;
-
-			// Normalize the direction
-			direction /= distance;
-
-			// Spot-light attenuation
-			if (2.0f == lightColorType.w)
-			{
-				float4 innerOuterNearClip = TEXEL_FETCH(LightTextureBuffer, i * 4u + 2u);
-				if (distance < innerOuterNearClip.z)
-				{
-					// Early escape: Not influenced by the light
-					continue;
-				}
-				float3 spotlightDirection = TEXEL_FETCH(LightTextureBuffer, i * 4u + 3u).xyz;
-				float spotlightAngle = SATURATE(dot(spotlightDirection, -direction));
-				float spotlightFalloff = SATURATE((spotlightAngle - innerOuterNearClip.x) / (innerOuterNearClip.y - innerOuterNearClip.x));
-				lightIntensity *= (1.0f - spotlightFalloff);
-			}
-
-			// Attenuation by using inverse-square falloff for higher quality falloff
-			// -> Physically accurate inverse-square falloff as described in "Real Shading in Unreal Engine 4" by Brian Karis, Epic Games - "Lighting Model" on page 12 - http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-			float distanceLightRadius = distance / lightPositionRadius.w;
-			float t1 = SATURATE(1.0f - distanceLightRadius * distanceLightRadius * distanceLightRadius * distanceLightRadius);
-			lightIntensity *= t1 / (distance * distance + 1.0f);
-
-			// Calculate lighting
-			if (lightIntensity > 0.0f)
-			{
-				float3 worldSpaceNormal = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceNormal);
-				if (dot(worldSpaceNormal, direction) > 0.0f)
-				{
-					float3 worldSpaceIncident = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceIncident);
-					color += CalculateLighting(diffuse, roughness, metallic, worldSpaceNormal, worldSpaceIncident, direction, lightColorType.rgb * lightIntensity);
-				}
-			}
-		}
-	}
+	// Perform clustered shading
+	@insertpiece(PerformClusteredShading)
 
 	// Apply screen space ambient occlusion
 	color *= float3(screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion, screenSpaceAmbientOcclusion);

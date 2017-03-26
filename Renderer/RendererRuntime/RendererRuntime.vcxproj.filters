@@ -510,9 +510,6 @@
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorContextData.inl">
       <Filter>Source Files\Resource\CompositorWorkspace</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\LightBufferManager.inl">
-      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
-    </None>
     <None Include="include\RendererRuntime\Vr\OpenVR\IVrManagerOpenVRListener.inl">
       <Filter>Source Files\Vr\OpenVR</Filter>
     </None>

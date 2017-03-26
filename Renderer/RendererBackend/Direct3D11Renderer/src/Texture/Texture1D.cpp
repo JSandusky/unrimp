@@ -66,7 +66,7 @@ namespace Direct3D11Renderer
 		d3d11Texture1DDesc.Format		  = dxgiFormat;
 		d3d11Texture1DDesc.Usage		  = static_cast<D3D11_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
 		d3d11Texture1DDesc.BindFlags	  = D3D11_BIND_SHADER_RESOURCE;
-		d3d11Texture1DDesc.CPUAccessFlags = 0;
+		d3d11Texture1DDesc.CPUAccessFlags = (Renderer::TextureUsage::DYNAMIC == textureUsage) ? D3D11_CPU_ACCESS_WRITE : 0u;
 		d3d11Texture1DDesc.MiscFlags	  = mGenerateMipmaps ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0u;
 
 		// Use this texture as render target?

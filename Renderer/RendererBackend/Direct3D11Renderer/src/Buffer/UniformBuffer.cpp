@@ -127,7 +127,8 @@ namespace Direct3D11Renderer
 	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
 		// Check resource pointers
-		if (nullptr != mD3D11Buffer && nullptr != data)
+		assert(nullptr != data);
+		if (nullptr != mD3D11Buffer)
 		{
 			Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
 

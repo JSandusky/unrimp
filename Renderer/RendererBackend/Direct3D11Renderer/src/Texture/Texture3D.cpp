@@ -67,7 +67,7 @@ namespace Direct3D11Renderer
 		d3d11Texture3DDesc.Format		  = dxgiFormat;
 		d3d11Texture3DDesc.Usage		  = static_cast<D3D11_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
 		d3d11Texture3DDesc.BindFlags	  = D3D11_BIND_SHADER_RESOURCE;
-		d3d11Texture3DDesc.CPUAccessFlags = 0;
+		d3d11Texture3DDesc.CPUAccessFlags = (Renderer::TextureUsage::DYNAMIC == textureUsage) ? D3D11_CPU_ACCESS_WRITE : 0u;
 		d3d11Texture3DDesc.MiscFlags	  = mGenerateMipmaps ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0u;
 
 		// Use this texture as render target?
@@ -184,6 +184,29 @@ namespace Direct3D11Renderer
 		{
 			mD3D11Texture3D->Release();
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ITexture3D methods           ]
+	//[-------------------------------------------------------]
+	void Texture3D::copyDataFrom(uint32_t numberOfBytes, const void* data)
+	{
+		// Sanity checks
+		assert(nullptr != data);
+		assert(nullptr != mD3D11ShaderResourceViewTexture);
+
+		// Copy data
+		Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)
+		D3D11_MAPPED_SUBRESOURCE d3d11MappedSubresource = {};
+		ID3D11DeviceContext* d3d11DeviceContext = direct3D11Renderer.getD3D11DeviceContext();
+		if (S_OK == d3d11DeviceContext->Map(mD3D11Texture3D, 0, D3D11_MAP_WRITE_DISCARD, 0, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&d3d11MappedSubresource)))
+		{
+			memcpy(d3d11MappedSubresource.pData, data, numberOfBytes);
+			d3d11DeviceContext->Unmap(mD3D11Texture3D, 0);
+		}
+		RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
 	}
 
 

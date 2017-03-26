@@ -66,7 +66,7 @@ namespace Direct3D10Renderer
 		d3d10Texture1DDesc.Format		  = dxgiFormat;
 		d3d10Texture1DDesc.Usage		  = static_cast<D3D10_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
 		d3d10Texture1DDesc.BindFlags	  = D3D10_BIND_SHADER_RESOURCE;
-		d3d10Texture1DDesc.CPUAccessFlags = 0;
+		d3d10Texture1DDesc.CPUAccessFlags = (Renderer::TextureUsage::DYNAMIC == textureUsage) ? D3D10_CPU_ACCESS_WRITE : 0u;
 		d3d10Texture1DDesc.MiscFlags	  = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET)) ? D3D10_RESOURCE_MISC_GENERATE_MIPS : 0u;
 
 		// Use this texture as render target?

@@ -1478,6 +1478,40 @@ namespace Direct3D10Renderer
 		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 constants, do not change them
 		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
 
+		// Define helper macro
+		#define TEXTURE_RESOURCE(type, typeClass, d3dClass, d3dStructure) \
+			case type: \
+			{ \
+				bool result = false; \
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this) \
+				d3dClass* d3d10Texture = nullptr; \
+				d3dStructure d3d10MappedTexture; \
+				static_cast<typeClass&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture)); \
+				if (nullptr != d3d10Texture) \
+				{ \
+					result = (S_OK == d3d10Texture->Map(subresource, static_cast<D3D10_MAP>(mapType), mapFlags, &d3d10MappedTexture)); \
+					d3d10Texture->Release(); \
+				} \
+				else \
+				{ \
+					memset(&d3d10MappedTexture, 0, sizeof(d3dStructure)); \
+				} \
+				if (result) \
+				{ \
+					mappedSubresource.data		 = d3d10MappedTexture.pData; \
+					mappedSubresource.rowPitch   = d3d10MappedTexture.RowPitch; \
+					mappedSubresource.depthPitch = 0; \
+				} \
+				else \
+				{ \
+					mappedSubresource.data		 = nullptr; \
+					mappedSubresource.rowPitch   = 0; \
+					mappedSubresource.depthPitch = 0; \
+				} \
+				RENDERER_END_DEBUG_EVENT(this) \
+				return result; \
+			}
+
 		// Evaluate the resource type
 		switch (resource.getResourceType())
 		{
@@ -1511,107 +1545,9 @@ namespace Direct3D10Renderer
 				// TODO(co) Implement Direct3D 10 1D texture
 				return false;
 
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				bool result = false;
-
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 10 resource instance
-				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
-				ID3D10Texture2D *d3d10Texture2D = nullptr;
-				D3D10_MAPPED_TEXTURE2D d3d10MappedTexture2D;
-				static_cast<Texture2D&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
-				if (nullptr != d3d10Texture2D)
-				{
-					// Map the Direct3D 10 resource
-					result = (S_OK == d3d10Texture2D->Map(subresource, static_cast<D3D10_MAP>(mapType), mapFlags, &d3d10MappedTexture2D));
-
-					// Release the Direct3D 10 resource instance
-					d3d10Texture2D->Release();
-				}
-				else
-				{
-					// Error!
-					memset(&d3d10MappedTexture2D, 0, sizeof(D3D10_MAPPED_TEXTURE2D));
-				}
-
-				// Set result
-				if (result)
-				{
-					// Copy over the data
-					mappedSubresource.data		 = d3d10MappedTexture2D.pData;
-					mappedSubresource.rowPitch   = d3d10MappedTexture2D.RowPitch;
-					mappedSubresource.depthPitch = 0;
-				}
-				else
-				{
-					// Set known return values in case of an error
-					mappedSubresource.data		 = nullptr;
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				bool result = false;
-
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 10 resource instance
-				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
-				ID3D10Texture2D *d3d10Texture2D = nullptr;
-				D3D10_MAPPED_TEXTURE2D d3d10MappedTexture2D;
-				static_cast<Texture2DArray&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
-				if (nullptr != d3d10Texture2D)
-				{
-					// Map the Direct3D 10 resource
-					result = (S_OK == d3d10Texture2D->Map(subresource, static_cast<D3D10_MAP>(mapType), mapFlags, &d3d10MappedTexture2D));
-
-					// Release the Direct3D 10 resource instance
-					d3d10Texture2D->Release();
-				}
-				else
-				{
-					// Error!
-					memset(&d3d10MappedTexture2D, 0, sizeof(D3D10_MAPPED_TEXTURE2D));
-				}
-
-				// Set result
-				if (result)
-				{
-					// Copy over the data
-					mappedSubresource.data		 = d3d10MappedTexture2D.pData;
-					mappedSubresource.rowPitch   = d3d10MappedTexture2D.RowPitch;
-					mappedSubresource.depthPitch = 0;
-				}
-				else
-				{
-					// Set known return values in case of an error
-					mappedSubresource.data		 = nullptr;
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-
-				// Done
-				return result;
-			}
-
-			case Renderer::ResourceType::TEXTURE_3D:
-				// TODO(co) Implement Direct3D 10 3D texture
-				return false;
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_2D, Texture2D, ID3D10Texture2D, D3D10_MAPPED_TEXTURE2D)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_2D_ARRAY, Texture2DArray, ID3D10Texture2D, D3D10_MAPPED_TEXTURE2D)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_3D, Texture3D, ID3D10Texture3D, D3D10_MAPPED_TEXTURE3D)
 
 			case Renderer::ResourceType::TEXTURE_CUBE:
 				// TODO(co) Implement Direct3D 10 cube texture
@@ -1638,10 +1574,29 @@ namespace Direct3D10Renderer
 				// Error!
 				return false;
 		}
+
+		// Undefine helper macro
+		#undef TEXTURE_RESOURCE
 	}
 
 	void Direct3D10Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
 	{
+		// Define helper macro
+		#define TEXTURE_RESOURCE(type, typeClass, d3dClass) \
+			case type: \
+			{ \
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this) \
+				d3dClass* d3d10Texture = nullptr; \
+				static_cast<typeClass&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture)); \
+				if (nullptr != d3d10Texture) \
+				{ \
+					d3d10Texture->Unmap(subresource); \
+					d3d10Texture->Release(); \
+				} \
+				RENDERER_END_DEBUG_EVENT(this) \
+				break; \
+			}
+
 		// Evaluate the resource type
 		switch (resource.getResourceType())
 		{
@@ -1669,55 +1624,9 @@ namespace Direct3D10Renderer
 				// TODO(co) Implement Direct3D 10 1D texture
 				break;
 
-			case Renderer::ResourceType::TEXTURE_2D:
-			{
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 10 resource instance
-				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
-				ID3D10Texture2D *d3d10Texture2D = nullptr;
-				static_cast<Texture2D&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
-				if (nullptr != d3d10Texture2D)
-				{
-					// Unmap the Direct3D 10 resource
-					d3d10Texture2D->Unmap(subresource);
-
-					// Release the Direct3D 10 resource instance
-					d3d10Texture2D->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-				break;
-			}
-
-			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-			{
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Get the Direct3D 10 resource instance
-				// -> The user is asked to not manipulate the view, so the cast to "ID3D10Resource" is assumed to be safe in here
-				ID3D10Texture2D *d3d10Texture2D = nullptr;
-				static_cast<Texture2DArray&>(resource).getD3D10ShaderResourceView()->GetResource(reinterpret_cast<ID3D10Resource**>(&d3d10Texture2D));
-				if (nullptr != d3d10Texture2D)
-				{
-					// Unmap the Direct3D 10 resource
-					d3d10Texture2D->Unmap(subresource);
-
-					// Release the Direct3D 10 resource instance
-					d3d10Texture2D->Release();
-				}
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-				break;
-			}
-
-			case Renderer::ResourceType::TEXTURE_3D:
-				// TODO(co) Implement Direct3D 10 3D texture
-				break;
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_2D, Texture2D, ID3D10Texture2D)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_2D_ARRAY, Texture2DArray, ID3D10Texture2D)
+			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_3D, Texture3D, ID3D10Texture3D)
 
 			case Renderer::ResourceType::TEXTURE_CUBE:
 				// TODO(co) Implement Direct3D 10 cube texture
@@ -1739,6 +1648,9 @@ namespace Direct3D10Renderer
 				// Nothing we can unmap
 				break;
 		}
+
+		// Undefine helper macro
+		#undef TEXTURE_RESOURCE
 	}
 
 

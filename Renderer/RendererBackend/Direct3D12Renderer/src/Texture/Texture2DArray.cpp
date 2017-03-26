@@ -61,7 +61,7 @@ namespace Direct3D12Renderer
 		d3d12Texture2DDesc.SampleDesc.Quality = 0;
 		d3d12Texture2DDesc.Usage			  = static_cast<D3D12_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
 		d3d12Texture2DDesc.BindFlags		  = D3D12_BIND_SHADER_RESOURCE;
-		d3d12Texture2DDesc.CPUAccessFlags	  = 0;
+		d3d12Texture2DDesc.CPUAccessFlags	  = (Renderer::TextureUsage::DYNAMIC == textureUsage) ? D3D12_CPU_ACCESS_WRITE : 0u;
 		d3d12Texture2DDesc.MiscFlags		  = 0;
 
 		// Use this texture as render target?
