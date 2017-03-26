@@ -1,4 +1,4 @@
-﻿/*********************************************************\
+/*********************************************************\
  * Copyright (c) 2012-2017 The Unrimp Team
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -207,17 +207,17 @@ namespace RendererRuntime
 						const glm::vec3 p_max = (p + packedShaderData.radius) * scale;
 
 						// Cluster for the center of the light
-						const int px = static_cast<int>(std::floorf(p.x * scale.x));
-						const int py = static_cast<int>(std::floorf(p.y * scale.y));
-						const int pz = static_cast<int>(std::floorf(p.z * scale.z));
+						const int px = static_cast<int>(std::floor(p.x * scale.x));
+						const int py = static_cast<int>(std::floor(p.y * scale.y));
+						const int pz = static_cast<int>(std::floor(p.z * scale.z));
 
 						// Cluster bounds for the light
-						const int x0 = std::max(static_cast<int>(std::floorf(p_min.x)), 0);
-						const int x1 = std::min(static_cast<int>(std::ceilf(p_max.x)), static_cast<int>(::detail::CLUSTER_X));
-						const int y0 = std::max(static_cast<int>(std::floorf(p_min.y)), 0);
-						const int y1 = std::min(static_cast<int>(std::ceilf(p_max.y)), static_cast<int>(::detail::CLUSTER_Y));
-						const int z0 = std::max(static_cast<int>(std::floorf(p_min.z)), 0);
-						const int z1 = std::min(static_cast<int>(std::ceilf(p_max.z)), static_cast<int>(::detail::CLUSTER_Z));
+						const int x0 = std::max(static_cast<int>(std::floor(p_min.x)), 0);
+						const int x1 = std::min(static_cast<int>(std::ceil(p_max.x)), static_cast<int>(::detail::CLUSTER_X));
+						const int y0 = std::max(static_cast<int>(std::floor(p_min.y)), 0);
+						const int y1 = std::min(static_cast<int>(std::ceil(p_max.y)), static_cast<int>(::detail::CLUSTER_Y));
+						const int z0 = std::max(static_cast<int>(std::floor(p_min.z)), 0);
+						const int z1 = std::min(static_cast<int>(std::ceil(p_max.z)), static_cast<int>(::detail::CLUSTER_Z));
 
 						const float squaredRadius = packedShaderData.radius * packedShaderData.radius;
 						const int mask = (1 << currentLightIndex);
