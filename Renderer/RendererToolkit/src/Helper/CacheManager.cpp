@@ -403,7 +403,7 @@ namespace RendererToolkit
 		}
 	}
 
-	uint32_t CacheManager::getSchemaVersionOfDatabase()
+	uint32_t CacheManager::getSchemaVersionOfDatabase() const
 	{
 		SQLite::Statement query(*mDatabaseConnection.get(), "SELECT schemaVersion FROM VersionInfo");
 
