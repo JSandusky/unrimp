@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture/Texture3D.h"
 
-#include <Renderer/Texture/TextureTypes.h>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
