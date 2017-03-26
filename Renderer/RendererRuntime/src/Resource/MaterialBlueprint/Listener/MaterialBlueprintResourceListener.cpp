@@ -281,7 +281,7 @@ namespace RendererRuntime
 		// Calculate required matrices basing whether or not the VR-manager is currently running
 		glm::mat4 viewSpaceToClipSpaceMatrix;
 		const IVrManager& vrManager = rendererRuntime.getVrManager();
-		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye() && !cameraSceneItem->hasCustomWorldSpaceToViewSpaceMatrix() && !cameraSceneItem->hasCustomViewSpaceToClipSpaceMatrix())
+		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye() && (nullptr != cameraSceneItem) && !cameraSceneItem->hasCustomWorldSpaceToViewSpaceMatrix() && !cameraSceneItem->hasCustomViewSpaceToClipSpaceMatrix())
 		{
 			// Virtual reality rendering
 
