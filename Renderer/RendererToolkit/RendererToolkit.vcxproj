@@ -363,7 +363,7 @@ copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"
-copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)_dynamic\"</Command>
+copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">
@@ -393,7 +393,7 @@ copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"
-copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)_dynamic\"</Command>
+copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
