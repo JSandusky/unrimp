@@ -37,6 +37,13 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/error/en.h>
 PRAGMA_WARNING_POP
 
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	#include <glm/gtc/quaternion.hpp>
+PRAGMA_WARNING_POP
+
 #include <fstream>
 #include <algorithm> // For "std::count()"
 
@@ -193,6 +200,45 @@ namespace RendererToolkit
 			else
 			{
 				throw std::runtime_error('\"' + std::string(propertyName) + "\" needs exactly" + std::to_string(numberOfComponents) + " components, but " + std::to_string(elements.size()) + " components given");
+			}
+		}
+	}
+
+	void JsonHelper::optionalRotationQuaternionProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, glm::quat& value)
+	{
+		// Rotation quaternion values can be defined as "QUATERNION", Euler angles in "DEGREES" or Euler angles in"RADIANS"
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			std::vector<std::string> elements;
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+			if (elements.size() == 5 && elements[4] == "QUATERNION")
+			{
+				value.x = std::stof(elements[0].c_str());
+				value.y = std::stof(elements[1].c_str());
+				value.z = std::stof(elements[2].c_str());
+				value.w = std::stof(elements[3].c_str());
+			}
+			else if (elements.size() == 4)
+			{
+				const float pitch = std::stof(elements[0].c_str());
+				const float yaw   = std::stof(elements[1].c_str());
+				const float roll  = std::stof(elements[2].c_str());
+				if (elements[3] == "DEGREES")
+				{
+					value = glm::quat(glm::vec3(glm::radians(pitch), glm::radians(yaw), glm::radians(roll)));
+				}
+				else if (elements[3] == "RADIANS")
+				{
+					value = glm::quat(glm::vec3(pitch, yaw, roll));
+				}
+				else
+				{
+					throw std::runtime_error('\"' + std::string(propertyName) + "\" must be a x y z w QUATERNION, or x y z Euler angles in DEGREES/RADIANS");
+				}
+			}
+			else
+			{
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" must be a x y z w QUATERNION, or x y z Euler angles in DEGREES/RADIANS");
 			}
 		}
 	}

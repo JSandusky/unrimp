@@ -22,7 +22,7 @@
 				"Description": "Sun light",
 				"Properties":
 				{
-					"Rotation": "-0.723630846 -0.170361593 0.153269514 0.651032865"
+					"Rotation": "-0.723630846 -0.170361593 0.153269514 0.651032865 QUATERNION"
 				},
 				"Items":
 				{
@@ -38,6 +38,7 @@
 				"Description": "Imrod character",
 				"Properties":
 				{
+					"Rotation": "0.0 45.0 0.0 DEGREES",
 					"Scale": "0.07 0.07 0.07"
 				},
 				"Items":

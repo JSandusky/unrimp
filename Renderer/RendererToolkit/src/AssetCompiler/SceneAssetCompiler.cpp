@@ -202,7 +202,7 @@ namespace RendererToolkit
 
 								// Position, rotation and scale
 								JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Position", &node.transform.position.x, 3);
-								JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Rotation", &node.transform.rotation.x, 4);	// Rotation quaternion
+								JsonHelper::optionalRotationQuaternionProperty(rapidJsonValueProperties, "Rotation", node.transform.rotation);
 								JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Scale", &node.transform.scale.x, 3);
 							}
 
