@@ -62,7 +62,7 @@ namespace RendererRuntime
 		assert(lightItem->lightType == LightType::DIRECTIONAL || mPackedShaderData.radius > 0.0f);
 		assert(lightItem->lightType != LightType::DIRECTIONAL || 0.0f == mPackedShaderData.radius);
 		assert(mInnerAngle >= 0.0f);
-		assert(mOuterAngle < 90.0f);
+		assert(mOuterAngle < glm::radians(90.0f));
 		assert(mInnerAngle < mOuterAngle);
 		assert(mPackedShaderData.nearClipDistance >= 0.0f);
 	}

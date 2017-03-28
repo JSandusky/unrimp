@@ -95,7 +95,7 @@ namespace RendererRuntime
 		mInnerAngle = innerAngle;
 
 		// Derive data
-		mPackedShaderData.innerAngle = glm::cos(glm::radians(mInnerAngle));
+		mPackedShaderData.innerAngle = glm::cos(mInnerAngle);
 
 		// Sanity checks
 		assert(mInnerAngle >= 0.0f);
@@ -112,10 +112,10 @@ namespace RendererRuntime
 		mOuterAngle = outerAngle;
 
 		// Derive data
-		mPackedShaderData.outerAngle = glm::cos(glm::radians(mOuterAngle));
+		mPackedShaderData.outerAngle = glm::cos(mOuterAngle);
 
 		// Sanity checks
-		assert(mOuterAngle < 90.0f);
+		assert(mOuterAngle < glm::radians(90.0f));
 		assert(mInnerAngle < mOuterAngle);
 	}
 
@@ -125,12 +125,12 @@ namespace RendererRuntime
 		mOuterAngle = outerAngle;
 
 		// Derive data
-		mPackedShaderData.innerAngle = glm::cos(glm::radians(mInnerAngle));
-		mPackedShaderData.outerAngle = glm::cos(glm::radians(mOuterAngle));
+		mPackedShaderData.innerAngle = glm::cos(mInnerAngle);
+		mPackedShaderData.outerAngle = glm::cos(mOuterAngle);
 
 		// Sanity checks
 		assert(mInnerAngle >= 0.0f);
-		assert(mOuterAngle < 90.0f);
+		assert(mOuterAngle < glm::radians(90.0f));
 		assert(mInnerAngle < mOuterAngle);
 	}
 
@@ -175,7 +175,7 @@ namespace RendererRuntime
 		mInnerAngle(0.0f),
 		mOuterAngle(0.1f)
 	{
-		setInnerOuterAngle(40.0f, 50.0f);
+		setInnerOuterAngle(glm::radians(40.0f), glm::radians(50.0f));
 	}
 
 	inline LightSceneItem::~LightSceneItem()

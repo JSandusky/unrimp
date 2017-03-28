@@ -145,8 +145,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		PackedShaderData mPackedShaderData;
-		float			 mInnerAngle;	///< Inner angle in degrees; interval in degrees: 0..90, must be smaller as the outer angle
-		float			 mOuterAngle;	///< Outer angle in degrees; interval in degrees: 0..90, must be greater as the inner angle
+		float			 mInnerAngle;	///< Inner angle in radians; interval in degrees: 0..90, must be smaller as the outer angle
+		float			 mOuterAngle;	///< Outer angle in radians; interval in degrees: 0..90, must be greater as the inner angle
 
 
 	};

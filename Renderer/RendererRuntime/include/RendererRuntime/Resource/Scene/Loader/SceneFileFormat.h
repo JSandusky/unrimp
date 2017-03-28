@@ -92,8 +92,8 @@ namespace RendererRuntime
 				LightSceneItem::LightType lightType		   = LightSceneItem::LightType::POINT;
 				float					  color[3]		   = { 1.0f, 1.0f, 1.0f };
 				float					  radius		   = 1.0f;
-				float					  innerAngle       = 40.0f;
-				float					  outerAngle	   = 50.0f;
+				float					  innerAngle	   = glm::radians(40.0f);
+				float					  outerAngle	   = glm::radians(50.0f);
 				float					  nearClipDistance = 0.0f;
 			};
 

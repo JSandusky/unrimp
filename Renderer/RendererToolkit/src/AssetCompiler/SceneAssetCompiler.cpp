@@ -270,8 +270,8 @@ namespace RendererToolkit
 										::detail::optionalLightTypeProperty(rapidJsonValueItem, "LightType", lightItem.lightType);
 										JsonHelper::optionalFloatNProperty(rapidJsonValueItem, "Color", lightItem.color, 3);
 										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "Radius", lightItem.radius);
-										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "InnerAngle", lightItem.innerAngle);
-										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "OuterAngle", lightItem.outerAngle);
+										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "InnerAngle", lightItem.innerAngle);
+										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "OuterAngle", lightItem.outerAngle);
 										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "NearClipDistance", lightItem.nearClipDistance);
 
 										// Sanity checks
@@ -291,7 +291,7 @@ namespace RendererToolkit
 										{
 											throw std::runtime_error("The inner spot light angle must be >= 0 degrees");
 										}
-										if (lightItem.outerAngle >= 90.0f)
+										if (lightItem.outerAngle >= glm::radians(90.0f))
 										{
 											throw std::runtime_error("The outer spot light angle must be < 90 degrees");
 										}

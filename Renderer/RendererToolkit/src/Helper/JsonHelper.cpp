@@ -204,9 +204,39 @@ namespace RendererToolkit
 		}
 	}
 
+	void JsonHelper::optionalAngleProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float& value)
+	{
+		// Angle values can be defined as Euler angle in "DEGREES" or Euler angle in "RADIANS"
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			std::vector<std::string> elements;
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+			if (elements.size() == 2)
+			{
+				value = std::stof(elements[0].c_str());
+				if (elements[1] == "DEGREES")
+				{
+					value = glm::radians(value);
+				}
+				else if (elements[1] == "RADIANS")
+				{
+					// Nothing here
+				}
+				else
+				{
+					throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x Euler angle in DEGREES/RADIANS");
+				}
+			}
+			else
+			{
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x Euler angle in DEGREES/RADIANS");
+			}
+		}
+	}
+
 	void JsonHelper::optionalRotationQuaternionProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, glm::quat& value)
 	{
-		// Rotation quaternion values can be defined as "QUATERNION", Euler angles in "DEGREES" or Euler angles in"RADIANS"
+		// Rotation quaternion values can be defined as "QUATERNION", Euler angles in "DEGREES" or Euler angles in "RADIANS"
 		if (rapidJsonValue.HasMember(propertyName))
 		{
 			std::vector<std::string> elements;

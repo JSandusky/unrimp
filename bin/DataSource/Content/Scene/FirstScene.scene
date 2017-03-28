@@ -206,7 +206,9 @@
 					{
 						"LightType": "SPOT",
 						"Color": "10.0 10.0 10.0",
-						"Radius": "5.0"
+						"Radius": "5.0",
+						"InnerAngle": "45.0 DEGREES",
+						"OuterAngle": "50.0 DEGREES"
 					}
 				}
 			}
