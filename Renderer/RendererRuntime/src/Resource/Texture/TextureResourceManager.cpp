@@ -69,7 +69,7 @@ namespace
 
 			// White alpha texture
 			const uint8_t whiteAData[] = { 255 };
-			Renderer::ITexturePtr whiteA2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::A8, whiteAData));
+			Renderer::ITexturePtr whiteA2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8, whiteAData));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteA2DTexturePtr, "White 2D alpha texture")
 
 			// Black RGB texture
@@ -90,7 +90,7 @@ namespace
 
 			// Black alpha texture
 			const uint8_t blackAData[] = { 255 };
-			Renderer::ITexturePtr blackA2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::A8, blackAData));
+			Renderer::ITexturePtr blackA2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8, blackAData));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(blackA2DTexturePtr, "Black 2D alpha texture")
 
 			// Create default dynamic texture assets

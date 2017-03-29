@@ -32,7 +32,7 @@ namespace Renderer
 	{
 		static bool MAPPING[] =
 		{
-			false,	// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
+			false,	// Renderer::TextureFormat::R8            - 8-bit pixel format, all bits red
 			false,	// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			false,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			false,	// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear
@@ -60,7 +60,7 @@ namespace Renderer
 	{
 		static bool MAPPING[] =
 		{
-			false,	// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
+			false,	// Renderer::TextureFormat::R8            - 8-bit pixel format, all bits red
 			false,	// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			false,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			false,	// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear
@@ -88,7 +88,7 @@ namespace Renderer
 	{
 		static const uint32_t MAPPING[] =
 		{
-			sizeof(uint8_t),		// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
+			sizeof(uint8_t),		// Renderer::TextureFormat::R8            - 8-bit pixel format, all bits red
 			sizeof(uint8_t) * 3,	// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			sizeof(uint8_t) * 4,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			sizeof(uint8_t) * 4,	// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear
@@ -116,8 +116,8 @@ namespace Renderer
 	{
 		switch (textureFormat)
 		{
-			// 8-bit pixel format, all bits alpha
-			case A8:
+			// 8-bit pixel format, all bits red
+			case R8:
 				return width;
 
 			// 24-bit pixel format, 8 bits for red, green and blue
@@ -191,8 +191,8 @@ namespace Renderer
 	{
 		switch (textureFormat)
 		{
-			// 8-bit pixel format, all bits alpha
-			case A8:
+			// 8-bit pixel format, all bits red
+			case R8:
 				return width * height;
 
 			// 24-bit pixel format, 8 bits for red, green and blue

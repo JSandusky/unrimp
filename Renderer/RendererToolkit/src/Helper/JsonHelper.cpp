@@ -412,7 +412,7 @@ namespace RendererToolkit
 		#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) return Renderer::TextureFormat::name;
 
 		// Evaluate value
-		IF_VALUE(A8)
+		IF_VALUE(R8)
 		ELSE_IF_VALUE(R8G8B8)
 		ELSE_IF_VALUE(R8G8B8A8)
 		ELSE_IF_VALUE(R8G8B8A8_SRGB)

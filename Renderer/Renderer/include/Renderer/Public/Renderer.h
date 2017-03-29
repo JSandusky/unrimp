@@ -734,7 +734,7 @@ namespace Renderer
 		{
 			enum Enum
 			{
-				A8				  = 0,
+				R8				  = 0,
 				R8G8B8			  = 1,
 				R8G8B8A8		  = 2,
 				R8G8B8A8_SRGB	  = 3,
@@ -841,7 +841,7 @@ namespace Renderer
 			{
 				switch (textureFormat)
 				{
-					case A8:
+					case R8:
 						return width;
 					case R8G8B8:
 						return 3 * width;
@@ -885,7 +885,7 @@ namespace Renderer
 			{
 				switch (textureFormat)
 				{
-					case A8:
+					case R8:
 						return width * height;
 					case R8G8B8:
 						return 3 * width * height;

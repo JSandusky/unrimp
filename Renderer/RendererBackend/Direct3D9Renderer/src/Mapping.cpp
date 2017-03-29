@@ -376,7 +376,7 @@ namespace Direct3D9Renderer
 		// D3DFORMAT
 		static const uint32_t MAPPING[] =
 		{
-			D3DFMT_A8,					// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
+			D3DFMT_L8,					// Renderer::TextureFormat::R8            - 8-bit pixel format, all bits red
 			D3DFMT_X8R8G8B8,			// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue - "D3DFMT_R8G8B8" is usually not supported
 			D3DFMT_A8R8G8B8,			// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			D3DFMT_A8R8G8B8,			// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear	- TODO(co) DirectX 9 sRGB format

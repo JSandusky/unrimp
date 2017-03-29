@@ -76,7 +76,7 @@ void FirstTexture::onInitialization()
 			}
 
 			// Create the texture instance
-			mTexture1D = mTextureManager->createTexture1D(TEXTURE_WIDTH, Renderer::TextureFormat::A8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
+			mTexture1D = mTextureManager->createTexture1D(TEXTURE_WIDTH, Renderer::TextureFormat::R8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
 
 			// Free texture memory
 			delete [] data;

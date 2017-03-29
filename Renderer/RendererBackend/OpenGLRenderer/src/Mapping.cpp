@@ -284,7 +284,7 @@ namespace OpenGLRenderer
 	{
 		static const GLuint MAPPING[] =
 		{
-			GL_R8,										// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha" (please note that "GL_ALPHA" is no valid OpenGL internal format)
+			GL_R8,										// Renderer::TextureFormat::R8            - 8-bit pixel format, all bits red
 			GL_RGB8,									// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			GL_RGBA8,									// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			GL_SRGB8_ALPHA8,							// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear
@@ -312,7 +312,7 @@ namespace OpenGLRenderer
 	{
 		static const GLuint MAPPING[] =
 		{
-			GL_RED,										// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha" (please note that "GL_ALPHA" is no valid OpenGL format)
+			GL_RED,										// Renderer::TextureFormat::R8            - 8-bit pixel format, all bits red
 			GL_RGB,										// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			GL_RGBA,									// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			GL_RGBA,									// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear
@@ -340,7 +340,7 @@ namespace OpenGLRenderer
 	{
 		static const GLenum MAPPING[] =
 		{
-			GL_UNSIGNED_BYTE,						// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
+			GL_UNSIGNED_BYTE,						// Renderer::TextureFormat::R8            - 8-bit pixel format, all bits red
 			GL_UNSIGNED_BYTE,						// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			GL_UNSIGNED_BYTE,						// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			GL_UNSIGNED_BYTE,						// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear

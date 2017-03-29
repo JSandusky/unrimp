@@ -56,12 +56,7 @@ TEXTURE_2D(BackgroundMap, 1)
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	// Get source and destination color
-	@property(HLSL)
-		float glyphMapValue = SAMPLE_2D(GlyphMap, GlyphSampler, MAIN_INPUT(TexCoordVS).xy).a;
-	@end
-	@property(GLSL || GLSLES)
-		float glyphMapValue = SAMPLE_2D(GlyphMap, GlyphSampler, MAIN_INPUT(TexCoordVS).xy).r;
-	@end
+	float glyphMapValue = SAMPLE_2D(GlyphMap, GlyphSampler, MAIN_INPUT(TexCoordVS).xy).r;
 	float4 sourceColor = MAIN_INPUT(ColorVS) * glyphMapValue;
 	float4 destinationColor = SAMPLE_2D_LOD(BackgroundMap, BackgroundSampler, float4(MAIN_INPUT(TexCoordVS).zw, 0.0f, 0.0f));
 

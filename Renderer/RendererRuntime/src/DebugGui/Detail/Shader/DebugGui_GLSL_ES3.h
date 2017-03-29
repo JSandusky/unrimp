@@ -83,7 +83,7 @@ uniform mediump sampler2D GlyphMap;	// Glyph atlas texture map
 void main()
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	FragmentColor = ColorVs * texture(GlyphMap, TexCoordVs).aaaa;
+	FragmentColor = ColorVs * texture(GlyphMap, TexCoordVs).rrrr;
 }
 );	// STRINGIFY
 

@@ -48,7 +48,7 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			A8				  = 0,	///< 8-bit pixel format, all bits alpha
+			R8				  = 0,	///< 8-bit pixel format, all bits red
 			R8G8B8			  = 1,	///< 24-bit pixel format, 8 bits for red, green and blue
 			R8G8B8A8		  = 2,	///< 32-bit pixel format, 8 bits for red, green, blue and alpha
 			R8G8B8A8_SRGB	  = 3,	///< 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear
