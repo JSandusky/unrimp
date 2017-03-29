@@ -240,6 +240,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorWorkspaceInstance::onLoadingStateChange(const IResource& resource)
 	{
+		// Destroy the previous stuff
+		destroySequentialCompositorNodeInstances();
+
+		// Handle loaded state
 		if (resource.getLoadingState() == IResource::LoadingState::LOADED)
 		{
 			// TODO(co) Just a first test, need to complete and refine the implementation
@@ -247,9 +251,6 @@ namespace RendererRuntime
 			const ICompositorPassFactory& compositorPassFactory = compositorNodeResourceManager.getCompositorPassFactory();
 			RenderTargetTextureManager& renderTargetTextureManager = mRendererRuntime.getCompositorWorkspaceResourceManager().getRenderTargetTextureManager();
 			FramebufferManager& framebufferManager = mRendererRuntime.getCompositorWorkspaceResourceManager().getFramebufferManager();
-
-			// Destroy the previous stuff
-			destroySequentialCompositorNodeInstances();
 
 			// For render queue index ranges gathering and merging
 			typedef std::pair<uint8_t, uint8_t> LocalRenderQueueIndexRange;
