@@ -89,7 +89,7 @@ namespace
 			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgbCubeTexturePtr, "Black cube RGB texture")
 
 			// Black alpha texture
-			const uint8_t blackAData[] = { 255 };
+			const uint8_t blackAData[] = { 0 };
 			Renderer::ITexturePtr blackA2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8, blackAData));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(blackA2DTexturePtr, "Black 2D alpha texture")
 
@@ -103,8 +103,8 @@ namespace
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",	 *whiteRgb2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",	 *whiteA2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",	 *normalMapIdentity2DTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D", *whiteRgb2DTexturePtr);	// TODO(co) Should be "whiteA2DTexturePtr"
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D",  *blackRgb2DTexturePtr);	// TODO(co) Should be "blackA2DTexturePtr"
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D", *whiteA2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D",  *blackA2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",	 *blackRgb2DTexturePtr);
 		}
 
