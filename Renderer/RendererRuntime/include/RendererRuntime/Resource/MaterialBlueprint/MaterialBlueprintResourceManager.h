@@ -94,6 +94,7 @@ namespace RendererRuntime
 		*    The material blueprint resource manager itself is setting the following global material properties:
 		*    - Floating point property "PastSecondsSinceLastFrame"
 		*    - Floating point property "GlobalTimeInSeconds"
+		*    - Integer property "NumberOfMultisamples" (see "RendererRuntime::CompositorWorkspaceInstance::setNumberOfMultisamples()")
 		*/
 		inline MaterialProperties& getGlobalMaterialProperties();
 		inline const MaterialProperties& getGlobalMaterialProperties() const;

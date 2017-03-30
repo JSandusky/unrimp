@@ -43,7 +43,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef StringId MaterialPropertyId;	///< Material property identifier, internally just a POD "uint32_t", result of hashing the property name
 
 
 	//[-------------------------------------------------------]
@@ -107,7 +108,9 @@ namespace RendererRuntime
 			FILTER_MODE,						///< Sampler state filter mode with possible values: "MIN_MAG_MIP_POINT", "MIN_MAG_POINT_MIP_LINEAR", "MIN_POINT_MAG_LINEAR_MIP_POINT", "MIN_POINT_MAG_MIP_LINEAR", "MIN_LINEAR_MAG_MIP_POINT", "MIN_LINEAR_MAG_POINT_MIP_LINEAR", "MIN_MAG_LINEAR_MIP_POINT", "MIN_MAG_MIP_LINEAR", "ANISOTROPIC", "COMPARISON_MIN_MAG_MIP_POINT", "COMPARISON_MIN_MAG_POINT_MIP_LINEAR", "COMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT", "COMPARISON_MIN_POINT_MAG_MIP_LINEAR", "COMPARISON_MIN_LINEAR_MAG_MIP_POINT", "COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR", "COMPARISON_MIN_MAG_LINEAR_MIP_POINT", "COMPARISON_MIN_MAG_MIP_LINEAR", "COMPARISON_ANISOTROPIC"
 			TEXTURE_ADDRESS_MODE,				///< Sampler state texture address mode with possible values: "WRAP", "MIRROR", "CLAMP", "BORDER", "MIRROR_ONCE"
 			// For texture property usage
-			TEXTURE_ASSET_ID					///< Texture asset ID
+			TEXTURE_ASSET_ID,					///< Texture asset ID
+			// For shader combination property usage
+			GLOBAL_MATERIAL_PROPERTY_ID			///< Global material property ID
 		};
 
 
@@ -151,6 +154,8 @@ namespace RendererRuntime
 		inline static MaterialPropertyValue fromTextureAddressMode(Renderer::TextureAddressMode value);
 		// For texture property usage
 		inline static MaterialPropertyValue fromTextureAssetId(AssetId value);
+		// For shader combination property usage
+		inline static MaterialPropertyValue fromGlobalMaterialPropertyId(MaterialPropertyId value);
 
 
 	//[-------------------------------------------------------]
@@ -204,6 +209,8 @@ namespace RendererRuntime
 		inline Renderer::TextureAddressMode getTextureAddressModeValue() const;
 		// For texture property usage
 		inline AssetId getTextureAssetIdValue() const;
+		// For shader combination property usage
+		inline MaterialPropertyId getGlobalMaterialPropertyId() const;
 
 		//[-------------------------------------------------------]
 		//[ Comparison operator                                   ]
@@ -252,6 +259,8 @@ namespace RendererRuntime
 			Renderer::TextureAddressMode					  TextureAddressMode;
 			// For texture property usage
 			uint32_t										  TextureAssetId;
+			// For shader combination property usage
+			uint32_t										  GlobalMaterialPropertyId;	///< "uint32_t" instead of "MaterialPropertyId" since there's no default constructor
 		} mValue;
 
 

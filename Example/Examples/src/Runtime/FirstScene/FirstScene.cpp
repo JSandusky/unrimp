@@ -72,10 +72,6 @@ namespace
 		static const RendererRuntime::AssetId IdentityColorCorrectionLookupTableTextureAssetId("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D");
 		static const RendererRuntime::AssetId SepiaColorCorrectionLookupTableTextureAssetId("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
 		static const RendererRuntime::AssetId FinalMaterialAssetId("Example/MaterialBlueprint/Compositor/Final");
-		static const RendererRuntime::AssetId ScreenSpaceAmbientOcclusionGenerationCompositorMaterialAssetId("Example/MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionGeneration");
-		static const RendererRuntime::AssetId DeferredAmbientCompositorMaterialAssetId("Example/MaterialBlueprint/Deferred/AmbientCompositor");
-		static const RendererRuntime::AssetId AtmosphereCompositorMaterialAssetId("Example/MaterialBlueprint/Compositor/Atmosphere");
-		static const RendererRuntime::AssetId DepthOfFieldCompositorMaterialAssetId("Example/MaterialBlueprint/Compositor/DepthOfField");
 
 
 //[-------------------------------------------------------]
@@ -516,53 +512,8 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 
 			// Update compositor workspace
 			{ // MSAA
-				uint8_t numberOfMultisamples = 1;
-				switch (mCurrentMsaa)
-				{
-					default:
-					case Msaa::NONE:
-						numberOfMultisamples = 1;
-						break;
-
-					case Msaa::TWO:
-						numberOfMultisamples = 2;
-						break;
-
-					case Msaa::FOUR:
-						numberOfMultisamples = 4;
-						break;
-
-					case Msaa::EIGHT:
-						numberOfMultisamples = 8;
-						break;
-				}
-				mCompositorWorkspaceInstance->setNumberOfMultisamples(numberOfMultisamples);
-
-				// Tell compositor materials about the number of multisamples
-				if (1 == numberOfMultisamples)
-				{
-					numberOfMultisamples = 0;
-				}
-				RendererRuntime::MaterialResource* materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::ScreenSpaceAmbientOcclusionGenerationCompositorMaterialAssetId);
-				if (nullptr != materialResource)
-				{
-					materialResource->setPropertyById("NumberOfMultisamples", RendererRuntime::MaterialPropertyValue::fromInteger(numberOfMultisamples));
-				}
-				materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::DeferredAmbientCompositorMaterialAssetId);
-				if (nullptr != materialResource)
-				{
-					materialResource->setPropertyById("NumberOfMultisamples", RendererRuntime::MaterialPropertyValue::fromInteger(numberOfMultisamples));
-				}
-				materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::AtmosphereCompositorMaterialAssetId);
-				if (nullptr != materialResource)
-				{
-					materialResource->setPropertyById("NumberOfMultisamples", RendererRuntime::MaterialPropertyValue::fromInteger(numberOfMultisamples));
-				}
-				materialResource = rendererRuntime.getMaterialResourceManager().getMaterialResourceByAssetId(::detail::DepthOfFieldCompositorMaterialAssetId);
-				if (nullptr != materialResource)
-				{
-					materialResource->setPropertyById("NumberOfMultisamples", RendererRuntime::MaterialPropertyValue::fromInteger(numberOfMultisamples));
-				}
+				static const uint8_t numberOfMultisamples[4] = { 1, 2, 4, 8 };
+				mCompositorWorkspaceInstance->setNumberOfMultisamples(numberOfMultisamples[mCurrentMsaa]);
 			}
 			mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
 

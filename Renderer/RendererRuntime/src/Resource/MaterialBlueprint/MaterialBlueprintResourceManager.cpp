@@ -311,6 +311,10 @@ namespace RendererRuntime
 			mInstanceBufferManager = new InstanceBufferManager(rendererRuntime);
 			mLightBufferManager = new LightBufferManager(rendererRuntime);
 		}
+
+		// Update at once to have all managed global material properties known from the start
+		update();
+		mGlobalMaterialProperties.setPropertyById("NumberOfMultisamples", MaterialPropertyValue::fromInteger(0));
 	}
 
 	MaterialBlueprintResourceManager::~MaterialBlueprintResourceManager()

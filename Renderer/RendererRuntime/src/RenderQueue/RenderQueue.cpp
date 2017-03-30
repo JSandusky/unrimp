@@ -159,6 +159,7 @@ namespace RendererRuntime
 
 		const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
+		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
 		InstanceBufferManager& instanceBufferManager = materialBlueprintResourceManager.getInstanceBufferManager();
 		LightBufferManager& lightBufferManager = materialBlueprintResourceManager.getLightBufferManager();
 
@@ -243,6 +244,55 @@ namespace RendererRuntime
 													case MaterialPropertyValue::ValueType::INTEGER:
 														shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getIntegerValue());
 														break;
+
+													case MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
+													{
+														const MaterialProperty* globalMaterialProperty = globalMaterialProperties.getPropertyById(materialProperty.getGlobalMaterialPropertyId());
+														if (nullptr != globalMaterialProperty)
+														{
+															switch (globalMaterialProperty->getValueType())
+															{
+																case MaterialPropertyValue::ValueType::BOOLEAN:
+																	shaderProperties.setPropertyValue(globalMaterialProperty->getMaterialPropertyId(), globalMaterialProperty->getBooleanValue());
+																	break;
+
+																case MaterialPropertyValue::ValueType::INTEGER:
+																	shaderProperties.setPropertyValue(globalMaterialProperty->getMaterialPropertyId(), globalMaterialProperty->getIntegerValue());
+																	break;
+
+																case MaterialPropertyValue::ValueType::UNKNOWN:
+																case MaterialPropertyValue::ValueType::INTEGER_2:
+																case MaterialPropertyValue::ValueType::INTEGER_3:
+																case MaterialPropertyValue::ValueType::INTEGER_4:
+																case MaterialPropertyValue::ValueType::FLOAT:
+																case MaterialPropertyValue::ValueType::FLOAT_2:
+																case MaterialPropertyValue::ValueType::FLOAT_3:
+																case MaterialPropertyValue::ValueType::FLOAT_4:
+																case MaterialPropertyValue::ValueType::FLOAT_3_3:
+																case MaterialPropertyValue::ValueType::FLOAT_4_4:
+																case MaterialPropertyValue::ValueType::FILL_MODE:
+																case MaterialPropertyValue::ValueType::CULL_MODE:
+																case MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
+																case MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
+																case MaterialPropertyValue::ValueType::STENCIL_OP:
+																case MaterialPropertyValue::ValueType::COMPARISON_FUNC:
+																case MaterialPropertyValue::ValueType::BLEND:
+																case MaterialPropertyValue::ValueType::BLEND_OP:
+																case MaterialPropertyValue::ValueType::FILTER_MODE:
+																case MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
+																case MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
+																case MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
+																default:
+																	assert(false);	// TODO(co) Error handling
+																	break;
+															}
+														}
+														else
+														{
+															assert(false);	// TODO(co) Error handling
+														}
+														break;
+													}
 
 													case MaterialPropertyValue::ValueType::UNKNOWN:
 													case MaterialPropertyValue::ValueType::INTEGER_2:

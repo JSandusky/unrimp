@@ -107,6 +107,9 @@ namespace RendererRuntime
 
 			case ValueType::TEXTURE_ASSET_ID:
 				return sizeof(AssetId);
+
+			case ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
+				return sizeof(MaterialPropertyId);
 		}
 
 		// Error, we should never ever end up in here
@@ -211,6 +214,9 @@ namespace RendererRuntime
 
 			case ValueType::TEXTURE_ASSET_ID:
 				return (mValue.TextureAssetId == materialPropertyValue.mValue.TextureAssetId);
+
+			case ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
+				return (mValue.GlobalMaterialPropertyId == materialPropertyValue.mValue.GlobalMaterialPropertyId);
 		}
 
 		// Not identical

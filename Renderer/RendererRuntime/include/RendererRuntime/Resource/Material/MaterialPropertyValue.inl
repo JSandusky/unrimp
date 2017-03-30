@@ -289,6 +289,14 @@ namespace RendererRuntime
 		return materialPropertyValue;
 	}
 
+	inline MaterialPropertyValue MaterialPropertyValue::fromGlobalMaterialPropertyId(MaterialPropertyId value)
+	{
+		MaterialPropertyValue materialPropertyValue;
+		materialPropertyValue.mValueType					  = ValueType::GLOBAL_MATERIAL_PROPERTY_ID;
+		materialPropertyValue.mValue.GlobalMaterialPropertyId = value;
+		return materialPropertyValue;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
@@ -426,6 +434,12 @@ namespace RendererRuntime
 	{
 		assert(ValueType::TEXTURE_ASSET_ID == mValueType);
 		return mValue.TextureAssetId;
+	}
+
+	inline MaterialPropertyId MaterialPropertyValue::getGlobalMaterialPropertyId() const
+	{
+		assert(ValueType::GLOBAL_MATERIAL_PROPERTY_ID == mValueType);
+		return mValue.GlobalMaterialPropertyId;
 	}
 
 	inline bool MaterialPropertyValue::operator !=(const MaterialPropertyValue& materialPropertyValue) const

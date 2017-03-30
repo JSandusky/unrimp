@@ -263,6 +263,7 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(FILTER_MODE)
 		ELSE_IF_VALUE(TEXTURE_ADDRESS_MODE)
 		ELSE_IF_VALUE(TEXTURE_ASSET_ID)
+		ELSE_IF_VALUE(GLOBAL_MATERIAL_PROPERTY_ID)
 		else
 		{
 			// TODO(co) Error handling
@@ -472,6 +473,37 @@ namespace RendererToolkit
 
 				// Done
 				return RendererRuntime::MaterialPropertyValue::fromTextureAssetId(textureAssetId);
+			}
+
+			case RendererRuntime::MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
+			{
+				RendererRuntime::MaterialPropertyId materialPropertyId = RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>();
+				if (rapidJsonValue.HasMember(propertyName))
+				{
+					// Get the reference value as string
+					static const uint32_t NAME_LENGTH = 128;
+					char referenceAsString[NAME_LENGTH];
+					memset(&referenceAsString[0], 0, sizeof(char) * NAME_LENGTH);
+					JsonHelper::optionalStringProperty(rapidJsonValue, propertyName, referenceAsString, NAME_LENGTH);
+
+					// The character "@" is used to reference e.g. a material property value
+					if (referenceAsString[0] == '@')
+					{
+						// Write down the material property
+						materialPropertyId = RendererRuntime::StringId(&referenceAsString[1]);
+					}
+					else
+					{
+						throw std::runtime_error("Inside material blueprints, global material property ID material property values must begin with a @");
+					}
+				}
+				if (RendererRuntime::isUninitialized(materialPropertyId))
+				{
+					throw std::runtime_error("Inside material blueprints, global material property ID material properties must always have a value");
+				}
+
+				// Done
+				return RendererRuntime::MaterialPropertyValue::fromGlobalMaterialPropertyId(materialPropertyId);
 			}
 		}
 
