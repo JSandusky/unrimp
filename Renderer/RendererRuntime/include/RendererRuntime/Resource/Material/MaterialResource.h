@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResource.h"
-#include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Material/MaterialProperties.h"
 
 
@@ -38,9 +37,10 @@
 namespace RendererRuntime
 {
 	class Renderable;
+	class MaterialTechnique;
+	class MaterialResourceLoader;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
-	class MaterialResourceLoader;
 }
 
 
@@ -54,6 +54,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
+	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
 	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
 
 

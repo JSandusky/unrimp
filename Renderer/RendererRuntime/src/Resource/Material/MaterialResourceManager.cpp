@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Material/Loader/MaterialResourceLoader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"

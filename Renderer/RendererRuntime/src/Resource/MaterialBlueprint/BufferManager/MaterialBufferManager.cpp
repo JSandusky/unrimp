@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
+#include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Core/SwizzleVectorElementRemove.h"
 #include "RendererRuntime/IRendererRuntime.h"

@@ -27,6 +27,7 @@
 #include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
