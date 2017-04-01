@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <RendererRuntime/Public/RendererRuntime.h>
+#include <RendererRuntime/IRendererRuntime.h>
 
 #ifdef SHARED_LIBRARIES
 	// Dynamically linked libraries

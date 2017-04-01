@@ -25,6 +25,7 @@
 #include "Runtime/FirstMesh/FirstMesh.h"
 #include "Framework/Color4.h"
 
+#include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Resource/Mesh/MeshResource.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/Texture/TextureResource.h>

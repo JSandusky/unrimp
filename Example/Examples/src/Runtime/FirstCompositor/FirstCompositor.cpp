@@ -36,6 +36,7 @@
 #include "Runtime/FirstCompositor/FirstCompositor.h"
 #include "Runtime/FirstCompositor/CompositorPassFactoryFirst.h"
 
+#include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h>
 #include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h>
 

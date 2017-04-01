@@ -235,12 +235,10 @@ endif()
 # Copy header
 if(SHARED_LIBRARY)
 	add_custom_command(TARGET RendererRuntime
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererRuntime/Public/RendererRuntime.h" ${OUTPUT_INCLUDE_DIR}
 		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererRuntime/Public/RendererRuntimeInstance.h" ${OUTPUT_INCLUDE_DIR}
 	)
 elseif(STATIC_LIBRARY)
 	add_custom_command(TARGET RendererRuntimeStatic
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererRuntime/Public/RendererRuntime.h" ${OUTPUT_INCLUDE_DIR}
 		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererRuntime/Public/RendererRuntimeInstance.h" ${OUTPUT_INCLUDE_DIR}
 	)
 endif()

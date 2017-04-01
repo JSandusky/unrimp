@@ -26,6 +26,7 @@
 #include "Framework/IApplication.h"
 #include "Framework/IApplicationRendererRuntime.h"
 
+#include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/DebugGui/Detail/DebugGuiManagerWindows.h>
 
 

@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRenderer.h"
 
-#include <RendererRuntime/Public/RendererRuntime.h>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -38,6 +36,7 @@
 class StdFileManager;
 namespace RendererRuntime
 {
+	class IRendererRuntime;
 	class RendererRuntimeInstance;
 }
 namespace RendererToolkit

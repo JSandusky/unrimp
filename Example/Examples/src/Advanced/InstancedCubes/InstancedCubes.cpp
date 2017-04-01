@@ -27,6 +27,7 @@
 #include "Advanced/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.h"
 #include "Framework/Color4.h"
 
+#include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/DebugGui/DebugGuiManager.h>
 #include <RendererRuntime/DebugGui/DebugGuiHelper.h>
 

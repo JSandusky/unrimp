@@ -206,7 +206,6 @@
 //[ Error                                                 ]
 //[-------------------------------------------------------]
 // OUTPUT_ERROR_* macros
-// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
 #ifdef WIN32
 	#ifndef RENDERERRUNTIME_OUTPUT_ERROR
 		#define RENDERERRUNTIME_OUTPUT_ERROR
@@ -243,7 +242,6 @@
 //[ Debug                                                 ]
 //[-------------------------------------------------------]
 // OUTPUT_DEBUG_* macros
-// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
 #ifdef RENDERER_NO_DEBUG
 	// Debugging stuff is not supported
 	#define RENDERERRUNTIME_OUTPUT_DEBUG_STRING(outputString)

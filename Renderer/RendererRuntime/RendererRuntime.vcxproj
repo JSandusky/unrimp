@@ -210,7 +210,6 @@
     <ClInclude Include="include\RendererRuntime\Export.h" />
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\PrecompiledHeader.h" />
-    <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
     <ClInclude Include="include\RendererRuntime\RenderQueue\IndirectBufferManager.h" />
     <ClInclude Include="include\RendererRuntime\RenderQueue\Renderable.h" />

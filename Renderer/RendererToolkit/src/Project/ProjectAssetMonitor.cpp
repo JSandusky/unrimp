@@ -31,7 +31,7 @@
 #include "RendererToolkit/Project/ProjectImpl.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 
-#include <RendererRuntime/Public/RendererRuntime.h>
+#include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
 
 #include <FileWatcher/FileWatcher.h>

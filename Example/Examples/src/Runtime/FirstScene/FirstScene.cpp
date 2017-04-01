@@ -28,6 +28,7 @@
 	#include "Runtime/FirstScene/VrController.h"
 #endif
 
+#include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Vr/IVrManager.h>
 #include <RendererRuntime/Core/Math/Transform.h>
 #include <RendererRuntime/Core/Math/EulerAngles.h>

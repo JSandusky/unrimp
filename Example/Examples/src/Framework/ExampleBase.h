@@ -31,9 +31,6 @@
 
 // TODO(sw) To make the example agnostic from unrimp internal headers is should reference the header in <unrimp source dir>/include
 #include <Renderer/Public/Renderer.h>
-#ifndef RENDERER_NO_RUNTIME
-	#include <RendererRuntime/Public/RendererRuntime.h>
-#endif
 
 
 //[-------------------------------------------------------]
@@ -84,6 +81,10 @@
 namespace Renderer
 {
 	class RendererInstance;
+}
+namespace RendererRuntime
+{
+	class IRendererRuntime;
 }
 
 
