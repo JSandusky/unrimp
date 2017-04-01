@@ -81,7 +81,7 @@ namespace
 				ELSE_IF_VALUE(LIGHT)
 				else
 				{
-					// TODO(co) Error handling
+					throw std::runtime_error("Buffer usage of property \"" + std::string(propertyName) + "\" must be \"UNKNOWN\", \"PASS\", \"MATERIAL\", \"INSTANCE\" or \"LIGHT\", but \"" + std::string(valueAsString) + "\" set");
 				}
 
 				// Undefine helper macros
@@ -113,7 +113,7 @@ namespace
 			}
 			else
 			{
-				// TODO(co) Error handling
+				throw std::runtime_error("Invalid parameter set instruction, syntax is \"@pset(<parameter name>, <parameter value to set>)\"");
 			}
 		}
 
@@ -180,7 +180,7 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(FRAGMENT)
 			else
 			{
-				// TODO(co) Error handling
+				throw std::runtime_error("Shader visibility of property \"" + std::string(propertyName) + "\" must be \"ALL\", \"VERTEX\", \"TESSELLATION_CONTROL\", \"TESSELLATION_EVALUATION\", \"GEOMETRY\" or \"FRAGMENT\", but \"" + std::string(valueAsString) + "\" set");
 			}
 
 			// Undefine helper macros
@@ -217,7 +217,7 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(INSTANCE_REFERENCE)
 		else
 		{
-			// TODO(co) Error handling
+			throw std::runtime_error("Invalid property usage \"" + std::string(valueAsString) + '\"');
 		}
 
 		// Undefine helper macros
@@ -266,7 +266,7 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(GLOBAL_MATERIAL_PROPERTY_ID)
 		else
 		{
-			// TODO(co) Error handling
+			throw std::runtime_error("Invalid property value type \"" + std::string(valueAsString) + '\"');
 		}
 
 		// Undefine helper macros
@@ -564,7 +564,7 @@ namespace RendererToolkit
 							ELSE_IF_VALUE(SAMPLER)
 							else
 							{
-								// TODO(co) Error handling
+								throw std::runtime_error("Invalid range type \"" + std::string(rangeTypeAsString) + "\", must be \"SRV\", \"UAV\", \"UBV\" or \"SAMPLER\"");
 							}
 
 							// Undefine helper macros
@@ -601,7 +601,7 @@ namespace RendererToolkit
 				}
 				else
 				{
-					// TODO(co) Error handling
+					throw std::runtime_error("Root parameter type must be \"DESCRIPTOR_TABLE\"");
 				}
 			}
 		}
@@ -1027,7 +1027,7 @@ namespace RendererToolkit
 					}
 					else
 					{
-						// TODO(co) Error handling
+						throw std::runtime_error("Textures with \"STATIC\"-usage must have the value type \"TEXTURE_ASSET_ID\"");
 					}
 				}
 
@@ -1060,12 +1060,12 @@ namespace RendererToolkit
 						}
 						else
 						{
-							// TODO(co) Error handling
+							throw std::runtime_error("Textures with \"MATERIAL_REFERENCE\"-usage and the value type \"TEXTURE_ASSET_ID\" must have a value starting with @");
 						}
 					}
 					else
 					{
-						// TODO(co) Error handling
+						throw std::runtime_error("Textures with \"MATERIAL_REFERENCE\"-usage must have the value type \"TEXTURE_ASSET_ID\"");
 					}
 					break;
 				}
@@ -1084,8 +1084,7 @@ namespace RendererToolkit
 				case RendererRuntime::MaterialProperty::Usage::INSTANCE_REFERENCE:
 				default:
 				{
-					// TODO(co) Error handling
-					break;
+					throw std::runtime_error("Invalid texture usage");
 				}
 			}
 		}

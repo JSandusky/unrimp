@@ -64,7 +64,8 @@ namespace
 			if (nullptr != sortedMaterialPropertyVector && !valueAsString.empty() && valueAsString[0] == '@')
 			{
 				// Reference a material property value
-				const RendererRuntime::MaterialPropertyId materialPropertyId(valueAsString.substr(1).c_str());
+				const std::string materialPropertyName = valueAsString.substr(1);
+				const RendererRuntime::MaterialPropertyId materialPropertyId(materialPropertyName.c_str());
 
 				// Figure out the material property value
 				RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector->cbegin(), sortedMaterialPropertyVector->cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
@@ -77,21 +78,18 @@ namespace
 					}
 					else
 					{
-						// TODO(co) Error handling: Usage mismatch etc.
+						throw std::runtime_error("Material property \"" + materialPropertyName + "\" value type mismatch");
 					}
 				}
 				else
 				{
-					// TODO(co) Error handling: Unknown material property
+					throw std::runtime_error("Unknown material property name \"" + materialPropertyName + '\"');
 				}
 			}
 			else
 			{
-				// TODO(co) Error handling
+				throw std::runtime_error("Invalid material property value reference \"" + valueAsString + "\", first character must be @");
 			}
-
-			// Error!
-			return nullptr;
 		}
 
 
