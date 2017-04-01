@@ -144,7 +144,7 @@ namespace RendererToolkit
 		}
 		catch (const std::exception& e)
 		{
-			std::cerr << "Error opening cache database: " << e.what() << "\n";
+			throw std::runtime_error("Error opening cache database: " + std::string(e.what()));
 		}
 
 		setupCacheDataBase();
@@ -233,7 +233,7 @@ namespace RendererToolkit
 			}
 			catch (const std::exception& e)
 			{
-				std::cerr << "Error setting up cache database: " << e.what() << "\n";
+				throw std::runtime_error("Error setting up cache database: " + std::string(e.what()));
 			}
 		}
 
@@ -268,10 +268,7 @@ namespace RendererToolkit
 			}
 			catch (const std::exception& e)
 			{
-				std::cerr << "Error querying data from database: " << e.what() << "\n";
-
-				// Error
-				return false;
+				throw std::runtime_error("Error querying data from database: " + std::string(e.what()));
 			}
 		}
 
@@ -360,7 +357,7 @@ namespace RendererToolkit
 			}
 			catch (const std::exception& e)
 			{
-				std::cerr << "Error querying data from database: " << e.what() << "\n";
+				throw std::runtime_error("Error querying data from database: " + std::string(e.what()));
 			}
 		}
 
@@ -385,7 +382,7 @@ namespace RendererToolkit
 			// Execute statement and check if we got a result
 			if (!query.exec())
 			{
-				std::cerr << "Error inserting data to database\n";
+				throw std::runtime_error("Error inserting data to database");
 			}
 		}
 		else
@@ -402,7 +399,7 @@ namespace RendererToolkit
 			// Execute statement and check if we got a result
 			if (!updateQuery.exec())
 			{
-				std::cerr << "Error updating data to database\n";
+				throw std::runtime_error("Error updating data to database");
 			}
 		}
 	}
