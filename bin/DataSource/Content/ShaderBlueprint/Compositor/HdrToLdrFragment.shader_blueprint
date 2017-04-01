@@ -46,7 +46,7 @@ OUTPUT_END
 struct PassDataStruct
 {
 	float4x4 LensStarMatrix;
-	float 	 ToneMapKeyValue;	// TODO(co) Currently unused
+	float 	 ToneMapKeyValue;	// Used by "CalculateExposedColor()"
 	float 	 BloomIntensity;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
