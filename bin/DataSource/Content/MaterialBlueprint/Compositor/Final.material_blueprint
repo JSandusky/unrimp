@@ -22,13 +22,6 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 				"Description": "2D color map"
-			},
-			"GlobalTimeInSeconds":
-			{
-				"Usage": "GLOBAL_REFERENCE_FALLBACK",
-				"ValueType": "FLOAT",
-				"Value": "0.0",
-				"Description": "Fallback value in case there's no global time in seconds global material property"
 			}
 		},
 		"RootSignature":
