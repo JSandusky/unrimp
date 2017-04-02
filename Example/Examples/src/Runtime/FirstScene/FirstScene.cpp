@@ -30,7 +30,6 @@
 
 #include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Vr/IVrManager.h>
-#include <RendererRuntime/Core/Math/Transform.h>
 #include <RendererRuntime/Core/Math/EulerAngles.h>
 #include <RendererRuntime/Core/Time/TimeManager.h>
 #include <RendererRuntime/DebugGui/DebugGuiManager.h>
@@ -64,15 +63,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
-		// Referenced assets
-		static const RendererRuntime::AssetId CompositorWorkspaceAssetId[3] = { "Example/CompositorWorkspace/Default/Debug", "Example/CompositorWorkspace/Default/Forward", "Example/CompositorWorkspace/Default/Deferred" };
-		static const RendererRuntime::AssetId SceneAssetId("Example/Scene/Default/FirstScene");
-		static const RendererRuntime::AssetId VrDeviceMaterialAssetId("Example/Material/Default/VrDevice");
-		static const RendererRuntime::AssetId ImrodMaterialAssetId("Example/Material/Character/Imrod");
-		static const RendererRuntime::AssetId HdrToLdrMaterialAssetId("Example/MaterialBlueprint/Compositor/HdrToLdr");
-		static const RendererRuntime::AssetId IdentityColorCorrectionLookupTableTextureAssetId("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D");
-		static const RendererRuntime::AssetId SepiaColorCorrectionLookupTableTextureAssetId("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
-		static const RendererRuntime::AssetId FinalMaterialAssetId("Example/MaterialBlueprint/Compositor/Final");
+		static const RendererRuntime::AssetId IMROD_MATERIAL_ASSET_ID("Example/Material/Character/Imrod");
 
 
 //[-------------------------------------------------------]
@@ -143,17 +134,17 @@ void FirstScene::onInitialization()
 		createCompositorWorkspace();
 
 		// Create the scene resource
-		mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId(::detail::SceneAssetId, this);
+		mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId("Example/Scene/Default/FirstScene", this);
 
 		// Load the material resource we're going to clone
-		rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::ImrodMaterialAssetId, mMaterialResourceId, this);
+		rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::IMROD_MATERIAL_ASSET_ID, mMaterialResourceId, this);
 
 		{ // Startup the VR-manager
 			RendererRuntime::IVrManager& vrManager = rendererRuntime->getVrManager();
 			if (vrManager.isHmdPresent())
 			{
 				vrManager.setSceneResource(mSceneResource);
-				vrManager.startup(::detail::VrDeviceMaterialAssetId);
+				vrManager.startup("Example/Material/Default/VrDevice");
 			}
 		}
 	}
@@ -260,35 +251,14 @@ void FirstScene::onUpdate()
 
 void FirstScene::onDraw()
 {
-	Renderer::IRenderer* renderer = getRenderer();
-	if (nullptr != renderer)
+	Renderer::IRenderTarget* mainRenderTarget = getMainRenderTarget();
+	if (nullptr != mainRenderTarget && nullptr != mCompositorWorkspaceInstance)
 	{
-		Renderer::IRenderTarget* mainRenderTarget = getMainRenderTarget();
-		if (nullptr != mainRenderTarget)
+		createDebugGui(*mainRenderTarget);
+		if (nullptr != mSceneResource && mSceneResource->getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
 		{
 			// Execute the compositor workspace instance
-			if (nullptr != mCompositorWorkspaceInstance)
-			{
-				createDebugGui(*mainRenderTarget);
-				if (nullptr != mSceneResource && mSceneResource->getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
-				{
-					// Decide whether or not the VR-manager is used for rendering
-					RendererRuntime::IVrManager& vrManager = mCompositorWorkspaceInstance->getRendererRuntime().getVrManager();
-					if (vrManager.isRunning())
-					{
-						// Update the VR-manager just before rendering
-						vrManager.updateHmdMatrixPose(mCameraSceneItem);
-
-						// Execute the compositor workspace instance
-						vrManager.executeCompositorWorkspaceInstance(*mCompositorWorkspaceInstance, *mainRenderTarget, mCameraSceneItem, mLightSceneItem);
-					}
-					else
-					{
-						// Execute the compositor workspace instance
-						mCompositorWorkspaceInstance->execute(*mainRenderTarget, mCameraSceneItem, mLightSceneItem);
-					}
-				}
-			}
+			mCompositorWorkspaceInstance->executeVr(*mainRenderTarget, mCameraSceneItem, mLightSceneItem);
 		}
 	}
 }
@@ -402,7 +372,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 			mSceneNode = nullptr;
 		}
 	}
-	else if (RendererRuntime::IResource::LoadingState::LOADED == loadingState && resource.getAssetId() == ::detail::ImrodMaterialAssetId)
+	else if (RendererRuntime::IResource::LoadingState::LOADED == loadingState && resource.getAssetId() == ::detail::IMROD_MATERIAL_ASSET_ID)
 	{
 		// Create our material resource clone
 		RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
@@ -428,7 +398,8 @@ void FirstScene::createCompositorWorkspace()
 		{
 			delete mCompositorWorkspaceInstance;
 		}
-		mCompositorWorkspaceInstance = new RendererRuntime::CompositorWorkspaceInstance(*rendererRuntime, ::detail::CompositorWorkspaceAssetId[mInstancedCompositor]);
+		static const RendererRuntime::AssetId COMPOSITOR_WORKSPACE_ASSET_ID[3] = { "Example/CompositorWorkspace/Default/Debug", "Example/CompositorWorkspace/Default/Forward", "Example/CompositorWorkspace/Default/Deferred" };
+		mCompositorWorkspaceInstance = new RendererRuntime::CompositorWorkspaceInstance(*rendererRuntime, COMPOSITOR_WORKSPACE_ASSET_ID[mInstancedCompositor]);
 	}
 }
 
@@ -513,8 +484,8 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 
 			// Update compositor workspace
 			{ // MSAA
-				static const uint8_t numberOfMultisamples[4] = { 1, 2, 4, 8 };
-				mCompositorWorkspaceInstance->setNumberOfMultisamples(numberOfMultisamples[mCurrentMsaa]);
+				static const uint8_t NUMBER_OF_MULTISAMPLES[4] = { 1, 2, 4, 8 };
+				mCompositorWorkspaceInstance->setNumberOfMultisamples(NUMBER_OF_MULTISAMPLES[mCurrentMsaa]);
 			}
 			mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
 
@@ -522,14 +493,16 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime.getMaterialResourceManager();
 
 				// HDR to LDR compositor material
-				RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId(::detail::HdrToLdrMaterialAssetId);
+				RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/HdrToLdr");
 				if (nullptr != materialResource)
 				{
-					materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? ::detail::SepiaColorCorrectionLookupTableTextureAssetId : ::detail::IdentityColorCorrectionLookupTableTextureAssetId));
+					static const RendererRuntime::AssetId IDENTITY_TEXTURE_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D");
+					static const RendererRuntime::AssetId SEPIA_TEXTURE_ASSET_ID("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
+					materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? SEPIA_TEXTURE_ASSET_ID : IDENTITY_TEXTURE_ASSET_ID));
 				}
 
 				// Final compositor material
-				materialResource = materialResourceManager.getMaterialResourceByAssetId(::detail::FinalMaterialAssetId);
+				materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/Final");
 				if (nullptr != materialResource)
 				{
 					materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));

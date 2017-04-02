@@ -43,6 +43,7 @@
 #include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
 #include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
+#include "RendererRuntime/Vr/IVrManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <algorithm>
@@ -118,6 +119,25 @@ namespace RendererRuntime
 
 		// No compositor instance pass with the provided compositor pass type ID found
 		return nullptr;
+	}
+
+	void CompositorWorkspaceInstance::executeVr(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem)
+	{
+		// Decide whether or not the VR-manager is used for rendering
+		IVrManager& vrManager = mRendererRuntime.getVrManager();
+		if (vrManager.isRunning())
+		{
+			// Update the VR-manager just before rendering
+			vrManager.updateHmdMatrixPose(cameraSceneItem);
+
+			// Execute the compositor workspace instance
+			vrManager.executeCompositorWorkspaceInstance(*this, renderTarget, cameraSceneItem, lightSceneItem);
+		}
+		else
+		{
+			// Execute the compositor workspace instance
+			execute(renderTarget, cameraSceneItem, lightSceneItem);
+		}
 	}
 
 	void CompositorWorkspaceInstance::execute(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem)

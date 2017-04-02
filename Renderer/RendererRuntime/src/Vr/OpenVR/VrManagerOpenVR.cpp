@@ -735,6 +735,10 @@ namespace RendererRuntime
 		return ::detail::convertOpenVrMatrixToGlmMat34(mVrSystem->GetEyeToHeadTransform(static_cast<vr::Hmd_Eye>(vrEye)));
 	}
 
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IVrManager methods   ]
+	//[-------------------------------------------------------]
 	void VrManagerOpenVR::executeCompositorWorkspaceInstance(CompositorWorkspaceInstance& compositorWorkspaceInstance, Renderer::IRenderTarget&, CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem)
 	{
 		assert(nullptr != mVrSystem);

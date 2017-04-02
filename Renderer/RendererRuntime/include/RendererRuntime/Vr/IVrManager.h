@@ -80,6 +80,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
+		friend class CompositorWorkspaceInstance;	// Calls "RendererRuntime::IVrManager::executeCompositorWorkspaceInstance()"
 
 
 	//[-------------------------------------------------------]
@@ -129,6 +130,11 @@ namespace RendererRuntime
 		virtual glm::mat4 getHmdEyeSpaceToHeadSpaceMatrix(VrEye vrEye) const = 0;
 		virtual const glm::mat4& getHmdPoseMatrix() const = 0;
 
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IVrManager methods   ]
+	//[-------------------------------------------------------]
+	private:
 		//[-------------------------------------------------------]
 		//[ Render (only valid if manager is running)             ]
 		//[-------------------------------------------------------]
