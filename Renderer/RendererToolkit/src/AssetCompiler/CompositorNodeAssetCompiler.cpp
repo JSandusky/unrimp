@@ -47,7 +47,6 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-#include <string>
 #include <fstream>
 #include <unordered_set>
 
@@ -476,7 +475,6 @@ namespace RendererToolkit
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// Read configuration
-		// TODO(co) Add required properties
 		std::string inputFile;
 		{
 			// Read compositor node asset compiler configuration

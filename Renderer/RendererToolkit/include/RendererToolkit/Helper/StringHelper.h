@@ -27,11 +27,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <RendererRuntime/Core/NonCopyable.h>
-
 #include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
-#include <string>
+#include <RendererRuntime/Core/NonCopyable.h>
+
 #include <vector>
 
 

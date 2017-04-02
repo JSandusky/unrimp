@@ -174,7 +174,6 @@ namespace RendererToolkit
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// Read configuration
-		// TODO(co) Add required properties
 		std::string inputFile;
 		{
 			// Read shader blueprint asset compiler configuration

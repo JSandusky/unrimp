@@ -41,13 +41,6 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
-	#include <glm/gtc/epsilon.hpp>
-PRAGMA_WARNING_POP
-
-#include <string>
 #include <fstream>
 
 
@@ -144,7 +137,6 @@ namespace RendererToolkit
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// Read configuration
-		// TODO(co) Add required properties
 		std::string inputFile;
 		{
 			// Read scene asset compiler configuration
@@ -204,14 +196,6 @@ namespace RendererToolkit
 								JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Position", &node.transform.position.x, 3);
 								JsonHelper::optionalRotationQuaternionProperty(rapidJsonValueProperties, "Rotation", node.transform.rotation);
 								JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Scale", &node.transform.scale.x, 3);
-							}
-
-							{ // Sanity check
-								const float length = glm::length(node.transform.rotation);
-								if (!glm::epsilonEqual(length, 1.0f, 0.0000001f))
-								{
-									throw std::runtime_error("The rotation quaternion of scene node \"" + std::string(rapidJsonMemberIteratorNodes->name.GetString()) + "\" does not appear to be normalized (length is " + std::to_string(length) + ")");
-								}
 							}
 
 							// Write down the scene node

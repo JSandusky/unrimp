@@ -42,6 +42,7 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
 	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
 	#include <glm/gtc/quaternion.hpp>
+	#include <glm/gtc/epsilon.hpp>
 PRAGMA_WARNING_POP
 
 #include <fstream>
@@ -240,13 +241,22 @@ namespace RendererToolkit
 		if (rapidJsonValue.HasMember(propertyName))
 		{
 			std::vector<std::string> elements;
-			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+			const char* valueAsString = rapidJsonValue[propertyName].GetString();
+			StringHelper::splitString(valueAsString, ' ', elements);
 			if (elements.size() == 5 && elements[4] == "QUATERNION")
 			{
 				value.x = std::stof(elements[0].c_str());
 				value.y = std::stof(elements[1].c_str());
 				value.z = std::stof(elements[2].c_str());
 				value.w = std::stof(elements[3].c_str());
+
+				{ // Sanity check
+					const float length = glm::length(value);
+					if (!glm::epsilonEqual(length, 1.0f, 0.0000001f))
+					{
+						throw std::runtime_error("The rotation quaternion \"" + std::string(valueAsString) + "\" does not appear to be normalized (length is " + std::to_string(length) + ")");
+					}
+				}
 			}
 			else if (elements.size() == 4)
 			{

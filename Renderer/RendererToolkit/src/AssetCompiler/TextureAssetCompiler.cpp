@@ -24,8 +24,8 @@
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
-#include "RendererToolkit/PlatformTypes.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
+#include "RendererToolkit/PlatformTypes.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 

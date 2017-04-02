@@ -499,7 +499,7 @@ namespace
 					// Loop through all indices of the Assimp face and set our indices
 					for (uint32_t assimpIndex = 0; assimpIndex < assimpFace.mNumIndices; ++assimpIndex, ++currentIndexBuffer)
 					{
-						//					  Assimp mesh vertex index	 								 Where the Assimp mesh starts within the our vertex buffer
+						//					  Assimp mesh vertex index									Where the Assimp mesh starts within the our vertex buffer
 						*currentIndexBuffer = static_cast<uint16_t>(assimpFace.mIndices[assimpIndex] + starVertex);
 					}
 
