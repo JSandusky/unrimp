@@ -77,6 +77,46 @@ namespace
 			return (f2i.i >> (32 - DepthBits));	// Take highest n-bits
 		}
 
+		inline void setShaderPropertiesPropertyValue(RendererRuntime::MaterialPropertyId materialPropertyId, const RendererRuntime::MaterialPropertyValue& materialPropertyValue, RendererRuntime::ShaderProperties& shaderProperties)
+		{
+			switch (materialPropertyValue.getValueType())
+			{
+				case RendererRuntime::MaterialPropertyValue::ValueType::BOOLEAN:
+					shaderProperties.setPropertyValue(materialPropertyId, materialPropertyValue.getBooleanValue());
+					break;
+
+				case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER:
+					shaderProperties.setPropertyValue(materialPropertyId, materialPropertyValue.getIntegerValue());
+					break;
+
+				case RendererRuntime::MaterialPropertyValue::ValueType::UNKNOWN:
+				case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_2:
+				case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_3:
+				case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_4:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_2:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3_3:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4_4:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FILL_MODE:
+				case RendererRuntime::MaterialPropertyValue::ValueType::CULL_MODE:
+				case RendererRuntime::MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
+				case RendererRuntime::MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
+				case RendererRuntime::MaterialPropertyValue::ValueType::STENCIL_OP:
+				case RendererRuntime::MaterialPropertyValue::ValueType::COMPARISON_FUNC:
+				case RendererRuntime::MaterialPropertyValue::ValueType::BLEND:
+				case RendererRuntime::MaterialPropertyValue::ValueType::BLEND_OP:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FILTER_MODE:
+				case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
+				case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
+				case RendererRuntime::MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
+				default:
+					assert(false);	// TODO(co) Error handling
+					break;
+			}
+		}
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -251,46 +291,21 @@ namespace RendererRuntime
 														const MaterialProperty* globalMaterialProperty = globalMaterialProperties.getPropertyById(materialProperty.getGlobalMaterialPropertyId());
 														if (nullptr != globalMaterialProperty)
 														{
-															switch (globalMaterialProperty->getValueType())
-															{
-																case MaterialPropertyValue::ValueType::BOOLEAN:
-																	shaderProperties.setPropertyValue(globalMaterialProperty->getMaterialPropertyId(), globalMaterialProperty->getBooleanValue());
-																	break;
-
-																case MaterialPropertyValue::ValueType::INTEGER:
-																	shaderProperties.setPropertyValue(globalMaterialProperty->getMaterialPropertyId(), globalMaterialProperty->getIntegerValue());
-																	break;
-
-																case MaterialPropertyValue::ValueType::UNKNOWN:
-																case MaterialPropertyValue::ValueType::INTEGER_2:
-																case MaterialPropertyValue::ValueType::INTEGER_3:
-																case MaterialPropertyValue::ValueType::INTEGER_4:
-																case MaterialPropertyValue::ValueType::FLOAT:
-																case MaterialPropertyValue::ValueType::FLOAT_2:
-																case MaterialPropertyValue::ValueType::FLOAT_3:
-																case MaterialPropertyValue::ValueType::FLOAT_4:
-																case MaterialPropertyValue::ValueType::FLOAT_3_3:
-																case MaterialPropertyValue::ValueType::FLOAT_4_4:
-																case MaterialPropertyValue::ValueType::FILL_MODE:
-																case MaterialPropertyValue::ValueType::CULL_MODE:
-																case MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
-																case MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
-																case MaterialPropertyValue::ValueType::STENCIL_OP:
-																case MaterialPropertyValue::ValueType::COMPARISON_FUNC:
-																case MaterialPropertyValue::ValueType::BLEND:
-																case MaterialPropertyValue::ValueType::BLEND_OP:
-																case MaterialPropertyValue::ValueType::FILTER_MODE:
-																case MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
-																case MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
-																case MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
-																default:
-																	assert(false);	// TODO(co) Error handling
-																	break;
-															}
+															::detail::setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, shaderProperties);
 														}
 														else
 														{
-															assert(false);	// TODO(co) Error handling
+															// Try global material property reference fallback
+															globalMaterialProperty = materialBlueprintResource->getMaterialProperties().getPropertyById(materialProperty.getGlobalMaterialPropertyId());
+															if (nullptr != globalMaterialProperty)
+															{
+																::detail::setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, shaderProperties);
+															}
+															else
+															{
+																// Error, can't resolve reference
+																assert(false);	// TODO(co) Error handling
+															}
 														}
 														break;
 													}

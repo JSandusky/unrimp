@@ -118,8 +118,18 @@ namespace RendererRuntime
 						}
 						else
 						{
-							// Error, can't resolve reference
-							assert(false);	// RendererRuntime::PassBufferManager::fillBuffer(): Failed to fill pass uniform buffer element " << i << " by using unknown global material property
+							// Try global material property reference fallback
+							materialProperty = mMaterialBlueprintResource.getMaterialProperties().getPropertyById(uniformBufferElementProperty.getReferenceValue());
+							if (nullptr != materialProperty)
+							{
+								// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
+								memcpy(scratchBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
+							}
+							else
+							{
+								// Error, can't resolve reference
+								assert(false);	// RendererRuntime::PassBufferManager::fillBuffer(): Failed to fill pass uniform buffer element " << i << " by using unknown global material property
+							}
 						}
 					}
 					else if (MaterialProperty::Usage::MATERIAL_REFERENCE == usage)

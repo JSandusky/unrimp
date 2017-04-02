@@ -81,6 +81,9 @@ namespace RendererRuntime
 			MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResourceManager.tryGetById(materialBlueprintResourceId);
 			if (nullptr != materialBlueprintResource)
 			{
+				// TODO(co) Possible optimization: Right now we don't filter for "RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE_FALLBACK" properties.
+				//          Only the material blueprint resource needs to store such properties while there're useless inside material resources. The filtering
+				//          makes the following more complex and it might not bring any real benefit. So, review this place in here later when we have more pressure on the system.
 				materialResource.mMaterialProperties = materialBlueprintResource->mMaterialProperties;
 
 				// Create default material technique

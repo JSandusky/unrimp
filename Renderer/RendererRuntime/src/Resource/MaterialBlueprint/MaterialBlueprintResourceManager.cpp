@@ -275,7 +275,7 @@ namespace RendererRuntime
 	void MaterialBlueprintResourceManager::update()
 	{
 		const TimeManager& timeManager = mRendererRuntime.getTimeManager();
-		mGlobalMaterialProperties.setPropertyById("PastSecondsSinceLastFrame", MaterialPropertyValue::fromFloat(timeManager.getPastSecondsSinceLastFrame()));
+		mGlobalMaterialProperties.setPropertyById("GlobalPastSecondsSinceLastFrame", MaterialPropertyValue::fromFloat(timeManager.getPastSecondsSinceLastFrame()));
 		mGlobalMaterialProperties.setPropertyById("GlobalTimeInSeconds", MaterialPropertyValue::fromFloat(timeManager.getGlobalTimeInSeconds()));
 	}
 
@@ -314,7 +314,7 @@ namespace RendererRuntime
 
 		// Update at once to have all managed global material properties known from the start
 		update();
-		mGlobalMaterialProperties.setPropertyById("NumberOfMultisamples", MaterialPropertyValue::fromInteger(0));
+		mGlobalMaterialProperties.setPropertyById("GlobalNumberOfMultisamples", MaterialPropertyValue::fromInteger(0));
 	}
 
 	MaterialBlueprintResourceManager::~MaterialBlueprintResourceManager()

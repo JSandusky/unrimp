@@ -64,20 +64,21 @@ namespace RendererRuntime
 		*/
 		enum class Usage : uint8_t
 		{
-			UNKNOWN = 0,			///< Usage not known
-			STATIC,					///< Static property is used for fixed build in values which usually don't change during runtime (for example hard wired material blueprint textures, hard wired uniform buffer element values or static material properties which the renderer should ignore)
-			SHADER_UNIFORM,			///< Dynamic property is considered to change regularly and hence will be handled as shader uniform managed in a combined uniform buffer
-			SHADER_COMBINATION,		///< Static property is considered to not change regularly and results in shader combinations
-			RASTERIZER_STATE,		///< Pipeline rasterizer state, property is considered to not change regularly
-			DEPTH_STENCIL_STATE,	///< Pipeline depth stencil state, property is considered to not change regularly
-			BLEND_STATE,			///< Pipeline blend state, property is considered to not change regularly
-			SAMPLER_STATE,			///< Sampler state, property is considered to not change regularly
-			TEXTURE_REFERENCE,		///< Property is a texture asset reference, property is considered to not change regularly
-			GLOBAL_REFERENCE,		///< Property is a global material property reference
-			UNKNOWN_REFERENCE,		///< Property is an automatic unknown uniform buffer property reference
-			PASS_REFERENCE,			///< Property is an automatic pass uniform buffer property reference
-			MATERIAL_REFERENCE,		///< Property is a material uniform buffer property reference
-			INSTANCE_REFERENCE		///< Property is an automatic instance uniform buffer property reference
+			UNKNOWN = 0,				///< Usage not known
+			STATIC,						///< Static property is used for fixed build in values which usually don't change during runtime (for example hard wired material blueprint textures, hard wired uniform buffer element values or static material properties which the renderer should ignore)
+			SHADER_UNIFORM,				///< Dynamic property is considered to change regularly and hence will be handled as shader uniform managed in a combined uniform buffer
+			SHADER_COMBINATION,			///< Static property is considered to not change regularly and results in shader combinations
+			RASTERIZER_STATE,			///< Pipeline rasterizer state, property is considered to not change regularly
+			DEPTH_STENCIL_STATE,		///< Pipeline depth stencil state, property is considered to not change regularly
+			BLEND_STATE,				///< Pipeline blend state, property is considered to not change regularly
+			SAMPLER_STATE,				///< Sampler state, property is considered to not change regularly
+			TEXTURE_REFERENCE,			///< Property is a texture asset reference, property is considered to not change regularly
+			GLOBAL_REFERENCE,			///< Property is a global material property reference
+			UNKNOWN_REFERENCE,			///< Property is an automatic unknown uniform buffer property reference
+			PASS_REFERENCE,				///< Property is an automatic pass uniform buffer property reference
+			MATERIAL_REFERENCE,			///< Property is a material uniform buffer property reference
+			INSTANCE_REFERENCE,			///< Property is an automatic instance uniform buffer property reference
+			GLOBAL_REFERENCE_FALLBACK	///< Property is a fallback for a none existing referenced global material property
 		};
 
 

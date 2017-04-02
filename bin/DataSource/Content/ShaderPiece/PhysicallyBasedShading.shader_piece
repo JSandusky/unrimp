@@ -138,7 +138,24 @@
 		return dotNL * Di * Fs * Vs;
 	}
 
-	float3 CalculatePbsLighting(float3 albedo, float roughness, float metallic, float3 N, float3 V, float3 L, float3 lightColor)
+	/**
+	*  @brief
+	*    Calculate lighting
+	*
+	*  @param[in] albedo
+	*    Albedo = diffuse = base color
+	*  @param[in] roughness
+	*    Roughness = 1 - glossiness
+	*  @param[in] metallic
+	*    Metallic
+	*  @param[in] N
+	*    N = Surface normal
+	*  @param[in] V
+	*    V = Camera direction
+	*  @param[in] L
+	*    L = Light direction
+	*/
+	float3 CalculateLighting(float3 albedo, float roughness, float metallic, float3 N, float3 V, float3 L, float3 lightColor)
 	{
 		// Derive data
 		float3 R = reflect(-V, N);
@@ -172,8 +189,56 @@
 		// Final output mixes based on material metalness
 		return LERP(diffuseColor, reflectionColor, metallic) + specularColor;
 	}
+@end
 
-	float3 CalculateTraditionalLighting(float3 albedo, float roughness, float metallic, float3 N, float3 V, float3 L, float3 lightColor)
+@piece(DefineBlinnPhongBasedShading)
+	//[-------------------------------------------------------]
+	//[ Constants                                             ]
+	//[-------------------------------------------------------]
+	#define PI 3.14159265359f
+
+
+	//[-------------------------------------------------------]
+	//[ Ambient                                               ]
+	//[-------------------------------------------------------]
+	// See http://sunandblackcat.com/tipFullView.php?l=eng&topicid=31&topic=Advanced-GLSL-Lighting-Models
+	float3 CalculateHemisphereLighting(float3 worldSpaceNormal, float3 groundColor, float3 skyColor)
+	{
+		// Cosine between normal and direction to upper hemisphere
+		// ->  1 - normal is oriented to upper hemisphere
+		// -> -1 - normal is oriented to lower hemisphere
+		float3 topHemisphereDirection = float3(0.0f, -1.0f, 0.0f);
+		float dotNL = dot(worldSpaceNormal, topHemisphereDirection);
+
+		// From [-1, 1] to [0, 1] range
+		float lightInfluence = dotNL * 0.5f + 0.5f;
+
+		// Interpolate colors from upper and lower hemispheres
+		return LERP(groundColor, skyColor, lightInfluence);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Lighting function                                     ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Calculate lighting
+	*
+	*  @param[in] albedo
+	*    Albedo = diffuse = base color
+	*  @param[in] roughness
+	*    Roughness = 1 - glossiness
+	*  @param[in] metallic
+	*    Metallic
+	*  @param[in] N
+	*    N = Surface normal
+	*  @param[in] V
+	*    V = Camera direction
+	*  @param[in] L
+	*    L = Light direction
+	*/
+	float3 CalculateLighting(float3 albedo, float roughness, float metallic, float3 N, float3 V, float3 L, float3 lightColor)
 	{
 		// Perform traditional Blinn-Phong diffuse and specular lighting
 
@@ -194,30 +259,6 @@
 
 		// Done
 		return color;
-	}
-
-	/**
-	*  @brief
-	*    Calculate lighting
-	*
-	*  @param[in] albedo
-	*    Albedo = diffuse = base color
-	*  @param[in] roughness
-	*    Roughness = 1 - glossiness
-	*  @param[in] metallic
-	*    Metallic
-	*  @param[in] N
-	*    N = Surface normal
-	*  @param[in] V
-	*    V = Camera direction
-	*  @param[in] L
-	*    L = Light direction
-	*/
-	float3 CalculateLighting(float3 albedo, float roughness, float metallic, float3 N, float3 V, float3 L, float3 lightColor)
-	{
-		// TODO(co) Traditional lighting is here as preparation for supporting low end hardware as well
-		return CalculatePbsLighting(albedo, roughness, metallic, N, V, L, lightColor);
-	//	return CalculateTraditionalLighting(albedo, roughness, metallic, N, V, L, lightColor);
 	}
 @end
 

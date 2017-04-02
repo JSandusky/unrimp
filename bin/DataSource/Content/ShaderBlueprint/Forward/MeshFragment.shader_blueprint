@@ -49,9 +49,7 @@ INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame0VS,		 2)	// Tangent frame
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame1VS,		 3)	// Tangent frame
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame2VS,		 4)	// Tangent frame
-	@property(Lighting)
-		INPUT_TEXTURE_COORDINATE			(float3, WorldSpacePositionVS,	 5)	// World space position
-	@end
+	INPUT_TEXTURE_COORDINATE				(float3, WorldSpacePositionVS,	 5)	// World space position
 	INPUT_VERTEX_DRAW_ID														// Draw ID
 INPUT_END
 OUTPUT_BEGIN
@@ -113,7 +111,12 @@ TEXTURE_3D_UINT(LightClustersMap3D, 10)
 //[ Functions                                             ]
 //[-------------------------------------------------------]
 @insertpiece(DefineGetTangentFrame)
-@insertpiece(DefinePhysicallyBasedShading)
+@property(HighQualityLighting)
+	@insertpiece(DefinePhysicallyBasedShading)
+@end
+@property(!HighQualityLighting)
+	@insertpiece(DefineBlinnPhongBasedShading)
+@end
 
 
 //[-------------------------------------------------------]
@@ -146,37 +149,33 @@ MAIN_BEGIN
 
 	// Derive data
 	float3 worldSpaceNormal = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceNormal);
+	float3 worldSpacePosition = MAIN_INPUT(WorldSpacePositionVS);
 
 	// Ambient term
 	float3 color = diffuse * (PassData.AmbientColor.rgb + CalculateHemisphereLighting(worldSpaceNormal.xyz, PassData.AmbientColor.rgb * 0.7f, PassData.AmbientColor.rgb * 0.2f));
 
+	// TODO(co) Shadow: Totally primitive to have something to start with
+	float shadowVisibility = 1.0f;
+	{
+		float4 shadowTextureCoordinate = MATRIX_MUL(PassData.ShadowMatrix, float4(worldSpacePosition, 1.0f));
+		if (SAMPLE_2D_LOD(ShadowMap, SamplerPoint, float4(shadowTextureCoordinate.xy, 0.0f, 0.0f)).r < shadowTextureCoordinate.z - 0.001f)
+		{
+			shadowVisibility = 0.0f;
+		}
+	}
+
+	// Get view space incident vector
+	float3 viewSpaceIncident = normalize(PassData.CameraWorldSpacePosition - worldSpacePosition);
+	viewSpaceIncident = MultiplyQuaternionVector(PassData.WorldSpaceToViewSpaceQuaternion, viewSpaceIncident);
+
 	// Directional sun light, our primary light
-	@property(Lighting)
-		float3 worldSpacePosition = MAIN_INPUT(WorldSpacePositionVS);
+	if (shadowVisibility > 0.0f)
+	{
+		color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
+	}
 
-		// TODO(co) Shadow: Totally primitive to have something to start with
-		float shadowVisibility = 1.0f;
-		{
-			float4 shadowTextureCoordinate = MATRIX_MUL(PassData.ShadowMatrix, float4(worldSpacePosition, 1.0f));
-			if (SAMPLE_2D_LOD(ShadowMap, SamplerPoint, float4(shadowTextureCoordinate.xy, 0.0f, 0.0f)).r < shadowTextureCoordinate.z - 0.001f)
-			{
-				shadowVisibility = 0.0f;
-			}
-		}
-
-		// Get view space incident vector
-		float3 viewSpaceIncident = normalize(PassData.CameraWorldSpacePosition - worldSpacePosition);
-		viewSpaceIncident = MultiplyQuaternionVector(PassData.WorldSpaceToViewSpaceQuaternion, viewSpaceIncident);
-
-		// Directional sun light, our primary light
-		if (shadowVisibility > 0.0f)
-		{
-			color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
-		}
-
-		// Perform clustered shading
-		@insertpiece(PerformClusteredShading)
-	@end
+	// Perform clustered shading
+	@insertpiece(PerformClusteredShading)
 
 	// Emissive term
 	@property(UseEmissiveMap)

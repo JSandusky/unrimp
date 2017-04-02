@@ -314,6 +314,7 @@ namespace RendererRuntime
 				case MaterialProperty::Usage::PASS_REFERENCE:
 				case MaterialProperty::Usage::MATERIAL_REFERENCE:
 				case MaterialProperty::Usage::INSTANCE_REFERENCE:
+				case MaterialProperty::Usage::GLOBAL_REFERENCE_FALLBACK:
 				default:
 					// Nothing here
 					break;

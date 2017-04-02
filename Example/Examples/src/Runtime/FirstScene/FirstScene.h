@@ -173,13 +173,10 @@ private:
 	bool	   mPerformSepiaColorCorrection;
 	float	   mRotationSpeed;
 	bool	   mShowSkeleton;
+	bool	   mHighQualityLighting;
 	float	   mSunLightColor[3];
 	float	   mWetness;
-	bool	   mPerformLighting;
-	bool	   mUseDiffuseMap;
 	bool	   mUseEmissiveMap;
-	bool	   mUseNormalMap;
-	bool	   mUseRoughnessMap;
 	float	   mDiffuseColor[3];
 	// Scene hot-reloading memory
 	bool					   mHasCameraTransformBackup;

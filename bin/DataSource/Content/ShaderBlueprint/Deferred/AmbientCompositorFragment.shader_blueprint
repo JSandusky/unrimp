@@ -97,7 +97,12 @@ TEXTURE_3D_UINT(LightClustersMap3D, 8)
 //[ Functions                                             ]
 //[-------------------------------------------------------]
 @insertpiece(DefineGetTangentFrame)
-@insertpiece(DefinePhysicallyBasedShading)
+@property(HighQualityLighting)
+	@insertpiece(DefinePhysicallyBasedShading)
+@end
+@property(!HighQualityLighting)
+	@insertpiece(DefineBlinnPhongBasedShading)
+@end
 
 
 //[-------------------------------------------------------]

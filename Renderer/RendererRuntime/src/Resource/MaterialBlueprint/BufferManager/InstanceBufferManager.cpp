@@ -162,8 +162,18 @@ namespace RendererRuntime
 					}
 					else
 					{
-						// Error, can't resolve reference
-						assert(false);
+						// Try global material property reference fallback
+						materialProperty = materialBlueprintResourceManager.getById(materialTechnique.getMaterialBlueprintResourceId()).getMaterialProperties().getPropertyById(uniformBufferElementProperty.getReferenceValue());
+						if (nullptr != materialProperty)
+						{
+							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
+							memcpy(scratchUniformBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
+						}
+						else
+						{
+							// Error, can't resolve reference
+							assert(false);	// RendererRuntime::PassBufferManager::fillBuffer(): Failed to fill pass uniform buffer element " << i << " by using unknown global material property
+						}
 					}
 				}
 				else if (!uniformBufferElementProperty.isReferenceUsage())	// TODO(co) Performance: Think about such tests, the toolkit should already take care of this so we have well known verified runtime data

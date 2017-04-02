@@ -39,6 +39,13 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 				"Description": "Previous 2D luminance map"
+			},
+			"GlobalPastSecondsSinceLastFrame":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "FLOAT",
+				"Value": "0.0",
+				"Description": "Fallback value in case there's no past seconds since last frame global material property"
 			}
 		},
 		"RootSignature":
@@ -142,7 +149,7 @@
 						{
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT",
-							"Value": "@PastSecondsSinceLastFrame"
+							"Value": "@GlobalPastSecondsSinceLastFrame"
 						}
 					}
 				}

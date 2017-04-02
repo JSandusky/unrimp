@@ -145,6 +145,52 @@ namespace
 		static ShaderPropertyIds				 g_ShaderPropertyIds(128);
 
 
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		inline void setShaderPropertiesPropertyValue(const RendererRuntime::MaterialBlueprintResource& materialBlueprintResource, RendererRuntime::MaterialPropertyId materialPropertyId, const RendererRuntime::MaterialPropertyValue& materialPropertyValue, ShaderPropertyIds& shaderPropertyIds, ShaderCombinationIterator& shaderCombinationIterator)
+		{
+			switch (materialPropertyValue.getValueType())
+			{
+				case RendererRuntime::MaterialPropertyValue::ValueType::BOOLEAN:
+					shaderPropertyIds.push_back(materialPropertyId);	// Shader property ID and material property ID are identical, so this is valid
+					shaderCombinationIterator.addBoolProperty();
+					break;
+
+				case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER:
+					shaderPropertyIds.push_back(materialPropertyId);	// Shader property ID and material property ID are identical, so this is valid
+					shaderCombinationIterator.addIntegerProperty(static_cast<uint32_t>(materialBlueprintResource.getMaximumIntegerValueOfShaderProperty(materialPropertyId)));
+					break;
+
+				case RendererRuntime::MaterialPropertyValue::ValueType::UNKNOWN:
+				case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_2:
+				case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_3:
+				case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_4:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_2:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3_3:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4_4:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FILL_MODE:
+				case RendererRuntime::MaterialPropertyValue::ValueType::CULL_MODE:
+				case RendererRuntime::MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
+				case RendererRuntime::MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
+				case RendererRuntime::MaterialPropertyValue::ValueType::STENCIL_OP:
+				case RendererRuntime::MaterialPropertyValue::ValueType::COMPARISON_FUNC:
+				case RendererRuntime::MaterialPropertyValue::ValueType::BLEND:
+				case RendererRuntime::MaterialPropertyValue::ValueType::BLEND_OP:
+				case RendererRuntime::MaterialPropertyValue::ValueType::FILTER_MODE:
+				case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
+				case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
+				case RendererRuntime::MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
+				default:
+					assert(false);	// TODO(co) Error handling
+					break;
+			}
+		}
+
+
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
@@ -293,48 +339,21 @@ namespace RendererRuntime
 							const MaterialProperty* globalMaterialProperty = getResourceManager<MaterialBlueprintResourceManager>().getGlobalMaterialProperties().getPropertyById(materialProperty.getGlobalMaterialPropertyId());
 							if (nullptr != globalMaterialProperty)
 							{
-								switch (globalMaterialProperty->getValueType())
-								{
-									case MaterialPropertyValue::ValueType::BOOLEAN:
-										shaderPropertyIds.push_back(globalMaterialProperty->getMaterialPropertyId());	// Shader property ID and material property ID are identical, so this is valid
-										shaderCombinationIterator.addBoolProperty();
-										break;
-
-									case MaterialPropertyValue::ValueType::INTEGER:
-										shaderPropertyIds.push_back(globalMaterialProperty->getMaterialPropertyId());	// Shader property ID and material property ID are identical, so this is valid
-										shaderCombinationIterator.addIntegerProperty(static_cast<uint32_t>(getMaximumIntegerValueOfShaderProperty(materialPropertyId)));
-										break;
-
-									case MaterialPropertyValue::ValueType::UNKNOWN:
-									case MaterialPropertyValue::ValueType::INTEGER_2:
-									case MaterialPropertyValue::ValueType::INTEGER_3:
-									case MaterialPropertyValue::ValueType::INTEGER_4:
-									case MaterialPropertyValue::ValueType::FLOAT:
-									case MaterialPropertyValue::ValueType::FLOAT_2:
-									case MaterialPropertyValue::ValueType::FLOAT_3:
-									case MaterialPropertyValue::ValueType::FLOAT_4:
-									case MaterialPropertyValue::ValueType::FLOAT_3_3:
-									case MaterialPropertyValue::ValueType::FLOAT_4_4:
-									case MaterialPropertyValue::ValueType::FILL_MODE:
-									case MaterialPropertyValue::ValueType::CULL_MODE:
-									case MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
-									case MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
-									case MaterialPropertyValue::ValueType::STENCIL_OP:
-									case MaterialPropertyValue::ValueType::COMPARISON_FUNC:
-									case MaterialPropertyValue::ValueType::BLEND:
-									case MaterialPropertyValue::ValueType::BLEND_OP:
-									case MaterialPropertyValue::ValueType::FILTER_MODE:
-									case MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
-									case MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
-									case MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
-									default:
-										assert(false);	// TODO(co) Error handling
-										break;
-								}
+								::detail::setShaderPropertiesPropertyValue(*this, materialProperty.getMaterialPropertyId(), *globalMaterialProperty, shaderPropertyIds, shaderCombinationIterator);
 							}
 							else
 							{
-								assert(false);	// TODO(co) Error handling
+								// Try global material property reference fallback
+								globalMaterialProperty = mMaterialProperties.getPropertyById(materialProperty.getGlobalMaterialPropertyId());
+								if (nullptr != globalMaterialProperty)
+								{
+									::detail::setShaderPropertiesPropertyValue(*this, materialProperty.getMaterialPropertyId(), *globalMaterialProperty, shaderPropertyIds, shaderCombinationIterator);
+								}
+								else
+								{
+									// Error, can't resolve reference
+									assert(false);	// TODO(co) Error handling
+								}
 							}
 							break;
 						}

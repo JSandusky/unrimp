@@ -12,7 +12,7 @@
 			{
 				"Usage": "SHADER_COMBINATION",
 				"ValueType": "GLOBAL_MATERIAL_PROPERTY_ID",
-				"Value": "@NumberOfMultisamples",
+				"Value": "@GlobalNumberOfMultisamples",
 				"Description": "Number of multisamples. Valid values are 0, 2, 4, 8. Use 0 to disable multisample.",
 				"VisualImportance": "100",
 				"MaximumIntegerValue": "8",
@@ -48,7 +48,21 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 				"Description": "2D depth map"
-			}
+			},
+			"GlobalAmbientColor":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "FLOAT_3",
+				"Value": "0.2 0.2 0.2",
+				"Description": "Fallback value in case there's no ambient color global material property"
+			},
+			"GlobalSunLightColor":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "FLOAT_3",
+				"Value": "1.0 1.0 1.0",
+				"Description": "Fallback value in case there's no sun light color global material property"
+			}			
 		},
 		"RootSignature":
 		{
@@ -168,13 +182,13 @@
 						{
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "@AmbientColor"
+							"Value": "@GlobalAmbientColor"
 						},
 						"SunLightColor":
 						{
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "@SunLightColor"
+							"Value": "@GlobalSunLightColor"
 						},
 						"DiffuseFogColor":
 						{

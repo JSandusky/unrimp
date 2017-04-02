@@ -98,13 +98,10 @@ FirstScene::FirstScene() :
 	mPerformSepiaColorCorrection(false),
 	mRotationSpeed(0.0f),
 	mShowSkeleton(false),
+	mHighQualityLighting(true),
 	mSunLightColor{1.0f, 1.0f, 1.0f},
 	mWetness(0.0f),
-	mPerformLighting(true),
-	mUseDiffuseMap(true),
 	mUseEmissiveMap(true),
-	mUseNormalMap(true),
-	mUseRoughnessMap(true),
 	mDiffuseColor{1.0f, 1.0f, 1.0f},
 	// Scene hot-reloading memory
 	mHasCameraTransformBackup(false)
@@ -218,9 +215,9 @@ void FirstScene::onUpdate()
 	{
 		{ // Tell the material blueprint resource manager about our global material properties
 			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
-			globalMaterialProperties.setPropertyById("AmbientColor", RendererRuntime::MaterialPropertyValue::fromFloat3(0.2f, 0.2f, 0.2f));
-			globalMaterialProperties.setPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunLightColor[0] * 2.0f, mSunLightColor[1] * 2.0f, mSunLightColor[2] * 2.0f));
-			globalMaterialProperties.setPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
+			globalMaterialProperties.setPropertyById("GlobalHighQualityLighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mHighQualityLighting));
+			globalMaterialProperties.setPropertyById("GlobalSunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunLightColor[0] * 2.0f, mSunLightColor[1] * 2.0f, mSunLightColor[2] * 2.0f));
+			globalMaterialProperties.setPropertyById("GlobalWetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
 		}
 
 		// Update the scene node rotation
@@ -440,16 +437,13 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 
 				// Global material properties
 				ImGui::Separator();
+				ImGui::Checkbox("High Quality Lighting", &mHighQualityLighting);
 				ImGui::ColorEdit3("Sun Light Color", mSunLightColor);
 				ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
 
 				// Material properties
 				ImGui::Separator();
-				ImGui::Checkbox("Perform Lighting", &mPerformLighting);
-				ImGui::Checkbox("Use Diffuse Map", &mUseDiffuseMap);
 				ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
-				ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
-				ImGui::Checkbox("Use Roughness Map", &mUseRoughnessMap);
 				ImGui::ColorEdit3("Diffuse Color", mDiffuseColor);
 
 				// Scene visualizations
@@ -508,21 +502,11 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
 				}
 
-				// Imrod material
-				materialResource = materialResourceManager.tryGetById(mMaterialResourceId);
-				if (nullptr != materialResource)
-				{
-					materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
-				}
-
 				// Imrod material clone
 				materialResource = materialResourceManager.tryGetById(mCloneMaterialResourceId);
 				if (nullptr != materialResource)
 				{
-					materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));
 					materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
-					materialResource->setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
-					materialResource->setPropertyById("UseRoughnessMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseRoughnessMap));
 					materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
 				}
 			}

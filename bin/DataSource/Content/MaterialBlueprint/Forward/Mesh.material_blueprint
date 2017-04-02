@@ -24,13 +24,13 @@
 				"Value": "TRUE",
 				"Description": "Cast shadows?"
 			},
-			"Lighting":
+			"HighQualityLighting":
 			{
 				"Usage": "SHADER_COMBINATION",
-				"ValueType": "BOOLEAN",
-				"Value": "TRUE",
-				"Description": "Perform lighting on the material?",
-				"VisualImportance": "MANDATORY"
+				"ValueType": "GLOBAL_MATERIAL_PROPERTY_ID",
+				"Value": "@GlobalHighQualityLighting",
+				"Description": "If high quality lighting is true physically based shading (PBS) is used, else a cheaper lighting model is used instead",
+				"VisualImportance": "100"
 			},
 			"CullMode":
 			{
@@ -163,6 +163,34 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "152",
 				"Description": "Reflection cube map"
+			},
+			"GlobalHighQualityLighting":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Fallback value in case there's no global high quality lighting global material property"
+			},
+			"GlobalWetness":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "FLOAT",
+				"Value": "0.0",
+				"Description": "Fallback value in case there's no wetness global material property"
+			},
+			"GlobalAmbientColor":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "FLOAT_3",
+				"Value": "0.2 0.2 0.2",
+				"Description": "Fallback value in case there's no ambient color global material property"
+			},
+			"GlobalSunLightColor":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "FLOAT_3",
+				"Value": "1.0 1.0 1.0",
+				"Description": "Fallback value in case there's no sun light color global material property"
 			}
 		},
 		"RootSignature":
@@ -458,19 +486,19 @@
 						{
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT",
-							"Value": "@Wetness"
+							"Value": "@GlobalWetness"
 						},
 						"AmbientColor":
 						{
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "@AmbientColor"
+							"Value": "@GlobalAmbientColor"
 						},
 						"SunLightColor":
 						{
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "@SunLightColor"
+							"Value": "@GlobalSunLightColor"
 						},
 						"CameraWorldSpacePosition":
 						{

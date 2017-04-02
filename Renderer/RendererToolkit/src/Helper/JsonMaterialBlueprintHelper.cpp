@@ -215,6 +215,7 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(PASS_REFERENCE)
 		ELSE_IF_VALUE(MATERIAL_REFERENCE)
 		ELSE_IF_VALUE(INSTANCE_REFERENCE)
+		ELSE_IF_VALUE(GLOBAL_REFERENCE_FALLBACK)
 		else
 		{
 			throw std::runtime_error("Invalid property usage \"" + std::string(valueAsString) + '\"');
@@ -299,7 +300,7 @@ namespace RendererToolkit
 		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, materialBlueprintInputFileStream, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "1");
 		RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
 		RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
-		readProperties(input, rapidJsonDocument["MaterialBlueprintAsset"]["Properties"], sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, materialPropertyIdToName);
+		readProperties(input, rapidJsonDocument["MaterialBlueprintAsset"]["Properties"], sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, true, materialPropertyIdToName);
 	}
 
 	RendererRuntime::MaterialPropertyValue JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName, const RendererRuntime::MaterialProperty::ValueType valueType)
@@ -642,7 +643,7 @@ namespace RendererToolkit
 		outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), static_cast<std::streamsize>(sizeof(Renderer::DescriptorRange) * descriptorRanges.size()));
 	}
 
-	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::ShaderProperties& visualImportanceOfShaderProperties, RendererRuntime::ShaderProperties& maximumIntegerValueOfShaderProperties, bool sort, MaterialPropertyIdToName* materialPropertyIdToName)
+	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::ShaderProperties& visualImportanceOfShaderProperties, RendererRuntime::ShaderProperties& maximumIntegerValueOfShaderProperties, bool ignoreGlobalReferenceFallback, bool sort, MaterialPropertyIdToName* materialPropertyIdToName)
 	{
 		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIterator = rapidJsonValueProperties.MemberBegin(); rapidJsonMemberIterator != rapidJsonValueProperties.MemberEnd(); ++rapidJsonMemberIterator)
 		{
@@ -656,67 +657,71 @@ namespace RendererToolkit
 			}
 
 			// Material property usage
+			// -> Optimisation: Material resources don't need to store global reference fallbacks, it's sufficient if those are just stored inside material blueprint resources
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(rapidJsonValueProperty);
-			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValueProperty);
-			if (RendererRuntime::MaterialProperty::isReferenceUsage(usage))
+			if (!ignoreGlobalReferenceFallback || RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE_FALLBACK != usage)
 			{
-				// Get the reference value as string
-				static const uint32_t NAME_LENGTH = 128;
-				char referenceAsString[NAME_LENGTH];
-				memset(&referenceAsString[0], 0, sizeof(char) * NAME_LENGTH);
-				JsonHelper::optionalStringProperty(rapidJsonValueProperty, "Value", referenceAsString, NAME_LENGTH);
-
-				// The character "@" is used to reference e.g. a material property value
-				if (referenceAsString[0] == '@')
+				const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValueProperty);
+				if (RendererRuntime::MaterialProperty::isReferenceUsage(usage))
 				{
-					// Write down the material property
-					const RendererRuntime::StringId referenceAsInteger(&referenceAsString[1]);
-					sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, RendererRuntime::MaterialProperty::materialPropertyValueFromReference(valueType, referenceAsInteger)));
+					// Get the reference value as string
+					static const uint32_t NAME_LENGTH = 128;
+					char referenceAsString[NAME_LENGTH];
+					memset(&referenceAsString[0], 0, sizeof(char) * NAME_LENGTH);
+					JsonHelper::optionalStringProperty(rapidJsonValueProperty, "Value", referenceAsString, NAME_LENGTH);
+
+					// The character "@" is used to reference e.g. a material property value
+					if (referenceAsString[0] == '@')
+					{
+						// Write down the material property
+						const RendererRuntime::StringId referenceAsInteger(&referenceAsString[1]);
+						sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, RendererRuntime::MaterialProperty::materialPropertyValueFromReference(valueType, referenceAsInteger)));
+					}
+					else
+					{
+						// Write down the material property
+						sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, mandatoryMaterialPropertyValue(input, rapidJsonValueProperty, "Value", valueType)));
+					}
 				}
 				else
 				{
 					// Write down the material property
 					sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, mandatoryMaterialPropertyValue(input, rapidJsonValueProperty, "Value", valueType)));
 				}
-			}
-			else
-			{
-				// Write down the material property
-				sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, mandatoryMaterialPropertyValue(input, rapidJsonValueProperty, "Value", valueType)));
-			}
 
-			// Optional visual importance of shader property
-			if (rapidJsonValueProperty.HasMember("VisualImportance"))
-			{
-				// Sanity check: "VisualImportance" is only valid for shader combination properties
-				// TODO(co) Error handling
-				assert(RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage);
-				if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage)
+				// Optional visual importance of shader property
+				if (rapidJsonValueProperty.HasMember("VisualImportance"))
 				{
-					const rapidjson::Value& rapidJsonValueVisualImportance = rapidJsonValueProperty["VisualImportance"];
-					const char* valueAsString = rapidJsonValueVisualImportance.GetString();
-					int32_t visualImportanceOfShaderProperty = RendererRuntime::MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY;
-					if (strncmp(valueAsString, "MANDATORY", 9) != 0)
+					// Sanity check: "VisualImportance" is only valid for shader combination properties
+					// TODO(co) Error handling
+					assert(RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage);
+					if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage)
 					{
-						visualImportanceOfShaderProperty = std::atoi(valueAsString);
+						const rapidjson::Value& rapidJsonValueVisualImportance = rapidJsonValueProperty["VisualImportance"];
+						const char* valueAsString = rapidJsonValueVisualImportance.GetString();
+						int32_t visualImportanceOfShaderProperty = RendererRuntime::MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY;
+						if (strncmp(valueAsString, "MANDATORY", 9) != 0)
+						{
+							visualImportanceOfShaderProperty = std::atoi(valueAsString);
+						}
+						visualImportanceOfShaderProperties.setPropertyValue(materialPropertyId, visualImportanceOfShaderProperty);	// We're using the same string hashing for material property ID and shader property ID
 					}
-					visualImportanceOfShaderProperties.setPropertyValue(materialPropertyId, visualImportanceOfShaderProperty);	// We're using the same string hashing for material property ID and shader property ID
 				}
-			}
 
-			// Mandatory maximum value for integer type shader combination properties to be able to keep the total number of shader combinations manageable
-			if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage && RendererRuntime::MaterialProperty::ValueType::INTEGER == valueType)
-			{
-				// TODO(co) Error handling
-
-				// "MaximumIntegerValue" (inclusive)
-				const bool hasMaximumIntegerValue = rapidJsonValueProperty.HasMember("MaximumIntegerValue");
-				assert(hasMaximumIntegerValue);
-				if (hasMaximumIntegerValue)
+				// Mandatory maximum value for integer type shader combination properties to be able to keep the total number of shader combinations manageable
+				if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage && RendererRuntime::MaterialProperty::ValueType::INTEGER == valueType)
 				{
-					const int maximumIntegerValue = std::atoi(rapidJsonValueProperty["MaximumIntegerValue"].GetString());
-					assert(maximumIntegerValue > 0);
-					maximumIntegerValueOfShaderProperties.setPropertyValue(materialPropertyId, maximumIntegerValue);	// We're using the same string hashing for material property ID and shader property ID
+					// TODO(co) Error handling
+
+					// "MaximumIntegerValue" (inclusive)
+					const bool hasMaximumIntegerValue = rapidJsonValueProperty.HasMember("MaximumIntegerValue");
+					assert(hasMaximumIntegerValue);
+					if (hasMaximumIntegerValue)
+					{
+						const int maximumIntegerValue = std::atoi(rapidJsonValueProperty["MaximumIntegerValue"].GetString());
+						assert(maximumIntegerValue > 0);
+						maximumIntegerValueOfShaderProperties.setPropertyValue(materialPropertyId, maximumIntegerValue);	// We're using the same string hashing for material property ID and shader property ID
+					}
 				}
 			}
 		}
@@ -861,7 +866,7 @@ namespace RendererToolkit
 			RendererRuntime::MaterialProperties::SortedPropertyVector elementProperties;
 			RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
 			RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
-			readProperties(input, rapidJsonValueElementProperties, elementProperties, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, false);
+			readProperties(input, rapidJsonValueElementProperties, elementProperties, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, false);
 
 			// Calculate the uniform buffer size, including handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 			// -> Sum up the number of bytes required by all uniform buffer element properties
@@ -1082,6 +1087,7 @@ namespace RendererToolkit
 				case RendererRuntime::MaterialProperty::Usage::UNKNOWN_REFERENCE:
 				case RendererRuntime::MaterialProperty::Usage::PASS_REFERENCE:
 				case RendererRuntime::MaterialProperty::Usage::INSTANCE_REFERENCE:
+				case RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE_FALLBACK:
 				default:
 				{
 					throw std::runtime_error("Invalid texture usage");
