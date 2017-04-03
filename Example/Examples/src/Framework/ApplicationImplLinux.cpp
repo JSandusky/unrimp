@@ -27,6 +27,7 @@
 #include "Framework/X11Application.h"
 #include "Framework/IApplicationRendererRuntime.h"
 
+#include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/DebugGui/Detail/DebugGuiManagerLinux.h>
 
 #include <X11/Xutil.h>
