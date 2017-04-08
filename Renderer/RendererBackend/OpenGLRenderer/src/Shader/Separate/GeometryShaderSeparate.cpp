@@ -36,16 +36,16 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t) :
+	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(0)
+		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromBytecode(GL_GEOMETRY_SHADER_ARB, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
 	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode*) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShader(GL_GEOMETRY_SHADER_ARB, sourceCode))
+		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromSourceCode(GL_GEOMETRY_SHADER_ARB, sourceCode))
 	{
 		// TODO(co) Return shader bytecode, if requested do to so
 

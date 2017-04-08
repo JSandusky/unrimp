@@ -45,7 +45,7 @@ namespace OpenGLRenderer
 
 	TessellationEvaluationShaderMonolithic::TessellationEvaluationShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(ShaderLanguageMonolithic::loadShader(GL_TESS_EVALUATION_SHADER, sourceCode))
+		mOpenGLShader(ShaderLanguageMonolithic::loadShaderFromSourcecode(GL_TESS_EVALUATION_SHADER, sourceCode))
 	{
 		// Nothing here
 	}

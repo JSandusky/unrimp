@@ -47,7 +47,7 @@
 #include <string.h>
 
 // Statically linked libraries create renderer instance signatures
-// This is needed to do here because the methods in the libaries are also defined in global namespace
+// This is needed to do here because the methods in the libraries are also defined in global namespace
 #ifndef SHARED_LIBRARIES
 	// Null
 	#ifndef RENDERER_NO_NULL

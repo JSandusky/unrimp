@@ -33,6 +33,8 @@
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
+#include <tuple>	// For "std::ignore"
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -50,7 +52,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t ShaderLanguageMonolithic::loadShader(uint32_t shaderType, const char *sourceCode)
+	uint32_t ShaderLanguageMonolithic::loadShaderFromSourcecode(uint32_t shaderType, const char *sourceCode)
 	{
 		// Create the shader object
 		const GLuint openGLShader = glCreateShaderObjectARB(shaderType);
@@ -144,6 +146,7 @@ namespace OpenGLRenderer
 	{
 		// Monolithic shaders have no shader bytecode, only a monolithic program bytecode
 		assert(nullptr == shaderBytecode);
+		std::ignore = shaderBytecode;
 
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
@@ -177,6 +180,7 @@ namespace OpenGLRenderer
 	{
 		// Monolithic shaders have no shader bytecode, only a monolithic program bytecode
 		assert(nullptr == shaderBytecode);
+		std::ignore = shaderBytecode;
 
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
@@ -210,6 +214,7 @@ namespace OpenGLRenderer
 	{
 		// Monolithic shaders have no shader bytecode, only a monolithic program bytecode
 		assert(nullptr == shaderBytecode);
+		std::ignore = shaderBytecode;
 
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
@@ -247,6 +252,7 @@ namespace OpenGLRenderer
 	{
 		// Monolithic shaders have no shader bytecode, only a monolithic program bytecode
 		assert(nullptr == shaderBytecode);
+		std::ignore = shaderBytecode;
 
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
@@ -284,6 +290,7 @@ namespace OpenGLRenderer
 	{
 		// Monolithic shaders have no shader bytecode, only a monolithic program bytecode
 		assert(nullptr == shaderBytecode);
+		std::ignore = shaderBytecode;
 
 		// Check whether or not there's fragment shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());

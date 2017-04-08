@@ -45,7 +45,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t ShaderLanguageGlsl::loadShader(uint32_t shaderType, const char *shaderSource)
+	uint32_t ShaderLanguageGlsl::loadShaderFromSourcecode(uint32_t shaderType, const char *shaderSource)
 	{
 		// Create the shader object
 		const GLuint openGLES3Shader = glCreateShader(shaderType);

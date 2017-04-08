@@ -157,6 +157,7 @@ namespace OpenGLRenderer
 		bool isGL_ARB_direct_state_access() const;
 		bool isGL_ARB_texture_storage() const;
 		bool isGL_ARB_copy_image() const;
+		bool isGL_ARB_gl_spirv() const;
 
 
 	//[-------------------------------------------------------]
@@ -266,6 +267,7 @@ namespace OpenGLRenderer
 		bool mGL_ARB_direct_state_access;
 		bool mGL_ARB_texture_storage;
 		bool mGL_ARB_copy_image;
+		bool mGL_ARB_gl_spirv;
 
 
 	};
@@ -508,6 +510,15 @@ namespace OpenGLRenderer
 
 	// GL_ARB_copy_image
 	FNDEF_EX(glCopyImageSubData,	PFNGLCOPYIMAGESUBDATAPROC);
+
+	// GL_ARB_gl_spirv
+	FNDEF_EX(glSpecializeShaderARB,	PFNGLSPECIALIZESHADERARBPROC);
+
+
+	//[-------------------------------------------------------]
+	//[ Core (OpenGL version dependent)                       ]
+	//[-------------------------------------------------------]
+	FNDEF_EX(glShaderBinary,	PFNGLSHADERBINARYPROC);	// OpenGL 4.1
 
 
 	//[-------------------------------------------------------]

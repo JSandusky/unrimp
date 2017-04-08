@@ -54,7 +54,7 @@ namespace Direct3D9Renderer
 		mD3DXConstantTable(nullptr)
 	{
 		// Create the Direct3D 9 buffer object for the vertex shader
-		ID3DXBuffer *d3dXBuffer = static_cast<ShaderLanguageHlsl*>(direct3D9Renderer.getShaderLanguage())->loadShader("vs_3_0", sourceCode, nullptr, &mD3DXConstantTable);
+		ID3DXBuffer *d3dXBuffer = static_cast<ShaderLanguageHlsl*>(direct3D9Renderer.getShaderLanguage())->loadShaderFromSourcecode("vs_3_0", sourceCode, nullptr, &mD3DXConstantTable);
 		if (nullptr != d3dXBuffer)
 		{
 			// Create the Direct3D 9 vertex shader
@@ -63,7 +63,7 @@ namespace Direct3D9Renderer
 			// Return shader bytecode, if requested do to so
 			if (nullptr != shaderBytecode)
 			{
-				shaderBytecode->setBytecodeCopy(d3dXBuffer->GetBufferSize(), static_cast<uint8_t*>(d3dXBuffer->GetBufferPointer()));
+				shaderBytecode->setBytecodeCopy(static_cast<uint32_t>(d3dXBuffer->GetBufferSize()), static_cast<uint8_t*>(d3dXBuffer->GetBufferPointer()));
 			}
 
 			// Release the Direct3D 9 shader buffer object

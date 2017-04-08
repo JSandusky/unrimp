@@ -57,7 +57,7 @@ namespace Direct3D9Renderer
 		// Nothing here
 	}
 
-	ID3DXBuffer *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint, ID3DXConstantTable **d3dXConstantTable) const
+	ID3DXBuffer *ShaderLanguageHlsl::loadShaderFromSourcecode(const char *shaderModel, const char *shaderSource, const char *entryPoint, ID3DXConstantTable **d3dXConstantTable) const
 	{
 		// TODO(co) Error handling
 

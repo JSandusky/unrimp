@@ -59,7 +59,7 @@ namespace Direct3D12Renderer
 		// Nothing here
 	}
 
-	ID3DBlob *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint) const
+	ID3DBlob *ShaderLanguageHlsl::loadShaderFromSourcecode(const char *shaderModel, const char *shaderSource, const char *entryPoint) const
 	{
 		assert(nullptr != shaderModel);
 		assert(nullptr != shaderSource);

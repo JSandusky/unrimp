@@ -51,12 +51,12 @@ namespace Direct3D12Renderer
 		mD3DBlobHullShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the hull shader
-		mD3DBlobHullShader = static_cast<ShaderLanguageHlsl*>(direct3D12Renderer.getShaderLanguage())->loadShader("hs_5_0", sourceCode, nullptr);
+		mD3DBlobHullShader = static_cast<ShaderLanguageHlsl*>(direct3D12Renderer.getShaderLanguage())->loadShaderFromSourcecode("hs_5_0", sourceCode, nullptr);
 
 		// Return shader bytecode, if requested do to so
 		if (nullptr != shaderBytecode)
 		{
-			shaderBytecode->setBytecodeCopy(mD3DBlobHullShader->GetBufferSize(), static_cast<uint8_t*>(mD3DBlobHullShader->GetBufferPointer()));
+			shaderBytecode->setBytecodeCopy(static_cast<uint32_t>(mD3DBlobHullShader->GetBufferSize()), static_cast<uint8_t*>(mD3DBlobHullShader->GetBufferPointer()));
 		}
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name

@@ -46,7 +46,7 @@ namespace OpenGLES3Renderer
 
 	VertexShaderGlsl::VertexShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode, Renderer::ShaderBytecode*) :
 		IVertexShader(openGLES3Renderer),
-		mOpenGLES3Shader(ShaderLanguageGlsl::loadShader(GL_VERTEX_SHADER, sourceCode))
+		mOpenGLES3Shader(ShaderLanguageGlsl::loadShaderFromSourcecode(GL_VERTEX_SHADER, sourceCode))
 	{
 		// TODO(co) Return shader bytecode, if requested do to so
 		// Nothing here

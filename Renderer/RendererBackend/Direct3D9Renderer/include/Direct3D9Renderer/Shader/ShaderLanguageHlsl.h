@@ -87,7 +87,7 @@ namespace Direct3D9Renderer
 
 		/**
 		*  @brief
-		*    Creates, loads and compiles a shader
+		*    Creates, loads and compiles a shader from source code
 		*
 		*  @param[in]  shaderModel
 		*    ASCII shader model (for example "vs_3_0", "ps_3_0")
@@ -101,7 +101,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    The loaded and compiled shader, can be a null pointer, release the instance if you no longer need it
 		*/
-		ID3DXBuffer *loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint, ID3DXConstantTable **d3dXConstantTable) const;
+		ID3DXBuffer *loadShaderFromSourcecode(const char *shaderModel, const char *shaderSource, const char *entryPoint, ID3DXConstantTable **d3dXConstantTable) const;
 
 
 	//[-------------------------------------------------------]

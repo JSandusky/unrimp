@@ -49,7 +49,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t ShaderLanguageGlsl::loadShader(uint32_t, const char*)
+	uint32_t ShaderLanguageGlsl::loadShaderFromSourcecode(uint32_t, const char*)
 	{
 		// TODO(co) Implement me
 		return 0;

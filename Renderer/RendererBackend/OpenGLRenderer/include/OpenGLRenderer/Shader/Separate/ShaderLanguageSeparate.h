@@ -72,7 +72,21 @@ namespace OpenGLRenderer
 	public:
 		/**
 		*  @brief
-		*    Creates, loads and compiles a shader
+		*    Creates and loads a shader program from bytecode
+		*
+		*  @param[in] shaderType
+		*    Shader type (for example "GL_VERTEX_SHADER_ARB", type GLenum not used in here in order to keep the header slim)
+		*  @param[in] shaderBytecode
+		*    Shader SPIR-V bytecode ("GL_ARB_gl_spirv"-extension)
+		*
+		*  @return
+		*    The OpenGL shader, 0 on error, destroy the resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
+		*/
+		static uint32_t loadShaderProgramFromBytecode(uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode);
+
+		/**
+		*  @brief
+		*    Creates, loads and compiles a shader program from source code
 		*
 		*  @param[in] shaderType
 		*    Shader type (for example "GL_VERTEX_SHADER_ARB", type GLenum not used in here in order to keep the header slim)
@@ -82,7 +96,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL shader, 0 on error, destroy the resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		static uint32_t loadShader(uint32_t shaderType, const char *shaderSource);
+		static uint32_t loadShaderProgramFromSourceCode(uint32_t shaderType, const char *shaderSource);
 
 
 	//[-------------------------------------------------------]

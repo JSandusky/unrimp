@@ -35,6 +35,49 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		#ifdef RENDERER_OUTPUT_DEBUG
+			void printOpenGLShaderProgramInformationIntoLog(GLuint openGLObject)
+			{
+				// Get the length of the information (including a null termination)
+				GLint informationLength = 0;
+				OpenGLRenderer::glGetObjectParameterivARB(openGLObject, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
+				if (informationLength > 1)
+				{
+					// Allocate memory for the information
+					char *informationLog = new char[static_cast<uint32_t>(informationLength)];
+
+					// Get the information
+					OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
+
+					// Output the debug string
+					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+
+					// Cleanup information memory
+					delete [] informationLog;
+				}
+			}
+		#endif
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -50,7 +93,63 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t ShaderLanguageSeparate::loadShader(uint32_t shaderType, const char *sourceCode)
+	uint32_t ShaderLanguageSeparate::loadShaderProgramFromBytecode(uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode)
+	{
+		// Create the shader object
+		const GLuint openGLShader = glCreateShaderObjectARB(shaderType);
+
+		// Load the SPIR-V module into the shader object
+		// -> "glShaderBinary" is OpenGL 4.1
+		glShaderBinary(1, &openGLShader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, shaderBytecode.getBytecode(), static_cast<GLsizei>(shaderBytecode.getNumberOfBytes()));
+
+		// Specialize the shader
+		// -> Before this shader the isn't compiled, after this shader is supposed to be compiled
+		glSpecializeShaderARB(openGLShader, "main", 0, nullptr, nullptr);
+
+		// Check the compile status
+		GLint compiled = GL_FALSE;
+		glGetObjectParameterivARB(openGLShader, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
+		if (GL_TRUE == compiled)
+		{
+			// All went fine, create and return the program
+			const GLuint openGLProgram = glCreateProgramObjectARB();
+			glProgramParameteri(openGLProgram, GL_PROGRAM_SEPARABLE, GL_TRUE);
+			glAttachObjectARB(openGLProgram, openGLShader);
+			glLinkProgramARB(openGLProgram);
+			glDetachObjectARB(openGLProgram, openGLShader);
+			glDeleteObjectARB(openGLShader);
+
+			// Check the link status
+			GLint linked = GL_FALSE;
+			glGetObjectParameterivARB(openGLProgram, GL_OBJECT_LINK_STATUS_ARB, &linked);
+			if (GL_TRUE != linked)
+			{
+				// Error, program link failed!
+				#ifdef RENDERER_OUTPUT_DEBUG
+					::detail::printOpenGLShaderProgramInformationIntoLog(openGLProgram);
+				#endif
+			}
+
+			// Done
+			return openGLProgram;
+		}
+		else
+		{
+			// Error, failed to compile the shader!
+			#ifdef RENDERER_OUTPUT_DEBUG
+				::detail::printOpenGLShaderProgramInformationIntoLog(openGLShader);
+			#endif
+
+			// Destroy the OpenGL shader
+			// -> A value of 0 for shader will be silently ignored
+			glDeleteObjectARB(openGLShader);
+
+			// Error!
+			return 0;
+		}
+	}
+
+	uint32_t ShaderLanguageSeparate::loadShaderProgramFromSourceCode(uint32_t shaderType, const char *sourceCode)
 	{
 		// Create the shader program
 		const GLuint openGLProgram = glCreateShaderProgramv(shaderType, 1, &sourceCode);
@@ -67,25 +166,7 @@ namespace OpenGLRenderer
 		{
 			// Error, failed to compile the shader!
 			#ifdef RENDERER_OUTPUT_DEBUG
-			{
-				// Get the length of the information
-				GLint informationLength = 0;
-				glGetObjectParameterivARB(openGLProgram, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
-				if (informationLength > 1)
-				{
-					// Allocate memory for the information
-					GLchar *informationLog = new GLchar[static_cast<uint32_t>(informationLength)];
-
-					// Get the information
-					glGetInfoLogARB(openGLProgram, informationLength, nullptr, informationLog);
-
-					// Output the debug string
-					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
-
-					// Cleanup information memory
-					delete [] informationLog;
-				}
-			}
+				::detail::printOpenGLShaderProgramInformationIntoLog(openGLProgram);
 			#endif
 
 			// Destroy the program
@@ -125,13 +206,14 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-		if (openGLRenderer.getExtensions().isGL_ARB_vertex_shader())
+		const Extensions& extensions = openGLRenderer.getExtensions();
+		if (extensions.isGL_ARB_vertex_shader() && extensions.isGL_ARB_gl_spirv())
 		{
 			return new VertexShaderSeparate(openGLRenderer, vertexAttributes, shaderBytecode);
 		}
 		else
 		{
-			// Error! There's no vertex shader support!
+			// Error! There's no vertex shader support or no decent shader bytecode support!
 			return nullptr;
 		}
 	}
@@ -140,9 +222,10 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-		if (openGLRenderer.getExtensions().isGL_ARB_vertex_shader())
+		const Extensions& extensions = openGLRenderer.getExtensions();
+		if (extensions.isGL_ARB_vertex_shader())
 		{
-			return new VertexShaderSeparate(openGLRenderer, vertexAttributes, shaderSourceCode.sourceCode, shaderBytecode);
+			return new VertexShaderSeparate(openGLRenderer, vertexAttributes, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
 		}
 		else
 		{
@@ -155,13 +238,14 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
+		const Extensions& extensions = openGLRenderer.getExtensions();
+		if (extensions.isGL_ARB_tessellation_shader() && extensions.isGL_ARB_gl_spirv())
 		{
 			return new TessellationControlShaderSeparate(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
-			// Error! There's no tessellation support!
+			// Error! There's no tessellation support or no decent shader bytecode support!
 			return nullptr;
 		}
 	}
@@ -170,9 +254,10 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
+		const Extensions& extensions = openGLRenderer.getExtensions();
+		if (extensions.isGL_ARB_tessellation_shader())
 		{
-			return new TessellationControlShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, shaderBytecode);
+			return new TessellationControlShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
 		}
 		else
 		{
@@ -185,13 +270,14 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
+		const Extensions& extensions = openGLRenderer.getExtensions();
+		if (extensions.isGL_ARB_tessellation_shader() && extensions.isGL_ARB_gl_spirv())
 		{
 			return new TessellationEvaluationShaderSeparate(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
-			// Error! There's no tessellation support!
+			// Error! There's no tessellation support or no decent shader bytecode support!
 			return nullptr;
 		}
 	}
@@ -200,9 +286,10 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
+		const Extensions& extensions = openGLRenderer.getExtensions();
+		if (extensions.isGL_ARB_tessellation_shader())
 		{
-			return new TessellationEvaluationShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, shaderBytecode);
+			return new TessellationEvaluationShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
 		}
 		else
 		{
@@ -215,7 +302,8 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-		if (openGLRenderer.getExtensions().isGL_ARB_geometry_shader4())
+		const Extensions& extensions = openGLRenderer.getExtensions();
+		if (extensions.isGL_ARB_geometry_shader4() && extensions.isGL_ARB_gl_spirv())
 		{
 			// In modern GLSL, "geometry shader input primitive topology" & "geometry shader output primitive topology" & "number of output vertices" can be directly set within GLSL by writing e.g.
 			//   "layout(triangles) in;"
@@ -225,7 +313,7 @@ namespace OpenGLRenderer
 		}
 		else
 		{
-			// Error! There's no geometry shader support!
+			// Error! There's no geometry shader support or no decent shader bytecode support!
 			return nullptr;
 		}
 	}
@@ -234,13 +322,14 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-		if (openGLRenderer.getExtensions().isGL_ARB_geometry_shader4())
+		const Extensions& extensions = openGLRenderer.getExtensions();
+		if (extensions.isGL_ARB_geometry_shader4())
 		{
 			// In modern GLSL, "geometry shader input primitive topology" & "geometry shader output primitive topology" & "number of output vertices" can be directly set within GLSL by writing e.g.
 			//   "layout(triangles) in;"
 			//   "layout(triangle_strip, max_vertices = 3) out;"
 			// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
-			return new GeometryShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices, shaderBytecode);
+			return new GeometryShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
 		}
 		else
 		{
@@ -253,13 +342,14 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's fragment shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-		if (openGLRenderer.getExtensions().isGL_ARB_fragment_shader())
+		const Extensions& extensions = openGLRenderer.getExtensions();
+		if (extensions.isGL_ARB_fragment_shader() && extensions.isGL_ARB_gl_spirv())
 		{
 			return new FragmentShaderSeparate(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
-			// Error! There's no fragment shader support!
+			// Error! There's no fragment shader support or no decent shader bytecode support!
 			return nullptr;
 		}
 	}
@@ -268,9 +358,10 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's fragment shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-		if (openGLRenderer.getExtensions().isGL_ARB_fragment_shader())
+		const Extensions& extensions = openGLRenderer.getExtensions();
+		if (extensions.isGL_ARB_fragment_shader())
 		{
-			return new FragmentShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, shaderBytecode);
+			return new FragmentShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
 		}
 		else
 		{

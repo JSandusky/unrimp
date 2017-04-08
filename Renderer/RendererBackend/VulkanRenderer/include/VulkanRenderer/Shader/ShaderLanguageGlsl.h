@@ -72,7 +72,7 @@ namespace VulkanRenderer
 	public:
 		/**
 		*  @brief
-		*    Creates, loads and compiles a shader
+		*    Creates, loads and compiles a shader from source code
 		*
 		*  @param[in] shaderType
 		*    Shader type (for example "GL_VERTEX_SHADER_ARB", type GLenum not used in here in order to keep the header slim)
@@ -82,7 +82,7 @@ namespace VulkanRenderer
 		*  @return
 		*    The Vulkan shader, 0 on error, destroy the resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		static uint32_t loadShader(uint32_t shaderType, const char *shaderSource);
+		static uint32_t loadShaderFromSourcecode(uint32_t shaderType, const char *shaderSource);
 
 
 	//[-------------------------------------------------------]

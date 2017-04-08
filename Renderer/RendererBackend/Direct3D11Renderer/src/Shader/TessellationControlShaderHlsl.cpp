@@ -53,7 +53,7 @@ namespace Direct3D11Renderer
 		mD3D11HullShader(nullptr)
 	{
 		// Create the Direct3D 11 binary large object for the hull shader
-		ID3DBlob *d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D11Renderer.getShaderLanguage())->loadShader("hs_5_0", sourceCode, nullptr);
+		ID3DBlob *d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D11Renderer.getShaderLanguage())->loadShaderFromSourcecode("hs_5_0", sourceCode, nullptr);
 		if (nullptr != d3dBlob)
 		{
 			// Create the Direct3D 11 hull shader
@@ -62,7 +62,7 @@ namespace Direct3D11Renderer
 			// Return shader bytecode, if requested do to so
 			if (nullptr != shaderBytecode)
 			{
-				shaderBytecode->setBytecodeCopy(d3dBlob->GetBufferSize(), static_cast<uint8_t*>(d3dBlob->GetBufferPointer()));
+				shaderBytecode->setBytecodeCopy(static_cast<uint32_t>(d3dBlob->GetBufferSize()), static_cast<uint8_t*>(d3dBlob->GetBufferPointer()));
 			}
 
 			// Release the Direct3D 11 shader binary large object

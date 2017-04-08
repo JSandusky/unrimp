@@ -53,7 +53,7 @@ namespace Direct3D10Renderer
 		mD3D10PixelShader(nullptr)
 	{
 		// Create the Direct3D 10 binary large object for the pixel shader
-		ID3DBlob *d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D10Renderer.getShaderLanguage())->loadShader("ps_4_0", sourceCode, nullptr);
+		ID3DBlob *d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D10Renderer.getShaderLanguage())->loadShaderFromSourcecode("ps_4_0", sourceCode, nullptr);
 		if (nullptr != d3dBlob)
 		{
 			// Create the Direct3D 10 pixel shader
@@ -62,7 +62,7 @@ namespace Direct3D10Renderer
 			// Return shader bytecode, if requested do to so
 			if (nullptr != shaderBytecode)
 			{
-				shaderBytecode->setBytecodeCopy(d3dBlob->GetBufferSize(), static_cast<uint8_t*>(d3dBlob->GetBufferPointer()));
+				shaderBytecode->setBytecodeCopy(static_cast<uint32_t>(d3dBlob->GetBufferSize()), static_cast<uint8_t*>(d3dBlob->GetBufferPointer()));
 			}
 
 			// Release the Direct3D 10 shader binary large object

@@ -42,11 +42,32 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
+		#ifdef RENDERER_OUTPUT_DEBUG
+			void printOpenGLShaderProgramInformationIntoLog(GLuint openGLObject)
+			{
+				// Get the length of the information (including a null termination)
+				GLint informationLength = 0;
+				OpenGLRenderer::glGetObjectParameterivARB(openGLObject, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
+				if (informationLength > 1)
+				{
+					// Allocate memory for the information
+					char *informationLog = new char[static_cast<uint32_t>(informationLength)];
+
+					// Get the information
+					OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
+
+					// Output the debug string
+					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+
+					// Cleanup information memory
+					delete [] informationLog;
+				}
+			}
+		#endif
+
 		// Basing on the implementation from https://www.opengl.org/registry/specs/ARB/separate_shader_objects.txt
-		GLuint CreateOpenGLShaderProgram(const Renderer::VertexAttributes& vertexAttributes, GLenum type, const char* sourceCode)
+		GLuint createShaderProgramObject(GLuint openGLShader, const Renderer::VertexAttributes& vertexAttributes)
 		{
-			// Create the OpenGL shader
-			const GLuint openGLShader = OpenGLRenderer::ShaderLanguageMonolithic::loadShader(type, sourceCode);
 			if (openGLShader > 0)
 			{
 				// Create the OpenGL program
@@ -92,23 +113,7 @@ namespace
 					{
 						// Error, program link failed!
 						#ifdef RENDERER_OUTPUT_DEBUG
-							// Get the length of the information (including a null termination)
-							GLint informationLength = 0;
-							OpenGLRenderer::glGetObjectParameterivARB(openGLProgram, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
-							if (informationLength > 1)
-							{
-								// Allocate memory for the information
-								char *informationLog = new char[static_cast<uint32_t>(informationLength)];
-
-								// Get the information
-								OpenGLRenderer::glGetInfoLogARB(openGLProgram, informationLength, nullptr, informationLog);
-
-								// Output the debug string
-								RENDERER_OUTPUT_DEBUG_STRING(informationLog)
-
-								// Cleanup information memory
-								delete [] informationLog;
-							}
+							printOpenGLShaderProgramInformationIntoLog(openGLProgram);
 						#endif
 					}
 				}
@@ -116,6 +121,48 @@ namespace
 
 			// Error!
 			return 0;
+		}
+
+		GLuint loadShaderProgramFromBytecode(const Renderer::VertexAttributes& vertexAttributes, GLenum type, const Renderer::ShaderBytecode& shaderBytecode)
+		{
+			// Create the shader object
+			const GLuint openGLShader = OpenGLRenderer::glCreateShaderObjectARB(type);
+
+			// Load the SPIR-V module into the shader object
+			// -> "glShaderBinary" is OpenGL 4.1
+			OpenGLRenderer::glShaderBinary(1, &openGLShader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, shaderBytecode.getBytecode(), static_cast<GLsizei>(shaderBytecode.getNumberOfBytes()));
+
+			// Specialize the shader
+			// -> Before this shader the isn't compiled, after this shader is supposed to be compiled
+			OpenGLRenderer::glSpecializeShaderARB(openGLShader, "main", 0, nullptr, nullptr);
+
+			// Check the compile status
+			GLint compiled = GL_FALSE;
+			OpenGLRenderer::glGetObjectParameterivARB(openGLShader, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
+			if (GL_TRUE == compiled)
+			{
+				// All went fine, create and return the program
+				return createShaderProgramObject(openGLShader, vertexAttributes);
+			}
+			else
+			{
+				// Error, failed to compile the shader!
+				#ifdef RENDERER_OUTPUT_DEBUG
+					printOpenGLShaderProgramInformationIntoLog(openGLShader);
+				#endif
+
+				// Destroy the OpenGL shader
+				// -> A value of 0 for shader will be silently ignored
+				OpenGLRenderer::glDeleteObjectARB(openGLShader);
+
+				// Error!
+				return 0;
+			}
+		}
+
+		GLuint loadShaderProgramFromSourcecode(const Renderer::VertexAttributes& vertexAttributes, GLenum type, const char* sourceCode)
+		{
+			return createShaderProgramObject(OpenGLRenderer::ShaderLanguageMonolithic::loadShaderFromSourcecode(type, sourceCode), vertexAttributes);
 		}
 
 
@@ -136,16 +183,16 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes&, const Renderer::ShaderBytecode&) :
+	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer& openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderBytecode& shaderBytecode) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(0)
+		mOpenGLShaderProgram(::detail::loadShaderProgramFromBytecode(vertexAttributes, GL_VERTEX_SHADER_ARB, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
 	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode, Renderer::ShaderBytecode*) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(::detail::CreateOpenGLShaderProgram(vertexAttributes, GL_VERTEX_SHADER_ARB, sourceCode))
+		mOpenGLShaderProgram(::detail::loadShaderProgramFromSourcecode(vertexAttributes, GL_VERTEX_SHADER_ARB, sourceCode))
 	{
 		// TODO(co) Return shader bytecode, if requested do to so
 		// Nothing here

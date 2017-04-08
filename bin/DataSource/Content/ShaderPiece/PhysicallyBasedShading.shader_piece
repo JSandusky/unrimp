@@ -274,7 +274,7 @@
 	uint lightMask = TEXTURE_FETCH_3D(LightClustersMap3D, int4(worldSpacePosition * PassData.LightClustersScale + PassData.LightClustersBias, 0)).x;
 
 	// Point and spot lights using clustered shading
-	while (lightMask)
+	while (0 != lightMask)
 	{
 		// Extract a light from the mask and disable that bit
 		uint lightIndex = firstbitlow(lightMask);

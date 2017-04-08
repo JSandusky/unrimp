@@ -101,6 +101,7 @@ namespace OpenGLRenderer
 	bool Extensions::isGL_ARB_direct_state_access()			const { return mGL_ARB_direct_state_access;			}
 	bool Extensions::isGL_ARB_texture_storage()				const { return mGL_ARB_texture_storage;				}
 	bool Extensions::isGL_ARB_copy_image()					const { return mGL_ARB_copy_image;					}
+	bool Extensions::isGL_ARB_gl_spirv()					const { return mGL_ARB_gl_spirv;					}
 
 
 	//[-------------------------------------------------------]
@@ -268,6 +269,7 @@ namespace OpenGLRenderer
 		mGL_ARB_direct_state_access			= false;
 		mGL_ARB_texture_storage				= false;
 		mGL_ARB_copy_image					= false;
+		mGL_ARB_gl_spirv					= false;
 	}
 
 	bool Extensions::initializeUniversal()
@@ -542,7 +544,7 @@ namespace OpenGLRenderer
 			mGL_ARB_separate_shader_objects = result;
 		}
 
-		// GL_ARB_get_programinary
+		// GL_ARB_get_program_binary
 		mGL_ARB_get_program_binary = isSupported("GL_ARB_get_program_binary");
 		if (mGL_ARB_get_program_binary)
 		{
@@ -767,6 +769,26 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glCopyImageSubData)
 			mGL_ARB_copy_image = result;
 		}
+
+		// GL_ARB_gl_spirv
+		mGL_ARB_gl_spirv = isSupported("GL_ARB_gl_spirv");
+		if (mGL_ARB_gl_spirv)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glSpecializeShaderARB)
+			mGL_ARB_gl_spirv = result;
+		}
+
+
+		//[-------------------------------------------------------]
+		//[ Core (OpenGL version dependent)                       ]
+		//[-------------------------------------------------------]
+		{
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glShaderBinary)	// OpenGL 4.1
+		}
+
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC

@@ -36,16 +36,16 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationEvaluationShaderSeparate::TessellationEvaluationShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode&):
+	TessellationEvaluationShaderSeparate::TessellationEvaluationShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode):
 		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(0)
+		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromBytecode(GL_TESS_EVALUATION_SHADER, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
 	TessellationEvaluationShaderSeparate::TessellationEvaluationShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::ShaderBytecode*) :
 		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShader(GL_TESS_EVALUATION_SHADER, sourceCode))
+		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromSourceCode(GL_TESS_EVALUATION_SHADER, sourceCode))
 	{
 		// TODO(co) Return shader bytecode, if requested do to so
 		// Nothing here

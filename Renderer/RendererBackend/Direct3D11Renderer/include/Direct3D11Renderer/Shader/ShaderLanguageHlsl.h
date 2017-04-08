@@ -87,7 +87,7 @@ namespace Direct3D11Renderer
 
 		/**
 		*  @brief
-		*    Creates, loads and compiles a shader
+		*    Creates, loads and compiles a shader from source code
 		*
 		*  @param[in] shaderModel
 		*    ASCII shader model (for example "vs_4_0", "gs_4_0", "ps_4_0"), must be a valid pointer
@@ -99,7 +99,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The loaded and compiled shader, can be a null pointer, release the instance if you no longer need it
 		*/
-		ID3DBlob *loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint) const;
+		ID3DBlob *loadShaderFromSourcecode(const char *shaderModel, const char *shaderSource, const char *entryPoint) const;
 
 
 	//[-------------------------------------------------------]

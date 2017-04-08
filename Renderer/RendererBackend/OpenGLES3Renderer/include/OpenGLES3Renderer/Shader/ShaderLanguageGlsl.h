@@ -70,7 +70,7 @@ namespace OpenGLES3Renderer
 	public:
 		/**
 		*  @brief
-		*    Creates, loads and compiles a shader
+		*    Creates, loads and compiles a shader from source code
 		*
 		*  @param[in] shaderType
 		*    Shader type (for example "GL_VERTEX_SHADER", type "GLenum" not used in here in order to keep the header slim)
@@ -80,7 +80,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    The OpenGL ES 3 shader, 0 on error, destroy the returned resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		static uint32_t loadShader(uint32_t shaderType, const char *shaderSource);
+		static uint32_t loadShaderFromSourcecode(uint32_t shaderType, const char *shaderSource);
 
 
 	//[-------------------------------------------------------]

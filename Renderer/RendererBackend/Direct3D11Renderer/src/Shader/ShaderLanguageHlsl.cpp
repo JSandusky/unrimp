@@ -59,7 +59,7 @@ namespace Direct3D11Renderer
 		// Nothing here
 	}
 
-	ID3DBlob *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint) const
+	ID3DBlob *ShaderLanguageHlsl::loadShaderFromSourcecode(const char *shaderModel, const char *shaderSource, const char *entryPoint) const
 	{
 		// TODO(co) Cleanup
 		ID3DBlob *d3dBlob;

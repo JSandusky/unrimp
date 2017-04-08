@@ -51,12 +51,12 @@ namespace Direct3D12Renderer
 		mD3DBlobVertexShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the vertex shader
-		mD3DBlobVertexShader = static_cast<ShaderLanguageHlsl*>(direct3D12Renderer.getShaderLanguage())->loadShader("vs_5_0", sourceCode, nullptr);
+		mD3DBlobVertexShader = static_cast<ShaderLanguageHlsl*>(direct3D12Renderer.getShaderLanguage())->loadShaderFromSourcecode("vs_5_0", sourceCode, nullptr);
 
 		// Return shader bytecode, if requested do to so
 		if (nullptr != shaderBytecode)
 		{
-			shaderBytecode->setBytecodeCopy(mD3DBlobVertexShader->GetBufferSize(), static_cast<uint8_t*>(mD3DBlobVertexShader->GetBufferPointer()));
+			shaderBytecode->setBytecodeCopy(static_cast<uint32_t>(mD3DBlobVertexShader->GetBufferSize()), static_cast<uint8_t*>(mD3DBlobVertexShader->GetBufferPointer()));
 		}
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
