@@ -37,21 +37,27 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderHlsl::VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+	VertexShaderHlsl::VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IVertexShader(direct3D12Renderer),
 		mD3DBlobVertexShader(nullptr)
 	{
 		// Backup the vertex shader bytecode
-		D3DCreateBlob(numberOfBytes, &mD3DBlobVertexShader);
-		memcpy(mD3DBlobVertexShader->GetBufferPointer(), bytecode, numberOfBytes);
+		D3DCreateBlob(shaderBytecode.getNumberOfBytes(), &mD3DBlobVertexShader);
+		memcpy(mD3DBlobVertexShader->GetBufferPointer(), shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes());
 	}
 
-	VertexShaderHlsl::VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
+	VertexShaderHlsl::VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IVertexShader(direct3D12Renderer),
 		mD3DBlobVertexShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the vertex shader
 		mD3DBlobVertexShader = static_cast<ShaderLanguageHlsl*>(direct3D12Renderer.getShaderLanguage())->loadShader("vs_5_0", sourceCode, nullptr);
+
+		// Return shader bytecode, if requested do to so
+		if (nullptr != shaderBytecode)
+		{
+			shaderBytecode->setBytecodeCopy(mD3DBlobVertexShader->GetBufferSize(), static_cast<uint8_t*>(mD3DBlobVertexShader->GetBufferPointer()));
+		}
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}

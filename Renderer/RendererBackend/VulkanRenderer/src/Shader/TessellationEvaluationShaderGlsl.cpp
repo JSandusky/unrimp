@@ -36,13 +36,13 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer &vulkanRenderer, const uint8_t *, uint32_t):
+	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer &vulkanRenderer, const Renderer::ShaderBytecode&):
 		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me
 	}
 
-	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer &vulkanRenderer, const char*) :
+	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer &vulkanRenderer, const char*, Renderer::ShaderBytecode*) :
 		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me

@@ -36,11 +36,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationControlShaderMonolithic::TessellationControlShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
+	TessellationControlShaderMonolithic::TessellationControlShaderMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode&) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(0)
 	{
-		// Nothing here
+		// TODO(co) Implement me
 	}
 
 	TessellationControlShaderMonolithic::TessellationControlShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :

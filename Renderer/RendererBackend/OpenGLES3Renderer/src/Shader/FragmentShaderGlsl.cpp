@@ -37,18 +37,18 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const uint8_t *, uint32_t) :
+	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const Renderer::ShaderBytecode&) :
 		IFragmentShader(openGLES3Renderer),
 		mOpenGLES3Shader(0)
 	{
 		// TODO(co) Implement me
-		// Nothing here
 	}
 
-	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode) :
+	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode, Renderer::ShaderBytecode*) :
 		IFragmentShader(openGLES3Renderer),
 		mOpenGLES3Shader(ShaderLanguageGlsl::loadShader(GL_FRAGMENT_SHADER, sourceCode))
 	{
+		// TODO(co) Return shader bytecode, if requested do to so
 		// Nothing here
 	}
 

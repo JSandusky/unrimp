@@ -35,6 +35,10 @@
 //[-------------------------------------------------------]
 typedef __interface ID3D10Blob *LPD3D10BLOB;
 typedef ID3D10Blob ID3DBlob;
+namespace Renderer
+{
+	class ShaderBytecode;
+}
 namespace Direct3D12Renderer
 {
 	class Direct3D12Renderer;
@@ -69,12 +73,10 @@ namespace Direct3D12Renderer
 		*
 		*  @param[in] direct3D12Renderer
 		*    Owner Direct3D 12 renderer instance
-		*  @param[in] bytecode
-		*    Shader bytecode, must be valid
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*/
-		FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -85,7 +87,7 @@ namespace Direct3D12Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode);
+		FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief

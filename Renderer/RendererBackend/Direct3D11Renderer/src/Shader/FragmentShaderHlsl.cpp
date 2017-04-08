@@ -38,17 +38,17 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IFragmentShader(direct3D11Renderer),
 		mD3D11PixelShader(nullptr)
 	{
 		// Create the Direct3D 11 vertex shader
-		direct3D11Renderer.getD3D11Device()->CreatePixelShader(bytecode, numberOfBytes, nullptr, &mD3D11PixelShader);
+		direct3D11Renderer.getD3D11Device()->CreatePixelShader(shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes(), nullptr, &mD3D11PixelShader);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name
 	}
 
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IFragmentShader(direct3D11Renderer),
 		mD3D11PixelShader(nullptr)
 	{
@@ -58,6 +58,12 @@ namespace Direct3D11Renderer
 		{
 			// Create the Direct3D 11 pixel shader
 			direct3D11Renderer.getD3D11Device()->CreatePixelShader(d3dBlob->GetBufferPointer(), d3dBlob->GetBufferSize(), nullptr, &mD3D11PixelShader);
+
+			// Return shader bytecode, if requested do to so
+			if (nullptr != shaderBytecode)
+			{
+				shaderBytecode->setBytecodeCopy(d3dBlob->GetBufferSize(), static_cast<uint8_t*>(d3dBlob->GetBufferPointer()));
+			}
 
 			// Release the Direct3D 11 shader binary large object
 			d3dBlob->Release();

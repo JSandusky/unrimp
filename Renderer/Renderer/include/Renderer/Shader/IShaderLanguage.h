@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "Renderer/SmartRefCount.h"
 #include "Renderer/Buffer/BufferTypes.h"
-#include "Renderer/Shader/GeometryShaderTypes.h"
+#include "Renderer/Shader/ShaderTypes.h"
 
 
 //[-------------------------------------------------------]
@@ -226,10 +226,8 @@ namespace Renderer
 		*
 		*  @param[in] vertexAttributes
 		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
-		*  @param[in] bytecode
-		*    Shader bytecode, if null pointer or empty string a null pointer will be returned
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*
 		*  @return
 		*    The created vertex shader, a null pointer on error. Release the returned instance if you no longer need it.
@@ -238,7 +236,7 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::vertexShader" is "true"
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual IVertexShader *createVertexShaderFromBytecode(const Renderer::VertexAttributes& vertexAttributes, const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
+		virtual IVertexShader *createVertexShaderFromBytecode(const VertexAttributes& vertexAttributes, const ShaderBytecode& shaderBytecode) = 0;
 
 		/**
 		*  @brief
@@ -246,15 +244,10 @@ namespace Renderer
 		*
 		*  @param[in] vertexAttributes
 		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
-		*  @param[in] sourceCode
-		*    Shader ASCII source code, if null pointer or empty string a null pointer will be returned
-		*  @param[in] profile
-		*    Shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually
-		*    tries to use the best available profile that runs on most hardware (Examples: "glslv", "arbvp1", "vs_3_0")
-		*  @param[in] arguments
-		*    Optional shader compiler ASCII arguments, can be a null pointer or empty string
-		*  @param[in] entry
-		*    ASCII entry point, if null pointer or empty string, "main" is used as default
+		*  @param[in] shaderSourceCode
+		*    Shader source code
+		*  @param[out] shaderBytecode
+		*    If not a null pointer, receives the shader bytecode in case the used renderer API supports this feature
 		*
 		*  @return
 		*    The created vertex shader, a null pointer on error. Release the returned instance if you no longer need it.
@@ -305,16 +298,14 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::vertexShader" is "true"
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual IVertexShader *createVertexShaderFromSourceCode(const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
+		virtual IVertexShader *createVertexShaderFromSourceCode(const VertexAttributes& vertexAttributes, const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
 
 		/**
 		*  @brief
 		*    Create a tessellation control shader ("hull shader" in Direct3D terminology) from shader bytecode
 		*
-		*  @param[in] bytecode
-		*    Shader bytecode, if null pointer or empty string a null pointer will be returned
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*
 		*  @return
 		*    The created tessellation control shader, a null pointer on error. Release the returned instance if you no longer need it.
@@ -323,21 +314,16 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::maximumNumberOfPatchVertices" is not 0
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual ITessellationControlShader *createTessellationControlShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
+		virtual ITessellationControlShader *createTessellationControlShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
 
 		/**
 		*  @brief
 		*    Create a tessellation control shader ("hull shader" in Direct3D terminology) from shader source code
 		*
-		*  @param[in] sourceCode
-		*    Shader ASCII source code, if null pointer or empty string a null pointer will be returned
-		*  @param[in] profile
-		*    Shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually
-		*    tries to use the best available profile that runs on most hardware (Example: "hs_5_0")
-		*  @param[in] arguments
-		*    Optional shader compiler ASCII arguments, can be a null pointer or empty string
-		*  @param[in] entry
-		*    ASCII entry point, if null pointer or empty string, "main" is used as default
+		*  @param[in] shaderSourceCode
+		*    Shader source code
+		*  @param[out] shaderBytecode
+		*    If not a null pointer, receives the shader bytecode in case the used renderer API supports this feature
 		*
 		*  @return
 		*    The created tessellation control shader, a null pointer on error. Release the returned instance if you no longer need it.
@@ -349,16 +335,14 @@ namespace Renderer
 		*  @see
 		*    - "Renderer::IShaderLanguage::createVertexShader()" for more information
 		*/
-		virtual ITessellationControlShader *createTessellationControlShaderFromSourceCode(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
+		virtual ITessellationControlShader *createTessellationControlShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
 
 		/**
 		*  @brief
 		*    Create a tessellation evaluation shader ("domain shader" in Direct3D terminology) from shader bytecode
 		*
-		*  @param[in] bytecode
-		*    Shader bytecode, if null pointer or empty string a null pointer will be returned
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*
 		*  @return
 		*    The created tessellation evaluation shader, a null pointer on error. Release the returned instance if you no longer need it.
@@ -367,21 +351,16 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::maximumNumberOfPatchVertices" is not 0
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual ITessellationEvaluationShader *createTessellationEvaluationShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
+		virtual ITessellationEvaluationShader *createTessellationEvaluationShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
 
 		/**
 		*  @brief
 		*    Create a tessellation evaluation shader ("domain shader" in Direct3D terminology) from shader source code
 		*
-		*  @param[in] sourceCode
-		*    Shader ASCII source code, if null pointer or empty string a null pointer will be returned
-		*  @param[in] profile
-		*    Shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually
-		*    tries to use the best available profile that runs on most hardware (Example: "ds_5_0")
-		*  @param[in] arguments
-		*    Optional shader compiler ASCII arguments, can be a null pointer or empty string
-		*  @param[in] entry
-		*    ASCII entry point, if null pointer or empty string, "main" is used as default
+		*  @param[in] shaderSourceCode
+		*    Shader source code
+		*  @param[out] shaderBytecode
+		*    If not a null pointer, receives the shader bytecode in case the used renderer API supports this feature
 		*
 		*  @return
 		*    The created tessellation evaluation shader, a null pointer on error. Release the returned instance if you no longer need it.
@@ -393,16 +372,14 @@ namespace Renderer
 		*  @see
 		*    - "Renderer::IShaderLanguage::createVertexShader()" for more information
 		*/
-		virtual ITessellationEvaluationShader *createTessellationEvaluationShaderFromSourceCode(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
+		virtual ITessellationEvaluationShader *createTessellationEvaluationShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
 
 		/**
 		*  @brief
 		*    Create a geometry shader from shader bytecode
 		*
-		*  @param[in] bytecode
-		*    Shader bytecode, if null pointer or empty string a null pointer will be returned
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*  @param[in] gsInputPrimitiveTopology
 		*    Geometry shader input primitive topology
 		*  @param[in] gsOutputPrimitiveTopology
@@ -420,27 +397,22 @@ namespace Renderer
 		*      highly recommended to provide this information anyway to be able to switch the internal implementation (e.g. using
 		*      OpenGL instead of Direct3D)
 		*/
-		virtual IGeometryShader *createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
+		virtual IGeometryShader *createGeometryShaderFromBytecode(const ShaderBytecode& shaderBytecode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) = 0;
 
 		/**
 		*  @brief
 		*    Create a geometry shader from shader source code
 		*
-		*  @param[in] sourceCode
-		*    Shader ASCII source code, if null pointer or empty string a null pointer will be returned
+		*  @param[in] shaderSourceCode
+		*    Shader source code
 		*  @param[in] gsInputPrimitiveTopology
 		*    Geometry shader input primitive topology
 		*  @param[in] gsOutputPrimitiveTopology
 		*    Geometry shader output primitive topology
 		*  @param[in] numberOfOutputVertices
 		*    Number of output vertices, maximum is "Renderer::Capabilities::maximumNumberOfGsOutputVertices"
-		*  @param[in] profile
-		*    Geometry shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually
-		*    tries to use the best available profile that runs on most hardware (Examples: "glslg", "gs_4_0")
-		*  @param[in] arguments
-		*    Optional shader compiler ASCII arguments, can be a null pointer or empty string
-		*  @param[in] entry
-		*    ASCII entry point, if null pointer or empty string, "main" is used as default
+		*  @param[out] shaderBytecode
+		*    If not a null pointer, receives the shader bytecode in case the used renderer API supports this feature
 		*
 		*  @return
 		*    The created geometry shader, a null pointer on error. Release the returned instance if you no longer need it.
@@ -455,16 +427,14 @@ namespace Renderer
 		*  @see
 		*    - "Renderer::IShaderLanguage::createVertexShader()" for more information
 		*/
-		virtual IGeometryShader *createGeometryShaderFromSourceCode(const char *sourceCode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
+		virtual IGeometryShader *createGeometryShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, ShaderBytecode* shaderBytecode = nullptr) = 0;
 
 		/**
 		*  @brief
 		*    Create a fragment shader from shader bytecode
 		*
-		*  @param[in] bytecode
-		*    Shader bytecode, if null pointer or empty string a null pointer will be returned
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*
 		*  @return
 		*    The created fragment shader, a null pointer on error. Release the returned instance if you no longer need it.
@@ -473,21 +443,16 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::fragmentShader" is "true"
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual IFragmentShader *createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
+		virtual IFragmentShader *createFragmentShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
 
 		/**
 		*  @brief
 		*    Create a fragment shader from shader source code
 		*
-		*  @param[in] sourceCode
-		*    Shader ASCII source code, if null pointer or empty string a null pointer will be returned
-		*  @param[in] profile
-		*    Shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually
-		*    tries to use the best available profile that runs on most hardware (Examples: "glslf", "arbfp1", "ps_3_0")
-		*  @param[in] arguments
-		*    Optional shader compiler ASCII arguments, can be a null pointer or empty string
-		*  @param[in] entry
-		*    ASCII entry point, if null pointer or empty string, "main" is used as default
+		*  @param[in] shaderSourceCode
+		*    Shader source code
+		*  @param[out] shaderBytecode
+		*    If not a null pointer, receives the shader bytecode in case the used renderer API supports this feature
 		*
 		*  @return
 		*    The created fragment shader, a null pointer on error. Release the returned instance if you no longer need it.
@@ -499,7 +464,7 @@ namespace Renderer
 		*  @see
 		*    - "Renderer::IShaderLanguage::createVertexShader()" for more information
 		*/
-		virtual IFragmentShader *createFragmentShaderFromSourceCode(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
+		virtual IFragmentShader *createFragmentShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
 
 		/**
 		*  @brief

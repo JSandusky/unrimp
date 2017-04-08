@@ -36,13 +36,13 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer &vulkanRenderer, const uint8_t *, uint32_t) :
+	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer &vulkanRenderer, const Renderer::ShaderBytecode&) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me
 	}
 
-	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer &vulkanRenderer, const char*) :
+	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer &vulkanRenderer, const char*, Renderer::ShaderBytecode*) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me

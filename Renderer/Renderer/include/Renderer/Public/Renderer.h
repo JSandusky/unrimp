@@ -1420,9 +1420,9 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/Shader/GeometryShaderTypes.h
-	#ifndef __RENDERER_GEOMETRYSHADER_TYPES_H__
-	#define __RENDERER_GEOMETRYSHADER_TYPES_H__
+	// Renderer/Shader/ShaderTypes.h
+	#ifndef __RENDERER_SHADER_TYPES_H__
+	#define __RENDERER_SHADER_TYPES_H__
 		enum class GsInputPrimitiveTopology
 		{
 			POINTS				= 0x0000,
@@ -1436,6 +1436,52 @@ namespace Renderer
 			POINTS		   = 0x0000,
 			LINES		   = 0x0001,
 			TRIANGLE_STRIP = 0x0005
+		};
+		class ShaderBytecode
+		{
+		public:
+			inline ShaderBytecode() :
+				mNumberOfBytes(0),
+				mBytecode(nullptr)
+			{}
+			inline ~ShaderBytecode()
+			{
+				if (nullptr != mBytecode)
+				{
+					delete [] mBytecode;
+				}
+			}
+			inline uint32_t getNumberOfBytes() const
+			{
+				return mNumberOfBytes;
+			}
+			inline const uint8_t* getBytecode() const
+			{
+				return mBytecode;
+			}
+			inline void setBytecodeCopy(uint32_t numberOfBytes, uint8_t* bytecode)
+			{
+				if (nullptr != mBytecode)
+				{
+					delete [] mBytecode;
+				}
+				mNumberOfBytes = numberOfBytes;
+				mBytecode = new uint8_t[mNumberOfBytes];
+				memcpy(mBytecode, bytecode, mNumberOfBytes);
+			}
+		private:
+			uint32_t mNumberOfBytes;
+			uint8_t* mBytecode;
+		};
+		struct ShaderSourceCode
+		{
+			const char* sourceCode	= nullptr;
+			const char* profile		= nullptr;
+			const char *arguments	= nullptr;
+			const char *entry		= nullptr;
+			inline ShaderSourceCode(const char* _sourceCode) :
+				sourceCode(_sourceCode)
+			{};
 		};
 	#endif
 
@@ -1909,16 +1955,16 @@ namespace Renderer
 			}
 		public:
 			virtual const char* getShaderLanguageName() const = 0;
-			virtual IVertexShader* createVertexShaderFromBytecode(const Renderer::VertexAttributes& vertexAttributes, const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
-			virtual IVertexShader* createVertexShaderFromSourceCode(const Renderer::VertexAttributes& vertexAttributes, const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
-			virtual ITessellationControlShader* createTessellationControlShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
-			virtual ITessellationControlShader* createTessellationControlShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
-			virtual ITessellationEvaluationShader* createTessellationEvaluationShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
-			virtual ITessellationEvaluationShader* createTessellationEvaluationShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
-			virtual IGeometryShader* createGeometryShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) = 0;
-			virtual IGeometryShader* createGeometryShaderFromSourceCode(const char* sourceCode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
-			virtual IFragmentShader* createFragmentShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
-			virtual IFragmentShader* createFragmentShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
+			virtual IVertexShader* createVertexShaderFromBytecode(const VertexAttributes& vertexAttributes, const ShaderBytecode& shaderBytecode) = 0;
+			virtual IVertexShader* createVertexShaderFromSourceCode(const VertexAttributes& vertexAttributes, const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
+			virtual ITessellationControlShader* createTessellationControlShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
+			virtual ITessellationControlShader* createTessellationControlShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
+			virtual ITessellationEvaluationShader* createTessellationEvaluationShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
+			virtual ITessellationEvaluationShader* createTessellationEvaluationShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
+			virtual IGeometryShader* createGeometryShaderFromBytecode(const ShaderBytecode& shaderBytecode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) = 0;
+			virtual IGeometryShader* createGeometryShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, ShaderBytecode* shaderBytecode = nullptr) = 0;
+			virtual IFragmentShader* createFragmentShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
+			virtual IFragmentShader* createFragmentShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
 			virtual IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, ITessellationControlShader* tessellationControlShader, ITessellationEvaluationShader* tessellationEvaluationShader, IGeometryShader* geometryShader, IFragmentShader* fragmentShader) = 0;
 		protected:
 			explicit IShaderLanguage(IRenderer& renderer);
@@ -2079,9 +2125,9 @@ namespace Renderer
 			virtual IVertexBuffer* createVertexBuffer(uint32_t numberOfBytes, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual IIndexBuffer* createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual IVertexArray* createVertexArray(const VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer* vertexBuffers, IIndexBuffer* indexBuffer = nullptr) = 0;
-			virtual IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual ITextureBuffer* createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual IIndirectBuffer* createIndirectBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IIndirectBuffer* createIndirectBuffer(uint32_t numberOfBytes, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 		protected:
 			inline explicit IBufferManager(IRenderer& renderer);
 			inline explicit IBufferManager(const IBufferManager& source);
@@ -2433,15 +2479,15 @@ namespace Renderer
 		public:
 			static inline const SamplerState& getDefaultSamplerState()
 			{
-				static const Renderer::SamplerState SAMPLER_STATE =
+				static const SamplerState SAMPLER_STATE =
 				{
-					Renderer::FilterMode::MIN_MAG_MIP_LINEAR,
-					Renderer::TextureAddressMode::CLAMP,
-					Renderer::TextureAddressMode::CLAMP,
-					Renderer::TextureAddressMode::CLAMP,
+					FilterMode::MIN_MAG_MIP_LINEAR,
+					TextureAddressMode::CLAMP,
+					TextureAddressMode::CLAMP,
+					TextureAddressMode::CLAMP,
 					0.0f,
 					16,
-					Renderer::ComparisonFunc::NEVER,
+					ComparisonFunc::NEVER,
 					{
 						0.0f,
 						0.0f,

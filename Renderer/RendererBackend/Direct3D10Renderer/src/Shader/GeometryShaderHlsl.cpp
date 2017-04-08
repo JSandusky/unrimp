@@ -38,17 +38,17 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IGeometryShader(direct3D10Renderer),
 		mD3D10GeometryShader(nullptr)
 	{
 		// Create the Direct3D 10 geometry shader
-		direct3D10Renderer.getD3D10Device()->CreateGeometryShader(bytecode, numberOfBytes, &mD3D10GeometryShader);
+		direct3D10Renderer.getD3D10Device()->CreateGeometryShader(shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes(), &mD3D10GeometryShader);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 10 automatically sets a decent default name
 	}
 
-	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode) :
+	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IGeometryShader(direct3D10Renderer),
 		mD3D10GeometryShader(nullptr)
 	{
@@ -58,6 +58,12 @@ namespace Direct3D10Renderer
 		{
 			// Create the Direct3D 10 geometry shader
 			direct3D10Renderer.getD3D10Device()->CreateGeometryShader(d3dBlob->GetBufferPointer(), d3dBlob->GetBufferSize(), &mD3D10GeometryShader);
+
+			// Return shader bytecode, if requested do to so
+			if (nullptr != shaderBytecode)
+			{
+				shaderBytecode->setBytecodeCopy(d3dBlob->GetBufferSize(), static_cast<uint8_t*>(d3dBlob->GetBufferPointer()));
+			}
 
 			// Release the Direct3D 10 shader binary large object
 			d3dBlob->Release();

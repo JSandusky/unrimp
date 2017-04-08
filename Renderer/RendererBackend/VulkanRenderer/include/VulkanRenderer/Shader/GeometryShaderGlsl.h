@@ -28,12 +28,16 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/Shader/IGeometryShader.h>
-#include <Renderer/Shader/GeometryShaderTypes.h>
+#include <Renderer/Shader/ShaderTypes.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class ShaderBytecode;
+}
 namespace VulkanRenderer
 {
 	class VulkanRenderer;
@@ -68,10 +72,8 @@ namespace VulkanRenderer
 		*
 		*  @param[in] vulkanRenderer
 		*    Owner Vulkan renderer instance
-		*  @param[in] bytecode
-		*    Shader bytecode, must be valid
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*  @param[in] gsInputPrimitiveTopology
 		*    Geometry shader input primitive topology
 		*  @param[in] gsOutputPrimitiveTopology
@@ -79,7 +81,7 @@ namespace VulkanRenderer
 		*  @param[in] numberOfOutputVertices
 		*    Number of output vertices
 		*/
-		GeometryShaderGlsl(VulkanRenderer &vulkanRenderer, const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
+		GeometryShaderGlsl(VulkanRenderer &vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
 
 		/**
 		*  @brief
@@ -96,7 +98,7 @@ namespace VulkanRenderer
 		*  @param[in] numberOfOutputVertices
 		*    Number of output vertices
 		*/
-		GeometryShaderGlsl(VulkanRenderer &vulkanRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
+		GeometryShaderGlsl(VulkanRenderer &vulkanRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief

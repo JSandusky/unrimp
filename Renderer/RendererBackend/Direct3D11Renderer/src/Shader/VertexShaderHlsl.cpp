@@ -39,22 +39,22 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderHlsl::VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+	VertexShaderHlsl::VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IVertexShader(direct3D11Renderer),
 		mD3DBlobVertexShader(nullptr),
 		mD3D11VertexShader(nullptr)
 	{
 		// Backup the vertex shader bytecode
-		D3DCreateBlob(numberOfBytes, &mD3DBlobVertexShader);
-		memcpy(mD3DBlobVertexShader->GetBufferPointer(), bytecode, numberOfBytes);
+		D3DCreateBlob(shaderBytecode.getNumberOfBytes(), &mD3DBlobVertexShader);
+		memcpy(mD3DBlobVertexShader->GetBufferPointer(), shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes());
 
 		// Create the Direct3D 11 vertex shader
-		direct3D11Renderer.getD3D11Device()->CreateVertexShader(bytecode, numberOfBytes, nullptr, &mD3D11VertexShader);
+		direct3D11Renderer.getD3D11Device()->CreateVertexShader(shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes(), nullptr, &mD3D11VertexShader);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name
 	}
 
-	VertexShaderHlsl::VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
+	VertexShaderHlsl::VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IVertexShader(direct3D11Renderer),
 		mD3DBlobVertexShader(nullptr),
 		mD3D11VertexShader(nullptr)
@@ -65,6 +65,12 @@ namespace Direct3D11Renderer
 		{
 			// Create the Direct3D 11 vertex shader
 			direct3D11Renderer.getD3D11Device()->CreateVertexShader(mD3DBlobVertexShader->GetBufferPointer(), mD3DBlobVertexShader->GetBufferSize(), nullptr, &mD3D11VertexShader);
+
+			// Return shader bytecode, if requested do to so
+			if (nullptr != shaderBytecode)
+			{
+				shaderBytecode->setBytecodeCopy(mD3DBlobVertexShader->GetBufferSize(), static_cast<uint8_t*>(mD3DBlobVertexShader->GetBufferPointer()));
+			}
 		}
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name

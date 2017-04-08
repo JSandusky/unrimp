@@ -36,13 +36,13 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderGlsl::FragmentShaderGlsl(VulkanRenderer &vulkanRenderer, const uint8_t *, uint32_t) :
+	FragmentShaderGlsl::FragmentShaderGlsl(VulkanRenderer &vulkanRenderer, const Renderer::ShaderBytecode&) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me
 	}
 
-	FragmentShaderGlsl::FragmentShaderGlsl(VulkanRenderer &vulkanRenderer, const char*) :
+	FragmentShaderGlsl::FragmentShaderGlsl(VulkanRenderer &vulkanRenderer, const char*, Renderer::ShaderBytecode*) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me

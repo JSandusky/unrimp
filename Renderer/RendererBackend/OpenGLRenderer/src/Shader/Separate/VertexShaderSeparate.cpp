@@ -136,17 +136,18 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes&, const uint8_t *, uint32_t) :
+	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes&, const Renderer::ShaderBytecode&) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(0)
 	{
-		// Nothing here
+		// TODO(co) Implement me
 	}
 
-	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode) :
+	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode, Renderer::ShaderBytecode*) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(::detail::CreateOpenGLShaderProgram(vertexAttributes, GL_VERTEX_SHADER_ARB, sourceCode))
 	{
+		// TODO(co) Return shader bytecode, if requested do to so
 		// Nothing here
 	}
 

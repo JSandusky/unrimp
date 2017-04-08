@@ -33,6 +33,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class ShaderBytecode;
+}
 namespace OpenGLRenderer
 {
 	class OpenGLRenderer;
@@ -67,12 +71,10 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
-		*  @param[in] bytecode
-		*    Shader bytecode, must be valid
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*/
-		TessellationEvaluationShaderSeparate(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		TessellationEvaluationShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -83,7 +85,7 @@ namespace OpenGLRenderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		TessellationEvaluationShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode);
+		TessellationEvaluationShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief

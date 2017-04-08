@@ -35,6 +35,10 @@
 //[-------------------------------------------------------]
 struct ID3DXConstantTable;
 struct IDirect3DVertexShader9;
+namespace Renderer
+{
+	class ShaderBytecode;
+}
 namespace Direct3D9Renderer
 {
 	class Direct3D9Renderer;
@@ -69,12 +73,10 @@ namespace Direct3D9Renderer
 		*
 		*  @param[in] direct3D9Renderer
 		*    Owner Direct3D 9 renderer instance
-		*  @param[in] bytecode
-		*    Shader bytecode, must be valid
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*/
-		VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -85,7 +87,7 @@ namespace Direct3D9Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode);
+		VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief

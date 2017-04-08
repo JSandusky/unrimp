@@ -36,6 +36,10 @@
 typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
 typedef ID3D10Blob ID3DBlob;
 struct ID3D11VertexShader;
+namespace Renderer
+{
+	class ShaderBytecode;
+}
 namespace Direct3D11Renderer
 {
 	class Direct3D11Renderer;
@@ -70,12 +74,10 @@ namespace Direct3D11Renderer
 		*
 		*  @param[in] direct3D11Renderer
 		*    Owner Direct3D 11 renderer instance
-		*  @param[in] bytecode
-		*    Shader bytecode, must be valid
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*/
-		VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -86,7 +88,7 @@ namespace Direct3D11Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode);
+		VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief

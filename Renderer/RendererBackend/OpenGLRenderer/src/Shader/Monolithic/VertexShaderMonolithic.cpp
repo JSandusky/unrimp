@@ -36,11 +36,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderMonolithic::VertexShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
+	VertexShaderMonolithic::VertexShaderMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode&) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(0)
 	{
-		// Nothing here
+		// TODO(co) Implement me
 	}
 
 	VertexShaderMonolithic::VertexShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :

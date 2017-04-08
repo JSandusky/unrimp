@@ -36,11 +36,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderMonolithic::FragmentShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
+	FragmentShaderMonolithic::FragmentShaderMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode&) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(0)
 	{
-		// Nothing here
+		// TODO(co) Implement me
 	}
 
 	FragmentShaderMonolithic::FragmentShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :

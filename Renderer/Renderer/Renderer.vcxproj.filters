@@ -85,9 +85,6 @@
     <ClInclude Include="include\Renderer\Shader\IVertexShader.h">
       <Filter>Header Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\Shader\GeometryShaderTypes.h">
-      <Filter>Header Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\Shader\IFragmentShader.h">
       <Filter>Header Files\Shader</Filter>
     </ClInclude>
@@ -192,6 +189,9 @@
     </ClInclude>
     <ClInclude Include="include\Renderer\Texture\ITextureCube.h">
       <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Shader\ShaderTypes.h">
+      <Filter>Header Files\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

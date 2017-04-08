@@ -33,6 +33,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class ShaderBytecode;
+}
 namespace VulkanRenderer
 {
 	class VulkanRenderer;
@@ -67,12 +71,10 @@ namespace VulkanRenderer
 		*
 		*  @param[in] vulkanRenderer
 		*    Owner Vulkan renderer instance
-		*  @param[in] bytecode
-		*    Shader bytecode, must be valid
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*/
-		TessellationControlShaderGlsl(VulkanRenderer &vulkanRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		TessellationControlShaderGlsl(VulkanRenderer &vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -83,7 +85,7 @@ namespace VulkanRenderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		TessellationControlShaderGlsl(VulkanRenderer &vulkanRenderer, const char *sourceCode);
+		TessellationControlShaderGlsl(VulkanRenderer &vulkanRenderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief

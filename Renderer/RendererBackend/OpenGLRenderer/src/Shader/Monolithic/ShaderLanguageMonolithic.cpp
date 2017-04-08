@@ -125,13 +125,13 @@ namespace OpenGLRenderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageMonolithic::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IVertexShader *ShaderLanguageMonolithic::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_vertex_shader())
 		{
-			return new VertexShaderMonolithic(openGLRenderer, bytecode, numberOfBytes);
+			return new VertexShaderMonolithic(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
@@ -140,13 +140,16 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IVertexShader *ShaderLanguageMonolithic::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageMonolithic::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
+		// Monolithic shaders have no shader bytecode, only a monolithic program bytecode
+		assert(nullptr == shaderBytecode);
+
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_vertex_shader())
 		{
-			return new VertexShaderMonolithic(openGLRenderer, sourceCode);
+			return new VertexShaderMonolithic(openGLRenderer, shaderSourceCode.sourceCode);
 		}
 		else
 		{
@@ -155,13 +158,13 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageMonolithic::createTessellationControlShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::ITessellationControlShader *ShaderLanguageMonolithic::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
-			return new TessellationControlShaderMonolithic(openGLRenderer, bytecode, numberOfBytes);
+			return new TessellationControlShaderMonolithic(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
@@ -170,13 +173,16 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageMonolithic::createTessellationControlShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::ITessellationControlShader *ShaderLanguageMonolithic::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
+		// Monolithic shaders have no shader bytecode, only a monolithic program bytecode
+		assert(nullptr == shaderBytecode);
+
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
-			return new TessellationControlShaderMonolithic(openGLRenderer, sourceCode);
+			return new TessellationControlShaderMonolithic(openGLRenderer, shaderSourceCode.sourceCode);
 		}
 		else
 		{
@@ -185,13 +191,13 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageMonolithic::createTessellationEvaluationShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::ITessellationEvaluationShader *ShaderLanguageMonolithic::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
-			return new TessellationEvaluationShaderMonolithic(openGLRenderer, bytecode, numberOfBytes);
+			return new TessellationEvaluationShaderMonolithic(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
@@ -200,13 +206,16 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageMonolithic::createTessellationEvaluationShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::ITessellationEvaluationShader *ShaderLanguageMonolithic::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
+		// Monolithic shaders have no shader bytecode, only a monolithic program bytecode
+		assert(nullptr == shaderBytecode);
+
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
-			return new TessellationEvaluationShaderMonolithic(openGLRenderer, sourceCode);
+			return new TessellationEvaluationShaderMonolithic(openGLRenderer, shaderSourceCode.sourceCode);
 		}
 		else
 		{
@@ -215,7 +224,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageMonolithic::createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageMonolithic::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices)
 	{
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
@@ -225,7 +234,7 @@ namespace OpenGLRenderer
 			//   "layout(triangles) in;"
 			//   "layout(triangle_strip, max_vertices = 3) out;"
 			// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
-			return new GeometryShaderMonolithic(openGLRenderer, bytecode, numberOfBytes, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
+			return new GeometryShaderMonolithic(openGLRenderer, shaderBytecode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
 		}
 		else
 		{
@@ -234,8 +243,11 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageMonolithic::createGeometryShaderFromSourceCode(const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageMonolithic::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode)
 	{
+		// Monolithic shaders have no shader bytecode, only a monolithic program bytecode
+		assert(nullptr == shaderBytecode);
+
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_geometry_shader4())
@@ -244,7 +256,7 @@ namespace OpenGLRenderer
 			//   "layout(triangles) in;"
 			//   "layout(triangle_strip, max_vertices = 3) out;"
 			// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
-			return new GeometryShaderMonolithic(openGLRenderer, sourceCode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
+			return new GeometryShaderMonolithic(openGLRenderer, shaderSourceCode.sourceCode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
 		}
 		else
 		{
@@ -253,13 +265,13 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageMonolithic::createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IFragmentShader *ShaderLanguageMonolithic::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's fragment shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_fragment_shader())
 		{
-			return new FragmentShaderMonolithic(openGLRenderer, bytecode, numberOfBytes);
+			return new FragmentShaderMonolithic(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
@@ -268,13 +280,16 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageMonolithic::createFragmentShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IFragmentShader *ShaderLanguageMonolithic::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
+		// Monolithic shaders have no shader bytecode, only a monolithic program bytecode
+		assert(nullptr == shaderBytecode);
+
 		// Check whether or not there's fragment shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_fragment_shader())
 		{
-			return new FragmentShaderMonolithic(openGLRenderer, sourceCode);
+			return new FragmentShaderMonolithic(openGLRenderer, shaderSourceCode.sourceCode);
 		}
 		else
 		{

@@ -116,64 +116,64 @@ namespace Direct3D9Renderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderHlsl(*mDirect3D9Renderer, bytecode, numberOfBytes);
+		return new VertexShaderHlsl(*mDirect3D9Renderer, shaderBytecode);
 	}
 
-	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderHlsl(*mDirect3D9Renderer, sourceCode);
+		return new VertexShaderHlsl(*mDirect3D9Renderer, shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShaderFromBytecode(const uint8_t *, uint32_t)
+	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error! Direct3D 9 has no tessellation control shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// Error! Direct3D 9 has no tessellation control shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShaderFromBytecode(const uint8_t *, uint32_t)
+	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error! Direct3D 9 has no tessellation evaluation shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// Error! Direct3D 9 has no tessellation evaluation shader support.
 		return nullptr;
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromBytecode(const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t)
 	{
 		// Error! Direct3D 9 has no geometry shader support.
 		return nullptr;
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromSourceCode(const char *, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, Renderer::ShaderBytecode*)
 	{
 		// Error! Direct3D 9 has no geometry shader support.
 		return nullptr;
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderHlsl(*mDirect3D9Renderer, bytecode, numberOfBytes);
+		return new FragmentShaderHlsl(*mDirect3D9Renderer, shaderBytecode);
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderHlsl(*mDirect3D9Renderer, sourceCode);
+		return new FragmentShaderHlsl(*mDirect3D9Renderer, shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
 	Renderer::IProgram *ShaderLanguageHlsl::createProgram(const Renderer::IRootSignature&, const Renderer::VertexAttributes&, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)

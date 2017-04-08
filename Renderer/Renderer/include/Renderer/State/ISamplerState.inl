@@ -56,23 +56,23 @@ namespace Renderer
 		// OpenGL & OpenGL ES 2: The official specifications (unlike Direct3D, OpenGL versions are more compatible to each other)
 
 		// Return default values
-		static const Renderer::SamplerState SAMPLER_STATE =
-		{																								//	Direct3D 11					Direct3D 10						Direct3D 9				OpenGL
-			Renderer::FilterMode::MIN_MAG_MIP_LINEAR,	// filter (Renderer::FilterMode)				"MIN_MAG_MIP_LINEAR"			"MIN_MAG_MIP_LINEAR"			"MIN_MAG_MIP_POINT"		"MIN_POINT_MAG_MIP_LINEAR"
-			Renderer::TextureAddressMode::CLAMP,		// addressU (Renderer::TextureAddressMode)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
-			Renderer::TextureAddressMode::CLAMP,		// addressV (Renderer::TextureAddressMode)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
-			Renderer::TextureAddressMode::CLAMP,		// addressW (Renderer::TextureAddressMode)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
-			0.0f,										// mipLODBias (float)							"0.0f"							"0.0f"							"0.0f"					"0.0f"
-			16,											// maxAnisotropy (uint32_t)						"16"							"16"							"1"						"1"
-			Renderer::ComparisonFunc::NEVER,			// comparisonFunc (Renderer::ComparisonFunc)	"NEVER"							"NEVER"							<unsupported>			"LESS_EQUAL"
+		static const SamplerState SAMPLER_STATE =
+		{																					//	Direct3D 11					Direct3D 10						Direct3D 9				OpenGL
+			FilterMode::MIN_MAG_MIP_LINEAR,	// filter (Renderer::FilterMode)				"MIN_MAG_MIP_LINEAR"			"MIN_MAG_MIP_LINEAR"			"MIN_MAG_MIP_POINT"		"MIN_POINT_MAG_MIP_LINEAR"
+			TextureAddressMode::CLAMP,		// addressU (Renderer::TextureAddressMode)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
+			TextureAddressMode::CLAMP,		// addressV (Renderer::TextureAddressMode)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
+			TextureAddressMode::CLAMP,		// addressW (Renderer::TextureAddressMode)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
+			0.0f,							// mipLODBias (float)							"0.0f"							"0.0f"							"0.0f"					"0.0f"
+			16,								// maxAnisotropy (uint32_t)						"16"							"16"							"1"						"1"
+			ComparisonFunc::NEVER,			// comparisonFunc (Renderer::ComparisonFunc)	"NEVER"							"NEVER"							<unsupported>			"LESS_EQUAL"
 			{
-				0.0f,									// borderColor[0] (float)						"0.0f"							"0.0f"							"0.0f"					"0.0f"
-				0.0f,									// borderColor[1] (float)						"0.0f"							"0.0f"							"0.0f"					"0.0f"
-				0.0f,									// borderColor[2] (float)						"0.0f"							"0.0f"							"0.0f"					"0.0f"
-				0.0f									// borderColor[3] (float)						"0.0f"							"0.0f"							"0.0f"					"0.0f"
+				0.0f,						// borderColor[0] (float)						"0.0f"							"0.0f"							"0.0f"					"0.0f"
+				0.0f,						// borderColor[1] (float)						"0.0f"							"0.0f"							"0.0f"					"0.0f"
+				0.0f,						// borderColor[2] (float)						"0.0f"							"0.0f"							"0.0f"					"0.0f"
+				0.0f						// borderColor[3] (float)						"0.0f"							"0.0f"							"0.0f"					"0.0f"
 			},
-			-3.402823466e+38f,							// minLOD (float) - Default: -FLT_MAX			"-3.402823466e+38F (-FLT_MAX)"	"-3.402823466e+38F (-FLT_MAX)"	<unsupported>			"-1000.0f"
-			3.402823466e+38f							// maxLOD (float) - Default: FLT_MAX			"3.402823466e+38F (FLT_MAX)"	"3.402823466e+38F (FLT_MAX)"	"0.0f"					"1000.0f"
+			-3.402823466e+38f,				// minLOD (float) - Default: -FLT_MAX			"-3.402823466e+38F (-FLT_MAX)"	"-3.402823466e+38F (-FLT_MAX)"	<unsupported>			"-1000.0f"
+			3.402823466e+38f				// maxLOD (float) - Default: FLT_MAX			"3.402823466e+38F (FLT_MAX)"	"3.402823466e+38F (FLT_MAX)"	"0.0f"					"1000.0f"
 		};
 		return SAMPLER_STATE;
 	}

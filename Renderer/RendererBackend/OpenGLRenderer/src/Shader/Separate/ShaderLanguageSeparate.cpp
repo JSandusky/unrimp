@@ -121,13 +121,13 @@ namespace OpenGLRenderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageSeparate::createVertexShaderFromBytecode(const Renderer::VertexAttributes& vertexAttributes, const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IVertexShader *ShaderLanguageSeparate::createVertexShaderFromBytecode(const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_vertex_shader())
 		{
-			return new VertexShaderSeparate(openGLRenderer, vertexAttributes, bytecode, numberOfBytes);
+			return new VertexShaderSeparate(openGLRenderer, vertexAttributes, shaderBytecode);
 		}
 		else
 		{
@@ -136,13 +136,13 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IVertexShader *ShaderLanguageSeparate::createVertexShaderFromSourceCode(const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageSeparate::createVertexShaderFromSourceCode(const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_vertex_shader())
 		{
-			return new VertexShaderSeparate(openGLRenderer, vertexAttributes, sourceCode);
+			return new VertexShaderSeparate(openGLRenderer, vertexAttributes, shaderSourceCode.sourceCode, shaderBytecode);
 		}
 		else
 		{
@@ -151,13 +151,13 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageSeparate::createTessellationControlShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::ITessellationControlShader *ShaderLanguageSeparate::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
-			return new TessellationControlShaderSeparate(openGLRenderer, bytecode, numberOfBytes);
+			return new TessellationControlShaderSeparate(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
@@ -166,13 +166,13 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageSeparate::createTessellationControlShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::ITessellationControlShader *ShaderLanguageSeparate::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
-			return new TessellationControlShaderSeparate(openGLRenderer, sourceCode);
+			return new TessellationControlShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, shaderBytecode);
 		}
 		else
 		{
@@ -181,13 +181,13 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageSeparate::createTessellationEvaluationShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::ITessellationEvaluationShader *ShaderLanguageSeparate::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
-			return new TessellationEvaluationShaderSeparate(openGLRenderer, bytecode, numberOfBytes);
+			return new TessellationEvaluationShaderSeparate(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
@@ -196,13 +196,13 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageSeparate::createTessellationEvaluationShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::ITessellationEvaluationShader *ShaderLanguageSeparate::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
-			return new TessellationEvaluationShaderSeparate(openGLRenderer, sourceCode);
+			return new TessellationEvaluationShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, shaderBytecode);
 		}
 		else
 		{
@@ -211,7 +211,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageSeparate::createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageSeparate::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices)
 	{
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
@@ -221,7 +221,7 @@ namespace OpenGLRenderer
 			//   "layout(triangles) in;"
 			//   "layout(triangle_strip, max_vertices = 3) out;"
 			// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
-			return new GeometryShaderSeparate(openGLRenderer, bytecode, numberOfBytes, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
+			return new GeometryShaderSeparate(openGLRenderer, shaderBytecode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
 		}
 		else
 		{
@@ -230,7 +230,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageSeparate::createGeometryShaderFromSourceCode(const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageSeparate::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
@@ -240,7 +240,7 @@ namespace OpenGLRenderer
 			//   "layout(triangles) in;"
 			//   "layout(triangle_strip, max_vertices = 3) out;"
 			// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
-			return new GeometryShaderSeparate(openGLRenderer, sourceCode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
+			return new GeometryShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices, shaderBytecode);
 		}
 		else
 		{
@@ -249,13 +249,13 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageSeparate::createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IFragmentShader *ShaderLanguageSeparate::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's fragment shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_fragment_shader())
 		{
-			return new FragmentShaderSeparate(openGLRenderer, bytecode, numberOfBytes);
+			return new FragmentShaderSeparate(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
@@ -264,13 +264,13 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageSeparate::createFragmentShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IFragmentShader *ShaderLanguageSeparate::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// Check whether or not there's fragment shader support
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_fragment_shader())
 		{
-			return new FragmentShaderSeparate(openGLRenderer, sourceCode);
+			return new FragmentShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, shaderBytecode);
 		}
 		else
 		{

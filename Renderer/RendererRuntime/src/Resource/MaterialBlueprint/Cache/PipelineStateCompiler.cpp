@@ -117,7 +117,7 @@ namespace RendererRuntime
 				thread.join();
 			}
 
-			// Create the compiler threads crunching the shaders into microcode
+			// Create the compiler threads crunching the shaders into bytecode
 			mNumberOfCompilerThreads = numberOfCompilerThreads;
 			mCompilerThreads.clear();
 			mCompilerThreads.reserve(mNumberOfCompilerThreads);
@@ -341,7 +341,7 @@ namespace RendererRuntime
 					mCompilerQueue.pop_back();
 					compilerMutexLock.unlock();
 
-					// Do the work: Compiling the shader source code it in order to get the shader microcode
+					// Do the work: Compiling the shader source code it in order to get the shader bytecode
 					bool needToWaitForShaderCache = false;
 					Renderer::IShader* shaders[NUMBER_OF_SHADER_TYPES] = {};
 					for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES && !needToWaitForShaderCache; ++i)

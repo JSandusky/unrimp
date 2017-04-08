@@ -34,6 +34,10 @@
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct ID3D10GeometryShader;
+namespace Renderer
+{
+	class ShaderBytecode;
+}
 namespace Direct3D10Renderer
 {
 	class Direct3D10Renderer;
@@ -68,12 +72,10 @@ namespace Direct3D10Renderer
 		*
 		*  @param[in] direct3D10Renderer
 		*    Owner Direct3D 10 renderer instance
-		*  @param[in] bytecode
-		*    Shader bytecode, must be valid
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*/
-		GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -84,7 +86,7 @@ namespace Direct3D10Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode);
+		GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief

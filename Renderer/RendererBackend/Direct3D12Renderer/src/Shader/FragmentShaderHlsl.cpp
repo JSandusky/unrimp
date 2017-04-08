@@ -37,21 +37,27 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IFragmentShader(direct3D12Renderer),
 		mD3DBlobFragmentShader(nullptr)
 	{
 		// Backup the fragment shader bytecode
-		D3DCreateBlob(numberOfBytes, &mD3DBlobFragmentShader);
-		memcpy(mD3DBlobFragmentShader->GetBufferPointer(), bytecode, numberOfBytes);
+		D3DCreateBlob(shaderBytecode.getNumberOfBytes(), &mD3DBlobFragmentShader);
+		memcpy(mD3DBlobFragmentShader->GetBufferPointer(), shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes());
 	}
 
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IFragmentShader(direct3D12Renderer),
 		mD3DBlobFragmentShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the fragment shader
 		mD3DBlobFragmentShader = static_cast<ShaderLanguageHlsl*>(direct3D12Renderer.getShaderLanguage())->loadShader("ps_5_0", sourceCode, nullptr);
+
+		// Return shader bytecode, if requested do to so
+		if (nullptr != shaderBytecode)
+		{
+			shaderBytecode->setBytecodeCopy(mD3DBlobFragmentShader->GetBufferSize(), static_cast<uint8_t*>(mD3DBlobFragmentShader->GetBufferPointer()));
+		}
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}

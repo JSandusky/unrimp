@@ -34,6 +34,10 @@
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct ID3D11HullShader;
+namespace Renderer
+{
+	class ShaderBytecode;
+}
 namespace Direct3D11Renderer
 {
 	class Direct3D11Renderer;
@@ -68,12 +72,10 @@ namespace Direct3D11Renderer
 		*
 		*  @param[in] direct3D11Renderer
 		*    Owner Direct3D 11 renderer instance
-		*  @param[in] bytecode
-		*    Shader bytecode, must be valid
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*/
-		TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -84,7 +86,7 @@ namespace Direct3D11Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode);
+		TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief

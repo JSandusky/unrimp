@@ -36,17 +36,18 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
+	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode&) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(0)
 	{
-		// Nothing here
+		// TODO(co) Implement me
 	}
 
-	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
+	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::ShaderBytecode*) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShader(GL_TESS_CONTROL_SHADER, sourceCode))
 	{
+		// TODO(co) Return shader bytecode, if requested do to so
 		// Nothing here
 	}
 

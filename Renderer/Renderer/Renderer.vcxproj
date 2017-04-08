@@ -63,7 +63,6 @@
     <ClInclude Include="include\Renderer\RenderTarget\ISwapChain.h" />
     <ClInclude Include="include\Renderer\ResourceTypes.h" />
     <ClInclude Include="include\Renderer\RootSignatureTypes.h" />
-    <ClInclude Include="include\Renderer\Shader\GeometryShaderTypes.h" />
     <ClInclude Include="include\Renderer\Shader\IFragmentShader.h" />
     <ClInclude Include="include\Renderer\Shader\IGeometryShader.h" />
     <ClInclude Include="include\Renderer\Shader\IProgram.h" />
@@ -72,6 +71,7 @@
     <ClInclude Include="include\Renderer\Shader\ITessellationControlShader.h" />
     <ClInclude Include="include\Renderer\Shader\ITessellationEvaluationShader.h" />
     <ClInclude Include="include\Renderer\Shader\IVertexShader.h" />
+    <ClInclude Include="include\Renderer\Shader\ShaderTypes.h" />
     <ClInclude Include="include\Renderer\SmartRefCount.h" />
     <ClInclude Include="include\Renderer\State\BlendStateTypes.h" />
     <ClInclude Include="include\Renderer\State\DepthStencilStateTypes.h" />

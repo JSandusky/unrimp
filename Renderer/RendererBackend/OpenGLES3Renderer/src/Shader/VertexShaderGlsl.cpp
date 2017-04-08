@@ -37,18 +37,18 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderGlsl::VertexShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const uint8_t *, uint32_t) :
+	VertexShaderGlsl::VertexShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const Renderer::ShaderBytecode&) :
 		IVertexShader(openGLES3Renderer),
 		mOpenGLES3Shader(0)
 	{
 		// TODO(co) Implement me
-		// Nothing here
 	}
 
-	VertexShaderGlsl::VertexShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode) :
+	VertexShaderGlsl::VertexShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode, Renderer::ShaderBytecode*) :
 		IVertexShader(openGLES3Renderer),
 		mOpenGLES3Shader(ShaderLanguageGlsl::loadShader(GL_VERTEX_SHADER, sourceCode))
 	{
+		// TODO(co) Return shader bytecode, if requested do to so
 		// Nothing here
 	}
 

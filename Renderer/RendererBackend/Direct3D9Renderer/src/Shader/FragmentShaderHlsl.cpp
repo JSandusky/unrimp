@@ -38,17 +38,17 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const uint8_t *bytecode, uint32_t) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IFragmentShader(direct3D9Renderer),
 		mDirect3DPixelShader9(nullptr),
 		mD3DXConstantTable(nullptr)
 	{
 		// Create the Direct3D 9 pixel shader
-		direct3D9Renderer.getDirect3DDevice9()->CreatePixelShader(reinterpret_cast<const DWORD*>(bytecode), &mDirect3DPixelShader9);
-		D3DXGetShaderConstantTable(reinterpret_cast<const DWORD*>(bytecode), &mD3DXConstantTable);
+		direct3D9Renderer.getDirect3DDevice9()->CreatePixelShader(reinterpret_cast<const DWORD*>(shaderBytecode.getBytecode()), &mDirect3DPixelShader9);
+		D3DXGetShaderConstantTable(reinterpret_cast<const DWORD*>(shaderBytecode.getBytecode()), &mD3DXConstantTable);
 	}
 
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IFragmentShader(direct3D9Renderer),
 		mDirect3DPixelShader9(nullptr),
 		mD3DXConstantTable(nullptr)
@@ -59,6 +59,12 @@ namespace Direct3D9Renderer
 		{
 			// Create the Direct3D 9 pixel shader
 			direct3D9Renderer.getDirect3DDevice9()->CreatePixelShader(static_cast<DWORD*>(d3dXBuffer->GetBufferPointer()), &mDirect3DPixelShader9);
+
+			// Return shader bytecode, if requested do to so
+			if (nullptr != shaderBytecode)
+			{
+				shaderBytecode->setBytecodeCopy(d3dXBuffer->GetBufferSize(), static_cast<uint8_t*>(d3dXBuffer->GetBufferPointer()));
+			}
 
 			// Release the Direct3D 9 shader buffer object
 			d3dXBuffer->Release();

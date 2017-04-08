@@ -28,12 +28,16 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/Shader/IGeometryShader.h>
-#include <Renderer/Shader/GeometryShaderTypes.h>
+#include <Renderer/Shader/ShaderTypes.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class ShaderBytecode;
+}
 namespace OpenGLRenderer
 {
 	class OpenGLRenderer;
@@ -68,10 +72,8 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
-		*  @param[in] bytecode
-		*    Shader bytecode, must be valid
-		*  @param[in] numberOfBytes
-		*    Number of bytes in the bytecode
+		*  @param[in] shaderBytecode
+		*    Shader bytecode
 		*  @param[in] gsInputPrimitiveTopology
 		*    Geometry shader input primitive topology
 		*  @param[in] gsOutputPrimitiveTopology
@@ -79,7 +81,7 @@ namespace OpenGLRenderer
 		*  @param[in] numberOfOutputVertices
 		*    Number of output vertices
 		*/
-		GeometryShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
+		GeometryShaderMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
 
 		/**
 		*  @brief

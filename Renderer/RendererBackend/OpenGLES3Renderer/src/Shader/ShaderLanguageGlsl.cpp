@@ -120,64 +120,64 @@ namespace OpenGLES3Renderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), bytecode, numberOfBytes);
+		return new VertexShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), shaderBytecode);
 	}
 
-	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), sourceCode);
+		return new VertexShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const uint8_t *, uint32_t )
+	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error! OpenGL ES 3 has no tessellation control shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// Error! OpenGL ES 3 has no tessellation control shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromBytecode(const uint8_t *, uint32_t )
+	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error! OpenGL ES 3 has no tessellation evaluation shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// Error! OpenGL ES 3 has no tessellation evaluation shader support.
 		return nullptr;
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromBytecode(const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t)
 	{
 		// Error! OpenGL ES 3 has no geometry shader support.
 		return nullptr;
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromSourceCode(const char *, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, Renderer::ShaderBytecode*)
 	{
 		// Error! OpenGL ES 3 has no geometry shader support.
 		return nullptr;
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), bytecode, numberOfBytes);
+		return new FragmentShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), shaderBytecode);
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), sourceCode);
+		return new FragmentShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
 	Renderer::IProgram *ShaderLanguageGlsl::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)

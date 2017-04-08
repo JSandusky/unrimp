@@ -36,13 +36,13 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderGlsl::GeometryShaderGlsl(VulkanRenderer &vulkanRenderer, const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t) :
+	GeometryShaderGlsl::GeometryShaderGlsl(VulkanRenderer &vulkanRenderer, const Renderer::ShaderBytecode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me
 	}
 
-	GeometryShaderGlsl::GeometryShaderGlsl(VulkanRenderer &vulkanRenderer, const char*, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t) :
+	GeometryShaderGlsl::GeometryShaderGlsl(VulkanRenderer &vulkanRenderer, const char*, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, Renderer::ShaderBytecode*) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me

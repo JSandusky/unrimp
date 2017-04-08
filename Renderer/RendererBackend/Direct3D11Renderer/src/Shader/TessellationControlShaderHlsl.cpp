@@ -38,17 +38,17 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		ITessellationControlShader(direct3D11Renderer),
 		mD3D11HullShader(nullptr)
 	{
 		// Create the Direct3D 11 hull shader
-		direct3D11Renderer.getD3D11Device()->CreateHullShader(bytecode, numberOfBytes, nullptr, &mD3D11HullShader);
+		direct3D11Renderer.getD3D11Device()->CreateHullShader(shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes(), nullptr, &mD3D11HullShader);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name
 	}
 
-	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
+	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		ITessellationControlShader(direct3D11Renderer),
 		mD3D11HullShader(nullptr)
 	{
@@ -58,6 +58,12 @@ namespace Direct3D11Renderer
 		{
 			// Create the Direct3D 11 hull shader
 			direct3D11Renderer.getD3D11Device()->CreateHullShader(d3dBlob->GetBufferPointer(), d3dBlob->GetBufferSize(), nullptr, &mD3D11HullShader);
+
+			// Return shader bytecode, if requested do to so
+			if (nullptr != shaderBytecode)
+			{
+				shaderBytecode->setBytecodeCopy(d3dBlob->GetBufferSize(), static_cast<uint8_t*>(d3dBlob->GetBufferPointer()));
+			}
 
 			// Release the Direct3D 11 shader binary large object
 			d3dBlob->Release();

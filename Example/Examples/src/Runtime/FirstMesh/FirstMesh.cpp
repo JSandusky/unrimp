@@ -154,9 +154,7 @@ void FirstMesh::onInitialization()
 			Renderer::IProgramPtr program;
 			{
 				// Get the shader source code (outsourced to keep an overview)
-				const char *vertexShaderProfile = nullptr;
 				const char *vertexShaderSourceCode = nullptr;
-				const char *fragmentShaderProfile = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
 				#include "FirstMesh_GLSL_410.h"
 				#include "FirstMesh_GLSL_ES3.h"
@@ -168,8 +166,8 @@ void FirstMesh::onInitialization()
 				mProgram = program = shaderLanguage->createProgram(
 					*mRootSignature,
 					vertexAttributes,
-					shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode, vertexShaderProfile),
-					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode, fragmentShaderProfile));
+					shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode),
+					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
 			// Is there a valid program?
