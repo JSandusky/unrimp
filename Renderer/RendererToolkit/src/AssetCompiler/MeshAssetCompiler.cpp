@@ -358,16 +358,16 @@ namespace
 			for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
 			{
 				// Get the used mesh
-				const aiMesh &assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
+				const aiMesh& assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
 
 				// Get the start vertex inside the our vertex buffer
 				const uint32_t starVertex = numberOfVertices;
 
 				{ // Loop through the Assimp mesh vertices
-					uint8_t *currentVertexBuffer = vertexBuffer + numberOfVertices * numberOfBytesPerVertex;
+					uint8_t* currentVertexBuffer = vertexBuffer + numberOfVertices * numberOfBytesPerVertex;
 					for (uint32_t j = 0; j < assimpMesh.mNumVertices; ++j)
 					{
-						uint8_t *currentVertex = currentVertexBuffer + j * numberOfBytesPerVertex;
+						uint8_t* currentVertex = currentVertexBuffer + j * numberOfBytesPerVertex;
 
 						{ // 32 bit position
 							// Get the Assimp mesh vertex position
@@ -377,7 +377,7 @@ namespace
 							assimpVertex *= currentAssimpTransformation;
 
 							// Set our vertex buffer position
-							float *currentVertexBufferFloat = reinterpret_cast<float*>(currentVertex);
+							float* currentVertexBufferFloat = reinterpret_cast<float*>(currentVertex);
 							*currentVertexBufferFloat = assimpVertex.x;
 							++currentVertexBufferFloat;
 							*currentVertexBufferFloat = assimpVertex.y;
@@ -391,7 +391,7 @@ namespace
 							aiVector3D assimpTexCoord = assimpMesh.mTextureCoords[0][j];
 
 							// Set our vertex buffer 32 bit texture coordinate
-							float *currentVertexBufferFloat = reinterpret_cast<float*>(currentVertex);
+							float* currentVertexBufferFloat = reinterpret_cast<float*>(currentVertex);
 							*currentVertexBufferFloat = assimpTexCoord.x;
 							++currentVertexBufferFloat;
 							*currentVertexBufferFloat = assimpTexCoord.y;
@@ -422,7 +422,7 @@ namespace
 							const glm::quat tangentFrameQuaternion = RendererRuntime::Math::calculateTangentFrameQuaternion(tangentFrame);
 
 							// Set our vertex buffer 16 bit QTangent
-							short *currentVertexBufferShort = reinterpret_cast<short*>(currentVertex);
+							short* currentVertexBufferShort = reinterpret_cast<short*>(currentVertex);
 							*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.x * SHRT_MAX);
 							++currentVertexBufferShort;
 							*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.y * SHRT_MAX);
@@ -463,7 +463,7 @@ namespace
 							const uint8_t numberOfVertexWeights = numberOfWeightsPerVertex[assimpVertexWeight.mVertexId];
 							if (numberOfVertexWeights < 4)
 							{
-								uint8_t *currentVertex = currentVertexBuffer + assimpVertexWeight.mVertexId * numberOfBytesPerVertex;
+								uint8_t* currentVertex = currentVertexBuffer + assimpVertexWeight.mVertexId * numberOfBytesPerVertex;
 
 								// Skip 32 bit position, 32 bit texture coordinate and 16 bit QTangent
 								currentVertex += sizeof(float) * 3 + sizeof(float) * 2 + sizeof(short) * 4;

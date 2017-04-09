@@ -190,7 +190,7 @@ namespace RendererToolkit
 		targetCode.reserve(endPosition);
 
 		// We have two kinds of comments
-		// - Single-line comments: Starts with "//" -> all text till the next new line char is a comment
+		// - Single-line comments: Starts with "//" -> all text till the next new line character is a comment
 		// - Multi-line comments: Starts with "/*" and ends with */ all text (even new lines) between the two position is a comment
 
 		// Till the end...
@@ -222,8 +222,8 @@ namespace RendererToolkit
 							// Ignore everything up to this new index
 							currentPosition = index;
 
-							// Don't strip the new line char, when the comment is not the only text in the line
-							// Check if there are any non whitespace chars (space, tab (\t) or \r) on the same text line
+							// Don't strip the new line character, when the comment is not the only text in the line
+							// Check if there are any non whitespace characters (space, tab (\t) or \r) on the same text line
 
 							// Find the previous new line, we do the search in the targetCode, because each character before the comment start is already copied to the target
 							// And we might need to remove the remaining line when it only consists of white spaces
@@ -237,7 +237,7 @@ namespace RendererToolkit
 									// The whole content consists only of white spaces
 									targetCode.clear();
 
-									// Ignore the new line char of the current line
+									// Ignore the new line character of the current line
 									currentPosition += 1;
 								}
 								else
@@ -254,8 +254,8 @@ namespace RendererToolkit
 								if (std::string::npos == indexIfNonWhiteSpaceBeforeCommentStart)
 								{
 									// The whole line consists only of white spaces
-									targetCode.erase(lineStartIndex + 1);	// The +1 is needed so we don't strip the new line char too
-																			// Ignore the new line char of the current line
+									targetCode.erase(lineStartIndex + 1);	// The +1 is needed so we don't strip the new line character too
+																			// Ignore the new line character of the current line
 									currentPosition += 1;
 								}
 								else
