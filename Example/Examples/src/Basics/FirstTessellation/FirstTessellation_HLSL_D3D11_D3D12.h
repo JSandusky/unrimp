@@ -27,16 +27,10 @@ if (0 == strcmp(renderer->getName(), "Direct3D11") || 0 == strcmp(renderer->getN
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per control point of the patch
-vertexShaderSourceCode = STRINGIFY(
+vertexShaderSourceCode = R"(
 // Attribute input/output
 struct VS_OUTPUT
 {
@@ -51,7 +45,7 @@ VS_OUTPUT main(float2 Position : POSITION)
 	output.Position = Position;
 	return output;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
@@ -59,7 +53,7 @@ VS_OUTPUT main(float2 Position : POSITION)
 //[-------------------------------------------------------]
 // Under Direct3D 11, the tessellation control shader invocation is slit into per patch and per patch control point
 // "hull shader" in Direct3D terminology
-tessellationControlShaderSourceCode = STRINGIFY(
+tessellationControlShaderSourceCode = R"(
 // Attribute input/output
 struct VS_OUTPUT
 {
@@ -100,7 +94,7 @@ struct HS_OUTPUT
 		output.Position = input[InvocationID].Position;
 		return output;
 	}
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
@@ -108,7 +102,7 @@ struct HS_OUTPUT
 //[-------------------------------------------------------]
 // One tessellation evaluation shader invocation per point from tessellator
 // "domain shader" in Direct3D terminology
-tessellationEvaluationShaderSourceCode = STRINGIFY(
+tessellationEvaluationShaderSourceCode = R"(
 // Attribute input/output
 struct HS_CONSTANT_DATA_OUTPUT
 {
@@ -143,7 +137,7 @@ DS_OUTPUT main(HS_CONSTANT_DATA_OUTPUT inputTess, float3 TessCoord : SV_DOMAINLO
 	// Done
 	return output;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
@@ -151,20 +145,14 @@ DS_OUTPUT main(HS_CONSTANT_DATA_OUTPUT inputTess, float3 TessCoord : SV_DOMAINLO
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 // "pixel shader" in Direct3D terminology
-fragmentShaderSourceCode = STRINGIFY(
+fragmentShaderSourceCode = R"(
 // Programs
 float4 main(float4 Position : SV_POSITION) : SV_TARGET
 {
 	// Return white
 	return float4(1.0f, 1.0f, 1.0f, 1.0f);
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

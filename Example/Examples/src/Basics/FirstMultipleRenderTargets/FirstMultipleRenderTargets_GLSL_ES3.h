@@ -27,18 +27,11 @@ if (0 == strcmp(renderer->getName(), "OpenGLES3"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode =
-"#version 300 es\n"	// OpenGL ES 3.0
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
+
 // Attribute input/output
 in  highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
 out highp vec2 TexCoord;	// Normalized texture coordinate as output
@@ -55,16 +48,14 @@ void main()
 	// -> (1,1) -> (1,1)
 	TexCoord = Position.xy * 0.5 + 0.5;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode_MultipleRenderTargets =
-"#version 300 es\n"	// OpenGL ES 3.0
-STRINGIFY(
+fragmentShaderSourceCode_MultipleRenderTargets = R"(#version 300 es	// OpenGL ES 3.0
 precision highp float; // Default precision to high for floating points
 
 // Attribute input/output
@@ -77,16 +68,14 @@ void main()
 	FragmentColor[0] = vec4(1.0f, 0.0f, 0.0f, 0.0f);	// Red
 	FragmentColor[1] = vec4(0.0f, 0.0f, 1.0f, 0.0f);	// Blue
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 300 es\n"	// OpenGL ES 3.0
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
 precision highp float; // Default precision to high for floating points
 
 // Attribute input/output
@@ -110,13 +99,7 @@ void main()
 	// -> The result should be white or green
 	FragmentColor = vec4(1.0, 1.0, 1.0, 1.0) - color0 - color1;
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

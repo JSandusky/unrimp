@@ -27,16 +27,10 @@ if (0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getN
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode = STRINGIFY(
+vertexShaderSourceCode = R"(
 // Attribute input/output
 struct VS_INPUT
 {
@@ -100,7 +94,7 @@ VS_OUTPUT main(VS_INPUT input)
 	// Done
 	return output;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
@@ -108,7 +102,7 @@ VS_OUTPUT main(VS_INPUT input)
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 // "pixel shader" in Direct3D terminology
-fragmentShaderSourceCode = STRINGIFY(
+fragmentShaderSourceCode = R"(
 // Attribute input/output
 struct VS_OUTPUT
 {
@@ -156,13 +150,7 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 	// Done
 	return min(color, float4(1.0f, 1.0f, 1.0f, 1.0f));
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

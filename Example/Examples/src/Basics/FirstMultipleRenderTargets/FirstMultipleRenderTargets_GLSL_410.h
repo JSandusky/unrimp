@@ -27,18 +27,11 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in  vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
 out gl_PerVertex
@@ -59,16 +52,15 @@ void main()
 	// -> (1,1) -> (1,1)
 	TexCoord = Position.xy * 0.5 + 0.5;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode_MultipleRenderTargets =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+fragmentShaderSourceCode_MultipleRenderTargets = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in vec2 TexCoord;	// Normalized texture coordinate as input
 
@@ -78,16 +70,15 @@ void main()
 	gl_FragData[0] = vec4(1.0f, 0.0f, 0.0f, 0.0f);	// Red
 	gl_FragData[1] = vec4(0.0f, 0.0f, 1.0f, 0.0f);	// Blue
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in vec2 TexCoord;	// Normalized texture coordinate as input
 
@@ -108,13 +99,7 @@ void main()
 	// -> The result should be white or green
 	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) - color0 - color1;
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

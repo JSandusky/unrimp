@@ -27,18 +27,11 @@ if (0 == strcmp(renderer->getName(), "OpenGLES3"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode =
-"#version 300 es\n"	// OpenGL ES 3.0
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
+
 // Attribute input/output
 in  highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
 out highp vec2 TexCoord;	// Normalized texture coordinate as output
@@ -50,16 +43,15 @@ void main()
 	gl_Position = vec4(Position, 0.0, 1.0);
 	TexCoord = Position.xy;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 300 es\n"	// OpenGL ES 3.0
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
+
 // Attribute input/output
 in mediump vec2 TexCoord;		// Normalized texture coordinate as input
 out highp vec4 FragmentColor;	// Output variable for fragment color
@@ -74,13 +66,7 @@ void main()
 	// Fetch the texel at the given texture coordinate and return it's color
 	FragmentColor = texture(GradientMap, vec2(TexCoord.y, 0.0f)).r * texture(DiffuseMap, TexCoord);
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

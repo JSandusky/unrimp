@@ -27,18 +27,11 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in  vec3 Position;		// Object space vertex position
 out gl_PerVertex
@@ -93,16 +86,15 @@ void main()
 	BinormalVs = tangentFrame[1];
 	NormalVs = tangentFrame[2];
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in vec2 TexCoordVs;	// Texture coordinate
 in vec3 TangentVs;	// Tangent space to view space, x-axis
@@ -147,13 +139,7 @@ void main()
 	// Done
 	gl_FragColor = min(color, vec4(1.0, 1.0, 1.0, 1.0));
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

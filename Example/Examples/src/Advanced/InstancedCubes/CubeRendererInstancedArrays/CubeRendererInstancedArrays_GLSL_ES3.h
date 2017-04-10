@@ -28,18 +28,11 @@ if (0 == strcmp(mRenderer->getName(), "OpenGLES3") && mRenderer->getCapabilities
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode =
-"#version 300 es\n"	// OpenGL ES 3.0
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
+
 // Attribute input - Mesh data
 in highp vec3 Position;	// Object space vertex position input
 in highp vec2 TexCoord;
@@ -57,11 +50,11 @@ out highp vec2 TexCoordVs;
 out highp vec3 NormalVs;
 
 // Uniforms
-layout(std140) uniform UniformBlockStaticVs		// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+layout(std140) uniform UniformBlockStaticVs		// Usage of 'layout(binding = 0)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	mat4 MVP;
 };
-layout(std140) uniform UniformBlockDynamicVs	// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+layout(std140) uniform UniformBlockDynamicVs	// Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec2 TimerAndGlobalScale;	// x=Timer, y=Global scale
 };
@@ -161,27 +154,25 @@ void main()
 	TexCoordVs = vec2(TexCoord.x, TexCoord.y / 8.0 + 1.0 / 8.0 * PerInstancePositionTexture.w);	// Fixed build in number of textures
 	NormalVs = Normal;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 300 es\n"	// OpenGL ES 3.0
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
 precision highp float;
 
 // Attribute input/output
 in vec3 WorldPositionVs;
 in vec2 TexCoordVs;
 in vec3 NormalVs;
-layout(location = 0) out vec4 Color0;	// Index layout needs "EXT_blend_func_extended" which is OpenGL ES 3.1+ feature but not supported in fragment shader
+layout(location = 0) out vec4 Color0;	// Index layout needs 'EXT_blend_func_extended' which is OpenGL ES 3.1+ feature but not supported in fragment shader
 
 // Uniforms
-uniform highp sampler2D DiffuseMap;				// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-layout(std140) uniform UniformBlockDynamicFs	// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform highp sampler2D DiffuseMap;				// Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+layout(std140) uniform UniformBlockDynamicFs	// Usage of 'layout(binding = 0)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec3 LightPosition;	// World space light position
 };
@@ -196,13 +187,7 @@ void main()
 	Color0 = (vec4(0.2, 0.2, 0.2, 1.0) + lighting) * texture(DiffuseMap, TexCoordVs);
 	Color0.a = 0.8;
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

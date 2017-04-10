@@ -27,16 +27,10 @@ if (0 == strcmp(renderer.getName(), "Direct3D9"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode = STRINGIFY(
+vertexShaderSourceCode = R"(
 // Attribute input/output
 struct VS_OUTPUT
 {
@@ -67,7 +61,7 @@ VS_OUTPUT main(float2 Position : POSITION,	// Clip space vertex position as inpu
 	// Done
 	return output;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
@@ -75,7 +69,7 @@ VS_OUTPUT main(float2 Position : POSITION,	// Clip space vertex position as inpu
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 // "pixel shader" in Direct3D terminology
-fragmentShaderSourceCode = STRINGIFY(
+fragmentShaderSourceCode = R"(
 // Uniforms
 uniform sampler2D GlyphMap : register(s0);	// Glyph atlas texture map
 
@@ -85,13 +79,7 @@ float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0, float4 C
 	// Fetch the texel at the given texture coordinate and return it's color
 	return Color * tex2D(GlyphMap, TexCoord).rrrr;
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

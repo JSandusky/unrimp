@@ -27,18 +27,11 @@ if (0 == strcmp(mRenderer->getName(), "OpenGL"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in  vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
 out gl_PerVertex
@@ -59,16 +52,15 @@ void main()
 	// -> (1,1) -> (1,1)
 	TexCoord = Position.xy * 0.5 + 0.5;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code - Content generation      ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode_ContentGeneration =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+fragmentShaderSourceCode_ContentGeneration = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in vec2 TexCoord;	// Normalized texture coordinate as input
 
@@ -78,16 +70,15 @@ void main()
 	// Return the color green
 	gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code - Content processing      ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode_ContentProcessing =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+fragmentShaderSourceCode_ContentProcessing = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in vec2 TexCoord;	// Normalized texture coordinate as input
 
@@ -101,13 +92,7 @@ void main()
 	// -> Apply a simple wobble to the texture coordinate so we can see that content processing is up and running
 	gl_FragColor = texture2D(ContentMap, vec2(TexCoord.x + sin(TexCoord.x * 100.0) * 0.01, TexCoord.y + cos(TexCoord.y * 100.0) * 0.01));
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

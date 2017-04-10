@@ -27,20 +27,14 @@ if (0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getN
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode = STRINGIFY(
+vertexShaderSourceCode = R"(
 // Attribute input/output
 struct VS_OUTPUT
 {
-	// Direct3D/driver says *crash* if we try to write "void main()"
+	// Direct3D/driver says *crash* if we try to write 'void main()'
 };
 
 // Programs
@@ -49,18 +43,18 @@ VS_OUTPUT main()
 	VS_OUTPUT output;
 	return output;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Geometry shader source code                           ]
 //[-------------------------------------------------------]
 // One geometry shader invocation per primitive
-geometryShaderSourceCode = STRINGIFY(
+geometryShaderSourceCode = R"(
 // Attribute input/output
 struct GS_INPUT
 {
-	// Direct3D says: "error X3514: 'main': no input primitive specified, if your shader doesn't require inputs, then define an empty struct and give it the proper primitive type."
+	// Direct3D says: 'error X3514: 'main': no input primitive specified, if your shader doesn't require inputs, then define an empty struct and give it the proper primitive type.'
 };
 struct GS_OUTPUT
 {
@@ -92,7 +86,7 @@ void main(point GS_INPUT input[1], inout TriangleStream<GS_OUTPUT> OutputStream)
 	// Done
 	OutputStream.RestartStrip();
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
@@ -100,20 +94,14 @@ void main(point GS_INPUT input[1], inout TriangleStream<GS_OUTPUT> OutputStream)
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 // "pixel shader" in Direct3D terminology
-fragmentShaderSourceCode = STRINGIFY(
+fragmentShaderSourceCode = R"(
 // Programs
 float4 main(float4 Position : SV_POSITION) : SV_TARGET
 {
 	// Return white
 	return float4(1.0f, 1.0f, 1.0f, 1.0f);
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

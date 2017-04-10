@@ -27,18 +27,11 @@ if (0 == strcmp(mRenderer->getName(), "OpenGL"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in  vec3 Position;	// Object space vertex position input
 in  vec2 TexCoord;
@@ -52,7 +45,7 @@ out vec3 TexCoordVs;	// z component = texture ID
 out vec3 NormalVs;
 
 // Uniforms
-uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of layout(binding = 1) would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 											// -> Layout: [Position][Rotation][Position][Rotation]...
 											//    - Position: xyz=Position, w=Slice of the 2D texture array to use
 											//    - Rotation: Rotation quaternion (xyz) and scale (w)
@@ -163,14 +156,13 @@ void main()
 	TexCoordVs.z = perInstancePositionTexture.w;
 	NormalVs = Normal;
 }
-);	// STRINGIFY
+)";
 
 // Uniform buffer version (Direct3D 10 and Direct3D 11 only support uniform buffers and no individual uniform access)
 // One vertex shader invocation per vertex
 if (mRenderer->getCapabilities().maximumUniformBufferSize > 0)
-vertexShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in vec3 Position;		// Object space vertex position input
 in vec2 TexCoord;
@@ -184,17 +176,17 @@ out vec3 TexCoordVs;	// z component = texture ID
 out vec3 NormalVs;
 
 // Uniforms
-uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 											// -> Layout: [Position][Rotation][Position][Rotation]...
 											//    - Position: xyz=Position, w=Slice of the 2D texture array to use
 											//    - Rotation: Rotation quaternion (xyz) and scale (w)
 											//      -> We don't need to store the w component of the quaternion. It's normalized and storing
 											//         three components while recomputing the fourths component is be sufficient.
-layout(std140) uniform UniformBlockStaticVs		// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+layout(std140) uniform UniformBlockStaticVs		// Usage of 'layout(binding = 0)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	mat4 MVP;
 };
-layout(std140) uniform UniformBlockDynamicVs	// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+layout(std140) uniform UniformBlockDynamicVs	// Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec2 TimerAndGlobalScale;	// x=Timer, y=Global scale
 };
@@ -301,18 +293,17 @@ void main()
 	TexCoordVs.z = perInstancePositionTexture.w;
 	NormalVs = Normal;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 410 core\n"									// OpenGL 4.1
-"#extension GL_EXT_texture_array : enable\n"
-"#extension GL_ARB_explicit_attrib_location : enable\n"	// Required for "layout(location = 0)" etc.
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+#extension GL_EXT_texture_array : enable
+#extension GL_ARB_explicit_attrib_location : enable	// Required for 'layout(location = 0)' etc.
+
 // Attribute input/output
 in vec3 WorldPositionVs;
 in vec3 TexCoordVs;	// z component = texture ID
@@ -320,7 +311,7 @@ in vec3 NormalVs;
 layout(location = 0, index = 0) out vec4 Color0;
 
 // Uniforms
-uniform sampler2DArray DiffuseMap;	// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform sampler2DArray DiffuseMap;	// Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 uniform vec3 LightPosition;	// World space light position
 
 // Programs
@@ -333,15 +324,14 @@ void main()
 	Color0 = (vec4(0.2, 0.2, 0.2, 1.0) + lighting) * texture(DiffuseMap, TexCoordVs);
 	Color0.a = 0.8;
 }
-);	// STRINGIFY
+)";
 
 // Uniform buffer version (Direct3D 10 and Direct3D 11 only support uniform buffers and no individual uniform access)
 if (mRenderer->getCapabilities().maximumUniformBufferSize > 0)
-fragmentShaderSourceCode =
-"#version 410 core\n"									// OpenGL 4.1
-"#extension GL_EXT_texture_array : enable\n"
-"#extension GL_ARB_explicit_attrib_location : enable\n"	// Required for "layout(location = 0)" etc.
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+#extension GL_EXT_texture_array : enable
+#extension GL_ARB_explicit_attrib_location : enable	// Required for 'layout(location = 0)' etc.
+
 // Attribute input/output
 in vec3 WorldPositionVs;
 in vec3 TexCoordVs;	// z component = texture ID
@@ -349,8 +339,8 @@ in vec3 NormalVs;
 layout(location = 0, index = 0) out vec4 Color0;
 
 // Uniforms
-uniform sampler2DArray DiffuseMap;				// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-layout(std140) uniform UniformBlockDynamicFs	// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform sampler2DArray DiffuseMap;				// Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+layout(std140) uniform UniformBlockDynamicFs	// Usage of 'layout(binding = 0)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec3 LightPosition;	// World space light position
 };
@@ -365,13 +355,7 @@ void main()
 	Color0 = (vec4(0.2, 0.2, 0.2, 1.0) + lighting) * texture(DiffuseMap, TexCoordVs);
 	Color0.a = 0.8;
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

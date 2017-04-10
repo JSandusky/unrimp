@@ -27,16 +27,10 @@ if (0 == strcmp(mRenderer->getName(), "Direct3D9"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode = STRINGIFY(
+vertexShaderSourceCode = R"(
 // Attribute input/output
 struct VS_OUTPUT
 {
@@ -63,7 +57,7 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 	// Done
 	return output;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
@@ -71,14 +65,14 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 // "pixel shader" in Direct3D terminology
-fragmentShaderSourceCode_ContentGeneration = STRINGIFY(
+fragmentShaderSourceCode_ContentGeneration = R"(
 // Programs
 float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Return the color green
 	return float4(0.0f, 1.0f, 0.0f, 1.0f);
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
@@ -86,7 +80,7 @@ float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TAR
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 // "pixel shader" in Direct3D terminology
-fragmentShaderSourceCode_ContentProcessing = STRINGIFY(
+fragmentShaderSourceCode_ContentProcessing = R"(
 // Uniforms
 uniform sampler2D ContentMap : register(s0);
 
@@ -101,13 +95,7 @@ float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TAR
 	// -> (1,1) -> (1,0)
 	return tex2D(ContentMap, float2(TexCoord.x + sin(TexCoord.x * 100.0f) * 0.01f, 1.0f - TexCoord.y - cos(TexCoord.y * 100.0f) * 0.01f));
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

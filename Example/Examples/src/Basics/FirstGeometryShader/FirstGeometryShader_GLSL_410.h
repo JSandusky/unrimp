@@ -27,18 +27,11 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in  float Position;	// Dummy
 out gl_PerVertex
@@ -52,16 +45,15 @@ void main()
 	// Pass through the dummy
 	gl_Position = vec4(Position, 0.0, 0.0, 1.0);
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Geometry shader source code                           ]
 //[-------------------------------------------------------]
 // One geometry shader invocation per primitive
-geometryShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+geometryShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 layout(points) in;
 layout(triangle_strip, max_vertices = 3) out;
@@ -93,16 +85,15 @@ void main()
 	// Done
 	EndPrimitive();
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 layout(location = 0, index = 0) out vec4 Color0;
 
@@ -112,13 +103,7 @@ void main()
 	// Return white
 	Color0 = vec4(1.0, 1.0, 1.0, 1.0);
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

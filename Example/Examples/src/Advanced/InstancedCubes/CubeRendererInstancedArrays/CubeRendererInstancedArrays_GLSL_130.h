@@ -27,18 +27,11 @@ if (0 == strcmp(mRenderer->getName(), "OpenGL") && 0 == mRenderer->getCapabiliti
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode =
-"#version 130\n"	// OpenGL 3.0
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 130	// OpenGL 3.0
+
 // Attribute input - Mesh data
 in vec3 Position;	// Object space vertex position input
 in vec2 TexCoord;
@@ -154,23 +147,22 @@ void main()
 	TexCoordVs = vec2(TexCoord.x, TexCoord.y / 8.0 + 1.0 / 8.0 * PerInstancePositionTexture.w);	// Fixed build in number of textures
 	NormalVs = Normal;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 130\n"	// OpenGL 3.0
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 130	// OpenGL 3.0
+
 // Attribute input/output
 in vec3 WorldPositionVs;
 in vec2 TexCoordVs;
 in vec3 NormalVs;
 
 // Uniforms
-uniform sampler2D DiffuseMap;		// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform sampler2D DiffuseMap;		// Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 uniform vec3      LightPosition;	// World space light position
 
 // Programs
@@ -183,13 +175,7 @@ void main()
 	gl_FragColor = (vec4(0.2, 0.2, 0.2, 1.0) + lighting) * texture2D(DiffuseMap, TexCoordVs);
 	gl_FragColor.a = 0.8;
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

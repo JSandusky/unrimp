@@ -27,18 +27,11 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per control point of the patch
-vertexShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in  vec2 Position;	// Clip space control point position of the patch as input, left/bottom is (-1,-1) and right/top is (1,1)
 out vec2 vPosition;	// Clip space control point position of the patch as output, left/bottom is (-1,-1) and right/top is (1,1)
@@ -49,16 +42,15 @@ void main()
 	// Pass through the clip space control point position of the patch, left/bottom is (-1,-1) and right/top is (1,1)
 	vPosition = Position;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Tessellation control shader source code               ]
 //[-------------------------------------------------------]
 // One tessellation control shader invocation per patch control point (with super-vision)
-tessellationControlShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+tessellationControlShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 layout(vertices = 3) out;
 in  vec2 vPosition[];	// Clip space control point position of the patch we received from the vertex shader (VS) as input
@@ -79,16 +71,15 @@ void main()
 		gl_TessLevelInner[0] = 4.0;
 	}
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Tessellation evaluation shader source code            ]
 //[-------------------------------------------------------]
 // One tessellation evaluation shader invocation per point from tessellator
-tessellationEvaluationShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+tessellationEvaluationShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 layout(triangles, equal_spacing, ccw) in;
 in vec2 tcPosition[];	// Clip space control point position of the patch we received from the tessellation control shader (TCS) as input
@@ -112,16 +103,15 @@ void main()
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	gl_Position = vec4(p0 + p1 + p2, 0.0f, 1.0);
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 layout(location = 0, index = 0) out vec4 Color0;
 
@@ -131,13 +121,7 @@ void main()
 	// Return white
 	Color0 = vec4(1.0, 1.0, 1.0, 1.0);
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

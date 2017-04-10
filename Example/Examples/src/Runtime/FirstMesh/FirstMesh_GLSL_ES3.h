@@ -27,18 +27,11 @@ if (0 == strcmp(renderer->getName(), "OpenGLES3"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode =
-"#version 300 es\n"	// OpenGL ES 3.0
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
+
 // Attribute input/output
 in  highp vec3 Position;	// Object space vertex position
 in  highp vec2 TexCoord;	// 32 bit texture coordinate
@@ -89,16 +82,15 @@ void main()
 	BinormalVs = tangentFrame[1];
 	NormalVs = tangentFrame[2];
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 300 es\n"	// OpenGL ES 3.0
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
+
 // Attribute input/output
 in  mediump vec2 TexCoordVs;	// Texture coordinate
 in  mediump vec3 TangentVs;		// Tangent space to view space, x-axis
@@ -144,13 +136,7 @@ void main()
 	// Done
 	FragmentColor = min(color, vec4(1.0, 1.0, 1.0, 1.0));
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]

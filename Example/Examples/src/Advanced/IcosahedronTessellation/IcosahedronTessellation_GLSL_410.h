@@ -30,18 +30,11 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 
 
 //[-------------------------------------------------------]
-//[ Define helper macro                                   ]
-//[-------------------------------------------------------]
-#define STRINGIFY(ME) #ME
-
-
-//[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per control point of the patch
-vertexShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+vertexShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 in  vec3 Position;	// Object space control point position of the patch we received from the input assembly (IA) as input
 out vec3 vPosition;	// Object space control point position of the patch as output
@@ -52,16 +45,15 @@ void main()
 	// Pass through the object space control point position of the patch
 	vPosition = Position;
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Tessellation control shader source code               ]
 //[-------------------------------------------------------]
 // One tessellation control shader invocation per patch control point (with super-vision)
-tessellationControlShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+tessellationControlShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 layout(vertices = 3) out;
 in  vec3 vPosition[];	// Object space control point position of the patch we received from the vertex shader (VS) as input
@@ -89,16 +81,15 @@ void main()
 		gl_TessLevelInner[0] = TessellationLevelInner;
 	}
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Tessellation evaluation shader source code            ]
 //[-------------------------------------------------------]
 // One tessellation evaluation shader invocation per point from tessellator
-tessellationEvaluationShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+tessellationEvaluationShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 layout(triangles, equal_spacing, cw) in;
 in  vec3 tcPosition[];		// Object space control point position of the patch we received from the tessellation control shader (TCS) as input
@@ -134,16 +125,15 @@ void main()
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	gl_Position = ObjectSpaceToClipSpaceMatrix * vec4(tePosition, 1.0);
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Geometry shader source code                           ]
 //[-------------------------------------------------------]
 // One geometry shader invocation per primitive
-geometryShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+geometryShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attribute input/output
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
@@ -196,16 +186,15 @@ void main()
 
 	EndPrimitive();
 }
-);	// STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 410 core\n"	// OpenGL 4.1
-STRINGIFY(
+fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
 // Attributes
 layout(location = 0) out vec4 OutFragmentColor;
 in vec3 gFacetNormal;	// Normalized normal of the primitive we received from the geometry shader (GS) as input
@@ -250,13 +239,7 @@ void main()
 	// Return the calculated color
 	OutFragmentColor = vec4(color, 1.0);
 }
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Undefine helper macro                                 ]
-//[-------------------------------------------------------]
-#undef STRINGIFY
+)";
 
 
 //[-------------------------------------------------------]
