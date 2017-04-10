@@ -72,21 +72,35 @@ namespace OpenGLRenderer
 	public:
 		/**
 		*  @brief
-		*    Creates and loads a shader program from bytecode
+		*    Create and load a shader from bytecode
 		*
 		*  @param[in] shaderType
 		*    Shader type (for example "GL_VERTEX_SHADER_ARB", type GLenum not used in here in order to keep the header slim)
 		*  @param[in] shaderBytecode
-		*    Shader SPIR-V bytecode ("GL_ARB_gl_spirv"-extension)
+		*    Shader SPIR-V bytecode ("GL_ARB_gl_spirv"-extension) compressed via SMOL-V
 		*
 		*  @return
 		*    The OpenGL shader, 0 on error, destroy the resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
+		*/
+		static uint32_t loadShaderFromBytecode(uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode);
+
+		/**
+		*  @brief
+		*    Create and load a shader program from bytecode
+		*
+		*  @param[in] shaderType
+		*    Shader type (for example "GL_VERTEX_SHADER_ARB", type GLenum not used in here in order to keep the header slim)
+		*  @param[in] shaderBytecode
+		*    Shader SPIR-V bytecode ("GL_ARB_gl_spirv"-extension) compressed via SMOL-V
+		*
+		*  @return
+		*    The OpenGL shader program, 0 on error, destroy the resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
 		*/
 		static uint32_t loadShaderProgramFromBytecode(uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
-		*    Creates, loads and compiles a shader program from source code
+		*    Create, load and compile a shader program from source code
 		*
 		*  @param[in] shaderType
 		*    Shader type (for example "GL_VERTEX_SHADER_ARB", type GLenum not used in here in order to keep the header slim)
@@ -94,9 +108,22 @@ namespace OpenGLRenderer
 		*    Shader ASCII source code, must be a valid pointer (type GLchar not used in here in order to keep the header slim)
 		*
 		*  @return
-		*    The OpenGL shader, 0 on error, destroy the resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
+		*    The OpenGL shader program, 0 on error, destroy the resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
 		*/
 		static uint32_t loadShaderProgramFromSourceCode(uint32_t shaderType, const char *shaderSource);
+
+		/**
+		*  @brief
+		*    Compile shader source code to shader bytecode
+		*
+		*  @param[in] shaderType
+		*    Shader type (for example "GL_VERTEX_SHADER_ARB", type GLenum not used in here in order to keep the header slim)
+		*  @param[in] shaderSource
+		*    Shader ASCII source code, must be a valid pointer (type GLchar not used in here in order to keep the header slim)
+		*  @param[out] shaderBytecode
+		*    Receives the shader SPIR-V bytecode ("GL_ARB_gl_spirv"-extension) compressed via SMOL-V
+		*/
+		static void shaderSourceCodeToShaderBytecode(uint32_t shaderType, const char* sourceCode, Renderer::ShaderBytecode& shaderBytecode);
 
 
 	//[-------------------------------------------------------]

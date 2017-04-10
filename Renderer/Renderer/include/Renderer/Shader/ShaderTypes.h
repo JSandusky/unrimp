@@ -73,7 +73,7 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    Shader bytecode (aka shader bytecode, binary large object (BLOB))
+	*    Shader bytecode (aka shader microcode, binary large object (BLOB))
 	*/
 	class ShaderBytecode
 	{

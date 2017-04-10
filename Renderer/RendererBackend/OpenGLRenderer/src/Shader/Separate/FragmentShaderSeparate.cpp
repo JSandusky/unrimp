@@ -43,12 +43,15 @@ namespace OpenGLRenderer
 		// Nothing here
 	}
 
-	FragmentShaderSeparate::FragmentShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::ShaderBytecode*) :
+	FragmentShaderSeparate::FragmentShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromSourceCode(GL_FRAGMENT_SHADER_ARB, sourceCode))
 	{
-		// TODO(co) Return shader bytecode, if requested do to so
-		// Nothing here
+		// Return shader bytecode, if requested do to so
+		if (nullptr != shaderBytecode)
+		{
+			ShaderLanguageSeparate::shaderSourceCodeToShaderBytecode(GL_FRAGMENT_SHADER_ARB, sourceCode, *shaderBytecode);
+		}
 	}
 
 	FragmentShaderSeparate::~FragmentShaderSeparate()

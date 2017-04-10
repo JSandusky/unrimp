@@ -33,6 +33,21 @@
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
+#ifdef OPENGLRENDERER_GLSLTOSPIRV
+	// Disable warnings in external headers, we can't fix them
+	PRAGMA_WARNING_PUSH
+		PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator '<x>' in switch of enum '<y>' is not explicitly handled by a case label
+		PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from '<x>' to '<y>', signed/unsigned mismatch
+		PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: '<x>': copy constructor was implicitly defined as deleted
+		#include <SPIRV\GlslangToSpv.h>
+		#include <glslang\MachineIndependent\localintermediate.h>
+	PRAGMA_WARNING_POP
+#else
+	#include <tuple>	// For "std::ignore"
+#endif
+
+#include <smol-v/smolv.h>
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -41,6 +56,111 @@ namespace
 {
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		#ifdef OPENGLRENDERER_GLSLTOSPIRV
+			static bool GlslangInitialized = false;
+
+			// Settings from "glslang/StandAlone/ResourceLimits.cpp"
+			const TBuiltInResource DefaultTBuiltInResource = {
+				32,		///< MaxLights
+				6,		///< MaxClipPlanes
+				32,		///< MaxTextureUnits
+				32,		///< MaxTextureCoords
+				64,		///< MaxVertexAttribs
+				4096,	///< MaxVertexUniformComponents
+				64,		///< MaxVaryingFloats
+				32,		///< MaxVertexTextureImageUnits
+				80,		///< MaxCombinedTextureImageUnits
+				32,		///< MaxTextureImageUnits
+				4096,	///< MaxFragmentUniformComponents
+				32,		///< MaxDrawBuffers
+				128,	///< MaxVertexUniformVectors
+				8,		///< MaxVaryingVectors
+				16,		///< MaxFragmentUniformVectors
+				16,		///< MaxVertexOutputVectors
+				15,		///< MaxFragmentInputVectors
+				-8,		///< MinProgramTexelOffset
+				7,		///< MaxProgramTexelOffset
+				8,		///< MaxClipDistances
+				65535,	///< MaxComputeWorkGroupCountX
+				65535,	///< MaxComputeWorkGroupCountY
+				65535,	///< MaxComputeWorkGroupCountZ
+				1024,	///< MaxComputeWorkGroupSizeX
+				1024,	///< MaxComputeWorkGroupSizeY
+				64,		///< MaxComputeWorkGroupSizeZ
+				1024,	///< MaxComputeUniformComponents
+				16,		///< MaxComputeTextureImageUnits
+				8,		///< MaxComputeImageUniforms
+				8,		///< MaxComputeAtomicCounters
+				1,		///< MaxComputeAtomicCounterBuffers
+				60,		///< MaxVaryingComponents
+				64,		///< MaxVertexOutputComponents
+				64,		///< MaxGeometryInputComponents
+				128,	///< MaxGeometryOutputComponents
+				128,	///< MaxFragmentInputComponents
+				8,		///< MaxImageUnits
+				8,		///< MaxCombinedImageUnitsAndFragmentOutputs
+				8,		///< MaxCombinedShaderOutputResources
+				0,		///< MaxImageSamples
+				0,		///< MaxVertexImageUniforms
+				0,		///< MaxTessControlImageUniforms
+				0,		///< MaxTessEvaluationImageUniforms
+				0,		///< MaxGeometryImageUniforms
+				8,		///< MaxFragmentImageUniforms
+				8,		///< MaxCombinedImageUniforms
+				16,		///< MaxGeometryTextureImageUnits
+				256,	///< MaxGeometryOutputVertices
+				1024,	///< MaxGeometryTotalOutputComponents
+				1024,	///< MaxGeometryUniformComponents
+				64,		///< MaxGeometryVaryingComponents
+				128,	///< MaxTessControlInputComponents
+				128,	///< MaxTessControlOutputComponents
+				16,		///< MaxTessControlTextureImageUnits
+				1024,	///< MaxTessControlUniformComponents
+				4096,	///< MaxTessControlTotalOutputComponents
+				128,	///< MaxTessEvaluationInputComponents
+				128,	///< MaxTessEvaluationOutputComponents
+				16,		///< MaxTessEvaluationTextureImageUnits
+				1024,	///< MaxTessEvaluationUniformComponents
+				120,	///< MaxTessPatchComponents
+				32,		///< MaxPatchVertices
+				64,		///< MaxTessGenLevel
+				16,		///< MaxViewports
+				0,		///< MaxVertexAtomicCounters
+				0,		///< MaxTessControlAtomicCounters
+				0,		///< MaxTessEvaluationAtomicCounters
+				0,		///< MaxGeometryAtomicCounters
+				8,		///< MaxFragmentAtomicCounters
+				8,		///< MaxCombinedAtomicCounters
+				1,		///< MaxAtomicCounterBindings
+				0,		///< MaxVertexAtomicCounterBuffers
+				0,		///< MaxTessControlAtomicCounterBuffers
+				0,		///< MaxTessEvaluationAtomicCounterBuffers
+				0,		///< MaxGeometryAtomicCounterBuffers
+				1,		///< MaxFragmentAtomicCounterBuffers
+				1,		///< MaxCombinedAtomicCounterBuffers
+				16384,	///< MaxAtomicCounterBufferSize
+				4,		///< MaxTransformFeedbackBuffers
+				64,		///< MaxTransformFeedbackInterleavedComponents
+				8,		///< MaxCullDistances
+				8,		///< MaxCombinedClipAndCullDistances
+				4,		///< MaxSamples
+				{		///< limits
+					1,	///< nonInductiveForLoops
+					1,	///< whileLoops
+					1,	///< doWhileLoops
+					1,	///< generalUniformIndexing
+					1,	///< generalAttributeMatrixVectorIndexing
+					1,	///< generalVaryingIndexing
+					1,	///< generalSamplerIndexing
+					1,	///< generalVariableIndexing
+					1,	///< generalConstantMatrixVectorIndexing
+			}};
+		#endif
 
 
 		//[-------------------------------------------------------]
@@ -93,14 +213,32 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t ShaderLanguageSeparate::loadShaderProgramFromBytecode(uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode)
+	uint32_t ShaderLanguageSeparate::loadShaderFromBytecode(uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Create the shader object
 		const GLuint openGLShader = glCreateShaderObjectARB(shaderType);
 
 		// Load the SPIR-V module into the shader object
 		// -> "glShaderBinary" is OpenGL 4.1
-		glShaderBinary(1, &openGLShader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, shaderBytecode.getBytecode(), static_cast<GLsizei>(shaderBytecode.getNumberOfBytes()));
+		{
+			// Decode from SMOL-V: like Vulkan/Khronos SPIR-V, but smaller
+			// -> https://github.com/aras-p/smol-v
+			// -> http://aras-p.info/blog/2016/09/01/SPIR-V-Compression/
+			const size_t spirvOutputBufferSize = smolv::GetDecodedBufferSize(shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes());
+			uint8_t* spirvOutputBuffer = new uint8_t[spirvOutputBufferSize];
+			smolv::Decode(shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes(), spirvOutputBuffer, spirvOutputBufferSize);
+			glShaderBinary(1, &openGLShader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, spirvOutputBuffer, static_cast<GLsizei>(spirvOutputBufferSize));
+			delete [] spirvOutputBuffer;
+		}
+
+		// Done
+		return openGLShader;
+	}
+
+	uint32_t ShaderLanguageSeparate::loadShaderProgramFromBytecode(uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode)
+	{
+		// Create and load the shader object
+		const GLuint openGLShader = loadShaderFromBytecode(shaderType, shaderBytecode);
 
 		// Specialize the shader
 		// -> Before this shader the isn't compiled, after this shader is supposed to be compiled
@@ -178,6 +316,76 @@ namespace OpenGLRenderer
 		}
 	}
 
+	void ShaderLanguageSeparate::shaderSourceCodeToShaderBytecode(uint32_t shaderType, const char* sourceCode, Renderer::ShaderBytecode& shaderBytecode)
+	{
+		#ifdef OPENGLRENDERER_GLSLTOSPIRV
+			// Initialize glslang, if necessary
+			if (!::detail::GlslangInitialized)
+			{
+				glslang::InitializeProcess();
+				::detail::GlslangInitialized = true;
+			}
+
+			// GLSL to intermediate
+			// -> OpenGL 4.1 (the best OpenGL version Mac OS X 10.11 supports, so lowest version we have to support)
+			EShLanguage shLanguage = EShLangCount;
+			switch (shaderType)
+			{
+				case GL_VERTEX_SHADER_ARB:
+					shLanguage = EShLangVertex;
+					break;
+
+				case GL_TESS_CONTROL_SHADER:
+					shLanguage = EShLangTessControl;
+					break;
+
+				case GL_TESS_EVALUATION_SHADER:
+					shLanguage = EShLangTessEvaluation;
+					break;
+
+				case GL_GEOMETRY_SHADER_ARB:
+					shLanguage = EShLangGeometry;
+					break;
+
+				case GL_FRAGMENT_SHADER_ARB:
+					shLanguage = EShLangFragment;
+					break;
+			}
+			glslang::TShader shader(shLanguage);
+			shader.setEntryPoint("main");
+			{
+				const char* sourcePointers[] = { sourceCode };
+				shader.setStrings(sourcePointers, 1);
+			}
+			shader.parse(&::detail::DefaultTBuiltInResource, 410, false, EShMsgDefault);
+			glslang::TProgram program;
+			program.addShader(&shader);
+			program.link(EShMsgDefault);
+
+			// Intermediate to SPIR-V
+			const glslang::TIntermediate* intermediate = program.getIntermediate(shLanguage);
+			if (nullptr != intermediate)
+			{
+				std::vector<unsigned int> spirv;
+				glslang::GlslangToSpv(*intermediate, spirv);
+
+				// Encode to SMOL-V: like Vulkan/Khronos SPIR-V, but smaller
+				// -> https://github.com/aras-p/smol-v
+				// -> http://aras-p.info/blog/2016/09/01/SPIR-V-Compression/
+				// -> Don't apply "spv::spirvbin_t::remap()" or the SMOL-V result will be bigger
+				smolv::ByteArray byteArray;
+				smolv::Encode(spirv.data(), sizeof(unsigned int) * spirv.size(), byteArray, smolv::kEncodeFlagStripDebugInfo);
+
+				// Done
+				shaderBytecode.setBytecodeCopy(static_cast<uint32_t>(byteArray.size()), reinterpret_cast<uint8_t*>(byteArray.data()));
+			}
+		#else
+			std::ignore = shaderType;
+			std::ignore = sourceCode;
+			std::ignore = shaderBytecode;
+		#endif
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
@@ -190,7 +398,14 @@ namespace OpenGLRenderer
 
 	ShaderLanguageSeparate::~ShaderLanguageSeparate()
 	{
-		// Nothing here
+		// De-initialize glslang, if necessary
+		#ifdef OPENGLRENDERER_GLSLTOSPIRV
+			if (::detail::GlslangInitialized)
+			{
+				glslang::FinalizeProcess();
+				::detail::GlslangInitialized = false;
+			}
+		#endif
 	}
 
 

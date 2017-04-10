@@ -123,14 +123,10 @@ namespace
 			return 0;
 		}
 
-		GLuint loadShaderProgramFromBytecode(const Renderer::VertexAttributes& vertexAttributes, GLenum type, const Renderer::ShaderBytecode& shaderBytecode)
+		GLuint loadShaderProgramFromBytecode(const Renderer::VertexAttributes& vertexAttributes, GLenum shaderType, const Renderer::ShaderBytecode& shaderBytecode)
 		{
-			// Create the shader object
-			const GLuint openGLShader = OpenGLRenderer::glCreateShaderObjectARB(type);
-
-			// Load the SPIR-V module into the shader object
-			// -> "glShaderBinary" is OpenGL 4.1
-			OpenGLRenderer::glShaderBinary(1, &openGLShader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, shaderBytecode.getBytecode(), static_cast<GLsizei>(shaderBytecode.getNumberOfBytes()));
+			// Create and load the shader object
+			const GLuint openGLShader = OpenGLRenderer::ShaderLanguageSeparate::loadShaderFromBytecode(shaderType, shaderBytecode);
 
 			// Specialize the shader
 			// -> Before this shader the isn't compiled, after this shader is supposed to be compiled
@@ -190,12 +186,15 @@ namespace OpenGLRenderer
 		// Nothing here
 	}
 
-	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode, Renderer::ShaderBytecode*) :
+	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(::detail::loadShaderProgramFromSourcecode(vertexAttributes, GL_VERTEX_SHADER_ARB, sourceCode))
 	{
-		// TODO(co) Return shader bytecode, if requested do to so
-		// Nothing here
+		// Return shader bytecode, if requested do to so
+		if (nullptr != shaderBytecode)
+		{
+			ShaderLanguageSeparate::shaderSourceCodeToShaderBytecode(GL_VERTEX_SHADER_ARB, sourceCode, *shaderBytecode);
+		}
 	}
 
 	VertexShaderSeparate::~VertexShaderSeparate()

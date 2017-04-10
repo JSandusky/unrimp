@@ -35,6 +35,9 @@ endif()
 if(RENDERER_OPENGL_NO_RENDERERMATCHCHECK)
 	add_definitions(-DOPENGLRENDERER_NO_RENDERERMATCHCHECK)
 endif()
+if(RENDERER_OPENGL_GLSLTOSPIRV)
+	add_definitions(-DOPENGLRENDERER_GLSLTOSPIRV)
+endif()
 
 
 ##################################################
@@ -43,6 +46,11 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/OpenGL/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/smol-v/include)
+if(RENDERER_OPENGL_GLSLTOSPIRV)
+	set(GLSLANG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../External/glslang/src)
+	include_directories(${GLSLANG_DIR})
+endif()
 
 
 ##################################################
@@ -50,6 +58,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/OpenGL/include
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
+	${CMAKE_CURRENT_SOURCE_DIR}/../../../External/smol-v/src/smolv.cpp
 	src/Buffer/BufferManager.cpp
 	src/Buffer/IndexBuffer.cpp
 	src/Buffer/IndexBufferBind.cpp
@@ -137,6 +146,59 @@ if(UNIX)
 		src/Linux/ContextLinux.cpp
 		src/Linux/ExtensionsLinux.cpp
 	)
+endif()
+if(RENDERER_OPENGL_GLSLTOSPIRV)
+	set(SOURCE_CODES
+		${SOURCE_CODES}
+		${GLSLANG_DIR}/glslang/GenericCodeGen/CodeGen.cpp
+		${GLSLANG_DIR}/glslang/GenericCodeGen/Link.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/Pp.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpAtom.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpContext.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpMemory.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpScanner.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpSymbols.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpTokens.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/Constant.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/glslang_tab.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/InfoSink.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/Initialize.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/Intermediate.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/intermOut.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/IntermTraverse.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/iomapper.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/limits.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/linkValidate.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/ParseContextBase.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/ParseHelper.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/PoolAlloc.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/propagateNoContraction.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/reflection.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/RemoveTree.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/Scan.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/ShaderLang.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/SymbolTable.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/Versions.cpp
+		${GLSLANG_DIR}/OGLCompilersDLL/InitializeDll.cpp
+		${GLSLANG_DIR}/SPIRV/GlslangToSpv.cpp
+		${GLSLANG_DIR}/SPIRV/InReadableOrder.cpp
+		${GLSLANG_DIR}/SPIRV/Logger.cpp
+		${GLSLANG_DIR}/SPIRV/SpvBuilder.cpp
+	)
+	if(WIN32)
+		# Windows source codes
+		set(SOURCE_CODES
+			${SOURCE_CODES}
+			${GLSLANG_DIR}/glslang/OSDependent/Windows/ossource.cpp
+		)
+	endif()
+	if(UNIX)
+		# Linux source codes
+		set(SOURCE_CODES
+			${SOURCE_CODES}
+			${GLSLANG_DIR}/glslang/OSDependent/Unix/ossource.cpp
+		)
+	endif()
 endif()
 
 

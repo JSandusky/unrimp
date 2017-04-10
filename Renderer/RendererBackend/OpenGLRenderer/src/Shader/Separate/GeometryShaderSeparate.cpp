@@ -43,12 +43,10 @@ namespace OpenGLRenderer
 		// Nothing here
 	}
 
-	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode*) :
+	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromSourceCode(GL_GEOMETRY_SHADER_ARB, sourceCode))
 	{
-		// TODO(co) Return shader bytecode, if requested do to so
-
 		// In modern GLSL, "geometry shader input primitive topology" & "geometry shader output primitive topology" & "number of output vertices" can be directly set within GLSL by writing e.g.
 		//   "layout(triangles) in;"
 		//   "layout(triangle_strip, max_vertices = 3) out;"
@@ -56,6 +54,12 @@ namespace OpenGLRenderer
 		glProgramParameteriARB(mOpenGLShaderProgram, GL_GEOMETRY_INPUT_TYPE_ARB, static_cast<int>(gsInputPrimitiveTopology));	// The "Renderer::GsInputPrimitiveTopology" values directly map to OpenGL constants, do not change them
 		glProgramParameteriARB(mOpenGLShaderProgram, GL_GEOMETRY_OUTPUT_TYPE_ARB, static_cast<int>(gsOutputPrimitiveTopology));	// The "Renderer::GsOutputPrimitiveTopology" values directly map to OpenGL constants, do not change them
 		glProgramParameteriARB(mOpenGLShaderProgram, GL_GEOMETRY_VERTICES_OUT_ARB, static_cast<GLint>(numberOfOutputVertices));
+
+		// Return shader bytecode, if requested do to so
+		if (nullptr != shaderBytecode)
+		{
+			ShaderLanguageSeparate::shaderSourceCodeToShaderBytecode(GL_GEOMETRY_SHADER_ARB, sourceCode, *shaderBytecode);
+		}
 	}
 
 	GeometryShaderSeparate::~GeometryShaderSeparate()
