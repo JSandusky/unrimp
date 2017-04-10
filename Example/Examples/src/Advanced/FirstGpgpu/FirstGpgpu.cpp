@@ -74,7 +74,7 @@ int FirstGpgpu::run()
 		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 		if (mRenderer->beginScene())
 		{
-			// Let the application to it's job
+			// Let the application to its job
 			onDoJob();
 
 			// End scene rendering

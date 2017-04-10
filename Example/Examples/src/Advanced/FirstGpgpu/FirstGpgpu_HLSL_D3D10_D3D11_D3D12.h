@@ -88,7 +88,7 @@ Texture2D ContentMap : register(t0);
 // Programs
 float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
-	// Fetch the texel at the given texture coordinate and return it's color
+	// Fetch the texel at the given texture coordinate and return its color
 	// -> Apply a simple wobble to the texture coordinate so we can see that content processing is up and running
 	// -> Unlike OpenGL or OpenGL ES 2, in Direct3D 9 & 10 & 11 the texture origin is left/top which does not map well to clip space coordinates
 	// -> We have to flip the y-axis to map the coordinate system to the Direct3D 9 & 10 & 11 texture coordinate system

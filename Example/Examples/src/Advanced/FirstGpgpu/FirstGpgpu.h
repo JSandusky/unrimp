@@ -134,7 +134,7 @@ private:
 
 	/**
 	*  @brief
-	*    Called on application should to it's job
+	*    Called on application should to its job
 	*
 	*  @note
 	*    - When this method is called it's ensured that the renderer instance "mRenderer" is valid
