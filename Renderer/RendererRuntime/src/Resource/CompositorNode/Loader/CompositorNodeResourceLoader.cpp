@@ -30,9 +30,6 @@
 #include "RendererRuntime/Core/File/IFile.h"
 
 
-// TODO(co) Possible performance improvement: Inside "CompositorNodeResourceLoader::onDeserialization()" load everything directly into memory,
-// (compositor hasn't much data), create the instances inside "CompositorNodeResourceLoader::onProcessing()" while other stuff can continue reading
-// from disk.
 // TODO(co) Error handling
 
 
@@ -89,7 +86,7 @@ namespace
 			}
 		}
 
-		void nodeDeserialization(RendererRuntime::IFile& file, const RendererRuntime::v1CompositorNode::Header& compositorNodeHeader, RendererRuntime::CompositorNodeResource& compositorNodeResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
+		void nodeDeserialization(RendererRuntime::IFile& file, const RendererRuntime::v1CompositorNode::CompositorNodeHeader& compositorNodeHeader, RendererRuntime::CompositorNodeResource& compositorNodeResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
 		{
 			// Read in the compositor resource node input channels
 			// TODO(co) Read all input channels in a single burst? (need to introduce a maximum number of input channels for this)
@@ -163,14 +160,27 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorNodeResourceLoader::onDeserialization(IFile& file)
 	{
+		// Read in the file format header
+		FileFormatHeader fileFormatHeader;
+		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
+		assert(v1CompositorNode::FORMAT_TYPE == fileFormatHeader.formatType);
+		assert(v1CompositorNode::FORMAT_VERSION == fileFormatHeader.formatVersion);
+
+		// Tell the memory mapped file about the LZ4 compressed data
+		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+	}
+
+	void CompositorNodeResourceLoader::onProcessing()
+	{
+		// Decompress LZ4 compressed data
+		mMemoryFile.decompress();
+
 		// Read in the compositor node header
-		v1CompositorNode::Header compositorNodeHeader;
-		file.read(&compositorNodeHeader, sizeof(v1CompositorNode::Header));
-		assert(v1CompositorNode::FORMAT_TYPE == compositorNodeHeader.formatType);
-		assert(v1CompositorNode::FORMAT_VERSION == compositorNodeHeader.formatVersion);
+		v1CompositorNode::CompositorNodeHeader compositorNodeHeader;
+		mMemoryFile.read(&compositorNodeHeader, sizeof(v1CompositorNode::CompositorNodeHeader));
 
 		// Read in the compositor node resource
-		::detail::nodeDeserialization(file, compositorNodeHeader, *mCompositorNodeResource, static_cast<CompositorNodeResourceManager&>(getResourceManager()).getCompositorPassFactory());
+		::detail::nodeDeserialization(mMemoryFile, compositorNodeHeader, *mCompositorNodeResource, static_cast<CompositorNodeResourceManager&>(getResourceManager()).getCompositorPassFactory());
 	}
 
 

@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
+#include "RendererRuntime/Core/File/MemoryFile.h"
 
 #include <vector>
 
@@ -92,7 +93,7 @@ namespace RendererRuntime
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization(IFile& file) override;
-		inline virtual void onProcessing() override;
+		virtual void onProcessing() override;
 		virtual bool onDispatch() override;
 		virtual bool isFullyLoaded() override;
 
@@ -121,6 +122,8 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime& mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
 		MaterialResource* mMaterialResource;	///< Destination resource
+		// Temporary data
+		MemoryFile mMemoryFile;
 		// Temporary data: Techniques
 		uint32_t					 mMaximumNumberOfMaterialTechniques;
 		uint32_t					 mNumberOfTechniques;

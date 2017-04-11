@@ -33,11 +33,6 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
-	inline void SceneResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
 	inline bool SceneResourceLoader::onDispatch()
 	{
 		// Fully loaded

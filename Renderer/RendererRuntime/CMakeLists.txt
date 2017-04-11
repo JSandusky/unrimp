@@ -44,6 +44,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGuizmo/include/
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenVR/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/include/)
 
 
 ##################################################
@@ -54,6 +55,10 @@ set(SOURCE_CODES
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/src/imgui.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/src/imgui_draw.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGuizmo/src/ImGuizmo.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4frame.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4hc.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/xxhash.c
 	src/Asset/AssetManager.cpp
 	src/Asset/AssetPackage.cpp
 	src/Asset/Serializer/AssetPackageSerializer.cpp
@@ -64,6 +69,7 @@ set(SOURCE_CODES
 	src/Core/Math/Transform.cpp
 	src/Core/Math/Vector3.cpp
 	src/Core/Platform/PlatformManager.cpp
+	src/Core/File/MemoryFile.cpp
 	src/Core/Time/TimeManager.cpp
 	src/Core/Time/Stopwatch.cpp
 	src/Core/Renderer/FramebufferManager.cpp

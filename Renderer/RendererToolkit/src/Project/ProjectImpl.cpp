@@ -50,6 +50,7 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <cassert>
+#include <sstream>
 #include <fstream>
 #include <algorithm>
 
@@ -163,7 +164,7 @@ namespace RendererToolkit
 		}
 
 		// Dispatch asset compiler
-		// TODO(co) Add multithreading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
+		// TODO(co) Add multi-threading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
 
 		// Get the asset input directory and asset output directory
 		const std::string assetInputDirectory = std_filesystem::path(assetFilename).parent_path().generic_string() + '/';
@@ -285,33 +286,30 @@ namespace RendererToolkit
 		}
 
 		{ // Write runtime asset package
-		  // TODO(co) Experimental, make more generic elsewhere
 			RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = outputAssetPackage.getWritableSortedAssetVector();
+			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
 
 			// Ensure the asset package is sorted
 			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), ::detail::orderByAssetId);
 
-			// Open the output file
-			std::ofstream outputFileStream("../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", std::ios::binary);
-
-			// Write down the asset package header
-			#pragma pack(push)
-			#pragma pack(1)
-				struct AssetPackageHeader
-				{
-					uint32_t formatType;
-					uint32_t formatVersion;
-					uint32_t numberOfAssets;
-				};
-			#pragma pack(pop)
-			AssetPackageHeader assetPackageHeader;
-			assetPackageHeader.formatType	  = RendererRuntime::StringId("AssetPackage");
-			assetPackageHeader.formatVersion  = 1;
-			assetPackageHeader.numberOfAssets = static_cast<uint32_t>(sortedAssetVector.size());
-			outputFileStream.write(reinterpret_cast<const char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
+			{ // Write down the asset package header
+				#pragma pack(push)
+				#pragma pack(1)
+					struct AssetPackageHeader
+					{
+						uint32_t numberOfAssets;
+					};
+				#pragma pack(pop)
+				AssetPackageHeader assetPackageHeader;
+				assetPackageHeader.numberOfAssets = static_cast<uint32_t>(sortedAssetVector.size());
+				outputMemoryStream.write(reinterpret_cast<const char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
+			}
 
 			// Write down the asset package content in one single burst
-			outputFileStream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::Asset) * assetPackageHeader.numberOfAssets));
+			outputMemoryStream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::Asset) * sortedAssetVector.size()));
+
+			// Write LZ4 compressed output
+			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::StringId("AssetPackage"), 2, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets");
 		}
 	}
 

@@ -37,9 +37,27 @@ namespace RendererRuntime
 {
 
 
-	// -> Shader piece file format content:
-	//    - Shader piece header
-	//    - Shader piece ASCII source code
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	#ifndef FILE_FORMAT_HEADER
+		#define FILE_FORMAT_HEADER
+		struct FileFormatHeader
+		{
+			// Format
+			uint32_t formatType;
+			uint32_t formatVersion;
+			// Content
+			uint32_t numberOfCompressedBytes;
+			uint32_t numberOfDecompressedBytes;
+		};
+	#endif
+
+
+	// Shader piece file format content:
+	// - File format header
+	// - Shader piece header
+	// - Shader piece ASCII source code
 	namespace v1ShaderPiece
 	{
 
@@ -48,17 +66,12 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("ShaderPiece");
-		static const uint32_t FORMAT_VERSION = 1;
+		static const uint32_t FORMAT_VERSION = 2;
 
-		#pragma pack(push)
-		#pragma pack(1)
-			struct Header
-			{
-				uint32_t formatType;
-				uint32_t formatVersion;
-				uint32_t numberOfShaderSourceCodeBytes;
-			};
-		#pragma pack(pop)
+		struct ShaderPieceHeader
+		{
+			uint32_t numberOfShaderSourceCodeBytes;
+		};
 
 
 //[-------------------------------------------------------]

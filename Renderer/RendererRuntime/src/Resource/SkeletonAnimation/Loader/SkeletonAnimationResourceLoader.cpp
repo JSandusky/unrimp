@@ -46,22 +46,35 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void SkeletonAnimationResourceLoader::onDeserialization(IFile& file)
 	{
+		// Read in the file format header
+		FileFormatHeader fileFormatHeader;
+		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
+		assert(v1SkeletonAnimation::FORMAT_TYPE == fileFormatHeader.formatType);
+		assert(v1SkeletonAnimation::FORMAT_VERSION == fileFormatHeader.formatVersion);
+
+		// Tell the memory mapped file about the LZ4 compressed data
+		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+	}
+
+	void SkeletonAnimationResourceLoader::onProcessing()
+	{
+		// Decompress LZ4 compressed data
+		mMemoryFile.decompress();
+
 		// Read in the skeleton animation header
-		v1SkeletonAnimation::Header skeletonAnimationHeader;
-		file.read(&skeletonAnimationHeader, sizeof(v1SkeletonAnimation::Header));
-		assert(v1SkeletonAnimation::FORMAT_TYPE == skeletonAnimationHeader.formatType);
-		assert(v1SkeletonAnimation::FORMAT_VERSION == skeletonAnimationHeader.formatVersion);
+		v1SkeletonAnimation::SkeletonAnimationHeader skeletonAnimationHeader;
+		mMemoryFile.read(&skeletonAnimationHeader, sizeof(v1SkeletonAnimation::SkeletonAnimationHeader));
 		mSkeletonAnimationResource->mNumberOfChannels = skeletonAnimationHeader.numberOfChannels;
 		mSkeletonAnimationResource->mDurationInTicks  = skeletonAnimationHeader.durationInTicks;
 		mSkeletonAnimationResource->mTicksPerSecond   = skeletonAnimationHeader.ticksPerSecond;
 
 		// Read in the channel byte offsets
 		mSkeletonAnimationResource->mChannelByteOffsets.resize(skeletonAnimationHeader.numberOfChannels);
-		file.read(mSkeletonAnimationResource->mChannelByteOffsets.data(), sizeof(uint32_t) * mSkeletonAnimationResource->mChannelByteOffsets.size());
+		mMemoryFile.read(mSkeletonAnimationResource->mChannelByteOffsets.data(), sizeof(uint32_t) * mSkeletonAnimationResource->mChannelByteOffsets.size());
 
 		// Read in the data of all bone channels in one big chunk
 		mSkeletonAnimationResource->mChannelData.resize(skeletonAnimationHeader.numberOfChannelDataBytes);
-		file.read(mSkeletonAnimationResource->mChannelData.data(), sizeof(uint8_t) * mSkeletonAnimationResource->mChannelData.size());
+		mMemoryFile.read(mSkeletonAnimationResource->mChannelData.data(), sizeof(uint8_t) * mSkeletonAnimationResource->mChannelData.size());
 
 		// That's all folks. There are no more memory allocations to see here. Please go on.
 	}

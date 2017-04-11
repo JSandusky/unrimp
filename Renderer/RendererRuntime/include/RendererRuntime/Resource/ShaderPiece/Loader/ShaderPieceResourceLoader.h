@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
+#include "RendererRuntime/Core/File/MemoryFile.h"
 
 
 //[-------------------------------------------------------]
@@ -80,7 +81,7 @@ namespace RendererRuntime
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization(IFile& file) override;
-		inline virtual void onProcessing() override;
+		virtual void onProcessing() override;
 		virtual bool onDispatch() override;
 		inline virtual bool isFullyLoaded() override;
 
@@ -103,8 +104,9 @@ namespace RendererRuntime
 		IRendererRuntime&	 mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
 		ShaderPieceResource* mShaderPieceResource;	///< Destination resource
 		// Temporary data
-		uint32_t mMaximumNumberOfShaderSourceCodeBytes;
-		char*	 mShaderSourceCode;
+		MemoryFile mMemoryFile;
+		uint32_t   mMaximumNumberOfShaderSourceCodeBytes;
+		char*	   mShaderSourceCode;
 
 
 	};

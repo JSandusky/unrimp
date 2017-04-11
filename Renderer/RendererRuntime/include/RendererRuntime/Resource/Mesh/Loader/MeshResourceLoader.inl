@@ -33,11 +33,6 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
-	inline void MeshResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

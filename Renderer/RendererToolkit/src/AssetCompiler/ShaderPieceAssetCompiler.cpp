@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/ShaderPieceAssetCompiler.h"
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 
@@ -37,8 +38,8 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-#include <memory>
 #include <fstream>
+#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -103,7 +104,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1ShaderPiece::FORMAT_VERSION))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
+			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
 
 			{ // Shader piece
 				// Get file size and file data
@@ -121,19 +122,18 @@ namespace RendererToolkit
 				}
 				const size_t numberOfBytes = sourceCode.length();
 
-				{ // Shader piece header
-					RendererRuntime::v1ShaderPiece::Header shaderPieceHeader;
-					shaderPieceHeader.formatType					= RendererRuntime::v1ShaderPiece::FORMAT_TYPE;
-					shaderPieceHeader.formatVersion					= RendererRuntime::v1ShaderPiece::FORMAT_VERSION;
-					shaderPieceHeader.numberOfShaderSourceCodeBytes	= static_cast<uint32_t>(numberOfBytes);
-
-					// Write down the shader piece header
-					outputFileStream.write(reinterpret_cast<const char*>(&shaderPieceHeader), sizeof(RendererRuntime::v1ShaderPiece::Header));
+				{ // Write down the shader piece header
+					RendererRuntime::v1ShaderPiece::ShaderPieceHeader shaderPieceHeader;
+					shaderPieceHeader.numberOfShaderSourceCodeBytes = static_cast<uint32_t>(numberOfBytes);
+					outputMemoryStream.write(reinterpret_cast<const char*>(&shaderPieceHeader), sizeof(RendererRuntime::v1ShaderPiece::ShaderPieceHeader));
 				}
 
 				// Dump the unchanged content into the output file stream
-				outputFileStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
+				outputMemoryStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
 			}
+
+			// Write LZ4 compressed output
+			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1ShaderPiece::FORMAT_TYPE, RendererRuntime::v1ShaderPiece::FORMAT_VERSION, outputAssetFilename);
 		}
 
 		{ // Update the output asset package

@@ -27,23 +27,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
-#include "RendererRuntime/Core/File/MemoryFile.h"
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/File/IFile.h"
 
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderer;
-}
-namespace RendererRuntime
-{
-	class IRendererRuntime;
-	class CompositorWorkspaceResource;
-	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
-}
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -54,61 +41,62 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef uint32_t CompositorWorkspaceResourceId;	///< POD compositor workspace resource identifier
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorWorkspaceResourceLoader : protected IResourceLoader
+	/**
+	*  @brief
+	*    Memory mapped file
+	*
+	*  @note
+	*    - Supports LZ4 compression ( http://lz4.github.io/lz4/ )
+	*    - Designed for instance reusage
+	*/
+	class MemoryFile : public IFile
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend ResourceManagerTemplate<CompositorWorkspaceResource, CompositorWorkspaceResourceLoader, CompositorWorkspaceResourceId, 32>;	// Type definition of template class
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		static const ResourceLoaderTypeId TYPE_ID;
+		inline MemoryFile();
+		inline virtual ~MemoryFile();
+		RENDERERRUNTIME_API_EXPORT void setLz4CompressedDataByFile(IFile& file, uint32_t numberOfCompressedBytes, uint32_t numberOfDecompressedBytes);
+		RENDERERRUNTIME_API_EXPORT void decompress();
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[ Public virtual RendererRuntime::IFile methods         ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void onDeserialization(IFile& file) override;
-		virtual void onProcessing() override;
-		inline virtual bool onDispatch() override;
-		inline virtual bool isFullyLoaded() override;
+		inline virtual size_t getNumberOfBytes() override;
+		inline virtual void read(void* destinationBuffer, size_t numberOfBytes) override;
+		inline virtual void skip(size_t numberOfBytes) override;
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		MemoryFile(const MemoryFile&) = delete;
+		MemoryFile& operator=(const MemoryFile&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		inline CompositorWorkspaceResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~CompositorWorkspaceResourceLoader();
-		CompositorWorkspaceResourceLoader(const CompositorWorkspaceResourceLoader&) = delete;
-		CompositorWorkspaceResourceLoader& operator=(const CompositorWorkspaceResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, CompositorWorkspaceResource& compositorWorkspaceResource);
+		typedef std::vector<uint8_t> ByteVector;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&			 mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
-		CompositorWorkspaceResource* mCompositorWorkspaceResource;	///< Destination resource
-		// Temporary data
-		MemoryFile mMemoryFile;
+		ByteVector mCompressedData;		///< Owns the data
+		ByteVector mDecompressedData;	///< Owns the data
+		uint32_t   mNumberOfDecompressedBytes;
+		uint8_t*   mCurrentDataPointer;	///< Pointer to the current uncompressed data position, doesn't own the data
 
 
 	};
@@ -123,4 +111,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/CompositorWorkspace/Loader/CompositorWorkspaceResourceLoader.inl"
+#include "RendererRuntime/Core/File/MemoryFile.inl"

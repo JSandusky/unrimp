@@ -39,11 +39,6 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
-	inline void MaterialBlueprintResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

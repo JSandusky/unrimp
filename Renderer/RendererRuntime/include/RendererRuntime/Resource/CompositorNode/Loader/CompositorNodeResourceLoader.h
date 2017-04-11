@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
+#include "RendererRuntime/Core/File/MemoryFile.h"
 
 
 //[-------------------------------------------------------]
@@ -84,7 +85,7 @@ namespace RendererRuntime
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization(IFile& file) override;
-		inline virtual void onProcessing() override;
+		virtual void onProcessing() override;
 		inline virtual bool onDispatch() override;
 		inline virtual bool isFullyLoaded() override;
 
@@ -106,6 +107,8 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime&		mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
 		CompositorNodeResource*	mCompositorNodeResource;	///< Destination resource
+		// Temporary data
+		MemoryFile mMemoryFile;
 
 
 	};

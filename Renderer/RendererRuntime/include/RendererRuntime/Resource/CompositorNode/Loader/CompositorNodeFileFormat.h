@@ -47,10 +47,23 @@ namespace RendererRuntime
 	typedef StringId CompositorFramebufferId;	///< Compositor framebuffer identifier, internally just a POD "uint32_t"
 	typedef StringId CompositorPassTypeId;		///< Compositor pass type identifier, internally just a POD "uint32_t"
 	typedef StringId MaterialTechniqueId;		///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
+	#ifndef FILE_FORMAT_HEADER
+		#define FILE_FORMAT_HEADER
+		struct FileFormatHeader
+		{
+			// Format
+			uint32_t formatType;
+			uint32_t formatVersion;
+			// Content
+			uint32_t numberOfCompressedBytes;
+			uint32_t numberOfDecompressedBytes;
+		};
+	#endif
 
 
-	// -> Compositor node file format content:
-	//    - Compositor node header
+	// Compositor node file format content:
+	// - File format header
+	// - Compositor node header
 	namespace v1CompositorNode
 	{
 
@@ -59,14 +72,12 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("CompositorNode");
-		static const uint32_t FORMAT_VERSION = 1;
+		static const uint32_t FORMAT_VERSION = 2;
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct Header
+			struct CompositorNodeHeader
 			{
-				uint32_t formatType;
-				uint32_t formatVersion;
 				uint32_t numberOfInputChannels;
 				uint32_t numberOfRenderTargetTextures;
 				uint32_t numberOfFramebuffers;

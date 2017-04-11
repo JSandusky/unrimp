@@ -60,11 +60,6 @@ namespace RendererRuntime
 		friend class AssetManager;
 
 
-	// TODO(co) Work-in-progress
-	private:
-		AssetPackage* loadAssetPackage(IFile& file);
-
-
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
@@ -73,6 +68,7 @@ namespace RendererRuntime
 		inline ~AssetPackageSerializer();
 		AssetPackageSerializer(const AssetPackageSerializer&) = delete;
 		AssetPackageSerializer& operator=(const AssetPackageSerializer&) = delete;
+		AssetPackage* loadAssetPackage(IFile& file);
 
 
 	};

@@ -37,9 +37,9 @@ namespace RendererRuntime
 {
 
 
-	// -> Skeleton file format content:
-	//    - Skeleton header
-	//    - Skeleton data block
+	// Skeleton file format content:
+	// - Skeleton header
+	// - Skeleton data block
 	namespace v1Skeleton
 	{
 
@@ -56,7 +56,7 @@ namespace RendererRuntime
 			{
 				uint32_t formatType;
 				uint32_t formatVersion;
-				// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
+				// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh. When there's one, don't forget to use LZ4 compression.
 			};
 		#pragma pack(pop)
 

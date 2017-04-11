@@ -44,13 +44,31 @@ namespace RendererRuntime
 {
 
 
-	// -> Skeleton animation file format content:
-	//    - Skeleton animation header
-	//    - Channel byte offsets
-	//    - n bone channels, all the skeleton animation data in one big chunk
-	//      - 1..n position keys
-	//      - 1..n rotation keys
-	//      - 1..n scale keys
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	#ifndef FILE_FORMAT_HEADER
+		#define FILE_FORMAT_HEADER
+		struct FileFormatHeader
+		{
+			// Format
+			uint32_t formatType;
+			uint32_t formatVersion;
+			// Content
+			uint32_t numberOfCompressedBytes;
+			uint32_t numberOfDecompressedBytes;
+		};
+	#endif
+
+
+	// Skeleton animation file format content:
+	// - File format header
+	// - Skeleton animation header
+	// - Channel byte offsets
+	// - n bone channels, all the skeleton animation data in one big chunk
+	//   - 1..n position keys
+	//   - 1..n rotation keys
+	//   - 1..n scale keys
 	namespace v1SkeletonAnimation
 	{
 
@@ -59,14 +77,12 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("SkeletonAnimation");
-		static const uint32_t FORMAT_VERSION = 1;
+		static const uint32_t FORMAT_VERSION = 2;
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct Header
+			struct SkeletonAnimationHeader
 			{
-				uint32_t formatType;
-				uint32_t formatVersion;
 				uint8_t  numberOfChannels;			///< The number of bone animation channels; each channel affects a single node
 				float	 durationInTicks;			///< Duration of the animation in ticks
 				float	 ticksPerSecond;			///< Ticks per second; 0 if not specified in the imported file

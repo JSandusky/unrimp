@@ -33,11 +33,6 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
-	inline void SkeletonAnimationResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
 	inline bool SkeletonAnimationResourceLoader::onDispatch()
 	{
 		// Fully loaded

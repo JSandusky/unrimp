@@ -113,9 +113,6 @@
     <Filter Include="Source Files\DebugGui\Detail">
       <UniqueIdentifier>{bc5af0f7-9afb-460a-b758-cefcb497137b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\DebugGui\Detail\ImGui">
-      <UniqueIdentifier>{325150df-9fe3-4bef-9abc-f0af2fc83ce7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\DebugGui\Detail\Shader">
       <UniqueIdentifier>{f3df438e-432f-4d54-b7a3-d286ebd1175e}</UniqueIdentifier>
     </Filter>
@@ -185,7 +182,16 @@
     <Filter Include="Source Files\Core\Time">
       <UniqueIdentifier>{8ef6badd-8966-4c64-bf44-e5c35310fab1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\DebugGui\Detail\ImGuizmo">
+    <Filter Include="External">
+      <UniqueIdentifier>{78f62abf-2014-4e6a-a7de-8124af05438d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External\lz4">
+      <UniqueIdentifier>{f08fb11e-d7e8-427f-9aa9-bc89fa401b28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External\ImGui">
+      <UniqueIdentifier>{325150df-9fe3-4bef-9abc-f0af2fc83ce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External\ImGuizmo">
       <UniqueIdentifier>{d7c7f29c-b86e-4d2d-8eb0-d0005aa30263}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -558,9 +564,11 @@
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.inl">
       <Filter>Source Files\Resource\Detail</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.h.vsspell" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManager.inl">
       <Filter>Source Files\Resource\Detail</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\File\MemoryFile.inl">
+      <Filter>Source Files\Core\File</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -821,22 +829,22 @@
       <Filter>Source Files\DebugGui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\External\ImGui\include\imgui\imgui_internal.h">
-      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+      <Filter>External\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\External\ImGui\include\imgui\stb_rect_pack.h">
-      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+      <Filter>External\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\External\ImGui\include\imgui\stb_textedit.h">
-      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+      <Filter>External\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\External\ImGui\include\imgui\stb_truetype.h">
-      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+      <Filter>External\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\External\ImGui\include\imgui\imconfig.h">
-      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+      <Filter>External\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\External\ImGui\include\imgui\imgui.h">
-      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+      <Filter>External\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Source Files\DebugGui\Detail\Shader</Filter>
@@ -1091,7 +1099,7 @@
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\External\ImGuizmo\include\imguizmo\ImGuizmo.h">
-      <Filter>Source Files\DebugGui\Detail\ImGuizmo</Filter>
+      <Filter>External\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\DebugGui\DebugGuiHelper.h">
       <Filter>Source Files\DebugGui</Filter>
@@ -1104,6 +1112,27 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManager.h">
       <Filter>Source Files\Resource\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\lz4\include\lz4\lz4frame.h">
+      <Filter>External\lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\lz4\include\lz4\lz4frame_static.h">
+      <Filter>External\lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\lz4\include\lz4\lz4hc.h">
+      <Filter>External\lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\lz4\include\lz4\lz4opt.h">
+      <Filter>External\lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\lz4\include\lz4\xxhash.h">
+      <Filter>External\lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\lz4\include\lz4\lz4.h">
+      <Filter>External\lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\File\MemoryFile.h">
+      <Filter>Source Files\Core\File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1243,10 +1272,10 @@
       <Filter>Source Files\DebugGui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\External\ImGui\src\imgui_draw.cpp">
-      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+      <Filter>External\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\External\ImGui\src\imgui.cpp">
-      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+      <Filter>External\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerWindows.cpp">
       <Filter>Source Files\DebugGui\Detail</Filter>
@@ -1441,7 +1470,7 @@
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\External\ImGuizmo\src\ImGuizmo.cpp">
-      <Filter>Source Files\DebugGui\Detail\ImGuizmo</Filter>
+      <Filter>External\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="src\DebugGui\DebugGuiHelper.cpp">
       <Filter>Source Files\DebugGui</Filter>
@@ -1451,6 +1480,21 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Texture\Loader\ITextureResourceLoader.cpp">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\lz4\src\lz4frame.c">
+      <Filter>External\lz4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\lz4\src\lz4hc.c">
+      <Filter>External\lz4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\lz4\src\xxhash.c">
+      <Filter>External\lz4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\lz4\src\lz4.c">
+      <Filter>External\lz4</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\File\MemoryFile.cpp">
+      <Filter>Source Files\Core\File</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

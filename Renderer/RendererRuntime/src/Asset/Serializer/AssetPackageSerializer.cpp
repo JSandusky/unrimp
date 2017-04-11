@@ -24,7 +24,41 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Asset/Serializer/AssetPackageSerializer.h"
 #include "RendererRuntime/Asset/AssetPackage.h"
-#include "RendererRuntime/Core/File/IFile.h"
+#include "RendererRuntime/Core/File/MemoryFile.h"
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		struct FileFormatHeader
+		{
+			// Format
+			uint32_t formatType;
+			uint32_t formatVersion;
+			// Content
+			uint32_t numberOfCompressedBytes;
+			uint32_t numberOfDecompressedBytes;
+		};
+		struct AssetPackageHeader
+		{
+			uint32_t numberOfAssets;
+		};
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -37,30 +71,29 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	// TODO(co) Work-in-progress
 	AssetPackage* AssetPackageSerializer::loadAssetPackage(IFile& file)
 	{
 		AssetPackage* assetPackage = new AssetPackage;
 
+		// Read in the file format header
+		::detail::FileFormatHeader fileFormatHeader;
+		file.read(&fileFormatHeader, sizeof(::detail::FileFormatHeader));
+		assert(RendererRuntime::StringId("AssetPackage") == fileFormatHeader.formatType);
+		assert(2 == fileFormatHeader.formatVersion);
+
+		// Tell the memory mapped file about the LZ4 compressed data
+		MemoryFile memoryFile;
+		memoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+		memoryFile.decompress();
+
 		// Read in the asset package header
-		#pragma pack(push)
-		#pragma pack(1)
-			struct AssetPackageHeader
-			{
-				uint32_t formatType;
-				uint32_t formatVersion;
-				uint32_t numberOfAssets;
-			};
-		#pragma pack(pop)
-		AssetPackageHeader assetPackageHeader;
-		file.read(&assetPackageHeader, sizeof(AssetPackageHeader));
-		assert(RendererRuntime::StringId("AssetPackage") == assetPackageHeader.formatType);
-		assert(1 == assetPackageHeader.formatVersion);
+		::detail::AssetPackageHeader assetPackageHeader;
+		memoryFile.read(&assetPackageHeader, sizeof(::detail::AssetPackageHeader));
 
 		// Read in the asset package content in one single burst
 		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage->getWritableSortedAssetVector();
 		sortedAssetVector.resize(assetPackageHeader.numberOfAssets);
-		file.read(sortedAssetVector.data(), sizeof(Asset) * assetPackageHeader.numberOfAssets);
+		memoryFile.read(sortedAssetVector.data(), sizeof(Asset) * assetPackageHeader.numberOfAssets);
 
 		// Done
 		return assetPackage;

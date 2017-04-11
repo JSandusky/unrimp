@@ -33,11 +33,6 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
-	inline void CompositorNodeResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
 	inline bool CompositorNodeResourceLoader::onDispatch()
 	{
 		// Fully loaded

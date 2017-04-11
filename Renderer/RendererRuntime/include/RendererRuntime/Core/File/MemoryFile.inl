@@ -21,11 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonResourceLoader.h"
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonFileFormat.h"
-#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
-#include "RendererRuntime/Core/File/IFile.h"
+#include <cassert>
+#include <cstring>	// For "memcpy()"
 
 
 //[-------------------------------------------------------]
@@ -36,23 +33,40 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	const ResourceLoaderTypeId SkeletonResourceLoader::TYPE_ID("skeleton");
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
-	//[-------------------------------------------------------]
-	void SkeletonResourceLoader::onDeserialization(IFile& file)
+	inline MemoryFile::MemoryFile() :
+		mNumberOfDecompressedBytes(0),
+		mCurrentDataPointer(nullptr)
 	{
-		// Read in the skeleton header
-		v1Skeleton::Header skeletonHeader;
-		file.read(&skeletonHeader, sizeof(v1Skeleton::Header));
-		assert(v1Skeleton::FORMAT_TYPE == skeletonHeader.formatType);
-		assert(v1Skeleton::FORMAT_VERSION == skeletonHeader.formatVersion);
+		// Nothing here
+	}
 
-		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh. When there's one, don't forget to use LZ4 compression.
+	inline MemoryFile::~MemoryFile()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IFile methods         ]
+	//[-------------------------------------------------------]
+	inline size_t MemoryFile::getNumberOfBytes()
+	{
+		return mDecompressedData.size();
+	}
+
+	inline void MemoryFile::read(void* destinationBuffer, size_t numberOfBytes)
+	{
+		assert((mCurrentDataPointer - mDecompressedData.data()) + numberOfBytes <= mDecompressedData.size());
+		memcpy(destinationBuffer, mCurrentDataPointer, numberOfBytes);
+		mCurrentDataPointer += numberOfBytes;
+	}
+
+	inline void MemoryFile::skip(size_t numberOfBytes)
+	{
+		assert((mCurrentDataPointer - mDecompressedData.data()) + numberOfBytes <= mDecompressedData.size());
+		mCurrentDataPointer += numberOfBytes;
 	}
 
 

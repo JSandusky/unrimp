@@ -29,8 +29,6 @@
 #include "RendererRuntime/Core/File/IFile.h"
 
 
-// TODO(co) Possible performance improvement: Inside "SceneResourceLoader::onDeserialization()" load everything directly into memory,
-// create the instances inside "SceneResourceLoader::onProcessing()" while other stuff can continue reading from disk.
 // TODO(co) Error handling
 
 
@@ -134,14 +132,28 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void SceneResourceLoader::onDeserialization(IFile& file)
 	{
+		// Read in the file format header
+		FileFormatHeader fileFormatHeader;
+		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
+		assert(v1Scene::FORMAT_TYPE == fileFormatHeader.formatType);
+		assert(v1Scene::FORMAT_VERSION == fileFormatHeader.formatVersion);
+
+		// Tell the memory mapped file about the LZ4 compressed data
+		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+	}
+
+	void SceneResourceLoader::onProcessing()
+	{
+		// Decompress LZ4 compressed data
+		mMemoryFile.decompress();
+
 		// Read in the scene header
-		v1Scene::Header sceneHeader;
-		file.read(&sceneHeader, sizeof(v1Scene::Header));
-		assert(v1Scene::FORMAT_TYPE == sceneHeader.formatType);
-		assert(v1Scene::FORMAT_VERSION == sceneHeader.formatVersion);
+		// TODO(co) Currently the scene header is unused
+		v1Scene::SceneHeader sceneHeader;
+		mMemoryFile.read(&sceneHeader, sizeof(v1Scene::SceneHeader));
 
 		// Read in the scene resource nodes
-		::detail::nodesDeserialization(file, *mSceneResource);
+		::detail::nodesDeserialization(mMemoryFile, *mSceneResource);
 	}
 
 

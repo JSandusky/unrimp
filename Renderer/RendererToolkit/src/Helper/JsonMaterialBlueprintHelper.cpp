@@ -40,6 +40,7 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <fstream>
+#include <sstream>
 #include <algorithm>
 #include <unordered_set>
 
@@ -512,7 +513,7 @@ namespace RendererToolkit
 		return RendererRuntime::MaterialPropertyValue::fromBoolean(false);
 	}
 
-	void JsonMaterialBlueprintHelper::readRootSignature(const rapidjson::Value& rapidJsonValueRootSignature, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readRootSignature(const rapidjson::Value& rapidJsonValueRootSignature, std::stringstream& outputMemoryStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
 		// First: Collect everything we need instead of directly writing it down using an inefficient data layout
 		std::vector<Renderer::RootParameterData> rootParameters;
@@ -633,14 +634,14 @@ namespace RendererToolkit
 			rootSignatureHeader.numberOfDescriptorRanges = static_cast<uint32_t>(descriptorRanges.size());
 			rootSignatureHeader.numberOfStaticSamplers	 = 0;									// TODO(co) Add support for static samplers
 			rootSignatureHeader.flags					 = Renderer::RootSignatureFlags::NONE;	// TODO(co) Add support for flags
-			outputFileStream.write(reinterpret_cast<const char*>(&rootSignatureHeader), sizeof(RendererRuntime::v1MaterialBlueprint::RootSignatureHeader));
+			outputMemoryStream.write(reinterpret_cast<const char*>(&rootSignatureHeader), sizeof(RendererRuntime::v1MaterialBlueprint::RootSignatureHeader));
 		}
 
 		// Write down the root parameters
-		outputFileStream.write(reinterpret_cast<const char*>(rootParameters.data()), static_cast<std::streamsize>(sizeof(Renderer::RootParameterData) * rootParameters.size()));
+		outputMemoryStream.write(reinterpret_cast<const char*>(rootParameters.data()), static_cast<std::streamsize>(sizeof(Renderer::RootParameterData) * rootParameters.size()));
 
 		// Write down the descriptor ranges
-		outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), static_cast<std::streamsize>(sizeof(Renderer::DescriptorRange) * descriptorRanges.size()));
+		outputMemoryStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), static_cast<std::streamsize>(sizeof(Renderer::DescriptorRange) * descriptorRanges.size()));
 	}
 
 	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::ShaderProperties& visualImportanceOfShaderProperties, RendererRuntime::ShaderProperties& maximumIntegerValueOfShaderProperties, bool ignoreGlobalReferenceFallback, bool sort, MaterialPropertyIdToName* materialPropertyIdToName)
@@ -733,7 +734,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readPipelineStateObject(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValuePipelineState, std::ofstream& outputFileStream, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+	void JsonMaterialBlueprintHelper::readPipelineStateObject(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValuePipelineState, std::stringstream& outputMemoryStream, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
 	{
 		{ // Shader blueprints
 			const rapidjson::Value& rapidJsonValueShaderBlueprints = rapidJsonValuePipelineState["ShaderBlueprints"];
@@ -747,7 +748,7 @@ namespace RendererToolkit
 			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "FragmentShaderBlueprintAssetId", shaderBlueprintAssetId[static_cast<uint8_t>(RendererRuntime::ShaderType::Fragment)]);
 
 			// Write down the shader blueprints
-			outputFileStream.write(reinterpret_cast<const char*>(&shaderBlueprintAssetId), sizeof(RendererRuntime::AssetId) * RendererRuntime::NUMBER_OF_SHADER_TYPES);
+			outputMemoryStream.write(reinterpret_cast<const char*>(&shaderBlueprintAssetId), sizeof(RendererRuntime::AssetId) * RendererRuntime::NUMBER_OF_SHADER_TYPES);
 		}
 
 		// Start with the default settings
@@ -852,10 +853,10 @@ namespace RendererToolkit
 		}
 
 		// Write down the pipeline state object (PSO)
-		outputFileStream.write(reinterpret_cast<const char*>(&pipelineState), sizeof(Renderer::SerializedPipelineState));
+		outputMemoryStream.write(reinterpret_cast<const char*>(&pipelineState), sizeof(Renderer::SerializedPipelineState));
 	}
 
-	void JsonMaterialBlueprintHelper::readUniformBuffers(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueUniformBuffers, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readUniformBuffers(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueUniformBuffers, std::stringstream& outputMemoryStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
 		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorUniformBuffers = rapidJsonValueUniformBuffers.MemberBegin(); rapidJsonMemberIteratorUniformBuffers != rapidJsonValueUniformBuffers.MemberEnd(); ++rapidJsonMemberIteratorUniformBuffers)
 		{
@@ -925,15 +926,15 @@ namespace RendererToolkit
 				JsonHelper::optionalIntegerProperty(rapidJsonValueUniformBuffer, "NumberOfElements", uniformBufferHeader.numberOfElements);
 				uniformBufferHeader.numberOfElementProperties = static_cast<uint32_t>(elementProperties.size());
 				uniformBufferHeader.uniformBufferNumberOfBytes = numberOfBytesPerElement * uniformBufferHeader.numberOfElements;
-				outputFileStream.write(reinterpret_cast<const char*>(&uniformBufferHeader), sizeof(RendererRuntime::v1MaterialBlueprint::UniformBufferHeader));
+				outputMemoryStream.write(reinterpret_cast<const char*>(&uniformBufferHeader), sizeof(RendererRuntime::v1MaterialBlueprint::UniformBufferHeader));
 			}
 
 			// Write down the uniform buffer element properties
-			outputFileStream.write(reinterpret_cast<const char*>(elementProperties.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * elementProperties.size()));
+			outputMemoryStream.write(reinterpret_cast<const char*>(elementProperties.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * elementProperties.size()));
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readTextureBuffers(const rapidjson::Value& rapidJsonValueTextureBuffers, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readTextureBuffers(const rapidjson::Value& rapidJsonValueTextureBuffers, std::stringstream& outputMemoryStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
 		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTextureBuffers = rapidJsonValueTextureBuffers.MemberBegin(); rapidJsonMemberIteratorTextureBuffers != rapidJsonValueTextureBuffers.MemberEnd(); ++rapidJsonMemberIteratorTextureBuffers)
 		{
@@ -956,12 +957,12 @@ namespace RendererToolkit
 				}
 				textureBufferHeader.rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueTextureBuffer["RootParameterIndex"].GetString(), shaderProperties);
 				detail::optionalBufferUsageProperty(rapidJsonValueTextureBuffer, "BufferUsage", textureBufferHeader.bufferUsage);
-				outputFileStream.write(reinterpret_cast<const char*>(&textureBufferHeader), sizeof(RendererRuntime::v1MaterialBlueprint::TextureBufferHeader));
+				outputMemoryStream.write(reinterpret_cast<const char*>(&textureBufferHeader), sizeof(RendererRuntime::v1MaterialBlueprint::TextureBufferHeader));
 			}
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readSamplerStates(const rapidjson::Value& rapidJsonValueSamplerStates, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+	void JsonMaterialBlueprintHelper::readSamplerStates(const rapidjson::Value& rapidJsonValueSamplerStates, std::stringstream& outputMemoryStream, RendererRuntime::ShaderProperties& shaderProperties, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
 	{
 		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorSamplerStates = rapidJsonValueSamplerStates.MemberBegin(); rapidJsonMemberIteratorSamplerStates != rapidJsonValueSamplerStates.MemberEnd(); ++rapidJsonMemberIteratorSamplerStates)
 		{
@@ -987,11 +988,11 @@ namespace RendererToolkit
 			JsonHelper::optionalFloatProperty(rapidJsonValueSamplerState, "MaxLOD", samplerState.maxLOD);
 
 			// Write down the sampler state
-			outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintSamplerState), sizeof(RendererRuntime::v1MaterialBlueprint::SamplerState));
+			outputMemoryStream.write(reinterpret_cast<const char*>(&materialBlueprintSamplerState), sizeof(RendererRuntime::v1MaterialBlueprint::SamplerState));
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueTextures, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueTextures, std::stringstream& outputMemoryStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
 		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTextures = rapidJsonValueTextures.MemberBegin(); rapidJsonMemberIteratorTextures != rapidJsonValueTextures.MemberEnd(); ++rapidJsonMemberIteratorTextures)
 		{
@@ -1025,7 +1026,7 @@ namespace RendererToolkit
 
 						// Write down the texture
 						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, materialPropertyValue), fallbackTextureAssetId, rgbHardwareGammaCorrection);
-						outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
+						outputMemoryStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 
 						// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
 						break;
@@ -1059,7 +1060,7 @@ namespace RendererToolkit
 
 									// Write down the texture
 									const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, materialProperty), fallbackTextureAssetId, rgbHardwareGammaCorrection);
-									outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
+									outputMemoryStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 								}
 							}
 						}

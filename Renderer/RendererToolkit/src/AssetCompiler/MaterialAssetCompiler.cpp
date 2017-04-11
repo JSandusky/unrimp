@@ -24,6 +24,7 @@
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialHelper.h"
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
@@ -40,6 +41,7 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <fstream>
+#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -104,7 +106,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
+			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
 
 			{ // Material
 				// Parse JSON
@@ -114,23 +116,22 @@ namespace RendererToolkit
 				RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
 				JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId(input, rapidJsonDocument, techniques, sortedMaterialPropertyVector);
 
-				{ // Material header
-					RendererRuntime::v1Material::Header materialHeader;
-					materialHeader.formatType		  = RendererRuntime::v1Material::FORMAT_TYPE;
-					materialHeader.formatVersion	  = RendererRuntime::v1Material::FORMAT_VERSION;
+				{ // Write down the material header
+					RendererRuntime::v1Material::MaterialHeader materialHeader;
 					materialHeader.numberOfTechniques = static_cast<uint32_t>(techniques.size());
 					materialHeader.numberOfProperties = static_cast<uint32_t>(sortedMaterialPropertyVector.size());
-
-					// Write down the material header
-					outputFileStream.write(reinterpret_cast<const char*>(&materialHeader), sizeof(RendererRuntime::v1Material::Header));
+					outputMemoryStream.write(reinterpret_cast<const char*>(&materialHeader), sizeof(RendererRuntime::v1Material::MaterialHeader));
 				}
 
 				// Write down the material techniques
-				outputFileStream.write(reinterpret_cast<const char*>(techniques.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Material::Technique) * techniques.size()));
+				outputMemoryStream.write(reinterpret_cast<const char*>(techniques.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Material::Technique) * techniques.size()));
 
 				// Write down all material properties
-				outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size()));
+				outputMemoryStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size()));
 			}
+
+			// Write LZ4 compressed output
+			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1Material::FORMAT_TYPE, RendererRuntime::v1Material::FORMAT_VERSION, outputAssetFilename);
 		}
 
 		{ // Update the output asset package

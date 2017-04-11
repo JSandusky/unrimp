@@ -41,10 +41,23 @@ namespace RendererRuntime
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
 	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	#ifndef FILE_FORMAT_HEADER
+		#define FILE_FORMAT_HEADER
+		struct FileFormatHeader
+		{
+			// Format
+			uint32_t formatType;
+			uint32_t formatVersion;
+			// Content
+			uint32_t numberOfCompressedBytes;
+			uint32_t numberOfDecompressedBytes;
+		};
+	#endif
 
 
-	// -> Compositor workspace file format content:
-	//    - Compositor workspace header
+	// Compositor workspace file format content:
+	// - File format header
+	// - Compositor workspace header
 	namespace v1CompositorWorkspace
 	{
 
@@ -53,14 +66,13 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("CompositorWorkspace");
-		static const uint32_t FORMAT_VERSION = 1;
+		static const uint32_t FORMAT_VERSION = 2;
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct Header
+			struct CompositorWorkspaceHeader
 			{
-				uint32_t formatType;
-				uint32_t formatVersion;
+				uint32_t unused;	// TODO(co) Currently the compositor workspace header is unused
 			};
 
 			struct Nodes

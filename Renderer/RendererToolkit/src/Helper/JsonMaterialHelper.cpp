@@ -26,8 +26,6 @@
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
-#include <RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h>
-
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'

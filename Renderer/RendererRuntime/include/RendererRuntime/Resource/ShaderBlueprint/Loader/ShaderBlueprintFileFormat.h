@@ -37,10 +37,28 @@ namespace RendererRuntime
 {
 
 
-	// -> Shader blueprint file format content:
-	//    - Shader blueprint header
-	//    - Asset IDs of the shader pieces to include
-	//    - Shader blueprint ASCII source code
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	#ifndef FILE_FORMAT_HEADER
+		#define FILE_FORMAT_HEADER
+		struct FileFormatHeader
+		{
+			// Format
+			uint32_t formatType;
+			uint32_t formatVersion;
+			// Content
+			uint32_t numberOfCompressedBytes;
+			uint32_t numberOfDecompressedBytes;
+		};
+	#endif
+
+
+	// Shader blueprint file format content:
+	// - File format header
+	// - Shader blueprint header
+	// - Asset IDs of the shader pieces to include
+	// - Shader blueprint ASCII source code
 	namespace v1ShaderBlueprint
 	{
 
@@ -49,14 +67,12 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("ShaderBlueprint");
-		static const uint32_t FORMAT_VERSION = 1;
+		static const uint32_t FORMAT_VERSION = 2;
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct Header
+			struct ShaderBlueprintHeader
 			{
-				uint32_t formatType;
-				uint32_t formatVersion;
 				uint16_t numberOfIncludeShaderPieceAssetIds;
 				uint16_t numberReferencedShaderProperties;
 				uint32_t numberOfShaderSourceCodeBytes;

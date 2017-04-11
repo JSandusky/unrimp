@@ -22,10 +22,13 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonResourceLoader.h"
-#include "RendererRuntime/Resource/Skeleton/Loader/SkeletonFileFormat.h"
-#include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
-#include "RendererRuntime/Core/File/IFile.h"
+#include "RendererRuntime/Core/File/MemoryFile.h"
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <lz4/lz4.h>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
@@ -36,23 +39,24 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	const ResourceLoaderTypeId SkeletonResourceLoader::TYPE_ID("skeleton");
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
-	//[-------------------------------------------------------]
-	void SkeletonResourceLoader::onDeserialization(IFile& file)
+	void MemoryFile::setLz4CompressedDataByFile(IFile& file, uint32_t numberOfCompressedBytes, uint32_t numberOfDecompressedBytes)
 	{
-		// Read in the skeleton header
-		v1Skeleton::Header skeletonHeader;
-		file.read(&skeletonHeader, sizeof(v1Skeleton::Header));
-		assert(v1Skeleton::FORMAT_TYPE == skeletonHeader.formatType);
-		assert(v1Skeleton::FORMAT_VERSION == skeletonHeader.formatVersion);
+		mNumberOfDecompressedBytes = numberOfDecompressedBytes;
+		mDecompressedData.clear();
+		mCurrentDataPointer = nullptr;
+		mCompressedData.resize(numberOfCompressedBytes);
+		file.read(mCompressedData.data(), numberOfCompressedBytes);
+	}
 
-		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh. When there's one, don't forget to use LZ4 compression.
+	void MemoryFile::decompress()
+	{
+		mDecompressedData.resize(mNumberOfDecompressedBytes);
+		const int numberOfDecompressedBytes = LZ4_decompress_safe(reinterpret_cast<const char*>(mCompressedData.data()), reinterpret_cast<char*>(mDecompressedData.data()), static_cast<int>(mCompressedData.size()), static_cast<int>(mNumberOfDecompressedBytes));
+		assert(mNumberOfDecompressedBytes == static_cast<uint32_t>(numberOfDecompressedBytes));
+		std::ignore = numberOfDecompressedBytes;
+		mCurrentDataPointer = mDecompressedData.data();
 	}
 
 

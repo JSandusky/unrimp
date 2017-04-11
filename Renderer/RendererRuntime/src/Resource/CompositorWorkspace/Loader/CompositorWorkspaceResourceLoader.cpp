@@ -28,9 +28,6 @@
 #include "RendererRuntime/Core/File/IFile.h"
 
 
-// TODO(co) Possible performance improvement: Inside "CompositorWorkspaceResourceLoader::onDeserialization()" load everything directly into memory,
-// (compositor hasn't much data), create the instances inside "CompositorWorkspaceResourceLoader::onProcessing()" while other stuff can continue reading
-// from disk.
 // TODO(co) Error handling
 
 
@@ -86,14 +83,28 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorWorkspaceResourceLoader::onDeserialization(IFile& file)
 	{
+		// Read in the file format header
+		FileFormatHeader fileFormatHeader;
+		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
+		assert(v1CompositorWorkspace::FORMAT_TYPE == fileFormatHeader.formatType);
+		assert(v1CompositorWorkspace::FORMAT_VERSION == fileFormatHeader.formatVersion);
+
+		// Tell the memory mapped file about the LZ4 compressed data
+		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+	}
+
+	void CompositorWorkspaceResourceLoader::onProcessing()
+	{
+		// Decompress LZ4 compressed data
+		mMemoryFile.decompress();
+
 		// Read in the compositor workspace header
-		v1CompositorWorkspace::Header compositorWorkspaceHeader;
-		file.read(&compositorWorkspaceHeader, sizeof(v1CompositorWorkspace::Header));
-		assert(v1CompositorWorkspace::FORMAT_TYPE == compositorWorkspaceHeader.formatType);
-		assert(v1CompositorWorkspace::FORMAT_VERSION == compositorWorkspaceHeader.formatVersion);
+		// TODO(co) Currently the compositor workspace header is unused
+		v1CompositorWorkspace::CompositorWorkspaceHeader compositorWorkspaceHeader;
+		mMemoryFile.read(&compositorWorkspaceHeader, sizeof(v1CompositorWorkspace::CompositorWorkspaceHeader));
 
 		// Read in the compositor workspace resource nodes
-		::detail::nodesDeserialization(file, *mCompositorWorkspaceResource);
+		::detail::nodesDeserialization(mMemoryFile, *mCompositorWorkspaceResource);
 	}
 
 

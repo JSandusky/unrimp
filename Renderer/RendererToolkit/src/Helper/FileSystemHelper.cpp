@@ -18,31 +18,21 @@
 \*********************************************************/
 
 
-// TODO(co) The C++17 filesystem is still experimental and hence not handled in an uniform way cross platform. Until C++17 has been released, we need to use those helper.
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <RendererRuntime/Core/NonCopyable.h>
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 
-#include <iosfwd>
+#include <RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h>	// Any header which defines "RendererRuntime::FileFormatHeader" will do here
 
-#ifdef WIN32
-	// Disable warnings in external headers, we can't fix them
-	__pragma(warning(push))
-		__pragma(warning(disable: 4548))	// warning C4548: expression before comma has no effect; expected expression with side-effect
-		#include <filesystem>
-	__pragma(warning(pop))
-#else
-	#include <experimental/filesystem>
-#endif
+#include <fstream>
+#include <sstream>
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <lz4/lz4hc.h>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
@@ -53,38 +43,32 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	#ifdef WIN32
-		namespace std_filesystem = std::tr2::sys;
-	#else
-		namespace std_filesystem = std::experimental::filesystem;
-	#endif
-
-
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class FileSystemHelper : public RendererRuntime::NonCopyable
-	{
-
-
-	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	public:
-		static void writeCompressedFile(const std::stringstream& outputMemoryStream, uint32_t formatType, uint32_t formatVersion, const std::string& outputAssetFilename);
+	void FileSystemHelper::writeCompressedFile(const std::stringstream& outputMemoryStream, uint32_t formatType, uint32_t formatVersion, const std::string& outputAssetFilename)
+	{
+		// TODO(co) Optimization: Is there a simple solution without copying data around?
+		std::string data = outputMemoryStream.str();
+		const int destinationCapacity = LZ4_compressBound(static_cast<int>(data.size()));
+		char* destination = new char[static_cast<unsigned int>(destinationCapacity)];
+		{
+			const int numberOfWrittenBytes = LZ4_compress_HC(data.data(), destination, static_cast<int>(data.size()), destinationCapacity, LZ4HC_CLEVEL_MAX);
+			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
+			{ // Write down the file format header
+				RendererRuntime::FileFormatHeader fileFormatHeader;
+				fileFormatHeader.formatType				   = formatType;
+				fileFormatHeader.formatVersion			   = formatVersion;
+				fileFormatHeader.numberOfCompressedBytes   = static_cast<uint32_t>(numberOfWrittenBytes);
+				fileFormatHeader.numberOfDecompressedBytes = static_cast<uint32_t>(data.size());
+				outputFileStream.write(reinterpret_cast<const char*>(&fileFormatHeader), sizeof(RendererRuntime::FileFormatHeader));
+			}
 
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		FileSystemHelper(const FileSystemHelper&) = delete;
-		FileSystemHelper& operator=(const FileSystemHelper&) = delete;
-
-
-	};
+			// Write down the compressed mesh data
+			outputFileStream.write(destination, numberOfWrittenBytes);
+		}
+		delete [] destination;
+	}
 
 
 //[-------------------------------------------------------]

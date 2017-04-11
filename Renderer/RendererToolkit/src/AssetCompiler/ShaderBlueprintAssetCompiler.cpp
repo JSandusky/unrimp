@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/ShaderBlueprintAssetCompiler.h"
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 
@@ -38,8 +39,8 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-#include <memory>
 #include <fstream>
+#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -190,7 +191,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION))
 		{
 			std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
-			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
+			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
 
 			{ // Shader blueprint
 				// Get file size and file data
@@ -245,27 +246,26 @@ namespace RendererToolkit
 				::detail::gatherReferencedShaderProperties(sourceCode, "@property", referencedShaderProperties);
 				::detail::gatherReferencedShaderProperties(sourceCode, "@foreach", referencedShaderProperties);
 
-				{ // Shader blueprint header
-					RendererRuntime::v1ShaderBlueprint::Header shaderBlueprintHeader;
-					shaderBlueprintHeader.formatType						 = RendererRuntime::v1ShaderBlueprint::FORMAT_TYPE;
-					shaderBlueprintHeader.formatVersion						 = RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION;
+				{ // Write down the shader blueprint header
+					RendererRuntime::v1ShaderBlueprint::ShaderBlueprintHeader shaderBlueprintHeader;
 					shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds = static_cast<uint16_t>(includeShaderPieceAssetIds.size());
 					shaderBlueprintHeader.numberReferencedShaderProperties   = static_cast<uint16_t>(referencedShaderProperties.getSortedPropertyVector().size());
 					shaderBlueprintHeader.numberOfShaderSourceCodeBytes		 = static_cast<uint32_t>(numberOfBytes);
-
-					// Write down the shader blueprint header
-					outputFileStream.write(reinterpret_cast<const char*>(&shaderBlueprintHeader), sizeof(RendererRuntime::v1ShaderBlueprint::Header));
+					outputMemoryStream.write(reinterpret_cast<const char*>(&shaderBlueprintHeader), sizeof(RendererRuntime::v1ShaderBlueprint::ShaderBlueprintHeader));
 				}
 
 				// Write down the asset IDs of the shader pieces to include
-				outputFileStream.write(reinterpret_cast<char*>(includeShaderPieceAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * includeShaderPieceAssetIds.size()));
+				outputMemoryStream.write(reinterpret_cast<char*>(includeShaderPieceAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * includeShaderPieceAssetIds.size()));
 
 				// Write down the referenced shader properties
-				outputFileStream.write(reinterpret_cast<char*>(referencedShaderProperties.getSortedPropertyVector().data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * referencedShaderProperties.getSortedPropertyVector().size()));
+				outputMemoryStream.write(reinterpret_cast<char*>(referencedShaderProperties.getSortedPropertyVector().data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * referencedShaderProperties.getSortedPropertyVector().size()));
 
 				// Dump the unchanged content into the output file stream
-				outputFileStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
+				outputMemoryStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
 			}
+
+			// Write LZ4 compressed output
+			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1ShaderBlueprint::FORMAT_TYPE, RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION, outputAssetFilename);
 		}
 
 		{ // Update the output asset package

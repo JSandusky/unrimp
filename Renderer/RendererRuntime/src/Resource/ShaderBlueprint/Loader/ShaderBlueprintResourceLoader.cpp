@@ -54,11 +54,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void ShaderBlueprintResourceLoader::onDeserialization(IFile& file)
 	{
+		// Read in the file format header
+		FileFormatHeader fileFormatHeader;
+		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
+		assert(v1ShaderBlueprint::FORMAT_TYPE == fileFormatHeader.formatType);
+		assert(v1ShaderBlueprint::FORMAT_VERSION == fileFormatHeader.formatVersion);
+
+		// Tell the memory mapped file about the LZ4 compressed data
+		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+	}
+
+	void ShaderBlueprintResourceLoader::onProcessing()
+	{
+		// Decompress LZ4 compressed data
+		mMemoryFile.decompress();
+
 		// Read in the shader blueprint header
-		v1ShaderBlueprint::Header shaderBlueprintHeader;
-		file.read(&shaderBlueprintHeader, sizeof(v1ShaderBlueprint::Header));
-		assert(v1ShaderBlueprint::FORMAT_TYPE == shaderBlueprintHeader.formatType);
-		assert(v1ShaderBlueprint::FORMAT_VERSION == shaderBlueprintHeader.formatVersion);
+		v1ShaderBlueprint::ShaderBlueprintHeader shaderBlueprintHeader;
+		mMemoryFile.read(&shaderBlueprintHeader, sizeof(v1ShaderBlueprint::ShaderBlueprintHeader));
 
 		// Allocate more temporary memory, if required
 		if (mMaximumNumberOfIncludeShaderPieceAssetIds < shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds)
@@ -75,17 +88,17 @@ namespace RendererRuntime
 		}
 
 		// Read the asset IDs of the shader pieces to include
-		file.read(mIncludeShaderPieceAssetIds, sizeof(AssetId) * shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
+		mMemoryFile.read(mIncludeShaderPieceAssetIds, sizeof(AssetId) * shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
 		mShaderBlueprintResource->mIncludeShaderPieceResourceIds.resize(shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
 
 		{ // Read the referenced shader properties
 			ShaderProperties::SortedPropertyVector& sortedPropertyVector = mShaderBlueprintResource->mReferencedShaderProperties.getSortedPropertyVector();
 			sortedPropertyVector.resize(shaderBlueprintHeader.numberReferencedShaderProperties);
-			file.read(sortedPropertyVector.data(), sizeof(ShaderProperties::Property) * shaderBlueprintHeader.numberReferencedShaderProperties);
+			mMemoryFile.read(sortedPropertyVector.data(), sizeof(ShaderProperties::Property) * shaderBlueprintHeader.numberReferencedShaderProperties);
 		}
 
 		// Read the shader blueprint ASCII source code
-		file.read(mShaderSourceCode, shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
+		mMemoryFile.read(mShaderSourceCode, shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
 		mShaderBlueprintResource->mShaderSourceCode.assign(mShaderSourceCode, mShaderSourceCode + shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
 	}
 

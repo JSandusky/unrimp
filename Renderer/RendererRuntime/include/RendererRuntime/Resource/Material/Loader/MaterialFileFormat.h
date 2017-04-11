@@ -42,12 +42,25 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
 	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	#ifndef FILE_FORMAT_HEADER
+		#define FILE_FORMAT_HEADER
+		struct FileFormatHeader
+		{
+			// Format
+			uint32_t formatType;
+			uint32_t formatVersion;
+			// Content
+			uint32_t numberOfCompressedBytes;
+			uint32_t numberOfDecompressedBytes;
+		};
+	#endif
 
 
-	// -> Material file format content:
-	//    - Material header
-	//    - Material techniques
-	//    - Material properties
+	// Material file format content:
+	// - File format header
+	// - Material header
+	// - Material techniques
+	// - Material properties
 	namespace v1Material
 	{
 
@@ -56,14 +69,12 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("Material");
-		static const uint32_t FORMAT_VERSION = 1;
+		static const uint32_t FORMAT_VERSION = 2;
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct Header
+			struct MaterialHeader
 			{
-				uint32_t formatType;
-				uint32_t formatVersion;
 				uint32_t numberOfTechniques;
 				uint32_t numberOfProperties;
 			};

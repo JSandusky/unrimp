@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
+#include "RendererRuntime/Core/File/MemoryFile.h"
 
 
 //[-------------------------------------------------------]
@@ -90,7 +91,7 @@ namespace RendererRuntime
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization(IFile& file) override;
-		inline virtual void onProcessing() override;
+		virtual void onProcessing() override;
 		virtual bool onDispatch() override;
 		virtual bool isFullyLoaded() override;
 
@@ -116,6 +117,7 @@ namespace RendererRuntime
 		Renderer::IVertexArray*	  mVertexArray;		///< In case the used renderer backend supports native multi-threading we also create the renderer resource asynchronous, but the final resource pointer reassignment must still happen synchronous
 		MeshResource*			  mMeshResource;	///< Destination resource
 		// Temporary data
+		MemoryFile mMemoryFile;
 		// Temporary vertex buffer
 		uint32_t mNumberOfVertexBufferDataBytes;
 		uint32_t mNumberOfUsedVertexBufferDataBytes;

@@ -50,11 +50,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void MaterialResourceLoader::onDeserialization(IFile& file)
 	{
+		// Read in the file format header
+		FileFormatHeader fileFormatHeader;
+		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
+		assert(v1Material::FORMAT_TYPE == fileFormatHeader.formatType);
+		assert(v1Material::FORMAT_VERSION == fileFormatHeader.formatVersion);
+
+		// Tell the memory mapped file about the LZ4 compressed data
+		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+	}
+
+	void MaterialResourceLoader::onProcessing()
+	{
+		// Decompress LZ4 compressed data
+		mMemoryFile.decompress();
+
 		// Read in the material header
-		v1Material::Header materialHeader;
-		file.read(&materialHeader, sizeof(v1Material::Header));
-		assert(v1Material::FORMAT_TYPE == materialHeader.formatType);
-		assert(v1Material::FORMAT_VERSION == materialHeader.formatVersion);
+		v1Material::MaterialHeader materialHeader;
+		mMemoryFile.read(&materialHeader, sizeof(v1Material::MaterialHeader));
 
 		{ // Read techniques
 			mNumberOfTechniques = materialHeader.numberOfTechniques;
@@ -68,14 +81,14 @@ namespace RendererRuntime
 			}
 
 			// Read already sorted techniques
-			file.read(mMaterialTechniques, sizeof(v1Material::Technique) * mNumberOfTechniques);
+			mMemoryFile.read(mMaterialTechniques, sizeof(v1Material::Technique) * mNumberOfTechniques);
 		}
 
 		// Read properties
 		// TODO(co) Get rid of the evil const-cast
 		MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialResource->mMaterialProperties.getSortedPropertyVector());
 		sortedPropertyVector.resize(materialHeader.numberOfProperties);
-		file.read(sortedPropertyVector.data(), sizeof(MaterialProperty) * materialHeader.numberOfProperties);
+		mMemoryFile.read(sortedPropertyVector.data(), sizeof(MaterialProperty) * materialHeader.numberOfProperties);
 	}
 
 	bool MaterialResourceLoader::onDispatch()

@@ -37,17 +37,35 @@ namespace RendererRuntime
 {
 
 
-	// -> Material blueprint file format content:
-	//    - Material blueprint header
-	//    - Material blueprint properties
-	//    - Visual importance of shader properties
-	//    - Root signature
-	//    - Pipeline state object (PSO)
-	//      - Shader blueprints, rasterization state etc.
-	//    - Resources
-	//      - Uniform buffers
-	//      - Sampler states
-	//      - Textures
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	#ifndef FILE_FORMAT_HEADER
+		#define FILE_FORMAT_HEADER
+		struct FileFormatHeader
+		{
+			// Format
+			uint32_t formatType;
+			uint32_t formatVersion;
+			// Content
+			uint32_t numberOfCompressedBytes;
+			uint32_t numberOfDecompressedBytes;
+		};
+	#endif
+
+
+	// Material blueprint file format content:
+	// - File format header
+	// - Material blueprint header
+	// - Material blueprint properties
+	// - Visual importance of shader properties
+	// - Root signature
+	// - Pipeline state object (PSO)
+	//   - Shader blueprints, rasterization state etc.
+	// - Resources
+	//   - Uniform buffers
+	//   - Sampler states
+	//   - Textures
 	namespace v1MaterialBlueprint
 	{
 
@@ -56,14 +74,12 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("MaterialBlueprint");
-		static const uint32_t FORMAT_VERSION = 1;
+		static const uint32_t FORMAT_VERSION = 2;
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct Header
+			struct MaterialBlueprintHeader
 			{
-				uint32_t formatType;
-				uint32_t formatVersion;
 				uint32_t numberOfProperties;
 				uint32_t numberOfShaderCombinationProperties;
 				uint32_t numberOfIntegerShaderCombinationProperties;

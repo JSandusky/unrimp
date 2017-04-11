@@ -44,10 +44,23 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
 	typedef StringId AssetId;			///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	#ifndef FILE_FORMAT_HEADER
+		#define FILE_FORMAT_HEADER
+		struct FileFormatHeader
+		{
+			// Format
+			uint32_t formatType;
+			uint32_t formatVersion;
+			// Content
+			uint32_t numberOfCompressedBytes;
+			uint32_t numberOfDecompressedBytes;
+		};
+	#endif
 
 
-	// -> Scene file format content:
-	//    - Scene header
+	// Scene file format content:
+	// - File format header
+	// - Scene header
 	namespace v1Scene
 	{
 
@@ -56,14 +69,13 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("Scene");
-		static const uint32_t FORMAT_VERSION = 1;
+		static const uint32_t FORMAT_VERSION = 2;
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct Header
+			struct SceneHeader
 			{
-				uint32_t formatType;
-				uint32_t formatVersion;
+				uint32_t unused;	// TODO(co) Currently the scene header is unused
 			};
 
 			struct Nodes

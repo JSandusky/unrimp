@@ -33,11 +33,6 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
-	inline void ShaderBlueprintResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

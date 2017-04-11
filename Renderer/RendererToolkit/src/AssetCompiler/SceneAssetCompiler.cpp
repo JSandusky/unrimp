@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
@@ -42,6 +43,7 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <fstream>
+#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -146,7 +148,6 @@ namespace RendererToolkit
 
 		// Open the input file
 		const std::string inputFilename = assetInputDirectory + inputFile;
-
 		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".scene";
 
@@ -154,7 +155,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Scene::FORMAT_VERSION))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
+			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
 
 			{ // Scene
 				// Parse JSON
@@ -162,10 +163,9 @@ namespace RendererToolkit
 				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "SceneAsset", "1");
 
 				{ // Write down the scene resource header
-					RendererRuntime::v1Scene::Header sceneHeader;
-					sceneHeader.formatType	  = RendererRuntime::v1Scene::FORMAT_TYPE;
-					sceneHeader.formatVersion = RendererRuntime::v1Scene::FORMAT_VERSION;
-					outputFileStream.write(reinterpret_cast<const char*>(&sceneHeader), sizeof(RendererRuntime::v1Scene::Header));
+					RendererRuntime::v1Scene::SceneHeader sceneHeader;
+					sceneHeader.unused = 42;	// TODO(co) Currently the scene header is unused
+					outputMemoryStream.write(reinterpret_cast<const char*>(&sceneHeader), sizeof(RendererRuntime::v1Scene::SceneHeader));
 				}
 
 				// Mandatory main sections of the material blueprint
@@ -175,7 +175,7 @@ namespace RendererToolkit
 				{ // Write down the scene nodes
 					RendererRuntime::v1Scene::Nodes nodes;
 					nodes.numberOfNodes = rapidJsonValueNodes.MemberCount();
-					outputFileStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Scene::Nodes));
+					outputMemoryStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Scene::Nodes));
 
 					// Loop through all scene nodes
 					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorNodes = rapidJsonValueNodes.MemberBegin(); rapidJsonMemberIteratorNodes != rapidJsonValueNodes.MemberEnd(); ++rapidJsonMemberIteratorNodes)
@@ -200,7 +200,7 @@ namespace RendererToolkit
 
 							// Write down the scene node
 							node.numberOfItems = (nullptr != rapidJsonValueItems) ? rapidJsonValueItems->MemberCount() : 0;
-							outputFileStream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Scene::Node));
+							outputMemoryStream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Scene::Node));
 						}
 
 						// Write down the scene items
@@ -236,7 +236,7 @@ namespace RendererToolkit
 									RendererRuntime::v1Scene::ItemHeader itemHeader;
 									itemHeader.typeId		 = typeId;
 									itemHeader.numberOfBytes = numberOfBytes;
-									outputFileStream.write(reinterpret_cast<const char*>(&itemHeader), sizeof(RendererRuntime::v1Scene::ItemHeader));
+									outputMemoryStream.write(reinterpret_cast<const char*>(&itemHeader), sizeof(RendererRuntime::v1Scene::ItemHeader));
 								}
 
 								// Write down the scene item type specific data, if there is any
@@ -289,7 +289,7 @@ namespace RendererToolkit
 										}
 
 										// Write down
-										outputFileStream.write(reinterpret_cast<const char*>(&lightItem), sizeof(RendererRuntime::v1Scene::LightItem));
+										outputMemoryStream.write(reinterpret_cast<const char*>(&lightItem), sizeof(RendererRuntime::v1Scene::LightItem));
 									}
 									else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 									{
@@ -302,7 +302,7 @@ namespace RendererToolkit
 											skeletonMeshItem.skeletonAnimationAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "SkeletonAnimationAssetId");
 
 											// Write down
-											outputFileStream.write(reinterpret_cast<const char*>(&skeletonMeshItem), sizeof(RendererRuntime::v1Scene::SkeletonMeshItem));
+											outputMemoryStream.write(reinterpret_cast<const char*>(&skeletonMeshItem), sizeof(RendererRuntime::v1Scene::SkeletonMeshItem));
 										}
 
 										// Mesh scene item
@@ -328,11 +328,11 @@ namespace RendererToolkit
 										meshItem.numberOfSubMeshMaterialAssetIds = static_cast<uint32_t>(subMeshMaterialAssetIds.size());
 
 										// Write down
-										outputFileStream.write(reinterpret_cast<const char*>(&meshItem), sizeof(RendererRuntime::v1Scene::MeshItem));
+										outputMemoryStream.write(reinterpret_cast<const char*>(&meshItem), sizeof(RendererRuntime::v1Scene::MeshItem));
 										if (!subMeshMaterialAssetIds.empty())
 										{
 											// Write down all sub-mesh material asset IDs
-											outputFileStream.write(reinterpret_cast<const char*>(subMeshMaterialAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * subMeshMaterialAssetIds.size()));
+											outputMemoryStream.write(reinterpret_cast<const char*>(subMeshMaterialAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * subMeshMaterialAssetIds.size()));
 										}
 									}
 								}
@@ -341,6 +341,9 @@ namespace RendererToolkit
 					}
 				}
 			}
+
+			// Write LZ4 compressed output
+			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1Scene::FORMAT_TYPE, RendererRuntime::v1Scene::FORMAT_VERSION, outputAssetFilename);
 		}
 
 		{ // Update the output asset package

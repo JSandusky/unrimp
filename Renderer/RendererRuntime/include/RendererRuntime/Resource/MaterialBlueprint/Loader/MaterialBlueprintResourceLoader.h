@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
+#include "RendererRuntime/Core/File/MemoryFile.h"
 
 #include <Renderer/Public/Renderer.h>
 
@@ -89,7 +90,7 @@ namespace RendererRuntime
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization(IFile& file) override;
-		inline virtual void onProcessing() override;
+		virtual void onProcessing() override;
 		virtual bool onDispatch() override;
 		virtual bool isFullyLoaded() override;
 
@@ -111,6 +112,9 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime&		   mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
 		MaterialBlueprintResource* mMaterialBlueprintResource;	///< Destination resource
+
+		// Temporary data
+		MemoryFile mMemoryFile;
 
 		// Temporary data: Root signature
 		uint32_t							   mMaximumNumberOfRootParameters;

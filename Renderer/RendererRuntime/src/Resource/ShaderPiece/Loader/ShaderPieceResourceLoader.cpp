@@ -52,11 +52,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void ShaderPieceResourceLoader::onDeserialization(IFile& file)
 	{
+		// Read in the file format header
+		FileFormatHeader fileFormatHeader;
+		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
+		assert(v1ShaderPiece::FORMAT_TYPE == fileFormatHeader.formatType);
+		assert(v1ShaderPiece::FORMAT_VERSION == fileFormatHeader.formatVersion);
+
+		// Tell the memory mapped file about the LZ4 compressed data
+		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+	}
+
+	void ShaderPieceResourceLoader::onProcessing()
+	{
+		// Decompress LZ4 compressed data
+		mMemoryFile.decompress();
+
 		// Read in the shader piece header
-		v1ShaderPiece::Header shaderPieceHeader;
-		file.read(&shaderPieceHeader, sizeof(v1ShaderPiece::Header));
-		assert(v1ShaderPiece::FORMAT_TYPE == shaderPieceHeader.formatType);
-		assert(v1ShaderPiece::FORMAT_VERSION == shaderPieceHeader.formatVersion);
+		v1ShaderPiece::ShaderPieceHeader shaderPieceHeader;
+		mMemoryFile.read(&shaderPieceHeader, sizeof(v1ShaderPiece::ShaderPieceHeader));
 
 		// Allocate more temporary memory, if required
 		if (mMaximumNumberOfShaderSourceCodeBytes < shaderPieceHeader.numberOfShaderSourceCodeBytes)
@@ -67,7 +80,7 @@ namespace RendererRuntime
 		}
 
 		// Read the shader piece ASCII source code
-		file.read(mShaderSourceCode, shaderPieceHeader.numberOfShaderSourceCodeBytes);
+		mMemoryFile.read(mShaderSourceCode, shaderPieceHeader.numberOfShaderSourceCodeBytes);
 		mShaderPieceResource->mShaderSourceCode.assign(mShaderSourceCode, mShaderSourceCode + shaderPieceHeader.numberOfShaderSourceCodeBytes);
 	}
 

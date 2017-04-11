@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
@@ -48,8 +49,7 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-#include <memory>
-#include <fstream>
+#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -584,7 +584,7 @@ namespace RendererToolkit
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Mesh::FORMAT_VERSION))
 		{
-			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
+			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
 
 			// Create an instance of the Assimp importer class
 			Assimp::Importer assimpImporter;
@@ -613,10 +613,8 @@ namespace RendererToolkit
 				const Renderer::VertexAttributes& vertexAttributes = (numberOfBones > 0) ? RendererRuntime::MeshResource::SKINNED_VERTEX_ATTRIBUTES : RendererRuntime::MeshResource::VERTEX_ATTRIBUTES;
 				const uint8_t numberOfBytesPerVertex = (numberOfBones > 0) ? ::detail::NUMBER_OF_BYTES_PER_SKINNED_VERTEX : ::detail::NUMBER_OF_BYTES_PER_VERTEX;
 
-				{ // Mesh header
-					RendererRuntime::v1Mesh::Header meshHeader;
-					meshHeader.formatType				= RendererRuntime::v1Mesh::FORMAT_TYPE;
-					meshHeader.formatVersion			= RendererRuntime::v1Mesh::FORMAT_VERSION;
+				{ // Write down the mesh header
+					RendererRuntime::v1Mesh::MeshHeader meshHeader;
 					meshHeader.numberOfBytesPerVertex	= numberOfBytesPerVertex;
 					meshHeader.numberOfVertices			= numberOfVertices;
 					meshHeader.indexBufferFormat		= Renderer::IndexBufferFormat::UNSIGNED_SHORT;	// TODO(co) Support of 32 bit indices if there are too many vertices
@@ -624,9 +622,7 @@ namespace RendererToolkit
 					meshHeader.numberOfVertexAttributes = static_cast<uint8_t>(vertexAttributes.numberOfAttributes);
 					meshHeader.numberOfSubMeshes		= static_cast<uint8_t>(subMeshes.size());
 					meshHeader.numberOfBones			= skeleton.numberOfBones;
-
-					// Write down the mesh header
-					outputFileStream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(RendererRuntime::v1Mesh::Header));
+					outputMemoryStream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(RendererRuntime::v1Mesh::MeshHeader));
 				}
 
 				{ // Vertex and index buffer data
@@ -647,8 +643,8 @@ namespace RendererToolkit
 					}
 
 					// Write down the vertex and index buffer
-					outputFileStream.write(reinterpret_cast<const char*>(vertexBufferData), numberOfBytesPerVertex * numberOfVertices);
-					outputFileStream.write(reinterpret_cast<const char*>(indexBufferData), static_cast<std::streamsize>(sizeof(uint16_t) * numberOfIndices));
+					outputMemoryStream.write(reinterpret_cast<const char*>(vertexBufferData), numberOfBytesPerVertex * numberOfVertices);
+					outputMemoryStream.write(reinterpret_cast<const char*>(indexBufferData), static_cast<std::streamsize>(sizeof(uint16_t) * numberOfIndices));
 
 					// Destroy local vertex and input buffer data
 					delete [] vertexBufferData;
@@ -656,10 +652,10 @@ namespace RendererToolkit
 				}
 
 				// Write down the vertex array attributes
-				outputFileStream.write(reinterpret_cast<const char*>(vertexAttributes.attributes), static_cast<std::streamsize>(sizeof(Renderer::VertexAttribute) * vertexAttributes.numberOfAttributes));
+				outputMemoryStream.write(reinterpret_cast<const char*>(vertexAttributes.attributes), static_cast<std::streamsize>(sizeof(Renderer::VertexAttribute) * vertexAttributes.numberOfAttributes));
 
 				// Write down the sub-meshes
-				outputFileStream.write(reinterpret_cast<const char*>(subMeshes.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size()));
+				outputMemoryStream.write(reinterpret_cast<const char*>(subMeshes.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size()));
 
 				// Write down the optional skeleton
 				if (skeleton.numberOfBones > 0)
@@ -674,13 +670,16 @@ namespace RendererToolkit
 						skeleton.localBoneMatrices[i].Transpose();
 						skeleton.boneOffsetMatrices[i].Transpose();
 					}
-					outputFileStream.write(reinterpret_cast<const char*>(skeleton.getSkeletonData()), static_cast<std::streamsize>(skeleton.getNumberOfSkeletonDataBytes()));
+					outputMemoryStream.write(reinterpret_cast<const char*>(skeleton.getSkeletonData()), static_cast<std::streamsize>(skeleton.getNumberOfSkeletonDataBytes()));
 				}
 			}
 			else
 			{
 				throw std::runtime_error("Assimp failed to load in the given mesh");
 			}
+
+			// Write LZ4 compressed output
+			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1Mesh::FORMAT_TYPE, RendererRuntime::v1Mesh::FORMAT_VERSION, outputAssetFilename);
 		}
 
 		{ // Update the output asset package

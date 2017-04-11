@@ -41,9 +41,22 @@ namespace RendererRuntime
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
 	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	#ifndef FILE_FORMAT_HEADER
+		#define FILE_FORMAT_HEADER
+		struct FileFormatHeader
+		{
+			// Format
+			uint32_t formatType;
+			uint32_t formatVersion;
+			// Content
+			uint32_t numberOfCompressedBytes;
+			uint32_t numberOfDecompressedBytes;
+		};
+	#endif
 
 
 	// Mesh file format content:
+	// - File format header
 	// - Mesh header
 	// - Vertex and index buffer data
 	// - Vertex array attribute definitions
@@ -56,15 +69,12 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("Mesh");
-		static const uint32_t FORMAT_VERSION = 1;
+		static const uint32_t FORMAT_VERSION = 2;
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct Header
+			struct MeshHeader
 			{
-				// Format
-				uint32_t formatType;
-				uint32_t formatVersion;
 				// Vertex and index data
 				uint8_t  numberOfBytesPerVertex;
 				uint32_t numberOfVertices;

@@ -33,11 +33,6 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
-	inline void ShaderPieceResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
 	inline bool ShaderPieceResourceLoader::isFullyLoaded()
 	{
 		// Fully loaded

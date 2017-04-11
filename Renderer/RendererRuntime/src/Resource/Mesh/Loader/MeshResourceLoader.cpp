@@ -28,7 +28,6 @@
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
-#include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <glm/detail/setup.hpp>	// For "glm::countof()"
@@ -52,11 +51,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void MeshResourceLoader::onDeserialization(IFile& file)
 	{
+		// Read in the file format header
+		FileFormatHeader fileFormatHeader;
+		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
+		assert(v1Mesh::FORMAT_TYPE == fileFormatHeader.formatType);
+		assert(v1Mesh::FORMAT_VERSION == fileFormatHeader.formatVersion);
+
+		// Tell the memory mapped file about the LZ4 compressed data
+		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+	}
+
+	void MeshResourceLoader::onProcessing()
+	{
+		// Decompress LZ4 compressed data
+		mMemoryFile.decompress();
+
 		// Read in the mesh header
-		v1Mesh::Header meshHeader;
-		file.read(&meshHeader, sizeof(v1Mesh::Header));
-		assert(v1Mesh::FORMAT_TYPE == meshHeader.formatType);
-		assert(v1Mesh::FORMAT_VERSION == meshHeader.formatVersion);
+		v1Mesh::MeshHeader meshHeader;
+		mMemoryFile.read(&meshHeader, sizeof(v1Mesh::MeshHeader));
 		mMeshResource->mNumberOfVertices = meshHeader.numberOfVertices;
 		mMeshResource->mNumberOfIndices  = meshHeader.numberOfIndices;
 
@@ -80,8 +92,8 @@ namespace RendererRuntime
 		}
 
 		// Read in the vertex and index buffer
-		file.read(mVertexBufferData, mNumberOfUsedVertexBufferDataBytes);
-		file.read(mIndexBufferData, mNumberOfUsedIndexBufferDataBytes);
+		mMemoryFile.read(mVertexBufferData, mNumberOfUsedVertexBufferDataBytes);
+		mMemoryFile.read(mIndexBufferData, mNumberOfUsedIndexBufferDataBytes);
 
 		// Read in the vertex attributes
 		mNumberOfUsedVertexAttributes = meshHeader.numberOfVertexAttributes;
@@ -91,7 +103,7 @@ namespace RendererRuntime
 			delete [] mVertexAttributes;
 			mVertexAttributes = new Renderer::VertexAttribute[mNumberOfVertexAttributes];
 		}
-		file.read(mVertexAttributes, sizeof(Renderer::VertexAttribute) * mNumberOfUsedVertexAttributes);
+		mMemoryFile.read(mVertexAttributes, sizeof(Renderer::VertexAttribute) * mNumberOfUsedVertexAttributes);
 
 		// Read in the sub-meshes
 		mNumberOfUsedSubMeshes = meshHeader.numberOfSubMeshes;
@@ -101,7 +113,7 @@ namespace RendererRuntime
 			delete [] mSubMeshes;
 			mSubMeshes = new v1Mesh::SubMesh[mNumberOfSubMeshes];
 		}
-		file.read(mSubMeshes, sizeof(v1Mesh::SubMesh) * mNumberOfUsedSubMeshes);
+		mMemoryFile.read(mSubMeshes, sizeof(v1Mesh::SubMesh) * mNumberOfUsedSubMeshes);
 
 		// Read in optional skeleton
 		mNumberOfBones = meshHeader.numberOfBones;
@@ -110,7 +122,7 @@ namespace RendererRuntime
 			// Read in the skeleton data in a single burst
 			const uint32_t numberOfSkeletonDataBytes = (sizeof(uint8_t) + sizeof(uint32_t) + sizeof(glm::mat4) * 2) * mNumberOfBones;
 			mSkeletonData = new uint8_t[numberOfSkeletonDataBytes + (sizeof(glm::mat4) + sizeof(glm::mat3x4)) * mNumberOfBones];	// "RendererRuntime::SkeletonResource::mGlobalBoneMatrices" & "RendererRuntime::SkeletonResource::mBoneSpaceMatrices" isn't serialized
-			file.read(mSkeletonData, numberOfSkeletonDataBytes);
+			mMemoryFile.read(mSkeletonData, numberOfSkeletonDataBytes);
 		}
 
 		// Can we create the renderer resource asynchronous as well?
