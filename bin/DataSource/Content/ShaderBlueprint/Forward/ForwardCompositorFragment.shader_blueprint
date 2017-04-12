@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 @includepiece(15)	// "Core.shader_piece"
+@includepiece(132)	// "Color.shader_piece"
 
 
 //[-------------------------------------------------------]
@@ -70,11 +71,14 @@ TEXTURE_2D(ColorMap, 0)
 @property(!NumberOfMultisamples)
 	TEXTURE_2D(DepthMap, 1)
 @end
+TEXTURE_2D(ScreenSpaceAmbientOcclusionMap, 2)
 
 
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
+@insertpiece(DefineCalculateFoggedColor)
+
 // TODO(co) Make this to a shader piece
 float GetDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
 {
@@ -92,31 +96,14 @@ float GetLinearDepth(float depth)
 	return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
 }
 
-float3 CalculateFoggedColor(float3 viewRay, float3 color, float2 screenSpacePosition, int sampleIndex)
+float3 CalculateColor(float3 viewRay, float3 color, float2 screenSpacePosition, int sampleIndex)
 {
-	float depth = GetDepthFromDepthMap(screenSpacePosition, sampleIndex);
-	float linearDepth = GetLinearDepth(depth);
-
-	// Traditional depth fog
-	// -> Depth fog: Exponential^2 (see e.g. http://developer.download.nvidia.com/assets/gamedev/docs/Fog2.pdf?display=style-table )
-	float factor = linearDepth * PassData.AtmosphereFogDensity;
-	factor *= factor;
-	float fogDepth = 1.0f - SATURATE(1.0f / exp(factor));
-
 	// Scale the view ray by the ratio of the linear z value to the projected view ray
 	// -> For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
-	float3 viewSpacePosition = viewRay * (GetLinearDepth(depth) / dot(float3(0.0f, 0.0f, 1.0f), viewRay));
-
-	// Fog lighting direction
-	float3 viewSpaceCameraDirection = -normalize(viewSpacePosition);	// In view space, we always look along the positive z-axis
-	float fogDirection = SATURATE(dot(viewSpaceCameraDirection, -PassData.ViewSpaceSunLightDirection));
-	fogDirection = pow(fogDirection, 15.0f);
+	float3 viewSpacePosition = viewRay * (GetLinearDepth(GetDepthFromDepthMap(screenSpacePosition, sampleIndex)) / dot(float3(0.0f, 0.0f, 1.0f), viewRay));
 
 	// Calculate fogged color
-	float3 ambientFogDiffuseColor = PassData.AmbientColor * PassData.DiffuseFogColor;
-	float3 sunFogDiffuseColor = PassData.SunLightColor * PassData.DiffuseFogColor;
-	float3 litFog = LERP(ambientFogDiffuseColor, ambientFogDiffuseColor + sunFogDiffuseColor, fogDirection);
-	return LERP(color, litFog, fogDepth);
+	return CalculateFoggedColor(viewSpacePosition, color);
 }
 
 
@@ -124,7 +111,11 @@ float3 CalculateFoggedColor(float3 viewRay, float3 color, float2 screenSpacePosi
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
+	// Gather screen space ambient occlusion value
+	float screenSpaceAmbientOcclusion = SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).r;
+
+	// Get color
+	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)) * screenSpaceAmbientOcclusion;
 
 	// Get the normalized view ray
 	float3 viewRay = normalize(MAIN_INPUT(ViewRayVS));
@@ -134,15 +125,15 @@ MAIN_BEGIN
 		float3 finalColor = float3(0.0f, 0.0f, 0.0f);
 		@foreach(NumberOfMultisamples, i, 0)
 		{
-			finalColor += CalculateFoggedColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), @i);
+			finalColor += CalculateColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), @i);
 		}
 		@end
 		finalColor /= @value(NumberOfMultisamples);
 	@end
 	@property(!NumberOfMultisamples)
-		float3 finalColor = CalculateFoggedColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), 0);
+		float3 finalColor = CalculateColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), 0);
 	@end
 
 	// Done
-	MAIN_OUTPUT_COLOR(0) = float4(SATURATE(finalColor), 1.0f);
+	MAIN_OUTPUT_COLOR(0) = float4(finalColor, 1.0f);
 MAIN_END

@@ -38,12 +38,12 @@
 				"StepSize": "1",
 				"Description": "Sample kernel size"
 			},
-			"GBufferMap1":
+			"NormalMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-				"Description": "2D GBuffer 1: rgb = view space normal, a = roughness"
+				"Description": "2D normal map: rgb = view space normal"
 			},
 			"DepthMap":
 			{
@@ -105,7 +105,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "GBufferMap1",
+							"BaseShaderRegisterName": "NormalMap",
 							"SamplerRootParameterIndex": "1"
 						}
 					},
@@ -251,12 +251,12 @@
 			},
 			"Textures":
 			{
-				"GBufferMap1":
+				"NormalMap":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@GBufferMap1",
+					"Value": "@NormalMap",
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				},

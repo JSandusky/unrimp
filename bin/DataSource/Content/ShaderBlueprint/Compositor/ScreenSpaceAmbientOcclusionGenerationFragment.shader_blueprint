@@ -63,11 +63,11 @@ SAMPLER_STATE(SamplerPointWrap, 1)
 
 // Textures
 @property(NumberOfMultisamples)
-	TEXTURE_2D_MS(GBufferMap1, @value(NumberOfMultisamples), 0)	// GBuffer 1: rgb = view space normal, a = roughness
+	TEXTURE_2D_MS(NormalMap, @value(NumberOfMultisamples), 0)	// Normal map: rgb = view space normal
 	TEXTURE_2D_MS(DepthMap, @value(NumberOfMultisamples), 1)
 @end
 @property(!NumberOfMultisamples)
-	TEXTURE_2D(GBufferMap1, 0)	// GBuffer 1: rgb = view space normal, a = roughness
+	TEXTURE_2D(NormalMap, 0)	// Normal map: rgb = view space normal
 	TEXTURE_2D(DepthMap, 1)
 @end
 TEXTURE_1D(SsaoSampleKernelMap, 2)
@@ -95,13 +95,13 @@ float GetDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
 }
 
 // TODO(co) Make this to a shader piece
-float3 GetNormalFromGBufferMap1(float2 textureCoordinate, int sampleIndex)
+float3 GetNormalFromNormalMap(float2 textureCoordinate, int sampleIndex)
 {
 	@property(NumberOfMultisamples)
-		return SAMPLE_2D_MS(GBufferMap1, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex).xyz;
+		return SAMPLE_2D_MS(NormalMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex).xyz;
 	@end
 	@property(!NumberOfMultisamples)
-		return SAMPLE_2D_LOD(GBufferMap1, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f)).xyz;
+		return SAMPLE_2D_LOD(NormalMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f)).xyz;
 	@end
 }
 
@@ -110,7 +110,7 @@ float CalculateOcclusion(float3 viewRay, float2 textureCoordinate, int sampleInd
 	// Get depth and normal of the fragment
 	float depth = GetDepthFromDepthMap(textureCoordinate, sampleIndex);
 	float originLinearDepth = GetLinearDepth(depth);
-	float3 normal = GetNormalFromGBufferMap1(textureCoordinate, sampleIndex);
+	float3 normal = GetNormalFromNormalMap(textureCoordinate, sampleIndex);
 
 	// Scale the view ray by the ratio of the linear z value to the projected view ray
 	// -> For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/

@@ -11,14 +11,14 @@
 			"AssetId": "139",
 			"AssetType": "MaterialBlueprint",
 			"AssetCategory": "Compositor",
-			"AssetName": "Atmosphere",
+			"AssetName": "ForwardCompositor",
 			"AssetDependencies": [ "165", "138", "167" ],
-			"FileDependencies": [ "Atmosphere.material_blueprint" ],
+			"FileDependencies": [ "ForwardCompositor.material_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"MaterialBlueprintAssetCompiler":
 		{
-			"InputFile": "Atmosphere.material_blueprint"
+			"InputFile": "ForwardCompositor.material_blueprint"
 		}
 	}
 }

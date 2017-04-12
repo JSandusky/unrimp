@@ -49,3 +49,26 @@
 		return SATURATE(pow(abs(color), float3(1.0f / 2.2f, 1.0f / 2.2f, 1.0f / 2.2f)));
 	}
 @end
+
+// Fog
+@piece(DefineCalculateFoggedColor)
+	float3 CalculateFoggedColor(float3 viewSpacePosition, float3 color)
+	{
+		// Traditional depth fog
+		// -> Depth fog: Exponential^2 (see e.g. http://developer.download.nvidia.com/assets/gamedev/docs/Fog2.pdf?display=style-table )
+		float factor = viewSpacePosition.z * PassData.AtmosphereFogDensity;
+		factor *= factor;
+		float fogDepth = 1.0f - SATURATE(1.0f / exp(factor));
+
+		// Fog lighting direction
+		float3 viewSpaceCameraDirection = -normalize(viewSpacePosition);	// In view space, we always look along the positive z-axis
+		float fogDirection = SATURATE(dot(viewSpaceCameraDirection, -PassData.ViewSpaceSunLightDirection));
+		fogDirection = pow(fogDirection, 15.0f);
+
+		// Calculate fogged color
+		float3 ambientFogDiffuseColor = PassData.AmbientColor * PassData.DiffuseFogColor;
+		float3 sunFogDiffuseColor = PassData.SunLightColor * PassData.DiffuseFogColor;
+		float3 litFog = LERP(ambientFogDiffuseColor, ambientFogDiffuseColor + sunFogDiffuseColor, fogDirection);
+		return LERP(color, litFog, fogDepth);
+	}
+@end

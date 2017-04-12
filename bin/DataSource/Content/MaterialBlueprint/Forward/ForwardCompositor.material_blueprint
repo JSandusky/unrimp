@@ -49,6 +49,13 @@
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 				"Description": "2D depth map"
 			},
+			"ScreenSpaceAmbientOcclusionMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+				"Description": "2D screen space ambient occlusion (SSAO) map"
+			},
 			"GlobalAmbientColor":
 			{
 				"Usage": "GLOBAL_REFERENCE_FALLBACK",
@@ -119,6 +126,21 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
 							"BaseShaderRegisterName": "DepthMap",
+							"SamplerRootParameterIndex": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"4":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "2",
+							"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionMap",
 							"SamplerRootParameterIndex": "1"
 						}
 					},
@@ -239,6 +261,15 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DepthMap",
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"MipmapsUsed": "FALSE"
+				},
+				"ScreenSpaceAmbientOcclusionMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@ScreenSpaceAmbientOcclusionMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

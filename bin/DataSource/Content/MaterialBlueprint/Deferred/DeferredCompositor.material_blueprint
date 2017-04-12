@@ -26,6 +26,23 @@
 				"Description": "If high quality lighting is true physically based shading (PBS) is used, else a cheaper lighting model is used instead",
 				"VisualImportance": "100"
 			},
+			"AtmosphereFogDensity":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.05",
+				"MinimumValue": "0.0",
+				"MaximumValue": "100.0",
+				"StepSize": "0.01",
+				"Description": "Atmosphere fog density"
+			},
+			"DiffuseFogColor":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT_3",
+				"Value": "1.0 1.0 1.0",
+				"Description": "Diffuse fog color"
+			},
 			"GBufferMap0":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -354,6 +371,12 @@
 							"ValueType": "FLOAT_3",
 							"Value": "@GlobalAmbientColor"
 						},
+						"AtmosphereFogDensity":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@AtmosphereFogDensity"
+						},
 						"ViewSpaceToWorldSpaceQuaternion":
 						{
 							"Usage": "PASS_REFERENCE",
@@ -365,6 +388,12 @@
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@GlobalSunLightColor"
+						},
+						"DiffuseFogColor":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@DiffuseFogColor"
 						},
 						"CameraWorldSpacePosition":
 						{

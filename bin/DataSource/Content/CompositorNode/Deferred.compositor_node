@@ -44,11 +44,11 @@
 			{
 				"TextureFormat": "R32_FLOAT"
 			},
-			"Example/Texture/Dynamic/HdrColorRenderTarget0":
+			"Example/Texture/Dynamic/HdrColorRenderTarget":
 			{
 				"TextureFormat": "R16G16B16A16F"
 			},
-			"Example/Texture/Dynamic/HdrColorRenderTarget1":
+			"Example/Texture/Dynamic/HdrColorRenderTarget":
 			{
 				"TextureFormat": "R16G16B16A16F"
 			},
@@ -156,13 +156,9 @@
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget" ]
 			},
-			"HdrFramebuffer0":
+			"HdrFramebuffer":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget0" ]
-			},
-			"HdrFramebuffer1":
-			{
-				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget1" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget" ]
 			},
 			"LuminanceFramebuffer":
 			{
@@ -255,7 +251,7 @@
 					"MaterialBlueprintAssetId": "147",
 					"SetMaterialProperties":
 					{
-						"GBufferMap1": "Example/Texture/Dynamic/MultisampleGBufferRenderTarget1",
+						"NormalMap": "Example/Texture/Dynamic/MultisampleGBufferRenderTarget1",
 						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 					}
 				}
@@ -272,7 +268,7 @@
 					}
 				}
 			},
-			"HdrFramebuffer0":
+			"HdrFramebuffer":
 			{
 				"Clear":
 				{
@@ -281,7 +277,7 @@
 				},
 				"Quad":
 				{
-					"Description": "Render ambient pass using GBuffer data",
+					"Description": "Composite deferred data",
 					"MaterialBlueprintAssetId": "115",
 					"SetMaterialProperties":
 					{
@@ -294,19 +290,6 @@
 					}
 				}
 			},
-			"HdrFramebuffer1":
-			{
-				"Quad":
-				{
-					"Description": "Atmosphere pass (fog)",
-					"MaterialBlueprintAssetId": "139",
-					"SetMaterialProperties":
-					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
-						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
-					}
-				}
-			},
 			"LuminanceFramebuffer":
 			{
 				"Quad":
@@ -315,7 +298,7 @@
 					"MaterialBlueprintAssetId": "126",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1"
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget"
 					}
 				}
 			},
@@ -362,7 +345,7 @@
 					"MaterialBlueprintAssetId": "131",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
 						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
 					}
 				}
@@ -464,7 +447,7 @@
 					"MaterialBlueprintAssetId": "141",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1"
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget"
 					}
 				}
 			},
@@ -514,7 +497,7 @@
 					"MaterialBlueprintAssetId": "124",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
 						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget",
 						"BloomMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget",
 						"LensFlareMap": "Example/Texture/Dynamic/LensFlareColorRenderTarget"

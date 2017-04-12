@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 @includepiece(15)	// "Core.shader_piece"
 @includepiece(16)	// "TangentFrame.shader_piece"
+@includepiece(132)	// "Color.shader_piece"
 @includepiece(164)	// "PhysicallyBasedShading.shader_piece"
 
 
@@ -55,13 +56,15 @@ struct PassDataStruct
 	float3   ViewSpaceSunLightDirection;
 	float    Wetness;
 	float3   AmbientColor;
-	float4	 ViewSpaceToWorldSpaceQuaternion;
+	float    AtmosphereFogDensity;
+	float4   ViewSpaceToWorldSpaceQuaternion;
 	float3   SunLightColor;
-	float3	 CameraWorldSpacePosition;
-	float3	 LightClustersScale;
-	float3	 LightClustersBias;
+	float3   DiffuseFogColor;
+	float3   CameraWorldSpacePosition;
+	float3   LightClustersScale;
+	float3   LightClustersBias;
 	float2   ViewportSize;
-	float2 	 ProjectionParameters;
+	float2   ProjectionParameters;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -96,6 +99,7 @@ TEXTURE_3D_UINT(LightClustersMap3D, 8)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
+@insertpiece(DefineCalculateFoggedColor)
 @insertpiece(DefineGetTangentFrame)
 @property(HighQualityLighting)
 	@insertpiece(DefinePhysicallyBasedShading)
@@ -104,10 +108,6 @@ TEXTURE_3D_UINT(LightClustersMap3D, 8)
 	@insertpiece(DefineBlinnPhongBasedShading)
 @end
 
-
-//[-------------------------------------------------------]
-//[ Pieces                                                ]
-//[-------------------------------------------------------]
 // TODO(co) Make this to a shader piece
 float GetLinearDepth(float depth)
 {
@@ -159,6 +159,9 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 
 	// Emissive term
 	color += emissive;
+
+	// Apply fog
+	color = CalculateFoggedColor(viewSpacePosition, color);
 
 	// Done
 	return color;

@@ -101,6 +101,12 @@ MAIN_BEGIN
 	float3 normal = SAMPLE_2D(NormalMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).yxx * 2.0f - 1.0f;
 	normal.z = sqrt(1.0f - dot(normal.xy, normal.xy));
 
+	// TODO(co) Get rid of this
+	if (isnan(normal.z))
+	{
+		normal.z = 1.0f;
+	}
+
 	// Transform the tangent space normal into view space
 	normal = normalize(normal.x * MAIN_INPUT(TangentFrame0VS) + normal.y * MAIN_INPUT(TangentFrame1VS) + normal.z * MAIN_INPUT(TangentFrame2VS));
 
