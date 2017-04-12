@@ -28,7 +28,6 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
-#include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -419,7 +418,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MaterialBlueprintResource::MaterialBlueprintResource() :
 		mPipelineStateCacheManager(*this),
-		mVertexAttributes(MeshResource::SKINNED_VERTEX_ATTRIBUTES.numberOfAttributes, MeshResource::SKINNED_VERTEX_ATTRIBUTES.attributes),
 		mPipelineState(Renderer::PipelineStateBuilder()),
 		mPassUniformBuffer(nullptr),
 		mMaterialUniformBuffer(nullptr),
@@ -427,7 +425,8 @@ namespace RendererRuntime
 		mInstanceTextureBuffer(nullptr),
 		mLightTextureBuffer(nullptr),
 		mPassBufferManager(nullptr),
-		mMaterialBufferManager(nullptr)
+		mMaterialBufferManager(nullptr),
+		mVertexAttributesResourceId(getUninitialized<ShaderBlueprintResourceId>())
 	{
 		memset(mShaderBlueprintResourceId, static_cast<int>(getUninitialized<ShaderBlueprintResourceId>()), sizeof(ShaderBlueprintResourceId) * NUMBER_OF_SHADER_TYPES);
 	}
@@ -452,6 +451,7 @@ namespace RendererRuntime
 		Renderer::VertexAttributes			 mVertexAttributes;
 		Renderer::IRootSignaturePtr			 mRootSignaturePtr;						///< Root signature, can be a null pointer
 		Renderer::PipelineState				 mPipelineState;
+		VertexAttributesResourceId			 mVertexAttributesResourceId;
 		ShaderBlueprintResourceId			 mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
 		// Resource
 		UniformBuffers mUniformBuffers;
@@ -477,6 +477,7 @@ namespace RendererRuntime
 	void MaterialBlueprintResource::deinitializeElement()
 	{
 		// TODO(co) Reset everything
+		setUninitialized(mVertexAttributesResourceId);
 		memset(mShaderBlueprintResourceId, static_cast<int>(getUninitialized<ShaderBlueprintResourceId>()), sizeof(ShaderBlueprintResourceId) * NUMBER_OF_SHADER_TYPES);
 
 		// Call base implementation

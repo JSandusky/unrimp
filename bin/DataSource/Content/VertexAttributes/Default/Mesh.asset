@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "166",
+			"AssetType": "VertexAttributes",
+			"AssetCategory": "Default",
+			"AssetName": "Mesh",
+			"FileDependencies": [ "Mesh.vertex_attributes" ],
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
+		},
+		"VertexAttributesAssetCompiler":
+		{
+			"InputFile": "Mesh.vertex_attributes"
+		}
+	}
+}

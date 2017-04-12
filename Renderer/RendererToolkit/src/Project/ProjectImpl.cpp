@@ -34,6 +34,7 @@
 #include "RendererToolkit/AssetCompiler/ShaderPieceAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/CompositorNodeAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/ShaderBlueprintAssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/VertexAttributesAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/SkeletonAnimationAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/CompositorWorkspaceAssetCompiler.h"
@@ -232,6 +233,10 @@ namespace RendererToolkit
 		else if (CompositorWorkspaceAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			CompositorWorkspaceAssetCompiler().compile(input, configuration, output);
+		}
+		else if (VertexAttributesAssetCompiler::TYPE_ID == assetCompilerTypeId)
+		{
+			VertexAttributesAssetCompiler().compile(input, configuration, output);
 		}
 		else
 		{

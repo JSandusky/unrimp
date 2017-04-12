@@ -52,7 +52,8 @@ namespace RendererRuntime
 		mMaximumNumberOfMaterialBlueprintSamplerStates(0),
 		mMaterialBlueprintSamplerStates(nullptr),
 		mMaximumNumberOfMaterialBlueprintTextures(0),
-		mMaterialBlueprintTextures(nullptr)
+		mMaterialBlueprintTextures(nullptr),
+		mVertexAttributesAssetId(getUninitialized<AssetId>())
 	{
 		memset(mShaderBlueprintAssetId, static_cast<int>(getUninitialized<AssetId>()), sizeof(AssetId) * NUMBER_OF_SHADER_TYPES);
 	}

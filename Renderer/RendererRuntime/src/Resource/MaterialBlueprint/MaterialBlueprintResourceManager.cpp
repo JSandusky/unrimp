@@ -110,95 +110,13 @@ namespace RendererRuntime
 			resourceStreamerLoadRequest.resourceLoader = materialBlueprintResourceLoader;
 			mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 
-			// TODO(co) The following is temporary until we have something like a vertex array format resource.
+			// TODO(co) Currently material blueprint resource loading is a blocking process.
 			//          Later on, we can probably just write "mInternalResourceManager->loadResourceByAssetId(assetId, meshResourceId, resourceListener, reload);" and be done in this method.
 			// Create default pipeline state caches
 			// -> Material blueprints should be loaded by a cache manager upfront so that the following expensive call doesn't cause runtime hiccups
 			// -> Runtime hiccups would also be there without fallback pipeline state caches, so there's no real way around
 			// -> We must enforce fully loaded material blueprint resource state for this
 			materialBlueprintResource->enforceFullyLoaded();
-
-			// TODO(co) We need a central vertex input layout management
-			if (20431079 == assetId ||		// "MaterialBlueprint/Compositor/Final"
-				2351022722 == assetId ||	// "MaterialBlueprint/Deferred/AmbientCompositor"
-				643992955 == assetId ||		// "MaterialBlueprint/Compositor/GaussianBlur"
-				3502284972 == assetId ||	// "MaterialBlueprint/Compositor/HdrToLdr"
-				1374114827 == assetId ||	// "MaterialBlueprint/Compositor/CalculateLuminance"
-				2961560463 == assetId ||	// "MaterialBlueprint/Compositor/AdaptiveLuminance"
-				2167712998 == assetId ||	// "MaterialBlueprint/Compositor/HdrToLdrBloomThreshold"
-				738992981 == assetId ||		// "MaterialBlueprint/Compositor/Scale"
-				1259586825 == assetId ||	// "MaterialBlueprint/Compositor/Atmosphere"
-				1378819984 == assetId ||	// "MaterialBlueprint/Compositor/LensFlareThreshold"
-				2734089221 == assetId ||	// "MaterialBlueprint/Compositor/LensFlareFeatureGeneration"
-				3076058624 == assetId ||	// "MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionGeneration"
-				2859523677 == assetId ||	// "MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionBlur"
-				1243189953 == assetId)		// "MaterialBlueprint/Compositor/DepthOfField"
-			{
-				Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(materialBlueprintResource->getVertexAttributes());
-				static const Renderer::VertexAttribute vertexAttributesLayout[] =
-				{
-					{ // Attribute 0
-						// Data destination
-						Renderer::VertexAttributeFormat::FLOAT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-						"PositionTexCoord",							// name[32] (char)
-						"POSITION",									// semanticName[32] (char)
-						0,											// semanticIndex (uint32_t)
-						// Data source
-						0,											// inputSlot (size_t)
-						0,											// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0											// instancesPerElement (uint32_t)
-					}
-				};
-				vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
-				vertexAttributes.attributes = vertexAttributesLayout;
-			}
-			else if (1042371778 == assetId)	// "MaterialBlueprint/Debug/Gui"
-			{
-				Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(materialBlueprintResource->getVertexAttributes());
-				static const Renderer::VertexAttribute vertexAttributesLayout[] =
-				{
-					{ // Attribute 0
-						// Data destination
-						Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-						"Position",									// name[32] (char)
-						"POSITION",									// semanticName[32] (char)
-						0,											// semanticIndex (uint32_t)
-						// Data source
-						0,											// inputSlot (uint32_t)
-						0,											// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0											// instancesPerElement (uint32_t)
-					},
-					{ // Attribute 1
-						// Data destination
-						Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-						"TexCoord",									// name[32] (char)
-						"TEXCOORD",									// semanticName[32] (char)
-						0,											// semanticIndex (uint32_t)
-						// Data source
-						0,											// inputSlot (uint32_t)
-						sizeof(float) * 2,							// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0											// instancesPerElement (uint32_t)
-					},
-					{ // Attribute 2
-						// Data destination
-						Renderer::VertexAttributeFormat::R8G8B8A8_UNORM,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-						"Color",											// name[32] (char)
-						"COLOR",											// semanticName[32] (char)
-						0,													// semanticIndex (uint32_t)
-						// Data source
-						0,													// inputSlot (uint32_t)
-						sizeof(float) * 2 * 2,								// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0													// instancesPerElement (uint32_t)
-					}
-				};
-				vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
-				vertexAttributes.attributes = vertexAttributesLayout;
-			}
-
 			materialBlueprintResource->createPipelineStateCaches(true);
 		}
 	}

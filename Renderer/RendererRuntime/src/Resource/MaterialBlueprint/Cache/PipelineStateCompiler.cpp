@@ -31,6 +31,8 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCache.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
+#include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResourceManager.h"
+#include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResource.h"
 #include "RendererRuntime/Core/Platform/PlatformManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 #include "RendererRuntime/Core/Math/Math.h"
@@ -59,10 +61,11 @@ namespace
 			Renderer::PipelineState pipelineState = materialBlueprintResource.getPipelineState();
 
 			// Setup the dynamic part of the pipeline state
+			const RendererRuntime::IRendererRuntime& rendererRuntime = materialBlueprintResource.getResourceManager<RendererRuntime::MaterialBlueprintResourceManager>().getRendererRuntime();
 			Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
 			pipelineState.rootSignature	   = rootSignaturePtr;
 			pipelineState.program		   = &program;
-			pipelineState.vertexAttributes = materialBlueprintResource.getVertexAttributes();
+			pipelineState.vertexAttributes = rendererRuntime.getVertexAttributesResourceManager().getById(materialBlueprintResource.getVertexAttributesResourceId()).getVertexAttributes();
 
 			// Create the pipeline state object (PSO)
 			Renderer::IPipelineState* pipelineStateResource = rootSignaturePtr->getRenderer().createPipelineState(pipelineState);
@@ -367,8 +370,12 @@ namespace RendererRuntime
 									switch (static_cast<ShaderType>(i))
 									{
 										case ShaderType::Vertex:
-											shader = shaderLanguage->createVertexShaderFromSourceCode(materialBlueprintResourceManager.getById(compilerRequest.pipelineStateCache.getPipelineStateSignature().getMaterialBlueprintResourceId()).getVertexAttributes(), shaderSourceCode.c_str());
+										{
+											const MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResourceManager.getById(compilerRequest.pipelineStateCache.getPipelineStateSignature().getMaterialBlueprintResourceId());
+											const Renderer::VertexAttributes& vertexAttributes = mRendererRuntime.getVertexAttributesResourceManager().getById(materialBlueprintResource.getVertexAttributesResourceId()).getVertexAttributes();
+											shader = shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, shaderSourceCode.c_str());
 											break;
+										}
 
 										case ShaderType::TessellationControl:
 											shader = shaderLanguage->createTessellationControlShaderFromSourceCode(shaderSourceCode.c_str());
@@ -403,7 +410,8 @@ namespace RendererRuntime
 							MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResourceManager.getById(pipelineStateSignature.getMaterialBlueprintResourceId());
 
 							// Create the program
-							Renderer::IProgram* program = shaderLanguage->createProgram(*materialBlueprintResource.getRootSignaturePtr(), materialBlueprintResource.getVertexAttributes(),
+							Renderer::IProgram* program = shaderLanguage->createProgram(*materialBlueprintResource.getRootSignaturePtr(),
+								mRendererRuntime.getVertexAttributesResourceManager().getById(materialBlueprintResource.getVertexAttributesResourceId()).getVertexAttributes(),
 								static_cast<Renderer::IVertexShader*>(shaders[static_cast<int>(ShaderType::Vertex)]),
 								static_cast<Renderer::ITessellationControlShader*>(shaders[static_cast<int>(ShaderType::TessellationControl)]),
 								static_cast<Renderer::ITessellationEvaluationShader*>(shaders[static_cast<int>(ShaderType::TessellationEvaluation)]),

@@ -67,6 +67,7 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SkeletonAnimationAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SkeletonAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\VertexAttributesAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\Helper\CacheManager.h" />
     <ClInclude Include="include\RendererToolkit\Helper\FileSystemHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonHelper.h" />
@@ -176,6 +177,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
     </ClCompile>
+    <ClCompile Include="src\AssetCompiler\VertexAttributesAssetCompiler.cpp" />
     <ClCompile Include="src\Helper\CacheManager.cpp" />
     <ClCompile Include="src\Helper\FileSystemHelper.cpp" />
     <ClCompile Include="src\Helper\JsonHelper.cpp" />

@@ -31,6 +31,7 @@
 #include "RendererRuntime/Resource/Scene/SceneResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCompiler.h"
@@ -91,6 +92,7 @@ namespace RendererRuntime
 
 		// Create the resource manager instances
 		mResourceStreamer = new ResourceStreamer(*this);
+		mVertexAttributesResourceManager = new VertexAttributesResourceManager(*this);
 		mTextureResourceManager = new TextureResourceManager(*this);
 		mShaderPieceResourceManager = new ShaderPieceResourceManager(*this);
 		mShaderBlueprintResourceManager = new ShaderBlueprintResourceManager(*this);
@@ -104,6 +106,7 @@ namespace RendererRuntime
 		mCompositorWorkspaceResourceManager = new CompositorWorkspaceResourceManager(*this);
 
 		// Register the resource managers inside the resource managers list
+		mResourceManagers.push_back(mVertexAttributesResourceManager);
 		mResourceManagers.push_back(mTextureResourceManager);
 		mResourceManagers.push_back(mShaderPieceResourceManager);
 		mResourceManagers.push_back(mShaderBlueprintResourceManager);
@@ -124,7 +127,7 @@ namespace RendererRuntime
 			mDebugGuiManager = new DebugGuiManagerWindows(*this);
 		#elif LINUX
 			mDebugGuiManager = new DebugGuiManagerLinux(*this);
-			// TODO(sw) Implement an linux manager for this (or we use generally sdl?)
+			// TODO(sw) Implement an Linux manager for this (or we use generally SDL?)
 			// TODO(co) No SDL inside the renderer runtime, it's beyond it's scope. It would be valid to define an abstract
 			//          minimalistic input interface which e.g. in concrete applications using renderer runtime use SDL. On
 			//          the other hand, this would be overkill for the super minimalistic debug GUI. Would prefer a self contained

@@ -26,9 +26,9 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
+#include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
-#include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -145,6 +145,9 @@ namespace RendererRuntime
 		}
 
 		{ // Read in the pipeline state
+			// Read vertex attributes asset ID
+			mMemoryFile.read(&mVertexAttributesAssetId, sizeof(AssetId));
+
 			// Read in the shader blueprints
 			mMemoryFile.read(&mShaderBlueprintAssetId, sizeof(AssetId) * NUMBER_OF_SHADER_TYPES);
 
@@ -234,6 +237,9 @@ namespace RendererRuntime
 		// Create the root signature
 		mMaterialBlueprintResource->mRootSignaturePtr = renderer.createRootSignature(mRootSignature);
 		RENDERER_SET_RESOURCE_DEBUG_NAME(mMaterialBlueprintResource->mRootSignaturePtr, getAsset().assetFilename)
+
+		// Get the used vertex attributes resource
+		mRendererRuntime.getVertexAttributesResourceManager().loadVertexAttributesResourceByAssetId(mVertexAttributesAssetId, mMaterialBlueprintResource->mVertexAttributesResourceId);
 
 		{ // Get the used shader blueprint resources
 			ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
@@ -359,6 +365,13 @@ namespace RendererRuntime
 
 	bool MaterialBlueprintResourceLoader::isFullyLoaded()
 	{
+		// Vertex attributes resource
+		if (IResource::LoadingState::LOADED != mRendererRuntime.getVertexAttributesResourceManager().getResourceByResourceId(mMaterialBlueprintResource->mVertexAttributesResourceId).getLoadingState())
+		{
+			// Not fully loaded
+			return false;
+		}
+
 		// We only demand that all referenced shader blueprint resources are loaded, not yet loaded texture resources can be handled during runtime
 		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
 		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)

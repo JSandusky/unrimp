@@ -26,7 +26,6 @@
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 #include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
-#include "RendererRuntime/Core/File/IFile.h"
 
 
 // TODO(co) Error handling

@@ -25,7 +25,6 @@
 #include "RendererRuntime/Resource/CompositorWorkspace/Loader/CompositorWorkspaceResourceLoader.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/Loader/CompositorWorkspaceFileFormat.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResource.h"
-#include "RendererRuntime/Core/File/IFile.h"
 
 
 // TODO(co) Error handling

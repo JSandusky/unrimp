@@ -57,6 +57,7 @@ namespace RendererRuntime
 	class ShaderPieceResourceManager;
 	class CompositorNodeResourceManager;
 	class ShaderBlueprintResourceManager;
+	class VertexAttributesResourceManager;
 	class SkeletonAnimationResourceManager;
 	class MaterialBlueprintResourceManager;
 	class CompositorWorkspaceResourceManager;
@@ -181,6 +182,15 @@ namespace RendererRuntime
 		*    The resource streamer instance, do not release the returned instance
 		*/
 		inline ResourceStreamer& getResourceStreamer() const;
+
+		/**
+		*  @brief
+		*    Return the vertex attributes resource manager instance
+		*
+		*  @return
+		*    The vertex attributes resource manager instance, do not release the returned instance
+		*/
+		inline VertexAttributesResourceManager& getVertexAttributesResourceManager() const;
 
 		/**
 		*  @brief
@@ -396,6 +406,7 @@ namespace RendererRuntime
 		TimeManager*			   mTimeManager;
 		// Resource
 		ResourceStreamer*					mResourceStreamer;
+		VertexAttributesResourceManager*	mVertexAttributesResourceManager;
 		TextureResourceManager*				mTextureResourceManager;
 		ShaderPieceResourceManager*			mShaderPieceResourceManager;
 		ShaderBlueprintResourceManager*		mShaderBlueprintResourceManager;

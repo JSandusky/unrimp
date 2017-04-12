@@ -48,11 +48,6 @@ namespace RendererRuntime
 		return mMaximumIntegerValueOfShaderProperties.getPropertyValueUnsafe(shaderPropertyId);
 	}
 
-	inline const Renderer::VertexAttributes& MaterialBlueprintResource::getVertexAttributes() const
-	{
-		return mVertexAttributes;
-	}
-
 	inline Renderer::IRootSignaturePtr MaterialBlueprintResource::getRootSignaturePtr() const
 	{
 		return mRootSignaturePtr;
@@ -61,6 +56,11 @@ namespace RendererRuntime
 	inline const Renderer::PipelineState& MaterialBlueprintResource::getPipelineState() const
 	{
 		return mPipelineState;
+	}
+
+	inline VertexAttributesResourceId MaterialBlueprintResource::getVertexAttributesResourceId() const
+	{
+		return mVertexAttributesResourceId;
 	}
 
 	inline ShaderBlueprintResourceId MaterialBlueprintResource::getShaderBlueprintResourceId(ShaderType shaderType) const

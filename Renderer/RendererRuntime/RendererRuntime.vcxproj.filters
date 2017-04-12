@@ -194,6 +194,12 @@
     <Filter Include="External\ImGuizmo">
       <UniqueIdentifier>{d7c7f29c-b86e-4d2d-8eb0-d0005aa30263}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\VertexAttributes">
+      <UniqueIdentifier>{163dfae3-1175-4414-bafb-3446f9055549}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\VertexAttributes\Loader">
+      <UniqueIdentifier>{d757a0fa-a5e7-4a43-8562-7cdf0093fe26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -569,6 +575,12 @@
     </None>
     <None Include="include\RendererRuntime\Core\File\MemoryFile.inl">
       <Filter>Source Files\Core\File</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\VertexAttributes\Loader\VertexAttributesResourceLoader.inl">
+      <Filter>Source Files\Resource\VertexAttributes\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\VertexAttributes\VertexAttributesResource.inl">
+      <Filter>Source Files\Resource\VertexAttributes</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1134,6 +1146,18 @@
     <ClInclude Include="include\RendererRuntime\Core\File\MemoryFile.h">
       <Filter>Source Files\Core\File</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\VertexAttributes\Loader\VertexAttributesFileFormat.h">
+      <Filter>Source Files\Resource\VertexAttributes\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\VertexAttributes\Loader\VertexAttributesResourceLoader.h">
+      <Filter>Source Files\Resource\VertexAttributes\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\VertexAttributes\VertexAttributesResource.h">
+      <Filter>Source Files\Resource\VertexAttributes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\VertexAttributes\VertexAttributesResourceManager.h">
+      <Filter>Source Files\Resource\VertexAttributes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1495,6 +1519,12 @@
     </ClCompile>
     <ClCompile Include="src\Core\File\MemoryFile.cpp">
       <Filter>Source Files\Core\File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\VertexAttributes\VertexAttributesResourceManager.cpp">
+      <Filter>Source Files\Resource\VertexAttributes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\VertexAttributes\Loader\VertexAttributesResourceLoader.cpp">
+      <Filter>Source Files\Resource\VertexAttributes\Loader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -27,6 +27,8 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
+#include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResourceManager.h"
+#include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateSignature.h"
 #include "RendererRuntime/Core/Math/Math.h"
@@ -96,7 +98,7 @@ namespace RendererRuntime
 							switch (shaderType)
 							{
 								case ShaderType::Vertex:
-									shader = shaderLanguage.createVertexShaderFromSourceCode(materialBlueprintResource.getVertexAttributes(), sourceCode.c_str());
+									shader = shaderLanguage.createVertexShaderFromSourceCode(mShaderBlueprintResourceManager.getRendererRuntime().getVertexAttributesResourceManager().getById(materialBlueprintResource.getVertexAttributesResourceId()).getVertexAttributes(), sourceCode.c_str());
 									break;
 
 								case ShaderType::TessellationControl:

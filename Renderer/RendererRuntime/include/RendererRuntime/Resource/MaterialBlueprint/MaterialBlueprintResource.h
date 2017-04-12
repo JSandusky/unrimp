@@ -62,6 +62,7 @@ namespace RendererRuntime
 	typedef StringId AssetId;						///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
 	typedef uint32_t TextureResourceId;				///< POD texture resource identifier
 	typedef uint32_t ShaderBlueprintResourceId;		///< POD shader blueprint resource identifier
+	typedef uint32_t VertexAttributesResourceId;	///< POD vertex attributes resource identifier
 	typedef uint32_t MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
 	typedef StringId ShaderPropertyId;				///< Shader property identifier, internally just a POD "uint32_t", result of hashing the property name
 
@@ -260,15 +261,6 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the vertex attributes
-		*
-		*  @return
-		*    The vertex attributes
-		*/
-		inline const Renderer::VertexAttributes& getVertexAttributes() const;
-
-		/**
-		*  @brief
 		*    Return the root signature
 		*
 		*  @return
@@ -284,6 +276,15 @@ namespace RendererRuntime
 		*    The pipeline state
 		*/
 		inline const Renderer::PipelineState& getPipelineState() const;
+
+		/**
+		*  @brief
+		*    Return a vertex attributes resource ID
+		*
+		*  @return
+		*    The requested vertex attributes resource ID, can be uninitialized
+		*/
+		inline VertexAttributesResourceId getVertexAttributesResourceId() const;
 
 		/**
 		*  @brief
@@ -467,9 +468,9 @@ namespace RendererRuntime
 		MaterialProperties					 mMaterialProperties;
 		ShaderProperties					 mVisualImportanceOfShaderProperties;		///< Every shader property known to the material blueprint has a visual importance entry in here
 		ShaderProperties					 mMaximumIntegerValueOfShaderProperties;	///< The maximum integer value (inclusive) of a shader property
-		Renderer::VertexAttributes			 mVertexAttributes;
 		Renderer::IRootSignaturePtr			 mRootSignaturePtr;							///< Root signature, can be a null pointer
 		Renderer::PipelineState				 mPipelineState;
+		VertexAttributesResourceId			 mVertexAttributesResourceId;
 		ShaderBlueprintResourceId			 mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
 		// Resource
 		UniformBuffers mUniformBuffers;

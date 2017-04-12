@@ -12,7 +12,7 @@
 			"AssetType": "MaterialBlueprint",
 			"AssetCategory": "Compositor",
 			"AssetName": "AdaptiveLuminance",
-			"AssetDependencies": [ "129", "127" ],
+			"AssetDependencies": [ "129", "127", "167" ],
 			"FileDependencies": [ "AdaptiveLuminance.material_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},

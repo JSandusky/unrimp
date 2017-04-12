@@ -101,6 +101,7 @@
 		},
 		"PipelineState":
 		{
+			"VertexAttributesAssetId": "168",
 			"ShaderBlueprints":
 			{
 				"VertexShaderBlueprintAssetId": "119",

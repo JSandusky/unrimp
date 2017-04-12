@@ -73,6 +73,11 @@ namespace RendererRuntime
 		return *mResourceStreamer;
 	}
 
+	inline VertexAttributesResourceManager& IRendererRuntime::getVertexAttributesResourceManager() const
+	{
+		return *mVertexAttributesResourceManager;
+	}
+
 	inline TextureResourceManager& IRendererRuntime::getTextureResourceManager() const
 	{
 		return *mTextureResourceManager;
@@ -162,6 +167,7 @@ namespace RendererRuntime
 		mTimeManager(nullptr),
 		// Resource
 		mResourceStreamer(nullptr),
+		mVertexAttributesResourceManager(nullptr),
 		mTextureResourceManager(nullptr),
 		mShaderPieceResourceManager(nullptr),
 		mShaderBlueprintResourceManager(nullptr),
@@ -192,6 +198,7 @@ namespace RendererRuntime
 		mTimeManager(nullptr),
 		// Resource
 		mResourceStreamer(nullptr),
+		mVertexAttributesResourceManager(nullptr),
 		mTextureResourceManager(nullptr),
 		mShaderPieceResourceManager(nullptr),
 		mShaderBlueprintResourceManager(nullptr),

@@ -12,7 +12,7 @@
 			"AssetType": "MaterialBlueprint",
 			"AssetCategory": "Debug",
 			"AssetName": "Gui",
-			"AssetDependencies": [ "119", "120" ],
+			"AssetDependencies": [ "119", "120", "168" ],
 			"FileDependencies": [ "Gui.material_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},

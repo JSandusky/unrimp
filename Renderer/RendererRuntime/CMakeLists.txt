@@ -167,6 +167,8 @@ set(SOURCE_CODES
 	src/Resource/Texture/Loader/DdsTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/KtxTextureResourceLoader.cpp
 	src/Resource/Texture/TextureResourceManager.cpp
+	src/Resource/VertexAttributes/Loader/VertexAttributesResourceLoader.cpp
+	src/Resource/VertexAttributes/VertexAttributesResourceManager.cpp
 )
 
 if(NOT ANDROID)

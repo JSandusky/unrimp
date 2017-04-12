@@ -12,7 +12,7 @@
 			"AssetType": "MaterialBlueprint",
 			"AssetCategory": "Compositor",
 			"AssetName": "LensFlareFeatureGeneration",
-			"AssetDependencies": [ "100", "142" ],
+			"AssetDependencies": [ "100", "142", "167" ],
 			"FileDependencies": [ "LensFlareFeatureGeneration.material_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team",
 			"Description": "Basing on 'Pseudo Lens Flare' from John Chapman - http://john-chapman-graphics.blogspot.de/2013/02/pseudo-lens-flare.html"

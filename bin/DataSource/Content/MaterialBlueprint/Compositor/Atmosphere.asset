@@ -12,7 +12,7 @@
 			"AssetType": "MaterialBlueprint",
 			"AssetCategory": "Compositor",
 			"AssetName": "Atmosphere",
-			"AssetDependencies": [ "165", "138" ],
+			"AssetDependencies": [ "165", "138", "167" ],
 			"FileDependencies": [ "Atmosphere.material_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},

@@ -25,7 +25,6 @@
 #include "RendererRuntime/Resource/SkeletonAnimation/Loader/SkeletonAnimationResourceLoader.h"
 #include "RendererRuntime/Resource/SkeletonAnimation/Loader/SkeletonAnimationFileFormat.h"
 #include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResource.h"
-#include "RendererRuntime/Core/File/IFile.h"
 
 
 //[-------------------------------------------------------]

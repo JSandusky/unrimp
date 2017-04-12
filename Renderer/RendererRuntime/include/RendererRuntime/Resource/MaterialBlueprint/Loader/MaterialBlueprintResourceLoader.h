@@ -123,7 +123,8 @@ namespace RendererRuntime
 		std::vector<Renderer::DescriptorRange> mDescriptorRanges;
 		Renderer::RootSignature				   mRootSignature;
 
-		// Temporary data: Shader blueprints
+		// Temporary data: Vertex attributes and shader blueprints
+		AssetId mVertexAttributesAssetId;
 		AssetId mShaderBlueprintAssetId[NUMBER_OF_SHADER_TYPES];
 
 		// Temporary data: Sampler states

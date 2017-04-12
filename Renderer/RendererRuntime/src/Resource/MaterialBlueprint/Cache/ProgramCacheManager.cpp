@@ -29,6 +29,8 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCache.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResourceManager.h"
+#include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResource.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -82,8 +84,10 @@ namespace RendererRuntime
 			Renderer::IShaderLanguagePtr shaderLanguage(rootSignaturePtr->getRenderer().getShaderLanguage());
 			if (nullptr != shaderLanguage)
 			{
+				const IRendererRuntime& rendererRuntime = materialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime();
+
 				// Create the shaders
-				ShaderCacheManager& shaderCacheManager = materialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getShaderBlueprintResourceManager().getShaderCacheManager();
+				ShaderCacheManager& shaderCacheManager = rendererRuntime.getShaderBlueprintResourceManager().getShaderCacheManager();
 				Renderer::IShader* shaders[NUMBER_OF_SHADER_TYPES] = {};
 				for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 				{
@@ -99,7 +103,8 @@ namespace RendererRuntime
 				}
 
 				// Create the program
-				Renderer::IProgram* program = shaderLanguage->createProgram(*rootSignaturePtr, materialBlueprintResource.getVertexAttributes(),
+				Renderer::IProgram* program = shaderLanguage->createProgram(*rootSignaturePtr,
+					rendererRuntime.getVertexAttributesResourceManager().getById(materialBlueprintResource.getVertexAttributesResourceId()).getVertexAttributes(),
 					static_cast<Renderer::IVertexShader*>(shaders[static_cast<int>(ShaderType::Vertex)]),
 					static_cast<Renderer::ITessellationControlShader*>(shaders[static_cast<int>(ShaderType::TessellationControl)]),
 					static_cast<Renderer::ITessellationEvaluationShader*>(shaders[static_cast<int>(ShaderType::TessellationEvaluation)]),

@@ -736,6 +736,11 @@ namespace RendererToolkit
 
 	void JsonMaterialBlueprintHelper::readPipelineStateObject(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValuePipelineState, std::stringstream& outputMemoryStream, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
 	{
+		{ // Vertex attributes asset ID
+			const RendererRuntime::AssetId vertexAttributesAssetId = StringHelper::getAssetIdByString(rapidJsonValuePipelineState["VertexAttributesAssetId"].GetString(), input);
+			outputMemoryStream.write(reinterpret_cast<const char*>(&vertexAttributesAssetId), sizeof(RendererRuntime::AssetId));
+		}
+
 		{ // Shader blueprints
 			const rapidjson::Value& rapidJsonValueShaderBlueprints = rapidJsonValuePipelineState["ShaderBlueprints"];
 
