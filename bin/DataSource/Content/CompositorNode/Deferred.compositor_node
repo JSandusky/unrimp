@@ -46,11 +46,11 @@
 			},
 			"Example/Texture/Dynamic/HdrColorRenderTarget":
 			{
-				"TextureFormat": "R16G16B16A16F"
+				"TextureFormat": "R11G11B10F"
 			},
 			"Example/Texture/Dynamic/HdrColorRenderTarget":
 			{
-				"TextureFormat": "R16G16B16A16F"
+				"TextureFormat": "R11G11B10F"
 			},
 			"Example/Texture/Dynamic/LuminanceRenderTarget":
 			{

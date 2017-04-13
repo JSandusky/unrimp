@@ -15,7 +15,7 @@
 		{
 			"Example/Texture/Dynamic/HdrMultisampleColorRenderTarget":
 			{
-				"TextureFormat": "R16G16B16A16F",
+				"TextureFormat": "R11G11B10F",
 				"AllowMultisample": "TRUE"
 			},
 			"Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget":
@@ -31,11 +31,11 @@
 			},
 			"Example/Texture/Dynamic/HdrColorRenderTarget0":
 			{
-				"TextureFormat": "R16G16B16A16F"
+				"TextureFormat": "R11G11B10F"
 			},
 			"Example/Texture/Dynamic/HdrColorRenderTarget1":
 			{
-				"TextureFormat": "R16G16B16A16F"
+				"TextureFormat": "R11G11B10F"
 			},
 			"Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget":
 			{
