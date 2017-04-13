@@ -92,7 +92,13 @@
 	// Walter et al. 2007, "Microfacet models for refraction through rough surfaces"
 	float NDF_GGX(float dotNH, float alphaSqr)
 	{
-		return alphaSqr / (PI * pow(dotNH * dotNH * (alphaSqr - 1.0f) + 1.0f, 2.0f));
+		float result = alphaSqr / (PI * pow(dotNH * dotNH * (alphaSqr - 1.0f) + 1.0f, 2.0f));
+
+		// Ensure we never get insane values resulting in visual artefacts
+		result = min(result, 10.0f);
+
+		// Done
+		return result;
 	}
 
 
