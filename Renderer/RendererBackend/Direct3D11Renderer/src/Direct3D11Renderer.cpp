@@ -24,7 +24,6 @@
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 #include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D11Renderer/Direct3D11Debug.h"	// For "DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN()"
-#include "Direct3D11Renderer/Direct3D9RuntimeLinking.h"	//  For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 #include "Direct3D11Renderer/RootSignature.h"
 #include "Direct3D11Renderer/Mapping.h"
@@ -334,10 +333,10 @@ namespace Direct3D11Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	Direct3D11Renderer::Direct3D11Renderer(handle nativeWindowHandle) :
-		mDirect3D9RuntimeLinking(nullptr),
 		mDirect3D11RuntimeLinking(new Direct3D11RuntimeLinking()),
 		mD3D11Device(nullptr),
 		mD3D11DeviceContext(nullptr),
+		mD3DUserDefinedAnnotation(nullptr),
 		mShaderLanguageHlsl(nullptr),
 		mD3D11QueryFlush(nullptr),
 		mMainSwapChain(nullptr),
@@ -372,21 +371,15 @@ namespace Direct3D11Renderer
 			// Is there a valid Direct3D 11 device and device context?
 			if (nullptr != mD3D11Device && nullptr != mD3D11DeviceContext)
 			{
-				#ifdef DIRECT3D11RENDERER_NO_DEBUG
-					// Create the Direct3D 9 runtime linking instance, we know there can't be one, yet
-					mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
-
-					// Call the Direct3D 9 PIX function
-					if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
-					{
-						// Disable debugging
-						D3DPERF_SetOptions(1);
-					}
-				#endif
-
-				// Direct3D 11 debug settings
+				// Direct3D 11 debug related stuff
 				if (flags & D3D11_CREATE_DEVICE_DEBUG)
 				{
+					#ifndef DIRECT3D11RENDERER_NO_DEBUG
+						// Try to get the Direct3D 11 user defined annotation interface, Direct3D 11.1 feature
+						mD3D11DeviceContext->QueryInterface(__uuidof(ID3DUserDefinedAnnotation), reinterpret_cast<LPVOID*>(&mD3DUserDefinedAnnotation));
+					#endif
+
+					// Direct3D 11 debug settings
 					ID3D11Debug* d3d11Debug = nullptr;
 					if (SUCCEEDED(mD3D11Device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<LPVOID*>(&d3d11Debug))))
 					{
@@ -511,6 +504,11 @@ namespace Direct3D11Renderer
 		}
 
 		// Release the Direct3D 11 device we've created
+		if (nullptr != mD3DUserDefinedAnnotation)
+		{
+			mD3DUserDefinedAnnotation->Release();
+			mD3DUserDefinedAnnotation = nullptr;
+		}
 		if (nullptr != mD3D11DeviceContext)
 		{
 			mD3D11DeviceContext->Release();
@@ -527,12 +525,6 @@ namespace Direct3D11Renderer
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(this)
-
-		// Destroy the Direct3D 9 runtime linking instance, in case there's one
-		if (nullptr != mDirect3D9RuntimeLinking)
-		{
-			delete mDirect3D9RuntimeLinking;
-		}
 	}
 
 
@@ -1321,19 +1313,12 @@ namespace Direct3D11Renderer
 	void Direct3D11Renderer::setDebugMarker(const char *name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
-			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
-			if (nullptr == mDirect3D9RuntimeLinking)
-			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
-			}
-
-			// Call the Direct3D 9 PIX function
-			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
+			if (nullptr != mD3DUserDefinedAnnotation)
 			{
 				assert(strlen(name) < 256);
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);
-				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), unicodeName);
+				mD3DUserDefinedAnnotation->SetMarker(unicodeName);
 			}
 		#endif
 	}
@@ -1341,19 +1326,12 @@ namespace Direct3D11Renderer
 	void Direct3D11Renderer::beginDebugEvent(const char *name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
-			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
-			if (nullptr == mDirect3D9RuntimeLinking)
-			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
-			}
-
-			// Call the Direct3D 9 PIX function
-			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
+			if (nullptr != mD3DUserDefinedAnnotation)
 			{
 				assert(strlen(name) < 256);
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);
-				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), unicodeName);
+				mD3DUserDefinedAnnotation->BeginEvent(unicodeName);
 			}
 		#endif
 	}
@@ -1361,16 +1339,9 @@ namespace Direct3D11Renderer
 	void Direct3D11Renderer::endDebugEvent()
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
-			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
-			if (nullptr == mDirect3D9RuntimeLinking)
+			if (nullptr != mD3DUserDefinedAnnotation)
 			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
-			}
-
-			// Call the Direct3D 9 PIX function
-			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
-			{
-				D3DPERF_EndEvent();
+				mD3DUserDefinedAnnotation->EndEvent();
 			}
 		#endif
 	}
@@ -1386,7 +1357,7 @@ namespace Direct3D11Renderer
 		// -> Maybe a debugger/profiler ignores the debug state
 		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
 		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
-		return (nullptr != D3DPERF_GetStatus && D3DPERF_GetStatus() != 0);
+		return (nullptr != mD3DUserDefinedAnnotation && mD3DUserDefinedAnnotation->GetStatus() != 0);
 	}
 
 	Renderer::ISwapChain *Direct3D11Renderer::getMainSwapChain() const

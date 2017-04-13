@@ -78,7 +78,6 @@
     <ClInclude Include="include\Direct3D11Renderer\Direct3D11Debug.h" />
     <ClInclude Include="include\Direct3D11Renderer\Direct3D11Renderer.h" />
     <ClInclude Include="include\Direct3D11Renderer\Direct3D11RuntimeLinking.h" />
-    <ClInclude Include="include\Direct3D11Renderer\Direct3D9RuntimeLinking.h" />
     <ClInclude Include="include\Direct3D11Renderer\Guid.h" />
     <ClInclude Include="include\Direct3D11Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D11Renderer\RenderTarget\Framebuffer.h" />
@@ -114,7 +113,6 @@
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
     <ClCompile Include="src\Direct3D11Renderer.cpp" />
     <ClCompile Include="src\Direct3D11RuntimeLinking.cpp" />
-    <ClCompile Include="src\Direct3D9RuntimeLinking.cpp" />
     <ClCompile Include="src\Guid.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />

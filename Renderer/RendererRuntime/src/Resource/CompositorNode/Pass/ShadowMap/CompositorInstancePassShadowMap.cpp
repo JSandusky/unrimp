@@ -53,6 +53,9 @@ namespace RendererRuntime
 		{
 			const glm::vec3 worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getTransform().rotation * Math::FORWARD_VECTOR;
 
+			// Begin debug event
+			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+
 			// Set render target
 			Renderer::Command::SetRenderTarget::create(commandBuffer, mFramebufferPtr);
 
@@ -77,10 +80,6 @@ namespace RendererRuntime
 			const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomViewSpaceToClipSpaceMatrix(depthProjectionMatrix);
 
 			{ // Render shadow casters
-				// Begin debug event
-				COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
-
-				// Fill command buffer
 				assert(nullptr != mRenderQueueIndexRange);
 				for (const RenderableManager* renderableManager : mRenderQueueIndexRange->renderableManagers)
 				{
@@ -93,9 +92,6 @@ namespace RendererRuntime
 					}
 				}
 				mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassScene&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
-
-				// End debug event
-				COMMAND_END_DEBUG_EVENT(commandBuffer)
 			}
 
 			// Unset custom camera matrices
@@ -111,6 +107,9 @@ namespace RendererRuntime
 			// Reset to previous render target
 			// TODO(co) Get rid of this
 			Renderer::Command::SetRenderTarget::create(commandBuffer, &const_cast<Renderer::IRenderTarget&>(renderTarget));
+
+			// End debug event
+			COMMAND_END_DEBUG_EVENT(commandBuffer)
 		}
 		else
 		{

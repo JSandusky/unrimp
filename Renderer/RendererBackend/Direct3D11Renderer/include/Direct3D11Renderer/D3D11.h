@@ -1609,3 +1609,14 @@ ID3D11InfoQueue : public IUnknown
 		virtual void STDMETHODCALLTYPE SetMuteDebugOutput(_In_ BOOL bMute) = 0;
 		virtual BOOL STDMETHODCALLTYPE GetMuteDebugOutput(void) = 0;
 };
+
+// "Microsoft DirectX SDK (June 2010)" -> "d3d11_1.h"
+MIDL_INTERFACE("b2daad8b-03d4-4dbf-95eb-32ab4b63d0ab")
+ID3DUserDefinedAnnotation : public IUnknown
+{
+	public:
+		virtual INT STDMETHODCALLTYPE BeginEvent(_In_ LPCWSTR Name) = 0;
+		virtual INT STDMETHODCALLTYPE EndEvent(void) = 0;
+		virtual void STDMETHODCALLTYPE SetMarker(_In_ LPCWSTR Name) = 0;
+		virtual BOOL STDMETHODCALLTYPE GetStatus(void) = 0;
+};

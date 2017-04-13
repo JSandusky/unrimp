@@ -137,9 +137,6 @@
     <ClInclude Include="include\Direct3D11Renderer\D3D11.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Direct3D9RuntimeLinking.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Direct3D11Debug.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -240,9 +237,6 @@
     </ClCompile>
     <ClCompile Include="src\Shader\ProgramHlsl.cpp">
       <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Direct3D9RuntimeLinking.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Direct3D11Renderer.cpp">
       <Filter>Source Files</Filter>

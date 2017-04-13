@@ -41,6 +41,7 @@ struct ID3D11DomainShader;
 struct ID3D11VertexShader;
 struct ID3D11DeviceContext;
 struct ID3D11GeometryShader;
+struct ID3DUserDefinedAnnotation;
 namespace Renderer
 {
 	class IRenderTarget;
@@ -49,7 +50,6 @@ namespace Direct3D11Renderer
 {
 	class SwapChain;
 	class RootSignature;
-	class Direct3D9RuntimeLinking;
 	class Direct3D11RuntimeLinking;
 }
 
@@ -232,15 +232,15 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D9RuntimeLinking		  *mDirect3D9RuntimeLinking;	///< Direct3D 9 runtime linking instance, can be a null pointer
-		Direct3D11RuntimeLinking	  *mDirect3D11RuntimeLinking;	///< Direct3D 11 runtime linking instance, always valid
-		ID3D11Device				  *mD3D11Device;				///< The Direct3D 11 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
-		ID3D11DeviceContext			  *mD3D11DeviceContext;			///< The Direct3D 11 device context instance, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
-		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
-		ID3D11Query					  *mD3D11QueryFlush;			///< Direct3D 11 query used for flush, can be a null pointer
-		SwapChain					  *mMainSwapChain;				///< In case the optional native main window handle within the "Direct3D11Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
-		Renderer::IRenderTarget		  *mRenderTarget;				///< Currently set render target (we keep a reference to it), can be a null pointer
-		RootSignature				  *mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
+		Direct3D11RuntimeLinking  *mDirect3D11RuntimeLinking;	///< Direct3D 11 runtime linking instance, always valid
+		ID3D11Device			  *mD3D11Device;				///< The Direct3D 11 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		ID3D11DeviceContext		  *mD3D11DeviceContext;			///< The Direct3D 11 device context instance, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		ID3DUserDefinedAnnotation *mD3DUserDefinedAnnotation;	///< The Direct3D 11 user defined annotation interface, null pointer on error, Direct3D 11.1 feature
+		Renderer::IShaderLanguage *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
+		ID3D11Query				  *mD3D11QueryFlush;			///< Direct3D 11 query used for flush, can be a null pointer
+		SwapChain				  *mMainSwapChain;				///< In case the optional native main window handle within the "Direct3D11Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
+		Renderer::IRenderTarget	  *mRenderTarget;				///< Currently set render target (we keep a reference to it), can be a null pointer
+		RootSignature			  *mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		// State cache to avoid making redundant Direct3D 11 calls
 		ID3D11VertexShader   *mD3d11VertexShader;
 		ID3D11HullShader     *mD3d11HullShader;

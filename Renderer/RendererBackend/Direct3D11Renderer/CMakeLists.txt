@@ -71,20 +71,12 @@ set(SOURCE_CODES
 	src/Texture/Texture3D.cpp
 	src/Texture/TextureCube.cpp
 	src/Texture/TextureManager.cpp
-	src/Direct3D9RuntimeLinking.cpp
 	src/Direct3D11Renderer.cpp
 	src/Direct3D11RuntimeLinking.cpp
 	src/Guid.cpp
 	src/Mapping.cpp
 	src/RootSignature.cpp
 )
-if(NOT DIRECT3D11RENDERER_NO_DEBUG)
-	# Support Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features
-	set(SOURCE_CODES
-		${SOURCE_CODES}
-		src/Direct3D9RuntimeLinking.cpp
-	)
-endif()
 
 
 ##################################################
