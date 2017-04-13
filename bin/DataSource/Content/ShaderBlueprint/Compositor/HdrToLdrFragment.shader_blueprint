@@ -112,7 +112,7 @@ MAIN_BEGIN
 	{ // Apply the lens flare with dirty lens
 		float lensFlareIntensity = 5.0f;
 		float3 lensFlare = SAMPLE_2D_LOD(LensFlareMap, SamplerLinear, textureCoordinate).rgb;
-		float2 lensStarTexcoord = (MATRIX_MUL(CAST_TO(PassData.LensStarMatrix, float3x3), float3(MAIN_INPUT(TexCoordVS), 1.0f))).xy;
+		float2 lensStarTexcoord = (MATRIX_MUL(float3(MAIN_INPUT(TexCoordVS), 1.0f), CAST_TO(PassData.LensStarMatrix, float3x3))).xy;
 		color += lensFlare * (dirtyLens + SAMPLE_2D_LOD(LensStarMap, SamplerLinear, float4(lensStarTexcoord, 0.0f, 0.0f)).rgb) * lensFlareIntensity;
 	}
 

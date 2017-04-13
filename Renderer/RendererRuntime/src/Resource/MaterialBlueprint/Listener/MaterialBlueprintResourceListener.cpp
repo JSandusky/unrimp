@@ -588,7 +588,7 @@ namespace RendererRuntime
 				0.0f, 0.5f, 0.5f,
 				0.0f, 0.0f, 1.0f
 			);
-			const glm::mat4 uLensStarMatrix = scaleBias2 * rotation * scaleBias1;
+			const glm::mat4 uLensStarMatrix = scaleBias1 * rotation * scaleBias2;
 
 			// Copy the matrix over
 			memcpy(buffer, glm::value_ptr(uLensStarMatrix), numberOfBytes);
