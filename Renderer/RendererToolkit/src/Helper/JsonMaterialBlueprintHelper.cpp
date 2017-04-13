@@ -789,12 +789,12 @@ namespace RendererToolkit
 			// The optional properties
 			JsonHelper::optionalBooleanProperty(rapidJsonValueDepthStencilState, "DepthEnable", depthStencilState.depthEnable);
 			JsonMaterialHelper::optionalDepthWriteMaskProperty(rapidJsonValueDepthStencilState, "DepthWriteMask", depthStencilState.depthWriteMask, &sortedMaterialPropertyVector);
+			JsonMaterialHelper::optionalComparisonFuncProperty(rapidJsonValueDepthStencilState, "DepthFunc", depthStencilState.depthFunc, &sortedMaterialPropertyVector);
 
 			// TODO(co) Depth stencil state: Read in the rest of the PSO
 			/*
 			"DepthStencilState":
 			{
-				"DepthFunc": "LESS",
 				"StencilEnable": "FALSE",
 				"StencilReadMask": "255",
 				"StencilWriteMask": "255",

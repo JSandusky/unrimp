@@ -99,6 +99,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	private:
 		Renderer::DepthStencilState mDepthStencilState;	///< Depth stencil state
+		int							mOpenGLDepthFunc;	///< OpenGL depth function (type "GLenum" not used in here in order to keep the header slim)
 
 
 	};

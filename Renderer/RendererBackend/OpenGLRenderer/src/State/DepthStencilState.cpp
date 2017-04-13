@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/State/DepthStencilState.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/Mapping.h"
 
 
 //[-------------------------------------------------------]
@@ -36,7 +37,8 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState &depthStencilState) :
-		mDepthStencilState(depthStencilState)
+		mDepthStencilState(depthStencilState),
+		mOpenGLDepthFunc(Mapping::getOpenGLComparisonFunc(depthStencilState.depthFunc))
 	{
 		// Nothing here
 	}
@@ -55,6 +57,9 @@ namespace OpenGLRenderer
 
 		// Renderer::DepthStencilState::depthWriteMask
 		glDepthMask(static_cast<GLboolean>((Renderer::DepthWriteMask::ALL == mDepthStencilState.depthWriteMask) ? GL_TRUE : GL_FALSE));
+
+		// Renderer::DepthStencilState::depthFunc
+		glDepthFunc(static_cast<GLenum>(mOpenGLDepthFunc));
 
 		// TODO(co) Map the rest of the depth stencil states
 	}

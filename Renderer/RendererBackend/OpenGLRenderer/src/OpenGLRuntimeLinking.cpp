@@ -201,6 +201,7 @@ namespace OpenGLRenderer
 		IMPORT_FUNC(glTexImage1D);
 		IMPORT_FUNC(glTexImage2D);
 		IMPORT_FUNC(glPixelStorei);
+		IMPORT_FUNC(glDepthFunc);
 		IMPORT_FUNC(glDepthMask);
 		IMPORT_FUNC(glViewport);
 		IMPORT_FUNC(glDepthRange);

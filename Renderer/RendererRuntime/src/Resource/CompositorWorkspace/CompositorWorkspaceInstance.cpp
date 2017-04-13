@@ -35,7 +35,9 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
@@ -154,7 +156,8 @@ namespace RendererRuntime
 		{
 			// Tell the global material properties managed by the material blueprint resource manager about the number of multisamples
 			// -> Since there can be multiple compositor workspace instances we can't do this once inside "RendererRuntime::CompositorWorkspaceInstance::setNumberOfMultisamples()"
-			mRendererRuntime.getMaterialBlueprintResourceManager().getGlobalMaterialProperties().setPropertyById("GlobalNumberOfMultisamples", MaterialPropertyValue::fromInteger((mNumberOfMultisamples == 1) ? 0 : mNumberOfMultisamples));
+			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
+			materialBlueprintResourceManager.getGlobalMaterialProperties().setPropertyById("GlobalNumberOfMultisamples", MaterialPropertyValue::fromInteger((mNumberOfMultisamples == 1) ? 0 : mNumberOfMultisamples));
 
 			// Add reference to the render target
 			renderTarget.addReference();
@@ -206,7 +209,7 @@ namespace RendererRuntime
 					gatherRenderQueueIndexRangesRenderableManagers(*cameraSceneItem);
 
 					// Fill the light buffer manager
-					mRendererRuntime.getMaterialBlueprintResourceManager().getLightBufferManager().fillBuffer(cameraSceneItem->getSceneResource(), mCommandBuffer);
+					materialBlueprintResourceManager.getLightBufferManager().fillBuffer(cameraSceneItem->getSceneResource(), mCommandBuffer);
 				}
 
 				// Begin debug event
@@ -242,6 +245,17 @@ namespace RendererRuntime
 				for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
 				{
 					compositorNodeInstance->frameEnded();
+				}
+				{ // Reset current pass buffer from all material blueprint resources
+					const uint32_t numberOfResources = materialBlueprintResourceManager.getNumberOfResources();
+					for (uint32_t i = 0; i < numberOfResources; ++i)
+					{
+						PassBufferManager* passBufferManager = materialBlueprintResourceManager.getByIndex(i).getPassBufferManager();
+						if (nullptr != passBufferManager)
+						{
+							passBufferManager->resetCurrentPassBuffer();
+						}
+					}
 				}
 				mIndirectBufferManager.freeAllUsedIndirectBuffers();
 			}

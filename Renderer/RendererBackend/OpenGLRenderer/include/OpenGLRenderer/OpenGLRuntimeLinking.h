@@ -178,6 +178,7 @@ namespace OpenGLRenderer
 	FNDEF_GL(void,		glTexImage1D,		(GLenum, GLint, GLint, GLsizei, GLint, GLenum, GLenum, const GLvoid *));
 	FNDEF_GL(void,		glTexImage2D,		(GLenum, GLint, GLint, GLsizei, GLsizei, GLint, GLenum, GLenum, const GLvoid *));
 	FNDEF_GL(void,		glPixelStorei,		(GLenum, GLint));
+	FNDEF_GL(void,		glDepthFunc,		(GLenum func));
 	FNDEF_GL(void,		glDepthMask,		(GLboolean));
 	FNDEF_GL(void,		glViewport,			(GLint, GLint, GLsizei, GLsizei));
 	FNDEF_GL(void,		glDepthRange,		(GLclampd, GLclampd));
@@ -242,6 +243,7 @@ namespace OpenGLRenderer
 	#define glTexImage1D		FNPTR(glTexImage1D)
 	#define glTexImage2D		FNPTR(glTexImage2D)
 	#define glPixelStorei		FNPTR(glPixelStorei)
+	#define glDepthFunc			FNPTR(glDepthFunc)
 	#define glDepthMask			FNPTR(glDepthMask)
 	#define glViewport			FNPTR(glViewport)
 	#define glDepthRange		FNPTR(glDepthRange)

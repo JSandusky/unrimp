@@ -209,6 +209,10 @@ namespace RendererRuntime
 		Renderer::PrimitiveTopology currentPrimitiveTopology = Renderer::PrimitiveTopology::UNKNOWN;
 		Renderer::IPipelineState* currentPipelineState = nullptr;
 
+		// We try to minimize state changes across multiple render queue fill command buffer calls, but while doing so we still need to take into account
+		// that pass data like world space to clip space transform might have been changed and needs to be updated inside the pass uniform buffer
+		bool enforcePassBufferManagerFillBuffer = true;
+
 		// Process all render queues
 		// -> When adding renderables from renderable manager we could build up a minimum/maximum used render queue index to sometimes reduce
 		//    the number of iterations. On the other hand, there are usually much more renderables added as iterations in here so this possible
@@ -356,24 +360,34 @@ namespace RendererRuntime
 									{
 										// Expensive state change: Handle material blueprint resource switches
 										// -> Render queue should be sorted by material blueprint resource first to reduce those expensive state changes
+										bool bindMaterialBlueprint = false;
+										PassBufferManager* passBufferManager = nullptr;
 										if (compositorContextData.mCurrentlyBoundMaterialBlueprintResource != materialBlueprintResource)
 										{
 											compositorContextData.mCurrentlyBoundMaterialBlueprintResource = materialBlueprintResource;
-
+											bindMaterialBlueprint = true;
+										}
+										if (bindMaterialBlueprint || enforcePassBufferManagerFillBuffer)
+										{
 											// Fill the pass buffer manager
-											{ // TODO(co) Just a dummy usage for now
-												PassBufferManager* passBufferManager = materialBlueprintResource->getPassBufferManager();
-												if (nullptr != passBufferManager)
-												{
-													passBufferManager->resetCurrentPassBuffer();
-													passBufferManager->fillBuffer(renderTarget, compositorContextData);
-												}
+											passBufferManager = materialBlueprintResource->getPassBufferManager();
+											if (nullptr != passBufferManager)
+											{
+												passBufferManager->fillBuffer(renderTarget, compositorContextData);
+												enforcePassBufferManagerFillBuffer = false;
 											}
-
+										}
+										if (bindMaterialBlueprint)
+										{
 											// Bind the material blueprint resource and instance and light buffer manager to the used renderer
 											materialBlueprintResource->fillCommandBuffer(commandBuffer);
 											instanceBufferManager.fillCommandBuffer(*materialBlueprintResource, commandBuffer);
 											lightBufferManager.fillCommandBuffer(*materialBlueprintResource, commandBuffer);
+										}
+										else if (nullptr != passBufferManager)
+										{
+											// Bind pass buffer manager since we filled the buffer
+											passBufferManager->fillCommandBuffer(commandBuffer);
 										}
 
 										// Cheap state change: Bind the material technique to the used renderer

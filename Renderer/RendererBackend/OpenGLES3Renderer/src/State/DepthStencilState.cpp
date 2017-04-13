@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/State/DepthStencilState.h"
 #include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
+#include "OpenGLES3Renderer/Mapping.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 
@@ -37,7 +38,8 @@ namespace OpenGLES3Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState &depthStencilState) :
-		mDepthStencilState(depthStencilState)
+		mDepthStencilState(depthStencilState),
+		mOpenGLES3DepthFunc(Mapping::getOpenGLES3ComparisonFunc(depthStencilState.depthFunc))
 	{
 		// Nothing here
 	}
@@ -56,6 +58,9 @@ namespace OpenGLES3Renderer
 
 		// Renderer::DepthStencilState::depthWriteMask
 		glDepthMask(static_cast<GLboolean>((Renderer::DepthWriteMask::ALL == mDepthStencilState.depthWriteMask) ? GL_TRUE : GL_FALSE));
+
+		// Renderer::DepthStencilState::depthFunc
+		glDepthFunc(static_cast<GLenum>(mOpenGLES3DepthFunc));
 
 		// TODO(co) Map the rest of the depth stencil states
 	}
