@@ -504,10 +504,7 @@ namespace Direct3D10Renderer
 		RENDERER_END_DEBUG_EVENT(this)
 
 		// Destroy the Direct3D 9 runtime linking instance, in case there's one
-		if (nullptr != mDirect3D9RuntimeLinking)
-		{
-			delete mDirect3D9RuntimeLinking;
-		}
+		delete mDirect3D9RuntimeLinking;
 	}
 
 

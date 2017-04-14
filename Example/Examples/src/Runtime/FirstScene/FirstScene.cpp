@@ -390,12 +390,9 @@ void FirstScene::createCompositorWorkspace()
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
-		// Create the compositor workspace instance
-		if (nullptr != mCompositorWorkspaceInstance)
-		{
-			delete mCompositorWorkspaceInstance;
-		}
+		// Create/recreate the compositor workspace instance
 		static const RendererRuntime::AssetId COMPOSITOR_WORKSPACE_ASSET_ID[3] = { "Example/CompositorWorkspace/Default/Debug", "Example/CompositorWorkspace/Default/Forward", "Example/CompositorWorkspace/Default/Deferred" };
+		delete mCompositorWorkspaceInstance;
 		mCompositorWorkspaceInstance = new RendererRuntime::CompositorWorkspaceInstance(*rendererRuntime, COMPOSITOR_WORKSPACE_ASSET_ID[mInstancedCompositor]);
 	}
 }

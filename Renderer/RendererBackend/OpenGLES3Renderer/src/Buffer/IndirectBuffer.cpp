@@ -58,10 +58,7 @@ namespace OpenGLES3Renderer
 
 	IndirectBuffer::~IndirectBuffer()
 	{
-		if (nullptr != mData)
-		{
-			delete [] mData;
-		}
+		delete [] mData;
 	}
 
 

@@ -31,11 +31,8 @@ RefCountPtr<AType>::RefCountPtr(AType *pointer) :
 template <class AType>
 RefCountPtr<AType>::~RefCountPtr()
 {
-	// Delete the referenced object
-	if (nullptr != mPointer)
-	{
-		delete mPointer;
-	}
+	// Delete the referenced object, if needed
+	delete mPointer;
 }
 
 template <class AType>

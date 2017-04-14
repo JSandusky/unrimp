@@ -76,11 +76,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	SkeletonMeshSceneItem::~SkeletonMeshSceneItem()
 	{
-		if (nullptr != mSkeletonAnimationController)
-		{
-			delete mSkeletonAnimationController;
-			mSkeletonAnimationController = nullptr;
-		}
+		// Destroy the skeleton animation controller instance, if needed
+		delete mSkeletonAnimationController;
 	}
 
 

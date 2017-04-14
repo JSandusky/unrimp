@@ -92,10 +92,7 @@ namespace Renderer
 
 		inline ~ShaderBytecode()
 		{
-			if (nullptr != mBytecode)
-			{
-				delete [] mBytecode;
-			}
+			delete [] mBytecode;
 		}
 
 		inline uint32_t getNumberOfBytes() const
@@ -110,10 +107,7 @@ namespace Renderer
 
 		inline void setBytecodeCopy(uint32_t numberOfBytes, uint8_t* bytecode)
 		{
-			if (nullptr != mBytecode)
-			{
-				delete [] mBytecode;
-			}
+			delete [] mBytecode;
 			mNumberOfBytes = numberOfBytes;
 			mBytecode = new uint8_t[mNumberOfBytes];
 			memcpy(mBytecode, bytecode, mNumberOfBytes);

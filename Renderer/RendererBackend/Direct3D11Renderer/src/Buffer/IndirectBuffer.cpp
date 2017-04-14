@@ -110,10 +110,7 @@ namespace Direct3D11Renderer
 
 	IndirectBuffer::~IndirectBuffer()
 	{
-		if (nullptr != mData)
-		{
-			delete [] mData;
-		}
+		delete [] mData;
 
 		// Release the used resources
 		if (nullptr != mD3D11ShaderResourceViewIndirect)

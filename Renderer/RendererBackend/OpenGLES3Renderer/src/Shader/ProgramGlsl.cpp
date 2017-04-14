@@ -210,10 +210,7 @@ namespace OpenGLES3Renderer
 		glDeleteProgram(mOpenGLES3Program);
 
 		// Destroy root signature parameter index to OpenGL ES 3 uniform location mapping, if required
-		if (nullptr != mRootSignatureParameterIndexToUniformLocation)
-		{
-			delete [] mRootSignatureParameterIndexToUniformLocation;
-		}
+		delete [] mRootSignatureParameterIndexToUniformLocation;
 	}
 
 

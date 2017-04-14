@@ -433,14 +433,9 @@ namespace RendererRuntime
 
 	MaterialBlueprintResource::~MaterialBlueprintResource()
 	{
-		if (nullptr != mPassBufferManager)
-		{
-			delete mPassBufferManager;
-		}
-		if (nullptr != mMaterialBufferManager)
-		{
-			delete mMaterialBufferManager;
-		}
+		// Destroy manager instances, if needed
+		delete mPassBufferManager;
+		delete mMaterialBufferManager;
 
 		// TODO(co) Sanity checks
 		/*

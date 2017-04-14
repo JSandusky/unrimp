@@ -161,10 +161,7 @@ namespace OpenGLES3Renderer
 			}
 			delete [] mRootSignature.parameters;
 		}
-		if (nullptr != mRootSignature.staticSamplers)
-		{
-			delete [] mRootSignature.staticSamplers;
-		}
+		delete [] mRootSignature.staticSamplers;
 	}
 
 	void RootSignature::setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const

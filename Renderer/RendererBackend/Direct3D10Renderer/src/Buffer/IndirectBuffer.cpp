@@ -58,10 +58,7 @@ namespace Direct3D10Renderer
 
 	IndirectBuffer::~IndirectBuffer()
 	{
-		if (nullptr != mData)
-		{
-			delete [] mData;
-		}
+		delete [] mData;
 	}
 
 

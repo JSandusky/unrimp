@@ -237,15 +237,9 @@ namespace RendererRuntime
 
 	MaterialBlueprintResourceManager::~MaterialBlueprintResourceManager()
 	{
-		// Destroy buffer managers
-		if (nullptr != mInstanceBufferManager)
-		{
-			delete mInstanceBufferManager;
-		}
-		if (nullptr != mLightBufferManager)
-		{
-			delete mLightBufferManager;
-		}
+		// Destroy buffer managers, if needed
+		delete mInstanceBufferManager;
+		delete mLightBufferManager;
 
 		// Shutdown material blueprint resource listener (we know there must be such an instance)
 		assert(nullptr != mMaterialBlueprintResourceListener);

@@ -307,10 +307,7 @@ namespace RendererRuntime
 		}
 
 		// Create pass buffer manager
-		if (nullptr != mMaterialBlueprintResource->mPassBufferManager)
-		{
-			delete mMaterialBlueprintResource->mPassBufferManager;
-		}
+		delete mMaterialBlueprintResource->mPassBufferManager;
 		mMaterialBlueprintResource->mPassBufferManager = new PassBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
 
 		// Create material buffer manager

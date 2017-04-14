@@ -88,10 +88,7 @@ namespace NullRenderer
 			}
 			delete [] mRootSignature.parameters;
 		}
-		if (nullptr != mRootSignature.staticSamplers)
-		{
-			delete [] mRootSignature.staticSamplers;
-		}
+		delete [] mRootSignature.staticSamplers;
 	}
 
 

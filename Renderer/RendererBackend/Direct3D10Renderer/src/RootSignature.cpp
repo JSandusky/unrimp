@@ -88,10 +88,7 @@ namespace Direct3D10Renderer
 			}
 			delete [] mRootSignature.parameters;
 		}
-		if (nullptr != mRootSignature.staticSamplers)
-		{
-			delete [] mRootSignature.staticSamplers;
-		}
+		delete [] mRootSignature.staticSamplers;
 	}
 
 

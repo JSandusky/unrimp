@@ -87,11 +87,8 @@ namespace Direct3D12Renderer
 			mIndexBuffer->releaseReference();
 		}
 
-		// Cleanup Direct3D 12 input slot data
-		if (nullptr != mD3D12VertexBufferViews)
-		{
-			delete [] mD3D12VertexBufferViews;
-		}
+		// Cleanup Direct3D 12 input slot data, if needed
+		delete [] mD3D12VertexBufferViews;
 
 		// Release the reference to the used vertex buffers
 		if (nullptr != mVertexBuffers)

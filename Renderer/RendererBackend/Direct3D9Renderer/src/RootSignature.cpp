@@ -161,10 +161,7 @@ namespace Direct3D9Renderer
 			}
 			delete [] mRootSignature.parameters;
 		}
-		if (nullptr != mRootSignature.staticSamplers)
-		{
-			delete [] mRootSignature.staticSamplers;
-		}
+		delete [] mRootSignature.staticSamplers;
 	}
 
 	const SamplerState* RootSignature::getSamplerState(uint32_t samplerRootParameterIndex) const

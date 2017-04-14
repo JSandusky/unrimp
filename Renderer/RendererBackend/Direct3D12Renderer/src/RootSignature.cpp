@@ -131,10 +131,7 @@ namespace Direct3D12Renderer
 				}
 				delete [] d3d12RootSignatureDesc.pParameters;
 			}
-			if (nullptr != d3d12RootSignatureDesc.pStaticSamplers)
-			{
-				delete [] d3d12RootSignatureDesc.pStaticSamplers;
-			}
+			delete [] d3d12RootSignatureDesc.pStaticSamplers;
 		}
 
 		// Assign a default name to the resource for debugging purposes

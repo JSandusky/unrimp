@@ -73,11 +73,7 @@ namespace OpenGLRenderer
 	VertexArrayNoVao::~VertexArrayNoVao()
 	{
 		// Destroy the vertex array attributes
-		if (nullptr != mAttributes)
-		{
-			// Cleanup
-			delete [] mAttributes;
-		}
+		delete [] mAttributes;
 
 		// Destroy the vertex array vertex buffers
 		if (nullptr != mVertexBuffers)

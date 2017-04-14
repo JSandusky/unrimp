@@ -111,10 +111,7 @@ namespace Direct3D12Renderer
 
 	IndirectBuffer::~IndirectBuffer()
 	{
-		if (nullptr != mData)
-		{
-			delete [] mData;
-		}
+		delete [] mData;
 
 		// TODO(co) Direct3D 12 update
 		/*

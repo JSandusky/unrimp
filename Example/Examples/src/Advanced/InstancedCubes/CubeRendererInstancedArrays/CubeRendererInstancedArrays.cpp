@@ -333,11 +333,8 @@ CubeRendererInstancedArrays::~CubeRendererInstancedArrays()
 {
 	// The renderer resource pointers are released automatically
 
-	// Destroy the batches
-	if (nullptr != mBatches)
-	{
-		delete [] mBatches;
-	}
+	// Destroy the batches, if needed
+	delete [] mBatches;
 }
 
 

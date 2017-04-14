@@ -223,10 +223,7 @@ namespace Renderer
 		*/
 		inline ~CommandBuffer()
 		{
-			if (nullptr != mCommandPacketBuffer)
-			{
-				delete [] mCommandPacketBuffer;
-			}
+			delete [] mCommandPacketBuffer;
 		}
 
 		/**
