@@ -25,6 +25,7 @@
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+#include <tuple>	// For "std::ignore"
 #include <cassert>
 
 
@@ -40,7 +41,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
 	inline ResourceManagerTemplate<TYPE, LOADER_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::ResourceManagerTemplate(IRendererRuntime& rendererRuntime, IResourceManager& resourceManager) :
-		ResourceManagerTemplateBase(rendererRuntime, resourceManager)
+		mRendererRuntime(rendererRuntime),
+		mResourceManager(resourceManager)
 	{
 		// Nothing here
 	}
@@ -52,22 +54,24 @@ namespace RendererRuntime
 	}
 
 	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
-	inline LOADER_TYPE* ResourceManagerTemplate<TYPE, LOADER_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	inline IRendererRuntime& ResourceManagerTemplate<TYPE, LOADER_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::getRendererRuntime() const
 	{
-		// Can we recycle an already existing resource loader instance?
-		LOADER_TYPE* resourceLoader = static_cast<LOADER_TYPE*>(ResourceManagerTemplateBase::acquireResourceLoaderInstance(resourceLoaderTypeId));
+		return mRendererRuntime;
+	}
 
-		// We need to create a new resource loader instance
-		if (nullptr == resourceLoader)
-		{
-			// We only support our own format
-			assert(resourceLoaderTypeId == LOADER_TYPE::TYPE_ID);
-			resourceLoader = new LOADER_TYPE(mResourceManager, mRendererRuntime);
-			mUsedResourceLoaderInstances.push_back(resourceLoader);
-		}
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
+	inline IResourceManager& ResourceManagerTemplate<TYPE, LOADER_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::getResourceManager() const
+	{
+		return mResourceManager;
+	}
 
-		// Done
-		return resourceLoader;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
+	inline LOADER_TYPE* ResourceManagerTemplate<TYPE, LOADER_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	{
+		// We only support our own format
+		assert(resourceLoaderTypeId == LOADER_TYPE::TYPE_ID);
+		std::ignore = resourceLoaderTypeId;
+		return new LOADER_TYPE(mResourceManager, mRendererRuntime);
 	}
 
 	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
@@ -137,15 +141,8 @@ namespace RendererRuntime
 		// Load the resource, if required
 		if (load)
 		{
-			// Prepare the resource loader
-			LOADER_TYPE* resourceLoader = acquireResourceLoaderInstance(LOADER_TYPE::TYPE_ID);
-			resourceLoader->initialize(*asset, *resource);
-
 			// Commit resource streamer asset load request
-			ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-			resourceStreamerLoadRequest.resource = resource;
-			resourceStreamerLoadRequest.resourceLoader = resourceLoader;
-			mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, LOADER_TYPE::TYPE_ID, *resource));
 		}
 	}
 

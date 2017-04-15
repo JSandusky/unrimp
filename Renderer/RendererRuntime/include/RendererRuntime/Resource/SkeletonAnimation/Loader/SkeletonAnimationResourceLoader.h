@@ -58,7 +58,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SkeletonAnimationResourceLoader : protected IResourceLoader
+	class SkeletonAnimationResourceLoader : public IResourceLoader
 	{
 
 
@@ -80,6 +80,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		virtual void initialize(const Asset& asset, IResource& resource) override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
 		inline virtual bool onDispatch() override;
@@ -94,7 +95,6 @@ namespace RendererRuntime
 		inline virtual ~SkeletonAnimationResourceLoader();
 		SkeletonAnimationResourceLoader(const SkeletonAnimationResourceLoader&) = delete;
 		SkeletonAnimationResourceLoader& operator=(const SkeletonAnimationResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, SkeletonAnimationResource& skeletonAnimationResource);
 
 
 	//[-------------------------------------------------------]

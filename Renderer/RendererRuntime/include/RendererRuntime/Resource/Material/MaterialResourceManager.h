@@ -98,14 +98,14 @@ namespace RendererRuntime
 		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
 		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
-		virtual void update() override;
+		inline virtual void update() override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	private:
-		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) override;
+		virtual IResourceLoader* createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId) override;
 
 
 	//[-------------------------------------------------------]

@@ -34,6 +34,15 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	inline void TextureResourceManager::update()
+	{
+		// Nothing here
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

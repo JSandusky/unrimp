@@ -39,7 +39,6 @@ namespace RendererRuntime
 	class ISceneResource;
 	class IRendererRuntime;
 	class IResourceListener;
-	class ResourceManagerTemplateBase;
 }
 
 
@@ -48,12 +47,6 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef StringId ResourceLoaderTypeId;	///< Resource loader type identifier, internally just a POD "uint32_t", usually created by hashing the file format extension (if the resource loader is processing file data in the first place)
 
 
 	//[-------------------------------------------------------]
@@ -89,14 +82,14 @@ namespace RendererRuntime
 		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
 		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
-		virtual void update() override;
+		inline virtual void update() override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	private:
-		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) override;
+		virtual IResourceLoader* createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId) override;
 
 
 	//[-------------------------------------------------------]
@@ -104,10 +97,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit SceneResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~SceneResourceManager();
+		inline virtual ~SceneResourceManager();
 		SceneResourceManager(const SceneResourceManager&) = delete;
 		SceneResourceManager& operator=(const SceneResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
@@ -121,10 +113,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&			 mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		const ISceneFactory*		 mSceneFactory;		///< Scene factory, always valid, do not destroy the instance
-		SceneResources				 mSceneResources;
-		ResourceManagerTemplateBase* mResourceManagerTemplateBase;
+		IRendererRuntime&	 mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		const ISceneFactory* mSceneFactory;		///< Scene factory, always valid, do not destroy the instance
+		SceneResources		 mSceneResources;
 
 
 	};

@@ -68,7 +68,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MeshResourceLoader : protected IResourceLoader
+	class MeshResourceLoader : public IResourceLoader
 	{
 
 
@@ -90,6 +90,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		virtual void initialize(const Asset& asset, IResource& resource) override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
 		virtual bool onDispatch() override;
@@ -104,7 +105,6 @@ namespace RendererRuntime
 		virtual ~MeshResourceLoader();
 		MeshResourceLoader(const MeshResourceLoader&) = delete;
 		MeshResourceLoader& operator=(const MeshResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, MeshResource& meshResource);
 		Renderer::IVertexArray* createVertexArray() const;
 
 

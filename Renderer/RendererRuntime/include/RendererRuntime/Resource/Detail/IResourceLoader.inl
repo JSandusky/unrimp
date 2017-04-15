@@ -35,7 +35,8 @@ namespace RendererRuntime
 
 	inline const Asset& IResourceLoader::getAsset() const
 	{
-		return mAsset;
+		assert(nullptr != mAsset);
+		return *mAsset;
 	}
 
 
@@ -43,7 +44,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline IResourceLoader::IResourceLoader(IResourceManager& resourceManager) :
-		mResourceManager(resourceManager)
+		mResourceManager(resourceManager),
+		mAsset(nullptr)
 	{
 		// Nothing here
 	}
@@ -55,7 +57,7 @@ namespace RendererRuntime
 
 	inline void IResourceLoader::initialize(const Asset& asset)
 	{
-		mAsset = asset;
+		mAsset = &asset;
 	}
 
 

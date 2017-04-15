@@ -100,9 +100,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	void SkeletonAnimationResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	IResourceLoader* SkeletonAnimationResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+		return mInternalResourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
 	}
 
 

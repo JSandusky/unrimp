@@ -62,12 +62,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void VertexAttributesResourceLoader::initialize(const Asset& asset, VertexAttributesResource& vertexAttributesResource)
-	{
-		IResourceLoader::initialize(asset);
-		mVertexAttributesResource = &vertexAttributesResource;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

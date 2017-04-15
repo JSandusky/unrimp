@@ -37,6 +37,7 @@
 namespace RendererRuntime
 {
 	class IFile;
+	class IResource;
 	class IResourceManager;
 }
 
@@ -64,7 +65,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class ResourceManagerTemplateBase;
+		friend class ResourceStreamer;	// Needs to be able to destroy resource loader instances
 
 
 	//[-------------------------------------------------------]
@@ -99,6 +100,17 @@ namespace RendererRuntime
 		*    Return the resource loader type ID
 		*/
 		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const = 0;
+
+		/**
+		*  @brief
+		*    Initialize the resource loader type ID
+		*
+		*  @param[in] asset
+		*    Asset to load
+		*  @param[out] resource
+		*    Resource instance to fill
+		*/
+		virtual void initialize(const Asset& asset, IResource& resource) = 0;
 
 		/**
 		*  @brief
@@ -150,7 +162,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IResourceManager& mResourceManager;	///< Owner resource manager
-		Asset			  mAsset;			///< In order to be multi-threading safe in here, we need an asset copy
+		const Asset*	  mAsset;			///< Used asset, must be valid
 
 
 	};

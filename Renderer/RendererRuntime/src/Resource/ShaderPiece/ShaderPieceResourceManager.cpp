@@ -74,16 +74,16 @@ namespace RendererRuntime
 
 	void ShaderPieceResourceManager::update()
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	void ShaderPieceResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	IResourceLoader* ShaderPieceResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+		return mInternalResourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
 	}
 
 

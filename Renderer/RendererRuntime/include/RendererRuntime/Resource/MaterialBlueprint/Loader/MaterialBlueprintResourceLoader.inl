@@ -58,12 +58,6 @@ namespace RendererRuntime
 		memset(mShaderBlueprintAssetId, static_cast<int>(getUninitialized<AssetId>()), sizeof(AssetId) * NUMBER_OF_SHADER_TYPES);
 	}
 
-	inline void MaterialBlueprintResourceLoader::initialize(const Asset& asset, MaterialBlueprintResource& materialBlueprintResource)
-	{
-		IResourceLoader::initialize(asset);
-		mMaterialBlueprintResource = &materialBlueprintResource;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -59,12 +59,6 @@ namespace RendererRuntime
 		delete [] mShaderSourceCode;
 	}
 
-	inline void ShaderPieceResourceLoader::initialize(const Asset& asset, ShaderPieceResource& shaderPieceResource)
-	{
-		IResourceLoader::initialize(asset);
-		mShaderPieceResource = &shaderPieceResource;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -129,6 +129,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	void SceneResourceLoader::initialize(const Asset& asset, IResource& resource)
+	{
+		IResourceLoader::initialize(asset);
+		mSceneResource = static_cast<ISceneResource*>(&resource);
+	}
+
 	void SceneResourceLoader::onDeserialization(IFile& file)
 	{
 		// Read in the file format header

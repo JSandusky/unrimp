@@ -48,6 +48,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	void MaterialBlueprintResourceLoader::initialize(const Asset& asset, IResource& resource)
+	{
+		IResourceLoader::initialize(asset);
+		mMaterialBlueprintResource = static_cast<MaterialBlueprintResource*>(&resource);
+	}
+
 	void MaterialBlueprintResourceLoader::onDeserialization(IFile& file)
 	{
 		// Read in the file format header

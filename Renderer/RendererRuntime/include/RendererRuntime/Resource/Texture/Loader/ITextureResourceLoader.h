@@ -64,7 +64,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class TextureResourceManager;
 		friend ResourceManagerTemplate<TextureResource, ITextureResourceLoader, TextureResourceId, 2048>;	// Type definition of template class
 
 
@@ -80,6 +79,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		virtual void initialize(const Asset& asset, IResource& resource) override;
 		inline virtual void onDeserialization(IFile& file) override;
 		inline virtual void onProcessing() override;
 		inline virtual bool onDispatch() override;
@@ -101,13 +101,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		TextureResource* mTextureResource;	///< Destination resource
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		inline void initialize(const Asset& asset, TextureResource& textureResource);
 
 
 	};

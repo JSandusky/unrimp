@@ -49,7 +49,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class DdsTextureResourceLoader : protected ITextureResourceLoader
+	class DdsTextureResourceLoader : public ITextureResourceLoader
 	{
 
 

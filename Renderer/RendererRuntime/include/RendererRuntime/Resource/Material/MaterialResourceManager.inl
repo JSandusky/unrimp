@@ -34,6 +34,15 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	inline void MaterialResourceManager::update()
+	{
+		// Nothing here
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

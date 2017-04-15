@@ -62,7 +62,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorNodeResourceLoader : protected IResourceLoader
+	class CompositorNodeResourceLoader : public IResourceLoader
 	{
 
 
@@ -84,6 +84,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		virtual void initialize(const Asset& asset, IResource& resource) override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
 		inline virtual bool onDispatch() override;
@@ -98,7 +99,6 @@ namespace RendererRuntime
 		inline virtual ~CompositorNodeResourceLoader();
 		CompositorNodeResourceLoader(const CompositorNodeResourceLoader&) = delete;
 		CompositorNodeResourceLoader& operator=(const CompositorNodeResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, CompositorNodeResource& compositorNodeResource);
 
 
 	//[-------------------------------------------------------]

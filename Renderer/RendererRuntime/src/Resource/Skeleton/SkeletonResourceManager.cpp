@@ -86,16 +86,16 @@ namespace RendererRuntime
 
 	void SkeletonResourceManager::update()
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	void SkeletonResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	IResourceLoader* SkeletonResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+		return mInternalResourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
 	}
 
 

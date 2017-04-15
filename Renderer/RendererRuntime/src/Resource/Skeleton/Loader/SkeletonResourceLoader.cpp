@@ -44,6 +44,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	void SkeletonResourceLoader::initialize(const Asset& asset, IResource& resource)
+	{
+		IResourceLoader::initialize(asset);
+		mSkeletonResource = static_cast<SkeletonResource*>(&resource);
+	}
+
 	void SkeletonResourceLoader::onDeserialization(IFile& file)
 	{
 		// Read in the skeleton header

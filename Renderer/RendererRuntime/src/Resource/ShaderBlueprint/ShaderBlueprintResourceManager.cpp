@@ -77,18 +77,13 @@ namespace RendererRuntime
 		return mInternalResourceManager->reloadResourceByAssetId(assetId);
 	}
 
-	void ShaderBlueprintResourceManager::update()
-	{
-		// TODO(co) Implement me
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	void ShaderBlueprintResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	IResourceLoader* ShaderBlueprintResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+		return mInternalResourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
 	}
 
 

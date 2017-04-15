@@ -50,8 +50,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;		///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
-	typedef uint32_t ResourceId;	///< POD resource identifier
+	typedef StringId ResourceLoaderTypeId;	///< Resource loader type identifier, internally just a POD "uint32_t", usually created by hashing the file format extension (if the resource loader is processing file data in the first place)
 
 
 	//[-------------------------------------------------------]
@@ -69,7 +68,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;	// Needs to be able to destroy resource manager instances
-		friend class ResourceStreamer;		// Needs to be able to release resource loader instances
+		friend class ResourceStreamer;		// Needs to be able to create resource loader instances
 
 
 	//[-------------------------------------------------------]
@@ -99,7 +98,7 @@ namespace RendererRuntime
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	private:
-		virtual void releaseResourceLoaderInstance(IResourceLoader& resourceLoader) = 0;
+		virtual IResourceLoader* createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId) = 0;
 
 
 	};

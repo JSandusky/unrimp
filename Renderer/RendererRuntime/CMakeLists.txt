@@ -108,7 +108,6 @@ set(SOURCE_CODES
 	src/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.cpp
 	src/Resource/CompositorWorkspace/Loader/CompositorWorkspaceResourceLoader.cpp
 	src/Resource/Detail/IResource.cpp
-	src/Resource/Detail/ResourceManagerTemplateBase.cpp
 	src/Resource/Detail/ResourceStreamer.cpp
 	src/Resource/IResourceListener.cpp
 	src/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.cpp

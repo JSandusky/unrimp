@@ -58,7 +58,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ShaderBlueprintResourceLoader : protected IResourceLoader
+	class ShaderBlueprintResourceLoader : public IResourceLoader
 	{
 
 
@@ -80,6 +80,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		virtual void initialize(const Asset& asset, IResource& resource) override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
 		virtual bool onDispatch() override;
@@ -94,7 +95,6 @@ namespace RendererRuntime
 		inline virtual ~ShaderBlueprintResourceLoader();
 		ShaderBlueprintResourceLoader(const ShaderBlueprintResourceLoader&) = delete;
 		ShaderBlueprintResourceLoader& operator=(const ShaderBlueprintResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, ShaderBlueprintResource& shaderBlueprintResource);
 
 
 	//[-------------------------------------------------------]

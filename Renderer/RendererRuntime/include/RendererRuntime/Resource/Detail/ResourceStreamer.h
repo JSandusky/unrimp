@@ -27,12 +27,14 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Asset/Asset.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 
 #include <deque>
 #include <mutex>
 #include <atomic>
 #include <thread>
+#include <unordered_map>
 #include <condition_variable>
 
 
@@ -52,6 +54,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId ResourceLoaderTypeId;	///< Resource loader type identifier, internally just a POD "uint32_t", usually created by hashing the file format extension (if the resource loader is processing file data in the first place)
 
 
 	//[-------------------------------------------------------]
@@ -89,8 +97,22 @@ namespace RendererRuntime
 	public:
 		struct LoadRequest
 		{
-			IResource*		 resource;			///< Must be valid, do not destroy the instance
-			IResourceLoader* resourceLoader;	///< Must be valid, do not destroy the instance
+			// Data provided from the outside
+			const Asset*		 asset;					///< Used asset, must be valid
+			ResourceLoaderTypeId resourceLoaderTypeId;	///< Must be valid
+			IResource*			 resource;				///< Must be valid, do not destroy the instance
+			// In flight data
+			mutable IResourceLoader* resourceLoader;	///< Null pointer at first, must be valid as soon as the load request is in flight, do not destroy the instance
+
+			// Methods
+			inline LoadRequest(const Asset& _asset, ResourceLoaderTypeId _resourceLoaderTypeId, IResource& _resource) :
+				asset(&_asset),
+				resourceLoaderTypeId(_resourceLoaderTypeId),
+				resource(&_resource),
+				resourceLoader(nullptr)
+			{
+				// Nothing here
+			}
 		};
 
 
@@ -121,13 +143,22 @@ namespace RendererRuntime
 		ResourceStreamer& operator=(const ResourceStreamer&) = delete;
 		void deserializationThreadWorker();
 		void processingThreadWorker();
+		void finalizeLoadRequest(const LoadRequest& loadRequest);
 
 
 	//[-------------------------------------------------------]
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
+		typedef std::vector<IResourceLoader*> ResourceLoaders;
 		typedef std::deque<LoadRequest> LoadRequests;
+		struct ResourceLoaderType
+		{
+			uint32_t		numberOfInstances;
+			ResourceLoaders	freeResourceLoaders;
+			LoadRequests	waitingLoadRequests;
+		};
+		typedef std::unordered_map<uint32_t, ResourceLoaderType> ResourceLoaderTypeManager;	///< Key = "RendererRuntime::ResourceLoaderTypeId"
 
 
 	//[-------------------------------------------------------]
@@ -135,22 +166,25 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		std::mutex		  mResourceManagerMutex;
 		// Resource streamer stage: 1. Asynchronous deserialization
-		std::atomic<bool>		  mShutdownDeserializationThread;
-		std::mutex				  mDeserializationMutex;
-		std::condition_variable	  mDeserializationConditionVariable;
-		LoadRequests			  mDeserializationQueue;
-		std::thread				  mDeserializationThread;
+		std::atomic<bool>		    mShutdownDeserializationThread;
+		std::mutex					mDeserializationMutex;
+		std::condition_variable		mDeserializationConditionVariable;
+		LoadRequests				mDeserializationQueue;
+		ResourceLoaderTypeManager	mResourceLoaderTypeManager;	// Do only touch if "mResourceManagerMutex" is locked
+		std::atomic<uint32_t>		mDeserializationWaitingQueueRequests;
+		std::thread					mDeserializationThread;
 		// Resource streamer stage: 2. Asynchronous processing
-		std::atomic<bool>		  mShutdownProcessingThread;
-		std::mutex				  mProcessingMutex;
-		std::condition_variable	  mProcessingConditionVariable;
-		LoadRequests			  mProcessingQueue;
-		std::thread				  mProcessingThread;
+		std::atomic<bool>		mShutdownProcessingThread;
+		std::mutex				mProcessingMutex;
+		std::condition_variable mProcessingConditionVariable;
+		LoadRequests			mProcessingQueue;
+		std::thread				mProcessingThread;
 		// Resource streamer stage: 3. Synchronous dispatch to e.g. the renderer backend
-		std::mutex				  mDispatchMutex;
-		LoadRequests			  mDispatchQueue;
-		LoadRequests			  mFullyLoadedWaitingQueue;
+		std::mutex	 mDispatchMutex;
+		LoadRequests mDispatchQueue;
+		LoadRequests mFullyLoadedWaitingQueue;
 
 
 	};
@@ -160,9 +194,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/ResourceStreamer.inl"

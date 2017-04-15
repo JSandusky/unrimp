@@ -44,6 +44,15 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	inline void ShaderBlueprintResourceManager::update()
+	{
+		// Nothing here
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

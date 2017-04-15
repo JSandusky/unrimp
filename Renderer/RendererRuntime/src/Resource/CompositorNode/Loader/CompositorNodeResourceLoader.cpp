@@ -157,6 +157,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	void CompositorNodeResourceLoader::initialize(const Asset& asset, IResource& resource)
+	{
+		IResourceLoader::initialize(asset);
+		mCompositorNodeResource = static_cast<CompositorNodeResource*>(&resource);
+	}
+
 	void CompositorNodeResourceLoader::onDeserialization(IFile& file)
 	{
 		// Read in the file format header

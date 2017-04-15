@@ -62,12 +62,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void CompositorNodeResourceLoader::initialize(const Asset& asset, CompositorNodeResource& compositorNodeResource)
-	{
-		IResourceLoader::initialize(asset);
-		mCompositorNodeResource = &compositorNodeResource;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

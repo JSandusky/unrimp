@@ -150,18 +150,13 @@ namespace RendererRuntime
 		return mInternalResourceManager->reloadResourceByAssetId(assetId);
 	}
 
-	void MaterialResourceManager::update()
-	{
-		// TODO(co) Implement me
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	void MaterialResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	IResourceLoader* MaterialResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+		return mInternalResourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
 	}
 
 

@@ -66,14 +66,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MaterialBlueprintResourceLoader : protected IResourceLoader
+	class MaterialBlueprintResourceLoader : public IResourceLoader
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class MaterialBlueprintResourceManager;
 		friend ResourceManagerTemplate<MaterialBlueprintResource, MaterialBlueprintResourceLoader, MaterialBlueprintResourceId, 64>;	// Type definition of template class
 
 
@@ -89,6 +88,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		virtual void initialize(const Asset& asset, IResource& resource) override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
 		virtual bool onDispatch() override;
@@ -103,7 +103,6 @@ namespace RendererRuntime
 		virtual ~MaterialBlueprintResourceLoader();
 		MaterialBlueprintResourceLoader(const MaterialBlueprintResourceLoader&) = delete;
 		MaterialBlueprintResourceLoader& operator=(const MaterialBlueprintResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, MaterialBlueprintResource& materialBlueprintResource);
 
 
 	//[-------------------------------------------------------]

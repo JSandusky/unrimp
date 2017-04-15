@@ -74,18 +74,13 @@ namespace RendererRuntime
 		return mInternalResourceManager->reloadResourceByAssetId(assetId);
 	}
 
-	void CompositorWorkspaceResourceManager::update()
-	{
-		// TODO(co) Implement me
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	void CompositorWorkspaceResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	IResourceLoader* CompositorWorkspaceResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+		return mInternalResourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
 	}
 
 

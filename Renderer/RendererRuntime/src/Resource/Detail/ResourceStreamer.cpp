@@ -45,7 +45,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void ResourceStreamer::commitLoadRequest(const LoadRequest& loadRequest)
 	{
-		// Update the resource loading state
+		// The first thing we do: Update the resource loading state
 		loadRequest.resource->setLoadingState(IResource::LoadingState::LOADING);
 
 		// Push the load request into the queue of the first resource streamer pipeline stage
@@ -64,7 +64,7 @@ namespace RendererRuntime
 			{ // Process
 				{ // Resource streamer stage: 1. Asynchronous deserialization
 					std::lock_guard<std::mutex> deserializationMutexLock(mDeserializationMutex);
-					everythingFlushed = mDeserializationQueue.empty();
+					everythingFlushed = (mDeserializationQueue.empty() && 0 == mDeserializationWaitingQueueRequests);
 				}
 
 				// Resource streamer stage: 2. Asynchronous processing
@@ -78,7 +78,7 @@ namespace RendererRuntime
 				if (everythingFlushed)
 				{
 					std::lock_guard<std::mutex> dispatchMutexLock(mDispatchMutex);
-					everythingFlushed = mDispatchQueue.empty();
+					everythingFlushed = (mDispatchQueue.empty() && mFullyLoadedWaitingQueue.empty());
 				}
 			}
 			dispatch();
@@ -115,12 +115,7 @@ namespace RendererRuntime
 			if (resourceLoader->onDispatch())
 			{
 				// Load request is finished now
-
-				// Update the resource loading state
-				loadRequest.resource->setLoadingState(IResource::LoadingState::LOADED);
-
-				// Release the resource loader instance
-				resourceLoader->getResourceManager().releaseResourceLoaderInstance(*resourceLoader);
+				finalizeLoadRequest(loadRequest);
 			}
 			else
 			{
@@ -132,16 +127,10 @@ namespace RendererRuntime
 		for (LoadRequests::iterator iterator = mFullyLoadedWaitingQueue.begin(); iterator != mFullyLoadedWaitingQueue.end();)
 		{
 			const LoadRequest& loadRequest = *iterator;
-			IResourceLoader* resourceLoader = loadRequest.resourceLoader;
-			if (resourceLoader->isFullyLoaded())
+			if (loadRequest.resourceLoader->isFullyLoaded())
 			{
 				// Load request is finished now
-
-				// Update the resource loading state
-				loadRequest.resource->setLoadingState(IResource::LoadingState::LOADED);
-
-				// Release the resource loader instance
-				resourceLoader->getResourceManager().releaseResourceLoaderInstance(*resourceLoader);
+				finalizeLoadRequest(loadRequest);
 
 				// Remove from queue
 				iterator = mFullyLoadedWaitingQueue.erase(iterator);
@@ -160,6 +149,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	ResourceStreamer::ResourceStreamer(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
+		mDeserializationWaitingQueueRequests(0),
 		mShutdownDeserializationThread(false),
 		mDeserializationThread(&ResourceStreamer::deserializationThreadWorker, this),
 		mShutdownProcessingThread(false),
@@ -177,6 +167,15 @@ namespace RendererRuntime
 		mProcessingConditionVariable.notify_one();
 		mDeserializationThread.join();
 		mProcessingThread.join();
+
+		// Destroy resource loader instances
+		for (auto& resourceLoaderType : mResourceLoaderTypeManager)
+		{
+			for (IResourceLoader* resourceLoader : resourceLoaderType.second.freeResourceLoaders)
+			{
+				delete resourceLoader;
+			}
+		}
 	}
 
 	void ResourceStreamer::deserializationThreadWorker()
@@ -194,33 +193,82 @@ namespace RendererRuntime
 				// Get the load request
 				LoadRequest loadRequest = mDeserializationQueue.front();
 				mDeserializationQueue.pop_front();
-				deserializationMutexLock.unlock();
 
-				{ // Do the work
-					IFileManager& fileManager = mRendererRuntime.getFileManager();
-					IFile* file = fileManager.openFile(loadRequest.resourceLoader->getAsset().assetFilename);
-					if (nullptr != file)
+				{ // Get resource loader instance
+					std::lock_guard<std::mutex> resourceManagerMutexLock(mResourceManagerMutex);
+					const ResourceLoaderTypeId resourceLoaderTypeId = loadRequest.resourceLoaderTypeId;
+					ResourceLoaderTypeManager::iterator iterator = mResourceLoaderTypeManager.find(resourceLoaderTypeId);
+					if (mResourceLoaderTypeManager.cend() == iterator)
 					{
-						loadRequest.resourceLoader->onDeserialization(*file);
-						fileManager.closeFile(*file);
+						// The resource loader type ID is unknown, yet
+						ResourceLoaderType resourceLoaderType;
+						resourceLoaderType.numberOfInstances = 1;
+						mResourceLoaderTypeManager.emplace(resourceLoaderTypeId, resourceLoaderType);
+						loadRequest.resourceLoader = loadRequest.resource->getResourceManager().createResourceLoaderInstance(resourceLoaderTypeId);
 					}
 					else
 					{
-						// Error! This is horrible, now we've got a zombie inside the resource streamer. We could let it crash, but maybe the zombie won't directly eat brains.
-						assert(false);
+						// The resource loader type ID is already known
+
+						// First check whether or not we're able to reuse a free resource loader instance
+						ResourceLoaderType& resourceLoaderType = iterator->second;
+						ResourceLoaders& freeResourceLoaders = resourceLoaderType.freeResourceLoaders;
+						if (freeResourceLoaders.empty())
+						{
+							// In order to keep the memory consumption under control, we limit the number of simultaneous resource loader type instances
+							if (resourceLoaderType.numberOfInstances < 5)
+							{
+								loadRequest.resourceLoader = loadRequest.resource->getResourceManager().createResourceLoaderInstance(resourceLoaderTypeId);
+								assert(nullptr != loadRequest.resourceLoader);
+								++resourceLoaderType.numberOfInstances;
+							}
+							else
+							{
+								// We were unable to acquire a resource loader instance, we just have to try it later again
+								resourceLoaderType.waitingLoadRequests.push_back(loadRequest);
+								++mDeserializationWaitingQueueRequests;
+							}
+						}
+						else
+						{
+							loadRequest.resourceLoader = freeResourceLoaders.back();
+							freeResourceLoaders.pop_back();
+						}
 					}
 				}
 
-				{ // Push the load request into the queue of the next resource streamer pipeline stage
-				  // -> Resource streamer stage: 2. Asynchronous processing
-					std::unique_lock<std::mutex> processingMutexLock(mProcessingMutex);
-					mProcessingQueue.push_back(loadRequest);
-					processingMutexLock.unlock();
-					mProcessingConditionVariable.notify_one();
-				}
+				// If we've got a resource loader instance now, let's continue with the resource streaming pipeline
+				if (nullptr != loadRequest.resourceLoader)
+				{
+					deserializationMutexLock.unlock();
+					loadRequest.resourceLoader->initialize(*loadRequest.asset, *loadRequest.resource);
 
-				// We're ready for the next round
-				deserializationMutexLock.lock();
+					{ // Do the work
+						IFileManager& fileManager = mRendererRuntime.getFileManager();
+						IFile* file = fileManager.openFile(loadRequest.resourceLoader->getAsset().assetFilename);
+						if (nullptr != file)
+						{
+							loadRequest.resourceLoader->onDeserialization(*file);
+							fileManager.closeFile(*file);
+						}
+						else
+						{
+							// Error! This is horrible, now we've got a zombie inside the resource streamer. We could let it crash, but maybe the zombie won't directly eat brains.
+							assert(false);
+						}
+					}
+
+					{ // Push the load request into the queue of the next resource streamer pipeline stage
+					  // -> Resource streamer stage: 2. Asynchronous processing
+						std::unique_lock<std::mutex> processingMutexLock(mProcessingMutex);
+						mProcessingQueue.push_back(loadRequest);
+						processingMutexLock.unlock();
+						mProcessingConditionVariable.notify_one();
+					}
+
+					// We're ready for the next round
+					deserializationMutexLock.lock();
+				}
 			}
 		}
 	}
@@ -255,6 +303,45 @@ namespace RendererRuntime
 				processingMutexLock.lock();
 			}
 		}
+	}
+
+	void ResourceStreamer::finalizeLoadRequest(const LoadRequest& loadRequest)
+	{
+		{ // Release the resource loader instance
+			std::unique_lock<std::mutex> resourceManagerMutexLock(mResourceManagerMutex);
+			ResourceLoaderTypeManager::iterator iterator = mResourceLoaderTypeManager.find(loadRequest.resourceLoaderTypeId);
+			if (mResourceLoaderTypeManager.cend() != iterator)
+			{
+				// The resource loader instance is free now and ready to be reused
+				iterator->second.freeResourceLoaders.push_back(loadRequest.resourceLoader);
+
+				// Check whether or not another resource streamer load request is already waiting for the just released resource loader instance
+				LoadRequests& waitingLoadRequests = iterator->second.waitingLoadRequests;
+				if (!waitingLoadRequests.empty())
+				{
+					// Get the waiting resource streamer load request and immediately release our resource manager mutex
+					LoadRequest waitingLoadRequest = waitingLoadRequests.front();
+					waitingLoadRequests.pop_front();
+					assert(0 != mDeserializationWaitingQueueRequests);
+					--mDeserializationWaitingQueueRequests;
+					resourceManagerMutexLock.unlock();
+
+					// Throw the fish back into the ocean
+					std::unique_lock<std::mutex> deserializationMutexLock(mDeserializationMutex);
+					mDeserializationQueue.push_back(waitingLoadRequest);
+					deserializationMutexLock.unlock();
+					mDeserializationConditionVariable.notify_one();
+				}
+			}
+			else
+			{
+				// Error! This shouldn't be possible if we're in here
+				assert(false);
+			}
+		}
+
+		// The last thing we do: Update the resource loading state
+		loadRequest.resource->setLoadingState(IResource::LoadingState::LOADED);
 	}
 
 

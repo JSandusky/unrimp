@@ -34,16 +34,6 @@ namespace RendererRuntime
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline void MeshResourceLoader::initialize(const Asset& asset, MeshResource& meshResource)
-	{
-		IResourceLoader::initialize(asset);
-		mMeshResource = &meshResource;
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

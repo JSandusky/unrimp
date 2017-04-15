@@ -72,16 +72,6 @@ namespace RendererRuntime
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline void ITextureResourceLoader::initialize(const Asset& asset, TextureResource& textureResource)
-	{
-		IResourceLoader::initialize(asset);
-		mTextureResource = &textureResource;
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

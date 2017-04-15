@@ -357,9 +357,6 @@
     <None Include="include\RendererRuntime\Resource\Detail\IResourceManager.inl">
       <Filter>Source Files\Resource\Detail</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl">
-      <Filter>Source Files\Resource\Detail</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Detail\IResource.inl">
       <Filter>Source Files\Resource\Detail</Filter>
     </None>
@@ -565,9 +562,6 @@
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.inl">
-      <Filter>Source Files\Resource\Detail</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.inl">
       <Filter>Source Files\Resource\Detail</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManager.inl">
@@ -1119,9 +1113,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.h">
       <Filter>Source Files\Resource\Detail</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.h">
-      <Filter>Source Files\Resource\Detail</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManager.h">
       <Filter>Source Files\Resource\Detail</Filter>
     </ClInclude>
@@ -1498,9 +1489,6 @@
     </ClCompile>
     <ClCompile Include="src\DebugGui\DebugGuiHelper.cpp">
       <Filter>Source Files\DebugGui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Detail\ResourceManagerTemplateBase.cpp">
-      <Filter>Source Files\Resource\Detail</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Texture\Loader\ITextureResourceLoader.cpp">
       <Filter>Source Files\Resource\Texture\Loader</Filter>

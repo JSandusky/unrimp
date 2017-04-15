@@ -100,15 +100,8 @@ namespace RendererRuntime
 		// Load the resource, if required
 		if (load)
 		{
-			// Prepare the resource loader
-			MaterialBlueprintResourceLoader* materialBlueprintResourceLoader = static_cast<MaterialBlueprintResourceLoader*>(mInternalResourceManager->acquireResourceLoaderInstance(MaterialBlueprintResourceLoader::TYPE_ID));
-			materialBlueprintResourceLoader->initialize(*asset, *materialBlueprintResource);
-
 			// Commit resource streamer asset load request
-			ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-			resourceStreamerLoadRequest.resource = materialBlueprintResource;
-			resourceStreamerLoadRequest.resourceLoader = materialBlueprintResourceLoader;
-			mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, MaterialBlueprintResourceLoader::TYPE_ID, *materialBlueprintResource));
 
 			// TODO(co) Currently material blueprint resource loading is a blocking process.
 			//          Later on, we can probably just write "mInternalResourceManager->loadResourceByAssetId(assetId, meshResourceId, resourceListener, reload);" and be done in this method.
@@ -201,9 +194,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	void MaterialBlueprintResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	IResourceLoader* MaterialBlueprintResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+		return mInternalResourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
 	}
 
 

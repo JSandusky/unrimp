@@ -58,6 +58,15 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	inline void CompositorNodeResourceManager::update()
+	{
+		// Nothing here
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

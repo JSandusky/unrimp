@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/ResourceManagerTemplateBase.h"
+#include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/PackedElementManager.h"
 
 
@@ -36,6 +36,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IResourceManager;
+	class IRendererRuntime;
 	class IResourceListener;
 }
 
@@ -50,7 +52,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef StringId ResourceLoaderTypeId;	///< Resource loader type identifier, internally just a POD "uint32_t", usually created by hashing the file format extension (if the resource loader is processing file data in the first place)
 
 
 	//[-------------------------------------------------------]
@@ -61,7 +64,7 @@ namespace RendererRuntime
 	*    Internal resource manager template; not public used to keep template instantiation overhead under control
 	*/
 	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
-	class ResourceManagerTemplate : public ResourceManagerTemplateBase
+	class ResourceManagerTemplate : private Manager
 	{
 
 
@@ -78,7 +81,9 @@ namespace RendererRuntime
 	public:
 		inline ResourceManagerTemplate(IRendererRuntime& rendererRuntimem, IResourceManager& resourceManager);
 		inline ~ResourceManagerTemplate();
-		inline LOADER_TYPE* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
+		inline IRendererRuntime& getRendererRuntime() const;
+		inline IResourceManager& getResourceManager() const;
+		inline LOADER_TYPE* createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 		inline TYPE* getResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
 		inline TYPE& createEmptyResourceByAssetId(AssetId assetId);	// Resource is not allowed to exist, yet
 		inline void loadResourceByAssetId(AssetId assetId, ID_TYPE& resourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
@@ -98,7 +103,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Resources mResources;
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		IResourceManager& mResourceManager;
+		Resources		  mResources;
 
 
 	};

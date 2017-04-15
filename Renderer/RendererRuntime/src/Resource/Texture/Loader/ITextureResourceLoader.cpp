@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Texture/Loader/ITextureResourceLoader.h"
+#include "RendererRuntime/Resource/Texture/TextureResource.h"
 
 
 //[-------------------------------------------------------]
@@ -36,6 +37,16 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	const ResourceLoaderTypeId ITextureResourceLoader::TYPE_ID("invalid_abstract_type");
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	void ITextureResourceLoader::initialize(const Asset& asset, IResource& resource)
+	{
+		IResourceLoader::initialize(asset);
+		mTextureResource = static_cast<TextureResource*>(&resource);
+	}
 
 
 //[-------------------------------------------------------]

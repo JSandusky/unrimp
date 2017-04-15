@@ -49,7 +49,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class KtxTextureResourceLoader : protected ITextureResourceLoader
+	class KtxTextureResourceLoader : public ITextureResourceLoader
 	{
 
 

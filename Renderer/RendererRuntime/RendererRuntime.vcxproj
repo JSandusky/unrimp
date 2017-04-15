@@ -96,8 +96,6 @@
     <None Include="include\RendererRuntime\Resource\Detail\IResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.inl" />
-    <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.inl" />
-    <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialBufferSlot.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassBufferManager.inl" />
@@ -262,7 +260,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplateBase.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceBufferManager.h" />
@@ -571,7 +568,6 @@
     <ClCompile Include="src\Resource\CompositorWorkspace\CompositorWorkspaceResourceManager.cpp" />
     <ClCompile Include="src\Resource\CompositorWorkspace\Loader\CompositorWorkspaceResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Detail\IResource.cpp" />
-    <ClCompile Include="src\Resource\Detail\ResourceManagerTemplateBase.cpp" />
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp" />
     <ClCompile Include="src\Resource\IResourceListener.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\InstanceBufferManager.cpp" />

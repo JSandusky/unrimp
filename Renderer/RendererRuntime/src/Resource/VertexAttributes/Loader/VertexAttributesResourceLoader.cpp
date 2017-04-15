@@ -38,12 +38,18 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const ResourceLoaderTypeId VertexAttributesResourceLoader::TYPE_ID("skeleton_animation");
+	const ResourceLoaderTypeId VertexAttributesResourceLoader::TYPE_ID("vertex_attributes");
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	void VertexAttributesResourceLoader::initialize(const Asset& asset, IResource& resource)
+	{
+		IResourceLoader::initialize(asset);
+		mVertexAttributesResource = static_cast<VertexAttributesResource*>(&resource);
+	}
+
 	void VertexAttributesResourceLoader::onDeserialization(IFile& file)
 	{
 		// Read in the file format header

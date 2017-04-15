@@ -27,7 +27,6 @@
 #include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
-#include "RendererRuntime/Resource/Detail/ResourceManagerTemplateBase.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -103,15 +102,8 @@ namespace RendererRuntime
 			// Load the resource, if required
 			if (load)
 			{
-				// Prepare the resource loader
-				SceneResourceLoader* sceneResourceLoader = static_cast<SceneResourceLoader*>(acquireResourceLoaderInstance(SceneResourceLoader::TYPE_ID));
-				sceneResourceLoader->initialize(*asset, *sceneResource);
-
 				// Commit resource streamer asset load request
-				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-				resourceStreamerLoadRequest.resource = sceneResource;
-				resourceStreamerLoadRequest.resourceLoader = sceneResourceLoader;
-				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+				mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, SceneResourceLoader::TYPE_ID, *sceneResource));
 			}
 
 			// TODO(co) No raw pointers in here
@@ -187,18 +179,16 @@ namespace RendererRuntime
 		}
 	}
 
-	void SceneResourceManager::update()
-	{
-		// TODO(co) Implement me
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	void SceneResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	IResourceLoader* SceneResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mResourceManagerTemplateBase->releaseResourceLoaderInstance(resourceLoader);
+		// We only support our own scene format
+		assert(resourceLoaderTypeId == SceneResourceLoader::TYPE_ID);
+		std::ignore = resourceLoaderTypeId;
+		return new SceneResourceLoader(*this, mRendererRuntime);
 	}
 
 
@@ -209,30 +199,7 @@ namespace RendererRuntime
 		mRendererRuntime(rendererRuntime),
 		mSceneFactory(&::detail::defaultSceneFactory)
 	{
-		mResourceManagerTemplateBase = new ResourceManagerTemplateBase(rendererRuntime, *this);
-	}
-
-	SceneResourceManager::~SceneResourceManager()
-	{
-		delete mResourceManagerTemplateBase;
-	}
-
-	IResourceLoader* SceneResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
-	{
-		// Can we recycle an already existing resource loader instance?
-		IResourceLoader* resourceLoader = mResourceManagerTemplateBase->acquireResourceLoaderInstance(resourceLoaderTypeId);
-
-		// We need to create a new resource loader instance
-		if (nullptr == resourceLoader)
-		{
-			// We only support our own scene format
-			assert(resourceLoaderTypeId == SceneResourceLoader::TYPE_ID);
-			resourceLoader = new SceneResourceLoader(*this, mRendererRuntime);
-			mResourceManagerTemplateBase->getUsedResourceLoaderInstances().push_back(resourceLoader);
-		}
-
-		// Done
-		return resourceLoader;
+		// Nothing here
 	}
 
 

@@ -62,12 +62,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void SceneResourceLoader::initialize(const Asset& asset, ISceneResource& sceneResource)
-	{
-		IResourceLoader::initialize(asset);
-		mSceneResource	= &sceneResource;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

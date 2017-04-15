@@ -62,12 +62,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void SkeletonAnimationResourceLoader::initialize(const Asset& asset, SkeletonAnimationResource& skeletonAnimationResource)
-	{
-		IResourceLoader::initialize(asset);
-		mSkeletonAnimationResource = &skeletonAnimationResource;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -55,7 +55,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneResourceLoader : protected IResourceLoader
+	class SceneResourceLoader : public IResourceLoader
 	{
 
 
@@ -77,6 +77,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		virtual void initialize(const Asset& asset, IResource& resource) override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
 		inline virtual bool onDispatch() override;
@@ -91,7 +92,6 @@ namespace RendererRuntime
 		inline virtual ~SceneResourceLoader();
 		SceneResourceLoader(const SceneResourceLoader&) = delete;
 		SceneResourceLoader& operator=(const SceneResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, ISceneResource& sceneResource);
 
 
 	//[-------------------------------------------------------]

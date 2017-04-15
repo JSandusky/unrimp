@@ -49,6 +49,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	void MeshResourceLoader::initialize(const Asset& asset, IResource& resource)
+	{
+		IResourceLoader::initialize(asset);
+		mMeshResource = static_cast<MeshResource*>(&resource);
+	}
+
 	void MeshResourceLoader::onDeserialization(IFile& file)
 	{
 		// Read in the file format header

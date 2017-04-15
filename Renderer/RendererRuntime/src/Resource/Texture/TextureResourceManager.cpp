@@ -139,7 +139,7 @@ namespace RendererRuntime
 			{
 				const TextureResource& textureResource = mInternalResourceManager->getResources().getElementByIndex(i);
 				const AssetId assetId = textureResource.getAssetId();
-				if (nullptr != assetManager.getAssetByAssetId(assetId))
+				if (nullptr != assetManager.getAssetByAssetId(assetId) && textureResource.getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
 				{
 					TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
 					loadTextureResourceByAssetId(assetId, getUninitialized<AssetId>(), textureResourceId, nullptr, textureResource.isRgbHardwareGammaCorrection(), true);
@@ -193,46 +193,38 @@ namespace RendererRuntime
 			const char* filenameExtension = strrchr(&asset->assetFilename[0], '.');
 			if (nullptr != filenameExtension)
 			{
-				ITextureResourceLoader* textureResourceLoader = static_cast<ITextureResourceLoader*>(acquireResourceLoaderInstance(StringId(filenameExtension + 1)));
-				if (nullptr != textureResourceLoader)
+				// Commit resource streamer asset load request
+				rendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, StringId(filenameExtension + 1), *textureResource));
+
+				// Since it might take a moment to load the texture resource, we'll use a fallback placeholder renderer texture resource so we don't have to wait until the real thing is there
+				// -> In case there's already a renderer texture, keep that as long as possible (for example there might be a change in the number of top mipmaps to remove)
+				if (nullptr == textureResource->mTexture)
 				{
-					textureResourceLoader->initialize(*asset, *textureResource);
-
-					// Commit resource streamer asset load request
-					ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-					resourceStreamerLoadRequest.resource = textureResource;
-					resourceStreamerLoadRequest.resourceLoader = textureResourceLoader;
-					rendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-
-					// Since it might take a moment to load the texture resource, we'll use a fallback placeholder renderer texture resource so we don't have to wait until the real thing is there
-					// -> In case there's already a renderer texture, keep that as long as possible (for example there might be a change in the number of top mipmaps to remove)
-					if (nullptr == textureResource->mTexture)
+					if (isInitialized(fallbackTextureAssetId))
 					{
-						if (isInitialized(fallbackTextureAssetId))
+						const TextureResource* fallbackTextureResource = getTextureResourceByAssetId(fallbackTextureAssetId);
+						if (nullptr != fallbackTextureResource)
 						{
-							const TextureResource* fallbackTextureResource = getTextureResourceByAssetId(fallbackTextureAssetId);
-							if (nullptr != fallbackTextureResource)
-							{
-								textureResource->mTexture = fallbackTextureResource->getTexture();
-								textureResource->setLoadingState(IResource::LoadingState::LOADED);
-							}
-							else
-							{
-								// Error! Fallback texture asset ID not found.
-								assert(false);
-							}
+							textureResource->mTexture = fallbackTextureResource->getTexture();
+							textureResource->setLoadingState(IResource::LoadingState::LOADED);
 						}
 						else
 						{
-							// Hiccups / lags warning: There should always be a fallback texture asset ID (better be safe than sorry)
+							// Error! Fallback texture asset ID not found.
 							assert(false);
 						}
+					}
+					else
+					{
+						// Hiccups / lags warning: There should always be a fallback texture asset ID (better be safe than sorry)
+						assert(false);
 					}
 				}
 			}
 			else
 			{
-				// TODO(co) Error handling
+				// Error! We should never ever be able to be in here, it's the renderer toolkit responsible to ensure the renderer runtime only works with sane data.
+				assert(false);
 			}
 		}
 	}
@@ -299,18 +291,30 @@ namespace RendererRuntime
 		}
 	}
 
-	void TextureResourceManager::update()
-	{
-		// TODO(co) Implement me
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	void TextureResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	IResourceLoader* TextureResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->releaseResourceLoaderInstance(resourceLoader);
+		if (resourceLoaderTypeId == CrnTextureResourceLoader::TYPE_ID)
+		{
+			return new CrnTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
+		}
+		else if (resourceLoaderTypeId == KtxTextureResourceLoader::TYPE_ID)
+		{
+			return new KtxTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
+		}
+		else if (resourceLoaderTypeId == DdsTextureResourceLoader::TYPE_ID)
+		{
+			return new DdsTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
+		}
+		else
+		{
+			// TODO(co) Error handling
+			assert(false);
+			return nullptr;
+		}
 	}
 
 
@@ -327,41 +331,6 @@ namespace RendererRuntime
 	TextureResourceManager::~TextureResourceManager()
 	{
 		delete mInternalResourceManager;
-	}
-
-	IResourceLoader* TextureResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
-	{
-		// Can we recycle an already existing resource loader instance?
-		IResourceLoader* resourceLoader = static_cast<ResourceManagerTemplateBase*>(mInternalResourceManager)->acquireResourceLoaderInstance(resourceLoaderTypeId);
-
-		// We need to create a new resource loader instance
-		if (nullptr == resourceLoader)
-		{
-			if (resourceLoaderTypeId == CrnTextureResourceLoader::TYPE_ID)
-			{
-				resourceLoader = new CrnTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
-			}
-			else if (resourceLoaderTypeId == KtxTextureResourceLoader::TYPE_ID)
-			{
-				resourceLoader = new KtxTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
-			}
-			else if (resourceLoaderTypeId == DdsTextureResourceLoader::TYPE_ID)
-			{
-				resourceLoader = new DdsTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
-			}
-			else
-			{
-				// TODO(co) Error handling
-				assert(false);
-			}
-			if (nullptr != resourceLoader)
-			{
-				mInternalResourceManager->getUsedResourceLoaderInstances().push_back(resourceLoader);
-			}
-		}
-
-		// Done
-		return resourceLoader;
 	}
 
 

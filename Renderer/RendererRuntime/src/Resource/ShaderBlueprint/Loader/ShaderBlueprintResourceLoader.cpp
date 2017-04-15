@@ -51,6 +51,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	void ShaderBlueprintResourceLoader::initialize(const Asset& asset, IResource& resource)
+	{
+		IResourceLoader::initialize(asset);
+		mShaderBlueprintResource = static_cast<ShaderBlueprintResource*>(&resource);
+	}
+
 	void ShaderBlueprintResourceLoader::onDeserialization(IFile& file)
 	{
 		// Read in the file format header
