@@ -16,7 +16,6 @@
 		},
 		"Properties":
 		{
-			"Lighting": "TRUE",
 			"DiffuseColor": "1.0 1.0 1.0",
 			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "4",

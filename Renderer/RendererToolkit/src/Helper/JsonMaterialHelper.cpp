@@ -478,14 +478,15 @@ namespace RendererToolkit
 
 			// Figure out the material property value type by using the material blueprint
 			RendererRuntime::MaterialProperties::SortedPropertyVector::iterator iterator = std::lower_bound(sortedMaterialPropertyVector.begin(), sortedMaterialPropertyVector.end(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
-			if (iterator != sortedMaterialPropertyVector.end())
+			if (iterator != sortedMaterialPropertyVector.end() && (*iterator).getMaterialPropertyId() == materialPropertyId)
 			{
+				// Set the material own property value
 				RendererRuntime::MaterialProperty& materialProperty = *iterator;
-				if (materialProperty.getMaterialPropertyId() == materialPropertyId)
-				{
-					// Set the material own property value
-					static_cast<RendererRuntime::MaterialPropertyValue&>(materialProperty) = JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(input, rapidJsonValueProperties, propertyName, materialProperty.getValueType());
-				}
+				static_cast<RendererRuntime::MaterialPropertyValue&>(materialProperty) = JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(input, rapidJsonValueProperties, propertyName, materialProperty.getValueType());
+			}
+			else
+			{
+				throw std::runtime_error(std::string("Material property \"") + propertyName + "\" is unknown");
 			}
 		}
 	}
