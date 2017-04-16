@@ -26,6 +26,12 @@
     <Filter Include="External\lz4">
       <UniqueIdentifier>{170cc223-b6fb-426c-8a95-8c6cd0414e2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External\SQLiteCpp">
+      <UniqueIdentifier>{d933c6da-9dd2-438b-a077-5b13960187c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External\SQLiteCpp\sqlite3">
+      <UniqueIdentifier>{13666b19-45c0-44e9-9f7a-aa62cae80319}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -164,6 +170,36 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\VertexAttributesAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Exception.h">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\SQLiteCpp.h">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Statement.h">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Transaction.h">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\VariadicBind.h">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Assertion.h">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Backup.h">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Column.h">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Database.h">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\sqlite3\sqlite3.h">
+      <Filter>External\SQLiteCpp\sqlite3</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -252,6 +288,27 @@
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\VertexAttributesAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Database.cpp">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Exception.cpp">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Statement.cpp">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Transaction.cpp">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Backup.cpp">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Column.cpp">
+      <Filter>External\SQLiteCpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\sqlite3\sqlite3.c">
+      <Filter>External\SQLiteCpp\sqlite3</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
