@@ -106,7 +106,8 @@ namespace RendererToolkit
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material_blueprint";
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
-		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION))
+		CacheManager::CacheEntries cacheEntries;
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
@@ -212,6 +213,9 @@ namespace RendererToolkit
 
 			// Write LZ4 compressed output
 			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION, outputAssetFilename);
+
+			// Store new cache entries or update existing ones
+			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
 		}
 
 		{ // Update the output asset package

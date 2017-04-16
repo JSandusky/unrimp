@@ -173,7 +173,7 @@ namespace
 			return filenames;
 		}
 
-		bool checkIfChanged(const RendererToolkit::IAssetCompiler::Input& input, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, TextureSemantic textureSemantic, const std::string& inputAssetFilename, const std::string& outputAssetFilename)
+		bool checkIfChanged(const RendererToolkit::IAssetCompiler::Input& input, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, TextureSemantic textureSemantic, const std::string& inputAssetFilename, const std::string& outputAssetFilename, std::vector<RendererToolkit::CacheManager::CacheEntries>& cacheEntries)
 		{
 			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
 			{
@@ -183,10 +183,12 @@ namespace
 				bool cubeMapSourcesChanged = false;
 				for (const std::string& faceFilename : faceFilenames)
 				{
-					if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilename, outputAssetFilename, TEXTURE_FORMAT_VERSION))
+					RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
+					if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilename, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
 					{
 						// A face source file has changed, mark result as true, but go on to store also for the remaining face source files an cache entry
 						cubeMapSourcesChanged = true;
+						cacheEntries.push_back(cacheEntriesCandidate);
 					}
 				}
 				return cubeMapSourcesChanged;
@@ -194,7 +196,16 @@ namespace
 			else
 			{
 				// Asset has single source file
-				return input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputAssetFilename, outputAssetFilename, TEXTURE_FORMAT_VERSION);
+				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
+				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputAssetFilename, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
+				{
+					// Changed
+					cacheEntries.push_back(cacheEntriesCandidate);
+					return true;
+				}
+
+				// Not changed
+				return false;
 			}
 		}
 
@@ -621,7 +632,8 @@ namespace RendererToolkit
 		}
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
-		if (::detail::checkIfChanged(input, configuration, rapidJsonValueTextureAssetCompiler, textureSemantic, inputAssetFilename, outputAssetFilename))
+		std::vector<CacheManager::CacheEntries> cacheEntries;
+		if (::detail::checkIfChanged(input, configuration, rapidJsonValueTextureAssetCompiler, textureSemantic, inputAssetFilename, outputAssetFilename, cacheEntries))
 		{
 			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
 			{
@@ -630,6 +642,12 @@ namespace RendererToolkit
 			else
 			{
 				detail::convertFile(configuration, rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), outputAssetFilename.c_str(), crunchOutputTextureFileType, textureSemantic, createMipmaps, mipmapBlurriness);
+			}
+
+			// Store new cache entries or update existing ones
+			for (const CacheManager::CacheEntries& currentCacheEntries : cacheEntries)
+			{
+				input.cacheManager.storeOrUpdateCacheEntriesInDatabase(currentCacheEntries);
 			}
 		}
 

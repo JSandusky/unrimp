@@ -104,7 +104,8 @@ namespace RendererToolkit
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		// TODO(co) Cache check disabled until we have implemented the stuff in here
-	//	if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1VertexAttributes::FORMAT_VERSION))
+		// CacheManager::CacheEntries cacheEntries;
+	//	if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1VertexAttributes::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
@@ -125,6 +126,10 @@ namespace RendererToolkit
 
 			// Write LZ4 compressed output
 			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1VertexAttributes::FORMAT_TYPE, RendererRuntime::v1VertexAttributes::FORMAT_VERSION, outputAssetFilename);
+
+			// TODO(co) Cache check disabled until we have implemented the stuff in here
+			// Store new cache entries or update existing ones
+			// input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
 		}
 
 		{ // Update the output asset package

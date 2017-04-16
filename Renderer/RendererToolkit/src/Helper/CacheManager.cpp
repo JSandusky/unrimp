@@ -155,7 +155,7 @@ namespace RendererToolkit
 		// Nothing here, only needed to support unique_ptr with forward declared classes
 	}
 
-	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t compilerVersion)
+	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t compilerVersion, CacheEntries& cacheEntries)
 	{
 		// Create "std::filesystem::path" object from the give file paths
 		const std_filesystem::path sourceFilePath(sourceFile);
@@ -169,10 +169,10 @@ namespace RendererToolkit
 		{
 			// Source exists
 			// -> Check if source has changed
-			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile, compilerVersion);
+			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, cacheEntries.cacheEntry);
 
 			// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
-			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION);
+			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION, cacheEntries.assetCacheEntry);
 
 			// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
 			return (fileChanged || assetFileChanged || !destinationExists);
@@ -182,6 +182,12 @@ namespace RendererToolkit
 			// Source could not be found, nothing to do
 			return false;
 		}
+	}
+
+	void CacheManager::storeOrUpdateCacheEntriesInDatabase(const CacheEntries& cacheEntries)
+	{
+		storeOrUpdateCacheEntryInDatabase(cacheEntries.cacheEntry);
+		storeOrUpdateCacheEntryInDatabase(cacheEntries.assetCacheEntry);
 	}
 
 
@@ -276,7 +282,7 @@ namespace RendererToolkit
 		return false;
 	}
 
-	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t compilerVersion)
+	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t compilerVersion, CacheEntry& cacheEntry)
 	{
 		if (mDatabaseConnection)
 		{
@@ -298,15 +304,14 @@ namespace RendererToolkit
 
 			// Get cache entry data if an entry exists
 			RendererRuntime::StringId fileId(filename.c_str());
-			CacheEntry localCacheEntry;
-			const bool hasFileEntry = fillEntryForFile(rendererTarget, fileId, localCacheEntry);
+			const bool hasFileEntry = fillEntryForFile(rendererTarget, fileId, cacheEntry);
 			try
 			{
 				if (hasFileEntry)
 				{
 					#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
 						// First and faster step: check file size and file time as well as the compiler version (needed so that we also detect compiler version changes here too)
-						if (localCacheEntry.fileSize == fileSize && localCacheEntry.fileTime == fileTime && localCacheEntry.compilerVersion == compilerVersion)
+						if (cacheEntry.fileSize == fileSize && cacheEntry.fileTime == fileTime && cacheEntry.compilerVersion == compilerVersion)
 						{
 							// Source file didn't changed
 							return false;
@@ -317,14 +322,15 @@ namespace RendererToolkit
 						// Current file differs in file size and/or file time do the second step:
 						// Check the compiler version and the sha256 hash
 						const std::string fileHash = ::detail::hash256_file(filename);
-						if (localCacheEntry.fileHash == fileHash && localCacheEntry.compilerVersion == compilerVersion)
+						if (cacheEntry.fileHash == fileHash && cacheEntry.compilerVersion == compilerVersion)
 						{
 							#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
 								// Hash of the file and compiler version didn't changed but store the changed fileSize/fileTime
-								localCacheEntry.fileSize = fileSize;
-								localCacheEntry.fileTime = fileTime;
-								localCacheEntry.compilerVersion = compilerVersion;
-								storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
+								cacheEntry.isNewEntry	   = false;
+								cacheEntry.fileSize		   = fileSize;
+								cacheEntry.fileTime		   = fileTime;
+								cacheEntry.compilerVersion = compilerVersion;
+								storeOrUpdateCacheEntryInDatabase(cacheEntry);
 							#endif
 
 							// Source file didn't changed
@@ -332,27 +338,24 @@ namespace RendererToolkit
 						}
 						else
 						{
-							localCacheEntry.fileSize = fileSize;
-							localCacheEntry.fileTime = fileTime;
-							localCacheEntry.fileHash = fileHash;
-							localCacheEntry.compilerVersion = compilerVersion;
-
-							// Source file and/or compiler version has changed, store the new data
-							storeOrUpdateCacheEntryInDatabase(localCacheEntry, false);
+							cacheEntry.isNewEntry	   = false;
+							cacheEntry.fileSize		   = fileSize;
+							cacheEntry.fileTime		   = fileTime;
+							cacheEntry.fileHash		   = fileHash;
+							cacheEntry.compilerVersion = compilerVersion;
 						}
 					}
 				}
 				else
 				{
 					// No cache entry exists yet: Store the data
-					localCacheEntry.rendererTarget = rendererTarget;
-					localCacheEntry.fileId = fileId;
-					localCacheEntry.fileSize = fileSize;
-					localCacheEntry.fileTime = fileTime;
-					localCacheEntry.fileHash = ::detail::hash256_file(filename);
-					localCacheEntry.compilerVersion = compilerVersion;
-
-					storeOrUpdateCacheEntryInDatabase(localCacheEntry, true);
+					cacheEntry.isNewEntry	   = true;
+					cacheEntry.rendererTarget  = rendererTarget;
+					cacheEntry.fileId		   = fileId;
+					cacheEntry.fileSize		   = fileSize;
+					cacheEntry.fileTime		   = fileTime;
+					cacheEntry.fileHash		   = ::detail::hash256_file(filename);
+					cacheEntry.compilerVersion = compilerVersion;
 				}
 			}
 			catch (const std::exception& e)
@@ -365,10 +368,10 @@ namespace RendererToolkit
 		return true;
 	}
 	
-	void CacheManager::storeOrUpdateCacheEntryInDatabase(const CacheEntry& cacheEntry, bool isNewEntry)
+	void CacheManager::storeOrUpdateCacheEntryInDatabase(const CacheEntry& cacheEntry)
 	{
 		// This method should only be called when a database connection exists so no need to do a check here
-		if (isNewEntry)
+		if (cacheEntry.isNewEntry)
 		{
 			// No entry in the cache: Store it
 			SQLite::Statement query(*mDatabaseConnection.get(), "INSERT INTO FileInfo VALUES(?, ?, ?, ?, ?, ?)");
@@ -409,25 +412,20 @@ namespace RendererToolkit
 		SQLite::Statement query(*mDatabaseConnection.get(), "SELECT schemaVersion FROM VersionInfo");
 
 		// Execute statement and check if we got a result
-		if (query.executeStep())
-		{
-			return static_cast<uint32_t>(query.getColumn(0).getUInt());
-		}
-		return 0;
+		return query.executeStep() ? static_cast<uint32_t>(query.getColumn(0).getUInt()) : 0;
 	}
 
 	void CacheManager::updateDatabaseDueSchemaChange(uint32_t oldSchemaVersion)
 	{
 		SQLite::Transaction transaction(*mDatabaseConnection.get());
-		if (oldSchemaVersion == 0)
+		if (0 == oldSchemaVersion)
 		{
-			// Pre VersionInfo table
-			// Add compilerVersion to the FileInfo table
+			// Pre "VersionInfo"-table: Add "compilerVersion" to the "FileInfo"-table
 			mDatabaseConnection->exec("ALTER TABLE FileInfo ADD compilerVersion integer DEFAULT 0 NOT NULL");
 		}
 
 		// Update schema version in database
-		// We can use here a update statement even when the oldSchemaVersion = 0 (VersionInfo table doesn't exists already) because in this case the table was created before this method is called
+		// -> We can use here a update statement even when the "oldSchemaVersion = 0" ("VersionInfo"-table doesn't exists already) because in this case the table was created before this method is called
 		SQLite::Statement query(*mDatabaseConnection.get(), "UPDATE VersionInfo  SET schemaVersion = ?");
 		query.bind(1, detail::DATABASE_SCHEMA_VERSION);
 		query.exec();
@@ -440,7 +438,7 @@ namespace RendererToolkit
 	{
 		// A newly created database has a schema_version of zero (http://www.sqlite.org/pragma.html#pragma_schema_version)
 		const int64_t sqlite_schema_version = mDatabaseConnection->execAndGet("PRAGMA schema_version").getInt64();
-		return sqlite_schema_version == 0;
+		return (0 == sqlite_schema_version);
 	}
 
 

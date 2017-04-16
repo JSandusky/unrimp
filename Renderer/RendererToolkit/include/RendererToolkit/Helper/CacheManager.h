@@ -77,6 +77,36 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		struct CacheEntry
+		{
+			bool					  isNewEntry;		///< Indicates of the given cache entry data should be inserted instead of updating an existing one
+			RendererRuntime::StringId fileId;			///< ID of the file (string hash of the filename)
+			std::string				  rendererTarget;	///< The renderer target
+			std::string				  fileHash;			///< The sha256 hash of the file content (as hex string)
+			int64_t					  fileSize;			///< The file size; SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
+			int64_t					  fileTime;			///< The file time (last write time); SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
+			uint32_t				  compilerVersion;	///< Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
+
+			CacheEntry() :
+				isNewEntry(false),
+				fileSize(0),
+				fileTime(0),
+				compilerVersion(0)
+			{}
+
+		};
+
+		struct CacheEntries
+		{
+			CacheEntry cacheEntry;
+			CacheEntry assetCacheEntry;
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -112,33 +142,22 @@ namespace RendererToolkit
 		*    The destination file of the asset which contains the compiled data of the source
 		*  @param[in] compilerVersion
 		*    Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
+		*  @param[out] cacheEntries
+		*    Receives information about the cache entries; to be passed into "RendererToolkit::CacheManager::storeOrUpdateCacheEntriesInDatabase()"
 		*
 		*  @return
 		*    True if the file needs to be compiled (aka source changed, destination doesn't exists or is yet unknown file) otherwise false
 		*/
-		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t compilerVersion);
+		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t compilerVersion, CacheEntries& cacheEntries);
 
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		struct CacheEntry
-		{
-			RendererRuntime::StringId fileId;			///< ID of the file (string hash of the filename)
-			std::string				  rendererTarget;	///< The renderer target
-			std::string				  fileHash;			///< The sha256 hash of the file content (as hex string)
-			int64_t					  fileSize;			///< The file size; SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
-			int64_t					  fileTime;			///< The file time (last write time); SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
-			uint32_t				  compilerVersion;	///< Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
-
-			CacheEntry() :
-				fileSize(0),
-				fileTime(0),
-				compilerVersion(0)
-			{}
-
-		};
+		/**
+		*  @brief
+		*    Store new cache entries or update existing ones
+		*
+		*  @param[in] cacheEntries
+		*    The cache entries data to store / update
+		*/
+		void storeOrUpdateCacheEntriesInDatabase(const CacheEntries& cacheEntries);
 
 
 	//[-------------------------------------------------------]
@@ -184,6 +203,8 @@ namespace RendererToolkit
 		*    The filename to check
 		*  @param[in] compilerVersion
 		*    Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
+		*  @param[out] cacheEntry
+		*    Receives the cache entry
 		*
 		*  @return
 		*    True if the file has changed otherwise false (aka the stored hash doesn't equals to the current one or file not yet known)
@@ -191,7 +212,7 @@ namespace RendererToolkit
 		*  @note
 		*    - When a change was detected the an cache entry is stored/updated
 		*/
-		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t compilerVersion);
+		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t compilerVersion, CacheEntry& cacheEntry);
 
 		/**
 		*  @brief
@@ -199,10 +220,8 @@ namespace RendererToolkit
 		*
 		*  @param[in] cacheEntry
 		*    The cache entry data to store / update
-		*  @param[in] isNewEntry
-		*    Indicates of the given cache entry data should be inserted instead of updating an existing one
 		*/
-		void storeOrUpdateCacheEntryInDatabase(const CacheEntry& cacheEntry, bool isNewEntry);
+		void storeOrUpdateCacheEntryInDatabase(const CacheEntry& cacheEntry);
 
 		uint32_t getSchemaVersionOfDatabase() const;
 		void updateDatabaseDueSchemaChange(uint32_t oldSchemaVersion);

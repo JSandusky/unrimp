@@ -99,11 +99,15 @@ namespace RendererToolkit
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".skeleton";
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
-		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Skeleton::FORMAT_VERSION))
+		CacheManager::CacheEntries cacheEntries;
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Skeleton::FORMAT_VERSION, cacheEntries))
 		{
 			// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
+
+			// Store new cache entries or update existing ones
+			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
 		}
 
 		{ // Update the output asset package
