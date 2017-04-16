@@ -24,7 +24,9 @@ Renderer runtime.
 
 == Dependencies ==
 - GLM (header only library)
+- lz4 (directly compiled and linked in)
 - ImGui (directly compiled and linked in)
+- ImGuizmo (directly compiled and linked in)
 - MojoShader (directly compiled and linked in)
 - OpenVR (header with dynamic runtime linking)
 - crunch (header only part of the library, doesn't depend on crn compression library)

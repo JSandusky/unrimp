@@ -325,7 +325,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -357,7 +357,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -389,7 +389,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -400,8 +400,8 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\libtiff\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_DynamicDebug\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeD.lib;zlibstatic.lib;assimp.lib;libtiff.lib;crnlibD.lib;sqlite3.lib;SQLiteCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_DynamicDebug\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeD.lib;zlibstatic.lib;assimp.lib;crnlibD.lib;sqlite3.lib;SQLiteCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -419,7 +419,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -430,8 +430,8 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\libtiff\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_DynamicDebug\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeD.lib;zlibstatic.lib;assimp.lib;libtiff.lib;crnlibD.lib;sqlite3.lib;SQLiteCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_DynamicDebug\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeD.lib;zlibstatic.lib;assimp.lib;crnlibD.lib;sqlite3.lib;SQLiteCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -451,7 +451,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -496,7 +496,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -540,7 +540,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -561,8 +561,8 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\libtiff\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_DynamicRelease\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntime.lib;zlibstatic.lib;assimp.lib;libtiff.lib;crnlib.lib;sqlite3.lib;SQLiteCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_DynamicRelease\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntime.lib;zlibstatic.lib;assimp.lib;crnlib.lib;sqlite3.lib;SQLiteCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -582,7 +582,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -602,8 +602,8 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\libtiff\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_DynamicRelease\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntime.lib;zlibstatic.lib;assimp.lib;libtiff.lib;crnlib.lib;sqlite3.lib;SQLiteCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_DynamicRelease\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntime.lib;zlibstatic.lib;assimp.lib;crnlib.lib;sqlite3.lib;SQLiteCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>

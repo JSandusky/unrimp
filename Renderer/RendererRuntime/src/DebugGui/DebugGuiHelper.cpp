@@ -61,7 +61,7 @@ namespace
 			// -> We need it on Android because GNU STL doesn't implement it, which is part of the Android NDK
 			// -> We need to support GNU STL because Qt-runtime uses Qt Android which currently only supports GNU STL as C++ runtime
 			#ifdef ANDROID
-				// We convert only an uint32 value which has a maximum value of 4294967295 -> 11 characters so with 16 we are on the safe side
+				// We convert only an "uint32_t"-value which has a maximum value of 4294967295 -> 11 characters so with 16 we are on the safe side
 				const size_t bufferSize = 16;
 				char buffer[bufferSize] = {0};
 				const int length = snprintf(buffer, bufferSize, "%u", value);

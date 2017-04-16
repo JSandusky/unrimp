@@ -41,8 +41,6 @@ PRAGMA_WARNING_PUSH
 	#include <crunch/crnlib/crn_console.h>
 PRAGMA_WARNING_POP
 
-#include <libtiff/tiffio.h>
-
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
@@ -125,7 +123,7 @@ namespace
 			}
 		}
 
-		std::string widthHeightToString(uint32 width, uint32 height)
+		std::string widthHeightToString(uint32_t width, uint32_t height)
 		{
 			return std::to_string(width) + 'x' + std::to_string(height);
 		}
@@ -220,7 +218,7 @@ namespace
 					}
 
 					// Sanity check
-					const uint32 width = source2DImage->get_width();
+					const uint32_t width = source2DImage->get_width();
 					if (width != source2DImage->get_height())
 					{
 						throw std::runtime_error("Cube map faces must have a width which is identical to the height");
@@ -342,8 +340,8 @@ namespace
 			if (dxtCompressed)
 			{
 				// Check base mipmap
-				uint32 width = crunchMipmappedTexture.get_width();
-				uint32 height = crunchMipmappedTexture.get_height();
+				uint32_t width = crunchMipmappedTexture.get_width();
+				uint32_t height = crunchMipmappedTexture.get_height();
 				if (0 != (width % 4) || 0 != (height % 4))
 				{
 					throw std::runtime_error("4x4 block size based DXT compression used, but the texture dimension " + widthHeightToString(width, height) + " is no multiple of four");
@@ -351,7 +349,7 @@ namespace
 				else if (createMipmaps)
 				{
 					// Check mipmaps and at least inform in case dynamic texture resolution scale will be limited
-					uint32 mipmap = 0;
+					uint32_t mipmap = 0;
 					while (width > 4 && height > 4)
 					{
 						// Check mipmap
@@ -487,7 +485,7 @@ namespace
 
 			// Write down the 3D destination texture
 			std::ofstream outputFileStream(destinationFilename, std::ios::binary);
-			outputFileStream.write("DDS ", sizeof(uint32));
+			outputFileStream.write("DDS ", sizeof(uint32_t));
 			outputFileStream.write(reinterpret_cast<const char*>(&ddsSurfaceDesc2), sizeof(crnlib::DDSURFACEDESC2));
 			outputFileStream.write(reinterpret_cast<const char*>(destinationData), sizeof(crnlib::color_quad_u8) * numberOfTexelsPerLayer * depth);
 

@@ -23,7 +23,9 @@ OpenGL renderer implementation.
 
 
 == Dependencies ==
-OpenGL capable graphics driver, nothing else.
+- OpenGL capable graphics driver
+- smol-v (directly compiled and linked in)
+- glslang if "OPENGLRENDERER_GLSLTOSPIRV" is set (directly compiled and linked in)
 
 
 == Preprocessor Definitions ==

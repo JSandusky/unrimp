@@ -23,12 +23,14 @@ Renderer toolkit.
 
 
 == Dependencies ==
-- GLM (header only library)
-- RapidJSON (header only library)
 - Assimp
 - crunch
-- libtiff
-- SimpleFileWatcher
+- sqlitecpp
+- GLM (header only library)
+- picosha2 (header only library)
+- RapidJSON (header only library)
+- lz4 (directly compiled and linked in)
+- SimpleFileWatcher (directly compiled and linked in)
 
 
 == Preprocessor Definitions ==

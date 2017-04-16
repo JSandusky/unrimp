@@ -284,7 +284,7 @@ namespace Renderer
 			// How many command package buffer bytes are consumed by the command to add?
 			const uint32_t numberOfCommandBytes = CommandPacketHelper::getNumberOfBytes<U>(numberOfAuxiliaryBytes);
 
-			// 4294967295 is the maximum value of an "uint32"-type: Check for overflow
+			// 4294967295 is the maximum value of an "uint32_t"-type: Check for overflow
 			// -> We use the magic number here to avoid "std::numeric_limits::max()" usage
 			assert((static_cast<uint64_t>(mCurrentCommandPacketByteIndex) + numberOfCommandBytes) < 4294967295u);
 
