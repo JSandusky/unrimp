@@ -42,7 +42,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void Preprocessor::preprocess(std::string& source, std::string& result)
 	{
-		// TODO(co) The usage of MojoShader just as preprocessor is overkill. Find a simpler but still efficient solution.
+		// TODO(co) The usage of MojoShader just as preprocessor is overkill. Find a simpler but still efficient solution. Switch to "mcpp -- a portable C preprocessor" ( http://mcpp.sourceforge.net/ ) ?
 
 		// Preprocess
 		const MOJOSHADER_preprocessData* preprocessData = MOJOSHADER_preprocess(nullptr, source.c_str(), static_cast<unsigned int>(source.length()), 0, 0, 0, 0, 0, 0, 0, 0, 0);

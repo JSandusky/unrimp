@@ -402,6 +402,7 @@ namespace
 						  // - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 						  //   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
 							// Get the Assimp mesh vertex tangent, binormal and normal
+							// TODO(co) Throw away ASSIMP tangent space vectors and use "mikktspace" as described in https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps ?
 							aiVector3D tangent = assimpMesh.mTangents[j];
 							aiVector3D binormal = assimpMesh.mBitangents[j];
 							aiVector3D normal = assimpMesh.mNormals[j];
