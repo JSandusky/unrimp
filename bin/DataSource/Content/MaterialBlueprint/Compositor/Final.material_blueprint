@@ -22,6 +22,13 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 				"Description": "2D color map"
+			},
+			"ColorCorrectionLookupTableMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D",
+				"Description": "3D color correction lookup table"
 			}
 		},
 		"RootSignature":
@@ -65,6 +72,21 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "ColorMap",
+							"SamplerRootParameterIndex": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"3":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "ColorCorrectionLookupTableMap",
 							"SamplerRootParameterIndex": "1"
 						}
 					},
@@ -134,6 +156,15 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap",
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"MipmapsUsed": "FALSE"
+				},
+				"ColorCorrectionLookupTableMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@ColorCorrectionLookupTableMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

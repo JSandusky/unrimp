@@ -1,0 +1,700 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "1"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"RenderQueueIndex":
+			{
+				"Usage": "STATIC",
+				"ValueType": "INTEGER",
+				"Value": "255",
+				"Description": "Render queue index [0, 255]",
+				"MinimumIntegerValue": "0",
+				"MaximumIntegerValue": "255"
+			},
+			"HighQualityLighting":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "GLOBAL_MATERIAL_PROPERTY_ID",
+				"Value": "@GlobalHighQualityLighting",
+				"Description": "If high quality lighting is true physically based shading (PBS) is used, else a cheaper lighting model is used instead",
+				"VisualImportance": "100"
+			},
+			"CullMode":
+			{
+				"Usage": "RASTERIZER_STATE",
+				"ValueType": "CULL_MODE",
+				"Value": "BACK",
+				"Description": "Cull mode rasterizer state"
+			},
+			"Opacity":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.9",
+				"Description": "Opacity, 0..1 = transparent..solid"
+			},
+			"DiffuseColor":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT_3",
+				"Value": "1.0 1.0 1.0",
+				"Description": "Material diffuse color"
+			},
+			"UseGpuSkinning":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use GPU skinning?",
+				"VisualImportance": "MANDATORY"
+			},
+			"UseDiffuseMap":
+			{
+				"Usage": "UNKNOWN",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use diffuse map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a diffuse map."
+			},
+			"DiffuseMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
+				"Description": "2D material diffuse map. Also known as base color or albedo. Raw color with no lighting information. Small amount of ambient occlusion can be baked in if using it for micro-surface occlusion. For a metal-rough-worfkow, the color range for dark values should stay within 30-50 RGB. Never have dark values below 30 RGB. The brightest color value should not go above 240 RGB. With metal/rough, the areas indicated as metal in the metallic map have a corresponding metal reflectance value in the base color map. The metal reflectance value in the base color needs to be a measured real-world value. Transitional areas in the metal map (not raw metal 1.0 white) need to have the metal reflectance value lowered to indicate that its reflectance value is not raw metal."
+			},
+			"UseAlphaMap":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use alpha map?",
+				"VisualImportance": "100"
+			},
+			"AlphaMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",
+				"Description": "2D material alpha map"
+			},
+			"AlphaReference":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.05",
+				"Description": "Alpha reference. Only used if 'UseAlphaMap' is true.",
+				"RangeMin": "0.0",
+				"RangeMax": "1.0",
+				"RangeStep": "0.05"
+			},
+			"UseEmissiveMap":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use emissive map?",
+				"VisualImportance": "30"
+			},
+			"EmissiveMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",
+				"Description": "2D material emissive map"
+			},
+			"EmissiveIntensity":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "1.0",
+				"Description": "Material emissive intensity, has only an effect if there's an emissive map"
+			},
+			"UseNormalMap":
+			{
+				"Usage": "UNKNOWN",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use normal map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a normal map."
+			},
+			"NormalMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",
+				"Description": "2D material tangent space BC5/3DC/ATI2N stored normal map"
+			},
+			"UseRoughnessMap":
+			{
+				"Usage": "UNKNOWN",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use roughness map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a roughness map."
+			},
+			"RoughnessMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D",
+				"Description": "2D material roughness map. Metal-rough-worfkow: Describes the microsurface of the object. White 1.0 is rough and black 0.0 is smooth. The microsurface if rough can cause the light rays to scatter and make the highlight appear dimmer and more broad. The same amount of light energy is reflected going out as coming into the surface. This map has the most artistic freedom. There is no wrong answers here. This map gives the asset the most character as it truly describes the surface e.g. scratches, fingerprints, smudges, grime etc."
+			},
+			"UseMetallicMap":
+			{
+				"Usage": "UNKNOWN",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use metallic map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a metallic map."
+			},
+			"MetallicMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D",
+				"Description": "2D material metallic map. Metal-rough-worfkow: Tells the shader if something is metal or not. Raw Metal = 1.0 white and non metal = 0.0 black. There can be transitional gray values that indicate something covering the raw metal such as dirt. With metal/rough, you only have control over metal reflectance values. The dielectric values are set to 0.04 or 4% which is most dielectric materials."
+			},
+			"ReflectionCubeMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "152",
+				"Description": "Reflection cube map"
+			},
+			"GlobalHighQualityLighting":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Fallback value in case there's no global high quality lighting global material property"
+			},
+			"GlobalWetness":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "FLOAT",
+				"Value": "0.0",
+				"Description": "Fallback value in case there's no wetness global material property"
+			},
+			"GlobalAmbientColor":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "FLOAT_3",
+				"Value": "0.2 0.2 0.2",
+				"Description": "Fallback value in case there's no ambient color global material property"
+			},
+			"GlobalSunLightColor":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "FLOAT_3",
+				"Value": "1.0 1.0 1.0",
+				"Description": "Fallback value in case there's no sun light color global material property"
+			}
+		},
+		"RootSignature":
+		{
+			"RootParameters":
+			{
+				"0":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "PassUniformBuffer"
+						}
+					}
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "MaterialUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"2":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "2",
+							"BaseShaderRegisterName": "InstanceUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "VERTEX"
+				},
+				"3":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "InstanceTextureBuffer"
+						}
+					},
+					"ShaderVisibility": "VERTEX"
+				},
+				"4":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "LightTextureBuffer"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"5":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"6":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"7":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "2",
+							"BaseShaderRegisterName": "DiffuseMap",
+							"SamplerRootParameterIndex": "6"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"8":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "3",
+							"BaseShaderRegisterName": "AlphaMap",
+							"SamplerRootParameterIndex": "6"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"9":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "4",
+							"BaseShaderRegisterName": "EmissiveMap",
+							"SamplerRootParameterIndex": "6"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"10":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "5",
+							"BaseShaderRegisterName": "NormalMap",
+							"SamplerRootParameterIndex": "6"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"11":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "6",
+							"BaseShaderRegisterName": "RoughnessMap",
+							"SamplerRootParameterIndex": "6"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"12":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "7",
+							"BaseShaderRegisterName": "MetallicMap",
+							"SamplerRootParameterIndex": "6"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"13":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "8",
+							"BaseShaderRegisterName": "ShadowMap",
+							"SamplerRootParameterIndex": "5"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"14":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "9",
+							"BaseShaderRegisterName": "ReflectionCubeMap",
+							"SamplerRootParameterIndex": "6"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"15":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "10",
+							"BaseShaderRegisterName": "LightClustersMap3D",
+							"SamplerRootParameterIndex": "5"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				}
+			}
+		},
+		"PipelineState":
+		{
+			"VertexAttributesAssetId": "166",
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprintAssetId": "12",
+				"FragmentShaderBlueprintAssetId": "171"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "@CullMode"
+			},
+			"DepthStencilState":
+			{
+				"DepthWriteMask": "ZERO"
+			},
+			"BlendState":
+			{
+				"RenderTarget[0]":
+				{
+					"BlendEnable": "TRUE",
+					"SrcBlend": "SRC_ALPHA",
+					"DestBlend": "INV_SRC_ALPHA",
+					"SrcBlendAlpha": "INV_SRC_ALPHA"
+				}
+			}
+		},
+		"Resources":
+		{
+			"UniformBuffers":
+			{
+				"PassUniformBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"WorldSpaceToClipSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
+						},
+						"ShadowMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@SHADOW_MATRIX"
+						},
+						"ViewSpaceToWorldSpaceQuaternion":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4",
+							"Value": "@VIEW_SPACE_TO_WORLD_SPACE_QUATERNION"
+						},
+						"WorldSpaceToViewSpaceQuaternion":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4",
+							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_QUATERNION"
+						},
+						"ViewSpaceSunLightDirection":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@VIEW_SPACE_SUN_LIGHT_DIRECTION"
+						},
+						"Wetness":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@GlobalWetness"
+						},
+						"AmbientColor":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@GlobalAmbientColor"
+						},
+						"SunLightColor":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@GlobalSunLightColor"
+						},
+						"CameraWorldSpacePosition":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@CAMERA_WORLD_SPACE_POSITION"
+						},
+						"LightClustersScale":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@LIGHT_CLUSTERS_SCALE"
+						},
+						"LightClustersBias":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@LIGHT_CLUSTERS_BIAS"
+						}
+					}
+				},
+				"MaterialUniformBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "MATERIAL",
+					"NumberOfElements": "2",
+					"ElementProperties":
+					{
+						"DiffuseColor":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@DiffuseColor"
+						},
+						"AlphaReference":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@AlphaReference"
+						},
+						"EmissiveIntensity":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@EmissiveIntensity"
+						},
+						"Opacity":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@Opacity"
+						}
+					}
+				},
+				"InstanceUniformBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "INSTANCE",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"InstanceIndicesArray":
+						{
+							"Usage": "INSTANCE_REFERENCE",
+							"ValueType": "INTEGER_4",
+							"Value": "@INSTANCE_INDICES"
+						}
+					}
+				}
+			},
+			"TextureBuffers":
+			{
+				"InstanceTextureBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "INSTANCE",
+					"ValueType": "FLOAT_4",
+					"Value": "@POSITION_ROTATION_SCALE"
+				},
+				"LightTextureBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "LIGHT",
+					"ValueType": "FLOAT_4",
+					"Value": "@LIGHT"
+				}
+			},
+			"SamplerStates":
+			{
+				"SamplerPoint":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Filter": "MIN_MAG_MIP_POINT",
+					"MaxLOD": "0.0"
+				},
+				"SamplerLinear":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"AddressU": "WRAP",
+					"AddressV": "WRAP"
+				}
+			},
+			"Textures":
+			{
+				"DiffuseMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@DiffuseMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
+					"RgbHardwareGammaCorrection": "TRUE"
+				},
+				"AlphaMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@AlphaMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
+				},
+				"EmissiveMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@EmissiveMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",
+					"RgbHardwareGammaCorrection": "TRUE"
+				},
+				"NormalMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@NormalMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
+				},
+				"RoughnessMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@RoughnessMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
+				},
+				"MetallicMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@MetallicMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D"
+				},
+				"ShadowMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "STATIC",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "Example/Texture/Dynamic/ShadowMapRenderTarget",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"MipmapsUsed": "FALSE"
+				},
+				"ReflectionCubeMap":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@ReflectionCubeMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMapCube",
+					"RgbHardwareGammaCorrection": "TRUE"
+				},
+				"LightClustersMap3D":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"Usage": "STATIC",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/LightClustersMap3D"
+				}
+			}
+		}
+	}
+}

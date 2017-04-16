@@ -483,19 +483,13 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			{ // Update the material resource instance
 				const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime.getMaterialResourceManager();
 
-				// HDR to LDR compositor material
-				RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/HdrToLdr");
+				// Final compositor material
+				RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/Final");
 				if (nullptr != materialResource)
 				{
 					static const RendererRuntime::AssetId IDENTITY_TEXTURE_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D");
 					static const RendererRuntime::AssetId SEPIA_TEXTURE_ASSET_ID("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
 					materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? SEPIA_TEXTURE_ASSET_ID : IDENTITY_TEXTURE_ASSET_ID));
-				}
-
-				// Final compositor material
-				materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/Final");
-				if (nullptr != materialResource)
-				{
 					materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
 				}
 

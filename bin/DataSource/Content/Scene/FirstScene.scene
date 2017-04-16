@@ -62,7 +62,7 @@
 					"MeshSceneItem":
 					{
 						"MeshAssetId": "2",
-						"SubMeshMaterialAssetIds": [ "", "40" ]
+						"SubMeshMaterialAssetIds": [ "40", "170" ]
 					}
 				}
 			},
@@ -209,6 +209,22 @@
 						"Radius": "5.0",
 						"InnerAngle": "45.0 DEGREES",
 						"OuterAngle": "50.0 DEGREES"
+					}
+				}
+			},
+			"13":
+			{
+				"Properties":
+				{
+					"Position": "-3.0 1.0 2.0"
+				},
+				"Items":
+				{
+					"LightSceneItem":
+					{
+						"LightType": "POINT",
+						"Color": "0.0 1.0 0.0",
+						"Radius": "2.0"
 					}
 				}
 			}

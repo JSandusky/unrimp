@@ -1,0 +1,194 @@
+/*********************************************************\
+ * Copyright (c) 2012-2017 The Unrimp Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+@includepiece(15)	// "Core.shader_piece"
+@includepiece(16)	// "TangentFrame.shader_piece"
+@includepiece(164)	// "PhysicallyBasedShading.shader_piece"
+
+
+//[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Define pieces                                         ]
+//[-------------------------------------------------------]
+// TODO(co) Define this outside
+@piece(MaximumNumberOfMaterials)2@end
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(uint,   AssignedMaterialSlotVS, 0)	// The assigned material slot inside the material uniform buffer
+	INPUT_TEXTURE_COORDINATE				(float2, TexCoordVS,			 1)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame0VS,		 2)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame1VS,		 3)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame2VS,		 4)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE				(float3, WorldSpacePositionVS,	 5)	// World space position
+	INPUT_VERTEX_DRAW_ID														// Draw ID
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_COLOR(0)	// rgb = diffuse color, a = alpha
+OUTPUT_END
+
+// Uniform buffers
+struct PassDataStruct
+{
+	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4x4 ShadowMatrix;
+	float4	 ViewSpaceToWorldSpaceQuaternion;
+	float4	 WorldSpaceToViewSpaceQuaternion;
+	float3	 ViewSpaceSunLightDirection;
+	float	 Wetness;
+	float3	 AmbientColor;
+	float3	 SunLightColor;
+	float3   CameraWorldSpacePosition;
+	float3	 LightClustersScale;
+	float3	 LightClustersBias;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
+struct Material
+{
+	float3 DiffuseColor;
+	float  AlphaReference;
+	float  EmissiveIntensity;
+	float  Opacity;
+};
+UNIFORM_BUFFER_BEGIN(MaterialUniformBuffer, 1)
+	Material Materials[@insertpiece(MaximumNumberOfMaterials)];
+UNIFORM_BUFFER_END
+
+// Texture buffers: We need to start at texture unit 1 instead of texture unit 0 because the vertex shader has an instance texture buffer bound at texture unit 0 (OpenGL shares those bindings accros all shader stages while Direct3D doesn't)
+TEXTURE_BUFFER(float4, LightTextureBuffer, 1)	// "LIGHT"
+
+// Samplers
+SAMPLER_STATE(SamplerPoint, 0)
+SAMPLER_STATE(SamplerLinear, 1)
+
+// Textures
+TEXTURE_2D(DiffuseMap, 2)
+@property(UseAlphaMap)
+	TEXTURE_2D(AlphaMap, 3)
+@end
+@property(UseEmissiveMap)
+	TEXTURE_2D(EmissiveMap, 4)
+@end
+TEXTURE_2D(NormalMap, 5)	// Tangent space normal map
+TEXTURE_2D(RoughnessMap, 6)
+TEXTURE_2D(MetallicMap, 7)
+TEXTURE_2D(ShadowMap, 8)
+TEXTURE_CUBE(ReflectionCubeMap, 9)
+TEXTURE_3D_UINT(LightClustersMap3D, 10)
+
+
+//[-------------------------------------------------------]
+//[ Functions                                             ]
+//[-------------------------------------------------------]
+@insertpiece(DefineGetTangentFrame)
+@property(HighQualityLighting)
+	@insertpiece(DefinePhysicallyBasedShading)
+@end
+@property(!HighQualityLighting)
+	@insertpiece(DefineBlinnPhongBasedShading)
+@end
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	// Get the used material
+	Material material = Materials[MAIN_INPUT(AssignedMaterialSlotVS)];
+
+	// Perform alpha map based fragment rejection
+	@property(UseAlphaMap)
+		if (material.AlphaReference >= SAMPLE_2D(AlphaMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r)
+		{
+			discard;
+		}
+	@end
+
+	// Get diffuse, roughness and metallic
+	float3 diffuse = material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+	float roughness = SAMPLE_2D(RoughnessMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r;
+	float metallic = SATURATE(PassData.Wetness + SAMPLE_2D(MetallicMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r);
+
+	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
+	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
+	float3 viewSpaceNormal = SAMPLE_2D(NormalMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).yxx * 2.0f - 1.0f;
+	viewSpaceNormal.z = sqrt(1.0f - dot(viewSpaceNormal.xy, viewSpaceNormal.xy));
+
+	// TODO(co) Get rid of this
+	if (isnan(viewSpaceNormal.z))
+	{
+		viewSpaceNormal.z = 1.0f;
+	}
+
+	// Transform the tangent space normal into view space
+	viewSpaceNormal = normalize(viewSpaceNormal.x * MAIN_INPUT(TangentFrame0VS) + viewSpaceNormal.y * MAIN_INPUT(TangentFrame1VS) + viewSpaceNormal.z * MAIN_INPUT(TangentFrame2VS));
+
+	// Derive data
+	float3 worldSpaceNormal = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceNormal);
+	float3 worldSpacePosition = MAIN_INPUT(WorldSpacePositionVS);
+
+	// Ambient term
+	float3 color = diffuse * (PassData.AmbientColor.rgb + CalculateHemisphereLighting(worldSpaceNormal.xyz, PassData.AmbientColor.rgb * 0.7f, PassData.AmbientColor.rgb * 0.2f));
+
+	// TODO(co) Shadow: Totally primitive to have something to start with
+	float shadowVisibility = 1.0f;
+	{
+		float4 shadowTextureCoordinate = MATRIX_MUL(PassData.ShadowMatrix, float4(worldSpacePosition, 1.0f));
+		if (SAMPLE_2D_LOD(ShadowMap, SamplerPoint, float4(shadowTextureCoordinate.xy, 0.0f, 0.0f)).r < shadowTextureCoordinate.z - 0.001f)
+		{
+			shadowVisibility = 0.0f;
+		}
+	}
+
+	// Get view space incident vector
+	float3 viewSpaceIncident = normalize(PassData.CameraWorldSpacePosition - worldSpacePosition);
+	viewSpaceIncident = MultiplyQuaternionVector(PassData.WorldSpaceToViewSpaceQuaternion, viewSpaceIncident);
+
+	// Directional sun light, our primary light
+	if (shadowVisibility > 0.0f)
+	{
+		color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
+	}
+
+	// Perform clustered shading
+	@insertpiece(PerformClusteredShading)
+
+	// Emissive term
+	@property(UseEmissiveMap)
+		color += SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb * material.EmissiveIntensity;
+	@end
+
+	// Done
+	MAIN_OUTPUT_COLOR(0) = float4(color, material.Opacity);
+MAIN_END

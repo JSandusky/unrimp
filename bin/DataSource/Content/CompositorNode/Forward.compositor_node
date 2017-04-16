@@ -198,7 +198,8 @@
 			},
 			"LdrFramebuffer0":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget0" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget0" ],
+				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			},
 			"LdrFramebuffer1":
 			{
@@ -240,6 +241,8 @@
 				},
 				"Scene":
 				{
+					"MinimumRenderQueueIndex": "0",
+					"MaximumRenderQueueIndex": "254",
 					"MaterialTechnique": "DepthOnly"
 				}
 			},
@@ -253,6 +256,9 @@
 				},
 				"Scene":
 				{
+					"Description": "Render solid objects",
+					"MinimumRenderQueueIndex": "0",
+					"MaximumRenderQueueIndex": "254",
 					"MaterialTechnique": "Forward"
 				}
 			},
@@ -595,6 +601,22 @@
 					}
 				}
 			},
+			"LdrFramebuffer0":
+			{
+				"Copy":
+				{
+					"DestinationTextureAssetId": "Example/Texture/Dynamic/LdrColorRenderTarget0",
+					"SourceTextureAssetId": "Example/Texture/Dynamic/LdrColorRenderTarget1"
+				},
+				"Scene":
+				{
+					"Description": "Render transparent objects",
+					"MinimumRenderQueueIndex": "255",
+					"MaximumRenderQueueIndex": "255",
+					"TransparentPass": "TRUE",
+					"MaterialTechnique": "Transparent"
+				}
+			},
 			"OutputRenderTarget":
 			{
 				"Quad":
@@ -602,7 +624,7 @@
 					"MaterialBlueprintAssetId": "102",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget1"
+						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0"
 					}
 				},
 				"DebugGui":

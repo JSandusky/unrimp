@@ -69,13 +69,6 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "145",
 				"Description": "2D lens star map for diffraction starburst"
-			},
-			"ColorCorrectionLookupTableMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D",
-				"Description": "3D color correction lookup table"
 			}
 		},
 		"RootSignature":
@@ -211,21 +204,6 @@
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
-				},
-				"9":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "6",
-							"BaseShaderRegisterName": "ColorCorrectionLookupTableMap",
-							"SamplerRootParameterIndex": "2"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
 				}
 			}
 		},
@@ -350,15 +328,6 @@
 					"Value": "@LensStarMap",
 					"RgbHardwareGammaCorrection": "TRUE",
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
-					"MipmapsUsed": "FALSE"
-				},
-				"ColorCorrectionLookupTableMap":
-				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@ColorCorrectionLookupTableMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

@@ -173,6 +173,9 @@
 		"165": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertexRay.asset",
 		"166": "VertexAttributes/Default/Mesh.asset",
 		"167": "VertexAttributes/Default/Compositor.asset",
-		"168": "VertexAttributes/Default/DebugGui.asset"
+		"168": "VertexAttributes/Default/DebugGui.asset",
+		"169": "MaterialBlueprint/Scene/TransparentMesh.asset",
+		"170": "Material/Imrod/TransparentImrod.asset",
+		"171": "ShaderBlueprint/Scene/TransparentMeshFragment.asset"
 	}
 }

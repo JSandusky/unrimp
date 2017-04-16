@@ -69,6 +69,7 @@ SAMPLER_STATE(SamplerLinear, 0)
 
 // Textures
 TEXTURE_2D(ColorMap, 0)
+TEXTURE_3D(ColorCorrectionLookupTableMap, 1)
 
 
 //[-------------------------------------------------------]
@@ -133,6 +134,19 @@ MAIN_BEGIN
 	// Apply screen space dither
 	color.rgb += ScreenSpaceDither(MAIN_INPUT(TexCoordVS) * (1.0f / PassData.InverseViewportSize));
 
+	// Ensure we're in a 0..1 range
+	color = SATURATE(color);
+
+	{ // Apply 3D identity color correction lookup table (LUT)
+	  // - Basing on "GPU Gems 2" - "Chapter 24. Using Lookup Tables to Accelerate Color Transformations" by Jeremy Selan, Sony Pictures Imageworks - http://http.developer.nvidia.com/GPUGems2/gpugems2_chapter24.html
+	  // - A way for artists to create color correction lookup tables is described at https://docs.unrealengine.com/latest/INT/Engine/Rendering/PostProcessEffects/ColorGrading/
+	  // - Color correction lookup table size is 16
+	  // - We don't have a texel offset like in DirectX 9 which we need to take care of
+		float3 LUT_SIZE = float3(16.0f, 16.0f, 16.0f);
+		float3 LUT_OFFSET = 1.0f / (2.0f * LUT_SIZE);
+		color.rgb = SAMPLE_3D_LOD(ColorCorrectionLookupTableMap, SamplerLinear, float4(color.rgb + LUT_OFFSET, 0.0f)).rgb;
+	}
+	
 	// Done
-	MAIN_OUTPUT_COLOR(0) = SATURATE(color);
+	MAIN_OUTPUT_COLOR(0) = color;
 MAIN_END

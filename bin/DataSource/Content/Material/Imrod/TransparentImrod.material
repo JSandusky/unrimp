@@ -1,0 +1,28 @@
+{
+	"Format":
+	{
+		"Type": "MaterialAsset",
+		"Version": "1"
+	},
+	"MaterialAsset":
+	{
+		"Techniques":
+		{
+			"Transparent": "169"
+		},
+		"Properties":
+		{
+			"Opacity": "0.6",
+			"DiffuseColor": "1.0 1.0 1.0",
+			"UseDiffuseMap": "TRUE",
+			"DiffuseMap": "4",
+			"UseEmissiveMap": "TRUE",
+			"EmissiveMap": "5",
+			"EmissiveIntensity": "10.0",
+			"UseNormalMap": "TRUE",
+			"NormalMap": "6",
+			"UseRoughnessMap": "TRUE",
+			"RoughnessMap": "7"
+		}
+	}
+}
