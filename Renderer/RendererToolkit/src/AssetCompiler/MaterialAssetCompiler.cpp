@@ -103,8 +103,13 @@ namespace RendererToolkit
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material";
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
-		CacheManager::CacheEntries cacheEntries;
-		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION, cacheEntries))
+		// TODO(co) Material assets are currently excluded from the cache: Material assets depend on 1-n material blueprint assets, if one
+		//          of them changes, the dependent material assets must be recompiled as well so everything is consistent. We need to extend
+		//          the cache manager somehow to be able to model such more complex asset relationships. Lucky us, material asset compilation
+		//          is blazing fast - but it would still be nice to have it cached. Might be useful if we later on need to tell someone about
+		//          changed assets.
+		// CacheManager::CacheEntries cacheEntries;
+		// if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
@@ -135,7 +140,8 @@ namespace RendererToolkit
 			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1Material::FORMAT_TYPE, RendererRuntime::v1Material::FORMAT_VERSION, outputAssetFilename);
 
 			// Store new cache entries or update existing ones
-			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
+			// TODO(co) Material assets are currently excluded from the cache: See more detailed comment above
+			// input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
 		}
 
 		{ // Update the output asset package
