@@ -337,6 +337,7 @@ namespace Direct3D11Renderer
 		mD3D11Device(nullptr),
 		mD3D11DeviceContext(nullptr),
 		mD3DUserDefinedAnnotation(nullptr),
+		mMainThreadId(std::this_thread::get_id()),
 		mShaderLanguageHlsl(nullptr),
 		mD3D11QueryFlush(nullptr),
 		mMainSwapChain(nullptr),
@@ -1326,7 +1327,8 @@ namespace Direct3D11Renderer
 	void Direct3D11Renderer::beginDebugEvent(const char *name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
-			if (nullptr != mD3DUserDefinedAnnotation)
+			// TODO(co) With the current API design, we can't emit debug events from multiple threads (e.g. for background resource loading)
+			if (nullptr != mD3DUserDefinedAnnotation && std::this_thread::get_id() == mMainThreadId)
 			{
 				assert(strlen(name) < 256);
 				wchar_t unicodeName[256];
@@ -1339,7 +1341,8 @@ namespace Direct3D11Renderer
 	void Direct3D11Renderer::endDebugEvent()
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
-			if (nullptr != mD3DUserDefinedAnnotation)
+			// TODO(co) With the current API design, we can't emit debug events from multiple threads (e.g. for background resource loading)
+			if (nullptr != mD3DUserDefinedAnnotation && std::this_thread::get_id() == mMainThreadId)
 			{
 				mD3DUserDefinedAnnotation->EndEvent();
 			}

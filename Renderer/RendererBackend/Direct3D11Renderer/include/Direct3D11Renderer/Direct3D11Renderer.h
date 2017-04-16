@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/IRenderer.h>
 
+#include <thread> // For "std::thread::id"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -236,6 +238,7 @@ namespace Direct3D11Renderer
 		ID3D11Device			  *mD3D11Device;				///< The Direct3D 11 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
 		ID3D11DeviceContext		  *mD3D11DeviceContext;			///< The Direct3D 11 device context instance, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
 		ID3DUserDefinedAnnotation *mD3DUserDefinedAnnotation;	///< The Direct3D 11 user defined annotation interface, null pointer on error, Direct3D 11.1 feature
+		std::thread::id			   mMainThreadId;
 		Renderer::IShaderLanguage *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
 		ID3D11Query				  *mD3D11QueryFlush;			///< Direct3D 11 query used for flush, can be a null pointer
 		SwapChain				  *mMainSwapChain;				///< In case the optional native main window handle within the "Direct3D11Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
