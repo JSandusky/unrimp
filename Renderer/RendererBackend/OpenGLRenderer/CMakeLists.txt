@@ -179,6 +179,7 @@ if(RENDERER_OPENGL_GLSLTOSPIRV)
 		${GLSLANG_DIR}/glslang/MachineIndependent/ShaderLang.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/SymbolTable.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/Versions.cpp
+		${GLSLANG_DIR}/glslang/MachineIndependent/parseConst.cpp
 		${GLSLANG_DIR}/OGLCompilersDLL/InitializeDll.cpp
 		${GLSLANG_DIR}/SPIRV/GlslangToSpv.cpp
 		${GLSLANG_DIR}/SPIRV/InReadableOrder.cpp
