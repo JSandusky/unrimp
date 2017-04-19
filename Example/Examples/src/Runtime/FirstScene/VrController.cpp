@@ -144,7 +144,7 @@ namespace
 						if (mNumberOfVrControllers > 0 && mVrControllerTrackedDeviceIndices[FIRST_CONTROLLER_INDEX] == vrVrEvent.trackedDeviceIndex && vrVrEvent.data.controller.button == vr::k_EButton_SteamVR_Trigger && mVrController->getTeleportIndicationLightSceneItemSafe().isVisible())
 						{
 							// TODO(co) Why inversed position?
-							mVrController->getCameraSceneItem().getParentSceneNodeSafe().setPosition(-mVrController->getTeleportIndicationLightSceneItemSafe().getParentSceneNodeSafe().getTransform().position);
+							mVrController->getCameraSceneItem().getParentSceneNodeSafe().setPosition(-mVrController->getTeleportIndicationLightSceneItemSafe().getParentSceneNodeSafe().getGlobalTransform().position);
 						}
 						break;
 					}
@@ -237,7 +237,7 @@ namespace
 					const glm::quat rotationOffset = RendererRuntime::EulerAngles::eulerToQuaternion(glm::vec3(glm::degrees(0.0f), glm::degrees(180.0f), 0.0f));
 					const glm::mat4 guiScaleMatrix = glm::scale(RendererRuntime::Math::IDENTITY_MATRIX, glm::vec3(1.0f / imGuiIo.DisplaySize.x, 1.0f / imGuiIo.DisplaySize.y, 1.0f));
 					const glm::mat4& devicePoseMatrix = mVrManagerOpenVR->getDevicePoseMatrix(mVrManagerOpenVRListener->getVrControllerTrackedDeviceIndices(SECOND_CONTROLLER_INDEX));
-					const glm::mat4& cameraPositionMatrix = glm::translate(RendererRuntime::Math::IDENTITY_MATRIX, -mVrController->getCameraSceneItem().getParentSceneNodeSafe().getTransform().position);
+					const glm::mat4& cameraPositionMatrix = glm::translate(RendererRuntime::Math::IDENTITY_MATRIX, -mVrController->getCameraSceneItem().getParentSceneNodeSafe().getGlobalTransform().position);
 					const glm::mat4 objectSpaceToClipSpaceMatrix = getPassData().worldSpaceToClipSpaceMatrix * cameraPositionMatrix * devicePoseMatrix * glm::mat4_cast(rotationOffset) * guiScaleMatrix;
 					memcpy(buffer, glm::value_ptr(objectSpaceToClipSpaceMatrix), numberOfBytes);
 
@@ -365,7 +365,7 @@ void VrController::onUpdate(float pastSecondsSinceLastFrame)
 			rotation = glm::conjugate(rotation);
 
 			// Everything must be relative to the camera world space position
-			translation -= getCameraSceneItem().getParentSceneNodeSafe().getTransform().position;
+			translation -= getCameraSceneItem().getParentSceneNodeSafe().getGlobalTransform().position;
 
 			// Construct ray
 			const glm::vec3& rayOrigin = translation;

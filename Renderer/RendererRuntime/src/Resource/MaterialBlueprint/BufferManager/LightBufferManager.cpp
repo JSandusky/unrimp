@@ -148,7 +148,7 @@ namespace RendererRuntime
 					{
 						// Update the world space light position and the normalized view space light direction
 						LightSceneItem::PackedShaderData& packedShaderData = lightSceneItem->mPackedShaderData;
-						const Transform& transform = sceneNode->getTransform();
+						const Transform& transform = sceneNode->getGlobalTransform();
 						packedShaderData.position  = transform.position;
 						packedShaderData.direction = transform.rotation * Math::FORWARD_VECTOR;
 

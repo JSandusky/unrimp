@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 #include "RendererRuntime/Core/Math/Transform.h"
@@ -73,6 +74,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
+		typedef std::vector<ISceneNode*> AttachedSceneNodes;
 		typedef std::vector<ISceneItem*> AttachedSceneItems;
 
 
@@ -81,7 +83,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		//[-------------------------------------------------------]
-		//[ Transform                                             ]
+		//[ Local transform                                       ]
 		//[-------------------------------------------------------]
 		inline const Transform& getTransform() const;
 		inline void setTransform(const Transform& transform);
@@ -91,12 +93,25 @@ namespace RendererRuntime
 		inline void setScale(const glm::vec3& scale);
 
 		//[-------------------------------------------------------]
+		//[ Derived global transform                              ]
+		//[-------------------------------------------------------]
+		inline const Transform& getGlobalTransform() const;
+
+		//[-------------------------------------------------------]
+		//[ Attached scene nodes                                  ]
+		//[-------------------------------------------------------]
+		RENDERERRUNTIME_API_EXPORT void attachSceneNode(ISceneNode& sceneNode);
+		RENDERERRUNTIME_API_EXPORT void detachAllSceneNodes();
+		inline const AttachedSceneNodes& getAttachedSceneNodes() const;
+		RENDERERRUNTIME_API_EXPORT void setVisible(bool visible);
+
+		//[-------------------------------------------------------]
 		//[ Attached scene items                                  ]
 		//[-------------------------------------------------------]
-		void attachSceneItem(ISceneItem& sceneItem);
-		void detachAllSceneItems();
+		RENDERERRUNTIME_API_EXPORT void attachSceneItem(ISceneItem& sceneItem);
+		RENDERERRUNTIME_API_EXPORT void detachAllSceneItems();
 		inline const AttachedSceneItems& getAttachedSceneItems() const;
-		void setSceneItemsVisible(bool visible);
+		RENDERERRUNTIME_API_EXPORT void setSceneItemsVisible(bool visible);
 
 
 	//[-------------------------------------------------------]
@@ -117,10 +132,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		RENDERERRUNTIME_API_EXPORT void updateGlobalTransformRecursive();
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Transform		   mTransform;
+		ISceneNode*		   mParentSceneNode;	///< Parent scene node the scene node is attached to, can be a null pointer, don't destroy the instance
+		Transform		   mTransform;			///< Local transform
+		Transform		   mGlobalTransform;	///< Derived global transform - TODO(co) Will of course later on be handled in another way to be cache efficient and more efficient to calculate and incrementally update. But lets start simple.
+		AttachedSceneNodes mAttachedSceneNodes;
 		AttachedSceneItems mAttachedSceneItems;
 
 

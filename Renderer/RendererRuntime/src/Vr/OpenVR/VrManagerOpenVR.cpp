@@ -534,14 +534,14 @@ namespace
 			}
 		}
 
-		void setSceneItemsVisible(RendererRuntime::ISceneNode* sceneNodes[vr::k_unMaxTrackedDeviceCount], bool visible)
+		void setSceneNodesVisible(RendererRuntime::ISceneNode* sceneNodes[vr::k_unMaxTrackedDeviceCount], bool visible)
 		{
 			for (uint32_t i = 0; i < vr::k_unMaxTrackedDeviceCount; ++i)
 			{
 				RendererRuntime::ISceneNode* sceneNode = sceneNodes[i];
 				if (nullptr != sceneNode)
 				{
-					sceneNode->setSceneItemsVisible(visible);
+					sceneNode->setVisible(visible);
 				}
 			}
 		}
@@ -700,13 +700,13 @@ namespace RendererRuntime
 					// Sent to the scene application to request hiding render models temporarily
 					case vr::VREvent_HideRenderModels:
 						mShowRenderModels = false;
-						::detail::setSceneItemsVisible(mSceneNodes, mShowRenderModels);
+						::detail::setSceneNodesVisible(mSceneNodes, mShowRenderModels);
 						break;
 
 					// Sent to the scene application to request restoring render model visibility
 					case vr::VREvent_ShowRenderModels:
 						mShowRenderModels = true;
-						::detail::setSceneItemsVisible(mSceneNodes, mShowRenderModels);
+						::detail::setSceneNodesVisible(mSceneNodes, mShowRenderModels);
 						break;
 				}
 
@@ -722,7 +722,7 @@ namespace RendererRuntime
 		glm::vec3 cameraPosition;
 		if (nullptr != cameraSceneItem && nullptr != cameraSceneItem->getParentSceneNode())
 		{
-			cameraPosition = cameraSceneItem->getParentSceneNode()->getTransform().position;
+			cameraPosition = cameraSceneItem->getParentSceneNode()->getGlobalTransform().position;
 		}
 
 		// Don't draw controllers if somebody else has input focus
@@ -754,7 +754,7 @@ namespace RendererRuntime
 					sceneNode->setPositionRotation(translation, rotation);
 
 					// Show/hide scene node
-					sceneNode->setSceneItemsVisible(showControllers);
+					sceneNode->setVisible(showControllers);
 				}
 			}
 		}
@@ -775,11 +775,11 @@ namespace RendererRuntime
 				ISceneNode* sceneNode = cameraSceneItem->getParentSceneNode();
 				if (nullptr != sceneNode)
 				{
-				//	sceneNode->setTransform(hmdSceneNode->getTransform());	// TODO(co)
+				//	sceneNode->setTransform(hmdSceneNode->getGlobalTransform());	// TODO(co)
 					hmdSceneNodeVisible = false;
 				}
 			}
-			hmdSceneNode->setSceneItemsVisible(hmdSceneNodeVisible);
+			hmdSceneNode->setVisible(hmdSceneNodeVisible);
 		}
 	}
 
@@ -894,7 +894,8 @@ namespace RendererRuntime
 
 				// In case the render model has components, don't use the render model directly, use its components instead so we can animate e.g. the controller trigger
 				const uint32_t componentCount = vr::VRRenderModels()->GetComponentCount(renderModelName.c_str());
-				if (componentCount > 0)
+				vr::VRControllerState_t vrControllerState;
+				if (componentCount > 0 && mVrSystem->GetControllerState(trackedDeviceIndex, &vrControllerState))
 				{
 					for (uint32_t componentIndex = 0; componentIndex < componentCount; ++componentIndex)
 					{
@@ -902,7 +903,21 @@ namespace RendererRuntime
 						const std::string componentRenderModelName = ::detail::getRenderModelComponentRenderModelName(renderModelName, componentName);
 						if (!componentRenderModelName.empty())
 						{
-							::detail::createMeshSceneItem(*mSceneResource, *sceneNode, componentRenderModelName, mVrDeviceMaterialResourceId);
+							// Get component state
+							vr::RenderModel_ControllerMode_State_t renderModelControllerModeState;
+							renderModelControllerModeState.bScrollWheelVisible = false;
+							vr::RenderModel_ComponentState_t renderModelComponentState;
+							if (vr::VRRenderModels()->GetComponentState(renderModelName.c_str(), componentName.c_str(), &vrControllerState, &renderModelControllerModeState, &renderModelComponentState))
+							{
+								// Create the scene node of the component
+								ISceneNode* componentSceneNode = mSceneResource->createSceneNode(Transform(::detail::convertOpenVrMatrixToGlmMat34(renderModelComponentState.mTrackingToComponentRenderModel)));
+								if (nullptr != componentSceneNode)
+								{
+									sceneNode->attachSceneNode(*componentSceneNode);
+									::detail::createMeshSceneItem(*mSceneResource, *componentSceneNode, componentRenderModelName, mVrDeviceMaterialResourceId);
+									componentSceneNode->setVisible((renderModelComponentState.uProperties & vr::VRComponentProperty_IsVisible) != 0);
+								}
+							}
 						}
 					}
 				}

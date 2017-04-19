@@ -112,7 +112,7 @@ namespace RendererRuntime
 
 	void MeshSceneItem::onAttachedToSceneNode(ISceneNode& sceneNode)
 	{
-		mRenderableManager.setTransform(&sceneNode.getTransform());
+		mRenderableManager.setTransform(&sceneNode.getGlobalTransform());
 
 		// Call the base implementation
 		ISceneItem::onAttachedToSceneNode(sceneNode);

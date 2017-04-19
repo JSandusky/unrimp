@@ -36,27 +36,42 @@ namespace RendererRuntime
 	inline void ISceneNode::setTransform(const Transform& transform)
 	{
 		mTransform = transform;
+		updateGlobalTransformRecursive();
 	}
 
 	inline void ISceneNode::setPosition(const glm::vec3& position)
 	{
 		mTransform.position = position;
+		updateGlobalTransformRecursive();
 	}
 
 	inline void ISceneNode::setRotation(const glm::quat& rotation)
 	{
 		mTransform.rotation = rotation;
+		updateGlobalTransformRecursive();
 	}
 
 	inline void ISceneNode::setPositionRotation(const glm::vec3& position, const glm::quat& rotation)
 	{
 		mTransform.position = position;
 		mTransform.rotation = rotation;
+		updateGlobalTransformRecursive();
 	}
 
 	inline void ISceneNode::setScale(const glm::vec3& scale)
 	{
 		mTransform.scale = scale;
+		updateGlobalTransformRecursive();
+	}
+
+	inline const Transform& ISceneNode::getGlobalTransform() const
+	{
+		return mGlobalTransform;
+	}
+
+	inline const ISceneNode::AttachedSceneNodes& ISceneNode::getAttachedSceneNodes() const
+	{
+		return mAttachedSceneNodes;
 	}
 
 	inline const ISceneNode::AttachedSceneItems& ISceneNode::getAttachedSceneItems() const
@@ -69,13 +84,16 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline ISceneNode::ISceneNode(const Transform& transform) :
-		mTransform(transform)
+		mTransform(transform),
+		mGlobalTransform(transform),
+		mParentSceneNode(nullptr)
 	{
 		// Nothing here
 	}
 
 	inline ISceneNode::~ISceneNode()
 	{
+		detachAllSceneNodes();
 		detachAllSceneItems();
 	}
 

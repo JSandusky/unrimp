@@ -56,7 +56,7 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 	RendererRuntime::ISceneNode* sceneNode = mCameraSceneItem.getParentSceneNode();
 	if (nullptr != sceneNode && (!mPressedKeys.empty() || !mPressedMouseButtons.empty()))
 	{
-		// Get the current transform
+		// Get the current local transform
 		const RendererRuntime::Transform& transform = sceneNode->getTransform();
 
 		// Keyboard

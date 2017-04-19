@@ -81,6 +81,7 @@ namespace RendererRuntime
 		inline Transform(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& scale);
 		void getAsMatrix(glm::mat4& objectSpaceToWorldSpace) const;
 		void setByMatrix(const glm::mat4& objectSpaceToWorldSpace);
+		Transform& operator+=(const Transform& other);
 
 
 	};

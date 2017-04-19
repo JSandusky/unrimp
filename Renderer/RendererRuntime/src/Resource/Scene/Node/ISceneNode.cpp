@@ -36,6 +36,33 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	void ISceneNode::attachSceneNode(ISceneNode& sceneNode)
+	{
+		// TODO(co) Need to guarantee that one scene node is only attached to one scene node at the same time
+		mAttachedSceneNodes.push_back(&sceneNode);
+		sceneNode.mParentSceneNode = this;
+		sceneNode.updateGlobalTransformRecursive();
+	}
+
+	void ISceneNode::detachAllSceneNodes()
+	{
+		for (ISceneNode* sceneNode : mAttachedSceneNodes)
+		{
+			sceneNode->mParentSceneNode = nullptr;
+			sceneNode->updateGlobalTransformRecursive();
+		}
+		mAttachedSceneNodes.clear();
+	}
+
+	void ISceneNode::setVisible(bool visible)
+	{
+		setSceneItemsVisible(visible);
+		for (ISceneNode* sceneNode : mAttachedSceneNodes)
+		{
+			sceneNode->setVisible(visible);
+		}
+	}
+
 	void ISceneNode::attachSceneItem(ISceneItem& sceneItem)
 	{
 		// TODO(co) Need to guarantee that one scene item is only attached to one scene node at the same time
@@ -57,6 +84,32 @@ namespace RendererRuntime
 		for (ISceneItem* sceneItem : mAttachedSceneItems)
 		{
 			sceneItem->setVisible(visible);
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	void ISceneNode::updateGlobalTransformRecursive()
+	{
+		// Update this node
+		if (nullptr != mParentSceneNode)
+		{
+			mGlobalTransform = mParentSceneNode->mGlobalTransform;
+			mGlobalTransform += mTransform;
+		}
+		else
+		{
+			mGlobalTransform = mTransform;
+		}
+
+		// Update attached scene nodes
+		for (ISceneNode* sceneNode : mAttachedSceneNodes)
+		{
+			sceneNode->mGlobalTransform = mGlobalTransform;
+			sceneNode->mGlobalTransform += sceneNode->mTransform;
+			sceneNode->updateGlobalTransformRecursive();
 		}
 	}
 

@@ -223,7 +223,7 @@ void FirstScene::onUpdate()
 		// Update the scene node rotation
 		if (nullptr != mSceneNode && mRotationSpeed > 0.0f)
 		{
-			glm::vec3 eulerAngles = RendererRuntime::EulerAngles::matrixToEuler(glm::mat3_cast(mSceneNode->getTransform().rotation));
+			glm::vec3 eulerAngles = RendererRuntime::EulerAngles::matrixToEuler(glm::mat3_cast(mSceneNode->getGlobalTransform().rotation));
 			eulerAngles.x += rendererRuntime->getTimeManager().getPastSecondsSinceLastFrame() * mRotationSpeed;
 			mSceneNode->setRotation(RendererRuntime::EulerAngles::eulerToQuaternion(eulerAngles));
 		}
@@ -238,7 +238,7 @@ void FirstScene::onUpdate()
 		if (nullptr != mCameraSceneItem)
 		{
 			mHasCameraTransformBackup = true;
-			mCameraTransformBackup = mCameraSceneItem->getParentSceneNodeSafe().getTransform();
+			mCameraTransformBackup = mCameraSceneItem->getParentSceneNodeSafe().getGlobalTransform();
 		}
 	}
 
@@ -456,7 +456,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					if (nullptr != mSceneNode)
 					{
 						ImGui::Separator();
-						RendererRuntime::Transform transform = mSceneNode->getTransform();
+						RendererRuntime::Transform transform = mSceneNode->getGlobalTransform();
 						RendererRuntime::DebugGuiHelper::drawGizmo(*mCameraSceneItem, mGizmoSettings, transform);
 						mSceneNode->setTransform(transform);
 					}

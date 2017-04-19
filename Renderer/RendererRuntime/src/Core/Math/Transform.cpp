@@ -64,6 +64,17 @@ namespace RendererRuntime
 		rotation = glm::conjugate(rotation);
 	}
 
+	Transform& Transform::operator+=(const Transform& other)
+	{
+		// Set update position, rotation and scale
+		position += rotation * other.position;
+		rotation  = rotation * other.rotation;
+		scale    *= other.scale;
+
+		// Return a reference to this instance
+		return *this;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

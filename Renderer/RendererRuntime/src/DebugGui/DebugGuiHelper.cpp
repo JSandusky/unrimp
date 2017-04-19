@@ -204,7 +204,7 @@ namespace RendererRuntime
 		{
 			// Get transform data
 			glm::mat4 objectSpaceToWorldSpace;
-			skeletonMeshSceneItem.getParentSceneNodeSafe().getTransform().getAsMatrix(objectSpaceToWorldSpace);
+			skeletonMeshSceneItem.getParentSceneNodeSafe().getGlobalTransform().getAsMatrix(objectSpaceToWorldSpace);
 			const glm::mat4 objectSpaceToClipSpaceMatrix = cameraSceneItem.getViewSpaceToClipSpaceMatrix() * cameraSceneItem.getWorldSpaceToViewSpaceMatrix() * objectSpaceToWorldSpace;
 
 			// Get skeleton data

@@ -59,7 +59,7 @@ namespace RendererRuntime
 	const Transform& CameraSceneItem::getWorldSpaceToViewSpaceTransform() const
 	{
 		const ISceneNode* parentSceneNode = getParentSceneNode();
-		return (nullptr != parentSceneNode) ? parentSceneNode->getTransform() : Transform::IDENTITY;
+		return (nullptr != parentSceneNode) ? parentSceneNode->getGlobalTransform() : Transform::IDENTITY;
 	}
 
 	const glm::mat4& CameraSceneItem::getWorldSpaceToViewSpaceMatrix() const

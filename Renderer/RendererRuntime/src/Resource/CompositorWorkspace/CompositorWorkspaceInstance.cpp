@@ -470,7 +470,7 @@ namespace RendererRuntime
 	void CompositorWorkspaceInstance::gatherRenderQueueIndexRangesRenderableManagers(const CameraSceneItem& cameraSceneItem)
 	{
 		// TODO(co) This is just a dummy implementation, has to use high level culling including e.g. multi-threaded culling
-		const glm::vec3& cameraPosition = cameraSceneItem.getParentSceneNodeSafe().getTransform().position;
+		const glm::vec3& cameraPosition = cameraSceneItem.getParentSceneNodeSafe().getGlobalTransform().position;
 
 		// Loop through all scene nodes and add renderables to the render queue
 		const ISceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
@@ -480,7 +480,7 @@ namespace RendererRuntime
 			const ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
 
 			// Calculate the distance to the camera
-			const float distanceToCamera = glm::distance(cameraPosition, sceneNode->getTransform().position);
+			const float distanceToCamera = glm::distance(cameraPosition, sceneNode->getGlobalTransform().position);
 
 			// Loop through all scene items attached to the current scene node
 			const ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();

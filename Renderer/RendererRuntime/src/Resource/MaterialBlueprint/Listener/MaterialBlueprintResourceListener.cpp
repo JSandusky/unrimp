@@ -374,7 +374,7 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 3 == numberOfBytes);
 			const CameraSceneItem* cameraSceneItem = mCompositorContextData->getCameraSceneItem();
-			memcpy(buffer, glm::value_ptr((nullptr != cameraSceneItem) ? cameraSceneItem->getParentSceneNodeSafe().getTransform().position : Math::ZERO_VECTOR), numberOfBytes);
+			memcpy(buffer, glm::value_ptr((nullptr != cameraSceneItem) ? cameraSceneItem->getParentSceneNodeSafe().getGlobalTransform().position : Math::ZERO_VECTOR), numberOfBytes);
 		}
 		else if (::detail::PROJECTION_PARAMETERS == referenceValue)
 		{
@@ -460,7 +460,7 @@ namespace RendererRuntime
 			const LightSceneItem* lightSceneItem = mCompositorContextData->getLightSceneItem();
 			if (nullptr != lightSceneItem && nullptr != lightSceneItem->getParentSceneNode())
 			{
-				worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getTransform().rotation * Math::FORWARD_VECTOR;
+				worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::FORWARD_VECTOR;
 			}
 			else
 			{
