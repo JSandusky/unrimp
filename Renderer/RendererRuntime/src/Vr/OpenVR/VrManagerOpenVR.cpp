@@ -222,7 +222,41 @@ namespace
 			}
 
 			char* temp = new char[requiredBufferLength];
-			requiredBufferLength = vrSystem.GetStringTrackedDeviceProperty(trackedDeviceIndex, trackedDeviceProperty, temp, requiredBufferLength, trackedPropertyError);
+			vrSystem.GetStringTrackedDeviceProperty(trackedDeviceIndex, trackedDeviceProperty, temp, requiredBufferLength, trackedPropertyError);
+			std::string result = temp;
+			delete [] temp;
+			return result;
+		}
+
+		std::string getRenderModelComponentName(const std::string& renderModelName, uint32_t componentIndex)
+		{
+			vr::IVRRenderModels* vrRenderModels = vr::VRRenderModels();
+
+			uint32_t requiredBufferLength = vrRenderModels->GetComponentName(renderModelName.c_str(), componentIndex, nullptr, 0);
+			if (0 == requiredBufferLength)
+			{
+				return "";
+			}
+
+			char* temp = new char[requiredBufferLength];
+			vrRenderModels->GetComponentName(renderModelName.c_str(), componentIndex, temp, requiredBufferLength);
+			std::string result = temp;
+			delete [] temp;
+			return result;
+		}
+
+		std::string getRenderModelComponentRenderModelName(const std::string& renderModelName, const std::string& componentName)
+		{
+			vr::IVRRenderModels* vrRenderModels = vr::VRRenderModels();
+
+			uint32_t requiredBufferLength = vrRenderModels->GetComponentRenderModelName(renderModelName.c_str(), componentName.c_str(), nullptr, 0);
+			if (0 == requiredBufferLength)
+			{
+				return "";
+			}
+
+			char* temp = new char[requiredBufferLength];
+			vrRenderModels->GetComponentRenderModelName(renderModelName.c_str(), componentName.c_str(), temp, requiredBufferLength);
 			std::string result = temp;
 			delete [] temp;
 			return result;
@@ -242,7 +276,7 @@ namespace
 		}
 
 		// TODO(co) Awful quick'n'dirty implementation. Implement asynchronous render texture loading.
-		RendererRuntime::AssetId setupRenderModelDiffuseTexture(RendererRuntime::IRendererRuntime& rendererRuntime, const std::string& renderModelName, const vr::RenderModel_t& vrRenderModel)
+		RendererRuntime::AssetId setupRenderModelDiffuseTexture(const RendererRuntime::IRendererRuntime& rendererRuntime, const std::string& renderModelName, const vr::RenderModel_t& vrRenderModel)
 		{
 			// Get the texture name and convert it into an runtime texture asset ID
 			const std::string diffuseTextureName = "OpenVR_" + std::to_string(vrRenderModel.diffuseTextureId);
@@ -291,7 +325,7 @@ namespace
 			return diffuseTextureAssetId;
 		}
 
-		RendererRuntime::MaterialResourceId setupRenderModelMaterial(RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::MaterialResourceId vrDeviceMaterialResourceId, vr::TextureID_t vrTextureId, RendererRuntime::AssetId diffuseTextureAssetId)
+		RendererRuntime::MaterialResourceId setupRenderModelMaterial(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::MaterialResourceId vrDeviceMaterialResourceId, vr::TextureID_t vrTextureId, RendererRuntime::AssetId diffuseTextureAssetId)
 		{
 			// Get the texture name and convert it into an runtime material asset ID
 			const std::string materialName = "OpenVR_" + std::to_string(vrTextureId);
@@ -322,7 +356,7 @@ namespace
 		}
 
 		// TODO(co) Awful quick'n'dirty implementation. Implement asynchronous render model loading.
-		void setupRenderModel(RendererRuntime::IRendererRuntime& rendererRuntime, const std::string& renderModelName, RendererRuntime::MeshResource& meshResource, RendererRuntime::MaterialResourceId vrDeviceMaterialResourceId)
+		void setupRenderModel(const RendererRuntime::IRendererRuntime& rendererRuntime, const std::string& renderModelName, RendererRuntime::MeshResource& meshResource, RendererRuntime::MaterialResourceId vrDeviceMaterialResourceId)
 		{
 			vr::IVRRenderModels* vrRenderModels = vr::VRRenderModels();
 
@@ -461,6 +495,43 @@ namespace
 
 			// Free the render model
 			vrRenderModels->FreeRenderModel(vrRenderModel);
+		}
+
+		void createMeshSceneItem(RendererRuntime::ISceneResource& sceneResource, RendererRuntime::ISceneNode& sceneNode, const std::string& renderModelName, RendererRuntime::MaterialResourceId vrDeviceMaterialResourceId)
+		{
+			// Check whether or not we need to generate the runtime mesh asset right now
+			RendererRuntime::MeshResourceId meshResourceId = RendererRuntime::getUninitialized<RendererRuntime::MeshResourceId>();
+			{
+				const RendererRuntime::AssetId assetId(renderModelName.c_str());
+				const RendererRuntime::IRendererRuntime& rendererRuntime = sceneResource.getRendererRuntime();
+				RendererRuntime::MeshResourceManager& meshResourceManager = rendererRuntime.getMeshResourceManager();
+				RendererRuntime::MeshResource* meshResource = meshResourceManager.getMeshResourceByAssetId(assetId);
+				if (nullptr != meshResource)
+				{
+					meshResourceId = meshResource->getId();
+				}
+				else
+				{
+					// We need to generate the runtime mesh asset right now
+					meshResourceId = meshResourceManager.createEmptyMeshResourceByAssetId(assetId);
+					if (RendererRuntime::isInitialized(meshResourceId))
+					{
+						meshResource = meshResourceManager.tryGetById(meshResourceId);
+						if (nullptr != meshResource)
+						{
+							setupRenderModel(rendererRuntime, renderModelName, *meshResource, vrDeviceMaterialResourceId);
+						}
+					}
+				}
+			}
+
+			{ // Create mesh scene item
+				RendererRuntime::MeshSceneItem* meshSceneItem = sceneResource.createSceneItem<RendererRuntime::MeshSceneItem>(sceneNode);
+				if (nullptr != meshSceneItem)
+				{
+					meshSceneItem->setMeshResourceId(meshResourceId);
+				}
+			}
 		}
 
 		void setSceneItemsVisible(RendererRuntime::ISceneNode* sceneNodes[vr::k_unMaxTrackedDeviceCount], bool visible)
@@ -811,48 +882,37 @@ namespace RendererRuntime
 	{
 		assert(trackedDeviceIndex < vr::k_unMaxTrackedDeviceCount);
 
-		// Get the render model name and convert it into an runtime mesh asset ID
-		const std::string renderModelName = ::detail::getTrackedDeviceString(*mVrSystem, trackedDeviceIndex, vr::Prop_RenderModelName_String);
-		const AssetId assetId(renderModelName.c_str());
-
-		// Check whether or not we need to generate the runtime mesh asset right now
-		MeshResourceId meshResourceId = getUninitialized<MeshResourceId>();
-		{
-			MeshResourceManager& meshResourceManager = mRendererRuntime.getMeshResourceManager();
-			MeshResource* meshResource = meshResourceManager.getMeshResourceByAssetId(assetId);
-			if (nullptr != meshResource)
-			{
-				meshResourceId = meshResource->getId();
-			}
-			else
-			{
-				// We need to generate the runtime mesh asset right now
-				meshResourceId = meshResourceManager.createEmptyMeshResourceByAssetId(assetId);
-				if (isInitialized(meshResourceId))
-				{
-					meshResource = meshResourceManager.tryGetById(meshResourceId);
-					if (nullptr != meshResource)
-					{
-						::detail::setupRenderModel(mRendererRuntime, renderModelName, *meshResource, mVrDeviceMaterialResourceId);
-					}
-				}
-			}
-		}
-
 		// Create and setup scene node with mesh item, this is what's controlled during runtime
 		if (nullptr != mSceneResource)
 		{
+			// Create scene node
 			ISceneNode* sceneNode = mSceneNodes[trackedDeviceIndex] = mSceneResource->createSceneNode(Transform::IDENTITY);
 			if (nullptr != sceneNode)
 			{
-				MeshSceneItem* meshSceneItem = mSceneResource->createSceneItem<MeshSceneItem>(*sceneNode);
-				if (nullptr != meshSceneItem)
-				{
-					meshSceneItem->setMeshResourceId(meshResourceId);
+				// Get the render model name
+				const std::string renderModelName = ::detail::getTrackedDeviceString(*mVrSystem, trackedDeviceIndex, vr::Prop_RenderModelName_String);
 
-					// Tell the world
-					mVrManagerOpenVRListener->onMeshSceneItemCreated(trackedDeviceIndex, *meshSceneItem);
+				// In case the render model has components, don't use the render model directly, use its components instead so we can animate e.g. the controller trigger
+				const uint32_t componentCount = vr::VRRenderModels()->GetComponentCount(renderModelName.c_str());
+				if (componentCount > 0)
+				{
+					for (uint32_t componentIndex = 0; componentIndex < componentCount; ++componentIndex)
+					{
+						const std::string componentName = ::detail::getRenderModelComponentName(renderModelName, componentIndex);
+						const std::string componentRenderModelName = ::detail::getRenderModelComponentRenderModelName(renderModelName, componentName);
+						if (!componentRenderModelName.empty())
+						{
+							::detail::createMeshSceneItem(*mSceneResource, *sceneNode, componentRenderModelName, mVrDeviceMaterialResourceId);
+						}
+					}
 				}
+				else
+				{
+					::detail::createMeshSceneItem(*mSceneResource, *sceneNode, renderModelName, mVrDeviceMaterialResourceId);
+				}
+
+				// Tell the world
+				mVrManagerOpenVRListener->onSceneNodeCreated(trackedDeviceIndex, *mSceneResource, *sceneNode);
 			}
 		}
 	}

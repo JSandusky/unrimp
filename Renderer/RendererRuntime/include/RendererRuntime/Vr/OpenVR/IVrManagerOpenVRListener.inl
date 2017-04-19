@@ -47,7 +47,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void IVrManagerOpenVRListener::onMeshSceneItemCreated(vr::TrackedDeviceIndex_t, MeshSceneItem&)
+	inline void IVrManagerOpenVRListener::onSceneNodeCreated(vr::TrackedDeviceIndex_t, ISceneResource&, ISceneNode&)
 	{
 		// Nothing here
 	}

@@ -151,12 +151,12 @@ namespace
 				}
 			}
 
-			virtual void onMeshSceneItemCreated(vr::TrackedDeviceIndex_t trackedDeviceIndex, RendererRuntime::MeshSceneItem& meshSceneItem) override
+			virtual void onSceneNodeCreated(vr::TrackedDeviceIndex_t trackedDeviceIndex, RendererRuntime::ISceneResource& sceneResource, RendererRuntime::ISceneNode& sceneNode) override
 			{
 				if (mVrManagerOpenVR->getVrSystem()->GetTrackedDeviceClass(trackedDeviceIndex) == vr::TrackedDeviceClass_Controller)
 				{
 					// Attach a light to controllers, this way they can be seen easier and it's possible to illuminate the scene by using the hands
-					RendererRuntime::LightSceneItem* lightSceneItem = meshSceneItem.getSceneResource().createSceneItem<RendererRuntime::LightSceneItem>(meshSceneItem.getParentSceneNodeSafe());
+					RendererRuntime::LightSceneItem* lightSceneItem = sceneResource.createSceneItem<RendererRuntime::LightSceneItem>(sceneNode);
 					if (0 == mNumberOfVrControllers && nullptr != lightSceneItem)
 					{
 						// Spot light for the first VR controller
