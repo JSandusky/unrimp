@@ -57,7 +57,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ICompositorResourcePass : protected NonCopyable
+	class RENDERERRUNTIME_API_EXPORT ICompositorResourcePass : protected NonCopyable
 	{
 
 
@@ -81,7 +81,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		virtual CompositorPassTypeId getTypeId() const = 0;
-		RENDERERRUNTIME_API_EXPORT virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data);
+		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data);
 
 		/**
 		*  @brief

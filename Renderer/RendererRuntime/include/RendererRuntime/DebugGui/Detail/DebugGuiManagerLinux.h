@@ -55,11 +55,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	// TODO(sw) Move this into base class, because these methods are input/windowing agnostic?
 	public:
-		void onWindowResize(uint32_t width, uint32_t heigth);
-		void onKeyInput(uint32_t keySym, char character, bool pressed);
-		void onMouseMoveInput(int x, int y);
-		void onMouseButtonInput(uint32_t button, bool pressed);
-		void onMouseWheelInput(bool scrollUp);
+		void RENDERERRUNTIME_API_EXPORT onWindowResize(uint32_t width, uint32_t heigth);
+		void RENDERERRUNTIME_API_EXPORT onKeyInput(uint32_t keySym, char character, bool pressed);
+		void RENDERERRUNTIME_API_EXPORT onMouseMoveInput(int x, int y);
+		void RENDERERRUNTIME_API_EXPORT onMouseButtonInput(uint32_t button, bool pressed);
+		void RENDERERRUNTIME_API_EXPORT onMouseWheelInput(bool scrollUp);
 
 
 	//[-------------------------------------------------------]

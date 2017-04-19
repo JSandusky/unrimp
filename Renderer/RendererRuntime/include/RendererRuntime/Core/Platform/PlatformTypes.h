@@ -175,11 +175,7 @@
 	#define GENERIC_FUNCTION_EXPORT	extern "C" __declspec(dllexport)
 #elif LINUX
 	// To export classes, methods and variables
-	#if defined(HAVE_VISIBILITY_ATTR)
-		#define GENERIC_API_EXPORT __attribute__ ((visibility("default")))
-	#else
-		#define GENERIC_API_EXPORT
-	#endif
+	#define GENERIC_API_EXPORT __attribute__ ((visibility("default")))
 
 	// To export functions
 	#define GENERIC_FUNCTION_EXPORT extern "C"  __attribute__ ((visibility("default")))
