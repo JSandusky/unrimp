@@ -39,8 +39,8 @@
 		PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator '<x>' in switch of enum '<y>' is not explicitly handled by a case label
 		PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from '<x>' to '<y>', signed/unsigned mismatch
 		PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: '<x>': copy constructor was implicitly defined as deleted
-		#include <SPIRV\GlslangToSpv.h>
-		#include <glslang\MachineIndependent\localintermediate.h>
+		#include <SPIRV/GlslangToSpv.h>
+		#include <glslang/MachineIndependent/localintermediate.h>
 	PRAGMA_WARNING_POP
 #else
 	#include <tuple>	// For "std::ignore"
