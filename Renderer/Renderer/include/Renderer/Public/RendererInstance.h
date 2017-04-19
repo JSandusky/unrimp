@@ -67,6 +67,12 @@
 		extern Renderer::IRenderer *createOpenGLES3RendererInstance(Renderer::handle);
 	#endif
 
+	// Vulkan
+	#ifndef RENDERER_NO_VULKAN
+		// "createVulkanRendererInstance()" signature
+		extern Renderer::IRenderer *createVulkanRendererInstance(Renderer::handle);
+	#endif
+
 	// Direct3D 9
 	#ifndef RENDERER_NO_DIRECT3D9
 		// "createDirect3D9RendererInstance()" signature
@@ -83,6 +89,12 @@
 	#ifndef RENDERER_NO_DIRECT3D11
 		// "createDirect3D11RendererInstance()" signature
 		extern Renderer::IRenderer *createDirect3D11RendererInstance(Renderer::handle);
+	#endif
+
+	// Direct3D 12
+	#ifndef RENDERER_NO_DIRECT3D12
+		// "createDirect3D12RendererInstance()" signature
+		extern Renderer::IRenderer *createDirect3D12RendererInstance(Renderer::handle);
 	#endif
 #endif
 
@@ -115,7 +127,7 @@ namespace Renderer
 		*
 		*  @param[in] rendererName
 		*    Case sensitive ASCII name of the renderer to instance, must be valid.
-		*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
+		*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 		*  @param[in] rendererName
 		*    Native window handle TODO(co) A renderer instance fixed connected to a native window handle? This can't be right. If it's about OpenGL context sharing we surely can find a better solution.
 		*/
@@ -226,6 +238,15 @@ namespace Renderer
 					}
 				#endif
 
+				// Vulkan
+				#ifndef RENDERER_NO_VULKAN
+					if (0 == strcmp(rendererName, "Vulkan"))
+					{
+						// Create the renderer instance
+						mRenderer = createVulkanRendererInstance(nativeWindowHandle);
+					}
+				#endif
+
 				// Direct3D 9
 				#ifndef RENDERER_NO_DIRECT3D9
 					if (0 == strcmp(rendererName, "Direct3D9"))
@@ -250,6 +271,15 @@ namespace Renderer
 					{
 						// Create the renderer instance
 						mRenderer = createDirect3D11RendererInstance(nativeWindowHandle);
+					}
+				#endif
+
+				// Direct3D 12
+				#ifndef RENDERER_NO_DIRECT3D12
+					if (0 == strcmp(rendererName, "Direct3D12"))
+					{
+						// Create the renderer instance
+						mRenderer = createDirect3D12RendererInstance(nativeWindowHandle);
 					}
 				#endif
 			#endif

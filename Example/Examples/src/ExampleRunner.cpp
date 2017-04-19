@@ -79,7 +79,7 @@ ExampleRunner::~ExampleRunner() {}
 ExampleRunner::ExampleRunner()
 	:
 	// Case sensitive name of the renderer to instance, might be ignored in case e.g. "RENDERER_ONLY_DIRECT3D12" was set as preprocessor definition
-	// -> Example renderer names: "Null", "OpenGL", "OpenGLES3", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
+	// -> Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 	// -> In case the graphics driver supports it, the OpenGL ES 2 renderer can automatically also run on a desktop PC without an emulator (perfect for testing/debugging)
 	m_defaultRendererName(
 		#ifdef RENDERER_ONLY_NULL
@@ -88,6 +88,8 @@ ExampleRunner::ExampleRunner()
 			"OpenGL"
 		#elif RENDERER_ONLY_OPENGLES3
 			"OpenGLES3"
+		#elif RENDERER_ONLY_VULKAN
+			"Vulkan"
 		#elif WIN32
 			#ifdef RENDERER_ONLY_DIRECT3D9
 				"Direct3D9"
@@ -97,8 +99,6 @@ ExampleRunner::ExampleRunner()
 				"Direct3D11"
 			#elif RENDERER_ONLY_DIRECT3D12
 				"Direct3D12"
-			#elif RENDERER_ONLY_VULKAN
-				"Vulkan"
 			#endif
 		#endif
 	)
@@ -118,10 +118,10 @@ ExampleRunner::ExampleRunner()
 	}
 
 	// Sets of supported renderer backends
-	std::array<std::string, 8> supportsAllRenderer = {{"Null", "OpenGL", "OpenGLES3", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
-	std::array<std::string, 7> doesNotSupportOpenGLES3 = {{"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
-	std::array<std::string, 6> onlyShaderModel4Plus = {{"Null", "OpenGL", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
-	std::array<std::string, 5> onlyShaderModel5Plus = {{"Null", "OpenGL", "Direct3D11", "Direct3D12", "Vulkan"}};
+	std::array<std::string, 8> supportsAllRenderer = {{"Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"}};
+	std::array<std::string, 7> doesNotSupportOpenGLES3 = {{"Null", "OpenGL", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"}};
+	std::array<std::string, 6> onlyShaderModel4Plus = {{"Null", "OpenGL", "Vulkan", "Direct3D10", "Direct3D11", "Direct3D12"}};
+	std::array<std::string, 5> onlyShaderModel5Plus = {{"Null", "OpenGL", "Vulkan", "Direct3D11", "Direct3D12"}};
 
 	// Basics
 	addExample("FirstTriangle",					&RunRenderExample<FirstTriangle>,				supportsAllRenderer);

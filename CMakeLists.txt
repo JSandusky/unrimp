@@ -110,6 +110,9 @@ set(RENDERER_OPENGLES3		"1"	CACHE BOOL "Build OpenGL ES 3 renderer?")
 	# Advanced OpenGL ES 3 renderer options
 	set(RENDERER_OPENGLES3_NO_RENDERERMATCHCHECK	"1"	CACHE BOOL "If true, remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)")
 	mark_as_advanced(RENDERER_OPENGLES3_NO_STATE_CLEANUP)
+set(RENDERER_VULKAN			"1"	CACHE BOOL "Build Vulkan renderer?")
+	# Advanced Vulkan renderer options
+	set(RENDERER_VULKAN_NO_RENDERERMATCHCHECK		"1"	CACHE BOOL "If true, remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)")
 if(WIN32)
 	# Direct3D is Windows only
 	set(RENDERER_DIRECT3D9	"1"	CACHE BOOL "Build Direct3D 9 renderer?")
@@ -122,8 +125,12 @@ if(WIN32)
 		mark_as_advanced(RENDERER_DIRECT3D10_DEBUG)
 	set(RENDERER_DIRECT3D11	"1"	CACHE BOOL "Build Direct3D 11 renderer?")
 		# Advanced Direct3D 11 renderer options
-		set(RENDERER_DIRECT3D11_DEBUG	"1"	CACHE BOOL "If false, the Direct3D 9 PIX functions (D3DPERF_* functions) debug features are disabled (disabling support just reduces the binary size slightly but makes debugging more difficult)")
+		set(RENDERER_DIRECT3D11_DEBUG	"1"	CACHE BOOL "If false, disable Direct3D 11 user defined annotation (also works directly within VisualStudio 2017 out-of-the-box) debug features (always linked at runtime, disabling support just reduces the binary size slightly but makes debugging more difficult)")
 		mark_as_advanced(RENDERER_DIRECT3D11_DEBUG)
+	set(RENDERER_DIRECT3D12	"1"	CACHE BOOL "Build Direct3D 12 renderer?")
+		# Advanced Direct3D 12 renderer options
+		set(RENDERER_DIRECT3D12_DEBUG	"1"	CACHE BOOL "If false, disable Direct3D 12 user defined annotation (also works directly within VisualStudio 2017 out-of-the-box) debug features (always linked at runtime, disabling support just reduces the binary size slightly but makes debugging more difficult)")
+		mark_as_advanced(RENDERER_DIRECT3D12_DEBUG)
 endif()
 set(STATIC_LIBRARY			"1"	CACHE BOOL "Build static library?")
 set(SHARED_LIBRARY			"1"	CACHE BOOL "Build shared library?")

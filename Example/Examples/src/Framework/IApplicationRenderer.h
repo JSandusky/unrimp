@@ -36,42 +36,71 @@
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
+// TODO(co) "ExampleBase.h" and "IApplicationRenderer.h" use the same definitions
 #ifdef RENDERER_ONLY_NULL
 	#define RENDERER_NO_OPENGL
 	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
 	#define RENDERER_NO_DIRECT3D9
 	#define RENDERER_NO_DIRECT3D10
 	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
 #elif RENDERER_ONLY_OPENGL
 	#define RENDERER_NO_NULL
+	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
+	#define RENDERER_NO_DIRECT3D9
+	#define RENDERER_NO_DIRECT3D10
+	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
+#elif RENDERER_ONLY_OPENGLES3
+	#define RENDERER_NO_NULL
+	#define RENDERER_NO_OPENGL
+	#define RENDERER_NO_VULKAN
+	#define RENDERER_NO_DIRECT3D9
+	#define RENDERER_NO_DIRECT3D10
+	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
+#elif RENDERER_ONLY_VULKAN
+	#define RENDERER_NO_NULL
+	#define RENDERER_NO_OPENGL
 	#define RENDERER_NO_OPENGLES3
 	#define RENDERER_NO_DIRECT3D9
 	#define RENDERER_NO_DIRECT3D10
 	#define RENDERER_NO_DIRECT3D11
-#elif RENDERER_ONLY_OPENGLES3
-	#define RENDERER_NO_NULL
-	#define RENDERER_NO_OPENGL
-	#define RENDERER_NO_DIRECT3D9
-	#define RENDERER_NO_DIRECT3D10
-	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
 #elif RENDERER_ONLY_DIRECT3D9
 	#define RENDERER_NO_NULL
 	#define RENDERER_NO_OPENGL
 	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
 	#define RENDERER_NO_DIRECT3D10
 	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
 #elif RENDERER_ONLY_DIRECT3D10
 	#define RENDERER_NO_NULL
 	#define RENDERER_NO_OPENGL
 	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
 	#define RENDERER_NO_DIRECT3D9
 	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
 #elif RENDERER_ONLY_DIRECT3D11
 	#define RENDERER_NO_NULL
 	#define RENDERER_NO_OPENGL
 	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
 	#define RENDERER_NO_DIRECT3D9
 	#define RENDERER_NO_DIRECT3D10
+	#define RENDERER_NO_DIRECT3D12
+#elif RENDERER_ONLY_DIRECT3D12
+	#define RENDERER_NO_NULL
+	#define RENDERER_NO_OPENGL
+	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
+	#define RENDERER_NO_DIRECT3D9
+	#define RENDERER_NO_DIRECT3D10
+	#define RENDERER_NO_DIRECT3D11
 #endif
 
 
@@ -106,8 +135,7 @@ public:
 	*
 	*  @param[in] rendererName
 	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
-	*
+	*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 	*  @param[in] example
 	*    Pointer to an example which should be used
 	*/
@@ -155,7 +183,7 @@ protected:
 	*
 	*  @param[in] rendererName
 	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
+	*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 	*/
 	explicit IApplicationRenderer(const char *rendererName);
 
@@ -188,7 +216,7 @@ private:
 	*
 	*  @param[in] rendererName
 	*    Case sensitive ASCII name of the renderer to instance, if null pointer nothing happens.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
+	*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 	*
 	*  @return
 	*    The created renderer instance, null pointer on error

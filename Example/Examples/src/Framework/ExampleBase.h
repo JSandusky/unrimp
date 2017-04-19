@@ -29,49 +29,78 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationFrontend.h"
 
-// TODO(sw) To make the example agnostic from unrimp internal headers is should reference the header in <unrimp source dir>/include
+// TODO(sw) To make the example agnostic from Unrimp internal headers is should reference the header in <unrimp source dir>/include
 #include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
+// TODO(co) "ExampleBase.h" and "IApplicationRenderer.h" use the same definitions
 #ifdef RENDERER_ONLY_NULL
 	#define RENDERER_NO_OPENGL
 	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
 	#define RENDERER_NO_DIRECT3D9
 	#define RENDERER_NO_DIRECT3D10
 	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
 #elif RENDERER_ONLY_OPENGL
 	#define RENDERER_NO_NULL
+	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
+	#define RENDERER_NO_DIRECT3D9
+	#define RENDERER_NO_DIRECT3D10
+	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
+#elif RENDERER_ONLY_OPENGLES3
+	#define RENDERER_NO_NULL
+	#define RENDERER_NO_OPENGL
+	#define RENDERER_NO_VULKAN
+	#define RENDERER_NO_DIRECT3D9
+	#define RENDERER_NO_DIRECT3D10
+	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
+#elif RENDERER_ONLY_VULKAN
+	#define RENDERER_NO_NULL
+	#define RENDERER_NO_OPENGL
 	#define RENDERER_NO_OPENGLES3
 	#define RENDERER_NO_DIRECT3D9
 	#define RENDERER_NO_DIRECT3D10
 	#define RENDERER_NO_DIRECT3D11
-#elif RENDERER_ONLY_OPENGLES3
-	#define RENDERER_NO_NULL
-	#define RENDERER_NO_OPENGL
-	#define RENDERER_NO_DIRECT3D9
-	#define RENDERER_NO_DIRECT3D10
-	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
 #elif RENDERER_ONLY_DIRECT3D9
 	#define RENDERER_NO_NULL
 	#define RENDERER_NO_OPENGL
 	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
 	#define RENDERER_NO_DIRECT3D10
 	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
 #elif RENDERER_ONLY_DIRECT3D10
 	#define RENDERER_NO_NULL
 	#define RENDERER_NO_OPENGL
 	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
 	#define RENDERER_NO_DIRECT3D9
 	#define RENDERER_NO_DIRECT3D11
+	#define RENDERER_NO_DIRECT3D12
 #elif RENDERER_ONLY_DIRECT3D11
 	#define RENDERER_NO_NULL
 	#define RENDERER_NO_OPENGL
 	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
 	#define RENDERER_NO_DIRECT3D9
 	#define RENDERER_NO_DIRECT3D10
+	#define RENDERER_NO_DIRECT3D12
+#elif RENDERER_ONLY_DIRECT3D12
+	#define RENDERER_NO_NULL
+	#define RENDERER_NO_OPENGL
+	#define RENDERER_NO_OPENGLES3
+	#define RENDERER_NO_VULKAN
+	#define RENDERER_NO_DIRECT3D9
+	#define RENDERER_NO_DIRECT3D10
+	#define RENDERER_NO_DIRECT3D11
 #endif
 
 
