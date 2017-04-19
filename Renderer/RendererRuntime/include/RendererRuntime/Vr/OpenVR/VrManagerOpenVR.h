@@ -133,6 +133,27 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		struct Component
+		{
+			std::string name;
+			ISceneNode* sceneNode = nullptr;	// TODO(co) No crazy raw-pointers
+			Component(const std::string& _name, ISceneNode* _sceneNode) :
+				name(_name),
+				sceneNode(_sceneNode)
+			{};
+		};
+		typedef std::vector<Component> Components;
+		struct TrackedDeviceInformation
+		{
+			std::string renderModelName;
+			Components  components;
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
@@ -142,6 +163,7 @@ namespace RendererRuntime
 		MaterialResourceId		   mVrDeviceMaterialResourceId;
 		ISceneResource*			   mSceneResource;			// TODO(co) No crazy raw-pointers
 		ISceneNode*				   mSceneNodes[vr::k_unMaxTrackedDeviceCount];	// TODO(co) No crazy raw-pointers
+		TrackedDeviceInformation   mTrackedDeviceInformation[vr::k_unMaxTrackedDeviceCount];
 		OpenVRRuntimeLinking*	   mOpenVRRuntimeLinking;
 		vr::EGraphicsAPIConvention mVrGraphicsAPIConvention;
 		vr::IVRSystem*			   mVrSystem;

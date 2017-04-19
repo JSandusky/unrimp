@@ -759,6 +759,34 @@ namespace RendererRuntime
 			}
 		}
 
+		// Update render model components so we can see e.g. controller trigger animations
+		for (uint32_t deviceIndex = 0; deviceIndex < vr::k_unMaxTrackedDeviceCount; ++deviceIndex)
+		{
+			const TrackedDeviceInformation& trackedDeviceInformation = mTrackedDeviceInformation[deviceIndex];
+			if (!trackedDeviceInformation.renderModelName.empty() && !trackedDeviceInformation.components.empty())
+			{
+				vr::VRControllerState_t vrControllerState;
+				if (mVrSystem->GetControllerState(deviceIndex, &vrControllerState))
+				{
+					vr::IVRRenderModels* vrRenderModels = vr::VRRenderModels();
+					for (const Component& component : trackedDeviceInformation.components)
+					{
+						assert(!component.name.empty());
+						ISceneNode* sceneNode = component.sceneNode;
+						assert(nullptr != sceneNode);
+						vr::RenderModel_ControllerMode_State_t renderModelControllerModeState;
+						renderModelControllerModeState.bScrollWheelVisible = false;
+						vr::RenderModel_ComponentState_t renderModelComponentState;
+						if (vrRenderModels->GetComponentState(trackedDeviceInformation.renderModelName.c_str(), component.name.c_str(), &vrControllerState, &renderModelControllerModeState, &renderModelComponentState))
+						{
+							sceneNode->setTransform(Transform(::detail::convertOpenVrMatrixToGlmMat34(renderModelComponentState.mTrackingToComponentRenderModel)));
+							sceneNode->setVisible((renderModelComponentState.uProperties & vr::VRComponentProperty_IsVisible) != 0);
+						}
+					}
+				}
+			}
+		}
+
 		// Backup HMD pose
 		if (mVrTrackedDevicePose[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid)
 		{
@@ -889,11 +917,16 @@ namespace RendererRuntime
 			ISceneNode* sceneNode = mSceneNodes[trackedDeviceIndex] = mSceneResource->createSceneNode(Transform::IDENTITY);
 			if (nullptr != sceneNode)
 			{
+				TrackedDeviceInformation& trackedDeviceInformation = mTrackedDeviceInformation[trackedDeviceIndex];
+				trackedDeviceInformation.components.clear();
+
 				// Get the render model name
-				const std::string renderModelName = ::detail::getTrackedDeviceString(*mVrSystem, trackedDeviceIndex, vr::Prop_RenderModelName_String);
+				trackedDeviceInformation.renderModelName = ::detail::getTrackedDeviceString(*mVrSystem, trackedDeviceIndex, vr::Prop_RenderModelName_String);
+				const std::string& renderModelName = trackedDeviceInformation.renderModelName;
 
 				// In case the render model has components, don't use the render model directly, use its components instead so we can animate e.g. the controller trigger
-				const uint32_t componentCount = vr::VRRenderModels()->GetComponentCount(renderModelName.c_str());
+				vr::IVRRenderModels* vrRenderModels = vr::VRRenderModels();
+				const uint32_t componentCount = vrRenderModels->GetComponentCount(renderModelName.c_str());
 				vr::VRControllerState_t vrControllerState;
 				if (componentCount > 0 && mVrSystem->GetControllerState(trackedDeviceIndex, &vrControllerState))
 				{
@@ -907,7 +940,7 @@ namespace RendererRuntime
 							vr::RenderModel_ControllerMode_State_t renderModelControllerModeState;
 							renderModelControllerModeState.bScrollWheelVisible = false;
 							vr::RenderModel_ComponentState_t renderModelComponentState;
-							if (vr::VRRenderModels()->GetComponentState(renderModelName.c_str(), componentName.c_str(), &vrControllerState, &renderModelControllerModeState, &renderModelComponentState))
+							if (vrRenderModels->GetComponentState(renderModelName.c_str(), componentName.c_str(), &vrControllerState, &renderModelControllerModeState, &renderModelComponentState))
 							{
 								// Create the scene node of the component
 								ISceneNode* componentSceneNode = mSceneResource->createSceneNode(Transform(::detail::convertOpenVrMatrixToGlmMat34(renderModelComponentState.mTrackingToComponentRenderModel)));
@@ -916,6 +949,7 @@ namespace RendererRuntime
 									sceneNode->attachSceneNode(*componentSceneNode);
 									::detail::createMeshSceneItem(*mSceneResource, *componentSceneNode, componentRenderModelName, mVrDeviceMaterialResourceId);
 									componentSceneNode->setVisible((renderModelComponentState.uProperties & vr::VRComponentProperty_IsVisible) != 0);
+									trackedDeviceInformation.components.emplace_back(componentName, componentSceneNode);
 								}
 							}
 						}
