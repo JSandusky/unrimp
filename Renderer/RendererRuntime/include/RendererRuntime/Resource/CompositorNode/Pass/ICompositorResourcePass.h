@@ -29,7 +29,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 
 
 //[-------------------------------------------------------]
@@ -57,7 +56,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ICompositorResourcePass : protected NonCopyable
+	class RENDERERRUNTIME_API_EXPORT ICompositorResourcePass
 	{
 
 
@@ -81,7 +80,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		virtual CompositorPassTypeId getTypeId() const = 0;
-		RENDERERRUNTIME_API_EXPORT virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data);
+		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data);
 
 		/**
 		*  @brief
