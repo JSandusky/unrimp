@@ -79,14 +79,13 @@ namespace RendererRuntime
 		return mAttachedSceneItems;
 	}
 
-
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline ISceneNode::ISceneNode(const Transform& transform) :
+		mParentSceneNode(nullptr),
 		mTransform(transform),
-		mGlobalTransform(transform),
-		mParentSceneNode(nullptr)
+		mGlobalTransform(transform)
 	{
 		// Nothing here
 	}
