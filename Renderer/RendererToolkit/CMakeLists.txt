@@ -56,13 +56,6 @@ set(SOURCE_CODES
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4frame.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4hc.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/xxhash.c
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/sqlitecpp/SQLiteCpp/src/Backup.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/sqlitecpp/SQLiteCpp/src/Column.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/sqlitecpp/SQLiteCpp/src/Database.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/sqlitecpp/SQLiteCpp/src/Exception.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/sqlitecpp/SQLiteCpp/src/Statement.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/sqlitecpp/SQLiteCpp/src/Transaction.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/sqlitecpp/SQLiteCpp/sqlite3/sqlite3.c
 	src/AssetCompiler/CompositorNodeAssetCompiler.cpp
 	src/AssetCompiler/CompositorWorkspaceAssetCompiler.cpp
 	src/AssetCompiler/MaterialAssetCompiler.cpp
@@ -108,25 +101,25 @@ endif()
 if(STATIC_LIBRARY)
 	add_library(RendererToolkitStatic STATIC ${SOURCE_CODES})
 	if (WIN32)
-		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX} zlibStatic.lib)
+		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX} zlibStatic.lib SQLiteCpp sqlite3)
 	elseif(UNIX)
-		set(LIBRARIES ${LIBRARIES} assimp tiff minizip crunch stdc++fs dl)
+		set(LIBRARIES ${LIBRARIES} assimp tiff minizip crunch stdc++fs SQLiteCpp sqlite3 dl)
 	endif()
 
 	target_link_libraries(RendererToolkitStatic ${LIBRARIES})
 
-	add_dependencies(RendererToolkitStatic crunch)
+	add_dependencies(RendererToolkitStatic crunch SQLiteCpp)
 endif()
 if(SHARED_LIBRARY)
 	add_library(RendererToolkit SHARED ${SOURCE_CODES})
 	set_target_properties(RendererToolkit PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DRENDERERTOOLKIT_EXPORTS")
 	if(WIN32)
-		target_link_libraries(RendererToolkit assimp.lib crnlib.lib)
+		target_link_libraries(RendererToolkit assimp.lib crnlib.lib SQLiteCpp sqlite3)
 	else()
-		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} tiff minizip crunch stdc++fs dl)
+		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} tiff minizip crunch stdc++fs SQLiteCpp sqlite3 dl)
 	endif()
 
-	add_dependencies(RendererToolkit crunch)
+	add_dependencies(RendererToolkit crunch SQLiteCpp)
 endif()
 
 
