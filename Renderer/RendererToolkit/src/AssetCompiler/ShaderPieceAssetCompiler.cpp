@@ -27,6 +27,7 @@
 #include "RendererToolkit/Helper/StringHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Resource/ShaderPiece/Loader/ShaderPieceFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -39,7 +40,6 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <fstream>
-#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -105,7 +105,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1ShaderPiece::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
 
 			{ // Shader piece
 				// Get file size and file data
@@ -126,15 +126,15 @@ namespace RendererToolkit
 				{ // Write down the shader piece header
 					RendererRuntime::v1ShaderPiece::ShaderPieceHeader shaderPieceHeader;
 					shaderPieceHeader.numberOfShaderSourceCodeBytes = static_cast<uint32_t>(numberOfBytes);
-					outputMemoryStream.write(reinterpret_cast<const char*>(&shaderPieceHeader), sizeof(RendererRuntime::v1ShaderPiece::ShaderPieceHeader));
+					memoryFile.write(&shaderPieceHeader, sizeof(RendererRuntime::v1ShaderPiece::ShaderPieceHeader));
 				}
 
 				// Dump the unchanged content into the output file stream
-				outputMemoryStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
+				memoryFile.write(sourceCode.c_str(), numberOfBytes);
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1ShaderPiece::FORMAT_TYPE, RendererRuntime::v1ShaderPiece::FORMAT_VERSION, outputAssetFilename);
+			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::v1ShaderPiece::FORMAT_TYPE, RendererRuntime::v1ShaderPiece::FORMAT_VERSION, outputAssetFilename);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);

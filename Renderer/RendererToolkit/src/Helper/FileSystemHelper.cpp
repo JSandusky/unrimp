@@ -24,9 +24,9 @@
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 
 #include <RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h>	// Any header which defines "RendererRuntime::FileFormatHeader" will do here
+#include <RendererRuntime/Core/File/MemoryFile.h>
 
 #include <fstream>
-#include <sstream>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -45,14 +45,13 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	void FileSystemHelper::writeCompressedFile(const std::stringstream& outputMemoryStream, uint32_t formatType, uint32_t formatVersion, const std::string& outputAssetFilename)
+	void FileSystemHelper::writeCompressedFile(const RendererRuntime::MemoryFile& memoryFile, uint32_t formatType, uint32_t formatVersion, const std::string& outputAssetFilename)
 	{
-		// TODO(co) Optimization: Is there a simple solution without copying data around?
-		std::string data = outputMemoryStream.str();
-		const int destinationCapacity = LZ4_compressBound(static_cast<int>(data.size()));
+		const RendererRuntime::MemoryFile::ByteVector& byteVector = memoryFile.getByteVector();
+		const int destinationCapacity = LZ4_compressBound(static_cast<int>(byteVector.size()));
 		char* destination = new char[static_cast<unsigned int>(destinationCapacity)];
 		{
-			const int numberOfWrittenBytes = LZ4_compress_HC(data.data(), destination, static_cast<int>(data.size()), destinationCapacity, LZ4HC_CLEVEL_MAX);
+			const int numberOfWrittenBytes = LZ4_compress_HC(reinterpret_cast<const char*>(byteVector.data()), destination, static_cast<int>(byteVector.size()), destinationCapacity, LZ4HC_CLEVEL_MAX);
 			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 			{ // Write down the file format header
@@ -60,7 +59,7 @@ namespace RendererToolkit
 				fileFormatHeader.formatType				   = formatType;
 				fileFormatHeader.formatVersion			   = formatVersion;
 				fileFormatHeader.numberOfCompressedBytes   = static_cast<uint32_t>(numberOfWrittenBytes);
-				fileFormatHeader.numberOfDecompressedBytes = static_cast<uint32_t>(data.size());
+				fileFormatHeader.numberOfDecompressedBytes = static_cast<uint32_t>(byteVector.size());
 				outputFileStream.write(reinterpret_cast<const char*>(&fileFormatHeader), sizeof(RendererRuntime::FileFormatHeader));
 			}
 

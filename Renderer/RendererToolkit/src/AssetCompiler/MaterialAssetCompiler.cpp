@@ -30,6 +30,7 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -41,7 +42,6 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <fstream>
-#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -112,7 +112,7 @@ namespace RendererToolkit
 		// if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
 
 			{ // Material
 				// Parse JSON
@@ -126,18 +126,18 @@ namespace RendererToolkit
 					RendererRuntime::v1Material::MaterialHeader materialHeader;
 					materialHeader.numberOfTechniques = static_cast<uint32_t>(techniques.size());
 					materialHeader.numberOfProperties = static_cast<uint32_t>(sortedMaterialPropertyVector.size());
-					outputMemoryStream.write(reinterpret_cast<const char*>(&materialHeader), sizeof(RendererRuntime::v1Material::MaterialHeader));
+					memoryFile.write(&materialHeader, sizeof(RendererRuntime::v1Material::MaterialHeader));
 				}
 
 				// Write down the material techniques
-				outputMemoryStream.write(reinterpret_cast<const char*>(techniques.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Material::Technique) * techniques.size()));
+				memoryFile.write(techniques.data(), sizeof(RendererRuntime::v1Material::Technique) * techniques.size());
 
 				// Write down all material properties
-				outputMemoryStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size()));
+				memoryFile.write(sortedMaterialPropertyVector.data(), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1Material::FORMAT_TYPE, RendererRuntime::v1Material::FORMAT_VERSION, outputAssetFilename);
+			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::v1Material::FORMAT_TYPE, RendererRuntime::v1Material::FORMAT_VERSION, outputAssetFilename);
 
 			// Store new cache entries or update existing ones
 			// TODO(co) Material assets are currently excluded from the cache: See more detailed comment above

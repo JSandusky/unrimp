@@ -91,6 +91,12 @@ namespace
 				mFileStream.ignore(static_cast<std::streamsize>(numberOfBytes));
 			}
 
+			virtual void write(const void*, size_t) override
+			{
+				// TODO(co) Currently, this file interface implementation is read-only. Might change as soon as the renderer runtime needs to e.g. write a pipeline state cache.
+				assert(false);
+			}
+
 
 		//[-------------------------------------------------------]
 		//[ Protected methods                                     ]

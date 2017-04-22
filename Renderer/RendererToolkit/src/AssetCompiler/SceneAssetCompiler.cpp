@@ -28,6 +28,7 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Resource/Scene/Item/LightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h>
@@ -43,7 +44,6 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <fstream>
-#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -156,7 +156,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Scene::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
 
 			{ // Scene
 				// Parse JSON
@@ -166,7 +166,7 @@ namespace RendererToolkit
 				{ // Write down the scene resource header
 					RendererRuntime::v1Scene::SceneHeader sceneHeader;
 					sceneHeader.unused = 42;	// TODO(co) Currently the scene header is unused
-					outputMemoryStream.write(reinterpret_cast<const char*>(&sceneHeader), sizeof(RendererRuntime::v1Scene::SceneHeader));
+					memoryFile.write(&sceneHeader, sizeof(RendererRuntime::v1Scene::SceneHeader));
 				}
 
 				// Mandatory main sections of the material blueprint
@@ -176,7 +176,7 @@ namespace RendererToolkit
 				{ // Write down the scene nodes
 					RendererRuntime::v1Scene::Nodes nodes;
 					nodes.numberOfNodes = rapidJsonValueNodes.MemberCount();
-					outputMemoryStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Scene::Nodes));
+					memoryFile.write(&nodes, sizeof(RendererRuntime::v1Scene::Nodes));
 
 					// Loop through all scene nodes
 					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorNodes = rapidJsonValueNodes.MemberBegin(); rapidJsonMemberIteratorNodes != rapidJsonValueNodes.MemberEnd(); ++rapidJsonMemberIteratorNodes)
@@ -201,7 +201,7 @@ namespace RendererToolkit
 
 							// Write down the scene node
 							node.numberOfItems = (nullptr != rapidJsonValueItems) ? rapidJsonValueItems->MemberCount() : 0;
-							outputMemoryStream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Scene::Node));
+							memoryFile.write(&node, sizeof(RendererRuntime::v1Scene::Node));
 						}
 
 						// Write down the scene items
@@ -237,7 +237,7 @@ namespace RendererToolkit
 									RendererRuntime::v1Scene::ItemHeader itemHeader;
 									itemHeader.typeId		 = typeId;
 									itemHeader.numberOfBytes = numberOfBytes;
-									outputMemoryStream.write(reinterpret_cast<const char*>(&itemHeader), sizeof(RendererRuntime::v1Scene::ItemHeader));
+									memoryFile.write(&itemHeader, sizeof(RendererRuntime::v1Scene::ItemHeader));
 								}
 
 								// Write down the scene item type specific data, if there is any
@@ -290,7 +290,7 @@ namespace RendererToolkit
 										}
 
 										// Write down
-										outputMemoryStream.write(reinterpret_cast<const char*>(&lightItem), sizeof(RendererRuntime::v1Scene::LightItem));
+										memoryFile.write(&lightItem, sizeof(RendererRuntime::v1Scene::LightItem));
 									}
 									else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 									{
@@ -303,7 +303,7 @@ namespace RendererToolkit
 											skeletonMeshItem.skeletonAnimationAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "SkeletonAnimationAssetId");
 
 											// Write down
-											outputMemoryStream.write(reinterpret_cast<const char*>(&skeletonMeshItem), sizeof(RendererRuntime::v1Scene::SkeletonMeshItem));
+											memoryFile.write(&skeletonMeshItem, sizeof(RendererRuntime::v1Scene::SkeletonMeshItem));
 										}
 
 										// Mesh scene item
@@ -329,11 +329,11 @@ namespace RendererToolkit
 										meshItem.numberOfSubMeshMaterialAssetIds = static_cast<uint32_t>(subMeshMaterialAssetIds.size());
 
 										// Write down
-										outputMemoryStream.write(reinterpret_cast<const char*>(&meshItem), sizeof(RendererRuntime::v1Scene::MeshItem));
+										memoryFile.write(&meshItem, sizeof(RendererRuntime::v1Scene::MeshItem));
 										if (!subMeshMaterialAssetIds.empty())
 										{
 											// Write down all sub-mesh material asset IDs
-											outputMemoryStream.write(reinterpret_cast<const char*>(subMeshMaterialAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * subMeshMaterialAssetIds.size()));
+											memoryFile.write(subMeshMaterialAssetIds.data(), sizeof(RendererRuntime::AssetId) * subMeshMaterialAssetIds.size());
 										}
 									}
 								}
@@ -344,7 +344,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1Scene::FORMAT_TYPE, RendererRuntime::v1Scene::FORMAT_VERSION, outputAssetFilename);
+			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::v1Scene::FORMAT_TYPE, RendererRuntime::v1Scene::FORMAT_VERSION, outputAssetFilename);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);

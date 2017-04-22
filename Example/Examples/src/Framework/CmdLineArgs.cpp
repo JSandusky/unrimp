@@ -25,13 +25,13 @@
 #include "CmdLineArgs.h"
 #ifdef WIN32
 	#include "framework/WindowsHeader.h"
-#ifdef UNICODE
-	#include "utf8/utf8.h" // to convert utf16 strings to utf8
-#else
-	#include <sstream>
-	#include <algorithm>
-	#include <iterator>
-#endif
+	#ifdef UNICODE
+		#include "utf8/utf8.h" // to convert utf16 strings to utf8
+	#else
+		#include <sstream>
+		#include <algorithm>
+		#include <iterator>
+	#endif
 #endif
 
 
@@ -62,7 +62,7 @@ CmdLineArgs::CmdLineArgs()
 		std::string cmdLine(GetCommandLineA());
 		std::istringstream ss(cmdLine);
 		std::istream_iterator<std::string> iss(ss);
-		// the first token is the path+name of the programm
+		// the first token is the path+name of the program
 		// -> ignore it
 		iss++;
 		std::copy(iss,

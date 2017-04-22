@@ -22,7 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <cassert>
-#include <cstring>	// For "memcpy()"
+#include <cstring>		// For "memcpy()"
+#include <iterator>		// For "std::back_inserter()"
+#include <algorithm>	// For "std::copy()"
 
 
 //[-------------------------------------------------------]
@@ -47,6 +49,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline const MemoryFile::ByteVector& MemoryFile::getByteVector() const
+	{
+		return mDecompressedData;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IFile methods         ]
@@ -67,6 +74,11 @@ namespace RendererRuntime
 	{
 		assert((mCurrentDataPointer - mDecompressedData.data()) + numberOfBytes <= mDecompressedData.size());
 		mCurrentDataPointer += numberOfBytes;
+	}
+
+	inline void MemoryFile::write(const void* sourceBuffer, size_t numberOfBytes)
+	{
+		std::copy(static_cast<const uint8_t*>(sourceBuffer), static_cast<const uint8_t*>(sourceBuffer) + numberOfBytes, std::back_inserter(mDecompressedData));
 	}
 
 

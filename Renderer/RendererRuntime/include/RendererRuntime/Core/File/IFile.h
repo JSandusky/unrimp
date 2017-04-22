@@ -57,6 +57,9 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IFile methods         ]
 	//[-------------------------------------------------------]
 	public:
+		//[-------------------------------------------------------]
+		//[ Read                                                  ]
+		//[-------------------------------------------------------]
 		/**
 		*  @brief
 		*    Return the number of bytes inside the file
@@ -85,6 +88,20 @@ namespace RendererRuntime
 		*    Number of bytes to skip, it's the callers responsibility that this number of byte is correct
 		*/
 		virtual void skip(size_t numberOfBytes) = 0;
+
+		//[-------------------------------------------------------]
+		//[ Write                                                 ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Write a requested number of bytes into the file
+		*
+		*  @param[in] sourceBuffer
+		*    Source buffer were to read from, must be at least "numberOfBytes" long, never ever a null pointer
+		*  @param[in] numberOfBytes
+		*    Number of bytes to read from the source buffer and write into the file, it's the callers responsibility that this number of byte is correct
+		*/
+		virtual void write(const void* sourceBuffer, size_t numberOfBytes) = 0;
 
 
 	//[-------------------------------------------------------]

@@ -28,6 +28,7 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Resource/CompositorWorkspace/Loader/CompositorWorkspaceFileFormat.h>
 #include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResource.h>
 
@@ -41,7 +42,6 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <fstream>
-#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -107,7 +107,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1CompositorWorkspace::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
 
 			{ // Compositor workspace
 				// Parse JSON
@@ -117,7 +117,7 @@ namespace RendererToolkit
 				{ // Write down the compositor workspace resource header
 					RendererRuntime::v1CompositorWorkspace::CompositorWorkspaceHeader compositorWorkspaceHeader;
 					compositorWorkspaceHeader.unused = 42;	// TODO(co) Currently the compositor workspace header is unused
-					outputMemoryStream.write(reinterpret_cast<const char*>(&compositorWorkspaceHeader), sizeof(RendererRuntime::v1CompositorWorkspace::CompositorWorkspaceHeader));
+					memoryFile.write(&compositorWorkspaceHeader, sizeof(RendererRuntime::v1CompositorWorkspace::CompositorWorkspaceHeader));
 				}
 
 				// Mandatory main sections of the compositor workspace
@@ -127,7 +127,7 @@ namespace RendererToolkit
 				{ // Write down the compositor resource nodes
 					RendererRuntime::v1CompositorWorkspace::Nodes nodes;
 					nodes.numberOfNodes = rapidJsonValueNodes.MemberCount();
-					outputMemoryStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1CompositorWorkspace::Nodes));
+					memoryFile.write(&nodes, sizeof(RendererRuntime::v1CompositorWorkspace::Nodes));
 
 					// Loop through all compositor workspace resource nodes
 					RendererRuntime::CompositorWorkspaceResource::CompositorNodeAssetIds compositorNodeAssetIds;
@@ -138,12 +138,12 @@ namespace RendererToolkit
 					}
 
 					// Write down compositor node asset IDs
-					outputMemoryStream.write(reinterpret_cast<const char*>(compositorNodeAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * nodes.numberOfNodes));
+					memoryFile.write(compositorNodeAssetIds.data(), sizeof(RendererRuntime::AssetId) * nodes.numberOfNodes);
 				}
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1CompositorWorkspace::FORMAT_TYPE, RendererRuntime::v1CompositorWorkspace::FORMAT_VERSION, outputAssetFilename);
+			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::v1CompositorWorkspace::FORMAT_TYPE, RendererRuntime::v1CompositorWorkspace::FORMAT_VERSION, outputAssetFilename);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);

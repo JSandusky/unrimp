@@ -56,11 +56,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<uint8_t> ByteVector;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
 		inline MemoryFile();
 		inline virtual ~MemoryFile();
+		inline const ByteVector& getByteVector() const;
 		RENDERERRUNTIME_API_EXPORT void setLz4CompressedDataByFile(IFile& file, uint32_t numberOfCompressedBytes, uint32_t numberOfDecompressedBytes);
 		RENDERERRUNTIME_API_EXPORT void decompress();
 
@@ -72,6 +80,7 @@ namespace RendererRuntime
 		inline virtual size_t getNumberOfBytes() override;
 		inline virtual void read(void* destinationBuffer, size_t numberOfBytes) override;
 		inline virtual void skip(size_t numberOfBytes) override;
+		inline virtual void write(const void* sourceBuffer, size_t numberOfBytes) override;
 
 
 	//[-------------------------------------------------------]
@@ -80,13 +89,6 @@ namespace RendererRuntime
 	protected:
 		MemoryFile(const MemoryFile&) = delete;
 		MemoryFile& operator=(const MemoryFile&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::vector<uint8_t> ByteVector;
 
 
 	//[-------------------------------------------------------]

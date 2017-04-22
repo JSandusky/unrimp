@@ -39,6 +39,7 @@
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/CompositorWorkspaceAssetCompiler.h"
 
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -51,7 +52,6 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <cassert>
-#include <sstream>
 #include <fstream>
 #include <algorithm>
 
@@ -292,7 +292,7 @@ namespace RendererToolkit
 
 		{ // Write runtime asset package
 			RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = outputAssetPackage.getWritableSortedAssetVector();
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
 
 			// Ensure the asset package is sorted
 			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), ::detail::orderByAssetId);
@@ -307,14 +307,14 @@ namespace RendererToolkit
 				#pragma pack(pop)
 				AssetPackageHeader assetPackageHeader;
 				assetPackageHeader.numberOfAssets = static_cast<uint32_t>(sortedAssetVector.size());
-				outputMemoryStream.write(reinterpret_cast<const char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
+				memoryFile.write(&assetPackageHeader, sizeof(AssetPackageHeader));
 			}
 
 			// Write down the asset package content in one single burst
-			outputMemoryStream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::Asset) * sortedAssetVector.size()));
+			memoryFile.write(sortedAssetVector.data(), sizeof(RendererRuntime::Asset) * sortedAssetVector.size());
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::StringId("AssetPackage"), 2, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets");
+			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::StringId("AssetPackage"), 2, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets");
 		}
 	}
 

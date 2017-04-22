@@ -27,6 +27,7 @@
 #include "RendererToolkit/Helper/StringHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
 #include <RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintFileFormat.h>
 
@@ -40,7 +41,6 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <fstream>
-#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -192,7 +192,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
 
 			{ // Shader blueprint
 				// Get file size and file data
@@ -252,21 +252,21 @@ namespace RendererToolkit
 					shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds = static_cast<uint16_t>(includeShaderPieceAssetIds.size());
 					shaderBlueprintHeader.numberReferencedShaderProperties   = static_cast<uint16_t>(referencedShaderProperties.getSortedPropertyVector().size());
 					shaderBlueprintHeader.numberOfShaderSourceCodeBytes		 = static_cast<uint32_t>(numberOfBytes);
-					outputMemoryStream.write(reinterpret_cast<const char*>(&shaderBlueprintHeader), sizeof(RendererRuntime::v1ShaderBlueprint::ShaderBlueprintHeader));
+					memoryFile.write(&shaderBlueprintHeader, sizeof(RendererRuntime::v1ShaderBlueprint::ShaderBlueprintHeader));
 				}
 
 				// Write down the asset IDs of the shader pieces to include
-				outputMemoryStream.write(reinterpret_cast<char*>(includeShaderPieceAssetIds.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::AssetId) * includeShaderPieceAssetIds.size()));
+				memoryFile.write(includeShaderPieceAssetIds.data(), sizeof(RendererRuntime::AssetId) * includeShaderPieceAssetIds.size());
 
 				// Write down the referenced shader properties
-				outputMemoryStream.write(reinterpret_cast<char*>(referencedShaderProperties.getSortedPropertyVector().data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * referencedShaderProperties.getSortedPropertyVector().size()));
+				memoryFile.write(referencedShaderProperties.getSortedPropertyVector().data(), sizeof(RendererRuntime::ShaderProperties::Property) * referencedShaderProperties.getSortedPropertyVector().size());
 
 				// Dump the unchanged content into the output file stream
-				outputMemoryStream.write(sourceCode.c_str(), static_cast<std::streamsize>(numberOfBytes));
+				memoryFile.write(sourceCode.c_str(), numberOfBytes);
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1ShaderBlueprint::FORMAT_TYPE, RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION, outputAssetFilename);
+			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::v1ShaderBlueprint::FORMAT_TYPE, RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION, outputAssetFilename);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);

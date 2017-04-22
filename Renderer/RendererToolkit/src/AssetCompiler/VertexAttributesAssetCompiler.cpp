@@ -28,6 +28,7 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Resource/VertexAttributes/VertexAttributesResource.h>
 #include <RendererRuntime/Resource/VertexAttributes/Loader/VertexAttributesFileFormat.h>
 
@@ -41,7 +42,6 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <fstream>
-#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -108,7 +108,7 @@ namespace RendererToolkit
 	//	if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1VertexAttributes::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
 
 			{ // Vertex attributes
 				// Parse JSON
@@ -118,14 +118,14 @@ namespace RendererToolkit
 				{ // Write down the vertex attributes header
 					RendererRuntime::v1VertexAttributes::VertexAttributesHeader vertexAttributesHeader;
 					vertexAttributesHeader.numberOfVertexAttributes = 1;
-					outputMemoryStream.write(reinterpret_cast<const char*>(&vertexAttributesHeader), sizeof(RendererRuntime::v1VertexAttributes::VertexAttributesHeader));
+					memoryFile.write(&vertexAttributesHeader, sizeof(RendererRuntime::v1VertexAttributes::VertexAttributesHeader));
 				}
 
 				// TODO(co) Implement vertex attributes file format
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1VertexAttributes::FORMAT_TYPE, RendererRuntime::v1VertexAttributes::FORMAT_VERSION, outputAssetFilename);
+			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::v1VertexAttributes::FORMAT_TYPE, RendererRuntime::v1VertexAttributes::FORMAT_VERSION, outputAssetFilename);
 
 			// TODO(co) Cache check disabled until we have implemented the stuff in here
 			// Store new cache entries or update existing ones

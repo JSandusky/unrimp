@@ -60,16 +60,19 @@ namespace RendererRuntime
 	{
 		// Keep this in sync with "RendererRuntime::v1CompositorNode::Pass"
 		// -> Don't include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h" here to keep the header complexity low (compile times matter)
-		struct PassData
-		{
-			uint32_t numberOfExecutions;
-			bool	 skipFirstExecution;
+		#pragma pack(push)
+		#pragma pack(1)
+			struct PassData
+			{
+				uint32_t numberOfExecutions;
+				bool	 skipFirstExecution;
 
-			PassData() :
-				numberOfExecutions(RendererRuntime::getUninitialized<uint32_t>()),
-				skipFirstExecution(false)
-			{}
-		};
+				PassData() :
+					numberOfExecutions(RendererRuntime::getUninitialized<uint32_t>()),
+					skipFirstExecution(false)
+				{}
+			};
+		#pragma pack(pop)
 
 		// Sanity check
 		assert(sizeof(PassData) == numberOfBytes);

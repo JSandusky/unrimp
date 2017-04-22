@@ -29,6 +29,7 @@
 
 #include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Resource/Mesh/MeshResource.h>
 #include <RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h>
 
@@ -48,8 +49,6 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
-
-#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -586,7 +585,7 @@ namespace RendererToolkit
 		CacheManager::CacheEntries cacheEntries;
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Mesh::FORMAT_VERSION, cacheEntries))
 		{
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
 
 			// Create an instance of the Assimp importer class
 			Assimp::Importer assimpImporter;
@@ -624,7 +623,7 @@ namespace RendererToolkit
 					meshHeader.numberOfVertexAttributes = static_cast<uint8_t>(vertexAttributes.numberOfAttributes);
 					meshHeader.numberOfSubMeshes		= static_cast<uint8_t>(subMeshes.size());
 					meshHeader.numberOfBones			= skeleton.numberOfBones;
-					outputMemoryStream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(RendererRuntime::v1Mesh::MeshHeader));
+					memoryFile.write(&meshHeader, sizeof(RendererRuntime::v1Mesh::MeshHeader));
 				}
 
 				{ // Vertex and index buffer data
@@ -645,8 +644,8 @@ namespace RendererToolkit
 					}
 
 					// Write down the vertex and index buffer
-					outputMemoryStream.write(reinterpret_cast<const char*>(vertexBufferData), numberOfBytesPerVertex * numberOfVertices);
-					outputMemoryStream.write(reinterpret_cast<const char*>(indexBufferData), static_cast<std::streamsize>(sizeof(uint16_t) * numberOfIndices));
+					memoryFile.write(vertexBufferData, numberOfBytesPerVertex * numberOfVertices);
+					memoryFile.write(indexBufferData, sizeof(uint16_t) * numberOfIndices);
 
 					// Destroy local vertex and input buffer data
 					delete [] vertexBufferData;
@@ -654,10 +653,10 @@ namespace RendererToolkit
 				}
 
 				// Write down the vertex array attributes
-				outputMemoryStream.write(reinterpret_cast<const char*>(vertexAttributes.attributes), static_cast<std::streamsize>(sizeof(Renderer::VertexAttribute) * vertexAttributes.numberOfAttributes));
+				memoryFile.write(vertexAttributes.attributes, sizeof(Renderer::VertexAttribute) * vertexAttributes.numberOfAttributes);
 
 				// Write down the sub-meshes
-				outputMemoryStream.write(reinterpret_cast<const char*>(subMeshes.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size()));
+				memoryFile.write(subMeshes.data(), sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size());
 
 				// Write down the optional skeleton
 				if (skeleton.numberOfBones > 0)
@@ -672,7 +671,7 @@ namespace RendererToolkit
 						skeleton.localBoneMatrices[i].Transpose();
 						skeleton.boneOffsetMatrices[i].Transpose();
 					}
-					outputMemoryStream.write(reinterpret_cast<const char*>(skeleton.getSkeletonData()), static_cast<std::streamsize>(skeleton.getNumberOfSkeletonDataBytes()));
+					memoryFile.write(skeleton.getSkeletonData(), skeleton.getNumberOfSkeletonDataBytes());
 				}
 			}
 			else
@@ -681,7 +680,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1Mesh::FORMAT_TYPE, RendererRuntime::v1Mesh::FORMAT_VERSION, outputAssetFilename);
+			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::v1Mesh::FORMAT_TYPE, RendererRuntime::v1Mesh::FORMAT_VERSION, outputAssetFilename);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);

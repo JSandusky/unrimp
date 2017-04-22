@@ -30,8 +30,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <iosfwd>
-
 #ifdef WIN32
 	// Disable warnings in external headers, we can't fix them
 	__pragma(warning(push))
@@ -41,6 +39,15 @@
 #else
 	#include <experimental/filesystem>
 #endif
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class MemoryFile;
+}
 
 
 //[-------------------------------------------------------]
@@ -71,7 +78,7 @@ namespace RendererToolkit
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
-		static void writeCompressedFile(const std::stringstream& outputMemoryStream, uint32_t formatType, uint32_t formatVersion, const std::string& outputAssetFilename);
+		static void writeCompressedFile(const RendererRuntime::MemoryFile& memoryFile, uint32_t formatType, uint32_t formatVersion, const std::string& outputAssetFilename);
 
 
 	//[-------------------------------------------------------]
