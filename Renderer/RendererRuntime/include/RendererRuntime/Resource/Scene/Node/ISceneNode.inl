@@ -79,6 +79,7 @@ namespace RendererRuntime
 		return mAttachedSceneItems;
 	}
 
+
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
