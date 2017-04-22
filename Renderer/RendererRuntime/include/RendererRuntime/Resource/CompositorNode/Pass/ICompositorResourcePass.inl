@@ -62,12 +62,12 @@ namespace RendererRuntime
 		// -> Don't include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h" here to keep the header complexity low (compile times matter)
 		struct PassData
 		{
-			bool	 skipFirstExecution;
 			uint32_t numberOfExecutions;
+			bool	 skipFirstExecution;
 
 			PassData() :
-				skipFirstExecution(false),
-				numberOfExecutions(RendererRuntime::getUninitialized<uint32_t>())
+				numberOfExecutions(RendererRuntime::getUninitialized<uint32_t>()),
+				skipFirstExecution(false)
 			{}
 		};
 
@@ -77,8 +77,8 @@ namespace RendererRuntime
 
 		// Read data
 		const PassData* pass = reinterpret_cast<const PassData*>(data);
-		mSkipFirstExecution = pass->skipFirstExecution;
 		mNumberOfExecutions = pass->numberOfExecutions;
+		mSkipFirstExecution = pass->skipFirstExecution;
 
 		// Sanity checks
 		assert(mNumberOfExecutions > 0);

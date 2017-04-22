@@ -72,7 +72,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("CompositorNode");
-		static const uint32_t FORMAT_VERSION = 2;
+		static const uint32_t FORMAT_VERSION = 3;
 
 		#pragma pack(push)
 		#pragma pack(1)
@@ -118,12 +118,12 @@ namespace RendererRuntime
 			// Keep this in sync with "RendererRuntime::ICompositorResourcePass::deserialize() -> PassData"
 			struct Pass
 			{
-				bool	 skipFirstExecution;
 				uint32_t numberOfExecutions;
+				bool	 skipFirstExecution;
 
 				Pass() :
-					skipFirstExecution(false),
-					numberOfExecutions(RendererRuntime::getUninitialized<uint32_t>())
+					numberOfExecutions(RendererRuntime::getUninitialized<uint32_t>()),
+					skipFirstExecution(false)
 				{}
 			};
 

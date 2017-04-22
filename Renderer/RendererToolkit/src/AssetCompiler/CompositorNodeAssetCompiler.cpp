@@ -119,8 +119,8 @@ namespace
 		void readPass(const rapidjson::Value& rapidJsonValuePass, RendererRuntime::v1CompositorNode::Pass& pass)
 		{
 			// Read properties
-			RendererToolkit::JsonHelper::optionalBooleanProperty(rapidJsonValuePass, "SkipFirstExecution", pass.skipFirstExecution);
 			RendererToolkit::JsonHelper::optionalIntegerProperty(rapidJsonValuePass, "NumberOfExecutions", pass.numberOfExecutions);
+			RendererToolkit::JsonHelper::optionalBooleanProperty(rapidJsonValuePass, "SkipFirstExecution", pass.skipFirstExecution);
 
 			// Sanity checks
 			if (0 == pass.numberOfExecutions)
