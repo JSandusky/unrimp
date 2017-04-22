@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
 
 // Disable warnings in external headers, we can't fix them

@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/GetUninitialized.h"
 
+#include <tuple>	// For "std::ignore"
+#include <cassert>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -53,6 +56,35 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
+	inline void ICompositorResourcePass::deserialize(uint32_t numberOfBytes, const uint8_t* data)
+	{
+		// Keep this in sync with "RendererRuntime::v1CompositorNode::Pass"
+		// -> Don't include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h" here to keep the header complexity low (compile times matter)
+		struct PassData
+		{
+			bool	 skipFirstExecution;
+			uint32_t numberOfExecutions;
+
+			PassData() :
+				skipFirstExecution(false),
+				numberOfExecutions(RendererRuntime::getUninitialized<uint32_t>())
+			{}
+		};
+
+		// Sanity check
+		assert(sizeof(PassData) == numberOfBytes);
+		std::ignore = numberOfBytes;
+
+		// Read data
+		const PassData* pass = reinterpret_cast<const PassData*>(data);
+		mSkipFirstExecution = pass->skipFirstExecution;
+		mNumberOfExecutions = pass->numberOfExecutions;
+
+		// Sanity checks
+		assert(mNumberOfExecutions > 0);
+		assert(!mSkipFirstExecution || mNumberOfExecutions > 1);
+	}
+
 	inline bool ICompositorResourcePass::getRenderQueueIndexRange(uint8_t&, uint8_t&) const
 	{
 		// This compositor resource pass has no render queue range defined

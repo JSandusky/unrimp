@@ -87,7 +87,6 @@ set(SOURCE_CODES
 	src/Resource/CompositorNode/CompositorNodeResource.cpp
 	src/Resource/CompositorNode/CompositorNodeResourceManager.cpp
 	src/Resource/CompositorNode/CompositorTarget.cpp
-	src/Resource/CompositorNode/ICompositorResourcePass.cpp
 	src/Resource/CompositorNode/Loader/CompositorNodeResourceLoader.cpp
 	src/Resource/CompositorNode/Pass/CompositorPassFactory.cpp
 	src/Resource/CompositorNode/Pass/Clear/CompositorInstancePassClear.cpp

@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
 
 
@@ -56,9 +55,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	// TODO(co) Unlike other Unrimp classes, we here have a full class export. Checkout the situation in detail and evaluate whether or not it's fine to have too
-	//          three different export strategies (function, methods, classes) or if there's an unification of the strategy possible without sacrificing minimalism.
-	class RENDERERRUNTIME_API_EXPORT ICompositorResourcePass
+	class ICompositorResourcePass
 	{
 
 
@@ -82,7 +79,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		virtual CompositorPassTypeId getTypeId() const = 0;
-		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data);
+		inline virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data);
 
 		/**
 		*  @brief

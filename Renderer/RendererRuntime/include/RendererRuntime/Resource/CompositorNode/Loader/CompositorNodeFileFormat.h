@@ -115,6 +115,7 @@ namespace RendererRuntime
 				uint32_t			 numberOfBytes;
 			};
 
+			// Keep this in sync with "RendererRuntime::ICompositorResourcePass::deserialize() -> PassData"
 			struct Pass
 			{
 				bool	 skipFirstExecution;
