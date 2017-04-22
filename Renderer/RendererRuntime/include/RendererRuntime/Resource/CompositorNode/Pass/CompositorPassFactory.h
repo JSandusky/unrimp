@@ -43,6 +43,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	// TODO(co) Unlike other Unrimp classes, we here have a full class export. Checkout the situation in detail and evaluate whether or not it's fine to have too
 	//          three different export strategies (function, methods, classes) or if there's an unification of the strategy possible without sacrificing minimalism.
+	PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4275)	// warning C4275: non dll-interface class 'RendererRuntime::ICompositorPassFactory' used as base for dll-interface class 'RendererRuntime::CompositorPassFactory' (compiling source file src\Resource\CompositorNode\Pass\CompositorPassFactory.cpp)
 	class RENDERERRUNTIME_API_EXPORT CompositorPassFactory : public ICompositorPassFactory
 	{
 
@@ -72,6 +74,7 @@ namespace RendererRuntime
 
 
 	};
+	PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
