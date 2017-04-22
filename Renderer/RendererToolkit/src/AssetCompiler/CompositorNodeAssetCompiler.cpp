@@ -225,7 +225,7 @@ namespace
 				{
 					// Get the two "@foreach"-parameters
 					std::string scopedIterationCounterVariable;
-					const uint32_t numberOfIterations = ::detail::getForEachInstructionParameters(targetName, scopedIterationCounterVariable);
+					const uint32_t numberOfIterations = getForEachInstructionParameters(targetName, scopedIterationCounterVariable);
 
 					// Unroll the loop
 					for (uint32_t i = 0; i < numberOfIterations; ++i)
@@ -252,7 +252,7 @@ namespace
 				{
 					// Get the two "@foreach"-parameters
 					std::string scopedIterationCounterVariable;
-					const uint32_t numberOfIterations = ::detail::getForEachInstructionParameters(targetName, scopedIterationCounterVariable);
+					const uint32_t numberOfIterations = getForEachInstructionParameters(targetName, scopedIterationCounterVariable);
 					// TODO(co) "scopedIterationCounterVariable" is currently unused
 
 					// Unroll the loop
@@ -330,7 +330,7 @@ namespace
 							if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == compositorPassTypeId)
 							{
 								RendererRuntime::v1CompositorNode::PassClear passClear;
-								::detail::readPass(rapidJsonValuePass, passClear);
+								readPass(rapidJsonValuePass, passClear);
 
 								// Read properties
 								RendererToolkit::JsonHelper::optionalClearFlagsProperty(rapidJsonValuePass, "Flags", passClear.flags);
@@ -344,8 +344,8 @@ namespace
 							else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)
 							{
 								RendererRuntime::v1CompositorNode::PassScene passScene;
-								::detail::readPass(rapidJsonValuePass, passScene);
-								::detail::readPassScene(rapidJsonValuePass, passScene);
+								readPass(rapidJsonValuePass, passScene);
+								readPassScene(rapidJsonValuePass, passScene);
 
 								// Write down
 								file.write(&passScene, sizeof(RendererRuntime::v1CompositorNode::PassScene));
@@ -353,8 +353,8 @@ namespace
 							else if (RendererRuntime::CompositorResourcePassShadowMap::TYPE_ID == compositorPassTypeId)
 							{
 								RendererRuntime::v1CompositorNode::PassShadowMap passShadowMap;
-								::detail::readPass(rapidJsonValuePass, passShadowMap);
-								::detail::readPassScene(rapidJsonValuePass, passShadowMap);
+								readPass(rapidJsonValuePass, passShadowMap);
+								readPassScene(rapidJsonValuePass, passShadowMap);
 								RendererToolkit::JsonHelper::mandatoryAssetIdProperty(rapidJsonValuePass, "TextureAssetId", passShadowMap.textureAssetId);
 								renderTargetTextureAssetIds.insert(passShadowMap.textureAssetId);
 
@@ -364,7 +364,7 @@ namespace
 							else if (RendererRuntime::CompositorResourcePassResolveMultisample::TYPE_ID == compositorPassTypeId)
 							{
 								RendererRuntime::v1CompositorNode::PassResolveMultisample passResolveMultisample;
-								::detail::readPass(rapidJsonValuePass, passResolveMultisample);
+								readPass(rapidJsonValuePass, passResolveMultisample);
 								RendererToolkit::JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "SourceMultisampleFramebuffer", passResolveMultisample.sourceMultisampleCompositorFramebufferId);
 								if (compositorFramebufferIds.find(passResolveMultisample.sourceMultisampleCompositorFramebufferId) == compositorFramebufferIds.end())
 								{
@@ -375,7 +375,7 @@ namespace
 							else if (RendererRuntime::CompositorResourcePassCopy::TYPE_ID == compositorPassTypeId)
 							{
 								RendererRuntime::v1CompositorNode::PassCopy passCopy;
-								::detail::readPass(rapidJsonValuePass, passCopy);
+								readPass(rapidJsonValuePass, passCopy);
 								RendererToolkit::JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "DestinationTextureAssetId", passCopy.destinationTextureAssetId);
 								RendererToolkit::JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "SourceTextureAssetId", passCopy.sourceTextureAssetId);
 								if (renderTargetTextureAssetIds.find(passCopy.destinationTextureAssetId) == renderTargetTextureAssetIds.end())
@@ -391,8 +391,8 @@ namespace
 							else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 							{
 								RendererRuntime::v1CompositorNode::PassQuad passQuad;
-								::detail::readPass(rapidJsonValuePass, passQuad);
-								::detail::readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, true, passQuad);
+								readPass(rapidJsonValuePass, passQuad);
+								readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, true, passQuad);
 
 								// Write down
 								file.write(&passQuad, sizeof(RendererRuntime::v1CompositorNode::PassQuad));
@@ -406,8 +406,8 @@ namespace
 							{
 								// The material definition is not mandatory for the debug GUI, if nothing is defined the fixed build in renderer configuration resources will be used instead
 								RendererRuntime::v1CompositorNode::PassDebugGui passDebugGui;
-								::detail::readPass(rapidJsonValuePass, passDebugGui);
-								::detail::readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, false, passDebugGui);
+								readPass(rapidJsonValuePass, passDebugGui);
+								readPassQuad(input, sortedMaterialPropertyVector, rapidJsonValuePass, false, passDebugGui);
 
 								// Write down
 								file.write(&passDebugGui, sizeof(RendererRuntime::v1CompositorNode::PassDebugGui));

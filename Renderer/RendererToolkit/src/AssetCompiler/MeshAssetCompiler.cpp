@@ -244,7 +244,7 @@ namespace
 					const aiNode* assimpChildNode = assimpNode.mChildren[i];
 					if (assimpChildNode->mName == aiString("<MD5_Hierarchy>"))
 					{
-						numberOfBones = ::detail::getNumberOfBonesRecursive(*assimpChildNode);
+						numberOfBones = getNumberOfBonesRecursive(*assimpChildNode);
 						break;
 					}
 				}
