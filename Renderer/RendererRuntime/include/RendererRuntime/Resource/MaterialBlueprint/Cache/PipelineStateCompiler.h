@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
 
 #include <deque>
@@ -78,7 +77,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Takes care of asynchronous pipeline state compilation
 	*/
-	class PipelineStateCompiler : private NonCopyable
+	class PipelineStateCompiler
 	{
 
 
@@ -107,7 +106,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		struct CompilerRequest : private NonCopyable
+		struct CompilerRequest
 		{
 			// Input
 			PipelineStateCache& pipelineStateCache;

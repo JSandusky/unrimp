@@ -27,8 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-
 #include <openvr/openvr.h>
 
 
@@ -56,7 +54,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Abstract OpenVR manager listener interface
 	*/
-	class IVrManagerOpenVRListener : public NonCopyable
+	class IVrManagerOpenVRListener
 	{
 
 

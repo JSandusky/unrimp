@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
 
 
@@ -56,7 +55,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class RENDERERRUNTIME_API_EXPORT ICompositorResourcePass
+	class ICompositorResourcePass
 	{
 
 
@@ -80,7 +79,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		virtual CompositorPassTypeId getTypeId() const = 0;
-		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data);
+		inline virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data);
 
 		/**
 		*  @brief

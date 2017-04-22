@@ -27,8 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
@@ -51,7 +49,7 @@ namespace RendererRuntime
 	*    - It's only called "file interface" because this is usually the name for such a concept, doesn't mean the concrete implementation needs to work with files
 	*    - Renderer runtime loaders try to read bigger chunks as often as possible instead of too fine granular byte wise read calls
 	*/
-	class IFile : public NonCopyable
+	class IFile
 	{
 
 

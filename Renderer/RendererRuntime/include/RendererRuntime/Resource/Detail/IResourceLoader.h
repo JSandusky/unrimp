@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
 #include "RendererRuntime/Asset/Asset.h"
 
 
@@ -58,7 +57,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class IResourceLoader : protected NonCopyable
+	class IResourceLoader
 	{
 
 

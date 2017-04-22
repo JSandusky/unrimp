@@ -56,7 +56,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Abstract material blueprint resource listener interface
 	*/
-	class IMaterialBlueprintResourceListener : public NonCopyable
+	class IMaterialBlueprintResourceListener
 	{
 
 

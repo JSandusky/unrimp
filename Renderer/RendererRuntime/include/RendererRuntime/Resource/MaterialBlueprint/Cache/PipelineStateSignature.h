@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 
@@ -69,7 +68,7 @@ namespace RendererRuntime
 	*  @see
 	*    - See "RendererRuntime::PipelineStateCacheManager" for additional information
 	*/
-	class PipelineStateSignature : private NonCopyable
+	class PipelineStateSignature
 	{
 
 

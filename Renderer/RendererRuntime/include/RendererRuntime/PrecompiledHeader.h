@@ -86,6 +86,7 @@ PRAGMA_WARNING_PUSH
 	#include <cstring>
 	#include <queue>
 	#include <deque>
+	#include <tuple>
 	#include <string>
 	#include <map>
 	#include <unordered_map>

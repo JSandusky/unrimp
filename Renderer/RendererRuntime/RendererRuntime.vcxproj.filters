@@ -582,9 +582,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h">
-      <Filter>Source Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Export.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -1447,9 +1444,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\CompositorNode\Pass\Copy\CompositorResourcePassCopy.cpp">
       <Filter>Source Files\Resource\CompositorNode\Pass\Copy</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\CompositorNode\ICompositorResourcePass.cpp">
-      <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
     </ClCompile>
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerLinux.cpp">
       <Filter>Source Files\DebugGui\Detail</Filter>

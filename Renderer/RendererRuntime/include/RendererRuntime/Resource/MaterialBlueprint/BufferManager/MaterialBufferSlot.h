@@ -27,8 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
@@ -62,7 +60,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Material buffer slot
 	*/
-	class MaterialBufferSlot : protected NonCopyable
+	class MaterialBufferSlot
 	{
 
 

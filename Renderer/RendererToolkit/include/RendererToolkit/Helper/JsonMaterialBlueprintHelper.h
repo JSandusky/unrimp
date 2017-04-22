@@ -29,7 +29,6 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
-#include <RendererRuntime/Core/NonCopyable.h>
 #include <RendererRuntime/Resource/Material/MaterialProperties.h>
 
 #include <rapidjson/fwd.h>
@@ -63,7 +62,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class JsonMaterialBlueprintHelper : public RendererRuntime::NonCopyable
+	class JsonMaterialBlueprintHelper
 	{
 
 

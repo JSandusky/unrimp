@@ -193,7 +193,6 @@
     <ClInclude Include="include\RendererRuntime\Core\Math\Quaternion.h" />
     <ClInclude Include="include\RendererRuntime\Core\Math\Transform.h" />
     <ClInclude Include="include\RendererRuntime\Core\Math\Vector3.h" />
-    <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h" />
     <ClInclude Include="include\RendererRuntime\Core\PackedElementManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Platform\PlatformManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Platform\PlatformTypes.h" />
@@ -547,7 +546,6 @@
     <ClCompile Include="src\Resource\CompositorNode\CompositorNodeResource.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\CompositorNodeResourceManager.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\CompositorTarget.cpp" />
-    <ClCompile Include="src\Resource\CompositorNode\ICompositorResourcePass.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Loader\CompositorNodeResourceLoader.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\Clear\CompositorInstancePassClear.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\Clear\CompositorResourcePassClear.cpp" />

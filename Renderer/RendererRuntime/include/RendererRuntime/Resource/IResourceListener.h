@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 #include <vector>
@@ -64,7 +63,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Abstract resource listener interface
 	*/
-	class IResourceListener : protected NonCopyable
+	class IResourceListener
 	{
 
 
