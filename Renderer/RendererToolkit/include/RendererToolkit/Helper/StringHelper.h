@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
-#include <RendererRuntime/Core/NonCopyable.h>
-
 #include <vector>
 
 
@@ -53,7 +51,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class StringHelper : public RendererRuntime::NonCopyable
+	class StringHelper
 	{
 
 

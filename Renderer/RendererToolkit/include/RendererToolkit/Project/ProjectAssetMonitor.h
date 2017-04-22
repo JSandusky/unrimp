@@ -27,8 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <RendererRuntime/Core/NonCopyable.h>
-
 #include <thread>
 #include <atomic>
 #include <string>
@@ -61,7 +59,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ProjectAssetMonitor : public RendererRuntime::NonCopyable
+	class ProjectAssetMonitor
 	{
 
 

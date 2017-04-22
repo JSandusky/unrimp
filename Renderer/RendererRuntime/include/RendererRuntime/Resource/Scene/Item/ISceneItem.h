@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 
 
 //[-------------------------------------------------------]
@@ -57,7 +56,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ISceneItem : protected NonCopyable
+	class ISceneItem
 	{
 
 

@@ -29,7 +29,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 
 
 //[-------------------------------------------------------]
@@ -53,7 +52,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Framebuffer signature
 	*/
-	class FramebufferSignature : private NonCopyable
+	class FramebufferSignature
 	{
 
 

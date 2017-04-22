@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Core/Platform/PlatformTypes.h"
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -74,7 +74,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Basing on "AssimpView::AnimEvaluator" ( https://github.com/assimp/assimp/blob/master/tools/assimp_view/AnimEvaluator.cpp )
 	*/
-	class SkeletonAnimationEvaluator : public NonCopyable
+	class SkeletonAnimationEvaluator
 	{
 
 

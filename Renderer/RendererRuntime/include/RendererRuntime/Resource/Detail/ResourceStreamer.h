@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Asset/Asset.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 
 #include <deque>
 #include <mutex>
@@ -81,7 +80,7 @@ namespace RendererRuntime
 	*    2. Asynchronous processing
 	*    3. Synchronous dispatch, e.g. to the renderer backend
 	*/
-	class ResourceStreamer : private NonCopyable
+	class ResourceStreamer
 	{
 
 

@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <RendererRuntime/Core/StringId.h>
-#include <RendererRuntime/Core/NonCopyable.h>
 
 #include <string>
 #include <memory> // For std::unique_ptr
@@ -72,7 +71,7 @@ namespace RendererToolkit
 	* Cache manager(Item?) per thread which collects any changes and on the end the changes are written from master thread?
 	* sqlite can compare a string within a where clause to select only those rows with that string -> can be used if hash equals stored one
 	*/
-	class CacheManager : public RendererRuntime::NonCopyable
+	class CacheManager
 	{
 
 

@@ -25,12 +25,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -47,7 +41,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Named in short just compositor channel because there's no instance variant
 	*/
-	class CompositorChannel : protected NonCopyable
+	class CompositorChannel
 	{
 
 

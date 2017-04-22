@@ -51,7 +51,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class PipelineStateCache : private NonCopyable
+	class PipelineStateCache
 	{
 
 

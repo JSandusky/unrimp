@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 
 #include <vector>
 
@@ -78,7 +77,7 @@ namespace RendererRuntime
 	*
 	*    The sole purpose of the render queue is to fill sorted commands into a given command buffer.
 	*/
-	class RenderQueue : protected NonCopyable
+	class RenderQueue
 	{
 
 

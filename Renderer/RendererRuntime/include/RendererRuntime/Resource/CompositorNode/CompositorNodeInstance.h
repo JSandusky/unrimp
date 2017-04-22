@@ -27,8 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-
 #include <vector>
 
 
@@ -64,7 +62,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorNodeInstance : protected NonCopyable
+	class CompositorNodeInstance
 	{
 
 

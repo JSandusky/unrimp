@@ -27,9 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 
 #include <vector>
@@ -60,7 +58,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ISceneNode : protected NonCopyable
+	class ISceneNode
 	{
 
 

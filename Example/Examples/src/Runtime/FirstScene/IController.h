@@ -27,8 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 #include <unordered_set>
 
@@ -52,7 +50,7 @@ namespace RendererRuntime
 *  @note
 *    - Remember: Unrimp is only about rendering and not about being a fully featured game engine, so just super basic stuff in here
 */
-class IController : private RendererRuntime::NonCopyable
+class IController
 {
 
 

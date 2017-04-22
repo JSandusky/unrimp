@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 
 #include <map>
@@ -67,7 +66,7 @@ namespace RendererRuntime
 	*  @notes
 	*   - Heavily basing on the OGRE 2.1 HLMS shader builder which is directly part of the OGRE class "Ogre::Hlms". So for syntax, have a look into the OGRE 2.1 documentation.
 	*/
-	class ShaderBuilder : private NonCopyable
+	class ShaderBuilder
 	{
 
 

@@ -29,7 +29,6 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
-#include <RendererRuntime/Core/NonCopyable.h>
 #include <RendererRuntime/Resource/Material/MaterialProperties.h>
 #include <RendererRuntime/Resource/Material/Loader/MaterialFileFormat.h>
 
@@ -48,7 +47,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class JsonMaterialHelper : public RendererRuntime::NonCopyable
+	class JsonMaterialHelper
 	{
 
 

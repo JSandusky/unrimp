@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 
 #include <Renderer/Public/Renderer.h>
 
@@ -53,7 +52,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Render target texture signature
 	*/
-	class RenderTargetTextureSignature : private NonCopyable
+	class RenderTargetTextureSignature
 	{
 
 

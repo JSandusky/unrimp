@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 #include "RendererRuntime/Asset/Asset.h"
 
 #include <vector>
@@ -44,7 +43,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class AssetPackage : protected NonCopyable
+	class AssetPackage
 	{
 
 

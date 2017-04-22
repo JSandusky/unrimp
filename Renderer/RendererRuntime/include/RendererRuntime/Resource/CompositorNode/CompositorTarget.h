@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 
 #include <vector>
 
@@ -69,7 +68,7 @@ namespace RendererRuntime
 	*    - Named in short just compositor target because there's no instance variant
 	*    - Render target might be compositor channel (external interconnection) or compositor framebuffer (node internal processing)
 	*/
-	class CompositorTarget : protected NonCopyable
+	class CompositorTarget
 	{
 
 

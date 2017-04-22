@@ -47,13 +47,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline CompositorRenderTargetTexture& CompositorRenderTargetTexture::operator=(const CompositorRenderTargetTexture& compositorRenderTargetTexture)
-	{
-		mAssetId					  = compositorRenderTargetTexture.mAssetId;
-		mRenderTargetTextureSignature = compositorRenderTargetTexture.mRenderTargetTextureSignature;
-		return *this;
-	}
-
 	inline AssetId CompositorRenderTargetTexture::getAssetId() const
 	{
 		return mAssetId;

@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
-#include <RendererRuntime/Core/NonCopyable.h>
-
 #include <rapidjson/fwd.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -59,7 +57,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class JsonHelper : public RendererRuntime::NonCopyable
+	class JsonHelper
 	{
 
 

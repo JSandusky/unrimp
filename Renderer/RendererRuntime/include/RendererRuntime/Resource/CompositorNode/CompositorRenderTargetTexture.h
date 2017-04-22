@@ -51,7 +51,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Compositor render target texture; used as part of compositor framebuffers
 	*/
-	class CompositorRenderTargetTexture : protected NonCopyable
+	class CompositorRenderTargetTexture
 	{
 
 
@@ -62,9 +62,15 @@ namespace RendererRuntime
 		inline CompositorRenderTargetTexture(AssetId assetId, const RenderTargetTextureSignature& renderTargetTextureSignature);
 		inline explicit CompositorRenderTargetTexture(const CompositorRenderTargetTexture& compositorRenderTargetTexture);
 		inline ~CompositorRenderTargetTexture();
-		inline CompositorRenderTargetTexture& operator=(const CompositorRenderTargetTexture& compositorRenderTargetTexture);
 		inline AssetId getAssetId() const;
 		inline const RenderTargetTextureSignature& getRenderTargetTextureSignature() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		inline CompositorRenderTargetTexture& operator=(const CompositorRenderTargetTexture& compositorRenderTargetTexture) = delete;
 
 
 	//[-------------------------------------------------------]

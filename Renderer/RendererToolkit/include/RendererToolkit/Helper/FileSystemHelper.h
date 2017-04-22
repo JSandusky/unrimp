@@ -30,8 +30,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <RendererRuntime/Core/NonCopyable.h>
-
 #include <iosfwd>
 
 #ifdef WIN32
@@ -65,7 +63,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class FileSystemHelper : public RendererRuntime::NonCopyable
+	class FileSystemHelper
 	{
 
 

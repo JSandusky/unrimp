@@ -27,8 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-
 #include <Renderer/Public/Renderer.h>
 
 
@@ -48,7 +46,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ShaderCache : private NonCopyable
+	class ShaderCache
 	{
 
 

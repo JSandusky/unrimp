@@ -25,12 +25,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-
-
-//[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -56,7 +50,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ICompositorInstancePass : protected NonCopyable
+	class ICompositorInstancePass
 	{
 
 
