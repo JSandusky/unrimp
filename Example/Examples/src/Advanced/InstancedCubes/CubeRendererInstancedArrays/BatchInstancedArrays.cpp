@@ -24,8 +24,8 @@
 #include "PrecompiledHeader.h"
 #include "Advanced/InstancedCubes/CubeRendererInstancedArrays/BatchInstancedArrays.h"
 #include "Framework/PlatformTypes.h"
-#include "Framework/Quaternion.h"
-#include "Framework/EulerAngles.h"
+
+#include <RendererRuntime/Core/Math/EulerAngles.h>
 
 #include <stdlib.h> // For rand()
 
@@ -67,7 +67,7 @@ void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, R
 		//    - Rotation: Rotation quaternion (xyz) and scale (w)
 		//      -> We don't need to store the w component of the quaternion. It's normalized and storing
 		//         three components while recomputing the fourths component is be sufficient.
-		Quaternion quaternion;	// Identity rotation quaternion
+		glm::quat rotation;	// Identity rotation quaternion
 		for (uint32_t i = 0; i < mNumberOfCubeInstances; ++i)
 		{
 			{ // Position
@@ -86,16 +86,16 @@ void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, R
 			}
 
 			{ // Rotation
-				EulerAngles::toQuaternion((rand() % 65536) / 65536.0f, (rand() % 65536) / 65536.0f * 2.0f, (rand() % 65536) / 65536.0f * 3.0f, quaternion);
+				rotation = RendererRuntime::EulerAngles::eulerToQuaternion((rand() % 65536) / 65536.0f, (rand() % 65536) / 65536.0f * 2.0f, (rand() % 65536) / 65536.0f * 3.0f);
 
 				// r=x
-				*dataCurrent = quaternion.x;
+				*dataCurrent = rotation.x;
 				++dataCurrent;
 				// g=y
-				*dataCurrent = quaternion.y;
+				*dataCurrent = rotation.y;
 				++dataCurrent;
 				// b=z
-				*dataCurrent = quaternion.z;
+				*dataCurrent = rotation.z;
 				++dataCurrent;
 				// a=scale
 				*dataCurrent = 2.0f * (rand() % 65536) / 65536.0f;

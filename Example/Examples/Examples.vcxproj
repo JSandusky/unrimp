@@ -526,7 +526,6 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Framework\CLocaleChanger.h" />
     <ClInclude Include="src\Framework\CmdLineArgs.h" />
     <ClInclude Include="src\Framework\Color4.h" />
-    <ClInclude Include="src\Framework\EulerAngles.h" />
     <ClInclude Include="src\Framework\ExampleBase.h" />
     <ClInclude Include="src\Framework\IApplication.h" />
     <ClInclude Include="src\Framework\IApplicationFrontend.h" />
@@ -537,7 +536,6 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Framework\Main.h" />
     <ClInclude Include="src\Framework\PlatformTypes.h" />
     <ClInclude Include="src\Framework\QtRunner\ExampleRunnerQt4.h" />
-    <ClInclude Include="src\Framework\Quaternion.h" />
     <ClInclude Include="src\Framework\RefCount.h" />
     <ClInclude Include="src\Framework\RefCountPtr.h" />
     <ClInclude Include="src\Framework\SmartPtr.h" />
@@ -595,7 +593,6 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClCompile Include="src\Framework\ApplicationImplWindows.cpp" />
     <ClCompile Include="src\Framework\CmdLineArgs.cpp" />
     <ClCompile Include="src\Framework\Color4.cpp" />
-    <ClCompile Include="src\Framework\EulerAngles.cpp" />
     <ClCompile Include="src\Framework\ExampleBase.cpp" />
     <ClCompile Include="src\Framework\IApplication.cpp" />
     <ClCompile Include="src\Framework\IApplicationImpl.cpp" />
@@ -660,7 +657,6 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <None Include="src\Framework\IApplication.inl" />
     <None Include="src\Framework\IApplicationFrontend.inl" />
     <None Include="src\Framework\IApplicationRenderer.inl" />
-    <None Include="src\Framework\Quaternion.inl" />
     <None Include="src\Framework\RefCount.inl" />
     <None Include="src\Framework\RefCountPtr.inl" />
     <None Include="src\Framework\SmartPtr.inl" />
