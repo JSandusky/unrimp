@@ -130,6 +130,8 @@ namespace RendererRuntime
 		virtual ~MaterialBlueprintResourceManager();
 		MaterialBlueprintResourceManager(const MaterialBlueprintResourceManager&) = delete;
 		MaterialBlueprintResourceManager& operator=(const MaterialBlueprintResourceManager&) = delete;
+		void loadPipelineStateObjectCache();
+		void savePipelineStateObjectCache();
 
 
 	//[-------------------------------------------------------]

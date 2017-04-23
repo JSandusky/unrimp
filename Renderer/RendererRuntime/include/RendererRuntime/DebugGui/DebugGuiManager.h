@@ -32,6 +32,8 @@
 
 #include <Renderer/Public/Renderer.h>
 
+#include <string>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -108,6 +110,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&			mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		std::string					mIniFilename;
+		std::string					mLogFilename;
 		bool						mIsRunning;			///< The debug GUI manager will be initialized lazy when "RendererRuntime::DebugGuiManager::newFrame()" is called for the first time
 		Renderer::ITexture2DPtr		mTexture2D;
 		// Fixed build in renderer configuration resources

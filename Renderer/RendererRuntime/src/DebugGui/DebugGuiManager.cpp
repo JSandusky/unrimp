@@ -349,12 +349,12 @@ namespace RendererRuntime
 		if (nullptr != absoluteLocalDataDirectoryName)
 		{
 			// TODO(sw) These files doesn't get read/written via an file interface -> can break on mobile devices
-			static const std::string debugGuiDirectoryName = std::string(absoluteLocalDataDirectoryName) + "/DebugGui";
-			static const std::string iniFilename = debugGuiDirectoryName + "/UnrimpDebugGuiLayout.ini";
-			static const std::string logFilename = debugGuiDirectoryName + "/UnrimpDebugGuiLog.txt";
+			const std::string debugGuiDirectoryName = std::string(absoluteLocalDataDirectoryName) + "/DebugGui";
+			mIniFilename = debugGuiDirectoryName + "/UnrimpDebugGuiLayout.ini";
+			mLogFilename = debugGuiDirectoryName + "/UnrimpDebugGuiLog.txt";
 			fileManager.createDirectories(debugGuiDirectoryName.c_str());
-			imGuiIo.IniFilename = iniFilename.c_str();
-			imGuiIo.LogFilename = logFilename.c_str();
+			imGuiIo.IniFilename = mIniFilename.c_str();
+			imGuiIo.LogFilename = mLogFilename.c_str();
 		}
 		else
 		{

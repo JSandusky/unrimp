@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/File/IFileManager.h"
 
+#include <string>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,6 +45,14 @@ namespace RendererRuntime
 	/**
 	*  @brief
 	*    STD file manager implementation class one can use
+	*
+	*  @remarks
+	*    For the Unrimp examples were using the following directory structure
+	*    - "<root directory>/bin/x64_static"
+	*    - "<root directory>/bin/DataPc"
+	*    - "<root directory>/bin/LocalData"
+	*    -> For end-user products, you might want to choose a local user data directory
+	*    -> In here we assume that the current directory has not been changed and still points to the directory the running executable is in (e.g. "<root directory>/bin/x64_static")
 	*
 	*  @note
 	*    - Designed to be instanced and used inside a single C++ file
@@ -75,6 +85,13 @@ namespace RendererRuntime
 	protected:
 		StdFileManager(const StdFileManager&) = delete;
 		StdFileManager& operator=(const StdFileManager&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		const std::string mAbsoluteLocalDataDirectoryName;
 
 
 	};

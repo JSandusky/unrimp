@@ -31,6 +31,7 @@
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
+#include "RendererRuntime/Core/File/IFileManager.h"
 #include "RendererRuntime/Core/Time/TimeManager.h"
 
 
@@ -44,9 +45,57 @@ namespace
 
 
 		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		namespace PipelineStateCache
+		{
+			static const uint32_t FORMAT_TYPE	 = RendererRuntime::StringId("PipelineStateCache");
+			static const uint32_t FORMAT_VERSION = 0;
+		}
+
+
+		//[-------------------------------------------------------]
 		//[ Global variables                                      ]
 		//[-------------------------------------------------------]
 		static RendererRuntime::MaterialBlueprintResourceListener defaultMaterialBlueprintResourceListener;
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void getPipelineStateObjectCacheFilename(const RendererRuntime::IRendererRuntime& rendererRuntime, std::string& directoryName, std::string& filename)
+		{
+			directoryName = std::string(rendererRuntime.getFileManager().getAbsoluteLocalDataDirectoryName()) + "/PipelineStateObjectCache/";
+			filename = directoryName + rendererRuntime.getRenderer().getName() + ".pso_cache";
+		}
+
+		bool loadPipelineStateObjectCacheFile(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::MemoryFile& memoryFile)
+		{
+			// Tell the memory mapped file about the LZ4 compressed data and decompress it at once
+			std::string directoryName;
+			std::string filename;
+			getPipelineStateObjectCacheFilename(rendererRuntime, directoryName, filename);
+			if (memoryFile.loadLz4CompressedDataFromFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, rendererRuntime.getFileManager()))
+			{
+				memoryFile.decompress();
+
+				// Done
+				return true;
+			}
+			
+			// Error!
+			return false;
+		}
+
+		bool savePipelineStateObjectCacheFile(const RendererRuntime::IRendererRuntime& rendererRuntime, const RendererRuntime::MemoryFile& memoryFile)
+		{
+			std::string directoryName;
+			std::string filename;
+			getPipelineStateObjectCacheFilename(rendererRuntime, directoryName, filename);
+			RendererRuntime::IFileManager& fileManager = rendererRuntime.getFileManager();
+			fileManager.createDirectories(directoryName.c_str());
+			return memoryFile.writeLz4CompressedDataToFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, fileManager);
+		}
 
 
 //[-------------------------------------------------------]
@@ -226,10 +275,16 @@ namespace RendererRuntime
 		// Update at once to have all managed global material properties known from the start
 		update();
 		mGlobalMaterialProperties.setPropertyById("GlobalNumberOfMultisamples", MaterialPropertyValue::fromInteger(0));
+
+		// Load pipeline state object cache
+		loadPipelineStateObjectCache();
 	}
 
 	MaterialBlueprintResourceManager::~MaterialBlueprintResourceManager()
 	{
+		// Save pipeline state object cache
+		savePipelineStateObjectCache();
+
 		// Destroy buffer managers, if needed
 		delete mInstanceBufferManager;
 		delete mLightBufferManager;
@@ -240,6 +295,37 @@ namespace RendererRuntime
 
 		// Destroy internal resource manager
 		delete mInternalResourceManager;
+	}
+
+	void MaterialBlueprintResourceManager::loadPipelineStateObjectCache()
+	{
+		MemoryFile memoryFile;
+		if (::detail::loadPipelineStateObjectCacheFile(mRendererRuntime, memoryFile))
+		{
+			// TODO(co) Implement me
+			NOP;
+		}
+		else
+		{
+			// TODO(co) As soon as everything is in place, we might want to enable this assert
+			// assert(false && "Unable to load the pipeline state object cache. This will possibly result decreased runtime performance up to runtime hiccups. You might want to create the pipeline state object cache via the renderer toolkit.");
+		}
+	}
+
+	void MaterialBlueprintResourceManager::savePipelineStateObjectCache()
+	{
+		// Do only save the pipeline state object cache if writing local data is allowed
+		if (nullptr != mRendererRuntime.getFileManager().getAbsoluteLocalDataDirectoryName())
+		{
+			// TODO(co) Write to memory file
+			/*
+			MemoryFile memoryFile;
+			NOP;
+
+			// Save pipeline state object cache file
+			assert(::detail::savePipelineStateObjectCacheFile(mRendererRuntime, memoryFile) && "Unable to save the pipeline state object cache");
+			*/
+		}
 	}
 
 

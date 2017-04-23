@@ -262,7 +262,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline StdFileManager::StdFileManager()
+	inline StdFileManager::StdFileManager() :
+		mAbsoluteLocalDataDirectoryName(std_filesystem::canonical(std_filesystem::current_path() / "/../LocalData").generic_string())
 	{
 		// Nothing here
 	}
@@ -278,14 +279,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline const char* StdFileManager::getAbsoluteLocalDataDirectoryName() const
 	{
-		// For the Unrimp examples were using the following directory structure
-		// - "<root directory>/bin/x64_static"
-		// - "<root directory>/bin/DataPc"
-		// - "<root directory>/bin/LocalData"
-		// -> For end-user products, you might want to choose a local user data directory
-		// -> In here we assume that the current directory has not been changed and still points to the directory the running executable is in (e.g. "<root directory>/bin/x64_static")
-		static const std::string absoluteLocalDataDirectoryName = std_filesystem::canonical(std_filesystem::current_path() / "/../LocalData").generic_string();
-		return absoluteLocalDataDirectoryName.c_str();
+		return mAbsoluteLocalDataDirectoryName.c_str();
 	}
 
 	inline void StdFileManager::createDirectories(const char* directoryName) const
