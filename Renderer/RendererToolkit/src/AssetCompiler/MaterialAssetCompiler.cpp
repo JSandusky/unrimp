@@ -137,7 +137,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::v1Material::FORMAT_TYPE, RendererRuntime::v1Material::FORMAT_VERSION, outputAssetFilename);
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1Material::FORMAT_TYPE, RendererRuntime::v1Material::FORMAT_VERSION, outputAssetFilename, input.fileManager);
 
 			// Store new cache entries or update existing ones
 			// TODO(co) Material assets are currently excluded from the cache: See more detailed comment above

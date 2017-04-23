@@ -44,18 +44,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
 	typedef StringId AssetId;			///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
-	#ifndef FILE_FORMAT_HEADER
-		#define FILE_FORMAT_HEADER
-		struct FileFormatHeader
-		{
-			// Format
-			uint32_t formatType;
-			uint32_t formatVersion;
-			// Content
-			uint32_t numberOfCompressedBytes;
-			uint32_t numberOfDecompressedBytes;
-		};
-	#endif
 
 
 	// Scene file format content:

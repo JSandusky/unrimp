@@ -30,6 +30,8 @@ PRAGMA_WARNING_DISABLE_MSVC(4244)	// warning C4244: '<x>': conversion from '<y>'
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 
+#include <RendererRuntime/Core/File/IFileManager.h>
+
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: '<x>': assignment operator was implicitly defined as deleted
@@ -126,9 +128,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CacheManager::CacheManager(const std::string& absoluteLocalDataDirectoryName, const std::string& projectName)
+	CacheManager::CacheManager(RendererRuntime::IFileManager& fileManager, const std::string& projectName)
 	{
-		std_filesystem::path cachePath(absoluteLocalDataDirectoryName);
+		std_filesystem::path cachePath(fileManager.getAbsoluteLocalDataDirectoryName());
 		cachePath /= "RendererToolkitCache";
 
 		// Ensure that the cache output directory exists

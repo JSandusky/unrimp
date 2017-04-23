@@ -165,14 +165,8 @@ namespace RendererRuntime
 
 	void CompositorNodeResourceLoader::onDeserialization(IFile& file)
 	{
-		// Read in the file format header
-		FileFormatHeader fileFormatHeader;
-		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
-		assert(v1CompositorNode::FORMAT_TYPE == fileFormatHeader.formatType);
-		assert(v1CompositorNode::FORMAT_VERSION == fileFormatHeader.formatVersion);
-
 		// Tell the memory mapped file about the LZ4 compressed data
-		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+		mMemoryFile.loadLz4CompressedDataFromFile(v1CompositorNode::FORMAT_TYPE, v1CompositorNode::FORMAT_VERSION, file);
 	}
 
 	void CompositorNodeResourceLoader::onProcessing()

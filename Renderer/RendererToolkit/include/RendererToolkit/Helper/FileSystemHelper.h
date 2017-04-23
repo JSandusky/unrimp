@@ -42,15 +42,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class MemoryFile;
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -65,31 +56,6 @@ namespace RendererToolkit
 	#else
 		namespace std_filesystem = std::experimental::filesystem;
 	#endif
-
-
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class FileSystemHelper
-	{
-
-
-	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
-	//[-------------------------------------------------------]
-	public:
-		static void writeCompressedFile(const RendererRuntime::MemoryFile& memoryFile, uint32_t formatType, uint32_t formatVersion, const std::string& outputAssetFilename);
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		FileSystemHelper(const FileSystemHelper&) = delete;
-		FileSystemHelper& operator=(const FileSystemHelper&) = delete;
-
-
-	};
 
 
 //[-------------------------------------------------------]

@@ -125,7 +125,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::v1VertexAttributes::FORMAT_TYPE, RendererRuntime::v1VertexAttributes::FORMAT_VERSION, outputAssetFilename);
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1VertexAttributes::FORMAT_TYPE, RendererRuntime::v1VertexAttributes::FORMAT_VERSION, outputAssetFilename, input.fileManager);
 
 			// TODO(co) Cache check disabled until we have implemented the stuff in here
 			// Store new cache entries or update existing ones

@@ -37,23 +37,6 @@ namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	#ifndef FILE_FORMAT_HEADER
-		#define FILE_FORMAT_HEADER
-		struct FileFormatHeader
-		{
-			// Format
-			uint32_t formatType;
-			uint32_t formatVersion;
-			// Content
-			uint32_t numberOfCompressedBytes;
-			uint32_t numberOfDecompressedBytes;
-		};
-	#endif
-
-
 	// Shader blueprint file format content:
 	// - File format header
 	// - Shader blueprint header

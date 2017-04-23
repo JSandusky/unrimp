@@ -50,15 +50,11 @@ namespace RendererRuntime
 		mSkeletonResource = static_cast<SkeletonResource*>(&resource);
 	}
 
-	void SkeletonResourceLoader::onDeserialization(IFile& file)
+	void SkeletonResourceLoader::onDeserialization(IFile&)
 	{
-		// Read in the skeleton header
-		v1Skeleton::Header skeletonHeader;
-		file.read(&skeletonHeader, sizeof(v1Skeleton::Header));
-		assert(v1Skeleton::FORMAT_TYPE == skeletonHeader.formatType);
-		assert(v1Skeleton::FORMAT_VERSION == skeletonHeader.formatVersion);
-
 		// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh. When there's one, don't forget to use LZ4 compression.
+		// Tell the memory mapped file about the LZ4 compressed data
+		// mMemoryFile.loadLz4CompressedDataFromFile(v1Skeleton::FORMAT_TYPE, v1Skeleton::FORMAT_VERSION, file);
 	}
 
 

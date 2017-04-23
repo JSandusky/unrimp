@@ -542,7 +542,6 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Framework\RefCountPtr.h" />
     <ClInclude Include="src\Framework\SmartPtr.h" />
     <ClInclude Include="src\Framework\SmartRefCount.h" />
-    <ClInclude Include="src\Framework\StdFileManager.h" />
     <ClInclude Include="src\Framework\WindowsHeader.h" />
     <ClInclude Include="src\Framework\X11Application.h" />
     <ClInclude Include="src\Framework\X11Window.h" />
@@ -612,7 +611,6 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\Framework\StdFileManager.cpp" />
     <ClCompile Include="src\Framework\X11Application.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">true</ExcludedFromBuild>
@@ -667,7 +665,6 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <None Include="src\Framework\RefCountPtr.inl" />
     <None Include="src\Framework\SmartPtr.inl" />
     <None Include="src\Framework\SmartRefCount.inl" />
-    <None Include="src\Framework\StdFileManager.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

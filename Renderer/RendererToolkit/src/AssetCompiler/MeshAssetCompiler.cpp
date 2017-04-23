@@ -680,7 +680,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::v1Mesh::FORMAT_TYPE, RendererRuntime::v1Mesh::FORMAT_VERSION, outputAssetFilename);
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1Mesh::FORMAT_TYPE, RendererRuntime::v1Mesh::FORMAT_VERSION, outputAssetFilename, input.fileManager);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);

@@ -42,6 +42,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IFileManager;
 	class IRendererRuntime;
 }
 namespace RendererToolkit
@@ -84,10 +85,10 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] absoluteLocalDataDirectoryName
-		*    The absolute ASCII name of the directory were to write local data to (usually a user directory), has to end without /, must be valid
+		*  @param[in] fileManager
+		*    The file manager instance to use
 		*/
-		explicit ProjectImpl(const std::string& absoluteLocalDataDirectoryName);
+		explicit ProjectImpl(RendererRuntime::IFileManager& fileManager);
 
 		/**
 		*  @brief
@@ -130,7 +131,7 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		std::string						mAbsoluteLocalDataDirectoryName;	///< The absolute ASCII name of the directory were to write local data to (usually a user directory), has to end without /
+		RendererRuntime::IFileManager&  mFileManager;
 		std::string						mProjectName;
 		std::string						mProjectDirectory;
 		QualityStrategy					mQualityStrategy;

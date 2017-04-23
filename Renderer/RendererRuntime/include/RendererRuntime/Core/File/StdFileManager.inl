@@ -21,11 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "PrecompiledHeader.h"
-#include "Framework/StdFileManager.h"
-
-#include <RendererRuntime/Core/Platform/PlatformTypes.h>
-#include <RendererRuntime/Core/File/IFile.h>
+#include "RendererRuntime/Core/File/IFile.h"
+#include "RendererRuntime/Core/Platform/PlatformTypes.h"
 
 #include <fstream>
 #include <cassert>
@@ -256,47 +253,74 @@ namespace
 
 
 //[-------------------------------------------------------]
-//[ Public virtual RendererRuntime::IFileManager methods  ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-const char* StdFileManager::getAbsoluteLocalDataDirectoryName() const
+namespace RendererRuntime
 {
-	// For the Unrimp examples were using the following directory structure
-	// - "<root directory>/bin/x64_static"
-	// - "<root directory>/bin/DataPc"
-	// - "<root directory>/bin/LocalData"
-	// -> For end-user products, you might want to choose a local user data directory
-	// -> In here we assume that the current directory has not been changed and still points to the directory the running executable is in (e.g. "<root directory>/bin/x64_static")
-	static const std::string absoluteLocalDataDirectoryName = std_filesystem::canonical(std_filesystem::current_path() / "/../LocalData").generic_string();
-	return absoluteLocalDataDirectoryName.c_str();
-}
 
-void StdFileManager::createDirectories(const char* directoryName) const
-{
-	std_filesystem::create_directories(directoryName);
-}
 
-RendererRuntime::IFile* StdFileManager::openFile(FileMode fileMode, const char* filename)
-{
-	assert(nullptr != filename);
-	::detail::StdFile* file = nullptr;
-	if (FileMode::READ == fileMode)
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline StdFileManager::StdFileManager()
 	{
-		file = new ::detail::StdReadFile(filename);
+		// Nothing here
 	}
-	else
-	{
-		file = new ::detail::StdWriteFile(filename);
-	}
-	if (file->isInvalid())
-	{
-		RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Failed to open file %s", filename);
-		delete file;
-		file = nullptr;
-	}
-	return file;
-}
 
-void StdFileManager::closeFile(RendererRuntime::IFile& file)
-{
-	delete static_cast< ::detail::StdFile*>(&file);
-}
+	inline StdFileManager::~StdFileManager()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IFileManager methods  ]
+	//[-------------------------------------------------------]
+	inline const char* StdFileManager::getAbsoluteLocalDataDirectoryName() const
+	{
+		// For the Unrimp examples were using the following directory structure
+		// - "<root directory>/bin/x64_static"
+		// - "<root directory>/bin/DataPc"
+		// - "<root directory>/bin/LocalData"
+		// -> For end-user products, you might want to choose a local user data directory
+		// -> In here we assume that the current directory has not been changed and still points to the directory the running executable is in (e.g. "<root directory>/bin/x64_static")
+		static const std::string absoluteLocalDataDirectoryName = std_filesystem::canonical(std_filesystem::current_path() / "/../LocalData").generic_string();
+		return absoluteLocalDataDirectoryName.c_str();
+	}
+
+	inline void StdFileManager::createDirectories(const char* directoryName) const
+	{
+		std_filesystem::create_directories(directoryName);
+	}
+
+	inline IFile* StdFileManager::openFile(FileMode fileMode, const char* filename)
+	{
+		assert(nullptr != filename);
+		::detail::StdFile* file = nullptr;
+		if (FileMode::READ == fileMode)
+		{
+			file = new ::detail::StdReadFile(filename);
+		}
+		else
+		{
+			file = new ::detail::StdWriteFile(filename);
+		}
+		if (file->isInvalid())
+		{
+			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Failed to open file %s", filename);
+			delete file;
+			file = nullptr;
+		}
+		return file;
+	}
+
+	inline void StdFileManager::closeFile(IFile& file)
+	{
+		delete static_cast< ::detail::StdFile*>(&file);
+	}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // RendererRuntime

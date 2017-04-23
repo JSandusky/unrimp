@@ -118,8 +118,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProjectImpl::ProjectImpl(const std::string& absoluteLocalDataDirectoryName) :
-		mAbsoluteLocalDataDirectoryName(absoluteLocalDataDirectoryName),
+	ProjectImpl::ProjectImpl(RendererRuntime::IFileManager& fileManager) :
+		mFileManager(fileManager),
 		mQualityStrategy(QualityStrategy::PRODUCTION),
 		mRapidJsonDocument(nullptr),
 		mProjectAssetMonitor(nullptr),
@@ -178,7 +178,7 @@ namespace RendererToolkit
 		std_filesystem::create_directories(assetOutputDirectory);
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mProjectName, *mCacheManager.get(), assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
+		IAssetCompiler::Input input(mFileManager, mProjectName, *mCacheManager.get(), assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
 
 		// Asset compiler configuration
 		assert(nullptr != mRapidJsonDocument);
@@ -274,7 +274,7 @@ namespace RendererToolkit
 
 			// Setup project folder for cache manager, it will store there its data
 			// TODO(sw) For now only prototype. Change this.
-			mCacheManager = std::make_unique<CacheManager>(mAbsoluteLocalDataDirectoryName, mProjectName);
+			mCacheManager = std::make_unique<CacheManager>(mFileManager, mProjectName);
 		}
 	}
 
@@ -315,7 +315,7 @@ namespace RendererToolkit
 			memoryFile.write(sortedAssetVector.data(), sizeof(RendererRuntime::Asset) * sortedAssetVector.size());
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(memoryFile, RendererRuntime::StringId("AssetPackage"), 2, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets");
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::StringId("AssetPackage"), 2, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", mFileManager);
 		}
 	}
 

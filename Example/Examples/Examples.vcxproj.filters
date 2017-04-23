@@ -393,9 +393,6 @@
     <ClInclude Include="src\Framework\IApplicationFrontend.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\Framework\StdFileManager.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="src\Framework\QtRunner\ExampleRunnerQt4.h">
       <Filter>Framework\QtRunner</Filter>
     </ClInclude>
@@ -546,9 +543,6 @@
     <ClCompile Include="src\Framework\ExampleBase.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="src\Framework\StdFileManager.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
     <ClCompile Include="src\Framework\QtRunner\ExampleRunnerQt4.cpp">
       <Filter>Framework\QtRunner</Filter>
     </ClCompile>
@@ -584,9 +578,6 @@
       <Filter>Framework</Filter>
     </None>
     <None Include="src\Framework\IApplicationFrontend.inl">
-      <Filter>Framework</Filter>
-    </None>
-    <None Include="src\Framework\StdFileManager.inl">
       <Filter>Framework</Filter>
     </None>
   </ItemGroup>

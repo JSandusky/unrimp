@@ -47,6 +47,19 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IFileManager;
+}
+namespace RendererToolkit
+{
+	class IRendererToolkit;
+}
+
+
+//[-------------------------------------------------------]
 //[ Global functions                                      ]
 //[-------------------------------------------------------]
 #ifndef SHARED_LIBRARIES
@@ -54,17 +67,8 @@
 	// This is needed to do here because the methods in the library are also defined in global namespace
 
 	// "createRendererToolkitInstance()" signature
-	extern RendererToolkit::IRendererToolkit *createRendererToolkitInstance(const char* absoluteLocalDataDirectoryName);
+	extern RendererToolkit::IRendererToolkit *createRendererToolkitInstance(RendererRuntime::IFileManager& fileManager);
 #endif
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererToolkit
-{
-	class IRendererToolkit;
-}
 
 
 //[-------------------------------------------------------]
@@ -93,10 +97,10 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] absoluteLocalDataDirectoryName
-		*    The absolute ASCII name of the directory were to write local data to (usually a user directory), has to end without /, must be valid
+		*  @param[in] fileManager
+		*    The file manager instance to use
 		*/
-		RendererToolkitInstance(const char* absoluteLocalDataDirectoryName)
+		RendererToolkitInstance(RendererRuntime::IFileManager& fileManager)
 		{
 			#ifdef SHARED_LIBRARIES
 				// Dynamically linked libraries
@@ -115,10 +119,10 @@ namespace RendererToolkit
 						if (nullptr != symbol)
 						{
 							// "createRendererToolkitInstance()" signature
-							typedef RendererToolkit::IRendererToolkit *(__cdecl *createRendererToolkitInstance)(const char*);
+							typedef RendererToolkit::IRendererToolkit *(__cdecl *createRendererToolkitInstance)(RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer toolkit instance
-							mRendererToolkit = static_cast<createRendererToolkitInstance>(symbol)(absoluteLocalDataDirectoryName);
+							mRendererToolkit = static_cast<createRendererToolkitInstance>(symbol)(fileManager);
 						}
 						else
 						{
@@ -147,10 +151,10 @@ namespace RendererToolkit
 						if (nullptr != symbol)
 						{
 							// "createRendererToolkitInstance()" signature
-							typedef RendererToolkit::IRendererToolkit *(*createRendererToolkitInstance)(const char*);
+							typedef RendererToolkit::IRendererToolkit *(*createRendererToolkitInstance)(RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer toolkit instance
-							mRendererToolkit = reinterpret_cast<createRendererToolkitInstance>(symbol)(absoluteLocalDataDirectoryName);
+							mRendererToolkit = reinterpret_cast<createRendererToolkitInstance>(symbol)(fileManager);
 						}
 						else
 						{
@@ -171,7 +175,7 @@ namespace RendererToolkit
 				// Statically linked libraries
 
 				// Create the renderer toolkit instance
-				mRendererToolkit = createRendererToolkitInstance(absoluteLocalDataDirectoryName);
+				mRendererToolkit = createRendererToolkitInstance(fileManager);
 			#endif
 		}
 

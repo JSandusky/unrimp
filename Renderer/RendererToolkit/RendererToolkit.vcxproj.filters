@@ -23,9 +23,6 @@
     <Filter Include="Source Files\Helper">
       <UniqueIdentifier>{f6aad327-91ba-4137-8b51-4ff62a29c0cb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="External\lz4">
-      <UniqueIdentifier>{170cc223-b6fb-426c-8a95-8c6cd0414e2c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="External\SQLiteCpp">
       <UniqueIdentifier>{d933c6da-9dd2-438b-a077-5b13960187c6}</UniqueIdentifier>
     </Filter>
@@ -36,9 +33,6 @@
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\RendererToolkit\RendererToolkitImpl.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\RendererToolkit\IRendererToolkit.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -149,24 +143,6 @@
     <ClInclude Include="include\RendererToolkit\Helper\CacheManager.h">
       <Filter>Source Files\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\External\lz4\include\lz4\lz4frame_static.h">
-      <Filter>External\lz4</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\External\lz4\include\lz4\lz4hc.h">
-      <Filter>External\lz4</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\External\lz4\include\lz4\lz4opt.h">
-      <Filter>External\lz4</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\External\lz4\include\lz4\xxhash.h">
-      <Filter>External\lz4</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\External\lz4\include\lz4\lz4.h">
-      <Filter>External\lz4</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\External\lz4\include\lz4\lz4frame.h">
-      <Filter>External\lz4</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererToolkit\AssetCompiler\VertexAttributesAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
@@ -269,21 +245,6 @@
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
     <ClCompile Include="src\Helper\CacheManager.cpp">
-      <Filter>Source Files\Helper</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\External\lz4\src\lz4frame.c">
-      <Filter>External\lz4</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\External\lz4\src\lz4hc.c">
-      <Filter>External\lz4</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\External\lz4\src\xxhash.c">
-      <Filter>External\lz4</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\External\lz4\src\lz4.c">
-      <Filter>External\lz4</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Helper\FileSystemHelper.cpp">
       <Filter>Source Files\Helper</Filter>
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\VertexAttributesAssetCompiler.cpp">

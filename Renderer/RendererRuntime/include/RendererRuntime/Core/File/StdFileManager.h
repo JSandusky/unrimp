@@ -27,50 +27,66 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <RendererRuntime/Core/File/IFileManager.h>
+#include "RendererRuntime/Core/File/IFileManager.h"
 
 
 //[-------------------------------------------------------]
-//[ Classes                                               ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    STD file manager implementation class
-*/
-class StdFileManager : public RendererRuntime::IFileManager
+namespace RendererRuntime
 {
 
 
-//[-------------------------------------------------------]
-//[ Friends                                               ]
-//[-------------------------------------------------------]
-	friend class IApplicationRendererRuntime;	// Manages the instance
+	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    STD file manager implementation class one can use
+	*
+	*  @note
+	*    - Designed to be instanced and used inside a single C++ file
+	*/
+	class StdFileManager : public IFileManager
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline StdFileManager();
+		inline virtual ~StdFileManager();
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IFileManager methods  ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual const char* getAbsoluteLocalDataDirectoryName() const override;
+		inline virtual void createDirectories(const char* directoryName) const override;
+		inline virtual IFile* openFile(FileMode fileMode, const char* filename) override;
+		inline virtual void closeFile(IFile& file) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		StdFileManager(const StdFileManager&) = delete;
+		StdFileManager& operator=(const StdFileManager&) = delete;
+
+
+	};
 
 
 //[-------------------------------------------------------]
-//[ Public virtual RendererRuntime::IFileManager methods  ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-public:
-	virtual const char* getAbsoluteLocalDataDirectoryName() const override;
-	virtual void createDirectories(const char* directoryName) const override;
-	virtual RendererRuntime::IFile* openFile(FileMode fileMode, const char* filename) override;
-	virtual void closeFile(RendererRuntime::IFile& file) override;
-
-
-//[-------------------------------------------------------]
-//[ Protected methods                                     ]
-//[-------------------------------------------------------]
-protected:
-	inline StdFileManager();
-	inline virtual ~StdFileManager();
-	StdFileManager(const StdFileManager&) = delete;
-	StdFileManager& operator=(const StdFileManager&) = delete;
-
-
-};
+} // RendererRuntime
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Framework/StdFileManager.inl"
+#include "RendererRuntime/Core/File/StdFileManager.inl"

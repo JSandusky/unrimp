@@ -576,6 +576,9 @@
     <None Include="include\RendererRuntime\Resource\VertexAttributes\VertexAttributesResource.inl">
       <Filter>Source Files\Resource\VertexAttributes</Filter>
     </None>
+    <None Include="include\RendererRuntime\Core\File\StdFileManager.inl">
+      <Filter>Source Files\Core\File</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1145,6 +1148,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\VertexAttributes\VertexAttributesResourceManager.h">
       <Filter>Source Files\Resource\VertexAttributes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\File\StdFileManager.h">
+      <Filter>Source Files\Core\File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

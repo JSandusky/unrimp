@@ -40,6 +40,10 @@ namespace SQLite
 {
 	class Database;
 }
+namespace RendererRuntime
+{
+	class IFileManager;
+}
 
 
 //[-------------------------------------------------------]
@@ -113,12 +117,12 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] absoluteLocalDataDirectoryName
-		*    The absolute ASCII name of the directory were to write local data to (usually a user directory), has to end without /, must be valid
+		*  @param[in] fileManager
+		*    The file manager instance to use
 		*  @param[in] projectName
 		*    Name of the project this cache is for
 		*/
-		CacheManager(const std::string& absoluteLocalDataDirectoryName, const std::string& projectName);
+		CacheManager(RendererRuntime::IFileManager& fileManager, const std::string& projectName);
 
 		/**
 		*  @brief

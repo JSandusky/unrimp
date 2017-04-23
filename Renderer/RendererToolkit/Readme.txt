@@ -28,7 +28,6 @@ Renderer toolkit.
 - GLM (header only library)
 - picosha2 (header only library)
 - RapidJSON (header only library)
-- lz4 (directly compiled and linked in)
 - sqlitecpp (directly compiled and linked in)
 - SimpleFileWatcher (directly compiled and linked in)
 
