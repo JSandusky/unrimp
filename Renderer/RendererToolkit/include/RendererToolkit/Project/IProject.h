@@ -59,7 +59,7 @@ namespace RendererToolkit
 	*    Abstract project interface
 	*
 	*  @note
-	*    - One of the major project responsiblilties is "Content Cooking" (optimization of assets for target runtime)
+	*    - One of the major project responsibilities is "Content Cooking" (optimization of assets for target runtime)
 	*/
 	class IProject : public Renderer::RefCount<IProject>
 	{

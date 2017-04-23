@@ -113,10 +113,12 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] projectPath
-		*    The path to the project for which the cache manager instance is used for
+		*  @param[in] absoluteLocalDataDirectoryName
+		*    The absolute ASCII name of the directory were to write local data to (usually a user directory), has to end without /, must be valid
+		*  @param[in] projectName
+		*    Name of the project this cache is for
 		*/
-		explicit CacheManager(const std::string& projectPath);
+		CacheManager(const std::string& absoluteLocalDataDirectoryName, const std::string& projectName);
 
 		/**
 		*  @brief

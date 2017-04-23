@@ -51,6 +51,8 @@ class StdFileManager : public RendererRuntime::IFileManager
 //[ Public virtual RendererRuntime::IFileManager methods  ]
 //[-------------------------------------------------------]
 public:
+	virtual const char* getAbsoluteLocalDataDirectoryName() const override;
+	virtual void createDirectories(const char* directoryName) const override;
 	virtual RendererRuntime::IFile* openFile(FileMode fileMode, const char* filename) override;
 	virtual void closeFile(RendererRuntime::IFile& file) override;
 

@@ -83,7 +83,8 @@ RendererToolkit::IRendererToolkit *IApplicationRendererRuntime::getRendererToolk
 		// Create the renderer toolkit instance, if required
 		if (nullptr == mRendererToolkitInstance)
 		{
-			mRendererToolkitInstance = new RendererToolkit::RendererToolkitInstance();
+			assert(nullptr != mRendererRuntimeInstance && "The renderer runtime instance must be valid");
+			mRendererToolkitInstance = new RendererToolkit::RendererToolkitInstance(mRendererRuntimeInstance->getRendererRuntime()->getFileManager().getAbsoluteLocalDataDirectoryName());
 		}
 		return (nullptr != mRendererToolkitInstance) ? mRendererToolkitInstance->getRendererToolkit() : nullptr;
 	#else

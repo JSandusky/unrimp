@@ -54,7 +54,7 @@
 	// This is needed to do here because the methods in the library are also defined in global namespace
 
 	// "createRendererToolkitInstance()" signature
-	extern RendererToolkit::IRendererToolkit *createRendererToolkitInstance();
+	extern RendererToolkit::IRendererToolkit *createRendererToolkitInstance(const char* absoluteLocalDataDirectoryName);
 #endif
 
 
@@ -92,8 +92,11 @@ namespace RendererToolkit
 		/**
 		*  @brief
 		*    Constructor
+		*
+		*  @param[in] absoluteLocalDataDirectoryName
+		*    The absolute ASCII name of the directory were to write local data to (usually a user directory), has to end without /, must be valid
 		*/
-		RendererToolkitInstance()
+		RendererToolkitInstance(const char* absoluteLocalDataDirectoryName)
 		{
 			#ifdef SHARED_LIBRARIES
 				// Dynamically linked libraries
@@ -112,10 +115,10 @@ namespace RendererToolkit
 						if (nullptr != symbol)
 						{
 							// "createRendererToolkitInstance()" signature
-							typedef RendererToolkit::IRendererToolkit *(__cdecl *createRendererToolkitInstance)();
+							typedef RendererToolkit::IRendererToolkit *(__cdecl *createRendererToolkitInstance)(const char*);
 
 							// Create the renderer toolkit instance
-							mRendererToolkit = static_cast<createRendererToolkitInstance>(symbol)();
+							mRendererToolkit = static_cast<createRendererToolkitInstance>(symbol)(absoluteLocalDataDirectoryName);
 						}
 						else
 						{
@@ -144,10 +147,10 @@ namespace RendererToolkit
 						if (nullptr != symbol)
 						{
 							// "createRendererToolkitInstance()" signature
-							typedef RendererToolkit::IRendererToolkit *(*createRendererToolkitInstance)();
+							typedef RendererToolkit::IRendererToolkit *(*createRendererToolkitInstance)(const char*);
 
 							// Create the renderer toolkit instance
-							mRendererToolkit = reinterpret_cast<createRendererToolkitInstance>(symbol)();
+							mRendererToolkit = reinterpret_cast<createRendererToolkitInstance>(symbol)(absoluteLocalDataDirectoryName);
 						}
 						else
 						{
@@ -168,7 +171,7 @@ namespace RendererToolkit
 				// Statically linked libraries
 
 				// Create the renderer toolkit instance
-				mRendererToolkit = createRendererToolkitInstance();
+				mRendererToolkit = createRendererToolkitInstance(absoluteLocalDataDirectoryName);
 			#endif
 		}
 

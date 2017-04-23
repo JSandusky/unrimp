@@ -118,7 +118,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProjectImpl::ProjectImpl() :
+	ProjectImpl::ProjectImpl(const std::string& absoluteLocalDataDirectoryName) :
+		mAbsoluteLocalDataDirectoryName(absoluteLocalDataDirectoryName),
 		mQualityStrategy(QualityStrategy::PRODUCTION),
 		mRapidJsonDocument(nullptr),
 		mProjectAssetMonitor(nullptr),
@@ -273,7 +274,7 @@ namespace RendererToolkit
 
 			// Setup project folder for cache manager, it will store there its data
 			// TODO(sw) For now only prototype. Change this.
-			mCacheManager = std::make_unique<CacheManager>(mProjectDirectory);
+			mCacheManager = std::make_unique<CacheManager>(mAbsoluteLocalDataDirectoryName, mProjectName);
 		}
 	}
 

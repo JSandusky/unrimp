@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/IRendererToolkit.h"
 
+#include <string>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -56,10 +58,13 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] absoluteLocalDataDirectoryName
+		*    The absolute ASCII name of the directory were to write local data to (usually a user directory), has to end without /, must be valid
+		*
 		*  @note
 		*    - The renderer toolkit keeps a reference to the provided renderer instance
 		*/
-		explicit RendererToolkitImpl();
+		explicit RendererToolkitImpl(const std::string& absoluteLocalDataDirectoryName);
 
 		/**
 		*  @brief
@@ -105,6 +110,7 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		std::string mAbsoluteLocalDataDirectoryName;	///< The absolute ASCII name of the directory were to write local data to (usually a user directory), has to end without /
 
 
 	};

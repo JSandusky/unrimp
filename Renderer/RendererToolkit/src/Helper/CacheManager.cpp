@@ -126,10 +126,10 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CacheManager::CacheManager(const std::string& projectPath)
+	CacheManager::CacheManager(const std::string& absoluteLocalDataDirectoryName, const std::string& projectName)
 	{
-		std_filesystem::path cachePath(projectPath);
-		cachePath /= "cache";
+		std_filesystem::path cachePath(absoluteLocalDataDirectoryName);
+		cachePath /= "RendererToolkitCache";
 
 		// Ensure that the cache output directory exists
 		std_filesystem::create_directories(cachePath);
@@ -138,7 +138,7 @@ namespace RendererToolkit
 		try
 		{
 			std_filesystem::path databasePath(cachePath);
-			databasePath /= "cache.db3";
+			databasePath /= projectName + ".db3";
 
 			mDatabaseConnection = std::make_unique<SQLite::Database>(databasePath.string(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE | SQLITE_OPEN_NOMUTEX);
 		}

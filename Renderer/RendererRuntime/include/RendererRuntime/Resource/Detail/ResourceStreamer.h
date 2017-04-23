@@ -79,6 +79,9 @@ namespace RendererRuntime
 	*    1. Asynchronous deserialization
 	*    2. Asynchronous processing
 	*    3. Synchronous dispatch, e.g. to the renderer backend
+	*
+	*  @todo
+	*    - TODO(co) It might make sense to use lock-free-queues in here
 	*/
 	class ResourceStreamer
 	{

@@ -35,9 +35,10 @@
 #else
 	#define RENDERERTOOLKIT_API_EXPORT
 #endif
-RENDERERTOOLKIT_API_EXPORT RendererToolkit::IRendererToolkit *createRendererToolkitInstance()
+RENDERERTOOLKIT_API_EXPORT RendererToolkit::IRendererToolkit* createRendererToolkitInstance(const char* absoluteLocalDataDirectoryName)
 {
-	return new RendererToolkit::RendererToolkitImpl();
+	assert(nullptr != absoluteLocalDataDirectoryName && "The absolute local data directory name must be valid");
+	return new RendererToolkit::RendererToolkitImpl(absoluteLocalDataDirectoryName);
 }
 #undef RENDERERTOOLKIT_API_EXPORT
 
@@ -52,7 +53,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RendererToolkitImpl::RendererToolkitImpl()
+	RendererToolkitImpl::RendererToolkitImpl(const std::string& absoluteLocalDataDirectoryName) :
+		mAbsoluteLocalDataDirectoryName(absoluteLocalDataDirectoryName)
 	{
 		// Nothing here
 	}
@@ -68,7 +70,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	IProject* RendererToolkitImpl::createProject()
 	{
-		return new ProjectImpl();
+		return new ProjectImpl(mAbsoluteLocalDataDirectoryName);
 	}
 
 
