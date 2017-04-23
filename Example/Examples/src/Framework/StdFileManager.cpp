@@ -51,8 +51,7 @@ namespace
 		//[ Public methods                                        ]
 		//[-------------------------------------------------------]
 		public:
-			explicit StdFile(const char* filename) :
-				mFileStream(filename, std::ios::binary)
+			StdFile()
 			{
 				// Nothing here
 			}
@@ -62,7 +61,49 @@ namespace
 				// Nothing here
 			}
 
-			bool isInvalid() const
+
+		//[-------------------------------------------------------]
+		//[ Public virtual StdFile methods                        ]
+		//[-------------------------------------------------------]
+		public:
+			virtual bool isInvalid() const = 0;
+
+
+		//[-------------------------------------------------------]
+		//[ Protected methods                                     ]
+		//[-------------------------------------------------------]
+		protected:
+			StdFile(const StdFile&) = delete;
+			StdFile& operator=(const StdFile&) = delete;
+
+
+		};
+
+		class StdReadFile : public StdFile
+		{
+
+
+		//[-------------------------------------------------------]
+		//[ Public methods                                        ]
+		//[-------------------------------------------------------]
+		public:
+			explicit StdReadFile(const char* filename) :
+				mFileStream(filename, std::ios::binary)
+			{
+				// Nothing here
+			}
+
+			virtual ~StdReadFile()
+			{
+				// Nothing here
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Public virtual StdFile methods                        ]
+		//[-------------------------------------------------------]
+		public:
+			virtual bool isInvalid() const override
 			{
 				return !mFileStream;
 			}
@@ -93,8 +134,7 @@ namespace
 
 			virtual void write(const void*, size_t) override
 			{
-				// TODO(co) Currently, this file interface implementation is read-only. Might change as soon as the renderer runtime needs to e.g. write a pipeline state cache.
-				assert(false);
+				assert(false && "File write method not supported by the implementation");
 			}
 
 
@@ -102,8 +142,8 @@ namespace
 		//[ Protected methods                                     ]
 		//[-------------------------------------------------------]
 		protected:
-			StdFile(const StdFile&) = delete;
-			StdFile& operator=(const StdFile&) = delete;
+			StdReadFile(const StdReadFile&) = delete;
+			StdReadFile& operator=(const StdReadFile&) = delete;
 
 
 		//[-------------------------------------------------------]
@@ -111,6 +151,79 @@ namespace
 		//[-------------------------------------------------------]
 		private:
 			std::ifstream mFileStream;
+
+
+		};
+
+		class StdWriteFile : public StdFile
+		{
+
+
+		//[-------------------------------------------------------]
+		//[ Public methods                                        ]
+		//[-------------------------------------------------------]
+		public:
+			explicit StdWriteFile(const char* filename) :
+				mFileStream(filename, std::ios::binary)
+			{
+				// Nothing here
+			}
+
+			virtual ~StdWriteFile()
+			{
+				// Nothing here
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Public virtual StdFile methods                        ]
+		//[-------------------------------------------------------]
+		public:
+			virtual bool isInvalid() const override
+			{
+				return !mFileStream;
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Public virtual RendererRuntime::IFile methods         ]
+		//[-------------------------------------------------------]
+		public:
+			virtual size_t getNumberOfBytes() override
+			{
+				assert(false && "File get number of bytes method not supported by the implementation");
+				return 0;
+			}
+
+			virtual void read(void*, size_t) override
+			{
+				assert(false && "File read method not supported by the implementation");
+			}
+
+			virtual void skip(size_t) override
+			{
+				assert(false && "File skip method not supported by the implementation");
+			}
+
+			virtual void write(const void* sourceBuffer, size_t numberOfBytes) override
+			{
+				mFileStream.write(reinterpret_cast<const char*>(sourceBuffer), static_cast<std::streamsize>(numberOfBytes));
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Protected methods                                     ]
+		//[-------------------------------------------------------]
+		protected:
+			StdWriteFile(const StdWriteFile&) = delete;
+			StdWriteFile& operator=(const StdWriteFile&) = delete;
+
+
+		//[-------------------------------------------------------]
+		//[ Private data                                          ]
+		//[-------------------------------------------------------]
+		private:
+			std::ofstream mFileStream;
 
 
 		};
@@ -126,10 +239,18 @@ namespace
 //[-------------------------------------------------------]
 //[ Public virtual RendererRuntime::IFileManager methods  ]
 //[-------------------------------------------------------]
-RendererRuntime::IFile* StdFileManager::openFile(const char* filename)
+RendererRuntime::IFile* StdFileManager::openFile(FileMode fileMode, const char* filename)
 {
 	assert(nullptr != filename);
-	::detail::StdFile* file = new ::detail::StdFile(filename);
+	::detail::StdFile* file = nullptr;
+	if (FileMode::READ == fileMode)
+	{
+		file = new ::detail::StdReadFile(filename);
+	}
+	else
+	{
+		file = new ::detail::StdWriteFile(filename);
+	}
 	if (file->isInvalid())
 	{
 		RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Failed to open file %s", filename);

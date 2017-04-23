@@ -58,6 +58,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		enum class FileMode
+		{
+			READ,
+			WRITE
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IFileManager methods  ]
 	//[-------------------------------------------------------]
 	public:
@@ -65,13 +76,15 @@ namespace RendererRuntime
 		*  @brief
 		*    Open a file
 		*
+		*  @param[in] fileMode
+		*    File mode
 		*  @param[in] filename
 		*    ASCII name of the file to open for reading, never ever a null pointer and always finished by a terminating zero
 		*
 		*  @return
 		*    The file interface, can be a null pointer if horrible things are happening (total failure)
 		*/
-		virtual IFile* openFile(const char* filename) = 0;
+		virtual IFile* openFile(FileMode fileMode, const char* filename) = 0;
 
 		/**
 		*  @brief

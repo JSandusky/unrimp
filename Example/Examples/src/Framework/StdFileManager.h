@@ -51,7 +51,7 @@ class StdFileManager : public RendererRuntime::IFileManager
 //[ Public virtual RendererRuntime::IFileManager methods  ]
 //[-------------------------------------------------------]
 public:
-	virtual RendererRuntime::IFile* openFile(const char* filename) override;
+	virtual RendererRuntime::IFile* openFile(FileMode fileMode, const char* filename) override;
 	virtual void closeFile(RendererRuntime::IFile& file) override;
 
 

@@ -52,7 +52,7 @@ namespace RendererRuntime
 	void AssetManager::addAssetPackageByFilename(const char* filename)
 	{
 		IFileManager& fileManager = mRendererRuntime.getFileManager();
-		IFile* file = fileManager.openFile(filename);
+		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, filename);
 		if (nullptr != file)
 		{
 			mAssetPackageVector.push_back(AssetPackageSerializer().loadAssetPackage(*file));

@@ -245,7 +245,7 @@ namespace RendererRuntime
 
 					{ // Do the work
 						IFileManager& fileManager = mRendererRuntime.getFileManager();
-						IFile* file = fileManager.openFile(loadRequest.resourceLoader->getAsset().assetFilename);
+						IFile* file = fileManager.openFile(IFileManager::FileMode::READ, loadRequest.resourceLoader->getAsset().assetFilename);
 						if (nullptr != file)
 						{
 							loadRequest.resourceLoader->onDeserialization(*file);
