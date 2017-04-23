@@ -42,9 +42,6 @@
     <None Include="include\RendererToolkit\Project\IProject.inl">
       <Filter>Source Files\Project</Filter>
     </None>
-    <None Include="include\RendererToolkit\Project\ProjectAssetMonitor.inl">
-      <Filter>Source Files\Project</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h">

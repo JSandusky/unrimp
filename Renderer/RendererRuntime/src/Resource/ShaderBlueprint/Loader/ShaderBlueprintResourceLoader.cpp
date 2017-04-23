@@ -51,9 +51,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void ShaderBlueprintResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void ShaderBlueprintResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mShaderBlueprintResource = static_cast<ShaderBlueprintResource*>(&resource);
 	}
 
@@ -114,7 +114,9 @@ namespace RendererRuntime
 			}
 		}
 
-		{ // TODO(co) Cleanup: Get all influenced material blueprint resources
+		// TODO(co) Cleanup: Get all influenced material blueprint resources
+		if (getReload())
+		{
 			const ShaderBlueprintResourceId shaderBlueprintResourceId = mShaderBlueprintResource->getId();
 			typedef std::unordered_set<MaterialBlueprintResource*> MaterialBlueprintResourcePointers;
 			MaterialBlueprintResourcePointers materialBlueprintResourcePointers;

@@ -821,6 +821,9 @@ namespace NullRenderer
 		// The null renderer has native multi-threading
 		mCapabilities.nativeMultiThreading = true;
 
+		// The null renderer has no shader bytecode support
+		mCapabilities.shaderBytecode = false;
+
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;
 

@@ -241,7 +241,7 @@ namespace RendererRuntime
 				if (nullptr != loadRequest.resourceLoader)
 				{
 					deserializationMutexLock.unlock();
-					loadRequest.resourceLoader->initialize(*loadRequest.asset, *loadRequest.resource);
+					loadRequest.resourceLoader->initialize(*loadRequest.asset, loadRequest.reload, *loadRequest.resource);
 
 					{ // Do the work
 						IFileManager& fileManager = mRendererRuntime.getFileManager();

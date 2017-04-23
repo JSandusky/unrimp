@@ -1878,6 +1878,9 @@ namespace OpenGLES3Renderer
 		// OpenGL ES 3 has no native multi-threading
 		mCapabilities.nativeMultiThreading = false;
 
+		// We don't support the OpenGL ES 3 program binaries since those are operation system and graphics driver version dependent, which renders them useless for pre-compiled shaders shipping
+		mCapabilities.shaderBytecode = false;
+
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;
 

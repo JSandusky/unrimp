@@ -41,6 +41,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IFile;
 	class PassBufferManager;
 	class MaterialBufferManager;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
@@ -452,6 +453,14 @@ namespace RendererRuntime
 		virtual ~MaterialBlueprintResource();
 		MaterialBlueprintResource(const MaterialBlueprintResource&) = delete;
 		MaterialBlueprintResource& operator=(const MaterialBlueprintResource&) = delete;
+
+		//[-------------------------------------------------------]
+		//[ Pipeline state object cache                           ]
+		//[-------------------------------------------------------]
+		void clearPipelineStateObjectCache();
+		void loadPipelineStateObjectCache(IFile& file);
+		bool doesPipelineStateObjectCacheNeedSaving() const;
+		void savePipelineStateObjectCache(IFile& file);
 
 		//[-------------------------------------------------------]
 		//[ "RendererRuntime::PackedElementManager" management    ]

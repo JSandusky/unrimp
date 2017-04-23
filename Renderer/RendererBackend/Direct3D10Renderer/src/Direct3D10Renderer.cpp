@@ -1787,6 +1787,9 @@ namespace Direct3D10Renderer
 		// -> https://msdn.microsoft.com/de-de/library/windows/desktop/bb205068(v=vs.85).aspx - "Unlike Direct3D 9, the Direct3D 10 API defaults to fully thread-safe"
 		mCapabilities.nativeMultiThreading = true;
 
+		// Direct3D 10 has shader bytecode support
+		mCapabilities.shaderBytecode = true;
+
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;
 

@@ -24,7 +24,9 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Backend/RendererRuntimeImpl.h"
 #include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/Core/File/MemoryFile.h"
 #include "RendererRuntime/Core/Time/TimeManager.h"
+#include "RendererRuntime/Core/File/IFileManager.h"
 #include "RendererRuntime/Core/Thread/ThreadManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
@@ -57,6 +59,70 @@
 RENDERERRUNTIME_FUNCTION_EXPORT RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager)
 {
 	return new RendererRuntime::RendererRuntimeImpl(renderer, fileManager);
+}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		namespace PipelineStateCache
+		{
+			static const uint32_t FORMAT_TYPE	 = RendererRuntime::StringId("PipelineStateCache");
+			static const uint32_t FORMAT_VERSION = 0;
+		}
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void getPipelineStateObjectCacheFilename(const RendererRuntime::IRendererRuntime& rendererRuntime, std::string& directoryName, std::string& filename)
+		{
+			directoryName = std::string(rendererRuntime.getFileManager().getAbsoluteLocalDataDirectoryName()) + "/PipelineStateObjectCache/";
+			filename = directoryName + rendererRuntime.getRenderer().getName() + ".pso_cache";
+		}
+
+		bool loadPipelineStateObjectCacheFile(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::MemoryFile& memoryFile)
+		{
+			// Tell the memory mapped file about the LZ4 compressed data and decompress it at once
+			std::string directoryName;
+			std::string filename;
+			getPipelineStateObjectCacheFilename(rendererRuntime, directoryName, filename);
+			if (memoryFile.loadLz4CompressedDataFromFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, rendererRuntime.getFileManager()))
+			{
+				memoryFile.decompress();
+
+				// Done
+				return true;
+			}
+			
+			// Error!
+			return false;
+		}
+
+		bool savePipelineStateObjectCacheFile(const RendererRuntime::IRendererRuntime& rendererRuntime, const RendererRuntime::MemoryFile& memoryFile)
+		{
+			std::string directoryName;
+			std::string filename;
+			getPipelineStateObjectCacheFilename(rendererRuntime, directoryName, filename);
+			RendererRuntime::IFileManager& fileManager = rendererRuntime.getFileManager();
+			fileManager.createDirectories(directoryName.c_str());
+			return memoryFile.writeLz4CompressedDataToFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, fileManager);
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
 }
 
 
@@ -140,12 +206,17 @@ namespace RendererRuntime
 			// TODO(sw) For now no OpenVR support under Android
 			mVrManager = new VrManagerOpenVR(*this);
 		#endif
+
+		// Don't try to load the pipeline state object cache at this point in time, the asset manager will have no asset packages and hence there will be no material blueprint assets
 	}
 
 	RendererRuntimeImpl::~RendererRuntimeImpl()
 	{
 		// Before doing anything else, ensure the resource streamer has no more work to do
 		mResourceStreamer->flushAllQueues();
+
+		// Save pipeline state object cache
+		savePipelineStateObjectCache();
 
 		// Destroy the optional manager instances
 		delete mVrManager;
@@ -218,6 +289,50 @@ namespace RendererRuntime
 		for (size_t i = 0; i < numberOfResourceManagers; ++i)
 		{
 			mResourceManagers[i]->update();
+		}
+	}
+
+	void RendererRuntimeImpl::clearPipelineStateObjectCache()
+	{
+		mShaderBlueprintResourceManager->clearPipelineStateObjectCache();
+		mMaterialBlueprintResourceManager->clearPipelineStateObjectCache();
+	}
+
+	void RendererRuntimeImpl::loadPipelineStateObjectCache()
+	{
+		if (mRenderer->getCapabilities().shaderBytecode)
+		{
+			clearPipelineStateObjectCache();
+
+			// Load file
+			MemoryFile memoryFile;
+			if (::detail::loadPipelineStateObjectCacheFile(*this, memoryFile))
+			{
+				mShaderBlueprintResourceManager->loadPipelineStateObjectCache(memoryFile);
+				mMaterialBlueprintResourceManager->loadPipelineStateObjectCache(memoryFile);
+			}
+			else
+			{
+				// TODO(co) As soon as everything is in place, we might want to enable this assert
+				// assert(false && "Unable to load the pipeline state object cache. This will possibly result decreased runtime performance up to runtime hiccups. You might want to create the pipeline state object cache via the renderer toolkit.");
+			}
+		}
+	}
+
+	void RendererRuntimeImpl::savePipelineStateObjectCache()
+	{
+		// Do only save the pipeline state object cache if writing local data is allowed
+		if (mRenderer->getCapabilities().shaderBytecode &&
+			(mShaderBlueprintResourceManager->doesPipelineStateObjectCacheNeedSaving() || mMaterialBlueprintResourceManager->doesPipelineStateObjectCacheNeedSaving()) &&
+			nullptr != mFileManager->getAbsoluteLocalDataDirectoryName())
+		{
+			MemoryFile memoryFile;
+			mShaderBlueprintResourceManager->savePipelineStateObjectCache(memoryFile);
+			mMaterialBlueprintResourceManager->savePipelineStateObjectCache(memoryFile);
+			if (!::detail::savePipelineStateObjectCacheFile(*this, memoryFile))
+			{
+				// TODO(co) Error! Unable to save the pipeline state object cache. Communicate this.
+			}
 		}
 	}
 

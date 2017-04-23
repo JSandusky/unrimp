@@ -79,7 +79,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void initialize(const Asset& asset, IResource& resource) override;
+		virtual void initialize(const Asset& asset, bool reload, IResource& resource) override;
 		inline virtual void onDeserialization(IFile& file) override;
 		inline virtual void onProcessing() override;
 		inline virtual bool onDispatch() override;

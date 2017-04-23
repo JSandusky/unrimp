@@ -43,9 +43,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void SkeletonAnimationResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void SkeletonAnimationResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mSkeletonAnimationResource = static_cast<SkeletonAnimationResource*>(&resource);
 	}
 

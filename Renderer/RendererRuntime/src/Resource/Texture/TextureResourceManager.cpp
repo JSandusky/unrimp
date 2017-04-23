@@ -194,7 +194,7 @@ namespace RendererRuntime
 			if (nullptr != filenameExtension)
 			{
 				// Commit resource streamer asset load request
-				rendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, StringId(filenameExtension + 1), *textureResource));
+				rendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, StringId(filenameExtension + 1), reload, *textureResource));
 
 				// Since it might take a moment to load the texture resource, we'll use a fallback placeholder renderer texture resource so we don't have to wait until the real thing is there
 				// -> In case there's already a renderer texture, keep that as long as possible (for example there might be a change in the number of top mipmaps to remove)

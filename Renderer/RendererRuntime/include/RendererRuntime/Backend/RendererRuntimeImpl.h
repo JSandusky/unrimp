@@ -96,6 +96,13 @@ namespace RendererRuntime
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
 
+		//[-------------------------------------------------------]
+		//[ Pipeline state object cache                           ]
+		//[-------------------------------------------------------]
+		virtual void clearPipelineStateObjectCache() override;
+		virtual void loadPipelineStateObjectCache() override;
+		virtual void savePipelineStateObjectCache() override;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

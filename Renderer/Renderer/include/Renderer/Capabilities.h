@@ -69,6 +69,7 @@ namespace Renderer
 		bool	 drawInstanced;								///< Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID)
 		bool	 baseVertex;								///< Base vertex supported for draw calls?
 		bool	 nativeMultiThreading;						///< Does the renderer support native multi-threading? For example Direct3D 11 does meaning we can also create renderer resources asynchronous while for OpenGL we have to create an separate OpenGL context (less efficient, more complex to implement).
+		bool	 shaderBytecode;							///< Shader bytecode supported?
 		// Vertex-shader (VS) stage
 		bool	 vertexShader;								///< Is there support for vertex shaders (VS)?
 		// Tessellation-control-shader (TCS) stage and tessellation-evaluation-shader (TES) stage
@@ -100,26 +101,8 @@ namespace Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit Capabilities(const Capabilities &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline Capabilities &operator =(const Capabilities &source);
+		explicit Capabilities(const Capabilities &source) = delete;
+		Capabilities &operator =(const Capabilities &source) = delete;
 
 
 	};

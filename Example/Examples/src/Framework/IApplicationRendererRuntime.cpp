@@ -126,6 +126,7 @@ void IApplicationRendererRuntime::onInitialization()
 				{
 					rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/Content/AssetPackage.assets");
 				}
+				rendererRuntime->loadPipelineStateObjectCache();
 
 				#ifdef SHARED_LIBRARIES
 				{

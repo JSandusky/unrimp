@@ -129,9 +129,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void SceneResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void SceneResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mSceneResource = static_cast<ISceneResource*>(&resource);
 	}
 

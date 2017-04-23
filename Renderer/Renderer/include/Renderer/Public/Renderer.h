@@ -1643,6 +1643,7 @@ namespace Renderer
 			bool	 drawInstanced;
 			bool	 baseVertex;
 			bool	 nativeMultiThreading;
+			bool	 shaderBytecode;
 			bool	 vertexShader;
 			uint32_t maximumNumberOfPatchVertices;
 			uint32_t maximumNumberOfGsOutputVertices;
@@ -1662,6 +1663,7 @@ namespace Renderer
 				drawInstanced(false),
 				baseVertex(false),
 				nativeMultiThreading(false),
+				shaderBytecode(false),
 				vertexShader(false),
 				maximumNumberOfPatchVertices(0),
 				maximumNumberOfGsOutputVertices(0)
@@ -1669,28 +1671,8 @@ namespace Renderer
 			inline ~Capabilities()
 			{}
 		private:
-			inline explicit Capabilities(const Capabilities&) :
-				maximumNumberOfViewports(0),
-				maximumNumberOfSimultaneousRenderTargets(0),
-				maximumTextureDimension(0),
-				maximumNumberOf2DTextureArraySlices(0),
-				maximumUniformBufferSize(0),
-				maximumTextureBufferSize(0),
-				maximumIndirectBufferSize(0),
-				maximumNumberOfMultisamples(1),
-				individualUniforms(false),
-				instancedArrays(false),
-				drawInstanced(false),
-				baseVertex(false),
-				nativeMultiThreading(false),
-				vertexShader(false),
-				maximumNumberOfPatchVertices(0),
-				maximumNumberOfGsOutputVertices(0)
-			{}
-			inline Capabilities& operator =(const Capabilities&)
-			{
-				return *this;
-			}
+			explicit Capabilities(const Capabilities&) = delete;
+			Capabilities& operator =(const Capabilities&) = delete;
 		};
 	#endif
 

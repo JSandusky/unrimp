@@ -103,7 +103,7 @@ namespace RendererRuntime
 			if (load)
 			{
 				// Commit resource streamer asset load request
-				mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, SceneResourceLoader::TYPE_ID, *sceneResource));
+				mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, SceneResourceLoader::TYPE_ID, reload, *sceneResource));
 			}
 
 			// TODO(co) No raw pointers in here

@@ -142,7 +142,7 @@ namespace RendererRuntime
 		if (load)
 		{
 			// Commit resource streamer asset load request
-			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, LOADER_TYPE::TYPE_ID, *resource));
+			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, LOADER_TYPE::TYPE_ID, reload, *resource));
 		}
 	}
 

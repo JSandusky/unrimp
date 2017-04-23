@@ -42,9 +42,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void ITextureResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void ITextureResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mTextureResource = static_cast<TextureResource*>(&resource);
 	}
 

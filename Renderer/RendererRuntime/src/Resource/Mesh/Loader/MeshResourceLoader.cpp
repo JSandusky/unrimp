@@ -49,9 +49,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void MeshResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void MeshResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mMeshResource = static_cast<MeshResource*>(&resource);
 	}
 
@@ -204,16 +204,15 @@ namespace RendererRuntime
 
 	bool MeshResourceLoader::isFullyLoaded()
 	{
-		{ // Fully loaded?
-			const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
-			const SubMeshes& subMeshes = mMeshResource->mSubMeshes;
-			for (uint32_t i = 0; i < mNumberOfUsedSubMeshes; ++i)
+		// Fully loaded?
+		const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
+		const SubMeshes& subMeshes = mMeshResource->mSubMeshes;
+		for (uint32_t i = 0; i < mNumberOfUsedSubMeshes; ++i)
+		{
+			if (IResource::LoadingState::LOADED != materialResourceManager.getResourceByResourceId(subMeshes[i].mMaterialResourceId).getLoadingState())
 			{
-				if (IResource::LoadingState::LOADED != materialResourceManager.getResourceByResourceId(subMeshes[i].mMaterialResourceId).getLoadingState())
-				{
-					// Not fully loaded
-					return false;
-				}
+				// Not fully loaded
+				return false;
 			}
 		}
 

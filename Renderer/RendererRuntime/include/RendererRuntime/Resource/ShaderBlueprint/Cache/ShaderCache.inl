@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -38,6 +44,11 @@ namespace RendererRuntime
 		return mMasterShaderCache;
 	}
 
+	inline const Renderer::ShaderBytecode& ShaderCache::getShaderBytecode() const
+	{
+		return mShaderBytecode;
+	}
+
 	inline Renderer::IShaderPtr ShaderCache::getShaderPtr() const
 	{
 		return (nullptr != mMasterShaderCache) ? mMasterShaderCache->mShaderPtr : mShaderPtr;
@@ -47,17 +58,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline ShaderCache::ShaderCache(ShaderCacheId shaderCacheId) :
-		mShaderCacheId(shaderCacheId),
+	inline ShaderCache::ShaderCache() :
+		mShaderCacheId(getUninitialized<ShaderCacheId>()),
 		mMasterShaderCache(nullptr)
 	{
 		// Nothing here
 	}
 
-	inline ShaderCache::ShaderCache(ShaderCacheId shaderCacheId, Renderer::IShader& shader) :
+	inline ShaderCache::ShaderCache(ShaderCacheId shaderCacheId) :
 		mShaderCacheId(shaderCacheId),
-		mMasterShaderCache(nullptr),
-		mShaderPtr(&shader)
+		mMasterShaderCache(nullptr)
 	{
 		// Nothing here
 	}

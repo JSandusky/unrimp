@@ -102,14 +102,16 @@ namespace RendererRuntime
 			// Data provided from the outside
 			const Asset*		 asset;					///< Used asset, must be valid
 			ResourceLoaderTypeId resourceLoaderTypeId;	///< Must be valid
+			bool				 reload;				///< "true" if the resource is new in memory, else "false" for reload an already loaded resource (and e.g. update cache entries)
 			IResource*			 resource;				///< Must be valid, do not destroy the instance
 			// In flight data
 			mutable IResourceLoader* resourceLoader;	///< Null pointer at first, must be valid as soon as the load request is in flight, do not destroy the instance
 
 			// Methods
-			inline LoadRequest(const Asset& _asset, ResourceLoaderTypeId _resourceLoaderTypeId, IResource& _resource) :
+			inline LoadRequest(const Asset& _asset, ResourceLoaderTypeId _resourceLoaderTypeId, bool _reload, IResource& _resource) :
 				asset(&_asset),
 				resourceLoaderTypeId(_resourceLoaderTypeId),
+				reload(_reload),
 				resource(&_resource),
 				resourceLoader(nullptr)
 			{

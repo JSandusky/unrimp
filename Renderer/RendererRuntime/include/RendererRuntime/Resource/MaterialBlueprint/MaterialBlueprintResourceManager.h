@@ -36,6 +36,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IFile;
+	class MemoryFile;
 	class IRendererRuntime;
 	class LightBufferManager;
 	class InstanceBufferManager;
@@ -99,6 +101,9 @@ namespace RendererRuntime
 		inline MaterialProperties& getGlobalMaterialProperties();
 		inline const MaterialProperties& getGlobalMaterialProperties() const;
 
+		//[-------------------------------------------------------]
+		//[ Manager                                               ]
+		//[-------------------------------------------------------]
 		inline InstanceBufferManager& getInstanceBufferManager() const;
 		inline LightBufferManager& getLightBufferManager() const;
 
@@ -130,8 +135,14 @@ namespace RendererRuntime
 		virtual ~MaterialBlueprintResourceManager();
 		MaterialBlueprintResourceManager(const MaterialBlueprintResourceManager&) = delete;
 		MaterialBlueprintResourceManager& operator=(const MaterialBlueprintResourceManager&) = delete;
-		void loadPipelineStateObjectCache();
-		void savePipelineStateObjectCache();
+
+		//[-------------------------------------------------------]
+		//[ Pipeline state object cache                           ]
+		//[-------------------------------------------------------]
+		void clearPipelineStateObjectCache();
+		void loadPipelineStateObjectCache(IFile& file);
+		bool doesPipelineStateObjectCacheNeedSaving() const;
+		void savePipelineStateObjectCache(MemoryFile& memoryFile);
 
 
 	//[-------------------------------------------------------]

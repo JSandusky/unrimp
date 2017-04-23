@@ -44,9 +44,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void VertexAttributesResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void VertexAttributesResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mVertexAttributesResource = static_cast<VertexAttributesResource*>(&resource);
 	}
 

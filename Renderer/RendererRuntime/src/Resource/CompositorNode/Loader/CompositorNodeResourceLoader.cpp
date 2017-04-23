@@ -157,9 +157,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void CompositorNodeResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void CompositorNodeResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mCompositorNodeResource = static_cast<CompositorNodeResource*>(&resource);
 	}
 

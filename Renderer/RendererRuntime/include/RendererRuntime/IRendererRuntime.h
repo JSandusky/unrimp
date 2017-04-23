@@ -359,6 +359,13 @@ namespace RendererRuntime
 		*/
 		virtual void update() = 0;
 
+		//[-------------------------------------------------------]
+		//[ Pipeline state object cache                           ]
+		//[-------------------------------------------------------]
+		virtual void clearPipelineStateObjectCache() = 0;
+		virtual void loadPipelineStateObjectCache() = 0;
+		virtual void savePipelineStateObjectCache() = 0;
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]

@@ -31,7 +31,6 @@
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
-#include "RendererRuntime/Core/File/IFileManager.h"
 #include "RendererRuntime/Core/Time/TimeManager.h"
 
 
@@ -47,55 +46,17 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
-		namespace PipelineStateCache
+		struct MaterialBlueprintCacheEntry
 		{
-			static const uint32_t FORMAT_TYPE	 = RendererRuntime::StringId("PipelineStateCache");
-			static const uint32_t FORMAT_VERSION = 0;
-		}
+			RendererRuntime::AssetId materialBlueprintAssetId;
+			uint32_t				 numberOfBytes;
+		};
 
 
 		//[-------------------------------------------------------]
 		//[ Global variables                                      ]
 		//[-------------------------------------------------------]
 		static RendererRuntime::MaterialBlueprintResourceListener defaultMaterialBlueprintResourceListener;
-
-
-		//[-------------------------------------------------------]
-		//[ Global functions                                      ]
-		//[-------------------------------------------------------]
-		void getPipelineStateObjectCacheFilename(const RendererRuntime::IRendererRuntime& rendererRuntime, std::string& directoryName, std::string& filename)
-		{
-			directoryName = std::string(rendererRuntime.getFileManager().getAbsoluteLocalDataDirectoryName()) + "/PipelineStateObjectCache/";
-			filename = directoryName + rendererRuntime.getRenderer().getName() + ".pso_cache";
-		}
-
-		bool loadPipelineStateObjectCacheFile(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::MemoryFile& memoryFile)
-		{
-			// Tell the memory mapped file about the LZ4 compressed data and decompress it at once
-			std::string directoryName;
-			std::string filename;
-			getPipelineStateObjectCacheFilename(rendererRuntime, directoryName, filename);
-			if (memoryFile.loadLz4CompressedDataFromFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, rendererRuntime.getFileManager()))
-			{
-				memoryFile.decompress();
-
-				// Done
-				return true;
-			}
-			
-			// Error!
-			return false;
-		}
-
-		bool savePipelineStateObjectCacheFile(const RendererRuntime::IRendererRuntime& rendererRuntime, const RendererRuntime::MemoryFile& memoryFile)
-		{
-			std::string directoryName;
-			std::string filename;
-			getPipelineStateObjectCacheFilename(rendererRuntime, directoryName, filename);
-			RendererRuntime::IFileManager& fileManager = rendererRuntime.getFileManager();
-			fileManager.createDirectories(directoryName.c_str());
-			return memoryFile.writeLz4CompressedDataToFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, fileManager);
-		}
 
 
 //[-------------------------------------------------------]
@@ -150,7 +111,7 @@ namespace RendererRuntime
 		if (load)
 		{
 			// Commit resource streamer asset load request
-			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, MaterialBlueprintResourceLoader::TYPE_ID, *materialBlueprintResource));
+			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, MaterialBlueprintResourceLoader::TYPE_ID, reload, *materialBlueprintResource));
 
 			// TODO(co) Currently material blueprint resource loading is a blocking process.
 			//          Later on, we can probably just write "mInternalResourceManager->loadResourceByAssetId(assetId, meshResourceId, resourceListener, reload);" and be done in this method.
@@ -275,16 +236,10 @@ namespace RendererRuntime
 		// Update at once to have all managed global material properties known from the start
 		update();
 		mGlobalMaterialProperties.setPropertyById("GlobalNumberOfMultisamples", MaterialPropertyValue::fromInteger(0));
-
-		// Load pipeline state object cache
-		loadPipelineStateObjectCache();
 	}
 
 	MaterialBlueprintResourceManager::~MaterialBlueprintResourceManager()
 	{
-		// Save pipeline state object cache
-		savePipelineStateObjectCache();
-
 		// Destroy buffer managers, if needed
 		delete mInstanceBufferManager;
 		delete mLightBufferManager;
@@ -297,34 +252,85 @@ namespace RendererRuntime
 		delete mInternalResourceManager;
 	}
 
-	void MaterialBlueprintResourceManager::loadPipelineStateObjectCache()
+	void MaterialBlueprintResourceManager::clearPipelineStateObjectCache()
 	{
-		MemoryFile memoryFile;
-		if (::detail::loadPipelineStateObjectCacheFile(mRendererRuntime, memoryFile))
+		// Loop through all material blueprint resources and clear the cache entries
+		const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			// TODO(co) Implement me
-			NOP;
-		}
-		else
-		{
-			// TODO(co) As soon as everything is in place, we might want to enable this assert
-			// assert(false && "Unable to load the pipeline state object cache. This will possibly result decreased runtime performance up to runtime hiccups. You might want to create the pipeline state object cache via the renderer toolkit.");
+			mInternalResourceManager->getResources().getElementByIndex(i).clearPipelineStateObjectCache();
 		}
 	}
 
-	void MaterialBlueprintResourceManager::savePipelineStateObjectCache()
+	void MaterialBlueprintResourceManager::loadPipelineStateObjectCache(IFile& file)
 	{
-		// Do only save the pipeline state object cache if writing local data is allowed
-		if (nullptr != mRendererRuntime.getFileManager().getAbsoluteLocalDataDirectoryName())
-		{
-			// TODO(co) Write to memory file
-			/*
-			MemoryFile memoryFile;
-			NOP;
+		// Read the pipeline state object cache header which consists of information about the contained material blueprint resources
+		uint32_t numberOfElements = 0;
+		file.read(&numberOfElements, sizeof(uint32_t));
+		std::vector< ::detail::MaterialBlueprintCacheEntry> materialBlueprintCacheEntries;
+		materialBlueprintCacheEntries.resize(numberOfElements);
+		file.read(materialBlueprintCacheEntries.data(), sizeof(::detail::MaterialBlueprintCacheEntry) * numberOfElements);
 
-			// Save pipeline state object cache file
-			assert(::detail::savePipelineStateObjectCacheFile(mRendererRuntime, memoryFile) && "Unable to save the pipeline state object cache");
-			*/
+		// Loop through all material blueprint resources and read the cache entries
+		for (uint32_t i = 0; i < numberOfElements; ++i)
+		{
+			// TODO(co) Currently material blueprint resource loading is a blocking process
+			const ::detail::MaterialBlueprintCacheEntry& materialBlueprintCacheEntry = materialBlueprintCacheEntries[i];
+			MaterialBlueprintResourceId materialBlueprintResourceId = getUninitialized<MaterialBlueprintResourceId>();
+			loadMaterialBlueprintResourceByAssetId(materialBlueprintCacheEntry.materialBlueprintAssetId, materialBlueprintResourceId);
+			if (isInitialized(materialBlueprintResourceId))
+			{
+				mInternalResourceManager->getResources().getElementById(materialBlueprintResourceId).loadPipelineStateObjectCache(file);
+			}
+			else
+			{
+				assert(false && "The pipeline state object cache contains an unknown material blueprint asset");
+				file.skip(materialBlueprintCacheEntry.numberOfBytes);
+			}
+		}
+	}
+
+	bool MaterialBlueprintResourceManager::doesPipelineStateObjectCacheNeedSaving() const
+	{
+		const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
+		{
+			if (mInternalResourceManager->getResources().getElementByIndex(i).doesPipelineStateObjectCacheNeedSaving())
+			{
+				// Cache saving needed
+				return true;
+			}
+		}
+
+		// No cache saving needed
+		return false;
+	}
+
+	void MaterialBlueprintResourceManager::savePipelineStateObjectCache(MemoryFile& memoryFile)
+	{
+		// Write the pipeline state object cache header which consists of information about the contained material blueprint resources
+		const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
+		memoryFile.write(&numberOfElements, sizeof(uint32_t));
+		uint32_t firstMaterialBlueprintCacheEntryIndex = 0;
+		for (uint32_t i = 0; i < numberOfElements; ++i)
+		{
+			::detail::MaterialBlueprintCacheEntry materialBlueprintCacheEntry;
+			materialBlueprintCacheEntry.materialBlueprintAssetId = mInternalResourceManager->getResources().getElementByIndex(i).getAssetId();
+			materialBlueprintCacheEntry.numberOfBytes			 = 0;	// At this point in time we don't know the number of bytes the material blueprint cache entry consumes
+			memoryFile.write(&materialBlueprintCacheEntry, sizeof(::detail::MaterialBlueprintCacheEntry));
+			if (0 == firstMaterialBlueprintCacheEntryIndex)
+			{
+				firstMaterialBlueprintCacheEntryIndex = static_cast<uint32_t>(memoryFile.getNumberOfBytes() - sizeof(::detail::MaterialBlueprintCacheEntry));
+			}
+		}
+		::detail::MaterialBlueprintCacheEntry* firstMaterialBlueprintCacheEntry = reinterpret_cast< ::detail::MaterialBlueprintCacheEntry*>(&memoryFile.getByteVector()[firstMaterialBlueprintCacheEntryIndex]);
+
+		// Loop through all material blueprint resources and write the cache entries
+		for (uint32_t i = 0; i < numberOfElements; ++i)
+		{
+			const uint32_t fileStart = static_cast<uint32_t>(memoryFile.getNumberOfBytes());
+			mInternalResourceManager->getResources().getElementByIndex(i).savePipelineStateObjectCache(memoryFile);
+			firstMaterialBlueprintCacheEntry[i].numberOfBytes = static_cast<uint32_t>(memoryFile.getNumberOfBytes() - fileStart);
 		}
 	}
 

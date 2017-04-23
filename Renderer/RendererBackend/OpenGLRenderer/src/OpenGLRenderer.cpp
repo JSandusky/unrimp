@@ -2497,6 +2497,11 @@ namespace OpenGLRenderer
 		// OpenGL has no native multi-threading
 		mCapabilities.nativeMultiThreading = false;
 
+		// We don't support the OpenGL program binaries since those are operation system and graphics driver version dependent, which renders them useless for pre-compiled shaders shipping
+		// TODO(co) "GL_ARB_gl_spirv"-support is under construction
+	//	mCapabilities.shaderBytecode = mExtensions->isGL_ARB_gl_spirv();
+		mCapabilities.shaderBytecode = false;
+
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = mExtensions->isGL_ARB_vertex_shader();
 

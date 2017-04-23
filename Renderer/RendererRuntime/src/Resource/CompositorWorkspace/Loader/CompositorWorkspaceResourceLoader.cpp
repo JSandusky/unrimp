@@ -80,9 +80,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void CompositorWorkspaceResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void CompositorWorkspaceResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mCompositorWorkspaceResource = static_cast<CompositorWorkspaceResource*>(&resource);
 	}
 

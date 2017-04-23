@@ -47,9 +47,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void MaterialResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void MaterialResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mMaterialResource = static_cast<MaterialResource*>(&resource);
 	}
 

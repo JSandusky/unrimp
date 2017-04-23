@@ -461,6 +461,30 @@ namespace RendererRuntime
 		*/
 	}
 
+	void MaterialBlueprintResource::clearPipelineStateObjectCache()
+	{
+		// TODO(co) Implement me
+		NOP;
+	}
+
+	void MaterialBlueprintResource::loadPipelineStateObjectCache(IFile&)
+	{
+		// TODO(co) Implement me
+		NOP;
+	}
+
+	bool MaterialBlueprintResource::doesPipelineStateObjectCacheNeedSaving() const
+	{
+		// TODO(co) Implement me
+		return false;
+	}
+
+	void MaterialBlueprintResource::savePipelineStateObjectCache(IFile&)
+	{
+		// TODO(co) Implement me
+		NOP;
+	}
+
 	void MaterialBlueprintResource::initializeElement(MaterialBlueprintResourceId materialBlueprintResourceId)
 	{
 		// TODO(co) Sanity checks

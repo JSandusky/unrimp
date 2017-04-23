@@ -37,6 +37,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IFile;
 	class IRendererRuntime;
 	class ShaderBlueprintResource;
 	class ShaderBlueprintResourceLoader;
@@ -132,6 +133,14 @@ namespace RendererRuntime
 		virtual ~ShaderBlueprintResourceManager();
 		ShaderBlueprintResourceManager(const ShaderBlueprintResourceManager&) = delete;
 		ShaderBlueprintResourceManager& operator=(const ShaderBlueprintResourceManager&) = delete;
+
+		//[-------------------------------------------------------]
+		//[ Pipeline state object cache                           ]
+		//[-------------------------------------------------------]
+		inline void clearPipelineStateObjectCache();
+		inline void loadPipelineStateObjectCache(IFile& file);
+		inline bool doesPipelineStateObjectCacheNeedSaving() const;
+		inline void savePipelineStateObjectCache(IFile& file);
 
 
 	//[-------------------------------------------------------]

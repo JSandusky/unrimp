@@ -49,6 +49,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline MemoryFile::ByteVector& MemoryFile::getByteVector()
+	{
+		return mDecompressedData;
+	}
+
 	inline const MemoryFile::ByteVector& MemoryFile::getByteVector() const
 	{
 		return mDecompressedData;

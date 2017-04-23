@@ -1937,6 +1937,9 @@ namespace Direct3D11Renderer
 		// Direct3D 11 has native multi-threading
 		mCapabilities.nativeMultiThreading = true;
 
+		// Direct3D 11 has shader bytecode support
+		mCapabilities.shaderBytecode = true;
+
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;
 

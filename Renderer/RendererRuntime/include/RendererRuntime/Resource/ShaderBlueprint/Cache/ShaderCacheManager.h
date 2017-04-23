@@ -43,6 +43,7 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
+	class IFile;
 	class ShaderCache;
 	class PipelineStateSignature;
 	class MaterialBlueprintResource;
@@ -116,12 +117,6 @@ namespace RendererRuntime
 		*/
 		ShaderCache* getShaderCache(const PipelineStateSignature& pipelineStateSignature, const MaterialBlueprintResource& materialBlueprintResource, Renderer::IShaderLanguage& shaderLanguage, ShaderType shaderType);
 
-		/**
-		*  @brief
-		*    Clear the shader cache manager
-		*/
-		void clearCache();
-
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -131,14 +126,21 @@ namespace RendererRuntime
 		inline ~ShaderCacheManager();
 		ShaderCacheManager(const ShaderCacheManager&) = delete;
 		ShaderCacheManager& operator=(const ShaderCacheManager&) = delete;
+		// TODO(co) Make this private. See "TODO(co) Do only clear the influenced shader cache entries" for context.
+	public:
+		void clearCache();
+	private:
+		void loadCache(IFile& file);
+		inline bool doesCacheNeedSaving() const;
+		void saveCache(IFile& file);
 
 
 	//[-------------------------------------------------------]
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		typedef std::unordered_map<ShaderCacheId, ShaderCache*>		 ShaderCacheByShaderCacheId;
-		typedef std::unordered_map<ShaderSourceCodeId, ShaderCache*> ShaderCacheByShaderSourceCodeId;
+		typedef std::unordered_map<ShaderCacheId, ShaderCache*>		  ShaderCacheByShaderCacheId;
+		typedef std::unordered_map<ShaderSourceCodeId, ShaderCacheId> ShaderCacheByShaderSourceCodeId;
 
 
 	//[-------------------------------------------------------]
@@ -147,7 +149,8 @@ namespace RendererRuntime
 	private:
 		ShaderBlueprintResourceManager& mShaderBlueprintResourceManager;	///< Owner shader blueprint resource manager
 		ShaderCacheByShaderCacheId		mShaderCacheByShaderCacheId;		///< Manages the shader cache instances
-		ShaderCacheByShaderSourceCodeId	mShaderCacheByShaderSourceCodeId;	///< Just references shader cache instances, doesn't own the instances
+		ShaderCacheByShaderSourceCodeId	mShaderCacheByShaderSourceCodeId;	///< Shader source code ID to shader cache ID mapping
+		bool							mCacheNeedsSaving;					///< "true" if a cache needs saving due to changes during runtime, else "false"
 		std::mutex						mMutex;								///< Mutex due to "RendererRuntime::PipelineStateCompiler" interaction, no too fine granular lock/unlock required because usually it's only asynchronous or synchronous processing, not both at one and the same time
 
 
