@@ -162,6 +162,7 @@ namespace RendererRuntime
 		mRenderer(nullptr),
 		mBufferManager(nullptr),
 		mTextureManager(nullptr),
+		mFileManager(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
 		mTimeManager(nullptr),

@@ -1165,7 +1165,7 @@ namespace OpenGLRenderer
 					framebufferToGenerateMipmapsFor->releaseReference();
 				}
 			}
-			else
+			else if (nullptr != mRenderTarget)
 			{
 				// Evaluate the render target type
 				if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType())
@@ -1177,11 +1177,8 @@ namespace OpenGLRenderer
 				// TODO(co) Set no active render target
 
 				// Release the render target reference, in case we have one
-				if (nullptr != mRenderTarget)
-				{
-					mRenderTarget->releaseReference();
-					mRenderTarget = nullptr;
-				}
+				mRenderTarget->releaseReference();
+				mRenderTarget = nullptr;
 			}
 		}
 	}
@@ -2478,9 +2475,6 @@ namespace OpenGLRenderer
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;
-
-		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
-		mCapabilities.instancedArrays = true;
 
 		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex, "GL_ARB_instanced_arrays" required)
 		mCapabilities.instancedArrays = mExtensions->isGL_ARB_instanced_arrays();

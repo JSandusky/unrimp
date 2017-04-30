@@ -165,7 +165,7 @@ namespace RendererRuntime
 							if (nullptr != shader)
 							{
 								RENDERER_SET_RESOURCE_DEBUG_NAME(shader, "Shader cache manager")
-								assert(!shaderLanguage.getRenderer().getCapabilities().shaderBytecode || 0 != shaderCache->mShaderBytecode.getNumberOfBytes() && "Invalid shader bytecode received from renderer implementation");
+								assert((!shaderLanguage.getRenderer().getCapabilities().shaderBytecode || 0 != shaderCache->mShaderBytecode.getNumberOfBytes()) && "Invalid shader bytecode received from renderer implementation");
 								shaderCache->mShaderPtr = shader;
 								mShaderCacheByShaderCacheId.emplace(shaderCacheId, shaderCache);
 								mShaderCacheByShaderSourceCodeId.emplace(shaderSourceCodeId, shaderCacheId);

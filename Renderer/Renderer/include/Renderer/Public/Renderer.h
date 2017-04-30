@@ -1150,7 +1150,9 @@ namespace Renderer
 			{
 				uint32_t				numberOfAttributes;
 				const VertexAttribute*	attributes;
-				VertexAttributes()
+				VertexAttributes() :
+					numberOfAttributes(0),
+					attributes(nullptr)
 				{}
 				VertexAttributes(uint32_t _numberOfAttributes, const VertexAttribute* _attributes) :
 					numberOfAttributes(_numberOfAttributes),
@@ -1666,7 +1668,8 @@ namespace Renderer
 				shaderBytecode(false),
 				vertexShader(false),
 				maximumNumberOfPatchVertices(0),
-				maximumNumberOfGsOutputVertices(0)
+				maximumNumberOfGsOutputVertices(0),
+				fragmentShader(false)
 			{}
 			inline ~Capabilities()
 			{}

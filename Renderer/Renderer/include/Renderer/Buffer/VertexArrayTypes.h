@@ -111,7 +111,9 @@ namespace Renderer
 				  uint32_t		   numberOfAttributes;	///< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
 			const VertexAttribute* attributes;			///< At least "numberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes, the data is internally copied and you have to free your memory if you no longer need it
 
-			VertexAttributes()
+			VertexAttributes() :
+				numberOfAttributes(0),
+				attributes(nullptr)
 			{
 				// Nothing here
 			}

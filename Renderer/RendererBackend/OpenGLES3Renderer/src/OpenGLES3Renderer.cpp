@@ -911,7 +911,7 @@ namespace OpenGLES3Renderer
 					framebufferToGenerateMipmapsFor->releaseReference();
 				}
 			}
-			else
+			else if (nullptr != mRenderTarget)
 			{
 				// Evaluate the render target type
 				if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType())
@@ -923,11 +923,8 @@ namespace OpenGLES3Renderer
 				// TODO(co) Set no active render target
 
 				// Release the render target reference, in case we have one
-				if (nullptr != mRenderTarget)
-				{
-					mRenderTarget->releaseReference();
-					mRenderTarget = nullptr;
-				}
+				mRenderTarget->releaseReference();
+				mRenderTarget = nullptr;
 			}
 		}
 	}

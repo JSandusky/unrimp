@@ -37,6 +37,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline MaterialBlueprintResourceListener::MaterialBlueprintResourceListener() :
+		mIdentityColorCorrectionLookupTable3D(getUninitialized<TextureResourceId>()),
 		mSsaoSampleKernelTextureResourceId(getUninitialized<TextureResourceId>()),
 		mSsaoNoiseTexture4x4ResourceId(getUninitialized<TextureResourceId>()),
 		mRendererRuntime(nullptr),

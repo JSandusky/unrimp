@@ -45,7 +45,8 @@ namespace Renderer
 		shaderBytecode(false),
 		vertexShader(false),
 		maximumNumberOfPatchVertices(0),
-		maximumNumberOfGsOutputVertices(0)
+		maximumNumberOfGsOutputVertices(0),
+		fragmentShader(false)
 	{
 		// Nothing here
 	}
