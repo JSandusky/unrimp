@@ -108,7 +108,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline CameraSceneItem::CameraSceneItem(ISceneResource& sceneResource) :
+	inline CameraSceneItem::CameraSceneItem(SceneResource& sceneResource) :
 		ISceneItem(sceneResource),
 		mFovY(DEFAULT_FOV_Y),
 		mNearZ(DEFAULT_NEAR_Z),

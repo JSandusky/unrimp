@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 #include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
-#include "RendererRuntime/Resource/Scene/ISceneResource.h"
+#include "RendererRuntime/Resource/Scene/SceneResource.h"
 
 
 // TODO(co) Error handling
@@ -43,7 +43,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void itemDeserialization(RendererRuntime::IFile& file, RendererRuntime::ISceneResource& sceneResource, RendererRuntime::ISceneNode& sceneNode)
+		void itemDeserialization(RendererRuntime::IFile& file, RendererRuntime::SceneResource& sceneResource, RendererRuntime::SceneNode& sceneNode)
 		{
 			// Read the scene item header
 			RendererRuntime::v1Scene::ItemHeader itemHeader;
@@ -70,14 +70,14 @@ namespace
 			}
 		}
 
-		void nodeDeserialization(RendererRuntime::IFile& file, RendererRuntime::ISceneResource& sceneResource)
+		void nodeDeserialization(RendererRuntime::IFile& file, RendererRuntime::SceneResource& sceneResource)
 		{
 			// Read in the scene node
 			RendererRuntime::v1Scene::Node node;
 			file.read(&node, sizeof(RendererRuntime::v1Scene::Node));
 
 			// Create the scene node
-			RendererRuntime::ISceneNode* sceneNode = sceneResource.createSceneNode(node.transform);
+			RendererRuntime::SceneNode* sceneNode = sceneResource.createSceneNode(node.transform);
 			if (nullptr != sceneNode)
 			{
 				// Read in the scene items
@@ -92,7 +92,7 @@ namespace
 			}
 		}
 
-		void nodesDeserialization(RendererRuntime::IFile& file, RendererRuntime::ISceneResource& sceneResource)
+		void nodesDeserialization(RendererRuntime::IFile& file, RendererRuntime::SceneResource& sceneResource)
 		{
 			// Read in the scene nodes
 			RendererRuntime::v1Scene::Nodes nodes;
@@ -132,7 +132,7 @@ namespace RendererRuntime
 	void SceneResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
 		IResourceLoader::initialize(asset, reload);
-		mSceneResource = static_cast<ISceneResource*>(&resource);
+		mSceneResource = static_cast<SceneResource*>(&resource);
 	}
 
 	void SceneResourceLoader::onDeserialization(IFile& file)

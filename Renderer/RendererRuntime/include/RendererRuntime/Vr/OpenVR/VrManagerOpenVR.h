@@ -40,7 +40,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class ISceneNode;
+	class SceneNode;
 	class IRendererRuntime;
 	class OpenVRRuntimeLinking;
 	class IVrManagerOpenVRListener;
@@ -97,7 +97,7 @@ namespace RendererRuntime
 	public:
 		virtual VrManagerTypeId getVrManagerTypeId() const override;
 		virtual bool isHmdPresent() const override;
-		virtual void setSceneResource(ISceneResource* sceneResource) override;
+		virtual void setSceneResourceId(SceneResourceId sceneResourceId) override;
 		virtual bool startup(AssetId vrDeviceMaterialAssetId) override;
 		inline virtual bool isRunning() const override;
 		virtual void shutdown() override;
@@ -139,8 +139,8 @@ namespace RendererRuntime
 		struct Component
 		{
 			std::string name;
-			ISceneNode* sceneNode = nullptr;	// TODO(co) No crazy raw-pointers
-			Component(const std::string& _name, ISceneNode* _sceneNode) :
+			SceneNode* sceneNode = nullptr;	// TODO(co) No crazy raw-pointers
+			Component(const std::string& _name, SceneNode* _sceneNode) :
 				name(_name),
 				sceneNode(_sceneNode)
 			{};
@@ -161,8 +161,8 @@ namespace RendererRuntime
 		IVrManagerOpenVRListener*  mVrManagerOpenVRListener;	///< OpenVR manager listener, always valid, do not destroy the instance
 		bool					   mVrDeviceMaterialResourceLoaded;
 		MaterialResourceId		   mVrDeviceMaterialResourceId;
-		ISceneResource*			   mSceneResource;			// TODO(co) No crazy raw-pointers
-		ISceneNode*				   mSceneNodes[vr::k_unMaxTrackedDeviceCount];	// TODO(co) No crazy raw-pointers
+		SceneResourceId			   mSceneResourceId;
+		SceneNode*				   mSceneNodes[vr::k_unMaxTrackedDeviceCount];	// TODO(co) No crazy raw-pointers
 		TrackedDeviceInformation   mTrackedDeviceInformation[vr::k_unMaxTrackedDeviceCount];
 		OpenVRRuntimeLinking*	   mOpenVRRuntimeLinking;
 		vr::EGraphicsAPIConvention mVrGraphicsAPIConvention;

@@ -33,9 +33,9 @@
 #include <RendererRuntime/Core/Math/EulerAngles.h>
 #include <RendererRuntime/Core/Time/TimeManager.h>
 #include <RendererRuntime/DebugGui/DebugGuiManager.h>
-#include <RendererRuntime/Resource/Scene/ISceneResource.h>
+#include <RendererRuntime/Resource/Scene/SceneNode.h>
+#include <RendererRuntime/Resource/Scene/SceneResource.h>
 #include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
-#include <RendererRuntime/Resource/Scene/Node/ISceneNode.h>
 #include <RendererRuntime/Resource/Scene/Item/LightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h>
@@ -63,6 +63,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
+		static const RendererRuntime::AssetId SCENE_ASSET_ID("Example/Scene/Default/FirstScene");
 		static const RendererRuntime::AssetId IMROD_MATERIAL_ASSET_ID("Example/Material/Character/Imrod");
 
 
@@ -78,7 +79,7 @@ namespace
 //[-------------------------------------------------------]
 FirstScene::FirstScene() :
 	mCompositorWorkspaceInstance(nullptr),
-	mSceneResource(nullptr),
+	mSceneResourceId(RendererRuntime::getUninitialized<RendererRuntime::SceneResourceId>()),
 	mMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
 	mCloneMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
 	mCustomMaterialResourceSet(false),
@@ -131,7 +132,7 @@ void FirstScene::onInitialization()
 		createCompositorWorkspace();
 
 		// Create the scene resource
-		mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId("Example/Scene/Default/FirstScene", this);
+		rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId(::detail::SCENE_ASSET_ID, mSceneResourceId, this);
 
 		// Load the material resource we're going to clone
 		rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::IMROD_MATERIAL_ASSET_ID, mMaterialResourceId, this);
@@ -140,7 +141,7 @@ void FirstScene::onInitialization()
 			RendererRuntime::IVrManager& vrManager = rendererRuntime->getVrManager();
 			if (vrManager.isHmdPresent())
 			{
-				vrManager.setSceneResource(mSceneResource);
+				vrManager.setSceneResourceId(mSceneResourceId);
 				vrManager.startup("Example/Material/Default/VrDevice");
 			}
 		}
@@ -152,7 +153,12 @@ void FirstScene::onDeinitialization()
 	// Release the used resources
 	delete mCompositorWorkspaceInstance;
 	mCompositorWorkspaceInstance = nullptr;
-	delete mSceneResource;
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+	if (nullptr != rendererRuntime)
+	{
+		rendererRuntime->getSceneResourceManager().destroySceneResource(mSceneResourceId);
+		RendererRuntime::setUninitialized(mSceneResourceId);
+	}
 
 	// Destroy controller instance
 	if (nullptr != mController)
@@ -249,10 +255,12 @@ void FirstScene::onUpdate()
 void FirstScene::onDraw()
 {
 	Renderer::IRenderTarget* mainRenderTarget = getMainRenderTarget();
-	if (nullptr != mainRenderTarget && nullptr != mCompositorWorkspaceInstance)
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+	if (nullptr != mainRenderTarget && nullptr != rendererRuntime && nullptr != mCompositorWorkspaceInstance)
 	{
 		createDebugGui(*mainRenderTarget);
-		if (nullptr != mSceneResource && mSceneResource->getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
+		RendererRuntime::SceneResource* sceneResource = rendererRuntime->getSceneResourceManager().tryGetById(mSceneResourceId);
+		if (nullptr != sceneResource && sceneResource->getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
 		{
 			// Execute the compositor workspace instance
 			mCompositorWorkspaceInstance->executeVr(*mainRenderTarget, mCameraSceneItem, mLightSceneItem);
@@ -273,7 +281,7 @@ bool FirstScene::doesCompleteOwnDrawing() const
 void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource)
 {
 	const RendererRuntime::IResource::LoadingState loadingState = resource.getLoadingState();
-	if (&resource == mSceneResource)
+	if (resource.getAssetId() == ::detail::SCENE_ASSET_ID)
 	{
 		if (RendererRuntime::IResource::LoadingState::LOADED == loadingState)
 		{
@@ -284,7 +292,8 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 			assert(nullptr == mSkeletonMeshSceneItem);
 
 			// Loop through all scene nodes and grab the first found camera, directional light and mesh
-			for (RendererRuntime::ISceneNode* sceneNode : mSceneResource->getSceneNodes())
+			const RendererRuntime::SceneResource& sceneResource = static_cast<const RendererRuntime::SceneResource&>(resource);
+			for (RendererRuntime::SceneNode* sceneNode : sceneResource.getSceneNodes())
 			{
 				// Loop through all scene items attached to the current scene node
 				for (RendererRuntime::ISceneItem* sceneItem : sceneNode->getAttachedSceneItems())
@@ -349,7 +358,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 					// Set initial camera position if virtual reality is disabled
 					if (!mHasCameraTransformBackup)
 					{
-						RendererRuntime::ISceneNode* sceneNode = mCameraSceneItem->getParentSceneNode();
+						RendererRuntime::SceneNode* sceneNode = mCameraSceneItem->getParentSceneNode();
 						sceneNode->setPosition(glm::vec3(-3.12873816f, 0.6473912f, 2.20889306f));
 						sceneNode->setRotation(glm::quat(0.412612021f, -0.0201802868f, 0.909596086f, 0.0444870926f));
 					}
@@ -399,15 +408,15 @@ void FirstScene::createCompositorWorkspace()
 
 void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 {
-	if (nullptr != mCompositorWorkspaceInstance && nullptr != mSceneResource)
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+	if (nullptr != mCompositorWorkspaceInstance && RendererRuntime::isInitialized(mSceneResourceId) && nullptr != rendererRuntime)
 	{
 		// Get the render target the debug GUI is rendered into, use the provided main render target as fallback
 		const RendererRuntime::ICompositorInstancePass* compositorInstancePass = mCompositorWorkspaceInstance->getFirstCompositorInstancePassByCompositorPassTypeId(RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID);
 		if (nullptr != compositorInstancePass)
 		{
 			// Setup GUI
-			const RendererRuntime::IRendererRuntime& rendererRuntime = mSceneResource->getRendererRuntime();
-			rendererRuntime.getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
+			rendererRuntime->getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
 			ImGui::Begin("Options");
 				// Compositing
 				{
@@ -415,7 +424,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					ImGui::Combo("Compositor", &mCurrentCompositor, items, static_cast<int>(glm::countof(items)));
 				}
 				{
-					const Renderer::Capabilities& capabilities = rendererRuntime.getRenderer().getCapabilities();
+					const Renderer::Capabilities& capabilities = rendererRuntime->getRenderer().getCapabilities();
 					if (capabilities.maximumNumberOfMultisamples > 1)
 					{
 						const char* items[] = { "None", "2x", "4x", "8x" };
@@ -471,7 +480,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			}
 
 			// Update texture resource manager
-			rendererRuntime.getTextureResourceManager().setNumberOfTopMipmapsToRemove(static_cast<uint8_t>(mNumberOfTopTextureMipmapsToRemove));
+			rendererRuntime->getTextureResourceManager().setNumberOfTopMipmapsToRemove(static_cast<uint8_t>(mNumberOfTopTextureMipmapsToRemove));
 
 			// Update compositor workspace
 			{ // MSAA
@@ -481,7 +490,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
 
 			{ // Update the material resource instance
-				const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime.getMaterialResourceManager();
+				const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
 
 				// Final compositor material
 				RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/Final");

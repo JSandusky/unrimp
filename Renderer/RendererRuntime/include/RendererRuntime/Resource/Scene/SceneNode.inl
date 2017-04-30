@@ -19,18 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -38,52 +26,79 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	class SceneNode : public ISceneNode
+	inline const Transform& SceneNode::getTransform() const
 	{
+		return mTransform;
+	}
 
+	inline void SceneNode::setTransform(const Transform& transform)
+	{
+		mTransform = transform;
+		updateGlobalTransformRecursive();
+	}
 
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class SceneFactory;	// Needs to be able to create scene node instances
+	inline void SceneNode::setPosition(const glm::vec3& position)
+	{
+		mTransform.position = position;
+		updateGlobalTransformRecursive();
+	}
 
+	inline void SceneNode::setRotation(const glm::quat& rotation)
+	{
+		mTransform.rotation = rotation;
+		updateGlobalTransformRecursive();
+	}
 
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		RENDERERRUNTIME_API_EXPORT static const SceneNodeTypeId TYPE_ID;
+	inline void SceneNode::setPositionRotation(const glm::vec3& position, const glm::quat& rotation)
+	{
+		mTransform.position = position;
+		mTransform.rotation = rotation;
+		updateGlobalTransformRecursive();
+	}
 
+	inline void SceneNode::setScale(const glm::vec3& scale)
+	{
+		mTransform.scale = scale;
+		updateGlobalTransformRecursive();
+	}
 
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneNode methods            ]
-	//[-------------------------------------------------------]
-	public:
-		inline virtual SceneNodeTypeId getSceneNodeTypeId() const override;
+	inline const Transform& SceneNode::getGlobalTransform() const
+	{
+		return mGlobalTransform;
+	}
+
+	inline const SceneNode::AttachedSceneNodes& SceneNode::getAttachedSceneNodes() const
+	{
+		return mAttachedSceneNodes;
+	}
+
+	inline const SceneNode::AttachedSceneItems& SceneNode::getAttachedSceneItems() const
+	{
+		return mAttachedSceneItems;
+	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	protected:
-		inline explicit SceneNode(const Transform& transform);
-		inline virtual ~SceneNode();
-		SceneNode(const SceneNode&) = delete;
-		SceneNode& operator=(const SceneNode&) = delete;
+	inline SceneNode::SceneNode(const Transform& transform) :
+		mParentSceneNode(nullptr),
+		mTransform(transform),
+		mGlobalTransform(transform)
+	{
+		// Nothing here
+	}
 
-
-	};
+	inline SceneNode::~SceneNode()
+	{
+		detachAllSceneNodes();
+		detachAllSceneItems();
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Node/SceneNode.inl"

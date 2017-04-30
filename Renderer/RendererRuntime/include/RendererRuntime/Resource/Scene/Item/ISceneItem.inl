@@ -34,7 +34,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ISceneResource& ISceneItem::getSceneResource() const
+	inline SceneResource& ISceneItem::getSceneResource() const
 	{
 		return mSceneResource;
 	}
@@ -44,23 +44,23 @@ namespace RendererRuntime
 		return (nullptr != mParentSceneNode);
 	}
 
-	inline ISceneNode* ISceneItem::getParentSceneNode()
+	inline SceneNode* ISceneItem::getParentSceneNode()
 	{
 		return mParentSceneNode;
 	}
 
-	inline const ISceneNode* ISceneItem::getParentSceneNode() const
+	inline const SceneNode* ISceneItem::getParentSceneNode() const
 	{
 		return mParentSceneNode;
 	}
 
-	inline ISceneNode& ISceneItem::getParentSceneNodeSafe()
+	inline SceneNode& ISceneItem::getParentSceneNodeSafe()
 	{
 		assert(nullptr != mParentSceneNode);
 		return *mParentSceneNode;
 	}
 
-	inline const ISceneNode& ISceneItem::getParentSceneNodeSafe() const
+	inline const SceneNode& ISceneItem::getParentSceneNodeSafe() const
 	{
 		assert(nullptr != mParentSceneNode);
 		return *mParentSceneNode;
@@ -70,13 +70,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	inline void ISceneItem::onAttachedToSceneNode(ISceneNode& sceneNode)
+	inline void ISceneItem::onAttachedToSceneNode(SceneNode& sceneNode)
 	{
 		assert(nullptr == mParentSceneNode);
 		mParentSceneNode = &sceneNode;
 	}
 
-	inline void ISceneItem::onDetachedFromSceneNode(ISceneNode&)
+	inline void ISceneItem::onDetachedFromSceneNode(SceneNode&)
 	{
 		assert(nullptr != mParentSceneNode);
 		mParentSceneNode = nullptr;
@@ -91,7 +91,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ISceneItem::ISceneItem(ISceneResource& sceneResource) :
+	inline ISceneItem::ISceneItem(SceneResource& sceneResource) :
 		mSceneResource(sceneResource),
 		mParentSceneNode(nullptr)
 	{

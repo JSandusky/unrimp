@@ -26,9 +26,7 @@
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.h"
-#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
-#include "RendererRuntime/Asset/AssetManager.h"
-#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
 
 
 //[-------------------------------------------------------]
@@ -63,68 +61,38 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ISceneResource* SceneResourceManager::loadSceneResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
-	{
-		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
-		if (nullptr != asset)
-		{
-			// Get or create the instance
-			ISceneResource* sceneResource = nullptr;
-			const size_t numberOfResources = mSceneResources.size();
-			for (size_t i = 0; i < numberOfResources; ++i)
-			{
-				ISceneResource* currentSceneResource = mSceneResources[i];
-				if (currentSceneResource->getAssetId() == assetId)
-				{
-					sceneResource = currentSceneResource;
-
-					// Get us out of the loop
-					i = mSceneResources.size();
-				}
-			}
-
-			// Create the resource instance
-			bool load = reload;
-			if (nullptr == sceneResource)
-			{
-				assert(nullptr != mSceneFactory);
-				sceneResource = mSceneFactory->createSceneResource(SceneResource::TYPE_ID, mRendererRuntime, assetId);
-				sceneResource->setResourceManager(this);
-				sceneResource->setAssetId(assetId);
-				mSceneResources.push_back(sceneResource);
-				load = true;
-			}
-			if (nullptr != sceneResource && nullptr != resourceListener)
-			{
-				sceneResource->connectResourceListener(*resourceListener);
-			}
-
-			// Load the resource, if required
-			if (load)
-			{
-				// Commit resource streamer asset load request
-				mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, SceneResourceLoader::TYPE_ID, reload, *sceneResource));
-			}
-
-			// TODO(co) No raw pointers in here
-			return sceneResource;
-		}
-
-		// Error!
-		return nullptr;
-	}
-
 	void SceneResourceManager::setSceneFactory(const ISceneFactory* sceneFactory)
 	{
 		// There must always be a valid scene factory instance
 		mSceneFactory = (nullptr != sceneFactory) ? sceneFactory : &::detail::defaultSceneFactory;
 
 		// Tell the scene resource instances about the new scene factory in town
-		const size_t numberOfSceneResources = mSceneResources.size();
-		for (size_t i = 0; i < numberOfSceneResources; ++i)
+		const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			mSceneResources[i]->mSceneFactory = mSceneFactory;
+			mInternalResourceManager->getResources().getElementByIndex(i).mSceneFactory = mSceneFactory;
 		}
+	}
+
+	SceneResource* SceneResourceManager::getSceneResourceByAssetId(AssetId assetId) const
+	{
+		return mInternalResourceManager->getResourceByAssetId(assetId);
+	}
+
+	SceneResourceId SceneResourceManager::getSceneResourceIdByAssetId(AssetId assetId) const
+	{
+		const SceneResource* sceneResource = getSceneResourceByAssetId(assetId);
+		return (nullptr != sceneResource) ? sceneResource->getId() : getUninitialized<SceneResourceId>();
+	}
+
+	void SceneResourceManager::loadSceneResourceByAssetId(AssetId assetId, SceneResourceId& sceneResourceId, IResourceListener* resourceListener, bool reload)
+	{
+		mInternalResourceManager->loadResourceByAssetId(assetId, sceneResourceId, resourceListener, reload);
+	}
+
+	void SceneResourceManager::destroySceneResource(SceneResourceId sceneResourceId)
+	{
+		mInternalResourceManager->getResources().removeElement(sceneResourceId);
 	}
 
 
@@ -133,50 +101,32 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	uint32_t SceneResourceManager::getNumberOfResources() const
 	{
-		return static_cast<uint32_t>(mSceneResources.size());
+		return mInternalResourceManager->getResources().getNumberOfElements();
 	}
 
 	IResource& SceneResourceManager::getResourceByIndex(uint32_t index) const
 	{
-		assert(nullptr != mSceneResources[index]);
-		return *mSceneResources[index];
+		return mInternalResourceManager->getResources().getElementByIndex(index);
 	}
 
 	IResource& SceneResourceManager::getResourceByResourceId(ResourceId resourceId) const
 	{
-		IResource* resource = tryGetResourceByResourceId(resourceId);
-		assert(nullptr != resource);
-		return *resource;
+		return mInternalResourceManager->getResources().getElementById(resourceId);
 	}
 
 	IResource* SceneResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
 	{
-		const size_t numberOfSceneResources = mSceneResources.size();
-		for (size_t i = 0; i < numberOfSceneResources; ++i)
-		{
-			ISceneResource* sceneResource = mSceneResources[i];
-			if (sceneResource->getId() == resourceId)
-			{
-				return sceneResource;
-			}
-		}
-		return nullptr;
+		return mInternalResourceManager->getResources().tryGetElementById(resourceId);
 	}
 
 	void SceneResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		const size_t numberOfSceneResources = mSceneResources.size();
-		for (size_t i = 0; i < numberOfSceneResources; ++i)
+		SceneResource* sceneResource = mInternalResourceManager->getResourceByAssetId(assetId);
+		if (nullptr != sceneResource)
 		{
-			ISceneResource* sceneResource = mSceneResources[i];
-			if (sceneResource->getAssetId() == assetId)
-			{
-				sceneResource->destroyAllSceneNodesAndItems();
-				loadSceneResourceByAssetId(assetId, nullptr, true);
-				break;
-			}
+			sceneResource->destroyAllSceneNodesAndItems();
 		}
+		return mInternalResourceManager->reloadResourceByAssetId(assetId);
 	}
 
 
@@ -185,10 +135,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	IResourceLoader* SceneResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		// We only support our own scene format
-		assert(resourceLoaderTypeId == SceneResourceLoader::TYPE_ID);
-		std::ignore = resourceLoaderTypeId;
-		return new SceneResourceLoader(*this, mRendererRuntime);
+		return mInternalResourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
 	}
 
 
@@ -199,7 +146,12 @@ namespace RendererRuntime
 		mRendererRuntime(rendererRuntime),
 		mSceneFactory(&::detail::defaultSceneFactory)
 	{
-		// Nothing here
+		mInternalResourceManager = new ResourceManagerTemplate<SceneResource, SceneResourceLoader, SceneResourceId, 16>(rendererRuntime, *this);
+	}
+
+	SceneResourceManager::~SceneResourceManager()
+	{
+		delete mInternalResourceManager;
 	}
 
 

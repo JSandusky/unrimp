@@ -28,8 +28,8 @@
 #include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Core/Math/Transform.h>
 #include <RendererRuntime/Core/Math/EulerAngles.h>
-#include <RendererRuntime/Resource/Scene/ISceneResource.h>
-#include <RendererRuntime/Resource/Scene/Node/ISceneNode.h>
+#include <RendererRuntime/Resource/Scene/SceneNode.h>
+#include <RendererRuntime/Resource/Scene/SceneResource.h>
 #include <RendererRuntime/Resource/Scene/Item/MeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/LightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
@@ -151,7 +151,7 @@ namespace
 				}
 			}
 
-			virtual void onSceneNodeCreated(vr::TrackedDeviceIndex_t trackedDeviceIndex, RendererRuntime::ISceneResource& sceneResource, RendererRuntime::ISceneNode& sceneNode) override
+			virtual void onSceneNodeCreated(vr::TrackedDeviceIndex_t trackedDeviceIndex, RendererRuntime::SceneResource& sceneResource, RendererRuntime::SceneNode& sceneNode) override
 			{
 				if (mVrManagerOpenVR->getVrSystem()->GetTrackedDeviceClass(trackedDeviceIndex) == vr::TrackedDeviceClass_Controller)
 				{
@@ -305,8 +305,8 @@ VrController::VrController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
 	}
 
 	{ // Create the teleport indication light scene item
-		RendererRuntime::ISceneResource& sceneResource = cameraSceneItem.getSceneResource();
-		RendererRuntime::ISceneNode* sceneNode = sceneResource.createSceneNode(RendererRuntime::Transform::IDENTITY);
+		RendererRuntime::SceneResource& sceneResource = cameraSceneItem.getSceneResource();
+		RendererRuntime::SceneNode* sceneNode = sceneResource.createSceneNode(RendererRuntime::Transform::IDENTITY);
 		assert(nullptr != sceneNode);
 		mTeleportIndicationLightSceneItem = sceneResource.createSceneItem<RendererRuntime::LightSceneItem>(*sceneNode);
 		assert(nullptr != mTeleportIndicationLightSceneItem);

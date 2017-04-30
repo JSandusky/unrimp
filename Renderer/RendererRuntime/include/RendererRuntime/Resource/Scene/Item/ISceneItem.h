@@ -35,8 +35,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class ISceneNode;
-	class ISceneResource;
+	class SceneNode;
+	class SceneResource;
 }
 
 
@@ -63,19 +63,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class ISceneResource;	// Needs to be able to destroy scene items
+		friend class SceneResource;	// Needs to be able to destroy scene items
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline ISceneResource& getSceneResource() const;
+		inline SceneResource& getSceneResource() const;
 		inline bool hasParentSceneNode() const;
-		inline ISceneNode* getParentSceneNode();
-		inline const ISceneNode* getParentSceneNode() const;
-		inline ISceneNode& getParentSceneNodeSafe();				// Just safe in context known as safe
-		inline const ISceneNode& getParentSceneNodeSafe() const;	// Just safe in context known as safe
+		inline SceneNode* getParentSceneNode();
+		inline const SceneNode* getParentSceneNode() const;
+		inline SceneNode& getParentSceneNodeSafe();				// Just safe in context known as safe
+		inline const SceneNode& getParentSceneNodeSafe() const;	// Just safe in context known as safe
 
 
 	//[-------------------------------------------------------]
@@ -84,8 +84,8 @@ namespace RendererRuntime
 	public:
 		virtual SceneItemTypeId getSceneItemTypeId() const = 0;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) = 0;
-		inline virtual void onAttachedToSceneNode(ISceneNode& sceneNode);
-		inline virtual void onDetachedFromSceneNode(ISceneNode& sceneNode);
+		inline virtual void onAttachedToSceneNode(SceneNode& sceneNode);
+		inline virtual void onDetachedFromSceneNode(SceneNode& sceneNode);
 		inline virtual void setVisible(bool visible);
 
 
@@ -93,7 +93,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit ISceneItem(ISceneResource& sceneResource);
+		inline explicit ISceneItem(SceneResource& sceneResource);
 		inline virtual ~ISceneItem();
 		ISceneItem(const ISceneItem&) = delete;
 		ISceneItem& operator=(const ISceneItem&) = delete;
@@ -103,8 +103,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ISceneResource& mSceneResource;
-		ISceneNode*		mParentSceneNode;	///< Parent scene node, can be a null pointer, don't destroy the instance
+		SceneResource& mSceneResource;
+		SceneNode*	   mParentSceneNode;	///< Parent scene node, can be a null pointer, don't destroy the instance
 
 
 	};

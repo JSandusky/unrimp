@@ -50,29 +50,23 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef StringId SceneNodeTypeId;	///< Scene node type identifier, internally just a POD "uint32_t"
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ISceneNode
+	class SceneNode
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class ISceneResource;
+		friend class SceneResource;
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<ISceneNode*> AttachedSceneNodes;
+		typedef std::vector<SceneNode*> AttachedSceneNodes;
 		typedef std::vector<ISceneItem*> AttachedSceneItems;
 
 
@@ -98,7 +92,7 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Attached scene nodes                                  ]
 		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT void attachSceneNode(ISceneNode& sceneNode);
+		RENDERERRUNTIME_API_EXPORT void attachSceneNode(SceneNode& sceneNode);
 		RENDERERRUNTIME_API_EXPORT void detachAllSceneNodes();
 		inline const AttachedSceneNodes& getAttachedSceneNodes() const;
 		RENDERERRUNTIME_API_EXPORT void setVisible(bool visible);
@@ -113,20 +107,13 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneNode methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual SceneNodeTypeId getSceneNodeTypeId() const = 0;
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit ISceneNode(const Transform& transform);
-		inline virtual ~ISceneNode();
-		ISceneNode(const ISceneNode&) = delete;
-		ISceneNode& operator=(const ISceneNode&) = delete;
+		inline explicit SceneNode(const Transform& transform);
+		inline virtual ~SceneNode();
+		SceneNode(const SceneNode&) = delete;
+		SceneNode& operator=(const SceneNode&) = delete;
 
 
 	//[-------------------------------------------------------]
@@ -140,7 +127,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ISceneNode*		   mParentSceneNode;	///< Parent scene node the scene node is attached to, can be a null pointer, don't destroy the instance
+		SceneNode*		   mParentSceneNode;	///< Parent scene node the scene node is attached to, can be a null pointer, don't destroy the instance
 		Transform		   mTransform;			///< Local transform
 		Transform		   mGlobalTransform;	///< Derived global transform - TODO(co) Will of course later on be handled in another way to be cache efficient and more efficient to calculate and incrementally update. But lets start simple.
 		AttachedSceneNodes mAttachedSceneNodes;
@@ -159,4 +146,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.inl"
+#include "RendererRuntime/Resource/Scene/SceneNode.inl"

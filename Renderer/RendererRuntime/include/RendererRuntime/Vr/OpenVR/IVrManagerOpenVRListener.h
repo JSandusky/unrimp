@@ -35,8 +35,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class ISceneNode;
-	class ISceneResource;
+	class SceneNode;
+	class SceneResource;
 }
 
 
@@ -79,7 +79,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline virtual void onVrEvent(const vr::VREvent_t& vrVrEvent);
-		inline virtual void onSceneNodeCreated(vr::TrackedDeviceIndex_t trackedDeviceIndex, ISceneResource& sceneResource, ISceneNode& sceneNode);
+		inline virtual void onSceneNodeCreated(vr::TrackedDeviceIndex_t trackedDeviceIndex, SceneResource& sceneResource, SceneNode& sceneNode);
 
 
 	};

@@ -23,8 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
-#include "RendererRuntime/Resource/Scene/SceneResource.h"
-#include "RendererRuntime/Resource/Scene/Node/SceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h"
@@ -40,35 +38,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ISceneFactory methods ]
 	//[-------------------------------------------------------]
-	ISceneResource* SceneFactory::createSceneResource(SceneResourceTypeId sceneResourceTypeId, IRendererRuntime& rendererRuntime, ResourceId resourceId) const
-	{
-		ISceneResource* sceneResource = nullptr;
-
-		// Evaluate the scene node type
-		if (sceneResourceTypeId == SceneResource::TYPE_ID)
-		{
-			sceneResource = new SceneResource(rendererRuntime, resourceId);
-		}
-
-		// Done
-		return sceneResource;
-	}
-
-	ISceneNode* SceneFactory::createSceneNode(SceneNodeTypeId sceneNodeTypeId, const Transform& transform) const
-	{
-		ISceneNode* sceneNode = nullptr;
-
-		// Evaluate the scene node type
-		if (sceneNodeTypeId == SceneNode::TYPE_ID)
-		{
-			sceneNode = new SceneNode(transform);
-		}
-
-		// Done
-		return sceneNode;
-	}
-
-	ISceneItem* SceneFactory::createSceneItem(const SceneItemTypeId& sceneItemTypeId, ISceneResource& sceneResource) const
+	ISceneItem* SceneFactory::createSceneItem(const SceneItemTypeId& sceneItemTypeId, SceneResource& sceneResource) const
 	{
 		ISceneItem* sceneItem = nullptr;
 

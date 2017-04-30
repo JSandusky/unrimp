@@ -25,8 +25,9 @@
 #include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h"
 #include "RendererRuntime/Vr/OpenVR/OpenVRRuntimeLinking.h"
 #include "RendererRuntime/Vr/OpenVR/IVrManagerOpenVRListener.h"
-#include "RendererRuntime/Resource/Scene/ISceneResource.h"
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
+#include "RendererRuntime/Resource/Scene/SceneNode.h"
+#include "RendererRuntime/Resource/Scene/SceneResource.h"
+#include "RendererRuntime/Resource/Scene/SceneResourceManager.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
@@ -497,7 +498,7 @@ namespace
 			vrRenderModels->FreeRenderModel(vrRenderModel);
 		}
 
-		void createMeshSceneItem(RendererRuntime::ISceneResource& sceneResource, RendererRuntime::ISceneNode& sceneNode, const std::string& renderModelName, RendererRuntime::MaterialResourceId vrDeviceMaterialResourceId)
+		void createMeshSceneItem(RendererRuntime::SceneResource& sceneResource, RendererRuntime::SceneNode& sceneNode, const std::string& renderModelName, RendererRuntime::MaterialResourceId vrDeviceMaterialResourceId)
 		{
 			// Check whether or not we need to generate the runtime mesh asset right now
 			RendererRuntime::MeshResourceId meshResourceId = RendererRuntime::getUninitialized<RendererRuntime::MeshResourceId>();
@@ -534,11 +535,11 @@ namespace
 			}
 		}
 
-		void setSceneNodesVisible(RendererRuntime::ISceneNode* sceneNodes[vr::k_unMaxTrackedDeviceCount], bool visible)
+		void setSceneNodesVisible(RendererRuntime::SceneNode* sceneNodes[vr::k_unMaxTrackedDeviceCount], bool visible)
 		{
 			for (uint32_t i = 0; i < vr::k_unMaxTrackedDeviceCount; ++i)
 			{
-				RendererRuntime::ISceneNode* sceneNode = sceneNodes[i];
+				RendererRuntime::SceneNode* sceneNode = sceneNodes[i];
 				if (nullptr != sceneNode)
 				{
 					sceneNode->setVisible(visible);
@@ -590,10 +591,10 @@ namespace RendererRuntime
 		return (mOpenVRRuntimeLinking->isOpenVRAvaiable() && vr::VR_IsRuntimeInstalled() && vr::VR_IsHmdPresent());
 	}
 
-	void VrManagerOpenVR::setSceneResource(ISceneResource* sceneResource)
+	void VrManagerOpenVR::setSceneResourceId(SceneResourceId sceneResourceId)
 	{
 		// TODO(co) Decent implementation so it's no problem to change the scene resource at any time
-		mSceneResource = sceneResource;
+		mSceneResourceId = sceneResourceId;
 	}
 
 	bool VrManagerOpenVR::startup(AssetId vrDeviceMaterialAssetId)
@@ -736,7 +737,7 @@ namespace RendererRuntime
 			{
 				++mNumberOfValidDevicePoses;
 				const glm::mat4& devicePoseMatrix = mDevicePoseMatrix[deviceIndex] = ::detail::convertOpenVrMatrixToGlmMat34(mVrTrackedDevicePose[deviceIndex].mDeviceToAbsoluteTracking);
-				ISceneNode* sceneNode = mSceneNodes[deviceIndex];
+				SceneNode* sceneNode = mSceneNodes[deviceIndex];
 				if (nullptr != sceneNode)
 				{
 					glm::vec3 scale;
@@ -772,7 +773,7 @@ namespace RendererRuntime
 					for (const Component& component : trackedDeviceInformation.components)
 					{
 						assert(!component.name.empty());
-						ISceneNode* sceneNode = component.sceneNode;
+						SceneNode* sceneNode = component.sceneNode;
 						assert(nullptr != sceneNode);
 						vr::RenderModel_ControllerMode_State_t renderModelControllerModeState;
 						renderModelControllerModeState.bScrollWheelVisible = false;
@@ -794,13 +795,13 @@ namespace RendererRuntime
 		}
 
 		// Update camera scene node transform and hide the HMD scene node in case it's currently used as the camera scene node (we don't want to see the HMD mesh from the inside)
-		ISceneNode* hmdSceneNode = mSceneNodes[vr::k_unTrackedDeviceIndex_Hmd];
+		SceneNode* hmdSceneNode = mSceneNodes[vr::k_unTrackedDeviceIndex_Hmd];
 		if (nullptr != hmdSceneNode)
 		{
 			bool hmdSceneNodeVisible = true;
 			if (nullptr != cameraSceneItem)
 			{
-				ISceneNode* sceneNode = cameraSceneItem->getParentSceneNode();
+				SceneNode* sceneNode = cameraSceneItem->getParentSceneNode();
 				if (nullptr != sceneNode)
 				{
 				//	sceneNode->setTransform(hmdSceneNode->getGlobalTransform());	// TODO(co)
@@ -889,7 +890,7 @@ namespace RendererRuntime
 		mVrManagerOpenVRListener(&::detail::defaultVrManagerOpenVRListener),
 		mVrDeviceMaterialResourceLoaded(false),
 		mVrDeviceMaterialResourceId(getUninitialized<MaterialResourceId>()),
-		mSceneResource(nullptr),
+		mSceneResourceId(getUninitialized<SceneResourceId>()),
 		mOpenVRRuntimeLinking(new OpenVRRuntimeLinking()),
 		mVrGraphicsAPIConvention(vr::API_OpenGL),
 		mVrSystem(nullptr),
@@ -897,7 +898,7 @@ namespace RendererRuntime
 		mShowRenderModels(true),
 		mNumberOfValidDevicePoses(0)
 	{
-		memset(mSceneNodes, 0, sizeof(ISceneNode*) * vr::k_unMaxTrackedDeviceCount);
+		memset(mSceneNodes, 0, sizeof(SceneNode*) * vr::k_unMaxTrackedDeviceCount);
 	}
 
 	VrManagerOpenVR::~VrManagerOpenVR()
@@ -911,10 +912,11 @@ namespace RendererRuntime
 		assert(trackedDeviceIndex < vr::k_unMaxTrackedDeviceCount);
 
 		// Create and setup scene node with mesh item, this is what's controlled during runtime
-		if (nullptr != mSceneResource)
+		SceneResource* sceneResource = mRendererRuntime.getSceneResourceManager().tryGetById(mSceneResourceId);
+		if (nullptr != sceneResource)
 		{
 			// Create scene node
-			ISceneNode* sceneNode = mSceneNodes[trackedDeviceIndex] = mSceneResource->createSceneNode(Transform::IDENTITY);
+			SceneNode* sceneNode = mSceneNodes[trackedDeviceIndex] = sceneResource->createSceneNode(Transform::IDENTITY);
 			if (nullptr != sceneNode)
 			{
 				TrackedDeviceInformation& trackedDeviceInformation = mTrackedDeviceInformation[trackedDeviceIndex];
@@ -943,11 +945,11 @@ namespace RendererRuntime
 							if (vrRenderModels->GetComponentState(renderModelName.c_str(), componentName.c_str(), &vrControllerState, &renderModelControllerModeState, &renderModelComponentState))
 							{
 								// Create the scene node of the component
-								ISceneNode* componentSceneNode = mSceneResource->createSceneNode(Transform(::detail::convertOpenVrMatrixToGlmMat34(renderModelComponentState.mTrackingToComponentRenderModel)));
+								SceneNode* componentSceneNode = sceneResource->createSceneNode(Transform(::detail::convertOpenVrMatrixToGlmMat34(renderModelComponentState.mTrackingToComponentRenderModel)));
 								if (nullptr != componentSceneNode)
 								{
 									sceneNode->attachSceneNode(*componentSceneNode);
-									::detail::createMeshSceneItem(*mSceneResource, *componentSceneNode, componentRenderModelName, mVrDeviceMaterialResourceId);
+									::detail::createMeshSceneItem(*sceneResource, *componentSceneNode, componentRenderModelName, mVrDeviceMaterialResourceId);
 									componentSceneNode->setVisible((renderModelComponentState.uProperties & vr::VRComponentProperty_IsVisible) != 0);
 									trackedDeviceInformation.components.emplace_back(componentName, componentSceneNode);
 								}
@@ -957,11 +959,11 @@ namespace RendererRuntime
 				}
 				else
 				{
-					::detail::createMeshSceneItem(*mSceneResource, *sceneNode, renderModelName, mVrDeviceMaterialResourceId);
+					::detail::createMeshSceneItem(*sceneResource, *sceneNode, renderModelName, mVrDeviceMaterialResourceId);
 				}
 
 				// Tell the world
-				mVrManagerOpenVRListener->onSceneNodeCreated(trackedDeviceIndex, *mSceneResource, *sceneNode);
+				mVrManagerOpenVRListener->onSceneNodeCreated(trackedDeviceIndex, *sceneResource, *sceneNode);
 			}
 		}
 	}

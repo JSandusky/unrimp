@@ -132,14 +132,12 @@ set(SOURCE_CODES
 	src/Resource/Mesh/MeshResourceManager.cpp
 	src/Resource/Mesh/MeshResource.cpp
 	src/Resource/Scene/Factory/SceneFactory.cpp
-	src/Resource/Scene/ISceneResource.cpp
 	src/Resource/Scene/Item/CameraSceneItem.cpp
 	src/Resource/Scene/Item/LightSceneItem.cpp
 	src/Resource/Scene/Item/MeshSceneItem.cpp
 	src/Resource/Scene/Item/SkeletonMeshSceneItem.cpp
 	src/Resource/Scene/Loader/SceneResourceLoader.cpp
-	src/Resource/Scene/Node/ISceneNode.cpp
-	src/Resource/Scene/Node/SceneNode.cpp
+	src/Resource/Scene/SceneNode.cpp
 	src/Resource/Scene/SceneResource.cpp
 	src/Resource/Scene/SceneResourceManager.cpp
 	src/Resource/ShaderBlueprint/Cache/Preprocessor/mojoshader_common.cpp

@@ -27,7 +27,26 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/ISceneResource.h"
+#include "RendererRuntime/Resource/Detail/IResource.h"
+#include "RendererRuntime/Core/Manager.h"
+
+#include <vector>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class Transform;
+	class SceneNode;
+	class ISceneItem;
+	class ISceneFactory;
+	class IRendererRuntime;
+	class SceneResourceLoader;
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
+}
 
 
 //[-------------------------------------------------------]
@@ -38,46 +57,84 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t SceneResourceId;	///< POD scene resource identifier
+	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneResource : public ISceneResource
+	class SceneResource : public IResource
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneFactory;	// Needs to be able to create scene resource instances
+		friend class SceneResourceManager;															// Needs to be able to update the scene factory instance
+		friend PackedElementManager<SceneResource, SceneResourceId, 16>;							// Type definition of template class
+		friend ResourceManagerTemplate<SceneResource, SceneResourceLoader, SceneResourceId, 16>;	// Type definition of template class
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT static const SceneResourceTypeId TYPE_ID;
+		typedef std::vector<SceneNode*> SceneNodes;
+		typedef std::vector<ISceneItem*> SceneItems;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		RENDERERRUNTIME_API_EXPORT IRendererRuntime& getRendererRuntime() const;
+		inline void destroyAllSceneNodesAndItems();
+
+		//[-------------------------------------------------------]
+		//[ Node                                                  ]
+		//[-------------------------------------------------------]
+		RENDERERRUNTIME_API_EXPORT SceneNode* createSceneNode(const Transform& transform);
+		RENDERERRUNTIME_API_EXPORT void destroySceneNode(SceneNode& sceneNode);
+		RENDERERRUNTIME_API_EXPORT void destroyAllSceneNodes();
+		inline const SceneNodes& getSceneNodes() const;
+
+		//[-------------------------------------------------------]
+		//[ Item                                                  ]
+		//[-------------------------------------------------------]
+		RENDERERRUNTIME_API_EXPORT ISceneItem* createSceneItem(SceneItemTypeId sceneItemTypeId, SceneNode& sceneNode);
+		template <typename T> T* createSceneItem(SceneNode& sceneNode);
+		RENDERERRUNTIME_API_EXPORT void destroySceneItem(ISceneItem& sceneItem);
+		RENDERERRUNTIME_API_EXPORT void destroyAllSceneItems();
+		inline const SceneItems& getSceneItems() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		inline SceneResource();
 		inline virtual ~SceneResource();
-
-
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneResource methods        ]
-	//[-------------------------------------------------------]
-	public:
-		inline virtual SceneResourceTypeId getSceneResourceTypeId() const override;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		inline SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId);
 		SceneResource(const SceneResource&) = delete;
 		SceneResource& operator=(const SceneResource&) = delete;
+		inline SceneResource& operator=(SceneResource&& sceneResource);
+
+		//[-------------------------------------------------------]
+		//[ "RendererRuntime::PackedElementManager" management    ]
+		//[-------------------------------------------------------]
+		void initializeElement(SceneResourceId sceneResourceId);
+		inline void deinitializeElement();
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		const ISceneFactory* mSceneFactory;	///< Scene factory instance, always valid, do not destroy the instance
+		SceneNodes			 mSceneNodes;
+		SceneItems			 mSceneItems;
 
 
 	};

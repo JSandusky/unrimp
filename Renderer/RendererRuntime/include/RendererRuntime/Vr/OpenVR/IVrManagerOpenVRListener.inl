@@ -47,7 +47,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void IVrManagerOpenVRListener::onSceneNodeCreated(vr::TrackedDeviceIndex_t, ISceneResource&, ISceneNode&)
+	inline void IVrManagerOpenVRListener::onSceneNodeCreated(vr::TrackedDeviceIndex_t, SceneResource&, SceneNode&)
 	{
 		// Nothing here
 	}

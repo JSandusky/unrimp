@@ -46,7 +46,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline SkeletonMeshSceneItem::SkeletonMeshSceneItem(ISceneResource& sceneResource) :
+	inline SkeletonMeshSceneItem::SkeletonMeshSceneItem(SceneResource& sceneResource) :
 		MeshSceneItem(sceneResource),
 		mSkeletonAnimationController(nullptr)
 	{

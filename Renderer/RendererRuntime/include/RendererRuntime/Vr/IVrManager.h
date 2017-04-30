@@ -48,7 +48,6 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
-	class ISceneResource;
 	class LightSceneItem;
 	class CameraSceneItem;
 	class CompositorWorkspaceInstance;
@@ -67,6 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	typedef StringId AssetId;			///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
 	typedef StringId VrManagerTypeId;	///< VR manager identifier, internally just a POD "uint32_t"
+	typedef uint32_t SceneResourceId;	///< POD scene resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -117,7 +117,7 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Lifecycle                                             ]
 		//[-------------------------------------------------------]
-		virtual void setSceneResource(ISceneResource* sceneResource) = 0;
+		virtual void setSceneResourceId(SceneResourceId sceneResourceId) = 0;
 		virtual bool startup(AssetId vrDeviceMaterialAssetId) = 0;	// If uninitialized material asset ID, no VR devices will be rendered
 		virtual bool isRunning() const = 0;
 		virtual void shutdown() = 0;

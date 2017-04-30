@@ -34,6 +34,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline IRendererRuntime& SceneResourceManager::getRendererRuntime() const
+	{
+		return mRendererRuntime;
+	}
+
 	inline const ISceneFactory& SceneResourceManager::getSceneFactory() const
 	{
 		// We know that this pointer is always valid
@@ -46,15 +51,6 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	inline void SceneResourceManager::update()
-	{
-		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline SceneResourceManager::~SceneResourceManager()
 	{
 		// Nothing here
 	}

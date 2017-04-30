@@ -170,7 +170,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline LightSceneItem::LightSceneItem(ISceneResource& sceneResource) :
+	inline LightSceneItem::LightSceneItem(SceneResource& sceneResource) :
 		ISceneItem(sceneResource),
 		mInnerAngle(0.0f),
 		mOuterAngle(0.1f)

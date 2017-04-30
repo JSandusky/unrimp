@@ -40,8 +40,7 @@
 class IController;
 namespace RendererRuntime
 {
-	class ISceneNode;
-	class ISceneResource;
+	class SceneNode;
 	class LightSceneItem;
 	class CameraSceneItem;
 	class SkeletonMeshSceneItem;
@@ -54,6 +53,7 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	typedef uint32_t SceneResourceId;		///< POD scene resource identifier
 	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
 }
 
@@ -151,7 +151,7 @@ private:
 //[-------------------------------------------------------]
 private:
 	RendererRuntime::CompositorWorkspaceInstance* mCompositorWorkspaceInstance;
-	RendererRuntime::ISceneResource*			  mSceneResource;
+	RendererRuntime::SceneResourceId			  mSceneResourceId;
 	RendererRuntime::MaterialResourceId			  mMaterialResourceId;
 	RendererRuntime::MaterialResourceId			  mCloneMaterialResourceId;
 	bool										  mCustomMaterialResourceSet;
@@ -160,7 +160,7 @@ private:
 	RendererRuntime::CameraSceneItem*		mCameraSceneItem;
 	RendererRuntime::LightSceneItem*		mLightSceneItem;
 	RendererRuntime::SkeletonMeshSceneItem*	mSkeletonMeshSceneItem;
-	RendererRuntime::ISceneNode*			mSceneNode;
+	RendererRuntime::SceneNode*				mSceneNode;
 	// States for runtime-editing
 	RendererRuntime::DebugGuiHelper::GizmoSettings mGizmoSettings;
 	// States for runtime-fun
