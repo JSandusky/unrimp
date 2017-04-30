@@ -134,7 +134,6 @@
 			{
 				"PassUniformBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -152,11 +151,9 @@
 			{
 				"GlyphSampler":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)"
 				},
 				"BackgroundSampler":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
 					"MaxLOD": "0.0"
 				}
@@ -165,7 +162,6 @@
 			{
 				"GlyphMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@GlyphMap",
@@ -173,7 +169,6 @@
 				},
 				"BackgroundMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@BackgroundMap",

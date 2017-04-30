@@ -142,6 +142,18 @@ namespace
 			return static_cast<uint32_t>((strncmp(instructionAsString, "@counter(", 7) == 0) ? executeCounterInstruction(instructionAsString, shaderProperties) : std::atoi(instructionAsString));
 		}
 
+		uint32_t getRootParameterIndex(const rapidjson::Value& rapidJsonValue, RendererRuntime::ShaderProperties& shaderProperties)
+		{
+			if (rapidJsonValue.HasMember("RootParameterIndex"))
+			{
+				return getIntegerFromInstructionString(rapidJsonValue["RootParameterIndex"].GetString(), shaderProperties);
+			}
+			else
+			{
+				return getIntegerFromInstructionString("@counter(RootParameterIndex)", shaderProperties);
+			}
+		}
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -926,7 +938,7 @@ namespace RendererToolkit
 
 			{ // Write down the uniform buffer header
 				RendererRuntime::v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
-				uniformBufferHeader.rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueUniformBuffer["RootParameterIndex"].GetString(), shaderProperties);
+				uniformBufferHeader.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValueUniformBuffer, shaderProperties);
 				detail::optionalBufferUsageProperty(rapidJsonValueUniformBuffer, "BufferUsage", uniformBufferHeader.bufferUsage);
 				JsonHelper::optionalIntegerProperty(rapidJsonValueUniformBuffer, "NumberOfElements", uniformBufferHeader.numberOfElements);
 				uniformBufferHeader.numberOfElementProperties = static_cast<uint32_t>(elementProperties.size());
@@ -960,7 +972,7 @@ namespace RendererToolkit
 					const RendererRuntime::StringId referenceAsInteger(&referenceAsString[1]);	// Skip the '@'
 					textureBufferHeader.materialPropertyValue = RendererRuntime::MaterialProperty::materialPropertyValueFromReference(valueType, referenceAsInteger);
 				}
-				textureBufferHeader.rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueTextureBuffer["RootParameterIndex"].GetString(), shaderProperties);
+				textureBufferHeader.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValueTextureBuffer, shaderProperties);
 				detail::optionalBufferUsageProperty(rapidJsonValueTextureBuffer, "BufferUsage", textureBufferHeader.bufferUsage);
 				file.write(&textureBufferHeader, sizeof(RendererRuntime::v1MaterialBlueprint::TextureBufferHeader));
 			}
@@ -980,7 +992,7 @@ namespace RendererToolkit
 			samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 
 			// The optional properties
-			materialBlueprintSamplerState.rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueSamplerState["RootParameterIndex"].GetString(), shaderProperties);
+			materialBlueprintSamplerState.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValueSamplerState, shaderProperties);
 			JsonMaterialHelper::optionalFilterProperty(rapidJsonValueSamplerState, "Filter", samplerState.filter, &sortedMaterialPropertyVector);
 			JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValueSamplerState, "AddressU", samplerState.addressU, &sortedMaterialPropertyVector);
 			JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValueSamplerState, "AddressV", samplerState.addressV, &sortedMaterialPropertyVector);
@@ -1004,7 +1016,7 @@ namespace RendererToolkit
 			const rapidjson::Value& rapidJsonValueTexture = rapidJsonMemberIteratorTextures->value;
 
 			// Mandatory root parameter index
-			const uint32_t rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueTexture["RootParameterIndex"].GetString(), shaderProperties);
+			const uint32_t rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValueTexture, shaderProperties);
 
 			// Mandatory fallback texture asset ID
 			// -> We could make this optional, but it's better to be totally restrictive in here so asynchronous texture loading always works nicely (easy when done from the beginning, hard to add this afterwards)

@@ -462,7 +462,6 @@
 			{
 				"PassUniformBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -537,7 +536,6 @@
 				},
 				"MaterialUniformBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "MATERIAL",
 					"NumberOfElements": "2",
 					"ElementProperties":
@@ -570,7 +568,6 @@
 				},
 				"InstanceUniformBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "INSTANCE",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -588,14 +585,12 @@
 			{
 				"InstanceTextureBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "INSTANCE",
 					"ValueType": "FLOAT_4",
 					"Value": "@POSITION_ROTATION_SCALE"
 				},
 				"LightTextureBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "LIGHT",
 					"ValueType": "FLOAT_4",
 					"Value": "@LIGHT"
@@ -605,13 +600,11 @@
 			{
 				"SamplerPoint":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_POINT",
 					"MaxLOD": "0.0"
 				},
 				"SamplerLinear":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"AddressU": "WRAP",
 					"AddressV": "WRAP"
 				}
@@ -620,7 +613,6 @@
 			{
 				"DiffuseMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DiffuseMap",
@@ -629,7 +621,6 @@
 				},
 				"AlphaMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@AlphaMap",
@@ -637,7 +628,6 @@
 				},
 				"EmissiveMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@EmissiveMap",
@@ -646,7 +636,6 @@
 				},
 				"NormalMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@NormalMap",
@@ -654,7 +643,6 @@
 				},
 				"RoughnessMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@RoughnessMap",
@@ -662,7 +650,6 @@
 				},
 				"MetallicMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@MetallicMap",
@@ -670,7 +657,6 @@
 				},
 				"ShadowMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Example/Texture/Dynamic/ShadowMapRenderTarget",
@@ -679,7 +665,6 @@
 				},
 				"ReflectionCubeMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ReflectionCubeMap",
@@ -688,7 +673,6 @@
 				},
 				"LightClustersMap3D":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",

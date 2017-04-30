@@ -160,7 +160,6 @@
 			{
 				"PassUniformBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -175,7 +174,6 @@
 				},
 				"MaterialUniformBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "MATERIAL",
 					"NumberOfElements": "2",
 					"ElementProperties":
@@ -190,7 +188,6 @@
 				},
 				"InstanceUniformBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "INSTANCE",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -208,7 +205,6 @@
 			{
 				"InstanceTextureBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "INSTANCE",
 					"ValueType": "FLOAT_4",
 					"Value": "@POSITION_ROTATION_SCALE"
@@ -218,7 +214,6 @@
 			{
 				"SamplerLinear":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"AddressU": "WRAP",
 					"AddressV": "WRAP"
 				}
@@ -227,7 +222,6 @@
 			{
 				"DiffuseMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DiffuseMap",
