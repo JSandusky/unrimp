@@ -64,11 +64,11 @@ namespace OpenGLRenderer
 		mWGL_ARB_extensions_string = (nullptr != wglGetExtensionsStringARB);
 
 
-		// Initialize the supported universal extensions
-		return initializeUniversal();
-
 		// Restore the previous warning configuration
 		__pragma(warning(pop))
+
+		// Initialize the supported universal extensions
+		return initializeUniversal();
 	}
 
 

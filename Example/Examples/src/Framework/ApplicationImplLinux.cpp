@@ -51,7 +51,7 @@ class ApplicationWindow : public X11Window
 												{XK_D, 'D'}
 											};
 public:
-	ApplicationWindow(IApplication &application) :
+	explicit ApplicationWindow(IApplication &application) :
 		mApplication(application)
 	{
 		// Nothing here

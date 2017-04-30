@@ -274,11 +274,11 @@ void FirstMesh::onDraw()
 		float aspectRatio = 4.0f / 3.0f;
 		{
 			// Get the render target with and height
-			uint32_t width  = 1;
-			uint32_t height = 1;
 			Renderer::IRenderTarget *renderTarget = getMainRenderTarget();
 			if (nullptr != renderTarget)
 			{
+				uint32_t width  = 1;
+				uint32_t height = 1;
 				renderTarget->getWidthAndHeight(width, height);
 
 				// Get the aspect ratio

@@ -306,7 +306,7 @@ namespace
 				if (vr::VRRenderModelError_None != vrRenderModelError)
 				{
 					RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF("Error: Unable to load OpenVR diffuse texture %d of render model \"%s\": %s", vrRenderModel.diffuseTextureId, renderModelName.c_str(), vrRenderModels->GetRenderModelErrorNameFromEnum(vrRenderModelError));
-					renderModelName.empty();	// TODO(co) Hack to get rid of "warning C4100: 'renderModelName': unreferenced formal parameter" in release static build
+					std::ignore = renderModelName;
 					return RendererRuntime::getUninitialized<RendererRuntime::AssetId>();
 				}
 

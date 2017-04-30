@@ -50,8 +50,6 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-#include <fstream>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -117,7 +115,6 @@ namespace RendererToolkit
 		CacheManager::CacheEntries cacheEntries;
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, cacheEntries))
 		{
-			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			RendererRuntime::MemoryFile memoryFile;
 
 			// Create an instance of the Assimp importer class

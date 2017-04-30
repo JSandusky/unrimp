@@ -993,10 +993,10 @@ namespace OpenGLRenderer
 			// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			uint32_t renderTargetWidth =  1;
 			uint32_t renderTargetHeight = 1;
 			if (nullptr != mRenderTarget)
 			{
+				uint32_t renderTargetWidth = 1;
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 			}
 
@@ -1023,10 +1023,10 @@ namespace OpenGLRenderer
 			// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			uint32_t renderTargetWidth =  1;
 			uint32_t renderTargetHeight = 1;
 			if (nullptr != mRenderTarget)
 			{
+				uint32_t renderTargetWidth = 1;
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 			}
 
@@ -1693,17 +1693,14 @@ namespace OpenGLRenderer
 
 	const char *OpenGLRenderer::getShaderLanguageName(uint32_t index) const
 	{
-		uint32_t currentIndex = 0;
-
 		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
 		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
 		{
 			// GLSL supported
-			if (currentIndex == index)
+			if (0 == index)
 			{
 				return ShaderLanguageMonolithic::NAME;	// "ShaderLanguageSeparate::NAME" has the same value
 			}
-			++currentIndex;
 		}
 
 		// Error!
@@ -2291,7 +2288,7 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char *message, const void *)
 	{
 		// Source to string
-		char debugSource[20]{0};
+		char debugSource[20 + 1]{0};	// +1 for terminating zero
 		switch (source)
 		{
 			case GL_DEBUG_SOURCE_API_ARB:
@@ -2324,7 +2321,7 @@ namespace OpenGLRenderer
 		}
 
 		// Debug type to string
-		char debugType[25]{0};
+		char debugType[25 + 1]{0};	// +1 for terminating zero
 		switch (type)
 		{
 			case GL_DEBUG_TYPE_ERROR_ARB:
@@ -2357,7 +2354,7 @@ namespace OpenGLRenderer
 		}
 
 		// Debug severity to string
-		char debugSeverity[20]{0};
+		char debugSeverity[20 + 1]{0};	// +1 for terminating zero
 		switch (severity)
 		{
 			case GL_DEBUG_SEVERITY_HIGH_ARB:

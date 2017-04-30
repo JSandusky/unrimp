@@ -104,8 +104,8 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Skeleton::FORMAT_VERSION, cacheEntries))
 		{
 			// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
-			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			RendererRuntime::MemoryFile memoryFile;
+			// std::ifstream inputFileStream(inputFilename, std::ios::binary);
+			// RendererRuntime::MemoryFile memoryFile;
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
