@@ -146,6 +146,14 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Texture1D(const Texture1D& source) = delete;
+		Texture1D& operator =(const Texture1D& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

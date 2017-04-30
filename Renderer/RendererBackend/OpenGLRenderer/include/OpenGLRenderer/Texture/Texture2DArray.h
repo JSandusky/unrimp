@@ -104,6 +104,14 @@ namespace OpenGLRenderer
 		uint32_t mOpenGLTexture;	///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Texture2DArray(const Texture2DArray& source) = delete;
+		Texture2DArray& operator =(const Texture2DArray& source) = delete;
+
+
 	};
 
 

@@ -89,6 +89,14 @@ namespace OpenGLRenderer
 		virtual ~VertexArrayVaoDsa();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexArrayVaoDsa(const VertexArrayVaoDsa& source) = delete;
+		VertexArrayVaoDsa& operator =(const VertexArrayVaoDsa& source) = delete;
+
+
 	};
 
 

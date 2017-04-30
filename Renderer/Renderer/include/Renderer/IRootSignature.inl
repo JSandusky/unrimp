@@ -58,23 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline IRootSignature::IRootSignature(const IRootSignature &source) :
-		IResource(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedRootSignatures;
-			++getRenderer().getStatistics().currentNumberOfRootSignatures;
-		#endif
-	}
-
-	inline IRootSignature &IRootSignature::operator =(const IRootSignature &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

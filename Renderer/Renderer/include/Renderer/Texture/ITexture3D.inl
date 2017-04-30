@@ -76,26 +76,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline ITexture3D::ITexture3D(const ITexture3D &source) :
-		ITexture(source),
-		mWidth(source.getWidth()),
-		mHeight(source.getHeight()),
-		mDepth(source.getDepth())
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTexture3Ds;
-			++getRenderer().getStatistics().currentNumberOfTexture3Ds;
-		#endif
-	}
-
-	inline ITexture3D &ITexture3D::operator =(const ITexture3D &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

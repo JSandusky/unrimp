@@ -74,19 +74,6 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IShaderLanguage::IShaderLanguage(const IShaderLanguage &source) :
-		mRenderer(&source.getRenderer()),
-		mOptimizationLevel(OptimizationLevel::Ultra)
-	{
-		// Not supported
-	}
-
-	inline IShaderLanguage &IShaderLanguage::operator =(const IShaderLanguage &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

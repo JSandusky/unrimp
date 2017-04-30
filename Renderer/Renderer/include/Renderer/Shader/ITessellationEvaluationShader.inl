@@ -58,23 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline ITessellationEvaluationShader::ITessellationEvaluationShader(const ITessellationEvaluationShader &source) :
-		IShader(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTessellationEvaluationShaders;
-			++getRenderer().getStatistics().currentNumberOfTessellationEvaluationShaders;
-		#endif
-	}
-
-	inline ITessellationEvaluationShader &ITessellationEvaluationShader::operator =(const ITessellationEvaluationShader &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

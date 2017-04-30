@@ -83,6 +83,14 @@ namespace NullRenderer
 		virtual ~Texture2DArray();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Texture2DArray(const Texture2DArray& source) = delete;
+		Texture2DArray& operator =(const Texture2DArray& source) = delete;
+
+
 	};
 
 

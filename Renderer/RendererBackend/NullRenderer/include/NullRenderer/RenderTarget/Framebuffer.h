@@ -84,6 +84,14 @@ namespace NullRenderer
 		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Framebuffer(const Framebuffer& source) = delete;
+		Framebuffer& operator =(const Framebuffer& source) = delete;
+
+
 	};
 
 

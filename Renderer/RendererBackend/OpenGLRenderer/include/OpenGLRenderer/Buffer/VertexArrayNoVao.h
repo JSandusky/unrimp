@@ -105,6 +105,14 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexArrayNoVao(const VertexArrayNoVao& source) = delete;
+		VertexArrayNoVao& operator =(const VertexArrayNoVao& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

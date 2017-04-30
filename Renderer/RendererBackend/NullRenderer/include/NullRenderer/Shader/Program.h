@@ -95,6 +95,14 @@ namespace NullRenderer
 		virtual ~Program();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Program(const Program& source) = delete;
+		Program& operator =(const Program& source) = delete;
+
+
 	};
 
 

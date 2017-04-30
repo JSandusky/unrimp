@@ -143,14 +143,3 @@ IApplication::IApplication(const char *windowTitle) :
 		#error "Unsupported platform"
 	#endif
 }
-
-IApplication::IApplication(const IApplication &)
-{
-	// Not supported
-}
-
-IApplication &IApplication::operator =(const IApplication &)
-{
-	// Not supported
-	return *this;
-}

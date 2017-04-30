@@ -111,6 +111,14 @@ namespace OpenGLRenderer
 		VertexBuffer **mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexArrayVao(const VertexArrayVao& source) = delete;
+		VertexArrayVao& operator =(const VertexArrayVao& source) = delete;
+
+
 	};
 
 

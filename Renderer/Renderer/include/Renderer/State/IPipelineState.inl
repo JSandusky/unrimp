@@ -59,23 +59,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline IPipelineState::IPipelineState(const IPipelineState &source) :
-		IState(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedPipelineStates;
-			++getRenderer().getStatistics().currentNumberOfPipelineStates;
-		#endif
-	}
-
-	inline IPipelineState &IPipelineState::operator =(const IPipelineState &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

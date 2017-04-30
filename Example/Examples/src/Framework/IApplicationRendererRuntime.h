@@ -140,6 +140,14 @@ protected:
 
 
 //[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	explicit IApplicationRendererRuntime(const IApplicationRendererRuntime& source) = delete;
+	IApplicationRendererRuntime& operator =(const IApplicationRendererRuntime& source) = delete;
+
+
+//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:

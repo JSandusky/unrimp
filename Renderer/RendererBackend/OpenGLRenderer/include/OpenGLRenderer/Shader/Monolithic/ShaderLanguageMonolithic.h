@@ -123,6 +123,14 @@ namespace OpenGLRenderer
 		virtual Renderer::IProgram *createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit ShaderLanguageMonolithic(const ShaderLanguageMonolithic& source) = delete;
+		ShaderLanguageMonolithic& operator =(const ShaderLanguageMonolithic& source) = delete;
+
+
 	};
 
 

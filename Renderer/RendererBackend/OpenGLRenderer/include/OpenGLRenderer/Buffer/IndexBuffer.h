@@ -121,6 +121,14 @@ namespace OpenGLRenderer
 		uint32_t mIndexSizeInBytes;			///< Number of bytes of an index
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit IndexBuffer(const IndexBuffer& source) = delete;
+		IndexBuffer& operator =(const IndexBuffer& source) = delete;
+
+
 	};
 
 

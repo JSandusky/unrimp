@@ -50,18 +50,6 @@ namespace OpenGLRenderer
 		// Nothing here
 	}
 
-	IContext::IContext(const IContext& context) :
-		mOpenGLRuntimeLinking(context.mOpenGLRuntimeLinking)
-	{
-		// Not supported
-	}
-
-	IContext &IContext::operator =(const IContext &)
-	{
-		// Not supported
-		return *this;
-	}
-
 	bool IContext::loadOpenGL3EntryPoints() const
 	{
 		return (nullptr != mOpenGLRuntimeLinking) ? mOpenGLRuntimeLinking->loadOpenGL3EntryPoints() : true;

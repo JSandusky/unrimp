@@ -96,26 +96,8 @@ namespace RendererToolkit
 		*/
 		inline IProject();
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IProject(const IProject &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IProject &operator =(const IProject &source);
+		explicit IProject(const IProject &source) = delete;
+		IProject &operator =(const IProject &source) = delete;
 
 
 	};

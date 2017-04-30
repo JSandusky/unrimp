@@ -121,6 +121,14 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit ShaderLanguageHlsl(const ShaderLanguageHlsl& source) = delete;
+		ShaderLanguageHlsl& operator =(const ShaderLanguageHlsl& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

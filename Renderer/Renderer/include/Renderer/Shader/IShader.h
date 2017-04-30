@@ -75,58 +75,6 @@ namespace Renderer
 		*/
 		virtual const char *getShaderLanguageName() const = 0;
 
-		/**
-		*  @brief
-		*    Return the shader source code
-		*
-		*  @return
-		*    The shader ASCII source code, always valid
-		*
-		*  @note
-		*    - Do not free the memory the returned pointer is pointing to
-		*/
-		// TODO(co) Think about it: Provide such methods in here?
-		//virtual const char *getSourceCode() const = 0;
-
-		/**
-		*  @brief
-		*    Return the name of the shader profile the shader is using
-		*
-		*  @return
-		*    The ASCII name of the shader profile the shader is using (for example "arbvp1"), always valid
-		*
-		*  @note
-		*    - Do not free the memory the returned pointer is pointing to
-		*/
-		// TODO(co) Think about it: Provide such methods in here?
-		//virtual const char *getProfile() const = 0;
-
-		/**
-		*  @brief
-		*    Return the optional shader compiler arguments the shader is using
-		*
-		*  @return
-		*    The optional shader compiler ASCII arguments the shader is using, always valid
-		*
-		*  @note
-		*    - Do not free the memory the returned pointer is pointing to
-		*/
-		// TODO(co) Think about it: Provide such methods in here?
-		//virtual const char *getArguments() const = 0;
-
-		/**
-		*  @brief
-		*    Return the name of the shader entry point the shader is using
-		*
-		*  @return
-		*    The ASCII name of the shader entry point the shader is using (for example "main"), always valid
-		*
-		*  @note
-		*    - Do not free the memory the returned pointer is pointing to
-		*/
-		// TODO(co) Think about it: Provide such methods in here?
-		//virtual const char *getEntry() const = 0;
-
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
@@ -143,26 +91,8 @@ namespace Renderer
 		*/
 		inline IShader(ResourceType resourceType, IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IShader(const IShader &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IShader &operator =(const IShader &source);
+		explicit IShader(const IShader &source) = delete;
+		IShader &operator =(const IShader &source) = delete;
 
 
 	};

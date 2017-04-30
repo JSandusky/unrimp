@@ -214,6 +214,9 @@ namespace Direct3D11Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit Direct3D11Renderer(const Direct3D11Renderer& source) = delete;
+		Direct3D11Renderer& operator =(const Direct3D11Renderer& source) = delete;
+
 		/**
 		*  @brief
 		*    Initialize the capabilities

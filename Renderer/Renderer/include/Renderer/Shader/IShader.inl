@@ -43,18 +43,6 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IShader::IShader(const IShader &source) :
-		IResource(source)
-	{
-		// Not supported
-	}
-
-	inline IShader &IShader::operator =(const IShader &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

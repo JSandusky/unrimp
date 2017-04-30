@@ -103,23 +103,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline ISamplerState::ISamplerState(const ISamplerState &source) :
-		IState(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedSamplerStates;
-			++getRenderer().getStatistics().currentNumberOfSamplerStates;
-		#endif
-	}
-
-	inline ISamplerState &ISamplerState::operator =(const ISamplerState &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

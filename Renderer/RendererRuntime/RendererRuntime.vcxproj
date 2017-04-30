@@ -40,7 +40,6 @@
     <None Include="include\RendererRuntime\Asset\AssetPackage.inl" />
     <None Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.inl" />
     <None Include="include\RendererRuntime\Backend\RendererBackendManager.inl" />
-    <None Include="include\RendererRuntime\Backend\RendererRuntimeImpl.inl" />
     <None Include="include\RendererRuntime\Core\File\IFile.inl" />
     <None Include="include\RendererRuntime\Core\File\IFileManager.inl" />
     <None Include="include\RendererRuntime\Core\File\MemoryFile.inl" />

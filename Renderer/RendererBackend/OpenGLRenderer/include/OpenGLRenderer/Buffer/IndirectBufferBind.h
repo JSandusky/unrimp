@@ -83,6 +83,14 @@ namespace OpenGLRenderer
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit IndirectBufferBind(const IndirectBufferBind& source) = delete;
+		IndirectBufferBind& operator =(const IndirectBufferBind& source) = delete;
+
+
 	};
 
 

@@ -90,26 +90,8 @@ namespace Renderer
 		*/
 		inline IRenderTarget(ResourceType resourceType, IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IRenderTarget(const IRenderTarget &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IRenderTarget &operator =(const IRenderTarget &source);
+		explicit IRenderTarget(const IRenderTarget &source) = delete;
+		IRenderTarget &operator =(const IRenderTarget &source) = delete;
 
 
 	};

@@ -200,6 +200,9 @@ namespace Direct3D10Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit Direct3D10Renderer(const Direct3D10Renderer& source) = delete;
+		Direct3D10Renderer& operator =(const Direct3D10Renderer& source) = delete;
+
 		/**
 		*  @brief
 		*    Initialize the capabilities

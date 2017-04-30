@@ -85,6 +85,14 @@ namespace NullRenderer
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit IndirectBuffer(const IndirectBuffer& source) = delete;
+		IndirectBuffer& operator =(const IndirectBuffer& source) = delete;
+
+
 	};
 
 

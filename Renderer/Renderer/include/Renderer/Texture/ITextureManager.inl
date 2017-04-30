@@ -48,18 +48,6 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline ITextureManager::ITextureManager(const ITextureManager& source) :
-		mRenderer(source.mRenderer)
-	{
-		// Not supported
-	}
-
-	inline ITextureManager& ITextureManager::operator =(const ITextureManager&)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

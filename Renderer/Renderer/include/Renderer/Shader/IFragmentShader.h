@@ -72,26 +72,8 @@ namespace Renderer
 		*/
 		inline explicit IFragmentShader(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IFragmentShader(const IFragmentShader &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IFragmentShader &operator =(const IFragmentShader &source);
+		explicit IFragmentShader(const IFragmentShader &source) = delete;
+		IFragmentShader &operator =(const IFragmentShader &source) = delete;
 
 
 	};

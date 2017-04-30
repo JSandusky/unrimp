@@ -210,9 +210,6 @@
     <None Include="include\RendererRuntime\Core\StringId.inl">
       <Filter>Source Files\Core</Filter>
     </None>
-    <None Include="include\RendererRuntime\Backend\RendererRuntimeImpl.inl">
-      <Filter>Source Files\Backend</Filter>
-    </None>
     <None Include="include\RendererRuntime\Backend\RendererBackendManager.inl">
       <Filter>Source Files\Backend</Filter>
     </None>

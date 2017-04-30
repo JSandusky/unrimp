@@ -89,6 +89,14 @@ namespace Direct3D11Renderer
 		virtual Renderer::IIndirectBuffer* createIndirectBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit BufferManager(const BufferManager& source) = delete;
+		BufferManager& operator =(const BufferManager& source) = delete;
+
+
 	};
 
 

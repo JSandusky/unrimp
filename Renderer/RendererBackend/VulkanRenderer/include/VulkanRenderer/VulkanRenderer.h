@@ -231,6 +231,9 @@ namespace VulkanRenderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit VulkanRenderer(const VulkanRenderer& source) = delete;
+		VulkanRenderer& operator =(const VulkanRenderer& source) = delete;
+
 		/**
 		*  @brief
 		*    Initialize the capabilities

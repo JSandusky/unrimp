@@ -105,26 +105,8 @@ namespace Renderer
 		*/
 		inline ITexture2DArray(IRenderer &renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ITexture2DArray(const ITexture2DArray &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ITexture2DArray &operator =(const ITexture2DArray &source);
+		explicit ITexture2DArray(const ITexture2DArray &source) = delete;
+		ITexture2DArray &operator =(const ITexture2DArray &source) = delete;
 
 
 	//[-------------------------------------------------------]

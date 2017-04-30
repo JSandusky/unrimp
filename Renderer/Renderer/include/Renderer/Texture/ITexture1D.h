@@ -83,26 +83,8 @@ namespace Renderer
 		*/
 		inline ITexture1D(IRenderer &renderer, uint32_t width);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ITexture1D(const ITexture1D &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ITexture1D &operator =(const ITexture1D &source);
+		explicit ITexture1D(const ITexture1D &source) = delete;
+		ITexture1D &operator =(const ITexture1D &source) = delete;
 
 
 	//[-------------------------------------------------------]

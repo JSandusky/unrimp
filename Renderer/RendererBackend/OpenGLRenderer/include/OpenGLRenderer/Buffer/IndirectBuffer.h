@@ -105,6 +105,14 @@ namespace OpenGLRenderer
 		uint32_t mOpenGLIndirectBuffer;	///< OpenGL indirect buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit IndirectBuffer(const IndirectBuffer& source) = delete;
+		IndirectBuffer& operator =(const IndirectBuffer& source) = delete;
+
+
 	};
 
 

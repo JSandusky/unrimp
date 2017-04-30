@@ -58,23 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline IFragmentShader::IFragmentShader(const IFragmentShader &source) :
-		IShader(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedFragmentShaders;
-			++getRenderer().getStatistics().currentNumberOfFragmentShaders;
-		#endif
-	}
-
-	inline IFragmentShader &IFragmentShader::operator =(const IFragmentShader &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

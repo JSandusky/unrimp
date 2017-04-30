@@ -80,6 +80,14 @@ namespace OpenGLRenderer
 		virtual ~TextureCubeBind();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TextureCubeBind(const TextureCubeBind& source) = delete;
+		TextureCubeBind& operator =(const TextureCubeBind& source) = delete;
+
+
 	};
 
 

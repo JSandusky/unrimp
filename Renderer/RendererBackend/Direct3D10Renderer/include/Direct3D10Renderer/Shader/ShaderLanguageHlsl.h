@@ -120,6 +120,14 @@ namespace Direct3D10Renderer
 		virtual Renderer::IProgram *createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit ShaderLanguageHlsl(const ShaderLanguageHlsl& source) = delete;
+		ShaderLanguageHlsl& operator =(const ShaderLanguageHlsl& source) = delete;
+
+
 	};
 
 

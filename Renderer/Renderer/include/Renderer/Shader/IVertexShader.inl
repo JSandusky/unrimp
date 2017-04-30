@@ -58,23 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline IVertexShader::IVertexShader(const IVertexShader &source) :
-		IShader(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedVertexShaders;
-			++getRenderer().getStatistics().currentNumberOfVertexShaders;
-		#endif
-	}
-
-	inline IVertexShader &IVertexShader::operator =(const IVertexShader &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

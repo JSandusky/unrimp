@@ -74,26 +74,8 @@ namespace Renderer
 		*/
 		inline IState(ResourceType resourceType, IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IState(const IState &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IState &operator =(const IState &source);
+		explicit IState(const IState &source) = delete;
+		IState &operator =(const IState &source) = delete;
 
 
 	};

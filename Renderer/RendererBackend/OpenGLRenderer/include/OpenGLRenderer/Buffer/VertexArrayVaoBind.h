@@ -89,6 +89,14 @@ namespace OpenGLRenderer
 		virtual ~VertexArrayVaoBind();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexArrayVaoBind(const VertexArrayVaoBind& source) = delete;
+		VertexArrayVaoBind& operator =(const VertexArrayVaoBind& source) = delete;
+
+
 	};
 
 

@@ -151,6 +151,14 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit GeometryShaderMonolithic(const GeometryShaderMonolithic& source) = delete;
+		GeometryShaderMonolithic& operator =(const GeometryShaderMonolithic& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

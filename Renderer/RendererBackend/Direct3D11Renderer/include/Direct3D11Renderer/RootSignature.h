@@ -90,6 +90,14 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit RootSignature(const RootSignature& source) = delete;
+		RootSignature& operator =(const RootSignature& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

@@ -84,6 +84,14 @@ namespace NullRenderer
 		virtual const char *getShaderLanguageName() const override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit GeometryShader(const GeometryShader& source) = delete;
+		GeometryShader& operator =(const GeometryShader& source) = delete;
+
+
 	};
 
 

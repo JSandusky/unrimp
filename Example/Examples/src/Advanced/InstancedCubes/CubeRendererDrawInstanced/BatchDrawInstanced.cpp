@@ -137,18 +137,3 @@ void BatchDrawInstanced::fillCommandBuffer(Renderer::CommandBuffer& commandBuffe
 	// End debug event
 	COMMAND_END_DEBUG_EVENT(commandBuffer)
 }
-
-
-//[-------------------------------------------------------]
-//[ Private methods                                       ]
-//[-------------------------------------------------------]
-BatchDrawInstanced::BatchDrawInstanced(const BatchDrawInstanced &)
-{
-	// Not supported
-}
-
-BatchDrawInstanced &BatchDrawInstanced::operator =(const BatchDrawInstanced &)
-{
-	// Not supported
-	return *this;
-}

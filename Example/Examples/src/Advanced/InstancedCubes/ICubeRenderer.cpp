@@ -41,14 +41,3 @@ ICubeRenderer::ICubeRenderer()
 {
 	// Nothing here
 }
-
-ICubeRenderer::ICubeRenderer(const ICubeRenderer &)
-{
-	// Not supported
-}
-
-ICubeRenderer &ICubeRenderer::operator =(const ICubeRenderer &)
-{
-	// Not supported
-	return *this;
-}

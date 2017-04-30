@@ -149,26 +149,8 @@ namespace Renderer
 		*/
 		inline IResource(ResourceType resourceType, IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IResource(const IResource &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IResource &operator =(const IResource &source);
+		explicit IResource(const IResource &source) = delete;
+		IResource &operator =(const IResource &source) = delete;
 
 
 	//[-------------------------------------------------------]

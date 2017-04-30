@@ -102,26 +102,8 @@ namespace Renderer
 		*/
 		inline explicit ITextureBuffer(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ITextureBuffer(const ITextureBuffer &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ITextureBuffer &operator =(const ITextureBuffer &source);
+		explicit ITextureBuffer(const ITextureBuffer &source) = delete;
+		ITextureBuffer &operator =(const ITextureBuffer &source) = delete;
 
 
 	};

@@ -70,25 +70,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline ITexture2D::ITexture2D(const ITexture2D &source) :
-		ITexture(source),
-		mWidth(source.getWidth()),
-		mHeight(source.getHeight())
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTexture2Ds;
-			++getRenderer().getStatistics().currentNumberOfTexture2Ds;
-		#endif
-	}
-
-	inline ITexture2D &ITexture2D::operator =(const ITexture2D &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

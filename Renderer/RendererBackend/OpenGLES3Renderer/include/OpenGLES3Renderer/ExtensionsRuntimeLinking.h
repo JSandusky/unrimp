@@ -103,6 +103,14 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit ExtensionsRuntimeLinking(const ExtensionsRuntimeLinking &source) = delete;
+		ExtensionsRuntimeLinking &operator =(const ExtensionsRuntimeLinking &source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

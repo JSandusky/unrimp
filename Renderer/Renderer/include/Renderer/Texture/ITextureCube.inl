@@ -70,25 +70,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline ITextureCube::ITextureCube(const ITextureCube &source) :
-		ITexture(source),
-		mWidth(source.getWidth()),
-		mHeight(source.getHeight())
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTextureCubes;
-			++getRenderer().getStatistics().currentNumberOfTextureCubes;
-		#endif
-	}
-
-	inline ITextureCube &ITextureCube::operator =(const ITextureCube &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

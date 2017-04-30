@@ -64,23 +64,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline IIndirectBuffer::IIndirectBuffer(const IIndirectBuffer &source) :
-		IBuffer(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedIndirectBuffers;
-			++getRenderer().getStatistics().currentNumberOfIndirectBuffers;
-		#endif
-	}
-
-	inline IIndirectBuffer &IIndirectBuffer::operator =(const IIndirectBuffer &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

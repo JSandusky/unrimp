@@ -117,6 +117,14 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexShaderSeparate(const VertexShaderSeparate& source) = delete;
+		VertexShaderSeparate& operator =(const VertexShaderSeparate& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

@@ -49,18 +49,6 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IBuffer::IBuffer(const IBuffer &source) :
-		IResource(source)
-	{
-		// Not supported
-	}
-
-	inline IBuffer &IBuffer::operator =(const IBuffer &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

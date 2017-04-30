@@ -119,6 +119,14 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit GeometryShaderHlsl(const GeometryShaderHlsl& source) = delete;
+		GeometryShaderHlsl& operator =(const GeometryShaderHlsl& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

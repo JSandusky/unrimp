@@ -111,26 +111,8 @@ namespace Renderer
 		*/
 		inline explicit IIndirectBuffer(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IIndirectBuffer(const IIndirectBuffer &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IIndirectBuffer &operator =(const IIndirectBuffer &source);
+		explicit IIndirectBuffer(const IIndirectBuffer &source) = delete;
+		IIndirectBuffer &operator =(const IIndirectBuffer &source) = delete;
 
 
 	};

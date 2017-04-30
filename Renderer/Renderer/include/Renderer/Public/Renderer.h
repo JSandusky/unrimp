@@ -1777,56 +1777,8 @@ namespace Renderer
 			inline ~Statistics()
 			{}
 		private:
-			inline explicit Statistics(const Statistics&) :
-				currentNumberOfRootSignatures(0),
-				numberOfCreatedRootSignatures(0),
-				currentNumberOfPrograms(0),
-				numberOfCreatedPrograms(0),
-				currentNumberOfVertexArrays(0),
-				numberOfCreatedVertexArrays(0),
-				currentNumberOfSwapChains(0),
-				numberOfCreatedSwapChains(0),
-				currentNumberOfFramebuffers(0),
-				numberOfCreatedFramebuffers(0),
-				currentNumberOfIndexBuffers(0),
-				numberOfCreatedIndexBuffers(0),
-				currentNumberOfVertexBuffers(0),
-				numberOfCreatedVertexBuffers(0),
-				currentNumberOfUniformBuffers(0),
-				numberOfCreatedUniformBuffers(0),
-				currentNumberOfTextureBuffers(0),
-				numberOfCreatedTextureBuffers(0),
-				currentNumberOfIndirectBuffers(0),
-				numberOfCreatedIndirectBuffers(0),
-				currentNumberOfTexture1Ds(0),
-				numberOfCreatedTexture1Ds(0),
-				currentNumberOfTexture2Ds(0),
-				numberOfCreatedTexture2Ds(0),
-				currentNumberOfTexture2DArrays(0),
-				numberOfCreatedTexture2DArrays(0),
-				currentNumberOfTexture3Ds(0),
-				numberOfCreatedTexture3Ds(0),
-				currentNumberOfTextureCubes(0),
-				numberOfCreatedTextureCubes(0),
-				currentNumberOfPipelineStates(0),
-				numberOfCreatedPipelineStates(0),
-				currentNumberOfSamplerStates(0),
-				numberOfCreatedSamplerStates(0),
-				currentNumberOfVertexShaders(0),
-				numberOfCreatedVertexShaders(0),
-				currentNumberOfTessellationControlShaders(0),
-				numberOfCreatedTessellationControlShaders(0),
-				currentNumberOfTessellationEvaluationShaders(0),
-				numberOfCreatedTessellationEvaluationShaders(0),
-				currentNumberOfGeometryShaders(0),
-				numberOfCreatedGeometryShaders(0),
-				currentNumberOfFragmentShaders(0),
-				numberOfCreatedFragmentShaders(0)
-			{}
-			inline Statistics& operator =(const Statistics&)
-			{
-				return *this;
-			}
+			explicit Statistics(const Statistics&) = delete;
+			Statistics& operator =(const Statistics&) = delete;
 		};
 		#endif
 	#endif
@@ -1876,8 +1828,8 @@ namespace Renderer
 			virtual void finish() = 0;
 		protected:
 			IRenderer();
-			explicit IRenderer(const IRenderer& source);
-			IRenderer& operator =(const IRenderer& source);
+			explicit IRenderer(const IRenderer& source) = delete;
+			IRenderer& operator =(const IRenderer& source) = delete;
 		protected:
 			Capabilities mCapabilities;
 		#ifndef RENDERER_NO_STATISTICS
@@ -1944,8 +1896,8 @@ namespace Renderer
 			virtual IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, ITessellationControlShader* tessellationControlShader, ITessellationEvaluationShader* tessellationEvaluationShader, IGeometryShader* geometryShader, IFragmentShader* fragmentShader) = 0;
 		protected:
 			explicit IShaderLanguage(IRenderer& renderer);
-			explicit IShaderLanguage(const IShaderLanguage& source);
-			IShaderLanguage& operator =(const IShaderLanguage& source);
+			explicit IShaderLanguage(const IShaderLanguage& source) = delete;
+			IShaderLanguage& operator =(const IShaderLanguage& source) = delete;
 		private:
 			IRenderer*		  mRenderer;
 			OptimizationLevel mOptimizationLevel;
@@ -1985,8 +1937,8 @@ namespace Renderer
 				mResourceType(resourceType),
 				mRenderer(&renderer)
 			{}
-			explicit IResource(const IResource& source);
-			IResource& operator =(const IResource& source);
+			explicit IResource(const IResource& source) = delete;
+			IResource& operator =(const IResource& source) = delete;
 		private:
 			ResourceType  mResourceType;
 			IRenderer*	  mRenderer;
@@ -2003,8 +1955,8 @@ namespace Renderer
 			virtual ~IRootSignature();
 		protected:
 			explicit IRootSignature(IRenderer& renderer);
-			explicit IRootSignature(const IRootSignature& source);
-			IRootSignature& operator =(const IRootSignature& source);
+			explicit IRootSignature(const IRootSignature& source) = delete;
+			IRootSignature& operator =(const IRootSignature& source) = delete;
 		};
 		typedef SmartRefCount<IRootSignature> IRootSignaturePtr;
 	#endif
@@ -2027,8 +1979,8 @@ namespace Renderer
 			virtual void setUniformMatrix4fv(handle uniformHandle, const float* value) = 0;
 		protected:
 			explicit IProgram(IRenderer& renderer);
-			explicit IProgram(const IProgram& source);
-			IProgram& operator =(const IProgram& source);
+			explicit IProgram(const IProgram& source) = delete;
+			IProgram& operator =(const IProgram& source) = delete;
 		};
 		typedef SmartRefCount<IProgram> IProgramPtr;
 	#endif
@@ -2044,8 +1996,8 @@ namespace Renderer
 			virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const = 0;
 		protected:
 			IRenderTarget(ResourceType resourceType, IRenderer& renderer);
-			explicit IRenderTarget(const IRenderTarget& source);
-			IRenderTarget& operator =(const IRenderTarget& source);
+			explicit IRenderTarget(const IRenderTarget& source) = delete;
+			IRenderTarget& operator =(const IRenderTarget& source) = delete;
 		};
 		typedef SmartRefCount<IRenderTarget> IRenderTargetPtr;
 	#endif
@@ -2065,8 +2017,8 @@ namespace Renderer
 			virtual void setFullscreenState(bool fullscreen) = 0;
 		protected:
 			explicit ISwapChain(IRenderer& renderer);
-			explicit ISwapChain(const ISwapChain& source);
-			ISwapChain& operator =(const ISwapChain& source);
+			explicit ISwapChain(const ISwapChain& source) = delete;
+			ISwapChain& operator =(const ISwapChain& source) = delete;
 		};
 		typedef SmartRefCount<ISwapChain> ISwapChainPtr;
 	#endif
@@ -2080,8 +2032,8 @@ namespace Renderer
 			virtual ~IFramebuffer();
 		protected:
 			explicit IFramebuffer(IRenderer& renderer);
-			explicit IFramebuffer(const IFramebuffer& source);
-			IFramebuffer& operator =(const IFramebuffer& source);
+			explicit IFramebuffer(const IFramebuffer& source) = delete;
+			IFramebuffer& operator =(const IFramebuffer& source) = delete;
 		};
 		typedef SmartRefCount<IFramebuffer> IFramebufferPtr;
 	#endif
@@ -2106,8 +2058,8 @@ namespace Renderer
 			virtual IIndirectBuffer* createIndirectBuffer(uint32_t numberOfBytes, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 		protected:
 			inline explicit IBufferManager(IRenderer& renderer);
-			inline explicit IBufferManager(const IBufferManager& source);
-			inline IBufferManager& operator =(const IBufferManager& source);
+			explicit IBufferManager(const IBufferManager& source) = delete;
+			IBufferManager& operator =(const IBufferManager& source) = delete;
 		private:
 			IRenderer& mRenderer;
 		};
@@ -2123,8 +2075,8 @@ namespace Renderer
 			virtual ~IVertexArray();
 		protected:
 			explicit IVertexArray(IRenderer& renderer);
-			explicit IVertexArray(const IVertexArray& source);
-			IVertexArray& operator =(const IVertexArray& source);
+			explicit IVertexArray(const IVertexArray& source) = delete;
+			IVertexArray& operator =(const IVertexArray& source) = delete;
 		};
 		typedef SmartRefCount<IVertexArray> IVertexArrayPtr;
 	#endif
@@ -2144,8 +2096,8 @@ namespace Renderer
 			inline IBuffer(ResourceType resourceType, IRenderer& renderer) :
 				IResource(resourceType, renderer)
 			{}
-			explicit IBuffer(const IBuffer& source);
-			IBuffer& operator =(const IBuffer& source);
+			explicit IBuffer(const IBuffer& source) = delete;
+			IBuffer& operator =(const IBuffer& source) = delete;
 		};
 		typedef SmartRefCount<IBuffer> IBufferPtr;
 	#endif
@@ -2159,8 +2111,8 @@ namespace Renderer
 			virtual ~IIndexBuffer();
 		protected:
 			explicit IIndexBuffer(IRenderer& renderer);
-			explicit IIndexBuffer(const IIndexBuffer& source);
-			IIndexBuffer& operator =(const IIndexBuffer& source);
+			explicit IIndexBuffer(const IIndexBuffer& source) = delete;
+			IIndexBuffer& operator =(const IIndexBuffer& source) = delete;
 		};
 		typedef SmartRefCount<IIndexBuffer> IIndexBufferPtr;
 	#endif
@@ -2174,8 +2126,8 @@ namespace Renderer
 			virtual ~IVertexBuffer();
 		protected:
 			explicit IVertexBuffer(IRenderer& renderer);
-			explicit IVertexBuffer(const IVertexBuffer& source);
-			IVertexBuffer& operator =(const IVertexBuffer& source);
+			explicit IVertexBuffer(const IVertexBuffer& source) = delete;
+			IVertexBuffer& operator =(const IVertexBuffer& source) = delete;
 		};
 		typedef SmartRefCount<IVertexBuffer> IVertexBufferPtr;
 	#endif
@@ -2191,8 +2143,8 @@ namespace Renderer
 			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
 			explicit IUniformBuffer(IRenderer& renderer);
-			explicit IUniformBuffer(const IUniformBuffer& source);
-			IUniformBuffer& operator =(const IUniformBuffer& source);
+			explicit IUniformBuffer(const IUniformBuffer& source) = delete;
+			IUniformBuffer& operator =(const IUniformBuffer& source) = delete;
 		};
 		typedef SmartRefCount<IUniformBuffer> IUniformBufferPtr;
 	#endif
@@ -2208,8 +2160,8 @@ namespace Renderer
 			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
 			explicit ITextureBuffer(IRenderer& renderer);
-			explicit ITextureBuffer(const ITextureBuffer& source);
-			ITextureBuffer& operator =(const ITextureBuffer& source);
+			explicit ITextureBuffer(const ITextureBuffer& source) = delete;
+			ITextureBuffer& operator =(const ITextureBuffer& source) = delete;
 		};
 		typedef SmartRefCount<ITextureBuffer> ITextureBufferPtr;
 	#endif
@@ -2232,8 +2184,8 @@ namespace Renderer
 			inline explicit IIndirectBuffer(IRenderer& renderer) :
 				IBuffer(ResourceType::INDIRECT_BUFFER, renderer)
 			{}
-			explicit IIndirectBuffer(const IIndirectBuffer& source);
-			IIndirectBuffer& operator =(const IIndirectBuffer& source);
+			explicit IIndirectBuffer(const IIndirectBuffer& source) = delete;
+			IIndirectBuffer& operator =(const IIndirectBuffer& source) = delete;
 		};
 		typedef SmartRefCount<IIndirectBuffer> IIndirectBufferPtr;
 	#endif
@@ -2257,8 +2209,8 @@ namespace Renderer
 			virtual ITextureCube* createTextureCube(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
 		protected:
 			inline explicit ITextureManager(IRenderer& renderer);
-			inline explicit ITextureManager(const ITextureManager& source);
-			inline ITextureManager& operator =(const ITextureManager& source);
+			explicit ITextureManager(const ITextureManager& source) = delete;
+			ITextureManager& operator =(const ITextureManager& source) = delete;
 		private:
 			IRenderer& mRenderer;
 		};
@@ -2274,8 +2226,8 @@ namespace Renderer
 			virtual ~ITexture();
 		protected:
 			ITexture(ResourceType resourceType, IRenderer& renderer);
-			explicit ITexture(const ITexture& source);
-			ITexture& operator =(const ITexture& source);
+			explicit ITexture(const ITexture& source) = delete;
+			ITexture& operator =(const ITexture& source) = delete;
 		};
 		typedef SmartRefCount<ITexture> ITexturePtr;
 	#endif
@@ -2293,8 +2245,8 @@ namespace Renderer
 			}
 		protected:
 			ITexture1D(IRenderer& renderer, uint32_t width);
-			explicit ITexture1D(const ITexture1D& source);
-			ITexture1D& operator =(const ITexture1D& source);
+			explicit ITexture1D(const ITexture1D& source) = delete;
+			ITexture1D& operator =(const ITexture1D& source) = delete;
 		private:
 			uint32_t mWidth;
 		};
@@ -2318,8 +2270,8 @@ namespace Renderer
 			}
 		protected:
 			ITexture2D(IRenderer& renderer, uint32_t width, uint32_t height);
-			explicit ITexture2D(const ITexture2D& source);
-			ITexture2D& operator =(const ITexture2D& source);
+			explicit ITexture2D(const ITexture2D& source) = delete;
+			ITexture2D& operator =(const ITexture2D& source) = delete;
 		private:
 			uint32_t mWidth;
 			uint32_t mHeight;
@@ -2348,8 +2300,8 @@ namespace Renderer
 			}
 		protected:
 			ITexture2DArray(IRenderer& renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices);
-			explicit ITexture2DArray(const ITexture2DArray& source);
-			ITexture2DArray& operator =(const ITexture2DArray& source);
+			explicit ITexture2DArray(const ITexture2DArray& source) = delete;
+			ITexture2DArray& operator =(const ITexture2DArray& source) = delete;
 		private:
 			uint32_t mWidth;
 			uint32_t mHeight;
@@ -2381,8 +2333,8 @@ namespace Renderer
 			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
 			ITexture3D(IRenderer& renderer, uint32_t width, uint32_t height, uint32_t depth);
-			explicit ITexture3D(const ITexture3D& source);
-			ITexture3D& operator =(const ITexture3D& source);
+			explicit ITexture3D(const ITexture3D& source) = delete;
+			ITexture3D& operator =(const ITexture3D& source) = delete;
 		private:
 			uint32_t mWidth;
 			uint32_t mHeight;
@@ -2408,8 +2360,8 @@ namespace Renderer
 			}
 		protected:
 			ITextureCube(IRenderer& renderer, uint32_t width, uint32_t height);
-			explicit ITextureCube(const ITextureCube& source);
-			ITextureCube& operator =(const ITextureCube& source);
+			explicit ITextureCube(const ITextureCube& source) = delete;
+			ITextureCube& operator =(const ITextureCube& source) = delete;
 		private:
 			uint32_t mWidth;
 			uint32_t mHeight;
@@ -2426,8 +2378,8 @@ namespace Renderer
 			virtual ~IState();
 		protected:
 			IState(ResourceType resourceType, IRenderer& renderer);
-			explicit IState(const IState& source);
-			IState& operator =(const IState& source);
+			explicit IState(const IState& source) = delete;
+			IState& operator =(const IState& source) = delete;
 		};
 		typedef SmartRefCount<IState> IStatePtr;
 	#endif
@@ -2441,8 +2393,8 @@ namespace Renderer
 			virtual ~IPipelineState();
 		protected:
 			explicit IPipelineState(IRenderer& renderer);
-			explicit IPipelineState(const IPipelineState& source);
-			IPipelineState& operator =(const IPipelineState& source);
+			explicit IPipelineState(const IPipelineState& source) = delete;
+			IPipelineState& operator =(const IPipelineState& source) = delete;
 		};
 		typedef SmartRefCount<IPipelineState> IPipelineStatePtr;
 	#endif
@@ -2479,8 +2431,8 @@ namespace Renderer
 			virtual ~ISamplerState();
 		protected:
 			explicit ISamplerState(IRenderer& renderer);
-			explicit ISamplerState(const ISamplerState& source);
-			ISamplerState& operator =(const ISamplerState& source);
+			explicit ISamplerState(const ISamplerState& source) = delete;
+			ISamplerState& operator =(const ISamplerState& source) = delete;
 		};
 		typedef SmartRefCount<ISamplerState> ISamplerStatePtr;
 	#endif
@@ -2496,8 +2448,8 @@ namespace Renderer
 			virtual const char* getShaderLanguageName() const = 0;
 		protected:
 			IShader(ResourceType resourceType, IRenderer& renderer);
-			explicit IShader(const IShader& source);
-			IShader& operator =(const IShader& source);
+			explicit IShader(const IShader& source) = delete;
+			IShader& operator =(const IShader& source) = delete;
 		};
 		typedef SmartRefCount<IShader> IShaderPtr;
 	#endif
@@ -2511,8 +2463,8 @@ namespace Renderer
 			virtual ~IVertexShader();
 		protected:
 			explicit IVertexShader(IRenderer& renderer);
-			explicit IVertexShader(const IVertexShader& source);
-			IVertexShader& operator =(const IVertexShader& source);
+			explicit IVertexShader(const IVertexShader& source) = delete;
+			IVertexShader& operator =(const IVertexShader& source) = delete;
 		};
 		typedef SmartRefCount<IVertexShader> IVertexShaderPtr;
 	#endif
@@ -2526,8 +2478,8 @@ namespace Renderer
 			virtual ~ITessellationControlShader();
 		protected:
 			explicit ITessellationControlShader(IRenderer& renderer);
-			explicit ITessellationControlShader(const ITessellationControlShader& source);
-			ITessellationControlShader& operator =(const ITessellationControlShader& source);
+			explicit ITessellationControlShader(const ITessellationControlShader& source) = delete;
+			ITessellationControlShader& operator =(const ITessellationControlShader& source) = delete;
 		};
 		typedef SmartRefCount<ITessellationControlShader> ITessellationControlShaderPtr;
 	#endif
@@ -2541,8 +2493,8 @@ namespace Renderer
 			virtual ~ITessellationEvaluationShader();
 		protected:
 			explicit ITessellationEvaluationShader(IRenderer& renderer);
-			explicit ITessellationEvaluationShader(const ITessellationEvaluationShader& source);
-			ITessellationEvaluationShader& operator =(const ITessellationEvaluationShader& source);
+			explicit ITessellationEvaluationShader(const ITessellationEvaluationShader& source) = delete;
+			ITessellationEvaluationShader& operator =(const ITessellationEvaluationShader& source) = delete;
 		};
 		typedef SmartRefCount<ITessellationEvaluationShader> ITessellationEvaluationShaderPtr;
 	#endif
@@ -2556,8 +2508,8 @@ namespace Renderer
 			virtual ~IGeometryShader();
 		protected:
 			explicit IGeometryShader(IRenderer& renderer);
-			explicit IGeometryShader(const IGeometryShader& source);
-			IGeometryShader& operator =(const IGeometryShader& source);
+			explicit IGeometryShader(const IGeometryShader& source) = delete;
+			IGeometryShader& operator =(const IGeometryShader& source) = delete;
 		};
 		typedef SmartRefCount<IGeometryShader> IGeometryShaderPtr;
 	#endif
@@ -2571,8 +2523,8 @@ namespace Renderer
 			virtual ~IFragmentShader();
 		protected:
 			explicit IFragmentShader(IRenderer& renderer);
-			explicit IFragmentShader(const IFragmentShader& source);
-			IFragmentShader& operator =(const IFragmentShader& source);
+			explicit IFragmentShader(const IFragmentShader& source) = delete;
+			IFragmentShader& operator =(const IFragmentShader& source) = delete;
 		};
 		typedef SmartRefCount<IFragmentShader> IFragmentShaderPtr;
 	#endif

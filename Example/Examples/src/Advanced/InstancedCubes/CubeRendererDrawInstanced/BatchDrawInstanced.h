@@ -94,26 +94,8 @@ public:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
-	/**
-	*  @brief
-	*    Copy constructor
-	*
-	*  @param[in] source
-	*    Source to copy from
-	*/
-	explicit BatchDrawInstanced(const BatchDrawInstanced &source);
-
-	/**
-	*  @brief
-	*    Copy operator
-	*
-	*  @param[in] source
-	*    Source to copy from
-	*
-	*  @return
-	*    Reference to this instance
-	*/
-	BatchDrawInstanced &operator =(const BatchDrawInstanced &source);
+	explicit BatchDrawInstanced(const BatchDrawInstanced &source) = delete;
+	BatchDrawInstanced &operator =(const BatchDrawInstanced &source) = delete;
 
 
 //[-------------------------------------------------------]

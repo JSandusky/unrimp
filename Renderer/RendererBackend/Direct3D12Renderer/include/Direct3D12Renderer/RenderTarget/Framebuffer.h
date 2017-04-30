@@ -155,6 +155,14 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Framebuffer(const Framebuffer& source) = delete;
+		Framebuffer& operator =(const Framebuffer& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

@@ -119,6 +119,14 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit FragmentShaderHlsl(const FragmentShaderHlsl& source) = delete;
+		FragmentShaderHlsl& operator =(const FragmentShaderHlsl& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

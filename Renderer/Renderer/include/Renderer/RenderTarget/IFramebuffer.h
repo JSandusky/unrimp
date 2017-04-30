@@ -72,26 +72,8 @@ namespace Renderer
 		*/
 		inline explicit IFramebuffer(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IFramebuffer(const IFramebuffer &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IFramebuffer &operator =(const IFramebuffer &source);
+		explicit IFramebuffer(const IFramebuffer &source) = delete;
+		IFramebuffer &operator =(const IFramebuffer &source) = delete;
 
 
 	};

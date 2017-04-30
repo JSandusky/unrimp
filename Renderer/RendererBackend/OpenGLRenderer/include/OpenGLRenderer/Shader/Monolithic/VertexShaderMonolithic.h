@@ -111,6 +111,14 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexShaderMonolithic(const VertexShaderMonolithic& source) = delete;
+		VertexShaderMonolithic& operator =(const VertexShaderMonolithic& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

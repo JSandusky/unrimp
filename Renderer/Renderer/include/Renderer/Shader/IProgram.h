@@ -100,26 +100,8 @@ namespace Renderer
 		*/
 		inline explicit IProgram(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IProgram(const IProgram &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IProgram &operator =(const IProgram &source);
+		explicit IProgram(const IProgram &source) = delete;
+		IProgram &operator =(const IProgram &source) = delete;
 
 
 	};

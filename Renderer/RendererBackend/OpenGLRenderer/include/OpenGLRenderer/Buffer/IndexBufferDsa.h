@@ -78,6 +78,14 @@ namespace OpenGLRenderer
 		virtual ~IndexBufferDsa();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit IndexBufferDsa(const IndexBufferDsa& source) = delete;
+		IndexBufferDsa& operator =(const IndexBufferDsa& source) = delete;
+
+
 	};
 
 

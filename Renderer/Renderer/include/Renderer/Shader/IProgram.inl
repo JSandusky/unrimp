@@ -72,23 +72,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline IProgram::IProgram(const IProgram &source) :
-		IResource(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedPrograms;
-			++getRenderer().getStatistics().currentNumberOfPrograms;
-		#endif
-	}
-
-	inline IProgram &IProgram::operator =(const IProgram &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

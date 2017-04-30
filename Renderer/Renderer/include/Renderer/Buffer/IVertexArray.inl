@@ -58,23 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline IVertexArray::IVertexArray(const IVertexArray &source) :
-		IResource(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedVertexArrays;
-			++getRenderer().getStatistics().currentNumberOfVertexArrays;
-		#endif
-	}
-
-	inline IVertexArray &IVertexArray::operator =(const IVertexArray &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

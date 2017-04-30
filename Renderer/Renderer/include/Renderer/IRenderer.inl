@@ -54,17 +54,6 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IRenderer::IRenderer(const IRenderer &)
-	{
-		// Not supported
-	}
-
-	inline IRenderer &IRenderer::operator =(const IRenderer &)
-	{
-		// Not supported
-		return *this;
-	}
-
 	#ifndef RENDERER_NO_STATISTICS
 		inline Statistics &IRenderer::getStatistics()
 		{

@@ -210,6 +210,9 @@ protected:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
+	explicit IApplicationRenderer(const IApplicationRenderer& source) = delete;
+	IApplicationRenderer& operator =(const IApplicationRenderer& source) = delete;
+
 	/**
 	*  @brief
 	*    Create a renderer instance

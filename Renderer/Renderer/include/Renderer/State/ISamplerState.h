@@ -95,26 +95,8 @@ namespace Renderer
 		*/
 		inline explicit ISamplerState(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ISamplerState(const ISamplerState &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ISamplerState &operator =(const ISamplerState &source);
+		explicit ISamplerState(const ISamplerState &source) = delete;
+		ISamplerState &operator =(const ISamplerState &source) = delete;
 
 
 	};

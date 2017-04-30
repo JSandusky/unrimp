@@ -84,6 +84,14 @@ namespace NullRenderer
 		virtual const char *getShaderLanguageName() const override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit FragmentShader(const FragmentShader& source) = delete;
+		FragmentShader& operator =(const FragmentShader& source) = delete;
+
+
 	};
 
 

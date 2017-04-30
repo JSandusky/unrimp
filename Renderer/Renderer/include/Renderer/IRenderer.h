@@ -445,26 +445,8 @@ namespace Renderer
 		*/
 		inline IRenderer();
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IRenderer(const IRenderer &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IRenderer &operator =(const IRenderer &source);
+		explicit IRenderer(const IRenderer &source) = delete;
+		IRenderer &operator =(const IRenderer &source) = delete;
 
 		#ifndef RENDERER_NO_STATISTICS
 			/**

@@ -86,6 +86,14 @@ namespace OpenGLES3Renderer
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TextureBufferBindEmulation(const TextureBufferBindEmulation& source) = delete;
+		TextureBufferBindEmulation& operator =(const TextureBufferBindEmulation& source) = delete;
+
+
 	};
 
 

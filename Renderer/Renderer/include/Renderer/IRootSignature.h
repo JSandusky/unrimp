@@ -72,26 +72,8 @@ namespace Renderer
 		*/
 		inline explicit IRootSignature(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IRootSignature(const IRootSignature &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IRootSignature &operator =(const IRootSignature &source);
+		explicit IRootSignature(const IRootSignature &source) = delete;
+		IRootSignature &operator =(const IRootSignature &source) = delete;
 
 
 	};

@@ -64,24 +64,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline ITexture1D::ITexture1D(const ITexture1D &source) :
-		ITexture(source),
-		mWidth(source.getWidth())
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTexture1Ds;
-			++getRenderer().getStatistics().currentNumberOfTexture1Ds;
-		#endif
-	}
-
-	inline ITexture1D &ITexture1D::operator =(const ITexture1D &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

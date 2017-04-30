@@ -262,26 +262,8 @@ namespace Renderer
 		*/
 		inline explicit ITextureManager(IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ITextureManager(const ITextureManager& source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ITextureManager& operator =(const ITextureManager& source);
+		explicit ITextureManager(const ITextureManager& source) = delete;
+		ITextureManager& operator =(const ITextureManager& source) = delete;
 
 
 	//[-------------------------------------------------------]

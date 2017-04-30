@@ -134,6 +134,14 @@ namespace OpenGLRenderer
 		uint32_t mOpenGLProgram;	///< OpenGL program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit ProgramMonolithic(const ProgramMonolithic& source) = delete;
+		ProgramMonolithic& operator =(const ProgramMonolithic& source) = delete;
+
+
 	};
 
 

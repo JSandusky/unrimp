@@ -58,23 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline ITextureBuffer::ITextureBuffer(const ITextureBuffer &source) :
-		IBuffer(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTextureBuffers;
-			++getRenderer().getStatistics().currentNumberOfTextureBuffers;
-		#endif
-	}
-
-	inline ITextureBuffer &ITextureBuffer::operator =(const ITextureBuffer &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

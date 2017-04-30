@@ -84,6 +84,14 @@ namespace NullRenderer
 		virtual const char *getShaderLanguageName() const override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexShader(const VertexShader& source) = delete;
+		VertexShader& operator =(const VertexShader& source) = delete;
+
+
 	};
 
 

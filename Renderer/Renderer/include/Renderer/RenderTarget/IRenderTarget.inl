@@ -43,18 +43,6 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IRenderTarget::IRenderTarget(const IRenderTarget &source) :
-		IResource(source)
-	{
-		// Nothing here
-	}
-
-	inline IRenderTarget &IRenderTarget::operator =(const IRenderTarget &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -81,26 +81,8 @@ namespace Renderer
 		*/
 		inline explicit IVertexArray(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IVertexArray(const IVertexArray &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IVertexArray &operator =(const IVertexArray &source);
+		explicit IVertexArray(const IVertexArray &source) = delete;
+		IVertexArray &operator =(const IVertexArray &source) = delete;
 
 
 	};

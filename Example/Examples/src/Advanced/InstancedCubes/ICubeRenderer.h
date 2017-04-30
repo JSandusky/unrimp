@@ -93,26 +93,8 @@ protected:
 	*/
 	ICubeRenderer();
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*
-	*  @param[in] source
-	*    Source to copy from
-	*/
-	explicit ICubeRenderer(const ICubeRenderer &source);
-
-	/**
-	*  @brief
-	*    Copy operator
-	*
-	*  @param[in] source
-	*    Source to copy from
-	*
-	*  @return
-	*    Reference to this instance
-	*/
-	ICubeRenderer &operator =(const ICubeRenderer &source);
+	explicit ICubeRenderer(const ICubeRenderer &source) = delete;
+	ICubeRenderer &operator =(const ICubeRenderer &source) = delete;
 
 
 //[-------------------------------------------------------]

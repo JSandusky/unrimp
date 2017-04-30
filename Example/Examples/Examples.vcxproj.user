@@ -22,7 +22,7 @@
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)_static\ExamplesStatic.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)\bin\$(PlatformTarget)_static\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>FirstScene -r Direct3D11</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>FirstScene -r OpenGL</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)_dynamic\Examples.exe</LocalDebuggerCommand>

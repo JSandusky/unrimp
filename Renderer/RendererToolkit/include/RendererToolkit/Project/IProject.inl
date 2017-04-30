@@ -42,17 +42,6 @@ namespace RendererToolkit
 		// Nothing here
 	}
 
-	inline IProject::IProject(const IProject &)
-	{
-		// Not supported
-	}
-
-	inline IProject &IProject::operator =(const IProject &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

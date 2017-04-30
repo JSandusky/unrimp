@@ -144,6 +144,9 @@ namespace Direct3D10Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit SwapChain(const SwapChain& source) = delete;
+		SwapChain& operator =(const SwapChain& source) = delete;
+
 		/**
 		*  @brief
 		*    Return the swap chain width and height

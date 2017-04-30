@@ -81,6 +81,14 @@ namespace NullRenderer
 		virtual ~Texture2D();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Texture2D(const Texture2D& source) = delete;
+		Texture2D& operator =(const Texture2D& source) = delete;
+
+
 	};
 
 

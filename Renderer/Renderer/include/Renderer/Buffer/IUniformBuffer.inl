@@ -58,23 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline IUniformBuffer::IUniformBuffer(const IUniformBuffer &source) :
-		IBuffer(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedUniformBuffers;
-			++getRenderer().getStatistics().currentNumberOfUniformBuffers;
-		#endif
-	}
-
-	inline IUniformBuffer &IUniformBuffer::operator =(const IUniformBuffer &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

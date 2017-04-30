@@ -75,19 +75,6 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IResource::IResource(const IResource &source) :
-		mResourceType(source.getResourceType()),
-		mRenderer(&source.getRenderer())
-	{
-		// Not supported
-	}
-
-	inline IResource &IResource::operator =(const IResource &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

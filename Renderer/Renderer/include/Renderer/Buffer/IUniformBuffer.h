@@ -101,26 +101,8 @@ namespace Renderer
 		*/
 		inline explicit IUniformBuffer(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IUniformBuffer(const IUniformBuffer &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IUniformBuffer &operator =(const IUniformBuffer &source);
+		explicit IUniformBuffer(const IUniformBuffer &source) = delete;
+		IUniformBuffer &operator =(const IUniformBuffer &source) = delete;
 
 
 	};

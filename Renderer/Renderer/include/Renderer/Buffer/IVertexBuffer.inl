@@ -58,23 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline IVertexBuffer::IVertexBuffer(const IVertexBuffer &source) :
-		IBuffer(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedVertexBuffers;
-			++getRenderer().getStatistics().currentNumberOfVertexBuffers;
-		#endif
-	}
-
-	inline IVertexBuffer &IVertexBuffer::operator =(const IVertexBuffer &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

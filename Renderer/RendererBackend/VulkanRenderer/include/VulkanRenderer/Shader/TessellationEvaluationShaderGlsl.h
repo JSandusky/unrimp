@@ -102,6 +102,14 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TessellationEvaluationShaderGlsl(const TessellationEvaluationShaderGlsl& source) = delete;
+		TessellationEvaluationShaderGlsl& operator =(const TessellationEvaluationShaderGlsl& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

@@ -58,23 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	inline IFramebuffer::IFramebuffer(const IFramebuffer &source) :
-		IRenderTarget(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedFramebuffers;
-			++getRenderer().getStatistics().currentNumberOfFramebuffers;
-		#endif
-	}
-
-	inline IFramebuffer &IFramebuffer::operator =(const IFramebuffer &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

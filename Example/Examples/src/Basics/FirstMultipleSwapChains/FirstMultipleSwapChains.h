@@ -92,6 +92,9 @@ public:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
+	explicit FirstMultipleSwapChains(const FirstMultipleSwapChains& source) = delete;
+	FirstMultipleSwapChains& operator =(const FirstMultipleSwapChains& source) = delete;
+
 	/**
 	*  @brief
 	*    Fill the given commando buffer

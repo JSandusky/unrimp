@@ -510,26 +510,8 @@ namespace Renderer
 		*/
 		inline explicit IShaderLanguage(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IShaderLanguage(const IShaderLanguage &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IShaderLanguage &operator =(const IShaderLanguage &source);
+		explicit IShaderLanguage(const IShaderLanguage &source) = delete;
+		IShaderLanguage &operator =(const IShaderLanguage &source) = delete;
 
 
 	//[-------------------------------------------------------]

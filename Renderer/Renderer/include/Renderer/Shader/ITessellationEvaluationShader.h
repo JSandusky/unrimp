@@ -72,26 +72,8 @@ namespace Renderer
 		*/
 		inline explicit ITessellationEvaluationShader(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ITessellationEvaluationShader(const ITessellationEvaluationShader &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ITessellationEvaluationShader &operator =(const ITessellationEvaluationShader &source);
+		explicit ITessellationEvaluationShader(const ITessellationEvaluationShader &source) = delete;
+		ITessellationEvaluationShader &operator =(const ITessellationEvaluationShader &source) = delete;
 
 
 	};

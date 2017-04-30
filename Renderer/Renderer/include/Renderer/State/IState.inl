@@ -43,18 +43,6 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IState::IState(const IState &source) :
-		IResource(source)
-	{
-		// Not supported
-	}
-
-	inline IState &IState::operator =(const IState &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -94,26 +94,8 @@ namespace Renderer
 		*/
 		inline ITexture2D(IRenderer &renderer, uint32_t width, uint32_t height);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ITexture2D(const ITexture2D &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ITexture2D &operator =(const ITexture2D &source);
+		explicit ITexture2D(const ITexture2D &source) = delete;
+		ITexture2D &operator =(const ITexture2D &source) = delete;
 
 
 	//[-------------------------------------------------------]

@@ -159,18 +159,3 @@ void BatchInstancedArrays::fillCommandBuffer(Renderer::CommandBuffer& commandBuf
 	// End debug event
 	COMMAND_END_DEBUG_EVENT(commandBuffer)
 }
-
-
-//[-------------------------------------------------------]
-//[ Private methods                                       ]
-//[-------------------------------------------------------]
-BatchInstancedArrays::BatchInstancedArrays(const BatchInstancedArrays &)
-{
-	// Not supported
-}
-
-BatchInstancedArrays &BatchInstancedArrays::operator =(const BatchInstancedArrays &)
-{
-	// Not supported
-	return *this;
-}

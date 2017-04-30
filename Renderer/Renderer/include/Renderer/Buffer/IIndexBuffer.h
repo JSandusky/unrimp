@@ -72,26 +72,8 @@ namespace Renderer
 		*/
 		inline explicit IIndexBuffer(IRenderer &renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IIndexBuffer(const IIndexBuffer &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IIndexBuffer &operator =(const IIndexBuffer &source);
+		explicit IIndexBuffer(const IIndexBuffer &source) = delete;
+		IIndexBuffer &operator =(const IIndexBuffer &source) = delete;
 
 
 	};

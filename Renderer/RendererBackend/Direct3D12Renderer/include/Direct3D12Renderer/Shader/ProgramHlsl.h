@@ -159,6 +159,14 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit ProgramHlsl(const ProgramHlsl& source) = delete;
+		ProgramHlsl& operator =(const ProgramHlsl& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

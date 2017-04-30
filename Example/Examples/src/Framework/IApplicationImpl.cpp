@@ -47,15 +47,3 @@ IApplicationImpl::IApplicationImpl(IApplication& application) :
 {
 	// Nothing here
 }
-
-IApplicationImpl::IApplicationImpl(const IApplicationImpl& applicationImpl) :
-	mApplication(applicationImpl.mApplication)
-{
-	// Not supported
-}
-
-IApplicationImpl &IApplicationImpl::operator =(const IApplicationImpl &)
-{
-	// Not supported
-	return *this;
-}

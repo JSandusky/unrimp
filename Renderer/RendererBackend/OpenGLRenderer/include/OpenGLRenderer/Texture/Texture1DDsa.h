@@ -78,6 +78,14 @@ namespace OpenGLRenderer
 		virtual ~Texture1DDsa();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Texture1DDsa(const Texture1DDsa& source) = delete;
+		Texture1DDsa& operator =(const Texture1DDsa& source) = delete;
+
+
 	};
 
 

@@ -171,6 +171,14 @@ namespace OpenGLRenderer
 		bool				 mGenerateMipmaps;			///< "true" if mipmaps should be generated automatically, else "false"
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Framebuffer(const Framebuffer& source) = delete;
+		Framebuffer& operator =(const Framebuffer& source) = delete;
+
+
 	};
 
 

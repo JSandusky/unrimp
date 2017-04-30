@@ -98,26 +98,8 @@ public:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
-	/**
-	*  @brief
-	*    Copy constructor
-	*
-	*  @param[in] source
-	*    Source to copy from
-	*/
-	explicit BatchInstancedArrays(const BatchInstancedArrays &source);
-
-	/**
-	*  @brief
-	*    Copy operator
-	*
-	*  @param[in] source
-	*    Source to copy from
-	*
-	*  @return
-	*    Reference to this instance
-	*/
-	BatchInstancedArrays &operator =(const BatchInstancedArrays &source);
+	explicit BatchInstancedArrays(const BatchInstancedArrays &source) = delete;
+	BatchInstancedArrays &operator =(const BatchInstancedArrays &source) = delete;
 
 
 //[-------------------------------------------------------]

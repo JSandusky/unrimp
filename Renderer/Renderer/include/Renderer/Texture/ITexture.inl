@@ -82,18 +82,6 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline ITexture::ITexture(const ITexture &source) :
-		IResource(source)
-	{
-		// Not supported
-	}
-
-	inline ITexture &ITexture::operator =(const ITexture &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

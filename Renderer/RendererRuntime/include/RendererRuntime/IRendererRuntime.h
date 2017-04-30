@@ -377,26 +377,8 @@ namespace RendererRuntime
 		*/
 		inline IRendererRuntime();
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IRendererRuntime(const IRendererRuntime &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IRendererRuntime &operator =(const IRendererRuntime &source);
+		explicit IRendererRuntime(const IRendererRuntime &source) = delete;
+		IRendererRuntime &operator =(const IRendererRuntime &source) = delete;
 
 
 	//[-------------------------------------------------------]

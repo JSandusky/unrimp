@@ -108,6 +108,14 @@ namespace Direct3D9Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TextureCube(const TextureCube& source) = delete;
+		TextureCube& operator =(const TextureCube& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

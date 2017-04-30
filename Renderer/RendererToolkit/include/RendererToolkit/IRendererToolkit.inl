@@ -42,17 +42,6 @@ namespace RendererToolkit
 		// Nothing here
 	}
 
-	inline IRendererToolkit::IRendererToolkit(const IRendererToolkit &)
-	{
-		// Not supported
-	}
-
-	inline IRendererToolkit &IRendererToolkit::operator =(const IRendererToolkit &)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

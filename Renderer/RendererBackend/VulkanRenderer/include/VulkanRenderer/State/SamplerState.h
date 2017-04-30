@@ -79,6 +79,14 @@ namespace VulkanRenderer
 		virtual ~SamplerState();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit SamplerState(const SamplerState& source) = delete;
+		SamplerState& operator =(const SamplerState& source) = delete;
+
+
 	};
 
 

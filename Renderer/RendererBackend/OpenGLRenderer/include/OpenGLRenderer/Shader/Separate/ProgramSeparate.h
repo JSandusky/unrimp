@@ -136,6 +136,14 @@ namespace OpenGLRenderer
 		FragmentShaderSeparate				 *mFragmentShaderSeparate;					///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit ProgramSeparate(const ProgramSeparate& source) = delete;
+		ProgramSeparate& operator =(const ProgramSeparate& source) = delete;
+
+
 	};
 
 
