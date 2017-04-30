@@ -111,7 +111,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline explicit SceneNode(const Transform& transform);
-		inline virtual ~SceneNode();
+		inline ~SceneNode();
 		SceneNode(const SceneNode&) = delete;
 		SceneNode& operator=(const SceneNode&) = delete;
 
