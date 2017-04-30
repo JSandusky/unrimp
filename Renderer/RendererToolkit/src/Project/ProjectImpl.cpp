@@ -190,59 +190,65 @@ namespace RendererToolkit
 
 		// Evaluate the asset type and continue with the processing in the asset type specific way
 		// TODO(co) Currently this is fixed build in, later on me might want to have this dynamic so we can plugin additional asset compilers
-		const AssetCompilerTypeId assetCompilerTypeId(assetType.c_str());
-		if (TextureAssetCompiler::TYPE_ID == assetCompilerTypeId)
+		try
 		{
-			TextureAssetCompiler().compile(input, configuration, output);
+			const AssetCompilerTypeId assetCompilerTypeId(assetType.c_str());
+			if (TextureAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				TextureAssetCompiler().compile(input, configuration, output);
+			}
+			else if (ShaderPieceAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				ShaderPieceAssetCompiler().compile(input, configuration, output);
+			}
+			else if (ShaderBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				ShaderBlueprintAssetCompiler().compile(input, configuration, output);
+			}
+			else if (MaterialBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				MaterialBlueprintAssetCompiler().compile(input, configuration, output);
+			}
+			else if (MaterialAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				MaterialAssetCompiler().compile(input, configuration, output);
+			}
+			else if (SkeletonAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				SkeletonAssetCompiler().compile(input, configuration, output);
+			}
+			else if (SkeletonAnimationAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				SkeletonAnimationAssetCompiler().compile(input, configuration, output);
+			}
+			else if (MeshAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				MeshAssetCompiler().compile(input, configuration, output);
+			}
+			else if (SceneAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				SceneAssetCompiler().compile(input, configuration, output);
+			}
+			else if (CompositorNodeAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				CompositorNodeAssetCompiler().compile(input, configuration, output);
+			}
+			else if (CompositorWorkspaceAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				CompositorWorkspaceAssetCompiler().compile(input, configuration, output);
+			}
+			else if (VertexAttributesAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				VertexAttributesAssetCompiler().compile(input, configuration, output);
+			}
+			else
+			{
+				throw std::runtime_error("Asset type \"" + assetType + "\" is unknown");
+			}
 		}
-		else if (ShaderPieceAssetCompiler::TYPE_ID == assetCompilerTypeId)
+		catch (const std::exception& e)
 		{
-			ShaderPieceAssetCompiler().compile(input, configuration, output);
-		}
-		else if (ShaderBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			ShaderBlueprintAssetCompiler().compile(input, configuration, output);
-		}
-		else if (MaterialBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			MaterialBlueprintAssetCompiler().compile(input, configuration, output);
-		}
-		else if (MaterialAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			MaterialAssetCompiler().compile(input, configuration, output);
-		}
-		else if (SkeletonAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			SkeletonAssetCompiler().compile(input, configuration, output);
-		}
-		else if (SkeletonAnimationAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			SkeletonAnimationAssetCompiler().compile(input, configuration, output);
-		}
-		else if (MeshAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			MeshAssetCompiler().compile(input, configuration, output);
-		}
-		else if (SceneAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			SceneAssetCompiler().compile(input, configuration, output);
-		}
-		else if (CompositorNodeAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			CompositorNodeAssetCompiler().compile(input, configuration, output);
-		}
-		else if (CompositorWorkspaceAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			CompositorWorkspaceAssetCompiler().compile(input, configuration, output);
-		}
-		else if (VertexAttributesAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			VertexAttributesAssetCompiler().compile(input, configuration, output);
-		}
-		else
-		{
-			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\" and ID " + std::to_string(asset.assetId) + ": Asset type \"" + assetType + "\" is unknown";
-			throw std::runtime_error(message);
+			throw std::runtime_error("Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\" and ID " + std::to_string(asset.assetId) + ": " + std::string(e.what()));
 		}
 	}
 
