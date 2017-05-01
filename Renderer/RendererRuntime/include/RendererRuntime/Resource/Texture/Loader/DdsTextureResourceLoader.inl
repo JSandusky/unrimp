@@ -49,7 +49,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline DdsTextureResourceLoader::DdsTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		ITextureResourceLoader(resourceManager, rendererRuntime),
+		ITextureResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
 		mTexture(nullptr),
 		mWidth(0),

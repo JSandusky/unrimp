@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/ResourceManager.h"
+#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
 
 
 //[-------------------------------------------------------]
@@ -36,9 +36,6 @@
 namespace RendererRuntime
 {
 	class MeshResource;
-	class IRendererRuntime;
-	class IMeshResourceLoader;
-	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -50,67 +47,42 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef uint32_t MeshResourceId;	///< POD mesh resource identifier
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MeshResourceManager : public ResourceManager<MeshResource>
+	class IMeshResourceLoader : public IResourceLoader
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class RendererRuntimeImpl;
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT MeshResource* getMeshResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
-		RENDERERRUNTIME_API_EXPORT void loadMeshResourceByAssetId(AssetId assetId, MeshResourceId& meshResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
-		RENDERERRUNTIME_API_EXPORT MeshResourceId createEmptyMeshResourceByAssetId(AssetId assetId);	// Mesh resource is not allowed to exist, yet
+		static const ResourceLoaderTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual uint32_t getNumberOfResources() const override;
-		virtual IResource& getResourceByIndex(uint32_t index) const override;
-		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
-		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
-		virtual void reloadResourceByAssetId(AssetId assetId) override;
-		virtual void update() override;
+		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		virtual void initialize(const Asset& asset, bool reload, IResource& resource) override;
 
 
 	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	private:
-		virtual IResourceLoader* createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId) override;
+	protected:
+		inline explicit IMeshResourceLoader(IResourceManager& resourceManager);
+		inline virtual ~IMeshResourceLoader();
+		IMeshResourceLoader(const IMeshResourceLoader&) = delete;
+		IMeshResourceLoader& operator=(const IMeshResourceLoader&) = delete;
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
-	private:
-		explicit MeshResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~MeshResourceManager();
-		MeshResourceManager(const MeshResourceManager&) = delete;
-		MeshResourceManager& operator=(const MeshResourceManager&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		ResourceManagerTemplate<MeshResource, IMeshResourceLoader, MeshResourceId, 4096>* mInternalResourceManager;
+	protected:
+		MeshResource* mMeshResource;	///< Destination resource
 
 
 	};
@@ -120,3 +92,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Mesh/Loader/IMeshResourceLoader.inl"

@@ -28,44 +28,25 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	inline ResourceLoaderTypeId CrnTextureResourceLoader::getResourceLoaderTypeId() const
+	inline ResourceLoaderTypeId IMeshResourceLoader::getResourceLoaderTypeId() const
 	{
 		return TYPE_ID;
 	}
 
-	inline bool CrnTextureResourceLoader::isFullyLoaded()
-	{
-		// Fully loaded
-		return true;
-	}
-
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline CrnTextureResourceLoader::CrnTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		ITextureResourceLoader(resourceManager),
-		mRendererRuntime(rendererRuntime),
-		mTexture(nullptr),
-		mWidth(0),
-		mHeight(0),
-		mTextureFormat(0),
-		mCubeMap(false),
-		mDataContainsMipmaps(false),
-		mNumberOfFileDataBytes(0),
-		mNumberOfUsedFileDataBytes(0),
-		mFileData(nullptr),
-		mNumberOfImageDataBytes(0),
-		mNumberOfUsedImageDataBytes(0),
-		mImageData(nullptr)
+	inline IMeshResourceLoader::IMeshResourceLoader(IResourceManager& resourceManager) :
+		IResourceLoader(resourceManager),
+		mMeshResource(nullptr)
 	{
 		// Nothing here
 	}
 
-	inline CrnTextureResourceLoader::~CrnTextureResourceLoader()
+	inline IMeshResourceLoader::~IMeshResourceLoader()
 	{
-		delete [] mFileData;
-		delete [] mImageData;
+		// Nothing here
 	}
 
 

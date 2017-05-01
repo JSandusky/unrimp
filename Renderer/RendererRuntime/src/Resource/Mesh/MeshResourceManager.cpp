@@ -45,7 +45,7 @@ namespace RendererRuntime
 
 	void MeshResourceManager::loadMeshResourceByAssetId(AssetId assetId, MeshResourceId& meshResourceId, IResourceListener* resourceListener, bool reload)
 	{
-		mInternalResourceManager->loadResourceByAssetId(assetId, meshResourceId, resourceListener, reload);
+		mInternalResourceManager->loadResourceByAssetId(assetId, meshResourceId, resourceListener, reload, MeshResourceLoader::TYPE_ID);
 	}
 
 	MeshResourceId MeshResourceManager::createEmptyMeshResourceByAssetId(AssetId assetId)
@@ -95,7 +95,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	IResourceLoader* MeshResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		return mInternalResourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
+		if (resourceLoaderTypeId == MeshResourceLoader::TYPE_ID)
+		{
+			return new MeshResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
+		}
+		else
+		{
+			// TODO(co) Error handling
+			assert(false);
+			return nullptr;
+		}
 	}
 
 
@@ -104,7 +113,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MeshResourceManager::MeshResourceManager(IRendererRuntime& rendererRuntime)
 	{
-		mInternalResourceManager = new ResourceManagerTemplate<MeshResource, MeshResourceLoader, MeshResourceId, 4096>(rendererRuntime, *this);
+		mInternalResourceManager = new ResourceManagerTemplate<MeshResource, IMeshResourceLoader, MeshResourceId, 4096>(rendererRuntime, *this);
 	}
 
 	MeshResourceManager::~MeshResourceManager()

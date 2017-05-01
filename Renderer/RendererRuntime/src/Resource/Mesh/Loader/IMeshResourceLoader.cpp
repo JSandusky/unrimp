@@ -19,24 +19,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class TextureResource;
-}
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Resource/Mesh/Loader/IMeshResourceLoader.h"
 
 
 //[-------------------------------------------------------]
@@ -47,54 +33,22 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class ITextureResourceLoader : protected IResourceLoader
-	{
-
-
-	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	public:
-		static const ResourceLoaderTypeId TYPE_ID;
+	const ResourceLoaderTypeId IMeshResourceLoader::TYPE_ID("invalid_abstract_type");
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	public:
-		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void initialize(const Asset& asset, bool reload, IResource& resource) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		inline explicit ITextureResourceLoader(IResourceManager& resourceManager);
-		inline virtual ~ITextureResourceLoader();
-		ITextureResourceLoader(const ITextureResourceLoader&) = delete;
-		ITextureResourceLoader& operator=(const ITextureResourceLoader&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected data                                        ]
-	//[-------------------------------------------------------]
-	protected:
-		TextureResource* mTextureResource;	///< Destination resource
-
-
-	};
+	void IMeshResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
+	{
+		IResourceLoader::initialize(asset, reload);
+		mMeshResource = reinterpret_cast<MeshResource*>(&resource);
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Texture/Loader/ITextureResourceLoader.inl"

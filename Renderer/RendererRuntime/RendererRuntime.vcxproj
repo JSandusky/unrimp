@@ -118,6 +118,7 @@
     <None Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialTechnique.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\Detail\SubMesh.inl" />
+    <None Include="include\RendererRuntime\Resource\Mesh\Loader\IMeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResource.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Factory\ISceneFactory.inl" />
@@ -157,6 +158,7 @@
     <None Include="include\RendererRuntime\Resource\VertexAttributes\VertexAttributesResource.inl" />
     <None Include="include\RendererRuntime\Vr\IVrManager.inl" />
     <None Include="include\RendererRuntime\Vr\OpenVR\IVrManagerOpenVRListener.inl" />
+    <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Vr\OpenVR\VrManagerOpenVR.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -286,6 +288,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialTechnique.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Detail\SubMesh.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\IMeshResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResource.h" />
@@ -342,6 +345,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\VertexAttributes\VertexAttributesResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Vr\IVrManager.h" />
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\IVrManagerOpenVRListener.h" />
+    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\OpenVRRuntimeLinking.h" />
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\VrManagerOpenVR.h" />
     <ClInclude Include="resource.h" />
@@ -584,6 +588,7 @@
     <ClCompile Include="src\Resource\Material\MaterialResource.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialTechnique.cpp" />
+    <ClCompile Include="src\Resource\Mesh\Loader\IMeshResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Mesh\Loader\MeshResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResource.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
@@ -696,6 +701,9 @@
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
     <ClCompile Include="src\Resource\VertexAttributes\Loader\VertexAttributesResourceLoader.cpp" />
     <ClCompile Include="src\Resource\VertexAttributes\VertexAttributesResourceManager.cpp" />
+    <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\Vr\OpenVR\OpenVRRuntimeLinking.cpp" />
     <ClCompile Include="src\Vr\OpenVR\VrManagerOpenVR.cpp" />
   </ItemGroup>

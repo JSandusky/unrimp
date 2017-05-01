@@ -86,7 +86,7 @@ namespace RendererRuntime
 		inline LOADER_TYPE* createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 		inline TYPE* getResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
 		inline TYPE& createEmptyResourceByAssetId(AssetId assetId);	// Resource is not allowed to exist, yet
-		inline void loadResourceByAssetId(AssetId assetId, ID_TYPE& resourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		inline void loadResourceByAssetId(AssetId assetId, ID_TYPE& resourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = LOADER_TYPE::TYPE_ID);	// Asynchronous
 		inline void reloadResourceByAssetId(AssetId assetId);
 		inline Resources& getResources();
 

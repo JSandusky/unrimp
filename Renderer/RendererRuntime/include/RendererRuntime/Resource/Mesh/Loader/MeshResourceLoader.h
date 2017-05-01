@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
+#include "RendererRuntime/Resource/Mesh/Loader/IMeshResourceLoader.h"
 #include "RendererRuntime/Core/File/MemoryFile.h"
 
 
@@ -42,9 +42,7 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
-	class MeshResource;
 	class IRendererRuntime;
-	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 	namespace v1Mesh
 	{
 		struct SubMesh;
@@ -68,14 +66,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MeshResourceLoader : public IResourceLoader
+	class MeshResourceLoader : public IMeshResourceLoader
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend ResourceManagerTemplate<MeshResource, MeshResourceLoader, MeshResourceId, 4096>;	// Type definition of template class
+		friend class MeshResourceManager;
 
 
 	//[-------------------------------------------------------]
@@ -90,7 +88,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void initialize(const Asset& asset, bool reload, IResource& resource) override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
 		virtual bool onDispatch() override;
@@ -115,7 +112,6 @@ namespace RendererRuntime
 		IRendererRuntime&		  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		Renderer::IBufferManager& mBufferManager;	///< Buffer manager instance, do not destroy the instance
 		Renderer::IVertexArray*	  mVertexArray;		///< In case the used renderer backend supports native multi-threading we also create the renderer resource asynchronous, but the final resource pointer reassignment must still happen synchronous
-		MeshResource*			  mMeshResource;	///< Destination resource
 		// Temporary data
 		MemoryFile mMemoryFile;
 		// Temporary vertex buffer

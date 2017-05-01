@@ -49,12 +49,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void MeshResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
-	{
-		IResourceLoader::initialize(asset, reload);
-		mMeshResource = static_cast<MeshResource*>(&resource);
-	}
-
 	void MeshResourceLoader::onDeserialization(IFile& file)
 	{
 		// Tell the memory mapped file about the LZ4 compressed data
@@ -69,11 +63,11 @@ namespace RendererRuntime
 		// Read in the mesh header
 		v1Mesh::MeshHeader meshHeader;
 		mMemoryFile.read(&meshHeader, sizeof(v1Mesh::MeshHeader));
-		mMeshResource->mNumberOfVertices = meshHeader.numberOfVertices;
-		mMeshResource->mNumberOfIndices  = meshHeader.numberOfIndices;
+		mMeshResource->setNumberOfVertices(meshHeader.numberOfVertices);
+		mMeshResource->setNumberOfIndices(meshHeader.numberOfIndices);
 
 		// Allocate memory for the local vertex buffer data
-		mNumberOfUsedVertexBufferDataBytes = meshHeader.numberOfBytesPerVertex * mMeshResource->mNumberOfVertices;
+		mNumberOfUsedVertexBufferDataBytes = meshHeader.numberOfBytesPerVertex * mMeshResource->getNumberOfVertices();
 		if (mNumberOfVertexBufferDataBytes < mNumberOfUsedVertexBufferDataBytes)
 		{
 			mNumberOfVertexBufferDataBytes = mNumberOfUsedVertexBufferDataBytes;
@@ -83,7 +77,7 @@ namespace RendererRuntime
 
 		// Allocate memory for the local index buffer data
 		mIndexBufferFormat = meshHeader.indexBufferFormat;
-		mNumberOfUsedIndexBufferDataBytes = Renderer::IndexBufferFormat::getNumberOfBytesPerElement(static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat)) * mMeshResource->mNumberOfIndices;
+		mNumberOfUsedIndexBufferDataBytes = Renderer::IndexBufferFormat::getNumberOfBytesPerElement(static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat)) * mMeshResource->getNumberOfIndices();
 		if (mNumberOfIndexBufferDataBytes < mNumberOfUsedIndexBufferDataBytes)
 		{
 			mNumberOfIndexBufferDataBytes = mNumberOfUsedIndexBufferDataBytes;
@@ -135,11 +129,11 @@ namespace RendererRuntime
 	bool MeshResourceLoader::onDispatch()
 	{
 		// Create vertex array object (VAO)
-		mMeshResource->mVertexArray = mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading ? mVertexArray : createVertexArray();
+		mMeshResource->setVertexArray(mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading ? mVertexArray : createVertexArray());
 
 		{ // Create sub-meshes
 			MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
-			SubMeshes& subMeshes = mMeshResource->mSubMeshes;
+			SubMeshes& subMeshes = mMeshResource->getSubMeshes();
 			subMeshes.resize(mNumberOfUsedSubMeshes);
 			for (uint32_t i = 0; i < mNumberOfUsedSubMeshes; ++i)
 			{
@@ -148,13 +142,15 @@ namespace RendererRuntime
 				const v1Mesh::SubMesh& v1SubMesh = mSubMeshes[i];
 
 				// Setup sub-mesh
-				materialResourceManager.loadMaterialResourceByAssetId(v1SubMesh.materialAssetId, subMesh.mMaterialResourceId);
-				subMesh.mPrimitiveTopology  = static_cast<Renderer::PrimitiveTopology>(v1SubMesh.primitiveTopology);
-				subMesh.mStartIndexLocation = v1SubMesh.startIndexLocation;
-				subMesh.mNumberOfIndices	= v1SubMesh.numberOfIndices;
+				MaterialResourceId materialResourceId = getUninitialized<MaterialResourceId>();
+				materialResourceManager.loadMaterialResourceByAssetId(v1SubMesh.materialAssetId, materialResourceId);
+				subMesh.setMaterialResourceId(materialResourceId);
+				subMesh.setPrimitiveTopology(static_cast<Renderer::PrimitiveTopology>(v1SubMesh.primitiveTopology));
+				subMesh.setStartIndexLocation(v1SubMesh.startIndexLocation);
+				subMesh.setNumberOfIndices(v1SubMesh.numberOfIndices);
 
 				// Sanity check
-				assert(isInitialized(subMesh.mMaterialResourceId));
+				assert(isInitialized(subMesh.getMaterialResourceId()));
 			}
 		}
 
@@ -206,10 +202,10 @@ namespace RendererRuntime
 	{
 		// Fully loaded?
 		const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
-		const SubMeshes& subMeshes = mMeshResource->mSubMeshes;
+		const SubMeshes& subMeshes = mMeshResource->getSubMeshes();
 		for (uint32_t i = 0; i < mNumberOfUsedSubMeshes; ++i)
 		{
-			if (IResource::LoadingState::LOADED != materialResourceManager.getResourceByResourceId(subMeshes[i].mMaterialResourceId).getLoadingState())
+			if (IResource::LoadingState::LOADED != materialResourceManager.getResourceByResourceId(subMeshes[i].getMaterialResourceId()).getLoadingState())
 			{
 				// Not fully loaded
 				return false;
@@ -225,11 +221,10 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	MeshResourceLoader::MeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		IResourceLoader(resourceManager),
+		IMeshResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
 		mBufferManager(rendererRuntime.getBufferManager()),
 		mVertexArray(nullptr),
-		mMeshResource(nullptr),
 		// Temporary vertex buffer
 		mNumberOfVertexBufferDataBytes(0),
 		mNumberOfUsedVertexBufferDataBytes(0),
@@ -279,7 +274,7 @@ namespace RendererRuntime
 		// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 		//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 		//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-		const uint32_t numberOfVertices = mMeshResource->mNumberOfVertices;
+		const uint32_t numberOfVertices = mMeshResource->getNumberOfVertices();
 		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 		{
 			{ // Vertex buffer 0

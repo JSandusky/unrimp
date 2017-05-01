@@ -108,7 +108,7 @@ namespace RendererRuntime
 	}
 
 	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
-	inline void ResourceManagerTemplate<TYPE, LOADER_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::loadResourceByAssetId(AssetId assetId, ID_TYPE& resourceId, IResourceListener* resourceListener, bool reload)
+	inline void ResourceManagerTemplate<TYPE, LOADER_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::loadResourceByAssetId(AssetId assetId, ID_TYPE& resourceId, IResourceListener* resourceListener, bool reload, ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Get or create the instance
 		TYPE* resource = getResourceByAssetId(assetId);
@@ -142,7 +142,7 @@ namespace RendererRuntime
 		if (load)
 		{
 			// Commit resource streamer asset load request
-			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, LOADER_TYPE::TYPE_ID, reload, *resource));
+			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, resourceLoaderTypeId, reload, *resource));
 		}
 	}
 

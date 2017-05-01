@@ -128,6 +128,7 @@ set(SOURCE_CODES
 	src/Resource/Material/MaterialResource.cpp
 	src/Resource/Material/MaterialResourceManager.cpp
 	src/Resource/Material/MaterialTechnique.cpp
+	src/Resource/Mesh/Loader/IMeshResourceLoader.cpp
 	src/Resource/Mesh/Loader/MeshResourceLoader.cpp
 	src/Resource/Mesh/MeshResourceManager.cpp
 	src/Resource/Mesh/MeshResource.cpp
