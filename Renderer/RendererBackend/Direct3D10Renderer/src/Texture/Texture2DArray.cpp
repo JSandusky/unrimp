@@ -44,9 +44,6 @@ namespace Direct3D10Renderer
 		mD3D10Texture2D(nullptr),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D10Renderer)
-
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
@@ -184,9 +181,6 @@ namespace Direct3D10Renderer
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			setDebugName("2D texture array");
 		#endif
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(&direct3D10Renderer)
 	}
 
 	Texture2DArray::~Texture2DArray()

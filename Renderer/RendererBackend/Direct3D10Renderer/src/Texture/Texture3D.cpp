@@ -48,9 +48,6 @@ namespace Direct3D10Renderer
 		// Sanity checks
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
 
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D10Renderer)
-
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
@@ -169,9 +166,6 @@ namespace Direct3D10Renderer
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			setDebugName("3D texture");
 		#endif
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(&direct3D10Renderer)
 	}
 
 	Texture3D::~Texture3D()
@@ -197,14 +191,12 @@ namespace Direct3D10Renderer
 		assert(nullptr != mD3D10ShaderResourceViewTexture);
 
 		// Copy data
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&static_cast<Direct3D10Renderer&>(getRenderer()))
 		D3D10_MAPPED_TEXTURE3D d3d10MappedTexture3D = {};
 		if (S_OK == mD3D10Texture3D->Map(0, D3D10_MAP_WRITE_DISCARD, 0, &d3d10MappedTexture3D))
 		{
 			memcpy(d3d10MappedTexture3D.pData, data, numberOfBytes);
 			mD3D10Texture3D->Unmap(0);
 		}
-		RENDERER_END_DEBUG_EVENT(&static_cast<Direct3D10Renderer&>(getRenderer()))
 	}
 
 

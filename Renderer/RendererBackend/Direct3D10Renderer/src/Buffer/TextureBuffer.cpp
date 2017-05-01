@@ -146,9 +146,6 @@ namespace Direct3D10Renderer
 		assert(nullptr != data);
 		if (nullptr != mD3D10Buffer)
 		{
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&static_cast<Direct3D10Renderer&>(getRenderer()))
-
 			// Update Direct3D 10 subresource data
 			void *direct3D10Data = nullptr;
 			const HRESULT hResult = mD3D10Buffer->Map(D3D10_MAP_WRITE_DISCARD, 0, &direct3D10Data);
@@ -157,9 +154,6 @@ namespace Direct3D10Renderer
 				memcpy(direct3D10Data, data, numberOfBytes);
 				mD3D10Buffer->Unmap();
 			}
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(&static_cast<Direct3D10Renderer&>(getRenderer()))
 		}
 	}
 

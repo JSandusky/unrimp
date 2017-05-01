@@ -48,9 +48,6 @@ namespace Direct3D11Renderer
 		// Sanity checks
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
 
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)
-
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
@@ -169,9 +166,6 @@ namespace Direct3D11Renderer
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			setDebugName("3D texture");
 		#endif
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
 	}
 
 	Texture3D::~Texture3D()
@@ -198,7 +192,6 @@ namespace Direct3D11Renderer
 
 		// Copy data
 		Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)
 		D3D11_MAPPED_SUBRESOURCE d3d11MappedSubresource = {};
 		ID3D11DeviceContext* d3d11DeviceContext = direct3D11Renderer.getD3D11DeviceContext();
 		if (S_OK == d3d11DeviceContext->Map(mD3D11Texture3D, 0, D3D11_MAP_WRITE_DISCARD, 0, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&d3d11MappedSubresource)))
@@ -206,7 +199,6 @@ namespace Direct3D11Renderer
 			memcpy(d3d11MappedSubresource.pData, data, numberOfBytes);
 			d3d11DeviceContext->Unmap(mD3D11Texture3D, 0);
 		}
-		RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
 	}
 
 
