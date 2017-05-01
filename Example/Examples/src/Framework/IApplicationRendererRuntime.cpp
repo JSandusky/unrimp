@@ -117,14 +117,14 @@ void IApplicationRendererRuntime::onInitialization()
 			{
 				// TODO(co) Under construction: Will probably become "mount asset package"
 				// Add used asset package
-				const bool rendererIsOpenGLES = 0 == strcmp(renderer->getName(), "OpenGLES3");
+				const bool rendererIsOpenGLES = (0 == strcmp(renderer->getName(), "OpenGLES3"));
 				if (rendererIsOpenGLES)
 				{
-					rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataMobile/Content/AssetPackage.assets");
+					rendererRuntime->getAssetManager().addAssetPackageByFilename("Example/Content", "../DataMobile/Content/AssetPackage.assets");
 				}
 				else
 				{
-					rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/Content/AssetPackage.assets");
+					rendererRuntime->getAssetManager().addAssetPackageByFilename("Example/Content", "../DataPc/Content/AssetPackage.assets");
 				}
 				rendererRuntime->loadPipelineStateObjectCache();
 

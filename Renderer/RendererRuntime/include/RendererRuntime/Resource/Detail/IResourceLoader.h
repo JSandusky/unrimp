@@ -124,6 +124,15 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Called to check whether or not the resource loader has to deserialize (usually from file)
+		*
+		*  @return
+		*    "true" if deserialization has to be called, else "false" (for example a procedural resource or a resource received via an API like OpenVR)
+		*/
+		virtual bool hasDeserialization() const = 0;
+
+		/**
+		*  @brief
 		*    Called when the resource loader has to deserialize (usually from file) the internal data into memory
 		*
 		*  @param[in] file

@@ -28,14 +28,34 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	inline ResourceLoaderTypeId MeshResourceLoader::getResourceLoaderTypeId() const
+	inline ResourceLoaderTypeId OpenVRMeshResourceLoader::getResourceLoaderTypeId() const
 	{
 		return TYPE_ID;
 	}
 
-	inline bool MeshResourceLoader::hasDeserialization() const
+	inline bool OpenVRMeshResourceLoader::hasDeserialization() const
 	{
-		return true;
+		return false;
+	}
+
+	inline void OpenVRMeshResourceLoader::onDeserialization(IFile&)
+	{
+		// We're using the OpenVR API instead of reading from a file
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline OpenVRMeshResourceLoader::OpenVRMeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+		IMeshResourceLoader(resourceManager, rendererRuntime)
+	{
+		// Nothing here
+	}
+
+	inline OpenVRMeshResourceLoader::~OpenVRMeshResourceLoader()
+	{
+		// Nothing here
 	}
 
 

@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool VertexAttributesResourceLoader::hasDeserialization() const
+	{
+		return true;
+	}
+
 	inline bool VertexAttributesResourceLoader::onDispatch()
 	{
 		// Fully loaded

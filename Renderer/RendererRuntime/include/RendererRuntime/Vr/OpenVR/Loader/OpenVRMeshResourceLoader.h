@@ -27,23 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
-#include "RendererRuntime/Core/File/MemoryFile.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderer;
-}
-namespace RendererRuntime
-{
-	class SceneResource;
-	class IRendererRuntime;
-	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
-}
+#include "RendererRuntime/Resource/Mesh/Loader/IMeshResourceLoader.h"
 
 
 //[-------------------------------------------------------]
@@ -54,22 +38,16 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef uint32_t SceneResourceId;	///< POD scene resource identifier
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneResourceLoader : public IResourceLoader
+	class OpenVRMeshResourceLoader : public IMeshResourceLoader
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend ResourceManagerTemplate<SceneResource, SceneResourceLoader, SceneResourceId, 16>;	// Type definition of template class
+		friend class MeshResourceManager;
 
 
 	//[-------------------------------------------------------]
@@ -84,32 +62,20 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void initialize(const Asset& asset, bool reload, IResource& resource) override;
 		inline virtual bool hasDeserialization() const override;
-		virtual void onDeserialization(IFile& file) override;
+		inline virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
-		inline virtual bool onDispatch() override;
-		inline virtual bool isFullyLoaded() override;
+		virtual bool onDispatch() override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline SceneResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~SceneResourceLoader();
-		SceneResourceLoader(const SceneResourceLoader&) = delete;
-		SceneResourceLoader& operator=(const SceneResourceLoader&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		SceneResource*    mSceneResource;	///< Destination resource
-		// Temporary data
-		MemoryFile mMemoryFile;
+		inline OpenVRMeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
+		inline virtual ~OpenVRMeshResourceLoader();
+		OpenVRMeshResourceLoader(const OpenVRMeshResourceLoader&) = delete;
+		OpenVRMeshResourceLoader& operator=(const OpenVRMeshResourceLoader&) = delete;
 
 
 	};
@@ -124,4 +90,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.inl"
+#include "RendererRuntime/Vr/OpenVR/Loader/OpenVRMeshResourceLoader.inl"

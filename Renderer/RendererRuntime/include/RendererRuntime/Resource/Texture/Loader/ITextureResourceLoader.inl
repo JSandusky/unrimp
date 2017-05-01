@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool ITextureResourceLoader::hasDeserialization() const
+	{
+		return true;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]

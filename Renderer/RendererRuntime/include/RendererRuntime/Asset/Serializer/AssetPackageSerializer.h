@@ -68,7 +68,7 @@ namespace RendererRuntime
 		inline ~AssetPackageSerializer();
 		AssetPackageSerializer(const AssetPackageSerializer&) = delete;
 		AssetPackageSerializer& operator=(const AssetPackageSerializer&) = delete;
-		AssetPackage* loadAssetPackage(IFile& file);
+		void loadAssetPackage(AssetPackage& assetPackage, IFile& file);
 
 
 	};

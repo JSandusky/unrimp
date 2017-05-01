@@ -39,6 +39,11 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool MaterialBlueprintResourceLoader::hasDeserialization() const
+	{
+		return true;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

@@ -42,7 +42,6 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
-	class IRendererRuntime;
 	namespace v1Mesh
 	{
 		struct SubMesh;
@@ -88,10 +87,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		inline virtual bool hasDeserialization() const override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
 		virtual bool onDispatch() override;
-		virtual bool isFullyLoaded() override;
 
 
 	//[-------------------------------------------------------]
@@ -109,7 +108,6 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		Renderer::IBufferManager& mBufferManager;	///< Buffer manager instance, do not destroy the instance
 		Renderer::IVertexArray*	  mVertexArray;		///< In case the used renderer backend supports native multi-threading we also create the renderer resource asynchronous, but the final resource pointer reassignment must still happen synchronous
 		// Temporary data

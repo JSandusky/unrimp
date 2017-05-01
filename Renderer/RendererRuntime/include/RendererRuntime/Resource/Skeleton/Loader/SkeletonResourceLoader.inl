@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool SkeletonResourceLoader::hasDeserialization() const
+	{
+		return true;
+	}
+
 	inline void SkeletonResourceLoader::onProcessing()
 	{
 		// Nothing here

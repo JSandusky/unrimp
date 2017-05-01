@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool SceneResourceLoader::hasDeserialization() const
+	{
+		return true;
+	}
+
 	inline bool SceneResourceLoader::onDispatch()
 	{
 		// Fully loaded

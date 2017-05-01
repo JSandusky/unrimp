@@ -36,6 +36,7 @@
 namespace RendererRuntime
 {
 	class MeshResource;
+	class IRendererRuntime;
 }
 
 
@@ -66,13 +67,14 @@ namespace RendererRuntime
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void initialize(const Asset& asset, bool reload, IResource& resource) override;
+		virtual bool isFullyLoaded() override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit IMeshResourceLoader(IResourceManager& resourceManager);
+		inline IMeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~IMeshResourceLoader();
 		IMeshResourceLoader(const IMeshResourceLoader&) = delete;
 		IMeshResourceLoader& operator=(const IMeshResourceLoader&) = delete;
@@ -82,7 +84,8 @@ namespace RendererRuntime
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		MeshResource* mMeshResource;	///< Destination resource
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		MeshResource*	  mMeshResource;	///< Destination resource
 
 
 	};

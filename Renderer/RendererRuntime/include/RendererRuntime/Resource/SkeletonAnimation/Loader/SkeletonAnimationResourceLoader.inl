@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool SkeletonAnimationResourceLoader::hasDeserialization() const
+	{
+		return true;
+	}
+
 	inline bool SkeletonAnimationResourceLoader::onDispatch()
 	{
 		// Fully loaded

@@ -198,31 +198,12 @@ namespace RendererRuntime
 		return isFullyLoaded();
 	}
 
-	bool MeshResourceLoader::isFullyLoaded()
-	{
-		// Fully loaded?
-		const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
-		const SubMeshes& subMeshes = mMeshResource->getSubMeshes();
-		for (uint32_t i = 0; i < mNumberOfUsedSubMeshes; ++i)
-		{
-			if (IResource::LoadingState::LOADED != materialResourceManager.getResourceByResourceId(subMeshes[i].getMaterialResourceId()).getLoadingState())
-			{
-				// Not fully loaded
-				return false;
-			}
-		}
-
-		// Fully loaded
-		return true;
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	MeshResourceLoader::MeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		IMeshResourceLoader(resourceManager),
-		mRendererRuntime(rendererRuntime),
+		IMeshResourceLoader(resourceManager, rendererRuntime),
 		mBufferManager(rendererRuntime.getBufferManager()),
 		mVertexArray(nullptr),
 		// Temporary vertex buffer

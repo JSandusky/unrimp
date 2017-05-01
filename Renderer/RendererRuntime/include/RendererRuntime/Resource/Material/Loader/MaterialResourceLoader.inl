@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool MaterialResourceLoader::hasDeserialization() const
+	{
+		return true;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

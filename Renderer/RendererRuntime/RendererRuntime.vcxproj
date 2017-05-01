@@ -701,9 +701,7 @@
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
     <ClCompile Include="src\Resource\VertexAttributes\Loader\VertexAttributesResourceLoader.cpp" />
     <ClCompile Include="src\Resource\VertexAttributes\VertexAttributesResourceManager.cpp" />
-    <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.cpp" />
     <ClCompile Include="src\Vr\OpenVR\OpenVRRuntimeLinking.cpp" />
     <ClCompile Include="src\Vr\OpenVR\VrManagerOpenVR.cpp" />
   </ItemGroup>

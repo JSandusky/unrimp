@@ -198,7 +198,7 @@
       <UniqueIdentifier>{d757a0fa-a5e7-4a43-8562-7cdf0093fe26}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Vr\OpenVR\Loader">
-      <UniqueIdentifier>{3146e445-a58f-48fd-8166-cd6df5836500}</UniqueIdentifier>
+      <UniqueIdentifier>{15c64425-3aee-4f74-a3ab-4698b7271aa5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -570,11 +570,11 @@
     <None Include="include\RendererRuntime\Resource\Scene\SceneResource.inl">
       <Filter>Source Files\Resource\Scene</Filter>
     </None>
-    <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.inl">
-      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\IMeshResourceLoader.inl">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.inl">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1143,11 +1143,11 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResource.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.h">
-      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\IMeshResourceLoader.h">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.h">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1505,11 +1505,11 @@
     <ClCompile Include="src\Resource\Scene\SceneResource.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.cpp">
-      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Mesh\Loader\IMeshResourceLoader.cpp">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.cpp">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -78,6 +78,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT static const VrManagerTypeId TYPE_ID;
+		typedef std::vector<std::string> RenderModelNames;
 
 
 	//[-------------------------------------------------------]
@@ -87,6 +88,8 @@ namespace RendererRuntime
 		inline IVrManagerOpenVRListener& getVrManagerOpenVRListener() const;
 		RENDERERRUNTIME_API_EXPORT void setVrManagerOpenVRListener(IVrManagerOpenVRListener* vrManagerOpenVRListener);	// Does not take over the control of the memory
 		inline vr::IVRSystem* getVrSystem() const;
+		inline MaterialResourceId getVrDeviceMaterialResourceId() const;
+		inline const RenderModelNames& getRenderModelNames() const;
 		inline const vr::TrackedDevicePose_t& getVrTrackedDevicePose(vr::TrackedDeviceIndex_t trackedDeviceIndex) const;
 		inline const glm::mat4& getDevicePoseMatrix(vr::TrackedDeviceIndex_t trackedDeviceIndex) const;
 
@@ -168,6 +171,7 @@ namespace RendererRuntime
 		vr::EGraphicsAPIConvention mVrGraphicsAPIConvention;
 		vr::IVRSystem*			   mVrSystem;
 		vr::IVRRenderModels*	   mVrRenderModels;
+		RenderModelNames		   mRenderModelNames;
 		bool					   mShowRenderModels;
 		// Transform
 		vr::TrackedDevicePose_t	mVrTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];

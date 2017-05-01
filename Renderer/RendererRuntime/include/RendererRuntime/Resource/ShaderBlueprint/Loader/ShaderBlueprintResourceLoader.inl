@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool ShaderBlueprintResourceLoader::hasDeserialization() const
+	{
+		return true;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

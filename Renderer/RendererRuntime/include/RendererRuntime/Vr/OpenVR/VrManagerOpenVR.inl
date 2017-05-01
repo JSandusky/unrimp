@@ -46,6 +46,16 @@ namespace RendererRuntime
 		return mVrSystem;
 	}
 
+	inline MaterialResourceId VrManagerOpenVR::getVrDeviceMaterialResourceId() const
+	{
+		return mVrDeviceMaterialResourceId;
+	}
+
+	inline const VrManagerOpenVR::RenderModelNames& VrManagerOpenVR::getRenderModelNames() const
+	{
+		return mRenderModelNames;
+	}
+
 	inline const vr::TrackedDevicePose_t& VrManagerOpenVR::getVrTrackedDevicePose(vr::TrackedDeviceIndex_t trackedDeviceIndex) const
 	{
 		assert(trackedDeviceIndex < vr::k_unMaxTrackedDeviceCount);

@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -28,7 +34,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline AssetPackage::AssetPackage()
+	inline AssetPackage::AssetPackage() :
+		mAssetPackageId(getUninitialized<AssetPackageId>())
+	{
+		// Nothing here
+	}
+
+	inline AssetPackage::AssetPackage(AssetPackageId assetPackageId) :
+		mAssetPackageId(assetPackageId)
 	{
 		// Nothing here
 	}
@@ -36,6 +49,11 @@ namespace RendererRuntime
 	inline AssetPackage::~AssetPackage()
 	{
 		// Nothing here
+	}
+
+	inline AssetPackageId AssetPackage::getAssetPackageId() const
+	{
+		return mAssetPackageId;
 	}
 
 	inline void AssetPackage::clear()

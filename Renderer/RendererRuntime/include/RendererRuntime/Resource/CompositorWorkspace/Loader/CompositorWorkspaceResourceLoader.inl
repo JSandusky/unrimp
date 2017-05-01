@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool CompositorWorkspaceResourceLoader::hasDeserialization() const
+	{
+		return true;
+	}
+
 	inline bool CompositorWorkspaceResourceLoader::onDispatch()
 	{
 		// Fully loaded

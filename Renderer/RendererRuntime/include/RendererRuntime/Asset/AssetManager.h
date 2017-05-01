@@ -52,6 +52,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId AssetPackageId;	///< Resource loader type identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset package name>"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	class AssetManager : private Manager
@@ -75,8 +81,19 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		//[-------------------------------------------------------]
+		//[ Asset package                                         ]
+		//[-------------------------------------------------------]
 		void clear();
-		RENDERERRUNTIME_API_EXPORT void addAssetPackageByFilename(const char* filename);
+		RENDERERRUNTIME_API_EXPORT AssetPackage& addAssetPackage(AssetPackageId assetPackageId);
+		RENDERERRUNTIME_API_EXPORT void addAssetPackageByFilename(AssetPackageId assetPackageId, const char* filename);
+		RENDERERRUNTIME_API_EXPORT AssetPackage& getAssetPackageById(AssetPackageId assetPackageId) const;
+		RENDERERRUNTIME_API_EXPORT AssetPackage* tryGetAssetPackageById(AssetPackageId assetPackageId) const;
+		RENDERERRUNTIME_API_EXPORT void removeAssetPackage(AssetPackageId assetPackageId);
+
+		//[-------------------------------------------------------]
+		//[ Asset                                                 ]
+		//[-------------------------------------------------------]
 		RENDERERRUNTIME_API_EXPORT const Asset* getAssetByAssetId(AssetId assetId) const;
 		inline const char* getAssetFilenameByAssetId(AssetId assetId) const;
 
@@ -85,9 +102,9 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline AssetManager(IRendererRuntime& rendererRuntime);
+		inline explicit AssetManager(IRendererRuntime& rendererRuntime);
 		inline ~AssetManager();
-		AssetManager(const AssetManager&) = delete;
+		explicit AssetManager(const AssetManager&) = delete;
 		AssetManager& operator=(const AssetManager&) = delete;
 
 

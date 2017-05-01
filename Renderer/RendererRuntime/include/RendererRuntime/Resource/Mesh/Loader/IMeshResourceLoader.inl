@@ -37,8 +37,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IMeshResourceLoader::IMeshResourceLoader(IResourceManager& resourceManager) :
+	inline IMeshResourceLoader::IMeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		IResourceLoader(resourceManager),
+		mRendererRuntime(rendererRuntime),
 		mMeshResource(nullptr)
 	{
 		// Nothing here

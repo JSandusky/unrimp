@@ -65,10 +65,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	AssetPackage* AssetPackageSerializer::loadAssetPackage(IFile& file)
+	void AssetPackageSerializer::loadAssetPackage(AssetPackage& assetPackage, IFile& file)
 	{
-		AssetPackage* assetPackage = new AssetPackage;
-
 		// Tell the memory mapped file about the LZ4 compressed data and decompress it at once
 		MemoryFile memoryFile;
 		memoryFile.loadLz4CompressedDataFromFile(::detail::FORMAT_TYPE, ::detail::FORMAT_VERSION, file);
@@ -79,12 +77,9 @@ namespace RendererRuntime
 		memoryFile.read(&assetPackageHeader, sizeof(::detail::AssetPackageHeader));
 
 		// Read in the asset package content in one single burst
-		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage->getWritableSortedAssetVector();
+		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage.getWritableSortedAssetVector();
 		sortedAssetVector.resize(assetPackageHeader.numberOfAssets);
 		memoryFile.read(sortedAssetVector.data(), sizeof(Asset) * assetPackageHeader.numberOfAssets);
-
-		// Done
-		return assetPackage;
 	}
 
 
