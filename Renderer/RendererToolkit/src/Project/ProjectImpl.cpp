@@ -138,9 +138,9 @@ namespace RendererToolkit
 		clear();
 	}
 
-	const char* ProjectImpl::getAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const
+	const char* ProjectImpl::tryGetAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const
 	{
-		return mAssetPackage.getAssetFilenameByAssetId(assetId);
+		return mAssetPackage.tryGetAssetFilenameByAssetId(assetId);
 	}
 
 	void ProjectImpl::compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)

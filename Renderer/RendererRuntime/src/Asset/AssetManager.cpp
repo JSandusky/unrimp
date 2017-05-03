@@ -103,13 +103,13 @@ namespace RendererRuntime
 		mAssetPackageVector.erase(iterator);
 	}
 
-	const Asset* AssetManager::getAssetByAssetId(AssetId assetId) const
+	const Asset* AssetManager::tryGetAssetByAssetId(AssetId assetId) const
 	{
 		// Search inside all mounted asset packages, later added asset packages cover old ones
 		const size_t numberOfAssetPackages = mAssetPackageVector.size();
 		for (size_t i = 0; i < numberOfAssetPackages; ++i)
 		{
-			const Asset* asset = mAssetPackageVector[i]->getAssetByAssetId(assetId);
+			const Asset* asset = mAssetPackageVector[i]->tryGetAssetByAssetId(assetId);
 			if (nullptr != asset)
 			{
 				return asset;

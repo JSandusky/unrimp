@@ -47,6 +47,9 @@ namespace Direct3D11Renderer
 	{
 		static const uint32_t NUMBER_OF_SLICES = 6;	// In Direct3D 11, a cube map is a 2D array texture with six slices
 
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)
+
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
@@ -178,6 +181,9 @@ namespace Direct3D11Renderer
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			setDebugName("Cube texture");
 		#endif
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
 	}
 
 	TextureCube::~TextureCube()

@@ -151,6 +151,9 @@ namespace Direct3D11Renderer
 		{
 			Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
 
+			// Begin debug event
+			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)
+
 			// Get the Direct3D 11 device context
 			ID3D11DeviceContext *d3d11DeviceContext = direct3D11Renderer.getD3D11DeviceContext();
 
@@ -163,6 +166,9 @@ namespace Direct3D11Renderer
 				memcpy(d3d11MappedSubresource.pData, data, numberOfBytes);
 				d3d11DeviceContext->Unmap(mD3D11Buffer, 0);
 			}
+
+			// End debug event
+			RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
 		}
 	}
 

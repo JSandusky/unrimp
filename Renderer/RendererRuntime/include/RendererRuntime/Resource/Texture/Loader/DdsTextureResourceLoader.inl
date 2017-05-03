@@ -38,20 +38,12 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline bool DdsTextureResourceLoader::isFullyLoaded()
-	{
-		// Fully loaded
-		return true;
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline DdsTextureResourceLoader::DdsTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		ITextureResourceLoader(resourceManager),
-		mRendererRuntime(rendererRuntime),
-		mTexture(nullptr),
+		ITextureResourceLoader(resourceManager, rendererRuntime),
 		mWidth(0),
 		mHeight(0),
 		mDepth(0),

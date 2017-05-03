@@ -173,6 +173,12 @@ namespace
 			return result;
 		}
 
+		void registerRenderModel(const std::string& renderModelName, RendererRuntime::VrManagerOpenVR::RenderModelNames& renderModelNames, RendererRuntime::AssetPackage& assetPackage)
+		{
+			assetPackage.addAsset(RendererRuntime::AssetId(renderModelName.c_str()), std::to_string(renderModelNames.size()).c_str());
+			renderModelNames.push_back(renderModelName);
+		}
+
 		glm::mat4 convertOpenVrMatrixToGlmMat34(const vr::HmdMatrix34_t& vrHmdMatrix34)
 		{
 			// Transform the OpenGL style transform matrix into a Direct3D style transform matrix as described at http://cv4mar.blogspot.de/2009/03/transformation-matrices-between-opengl.html
@@ -231,6 +237,16 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	const VrManagerTypeId VrManagerOpenVR::TYPE_ID("VrManagerOpenVR");
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	AssetId VrManagerOpenVR::diffuseTextureIdToAssetId(vr::TextureID_t diffuseTextureId)
+	{
+		const std::string diffuseTextureName = "OpenVR_" + std::to_string(diffuseTextureId);
+		return StringId(diffuseTextureName.c_str());
+	}
 
 
 	//[-------------------------------------------------------]
@@ -326,8 +342,10 @@ namespace RendererRuntime
 			}
 
 			{ // Add dynamic OpenVR asset package
-			  // -> OpenVR render model names can get awful long due to absolute path information, so, we need to store them inside a separate list and tell the asset just about the render model name index
 				AssetPackage& assetPackage = mRendererRuntime.getAssetManager().addAssetPackage(::detail::ASSET_PACKAGE_ID);
+
+				// Register render models
+				// -> OpenVR render model names can get awful long due to absolute path information, so, we need to store them inside a separate list and tell the asset just about the render model name index
 				const uint32_t renderModelCount = mVrRenderModels->GetRenderModelCount();
 				for (uint32_t renderModelIndex = 0; renderModelIndex < renderModelCount; ++renderModelIndex)
 				{
@@ -341,18 +359,24 @@ namespace RendererRuntime
 							const std::string componentRenderModelName = ::detail::getRenderModelComponentRenderModelName(renderModelName, componentName);
 							if (!componentRenderModelName.empty())
 							{
-								assetPackage.addAsset(AssetId(componentRenderModelName.c_str()), std::to_string(mRenderModelNames.size()).c_str());
-								mRenderModelNames.push_back(componentRenderModelName);
+								::detail::registerRenderModel(componentRenderModelName, mRenderModelNames, assetPackage);
 							}
 						}
 					}
 					else
 					{
-						assetPackage.addAsset(AssetId(renderModelName.c_str()), std::to_string(mRenderModelNames.size()).c_str());
-						mRenderModelNames.push_back(renderModelName);
+						::detail::registerRenderModel(renderModelName, mRenderModelNames, assetPackage);
 					}
 				}
 				assert(assetPackage.getSortedAssetVector().size() == mRenderModelNames.size());
+
+				// Register render model textures
+				// -> Sadly, there's no way to determine all available diffuse texture IDs upfront without loading the render models
+				// -> We assume, that diffuse texture IDs are linear
+				for (uint32_t renderModelIndex = 0; renderModelIndex < renderModelCount; ++renderModelIndex)
+				{
+					assetPackage.addAsset(VrManagerOpenVR::diffuseTextureIdToAssetId(static_cast<vr::TextureID_t>(renderModelIndex)), std::to_string(renderModelIndex).c_str());
+				}
 			}
 
 			// TODO(co) Optionally mirror the result on the given render target

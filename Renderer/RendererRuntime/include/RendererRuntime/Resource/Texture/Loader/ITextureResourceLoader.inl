@@ -38,13 +38,21 @@ namespace RendererRuntime
 		return true;
 	}
 
+	inline bool ITextureResourceLoader::isFullyLoaded()
+	{
+		// Fully loaded
+		return true;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITextureResourceLoader::ITextureResourceLoader(IResourceManager& resourceManager) :
+	inline ITextureResourceLoader::ITextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		IResourceLoader(resourceManager),
-		mTextureResource(nullptr)
+		mRendererRuntime(rendererRuntime),
+		mTextureResource(nullptr),
+		mTexture(nullptr)
 	{
 		// Nothing here
 	}

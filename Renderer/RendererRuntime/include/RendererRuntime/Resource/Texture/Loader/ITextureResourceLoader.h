@@ -33,9 +33,14 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class ITexture;
+}
 namespace RendererRuntime
 {
 	class TextureResource;
+	class IRendererRuntime;
 }
 
 
@@ -67,13 +72,14 @@ namespace RendererRuntime
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void initialize(const Asset& asset, bool reload, IResource& resource) override;
 		inline virtual bool hasDeserialization() const override;
+		inline virtual bool isFullyLoaded() override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit ITextureResourceLoader(IResourceManager& resourceManager);
+		inline explicit ITextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~ITextureResourceLoader();
 		ITextureResourceLoader(const ITextureResourceLoader&) = delete;
 		ITextureResourceLoader& operator=(const ITextureResourceLoader&) = delete;
@@ -83,7 +89,9 @@ namespace RendererRuntime
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		TextureResource* mTextureResource;	///< Destination resource
+		IRendererRuntime&	mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		TextureResource*	mTextureResource;	///< Destination resource
+		Renderer::ITexture*	mTexture;			///< In case the used renderer backend supports native multi-threading we also create the renderer resource asynchronous, but the final resource pointer reassignment must still happen synchronous
 
 
 	};

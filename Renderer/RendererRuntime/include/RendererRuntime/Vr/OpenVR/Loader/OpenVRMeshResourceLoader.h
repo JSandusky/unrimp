@@ -29,6 +29,30 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Mesh/Loader/IMeshResourceLoader.h"
 
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+	#include <glm/glm.hpp>
+PRAGMA_WARNING_POP
+
+#include <vector>
+#include <string>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace vr
+{
+	struct RenderModel_t;
+}
+namespace Renderer
+{
+	class IVertexArray;
+}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -76,6 +100,32 @@ namespace RendererRuntime
 		inline virtual ~OpenVRMeshResourceLoader();
 		OpenVRMeshResourceLoader(const OpenVRMeshResourceLoader&) = delete;
 		OpenVRMeshResourceLoader& operator=(const OpenVRMeshResourceLoader&) = delete;
+		void calculateTangentArrayOfRenderModel();
+		Renderer::IVertexArray* createVertexArray() const;
+		const std::string& getRenderModelName() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<glm::vec3>	TemporaryTangentsData;
+		typedef std::vector<glm::vec4>	TangentsData;
+		typedef std::vector<uint8_t>	VertexBufferData;
+		typedef std::vector<uint16_t>	IndexBufferData;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		// Temporary data
+		vr::RenderModel_t*		mVrRenderModel;
+		TemporaryTangentsData	mTemporaryTangentsData;
+		TangentsData			mTangentsData;
+		VertexBufferData		mVertexBufferData;
+		IndexBufferData			mIndexBufferData;
+		Renderer::IVertexArray*	mVertexArray;
 
 
 	};

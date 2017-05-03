@@ -43,9 +43,9 @@ namespace RendererRuntime
 		return mInternalResourceManager->getResourceByAssetId(assetId);
 	}
 
-	void VertexAttributesResourceManager::loadVertexAttributesResourceByAssetId(AssetId assetId, VertexAttributesResourceId& vertexAttributesResourceId, IResourceListener* resourceListener, bool reload)
+	void VertexAttributesResourceManager::loadVertexAttributesResourceByAssetId(AssetId assetId, VertexAttributesResourceId& vertexAttributesResourceId, IResourceListener* resourceListener, bool reload, ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->loadResourceByAssetId(assetId, vertexAttributesResourceId, resourceListener, reload);
+		mInternalResourceManager->loadResourceByAssetId(assetId, vertexAttributesResourceId, resourceListener, reload, resourceLoaderTypeId);
 	}
 
 	VertexAttributesResourceId VertexAttributesResourceManager::createVertexAttributesResourceByAssetId(AssetId assetId)

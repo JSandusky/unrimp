@@ -27,18 +27,15 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/ResourceManager.h"
+#include "RendererRuntime/Resource/Texture/Loader/ITextureResourceLoader.h"
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace vr
 {
-	class IRendererRuntime;
-	class ShaderPieceResource;
-	class ShaderPieceResourceLoader;
-	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
+	struct RenderModel_TextureMap_t;
 }
 
 
@@ -50,69 +47,53 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef uint32_t ShaderPieceResourceId;	///< POD shader piece resource identifier
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Shader piece resource manager
-	*/
-	class ShaderPieceResourceManager : public ResourceManager<ShaderPieceResource>
+	class OpenVRTextureResourceLoader : public ITextureResourceLoader
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class RendererRuntimeImpl;
+		friend class TextureResourceManager;
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		RENDERERRUNTIME_API_EXPORT void loadShaderPieceResourceByAssetId(AssetId assetId, ShaderPieceResourceId& shaderPieceResourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = getUninitialized<ResourceLoaderTypeId>());	// Asynchronous
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		virtual uint32_t getNumberOfResources() const override;
-		virtual IResource& getResourceByIndex(uint32_t index) const override;
-		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
-		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
-		virtual void reloadResourceByAssetId(AssetId assetId) override;
-		virtual void update() override;
+		static const ResourceLoaderTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
-	//[ Private virtual RendererRuntime::IResourceManager methods ]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	private:
-		virtual IResourceLoader* createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId) override;
+	public:
+		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		inline virtual bool hasDeserialization() const override;
+		inline virtual void onDeserialization(IFile& file) override;
+		virtual void onProcessing() override;
+		virtual bool onDispatch() override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit ShaderPieceResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~ShaderPieceResourceManager();
-		ShaderPieceResourceManager(const ShaderPieceResourceManager&) = delete;
-		ShaderPieceResourceManager& operator=(const ShaderPieceResourceManager&) = delete;
+		inline OpenVRTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
+		inline virtual ~OpenVRTextureResourceLoader();
+		OpenVRTextureResourceLoader(const OpenVRTextureResourceLoader&) = delete;
+		OpenVRTextureResourceLoader& operator=(const OpenVRTextureResourceLoader&) = delete;
+		Renderer::ITexture* createRendererTexture();
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ResourceManagerTemplate<ShaderPieceResource, ShaderPieceResourceLoader, ShaderPieceResourceId, 64>* mInternalResourceManager;
+		// Temporary data
+		vr::RenderModel_TextureMap_t* mVrRenderModelTextureMap;
 
 
 	};
@@ -122,3 +103,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Vr/OpenVR/Loader/OpenVRTextureResourceLoader.inl"

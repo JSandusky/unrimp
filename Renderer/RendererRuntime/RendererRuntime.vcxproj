@@ -159,6 +159,7 @@
     <None Include="include\RendererRuntime\Vr\IVrManager.inl" />
     <None Include="include\RendererRuntime\Vr\OpenVR\IVrManagerOpenVRListener.inl" />
     <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Vr\OpenVR\VrManagerOpenVR.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -346,6 +347,7 @@
     <ClInclude Include="include\RendererRuntime\Vr\IVrManager.h" />
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\IVrManagerOpenVRListener.h" />
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\OpenVRRuntimeLinking.h" />
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\VrManagerOpenVR.h" />
     <ClInclude Include="resource.h" />
@@ -702,6 +704,7 @@
     <ClCompile Include="src\Resource\VertexAttributes\Loader\VertexAttributesResourceLoader.cpp" />
     <ClCompile Include="src\Resource\VertexAttributes\VertexAttributesResourceManager.cpp" />
     <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.cpp" />
+    <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.cpp" />
     <ClCompile Include="src\Vr\OpenVR\OpenVRRuntimeLinking.cpp" />
     <ClCompile Include="src\Vr\OpenVR\VrManagerOpenVR.cpp" />
   </ItemGroup>

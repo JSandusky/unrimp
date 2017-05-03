@@ -48,6 +48,9 @@ namespace Direct3D10Renderer
 		// Sanity checks
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
 
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D10Renderer)
+
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
@@ -163,6 +166,9 @@ namespace Direct3D10Renderer
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			setDebugName("1D texture");
 		#endif
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT(&direct3D10Renderer)
 	}
 
 	Texture1D::~Texture1D()

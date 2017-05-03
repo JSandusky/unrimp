@@ -99,7 +99,7 @@ namespace RendererToolkit
 		inline const std::string& getProjectName() const;
 		inline const std::string& getProjectDirectory() const;
 		inline const RendererRuntime::AssetPackage& getAssetPackage() const;
-		const char* getAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const;
+		const char* tryGetAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const;
 		void compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage);
 
 

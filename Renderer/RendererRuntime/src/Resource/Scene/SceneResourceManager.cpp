@@ -85,9 +85,9 @@ namespace RendererRuntime
 		return (nullptr != sceneResource) ? sceneResource->getId() : getUninitialized<SceneResourceId>();
 	}
 
-	void SceneResourceManager::loadSceneResourceByAssetId(AssetId assetId, SceneResourceId& sceneResourceId, IResourceListener* resourceListener, bool reload)
+	void SceneResourceManager::loadSceneResourceByAssetId(AssetId assetId, SceneResourceId& sceneResourceId, IResourceListener* resourceListener, bool reload, ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->loadResourceByAssetId(assetId, sceneResourceId, resourceListener, reload);
+		mInternalResourceManager->loadResourceByAssetId(assetId, sceneResourceId, resourceListener, reload, resourceLoaderTypeId);
 	}
 
 	void SceneResourceManager::destroySceneResource(SceneResourceId sceneResourceId)

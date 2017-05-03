@@ -48,7 +48,14 @@ namespace RendererRuntime
 
 	void MeshResourceManager::loadMeshResourceByAssetId(AssetId assetId, MeshResourceId& meshResourceId, IResourceListener* resourceListener, bool reload, ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->loadResourceByAssetId(assetId, meshResourceId, resourceListener, reload, isInitialized(resourceLoaderTypeId) ? resourceLoaderTypeId : MeshResourceLoader::TYPE_ID);
+		// Choose default resource loader type ID, if necessary
+		if (isUninitialized(resourceLoaderTypeId))
+		{
+			resourceLoaderTypeId = MeshResourceLoader::TYPE_ID;
+		}
+
+		// Load
+		mInternalResourceManager->loadResourceByAssetId(assetId, meshResourceId, resourceListener, reload, resourceLoaderTypeId);
 	}
 
 	MeshResourceId MeshResourceManager::createEmptyMeshResourceByAssetId(AssetId assetId)

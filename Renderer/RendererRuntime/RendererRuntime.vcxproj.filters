@@ -576,6 +576,9 @@
     <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.inl">
       <Filter>Source Files\Vr\OpenVR\Loader</Filter>
     </None>
+    <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.inl">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1149,6 +1152,9 @@
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.h">
       <Filter>Source Files\Vr\OpenVR\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.h">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1509,6 +1515,9 @@
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
     </ClCompile>
     <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.cpp">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.cpp">
       <Filter>Source Files\Vr\OpenVR\Loader</Filter>
     </ClCompile>
   </ItemGroup>

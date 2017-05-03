@@ -48,7 +48,9 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline OpenVRMeshResourceLoader::OpenVRMeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		IMeshResourceLoader(resourceManager, rendererRuntime)
+		IMeshResourceLoader(resourceManager, rendererRuntime),
+		mVrRenderModel(nullptr),
+		mVertexArray(nullptr)
 	{
 		// Nothing here
 	}

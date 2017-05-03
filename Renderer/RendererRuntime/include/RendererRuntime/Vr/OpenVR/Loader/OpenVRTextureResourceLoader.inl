@@ -28,36 +28,35 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	inline ResourceLoaderTypeId CrnTextureResourceLoader::getResourceLoaderTypeId() const
+	inline ResourceLoaderTypeId OpenVRTextureResourceLoader::getResourceLoaderTypeId() const
 	{
 		return TYPE_ID;
+	}
+
+	inline bool OpenVRTextureResourceLoader::hasDeserialization() const
+	{
+		return false;
+	}
+
+	inline void OpenVRTextureResourceLoader::onDeserialization(IFile&)
+	{
+		// We're using the OpenVR API instead of reading from a file
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline CrnTextureResourceLoader::CrnTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+	inline OpenVRTextureResourceLoader::OpenVRTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		ITextureResourceLoader(resourceManager, rendererRuntime),
-		mWidth(0),
-		mHeight(0),
-		mTextureFormat(0),
-		mCubeMap(false),
-		mDataContainsMipmaps(false),
-		mNumberOfFileDataBytes(0),
-		mNumberOfUsedFileDataBytes(0),
-		mFileData(nullptr),
-		mNumberOfImageDataBytes(0),
-		mNumberOfUsedImageDataBytes(0),
-		mImageData(nullptr)
+		mVrRenderModelTextureMap(nullptr)
 	{
 		// Nothing here
 	}
 
-	inline CrnTextureResourceLoader::~CrnTextureResourceLoader()
+	inline OpenVRTextureResourceLoader::~OpenVRTextureResourceLoader()
 	{
-		delete [] mFileData;
-		delete [] mImageData;
+		// Nothing here
 	}
 
 
