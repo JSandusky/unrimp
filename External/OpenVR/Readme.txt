@@ -1,4 +1,4 @@
-OpenVR (latest commit e1507a27547d22a680153862865d40b90fad8c75 - Jun 10, 2016)
+OpenVR SDK 1.0.7
 - License
 	"
 	Copyright (c) 2015, Valve Corporation

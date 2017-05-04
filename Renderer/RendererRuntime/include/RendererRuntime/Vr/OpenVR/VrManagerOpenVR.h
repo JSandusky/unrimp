@@ -175,7 +175,7 @@ namespace RendererRuntime
 		SceneNode*				   mSceneNodes[vr::k_unMaxTrackedDeviceCount];	// TODO(co) No crazy raw-pointers
 		TrackedDeviceInformation   mTrackedDeviceInformation[vr::k_unMaxTrackedDeviceCount];
 		OpenVRRuntimeLinking*	   mOpenVRRuntimeLinking;
-		vr::EGraphicsAPIConvention mVrGraphicsAPIConvention;
+		vr::ETextureType		   mVrTextureType;
 		vr::IVRSystem*			   mVrSystem;
 		vr::IVRRenderModels*	   mVrRenderModels;
 		RenderModelNames		   mRenderModelNames;

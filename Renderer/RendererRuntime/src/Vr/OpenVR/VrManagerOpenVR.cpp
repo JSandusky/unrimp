@@ -283,17 +283,17 @@ namespace RendererRuntime
 		assert(nullptr == mVrSystem);
 		if (nullptr == mVrSystem)
 		{
-			// OpenVR "IVRSystem_012" (Jun 10, 2016) only works with OpenGL and DirectX 11
+			// TODO(co) Add support for "vr::TextureType_Vulkan" and "vr::TextureType_DirectX12" as soon as those renderer backends are ready
 			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
 			const bool isOpenGLRenderer = (0 == strcmp(renderer.getName(), "OpenGL"));
 			const bool isDirect3D11Renderer = (0 == strcmp(renderer.getName(), "Direct3D11"));
 			if (!isOpenGLRenderer && !isDirect3D11Renderer)
 			{
 				// Error!
-				RENDERERRUNTIME_OUTPUT_DEBUG_STRING("Error: OpenVR \"IVRSystem_012\" (Jun 10, 2016) only works with OpenGL and DirectX 11");
+				RENDERERRUNTIME_OUTPUT_DEBUG_STRING("Error: The VR OpenVR manager currently doesn't support Vulkan and Direct3D 12");
 				return false;
 			}
-			mVrGraphicsAPIConvention = isOpenGLRenderer ? vr::API_OpenGL : vr::API_DirectX;
+			mVrTextureType = isOpenGLRenderer ? vr::TextureType_OpenGL : vr::TextureType_DirectX;
 
 			// Initialize the OpenVR system
 			vr::EVRInitError vrInitError = vr::VRInitError_None;
@@ -490,7 +490,7 @@ namespace RendererRuntime
 			if (!trackedDeviceInformation.renderModelName.empty() && !trackedDeviceInformation.components.empty())
 			{
 				vr::VRControllerState_t vrControllerState;
-				if (mVrSystem->GetControllerState(deviceIndex, &vrControllerState))
+				if (mVrSystem->GetControllerState(deviceIndex, &vrControllerState, sizeof(vr::VRControllerState_t)))
 				{
 					vr::IVRRenderModels* vrRenderModels = vr::VRRenderModels();
 					for (const Component& component : trackedDeviceInformation.components)
@@ -537,13 +537,11 @@ namespace RendererRuntime
 
 	glm::mat4 VrManagerOpenVR::getHmdViewSpaceToClipSpaceMatrix(VrEye vrEye, float nearZ, float farZ) const
 	{
-		// TODO(co) OpenVR (commit e1507a27547d22a680153862865d40b90fad8c75 - Jun 10, 2016): "vr::IVRSystem::GetProjectionMatrix()" apparently ignores the last "vr::API_OpenGL"/"vr::API_DirectX"-parameter
-		// -> This issue is also described at https://github.com/ValveSoftware/openvr/issues/70 and https://github.com/ValveSoftware/openvr/issues/239 and https://github.com/ValveSoftware/openvr/issues/203
-		// -> Transform the OpenGL style projection matrix into a Direct3D style projection matrix as described at http://cv4mar.blogspot.de/2009/03/transformation-matrices-between-opengl.html
+		// Transform the OpenGL style projection matrix into a Direct3D style projection matrix as described at http://cv4mar.blogspot.de/2009/03/transformation-matrices-between-opengl.html
 		// -> Direct3D: Left-handed coordinate system with clip space depth value range 0..1
 		// -> OpenGL: Right-handed coordinate system with clip space depth value range -1..1
 		assert(nullptr != mVrSystem);
-		const vr::HmdMatrix44_t vrHmdMatrix34 = mVrSystem->GetProjectionMatrix(static_cast<vr::Hmd_Eye>(vrEye), nearZ, farZ, vr::API_DirectX);
+		const vr::HmdMatrix44_t vrHmdMatrix34 = mVrSystem->GetProjectionMatrix(static_cast<vr::Hmd_Eye>(vrEye), nearZ, farZ);
 		return glm::mat4(
 			 vrHmdMatrix34.m[0][0],  vrHmdMatrix34.m[1][0],  vrHmdMatrix34.m[2][0],  vrHmdMatrix34.m[3][0],
 			 vrHmdMatrix34.m[0][1],  vrHmdMatrix34.m[1][1],  vrHmdMatrix34.m[2][1],  vrHmdMatrix34.m[3][1],
@@ -574,7 +572,7 @@ namespace RendererRuntime
 			compositorWorkspaceInstance.execute(*mFramebuffer, cameraSceneItem, lightSceneItem);
 
 			// Submit the rendered texture to the OpenVR compositor
-			const vr::Texture_t vrTexture = { mColorTexture2D->getInternalResourceHandle(), mVrGraphicsAPIConvention, vr::ColorSpace_Auto };
+			const vr::Texture_t vrTexture = { mColorTexture2D->getInternalResourceHandle(), mVrTextureType, vr::ColorSpace_Auto };
 			vr::VRCompositor()->Submit(static_cast<vr::Hmd_Eye>(eyeIndex), &vrTexture);
 		}
 		materialBlueprintResourceListener.setCurrentRenderedVrEye(IMaterialBlueprintResourceListener::VrEye::UNKNOWN);
@@ -615,7 +613,7 @@ namespace RendererRuntime
 		mVrDeviceMaterialResourceId(getUninitialized<MaterialResourceId>()),
 		mSceneResourceId(getUninitialized<SceneResourceId>()),
 		mOpenVRRuntimeLinking(new OpenVRRuntimeLinking()),
-		mVrGraphicsAPIConvention(vr::API_OpenGL),
+		mVrTextureType(vr::TextureType_OpenGL),
 		mVrSystem(nullptr),
 		mVrRenderModels(nullptr),
 		mShowRenderModels(true),
@@ -653,7 +651,7 @@ namespace RendererRuntime
 				vr::IVRRenderModels* vrRenderModels = vr::VRRenderModels();
 				const uint32_t componentCount = vrRenderModels->GetComponentCount(renderModelName.c_str());
 				vr::VRControllerState_t vrControllerState;
-				if (componentCount > 0 && mVrSystem->GetControllerState(trackedDeviceIndex, &vrControllerState))
+				if (componentCount > 0 && mVrSystem->GetControllerState(trackedDeviceIndex, &vrControllerState, sizeof(vr::VRControllerState_t)))
 				{
 					for (uint32_t componentIndex = 0; componentIndex < componentCount; ++componentIndex)
 					{
