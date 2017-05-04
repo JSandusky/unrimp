@@ -89,7 +89,7 @@ namespace
 		//[ Protected methods                                     ]
 		//[-------------------------------------------------------]
 		protected:
-			StdFile(const StdFile&) = delete;
+			explicit StdFile(const StdFile&) = delete;
 			StdFile& operator=(const StdFile&) = delete;
 
 
@@ -158,7 +158,7 @@ namespace
 		//[ Protected methods                                     ]
 		//[-------------------------------------------------------]
 		protected:
-			StdReadFile(const StdReadFile&) = delete;
+			explicit StdReadFile(const StdReadFile&) = delete;
 			StdReadFile& operator=(const StdReadFile&) = delete;
 
 
@@ -231,7 +231,7 @@ namespace
 		//[ Protected methods                                     ]
 		//[-------------------------------------------------------]
 		protected:
-			StdWriteFile(const StdWriteFile&) = delete;
+			explicit StdWriteFile(const StdWriteFile&) = delete;
 			StdWriteFile& operator=(const StdWriteFile&) = delete;
 
 

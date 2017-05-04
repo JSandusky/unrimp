@@ -70,7 +70,7 @@ namespace RendererRuntime
 	protected:
 		inline IVrManagerOpenVRListener();
 		inline virtual ~IVrManagerOpenVRListener();
-		IVrManagerOpenVRListener(const IVrManagerOpenVRListener&) = delete;
+		explicit IVrManagerOpenVRListener(const IVrManagerOpenVRListener&) = delete;
 		IVrManagerOpenVRListener& operator=(const IVrManagerOpenVRListener&) = delete;
 
 

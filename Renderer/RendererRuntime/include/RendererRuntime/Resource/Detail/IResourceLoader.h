@@ -171,7 +171,7 @@ namespace RendererRuntime
 	protected:
 		inline IResourceLoader(IResourceManager& resourceManager);
 		inline virtual ~IResourceLoader();
-		IResourceLoader(const IResourceLoader&) = delete;
+		explicit IResourceLoader(const IResourceLoader&) = delete;
 		IResourceLoader& operator=(const IResourceLoader&) = delete;
 		inline void initialize(const Asset& asset, bool reload);
 

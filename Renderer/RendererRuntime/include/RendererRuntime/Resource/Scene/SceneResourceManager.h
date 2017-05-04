@@ -107,7 +107,7 @@ namespace RendererRuntime
 	private:
 		explicit SceneResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~SceneResourceManager();
-		SceneResourceManager(const SceneResourceManager&) = delete;
+		explicit SceneResourceManager(const SceneResourceManager&) = delete;
 		SceneResourceManager& operator=(const SceneResourceManager&) = delete;
 
 

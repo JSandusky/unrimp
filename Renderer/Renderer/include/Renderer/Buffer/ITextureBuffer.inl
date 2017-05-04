@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITextureBuffer::ITextureBuffer(IRenderer &renderer) :
+	inline ITextureBuffer::ITextureBuffer(IRenderer& renderer) :
 		IBuffer(ResourceType::TEXTURE_BUFFER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS

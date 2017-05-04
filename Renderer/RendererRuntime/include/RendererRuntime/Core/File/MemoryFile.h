@@ -100,7 +100,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		MemoryFile(const MemoryFile&) = delete;
+		explicit MemoryFile(const MemoryFile&) = delete;
 		MemoryFile& operator=(const MemoryFile&) = delete;
 
 

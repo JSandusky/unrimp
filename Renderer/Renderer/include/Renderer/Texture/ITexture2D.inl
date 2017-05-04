@@ -58,7 +58,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITexture2D::ITexture2D(IRenderer &renderer, uint32_t width, uint32_t height) :
+	inline ITexture2D::ITexture2D(IRenderer& renderer, uint32_t width, uint32_t height) :
 		ITexture(ResourceType::TEXTURE_2D, renderer),
 		mWidth(width),
 		mHeight(height)

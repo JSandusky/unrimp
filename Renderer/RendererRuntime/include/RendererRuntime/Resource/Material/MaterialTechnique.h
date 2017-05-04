@@ -157,7 +157,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialTechnique(const MaterialTechnique&) = delete;
+		explicit MaterialTechnique(const MaterialTechnique&) = delete;
 		MaterialTechnique& operator=(const MaterialTechnique&) = delete;
 		MaterialBufferManager* getMaterialBufferManager() const;
 

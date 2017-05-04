@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IVertexShader::IVertexShader(IRenderer &renderer) :
+	inline IVertexShader::IVertexShader(IRenderer& renderer) :
 		IShader(ResourceType::VERTEX_SHADER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS

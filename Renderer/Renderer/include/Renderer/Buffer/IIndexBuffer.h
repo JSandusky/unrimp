@@ -70,10 +70,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IIndexBuffer(IRenderer &renderer);
+		inline explicit IIndexBuffer(IRenderer& renderer);
 
-		explicit IIndexBuffer(const IIndexBuffer &source) = delete;
-		IIndexBuffer &operator =(const IIndexBuffer &source) = delete;
+		explicit IIndexBuffer(const IIndexBuffer& source) = delete;
+		IIndexBuffer &operator =(const IIndexBuffer& source) = delete;
 
 
 	};

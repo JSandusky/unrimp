@@ -86,7 +86,7 @@ namespace RendererRuntime
 	protected:
 		inline explicit CompositorResourcePassCopy(const CompositorTarget& compositorTarget);
 		inline virtual ~CompositorResourcePassCopy();
-		CompositorResourcePassCopy(const CompositorResourcePassCopy&) = delete;
+		explicit CompositorResourcePassCopy(const CompositorResourcePassCopy&) = delete;
 		CompositorResourcePassCopy& operator=(const CompositorResourcePassCopy&) = delete;
 
 

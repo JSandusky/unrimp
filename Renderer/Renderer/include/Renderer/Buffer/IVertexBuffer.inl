@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IVertexBuffer::IVertexBuffer(IRenderer &renderer) :
+	inline IVertexBuffer::IVertexBuffer(IRenderer& renderer) :
 		IBuffer(ResourceType::VERTEX_BUFFER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS

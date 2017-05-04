@@ -70,10 +70,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IVertexBuffer(IRenderer &renderer);
+		inline explicit IVertexBuffer(IRenderer& renderer);
 
-		explicit IVertexBuffer(const IVertexBuffer &source) = delete;
-		IVertexBuffer &operator =(const IVertexBuffer &source) = delete;
+		explicit IVertexBuffer(const IVertexBuffer& source) = delete;
+		IVertexBuffer& operator =(const IVertexBuffer& source) = delete;
 
 
 	};

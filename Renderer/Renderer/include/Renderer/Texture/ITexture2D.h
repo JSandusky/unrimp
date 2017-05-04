@@ -92,10 +92,10 @@ namespace Renderer
 		*  @param[in] height
 		*    The height of the texture
 		*/
-		inline ITexture2D(IRenderer &renderer, uint32_t width, uint32_t height);
+		inline ITexture2D(IRenderer& renderer, uint32_t width, uint32_t height);
 
-		explicit ITexture2D(const ITexture2D &source) = delete;
-		ITexture2D &operator =(const ITexture2D &source) = delete;
+		explicit ITexture2D(const ITexture2D& source) = delete;
+		ITexture2D& operator =(const ITexture2D& source) = delete;
 
 
 	//[-------------------------------------------------------]

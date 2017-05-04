@@ -93,7 +93,7 @@ namespace RendererRuntime
 	private:
 		inline CompositorWorkspaceResource();
 		inline virtual ~CompositorWorkspaceResource();
-		CompositorWorkspaceResource(const CompositorWorkspaceResource&) = delete;
+		explicit CompositorWorkspaceResource(const CompositorWorkspaceResource&) = delete;
 		CompositorWorkspaceResource& operator=(const CompositorWorkspaceResource&) = delete;
 
 		//[-------------------------------------------------------]

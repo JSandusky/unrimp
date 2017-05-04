@@ -101,8 +101,8 @@ namespace Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit Capabilities(const Capabilities &source) = delete;
-		Capabilities &operator =(const Capabilities &source) = delete;
+		explicit Capabilities(const Capabilities& source) = delete;
+		Capabilities& operator =(const Capabilities& source) = delete;
 
 
 	};

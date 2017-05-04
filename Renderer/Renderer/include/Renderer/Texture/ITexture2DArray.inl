@@ -63,7 +63,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITexture2DArray::ITexture2DArray(IRenderer &renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices) :
+	inline ITexture2DArray::ITexture2DArray(IRenderer& renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices) :
 		ITexture(ResourceType::TEXTURE_2D_ARRAY, renderer),
 		mWidth(width),
 		mHeight(height),

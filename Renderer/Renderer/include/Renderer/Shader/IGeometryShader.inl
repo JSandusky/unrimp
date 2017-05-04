@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IGeometryShader::IGeometryShader(IRenderer &renderer) :
+	inline IGeometryShader::IGeometryShader(IRenderer& renderer) :
 		IShader(ResourceType::GEOMETRY_SHADER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS

@@ -129,7 +129,7 @@ namespace RendererRuntime
 	private:
 		explicit TextureResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~TextureResourceManager();
-		TextureResourceManager(const TextureResourceManager&) = delete;
+		explicit TextureResourceManager(const TextureResourceManager&) = delete;
 		TextureResourceManager& operator=(const TextureResourceManager&) = delete;
 
 

@@ -113,7 +113,7 @@ namespace RendererRuntime
 	protected:
 		inline ICompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorNodeInstance& compositorNodeInstance);
 		inline virtual ~ICompositorInstancePass();
-		ICompositorInstancePass(const ICompositorInstancePass&) = delete;
+		explicit ICompositorInstancePass(const ICompositorInstancePass&) = delete;
 		ICompositorInstancePass& operator=(const ICompositorInstancePass&) = delete;
 
 

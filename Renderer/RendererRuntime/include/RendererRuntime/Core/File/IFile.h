@@ -110,7 +110,7 @@ namespace RendererRuntime
 	protected:
 		inline IFile();
 		inline virtual ~IFile();
-		IFile(const IFile&) = delete;
+		explicit IFile(const IFile&) = delete;
 		IFile& operator=(const IFile&) = delete;
 
 

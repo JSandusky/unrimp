@@ -98,7 +98,7 @@ namespace RendererRuntime
 	private:
 		inline SceneResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~SceneResourceLoader();
-		SceneResourceLoader(const SceneResourceLoader&) = delete;
+		explicit SceneResourceLoader(const SceneResourceLoader&) = delete;
 		SceneResourceLoader& operator=(const SceneResourceLoader&) = delete;
 
 

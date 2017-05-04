@@ -58,7 +58,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITextureCube::ITextureCube(IRenderer &renderer, uint32_t width, uint32_t height) :
+	inline ITextureCube::ITextureCube(IRenderer& renderer, uint32_t width, uint32_t height) :
 		ITexture(ResourceType::TEXTURE_CUBE, renderer),
 		mWidth(width),
 		mHeight(height)

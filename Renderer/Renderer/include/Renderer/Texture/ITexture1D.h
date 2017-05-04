@@ -81,10 +81,10 @@ namespace Renderer
 		*  @param[in] width
 		*    The width of the texture
 		*/
-		inline ITexture1D(IRenderer &renderer, uint32_t width);
+		inline ITexture1D(IRenderer& renderer, uint32_t width);
 
-		explicit ITexture1D(const ITexture1D &source) = delete;
-		ITexture1D &operator =(const ITexture1D &source) = delete;
+		explicit ITexture1D(const ITexture1D& source) = delete;
+		ITexture1D& operator =(const ITexture1D& source) = delete;
 
 
 	//[-------------------------------------------------------]

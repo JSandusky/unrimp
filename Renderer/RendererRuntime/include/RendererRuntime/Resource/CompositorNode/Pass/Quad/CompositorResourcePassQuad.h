@@ -102,7 +102,7 @@ namespace RendererRuntime
 		inline explicit CompositorResourcePassQuad(const CompositorTarget& compositorTarget);
 		inline CompositorResourcePassQuad(const CompositorTarget& compositorTarget, bool materialDefinitionMandatory);
 		inline virtual ~CompositorResourcePassQuad();
-		CompositorResourcePassQuad(const CompositorResourcePassQuad&) = delete;
+		explicit CompositorResourcePassQuad(const CompositorResourcePassQuad&) = delete;
 		CompositorResourcePassQuad& operator=(const CompositorResourcePassQuad&) = delete;
 
 

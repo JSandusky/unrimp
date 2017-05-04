@@ -102,7 +102,7 @@ namespace RendererRuntime
 	private:
 		inline MaterialBlueprintResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		virtual ~MaterialBlueprintResourceLoader();
-		MaterialBlueprintResourceLoader(const MaterialBlueprintResourceLoader&) = delete;
+		explicit MaterialBlueprintResourceLoader(const MaterialBlueprintResourceLoader&) = delete;
 		MaterialBlueprintResourceLoader& operator=(const MaterialBlueprintResourceLoader&) = delete;
 
 

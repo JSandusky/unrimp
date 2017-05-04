@@ -64,7 +64,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		SceneFactory(const SceneFactory&) = delete;
+		explicit SceneFactory(const SceneFactory&) = delete;
 		SceneFactory& operator=(const SceneFactory&) = delete;
 
 

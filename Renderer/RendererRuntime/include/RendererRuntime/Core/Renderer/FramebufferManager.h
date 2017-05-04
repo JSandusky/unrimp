@@ -109,7 +109,7 @@ namespace RendererRuntime
 	public:
 		inline explicit FramebufferManager(RenderTargetTextureManager& renderTargetTextureManager);
 		inline ~FramebufferManager();
-		FramebufferManager(const FramebufferManager&) = delete;
+		explicit FramebufferManager(const FramebufferManager&) = delete;
 		FramebufferManager& operator=(const FramebufferManager&) = delete;
 		void clear();
 		void clearRendererResources();

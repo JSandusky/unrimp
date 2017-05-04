@@ -98,7 +98,7 @@ namespace RendererRuntime
 	protected:
 		inline explicit SkeletonMeshSceneItem(SceneResource& sceneResource);
 		virtual ~SkeletonMeshSceneItem();
-		SkeletonMeshSceneItem(const SkeletonMeshSceneItem&) = delete;
+		explicit SkeletonMeshSceneItem(const SkeletonMeshSceneItem&) = delete;
 		SkeletonMeshSceneItem& operator=(const SkeletonMeshSceneItem&) = delete;
 
 

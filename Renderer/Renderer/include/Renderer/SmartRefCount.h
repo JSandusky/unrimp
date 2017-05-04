@@ -66,7 +66,7 @@ namespace Renderer
 		*  @param[in] ptr
 		*    Direct pointer to initialize with, can be a null pointer
 		*/
-		explicit SmartRefCount(AType *ptr);
+		explicit SmartRefCount(AType* ptr);
 
 		/**
 		*  @brief
@@ -75,7 +75,7 @@ namespace Renderer
 		*  @param[in] ptr
 		*    Smart pointer to initialize with
 		*/
-		inline SmartRefCount(const SmartRefCount<AType> &ptr);
+		inline SmartRefCount(const SmartRefCount<AType>& ptr);
 
 		/**
 		*  @brief
@@ -93,7 +93,7 @@ namespace Renderer
 		*  @return
 		*    Reference to the smart pointer
 		*/
-		inline SmartRefCount<AType> &operator =(AType *ptr);
+		inline SmartRefCount<AType>& operator =(AType* ptr);
 
 		/**
 		*  @brief
@@ -105,7 +105,7 @@ namespace Renderer
 		*  @return
 		*    Reference to the smart pointer
 		*/
-		inline SmartRefCount<AType> &operator =(const SmartRefCount<AType> &ptr);
+		inline SmartRefCount<AType>& operator =(const SmartRefCount<AType>& ptr);
 
 		/**
 		*  @brief
@@ -114,7 +114,7 @@ namespace Renderer
 		*  @return
 		*    Pointer to the object, can be a null pointer
 		*/
-		inline AType *getPointer() const;
+		inline AType* getPointer() const;
 
 		/**
 		*  @brief
@@ -123,7 +123,7 @@ namespace Renderer
 		*  @return
 		*    Pointer to the object, can be a null pointer
 		*/
-		inline AType *operator ->() const;
+		inline AType* operator ->() const;
 
 		/**
 		*  @brief
@@ -153,7 +153,7 @@ namespace Renderer
 		*  @return
 		*    "true" if the two pointers are equal
 		*/
-		inline bool operator ==(AType *ptr) const;
+		inline bool operator ==(AType* ptr) const;
 
 		/**
 		*  @brief
@@ -165,7 +165,7 @@ namespace Renderer
 		*  @return
 		*    "true" if the two pointers are equal
 		*/
-		inline bool operator ==(const SmartRefCount<AType> &ptr) const;
+		inline bool operator ==(const SmartRefCount<AType>& ptr) const;
 
 		/**
 		*  @brief
@@ -177,7 +177,7 @@ namespace Renderer
 		*  @return
 		*    "true" if the two pointers are not equal
 		*/
-		inline bool operator !=(AType *ptr) const;
+		inline bool operator !=(AType* ptr) const;
 
 		/**
 		*  @brief
@@ -189,7 +189,7 @@ namespace Renderer
 		*  @return
 		*    "true" if the two pointers are not equal
 		*/
-		inline bool operator !=(const SmartRefCount<AType> &ptr) const;
+		inline bool operator !=(const SmartRefCount<AType>& ptr) const;
 
 
 	//[-------------------------------------------------------]
@@ -203,7 +203,7 @@ namespace Renderer
 		*  @param[in] ptr
 		*    Pointer to assign, can be a null pointer
 		*/
-		inline void setPtr(AType *ptr);
+		inline void setPtr(AType* ptr);
 
 		/**
 		*  @brief
@@ -212,14 +212,14 @@ namespace Renderer
 		*  @return
 		*    Pointer to the RefCount object, can be a null pointer
 		*/
-		inline AType *getPtr() const;
+		inline AType* getPtr() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		AType *mPtr; ///< Pointer to reference counter, can be a null pointer
+		AType* mPtr; ///< Pointer to reference counter, can be a null pointer
 
 
 	};

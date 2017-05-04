@@ -106,7 +106,7 @@ namespace RendererRuntime
 		inline explicit ShaderCache(ShaderCacheId shaderCacheId);
 		inline ShaderCache(ShaderCacheId shaderCacheId, ShaderCache* masterShaderCache);
 		inline ~ShaderCache();
-		ShaderCache(const ShaderCache&) = delete;
+		explicit ShaderCache(const ShaderCache&) = delete;
 		ShaderCache& operator=(const ShaderCache&) = delete;
 
 

@@ -82,7 +82,7 @@ namespace Renderer
 		inline explicit IPipelineState(IRenderer& renderer);
 
 		explicit IPipelineState(const IPipelineState& source) = delete;
-		IPipelineState &operator =(const IPipelineState& source) = delete;
+		IPipelineState& operator =(const IPipelineState& source) = delete;
 
 
 	};

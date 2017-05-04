@@ -132,7 +132,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialBufferManager(const MaterialBufferManager&) = delete;
+		explicit MaterialBufferManager(const MaterialBufferManager&) = delete;
 		MaterialBufferManager& operator=(const MaterialBufferManager&) = delete;
 		void uploadDirtySlots();
 

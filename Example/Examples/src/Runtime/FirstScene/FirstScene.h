@@ -119,7 +119,7 @@ protected:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
-	FirstScene(const FirstScene&) = delete;
+	explicit FirstScene(const FirstScene&) = delete;
 	FirstScene& operator=(const FirstScene&) = delete;
 	void createCompositorWorkspace();
 	void createDebugGui(Renderer::IRenderTarget& mainRenderTarget);

@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IFragmentShader::IFragmentShader(IRenderer &renderer) :
+	inline IFragmentShader::IFragmentShader(IRenderer& renderer) :
 		IShader(ResourceType::FRAGMENT_SHADER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS

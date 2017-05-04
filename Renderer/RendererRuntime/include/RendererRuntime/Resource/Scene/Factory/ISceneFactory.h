@@ -79,7 +79,7 @@ namespace RendererRuntime
 	protected:
 		inline ISceneFactory();
 		inline virtual ~ISceneFactory();
-		ISceneFactory(const ISceneFactory&) = delete;
+		explicit ISceneFactory(const ISceneFactory&) = delete;
 		ISceneFactory& operator=(const ISceneFactory&) = delete;
 
 

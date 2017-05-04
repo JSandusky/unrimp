@@ -72,10 +72,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IState(ResourceType resourceType, IRenderer &renderer);
+		inline IState(ResourceType resourceType, IRenderer& renderer);
 
-		explicit IState(const IState &source) = delete;
-		IState &operator =(const IState &source) = delete;
+		explicit IState(const IState& source) = delete;
+		IState& operator =(const IState& source) = delete;
 
 
 	};

@@ -98,7 +98,7 @@ namespace RendererRuntime
 	private:
 		inline CompositorWorkspaceResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~CompositorWorkspaceResourceLoader();
-		CompositorWorkspaceResourceLoader(const CompositorWorkspaceResourceLoader&) = delete;
+		explicit CompositorWorkspaceResourceLoader(const CompositorWorkspaceResourceLoader&) = delete;
 		CompositorWorkspaceResourceLoader& operator=(const CompositorWorkspaceResourceLoader&) = delete;
 
 

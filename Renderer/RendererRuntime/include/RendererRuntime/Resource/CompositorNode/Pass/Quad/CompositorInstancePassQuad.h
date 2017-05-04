@@ -116,7 +116,7 @@ namespace RendererRuntime
 	protected:
 		CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorNodeInstance& compositorNodeInstance);
 		virtual ~CompositorInstancePassQuad();
-		CompositorInstancePassQuad(const CompositorInstancePassQuad&) = delete;
+		explicit CompositorInstancePassQuad(const CompositorInstancePassQuad&) = delete;
 		CompositorInstancePassQuad& operator=(const CompositorInstancePassQuad&) = delete;
 
 

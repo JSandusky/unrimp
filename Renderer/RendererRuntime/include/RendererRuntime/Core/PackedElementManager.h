@@ -74,7 +74,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		PackedElementManager(const PackedElementManager&) = delete;
+		explicit PackedElementManager(const PackedElementManager&) = delete;
 		PackedElementManager& operator=(const PackedElementManager&) = delete;
 
 

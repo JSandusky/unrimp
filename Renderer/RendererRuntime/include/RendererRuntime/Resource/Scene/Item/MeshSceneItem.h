@@ -97,7 +97,7 @@ namespace RendererRuntime
 	protected:
 		inline explicit MeshSceneItem(SceneResource& sceneResource);
 		inline virtual ~MeshSceneItem();
-		MeshSceneItem(const MeshSceneItem&) = delete;
+		explicit MeshSceneItem(const MeshSceneItem&) = delete;
 		MeshSceneItem& operator=(const MeshSceneItem&) = delete;
 
 

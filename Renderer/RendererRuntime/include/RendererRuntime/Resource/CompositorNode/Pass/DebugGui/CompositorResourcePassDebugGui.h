@@ -78,7 +78,7 @@ namespace RendererRuntime
 	protected:
 		inline explicit CompositorResourcePassDebugGui(const CompositorTarget& compositorTarget);
 		inline virtual ~CompositorResourcePassDebugGui();
-		CompositorResourcePassDebugGui(const CompositorResourcePassDebugGui&) = delete;
+		explicit CompositorResourcePassDebugGui(const CompositorResourcePassDebugGui&) = delete;
 		CompositorResourcePassDebugGui& operator=(const CompositorResourcePassDebugGui&) = delete;
 
 

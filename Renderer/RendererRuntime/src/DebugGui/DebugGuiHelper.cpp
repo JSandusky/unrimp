@@ -232,7 +232,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
 	void DebugGuiHelper::beginFrame()
 	{

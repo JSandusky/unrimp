@@ -72,7 +72,7 @@ namespace RendererRuntime
 	protected:
 		CompositorInstancePassClear(const CompositorResourcePassClear& compositorResourcePassClear, const CompositorNodeInstance& compositorNodeInstance);
 		inline virtual ~CompositorInstancePassClear();
-		CompositorInstancePassClear(const CompositorInstancePassClear&) = delete;
+		explicit CompositorInstancePassClear(const CompositorInstancePassClear&) = delete;
 		CompositorInstancePassClear& operator=(const CompositorInstancePassClear&) = delete;
 
 

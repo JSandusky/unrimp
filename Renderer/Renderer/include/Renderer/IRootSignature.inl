@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IRootSignature::IRootSignature(IRenderer &renderer) :
+	inline IRootSignature::IRootSignature(IRenderer& renderer) :
 		IResource(ResourceType::ROOT_SIGNATURE, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS

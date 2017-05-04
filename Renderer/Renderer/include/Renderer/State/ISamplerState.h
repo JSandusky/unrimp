@@ -68,7 +68,7 @@ namespace Renderer
 		*  @return
 		*    The default sampler state, see "Renderer::SamplerState" for the default values
 		*/
-		static inline const SamplerState &getDefaultSamplerState();
+		static inline const SamplerState& getDefaultSamplerState();
 
 
 	//[-------------------------------------------------------]
@@ -93,10 +93,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit ISamplerState(IRenderer &renderer);
+		inline explicit ISamplerState(IRenderer& renderer);
 
-		explicit ISamplerState(const ISamplerState &source) = delete;
-		ISamplerState &operator =(const ISamplerState &source) = delete;
+		explicit ISamplerState(const ISamplerState& source) = delete;
+		ISamplerState& operator =(const ISamplerState& source) = delete;
 
 
 	};

@@ -93,7 +93,7 @@ namespace RendererRuntime
 	private:
 		inline SkeletonResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~SkeletonResourceLoader();
-		SkeletonResourceLoader(const SkeletonResourceLoader&) = delete;
+		explicit SkeletonResourceLoader(const SkeletonResourceLoader&) = delete;
 		SkeletonResourceLoader& operator=(const SkeletonResourceLoader&) = delete;
 
 

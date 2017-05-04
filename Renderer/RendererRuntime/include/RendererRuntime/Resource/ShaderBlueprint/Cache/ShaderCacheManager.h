@@ -124,7 +124,7 @@ namespace RendererRuntime
 	private:
 		inline explicit ShaderCacheManager(ShaderBlueprintResourceManager& shaderBlueprintResourceManager);
 		inline ~ShaderCacheManager();
-		ShaderCacheManager(const ShaderCacheManager&) = delete;
+		explicit ShaderCacheManager(const ShaderCacheManager&) = delete;
 		ShaderCacheManager& operator=(const ShaderCacheManager&) = delete;
 		// TODO(co) Make this private. See "TODO(co) Do only clear the influenced shader cache entries" for context.
 	public:

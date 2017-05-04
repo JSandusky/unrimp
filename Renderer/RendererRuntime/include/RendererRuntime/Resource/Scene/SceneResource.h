@@ -117,7 +117,7 @@ namespace RendererRuntime
 	private:
 		inline SceneResource();
 		inline virtual ~SceneResource();
-		SceneResource(const SceneResource&) = delete;
+		explicit SceneResource(const SceneResource&) = delete;
 		SceneResource& operator=(const SceneResource&) = delete;
 		inline SceneResource& operator=(SceneResource&& sceneResource);
 

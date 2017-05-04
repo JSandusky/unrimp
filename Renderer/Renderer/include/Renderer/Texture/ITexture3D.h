@@ -119,10 +119,10 @@ namespace Renderer
 		*  @param[in] depth
 		*    The depth of the texture
 		*/
-		inline ITexture3D(IRenderer &renderer, uint32_t width, uint32_t height, uint32_t depth);
+		inline ITexture3D(IRenderer& renderer, uint32_t width, uint32_t height, uint32_t depth);
 
-		explicit ITexture3D(const ITexture3D &source) = delete;
-		ITexture3D &operator =(const ITexture3D &source) = delete;
+		explicit ITexture3D(const ITexture3D& source) = delete;
+		ITexture3D& operator =(const ITexture3D& source) = delete;
 
 
 	//[-------------------------------------------------------]

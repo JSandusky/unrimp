@@ -72,7 +72,7 @@ public:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
-	FreeCameraController(const FreeCameraController&) = delete;
+	explicit FreeCameraController(const FreeCameraController&) = delete;
 	FreeCameraController& operator=(const FreeCameraController&) = delete;
 
 

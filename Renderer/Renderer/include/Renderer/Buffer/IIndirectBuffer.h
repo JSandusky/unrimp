@@ -86,7 +86,7 @@ namespace Renderer
 		*  @param[in] data
 		*    Indirect buffer data, must be valid
 		*/
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 
 
 	//[-------------------------------------------------------]
@@ -109,10 +109,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IIndirectBuffer(IRenderer &renderer);
+		inline explicit IIndirectBuffer(IRenderer& renderer);
 
-		explicit IIndirectBuffer(const IIndirectBuffer &source) = delete;
-		IIndirectBuffer &operator =(const IIndirectBuffer &source) = delete;
+		explicit IIndirectBuffer(const IIndirectBuffer& source) = delete;
+		IIndirectBuffer& operator =(const IIndirectBuffer& source) = delete;
 
 
 	};

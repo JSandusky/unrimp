@@ -131,7 +131,7 @@ namespace RendererRuntime
 	private:
 		explicit ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~ShaderBlueprintResourceManager();
-		ShaderBlueprintResourceManager(const ShaderBlueprintResourceManager&) = delete;
+		explicit ShaderBlueprintResourceManager(const ShaderBlueprintResourceManager&) = delete;
 		ShaderBlueprintResourceManager& operator=(const ShaderBlueprintResourceManager&) = delete;
 
 		//[-------------------------------------------------------]

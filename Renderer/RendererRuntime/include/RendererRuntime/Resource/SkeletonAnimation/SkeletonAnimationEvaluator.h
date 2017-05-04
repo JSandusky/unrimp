@@ -139,7 +139,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		SkeletonAnimationEvaluator(const SkeletonAnimationEvaluator&) = delete;
+		explicit SkeletonAnimationEvaluator(const SkeletonAnimationEvaluator&) = delete;
 		SkeletonAnimationEvaluator& operator=(const SkeletonAnimationEvaluator&) = delete;
 
 

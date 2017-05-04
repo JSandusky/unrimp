@@ -95,7 +95,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		ResourceManagerTemplate(const ResourceManagerTemplate&) = delete;
+		explicit ResourceManagerTemplate(const ResourceManagerTemplate&) = delete;
 		ResourceManagerTemplate& operator=(const ResourceManagerTemplate&) = delete;
 
 

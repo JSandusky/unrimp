@@ -121,7 +121,7 @@ namespace RendererRuntime
 	private:
 		inline ShaderBlueprintResource();
 		inline virtual ~ShaderBlueprintResource();
-		ShaderBlueprintResource(const ShaderBlueprintResource&) = delete;
+		explicit ShaderBlueprintResource(const ShaderBlueprintResource&) = delete;
 		ShaderBlueprintResource& operator=(const ShaderBlueprintResource&) = delete;
 
 		//[-------------------------------------------------------]

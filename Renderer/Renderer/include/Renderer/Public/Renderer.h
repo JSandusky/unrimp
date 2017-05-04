@@ -1473,8 +1473,8 @@ namespace Renderer
 		{
 			const char* sourceCode	= nullptr;
 			const char* profile		= nullptr;
-			const char *arguments	= nullptr;
-			const char *entry		= nullptr;
+			const char* arguments	= nullptr;
+			const char* entry		= nullptr;
 			inline ShaderSourceCode(const char* _sourceCode) :
 				sourceCode(_sourceCode)
 			{};

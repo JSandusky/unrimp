@@ -88,7 +88,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		AssetPackage(const AssetPackage&) = delete;
+		explicit AssetPackage(const AssetPackage&) = delete;
 		AssetPackage& operator=(const AssetPackage&) = delete;
 
 

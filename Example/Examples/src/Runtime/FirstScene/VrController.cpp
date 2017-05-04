@@ -178,7 +178,7 @@ namespace
 		//[ Private methods                                       ]
 		//[-------------------------------------------------------]
 		private:
-			VrManagerOpenVRListener(const VrManagerOpenVRListener&) = delete;
+			explicit VrManagerOpenVRListener(const VrManagerOpenVRListener&) = delete;
 			VrManagerOpenVRListener& operator=(const VrManagerOpenVRListener&) = delete;
 
 
@@ -256,7 +256,7 @@ namespace
 		//[ Private methods                                       ]
 		//[-------------------------------------------------------]
 		private:
-			MaterialBlueprintResourceListener(const MaterialBlueprintResourceListener&) = delete;
+			explicit MaterialBlueprintResourceListener(const MaterialBlueprintResourceListener&) = delete;
 			MaterialBlueprintResourceListener& operator=(const MaterialBlueprintResourceListener&) = delete;
 
 

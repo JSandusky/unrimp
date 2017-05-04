@@ -108,7 +108,7 @@ namespace RendererRuntime
 	private:
 		explicit SkeletonAnimationResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~SkeletonAnimationResourceManager();
-		SkeletonAnimationResourceManager(const SkeletonAnimationResourceManager&) = delete;
+		explicit SkeletonAnimationResourceManager(const SkeletonAnimationResourceManager&) = delete;
 		SkeletonAnimationResourceManager& operator=(const SkeletonAnimationResourceManager&) = delete;
 
 

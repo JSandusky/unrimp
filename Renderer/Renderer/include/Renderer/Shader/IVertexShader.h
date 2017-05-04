@@ -70,10 +70,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IVertexShader(IRenderer &renderer);
+		inline explicit IVertexShader(IRenderer& renderer);
 
-		explicit IVertexShader(const IVertexShader &source) = delete;
-		IVertexShader &operator =(const IVertexShader &source) = delete;
+		explicit IVertexShader(const IVertexShader& source) = delete;
+		IVertexShader& operator =(const IVertexShader& source) = delete;
 
 
 	};

@@ -103,10 +103,10 @@ namespace Renderer
 		*  @param[in] numberOfSlices
 		*    The number of slices
 		*/
-		inline ITexture2DArray(IRenderer &renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices);
+		inline ITexture2DArray(IRenderer& renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices);
 
-		explicit ITexture2DArray(const ITexture2DArray &source) = delete;
-		ITexture2DArray &operator =(const ITexture2DArray &source) = delete;
+		explicit ITexture2DArray(const ITexture2DArray& source) = delete;
+		ITexture2DArray& operator =(const ITexture2DArray& source) = delete;
 
 
 	//[-------------------------------------------------------]

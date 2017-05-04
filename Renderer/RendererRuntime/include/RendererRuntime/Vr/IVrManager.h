@@ -147,7 +147,7 @@ namespace RendererRuntime
 	protected:
 		inline IVrManager();
 		inline virtual ~IVrManager();
-		IVrManager(const IVrManager&) = delete;
+		explicit IVrManager(const IVrManager&) = delete;
 		IVrManager& operator=(const IVrManager&) = delete;
 
 

@@ -105,7 +105,7 @@ namespace RendererRuntime
 	public:
 		inline explicit RenderTargetTextureManager(IRendererRuntime& rendererRuntime);
 		inline ~RenderTargetTextureManager();
-		RenderTargetTextureManager(const RenderTargetTextureManager&) = delete;
+		explicit RenderTargetTextureManager(const RenderTargetTextureManager&) = delete;
 		RenderTargetTextureManager& operator=(const RenderTargetTextureManager&) = delete;
 		inline IRendererRuntime& getRendererRuntime() const;
 		void clear();

@@ -179,7 +179,7 @@ namespace RendererRuntime
 	private:
 		EulerAngles() = delete;
 		~EulerAngles() = delete;
-		EulerAngles(const EulerAngles&) = delete;
+		explicit EulerAngles(const EulerAngles&) = delete;
 		EulerAngles& operator=(const EulerAngles&) = delete;
 
 

@@ -100,7 +100,7 @@ namespace RendererRuntime
 	private:
 		inline explicit PipelineStateCache(const PipelineStateSignature& pipelineStateSignature);
 		inline ~PipelineStateCache();
-		PipelineStateCache(const PipelineStateCache&) = delete;
+		explicit PipelineStateCache(const PipelineStateCache&) = delete;
 		PipelineStateCache& operator=(const PipelineStateCache&) = delete;
 
 

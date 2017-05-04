@@ -70,10 +70,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IGeometryShader(IRenderer &renderer);
+		inline explicit IGeometryShader(IRenderer& renderer);
 
-		explicit IGeometryShader(const IGeometryShader &source) = delete;
-		IGeometryShader &operator =(const IGeometryShader &source) = delete;
+		explicit IGeometryShader(const IGeometryShader& source) = delete;
+		IGeometryShader &operator =(const IGeometryShader& source) = delete;
 
 
 	};

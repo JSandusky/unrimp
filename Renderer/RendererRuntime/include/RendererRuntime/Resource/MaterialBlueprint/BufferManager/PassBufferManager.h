@@ -152,7 +152,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		PassBufferManager(const PassBufferManager&) = delete;
+		explicit PassBufferManager(const PassBufferManager&) = delete;
 		PassBufferManager& operator=(const PassBufferManager&) = delete;
 
 

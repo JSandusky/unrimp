@@ -89,7 +89,7 @@ namespace RendererRuntime
 	protected:
 		inline IResourceManager();
 		inline virtual ~IResourceManager();
-		IResourceManager(const IResourceManager&) = delete;
+		explicit IResourceManager(const IResourceManager&) = delete;
 		IResourceManager& operator=(const IResourceManager&) = delete;
 		inline void setResourceLoadingState(IResource& resource, IResource::LoadingState loadingState);
 

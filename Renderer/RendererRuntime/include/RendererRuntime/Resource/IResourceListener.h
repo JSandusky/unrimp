@@ -111,7 +111,7 @@ namespace RendererRuntime
 	protected:
 		inline IResourceListener();
 		inline virtual ~IResourceListener();
-		IResourceListener(const IResourceListener&) = delete;
+		explicit IResourceListener(const IResourceListener&) = delete;
 		IResourceListener& operator=(const IResourceListener&) = delete;
 
 

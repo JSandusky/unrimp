@@ -72,7 +72,7 @@ namespace Renderer
 		*  @param[out] height
 		*    Receives the height of the render target, guaranteed to be never ever zero
 		*/
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const = 0;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const = 0;
 
 
 	//[-------------------------------------------------------]
@@ -88,10 +88,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IRenderTarget(ResourceType resourceType, IRenderer &renderer);
+		inline IRenderTarget(ResourceType resourceType, IRenderer& renderer);
 
-		explicit IRenderTarget(const IRenderTarget &source) = delete;
-		IRenderTarget &operator =(const IRenderTarget &source) = delete;
+		explicit IRenderTarget(const IRenderTarget& source) = delete;
+		IRenderTarget& operator =(const IRenderTarget& source) = delete;
 
 
 	};

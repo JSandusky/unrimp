@@ -118,10 +118,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit ISwapChain(IRenderer &renderer);
+		inline explicit ISwapChain(IRenderer& renderer);
 
-		explicit ISwapChain(const ISwapChain &source) = delete;
-		ISwapChain &operator =(const ISwapChain &source) = delete;
+		explicit ISwapChain(const ISwapChain& source) = delete;
+		ISwapChain& operator =(const ISwapChain& source) = delete;
 
 
 	};

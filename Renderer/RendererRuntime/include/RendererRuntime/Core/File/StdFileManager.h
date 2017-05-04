@@ -83,7 +83,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		StdFileManager(const StdFileManager&) = delete;
+		explicit StdFileManager(const StdFileManager&) = delete;
 		StdFileManager& operator=(const StdFileManager&) = delete;
 
 

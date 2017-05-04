@@ -132,8 +132,8 @@ namespace Renderer
 	{
 		const char* sourceCode	= nullptr;	///< Shader ASCII source code, if null pointer or empty string a null pointer will be returned
 		const char* profile		= nullptr;	///< Shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually tries to use the best available profile that runs on most hardware (Examples: "glslf", "arbfp1", "ps_3_0")
-		const char *arguments	= nullptr;	///< Optional shader compiler ASCII arguments, can be a null pointer or empty string
-		const char *entry		= nullptr;	///< ASCII entry point, if null pointer or empty string, "main" is used as default
+		const char* arguments	= nullptr;	///< Optional shader compiler ASCII arguments, can be a null pointer or empty string
+		const char* entry		= nullptr;	///< ASCII entry point, if null pointer or empty string, "main" is used as default
 		inline ShaderSourceCode(const char* _sourceCode) :
 			sourceCode(_sourceCode)
 		{};

@@ -79,10 +79,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IVertexArray(IRenderer &renderer);
+		inline explicit IVertexArray(IRenderer& renderer);
 
-		explicit IVertexArray(const IVertexArray &source) = delete;
-		IVertexArray &operator =(const IVertexArray &source) = delete;
+		explicit IVertexArray(const IVertexArray& source) = delete;
+		IVertexArray& operator =(const IVertexArray& source) = delete;
 
 
 	};

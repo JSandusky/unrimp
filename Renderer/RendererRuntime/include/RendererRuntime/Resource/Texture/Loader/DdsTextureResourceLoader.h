@@ -73,7 +73,7 @@ namespace RendererRuntime
 	private:
 		inline DdsTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~DdsTextureResourceLoader();
-		DdsTextureResourceLoader(const DdsTextureResourceLoader&) = delete;
+		explicit DdsTextureResourceLoader(const DdsTextureResourceLoader&) = delete;
 		DdsTextureResourceLoader& operator=(const DdsTextureResourceLoader&) = delete;
 		Renderer::ITexture* createRendererTexture();
 

@@ -70,10 +70,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IRootSignature(IRenderer &renderer);
+		inline explicit IRootSignature(IRenderer& renderer);
 
-		explicit IRootSignature(const IRootSignature &source) = delete;
-		IRootSignature &operator =(const IRootSignature &source) = delete;
+		explicit IRootSignature(const IRootSignature& source) = delete;
+		IRootSignature& operator =(const IRootSignature& source) = delete;
 
 
 	};

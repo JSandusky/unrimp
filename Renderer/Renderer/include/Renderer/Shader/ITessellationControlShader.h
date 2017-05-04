@@ -70,10 +70,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit ITessellationControlShader(IRenderer &renderer);
+		inline explicit ITessellationControlShader(IRenderer& renderer);
 
-		explicit ITessellationControlShader(const ITessellationControlShader &source) = delete;
-		ITessellationControlShader &operator =(const ITessellationControlShader &source) = delete;
+		explicit ITessellationControlShader(const ITessellationControlShader& source) = delete;
+		ITessellationControlShader& operator =(const ITessellationControlShader& source) = delete;
 
 
 	};

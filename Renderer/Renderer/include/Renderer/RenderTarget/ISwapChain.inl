@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ISwapChain::ISwapChain(IRenderer &renderer) :
+	inline ISwapChain::ISwapChain(IRenderer& renderer) :
 		IRenderTarget(ResourceType::SWAP_CHAIN, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS

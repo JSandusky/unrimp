@@ -127,7 +127,7 @@ namespace RendererRuntime
 	protected:
 		inline IFileManager();
 		inline virtual ~IFileManager();
-		IFileManager(const IFileManager&) = delete;
+		explicit IFileManager(const IFileManager&) = delete;
 		IFileManager& operator=(const IFileManager&) = delete;
 
 

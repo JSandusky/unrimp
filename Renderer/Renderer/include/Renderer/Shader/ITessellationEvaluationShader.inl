@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITessellationEvaluationShader::ITessellationEvaluationShader(IRenderer &renderer) :
+	inline ITessellationEvaluationShader::ITessellationEvaluationShader(IRenderer& renderer) :
 		IShader(ResourceType::TESSELLATION_EVALUATION_SHADER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS

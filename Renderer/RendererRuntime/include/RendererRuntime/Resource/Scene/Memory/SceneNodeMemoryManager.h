@@ -50,7 +50,7 @@ namespace RendererRuntime
 	private:
 		inline SceneNodeMemoryManager();
 		inline ~SceneNodeMemoryManager();
-		SceneNodeMemoryManager(const SceneNodeMemoryManager&) = delete;
+		explicit SceneNodeMemoryManager(const SceneNodeMemoryManager&) = delete;
 		SceneNodeMemoryManager& operator=(const SceneNodeMemoryManager&) = delete;
 
 

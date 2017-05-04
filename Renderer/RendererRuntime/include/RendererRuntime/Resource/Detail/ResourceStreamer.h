@@ -143,7 +143,7 @@ namespace RendererRuntime
 	private:
 		explicit ResourceStreamer(IRendererRuntime& rendererRuntime);
 		~ResourceStreamer();
-		ResourceStreamer(const ResourceStreamer&) = delete;
+		explicit ResourceStreamer(const ResourceStreamer&) = delete;
 		ResourceStreamer& operator=(const ResourceStreamer&) = delete;
 		void deserializationThreadWorker();
 		void processingThreadWorker();

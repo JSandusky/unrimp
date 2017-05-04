@@ -128,10 +128,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline ITexture(ResourceType resourceType, IRenderer &renderer);
+		inline ITexture(ResourceType resourceType, IRenderer& renderer);
 
-		explicit ITexture(const ITexture &source) = delete;
-		ITexture &operator =(const ITexture &source) = delete;
+		explicit ITexture(const ITexture& source) = delete;
+		ITexture& operator =(const ITexture& source) = delete;
 
 
 	};

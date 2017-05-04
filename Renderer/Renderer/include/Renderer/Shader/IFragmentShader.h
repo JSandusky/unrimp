@@ -70,10 +70,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IFragmentShader(IRenderer &renderer);
+		inline explicit IFragmentShader(IRenderer& renderer);
 
-		explicit IFragmentShader(const IFragmentShader &source) = delete;
-		IFragmentShader &operator =(const IFragmentShader &source) = delete;
+		explicit IFragmentShader(const IFragmentShader& source) = delete;
+		IFragmentShader& operator =(const IFragmentShader& source) = delete;
 
 
 	};

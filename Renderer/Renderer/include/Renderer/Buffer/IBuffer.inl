@@ -43,7 +43,7 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IBuffer::IBuffer(ResourceType resourceType, IRenderer &renderer) :
+	inline IBuffer::IBuffer(ResourceType resourceType, IRenderer& renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing here

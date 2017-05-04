@@ -49,7 +49,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IPipelineState::IPipelineState(IRenderer &renderer) :
+	inline IPipelineState::IPipelineState(IRenderer& renderer) :
 		IState(ResourceType::PIPELINE_STATE, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS

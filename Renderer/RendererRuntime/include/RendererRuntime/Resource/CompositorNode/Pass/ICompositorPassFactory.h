@@ -83,7 +83,7 @@ namespace RendererRuntime
 	protected:
 		inline ICompositorPassFactory();
 		inline virtual ~ICompositorPassFactory();
-		ICompositorPassFactory(const ICompositorPassFactory&) = delete;
+		explicit ICompositorPassFactory(const ICompositorPassFactory&) = delete;
 		ICompositorPassFactory& operator=(const ICompositorPassFactory&) = delete;
 
 

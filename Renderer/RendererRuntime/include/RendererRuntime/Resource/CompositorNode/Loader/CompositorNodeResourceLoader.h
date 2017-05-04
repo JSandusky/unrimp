@@ -98,7 +98,7 @@ namespace RendererRuntime
 	private:
 		inline CompositorNodeResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~CompositorNodeResourceLoader();
-		CompositorNodeResourceLoader(const CompositorNodeResourceLoader&) = delete;
+		explicit CompositorNodeResourceLoader(const CompositorNodeResourceLoader&) = delete;
 		CompositorNodeResourceLoader& operator=(const CompositorNodeResourceLoader&) = delete;
 
 

@@ -157,8 +157,8 @@ namespace Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit Statistics(const Statistics &source) = delete;
-		Statistics &operator =(const Statistics &source) = delete;
+		explicit Statistics(const Statistics& source) = delete;
+		Statistics& operator =(const Statistics& source) = delete;
 
 
 	};

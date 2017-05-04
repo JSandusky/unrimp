@@ -77,14 +77,14 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Cleanup
-		inline virtual handle getUniformHandle(const char *uniformName);
+		inline virtual handle getUniformHandle(const char* uniformName);
 		inline virtual void setUniform1i(handle uniformHandle, int value);
 		inline virtual void setUniform1f(handle uniformHandle, float value);
-		inline virtual void setUniform2fv(handle uniformHandle, const float *value);
-		inline virtual void setUniform3fv(handle uniformHandle, const float *value);
-		inline virtual void setUniform4fv(handle uniformHandle, const float *value);
-		inline virtual void setUniformMatrix3fv(handle uniformHandle, const float *value);
-		inline virtual void setUniformMatrix4fv(handle uniformHandle, const float *value);
+		inline virtual void setUniform2fv(handle uniformHandle, const float* value);
+		inline virtual void setUniform3fv(handle uniformHandle, const float* value);
+		inline virtual void setUniform4fv(handle uniformHandle, const float* value);
+		inline virtual void setUniformMatrix3fv(handle uniformHandle, const float* value);
+		inline virtual void setUniformMatrix4fv(handle uniformHandle, const float* value);
 
 
 	//[-------------------------------------------------------]
@@ -98,10 +98,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IProgram(IRenderer &renderer);
+		inline explicit IProgram(IRenderer& renderer);
 
-		explicit IProgram(const IProgram &source) = delete;
-		IProgram &operator =(const IProgram &source) = delete;
+		explicit IProgram(const IProgram& source) = delete;
+		IProgram& operator =(const IProgram& source) = delete;
 
 
 	};

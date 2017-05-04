@@ -85,7 +85,7 @@ namespace
 		//[ Protected methods                                     ]
 		//[-------------------------------------------------------]
 		protected:
-			VrManagerOpenVRListener(const VrManagerOpenVRListener&) = delete;
+			explicit VrManagerOpenVRListener(const VrManagerOpenVRListener&) = delete;
 			VrManagerOpenVRListener& operator=(const VrManagerOpenVRListener&) = delete;
 
 

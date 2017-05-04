@@ -104,7 +104,7 @@ namespace RendererRuntime
 	private:
 		explicit ShaderPieceResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~ShaderPieceResourceManager();
-		ShaderPieceResourceManager(const ShaderPieceResourceManager&) = delete;
+		explicit ShaderPieceResourceManager(const ShaderPieceResourceManager&) = delete;
 		ShaderPieceResourceManager& operator=(const ShaderPieceResourceManager&) = delete;
 
 

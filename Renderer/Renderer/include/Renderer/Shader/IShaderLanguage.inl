@@ -33,7 +33,7 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IRenderer &IShaderLanguage::getRenderer() const
+	inline IRenderer& IShaderLanguage::getRenderer() const
 	{
 		return *mRenderer;
 	}
@@ -48,17 +48,17 @@ namespace Renderer
 		mOptimizationLevel = optimizationLevel;
 	}
 
-	inline IProgram *IShaderLanguage::createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader)
+	inline IProgram* IShaderLanguage::createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, IFragmentShader* fragmentShader)
 	{
 		return createProgram(rootSignature, vertexAttributes, vertexShader, nullptr, nullptr, nullptr, fragmentShader);
 	}
 
-	inline IProgram *IShaderLanguage::createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader)
+	inline IProgram* IShaderLanguage::createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, IGeometryShader* geometryShader, IFragmentShader* fragmentShader)
 	{
 		return createProgram(rootSignature, vertexAttributes, vertexShader, nullptr, nullptr, geometryShader, fragmentShader);
 	}
 
-	inline IProgram *IShaderLanguage::createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader)
+	inline IProgram* IShaderLanguage::createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, ITessellationControlShader* tessellationControlShader, ITessellationEvaluationShader* tessellationEvaluationShader, IFragmentShader* fragmentShader)
 	{
 		return createProgram(rootSignature, vertexAttributes, vertexShader, tessellationControlShader, tessellationEvaluationShader, nullptr, fragmentShader);
 	}
@@ -67,7 +67,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IShaderLanguage::IShaderLanguage(IRenderer &renderer) :
+	inline IShaderLanguage::IShaderLanguage(IRenderer& renderer) :
 		mRenderer(&renderer),
 		mOptimizationLevel(OptimizationLevel::Ultra)
 	{

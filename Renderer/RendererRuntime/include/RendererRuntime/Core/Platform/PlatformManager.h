@@ -69,7 +69,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		PlatformManager(const PlatformManager&) = delete;
+		explicit PlatformManager(const PlatformManager&) = delete;
 		PlatformManager& operator=(const PlatformManager&) = delete;
 
 

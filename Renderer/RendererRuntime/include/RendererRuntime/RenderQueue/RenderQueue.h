@@ -114,7 +114,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		RenderQueue(const RenderQueue&) = delete;
+		explicit RenderQueue(const RenderQueue&) = delete;
 		RenderQueue& operator=(const RenderQueue&) = delete;
 
 

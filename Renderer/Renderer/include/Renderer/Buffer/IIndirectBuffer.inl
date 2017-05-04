@@ -54,7 +54,7 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IIndirectBuffer::IIndirectBuffer(IRenderer &renderer) :
+	inline IIndirectBuffer::IIndirectBuffer(IRenderer& renderer) :
 		IBuffer(ResourceType::INDIRECT_BUFFER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS

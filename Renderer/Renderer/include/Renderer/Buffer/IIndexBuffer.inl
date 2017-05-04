@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IIndexBuffer::IIndexBuffer(IRenderer &renderer) :
+	inline IIndexBuffer::IIndexBuffer(IRenderer& renderer) :
 		IBuffer(ResourceType::INDEX_BUFFER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS

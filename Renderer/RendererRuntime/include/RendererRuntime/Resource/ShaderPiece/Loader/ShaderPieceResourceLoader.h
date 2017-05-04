@@ -94,7 +94,7 @@ namespace RendererRuntime
 	private:
 		inline ShaderPieceResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~ShaderPieceResourceLoader();
-		ShaderPieceResourceLoader(const ShaderPieceResourceLoader&) = delete;
+		explicit ShaderPieceResourceLoader(const ShaderPieceResourceLoader&) = delete;
 		ShaderPieceResourceLoader& operator=(const ShaderPieceResourceLoader&) = delete;
 
 

@@ -107,7 +107,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		ShaderBuilder(const ShaderBuilder&) = delete;
+		explicit ShaderBuilder(const ShaderBuilder&) = delete;
 		ShaderBuilder& operator=(const ShaderBuilder&) = delete;
 		bool parseMath(const std::string& inBuffer, std::string& outBuffer);
 		bool parseForEach(const std::string& inBuffer, std::string& outBuffer) const;

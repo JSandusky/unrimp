@@ -69,7 +69,7 @@ namespace Renderer
 		*  @return
 		*    Pointer to the reference counter's object, never a null pointer!
 		*/
-		inline virtual const AType *getPointer() const;
+		inline virtual const AType* getPointer() const;
 
 		/**
 		*  @brief
@@ -78,7 +78,7 @@ namespace Renderer
 		*  @return
 		*    Pointer to the reference counter's object, never a null pointer!
 		*/
-		inline virtual AType *getPointer();
+		inline virtual AType* getPointer();
 
 		/**
 		*  @brief

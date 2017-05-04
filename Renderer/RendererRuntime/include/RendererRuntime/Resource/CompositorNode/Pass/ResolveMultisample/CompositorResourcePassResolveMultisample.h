@@ -85,7 +85,7 @@ namespace RendererRuntime
 	protected:
 		inline explicit CompositorResourcePassResolveMultisample(const CompositorTarget& compositorTarget);
 		inline virtual ~CompositorResourcePassResolveMultisample();
-		CompositorResourcePassResolveMultisample(const CompositorResourcePassResolveMultisample&) = delete;
+		explicit CompositorResourcePassResolveMultisample(const CompositorResourcePassResolveMultisample&) = delete;
 		CompositorResourcePassResolveMultisample& operator=(const CompositorResourcePassResolveMultisample&) = delete;
 
 

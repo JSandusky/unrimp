@@ -76,7 +76,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		CompositorContextData(const CompositorContextData&) = delete;
+		explicit CompositorContextData(const CompositorContextData&) = delete;
 		CompositorContextData& operator=(const CompositorContextData&) = delete;
 
 

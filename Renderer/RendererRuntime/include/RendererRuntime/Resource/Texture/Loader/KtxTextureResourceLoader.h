@@ -74,7 +74,7 @@ namespace RendererRuntime
 	private:
 		inline KtxTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~KtxTextureResourceLoader();
-		KtxTextureResourceLoader(const KtxTextureResourceLoader&) = delete;
+		explicit KtxTextureResourceLoader(const KtxTextureResourceLoader&) = delete;
 		KtxTextureResourceLoader& operator=(const KtxTextureResourceLoader&) = delete;
 
 

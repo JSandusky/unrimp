@@ -73,7 +73,7 @@ namespace Renderer
 		*  @note
 		*    - Do not free the memory the returned pointer is pointing to
 		*/
-		virtual const char *getShaderLanguageName() const = 0;
+		virtual const char* getShaderLanguageName() const = 0;
 
 
 	//[-------------------------------------------------------]
@@ -89,10 +89,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IShader(ResourceType resourceType, IRenderer &renderer);
+		inline IShader(ResourceType resourceType, IRenderer& renderer);
 
-		explicit IShader(const IShader &source) = delete;
-		IShader &operator =(const IShader &source) = delete;
+		explicit IShader(const IShader& source) = delete;
+		IShader& operator =(const IShader& source) = delete;
 
 
 	};

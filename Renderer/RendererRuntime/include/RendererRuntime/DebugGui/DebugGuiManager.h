@@ -100,7 +100,7 @@ namespace RendererRuntime
 	protected:
 		explicit DebugGuiManager(IRendererRuntime& rendererRuntime);
 		virtual ~DebugGuiManager();
-		DebugGuiManager(const DebugGuiManager&) = delete;
+		explicit DebugGuiManager(const DebugGuiManager&) = delete;
 		DebugGuiManager& operator=(const DebugGuiManager&) = delete;
 		void createFixedBuildInRendererConfigurationResources();
 

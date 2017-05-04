@@ -76,7 +76,7 @@ namespace RendererRuntime
 	private:
 		explicit DebugGuiManagerLinux(IRendererRuntime& rendererRuntime);
 		virtual ~DebugGuiManagerLinux();
-		DebugGuiManagerLinux(const DebugGuiManagerLinux&) = delete;
+		explicit DebugGuiManagerLinux(const DebugGuiManagerLinux&) = delete;
 		DebugGuiManagerLinux& operator=(const DebugGuiManagerLinux&) = delete;
 		void updateMousePosition(int x, int y);
 

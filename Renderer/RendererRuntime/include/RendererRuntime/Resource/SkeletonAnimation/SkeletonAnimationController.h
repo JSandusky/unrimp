@@ -138,7 +138,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		SkeletonAnimationController(const SkeletonAnimationController&) = delete;
+		explicit SkeletonAnimationController(const SkeletonAnimationController&) = delete;
 		SkeletonAnimationController& operator=(const SkeletonAnimationController&) = delete;
 		void createSkeletonAnimationEvaluator();
 		void destroySkeletonAnimationEvaluator();

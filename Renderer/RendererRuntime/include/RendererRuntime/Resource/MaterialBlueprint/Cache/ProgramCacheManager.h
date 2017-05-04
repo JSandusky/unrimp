@@ -133,7 +133,7 @@ namespace RendererRuntime
 	private:
 		inline explicit ProgramCacheManager(PipelineStateCacheManager& pipelineStateCacheManager);
 		inline ~ProgramCacheManager();
-		ProgramCacheManager(const ProgramCacheManager&) = delete;
+		explicit ProgramCacheManager(const ProgramCacheManager&) = delete;
 		ProgramCacheManager& operator=(const ProgramCacheManager&) = delete;
 
 

@@ -76,7 +76,7 @@ namespace RendererRuntime
 	protected:
 		inline IMeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~IMeshResourceLoader();
-		IMeshResourceLoader(const IMeshResourceLoader&) = delete;
+		explicit IMeshResourceLoader(const IMeshResourceLoader&) = delete;
 		IMeshResourceLoader& operator=(const IMeshResourceLoader&) = delete;
 
 

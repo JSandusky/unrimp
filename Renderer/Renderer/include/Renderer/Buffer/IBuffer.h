@@ -84,10 +84,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IBuffer(ResourceType resourceType, IRenderer &renderer);
+		inline IBuffer(ResourceType resourceType, IRenderer& renderer);
 
-		explicit IBuffer(const IBuffer &source) = delete;
-		IBuffer &operator =(const IBuffer &source) = delete;
+		explicit IBuffer(const IBuffer& source) = delete;
+		IBuffer &operator =(const IBuffer& source) = delete;
 
 
 	};

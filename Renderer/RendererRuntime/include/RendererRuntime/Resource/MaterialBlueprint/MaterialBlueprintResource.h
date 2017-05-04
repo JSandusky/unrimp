@@ -451,7 +451,7 @@ namespace RendererRuntime
 	private:
 		MaterialBlueprintResource();
 		virtual ~MaterialBlueprintResource();
-		MaterialBlueprintResource(const MaterialBlueprintResource&) = delete;
+		explicit MaterialBlueprintResource(const MaterialBlueprintResource&) = delete;
 		MaterialBlueprintResource& operator=(const MaterialBlueprintResource&) = delete;
 
 		//[-------------------------------------------------------]

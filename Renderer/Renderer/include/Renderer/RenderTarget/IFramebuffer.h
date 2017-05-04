@@ -70,10 +70,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IFramebuffer(IRenderer &renderer);
+		inline explicit IFramebuffer(IRenderer& renderer);
 
-		explicit IFramebuffer(const IFramebuffer &source) = delete;
-		IFramebuffer &operator =(const IFramebuffer &source) = delete;
+		explicit IFramebuffer(const IFramebuffer& source) = delete;
+		IFramebuffer& operator =(const IFramebuffer& source) = delete;
 
 
 	};

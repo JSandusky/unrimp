@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IVertexArray::IVertexArray(IRenderer &renderer) :
+	inline IVertexArray::IVertexArray(IRenderer& renderer) :
 		IResource(ResourceType::VERTEX_ARRAY, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
