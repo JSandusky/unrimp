@@ -29,6 +29,9 @@
     <Filter Include="External\SQLiteCpp\sqlite3">
       <UniqueIdentifier>{13666b19-45c0-44e9-9f7a-aa62cae80319}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External\mikktspace">
+      <UniqueIdentifier>{0931decb-44d0-4f6e-a373-f846631b1677}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -173,6 +176,9 @@
     <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\sqlite3\sqlite3.h">
       <Filter>External\SQLiteCpp\sqlite3</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\External\mikktspace\include\mikktspace\mikktspace.h">
+      <Filter>External\mikktspace</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -267,6 +273,9 @@
     </ClCompile>
     <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\sqlite3\sqlite3.c">
       <Filter>External\SQLiteCpp\sqlite3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\mikktspace\src\mikktspace.c">
+      <Filter>External\mikktspace</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

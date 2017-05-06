@@ -200,6 +200,9 @@
     <Filter Include="Source Files\Vr\OpenVR\Loader">
       <UniqueIdentifier>{15c64425-3aee-4f74-a3ab-4698b7271aa5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External\mikktspace">
+      <UniqueIdentifier>{189cfe7b-1d03-49c2-8fe9-b04cf6b4a9cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -1155,6 +1158,9 @@
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.h">
       <Filter>Source Files\Vr\OpenVR\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\External\mikktspace\include\mikktspace\mikktspace.h">
+      <Filter>External\mikktspace</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1519,6 +1525,9 @@
     </ClCompile>
     <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.cpp">
       <Filter>Source Files\Vr\OpenVR\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\mikktspace\src\mikktspace.c">
+      <Filter>External\mikktspace</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
