@@ -26,6 +26,25 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline vr::RenderModel_t* OpenVRMeshResourceLoader::getVrRenderModel() const
+	{
+		return mVrRenderModel;
+	}
+
+	inline OpenVRMeshResourceLoader::BufferData& OpenVRMeshResourceLoader::getTangentsData()
+	{
+		return mTangentsData;
+	}
+
+	inline OpenVRMeshResourceLoader::BufferData& OpenVRMeshResourceLoader::getBinormalsData()
+	{
+		return mBinormalsData;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	inline ResourceLoaderTypeId OpenVRMeshResourceLoader::getResourceLoaderTypeId() const

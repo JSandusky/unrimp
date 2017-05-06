@@ -34,6 +34,8 @@
 
 #include <openvr/openvr.h>
 
+#include <mikktspace/mikktspace.h>
+
 #include <chrono>
 #include <thread>
 
@@ -43,6 +45,89 @@
 //[-------------------------------------------------------]
 namespace
 {
+
+	namespace mikktspace
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		static const uint32_t NUMBER_OF_VERTICES_PER_FACE = 3;
+
+
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		SMikkTSpaceContext g_MikkTSpaceContext;
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		int getNumFaces(const SMikkTSpaceContext* pContext)
+		{
+			const RendererRuntime::OpenVRMeshResourceLoader* openVRMeshResourceLoader = static_cast<const RendererRuntime::OpenVRMeshResourceLoader*>(pContext->m_pUserData);
+			return static_cast<int>(openVRMeshResourceLoader->getVrRenderModel()->unTriangleCount);
+		}
+
+		int getNumVerticesOfFace(const SMikkTSpaceContext*, const int)
+		{
+			return NUMBER_OF_VERTICES_PER_FACE;
+		}
+
+		void getPosition(const SMikkTSpaceContext* pContext, float fvPosOut[], const int iFace, const int iVert)
+		{
+			const RendererRuntime::OpenVRMeshResourceLoader* openVRMeshResourceLoader = static_cast<const RendererRuntime::OpenVRMeshResourceLoader*>(pContext->m_pUserData);
+			const vr::RenderModel_t* vrRenderModel = openVRMeshResourceLoader->getVrRenderModel();
+			const vr::HmdVector3_t& position = vrRenderModel->rVertexData[vrRenderModel->rIndexData[iFace * NUMBER_OF_VERTICES_PER_FACE + iVert]].vPosition;
+			fvPosOut[0] = position.v[0];
+			fvPosOut[1] = position.v[1];
+			fvPosOut[2] = position.v[2];
+		}
+
+		void getNormal(const SMikkTSpaceContext* pContext, float fvNormOut[], const int iFace, const int iVert)
+		{
+			const RendererRuntime::OpenVRMeshResourceLoader* openVRMeshResourceLoader = static_cast<const RendererRuntime::OpenVRMeshResourceLoader*>(pContext->m_pUserData);
+			const vr::RenderModel_t* vrRenderModel = openVRMeshResourceLoader->getVrRenderModel();
+			const vr::HmdVector3_t& normal = vrRenderModel->rVertexData[vrRenderModel->rIndexData[iFace * NUMBER_OF_VERTICES_PER_FACE + iVert]].vNormal;
+			fvNormOut[0] = normal.v[0];
+			fvNormOut[1] = normal.v[1];
+			fvNormOut[2] = normal.v[2];
+		}
+
+		void getTexCoord(const SMikkTSpaceContext* pContext, float fvTexcOut[], const int iFace, const int iVert)
+		{
+			const RendererRuntime::OpenVRMeshResourceLoader* openVRMeshResourceLoader = static_cast<const RendererRuntime::OpenVRMeshResourceLoader*>(pContext->m_pUserData);
+			const vr::RenderModel_t* vrRenderModel = openVRMeshResourceLoader->getVrRenderModel();
+			const float* texCoord = vrRenderModel->rVertexData[vrRenderModel->rIndexData[iFace * NUMBER_OF_VERTICES_PER_FACE + iVert]].rfTextureCoord;
+			fvTexcOut[0] = texCoord[0];
+			fvTexcOut[1] = texCoord[1];
+		}
+
+		void setTSpace(const SMikkTSpaceContext* pContext, const float fvTangent[], const float fvBiTangent[], const float, const float, const tbool, const int iFace, const int iVert)
+		{
+			RendererRuntime::OpenVRMeshResourceLoader* openVRMeshResourceLoader = static_cast<RendererRuntime::OpenVRMeshResourceLoader*>(pContext->m_pUserData);
+			const vr::RenderModel_t* vrRenderModel = openVRMeshResourceLoader->getVrRenderModel();
+
+			{ // Tangent
+				glm::vec3& tangent = openVRMeshResourceLoader->getTangentsData()[vrRenderModel->rIndexData[iFace * NUMBER_OF_VERTICES_PER_FACE + iVert]];
+				tangent.x = fvTangent[0];
+				tangent.y = fvTangent[1];
+				tangent.z = fvTangent[2];
+			}
+
+			{ // Binormal
+				glm::vec3& binormal = openVRMeshResourceLoader->getBinormalsData()[vrRenderModel->rIndexData[iFace * NUMBER_OF_VERTICES_PER_FACE + iVert]];
+				binormal.x = fvBiTangent[0];
+				binormal.y = fvBiTangent[1];
+				binormal.z = fvBiTangent[2];
+			}
+		}
+
+
+	} // mikktspace
+
 	namespace detail
 	{
 
@@ -142,6 +227,18 @@ namespace RendererRuntime
 			return;
 		}
 
+		// Setup "mikktspace" by Morten S. Mikkelsen for semi-standard tangent space generation (see e.g. https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps for background information)
+		SMikkTSpaceInterface mikkTSpaceInterface;
+		mikkTSpaceInterface.m_getNumFaces		   = mikktspace::getNumFaces;
+		mikkTSpaceInterface.m_getNumVerticesOfFace = mikktspace::getNumVerticesOfFace;
+		mikkTSpaceInterface.m_getPosition		   = mikktspace::getPosition;
+		mikkTSpaceInterface.m_getNormal			   = mikktspace::getNormal;
+		mikkTSpaceInterface.m_getTexCoord		   = mikktspace::getTexCoord;
+		mikkTSpaceInterface.m_setTSpaceBasic	   = nullptr;
+		mikkTSpaceInterface.m_setTSpace			   = mikktspace::setTSpace;
+		mikktspace::g_MikkTSpaceContext.m_pInterface = &mikkTSpaceInterface;
+		mikktspace::g_MikkTSpaceContext.m_pUserData  = this;
+
 		{ // Get the vertex buffer and index buffer data
 			// Tell the mesh resource about the number of vertices and indices
 			const uint32_t numberOfVertices = mVrRenderModel->unVertexCount;
@@ -155,7 +252,12 @@ namespace RendererRuntime
 				uint8_t* currentVertexBufferData = mVertexBufferData.data();
 				const vr::RenderModel_Vertex_t* currentVrRenderModelVertex = mVrRenderModel->rVertexData;
 				mTangentsData.resize(mVrRenderModel->unVertexCount);
-				calculateTangentArrayOfRenderModel();
+				mBinormalsData.resize(mVrRenderModel->unVertexCount);
+				if (genTangSpaceDefault(&mikktspace::g_MikkTSpaceContext) == 0)
+				{
+					// TODO(co) Error handling
+					assert(false && "mikktspace for semi-standard tangent space generation failed");
+				}
 				for (uint32_t i = 0; i < numberOfVertices; ++i, ++currentVrRenderModelVertex)
 				{
 					{ // 32 bit position
@@ -176,12 +278,8 @@ namespace RendererRuntime
 					{ // 16 bit QTangent
 						// Get the mesh vertex normal, tangent and binormal
 						const glm::vec3 normal(currentVrRenderModelVertex->vNormal.v[0], currentVrRenderModelVertex->vNormal.v[1], currentVrRenderModelVertex->vNormal.v[2]);
-						const glm::vec4& tangent = mTangentsData[i];
-						glm::vec3 binormal = glm::cross(normal, glm::vec3(tangent));
-						if (tangent.w < 0.0f)
-						{
-							binormal = -binormal;
-						}
+						const glm::vec3& tangent = mTangentsData[i];
+						const glm::vec3& binormal = mBinormalsData[i];
 
 						// Generate tangent frame rotation matrix
 						glm::mat3 tangentFrame(
@@ -255,116 +353,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void OpenVRMeshResourceLoader::calculateTangentArrayOfRenderModel()
-	{
-		// Lengyel, Eric. "Computing Tangent Space Basis Vectors for an Arbitrary Mesh". Terathon Software 3D Graphics Library, 2001. http://www.terathon.com/code/tangent.html
-		// -> Copy found at: https://fenix.tecnico.ulisboa.pt/downloadFile/845043405449073/Tangent%20Space%20Calculation.pdf
-		// -> Don't remove this commented code style adjusted copy below, it's the base of an adjusted function and we should be able to have the original as reference
-		/*
-		struct Triangle
-		{
-			uint16_t index[3];
-		};
-		void calculateTangentArray(uint32_t numberOfVertices, const glm::vec3* positions, const glm::vec3* normals, const glm::vec2* textureCoordinates, uint32_t numberOfTriangles, const Triangle* triangles, glm::vec4* tangents)
-		{
-			glm::vec3* tan1 = new glm::vec3[numberOfVertices * 2];
-			glm::vec3* tan2 = tan1 + numberOfVertices;
-			memset(tan1, 0, numberOfVertices * sizeof(glm::vec3) * 2);
-			for (uint32_t i = 0; i < numberOfTriangles; ++i)
-			{
-				const uint16_t i1 = triangles->index[0];
-				const uint16_t i2 = triangles->index[1];
-				const uint16_t i3 = triangles->index[2];
-				const glm::vec3& v1 = positions[i1];
-				const glm::vec3& v2 = positions[i2];
-				const glm::vec3& v3 = positions[i3];
-				const glm::vec2& w1 = textureCoordinates[i1];
-				const glm::vec2& w2 = textureCoordinates[i2];
-				const glm::vec2& w3 = textureCoordinates[i3];
-				const float x1 = v2.x - v1.x;
-				const float x2 = v3.x - v1.x;
-				const float y1 = v2.y - v1.y;
-				const float y2 = v3.y - v1.y;
-				const float z1 = v2.z - v1.z;
-				const float z2 = v3.z - v1.z;
-				const float s1 = w2.x - w1.x;
-				const float s2 = w3.x - w1.x;
-				const float t1 = w2.y - w1.y;
-				const float t2 = w3.y - w1.y;
-				const float r = 1.0f / (s1 * t2 - s2 * t1);
-				const glm::vec3 sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r, (t2 * z1 - t1 * z2) * r);
-				const glm::vec3 tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r);
-				tan1[i1] += sdir;
-				tan1[i2] += sdir;
-				tan1[i3] += sdir;
-				tan2[i1] += tdir;
-				tan2[i2] += tdir;
-				tan2[i3] += tdir;
-				++triangles;
-			}
-			for (uint32_t i = 0; i < numberOfVertices; ++i)
-			{
-				const glm::vec3& n = normals[i];
-				const glm::vec3& t = tan1[i];
-
-				// Gram-Schmidt orthogonalize and calculate handedness
-				tangents[i] = glm::vec4(glm::normalize(t - n * glm::dot(n, t)), (glm::dot(glm::cross(n, t), tan2[i]) < 0.0f) ? -1.0f : 1.0f);
-			}
-			delete [] tan1;
-		}
-		*/
-		// Function of "Computing Tangent Space Basis Vectors for an Arbitrary Mesh" adjusted to "vr::RenderModel_t" to not need to move around too much data just for computation
-		const uint32_t numberOfTriangles = mVrRenderModel->unTriangleCount;
-		const uint32_t numberOfVertices = mVrRenderModel->unVertexCount;
-		mTemporaryTangentsData.resize(numberOfVertices * 2);
-		glm::vec3* tan1 = mTemporaryTangentsData.data();
-		glm::vec3* tan2 = mTemporaryTangentsData.data() + numberOfVertices;
-		memset(tan1, 0, numberOfVertices * sizeof(glm::vec3) * 2);
-		const uint16_t* currentIndex = mVrRenderModel->rIndexData;
-		const vr::RenderModel_Vertex_t* vrRenderModelVertex = mVrRenderModel->rVertexData;
-		for (uint32_t i = 0; i < numberOfTriangles; ++i, currentIndex += 3)
-		{
-			const uint16_t i1 = currentIndex[0];
-			const uint16_t i2 = currentIndex[1];
-			const uint16_t i3 = currentIndex[2];
-			const vr::HmdVector3_t& v1 = vrRenderModelVertex[i1].vPosition;
-			const vr::HmdVector3_t& v2 = vrRenderModelVertex[i2].vPosition;
-			const vr::HmdVector3_t& v3 = vrRenderModelVertex[i3].vPosition;
-			const float* w1 = vrRenderModelVertex[i1].rfTextureCoord;
-			const float* w2 = vrRenderModelVertex[i2].rfTextureCoord;
-			const float* w3 = vrRenderModelVertex[i3].rfTextureCoord;
-			const float x1 = v2.v[0] - v1.v[0];
-			const float x2 = v3.v[0] - v1.v[0];
-			const float y1 = v2.v[1] - v1.v[1];
-			const float y2 = v3.v[1] - v1.v[1];
-			const float z1 = -v2.v[2] - -v1.v[2];
-			const float z2 = -v3.v[2] - -v1.v[2];
-			const float s1 = w2[0] - w1[0];
-			const float s2 = w3[0] - w1[0];
-			const float t1 = w2[1] - w1[1];
-			const float t2 = w3[1] - w1[1];
-			const float r = 1.0f / (s1 * t2 - s2 * t1);
-			const glm::vec3 sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r, (t2 * z1 - t1 * z2) * r);
-			const glm::vec3 tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r);
-			tan1[i1] += sdir;
-			tan1[i2] += sdir;
-			tan1[i3] += sdir;
-			tan2[i1] += tdir;
-			tan2[i2] += tdir;
-			tan2[i3] += tdir;
-		}
-		glm::vec4* tangents = mTangentsData.data();
-		for (uint32_t i = 0; i < numberOfVertices; ++i)
-		{
-			const vr::HmdVector3_t& vrHmdVector3 = vrRenderModelVertex[i].vNormal;
-			const glm::vec3 n(vrHmdVector3.v[0], vrHmdVector3.v[1], -vrHmdVector3.v[2]);
-			const glm::vec3& t = tan1[i];
-
-			// Gram-Schmidt orthogonalize and calculate handedness
-			tangents[i] = glm::vec4(glm::normalize(t - n * glm::dot(n, t)), (glm::dot(glm::cross(n, t), tan2[i]) < 0.0f) ? -1.0f : 1.0f);
-		}
-	}
-
 	Renderer::IVertexArray* OpenVRMeshResourceLoader::createVertexArray() const
 	{
 		Renderer::IBufferManager& bufferManager = mRendererRuntime.getBufferManager();

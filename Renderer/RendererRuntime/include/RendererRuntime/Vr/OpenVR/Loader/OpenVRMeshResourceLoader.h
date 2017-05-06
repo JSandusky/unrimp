@@ -79,6 +79,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		static const ResourceLoaderTypeId TYPE_ID;
+		typedef std::vector<glm::vec3> BufferData;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline vr::RenderModel_t* getVrRenderModel() const;
+		inline BufferData& getTangentsData();
+		inline BufferData& getBinormalsData();
 
 
 	//[-------------------------------------------------------]
@@ -100,7 +110,6 @@ namespace RendererRuntime
 		inline virtual ~OpenVRMeshResourceLoader();
 		explicit OpenVRMeshResourceLoader(const OpenVRMeshResourceLoader&) = delete;
 		OpenVRMeshResourceLoader& operator=(const OpenVRMeshResourceLoader&) = delete;
-		void calculateTangentArrayOfRenderModel();
 		Renderer::IVertexArray* createVertexArray() const;
 		const std::string& getRenderModelName() const;
 
@@ -109,10 +118,8 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		typedef std::vector<glm::vec3>	TemporaryTangentsData;
-		typedef std::vector<glm::vec4>	TangentsData;
-		typedef std::vector<uint8_t>	VertexBufferData;
-		typedef std::vector<uint16_t>	IndexBufferData;
+		typedef std::vector<uint8_t>  VertexBufferData;
+		typedef std::vector<uint16_t> IndexBufferData;
 
 
 	//[-------------------------------------------------------]
@@ -121,8 +128,8 @@ namespace RendererRuntime
 	private:
 		// Temporary data
 		vr::RenderModel_t*		mVrRenderModel;
-		TemporaryTangentsData	mTemporaryTangentsData;
-		TangentsData			mTangentsData;
+		BufferData				mTangentsData;
+		BufferData				mBinormalsData;
 		VertexBufferData		mVertexBufferData;
 		IndexBufferData			mIndexBufferData;
 		Renderer::IVertexArray*	mVertexArray;

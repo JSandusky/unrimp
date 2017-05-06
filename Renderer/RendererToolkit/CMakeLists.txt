@@ -52,6 +52,7 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/${OS_ARCHITECTURE}/A
 # Cross-platform source codes
 set(SOURCE_CODES
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/FileWatcher/FileWatcher.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/src/mikktspace.c
 	src/AssetCompiler/CompositorNodeAssetCompiler.cpp
 	src/AssetCompiler/CompositorWorkspaceAssetCompiler.cpp
 	src/AssetCompiler/MaterialAssetCompiler.cpp

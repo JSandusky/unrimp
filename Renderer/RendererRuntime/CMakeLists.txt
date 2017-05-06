@@ -60,6 +60,7 @@ set(SOURCE_CODES
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4frame.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4hc.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/xxhash.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/src/mikktspace.c
 	src/Asset/AssetManager.cpp
 	src/Asset/AssetPackage.cpp
 	src/Asset/Serializer/AssetPackageSerializer.cpp
