@@ -176,8 +176,8 @@ if(NOT ANDROID)
 		${SOURCE_CODES}
 		src/Vr/OpenVR/OpenVRRuntimeLinking.cpp
 		src/Vr/OpenVR/VrManagerOpenVR.cpp
-		src/Vr/OpenVR/OpenVRMeshResourceLoader.cpp
-		src/Vr/OpenVR/OpenVRTextureResourceLoader.cpp
+		src/Vr/OpenVR/Loader/OpenVRMeshResourceLoader.cpp
+		src/Vr/OpenVR/Loader/OpenVRTextureResourceLoader.cpp
 	)
 endif()
 
