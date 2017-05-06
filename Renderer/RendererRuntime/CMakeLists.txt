@@ -93,6 +93,8 @@ set(SOURCE_CODES
 	src/Resource/CompositorNode/Pass/CompositorPassFactory.cpp
 	src/Resource/CompositorNode/Pass/Clear/CompositorInstancePassClear.cpp
 	src/Resource/CompositorNode/Pass/Clear/CompositorResourcePassClear.cpp
+	src/Resource/CompositorNode/Pass/VrHiddenAreaMesh/CompositorInstancePassVrHiddenAreaMesh.cpp
+	src/Resource/CompositorNode/Pass/VrHiddenAreaMesh/CompositorResourcePassVrHiddenAreaMesh.cpp
 	src/Resource/CompositorNode/Pass/Scene/CompositorInstancePassScene.cpp
 	src/Resource/CompositorNode/Pass/Scene/CompositorResourcePassScene.cpp
 	src/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.cpp

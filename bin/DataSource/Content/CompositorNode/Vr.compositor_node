@@ -164,12 +164,12 @@
 			},
 			"LdrFramebuffer0":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget0" ],
-				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
+				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget0" ]
 			},
 			"LdrFramebuffer1":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget1" ]
+				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget1" ],
+				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			}
 		},
 		"Targets":
@@ -186,6 +186,10 @@
 			{
 				"Description": "Depth pre-pass",
 				"Clear":
+				{
+					"Flags": "DEPTH"
+				},
+				"VrHiddenAreaMesh":
 				{
 					"Flags": "DEPTH"
 				},
@@ -447,9 +451,6 @@
 					{
 						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget1"
 					}
-				},
-				"DebugGui":
-				{
 				}
 			}
 		},

@@ -203,6 +203,12 @@
     <Filter Include="External\mikktspace">
       <UniqueIdentifier>{189cfe7b-1d03-49c2-8fe9-b04cf6b4a9cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh">
+      <UniqueIdentifier>{daa6382d-cba1-4e92-9f24-5b5dea8194ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader">
+      <UniqueIdentifier>{46975305-57ad-457e-80d4-b83ae0d921de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -581,6 +587,9 @@
     </None>
     <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.inl">
       <Filter>Source Files\Vr\OpenVR\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorResourcePassVrHiddenAreaMesh.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1161,6 +1170,27 @@
     <ClInclude Include="..\..\External\mikktspace\include\mikktspace\mikktspace.h">
       <Filter>External\mikktspace</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorResourcePassVrHiddenAreaMesh.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorInstancePassVrHiddenAreaMesh.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader\VrHiddenAreaMesh_GLSL_ES3.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader\VrHiddenAreaMesh_HLSL_D3D9.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader\VrHiddenAreaMesh_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader\VrHiddenAreaMesh_Null.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader\VrHiddenAreaMesh_GLSL_410.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1528,6 +1558,12 @@
     </ClCompile>
     <ClCompile Include="..\..\External\mikktspace\src\mikktspace.c">
       <Filter>External\mikktspace</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorInstancePassVrHiddenAreaMesh.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorResourcePassVrHiddenAreaMesh.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

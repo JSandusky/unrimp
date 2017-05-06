@@ -25,6 +25,7 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorInstancePassDebugGui.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
+#include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/DebugGui/DebugGuiManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -51,6 +52,7 @@ namespace RendererRuntime
 		if (renderables.empty())
 		{
 			// Fill command buffer using fixed build in renderer configuration resources
+			compositorContextData.resetCurrentlyBoundMaterialBlueprintResource();
 			debugGuiManager.fillCommandBufferUsingFixedBuildInRendererConfiguration(commandBuffer);
 		}
 		else
