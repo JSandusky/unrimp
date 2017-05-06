@@ -24,6 +24,13 @@
 				"Value": "TRUE",
 				"Description": "Cast shadows?"
 			},
+			"CullMode":
+			{
+				"Usage": "RASTERIZER_STATE",
+				"ValueType": "CULL_MODE",
+				"Value": "BACK",
+				"Description": "Cull mode rasterizer state"
+			},
 			"UseGpuSkinning":
 			{
 				"Usage": "SHADER_COMBINATION",
@@ -155,6 +162,10 @@
 			{
 				"VertexShaderBlueprintAssetId": "17",
 				"FragmentShaderBlueprintAssetId": "18"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "@CullMode"
 			}
 		},
 		"Resources":
