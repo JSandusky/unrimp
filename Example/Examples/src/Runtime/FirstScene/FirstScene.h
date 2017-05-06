@@ -135,7 +135,7 @@ private:
 		DEBUG,
 		FORWARD,
 		DEFERRED,
-		NumberOfCompositors
+		VR
 	};
 	enum Msaa
 	{

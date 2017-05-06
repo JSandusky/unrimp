@@ -1,0 +1,25 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "172",
+			"AssetType": "CompositorNode",
+			"AssetCategory": "Default",
+			"AssetName": "Vr",
+			"AssetDependencies": [ "102", "117", "121" ],
+			"FileDependencies": [ "Vr.compositor_node" ],
+			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team",
+			"Description": "Vr rendering compositor node"
+		},
+		"CompositorNodeAssetCompiler":
+		{
+			"InputFile": "Vr.compositor_node"
+		}
+	}
+}

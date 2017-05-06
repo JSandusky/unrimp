@@ -176,6 +176,8 @@
 		"168": "VertexAttributes/Default/DebugGui.asset",
 		"169": "MaterialBlueprint/Scene/TransparentMesh.asset",
 		"170": "Material/Imrod/TransparentImrod.asset",
-		"171": "ShaderBlueprint/Scene/TransparentMeshFragment.asset"
+		"171": "ShaderBlueprint/Scene/TransparentMeshFragment.asset",
+		"172": "CompositorNode/Vr.asset",
+		"173": "CompositorWorkspace/Vr.asset"
 	}
 }

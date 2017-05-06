@@ -49,13 +49,6 @@
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 				"Description": "2D bloom map"
 			},
-			"LensFlareMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-				"Description": "2D lens flare map"
-			},
 			"DirtyLensMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -63,12 +56,26 @@
 				"Value": "135",
 				"Description": "2D dirty lens map"
 			},
+			"UseLensFlareMap":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Use lens flare map?"
+			},
+			"LensFlareMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D lens flare map"
+			},
 			"LensStarMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "145",
-				"Description": "2D lens star map for diffraction starburst"
+				"Description": "2D lens star map for diffraction starburst, only used of the lens flare map is used"
 			}
 		},
 		"RootSignature":
@@ -169,7 +176,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
-							"BaseShaderRegisterName": "LensFlareMap",
+							"BaseShaderRegisterName": "DirtyLensMap",
 							"SamplerRootParameterIndex": "2"
 						}
 					},
@@ -184,7 +191,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "4",
-							"BaseShaderRegisterName": "DirtyLensMap",
+							"BaseShaderRegisterName": "LensFlareMap",
 							"SamplerRootParameterIndex": "2"
 						}
 					},
@@ -295,14 +302,6 @@
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				},
-				"LensFlareMap":
-				{
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@LensFlareMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-					"MipmapsUsed": "FALSE"
-				},
 				"DirtyLensMap":
 				{
 					"Usage": "MATERIAL_REFERENCE",
@@ -310,6 +309,14 @@
 					"Value": "@DirtyLensMap",
 					"RgbHardwareGammaCorrection": "TRUE",
 					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"MipmapsUsed": "FALSE"
+				},
+				"LensFlareMap":
+				{
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@LensFlareMap",
+					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"LensStarMap":
