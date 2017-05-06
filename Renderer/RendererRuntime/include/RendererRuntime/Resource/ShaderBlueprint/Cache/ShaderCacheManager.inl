@@ -38,7 +38,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline ShaderCacheManager::ShaderCacheManager(ShaderBlueprintResourceManager& shaderBlueprintResourceManager) :
-		mShaderBlueprintResourceManager(shaderBlueprintResourceManager)
+		mShaderBlueprintResourceManager(shaderBlueprintResourceManager),
+		mCacheNeedsSaving(true)
 	{
 		// Nothing here
 	}
@@ -46,6 +47,11 @@ namespace RendererRuntime
 	inline ShaderCacheManager::~ShaderCacheManager()
 	{
 		clearCache();
+	}
+
+	inline bool ShaderCacheManager::doesCacheNeedSaving() const
+	{
+		return mCacheNeedsSaving;
 	}
 
 

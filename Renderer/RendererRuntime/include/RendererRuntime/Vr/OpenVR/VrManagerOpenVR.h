@@ -40,7 +40,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class ISceneNode;
+	class SceneNode;
 	class IRendererRuntime;
 	class OpenVRRuntimeLinking;
 	class IVrManagerOpenVRListener;
@@ -78,6 +78,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT static const VrManagerTypeId TYPE_ID;
+		typedef std::vector<std::string> RenderModelNames;
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		static AssetId diffuseTextureIdToAssetId(vr::TextureID_t diffuseTextureId);
 
 
 	//[-------------------------------------------------------]
@@ -87,6 +95,8 @@ namespace RendererRuntime
 		inline IVrManagerOpenVRListener& getVrManagerOpenVRListener() const;
 		RENDERERRUNTIME_API_EXPORT void setVrManagerOpenVRListener(IVrManagerOpenVRListener* vrManagerOpenVRListener);	// Does not take over the control of the memory
 		inline vr::IVRSystem* getVrSystem() const;
+		inline MaterialResourceId getVrDeviceMaterialResourceId() const;
+		inline const RenderModelNames& getRenderModelNames() const;
 		inline const vr::TrackedDevicePose_t& getVrTrackedDevicePose(vr::TrackedDeviceIndex_t trackedDeviceIndex) const;
 		inline const glm::mat4& getDevicePoseMatrix(vr::TrackedDeviceIndex_t trackedDeviceIndex) const;
 
@@ -97,7 +107,7 @@ namespace RendererRuntime
 	public:
 		virtual VrManagerTypeId getVrManagerTypeId() const override;
 		virtual bool isHmdPresent() const override;
-		virtual void setSceneResource(ISceneResource* sceneResource) override;
+		virtual void setSceneResourceId(SceneResourceId sceneResourceId) override;
 		virtual bool startup(AssetId vrDeviceMaterialAssetId) override;
 		inline virtual bool isRunning() const override;
 		virtual void shutdown() override;
@@ -127,7 +137,7 @@ namespace RendererRuntime
 	private:
 		explicit VrManagerOpenVR(IRendererRuntime& rendererRuntime);
 		virtual ~VrManagerOpenVR();
-		VrManagerOpenVR(const VrManagerOpenVR&) = delete;
+		explicit VrManagerOpenVR(const VrManagerOpenVR&) = delete;
 		VrManagerOpenVR& operator=(const VrManagerOpenVR&) = delete;
 		void setupRenderModelForTrackedDevice(vr::TrackedDeviceIndex_t unTrackedDeviceIndex);
 
@@ -139,8 +149,8 @@ namespace RendererRuntime
 		struct Component
 		{
 			std::string name;
-			ISceneNode* sceneNode = nullptr;	// TODO(co) No crazy raw-pointers
-			Component(const std::string& _name, ISceneNode* _sceneNode) :
+			SceneNode* sceneNode = nullptr;	// TODO(co) No crazy raw-pointers
+			Component(const std::string& _name, SceneNode* _sceneNode) :
 				name(_name),
 				sceneNode(_sceneNode)
 			{};
@@ -161,13 +171,14 @@ namespace RendererRuntime
 		IVrManagerOpenVRListener*  mVrManagerOpenVRListener;	///< OpenVR manager listener, always valid, do not destroy the instance
 		bool					   mVrDeviceMaterialResourceLoaded;
 		MaterialResourceId		   mVrDeviceMaterialResourceId;
-		ISceneResource*			   mSceneResource;			// TODO(co) No crazy raw-pointers
-		ISceneNode*				   mSceneNodes[vr::k_unMaxTrackedDeviceCount];	// TODO(co) No crazy raw-pointers
+		SceneResourceId			   mSceneResourceId;
+		SceneNode*				   mSceneNodes[vr::k_unMaxTrackedDeviceCount];	// TODO(co) No crazy raw-pointers
 		TrackedDeviceInformation   mTrackedDeviceInformation[vr::k_unMaxTrackedDeviceCount];
 		OpenVRRuntimeLinking*	   mOpenVRRuntimeLinking;
-		vr::EGraphicsAPIConvention mVrGraphicsAPIConvention;
+		vr::ETextureType		   mVrTextureType;
 		vr::IVRSystem*			   mVrSystem;
 		vr::IVRRenderModels*	   mVrRenderModels;
+		RenderModelNames		   mRenderModelNames;
 		bool					   mShowRenderModels;
 		// Transform
 		vr::TrackedDevicePose_t	mVrTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];

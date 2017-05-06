@@ -29,6 +29,7 @@
 
 #include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Resource/Mesh/MeshResource.h>
 #include <RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h>
 
@@ -40,6 +41,8 @@ PRAGMA_WARNING_PUSH
 	#include <assimp/postprocess.h>
 PRAGMA_WARNING_POP
 
+#include <mikktspace/mikktspace.h>
+
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
@@ -49,14 +52,87 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-#include <sstream>
-
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
 namespace
 {
+
+	namespace mikktspace
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		SMikkTSpaceContext g_MikkTSpaceContext;
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		int getNumFaces(const SMikkTSpaceContext* pContext)
+		{
+			const aiMesh* assimpMesh = static_cast<const aiMesh*>(pContext->m_pUserData);
+			return static_cast<int>(assimpMesh->mNumFaces);
+		}
+
+		int getNumVerticesOfFace(const SMikkTSpaceContext* pContext, const int iFace)
+		{
+			const aiMesh* assimpMesh = static_cast<const aiMesh*>(pContext->m_pUserData);
+			return static_cast<int>(assimpMesh->mFaces[iFace].mNumIndices);
+		}
+
+		void getPosition(const SMikkTSpaceContext* pContext, float fvPosOut[], const int iFace, const int iVert)
+		{
+			const aiMesh* assimpMesh = static_cast<const aiMesh*>(pContext->m_pUserData);
+			const aiVector3D& assimpVertex = assimpMesh->mVertices[assimpMesh->mFaces[iFace].mIndices[iVert]];
+			fvPosOut[0] = assimpVertex.x;
+			fvPosOut[1] = assimpVertex.y;
+			fvPosOut[2] = assimpVertex.z;
+		}
+
+		void getNormal(const SMikkTSpaceContext* pContext, float fvNormOut[], const int iFace, const int iVert)
+		{
+			const aiMesh* assimpMesh = static_cast<const aiMesh*>(pContext->m_pUserData);
+			const aiVector3D& assimpNormal = assimpMesh->mNormals[assimpMesh->mFaces[iFace].mIndices[iVert]];
+			fvNormOut[0] = assimpNormal.x;
+			fvNormOut[1] = assimpNormal.y;
+			fvNormOut[2] = assimpNormal.z;
+		}
+
+		void getTexCoord(const SMikkTSpaceContext* pContext, float fvTexcOut[], const int iFace, const int iVert)
+		{
+			const aiMesh* assimpMesh = static_cast<const aiMesh*>(pContext->m_pUserData);
+			const aiVector3D& assimpTexCoord = assimpMesh->mTextureCoords[0][assimpMesh->mFaces[iFace].mIndices[iVert]];
+			fvTexcOut[0] = assimpTexCoord.x;
+			fvTexcOut[1] = assimpTexCoord.y;
+		}
+
+		void setTSpace(const SMikkTSpaceContext* pContext, const float fvTangent[], const float fvBiTangent[], const float, const float, const tbool, const int iFace, const int iVert)
+		{
+			const aiMesh* assimpMesh = static_cast<const aiMesh*>(pContext->m_pUserData);
+			const unsigned int index = assimpMesh->mFaces[iFace].mIndices[iVert];
+
+			{ // Tangent
+				aiVector3D& assimpTangent = assimpMesh->mTangents[index];
+				assimpTangent.x = fvTangent[0];
+				assimpTangent.y = fvTangent[1];
+				assimpTangent.z = fvTangent[2];
+			}
+
+			{ // Binormal
+				aiVector3D& assimpBinormal = assimpMesh->mBitangents[index];
+				assimpBinormal.x = fvBiTangent[0];
+				assimpBinormal.y = fvBiTangent[1];
+				assimpBinormal.z = fvBiTangent[2];
+			}
+		}
+
+
+	} // mikktspace
+
 	namespace detail
 	{
 
@@ -245,7 +321,7 @@ namespace
 					const aiNode* assimpChildNode = assimpNode.mChildren[i];
 					if (assimpChildNode->mName == aiString("<MD5_Hierarchy>"))
 					{
-						numberOfBones = ::detail::getNumberOfBonesRecursive(*assimpChildNode);
+						numberOfBones = getNumberOfBonesRecursive(*assimpChildNode);
 						break;
 					}
 				}
@@ -358,7 +434,14 @@ namespace
 			for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
 			{
 				// Get the used mesh
-				const aiMesh& assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
+				aiMesh& assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
+
+				// Use "mikktspace" by Morten S. Mikkelsen for semi-standard tangent space generation and overwrite what Assimp calculated (see e.g. https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps for background information)
+				mikktspace::g_MikkTSpaceContext.m_pUserData = reinterpret_cast<void*>(&assimpMesh);
+				if (genTangSpaceDefault(&mikktspace::g_MikkTSpaceContext) == 0)
+				{
+					throw std::runtime_error("mikktspace for semi-standard tangent space generation failed");
+				}
 
 				// Get the start vertex inside the our vertex buffer
 				const uint32_t starVertex = numberOfVertices;
@@ -402,7 +485,6 @@ namespace
 						  // - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 						  //   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
 							// Get the Assimp mesh vertex tangent, binormal and normal
-							// TODO(co) Throw away ASSIMP tangent space vectors and use "mikktspace" as described in https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps ?
 							aiVector3D tangent = assimpMesh.mTangents[j];
 							aiVector3D binormal = assimpMesh.mBitangents[j];
 							aiVector3D normal = assimpMesh.mNormals[j];
@@ -586,7 +668,19 @@ namespace RendererToolkit
 		CacheManager::CacheEntries cacheEntries;
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Mesh::FORMAT_VERSION, cacheEntries))
 		{
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
+
+			// Setup "mikktspace" by Morten S. Mikkelsen for semi-standard tangent space generation (see e.g. https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps for background information)
+			SMikkTSpaceInterface mikkTSpaceInterface;
+			mikkTSpaceInterface.m_getNumFaces		   = mikktspace::getNumFaces;
+			mikkTSpaceInterface.m_getNumVerticesOfFace = mikktspace::getNumVerticesOfFace;
+			mikkTSpaceInterface.m_getPosition		   = mikktspace::getPosition;
+			mikkTSpaceInterface.m_getNormal			   = mikktspace::getNormal;
+			mikkTSpaceInterface.m_getTexCoord		   = mikktspace::getTexCoord;
+			mikkTSpaceInterface.m_setTSpaceBasic	   = nullptr;
+			mikkTSpaceInterface.m_setTSpace			   = mikktspace::setTSpace;
+			mikktspace::g_MikkTSpaceContext.m_pInterface = &mikkTSpaceInterface;
+			mikktspace::g_MikkTSpaceContext.m_pUserData  = nullptr;
 
 			// Create an instance of the Assimp importer class
 			Assimp::Importer assimpImporter;
@@ -594,6 +688,8 @@ namespace RendererToolkit
 
 			// Load the given mesh
 			// -> "aiProcess_MakeLeftHanded" is added because the rasterizer states directly map to Direct3D
+			// -> We're using "mikktspace" by Morten S. Mikkelsen for semi-standard tangent space generation (see e.g. https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps for background information)
+			// -> "aiProcess_CalcTangentSpace" from Assimp is still used to allocate internal memory and enable Assimp to perform work regarding e.g. shared vertices
 			const aiScene *assimpScene = assimpImporter.ReadFile(inputFilename, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder);
 			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
@@ -624,7 +720,7 @@ namespace RendererToolkit
 					meshHeader.numberOfVertexAttributes = static_cast<uint8_t>(vertexAttributes.numberOfAttributes);
 					meshHeader.numberOfSubMeshes		= static_cast<uint8_t>(subMeshes.size());
 					meshHeader.numberOfBones			= skeleton.numberOfBones;
-					outputMemoryStream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(RendererRuntime::v1Mesh::MeshHeader));
+					memoryFile.write(&meshHeader, sizeof(RendererRuntime::v1Mesh::MeshHeader));
 				}
 
 				{ // Vertex and index buffer data
@@ -645,8 +741,8 @@ namespace RendererToolkit
 					}
 
 					// Write down the vertex and index buffer
-					outputMemoryStream.write(reinterpret_cast<const char*>(vertexBufferData), numberOfBytesPerVertex * numberOfVertices);
-					outputMemoryStream.write(reinterpret_cast<const char*>(indexBufferData), static_cast<std::streamsize>(sizeof(uint16_t) * numberOfIndices));
+					memoryFile.write(vertexBufferData, numberOfBytesPerVertex * numberOfVertices);
+					memoryFile.write(indexBufferData, sizeof(uint16_t) * numberOfIndices);
 
 					// Destroy local vertex and input buffer data
 					delete [] vertexBufferData;
@@ -654,10 +750,10 @@ namespace RendererToolkit
 				}
 
 				// Write down the vertex array attributes
-				outputMemoryStream.write(reinterpret_cast<const char*>(vertexAttributes.attributes), static_cast<std::streamsize>(sizeof(Renderer::VertexAttribute) * vertexAttributes.numberOfAttributes));
+				memoryFile.write(vertexAttributes.attributes, sizeof(Renderer::VertexAttribute) * vertexAttributes.numberOfAttributes);
 
 				// Write down the sub-meshes
-				outputMemoryStream.write(reinterpret_cast<const char*>(subMeshes.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size()));
+				memoryFile.write(subMeshes.data(), sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size());
 
 				// Write down the optional skeleton
 				if (skeleton.numberOfBones > 0)
@@ -672,7 +768,7 @@ namespace RendererToolkit
 						skeleton.localBoneMatrices[i].Transpose();
 						skeleton.boneOffsetMatrices[i].Transpose();
 					}
-					outputMemoryStream.write(reinterpret_cast<const char*>(skeleton.getSkeletonData()), static_cast<std::streamsize>(skeleton.getNumberOfSkeletonDataBytes()));
+					memoryFile.write(skeleton.getSkeletonData(), skeleton.getNumberOfSkeletonDataBytes());
 				}
 			}
 			else
@@ -681,7 +777,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1Mesh::FORMAT_TYPE, RendererRuntime::v1Mesh::FORMAT_VERSION, outputAssetFilename);
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1Mesh::FORMAT_TYPE, RendererRuntime::v1Mesh::FORMAT_VERSION, outputAssetFilename, input.fileManager);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);

@@ -324,7 +324,6 @@
 			{
 				"PassUniformBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -432,7 +431,6 @@
 			{
 				"LightTextureBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "LIGHT",
 					"ValueType": "FLOAT_4",
 					"Value": "@LIGHT"
@@ -442,20 +440,17 @@
 			{
 				"SamplerPoint":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_POINT",
 					"MaxLOD": "0.0"
 				},
 				"SamplerLinear":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)"
 				}
 			},
 			"Textures":
 			{
 				"GBufferMap0":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@GBufferMap0",
@@ -464,7 +459,6 @@
 				},
 				"GBufferMap1":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@GBufferMap1",
@@ -473,7 +467,6 @@
 				},
 				"GBufferMap2":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@GBufferMap2",
@@ -482,7 +475,6 @@
 				},
 				"DepthMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DepthMap",
@@ -491,7 +483,6 @@
 				},
 				"ShadowMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ShadowMap",
@@ -500,7 +491,6 @@
 				},
 				"ScreenSpaceAmbientOcclusionMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ScreenSpaceAmbientOcclusionMap",
@@ -509,7 +499,6 @@
 				},
 				"ReflectionCubeMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ReflectionCubeMap",
@@ -518,7 +507,6 @@
 				},
 				"LightClustersMap3D":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",

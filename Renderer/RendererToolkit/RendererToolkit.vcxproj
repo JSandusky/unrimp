@@ -38,18 +38,11 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\RendererToolkit\IRendererToolkit.inl" />
     <None Include="include\RendererToolkit\Project\IProject.inl" />
-    <None Include="include\RendererToolkit\Project\ProjectAssetMonitor.inl" />
     <None Include="include\RendererToolkit\Project\ProjectImpl.inl" />
-    <None Include="include\RendererToolkit\RendererToolkitImpl.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\External\lz4\include\lz4\lz4.h" />
-    <ClInclude Include="..\..\External\lz4\include\lz4\lz4frame.h" />
-    <ClInclude Include="..\..\External\lz4\include\lz4\lz4frame_static.h" />
-    <ClInclude Include="..\..\External\lz4\include\lz4\lz4hc.h" />
-    <ClInclude Include="..\..\External\lz4\include\lz4\lz4opt.h" />
-    <ClInclude Include="..\..\External\lz4\include\lz4\xxhash.h" />
+    <ClInclude Include="..\..\External\mikktspace\include\mikktspace\mikktspace.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcher.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherImpl.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherLinux.h" />
@@ -95,45 +88,15 @@
     <ClInclude Include="include\RendererToolkit\WindowsHeader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\External\lz4\src\lz4.c">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="..\..\External\lz4\src\lz4frame.c">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="..\..\External\lz4\src\lz4hc.c">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="..\..\External\lz4\src\xxhash.c">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    <ClCompile Include="..\..\External\mikktspace\src\mikktspace.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level3</WarningLevel>
     </ClCompile>
     <ClCompile Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcher.cpp" />
     <ClCompile Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherLinux.cpp">
@@ -259,7 +222,6 @@
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\VertexAttributesAssetCompiler.cpp" />
     <ClCompile Include="src\Helper\CacheManager.cpp" />
-    <ClCompile Include="src\Helper\FileSystemHelper.cpp" />
     <ClCompile Include="src\Helper\JsonHelper.cpp" />
     <ClCompile Include="src\Helper\JsonMaterialBlueprintHelper.cpp" />
     <ClCompile Include="src\Helper\JsonMaterialHelper.cpp" />
@@ -405,7 +367,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -437,7 +399,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -469,7 +431,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -499,7 +461,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -531,7 +493,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -576,7 +538,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -620,7 +582,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -662,7 +624,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\;..\..\External\lz4\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\picosha2\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>

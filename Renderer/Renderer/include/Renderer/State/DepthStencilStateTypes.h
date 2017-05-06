@@ -139,7 +139,7 @@ namespace Renderer
 		*  @return
 		*    The default depth stencil state, see "Renderer::DepthStencilState" for the default values
 		*/
-		static inline const DepthStencilState &getDefaultDepthStencilState();
+		static inline const DepthStencilState& getDefaultDepthStencilState();
 
 
 	};

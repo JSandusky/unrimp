@@ -229,6 +229,9 @@ namespace Direct3D12Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit Direct3D12Renderer(const Direct3D12Renderer& source) = delete;
+		Direct3D12Renderer& operator =(const Direct3D12Renderer& source) = delete;
+
 		/**
 		*  @brief
 		*    Initialize the capabilities

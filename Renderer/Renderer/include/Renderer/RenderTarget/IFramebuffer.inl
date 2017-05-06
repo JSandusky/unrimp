@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IFramebuffer::IFramebuffer(IRenderer &renderer) :
+	inline IFramebuffer::IFramebuffer(IRenderer& renderer) :
 		IRenderTarget(ResourceType::FRAMEBUFFER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -56,23 +56,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedFramebuffers;
 			++getRenderer().getStatistics().currentNumberOfFramebuffers;
 		#endif
-	}
-
-	inline IFramebuffer::IFramebuffer(const IFramebuffer &source) :
-		IRenderTarget(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedFramebuffers;
-			++getRenderer().getStatistics().currentNumberOfFramebuffers;
-		#endif
-	}
-
-	inline IFramebuffer &IFramebuffer::operator =(const IFramebuffer &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

@@ -498,7 +498,7 @@
 			{
 				"Quad":
 				{
-					"Description": "Lens flare flareom pass: Horizontal Gaussian blur",
+					"Description": "Lens flare pass: Horizontal Gaussian blur",
 					"MaterialBlueprintAssetId": "117",
 					"SetMaterialProperties":
 					{

@@ -89,7 +89,7 @@ public:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
-	VrController(const VrController&) = delete;
+	explicit VrController(const VrController&) = delete;
 	VrController& operator=(const VrController&) = delete;
 
 

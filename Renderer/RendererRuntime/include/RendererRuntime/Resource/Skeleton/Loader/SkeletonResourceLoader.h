@@ -79,7 +79,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void initialize(const Asset& asset, IResource& resource) override;
+		virtual void initialize(const Asset& asset, bool reload, IResource& resource) override;
+		inline virtual bool hasDeserialization() const override;
 		virtual void onDeserialization(IFile& file) override;
 		inline virtual void onProcessing() override;
 		inline virtual bool onDispatch() override;
@@ -92,7 +93,7 @@ namespace RendererRuntime
 	private:
 		inline SkeletonResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~SkeletonResourceLoader();
-		SkeletonResourceLoader(const SkeletonResourceLoader&) = delete;
+		explicit SkeletonResourceLoader(const SkeletonResourceLoader&) = delete;
 		SkeletonResourceLoader& operator=(const SkeletonResourceLoader&) = delete;
 
 

@@ -236,26 +236,8 @@ protected:
 	*/
 	explicit IApplication(const char *windowTitle);
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*
-	*  @param[in] source
-	*    Source to copy from
-	*/
-	explicit IApplication(const IApplication &source);
-
-	/**
-	*  @brief
-	*    Copy operator
-	*
-	*  @param[in] source
-	*    Source to copy from
-	*
-	*  @return
-	*    Reference to this instance
-	*/
-	IApplication &operator =(const IApplication &source);
+	explicit IApplication(const IApplication &source) = delete;
+	IApplication &operator =(const IApplication &source) = delete;
 
 
 //[-------------------------------------------------------]

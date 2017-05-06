@@ -39,6 +39,7 @@
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/CompositorWorkspaceAssetCompiler.h"
 
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -51,7 +52,6 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <cassert>
-#include <sstream>
 #include <fstream>
 #include <algorithm>
 
@@ -118,7 +118,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProjectImpl::ProjectImpl() :
+	ProjectImpl::ProjectImpl(RendererRuntime::IFileManager& fileManager) :
+		mFileManager(fileManager),
 		mQualityStrategy(QualityStrategy::PRODUCTION),
 		mRapidJsonDocument(nullptr),
 		mProjectAssetMonitor(nullptr),
@@ -137,9 +138,9 @@ namespace RendererToolkit
 		clear();
 	}
 
-	const char* ProjectImpl::getAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const
+	const char* ProjectImpl::tryGetAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const
 	{
-		return mAssetPackage.getAssetFilenameByAssetId(assetId);
+		return mAssetPackage.tryGetAssetFilenameByAssetId(assetId);
 	}
 
 	void ProjectImpl::compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)
@@ -177,7 +178,7 @@ namespace RendererToolkit
 		std_filesystem::create_directories(assetOutputDirectory);
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mProjectName, *mCacheManager.get(), assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
+		IAssetCompiler::Input input(mFileManager, mProjectName, *mCacheManager.get(), assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
 
 		// Asset compiler configuration
 		assert(nullptr != mRapidJsonDocument);
@@ -189,59 +190,65 @@ namespace RendererToolkit
 
 		// Evaluate the asset type and continue with the processing in the asset type specific way
 		// TODO(co) Currently this is fixed build in, later on me might want to have this dynamic so we can plugin additional asset compilers
-		const AssetCompilerTypeId assetCompilerTypeId(assetType.c_str());
-		if (TextureAssetCompiler::TYPE_ID == assetCompilerTypeId)
+		try
 		{
-			TextureAssetCompiler().compile(input, configuration, output);
+			const AssetCompilerTypeId assetCompilerTypeId(assetType.c_str());
+			if (TextureAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				TextureAssetCompiler().compile(input, configuration, output);
+			}
+			else if (ShaderPieceAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				ShaderPieceAssetCompiler().compile(input, configuration, output);
+			}
+			else if (ShaderBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				ShaderBlueprintAssetCompiler().compile(input, configuration, output);
+			}
+			else if (MaterialBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				MaterialBlueprintAssetCompiler().compile(input, configuration, output);
+			}
+			else if (MaterialAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				MaterialAssetCompiler().compile(input, configuration, output);
+			}
+			else if (SkeletonAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				SkeletonAssetCompiler().compile(input, configuration, output);
+			}
+			else if (SkeletonAnimationAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				SkeletonAnimationAssetCompiler().compile(input, configuration, output);
+			}
+			else if (MeshAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				MeshAssetCompiler().compile(input, configuration, output);
+			}
+			else if (SceneAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				SceneAssetCompiler().compile(input, configuration, output);
+			}
+			else if (CompositorNodeAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				CompositorNodeAssetCompiler().compile(input, configuration, output);
+			}
+			else if (CompositorWorkspaceAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				CompositorWorkspaceAssetCompiler().compile(input, configuration, output);
+			}
+			else if (VertexAttributesAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			{
+				VertexAttributesAssetCompiler().compile(input, configuration, output);
+			}
+			else
+			{
+				throw std::runtime_error("Asset type \"" + assetType + "\" is unknown");
+			}
 		}
-		else if (ShaderPieceAssetCompiler::TYPE_ID == assetCompilerTypeId)
+		catch (const std::exception& e)
 		{
-			ShaderPieceAssetCompiler().compile(input, configuration, output);
-		}
-		else if (ShaderBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			ShaderBlueprintAssetCompiler().compile(input, configuration, output);
-		}
-		else if (MaterialBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			MaterialBlueprintAssetCompiler().compile(input, configuration, output);
-		}
-		else if (MaterialAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			MaterialAssetCompiler().compile(input, configuration, output);
-		}
-		else if (SkeletonAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			SkeletonAssetCompiler().compile(input, configuration, output);
-		}
-		else if (SkeletonAnimationAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			SkeletonAnimationAssetCompiler().compile(input, configuration, output);
-		}
-		else if (MeshAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			MeshAssetCompiler().compile(input, configuration, output);
-		}
-		else if (SceneAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			SceneAssetCompiler().compile(input, configuration, output);
-		}
-		else if (CompositorNodeAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			CompositorNodeAssetCompiler().compile(input, configuration, output);
-		}
-		else if (CompositorWorkspaceAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			CompositorWorkspaceAssetCompiler().compile(input, configuration, output);
-		}
-		else if (VertexAttributesAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			VertexAttributesAssetCompiler().compile(input, configuration, output);
-		}
-		else
-		{
-			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\" and ID " + std::to_string(asset.assetId) + ": Asset type \"" + assetType + "\" is unknown";
-			throw std::runtime_error(message);
+			throw std::runtime_error("Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\" and ID " + std::to_string(asset.assetId) + ": " + std::string(e.what()));
 		}
 	}
 
@@ -273,7 +280,7 @@ namespace RendererToolkit
 
 			// Setup project folder for cache manager, it will store there its data
 			// TODO(sw) For now only prototype. Change this.
-			mCacheManager = std::make_unique<CacheManager>(mProjectDirectory);
+			mCacheManager = std::make_unique<CacheManager>(mFileManager, mProjectName);
 		}
 	}
 
@@ -292,7 +299,7 @@ namespace RendererToolkit
 
 		{ // Write runtime asset package
 			RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = outputAssetPackage.getWritableSortedAssetVector();
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
 
 			// Ensure the asset package is sorted
 			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), ::detail::orderByAssetId);
@@ -307,14 +314,14 @@ namespace RendererToolkit
 				#pragma pack(pop)
 				AssetPackageHeader assetPackageHeader;
 				assetPackageHeader.numberOfAssets = static_cast<uint32_t>(sortedAssetVector.size());
-				outputMemoryStream.write(reinterpret_cast<const char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
+				memoryFile.write(&assetPackageHeader, sizeof(AssetPackageHeader));
 			}
 
 			// Write down the asset package content in one single burst
-			outputMemoryStream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::Asset) * sortedAssetVector.size()));
+			memoryFile.write(sortedAssetVector.data(), sizeof(RendererRuntime::Asset) * sortedAssetVector.size());
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::StringId("AssetPackage"), 2, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets");
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::StringId("AssetPackage"), 2, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", mFileManager);
 		}
 	}
 

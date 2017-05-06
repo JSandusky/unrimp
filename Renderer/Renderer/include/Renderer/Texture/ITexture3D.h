@@ -119,28 +119,10 @@ namespace Renderer
 		*  @param[in] depth
 		*    The depth of the texture
 		*/
-		inline ITexture3D(IRenderer &renderer, uint32_t width, uint32_t height, uint32_t depth);
+		inline ITexture3D(IRenderer& renderer, uint32_t width, uint32_t height, uint32_t depth);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ITexture3D(const ITexture3D &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ITexture3D &operator =(const ITexture3D &source);
+		explicit ITexture3D(const ITexture3D& source) = delete;
+		ITexture3D& operator =(const ITexture3D& source) = delete;
 
 
 	//[-------------------------------------------------------]

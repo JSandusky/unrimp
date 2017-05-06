@@ -34,6 +34,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IFileManager;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -56,13 +65,25 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<uint8_t> ByteVector;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
 		inline MemoryFile();
 		inline virtual ~MemoryFile();
+		inline ByteVector& getByteVector();
+		inline const ByteVector& getByteVector() const;
+		RENDERERRUNTIME_API_EXPORT bool loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, const std::string& filename, IFileManager& fileManager);
+		RENDERERRUNTIME_API_EXPORT void loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, IFile& file);
 		RENDERERRUNTIME_API_EXPORT void setLz4CompressedDataByFile(IFile& file, uint32_t numberOfCompressedBytes, uint32_t numberOfDecompressedBytes);
 		RENDERERRUNTIME_API_EXPORT void decompress();
+		RENDERERRUNTIME_API_EXPORT bool writeLz4CompressedDataToFile(uint32_t formatType, uint32_t formatVersion, const std::string& filename, IFileManager& fileManager) const;
 
 
 	//[-------------------------------------------------------]
@@ -72,21 +93,15 @@ namespace RendererRuntime
 		inline virtual size_t getNumberOfBytes() override;
 		inline virtual void read(void* destinationBuffer, size_t numberOfBytes) override;
 		inline virtual void skip(size_t numberOfBytes) override;
+		inline virtual void write(const void* sourceBuffer, size_t numberOfBytes) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		MemoryFile(const MemoryFile&) = delete;
+		explicit MemoryFile(const MemoryFile&) = delete;
 		MemoryFile& operator=(const MemoryFile&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::vector<uint8_t> ByteVector;
 
 
 	//[-------------------------------------------------------]

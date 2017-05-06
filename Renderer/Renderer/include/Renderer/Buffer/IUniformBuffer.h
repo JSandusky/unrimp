@@ -54,7 +54,7 @@ namespace Renderer
 	*      - Adopted into core in version: 3.1
 	*      - ARB extension:                GL_ARB_Uniform_Buffer_Object
 	*    Direct3D - "Shader Constants"-documentation - http://msdn.microsoft.com/en-us/library/windows/desktop/bb509581%28v=vs.85%29.aspx
-	*      - Direct3D version:              10 and 11
+	*      - Direct3D version:             10 and 11
 	*      - Shader model:                 4
 	*/
 	class IUniformBuffer : public IBuffer
@@ -85,7 +85,7 @@ namespace Renderer
 		*  @param[in] data
 		*    Uniform buffer data, must be valid
 		*/
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 
 
 	//[-------------------------------------------------------]
@@ -99,28 +99,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IUniformBuffer(IRenderer &renderer);
+		inline explicit IUniformBuffer(IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IUniformBuffer(const IUniformBuffer &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IUniformBuffer &operator =(const IUniformBuffer &source);
+		explicit IUniformBuffer(const IUniformBuffer& source) = delete;
+		IUniformBuffer& operator =(const IUniformBuffer& source) = delete;
 
 
 	};

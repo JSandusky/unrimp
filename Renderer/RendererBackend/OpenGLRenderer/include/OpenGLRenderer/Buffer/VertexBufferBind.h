@@ -76,6 +76,14 @@ namespace OpenGLRenderer
 		virtual ~VertexBufferBind();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexBufferBind(const VertexBufferBind& source) = delete;
+		VertexBufferBind& operator =(const VertexBufferBind& source) = delete;
+
+
 	};
 
 

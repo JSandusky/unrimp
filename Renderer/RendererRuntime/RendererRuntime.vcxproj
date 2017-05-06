@@ -40,10 +40,10 @@
     <None Include="include\RendererRuntime\Asset\AssetPackage.inl" />
     <None Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.inl" />
     <None Include="include\RendererRuntime\Backend\RendererBackendManager.inl" />
-    <None Include="include\RendererRuntime\Backend\RendererRuntimeImpl.inl" />
     <None Include="include\RendererRuntime\Core\File\IFile.inl" />
     <None Include="include\RendererRuntime\Core\File\IFileManager.inl" />
     <None Include="include\RendererRuntime\Core\File\MemoryFile.inl" />
+    <None Include="include\RendererRuntime\Core\File\StdFileManager.inl" />
     <None Include="include\RendererRuntime\Core\Math\Transform.inl" />
     <None Include="include\RendererRuntime\Core\PackedElementManager.inl" />
     <None Include="include\RendererRuntime\Core\Renderer\FramebufferManager.inl" />
@@ -118,11 +118,11 @@
     <None Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialTechnique.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\Detail\SubMesh.inl" />
+    <None Include="include\RendererRuntime\Resource\Mesh\Loader\IMeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResource.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Factory\ISceneFactory.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Factory\SceneFactory.inl" />
-    <None Include="include\RendererRuntime\Resource\Scene\ISceneResource.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\CameraSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\LightSceneItem.inl" />
@@ -131,8 +131,7 @@
     <None Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneNodeMemoryManager.inl" />
-    <None Include="include\RendererRuntime\Resource\Scene\Node\ISceneNode.inl" />
-    <None Include="include\RendererRuntime\Resource\Scene\Node\SceneNode.inl" />
+    <None Include="include\RendererRuntime\Resource\Scene\SceneNode.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\SceneResource.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderCache.inl" />
@@ -159,6 +158,8 @@
     <None Include="include\RendererRuntime\Resource\VertexAttributes\VertexAttributesResource.inl" />
     <None Include="include\RendererRuntime\Vr\IVrManager.inl" />
     <None Include="include\RendererRuntime\Vr\OpenVR\IVrManagerOpenVRListener.inl" />
+    <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Vr\OpenVR\VrManagerOpenVR.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -176,6 +177,7 @@
     <ClInclude Include="..\..\External\lz4\include\lz4\lz4hc.h" />
     <ClInclude Include="..\..\External\lz4\include\lz4\lz4opt.h" />
     <ClInclude Include="..\..\External\lz4\include\lz4\xxhash.h" />
+    <ClInclude Include="..\..\External\mikktspace\include\mikktspace\mikktspace.h" />
     <ClInclude Include="include\RendererRuntime\Asset\Asset.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetPackage.h" />
@@ -185,6 +187,7 @@
     <ClInclude Include="include\RendererRuntime\Core\File\IFile.h" />
     <ClInclude Include="include\RendererRuntime\Core\File\IFileManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\File\MemoryFile.h" />
+    <ClInclude Include="include\RendererRuntime\Core\File\StdFileManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\GetUninitialized.h" />
     <ClInclude Include="include\RendererRuntime\Core\MakeId.h" />
     <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
@@ -287,13 +290,13 @@
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialTechnique.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Detail\SubMesh.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\IMeshResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Factory\ISceneFactory.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Factory\SceneFactory.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\CameraSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\LightSceneItem.h" />
@@ -303,8 +306,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Memory\SceneNodeMemoryManager.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Node\ISceneNode.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Node\SceneNode.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneNode.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader.h" />
@@ -345,6 +347,8 @@
     <ClInclude Include="include\RendererRuntime\Resource\VertexAttributes\VertexAttributesResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Vr\IVrManager.h" />
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\IVrManagerOpenVRListener.h" />
+    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\OpenVRRuntimeLinking.h" />
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\VrManagerOpenVR.h" />
     <ClInclude Include="resource.h" />
@@ -489,6 +493,24 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\External\mikktspace\src\mikktspace.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level3</WarningLevel>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\Asset\AssetManager.cpp" />
     <ClCompile Include="src\Asset\AssetPackage.cpp" />
     <ClCompile Include="src\Asset\Serializer\AssetPackageSerializer.cpp" />
@@ -587,18 +609,17 @@
     <ClCompile Include="src\Resource\Material\MaterialResource.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialTechnique.cpp" />
+    <ClCompile Include="src\Resource\Mesh\Loader\IMeshResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Mesh\Loader\MeshResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResource.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
     <ClCompile Include="src\Resource\Scene\Factory\SceneFactory.cpp" />
-    <ClCompile Include="src\Resource\Scene\ISceneResource.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\CameraSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\LightSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\MeshSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\SkeletonMeshSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Loader\SceneResourceLoader.cpp" />
-    <ClCompile Include="src\Resource\Scene\Node\ISceneNode.cpp" />
-    <ClCompile Include="src\Resource\Scene\Node\SceneNode.cpp" />
+    <ClCompile Include="src\Resource\Scene\SceneNode.cpp" />
     <ClCompile Include="src\Resource\Scene\SceneResource.cpp" />
     <ClCompile Include="src\Resource\Scene\SceneResourceManager.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_common.cpp">
@@ -701,6 +722,8 @@
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
     <ClCompile Include="src\Resource\VertexAttributes\Loader\VertexAttributesResourceLoader.cpp" />
     <ClCompile Include="src\Resource\VertexAttributes\VertexAttributesResourceManager.cpp" />
+    <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.cpp" />
+    <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.cpp" />
     <ClCompile Include="src\Vr\OpenVR\OpenVRRuntimeLinking.cpp" />
     <ClCompile Include="src\Vr\OpenVR\VrManagerOpenVR.cpp" />
   </ItemGroup>
@@ -841,7 +864,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -874,7 +897,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -907,7 +930,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -940,7 +963,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -975,7 +998,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -1021,7 +1044,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -1066,7 +1089,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -1110,7 +1133,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>

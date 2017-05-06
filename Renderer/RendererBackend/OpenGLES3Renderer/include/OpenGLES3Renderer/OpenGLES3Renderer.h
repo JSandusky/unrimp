@@ -232,6 +232,9 @@ namespace OpenGLES3Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit OpenGLES3Renderer(const OpenGLES3Renderer& source) = delete;
+		OpenGLES3Renderer& operator =(const OpenGLES3Renderer& source) = delete;
+
 		/**
 		*  @brief
 		*    Initialize the capabilities

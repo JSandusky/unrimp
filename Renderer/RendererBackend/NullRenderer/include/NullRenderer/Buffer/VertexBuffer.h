@@ -77,6 +77,14 @@ namespace NullRenderer
 		virtual ~VertexBuffer();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexBuffer(const VertexBuffer& source) = delete;
+		VertexBuffer& operator =(const VertexBuffer& source) = delete;
+
+
 	};
 
 

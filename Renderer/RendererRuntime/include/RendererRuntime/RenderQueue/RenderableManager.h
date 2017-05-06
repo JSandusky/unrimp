@@ -145,7 +145,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		RenderableManager(const RenderableManager&) = delete;
+		explicit RenderableManager(const RenderableManager&) = delete;
 		RenderableManager& operator=(const RenderableManager&) = delete;
 
 

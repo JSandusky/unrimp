@@ -31,15 +31,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class ITexture;
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -74,7 +65,6 @@ namespace RendererRuntime
 		virtual void onDeserialization(IFile& file) override;
 		inline virtual void onProcessing() override;
 		virtual bool onDispatch() override;
-		inline virtual bool isFullyLoaded() override;
 
 
 	//[-------------------------------------------------------]
@@ -83,7 +73,7 @@ namespace RendererRuntime
 	private:
 		inline DdsTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~DdsTextureResourceLoader();
-		DdsTextureResourceLoader(const DdsTextureResourceLoader&) = delete;
+		explicit DdsTextureResourceLoader(const DdsTextureResourceLoader&) = delete;
 		DdsTextureResourceLoader& operator=(const DdsTextureResourceLoader&) = delete;
 		Renderer::ITexture* createRendererTexture();
 
@@ -92,8 +82,6 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&   mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		Renderer::ITexture* mTexture;			///< In case the used renderer backend supports native multi-threading we also create the renderer resource asynchronous, but the final resource pointer reassignment must still happen synchronous
 		// Temporary data
 		uint32_t mWidth;
 		uint32_t mHeight;

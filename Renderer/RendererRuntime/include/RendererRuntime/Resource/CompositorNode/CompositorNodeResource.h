@@ -131,7 +131,7 @@ namespace RendererRuntime
 	private:
 		inline CompositorNodeResource();
 		inline virtual ~CompositorNodeResource();
-		CompositorNodeResource(const CompositorNodeResource&) = delete;
+		explicit CompositorNodeResource(const CompositorNodeResource&) = delete;
 		CompositorNodeResource& operator=(const CompositorNodeResource&) = delete;
 
 		//[-------------------------------------------------------]

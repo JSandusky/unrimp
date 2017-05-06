@@ -37,22 +37,10 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IShader::IShader(ResourceType resourceType, IRenderer &renderer) :
+	inline IShader::IShader(ResourceType resourceType, IRenderer& renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing here
-	}
-
-	inline IShader::IShader(const IShader &source) :
-		IResource(source)
-	{
-		// Not supported
-	}
-
-	inline IShader &IShader::operator =(const IShader &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

@@ -119,6 +119,14 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit SwapChain(const SwapChain& source) = delete;
+		SwapChain& operator =(const SwapChain& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

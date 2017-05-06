@@ -90,13 +90,11 @@ set(SOURCE_CODES
 	src/ExampleRunner.cpp
 	src/Framework/CmdLineArgs.cpp
 	src/Framework/Color4.cpp
-	src/Framework/EulerAngles.cpp
 	src/Framework/ExampleBase.cpp
 	src/Framework/IApplication.cpp
 	src/Framework/IApplicationImpl.cpp
 	src/Framework/IApplicationRenderer.cpp
 	src/Framework/ExampleBase.cpp
-	src/Framework/StdFileManager.cpp
 	src/Main.cpp
 )
 if(WIN32)

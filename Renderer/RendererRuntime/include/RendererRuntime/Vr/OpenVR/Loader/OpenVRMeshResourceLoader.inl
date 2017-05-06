@@ -21,26 +21,66 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline vr::RenderModel_t* OpenVRMeshResourceLoader::getVrRenderModel() const
+	{
+		return mVrRenderModel;
+	}
+
+	inline OpenVRMeshResourceLoader::BufferData& OpenVRMeshResourceLoader::getTangentsData()
+	{
+		return mTangentsData;
+	}
+
+	inline OpenVRMeshResourceLoader::BufferData& OpenVRMeshResourceLoader::getBinormalsData()
+	{
+		return mBinormalsData;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	inline ResourceLoaderTypeId OpenVRMeshResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+	inline bool OpenVRMeshResourceLoader::hasDeserialization() const
+	{
+		return false;
+	}
+
+	inline void OpenVRMeshResourceLoader::onDeserialization(IFile&)
+	{
+		// We're using the OpenVR API instead of reading from a file
+	}
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline RendererToolkitImpl::RendererToolkitImpl(const RendererToolkitImpl &)
+	inline OpenVRMeshResourceLoader::OpenVRMeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+		IMeshResourceLoader(resourceManager, rendererRuntime),
+		mVrRenderModel(nullptr),
+		mVertexArray(nullptr)
 	{
-		// Not supported
+		// Nothing here
 	}
 
-	inline RendererToolkitImpl &RendererToolkitImpl::operator =(const RendererToolkitImpl &)
+	inline OpenVRMeshResourceLoader::~OpenVRMeshResourceLoader()
 	{
-		// Not supported
-		return *this;
+		// Nothing here
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererToolkit
+} // RendererRuntime

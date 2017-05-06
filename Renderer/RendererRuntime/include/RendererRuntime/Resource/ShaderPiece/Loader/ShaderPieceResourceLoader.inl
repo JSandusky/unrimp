@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool ShaderPieceResourceLoader::hasDeserialization() const
+	{
+		return true;
+	}
+
 	inline bool ShaderPieceResourceLoader::isFullyLoaded()
 	{
 		// Fully loaded

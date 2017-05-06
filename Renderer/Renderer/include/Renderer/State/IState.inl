@@ -37,22 +37,10 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IState::IState(ResourceType resourceType, IRenderer &renderer) :
+	inline IState::IState(ResourceType resourceType, IRenderer& renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing here
-	}
-
-	inline IState::IState(const IState &source) :
-		IResource(source)
-	{
-		// Not supported
-	}
-
-	inline IState &IState::operator =(const IState &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

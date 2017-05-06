@@ -107,7 +107,7 @@ namespace RendererRuntime
 	private:
 		inline ThreadManager();
 		inline ~ThreadManager();
-		ThreadManager(const ThreadManager&) = delete;
+		explicit ThreadManager(const ThreadManager&) = delete;
 		ThreadManager& operator=(const ThreadManager&) = delete;
 
 

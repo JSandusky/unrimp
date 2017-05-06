@@ -91,6 +91,14 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Texture2D(const Texture2D& source) = delete;
+		Texture2D& operator =(const Texture2D& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

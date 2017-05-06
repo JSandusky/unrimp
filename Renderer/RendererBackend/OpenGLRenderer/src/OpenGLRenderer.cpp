@@ -993,10 +993,10 @@ namespace OpenGLRenderer
 			// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			uint32_t renderTargetWidth =  1;
 			uint32_t renderTargetHeight = 1;
 			if (nullptr != mRenderTarget)
 			{
+				uint32_t renderTargetWidth = 1;
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 			}
 
@@ -1023,10 +1023,10 @@ namespace OpenGLRenderer
 			// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			uint32_t renderTargetWidth =  1;
 			uint32_t renderTargetHeight = 1;
 			if (nullptr != mRenderTarget)
 			{
+				uint32_t renderTargetWidth = 1;
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 			}
 
@@ -1165,7 +1165,7 @@ namespace OpenGLRenderer
 					framebufferToGenerateMipmapsFor->releaseReference();
 				}
 			}
-			else
+			else if (nullptr != mRenderTarget)
 			{
 				// Evaluate the render target type
 				if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType())
@@ -1177,11 +1177,8 @@ namespace OpenGLRenderer
 				// TODO(co) Set no active render target
 
 				// Release the render target reference, in case we have one
-				if (nullptr != mRenderTarget)
-				{
-					mRenderTarget->releaseReference();
-					mRenderTarget = nullptr;
-				}
+				mRenderTarget->releaseReference();
+				mRenderTarget = nullptr;
 			}
 		}
 	}
@@ -1693,17 +1690,14 @@ namespace OpenGLRenderer
 
 	const char *OpenGLRenderer::getShaderLanguageName(uint32_t index) const
 	{
-		uint32_t currentIndex = 0;
-
 		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
 		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
 		{
 			// GLSL supported
-			if (currentIndex == index)
+			if (0 == index)
 			{
 				return ShaderLanguageMonolithic::NAME;	// "ShaderLanguageSeparate::NAME" has the same value
 			}
-			++currentIndex;
 		}
 
 		// Error!
@@ -2291,7 +2285,7 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char *message, const void *)
 	{
 		// Source to string
-		char debugSource[20]{0};
+		char debugSource[20 + 1]{0};	// +1 for terminating zero
 		switch (source)
 		{
 			case GL_DEBUG_SOURCE_API_ARB:
@@ -2324,7 +2318,7 @@ namespace OpenGLRenderer
 		}
 
 		// Debug type to string
-		char debugType[25]{0};
+		char debugType[25 + 1]{0};	// +1 for terminating zero
 		switch (type)
 		{
 			case GL_DEBUG_TYPE_ERROR_ARB:
@@ -2357,7 +2351,7 @@ namespace OpenGLRenderer
 		}
 
 		// Debug severity to string
-		char debugSeverity[20]{0};
+		char debugSeverity[20 + 1]{0};	// +1 for terminating zero
 		switch (severity)
 		{
 			case GL_DEBUG_SEVERITY_HIGH_ARB:
@@ -2482,9 +2476,6 @@ namespace OpenGLRenderer
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;
 
-		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
-		mCapabilities.instancedArrays = true;
-
 		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex, "GL_ARB_instanced_arrays" required)
 		mCapabilities.instancedArrays = mExtensions->isGL_ARB_instanced_arrays();
 
@@ -2496,6 +2487,9 @@ namespace OpenGLRenderer
 
 		// OpenGL has no native multi-threading
 		mCapabilities.nativeMultiThreading = false;
+
+		// We don't support the OpenGL program binaries since those are operation system and graphics driver version dependent, which renders them useless for pre-compiled shaders shipping
+		mCapabilities.shaderBytecode = mExtensions->isGL_ARB_gl_spirv();
 
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = mExtensions->isGL_ARB_vertex_shader();

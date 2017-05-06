@@ -30,6 +30,8 @@ PRAGMA_WARNING_DISABLE_MSVC(4244)	// warning C4244: '<x>': conversion from '<y>'
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 
+#include <RendererRuntime/Core/File/IFileManager.h>
+
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: '<x>': assignment operator was implicitly defined as deleted
@@ -126,10 +128,10 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CacheManager::CacheManager(const std::string& projectPath)
+	CacheManager::CacheManager(RendererRuntime::IFileManager& fileManager, const std::string& projectName)
 	{
-		std_filesystem::path cachePath(projectPath);
-		cachePath /= "cache";
+		std_filesystem::path cachePath(fileManager.getAbsoluteLocalDataDirectoryName());
+		cachePath /= "RendererToolkitCache";
 
 		// Ensure that the cache output directory exists
 		std_filesystem::create_directories(cachePath);
@@ -138,7 +140,7 @@ namespace RendererToolkit
 		try
 		{
 			std_filesystem::path databasePath(cachePath);
-			databasePath /= "cache.db3";
+			databasePath /= projectName + ".db3";
 
 			mDatabaseConnection = std::make_unique<SQLite::Database>(databasePath.string(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE | SQLITE_OPEN_NOMUTEX);
 		}

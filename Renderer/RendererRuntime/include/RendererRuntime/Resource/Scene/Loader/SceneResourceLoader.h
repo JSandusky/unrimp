@@ -40,8 +40,9 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
-	class ISceneResource;
+	class SceneResource;
 	class IRendererRuntime;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -50,6 +51,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t SceneResourceId;	///< POD scene resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -62,7 +69,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneResourceManager;
+		friend ResourceManagerTemplate<SceneResource, SceneResourceLoader, SceneResourceId, 16>;	// Type definition of template class
 
 
 	//[-------------------------------------------------------]
@@ -77,7 +84,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void initialize(const Asset& asset, IResource& resource) override;
+		virtual void initialize(const Asset& asset, bool reload, IResource& resource) override;
+		inline virtual bool hasDeserialization() const override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
 		inline virtual bool onDispatch() override;
@@ -90,7 +98,7 @@ namespace RendererRuntime
 	private:
 		inline SceneResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~SceneResourceLoader();
-		SceneResourceLoader(const SceneResourceLoader&) = delete;
+		explicit SceneResourceLoader(const SceneResourceLoader&) = delete;
 		SceneResourceLoader& operator=(const SceneResourceLoader&) = delete;
 
 
@@ -99,7 +107,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		ISceneResource*   mSceneResource;	///< Destination resource
+		SceneResource*    mSceneResource;	///< Destination resource
 		// Temporary data
 		MemoryFile mMemoryFile;
 

@@ -37,7 +37,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	inline const SamplerState &ISamplerState::getDefaultSamplerState()
+	inline const SamplerState& ISamplerState::getDefaultSamplerState()
 	{
 		// As default values, the one of Direct3D 11 and Direct 10 were chosen in order to make it easier for those renderer implementations
 		// (choosing OpenGL default values would bring no benefit due to the design of the OpenGL API)
@@ -93,7 +93,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ISamplerState::ISamplerState(IRenderer &renderer) :
+	inline ISamplerState::ISamplerState(IRenderer& renderer) :
 		IState(ResourceType::SAMPLER_STATE, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -101,23 +101,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedSamplerStates;
 			++getRenderer().getStatistics().currentNumberOfSamplerStates;
 		#endif
-	}
-
-	inline ISamplerState::ISamplerState(const ISamplerState &source) :
-		IState(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedSamplerStates;
-			++getRenderer().getStatistics().currentNumberOfSamplerStates;
-		#endif
-	}
-
-	inline ISamplerState &ISamplerState::operator =(const ISamplerState &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

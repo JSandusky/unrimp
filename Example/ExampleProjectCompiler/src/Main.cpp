@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "Main.h"
 
+#include <RendererRuntime/Core/File/StdFileManager.h>
+
 #include <RendererToolkit/Public/RendererToolkit.h>
 #include <RendererToolkit/Public/RendererToolkitInstance.h>
 
@@ -34,7 +36,8 @@
 //[-------------------------------------------------------]
 int programEntryPoint()
 {
-	RendererToolkit::RendererToolkitInstance rendererToolkitInstance;
+	RendererRuntime::StdFileManager stdFileManager;
+	RendererToolkit::RendererToolkitInstance rendererToolkitInstance(stdFileManager);
 	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
 	if (nullptr != rendererToolkit)
 	{

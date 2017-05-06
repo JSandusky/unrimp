@@ -33,7 +33,6 @@
 	// Dynamically linked libraries
 	#ifdef WIN32
 		#include "RendererToolkit/WindowsHeader.h"
-
 	#elif defined LINUX
 		#include <dlfcn.h>
 	#else
@@ -47,6 +46,19 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IFileManager;
+}
+namespace RendererToolkit
+{
+	class IRendererToolkit;
+}
+
+
+//[-------------------------------------------------------]
 //[ Global functions                                      ]
 //[-------------------------------------------------------]
 #ifndef SHARED_LIBRARIES
@@ -54,17 +66,8 @@
 	// This is needed to do here because the methods in the library are also defined in global namespace
 
 	// "createRendererToolkitInstance()" signature
-	extern RendererToolkit::IRendererToolkit *createRendererToolkitInstance();
+	extern RendererToolkit::IRendererToolkit *createRendererToolkitInstance(RendererRuntime::IFileManager& fileManager);
 #endif
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererToolkit
-{
-	class IRendererToolkit;
-}
 
 
 //[-------------------------------------------------------]
@@ -92,8 +95,11 @@ namespace RendererToolkit
 		/**
 		*  @brief
 		*    Constructor
+		*
+		*  @param[in] fileManager
+		*    The file manager instance to use
 		*/
-		RendererToolkitInstance()
+		RendererToolkitInstance(RendererRuntime::IFileManager& fileManager)
 		{
 			#ifdef SHARED_LIBRARIES
 				// Dynamically linked libraries
@@ -112,10 +118,10 @@ namespace RendererToolkit
 						if (nullptr != symbol)
 						{
 							// "createRendererToolkitInstance()" signature
-							typedef RendererToolkit::IRendererToolkit *(__cdecl *createRendererToolkitInstance)();
+							typedef RendererToolkit::IRendererToolkit *(__cdecl *createRendererToolkitInstance)(RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer toolkit instance
-							mRendererToolkit = static_cast<createRendererToolkitInstance>(symbol)();
+							mRendererToolkit = static_cast<createRendererToolkitInstance>(symbol)(fileManager);
 						}
 						else
 						{
@@ -144,10 +150,10 @@ namespace RendererToolkit
 						if (nullptr != symbol)
 						{
 							// "createRendererToolkitInstance()" signature
-							typedef RendererToolkit::IRendererToolkit *(*createRendererToolkitInstance)();
+							typedef RendererToolkit::IRendererToolkit *(*createRendererToolkitInstance)(RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer toolkit instance
-							mRendererToolkit = reinterpret_cast<createRendererToolkitInstance>(symbol)();
+							mRendererToolkit = reinterpret_cast<createRendererToolkitInstance>(symbol)(fileManager);
 						}
 						else
 						{
@@ -168,7 +174,7 @@ namespace RendererToolkit
 				// Statically linked libraries
 
 				// Create the renderer toolkit instance
-				mRendererToolkit = createRendererToolkitInstance();
+				mRendererToolkit = createRendererToolkitInstance(fileManager);
 			#endif
 		}
 

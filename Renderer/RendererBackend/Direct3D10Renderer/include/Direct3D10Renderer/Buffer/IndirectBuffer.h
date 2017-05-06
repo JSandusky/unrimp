@@ -99,6 +99,14 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit IndirectBuffer(const IndirectBuffer& source) = delete;
+		IndirectBuffer& operator =(const IndirectBuffer& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

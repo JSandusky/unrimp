@@ -84,6 +84,14 @@ namespace NullRenderer
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TextureBuffer(const TextureBuffer& source) = delete;
+		TextureBuffer& operator =(const TextureBuffer& source) = delete;
+
+
 	};
 
 

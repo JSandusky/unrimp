@@ -101,6 +101,14 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexArray(const VertexArray& source) = delete;
+		VertexArray& operator =(const VertexArray& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

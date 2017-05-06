@@ -33,7 +33,6 @@
 
 #include <rapidjson/fwd.h>
 
-#include <iosfwd>
 #include <unordered_map>
 
 
@@ -42,6 +41,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IFile;
 	class ShaderProperties;
 }
 
@@ -75,13 +75,13 @@ namespace RendererToolkit
 		static RendererRuntime::MaterialProperty::ValueType mandatoryMaterialPropertyValueType(const rapidjson::Value& rapidJsonValue);
 		static void getPropertiesByMaterialBlueprintAssetId(const IAssetCompiler::Input& input, RendererRuntime::AssetId materialBlueprintAssetId, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, MaterialPropertyIdToName* materialPropertyIdToName = nullptr);
 		static RendererRuntime::MaterialPropertyValue mandatoryMaterialPropertyValue(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName, const RendererRuntime::MaterialProperty::ValueType valueType);
-		static void readRootSignature(const rapidjson::Value& rapidJsonValueRootSignature, std::ostream& outputMemoryStream, RendererRuntime::ShaderProperties& shaderProperties);
+		static void readRootSignature(const rapidjson::Value& rapidJsonValueRootSignature, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties);
 		static void readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::ShaderProperties& visualImportanceOfShaderProperties, RendererRuntime::ShaderProperties& maximumIntegerValueOfShaderProperties, bool ignoreGlobalReferenceFallback, bool sort, MaterialPropertyIdToName* materialPropertyIdToName = nullptr);
-		static void readPipelineStateObject(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValuePipelineState, std::ostream& outputMemoryStream, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector);
-		static void readUniformBuffers(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueUniformBuffers, std::ostream& outputMemoryStream, RendererRuntime::ShaderProperties& shaderProperties);
-		static void readTextureBuffers(const rapidjson::Value& rapidJsonValueTextureBuffers, std::ostream& outputMemoryStream, RendererRuntime::ShaderProperties& shaderProperties);
-		static void readSamplerStates(const rapidjson::Value& rapidJsonValueSamplerStates, std::ostream& outputMemoryStream, RendererRuntime::ShaderProperties& shaderProperties, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector);
-		static void readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueTextures, std::ostream& outputMemoryStream, RendererRuntime::ShaderProperties& shaderProperties);
+		static void readPipelineStateObject(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValuePipelineState, RendererRuntime::IFile& file, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector);
+		static void readUniformBuffers(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueUniformBuffers, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties);
+		static void readTextureBuffers(const rapidjson::Value& rapidJsonValueTextureBuffers, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties);
+		static void readSamplerStates(const rapidjson::Value& rapidJsonValueSamplerStates, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector);
+		static void readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueTextures, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties);
 
 
 	//[-------------------------------------------------------]

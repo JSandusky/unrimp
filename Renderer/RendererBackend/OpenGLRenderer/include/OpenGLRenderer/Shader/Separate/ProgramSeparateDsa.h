@@ -95,6 +95,14 @@ namespace OpenGLRenderer
 		virtual void setUniformMatrix4fv(handle uniformHandle, const float *value) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit ProgramSeparateDsa(const ProgramSeparateDsa& source) = delete;
+		ProgramSeparateDsa& operator =(const ProgramSeparateDsa& source) = delete;
+
+
 	};
 
 

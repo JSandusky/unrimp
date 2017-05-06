@@ -103,7 +103,7 @@ namespace RendererRuntime
 	protected:
 		inline IResource();
 		inline virtual ~IResource();
-		IResource(const IResource&) = delete;
+		explicit IResource(const IResource&) = delete;
 		IResource& operator=(const IResource&) = delete;
 		RENDERERRUNTIME_API_EXPORT IResource& operator=(IResource&& resource);
 		inline void setResourceManager(IResourceManager* resourceManager);

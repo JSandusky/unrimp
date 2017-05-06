@@ -233,13 +233,13 @@ namespace OpenGLES3Renderer
 	protected:
 		/**
 		*  @brief
-		*    Chooses a EGL config
+		*    Choose a EGL configuration
 		*
 		*  @param[in] multisampleAntialiasingSamples
 		*    Multisample antialiasing samples per pixel
 		*
 		*  @return
-		*    The chosen EGL config, a null pointer on error
+		*    The chosen EGL configuration, a null pointer on error
 		*
 		*  @note
 		*    - Automatically tries to find fallback configurations

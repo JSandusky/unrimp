@@ -26,7 +26,7 @@
 
 #include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Core/Math/EulerAngles.h>
-#include <RendererRuntime/Resource/Scene/Node/ISceneNode.h>
+#include <RendererRuntime/Resource/Scene/SceneNode.h>
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
 
 
@@ -53,7 +53,7 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 	// Sanity check: No negative time, no useless update calls
 	assert(pastSecondsSinceLastFrame > 0.0f);
 
-	RendererRuntime::ISceneNode* sceneNode = mCameraSceneItem.getParentSceneNode();
+	RendererRuntime::SceneNode* sceneNode = mCameraSceneItem.getParentSceneNode();
 	if (nullptr != sceneNode && (!mPressedKeys.empty() || !mPressedMouseButtons.empty()))
 	{
 		// Get the current local transform

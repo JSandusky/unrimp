@@ -82,6 +82,14 @@ namespace OpenGLRenderer
 		explicit SamplerState(OpenGLRenderer &openGLRenderer);
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit SamplerState(const SamplerState& source) = delete;
+		SamplerState& operator =(const SamplerState& source) = delete;
+
+
 	};
 
 

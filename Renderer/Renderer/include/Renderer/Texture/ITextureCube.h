@@ -92,28 +92,10 @@ namespace Renderer
 		*  @param[in] height
 		*    The height of the texture
 		*/
-		inline ITextureCube(IRenderer &renderer, uint32_t width, uint32_t height);
+		inline ITextureCube(IRenderer& renderer, uint32_t width, uint32_t height);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ITextureCube(const ITextureCube &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ITextureCube &operator =(const ITextureCube &source);
+		explicit ITextureCube(const ITextureCube& source) = delete;
+		ITextureCube& operator =(const ITextureCube& source) = delete;
 
 
 	//[-------------------------------------------------------]

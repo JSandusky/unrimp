@@ -36,10 +36,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendererRuntime/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/RapidJSON/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/sqlitecpp/SQLiteCpp/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/picosha2/include)
 
@@ -52,10 +52,7 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/${OS_ARCHITECTURE}/A
 # Cross-platform source codes
 set(SOURCE_CODES
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/FileWatcher/FileWatcher.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4.c
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4frame.c
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4hc.c
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/xxhash.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/src/mikktspace.c
 	src/AssetCompiler/CompositorNodeAssetCompiler.cpp
 	src/AssetCompiler/CompositorWorkspaceAssetCompiler.cpp
 	src/AssetCompiler/MaterialAssetCompiler.cpp
@@ -71,7 +68,6 @@ set(SOURCE_CODES
 	src/Helper/JsonHelper.cpp
 	src/Helper/JsonMaterialBlueprintHelper.cpp
 	src/Helper/JsonMaterialHelper.cpp
-	src/Helper/FileSystemHelper.cpp
 	src/Helper/StringHelper.cpp
 	src/Helper/CacheManager.cpp
 	src/Project/ProjectAssetMonitor.cpp

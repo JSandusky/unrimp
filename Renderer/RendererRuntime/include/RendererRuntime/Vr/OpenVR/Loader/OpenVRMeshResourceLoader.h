@@ -27,22 +27,30 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResource.h"
-#include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Resource/Mesh/Loader/IMeshResourceLoader.h"
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+	#include <glm/glm.hpp>
+PRAGMA_WARNING_POP
 
 #include <vector>
+#include <string>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace vr
 {
-	class Transform;
-	class ISceneNode;
-	class ISceneItem;
-	class ISceneFactory;
-	class IRendererRuntime;
+	struct RenderModel_t;
+}
+namespace Renderer
+{
+	class IVertexArray;
 }
 
 
@@ -54,83 +62,77 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef StringId SceneItemTypeId;		///< Scene item type identifier, internally just a POD "uint32_t"
-	typedef StringId SceneResourceTypeId;	///< Scene resource type identifier, internally just a POD "uint32_t"
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ISceneResource : public IResource
+	class OpenVRMeshResourceLoader : public IMeshResourceLoader
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneResourceManager;	// Needs to be able to update the scene factory instance
+		friend class MeshResourceManager;
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<ISceneNode*> SceneNodes;
-		typedef std::vector<ISceneItem*> SceneItems;
+		static const ResourceLoaderTypeId TYPE_ID;
+		typedef std::vector<glm::vec3> BufferData;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual ~ISceneResource();
-		inline const IRendererRuntime& getRendererRuntime() const;
-		inline void destroyAllSceneNodesAndItems();
-
-		//[-------------------------------------------------------]
-		//[ Node                                                  ]
-		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT ISceneNode* createSceneNode(const Transform& transform);
-		RENDERERRUNTIME_API_EXPORT void destroySceneNode(ISceneNode& sceneNode);
-		RENDERERRUNTIME_API_EXPORT void destroyAllSceneNodes();
-		inline const SceneNodes& getSceneNodes() const;
-
-		//[-------------------------------------------------------]
-		//[ Item                                                  ]
-		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT ISceneItem* createSceneItem(SceneItemTypeId sceneItemTypeId, ISceneNode& sceneNode);
-		template <typename T> T* createSceneItem(ISceneNode& sceneNode);
-		RENDERERRUNTIME_API_EXPORT void destroySceneItem(ISceneItem& sceneItem);
-		RENDERERRUNTIME_API_EXPORT void destroyAllSceneItems();
-		inline const SceneItems& getSceneItems() const;
+		inline vr::RenderModel_t* getVrRenderModel() const;
+		inline BufferData& getTangentsData();
+		inline BufferData& getBinormalsData();
 
 
 	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneResource methods        ]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual SceneResourceTypeId getSceneResourceTypeId() const = 0;
+		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		inline virtual bool hasDeserialization() const override;
+		inline virtual void onDeserialization(IFile& file) override;
+		virtual void onProcessing() override;
+		virtual bool onDispatch() override;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	protected:
-		ISceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId);
-		ISceneResource(const ISceneResource&) = delete;
-		ISceneResource& operator=(const ISceneResource&) = delete;
+	private:
+		inline OpenVRMeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
+		inline virtual ~OpenVRMeshResourceLoader();
+		explicit OpenVRMeshResourceLoader(const OpenVRMeshResourceLoader&) = delete;
+		OpenVRMeshResourceLoader& operator=(const OpenVRMeshResourceLoader&) = delete;
+		Renderer::IVertexArray* createVertexArray() const;
+		const std::string& getRenderModelName() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<uint8_t>  VertexBufferData;
+		typedef std::vector<uint16_t> IndexBufferData;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&	 mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		const ISceneFactory* mSceneFactory;		///< Scene factory instance, always valid, do not destroy the instance
-		SceneNodes			 mSceneNodes;
-		SceneItems			 mSceneItems;
+		// Temporary data
+		vr::RenderModel_t*		mVrRenderModel;
+		BufferData				mTangentsData;
+		BufferData				mBinormalsData;
+		VertexBufferData		mVertexBufferData;
+		IndexBufferData			mIndexBufferData;
+		Renderer::IVertexArray*	mVertexArray;
 
 
 	};
@@ -145,4 +147,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/ISceneResource.inl"
+#include "RendererRuntime/Vr/OpenVR/Loader/OpenVRMeshResourceLoader.inl"

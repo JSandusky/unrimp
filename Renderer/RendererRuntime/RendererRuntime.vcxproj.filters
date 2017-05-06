@@ -53,9 +53,6 @@
     <Filter Include="Source Files\Resource\Scene\Item">
       <UniqueIdentifier>{0fc2aed3-9119-4664-b7e9-99a3d25e9428}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resource\Scene\Node">
-      <UniqueIdentifier>{202404c2-378a-4e32-9829-1f2c5ddf3535}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Resource\Scene\Factory">
       <UniqueIdentifier>{f6cc6cf4-b0c0-4602-8735-8bcba5778271}</UniqueIdentifier>
     </Filter>
@@ -200,6 +197,12 @@
     <Filter Include="Source Files\Resource\VertexAttributes\Loader">
       <UniqueIdentifier>{d757a0fa-a5e7-4a43-8562-7cdf0093fe26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Vr\OpenVR\Loader">
+      <UniqueIdentifier>{15c64425-3aee-4f74-a3ab-4698b7271aa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External\mikktspace">
+      <UniqueIdentifier>{189cfe7b-1d03-49c2-8fe9-b04cf6b4a9cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -209,9 +212,6 @@
     </None>
     <None Include="include\RendererRuntime\Core\StringId.inl">
       <Filter>Source Files\Core</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Backend\RendererRuntimeImpl.inl">
-      <Filter>Source Files\Backend</Filter>
     </None>
     <None Include="include\RendererRuntime\Backend\RendererBackendManager.inl">
       <Filter>Source Files\Backend</Filter>
@@ -255,16 +255,7 @@
     <None Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Scene\Node\SceneNode.inl">
-      <Filter>Source Files\Resource\Scene\Node</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Scene\Node\ISceneNode.inl">
-      <Filter>Source Files\Resource\Scene\Node</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.inl">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Scene\ISceneResource.inl">
       <Filter>Source Files\Resource\Scene</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.inl">
@@ -395,9 +386,6 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneNodeMemoryManager.inl">
       <Filter>Source Files\Resource\Scene\Memory</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Scene\SceneResource.inl">
-      <Filter>Source Files\Resource\Scene</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\Loader\CompositorWorkspaceResourceLoader.inl">
       <Filter>Source Files\Resource\CompositorWorkspace\Loader</Filter>
@@ -576,6 +564,24 @@
     <None Include="include\RendererRuntime\Resource\VertexAttributes\VertexAttributesResource.inl">
       <Filter>Source Files\Resource\VertexAttributes</Filter>
     </None>
+    <None Include="include\RendererRuntime\Core\File\StdFileManager.inl">
+      <Filter>Source Files\Core\File</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\SceneNode.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\SceneResource.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Mesh\Loader\IMeshResourceLoader.inl">
+      <Filter>Source Files\Resource\Mesh\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.inl">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.inl">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -660,9 +666,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResource.h">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.h">
       <Filter>Source Files\Resource\Scene\Loader</Filter>
     </ClInclude>
@@ -684,20 +687,11 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.h">
       <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Node\SceneNode.h">
-      <Filter>Source Files\Resource\Scene\Node</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Node\ISceneNode.h">
-      <Filter>Source Files\Resource\Scene\Node</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Factory\ISceneFactory.h">
       <Filter>Source Files\Resource\Scene\Factory</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Factory\SceneFactory.h">
       <Filter>Source Files\Resource\Scene\Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneResource.h">
-      <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.h">
       <Filter>Source Files\Resource\MaterialBlueprint</Filter>
@@ -1146,6 +1140,27 @@
     <ClInclude Include="include\RendererRuntime\Resource\VertexAttributes\VertexAttributesResourceManager.h">
       <Filter>Source Files\Resource\VertexAttributes</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\File\StdFileManager.h">
+      <Filter>Source Files\Core\File</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneNode.h">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResource.h">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\IMeshResourceLoader.h">
+      <Filter>Source Files\Resource\Mesh\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.h">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.h">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\mikktspace\include\mikktspace\mikktspace.h">
+      <Filter>External\mikktspace</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1190,23 +1205,14 @@
     <ClCompile Include="src\Resource\Scene\Loader\SceneResourceLoader.cpp">
       <Filter>Source Files\Resource\Scene\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\SceneResource.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\MeshSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\CameraSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Node\SceneNode.cpp">
-      <Filter>Source Files\Resource\Scene\Node</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Scene\Factory\SceneFactory.cpp">
       <Filter>Source Files\Resource\Scene\Factory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\ISceneResource.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint</Filter>
@@ -1400,9 +1406,6 @@
     <ClCompile Include="src\RenderQueue\RenderableManager.cpp">
       <Filter>Source Files\RenderQueue</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Node\ISceneNode.cpp">
-      <Filter>Source Files\Resource\Scene\Node</Filter>
-    </ClCompile>
     <ClCompile Include="src\RenderQueue\IndirectBufferManager.cpp">
       <Filter>Source Files\RenderQueue</Filter>
     </ClCompile>
@@ -1507,6 +1510,24 @@
     </ClCompile>
     <ClCompile Include="src\Resource\VertexAttributes\Loader\VertexAttributesResourceLoader.cpp">
       <Filter>Source Files\Resource\VertexAttributes\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\SceneNode.cpp">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\SceneResource.cpp">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Mesh\Loader\IMeshResourceLoader.cpp">
+      <Filter>Source Files\Resource\Mesh\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRMeshResourceLoader.cpp">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vr\OpenVR\Loader\OpenVRTextureResourceLoader.cpp">
+      <Filter>Source Files\Vr\OpenVR\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\mikktspace\src\mikktspace.c">
+      <Filter>External\mikktspace</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

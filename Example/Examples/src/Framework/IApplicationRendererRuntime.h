@@ -33,9 +33,9 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-class StdFileManager;
 namespace RendererRuntime
 {
+	class IFileManager;
 	class IRendererRuntime;
 	class RendererRuntimeInstance;
 }
@@ -140,10 +140,18 @@ protected:
 
 
 //[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	explicit IApplicationRendererRuntime(const IApplicationRendererRuntime& source) = delete;
+	IApplicationRendererRuntime& operator =(const IApplicationRendererRuntime& source) = delete;
+
+
+//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	StdFileManager*							  mFileManager;				///< File manager instance, can be a null pointer
+	RendererRuntime::IFileManager*			  mFileManager;				///< File manager instance, can be a null pointer
 	RendererRuntime::RendererRuntimeInstance* mRendererRuntimeInstance;	///< Renderer runtime instance, can be a null pointer
 	#ifdef SHARED_LIBRARIES
 		RendererToolkit::RendererToolkitInstance* mRendererToolkitInstance;	///< Renderer toolkit instance, can be a null pointer

@@ -69,7 +69,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorPassFactory(const CompositorPassFactory&) = delete;
+		explicit CompositorPassFactory(const CompositorPassFactory&) = delete;
 		CompositorPassFactory& operator=(const CompositorPassFactory&) = delete;
 
 

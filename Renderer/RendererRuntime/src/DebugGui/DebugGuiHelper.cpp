@@ -25,8 +25,8 @@
 #include "RendererRuntime/DebugGui/DebugGuiHelper.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/Core/Math/EulerAngles.h"
-#include "RendererRuntime/Resource/Scene/ISceneResource.h"
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
+#include "RendererRuntime/Resource/Scene/SceneNode.h"
+#include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
@@ -232,7 +232,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
 	void DebugGuiHelper::beginFrame()
 	{

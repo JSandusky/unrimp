@@ -36,6 +36,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IFile;
+	class MemoryFile;
 	class IRendererRuntime;
 	class LightBufferManager;
 	class InstanceBufferManager;
@@ -78,8 +80,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline IRendererRuntime& getRendererRuntime() const;
-		RENDERERRUNTIME_API_EXPORT void loadMaterialBlueprintResourceByAssetId(AssetId assetId, MaterialBlueprintResourceId& materialBlueprintResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
-
+		RENDERERRUNTIME_API_EXPORT void loadMaterialBlueprintResourceByAssetId(AssetId assetId, MaterialBlueprintResourceId& materialBlueprintResourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = getUninitialized<ResourceLoaderTypeId>());	// Asynchronous
 		inline IMaterialBlueprintResourceListener& getMaterialBlueprintResourceListener() const;
 		RENDERERRUNTIME_API_EXPORT void setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener);	// Does not take over the control of the memory
 
@@ -99,6 +100,9 @@ namespace RendererRuntime
 		inline MaterialProperties& getGlobalMaterialProperties();
 		inline const MaterialProperties& getGlobalMaterialProperties() const;
 
+		//[-------------------------------------------------------]
+		//[ Manager                                               ]
+		//[-------------------------------------------------------]
 		inline InstanceBufferManager& getInstanceBufferManager() const;
 		inline LightBufferManager& getLightBufferManager() const;
 
@@ -128,8 +132,16 @@ namespace RendererRuntime
 	private:
 		explicit MaterialBlueprintResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~MaterialBlueprintResourceManager();
-		MaterialBlueprintResourceManager(const MaterialBlueprintResourceManager&) = delete;
+		explicit MaterialBlueprintResourceManager(const MaterialBlueprintResourceManager&) = delete;
 		MaterialBlueprintResourceManager& operator=(const MaterialBlueprintResourceManager&) = delete;
+
+		//[-------------------------------------------------------]
+		//[ Pipeline state object cache                           ]
+		//[-------------------------------------------------------]
+		void clearPipelineStateObjectCache();
+		void loadPipelineStateObjectCache(IFile& file);
+		bool doesPipelineStateObjectCacheNeedSaving() const;
+		void savePipelineStateObjectCache(MemoryFile& memoryFile);
 
 
 	//[-------------------------------------------------------]

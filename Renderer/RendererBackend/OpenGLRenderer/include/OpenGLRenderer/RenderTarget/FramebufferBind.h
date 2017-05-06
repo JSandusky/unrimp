@@ -85,6 +85,14 @@ namespace OpenGLRenderer
 		virtual void generateMipmaps() const override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit FramebufferBind(const FramebufferBind& source) = delete;
+		FramebufferBind& operator =(const FramebufferBind& source) = delete;
+
+
 	};
 
 

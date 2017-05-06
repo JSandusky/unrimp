@@ -132,26 +132,8 @@ protected:
 	*/
 	explicit IApplicationImpl(IApplication& application);
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*
-	*  @param[in] source
-	*    Source to copy from
-	*/
-	explicit IApplicationImpl(const IApplicationImpl &source);
-
-	/**
-	*  @brief
-	*    Copy operator
-	*
-	*  @param[in] source
-	*    Source to copy from
-	*
-	*  @return
-	*    Reference to this instance
-	*/
-	IApplicationImpl &operator =(const IApplicationImpl &source);
+	explicit IApplicationImpl(const IApplicationImpl &source) = delete;
+	IApplicationImpl &operator =(const IApplicationImpl &source) = delete;
 
 
 //[-------------------------------------------------------]

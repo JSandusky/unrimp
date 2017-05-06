@@ -30,8 +30,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <iosfwd>
-
 #ifdef WIN32
 	// Disable warnings in external headers, we can't fix them
 	__pragma(warning(push))
@@ -58,31 +56,6 @@ namespace RendererToolkit
 	#else
 		namespace std_filesystem = std::experimental::filesystem;
 	#endif
-
-
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class FileSystemHelper
-	{
-
-
-	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
-	//[-------------------------------------------------------]
-	public:
-		static void writeCompressedFile(const std::stringstream& outputMemoryStream, uint32_t formatType, uint32_t formatVersion, const std::string& outputAssetFilename);
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		FileSystemHelper(const FileSystemHelper&) = delete;
-		FileSystemHelper& operator=(const FileSystemHelper&) = delete;
-
-
-	};
 
 
 //[-------------------------------------------------------]

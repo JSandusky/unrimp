@@ -82,9 +82,19 @@ namespace RendererRuntime
 		return mMaterialResourceId;
 	}
 
+	inline void SubMesh::setMaterialResourceId(MaterialResourceId materialResourceId)
+	{
+		mMaterialResourceId = materialResourceId;
+	}
+
 	inline Renderer::PrimitiveTopology SubMesh::getPrimitiveTopology() const
 	{
 		return mPrimitiveTopology;
+	}
+
+	inline void SubMesh::setPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
+	{
+		mPrimitiveTopology = primitiveTopology;
 	}
 
 	inline uint32_t SubMesh::getStartIndexLocation() const
@@ -92,9 +102,19 @@ namespace RendererRuntime
 		return mStartIndexLocation;
 	}
 
+	inline void SubMesh::setStartIndexLocation(uint32_t startIndexLocation)
+	{
+		mStartIndexLocation = startIndexLocation;
+	}
+
 	inline uint32_t SubMesh::getNumberOfIndices() const
 	{
 		return mNumberOfIndices;
+	}
+
+	inline void SubMesh::setNumberOfIndices(uint32_t numberOfIndices)
+	{
+		mNumberOfIndices = numberOfIndices;
 	}
 
 

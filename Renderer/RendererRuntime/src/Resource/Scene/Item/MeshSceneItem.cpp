@@ -23,9 +23,9 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
-#include "RendererRuntime/Resource/Scene/ISceneResource.h"
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
+#include "RendererRuntime/Resource/Scene/SceneResource.h"
+#include "RendererRuntime/Resource/Scene/SceneNode.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
@@ -110,7 +110,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void MeshSceneItem::onAttachedToSceneNode(ISceneNode& sceneNode)
+	void MeshSceneItem::onAttachedToSceneNode(SceneNode& sceneNode)
 	{
 		mRenderableManager.setTransform(&sceneNode.getGlobalTransform());
 

@@ -107,9 +107,9 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit LightSceneItem(ISceneResource& sceneResource);
+		inline explicit LightSceneItem(SceneResource& sceneResource);
 		inline virtual ~LightSceneItem();
-		LightSceneItem(const LightSceneItem&) = delete;
+		explicit LightSceneItem(const LightSceneItem&) = delete;
 		LightSceneItem& operator=(const LightSceneItem&) = delete;
 
 

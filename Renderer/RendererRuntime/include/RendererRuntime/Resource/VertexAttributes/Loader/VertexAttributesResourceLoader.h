@@ -80,7 +80,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void initialize(const Asset& asset, IResource& resource) override;
+		virtual void initialize(const Asset& asset, bool reload, IResource& resource) override;
+		inline virtual bool hasDeserialization() const override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
 		inline virtual bool onDispatch() override;
@@ -93,7 +94,7 @@ namespace RendererRuntime
 	private:
 		inline VertexAttributesResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~VertexAttributesResourceLoader();
-		VertexAttributesResourceLoader(const VertexAttributesResourceLoader&) = delete;
+		explicit VertexAttributesResourceLoader(const VertexAttributesResourceLoader&) = delete;
 		VertexAttributesResourceLoader& operator=(const VertexAttributesResourceLoader&) = delete;
 
 

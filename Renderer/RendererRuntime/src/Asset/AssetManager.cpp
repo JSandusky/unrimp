@@ -49,13 +49,24 @@ namespace RendererRuntime
 		mAssetPackageVector.clear();
 	}
 
-	void AssetManager::addAssetPackageByFilename(const char* filename)
+	AssetPackage& AssetManager::addAssetPackage(AssetPackageId assetPackageId)
 	{
+		assert(nullptr == tryGetAssetPackageById(assetPackageId) && "Asset package ID is already used");
+		AssetPackage* assetPackage = new AssetPackage(assetPackageId);
+		mAssetPackageVector.push_back(assetPackage);
+		return *assetPackage;
+	}
+
+	void AssetManager::addAssetPackageByFilename(AssetPackageId assetPackageId, const char* filename)
+	{
+		assert(nullptr == tryGetAssetPackageById(assetPackageId) && "Asset package ID is already used");
 		IFileManager& fileManager = mRendererRuntime.getFileManager();
-		IFile* file = fileManager.openFile(filename);
+		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, filename);
 		if (nullptr != file)
 		{
-			mAssetPackageVector.push_back(AssetPackageSerializer().loadAssetPackage(*file));
+			AssetPackage* assetPackage = new AssetPackage(assetPackageId);
+			AssetPackageSerializer().loadAssetPackage(*assetPackage, *file);
+			mAssetPackageVector.push_back(assetPackage);
 			fileManager.closeFile(*file);
 		}
 		else
@@ -65,13 +76,40 @@ namespace RendererRuntime
 		}
 	}
 
-	const Asset* AssetManager::getAssetByAssetId(AssetId assetId) const
+	AssetPackage* AssetManager::tryGetAssetPackageById(AssetPackageId assetPackageId) const
+	{
+		AssetPackageVector::const_iterator iterator = std::find_if(mAssetPackageVector.cbegin(), mAssetPackageVector.cend(),
+			[assetPackageId](const AssetPackage* assetPackage) { return (assetPackage->getAssetPackageId() == assetPackageId); }
+			);
+		return (iterator != mAssetPackageVector.cend()) ? *iterator : nullptr;
+	}
+
+	AssetPackage& AssetManager::getAssetPackageById(AssetPackageId assetPackageId) const
+	{
+		AssetPackageVector::const_iterator iterator = std::find_if(mAssetPackageVector.cbegin(), mAssetPackageVector.cend(),
+			[assetPackageId](const AssetPackage* assetPackage) { return (assetPackage->getAssetPackageId() == assetPackageId); }
+			);
+		assert(iterator != mAssetPackageVector.cend() && "Unknown asset package ID");
+		return **iterator;
+	}
+
+	void AssetManager::removeAssetPackage(AssetPackageId assetPackageId)
+	{
+		AssetPackageVector::const_iterator iterator = std::find_if(mAssetPackageVector.cbegin(), mAssetPackageVector.cend(),
+			[assetPackageId](const AssetPackage* assetPackage) { return (assetPackage->getAssetPackageId() == assetPackageId); }
+			);
+		assert(iterator != mAssetPackageVector.cend() && "Unknown asset package ID");
+		delete *iterator;
+		mAssetPackageVector.erase(iterator);
+	}
+
+	const Asset* AssetManager::tryGetAssetByAssetId(AssetId assetId) const
 	{
 		// Search inside all mounted asset packages, later added asset packages cover old ones
 		const size_t numberOfAssetPackages = mAssetPackageVector.size();
 		for (size_t i = 0; i < numberOfAssetPackages; ++i)
 		{
-			const Asset* asset = mAssetPackageVector[i]->getAssetByAssetId(assetId);
+			const Asset* asset = mAssetPackageVector[i]->tryGetAssetByAssetId(assetId);
 			if (nullptr != asset)
 			{
 				return asset;

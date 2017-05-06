@@ -78,6 +78,14 @@ namespace OpenGLRenderer
 		virtual ~Texture1DBind();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Texture1DBind(const Texture1DBind& source) = delete;
+		Texture1DBind& operator =(const Texture1DBind& source) = delete;
+
+
 	};
 
 

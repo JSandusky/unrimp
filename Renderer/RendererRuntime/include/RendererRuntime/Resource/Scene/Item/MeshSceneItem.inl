@@ -58,7 +58,7 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
-	inline void MeshSceneItem::onDetachedFromSceneNode(ISceneNode& sceneNode)
+	inline void MeshSceneItem::onDetachedFromSceneNode(SceneNode& sceneNode)
 	{
 		mRenderableManager.setTransform(nullptr);
 
@@ -75,7 +75,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline MeshSceneItem::MeshSceneItem(ISceneResource& sceneResource) :
+	inline MeshSceneItem::MeshSceneItem(SceneResource& sceneResource) :
 		ISceneItem(sceneResource),
 		mMeshResourceId(getUninitialized<MeshResourceId>())
 	{

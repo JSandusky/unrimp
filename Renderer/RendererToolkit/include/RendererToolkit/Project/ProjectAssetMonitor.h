@@ -123,9 +123,3 @@ namespace RendererToolkit
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererToolkit
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererToolkit/Project/ProjectAssetMonitor.inl"

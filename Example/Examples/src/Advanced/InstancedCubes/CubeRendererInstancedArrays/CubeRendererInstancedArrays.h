@@ -87,6 +87,8 @@ public:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
+	explicit CubeRendererInstancedArrays(const CubeRendererInstancedArrays& source) = delete;
+	CubeRendererInstancedArrays& operator =(const CubeRendererInstancedArrays& source) = delete;
 	void fillCommandBuffer();
 
 

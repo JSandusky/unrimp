@@ -26,17 +26,75 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline RendererRuntimeImpl::RendererRuntimeImpl(const RendererRuntimeImpl &)
+	inline const Transform& SceneNode::getTransform() const
 	{
-		// Not supported
+		return mTransform;
 	}
 
-	inline RendererRuntimeImpl &RendererRuntimeImpl::operator =(const RendererRuntimeImpl &)
+	inline void SceneNode::setTransform(const Transform& transform)
 	{
-		// Not supported
-		return *this;
+		mTransform = transform;
+		updateGlobalTransformRecursive();
+	}
+
+	inline void SceneNode::setPosition(const glm::vec3& position)
+	{
+		mTransform.position = position;
+		updateGlobalTransformRecursive();
+	}
+
+	inline void SceneNode::setRotation(const glm::quat& rotation)
+	{
+		mTransform.rotation = rotation;
+		updateGlobalTransformRecursive();
+	}
+
+	inline void SceneNode::setPositionRotation(const glm::vec3& position, const glm::quat& rotation)
+	{
+		mTransform.position = position;
+		mTransform.rotation = rotation;
+		updateGlobalTransformRecursive();
+	}
+
+	inline void SceneNode::setScale(const glm::vec3& scale)
+	{
+		mTransform.scale = scale;
+		updateGlobalTransformRecursive();
+	}
+
+	inline const Transform& SceneNode::getGlobalTransform() const
+	{
+		return mGlobalTransform;
+	}
+
+	inline const SceneNode::AttachedSceneNodes& SceneNode::getAttachedSceneNodes() const
+	{
+		return mAttachedSceneNodes;
+	}
+
+	inline const SceneNode::AttachedSceneItems& SceneNode::getAttachedSceneItems() const
+	{
+		return mAttachedSceneItems;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline SceneNode::SceneNode(const Transform& transform) :
+		mParentSceneNode(nullptr),
+		mTransform(transform),
+		mGlobalTransform(transform)
+	{
+		// Nothing here
+	}
+
+	inline SceneNode::~SceneNode()
+	{
+		detachAllSceneNodes();
+		detachAllSceneItems();
 	}
 
 

@@ -42,9 +42,11 @@ namespace Renderer
 		drawInstanced(false),
 		baseVertex(false),
 		nativeMultiThreading(false),
+		shaderBytecode(false),
 		vertexShader(false),
 		maximumNumberOfPatchVertices(0),
-		maximumNumberOfGsOutputVertices(0)
+		maximumNumberOfGsOutputVertices(0),
+		fragmentShader(false)
 	{
 		// Nothing here
 	}
@@ -52,37 +54,6 @@ namespace Renderer
 	inline Capabilities::~Capabilities()
 	{
 		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline Capabilities::Capabilities(const Capabilities &) :
-		maximumNumberOfViewports(0),
-		maximumNumberOfSimultaneousRenderTargets(0),
-		maximumTextureDimension(0),
-		maximumNumberOf2DTextureArraySlices(0),
-		maximumUniformBufferSize(0),
-		maximumTextureBufferSize(0),
-		maximumIndirectBufferSize(0),
-		maximumNumberOfMultisamples(1),
-		individualUniforms(false),
-		instancedArrays(false),
-		drawInstanced(false),
-		baseVertex(false),
-		nativeMultiThreading(false),
-		vertexShader(false),
-		maximumNumberOfPatchVertices(0),
-		maximumNumberOfGsOutputVertices(0)
-	{
-		// Not supported
-	}
-
-	inline Capabilities &Capabilities::operator =(const Capabilities &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

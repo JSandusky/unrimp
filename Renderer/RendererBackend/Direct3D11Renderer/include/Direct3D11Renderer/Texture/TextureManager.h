@@ -88,6 +88,14 @@ namespace Direct3D11Renderer
 		virtual Renderer::ITextureCube *createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, uint32_t flags = 0, Renderer::TextureUsage textureUsage = Renderer::TextureUsage::DEFAULT) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TextureManager(const TextureManager& source) = delete;
+		TextureManager& operator =(const TextureManager& source) = delete;
+
+
 	};
 
 

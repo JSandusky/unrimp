@@ -254,6 +254,9 @@ namespace OpenGLRenderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit OpenGLRenderer(const OpenGLRenderer& source) = delete;
+		OpenGLRenderer& operator =(const OpenGLRenderer& source) = delete;
+
 		/**
 		*  @brief
 		*    Initialize the capabilities

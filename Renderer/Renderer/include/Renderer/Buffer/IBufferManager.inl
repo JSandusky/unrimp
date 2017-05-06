@@ -48,18 +48,6 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IBufferManager::IBufferManager(const IBufferManager& source) :
-		mRenderer(source.mRenderer)
-	{
-		// Not supported
-	}
-
-	inline IBufferManager& IBufferManager::operator =(const IBufferManager&)
-	{
-		// Not supported
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

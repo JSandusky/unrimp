@@ -23,12 +23,43 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/File/MemoryFile.h"
+#include "RendererRuntime/Core/File/IFileManager.h"
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-	#include <lz4/lz4.h>
+	#include <lz4/lz4hc.h>
 PRAGMA_WARNING_POP
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		struct FileFormatHeader
+		{
+			// Format
+			uint32_t formatType;
+			uint32_t formatVersion;
+			// Content
+			uint32_t numberOfCompressedBytes;
+			uint32_t numberOfDecompressedBytes;
+		};
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -41,6 +72,39 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	bool MemoryFile::loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, const std::string& filename, IFileManager& fileManager)
+	{
+		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, filename.c_str());
+		if (nullptr != file)
+		{
+			// Tell the memory mapped file about the LZ4 compressed data
+			loadLz4CompressedDataFromFile(formatType, formatVersion, *file);
+
+			// Close file
+			fileManager.closeFile(*file);
+
+			// Done
+			return true;
+		}
+
+		// Error!
+		return false;
+	}
+
+	void MemoryFile::loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, IFile& file)
+	{
+		// Read in the file format header
+		::detail::FileFormatHeader fileFormatHeader;
+		file.read(&fileFormatHeader, sizeof(::detail::FileFormatHeader));
+		assert(formatType == fileFormatHeader.formatType);
+		assert(formatVersion == fileFormatHeader.formatVersion);
+		std::ignore = formatType;
+		std::ignore = formatVersion;
+
+		// Tell the memory mapped file about the LZ4 compressed data
+		setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+	}
+
 	void MemoryFile::setLz4CompressedDataByFile(IFile& file, uint32_t numberOfCompressedBytes, uint32_t numberOfDecompressedBytes)
 	{
 		mNumberOfDecompressedBytes = numberOfDecompressedBytes;
@@ -57,6 +121,43 @@ namespace RendererRuntime
 		assert(mNumberOfDecompressedBytes == static_cast<uint32_t>(numberOfDecompressedBytes));
 		std::ignore = numberOfDecompressedBytes;
 		mCurrentDataPointer = mDecompressedData.data();
+	}
+
+	bool MemoryFile::writeLz4CompressedDataToFile(uint32_t formatType, uint32_t formatVersion, const std::string& filename, IFileManager& fileManager) const
+	{
+		// Open file
+		IFile* file = fileManager.openFile(IFileManager::FileMode::WRITE, filename.c_str());
+		if (nullptr != file)
+		{
+			// Write file
+			const int destinationCapacity = LZ4_compressBound(static_cast<int>(mDecompressedData.size()));
+			char* destination = new char[static_cast<unsigned int>(destinationCapacity)];
+			{
+				const int numberOfWrittenBytes = LZ4_compress_HC(reinterpret_cast<const char*>(mDecompressedData.data()), destination, static_cast<int>(mDecompressedData.size()), destinationCapacity, LZ4HC_CLEVEL_MAX);
+
+				{ // Write down the file format header
+					::detail::FileFormatHeader fileFormatHeader;
+					fileFormatHeader.formatType				   = formatType;
+					fileFormatHeader.formatVersion			   = formatVersion;
+					fileFormatHeader.numberOfCompressedBytes   = static_cast<uint32_t>(numberOfWrittenBytes);
+					fileFormatHeader.numberOfDecompressedBytes = static_cast<uint32_t>(mDecompressedData.size());
+					file->write(&fileFormatHeader, sizeof(::detail::FileFormatHeader));
+				}
+
+				// Write down the compressed data
+				file->write(destination, static_cast<size_t>(numberOfWrittenBytes));
+			}
+			delete [] destination;
+
+			// Close file
+			fileManager.closeFile(*file);
+
+			// Done
+			return true;
+		}
+
+		// Error!
+		return false;
 	}
 
 

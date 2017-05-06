@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IRootSignature::IRootSignature(IRenderer &renderer) :
+	inline IRootSignature::IRootSignature(IRenderer& renderer) :
 		IResource(ResourceType::ROOT_SIGNATURE, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -56,23 +56,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedRootSignatures;
 			++getRenderer().getStatistics().currentNumberOfRootSignatures;
 		#endif
-	}
-
-	inline IRootSignature::IRootSignature(const IRootSignature &source) :
-		IResource(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedRootSignatures;
-			++getRenderer().getStatistics().currentNumberOfRootSignatures;
-		#endif
-	}
-
-	inline IRootSignature &IRootSignature::operator =(const IRootSignature &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

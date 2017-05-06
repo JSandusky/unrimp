@@ -57,7 +57,7 @@ protected:
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
 protected:
-	CompositorPassFactoryFirst(const CompositorPassFactoryFirst&) = delete;
+	explicit CompositorPassFactoryFirst(const CompositorPassFactoryFirst&) = delete;
 	CompositorPassFactoryFirst& operator=(const CompositorPassFactoryFirst&) = delete;
 
 

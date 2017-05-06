@@ -41,6 +41,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId AssetPackageId;	///< Resource loader type identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset package name>"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	class AssetPackage
@@ -65,11 +71,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline AssetPackage();
+		inline explicit AssetPackage(AssetPackageId assetPackageId);
 		inline ~AssetPackage();
+		inline AssetPackageId getAssetPackageId() const;
 		inline void clear();
 		inline const SortedAssetVector& getSortedAssetVector() const;
-		RENDERERRUNTIME_API_EXPORT const Asset* getAssetByAssetId(AssetId assetId) const;
-		inline const char* getAssetFilenameByAssetId(AssetId assetId) const;
+		RENDERERRUNTIME_API_EXPORT void addAsset(AssetId assetId, const char* assetFilename);
+		RENDERERRUNTIME_API_EXPORT const Asset* tryGetAssetByAssetId(AssetId assetId) const;
+		inline const char* tryGetAssetFilenameByAssetId(AssetId assetId) const;
 
 		// For internal use only (exposed for API performance reasons)
 		inline SortedAssetVector& getWritableSortedAssetVector();
@@ -79,7 +88,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		AssetPackage(const AssetPackage&) = delete;
+		explicit AssetPackage(const AssetPackage&) = delete;
 		AssetPackage& operator=(const AssetPackage&) = delete;
 
 
@@ -87,6 +96,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		AssetPackageId	  mAssetPackageId;
 		SortedAssetVector mSortedAssetVector;	///< Sorted vector of assets
 
 

@@ -81,26 +81,8 @@ namespace Renderer
 		*/
 		inline explicit IPipelineState(IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IPipelineState(const IPipelineState& source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IPipelineState &operator =(const IPipelineState& source);
+		explicit IPipelineState(const IPipelineState& source) = delete;
+		IPipelineState& operator =(const IPipelineState& source) = delete;
 
 
 	};

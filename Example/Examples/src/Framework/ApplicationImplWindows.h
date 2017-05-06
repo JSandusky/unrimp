@@ -90,6 +90,14 @@ private:
 
 
 //[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	explicit ApplicationImplWindows(const ApplicationImplWindows& source) = delete;
+	ApplicationImplWindows& operator =(const ApplicationImplWindows& source) = delete;
+
+
+//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:

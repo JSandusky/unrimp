@@ -26,6 +26,7 @@
 #include "RendererToolkit/Helper/StringHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Resource/Skeleton/Loader/SkeletonFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -103,8 +104,8 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Skeleton::FORMAT_VERSION, cacheEntries))
 		{
 			// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
-			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
+			// std::ifstream inputFileStream(inputFilename, std::ios::binary);
+			// RendererRuntime::MemoryFile memoryFile;
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);

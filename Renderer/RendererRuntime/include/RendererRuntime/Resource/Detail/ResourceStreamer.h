@@ -79,6 +79,9 @@ namespace RendererRuntime
 	*    1. Asynchronous deserialization
 	*    2. Asynchronous processing
 	*    3. Synchronous dispatch, e.g. to the renderer backend
+	*
+	*  @todo
+	*    - TODO(co) It might make sense to use lock-free-queues in here
 	*/
 	class ResourceStreamer
 	{
@@ -99,14 +102,16 @@ namespace RendererRuntime
 			// Data provided from the outside
 			const Asset*		 asset;					///< Used asset, must be valid
 			ResourceLoaderTypeId resourceLoaderTypeId;	///< Must be valid
+			bool				 reload;				///< "true" if the resource is new in memory, else "false" for reload an already loaded resource (and e.g. update cache entries)
 			IResource*			 resource;				///< Must be valid, do not destroy the instance
 			// In flight data
 			mutable IResourceLoader* resourceLoader;	///< Null pointer at first, must be valid as soon as the load request is in flight, do not destroy the instance
 
 			// Methods
-			inline LoadRequest(const Asset& _asset, ResourceLoaderTypeId _resourceLoaderTypeId, IResource& _resource) :
+			inline LoadRequest(const Asset& _asset, ResourceLoaderTypeId _resourceLoaderTypeId, bool _reload, IResource& _resource) :
 				asset(&_asset),
 				resourceLoaderTypeId(_resourceLoaderTypeId),
+				reload(_reload),
 				resource(&_resource),
 				resourceLoader(nullptr)
 			{
@@ -138,7 +143,7 @@ namespace RendererRuntime
 	private:
 		explicit ResourceStreamer(IRendererRuntime& rendererRuntime);
 		~ResourceStreamer();
-		ResourceStreamer(const ResourceStreamer&) = delete;
+		explicit ResourceStreamer(const ResourceStreamer&) = delete;
 		ResourceStreamer& operator=(const ResourceStreamer&) = delete;
 		void deserializationThreadWorker();
 		void processingThreadWorker();

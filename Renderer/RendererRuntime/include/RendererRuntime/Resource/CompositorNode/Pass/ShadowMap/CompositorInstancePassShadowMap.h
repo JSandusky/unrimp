@@ -85,7 +85,7 @@ namespace RendererRuntime
 		struct PassData
 		{
 			glm::mat4	shadowMatrix;
-			float		cascadeSplits[CompositorResourcePassShadowMap::NUMBER_OF_CASCADES];
+			float		cascadeSplits[CompositorResourcePassShadowMap::NUMBER_OF_CASCADES] = {};
 			glm::vec4	cascadeOffsets[CompositorResourcePassShadowMap::NUMBER_OF_CASCADES];
 			glm::vec4	cascadeScales[CompositorResourcePassShadowMap::NUMBER_OF_CASCADES];
 		};
@@ -111,7 +111,7 @@ namespace RendererRuntime
 	protected:
 		CompositorInstancePassShadowMap(const CompositorResourcePassShadowMap& compositorResourcePassShadowMap, const CompositorNodeInstance& compositorNodeInstance);
 		inline virtual ~CompositorInstancePassShadowMap();
-		CompositorInstancePassShadowMap(const CompositorInstancePassShadowMap&) = delete;
+		explicit CompositorInstancePassShadowMap(const CompositorInstancePassShadowMap&) = delete;
 		CompositorInstancePassShadowMap& operator=(const CompositorInstancePassShadowMap&) = delete;
 		void createShadowMapRenderTarget();
 		void destroyShadowMapRenderTarget();

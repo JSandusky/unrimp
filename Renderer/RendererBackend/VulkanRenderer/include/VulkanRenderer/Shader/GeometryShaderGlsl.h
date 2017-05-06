@@ -115,6 +115,14 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit GeometryShaderGlsl(const GeometryShaderGlsl& source) = delete;
+		GeometryShaderGlsl& operator =(const GeometryShaderGlsl& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

@@ -170,7 +170,7 @@ namespace Direct3D11Renderer
 		memcpy(mData, data, numberOfBytes);
 
 		// Check resource pointers
-		if (nullptr != mD3D11Buffer && nullptr != data)
+		if (nullptr != mD3D11Buffer)
 		{
 			Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
 

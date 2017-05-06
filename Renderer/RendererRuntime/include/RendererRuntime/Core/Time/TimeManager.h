@@ -72,7 +72,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		TimeManager(const TimeManager&) = delete;
+		explicit TimeManager(const TimeManager&) = delete;
 		TimeManager& operator=(const TimeManager&) = delete;
 
 

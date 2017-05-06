@@ -211,7 +211,7 @@ namespace RendererRuntime
 	private:
 		inline MaterialResource();
 		virtual ~MaterialResource();
-		MaterialResource(const MaterialResource&) = delete;
+		explicit MaterialResource(const MaterialResource&) = delete;
 		MaterialResource& operator=(const MaterialResource&) = delete;
 		RENDERERRUNTIME_API_EXPORT MaterialResource& operator=(MaterialResource&& materialResource);
 

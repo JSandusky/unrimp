@@ -337,7 +337,6 @@ namespace Direct3D11Renderer
 		mD3D11Device(nullptr),
 		mD3D11DeviceContext(nullptr),
 		mD3DUserDefinedAnnotation(nullptr),
-		mMainThreadId(std::this_thread::get_id()),
 		mShaderLanguageHlsl(nullptr),
 		mD3D11QueryFlush(nullptr),
 		mMainSwapChain(nullptr),
@@ -1327,8 +1326,7 @@ namespace Direct3D11Renderer
 	void Direct3D11Renderer::beginDebugEvent(const char *name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
-			// TODO(co) With the current API design, we can't emit debug events from multiple threads (e.g. for background resource loading)
-			if (nullptr != mD3DUserDefinedAnnotation && std::this_thread::get_id() == mMainThreadId)
+			if (nullptr != mD3DUserDefinedAnnotation)
 			{
 				assert(strlen(name) < 256);
 				wchar_t unicodeName[256];
@@ -1341,8 +1339,7 @@ namespace Direct3D11Renderer
 	void Direct3D11Renderer::endDebugEvent()
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
-			// TODO(co) With the current API design, we can't emit debug events from multiple threads (e.g. for background resource loading)
-			if (nullptr != mD3DUserDefinedAnnotation && std::this_thread::get_id() == mMainThreadId)
+			if (nullptr != mD3DUserDefinedAnnotation)
 			{
 				mD3DUserDefinedAnnotation->EndEvent();
 			}
@@ -1935,7 +1932,16 @@ namespace Direct3D11Renderer
 		mCapabilities.baseVertex = true;
 
 		// Direct3D 11 has native multi-threading
-		mCapabilities.nativeMultiThreading = true;
+		// -> When using user defined annotation for enhanced graphics debugging, disable native multi-threading or we'll get synchronization problems like
+		//    "
+		//    D3D11 CORRUPTION: ID3D11DeviceContext::Map: Two threads were found to be executing functions associated with the same Device[Context] at the same time. This will cause corruption of memory. Appropriate thread synchronization needs to occur external to the Direct3D API (or through the ID3D10Multithread interface). 7584 and 12900 are the implicated thread ids. [ MISCELLANEOUS CORRUPTION #28: CORRUPTED_MULTITHREADING]
+		//    Exception thrown at 0x7645B782 (KernelBase.dll) in ExamplesD.exe: 0x0000087D (parameters: 0x00000000, 0x00C84D70, 0x00C841A8).
+		//    "
+		//    in case a thread is currently between "beginDebugEvent()"/"endDebugEvent()" while another thread is creating for example a texture resource.
+		mCapabilities.nativeMultiThreading = (nullptr == mD3DUserDefinedAnnotation);
+
+		// Direct3D 11 has shader bytecode support
+		mCapabilities.shaderBytecode = true;
 
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;

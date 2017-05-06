@@ -151,11 +151,11 @@ namespace Renderer
 						// Get the "CreateRendererInstance()" function pointer
 						char functionName[128];
 						sprintf(functionName, "create%sRendererInstance", rendererName);
-						void *symbol = ::GetProcAddress(static_cast<HMODULE>(mRendererSharedLibrary), functionName);
+						void* symbol = ::GetProcAddress(static_cast<HMODULE>(mRendererSharedLibrary), functionName);
 						if (nullptr != symbol)
 						{
 							// "createRendererInstance()" signature
-							typedef Renderer::IRenderer *(__cdecl *createRendererInstance)(Renderer::handle);
+							typedef Renderer::IRenderer* (__cdecl *createRendererInstance)(Renderer::handle);
 
 							// Create the renderer instance
 							mRenderer = (static_cast<createRendererInstance>(symbol))(nativeWindowHandle);
@@ -184,11 +184,11 @@ namespace Renderer
 						// Get the "CreateRendererInstance()" function pointer
 						char functionName[128];
 						sprintf(functionName, "create%sRendererInstance", rendererName);
-						void *symbol = ::dlsym(mRendererSharedLibrary, functionName);
+						void* symbol = ::dlsym(mRendererSharedLibrary, functionName);
 						if (nullptr != symbol)
 						{
 							// "createRendererInstance()" signature
-							typedef Renderer::IRenderer *(*createRendererInstance)(Renderer::handle);
+							typedef Renderer::IRenderer* (*createRendererInstance)(Renderer::handle);
 
 							// Create the renderer instance
 							mRenderer = (reinterpret_cast<createRendererInstance>(symbol))(nativeWindowHandle);
@@ -321,7 +321,7 @@ namespace Renderer
 		*  @remarks
 		*    The renderer instance, can be a null pointer
 		*/
-		inline Renderer::IRenderer *getRenderer() const
+		inline Renderer::IRenderer* getRenderer() const
 		{
 			return mRenderer;
 		}
@@ -331,8 +331,8 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void				   *mRendererSharedLibrary;	///< Renderer shared library, can be a null pointer
-		Renderer::IRendererPtr  mRenderer;				///< Renderer instance, can be a null pointer
+		void*				   mRendererSharedLibrary;	///< Renderer shared library, can be a null pointer
+		Renderer::IRendererPtr mRenderer;				///< Renderer instance, can be a null pointer
 
 
 	};

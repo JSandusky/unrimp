@@ -70,28 +70,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit ITessellationControlShader(IRenderer &renderer);
+		inline explicit ITessellationControlShader(IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ITessellationControlShader(const ITessellationControlShader &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ITessellationControlShader &operator =(const ITessellationControlShader &source);
+		explicit ITessellationControlShader(const ITessellationControlShader& source) = delete;
+		ITessellationControlShader& operator =(const ITessellationControlShader& source) = delete;
 
 
 	};

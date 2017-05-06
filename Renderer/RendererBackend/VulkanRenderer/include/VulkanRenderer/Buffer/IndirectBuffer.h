@@ -93,6 +93,14 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit IndirectBuffer(const IndirectBuffer& source) = delete;
+		IndirectBuffer& operator =(const IndirectBuffer& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

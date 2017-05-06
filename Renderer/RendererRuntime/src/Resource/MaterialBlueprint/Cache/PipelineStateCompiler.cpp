@@ -284,11 +284,11 @@ namespace RendererRuntime
 										// -> Shader compilation is considered to be expensive, so we need to be pretty sure that we really need to perform this heavy work
 										const ShaderSourceCodeId shaderSourceCodeId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(sourceCode.c_str()), static_cast<uint32_t>(sourceCode.size()));
 										ShaderCacheManager::ShaderCacheByShaderSourceCodeId::const_iterator shaderSourceCodeIdIterator = shaderCacheManager.mShaderCacheByShaderSourceCodeId.find(shaderSourceCodeId);
-										if (shaderSourceCodeIdIterator != shaderCacheManager.mShaderCacheByShaderSourceCodeId.cend() && nullptr != shaderSourceCodeIdIterator->second->getShaderPtr().getPointer())
+										if (shaderSourceCodeIdIterator != shaderCacheManager.mShaderCacheByShaderSourceCodeId.cend())
 										{
 											// Reuse already existing shader instance
 											// -> We still have to create a shader cache instance so we don't need to build the shader source code again next time
-											shaderCache = new ShaderCache(shaderCacheId, shaderSourceCodeIdIterator->second);
+											shaderCache = new ShaderCache(shaderCacheId, shaderCacheManager.mShaderCacheByShaderCacheId.find(shaderSourceCodeIdIterator->second)->second);
 											shaderCacheManager.mShaderCacheByShaderCacheId.emplace(shaderCacheId, shaderCache);
 										}
 										else
@@ -296,7 +296,7 @@ namespace RendererRuntime
 											// Create the new shader cache instance
 											shaderCache = new ShaderCache(shaderCacheId);
 											shaderCacheManager.mShaderCacheByShaderCacheId.emplace(shaderCacheId, shaderCache);
-											shaderCacheManager.mShaderCacheByShaderSourceCodeId.emplace(shaderSourceCodeId, shaderCache);
+											shaderCacheManager.mShaderCacheByShaderSourceCodeId.emplace(shaderSourceCodeId, shaderCacheId);
 											compilerRequest.shaderSourceCode[i] = sourceCode;
 										}
 									}

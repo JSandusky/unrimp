@@ -42,13 +42,13 @@ namespace Renderer
 	}
 
 	template <class AType>
-	inline const AType *RefCount<AType>::getPointer() const
+	inline const AType* RefCount<AType>::getPointer() const
 	{
 		return static_cast<const AType*>(this);
 	}
 
 	template <class AType>
-	inline AType *RefCount<AType>::getPointer()
+	inline AType* RefCount<AType>::getPointer()
 	{
 		return static_cast<AType*>(this);
 	}
@@ -73,9 +73,9 @@ namespace Renderer
 
 			// Return current reference count
 			return mRefCount;
+		}
 
 		// Destroy object when no references are left
-		}
 		else
 		{
 			delete this;

@@ -84,28 +84,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IBuffer(ResourceType resourceType, IRenderer &renderer);
+		inline IBuffer(ResourceType resourceType, IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IBuffer(const IBuffer &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IBuffer &operator =(const IBuffer &source);
+		explicit IBuffer(const IBuffer& source) = delete;
+		IBuffer &operator =(const IBuffer& source) = delete;
 
 
 	};

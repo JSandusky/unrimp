@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IFragmentShader::IFragmentShader(IRenderer &renderer) :
+	inline IFragmentShader::IFragmentShader(IRenderer& renderer) :
 		IShader(ResourceType::FRAGMENT_SHADER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -56,23 +56,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedFragmentShaders;
 			++getRenderer().getStatistics().currentNumberOfFragmentShaders;
 		#endif
-	}
-
-	inline IFragmentShader::IFragmentShader(const IFragmentShader &source) :
-		IShader(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedFragmentShaders;
-			++getRenderer().getStatistics().currentNumberOfFragmentShaders;
-		#endif
-	}
-
-	inline IFragmentShader &IFragmentShader::operator =(const IFragmentShader &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

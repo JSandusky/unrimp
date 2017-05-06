@@ -136,7 +136,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		CompositorWorkspaceInstance() = delete;
-		CompositorWorkspaceInstance(const CompositorWorkspaceInstance&) = delete;
+		explicit CompositorWorkspaceInstance(const CompositorWorkspaceInstance&) = delete;
 		CompositorWorkspaceInstance& operator=(const CompositorWorkspaceInstance&) = delete;
 		void destroySequentialCompositorNodeInstances();
 		void createFramebuffersAndRenderTargetTextures(const Renderer::IRenderTarget& mainRenderTarget);

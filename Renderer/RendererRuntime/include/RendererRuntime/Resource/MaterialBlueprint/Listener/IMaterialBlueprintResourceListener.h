@@ -96,7 +96,7 @@ namespace RendererRuntime
 	protected:
 		inline IMaterialBlueprintResourceListener();
 		inline virtual ~IMaterialBlueprintResourceListener();
-		IMaterialBlueprintResourceListener(const IMaterialBlueprintResourceListener&) = delete;
+		explicit IMaterialBlueprintResourceListener(const IMaterialBlueprintResourceListener&) = delete;
 		IMaterialBlueprintResourceListener& operator=(const IMaterialBlueprintResourceListener&) = delete;
 
 

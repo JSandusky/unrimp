@@ -57,11 +57,11 @@ namespace VulkanRenderer
 
 		// TODO(co) Implement me
 
-		// Initialize the supported universal extensions
-		return initializeUniversal();
-
 		// Restore the previous warning configuration
 		__pragma(warning(pop))
+
+		// Initialize the supported universal extensions
+		return initializeUniversal();
 	}
 
 

@@ -76,22 +76,10 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITexture::ITexture(ResourceType resourceType, IRenderer &renderer) :
+	inline ITexture::ITexture(ResourceType resourceType, IRenderer& renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing here
-	}
-
-	inline ITexture::ITexture(const ITexture &source) :
-		IResource(source)
-	{
-		// Not supported
-	}
-
-	inline ITexture &ITexture::operator =(const ITexture &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

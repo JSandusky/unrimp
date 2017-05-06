@@ -35,9 +35,9 @@
 #else
 	#define RENDERERTOOLKIT_API_EXPORT
 #endif
-RENDERERTOOLKIT_API_EXPORT RendererToolkit::IRendererToolkit *createRendererToolkitInstance()
+RENDERERTOOLKIT_API_EXPORT RendererToolkit::IRendererToolkit* createRendererToolkitInstance(RendererRuntime::IFileManager& fileManager)
 {
-	return new RendererToolkit::RendererToolkitImpl();
+	return new RendererToolkit::RendererToolkitImpl(fileManager);
 }
 #undef RENDERERTOOLKIT_API_EXPORT
 
@@ -52,7 +52,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RendererToolkitImpl::RendererToolkitImpl()
+	RendererToolkitImpl::RendererToolkitImpl(RendererRuntime::IFileManager& fileManager) :
+		mFileManager(fileManager)
 	{
 		// Nothing here
 	}
@@ -68,7 +69,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	IProject* RendererToolkitImpl::createProject()
 	{
-		return new ProjectImpl();
+		return new ProjectImpl(mFileManager);
 	}
 
 

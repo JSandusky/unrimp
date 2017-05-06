@@ -85,6 +85,14 @@ public:
 
 
 //[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	explicit ApplicationImplLinux(const ApplicationImplLinux& source) = delete;
+	ApplicationImplLinux& operator =(const ApplicationImplLinux& source) = delete;
+
+
+//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:

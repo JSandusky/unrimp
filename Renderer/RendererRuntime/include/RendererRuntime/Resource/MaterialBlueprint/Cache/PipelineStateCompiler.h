@@ -146,7 +146,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit PipelineStateCompiler(IRendererRuntime& rendererRuntime);
-		PipelineStateCompiler(const PipelineStateCompiler&) = delete;
+		explicit PipelineStateCompiler(const PipelineStateCompiler&) = delete;
 		~PipelineStateCompiler();
 		PipelineStateCompiler& operator=(const PipelineStateCompiler&) = delete;
 		void addAsynchronousCompilerRequest(PipelineStateCache& pipelineStateCache);

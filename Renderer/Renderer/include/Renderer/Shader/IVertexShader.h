@@ -70,28 +70,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IVertexShader(IRenderer &renderer);
+		inline explicit IVertexShader(IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IVertexShader(const IVertexShader &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IVertexShader &operator =(const IVertexShader &source);
+		explicit IVertexShader(const IVertexShader& source) = delete;
+		IVertexShader& operator =(const IVertexShader& source) = delete;
 
 
 	};

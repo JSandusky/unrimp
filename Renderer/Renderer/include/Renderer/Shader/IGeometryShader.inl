@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IGeometryShader::IGeometryShader(IRenderer &renderer) :
+	inline IGeometryShader::IGeometryShader(IRenderer& renderer) :
 		IShader(ResourceType::GEOMETRY_SHADER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -56,23 +56,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedGeometryShaders;
 			++getRenderer().getStatistics().currentNumberOfGeometryShaders;
 		#endif
-	}
-
-	inline IGeometryShader::IGeometryShader(const IGeometryShader &source) :
-		IShader(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedGeometryShaders;
-			++getRenderer().getStatistics().currentNumberOfGeometryShaders;
-		#endif
-	}
-
-	inline IGeometryShader &IGeometryShader::operator =(const IGeometryShader &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

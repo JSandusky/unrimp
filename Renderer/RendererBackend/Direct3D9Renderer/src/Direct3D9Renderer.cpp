@@ -1751,6 +1751,9 @@ namespace Direct3D9Renderer
 		// Direct3D 9 has no native multi-threading
 		mCapabilities.nativeMultiThreading = false;
 
+		// Direct3D 9 has shader bytecode support
+		mCapabilities.shaderBytecode = true;
+
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;
 

@@ -115,7 +115,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		IndirectBufferManager(const IndirectBufferManager&) = delete;
+		explicit IndirectBufferManager(const IndirectBufferManager&) = delete;
 		IndirectBufferManager& operator=(const IndirectBufferManager&) = delete;
 
 

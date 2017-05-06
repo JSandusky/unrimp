@@ -44,22 +44,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void VertexAttributesResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void VertexAttributesResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mVertexAttributesResource = static_cast<VertexAttributesResource*>(&resource);
 	}
 
 	void VertexAttributesResourceLoader::onDeserialization(IFile& file)
 	{
-		// Read in the file format header
-		FileFormatHeader fileFormatHeader;
-		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
-		assert(v1VertexAttributes::FORMAT_TYPE == fileFormatHeader.formatType);
-		assert(v1VertexAttributes::FORMAT_VERSION == fileFormatHeader.formatVersion);
-
 		// Tell the memory mapped file about the LZ4 compressed data
-		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+		mMemoryFile.loadLz4CompressedDataFromFile(v1VertexAttributes::FORMAT_TYPE, v1VertexAttributes::FORMAT_VERSION, file);
 	}
 
 	void VertexAttributesResourceLoader::onProcessing()

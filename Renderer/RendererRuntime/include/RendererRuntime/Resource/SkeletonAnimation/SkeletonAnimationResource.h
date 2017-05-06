@@ -124,7 +124,7 @@ namespace RendererRuntime
 	private:
 		inline SkeletonAnimationResource();
 		inline virtual ~SkeletonAnimationResource();
-		SkeletonAnimationResource(const SkeletonAnimationResource&) = delete;
+		explicit SkeletonAnimationResource(const SkeletonAnimationResource&) = delete;
 		SkeletonAnimationResource& operator=(const SkeletonAnimationResource&) = delete;
 		inline void clearSkeletonAnimationData();
 

@@ -778,6 +778,9 @@ namespace OpenGLRenderer
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glSpecializeShaderARB)
 			mGL_ARB_gl_spirv = result;
+
+			// TODO(co) "GL_ARB_gl_spirv"-support is under construction
+			mGL_ARB_gl_spirv = false;
 		}
 
 

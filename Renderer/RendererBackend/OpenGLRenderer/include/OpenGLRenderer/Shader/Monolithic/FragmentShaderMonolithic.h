@@ -111,6 +111,14 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit FragmentShaderMonolithic(const FragmentShaderMonolithic& source) = delete;
+		FragmentShaderMonolithic& operator =(const FragmentShaderMonolithic& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

@@ -82,6 +82,14 @@ namespace OpenGLRenderer
 		virtual ~Texture2DArrayBind();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Texture2DArrayBind(const Texture2DArrayBind& source) = delete;
+		Texture2DArrayBind& operator =(const Texture2DArrayBind& source) = delete;
+
+
 	};
 
 

@@ -99,14 +99,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private static methods                                ]
+	//[-------------------------------------------------------]
+	private:
+		static void beginFrame();
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
 		DebugGuiHelper() = delete;
 		~DebugGuiHelper() = delete;
-		DebugGuiHelper(const DebugGuiHelper&) = delete;
+		explicit DebugGuiHelper(const DebugGuiHelper&) = delete;
 		DebugGuiHelper& operator=(const DebugGuiHelper&) = delete;
-		static void beginFrame();
 
 
 	//[-------------------------------------------------------]

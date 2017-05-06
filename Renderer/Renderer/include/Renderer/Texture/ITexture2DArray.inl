@@ -63,7 +63,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITexture2DArray::ITexture2DArray(IRenderer &renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices) :
+	inline ITexture2DArray::ITexture2DArray(IRenderer& renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices) :
 		ITexture(ResourceType::TEXTURE_2D_ARRAY, renderer),
 		mWidth(width),
 		mHeight(height),
@@ -74,26 +74,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedTexture2DArrays;
 			++getRenderer().getStatistics().currentNumberOfTexture2DArrays;
 		#endif
-	}
-
-	inline ITexture2DArray::ITexture2DArray(const ITexture2DArray &source) :
-		ITexture(source),
-		mWidth(source.getWidth()),
-		mHeight(source.getHeight()),
-		mNumberOfSlices(source.getNumberOfSlices())
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTexture2DArrays;
-			++getRenderer().getStatistics().currentNumberOfTexture2DArrays;
-		#endif
-	}
-
-	inline ITexture2DArray &ITexture2DArray::operator =(const ITexture2DArray &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

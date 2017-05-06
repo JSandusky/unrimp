@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IIndexBuffer::IIndexBuffer(IRenderer &renderer) :
+	inline IIndexBuffer::IIndexBuffer(IRenderer& renderer) :
 		IBuffer(ResourceType::INDEX_BUFFER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -56,23 +56,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedIndexBuffers;
 			++getRenderer().getStatistics().currentNumberOfIndexBuffers;
 		#endif
-	}
-
-	inline IIndexBuffer::IIndexBuffer(const IIndexBuffer &source) :
-		IBuffer(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedIndexBuffers;
-			++getRenderer().getStatistics().currentNumberOfIndexBuffers;
-		#endif
-	}
-
-	inline IIndexBuffer &IIndexBuffer::operator =(const IIndexBuffer &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

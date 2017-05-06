@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "Renderer/State/SamplerStateTypes.h"
 
-#include <string.h>	// For strcpy
+#include <string.h>	// For "strcpy()"
 
 
 //[-------------------------------------------------------]
@@ -87,12 +87,14 @@ namespace Renderer
 	};
 	struct DescriptorRangeBuilder : public DescriptorRange
 	{
-		static const uint32_t OFFSET_APPEND	= 0xffffffff;
+		static const uint32_t OFFSET_APPEND = 0xffffffff;
 		DescriptorRangeBuilder()
 		{
+			// Nothing here
 		}
 		explicit DescriptorRangeBuilder(const DescriptorRangeBuilder&)
 		{
+			// Nothing here
 		}
 		DescriptorRangeBuilder(
 			DescriptorRangeType _rangeType,
@@ -163,9 +165,11 @@ namespace Renderer
 	{
 		RootDescriptorTableBuilder()
 		{
+			// Nothing here
 		}
 		explicit RootDescriptorTableBuilder(const RootDescriptorTableBuilder&)
 		{
+			// Nothing here
 		}
 		RootDescriptorTableBuilder(
 			uint32_t _numberOfDescriptorRanges,
@@ -180,7 +184,7 @@ namespace Renderer
 			initialize(*this, _numberOfDescriptorRanges, _descriptorRanges);
 		}
 		static inline void initialize(
-			RootDescriptorTable &rootDescriptorTable,
+			RootDescriptorTable& rootDescriptorTable,
 			uint32_t _numberOfDescriptorRanges,
 			const DescriptorRange* _descriptorRanges)
 		{
@@ -228,9 +232,11 @@ namespace Renderer
 	{
 		RootConstantsBuilder()
 		{
+			// Nothing here
 		}
 		explicit RootConstantsBuilder(const RootConstantsBuilder&)
 		{
+			// Nothing here
 		}
 		RootConstantsBuilder(
 			uint32_t _numberOf32BitValues,
@@ -277,9 +283,11 @@ namespace Renderer
 	{
 		RootDescriptorBuilder()
 		{
+			// Nothing here
 		}
 		explicit RootDescriptorBuilder(const RootDescriptorBuilder&)
 		{
+			// Nothing here
 		}
 		RootDescriptorBuilder(
 			uint32_t _shaderRegister,
@@ -351,9 +359,11 @@ namespace Renderer
 	{
 		RootParameterBuilder()
 		{
+			// Nothing here
 		}
 		explicit RootParameterBuilder(const RootParameterBuilder&)
 		{
+			// Nothing here
 		}
 		static inline void initializeAsDescriptorTable(
 			RootParameter& rootParam,
@@ -537,9 +547,11 @@ namespace Renderer
 	{
 		RootSignatureBuilder()
 		{
+			// Nothing here
 		}
 		explicit RootSignatureBuilder(const RootSignatureBuilder&)
 		{
+			// Nothing here
 		}
 		RootSignatureBuilder(
 			uint32_t _numberOfParameters,

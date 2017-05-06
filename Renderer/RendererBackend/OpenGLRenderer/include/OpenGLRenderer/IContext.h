@@ -107,26 +107,8 @@ namespace OpenGLRenderer
 		*/
 		explicit IContext(OpenGLRuntimeLinking* openGLRuntimeLinking);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		explicit IContext(const IContext &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		IContext &operator =(const IContext &source);
+		explicit IContext(const IContext &source) = delete;
+		IContext &operator =(const IContext &source) = delete;
 
 		/**
 		*  @brief

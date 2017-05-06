@@ -76,6 +76,14 @@ namespace OpenGLRenderer
 		virtual ~VertexBufferDsa();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexBufferDsa(const VertexBufferDsa& source) = delete;
+		VertexBufferDsa& operator =(const VertexBufferDsa& source) = delete;
+
+
 	};
 
 

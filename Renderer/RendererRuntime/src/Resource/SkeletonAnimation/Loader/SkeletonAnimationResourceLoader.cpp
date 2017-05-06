@@ -43,22 +43,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void SkeletonAnimationResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void SkeletonAnimationResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mSkeletonAnimationResource = static_cast<SkeletonAnimationResource*>(&resource);
 	}
 
 	void SkeletonAnimationResourceLoader::onDeserialization(IFile& file)
 	{
-		// Read in the file format header
-		FileFormatHeader fileFormatHeader;
-		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
-		assert(v1SkeletonAnimation::FORMAT_TYPE == fileFormatHeader.formatType);
-		assert(v1SkeletonAnimation::FORMAT_VERSION == fileFormatHeader.formatVersion);
-
 		// Tell the memory mapped file about the LZ4 compressed data
-		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+		mMemoryFile.loadLz4CompressedDataFromFile(v1SkeletonAnimation::FORMAT_TYPE, v1SkeletonAnimation::FORMAT_VERSION, file);
 	}
 
 	void SkeletonAnimationResourceLoader::onProcessing()

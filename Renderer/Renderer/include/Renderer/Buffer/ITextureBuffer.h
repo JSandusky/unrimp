@@ -55,7 +55,7 @@ namespace Renderer
 	*      - ARB extension:                GL_ARB_texture_buffer_object
 	*      - EXT extension:                GL_EXT_texture_buffer_object
 	*    Direct3D - "Shader Constants"-documentation - http://msdn.microsoft.com/en-us/library/windows/desktop/bb509581%28v=vs.85%29.aspx
-	*      - Direct3D version:              10 and 11
+	*      - Direct3D version:             10 and 11
 	*      - Shader model:                 4
 	*/
 	class ITextureBuffer : public IBuffer
@@ -86,7 +86,7 @@ namespace Renderer
 		*  @param[in] data
 		*    Texture buffer data, must be valid
 		*/
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 
 
 	//[-------------------------------------------------------]
@@ -100,28 +100,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit ITextureBuffer(IRenderer &renderer);
+		inline explicit ITextureBuffer(IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ITextureBuffer(const ITextureBuffer &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ITextureBuffer &operator =(const ITextureBuffer &source);
+		explicit ITextureBuffer(const ITextureBuffer& source) = delete;
+		ITextureBuffer& operator =(const ITextureBuffer& source) = delete;
 
 
 	};

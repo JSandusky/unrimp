@@ -70,7 +70,17 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	const Asset* AssetPackage::getAssetByAssetId(AssetId assetId) const
+	void AssetPackage::addAsset(AssetId assetId, const char* assetFilename)
+	{
+		assert(nullptr == tryGetAssetByAssetId(assetId) && "Asset ID is already used");
+		assert((strlen(assetFilename) <= Asset::MAXIMUM_ASSET_FILENAME_LENGTH) && "The asset filename is too long");
+		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, ::detail::OrderByAssetId());
+		Asset& asset = *mSortedAssetVector.insert(iterator, Asset());
+		asset.assetId = assetId;
+		strncpy(asset.assetFilename, assetFilename, Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
+	}
+
+	const Asset* AssetPackage::tryGetAssetByAssetId(AssetId assetId) const
 	{
 		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, ::detail::OrderByAssetId());
 		return (iterator != mSortedAssetVector.end() && iterator->assetId == assetId) ? &(*iterator) : nullptr;

@@ -77,7 +77,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT VertexAttributesResource* getVertexAttributesResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
-		RENDERERRUNTIME_API_EXPORT void loadVertexAttributesResourceByAssetId(AssetId assetId, VertexAttributesResourceId& vertexAttributesResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadVertexAttributesResourceByAssetId(AssetId assetId, VertexAttributesResourceId& vertexAttributesResourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = getUninitialized<ResourceLoaderTypeId>());	// Asynchronous
 		RENDERERRUNTIME_API_EXPORT VertexAttributesResourceId createVertexAttributesResourceByAssetId(AssetId assetId);	// Skeleton animation resource is not allowed to exist, yet
 
 
@@ -106,7 +106,7 @@ namespace RendererRuntime
 	private:
 		explicit VertexAttributesResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~VertexAttributesResourceManager();
-		VertexAttributesResourceManager(const VertexAttributesResourceManager&) = delete;
+		explicit VertexAttributesResourceManager(const VertexAttributesResourceManager&) = delete;
 		VertexAttributesResourceManager& operator=(const VertexAttributesResourceManager&) = delete;
 
 

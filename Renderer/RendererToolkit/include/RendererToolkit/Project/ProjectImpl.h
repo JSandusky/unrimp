@@ -42,6 +42,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IFileManager;
 	class IRendererRuntime;
 }
 namespace RendererToolkit
@@ -83,8 +84,11 @@ namespace RendererToolkit
 		/**
 		*  @brief
 		*    Constructor
+		*
+		*  @param[in] fileManager
+		*    The file manager instance to use
 		*/
-		explicit ProjectImpl();
+		explicit ProjectImpl(RendererRuntime::IFileManager& fileManager);
 
 		/**
 		*  @brief
@@ -95,7 +99,7 @@ namespace RendererToolkit
 		inline const std::string& getProjectName() const;
 		inline const std::string& getProjectDirectory() const;
 		inline const RendererRuntime::AssetPackage& getAssetPackage() const;
-		const char* getAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const;
+		const char* tryGetAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const;
 		void compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage);
 
 
@@ -127,6 +131,7 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		RendererRuntime::IFileManager&  mFileManager;
 		std::string						mProjectName;
 		std::string						mProjectDirectory;
 		QualityStrategy					mQualityStrategy;

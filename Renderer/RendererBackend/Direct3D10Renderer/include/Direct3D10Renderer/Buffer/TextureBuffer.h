@@ -122,6 +122,14 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TextureBuffer(const TextureBuffer& source) = delete;
+		TextureBuffer& operator =(const TextureBuffer& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

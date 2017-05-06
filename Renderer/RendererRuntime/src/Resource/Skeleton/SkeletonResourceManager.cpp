@@ -43,9 +43,9 @@ namespace RendererRuntime
 		return mInternalResourceManager->getResourceByAssetId(assetId);
 	}
 
-	void SkeletonResourceManager::loadSkeletonResourceByAssetId(AssetId assetId, SkeletonResourceId& skeletonResourceId, IResourceListener* resourceListener, bool reload)
+	void SkeletonResourceManager::loadSkeletonResourceByAssetId(AssetId assetId, SkeletonResourceId& skeletonResourceId, IResourceListener* resourceListener, bool reload, ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->loadResourceByAssetId(assetId, skeletonResourceId, resourceListener, reload);
+		mInternalResourceManager->loadResourceByAssetId(assetId, skeletonResourceId, resourceListener, reload, resourceLoaderTypeId);
 	}
 
 	SkeletonResourceId SkeletonResourceManager::createSkeletonResourceByAssetId(AssetId assetId)

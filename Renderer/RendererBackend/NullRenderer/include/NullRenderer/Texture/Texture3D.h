@@ -90,6 +90,14 @@ namespace NullRenderer
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Texture3D(const Texture3D& source) = delete;
+		Texture3D& operator =(const Texture3D& source) = delete;
+
+
 	};
 
 

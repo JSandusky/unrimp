@@ -126,7 +126,7 @@ namespace Renderer
 		*  @note
 		*    - Do not free the memory the returned reference is pointing to
 		*/
-		inline const Capabilities &getCapabilities() const;
+		inline const Capabilities& getCapabilities() const;
 
 		#ifndef RENDERER_NO_STATISTICS
 			/**
@@ -140,7 +140,7 @@ namespace Renderer
 			*    - Do not free the memory the returned reference is pointing to
 			*    - It's possible that the statistics or part of it are disabled, e.g. due to hight performance constrains
 			*/
-			inline const Statistics &getStatistics() const;
+			inline const Statistics& getStatistics() const;
 		#endif
 
 
@@ -158,7 +158,7 @@ namespace Renderer
 		*  @note
 		*    - Do not free the memory the returned pointer is pointing to
 		*/
-		virtual const char *getName() const = 0;
+		virtual const char* getName() const = 0;
 
 		/**
 		*  @brief
@@ -216,7 +216,7 @@ namespace Renderer
 		*    In case the optional native main window handle within the renderer constructor was
 		*    not a null handle, this methods returns the instance of the main swap chain.
 		*/
-		virtual ISwapChain *getMainSwapChain() const = 0;
+		virtual ISwapChain* getMainSwapChain() const = 0;
 
 		//[-------------------------------------------------------]
 		//[ Shader language                                       ]
@@ -244,7 +244,7 @@ namespace Renderer
 		*    - Do not free the memory the returned pointer is pointing to
 		*    - The default shader language is always at index 0
 		*/
-		virtual const char *getShaderLanguageName(uint32_t index) const = 0;
+		virtual const char* getShaderLanguageName(uint32_t index) const = 0;
 
 		/**
 		*  @brief
@@ -257,7 +257,7 @@ namespace Renderer
 		*  @return
 		*    The shader language instance, a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		virtual IShaderLanguage *getShaderLanguage(const char *shaderLanguageName = nullptr) = 0;
+		virtual IShaderLanguage* getShaderLanguage(const char* shaderLanguageName = nullptr) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Resource creation                                     ]
@@ -272,7 +272,7 @@ namespace Renderer
 		*  @return
 		*    The created swap chain instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual ISwapChain *createSwapChain(handle nativeWindowHandle) = 0;
+		virtual ISwapChain* createSwapChain(handle nativeWindowHandle) = 0;
 
 		/**
 		*  @brief
@@ -296,7 +296,7 @@ namespace Renderer
 		*    - Depending on the used graphics API and feature set, there might be the requirement that all provided textures have the same size
 		*      (in order to be on the save side, ensure that all provided textures have the same size)
 		*/
-		virtual IFramebuffer *createFramebuffer(uint32_t numberOfColorTextures, ITexture **colorTextures, ITexture *depthStencilTexture = nullptr) = 0;
+		virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorTextures, ITexture** colorTextures, ITexture* depthStencilTexture = nullptr) = 0;
 
 		/**
 		*  @brief
@@ -305,7 +305,7 @@ namespace Renderer
 		*  @return
 		*    The created buffer manager instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual IBufferManager *createBufferManager() = 0;
+		virtual IBufferManager* createBufferManager() = 0;
 
 		/**
 		*  @brief
@@ -314,7 +314,7 @@ namespace Renderer
 		*  @return
 		*    The created texture manager instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual ITextureManager *createTextureManager() = 0;
+		virtual ITextureManager* createTextureManager() = 0;
 
 		/**
 		*  @brief
@@ -326,7 +326,7 @@ namespace Renderer
 		*  @return
 		*    The root signature instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual IRootSignature *createRootSignature(const RootSignature &rootSignature) = 0;
+		virtual IRootSignature* createRootSignature(const RootSignature& rootSignature) = 0;
 
 		/**
 		*  @brief
@@ -338,7 +338,7 @@ namespace Renderer
 		*  @return
 		*    The pipeline state instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual IPipelineState *createPipelineState(const PipelineState &pipelineState) = 0;
+		virtual IPipelineState* createPipelineState(const PipelineState& pipelineState) = 0;
 
 		/**
 		*  @brief
@@ -350,7 +350,7 @@ namespace Renderer
 		*  @return
 		*    The sampler state instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual ISamplerState *createSamplerState(const SamplerState &samplerState) = 0;
+		virtual ISamplerState* createSamplerState(const SamplerState& samplerState) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Resource handling                                     ]
@@ -373,7 +373,7 @@ namespace Renderer
 		*  @return
 		*    "true" if all went fine, else "false"
 		*/
-		virtual bool map(IResource &resource, uint32_t subresource, MapType mapType, uint32_t mapFlags, MappedSubresource &mappedSubresource) = 0;
+		virtual bool map(IResource& resource, uint32_t subresource, MapType mapType, uint32_t mapFlags, MappedSubresource& mappedSubresource) = 0;
 
 		/**
 		*  @brief
@@ -384,7 +384,7 @@ namespace Renderer
 		*  @param[in] subresource
 		*    Subresource
 		*/
-		virtual void unmap(IResource &resource, uint32_t subresource) = 0;
+		virtual void unmap(IResource& resource, uint32_t subresource) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Operations                                            ]
@@ -445,26 +445,8 @@ namespace Renderer
 		*/
 		inline IRenderer();
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IRenderer(const IRenderer &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IRenderer &operator =(const IRenderer &source);
+		explicit IRenderer(const IRenderer& source) = delete;
+		IRenderer& operator =(const IRenderer& source) = delete;
 
 		#ifndef RENDERER_NO_STATISTICS
 			/**
@@ -478,7 +460,7 @@ namespace Renderer
 			*    - Do not free the memory the returned reference is pointing to
 			*    - It's possible that the statistics or part of it are disabled, e.g. due to hight performance constrains
 			*/
-			inline Statistics &getStatistics();
+			inline Statistics& getStatistics();
 		#endif
 
 

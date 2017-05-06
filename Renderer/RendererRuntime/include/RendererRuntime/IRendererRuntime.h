@@ -359,6 +359,13 @@ namespace RendererRuntime
 		*/
 		virtual void update() = 0;
 
+		//[-------------------------------------------------------]
+		//[ Pipeline state object cache                           ]
+		//[-------------------------------------------------------]
+		virtual void clearPipelineStateObjectCache() = 0;
+		virtual void loadPipelineStateObjectCache() = 0;
+		virtual void savePipelineStateObjectCache() = 0;
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
@@ -370,26 +377,8 @@ namespace RendererRuntime
 		*/
 		inline IRendererRuntime();
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IRendererRuntime(const IRendererRuntime &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IRendererRuntime &operator =(const IRendererRuntime &source);
+		explicit IRendererRuntime(const IRendererRuntime &source) = delete;
+		IRendererRuntime &operator =(const IRendererRuntime &source) = delete;
 
 
 	//[-------------------------------------------------------]

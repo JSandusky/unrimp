@@ -68,7 +68,7 @@ namespace RendererRuntime
 	private:
 		inline RendererBackendManager(IRendererRuntime& rendererRuntime);
 		inline ~RendererBackendManager();
-		RendererBackendManager(const RendererBackendManager&) = delete;
+		explicit RendererBackendManager(const RendererBackendManager&) = delete;
 		RendererBackendManager& operator=(const RendererBackendManager&) = delete;
 
 

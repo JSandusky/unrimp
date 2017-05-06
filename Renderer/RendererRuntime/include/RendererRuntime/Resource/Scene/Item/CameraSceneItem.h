@@ -122,9 +122,9 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit CameraSceneItem(ISceneResource& sceneResource);
+		inline explicit CameraSceneItem(SceneResource& sceneResource);
 		inline virtual ~CameraSceneItem();
-		CameraSceneItem(const CameraSceneItem&) = delete;
+		explicit CameraSceneItem(const CameraSceneItem&) = delete;
 		CameraSceneItem& operator=(const CameraSceneItem&) = delete;
 
 

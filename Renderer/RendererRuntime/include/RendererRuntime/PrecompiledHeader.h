@@ -79,6 +79,7 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator '<x>' in switch of enum '<y>' is not explicitly handled by a case label
 	#include <future>
 	#include <vector>
+	#include <iterator>
 	#include <algorithm>
 	#include <inttypes.h>
 	#include <cassert>

@@ -38,7 +38,7 @@ namespace Renderer
 		return mResourceType;
 	}
 
-	inline IRenderer &IResource::getRenderer() const
+	inline IRenderer& IResource::getRenderer() const
 	{
 		return *mRenderer;
 	}
@@ -47,7 +47,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual IResource methods                      ]
 	//[-------------------------------------------------------]
-	inline void IResource::setDebugName(const char *)
+	inline void IResource::setDebugName(const char*)
 	{
 		// Nothing to do by default
 	}
@@ -68,24 +68,11 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IResource::IResource(ResourceType resourceType, IRenderer &renderer) :
+	inline IResource::IResource(ResourceType resourceType, IRenderer& renderer) :
 		mResourceType(resourceType),
 		mRenderer(&renderer)
 	{
 		// Nothing here
-	}
-
-	inline IResource::IResource(const IResource &source) :
-		mResourceType(source.getResourceType()),
-		mRenderer(&source.getRenderer())
-	{
-		// Not supported
-	}
-
-	inline IResource &IResource::operator =(const IResource &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

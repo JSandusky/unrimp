@@ -182,7 +182,6 @@
 			{
 				"PassUniformBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -236,13 +235,11 @@
 			{
 				"SamplerPointClamp":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_POINT",
 					"MaxLOD": "0.0"
 				},
 				"SamplerPointWrap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_POINT",
 					"AddressU": "WRAP",
 					"AddressV": "WRAP",
@@ -253,7 +250,6 @@
 			{
 				"NormalMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@NormalMap",
@@ -262,7 +258,6 @@
 				},
 				"DepthMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DepthMap",
@@ -271,7 +266,6 @@
 				},
 				"SsaoSampleKernelMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Unrimp/Texture/DynamicByCode/SsaoSampleKernel",
@@ -281,7 +275,6 @@
 				},
 				"SsaoNoise4x4Map":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Unrimp/Texture/DynamicByCode/SsaoNoise4x4",

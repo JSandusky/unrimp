@@ -76,7 +76,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline IRendererRuntime& getRendererRuntime() const;
-		RENDERERRUNTIME_API_EXPORT void loadCompositorNodeResourceByAssetId(AssetId assetId, CompositorNodeResourceId& compositorNodeResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadCompositorNodeResourceByAssetId(AssetId assetId, CompositorNodeResourceId& compositorNodeResourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = getUninitialized<ResourceLoaderTypeId>());	// Asynchronous
 		inline const ICompositorPassFactory& getCompositorPassFactory() const;
 		RENDERERRUNTIME_API_EXPORT void setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory);
 		inline RenderTargetTextureManager& getRenderTargetTextureManager();
@@ -108,7 +108,7 @@ namespace RendererRuntime
 	private:
 		explicit CompositorNodeResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~CompositorNodeResourceManager();
-		CompositorNodeResourceManager(const CompositorNodeResourceManager&) = delete;
+		explicit CompositorNodeResourceManager(const CompositorNodeResourceManager&) = delete;
 		CompositorNodeResourceManager& operator=(const CompositorNodeResourceManager&) = delete;
 
 

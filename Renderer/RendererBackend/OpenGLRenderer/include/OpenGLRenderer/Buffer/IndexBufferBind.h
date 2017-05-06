@@ -78,6 +78,14 @@ namespace OpenGLRenderer
 		virtual ~IndexBufferBind();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit IndexBufferBind(const IndexBufferBind& source) = delete;
+		IndexBufferBind& operator =(const IndexBufferBind& source) = delete;
+
+
 	};
 
 

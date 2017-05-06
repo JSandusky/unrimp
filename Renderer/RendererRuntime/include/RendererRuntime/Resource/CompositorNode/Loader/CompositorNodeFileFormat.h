@@ -47,18 +47,6 @@ namespace RendererRuntime
 	typedef StringId CompositorFramebufferId;	///< Compositor framebuffer identifier, internally just a POD "uint32_t"
 	typedef StringId CompositorPassTypeId;		///< Compositor pass type identifier, internally just a POD "uint32_t"
 	typedef StringId MaterialTechniqueId;		///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
-	#ifndef FILE_FORMAT_HEADER
-		#define FILE_FORMAT_HEADER
-		struct FileFormatHeader
-		{
-			// Format
-			uint32_t formatType;
-			uint32_t formatVersion;
-			// Content
-			uint32_t numberOfCompressedBytes;
-			uint32_t numberOfDecompressedBytes;
-		};
-	#endif
 
 
 	// Compositor node file format content:

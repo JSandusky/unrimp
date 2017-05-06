@@ -133,7 +133,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialBufferSlot(const MaterialBufferSlot&) = delete;
+		explicit MaterialBufferSlot(const MaterialBufferSlot&) = delete;
 		MaterialBufferSlot& operator=(const MaterialBufferSlot&) = delete;
 
 

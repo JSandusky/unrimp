@@ -171,6 +171,9 @@ namespace NullRenderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit NullRenderer(const NullRenderer& source) = delete;
+		NullRenderer& operator =(const NullRenderer& source) = delete;
+
 		/**
 		*  @brief
 		*    Initialize the capabilities

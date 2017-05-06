@@ -33,13 +33,13 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline const Capabilities &IRenderer::getCapabilities() const
+	inline const Capabilities& IRenderer::getCapabilities() const
 	{
 		return mCapabilities;
 	}
 
 	#ifndef RENDERER_NO_STATISTICS
-		inline const Statistics &IRenderer::getStatistics() const
+		inline const Statistics& IRenderer::getStatistics() const
 		{
 			return mStatistics;
 		}
@@ -54,19 +54,8 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IRenderer::IRenderer(const IRenderer &)
-	{
-		// Not supported
-	}
-
-	inline IRenderer &IRenderer::operator =(const IRenderer &)
-	{
-		// Not supported
-		return *this;
-	}
-
 	#ifndef RENDERER_NO_STATISTICS
-		inline Statistics &IRenderer::getStatistics()
+		inline Statistics& IRenderer::getStatistics()
 		{
 			return mStatistics;
 		}

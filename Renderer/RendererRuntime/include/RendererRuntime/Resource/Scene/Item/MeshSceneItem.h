@@ -86,8 +86,8 @@ namespace RendererRuntime
 	public:
 		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
-		virtual void onAttachedToSceneNode(ISceneNode& sceneNode) override;
-		inline virtual void onDetachedFromSceneNode(ISceneNode& sceneNode) override;
+		virtual void onAttachedToSceneNode(SceneNode& sceneNode) override;
+		inline virtual void onDetachedFromSceneNode(SceneNode& sceneNode) override;
 		inline virtual void setVisible(bool visible) override;
 
 
@@ -95,9 +95,9 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit MeshSceneItem(ISceneResource& sceneResource);
+		inline explicit MeshSceneItem(SceneResource& sceneResource);
 		inline virtual ~MeshSceneItem();
-		MeshSceneItem(const MeshSceneItem&) = delete;
+		explicit MeshSceneItem(const MeshSceneItem&) = delete;
 		MeshSceneItem& operator=(const MeshSceneItem&) = delete;
 
 

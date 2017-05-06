@@ -36,9 +36,10 @@
 namespace RendererRuntime
 {
 	class ISceneFactory;
-	class ISceneResource;
+	class SceneResource;
 	class IRendererRuntime;
-	class IResourceListener;
+	class SceneResourceLoader;
+	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -50,9 +51,15 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t SceneResourceId;	///< POD scene resource identifier
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneResourceManager : public ResourceManager<ISceneResource>
+	class SceneResourceManager : public ResourceManager<SceneResource>
 	{
 
 
@@ -66,11 +73,13 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT ISceneResource* loadSceneResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
-
+		inline IRendererRuntime& getRendererRuntime() const;
 		inline const ISceneFactory& getSceneFactory() const;
 		RENDERERRUNTIME_API_EXPORT void setSceneFactory(const ISceneFactory* sceneFactory);
+		RENDERERRUNTIME_API_EXPORT SceneResource* getSceneResourceByAssetId(AssetId assetId) const;		// Considered to be inefficient, avoid method whenever possible
+		RENDERERRUNTIME_API_EXPORT SceneResourceId getSceneResourceIdByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
+		RENDERERRUNTIME_API_EXPORT void loadSceneResourceByAssetId(AssetId assetId, SceneResourceId& sceneResourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = getUninitialized<ResourceLoaderTypeId>());	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void destroySceneResource(SceneResourceId sceneResourceId);
 
 
 	//[-------------------------------------------------------]
@@ -97,16 +106,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit SceneResourceManager(IRendererRuntime& rendererRuntime);
-		inline virtual ~SceneResourceManager();
-		SceneResourceManager(const SceneResourceManager&) = delete;
+		virtual ~SceneResourceManager();
+		explicit SceneResourceManager(const SceneResourceManager&) = delete;
 		SceneResourceManager& operator=(const SceneResourceManager&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::vector<ISceneResource*> SceneResources;
 
 
 	//[-------------------------------------------------------]
@@ -115,7 +117,9 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime&	 mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		const ISceneFactory* mSceneFactory;		///< Scene factory, always valid, do not destroy the instance
-		SceneResources		 mSceneResources;
+
+		// Internal resource manager implementation
+		ResourceManagerTemplate<SceneResource, SceneResourceLoader, SceneResourceId, 16>* mInternalResourceManager;
 
 
 	};

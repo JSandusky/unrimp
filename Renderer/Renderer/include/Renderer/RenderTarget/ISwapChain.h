@@ -118,28 +118,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit ISwapChain(IRenderer &renderer);
+		inline explicit ISwapChain(IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ISwapChain(const ISwapChain &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ISwapChain &operator =(const ISwapChain &source);
+		explicit ISwapChain(const ISwapChain& source) = delete;
+		ISwapChain& operator =(const ISwapChain& source) = delete;
 
 
 	};

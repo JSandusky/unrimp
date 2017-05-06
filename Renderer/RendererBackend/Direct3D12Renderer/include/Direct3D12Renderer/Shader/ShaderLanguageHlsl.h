@@ -121,10 +121,11 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Private data                                          ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D12Renderer *mDirect3D12Renderer;	///< Owner Direct3D 12 renderer instance, always valid
+		explicit ShaderLanguageHlsl(const ShaderLanguageHlsl& source) = delete;
+		ShaderLanguageHlsl& operator =(const ShaderLanguageHlsl& source) = delete;
 
 
 	};

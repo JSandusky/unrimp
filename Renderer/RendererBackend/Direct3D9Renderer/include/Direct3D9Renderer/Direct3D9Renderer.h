@@ -208,6 +208,9 @@ namespace Direct3D9Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit Direct3D9Renderer(const Direct3D9Renderer& source) = delete;
+		Direct3D9Renderer& operator =(const Direct3D9Renderer& source) = delete;
+
 		/**
 		*  @brief
 		*    Initialize the capabilities

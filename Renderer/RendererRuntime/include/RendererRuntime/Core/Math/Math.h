@@ -140,7 +140,7 @@ namespace RendererRuntime
 	private:
 		Math() = delete;
 		~Math() = delete;
-		Math(const Math&) = delete;
+		explicit Math(const Math&) = delete;
 		Math& operator=(const Math&) = delete;
 
 

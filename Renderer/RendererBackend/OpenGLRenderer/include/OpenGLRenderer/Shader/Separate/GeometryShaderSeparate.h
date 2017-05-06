@@ -124,6 +124,14 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit GeometryShaderSeparate(const GeometryShaderSeparate& source) = delete;
+		GeometryShaderSeparate& operator =(const GeometryShaderSeparate& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

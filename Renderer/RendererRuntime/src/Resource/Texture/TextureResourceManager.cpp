@@ -28,6 +28,9 @@
 #include "RendererRuntime/Resource/Texture/Loader/KtxTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Texture/Loader/DdsTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
+#ifdef WIN32	// TODO(sw) openvr doesn't support non windows systems yet
+	#include "RendererRuntime/Vr/OpenVR/Loader/OpenVRTextureResourceLoader.h"
+#endif
 
 
 //[-------------------------------------------------------]
@@ -139,7 +142,7 @@ namespace RendererRuntime
 			{
 				const TextureResource& textureResource = mInternalResourceManager->getResources().getElementByIndex(i);
 				const AssetId assetId = textureResource.getAssetId();
-				if (nullptr != assetManager.getAssetByAssetId(assetId) && textureResource.getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
+				if (nullptr != assetManager.tryGetAssetByAssetId(assetId) && textureResource.getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
 				{
 					TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
 					loadTextureResourceByAssetId(assetId, getUninitialized<AssetId>(), textureResourceId, nullptr, textureResource.isRgbHardwareGammaCorrection(), true);
@@ -153,14 +156,20 @@ namespace RendererRuntime
 		return mInternalResourceManager->getResourceByAssetId(assetId);
 	}
 
-	void TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, AssetId fallbackTextureAssetId, TextureResourceId& textureResourceId, IResourceListener* resourceListener, bool rgbHardwareGammaCorrection, bool reload)
+	TextureResourceId TextureResourceManager::getTextureResourceIdByAssetId(AssetId assetId) const
+	{
+		const TextureResource* textureResource = getTextureResourceByAssetId(assetId);
+		return (nullptr != textureResource) ? textureResource->getId() : getUninitialized<TextureResourceId>();
+	}
+
+	void TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, AssetId fallbackTextureAssetId, TextureResourceId& textureResourceId, IResourceListener* resourceListener, bool rgbHardwareGammaCorrection, bool reload, ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Check whether or not the texture resource already exists
 		TextureResource* textureResource = getTextureResourceByAssetId(assetId);
 
 		// Create the resource instance
 		const IRendererRuntime& rendererRuntime = mInternalResourceManager->getRendererRuntime();
-		const Asset* asset = rendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		const Asset* asset = rendererRuntime.getAssetManager().tryGetAssetByAssetId(assetId);
 		bool load = (reload && nullptr != asset);
 		if (nullptr == textureResource && nullptr != asset)
 		{
@@ -189,12 +198,24 @@ namespace RendererRuntime
 		if (load)
 		{
 			// Prepare the resource loader
-			// -> The totally primitive texture resource loader type detection is sufficient for now
-			const char* filenameExtension = strrchr(&asset->assetFilename[0], '.');
-			if (nullptr != filenameExtension)
+			if (isUninitialized(resourceLoaderTypeId))
+			{
+				// The totally primitive texture resource loader type detection is sufficient for now
+				const char* filenameExtension = strrchr(&asset->assetFilename[0], '.');
+				if (nullptr != filenameExtension)
+				{
+					resourceLoaderTypeId = StringId(filenameExtension + 1);
+				}
+				else
+				{
+					// Error! We should never ever be able to be in here, it's the renderer toolkit responsible to ensure the renderer runtime only works with sane data.
+					assert(false);
+				}
+			}
+			if (isInitialized(resourceLoaderTypeId))
 			{
 				// Commit resource streamer asset load request
-				rendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, StringId(filenameExtension + 1), *textureResource));
+				rendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, resourceLoaderTypeId, reload, *textureResource));
 
 				// Since it might take a moment to load the texture resource, we'll use a fallback placeholder renderer texture resource so we don't have to wait until the real thing is there
 				// -> In case there's already a renderer texture, keep that as long as possible (for example there might be a change in the number of top mipmaps to remove)
@@ -309,6 +330,12 @@ namespace RendererRuntime
 		{
 			return new DdsTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
 		}
+		#ifdef WIN32	// TODO(sw) openvr doesn't support non windows systems yet
+			else if (resourceLoaderTypeId == OpenVRTextureResourceLoader::TYPE_ID)
+			{
+				return new OpenVRTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
+			}
+		#endif
 		else
 		{
 			// TODO(co) Error handling

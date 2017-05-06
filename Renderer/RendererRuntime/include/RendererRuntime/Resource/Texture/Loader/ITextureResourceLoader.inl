@@ -33,35 +33,26 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
-	inline void ITextureResourceLoader::onDeserialization(IFile&)
+	inline bool ITextureResourceLoader::hasDeserialization() const
 	{
-		// Nothing here
-	}
-
-	inline void ITextureResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
-	inline bool ITextureResourceLoader::onDispatch()
-	{
-		// Nothing here
-		return false;
+		return true;
 	}
 
 	inline bool ITextureResourceLoader::isFullyLoaded()
 	{
-		// Nothing here
-		return false;
+		// Fully loaded
+		return true;
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITextureResourceLoader::ITextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime&) :
+	inline ITextureResourceLoader::ITextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		IResourceLoader(resourceManager),
-		mTextureResource(nullptr)
+		mRendererRuntime(rendererRuntime),
+		mTextureResource(nullptr),
+		mTexture(nullptr)
 	{
 		// Nothing here
 	}

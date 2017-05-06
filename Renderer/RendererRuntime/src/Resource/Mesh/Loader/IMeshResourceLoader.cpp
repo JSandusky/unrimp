@@ -19,6 +19,16 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Resource/Mesh/Loader/IMeshResourceLoader.h"
+#include "RendererRuntime/Resource/Mesh/MeshResource.h"
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -26,75 +36,37 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	inline const Transform& ISceneNode::getTransform() const
-	{
-		return mTransform;
-	}
-
-	inline void ISceneNode::setTransform(const Transform& transform)
-	{
-		mTransform = transform;
-		updateGlobalTransformRecursive();
-	}
-
-	inline void ISceneNode::setPosition(const glm::vec3& position)
-	{
-		mTransform.position = position;
-		updateGlobalTransformRecursive();
-	}
-
-	inline void ISceneNode::setRotation(const glm::quat& rotation)
-	{
-		mTransform.rotation = rotation;
-		updateGlobalTransformRecursive();
-	}
-
-	inline void ISceneNode::setPositionRotation(const glm::vec3& position, const glm::quat& rotation)
-	{
-		mTransform.position = position;
-		mTransform.rotation = rotation;
-		updateGlobalTransformRecursive();
-	}
-
-	inline void ISceneNode::setScale(const glm::vec3& scale)
-	{
-		mTransform.scale = scale;
-		updateGlobalTransformRecursive();
-	}
-
-	inline const Transform& ISceneNode::getGlobalTransform() const
-	{
-		return mGlobalTransform;
-	}
-
-	inline const ISceneNode::AttachedSceneNodes& ISceneNode::getAttachedSceneNodes() const
-	{
-		return mAttachedSceneNodes;
-	}
-
-	inline const ISceneNode::AttachedSceneItems& ISceneNode::getAttachedSceneItems() const
-	{
-		return mAttachedSceneItems;
-	}
+	const ResourceLoaderTypeId IMeshResourceLoader::TYPE_ID("invalid_abstract_type");
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	inline ISceneNode::ISceneNode(const Transform& transform) :
-		mParentSceneNode(nullptr),
-		mTransform(transform),
-		mGlobalTransform(transform)
+	void IMeshResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		// Nothing here
+		IResourceLoader::initialize(asset, reload);
+		mMeshResource = static_cast<MeshResource*>(&resource);
 	}
 
-	inline ISceneNode::~ISceneNode()
+	bool IMeshResourceLoader::isFullyLoaded()
 	{
-		detachAllSceneNodes();
-		detachAllSceneItems();
+		// Fully loaded?
+		const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
+		const SubMeshes& subMeshes = mMeshResource->getSubMeshes();
+		const uint32_t numberOfUsedSubMeshes = static_cast<uint32_t>(subMeshes.size());
+		for (uint32_t i = 0; i < numberOfUsedSubMeshes; ++i)
+		{
+			if (IResource::LoadingState::LOADED != materialResourceManager.getResourceByResourceId(subMeshes[i].getMaterialResourceId()).getLoadingState())
+			{
+				// Not fully loaded
+				return false;
+			}
+		}
+
+		// Fully loaded
+		return true;
 	}
 
 

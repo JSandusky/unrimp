@@ -53,6 +53,30 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline void ShaderBlueprintResourceManager::clearPipelineStateObjectCache()
+	{
+		mShaderCacheManager.clearCache();
+	}
+
+	inline void ShaderBlueprintResourceManager::loadPipelineStateObjectCache(IFile& file)
+	{
+		mShaderCacheManager.loadCache(file);
+	}
+
+	inline bool ShaderBlueprintResourceManager::doesPipelineStateObjectCacheNeedSaving() const
+	{
+		return mShaderCacheManager.doesCacheNeedSaving();
+	}
+
+	inline void ShaderBlueprintResourceManager::savePipelineStateObjectCache(IFile& file)
+	{
+		mShaderCacheManager.saveCache(file);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

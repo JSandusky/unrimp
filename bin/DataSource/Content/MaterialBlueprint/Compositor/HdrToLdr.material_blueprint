@@ -231,7 +231,6 @@
 			{
 				"PassUniformBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -261,13 +260,11 @@
 			{
 				"SamplerPoint":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_POINT",
 					"MaxLOD": "0.0"
 				},
 				"SamplerLinear":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
 					"MaxLOD": "0.0"
 				}
@@ -276,7 +273,6 @@
 			{
 				"ColorMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap",
@@ -285,7 +281,6 @@
 				},
 				"LuminanceMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LuminanceMap",
@@ -294,7 +289,6 @@
 				},
 				"BloomMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@BloomMap",
@@ -303,7 +297,6 @@
 				},
 				"LensFlareMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LensFlareMap",
@@ -312,7 +305,6 @@
 				},
 				"DirtyLensMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DirtyLensMap",
@@ -322,7 +314,6 @@
 				},
 				"LensStarMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LensStarMap",

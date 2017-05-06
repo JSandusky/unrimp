@@ -28,6 +28,7 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/GetUninitialized.h>
 #include <RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResource.h>
 #include <RendererRuntime/Resource/SkeletonAnimation/Loader/SkeletonAnimationFileFormat.h>
@@ -48,9 +49,6 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
-
-#include <fstream>
-#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -117,8 +115,7 @@ namespace RendererToolkit
 		CacheManager::CacheEntries cacheEntries;
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, cacheEntries))
 		{
-			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
 
 			// Create an instance of the Assimp importer class
 			Assimp::Importer assimpImporter;
@@ -171,11 +168,11 @@ namespace RendererToolkit
 					skeletonAnimationHeader.durationInTicks			 = static_cast<float>(assimpAnimation->mDuration);
 					skeletonAnimationHeader.ticksPerSecond			 = static_cast<float>(assimpAnimation->mTicksPerSecond);
 					skeletonAnimationHeader.numberOfChannelDataBytes = numberOfChannelDataBytes;
-					outputMemoryStream.write(reinterpret_cast<const char*>(&skeletonAnimationHeader), sizeof(RendererRuntime::v1SkeletonAnimation::SkeletonAnimationHeader));
+					memoryFile.write(&skeletonAnimationHeader, sizeof(RendererRuntime::v1SkeletonAnimation::SkeletonAnimationHeader));
 				}
 
 				// Write down the channel byte offsets
-				outputMemoryStream.write(reinterpret_cast<const char*>(channelByteOffsets.data()), static_cast<std::streamsize>(sizeof(uint32_t) * channelByteOffsets.size()));
+				memoryFile.write(channelByteOffsets.data(), sizeof(uint32_t) * channelByteOffsets.size());
 
 				// Bone channels, all the skeleton animation data in one big chunk
 				for (unsigned int channel = 0; channel < assimpAnimation->mNumChannels; ++channel)
@@ -190,7 +187,7 @@ namespace RendererToolkit
 						channelHeader.numberOfScaleKeys	   = assimpNodeAnim->mNumScalingKeys;
 
 						// Write down the bone channel header
-						outputMemoryStream.write(reinterpret_cast<const char*>(&channelHeader), sizeof(RendererRuntime::SkeletonAnimationResource::ChannelHeader));
+						memoryFile.write(&channelHeader, sizeof(RendererRuntime::SkeletonAnimationResource::ChannelHeader));
 					}
 
 					{ // Write bone channel position data
@@ -205,7 +202,7 @@ namespace RendererToolkit
 							vector3Key.value.y	   = assimpVectorKey.mValue.y;
 							vector3Key.value.z	   = assimpVectorKey.mValue.z;
 						}
-						outputMemoryStream.write(reinterpret_cast<const char*>(positionKeys.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumPositionKeys));
+						memoryFile.write(positionKeys.data(), sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumPositionKeys);
 					}
 
 					{ // Write bone channel rotation data
@@ -224,7 +221,7 @@ namespace RendererToolkit
 							quaternionKey.value[1]	  = assimpQuaternion.y;
 							quaternionKey.value[2]	  = assimpQuaternion.z;
 						}
-						outputMemoryStream.write(reinterpret_cast<const char*>(rotationKeys.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::SkeletonAnimationResource::QuaternionKey) * assimpNodeAnim->mNumRotationKeys));
+						memoryFile.write(rotationKeys.data(), sizeof(RendererRuntime::SkeletonAnimationResource::QuaternionKey) * assimpNodeAnim->mNumRotationKeys);
 					}
 
 					{ // Write bone channel scale data
@@ -239,13 +236,13 @@ namespace RendererToolkit
 							vector3Key.value.y	   = assimpVectorKey.mValue.y;
 							vector3Key.value.z	   = assimpVectorKey.mValue.z;
 						}
-						outputMemoryStream.write(reinterpret_cast<const char*>(scaleKeys.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumScalingKeys));
+						memoryFile.write(scaleKeys.data(), sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumScalingKeys);
 					}
 				}
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1SkeletonAnimation::FORMAT_TYPE, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, outputAssetFilename);
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1SkeletonAnimation::FORMAT_TYPE, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, outputAssetFilename, input.fileManager);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);

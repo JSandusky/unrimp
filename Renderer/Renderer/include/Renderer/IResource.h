@@ -84,7 +84,7 @@ namespace Renderer
 		*  @return
 		*    The owner renderer instance, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IRenderer &getRenderer() const;
+		inline IRenderer& getRenderer() const;
 
 
 	//[-------------------------------------------------------]
@@ -104,7 +104,7 @@ namespace Renderer
 		*  @see
 		*    - "Renderer::IRenderer::isDebugEnabled()"
 		*/
-		inline virtual void setDebugName(const char *name);
+		inline virtual void setDebugName(const char* name);
 
 		//[-------------------------------------------------------]
 		//[ Internal                                              ]
@@ -147,36 +147,18 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IResource(ResourceType resourceType, IRenderer &renderer);
+		inline IResource(ResourceType resourceType, IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IResource(const IResource &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IResource &operator =(const IResource &source);
+		explicit IResource(const IResource& source) = delete;
+		IResource& operator =(const IResource& source) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ResourceType  mResourceType;	///< The resource type
-		IRenderer	 *mRenderer;		///< The owner renderer instance, always valid
+		ResourceType mResourceType;	///< The resource type
+		IRenderer*	 mRenderer;		///< The owner renderer instance, always valid
 
 
 	};

@@ -130,7 +130,6 @@
 			{
 				"PassUniformBuffer":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"BufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -154,7 +153,6 @@
 			{
 				"SamplerPoint":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_POINT",
 					"MaxLOD": "0.0"
 				}
@@ -163,7 +161,6 @@
 			{
 				"ColorMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap",
@@ -172,7 +169,6 @@
 				},
 				"LuminanceMap":
 				{
-					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LuminanceMap",

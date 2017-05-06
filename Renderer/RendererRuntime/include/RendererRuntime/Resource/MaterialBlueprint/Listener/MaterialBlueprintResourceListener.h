@@ -90,7 +90,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		MaterialBlueprintResourceListener(const MaterialBlueprintResourceListener&) = delete;
+		explicit MaterialBlueprintResourceListener(const MaterialBlueprintResourceListener&) = delete;
 		MaterialBlueprintResourceListener& operator=(const MaterialBlueprintResourceListener&) = delete;
 		inline const PassBufferManager::PassData& getPassData() const;	// Memory address received via "RendererRuntime::MaterialBlueprintResourceListener::beginFillPass()", can be invalid outside the correct scope, don't destroy the memory
 

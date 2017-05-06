@@ -98,6 +98,14 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexArray(const VertexArray& source) = delete;
+		VertexArray& operator =(const VertexArray& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

@@ -35,12 +35,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class Transform;
-	class ISceneNode;
 	class ISceneItem;
-	class ISceneResource;
-	class IRendererRuntime;
-	class IResourceListener;
+	class SceneResource;
 }
 
 
@@ -54,10 +50,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t ResourceId;			///< POD resource identifier
-	typedef StringId SceneNodeTypeId;		///< Scene node type identifier, internally just a POD "uint32_t"
-	typedef StringId SceneItemTypeId;		///< Scene item type identifier, internally just a POD "uint32_t"
-	typedef StringId SceneResourceTypeId;	///< Scene resource type identifier, internally just a POD "uint32_t"
+	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
 
 
 	//[-------------------------------------------------------]
@@ -70,17 +63,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneResourceManager;	// Needs to create scene resource instances
-		friend class ISceneResource;		// Needs to create scene node and scene item instances
+		friend class SceneResource;	// Needs to create scene node and scene item instances
 
 
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ISceneFactory methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual ISceneResource* createSceneResource(SceneResourceTypeId sceneResourceTypeId, IRendererRuntime& rendererRuntime, ResourceId resourceId) const = 0;
-		virtual ISceneNode* createSceneNode(SceneNodeTypeId sceneNodeTypeId, const Transform& transform) const = 0;
-		virtual ISceneItem* createSceneItem(const SceneItemTypeId& sceneItemTypeId, ISceneResource& sceneResource) const = 0;
+		virtual ISceneItem* createSceneItem(const SceneItemTypeId& sceneItemTypeId, SceneResource& sceneResource) const = 0;
 
 
 	//[-------------------------------------------------------]
@@ -89,7 +79,7 @@ namespace RendererRuntime
 	protected:
 		inline ISceneFactory();
 		inline virtual ~ISceneFactory();
-		ISceneFactory(const ISceneFactory&) = delete;
+		explicit ISceneFactory(const ISceneFactory&) = delete;
 		ISceneFactory& operator=(const ISceneFactory&) = delete;
 
 

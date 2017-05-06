@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Texture/Loader/ITextureResourceLoader.h"
-#include "RendererRuntime/Resource/Texture/TextureResource.h"
 
 
 //[-------------------------------------------------------]
@@ -42,10 +41,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void ITextureResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void ITextureResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
-		mTextureResource = static_cast<TextureResource*>(&resource);
+		IResourceLoader::initialize(asset, reload);
+		mTextureResource = reinterpret_cast<TextureResource*>(&resource);
 	}
 
 

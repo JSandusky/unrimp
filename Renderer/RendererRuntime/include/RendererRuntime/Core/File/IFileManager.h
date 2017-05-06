@@ -58,20 +58,58 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		enum class FileMode
+		{
+			READ,
+			WRITE
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IFileManager methods  ]
 	//[-------------------------------------------------------]
 	public:
 		/**
 		*  @brief
+		*    Return the absolute name of the directory were to write local data to
+		*
+		*  @return
+		*    The absolute ASCII name of the directory were to write local data to (usually a user directory), has to end without /, if null pointer writing local data isn't allowed
+		*
+		*  @remarks
+		*    Examples for local data
+		*    - "DebugGui": ImGui "ini"-files storing session information
+		*    - "PipelineStateObjectCache": Locally updated and saved pipeline state object cache in case the shipped one had cache misses
+		*    - "RendererToolkitCache": Renderer toolkit cache used to detect source data changes for incremental asset compilation instead of time consuming full asset compilation
+		*    - "Log": Log files, Unrimp itself won't save log files
+		*/
+		virtual const char* getAbsoluteLocalDataDirectoryName() const = 0;
+
+		/**
+		*  @brief
+		*    Create directories recursive
+		*
+		*  @param[in] directoryName
+		*    Name of the directory to create, including all parent directories if necessary, never ever a null pointer and always finished by a terminating zero
+		*/
+		virtual void createDirectories(const char* directoryName) const = 0;
+
+		/**
+		*  @brief
 		*    Open a file
 		*
+		*  @param[in] fileMode
+		*    File mode
 		*  @param[in] filename
 		*    ASCII name of the file to open for reading, never ever a null pointer and always finished by a terminating zero
 		*
 		*  @return
 		*    The file interface, can be a null pointer if horrible things are happening (total failure)
 		*/
-		virtual IFile* openFile(const char* filename) = 0;
+		virtual IFile* openFile(FileMode fileMode, const char* filename) = 0;
 
 		/**
 		*  @brief
@@ -89,7 +127,7 @@ namespace RendererRuntime
 	protected:
 		inline IFileManager();
 		inline virtual ~IFileManager();
-		IFileManager(const IFileManager&) = delete;
+		explicit IFileManager(const IFileManager&) = delete;
 		IFileManager& operator=(const IFileManager&) = delete;
 
 

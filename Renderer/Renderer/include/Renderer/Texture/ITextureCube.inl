@@ -58,7 +58,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITextureCube::ITextureCube(IRenderer &renderer, uint32_t width, uint32_t height) :
+	inline ITextureCube::ITextureCube(IRenderer& renderer, uint32_t width, uint32_t height) :
 		ITexture(ResourceType::TEXTURE_CUBE, renderer),
 		mWidth(width),
 		mHeight(height)
@@ -68,25 +68,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedTextureCubes;
 			++getRenderer().getStatistics().currentNumberOfTextureCubes;
 		#endif
-	}
-
-	inline ITextureCube::ITextureCube(const ITextureCube &source) :
-		ITexture(source),
-		mWidth(source.getWidth()),
-		mHeight(source.getHeight())
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTextureCubes;
-			++getRenderer().getStatistics().currentNumberOfTextureCubes;
-		#endif
-	}
-
-	inline ITextureCube &ITextureCube::operator =(const ITextureCube &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

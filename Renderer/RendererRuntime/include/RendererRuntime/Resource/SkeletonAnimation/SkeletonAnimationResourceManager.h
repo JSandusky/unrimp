@@ -79,7 +79,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT SkeletonAnimationResource* getSkeletonAnimationResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
-		RENDERERRUNTIME_API_EXPORT void loadSkeletonAnimationResourceByAssetId(AssetId assetId, SkeletonAnimationResourceId& skeletonAnimationResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadSkeletonAnimationResourceByAssetId(AssetId assetId, SkeletonAnimationResourceId& skeletonAnimationResourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = getUninitialized<ResourceLoaderTypeId>());	// Asynchronous
 		RENDERERRUNTIME_API_EXPORT SkeletonAnimationResourceId createSkeletonAnimationResourceByAssetId(AssetId assetId);	// Skeleton animation resource is not allowed to exist, yet
 
 
@@ -108,7 +108,7 @@ namespace RendererRuntime
 	private:
 		explicit SkeletonAnimationResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~SkeletonAnimationResourceManager();
-		SkeletonAnimationResourceManager(const SkeletonAnimationResourceManager&) = delete;
+		explicit SkeletonAnimationResourceManager(const SkeletonAnimationResourceManager&) = delete;
 		SkeletonAnimationResourceManager& operator=(const SkeletonAnimationResourceManager&) = delete;
 
 

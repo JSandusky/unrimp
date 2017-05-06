@@ -28,7 +28,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	inline const DepthStencilState &DepthStencilStateBuilder::getDefaultDepthStencilState()
+	inline const DepthStencilState& DepthStencilStateBuilder::getDefaultDepthStencilState()
 	{
 		// As default values, the one of Direct3D 11 and Direct 10 were chosen in order to make it easier for those renderer implementations
 		// (choosing OpenGL default values would bring no benefit due to the design of the OpenGL API)

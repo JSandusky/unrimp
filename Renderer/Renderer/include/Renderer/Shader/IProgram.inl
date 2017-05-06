@@ -49,20 +49,20 @@ namespace Renderer
 	//[ Public virtual IProgram methods                       ]
 	//[-------------------------------------------------------]
 	// TODO(co) Cleanup
-	inline handle IProgram::getUniformHandle(const char *) { return NULL_HANDLE; }
+	inline handle IProgram::getUniformHandle(const char*) { return NULL_HANDLE; }
 	inline void IProgram::setUniform1i(handle, int) {}
 	inline void IProgram::setUniform1f(handle, float) {}
-	inline void IProgram::setUniform2fv(handle, const float *) {}
-	inline void IProgram::setUniform3fv(handle, const float *) {}
-	inline void IProgram::setUniform4fv(handle, const float *) {}
-	inline void IProgram::setUniformMatrix3fv(handle, const float *) {}
-	inline void IProgram::setUniformMatrix4fv(handle, const float *) {}
+	inline void IProgram::setUniform2fv(handle, const float*) {}
+	inline void IProgram::setUniform3fv(handle, const float*) {}
+	inline void IProgram::setUniform4fv(handle, const float*) {}
+	inline void IProgram::setUniformMatrix3fv(handle, const float*) {}
+	inline void IProgram::setUniformMatrix4fv(handle, const float*) {}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IProgram::IProgram(IRenderer &renderer) :
+	inline IProgram::IProgram(IRenderer& renderer) :
 		IResource(ResourceType::PROGRAM, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -70,23 +70,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedPrograms;
 			++getRenderer().getStatistics().currentNumberOfPrograms;
 		#endif
-	}
-
-	inline IProgram::IProgram(const IProgram &source) :
-		IResource(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedPrograms;
-			++getRenderer().getStatistics().currentNumberOfPrograms;
-		#endif
-	}
-
-	inline IProgram &IProgram::operator =(const IProgram &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

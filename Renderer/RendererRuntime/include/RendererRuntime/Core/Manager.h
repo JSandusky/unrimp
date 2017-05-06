@@ -44,7 +44,7 @@ namespace RendererRuntime
 	protected:
 		inline Manager() {}
 		inline ~Manager() {}
-		Manager(const Manager&) = delete;
+		explicit Manager(const Manager&) = delete;
 		Manager& operator=(const Manager&) = delete;
 
 

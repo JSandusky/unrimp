@@ -151,7 +151,7 @@ namespace Renderer
 		*  @return
 		*    The default blend state, see "Renderer::BlendState" for the default values
 		*/
-		static inline const BlendState &getDefaultBlendState();
+		static inline const BlendState& getDefaultBlendState();
 
 
 	};

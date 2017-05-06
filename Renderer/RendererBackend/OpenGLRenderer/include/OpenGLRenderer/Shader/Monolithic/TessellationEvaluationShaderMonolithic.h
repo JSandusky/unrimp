@@ -111,6 +111,14 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TessellationEvaluationShaderMonolithic(const TessellationEvaluationShaderMonolithic& source) = delete;
+		TessellationEvaluationShaderMonolithic& operator =(const TessellationEvaluationShaderMonolithic& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

@@ -48,17 +48,6 @@ namespace OpenGLES3Renderer
 		// Nothing here
 	}
 
-	IExtensions::IExtensions(const IExtensions &)
-	{
-		// No implementation because the copy constructor is never used
-	}
-
-	IExtensions &IExtensions::operator =(const IExtensions &)
-	{
-		// No implementation because the copy operator is never used
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

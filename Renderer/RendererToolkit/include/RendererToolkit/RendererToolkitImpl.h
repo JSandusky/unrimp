@@ -29,6 +29,17 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/IRendererToolkit.h"
 
+#include <string>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IFileManager;
+}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -56,10 +67,13 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] fileManager
+		*    The file manager instance to use
+		*
 		*  @note
 		*    - The renderer toolkit keeps a reference to the provided renderer instance
 		*/
-		explicit RendererToolkitImpl();
+		explicit RendererToolkitImpl(RendererRuntime::IFileManager& fileManager);
 
 		/**
 		*  @brief
@@ -79,32 +93,15 @@ namespace RendererToolkit
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit RendererToolkitImpl(const RendererToolkitImpl &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline RendererToolkitImpl &operator =(const RendererToolkitImpl &source);
+		inline explicit RendererToolkitImpl(const RendererToolkitImpl &source) = delete;
+		inline RendererToolkitImpl &operator =(const RendererToolkitImpl &source) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		RendererRuntime::IFileManager& mFileManager;
 
 
 	};
@@ -114,9 +111,3 @@ namespace RendererToolkit
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererToolkit
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererToolkit/RendererToolkitImpl.inl"

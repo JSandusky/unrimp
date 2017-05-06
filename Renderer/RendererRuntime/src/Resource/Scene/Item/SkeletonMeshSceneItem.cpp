@@ -23,8 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h"
-#include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
+#include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationController.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"

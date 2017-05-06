@@ -85,6 +85,14 @@ namespace OpenGLRenderer
 		virtual void generateMipmaps() const override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit FramebufferDsa(const FramebufferDsa& source) = delete;
+		FramebufferDsa& operator =(const FramebufferDsa& source) = delete;
+
+
 	};
 
 

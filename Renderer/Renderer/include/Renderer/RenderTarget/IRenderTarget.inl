@@ -37,22 +37,10 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IRenderTarget::IRenderTarget(ResourceType resourceType, IRenderer &renderer) :
+	inline IRenderTarget::IRenderTarget(ResourceType resourceType, IRenderer& renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing here
-	}
-
-	inline IRenderTarget::IRenderTarget(const IRenderTarget &source) :
-		IResource(source)
-	{
-		// Nothing here
-	}
-
-	inline IRenderTarget &IRenderTarget::operator =(const IRenderTarget &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

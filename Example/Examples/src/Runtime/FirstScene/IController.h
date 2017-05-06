@@ -141,7 +141,7 @@ protected:
 	*/
 	explicit IController(RendererRuntime::CameraSceneItem& cameraSceneItem);
 
-	IController(const IController&) = delete;
+	explicit IController(const IController&) = delete;
 	IController& operator=(const IController&) = delete;
 	bool isKeyPressed(uint32_t key) const;
 	bool isMouseButtonPressed(uint32_t button) const;

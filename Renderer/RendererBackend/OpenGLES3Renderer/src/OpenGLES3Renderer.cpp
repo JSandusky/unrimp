@@ -753,10 +753,10 @@ namespace OpenGLES3Renderer
 			// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			uint32_t renderTargetWidth =  1;
 			uint32_t renderTargetHeight = 1;
 			if (nullptr != mRenderTarget)
 			{
+				uint32_t renderTargetWidth = 1;
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 			}
 
@@ -782,10 +782,10 @@ namespace OpenGLES3Renderer
 			// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			uint32_t renderTargetWidth =  1;
 			uint32_t renderTargetHeight = 1;
 			if (nullptr != mRenderTarget)
 			{
+				uint32_t renderTargetWidth = 1;
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 			}
 
@@ -911,7 +911,7 @@ namespace OpenGLES3Renderer
 					framebufferToGenerateMipmapsFor->releaseReference();
 				}
 			}
-			else
+			else if (nullptr != mRenderTarget)
 			{
 				// Evaluate the render target type
 				if (Renderer::ResourceType::FRAMEBUFFER == mRenderTarget->getResourceType())
@@ -923,11 +923,8 @@ namespace OpenGLES3Renderer
 				// TODO(co) Set no active render target
 
 				// Release the render target reference, in case we have one
-				if (nullptr != mRenderTarget)
-				{
-					mRenderTarget->releaseReference();
-					mRenderTarget = nullptr;
-				}
+				mRenderTarget->releaseReference();
+				mRenderTarget = nullptr;
 			}
 		}
 	}
@@ -1715,7 +1712,7 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char *message, const void *)
 	{
 		// Source to string
-		char debugSource[20]{0};
+		char debugSource[20 + 1]{0};	// +1 for terminating zero
 		switch (source)
 		{
 			case GL_DEBUG_SOURCE_API_KHR:
@@ -1748,7 +1745,7 @@ namespace OpenGLES3Renderer
 		}
 
 		// Debug type to string
-		char debugType[25]{0};
+		char debugType[25 + 1]{0};	// +1 for terminating zero
 		switch (type)
 		{
 			case GL_DEBUG_TYPE_ERROR_KHR:
@@ -1781,7 +1778,7 @@ namespace OpenGLES3Renderer
 		}
 
 		// Debug severity to string
-		char debugSeverity[20]{0};
+		char debugSeverity[20 + 1]{0};	// +1 for terminating zero
 		switch (severity)
 		{
 			case GL_DEBUG_SEVERITY_HIGH_KHR:
@@ -1877,6 +1874,9 @@ namespace OpenGLES3Renderer
 
 		// OpenGL ES 3 has no native multi-threading
 		mCapabilities.nativeMultiThreading = false;
+
+		// We don't support the OpenGL ES 3 program binaries since those are operation system and graphics driver version dependent, which renders them useless for pre-compiled shaders shipping
+		mCapabilities.shaderBytecode = false;
 
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;

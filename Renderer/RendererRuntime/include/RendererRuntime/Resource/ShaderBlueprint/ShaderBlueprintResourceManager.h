@@ -37,6 +37,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IFile;
 	class IRendererRuntime;
 	class ShaderBlueprintResource;
 	class ShaderBlueprintResourceLoader;
@@ -93,7 +94,7 @@ namespace RendererRuntime
 		*/
 		inline const ShaderProperties& getRendererShaderProperties() const;
 
-		RENDERERRUNTIME_API_EXPORT void loadShaderBlueprintResourceByAssetId(AssetId assetId, ShaderBlueprintResourceId& shaderBlueprintResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadShaderBlueprintResourceByAssetId(AssetId assetId, ShaderBlueprintResourceId& shaderBlueprintResourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = getUninitialized<ResourceLoaderTypeId>());	// Asynchronous
 
 		/**
 		*  @brief
@@ -130,8 +131,16 @@ namespace RendererRuntime
 	private:
 		explicit ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~ShaderBlueprintResourceManager();
-		ShaderBlueprintResourceManager(const ShaderBlueprintResourceManager&) = delete;
+		explicit ShaderBlueprintResourceManager(const ShaderBlueprintResourceManager&) = delete;
 		ShaderBlueprintResourceManager& operator=(const ShaderBlueprintResourceManager&) = delete;
+
+		//[-------------------------------------------------------]
+		//[ Pipeline state object cache                           ]
+		//[-------------------------------------------------------]
+		inline void clearPipelineStateObjectCache();
+		inline void loadPipelineStateObjectCache(IFile& file);
+		inline bool doesPipelineStateObjectCacheNeedSaving() const;
+		inline void savePipelineStateObjectCache(IFile& file);
 
 
 	//[-------------------------------------------------------]

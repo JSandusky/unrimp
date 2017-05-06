@@ -162,6 +162,7 @@ namespace RendererRuntime
 		mRenderer(nullptr),
 		mBufferManager(nullptr),
 		mTextureManager(nullptr),
+		mFileManager(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
 		mTimeManager(nullptr),
@@ -186,43 +187,6 @@ namespace RendererRuntime
 		mVrManager(nullptr)
 	{
 		// Nothing here
-	}
-
-	inline IRendererRuntime::IRendererRuntime(const IRendererRuntime &) :
-		// Core
-		mRenderer(nullptr),
-		mBufferManager(nullptr),
-		mTextureManager(nullptr),
-		mThreadManager(nullptr),
-		mAssetManager(nullptr),
-		mTimeManager(nullptr),
-		// Resource
-		mResourceStreamer(nullptr),
-		mVertexAttributesResourceManager(nullptr),
-		mTextureResourceManager(nullptr),
-		mShaderPieceResourceManager(nullptr),
-		mShaderBlueprintResourceManager(nullptr),
-		mMaterialBlueprintResourceManager(nullptr),
-		mMaterialResourceManager(nullptr),
-		mSkeletonResourceManager(nullptr),
-		mSkeletonAnimationResourceManager(nullptr),
-		mMeshResourceManager(nullptr),
-		mSceneResourceManager(nullptr),
-		mCompositorNodeResourceManager(nullptr),
-		mCompositorWorkspaceResourceManager(nullptr),
-		// Misc
-		mPipelineStateCompiler(nullptr),
-		// Optional
-		mDebugGuiManager(nullptr),
-		mVrManager(nullptr)
-	{
-		// Not supported
-	}
-
-	inline IRendererRuntime &IRendererRuntime::operator =(const IRendererRuntime &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

@@ -109,6 +109,9 @@ namespace OpenGLRenderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit ContextWindows(const ContextWindows &source) = delete;
+		ContextWindows &operator =(const ContextWindows &source) = delete;
+
 		/**
 		*  @brief
 		*    Constructor for primary context

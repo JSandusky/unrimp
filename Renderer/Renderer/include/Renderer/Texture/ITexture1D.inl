@@ -53,7 +53,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITexture1D::ITexture1D(IRenderer &renderer, uint32_t width) :
+	inline ITexture1D::ITexture1D(IRenderer& renderer, uint32_t width) :
 		ITexture(ResourceType::TEXTURE_1D, renderer),
 		mWidth(width)
 	{
@@ -62,24 +62,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedTexture1Ds;
 			++getRenderer().getStatistics().currentNumberOfTexture1Ds;
 		#endif
-	}
-
-	inline ITexture1D::ITexture1D(const ITexture1D &source) :
-		ITexture(source),
-		mWidth(source.getWidth())
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTexture1Ds;
-			++getRenderer().getStatistics().currentNumberOfTexture1Ds;
-		#endif
-	}
-
-	inline ITexture1D &ITexture1D::operator =(const ITexture1D &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

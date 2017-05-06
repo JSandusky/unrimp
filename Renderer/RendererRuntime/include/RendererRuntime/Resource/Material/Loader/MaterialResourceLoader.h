@@ -92,7 +92,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void initialize(const Asset& asset, IResource& resource) override;
+		virtual void initialize(const Asset& asset, bool reload, IResource& resource) override;
+		inline virtual bool hasDeserialization() const override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
 		virtual bool onDispatch() override;
@@ -105,7 +106,7 @@ namespace RendererRuntime
 	private:
 		inline MaterialResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		virtual ~MaterialResourceLoader();
-		MaterialResourceLoader(const MaterialResourceLoader&) = delete;
+		explicit MaterialResourceLoader(const MaterialResourceLoader&) = delete;
 		MaterialResourceLoader& operator=(const MaterialResourceLoader&) = delete;
 
 

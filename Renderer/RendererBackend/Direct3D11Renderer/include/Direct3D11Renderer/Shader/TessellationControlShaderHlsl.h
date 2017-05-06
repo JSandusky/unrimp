@@ -119,6 +119,14 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TessellationControlShaderHlsl(const TessellationControlShaderHlsl& source) = delete;
+		TessellationControlShaderHlsl& operator =(const TessellationControlShaderHlsl& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

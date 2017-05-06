@@ -95,7 +95,7 @@ namespace RendererRuntime
 	private:
 		inline VertexAttributesResource();
 		inline virtual ~VertexAttributesResource();
-		VertexAttributesResource(const VertexAttributesResource&) = delete;
+		explicit VertexAttributesResource(const VertexAttributesResource&) = delete;
 		VertexAttributesResource& operator=(const VertexAttributesResource&) = delete;
 
 		//[-------------------------------------------------------]

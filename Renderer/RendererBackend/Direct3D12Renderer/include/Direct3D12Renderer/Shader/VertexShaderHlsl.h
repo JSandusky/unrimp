@@ -113,6 +113,14 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexShaderHlsl(const VertexShaderHlsl& source) = delete;
+		VertexShaderHlsl& operator =(const VertexShaderHlsl& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

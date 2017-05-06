@@ -81,6 +81,15 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return shader bytecode
+		*
+		*  @return
+		*    The shader bytecode
+		*/
+		inline const Renderer::ShaderBytecode& getShaderBytecode() const;
+
+		/**
+		*  @brief
 		*    Return shader
 		*
 		*  @return
@@ -93,11 +102,11 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		inline ShaderCache();
 		inline explicit ShaderCache(ShaderCacheId shaderCacheId);
-		inline ShaderCache(ShaderCacheId shaderCacheId, Renderer::IShader& shader);
 		inline ShaderCache(ShaderCacheId shaderCacheId, ShaderCache* masterShaderCache);
 		inline ~ShaderCache();
-		ShaderCache(const ShaderCache&) = delete;
+		explicit ShaderCache(const ShaderCache&) = delete;
 		ShaderCache& operator=(const ShaderCache&) = delete;
 
 
@@ -105,9 +114,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ShaderCacheId		 mShaderCacheId;
-		ShaderCache*		 mMasterShaderCache;	///< If there's a master shader cache instance, we don't own the references shader but only redirect to it (multiple shader combinations resulting in same shader source code topic), don't destroy the instance
-		Renderer::IShaderPtr mShaderPtr;
+		ShaderCacheId			 mShaderCacheId;
+		ShaderCache*			 mMasterShaderCache;	///< If there's a master shader cache instance, we don't own the references shader but only redirect to it (multiple shader combinations resulting in same shader source code topic), don't destroy the instance
+		Renderer::ShaderBytecode mShaderBytecode;
+		Renderer::IShaderPtr	 mShaderPtr;
 
 
 	};

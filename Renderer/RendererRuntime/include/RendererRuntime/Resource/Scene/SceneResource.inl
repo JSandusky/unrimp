@@ -28,28 +28,70 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline void SceneResource::destroyAllSceneNodesAndItems()
+	{
+		destroyAllSceneNodes();
+		destroyAllSceneItems();
+
+		// Update the resource loading state
+		setLoadingState(IResource::LoadingState::UNLOADED);
+	}
+
+	inline const SceneResource::SceneNodes& SceneResource::getSceneNodes() const
+	{
+		return mSceneNodes;
+	}
+
+	template <typename T> T* SceneResource::createSceneItem(SceneNode& sceneNode)
+	{
+		return static_cast<T*>(createSceneItem(T::TYPE_ID, sceneNode));
+	}
+
+	inline const SceneResource::SceneItems& SceneResource::getSceneItems() const
+	{
+		return mSceneItems;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline SceneResource::SceneResource() :
+		mSceneFactory(nullptr)
+	{
+		// Nothing here
+	}
+
 	inline SceneResource::~SceneResource()
 	{
-		// Nothing here
+		// Sanity checks
+		assert(nullptr == mSceneFactory);
+		assert(mSceneNodes.empty());
+		assert(mSceneItems.empty());
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneResource methods        ]
-	//[-------------------------------------------------------]
-	inline SceneResourceTypeId SceneResource::getSceneResourceTypeId() const
+	inline SceneResource& SceneResource::operator=(SceneResource&& sceneResource)
 	{
-		return TYPE_ID;
+		// Call base implementation
+		IResource::operator=(std::move(sceneResource));
+
+		// Swap data
+		std::swap(mSceneFactory, sceneResource.mSceneFactory);
+		std::swap(mSceneNodes,	 sceneResource.mSceneNodes);
+		std::swap(mSceneItems,	 sceneResource.mSceneItems);
+
+		// Done
+		return *this;
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	inline SceneResource::SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
-		ISceneResource(rendererRuntime, resourceId)
+	inline void SceneResource::deinitializeElement()
 	{
-		// Nothing here
+		// Reset everything
+		destroyAllSceneNodesAndItems();
+		mSceneFactory = nullptr;
+
+		// Call base implementation
+		IResource::deinitializeElement();
 	}
 
 

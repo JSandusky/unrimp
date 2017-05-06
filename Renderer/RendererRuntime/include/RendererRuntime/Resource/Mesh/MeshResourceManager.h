@@ -37,7 +37,7 @@ namespace RendererRuntime
 {
 	class MeshResource;
 	class IRendererRuntime;
-	class MeshResourceLoader;
+	class IMeshResourceLoader;
 	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
@@ -73,8 +73,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT MeshResource* getMeshResourceByAssetId(AssetId assetId) const;	// Considered to be inefficient, avoid method whenever possible
-		RENDERERRUNTIME_API_EXPORT void loadMeshResourceByAssetId(AssetId assetId, MeshResourceId& meshResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
-		RENDERERRUNTIME_API_EXPORT MeshResourceId createEmptyMeshResourceByAssetId(AssetId assetId);	// Mesh resource is not allowed to exist, yet
+		RENDERERRUNTIME_API_EXPORT void loadMeshResourceByAssetId(AssetId assetId, MeshResourceId& meshResourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = getUninitialized<ResourceLoaderTypeId>());	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT MeshResourceId createEmptyMeshResourceByAssetId(AssetId assetId);	// Mesh resource is not allowed to exist, yet, prefer asynchronous mesh resource loading over this method
 
 
 	//[-------------------------------------------------------]
@@ -102,7 +102,7 @@ namespace RendererRuntime
 	private:
 		explicit MeshResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~MeshResourceManager();
-		MeshResourceManager(const MeshResourceManager&) = delete;
+		explicit MeshResourceManager(const MeshResourceManager&) = delete;
 		MeshResourceManager& operator=(const MeshResourceManager&) = delete;
 
 
@@ -110,7 +110,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ResourceManagerTemplate<MeshResource, MeshResourceLoader, MeshResourceId, 4096>* mInternalResourceManager;
+		ResourceManagerTemplate<MeshResource, IMeshResourceLoader, MeshResourceId, 4096>* mInternalResourceManager;
 
 
 	};

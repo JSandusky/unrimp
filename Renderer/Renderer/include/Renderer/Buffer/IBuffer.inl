@@ -43,22 +43,10 @@ namespace Renderer
 		// Nothing here
 	}
 
-	inline IBuffer::IBuffer(ResourceType resourceType, IRenderer &renderer) :
+	inline IBuffer::IBuffer(ResourceType resourceType, IRenderer& renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing here
-	}
-
-	inline IBuffer::IBuffer(const IBuffer &source) :
-		IResource(source)
-	{
-		// Not supported
-	}
-
-	inline IBuffer &IBuffer::operator =(const IBuffer &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

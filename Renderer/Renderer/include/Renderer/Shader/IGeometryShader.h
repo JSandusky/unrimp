@@ -70,28 +70,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IGeometryShader(IRenderer &renderer);
+		inline explicit IGeometryShader(IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IGeometryShader(const IGeometryShader &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IGeometryShader &operator =(const IGeometryShader &source);
+		explicit IGeometryShader(const IGeometryShader& source) = delete;
+		IGeometryShader &operator =(const IGeometryShader& source) = delete;
 
 
 	};

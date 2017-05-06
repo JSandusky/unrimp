@@ -58,7 +58,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITexture2D::ITexture2D(IRenderer &renderer, uint32_t width, uint32_t height) :
+	inline ITexture2D::ITexture2D(IRenderer& renderer, uint32_t width, uint32_t height) :
 		ITexture(ResourceType::TEXTURE_2D, renderer),
 		mWidth(width),
 		mHeight(height)
@@ -68,25 +68,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedTexture2Ds;
 			++getRenderer().getStatistics().currentNumberOfTexture2Ds;
 		#endif
-	}
-
-	inline ITexture2D::ITexture2D(const ITexture2D &source) :
-		ITexture(source),
-		mWidth(source.getWidth()),
-		mHeight(source.getHeight())
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTexture2Ds;
-			++getRenderer().getStatistics().currentNumberOfTexture2Ds;
-		#endif
-	}
-
-	inline ITexture2D &ITexture2D::operator =(const ITexture2D &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

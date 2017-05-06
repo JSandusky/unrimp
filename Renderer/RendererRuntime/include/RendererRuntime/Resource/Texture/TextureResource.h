@@ -38,9 +38,7 @@
 namespace RendererRuntime
 {
 	class TextureResource;
-	class ITextureResourceLoader;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
-	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
 }
 
 
@@ -71,13 +69,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class TextureResourceLoader;
 		friend class TextureResourceManager;
-		friend class CrnTextureResourceLoader;	// TODO(co) Get rid of this
-		friend class KtxTextureResourceLoader;	// TODO(co) Get rid of this
-		friend class DdsTextureResourceLoader;	// TODO(co) Get rid of this
-		friend PackedElementManager<TextureResource, TextureResourceId, 2048>;								// Type definition of template class
-		friend ResourceManagerTemplate<TextureResource, ITextureResourceLoader, TextureResourceId, 2048>;	// Type definition of template class
+		friend PackedElementManager<TextureResource, TextureResourceId, 2048>;	// Type definition of template class
 
 
 	//[-------------------------------------------------------]
@@ -95,7 +88,7 @@ namespace RendererRuntime
 	private:
 		inline TextureResource();
 		inline virtual ~TextureResource();
-		TextureResource(const TextureResource&) = delete;
+		explicit TextureResource(const TextureResource&) = delete;
 		TextureResource& operator=(const TextureResource&) = delete;
 		inline TextureResource& operator=(TextureResource&& textureResource);
 

@@ -26,8 +26,8 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
-#include "RendererRuntime/Resource/Scene/ISceneResource.h"
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
+#include "RendererRuntime/Resource/Scene/SceneNode.h"
+#include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -100,7 +100,7 @@ namespace RendererRuntime
 		mRendererRuntime.getTextureResourceManager().destroyTextureResource(mClusters3DTextureResourceId);
 	}
 
-	void LightBufferManager::fillBuffer(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer)
+	void LightBufferManager::fillBuffer(SceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer)
 	{
 		fillTextureBuffer(sceneResource, commandBuffer);
 		fillClusters3DTexture(sceneResource, commandBuffer);
@@ -130,13 +130,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void LightBufferManager::fillTextureBuffer(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer)
+	void LightBufferManager::fillTextureBuffer(SceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer)
 	{
 		// TODO(co) This is just a placeholder implementation until "RendererRuntime::LightBufferManager" is ready (containing e.g. reasonable optimizations)
 
 		// Loop through all scene nodes and look for point and spot lights
 		uint8_t* scratchBufferPointer = mTextureScratchBuffer.data();
-		for (const ISceneNode* sceneNode : sceneResource.getSceneNodes())
+		for (const SceneNode* sceneNode : sceneResource.getSceneNodes())
 		{
 			// Loop through all scene items attached to the current scene node
 			for (ISceneItem* sceneItem : sceneNode->getAttachedSceneItems())
@@ -168,7 +168,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void LightBufferManager::fillClusters3DTexture(ISceneResource& sceneResource, Renderer::CommandBuffer&)
+	void LightBufferManager::fillClusters3DTexture(SceneResource& sceneResource, Renderer::CommandBuffer&)
 	{
 		// Basing on the clustered shading demo from Emil Persson - http://humus.name/index.php?page=3D
 		// "
@@ -189,7 +189,7 @@ namespace RendererRuntime
 
 		// Loop through all scene nodes and look for point and spot lights
 		uint32_t currentLightIndex = 0;
-		for (const ISceneNode* sceneNode : sceneResource.getSceneNodes())
+		for (const SceneNode* sceneNode : sceneResource.getSceneNodes())
 		{
 			// Loop through all scene items attached to the current scene node
 			for (ISceneItem* sceneItem : sceneNode->getAttachedSceneItems())

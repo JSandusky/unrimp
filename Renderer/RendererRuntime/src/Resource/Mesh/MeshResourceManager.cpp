@@ -26,6 +26,9 @@
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Mesh/Loader/MeshResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
+#ifdef WIN32	// TODO(sw) openvr doesn't support non windows systems yet
+	#include "RendererRuntime/Vr/OpenVR/Loader/OpenVRMeshResourceLoader.h"
+#endif
 
 
 //[-------------------------------------------------------]
@@ -43,9 +46,16 @@ namespace RendererRuntime
 		return mInternalResourceManager->getResourceByAssetId(assetId);
 	}
 
-	void MeshResourceManager::loadMeshResourceByAssetId(AssetId assetId, MeshResourceId& meshResourceId, IResourceListener* resourceListener, bool reload)
+	void MeshResourceManager::loadMeshResourceByAssetId(AssetId assetId, MeshResourceId& meshResourceId, IResourceListener* resourceListener, bool reload, ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		mInternalResourceManager->loadResourceByAssetId(assetId, meshResourceId, resourceListener, reload);
+		// Choose default resource loader type ID, if necessary
+		if (isUninitialized(resourceLoaderTypeId))
+		{
+			resourceLoaderTypeId = MeshResourceLoader::TYPE_ID;
+		}
+
+		// Load
+		mInternalResourceManager->loadResourceByAssetId(assetId, meshResourceId, resourceListener, reload, resourceLoaderTypeId);
 	}
 
 	MeshResourceId MeshResourceManager::createEmptyMeshResourceByAssetId(AssetId assetId)
@@ -95,7 +105,22 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	IResourceLoader* MeshResourceManager::createResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
-		return mInternalResourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
+		if (resourceLoaderTypeId == MeshResourceLoader::TYPE_ID)
+		{
+			return new MeshResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
+		}
+		#ifdef WIN32	// TODO(sw) openvr doesn't support non windows systems yet
+			else if (resourceLoaderTypeId == OpenVRMeshResourceLoader::TYPE_ID)
+			{
+				return new OpenVRMeshResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
+			}
+		#endif
+		else
+		{
+			// TODO(co) Error handling
+			assert(false);
+			return nullptr;
+		}
 	}
 
 
@@ -104,7 +129,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MeshResourceManager::MeshResourceManager(IRendererRuntime& rendererRuntime)
 	{
-		mInternalResourceManager = new ResourceManagerTemplate<MeshResource, MeshResourceLoader, MeshResourceId, 4096>(rendererRuntime, *this);
+		mInternalResourceManager = new ResourceManagerTemplate<MeshResource, IMeshResourceLoader, MeshResourceId, 4096>(rendererRuntime, *this);
 	}
 
 	MeshResourceManager::~MeshResourceManager()

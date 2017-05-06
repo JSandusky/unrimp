@@ -96,31 +96,20 @@ namespace RendererRuntime
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
 
+		//[-------------------------------------------------------]
+		//[ Pipeline state object cache                           ]
+		//[-------------------------------------------------------]
+		virtual void clearPipelineStateObjectCache() override;
+		virtual void loadPipelineStateObjectCache() override;
+		virtual void savePipelineStateObjectCache() override;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit RendererRuntimeImpl(const RendererRuntimeImpl &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline RendererRuntimeImpl &operator =(const RendererRuntimeImpl &source);
+		explicit RendererRuntimeImpl(const RendererRuntimeImpl &source) = delete;
+		RendererRuntimeImpl &operator =(const RendererRuntimeImpl &source) = delete;
 
 
 	//[-------------------------------------------------------]
@@ -146,9 +135,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Backend/RendererRuntimeImpl.inl"

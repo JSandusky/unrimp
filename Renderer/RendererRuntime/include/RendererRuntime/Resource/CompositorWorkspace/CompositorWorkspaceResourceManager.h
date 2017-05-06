@@ -74,7 +74,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT void loadCompositorWorkspaceResourceByAssetId(AssetId assetId, CompositorWorkspaceResourceId& compositorWorkspaceResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadCompositorWorkspaceResourceByAssetId(AssetId assetId, CompositorWorkspaceResourceId& compositorWorkspaceResourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = getUninitialized<ResourceLoaderTypeId>());	// Asynchronous
 		inline RenderTargetTextureManager& getRenderTargetTextureManager();
 		inline FramebufferManager& getFramebufferManager();
 
@@ -104,7 +104,7 @@ namespace RendererRuntime
 	private:
 		explicit CompositorWorkspaceResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~CompositorWorkspaceResourceManager();
-		CompositorWorkspaceResourceManager(const CompositorWorkspaceResourceManager&) = delete;
+		explicit CompositorWorkspaceResourceManager(const CompositorWorkspaceResourceManager&) = delete;
 		CompositorWorkspaceResourceManager& operator=(const CompositorWorkspaceResourceManager&) = delete;
 
 

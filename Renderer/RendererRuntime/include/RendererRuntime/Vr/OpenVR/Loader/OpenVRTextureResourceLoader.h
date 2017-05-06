@@ -27,7 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
+#include "RendererRuntime/Resource/Texture/Loader/ITextureResourceLoader.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace vr
+{
+	struct RenderModel_TextureMap_t;
+}
 
 
 //[-------------------------------------------------------]
@@ -40,38 +49,51 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneNode : public ISceneNode
+	class OpenVRTextureResourceLoader : public ITextureResourceLoader
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneFactory;	// Needs to be able to create scene node instances
+		friend class TextureResourceManager;
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT static const SceneNodeTypeId TYPE_ID;
+		static const ResourceLoaderTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneNode methods            ]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual SceneNodeTypeId getSceneNodeTypeId() const override;
+		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		inline virtual bool hasDeserialization() const override;
+		inline virtual void onDeserialization(IFile& file) override;
+		virtual void onProcessing() override;
+		virtual bool onDispatch() override;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	protected:
-		inline explicit SceneNode(const Transform& transform);
-		inline virtual ~SceneNode();
-		SceneNode(const SceneNode&) = delete;
-		SceneNode& operator=(const SceneNode&) = delete;
+	private:
+		inline OpenVRTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
+		inline virtual ~OpenVRTextureResourceLoader();
+		explicit OpenVRTextureResourceLoader(const OpenVRTextureResourceLoader&) = delete;
+		OpenVRTextureResourceLoader& operator=(const OpenVRTextureResourceLoader&) = delete;
+		Renderer::ITexture* createRendererTexture();
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		// Temporary data
+		vr::RenderModel_TextureMap_t* mVrRenderModelTextureMap;
 
 
 	};
@@ -86,4 +108,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Node/SceneNode.inl"
+#include "RendererRuntime/Vr/OpenVR/Loader/OpenVRTextureResourceLoader.inl"

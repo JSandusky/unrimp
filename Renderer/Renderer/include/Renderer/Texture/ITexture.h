@@ -128,28 +128,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline ITexture(ResourceType resourceType, IRenderer &renderer);
+		inline ITexture(ResourceType resourceType, IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ITexture(const ITexture &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ITexture &operator =(const ITexture &source);
+		explicit ITexture(const ITexture& source) = delete;
+		ITexture& operator =(const ITexture& source) = delete;
 
 
 	};

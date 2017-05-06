@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITessellationControlShader::ITessellationControlShader(IRenderer &renderer) :
+	inline ITessellationControlShader::ITessellationControlShader(IRenderer& renderer) :
 		IShader(ResourceType::TESSELLATION_CONTROL_SHADER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -56,23 +56,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedTessellationControlShaders;
 			++getRenderer().getStatistics().currentNumberOfTessellationControlShaders;
 		#endif
-	}
-
-	inline ITessellationControlShader::ITessellationControlShader(const ITessellationControlShader &source) :
-		IShader(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTessellationControlShaders;
-			++getRenderer().getStatistics().currentNumberOfTessellationControlShaders;
-		#endif
-	}
-
-	inline ITessellationControlShader &ITessellationControlShader::operator =(const ITessellationControlShader &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

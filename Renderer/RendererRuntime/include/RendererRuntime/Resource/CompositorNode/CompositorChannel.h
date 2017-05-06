@@ -51,7 +51,7 @@ namespace RendererRuntime
 	private:
 		inline CompositorChannel();
 		inline ~CompositorChannel();
-		CompositorChannel(const CompositorChannel&) = delete;
+		explicit CompositorChannel(const CompositorChannel&) = delete;
 		CompositorChannel& operator=(const CompositorChannel&) = delete;
 
 

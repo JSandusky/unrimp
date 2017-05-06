@@ -131,7 +131,7 @@ namespace Renderer
 		*  @return
 		*    The default rasterizer state, see "Renderer::RasterizerState" for the default values
 		*/
-		static inline const RasterizerState &getDefaultRasterizerState();
+		static inline const RasterizerState& getDefaultRasterizerState();
 
 
 	};

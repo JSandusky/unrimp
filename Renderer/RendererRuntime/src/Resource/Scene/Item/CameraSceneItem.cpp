@@ -23,8 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
+#include "RendererRuntime/Resource/Scene/SceneNode.h"
 #include "RendererRuntime/Core/Math/Math.h"
 
 // Disable warnings in external headers, we can't fix them
@@ -58,7 +58,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	const Transform& CameraSceneItem::getWorldSpaceToViewSpaceTransform() const
 	{
-		const ISceneNode* parentSceneNode = getParentSceneNode();
+		const SceneNode* parentSceneNode = getParentSceneNode();
 		return (nullptr != parentSceneNode) ? parentSceneNode->getGlobalTransform() : Transform::IDENTITY;
 	}
 

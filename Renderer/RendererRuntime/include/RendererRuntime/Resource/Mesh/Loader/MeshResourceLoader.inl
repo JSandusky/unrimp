@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return TYPE_ID;
 	}
 
+	inline bool MeshResourceLoader::hasDeserialization() const
+	{
+		return true;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

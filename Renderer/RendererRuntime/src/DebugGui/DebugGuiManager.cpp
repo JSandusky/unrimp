@@ -25,6 +25,7 @@
 #include "RendererRuntime/DebugGui/DebugGuiManager.h"
 #include "RendererRuntime/DebugGui/DebugGuiHelper.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Core/File/IFileManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <imguizmo/ImGuizmo.h>
@@ -342,11 +343,25 @@ namespace RendererRuntime
 		mNumberOfAllocatedIndices(0)
 	{
 		// Change ImGui filenames so one is able to guess where those files come from when using Unrimp
-		// TODO(co) Maybe it makes sense to collect such filenames somewhere so one doesn't need to find those one after another when trying to e.g. keep all files inside the user application directory?
-		// TODO(sw) These files doesn't get read/written via an file interface -> can break on mobile devices
+		const IFileManager& fileManager = rendererRuntime.getFileManager();
+		const char* absoluteLocalDataDirectoryName = fileManager.getAbsoluteLocalDataDirectoryName();
 		ImGuiIO& imGuiIo = ImGui::GetIO();
-		imGuiIo.IniFilename = "UnrimpDebugGuiLayout.ini";
-		imGuiIo.LogFilename = "UnrimpDebugGuiLog.txt";
+		if (nullptr != absoluteLocalDataDirectoryName)
+		{
+			// TODO(sw) These files doesn't get read/written via an file interface -> can break on mobile devices
+			const std::string debugGuiDirectoryName = std::string(absoluteLocalDataDirectoryName) + "/DebugGui";
+			mIniFilename = debugGuiDirectoryName + "/UnrimpDebugGuiLayout.ini";
+			mLogFilename = debugGuiDirectoryName + "/UnrimpDebugGuiLog.txt";
+			fileManager.createDirectories(debugGuiDirectoryName.c_str());
+			imGuiIo.IniFilename = mIniFilename.c_str();
+			imGuiIo.LogFilename = mLogFilename.c_str();
+		}
+		else
+		{
+			// Writing local data isn't allowed, unset standard ImGui filenames
+			imGuiIo.IniFilename = nullptr;
+			imGuiIo.LogFilename = nullptr;
+		}
 	}
 
 	DebugGuiManager::~DebugGuiManager()

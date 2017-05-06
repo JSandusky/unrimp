@@ -44,7 +44,7 @@ namespace RendererRuntime
 	protected:
 		inline Serializer() {}
 		inline ~Serializer() {}
-		Serializer(const Serializer&) = delete;
+		explicit Serializer(const Serializer&) = delete;
 		Serializer& operator=(const Serializer&) = delete;
 
 

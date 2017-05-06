@@ -85,26 +85,8 @@ namespace RendererToolkit
 		*/
 		inline IRendererToolkit();
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IRendererToolkit(const IRendererToolkit &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IRendererToolkit &operator =(const IRendererToolkit &source);
+		explicit IRendererToolkit(const IRendererToolkit &source) = delete;
+		IRendererToolkit &operator =(const IRendererToolkit &source) = delete;
 
 
 	};

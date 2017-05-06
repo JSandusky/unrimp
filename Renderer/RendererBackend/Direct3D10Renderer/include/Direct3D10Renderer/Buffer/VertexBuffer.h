@@ -102,6 +102,14 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit VertexBuffer(const VertexBuffer& source) = delete;
+		VertexBuffer& operator =(const VertexBuffer& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

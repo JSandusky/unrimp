@@ -38,8 +38,8 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
-#include "RendererRuntime/Resource/Scene/ISceneResource.h"
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
+#include "RendererRuntime/Resource/Scene/SceneNode.h"
+#include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h"
 #include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
@@ -473,17 +473,17 @@ namespace RendererRuntime
 		const glm::vec3& cameraPosition = cameraSceneItem.getParentSceneNodeSafe().getGlobalTransform().position;
 
 		// Loop through all scene nodes and add renderables to the render queue
-		const ISceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
+		const SceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
 		const size_t numberOfSceneNodes = sceneNodes.size();
 		for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
 		{
-			const ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
+			const SceneNode* sceneNode = sceneNodes[sceneNodeIndex];
 
 			// Calculate the distance to the camera
 			const float distanceToCamera = glm::distance(cameraPosition, sceneNode->getGlobalTransform().position);
 
 			// Loop through all scene items attached to the current scene node
-			const ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
+			const SceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
 			const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
 			for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
 			{

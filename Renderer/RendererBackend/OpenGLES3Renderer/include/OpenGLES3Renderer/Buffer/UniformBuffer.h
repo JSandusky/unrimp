@@ -98,6 +98,14 @@ namespace OpenGLES3Renderer
 		uint32_t mOpenGLESUniformBuffer;	///< OpenGL ES uniform buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit UniformBuffer(const UniformBuffer& source) = delete;
+		UniformBuffer& operator =(const UniformBuffer& source) = delete;
+
+
 	};
 
 

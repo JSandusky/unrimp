@@ -76,7 +76,7 @@ namespace RendererRuntime
 	private:
 		explicit DebugGuiManagerWindows(IRendererRuntime& rendererRuntime);
 		virtual ~DebugGuiManagerWindows();
-		DebugGuiManagerWindows(const DebugGuiManagerWindows&) = delete;
+		explicit DebugGuiManagerWindows(const DebugGuiManagerWindows&) = delete;
 		DebugGuiManagerWindows& operator=(const DebugGuiManagerWindows&) = delete;
 
 

@@ -55,13 +55,6 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class MeshResource;
-		friend class MeshResourceLoader;
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -71,9 +64,13 @@ namespace RendererRuntime
 		inline SubMesh(const SubMesh& subMesh);
 		inline SubMesh& operator=(const SubMesh& subMesh);
 		inline MaterialResourceId getMaterialResourceId() const;
+		inline void setMaterialResourceId(MaterialResourceId materialResourceId);
 		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
+		inline void setPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
 		inline uint32_t getStartIndexLocation() const;
+		inline void setStartIndexLocation(uint32_t startIndexLocation);
 		inline uint32_t getNumberOfIndices() const;
+		inline void setNumberOfIndices(uint32_t numberOfIndices);
 
 
 	//[-------------------------------------------------------]

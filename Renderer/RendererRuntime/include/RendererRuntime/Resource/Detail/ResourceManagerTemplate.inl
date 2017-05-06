@@ -108,13 +108,19 @@ namespace RendererRuntime
 	}
 
 	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
-	inline void ResourceManagerTemplate<TYPE, LOADER_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::loadResourceByAssetId(AssetId assetId, ID_TYPE& resourceId, IResourceListener* resourceListener, bool reload)
+	inline void ResourceManagerTemplate<TYPE, LOADER_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::loadResourceByAssetId(AssetId assetId, ID_TYPE& resourceId, IResourceListener* resourceListener, bool reload, ResourceLoaderTypeId resourceLoaderTypeId)
 	{
+		// Choose default resource loader type ID, if necessary
+		if (isUninitialized(resourceLoaderTypeId))
+		{
+			resourceLoaderTypeId = LOADER_TYPE::TYPE_ID;
+		}
+
 		// Get or create the instance
 		TYPE* resource = getResourceByAssetId(assetId);
 
 		// Create the resource instance
-		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		const Asset* asset = mRendererRuntime.getAssetManager().tryGetAssetByAssetId(assetId);
 		bool load = (reload && nullptr != asset);
 		if (nullptr == resource && nullptr != asset)
 		{
@@ -142,7 +148,7 @@ namespace RendererRuntime
 		if (load)
 		{
 			// Commit resource streamer asset load request
-			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, LOADER_TYPE::TYPE_ID, *resource));
+			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, resourceLoaderTypeId, reload, *resource));
 		}
 	}
 
@@ -156,7 +162,7 @@ namespace RendererRuntime
 			if (mResources.getElementByIndex(i).getAssetId() == assetId)
 			{
 				ID_TYPE resourceId = getUninitialized<ID_TYPE>();
-				loadResourceByAssetId(assetId, resourceId, nullptr, true);
+				loadResourceByAssetId(assetId, resourceId, nullptr, true, LOADER_TYPE::TYPE_ID);
 				break;
 			}
 		}

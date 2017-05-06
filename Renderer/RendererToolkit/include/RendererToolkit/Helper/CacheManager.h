@@ -40,6 +40,10 @@ namespace SQLite
 {
 	class Database;
 }
+namespace RendererRuntime
+{
+	class IFileManager;
+}
 
 
 //[-------------------------------------------------------]
@@ -113,10 +117,12 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] projectPath
-		*    The path to the project for which the cache manager instance is used for
+		*  @param[in] fileManager
+		*    The file manager instance to use
+		*  @param[in] projectName
+		*    Name of the project this cache is for
 		*/
-		explicit CacheManager(const std::string& projectPath);
+		CacheManager(RendererRuntime::IFileManager& fileManager, const std::string& projectName);
 
 		/**
 		*  @brief

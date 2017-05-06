@@ -239,26 +239,8 @@ namespace Renderer
 		*/
 		inline explicit IBufferManager(IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IBufferManager(const IBufferManager& source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IBufferManager& operator =(const IBufferManager& source);
+		explicit IBufferManager(const IBufferManager& source) = delete;
+		IBufferManager& operator =(const IBufferManager& source) = delete;
 
 
 	//[-------------------------------------------------------]

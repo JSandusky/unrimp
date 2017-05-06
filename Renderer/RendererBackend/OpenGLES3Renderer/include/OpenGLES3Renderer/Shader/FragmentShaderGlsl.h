@@ -111,6 +111,14 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit FragmentShaderGlsl(const FragmentShaderGlsl& source) = delete;
+		FragmentShaderGlsl& operator =(const FragmentShaderGlsl& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

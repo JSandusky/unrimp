@@ -105,7 +105,7 @@ namespace Renderer
 		*  @return
 		*    The owner renderer instance, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IRenderer &getRenderer() const;
+		inline IRenderer& getRenderer() const;
 
 		/**
 		*  @brief
@@ -147,7 +147,7 @@ namespace Renderer
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*    - Comfort method
 		*/
-		inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader);
+		inline IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, IFragmentShader* fragmentShader);
 
 		/**
 		*  @brief
@@ -173,7 +173,7 @@ namespace Renderer
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*    - Comfort method
 		*/
-		inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader);
+		inline IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, IGeometryShader* geometryShader, IFragmentShader* fragmentShader);
 
 		/**
 		*  @brief
@@ -201,7 +201,7 @@ namespace Renderer
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*    - Comfort method
 		*/
-		inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader);
+		inline IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, ITessellationControlShader* tessellationControlShader, ITessellationEvaluationShader* tessellationEvaluationShader, IFragmentShader* fragmentShader);
 
 
 	//[-------------------------------------------------------]
@@ -218,7 +218,7 @@ namespace Renderer
 		*  @note
 		*    - Do not free the memory the returned pointer is pointing to
 		*/
-		virtual const char *getShaderLanguageName() const = 0;
+		virtual const char* getShaderLanguageName() const = 0;
 
 		/**
 		*  @brief
@@ -236,7 +236,7 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::vertexShader" is "true"
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual IVertexShader *createVertexShaderFromBytecode(const VertexAttributes& vertexAttributes, const ShaderBytecode& shaderBytecode) = 0;
+		virtual IVertexShader* createVertexShaderFromBytecode(const VertexAttributes& vertexAttributes, const ShaderBytecode& shaderBytecode) = 0;
 
 		/**
 		*  @brief
@@ -298,7 +298,7 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::vertexShader" is "true"
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual IVertexShader *createVertexShaderFromSourceCode(const VertexAttributes& vertexAttributes, const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
+		virtual IVertexShader* createVertexShaderFromSourceCode(const VertexAttributes& vertexAttributes, const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
 
 		/**
 		*  @brief
@@ -314,7 +314,7 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::maximumNumberOfPatchVertices" is not 0
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual ITessellationControlShader *createTessellationControlShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
+		virtual ITessellationControlShader* createTessellationControlShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
 
 		/**
 		*  @brief
@@ -335,7 +335,7 @@ namespace Renderer
 		*  @see
 		*    - "Renderer::IShaderLanguage::createVertexShader()" for more information
 		*/
-		virtual ITessellationControlShader *createTessellationControlShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
+		virtual ITessellationControlShader* createTessellationControlShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
 
 		/**
 		*  @brief
@@ -351,7 +351,7 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::maximumNumberOfPatchVertices" is not 0
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual ITessellationEvaluationShader *createTessellationEvaluationShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
+		virtual ITessellationEvaluationShader* createTessellationEvaluationShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
 
 		/**
 		*  @brief
@@ -372,7 +372,7 @@ namespace Renderer
 		*  @see
 		*    - "Renderer::IShaderLanguage::createVertexShader()" for more information
 		*/
-		virtual ITessellationEvaluationShader *createTessellationEvaluationShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
+		virtual ITessellationEvaluationShader* createTessellationEvaluationShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
 
 		/**
 		*  @brief
@@ -397,7 +397,7 @@ namespace Renderer
 		*      highly recommended to provide this information anyway to be able to switch the internal implementation (e.g. using
 		*      OpenGL instead of Direct3D)
 		*/
-		virtual IGeometryShader *createGeometryShaderFromBytecode(const ShaderBytecode& shaderBytecode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) = 0;
+		virtual IGeometryShader* createGeometryShaderFromBytecode(const ShaderBytecode& shaderBytecode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) = 0;
 
 		/**
 		*  @brief
@@ -427,7 +427,7 @@ namespace Renderer
 		*  @see
 		*    - "Renderer::IShaderLanguage::createVertexShader()" for more information
 		*/
-		virtual IGeometryShader *createGeometryShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, ShaderBytecode* shaderBytecode = nullptr) = 0;
+		virtual IGeometryShader* createGeometryShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, ShaderBytecode* shaderBytecode = nullptr) = 0;
 
 		/**
 		*  @brief
@@ -443,7 +443,7 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::fragmentShader" is "true"
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual IFragmentShader *createFragmentShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
+		virtual IFragmentShader* createFragmentShaderFromBytecode(const ShaderBytecode& shaderBytecode) = 0;
 
 		/**
 		*  @brief
@@ -464,7 +464,7 @@ namespace Renderer
 		*  @see
 		*    - "Renderer::IShaderLanguage::createVertexShader()" for more information
 		*/
-		virtual IFragmentShader *createFragmentShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
+		virtual IFragmentShader* createFragmentShaderFromSourceCode(const ShaderSourceCode& shaderSourceCode, ShaderBytecode* shaderBytecode = nullptr) = 0;
 
 		/**
 		*  @brief
@@ -494,7 +494,7 @@ namespace Renderer
 		*    - It's valid that a program implementation is adding a reference and releasing it again at once
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*/
-		virtual IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader) = 0;
+		virtual IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, ITessellationControlShader* tessellationControlShader, ITessellationEvaluationShader* tessellationEvaluationShader, IGeometryShader* geometryShader, IFragmentShader* fragmentShader) = 0;
 
 
 	//[-------------------------------------------------------]
@@ -508,28 +508,10 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IShaderLanguage(IRenderer &renderer);
+		inline explicit IShaderLanguage(IRenderer& renderer);
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IShaderLanguage(const IShaderLanguage &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IShaderLanguage &operator =(const IShaderLanguage &source);
+		explicit IShaderLanguage(const IShaderLanguage& source) = delete;
+		IShaderLanguage& operator =(const IShaderLanguage& source) = delete;
 
 
 	//[-------------------------------------------------------]

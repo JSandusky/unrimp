@@ -87,6 +87,14 @@ namespace OpenGLRenderer
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit Texture3DBind(const Texture3DBind& source) = delete;
+		Texture3DBind& operator =(const Texture3DBind& source) = delete;
+
+
 	};
 
 

@@ -63,7 +63,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITexture3D::ITexture3D(IRenderer &renderer, uint32_t width, uint32_t height, uint32_t depth) :
+	inline ITexture3D::ITexture3D(IRenderer& renderer, uint32_t width, uint32_t height, uint32_t depth) :
 		ITexture(ResourceType::TEXTURE_3D, renderer),
 		mWidth(width),
 		mHeight(height),
@@ -74,26 +74,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedTexture3Ds;
 			++getRenderer().getStatistics().currentNumberOfTexture3Ds;
 		#endif
-	}
-
-	inline ITexture3D::ITexture3D(const ITexture3D &source) :
-		ITexture(source),
-		mWidth(source.getWidth()),
-		mHeight(source.getHeight()),
-		mDepth(source.getDepth())
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedTexture3Ds;
-			++getRenderer().getStatistics().currentNumberOfTexture3Ds;
-		#endif
-	}
-
-	inline ITexture3D &ITexture3D::operator =(const ITexture3D &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

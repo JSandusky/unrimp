@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IVertexBuffer::IVertexBuffer(IRenderer &renderer) :
+	inline IVertexBuffer::IVertexBuffer(IRenderer& renderer) :
 		IBuffer(ResourceType::VERTEX_BUFFER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -56,23 +56,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedVertexBuffers;
 			++getRenderer().getStatistics().currentNumberOfVertexBuffers;
 		#endif
-	}
-
-	inline IVertexBuffer::IVertexBuffer(const IVertexBuffer &source) :
-		IBuffer(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedVertexBuffers;
-			++getRenderer().getStatistics().currentNumberOfVertexBuffers;
-		#endif
-	}
-
-	inline IVertexBuffer &IVertexBuffer::operator =(const IVertexBuffer &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

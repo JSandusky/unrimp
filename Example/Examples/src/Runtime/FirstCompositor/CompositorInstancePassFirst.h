@@ -62,7 +62,7 @@ protected:
 protected:
 	CompositorInstancePassFirst(const CompositorResourcePassFirst& compositorResourcePassFirst, const RendererRuntime::CompositorNodeInstance& compositorNodeInstance);
 	virtual ~CompositorInstancePassFirst();
-	CompositorInstancePassFirst(const CompositorInstancePassFirst&) = delete;
+	explicit CompositorInstancePassFirst(const CompositorInstancePassFirst&) = delete;
 	CompositorInstancePassFirst& operator=(const CompositorInstancePassFirst&) = delete;
 
 

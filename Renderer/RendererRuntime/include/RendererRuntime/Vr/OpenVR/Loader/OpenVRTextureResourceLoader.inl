@@ -19,14 +19,48 @@
 
 
 //[-------------------------------------------------------]
-//[ Protected methods                                     ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-inline StdFileManager::StdFileManager()
+namespace RendererRuntime
 {
-	// Nothing here
-}
 
-inline StdFileManager::~StdFileManager()
-{
-	// Nothing here
-}
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	inline ResourceLoaderTypeId OpenVRTextureResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+	inline bool OpenVRTextureResourceLoader::hasDeserialization() const
+	{
+		return false;
+	}
+
+	inline void OpenVRTextureResourceLoader::onDeserialization(IFile&)
+	{
+		// We're using the OpenVR API instead of reading from a file
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline OpenVRTextureResourceLoader::OpenVRTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+		ITextureResourceLoader(resourceManager, rendererRuntime),
+		mVrRenderModelTextureMap(nullptr)
+	{
+		// Nothing here
+	}
+
+	inline OpenVRTextureResourceLoader::~OpenVRTextureResourceLoader()
+	{
+		// Nothing here
+	}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // RendererRuntime

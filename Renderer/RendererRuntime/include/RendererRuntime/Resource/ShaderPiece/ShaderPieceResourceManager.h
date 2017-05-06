@@ -76,7 +76,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT void loadShaderPieceResourceByAssetId(AssetId assetId, ShaderPieceResourceId& shaderPieceResourceId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
+		RENDERERRUNTIME_API_EXPORT void loadShaderPieceResourceByAssetId(AssetId assetId, ShaderPieceResourceId& shaderPieceResourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = getUninitialized<ResourceLoaderTypeId>());	// Asynchronous
 
 
 	//[-------------------------------------------------------]
@@ -104,7 +104,7 @@ namespace RendererRuntime
 	private:
 		explicit ShaderPieceResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~ShaderPieceResourceManager();
-		ShaderPieceResourceManager(const ShaderPieceResourceManager&) = delete;
+		explicit ShaderPieceResourceManager(const ShaderPieceResourceManager&) = delete;
 		ShaderPieceResourceManager& operator=(const ShaderPieceResourceManager&) = delete;
 
 

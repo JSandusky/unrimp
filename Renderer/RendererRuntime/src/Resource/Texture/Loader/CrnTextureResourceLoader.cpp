@@ -259,7 +259,7 @@ namespace RendererRuntime
 	bool CrnTextureResourceLoader::onDispatch()
 	{
 		// Create the renderer texture instance
-		mTextureResource->mTexture = mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading ? mTexture : createRendererTexture();
+		mTextureResource->setTexture(*(mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading ? mTexture : createRendererTexture()));
 
 		// Fully loaded
 		return true;

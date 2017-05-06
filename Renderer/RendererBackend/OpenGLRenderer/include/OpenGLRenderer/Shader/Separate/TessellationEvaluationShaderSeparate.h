@@ -111,6 +111,14 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TessellationEvaluationShaderSeparate(const TessellationEvaluationShaderSeparate& source) = delete;
+		TessellationEvaluationShaderSeparate& operator =(const TessellationEvaluationShaderSeparate& source) = delete;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:

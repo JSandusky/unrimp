@@ -19,13 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Scene/Node/SceneNode.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -33,9 +26,29 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	const SceneNodeTypeId SceneNode::TYPE_ID("SceneNode");
+	inline ResourceLoaderTypeId IMeshResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline IMeshResourceLoader::IMeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+		IResourceLoader(resourceManager),
+		mRendererRuntime(rendererRuntime),
+		mMeshResource(nullptr)
+	{
+		// Nothing here
+	}
+
+	inline IMeshResourceLoader::~IMeshResourceLoader()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]

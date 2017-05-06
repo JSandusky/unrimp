@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ISwapChain::ISwapChain(IRenderer &renderer) :
+	inline ISwapChain::ISwapChain(IRenderer& renderer) :
 		IRenderTarget(ResourceType::SWAP_CHAIN, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -56,23 +56,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedSwapChains;
 			++getRenderer().getStatistics().currentNumberOfSwapChains;
 		#endif
-	}
-
-	inline ISwapChain::ISwapChain(const ISwapChain &source) :
-		IRenderTarget(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedSwapChains;
-			++getRenderer().getStatistics().currentNumberOfSwapChains;
-		#endif
-	}
-
-	inline ISwapChain &ISwapChain::operator =(const ISwapChain &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

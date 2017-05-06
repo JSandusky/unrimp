@@ -84,9 +84,6 @@
     <ClInclude Include="src\Framework\PlatformTypes.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\Framework\Quaternion.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="src\Framework\RefCount.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -100,9 +97,6 @@
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="src\Framework\Color4.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Framework\EulerAngles.h">
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="src\Framework\Main.h">
@@ -393,9 +387,6 @@
     <ClInclude Include="src\Framework\IApplicationFrontend.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\Framework\StdFileManager.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="src\Framework\QtRunner\ExampleRunnerQt4.h">
       <Filter>Framework\QtRunner</Filter>
     </ClInclude>
@@ -435,9 +426,6 @@
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="src\Framework\Color4.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Framework\EulerAngles.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="src\Main.cpp" />
@@ -546,9 +534,6 @@
     <ClCompile Include="src\Framework\ExampleBase.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="src\Framework\StdFileManager.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
     <ClCompile Include="src\Framework\QtRunner\ExampleRunnerQt4.cpp">
       <Filter>Framework\QtRunner</Filter>
     </ClCompile>
@@ -558,9 +543,6 @@
       <Filter>Framework</Filter>
     </None>
     <None Include="src\Framework\IApplicationRenderer.inl">
-      <Filter>Framework</Filter>
-    </None>
-    <None Include="src\Framework\Quaternion.inl">
       <Filter>Framework</Filter>
     </None>
     <None Include="src\Framework\RefCount.inl">
@@ -584,9 +566,6 @@
       <Filter>Framework</Filter>
     </None>
     <None Include="src\Framework\IApplicationFrontend.inl">
-      <Filter>Framework</Filter>
-    </None>
-    <None Include="src\Framework\StdFileManager.inl">
       <Filter>Framework</Filter>
     </None>
   </ItemGroup>

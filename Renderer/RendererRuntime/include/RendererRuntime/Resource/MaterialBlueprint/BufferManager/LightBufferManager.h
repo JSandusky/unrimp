@@ -48,7 +48,7 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
-	class ISceneResource;
+	class SceneResource;
 	class IRendererRuntime;
 	class MaterialBlueprintResource;
 }
@@ -110,7 +110,7 @@ namespace RendererRuntime
 		*  @param[out] commandBuffer
 		*    Command buffer to fill
 		*/
-		void fillBuffer(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer);
+		void fillBuffer(SceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer);
 
 		/**
 		*  @brief
@@ -146,10 +146,10 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		LightBufferManager(const LightBufferManager&) = delete;
+		explicit LightBufferManager(const LightBufferManager&) = delete;
 		LightBufferManager& operator=(const LightBufferManager&) = delete;
-		void fillTextureBuffer(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer);
-		void fillClusters3DTexture(ISceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer);
+		void fillTextureBuffer(SceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer);
+		void fillClusters3DTexture(SceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]

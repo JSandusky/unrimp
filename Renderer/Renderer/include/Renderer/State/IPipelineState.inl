@@ -49,7 +49,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IPipelineState::IPipelineState(IRenderer &renderer) :
+	inline IPipelineState::IPipelineState(IRenderer& renderer) :
 		IState(ResourceType::PIPELINE_STATE, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -57,23 +57,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedPipelineStates;
 			++getRenderer().getStatistics().currentNumberOfPipelineStates;
 		#endif
-	}
-
-	inline IPipelineState::IPipelineState(const IPipelineState &source) :
-		IState(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedPipelineStates;
-			++getRenderer().getStatistics().currentNumberOfPipelineStates;
-		#endif
-	}
-
-	inline IPipelineState &IPipelineState::operator =(const IPipelineState &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

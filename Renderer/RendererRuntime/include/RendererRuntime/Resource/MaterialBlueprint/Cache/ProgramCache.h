@@ -86,7 +86,7 @@ namespace RendererRuntime
 	private:
 		inline ProgramCache(ProgramCacheId programCacheId, Renderer::IProgram& program);
 		inline ~ProgramCache();
-		ProgramCache(const ProgramCache&) = delete;
+		explicit ProgramCache(const ProgramCache&) = delete;
 		ProgramCache& operator=(const ProgramCache&) = delete;
 
 

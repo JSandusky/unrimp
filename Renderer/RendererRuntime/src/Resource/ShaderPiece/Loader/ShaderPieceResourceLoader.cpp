@@ -49,22 +49,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	void ShaderPieceResourceLoader::initialize(const Asset& asset, IResource& resource)
+	void ShaderPieceResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
-		IResourceLoader::initialize(asset);
+		IResourceLoader::initialize(asset, reload);
 		mShaderPieceResource = static_cast<ShaderPieceResource*>(&resource);
 	}
 
 	void ShaderPieceResourceLoader::onDeserialization(IFile& file)
 	{
-		// Read in the file format header
-		FileFormatHeader fileFormatHeader;
-		file.read(&fileFormatHeader, sizeof(FileFormatHeader));
-		assert(v1ShaderPiece::FORMAT_TYPE == fileFormatHeader.formatType);
-		assert(v1ShaderPiece::FORMAT_VERSION == fileFormatHeader.formatVersion);
-
 		// Tell the memory mapped file about the LZ4 compressed data
-		mMemoryFile.setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+		mMemoryFile.loadLz4CompressedDataFromFile(v1ShaderPiece::FORMAT_TYPE, v1ShaderPiece::FORMAT_VERSION, file);
 	}
 
 	void ShaderPieceResourceLoader::onProcessing()
@@ -91,7 +85,9 @@ namespace RendererRuntime
 
 	bool ShaderPieceResourceLoader::onDispatch()
 	{
-		{ // TODO(co) Cleanup: Get all influenced material blueprint resources
+		// TODO(co) Cleanup: Get all influenced material blueprint resources
+		if (getReload())
+		{
 			const ShaderPieceResourceId shaderPieceResourceId = mShaderPieceResource->getId();
 			const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
 			typedef std::unordered_set<MaterialBlueprintResource*> MaterialBlueprintResourcePointers;

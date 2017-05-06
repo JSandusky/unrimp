@@ -92,26 +92,8 @@ namespace OpenGLES3Renderer
 		*/
 		IExtensions();
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		explicit IExtensions(const IExtensions &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		IExtensions &operator =(const IExtensions &source);
+		explicit IExtensions(const IExtensions &source) = delete;
+		IExtensions &operator =(const IExtensions &source) = delete;
 
 
 	};

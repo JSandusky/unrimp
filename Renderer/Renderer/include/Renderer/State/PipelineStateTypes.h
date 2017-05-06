@@ -76,9 +76,6 @@ namespace Renderer
 	/**
 	*  @brief
 	*    Pipeline state
-	*
-	*  @todo
-	*    - TODO(co) Under construction
 	*/
 	struct SerializedPipelineState
 	{

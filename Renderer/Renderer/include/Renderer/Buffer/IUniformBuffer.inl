@@ -48,7 +48,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IUniformBuffer::IUniformBuffer(IRenderer &renderer) :
+	inline IUniformBuffer::IUniformBuffer(IRenderer& renderer) :
 		IBuffer(ResourceType::UNIFORM_BUFFER, renderer)
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -56,23 +56,6 @@ namespace Renderer
 			++getRenderer().getStatistics().numberOfCreatedUniformBuffers;
 			++getRenderer().getStatistics().currentNumberOfUniformBuffers;
 		#endif
-	}
-
-	inline IUniformBuffer::IUniformBuffer(const IUniformBuffer &source) :
-		IBuffer(source)
-	{
-		// Not supported
-		#ifndef RENDERER_NO_STATISTICS
-			// Update the statistics
-			++getRenderer().getStatistics().numberOfCreatedUniformBuffers;
-			++getRenderer().getStatistics().currentNumberOfUniformBuffers;
-		#endif
-	}
-
-	inline IUniformBuffer &IUniformBuffer::operator =(const IUniformBuffer &)
-	{
-		// Not supported
-		return *this;
 	}
 
 

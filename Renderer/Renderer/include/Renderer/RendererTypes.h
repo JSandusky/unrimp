@@ -194,9 +194,9 @@ namespace Renderer
 	// TODO(co) Comments
 	struct MappedSubresource
 	{
-		void	 *data;
-		uint32_t  rowPitch;
-		uint32_t  depthPitch;
+		void*	 data;
+		uint32_t rowPitch;
+		uint32_t depthPitch;
 	};
 
 	/**

@@ -80,6 +80,14 @@ namespace OpenGLRenderer
 		virtual ~TextureCubeDsa();
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TextureCubeDsa(const TextureCubeDsa& source) = delete;
+		TextureCubeDsa& operator =(const TextureCubeDsa& source) = delete;
+
+
 	};
 
 

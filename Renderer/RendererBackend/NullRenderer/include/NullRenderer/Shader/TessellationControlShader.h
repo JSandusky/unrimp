@@ -84,6 +84,14 @@ namespace NullRenderer
 		virtual const char *getShaderLanguageName() const override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TessellationControlShader(const TessellationControlShader& source) = delete;
+		TessellationControlShader& operator =(const TessellationControlShader& source) = delete;
+
+
 	};
 
 

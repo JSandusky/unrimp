@@ -89,6 +89,15 @@ namespace RendererRuntime
 		*/
 		inline const Asset& getAsset() const;
 
+		/**
+		*  @brief
+		*    Return whether or not the resource gets reloaded or not
+		*
+		*  @return
+		*    "true" if the resource is new in memory, else "false" for reload an already loaded resource (and e.g. update cache entries)
+		*/
+		inline bool getReload() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
@@ -106,10 +115,21 @@ namespace RendererRuntime
 		*
 		*  @param[in] asset
 		*    Asset to load
+		*  @param[in] reload
+		*    "true" if the resource is new in memory, else "false" for reload an already loaded resource (and e.g. update cache entries)
 		*  @param[out] resource
 		*    Resource instance to fill
 		*/
-		virtual void initialize(const Asset& asset, IResource& resource) = 0;
+		virtual void initialize(const Asset& asset, bool reload, IResource& resource) = 0;
+
+		/**
+		*  @brief
+		*    Called to check whether or not the resource loader has to deserialize (usually from file)
+		*
+		*  @return
+		*    "true" if deserialization has to be called, else "false" (for example a procedural resource or a resource received via an API like OpenVR)
+		*/
+		virtual bool hasDeserialization() const = 0;
 
 		/**
 		*  @brief
@@ -151,9 +171,9 @@ namespace RendererRuntime
 	protected:
 		inline IResourceLoader(IResourceManager& resourceManager);
 		inline virtual ~IResourceLoader();
-		IResourceLoader(const IResourceLoader&) = delete;
+		explicit IResourceLoader(const IResourceLoader&) = delete;
 		IResourceLoader& operator=(const IResourceLoader&) = delete;
-		inline void initialize(const Asset& asset);
+		inline void initialize(const Asset& asset, bool reload);
 
 
 	//[-------------------------------------------------------]
@@ -162,6 +182,7 @@ namespace RendererRuntime
 	private:
 		IResourceManager& mResourceManager;	///< Owner resource manager
 		const Asset*	  mAsset;			///< Used asset, must be valid
+		bool			  mReload;			///< "true" if the resource is new in memory, else "false" for reload an already loaded resource (and e.g. update cache entries)
 
 
 	};

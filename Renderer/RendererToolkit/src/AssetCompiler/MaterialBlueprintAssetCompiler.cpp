@@ -29,6 +29,7 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h>
 
@@ -42,7 +43,6 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <fstream>
-#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -110,7 +110,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			std::stringstream outputMemoryStream(std::stringstream::out | std::stringstream::binary);
+			RendererRuntime::MemoryFile memoryFile;
 
 			{ // Material blueprint
 				// Parse JSON
@@ -165,54 +165,54 @@ namespace RendererToolkit
 					materialBlueprintHeader.numberOfTextureBuffers						= rapidJsonValueTextureBuffers.IsObject() ? rapidJsonValueTextureBuffers.MemberCount() : 0;
 					materialBlueprintHeader.numberOfSamplerStates						= rapidJsonValueSamplerStates.IsObject() ? rapidJsonValueSamplerStates.MemberCount() : 0;
 					materialBlueprintHeader.numberOfTextures							= rapidJsonValueTextures.IsObject() ? rapidJsonValueTextures.MemberCount() : 0;
-					outputMemoryStream.write(reinterpret_cast<const char*>(&materialBlueprintHeader), sizeof(RendererRuntime::v1MaterialBlueprint::MaterialBlueprintHeader));
+					memoryFile.write(&materialBlueprintHeader, sizeof(RendererRuntime::v1MaterialBlueprint::MaterialBlueprintHeader));
 				}
 
 				// Write down all material properties
-				outputMemoryStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size()));
+				memoryFile.write(sortedMaterialPropertyVector.data(), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
 
 				// Write down visual importance of shader properties
-				outputMemoryStream.write(reinterpret_cast<const char*>(visualImportanceOfShaderPropertiesVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * visualImportanceOfShaderPropertiesVector.size()));
+				memoryFile.write(visualImportanceOfShaderPropertiesVector.data(), sizeof(RendererRuntime::ShaderProperties::Property) * visualImportanceOfShaderPropertiesVector.size());
 
 				// Write down maximum integer value of shader properties
-				outputMemoryStream.write(reinterpret_cast<const char*>(maximumIntegerValueOfShaderPropertiesVector.data()), static_cast<std::streamsize>(sizeof(RendererRuntime::ShaderProperties::Property) * maximumIntegerValueOfShaderPropertiesVector.size()));
+				memoryFile.write(maximumIntegerValueOfShaderPropertiesVector.data(), sizeof(RendererRuntime::ShaderProperties::Property) * maximumIntegerValueOfShaderPropertiesVector.size());
 
 				// Root signature
 				RendererRuntime::ShaderProperties shaderProperties;
-				JsonMaterialBlueprintHelper::readRootSignature(rapidJsonValueMaterialBlueprintAsset["RootSignature"], outputMemoryStream, shaderProperties);
+				JsonMaterialBlueprintHelper::readRootSignature(rapidJsonValueMaterialBlueprintAsset["RootSignature"], memoryFile, shaderProperties);
 
 				// Pipeline state object (PSO)
-				JsonMaterialBlueprintHelper::readPipelineStateObject(input, rapidJsonValueMaterialBlueprintAsset["PipelineState"], outputMemoryStream, sortedMaterialPropertyVector);
+				JsonMaterialBlueprintHelper::readPipelineStateObject(input, rapidJsonValueMaterialBlueprintAsset["PipelineState"], memoryFile, sortedMaterialPropertyVector);
 
 				{ // Resources
 					// Uniform buffers
 					if (rapidJsonValueUniformBuffers.IsObject())
 					{
-						JsonMaterialBlueprintHelper::readUniformBuffers(input, rapidJsonValueUniformBuffers, outputMemoryStream, shaderProperties);
+						JsonMaterialBlueprintHelper::readUniformBuffers(input, rapidJsonValueUniformBuffers, memoryFile, shaderProperties);
 					}
 
 					// Texture buffers
 					if (rapidJsonValueTextureBuffers.IsObject())
 					{
-						JsonMaterialBlueprintHelper::readTextureBuffers(rapidJsonValueTextureBuffers, outputMemoryStream, shaderProperties);
+						JsonMaterialBlueprintHelper::readTextureBuffers(rapidJsonValueTextureBuffers, memoryFile, shaderProperties);
 					}
 
 					// Sampler states
 					if (rapidJsonValueSamplerStates.IsObject())
 					{
-						JsonMaterialBlueprintHelper::readSamplerStates(rapidJsonValueSamplerStates, outputMemoryStream, shaderProperties, sortedMaterialPropertyVector);
+						JsonMaterialBlueprintHelper::readSamplerStates(rapidJsonValueSamplerStates, memoryFile, shaderProperties, sortedMaterialPropertyVector);
 					}
 
 					// Textures
 					if (rapidJsonValueTextures.IsObject())
 					{
-						JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, rapidJsonValueTextures, outputMemoryStream, shaderProperties);
+						JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, rapidJsonValueTextures, memoryFile, shaderProperties);
 					}
 				}
 			}
 
 			// Write LZ4 compressed output
-			FileSystemHelper::writeCompressedFile(outputMemoryStream, RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION, outputAssetFilename);
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION, outputAssetFilename, input.fileManager);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);

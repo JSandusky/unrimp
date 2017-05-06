@@ -108,6 +108,14 @@ namespace OpenGLRenderer
 		uint32_t mOpenGLTexture;		///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		explicit TextureBuffer(const TextureBuffer& source) = delete;
+		TextureBuffer& operator =(const TextureBuffer& source) = delete;
+
+
 	};
 
 

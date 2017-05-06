@@ -45,6 +45,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenVR/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/include/)
 
 
 ##################################################
@@ -59,6 +60,7 @@ set(SOURCE_CODES
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4frame.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/lz4hc.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/src/xxhash.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/src/mikktspace.c
 	src/Asset/AssetManager.cpp
 	src/Asset/AssetPackage.cpp
 	src/Asset/Serializer/AssetPackageSerializer.cpp
@@ -128,18 +130,17 @@ set(SOURCE_CODES
 	src/Resource/Material/MaterialResource.cpp
 	src/Resource/Material/MaterialResourceManager.cpp
 	src/Resource/Material/MaterialTechnique.cpp
+	src/Resource/Mesh/Loader/IMeshResourceLoader.cpp
 	src/Resource/Mesh/Loader/MeshResourceLoader.cpp
 	src/Resource/Mesh/MeshResourceManager.cpp
 	src/Resource/Mesh/MeshResource.cpp
 	src/Resource/Scene/Factory/SceneFactory.cpp
-	src/Resource/Scene/ISceneResource.cpp
 	src/Resource/Scene/Item/CameraSceneItem.cpp
 	src/Resource/Scene/Item/LightSceneItem.cpp
 	src/Resource/Scene/Item/MeshSceneItem.cpp
 	src/Resource/Scene/Item/SkeletonMeshSceneItem.cpp
 	src/Resource/Scene/Loader/SceneResourceLoader.cpp
-	src/Resource/Scene/Node/ISceneNode.cpp
-	src/Resource/Scene/Node/SceneNode.cpp
+	src/Resource/Scene/SceneNode.cpp
 	src/Resource/Scene/SceneResource.cpp
 	src/Resource/Scene/SceneResourceManager.cpp
 	src/Resource/ShaderBlueprint/Cache/Preprocessor/mojoshader_common.cpp
@@ -175,6 +176,8 @@ if(NOT ANDROID)
 		${SOURCE_CODES}
 		src/Vr/OpenVR/OpenVRRuntimeLinking.cpp
 		src/Vr/OpenVR/VrManagerOpenVR.cpp
+		src/Vr/OpenVR/OpenVRMeshResourceLoader.cpp
+		src/Vr/OpenVR/OpenVRTextureResourceLoader.cpp
 	)
 endif()
 

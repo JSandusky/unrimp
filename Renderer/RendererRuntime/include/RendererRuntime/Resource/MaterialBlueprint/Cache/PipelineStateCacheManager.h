@@ -163,7 +163,7 @@ namespace RendererRuntime
 	private:
 		inline explicit PipelineStateCacheManager(MaterialBlueprintResource& materialBlueprintResource);
 		inline ~PipelineStateCacheManager();
-		PipelineStateCacheManager(const PipelineStateCacheManager&) = delete;
+		explicit PipelineStateCacheManager(const PipelineStateCacheManager&) = delete;
 		PipelineStateCacheManager& operator=(const PipelineStateCacheManager&) = delete;
 
 

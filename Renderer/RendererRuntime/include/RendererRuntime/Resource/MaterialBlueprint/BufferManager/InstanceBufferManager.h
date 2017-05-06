@@ -118,7 +118,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		InstanceBufferManager(const InstanceBufferManager&) = delete;
+		explicit InstanceBufferManager(const InstanceBufferManager&) = delete;
 		InstanceBufferManager& operator=(const InstanceBufferManager&) = delete;
 
 

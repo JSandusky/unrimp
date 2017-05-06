@@ -157,26 +157,8 @@ namespace Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit Statistics(const Statistics &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline Statistics &operator =(const Statistics &source);
+		explicit Statistics(const Statistics& source) = delete;
+		Statistics& operator =(const Statistics& source) = delete;
 
 
 	};

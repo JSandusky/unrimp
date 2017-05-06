@@ -39,13 +39,19 @@ namespace RendererRuntime
 		return *mAsset;
 	}
 
+	inline bool IResourceLoader::getReload() const
+	{
+		return mReload;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline IResourceLoader::IResourceLoader(IResourceManager& resourceManager) :
 		mResourceManager(resourceManager),
-		mAsset(nullptr)
+		mAsset(nullptr),
+		mReload(false)
 	{
 		// Nothing here
 	}
@@ -55,9 +61,10 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void IResourceLoader::initialize(const Asset& asset)
+	inline void IResourceLoader::initialize(const Asset& asset, bool reload)
 	{
-		mAsset = &asset;
+		mAsset  = &asset;
+		mReload = reload;
 	}
 
 
