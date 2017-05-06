@@ -113,16 +113,17 @@ namespace
 		void setTSpace(const SMikkTSpaceContext* pContext, const float fvTangent[], const float fvBiTangent[], const float, const float, const tbool, const int iFace, const int iVert)
 		{
 			const aiMesh* assimpMesh = static_cast<const aiMesh*>(pContext->m_pUserData);
+			const unsigned int index = assimpMesh->mFaces[iFace].mIndices[iVert];
 
 			{ // Tangent
-				aiVector3D& assimpTangent = assimpMesh->mTangents[assimpMesh->mFaces[iFace].mIndices[iVert]];
+				aiVector3D& assimpTangent = assimpMesh->mTangents[index];
 				assimpTangent.x = fvTangent[0];
 				assimpTangent.y = fvTangent[1];
 				assimpTangent.z = fvTangent[2];
 			}
 
 			{ // Binormal
-				aiVector3D& assimpBinormal = assimpMesh->mBitangents[assimpMesh->mFaces[iFace].mIndices[iVert]];
+				aiVector3D& assimpBinormal = assimpMesh->mBitangents[index];
 				assimpBinormal.x = fvBiTangent[0];
 				assimpBinormal.y = fvBiTangent[1];
 				assimpBinormal.z = fvBiTangent[2];

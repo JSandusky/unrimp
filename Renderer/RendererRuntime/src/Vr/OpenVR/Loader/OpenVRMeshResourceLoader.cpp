@@ -108,17 +108,17 @@ namespace
 		void setTSpace(const SMikkTSpaceContext* pContext, const float fvTangent[], const float fvBiTangent[], const float, const float, const tbool, const int iFace, const int iVert)
 		{
 			RendererRuntime::OpenVRMeshResourceLoader* openVRMeshResourceLoader = static_cast<RendererRuntime::OpenVRMeshResourceLoader*>(pContext->m_pUserData);
-			const vr::RenderModel_t* vrRenderModel = openVRMeshResourceLoader->getVrRenderModel();
+			const size_t index = openVRMeshResourceLoader->getVrRenderModel()->rIndexData[iFace * NUMBER_OF_VERTICES_PER_FACE + iVert];
 
 			{ // Tangent
-				glm::vec3& tangent = openVRMeshResourceLoader->getTangentsData()[vrRenderModel->rIndexData[iFace * NUMBER_OF_VERTICES_PER_FACE + iVert]];
+				glm::vec3& tangent = openVRMeshResourceLoader->getTangentsData()[index];
 				tangent.x = fvTangent[0];
 				tangent.y = fvTangent[1];
 				tangent.z = fvTangent[2];
 			}
 
 			{ // Binormal
-				glm::vec3& binormal = openVRMeshResourceLoader->getBinormalsData()[vrRenderModel->rIndexData[iFace * NUMBER_OF_VERTICES_PER_FACE + iVert]];
+				glm::vec3& binormal = openVRMeshResourceLoader->getBinormalsData()[index];
 				binormal.x = fvBiTangent[0];
 				binormal.y = fvBiTangent[1];
 				binormal.z = fvBiTangent[2];
