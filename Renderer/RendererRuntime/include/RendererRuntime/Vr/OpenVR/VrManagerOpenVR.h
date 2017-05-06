@@ -63,7 +63,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class VrManagerOpenVR : private IVrManager, public IResourceListener
+	class VrManagerOpenVR : public IVrManager, public IResourceListener
 	{
 
 
