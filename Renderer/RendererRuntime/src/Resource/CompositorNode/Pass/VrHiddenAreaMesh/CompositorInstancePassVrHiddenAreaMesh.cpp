@@ -266,8 +266,9 @@ namespace RendererRuntime
 			if (nullptr == ::detail::g_MeshPtr)
 			{
 				const IRendererRuntime& rendererRuntime = getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime();
-				const IVrManager& vrManager = rendererRuntime.getVrManager();
-				if (vrManager.isRunning() && vrManager.getVrManagerTypeId() == RendererRuntime::VrManagerOpenVR::TYPE_ID)
+				IVrManager& vrManager = rendererRuntime.getVrManager();
+				if (vrManager.isRunning() && vrManager.getVrManagerTypeId() == RendererRuntime::VrManagerOpenVR::TYPE_ID &&
+					0 != static_cast<RendererRuntime::VrManagerOpenVR&>(vrManager).getVrSystem()->GetHiddenAreaMesh(vr::EVREye::Eye_Left).unTriangleCount)
 				{
 					::detail::g_MeshPtr = new ::detail::Mesh(rendererRuntime);
 				}
