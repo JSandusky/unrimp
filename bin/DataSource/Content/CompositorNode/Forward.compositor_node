@@ -135,10 +135,6 @@
 		},
 		"Framebuffers":
 		{
-			"HdrMultisampleDepthStencilFramebuffer":
-			{
-				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
-			},
 			"HdrMultisampleFramebuffer":
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrMultisampleColorRenderTarget", "Example/Texture/Dynamic/MultisampleNormalRenderTarget" ],
@@ -232,26 +228,12 @@
 					"TextureAssetId": "Example/Texture/Dynamic/ShadowMapRenderTarget"
 				}
 			},
-			"HdrMultisampleDepthStencilFramebuffer":
-			{
-				"Description": "Depth pre-pass",
-				"Clear":
-				{
-					"Flags": "DEPTH"
-				},
-				"Scene":
-				{
-					"MinimumRenderQueueIndex": "0",
-					"MaximumRenderQueueIndex": "254",
-					"MaterialTechnique": "DepthOnly"
-				}
-			},
 			"HdrMultisampleFramebuffer":
 			{
 				"Description": "Forward rendering, also renders out view space normals into an additional render target",
 				"Clear":
 				{
-					"Flags": "COLOR",
+					"Flags": "COLOR | DEPTH",
 					"Color": "0.5 0.5 0.5 1.0"
 				},
 				"Scene":
