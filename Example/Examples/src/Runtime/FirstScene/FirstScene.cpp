@@ -90,7 +90,7 @@ FirstScene::FirstScene() :
 	mSkeletonMeshSceneItem(nullptr),
 	mSceneNode(nullptr),
 	// States for runtime-fun
-	mInstancedCompositor(Compositor::DEFERRED),
+	mInstancedCompositor(Compositor::FORWARD),
 	mCurrentCompositor(mInstancedCompositor),
 	mCurrentMsaa(Msaa::NONE),
 	mResolutionScale(1.0f),
@@ -141,8 +141,9 @@ void FirstScene::onInitialization()
 				vrManager.setSceneResourceId(mSceneResourceId);
 				if (vrManager.startup("Example/Material/Default/VrDevice"))
 				{
-					// Select the VR compositor by default
+					// Select the VR compositor and enable MSAA by default since image stability is quite important for VR
 					mCurrentCompositor = mInstancedCompositor = Compositor::VR;
+					mCurrentMsaa = Msaa::TWO;
 				}
 			}
 		}
