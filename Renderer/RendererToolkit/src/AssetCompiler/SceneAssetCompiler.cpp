@@ -355,10 +355,7 @@ namespace RendererToolkit
 			const std::string assetIdAsString = input.projectName + "/Scene/" + assetCategory + '/' + assetName;
 
 			// Output asset
-			RendererRuntime::Asset outputAsset;
-			outputAsset.assetId = StringHelper::getAssetIdByString(assetIdAsString.c_str());
-			strcpy(outputAsset.assetFilename, outputAssetFilename.c_str());	// TODO(co) Buffer overflow test
-			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
+			IAssetCompiler::outputAsset(assetIdAsString, outputAssetFilename, outputAssetPackage);
 		}
 	}
 
