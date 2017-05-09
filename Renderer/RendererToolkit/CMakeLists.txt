@@ -28,6 +28,10 @@ if(NOT RENDERER_DEBUG)
 	add_definitions(-DRENDERER_NO_DEBUG)
 endif()
 
+if (Boost_FILESYSTEM_FOUND)
+	add_definitions(-DUNRIMP_USE_BOOST_FILESYSTEM)
+endif()
+
 
 ##################################################
 ## Includes
@@ -53,6 +57,7 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/${OS_ARCHITECTURE}/A
 set(SOURCE_CODES
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/FileWatcher/FileWatcher.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/src/mikktspace.c
+	src/AssetCompiler/IAssetCompiler.cpp
 	src/AssetCompiler/CompositorNodeAssetCompiler.cpp
 	src/AssetCompiler/CompositorWorkspaceAssetCompiler.cpp
 	src/AssetCompiler/MaterialAssetCompiler.cpp
@@ -100,6 +105,12 @@ if(STATIC_LIBRARY)
 		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX} zlibStatic.lib SQLiteCpp sqlite3)
 	elseif(UNIX)
 		set(LIBRARIES ${LIBRARIES} assimp tiff minizip crunch stdc++fs SQLiteCpp sqlite3 dl)
+
+		if (HAVE_CXX_FILESYSTEM_TS_SUPPORT)
+			set(LIBRARIES ${LIBRARIES} stdc++fs)
+		elseif(Boost_FILESYSTEM_FOUND)
+			set(LIBRARIES ${LIBRARIES} Boost::filesystem)
+		endif()
 	endif()
 
 	target_link_libraries(RendererToolkitStatic ${LIBRARIES})
@@ -112,7 +123,12 @@ if(SHARED_LIBRARY)
 	if(WIN32)
 		target_link_libraries(RendererToolkit assimp.lib crnlib.lib SQLiteCpp sqlite3)
 	else()
-		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} tiff minizip crunch stdc++fs SQLiteCpp sqlite3 dl)
+		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} tiff minizip crunch SQLiteCpp sqlite3 dl)
+		if (HAVE_CXX_FILESYSTEM_TS_SUPPORT)
+			target_link_libraries(RendererToolkit stdc++fs)
+		elseif(Boost_FILESYSTEM_FOUND)
+			target_link_libraries(RendererToolkit Boost::filesystem)
+		endif()
 	endif()
 
 	add_dependencies(RendererToolkit crunch SQLiteCpp)
