@@ -19,11 +19,24 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorResourcePassClear.h"
-#include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class CompositorResourcePassVrHiddenAreaMesh;
+}
 
 
 //[-------------------------------------------------------]
@@ -34,33 +47,36 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	const CompositorPassTypeId CompositorResourcePassClear::TYPE_ID("Clear");
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
-	//[-------------------------------------------------------]
-	void CompositorResourcePassClear::deserialize(uint32_t numberOfBytes, const uint8_t* data)
+	class CompositorInstancePassVrHiddenAreaMesh : public ICompositorInstancePass
 	{
-		// Sanity check
-		assert(sizeof(v1CompositorNode::PassClear) == numberOfBytes);
-		std::ignore = numberOfBytes;
 
-		// Call the base implementation
-		ICompositorResourcePass::deserialize(sizeof(v1CompositorNode::Pass), data);
 
-		// Read data
-		const v1CompositorNode::PassClear* passClear = reinterpret_cast<const v1CompositorNode::PassClear*>(data);
-		mFlags = passClear->flags;
-		memcpy(glm::value_ptr(mColor), passClear->color, sizeof(float) * 4);
-		mZ = passClear->z;
-		mStencil = passClear->stencil;
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class CompositorPassFactory;	// The only one allowed to create instances of this class
 
-		// Sanity check
-		assert(0 != mFlags && "The clear compositor resource pass flags must not be null");
-	}
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		CompositorInstancePassVrHiddenAreaMesh(const CompositorResourcePassVrHiddenAreaMesh& compositorResourcePassVrHiddenAreaMesh, const CompositorNodeInstance& compositorNodeInstance);
+		virtual ~CompositorInstancePassVrHiddenAreaMesh();
+		explicit CompositorInstancePassVrHiddenAreaMesh(const CompositorInstancePassVrHiddenAreaMesh&) = delete;
+		CompositorInstancePassVrHiddenAreaMesh& operator=(const CompositorInstancePassVrHiddenAreaMesh&) = delete;
+
+
+	};
 
 
 //[-------------------------------------------------------]

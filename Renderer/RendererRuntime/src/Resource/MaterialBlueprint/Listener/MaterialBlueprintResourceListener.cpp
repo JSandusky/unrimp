@@ -372,9 +372,10 @@ namespace RendererRuntime
 		}
 		else if (::detail::CAMERA_WORLD_SPACE_POSITION == referenceValue)
 		{
+			// In view space, the camera is located at the origin
+			// -> Please note that we can't just use the camera world space position since the coordinate system might get manipulated when using for example OpenVR
 			assert(sizeof(float) * 3 == numberOfBytes);
-			const CameraSceneItem* cameraSceneItem = mCompositorContextData->getCameraSceneItem();
-			memcpy(buffer, glm::value_ptr((nullptr != cameraSceneItem) ? cameraSceneItem->getParentSceneNodeSafe().getGlobalTransform().position : Math::ZERO_VECTOR), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToViewSpaceMatrix) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0)), numberOfBytes);
 		}
 		else if (::detail::PROJECTION_PARAMETERS == referenceValue)
 		{

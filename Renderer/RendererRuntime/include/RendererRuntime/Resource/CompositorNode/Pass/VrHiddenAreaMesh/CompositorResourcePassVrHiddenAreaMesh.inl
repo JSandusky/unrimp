@@ -28,47 +28,40 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline CompositorContextData::CompositorContextData() :
-		mCameraSceneItem(nullptr),
-		mLightSceneItem(nullptr),
-		mCompositorInstancePassShadowMap(nullptr),
-		mCurrentlyBoundMaterialBlueprintResource(nullptr)
+	inline uint32_t CompositorResourcePassVrHiddenAreaMesh::getFlags() const
+	{
+		return mFlags;
+	}
+
+	inline uint32_t CompositorResourcePassVrHiddenAreaMesh::getStencil() const
+	{
+		return mStencil;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	inline CompositorPassTypeId CompositorResourcePassVrHiddenAreaMesh::getTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline CompositorResourcePassVrHiddenAreaMesh::CompositorResourcePassVrHiddenAreaMesh(const CompositorTarget& compositorTarget) :
+		ICompositorResourcePass(compositorTarget),
+		mFlags(0),
+		mStencil(0)
 	{
 		// Nothing here
 	}
 
-	inline CompositorContextData::CompositorContextData(const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap) :
-		mCameraSceneItem(cameraSceneItem),
-		mLightSceneItem(lightSceneItem),
-		mCompositorInstancePassShadowMap(compositorInstancePassShadowMap),
-		mCurrentlyBoundMaterialBlueprintResource(nullptr)
+	inline CompositorResourcePassVrHiddenAreaMesh::~CompositorResourcePassVrHiddenAreaMesh()
 	{
 		// Nothing here
-	}
-
-	inline CompositorContextData::~CompositorContextData()
-	{
-		// Nothing here
-	}
-
-	inline const CameraSceneItem* CompositorContextData::getCameraSceneItem() const
-	{
-		return mCameraSceneItem;
-	}
-
-	inline const LightSceneItem* CompositorContextData::getLightSceneItem() const
-	{
-		return mLightSceneItem;
-	}
-
-	inline const CompositorInstancePassShadowMap* CompositorContextData::getCompositorInstancePassShadowMap() const
-	{
-		return mCompositorInstancePassShadowMap;
-	}
-
-	inline void CompositorContextData::resetCurrentlyBoundMaterialBlueprintResource() const
-	{
-		mCurrentlyBoundMaterialBlueprintResource = nullptr;
 	}
 
 

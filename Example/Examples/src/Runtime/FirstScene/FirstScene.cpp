@@ -90,7 +90,7 @@ FirstScene::FirstScene() :
 	mSkeletonMeshSceneItem(nullptr),
 	mSceneNode(nullptr),
 	// States for runtime-fun
-	mInstancedCompositor(Compositor::DEFERRED),
+	mInstancedCompositor(Compositor::FORWARD),
 	mCurrentCompositor(mInstancedCompositor),
 	mCurrentMsaa(Msaa::NONE),
 	mResolutionScale(1.0f),
@@ -128,9 +128,6 @@ void FirstScene::onInitialization()
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
-		// Create the compositor workspace instance
-		createCompositorWorkspace();
-
 		// Create the scene resource
 		rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId(::detail::SCENE_ASSET_ID, mSceneResourceId, this);
 
@@ -142,9 +139,17 @@ void FirstScene::onInitialization()
 			if (vrManager.isHmdPresent())
 			{
 				vrManager.setSceneResourceId(mSceneResourceId);
-				vrManager.startup("Example/Material/Default/VrDevice");
+				if (vrManager.startup("Example/Material/Default/VrDevice"))
+				{
+					// Select the VR compositor and enable MSAA by default since image stability is quite important for VR
+					mCurrentCompositor = mInstancedCompositor = Compositor::VR;
+					mCurrentMsaa = Msaa::TWO;
+				}
 			}
 		}
+
+		// Create the compositor workspace instance
+		createCompositorWorkspace();
 	}
 }
 
@@ -400,7 +405,7 @@ void FirstScene::createCompositorWorkspace()
 	if (nullptr != rendererRuntime)
 	{
 		// Create/recreate the compositor workspace instance
-		static const RendererRuntime::AssetId COMPOSITOR_WORKSPACE_ASSET_ID[3] = { "Example/CompositorWorkspace/Default/Debug", "Example/CompositorWorkspace/Default/Forward", "Example/CompositorWorkspace/Default/Deferred" };
+		static const RendererRuntime::AssetId COMPOSITOR_WORKSPACE_ASSET_ID[4] = { "Example/CompositorWorkspace/Default/Debug", "Example/CompositorWorkspace/Default/Forward", "Example/CompositorWorkspace/Default/Deferred", "Example/CompositorWorkspace/Default/Vr" };
 		delete mCompositorWorkspaceInstance;
 		mCompositorWorkspaceInstance = new RendererRuntime::CompositorWorkspaceInstance(*rendererRuntime, COMPOSITOR_WORKSPACE_ASSET_ID[mInstancedCompositor]);
 	}
@@ -420,7 +425,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			ImGui::Begin("Options");
 				// Compositing
 				{
-					const char* items[] = { "Debug", "Forward", "Deferred" };
+					const char* items[] = { "Debug", "Forward", "Deferred", "VR" };
 					ImGui::Combo("Compositor", &mCurrentCompositor, items, static_cast<int>(glm::countof(items)));
 				}
 				{

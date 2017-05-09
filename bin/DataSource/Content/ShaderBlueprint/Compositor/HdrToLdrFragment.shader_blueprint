@@ -61,9 +61,11 @@ SAMPLER_STATE(SamplerLinear, 1)
 TEXTURE_2D(ColorMap, 0)
 TEXTURE_2D(LuminanceMap, 1)
 TEXTURE_2D(BloomMap, 2)
-TEXTURE_2D(LensFlareMap, 3)
-TEXTURE_2D(DirtyLensMap, 4)
-TEXTURE_2D(LensStarMap, 5)
+TEXTURE_2D(DirtyLensMap, 3)
+@property(UseLensFlareMap)
+	TEXTURE_2D(LensFlareMap, 4)
+	TEXTURE_2D(LensStarMap, 5)
+@end
 
 
 //[-------------------------------------------------------]
@@ -108,12 +110,15 @@ MAIN_BEGIN
 		color = ToneMap(color, averageLuminance, 0.0f, exposure);
 	}
 
-	{ // Apply the lens flare with dirty lens
+	@property(UseLensFlareMap)
+	{
+		// Apply the lens flare with dirty lens
 		float lensFlareIntensity = 5.0f;
 		float3 lensFlare = SAMPLE_2D_LOD(LensFlareMap, SamplerLinear, textureCoordinate).rgb;
 		float2 lensStarTexcoord = (MATRIX_MUL(float3(MAIN_INPUT(TexCoordVS), 1.0f), CAST_TO(PassData.LensStarMatrix, float3x3))).xy;
 		color += lensFlare * (dirtyLens + SAMPLE_2D_LOD(LensStarMap, SamplerLinear, float4(lensStarTexcoord, 0.0f, 0.0f)).rgb) * lensFlareIntensity;
 	}
+	@end
 
 	{ // Apply the bloom with dirty lens
 		float3 bloom = SAMPLE_2D_LOD(BloomMap, SamplerLinear, textureCoordinate).rgb;

@@ -130,6 +130,17 @@ namespace RendererRuntime
 				{}
 			};
 
+			struct PassVrHiddenAreaMesh : public Pass
+			{
+				uint32_t flags;		///< Combination of "Renderer::ClearFlag", except for color-flag
+				uint32_t stencil;
+
+				PassVrHiddenAreaMesh() :
+					flags(0),
+					stencil(0)
+				{}
+			};
+
 			struct PassScene : public Pass
 			{
 				uint8_t				minimumRenderQueueIndex;	///< Inclusive

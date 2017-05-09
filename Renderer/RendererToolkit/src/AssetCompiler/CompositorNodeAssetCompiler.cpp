@@ -38,6 +38,7 @@
 #include <RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorResourcePassClear.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.h>
+#include <RendererRuntime/Resource/CompositorNode/Pass/VrHiddenAreaMesh/CompositorResourcePassVrHiddenAreaMesh.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/ResolveMultisample/CompositorResourcePassResolveMultisample.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -290,6 +291,10 @@ namespace
 						{
 							numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassClear);
 						}
+						else if (RendererRuntime::CompositorResourcePassVrHiddenAreaMesh::TYPE_ID == compositorPassTypeId)
+						{
+							numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassVrHiddenAreaMesh);
+						}
 						else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)
 						{
 							numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassScene);
@@ -337,9 +342,37 @@ namespace
 								RendererToolkit::JsonHelper::optionalFloatNProperty(rapidJsonValuePass, "Color", passClear.color, 4);
 								RendererToolkit::JsonHelper::optionalFloatProperty(rapidJsonValuePass, "Z", passClear.z);
 								RendererToolkit::JsonHelper::optionalIntegerProperty(rapidJsonValuePass, "Stencil", passClear.stencil);
+								if (0 == passClear.flags)
+								{
+									throw std::runtime_error("The clear compositor resource pass flags must not be null");
+								}
 
 								// Write down
 								file.write(&passClear, sizeof(RendererRuntime::v1CompositorNode::PassClear));
+							}
+							else if (RendererRuntime::CompositorResourcePassVrHiddenAreaMesh::TYPE_ID == compositorPassTypeId)
+							{
+								RendererRuntime::v1CompositorNode::PassVrHiddenAreaMesh passVrHiddenAreaMesh;
+								readPass(rapidJsonValuePass, passVrHiddenAreaMesh);
+
+								// Read properties
+								RendererToolkit::JsonHelper::optionalClearFlagsProperty(rapidJsonValuePass, "Flags", passVrHiddenAreaMesh.flags);
+								RendererToolkit::JsonHelper::optionalIntegerProperty(rapidJsonValuePass, "Stencil", passVrHiddenAreaMesh.stencil);
+								if (0 == passVrHiddenAreaMesh.flags)
+								{
+									throw std::runtime_error("The VR hidden area mesh compositor resource pass flags must not be null");
+								}
+								if ((passVrHiddenAreaMesh.flags & Renderer::ClearFlag::COLOR) != 0)
+								{
+									throw std::runtime_error("The VR hidden area mesh compositor resource pass doesn't support the color flag");
+								}
+								if ((passVrHiddenAreaMesh.flags & Renderer::ClearFlag::STENCIL) != 0)
+								{
+									throw std::runtime_error("TODO(co) The VR hidden area mesh compositor resource pass doesn't support the stencil flag, yet");
+								}
+
+								// Write down
+								file.write(&passVrHiddenAreaMesh, sizeof(RendererRuntime::v1CompositorNode::PassVrHiddenAreaMesh));
 							}
 							else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)
 							{

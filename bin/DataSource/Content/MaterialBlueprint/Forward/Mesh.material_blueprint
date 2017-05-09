@@ -440,11 +440,6 @@
 			"RasterizerState":
 			{
 				"CullMode": "@CullMode"
-			},
-			"DepthStencilState":
-			{
-				"DepthFunc": "EQUAL",
-				"DepthWriteMask": "ZERO"
 			}
 		},
 		"Resources":

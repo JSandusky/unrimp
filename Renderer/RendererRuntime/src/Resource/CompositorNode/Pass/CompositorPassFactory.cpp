@@ -25,6 +25,8 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/CompositorPassFactory.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorResourcePassClear.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Clear/CompositorInstancePassClear.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/VrHiddenAreaMesh/CompositorResourcePassVrHiddenAreaMesh.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/VrHiddenAreaMesh/CompositorInstancePassVrHiddenAreaMesh.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorInstancePassQuad.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Copy/CompositorResourcePassCopy.h"
@@ -51,35 +53,23 @@ namespace RendererRuntime
 	{
 		ICompositorResourcePass* compositorResourcePass = nullptr;
 
+		// Define helper macros
+		#define IF_VALUE(resource)			 if (compositorPassTypeId == resource::TYPE_ID) compositorResourcePass = new resource(compositorTarget);
+		#define ELSE_IF_VALUE(resource) else if (compositorPassTypeId == resource::TYPE_ID) compositorResourcePass = new resource(compositorTarget);
+
 		// Evaluate the compositor pass type
-		if (compositorPassTypeId == CompositorResourcePassClear::TYPE_ID)
-		{
-			compositorResourcePass = new CompositorResourcePassClear(compositorTarget);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassScene::TYPE_ID)
-		{
-			compositorResourcePass = new CompositorResourcePassScene(compositorTarget);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassShadowMap::TYPE_ID)
-		{
-			compositorResourcePass = new CompositorResourcePassShadowMap(compositorTarget);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassResolveMultisample::TYPE_ID)
-		{
-			compositorResourcePass = new CompositorResourcePassResolveMultisample(compositorTarget);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassCopy::TYPE_ID)
-		{
-			compositorResourcePass = new CompositorResourcePassCopy(compositorTarget);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassQuad::TYPE_ID)
-		{
-			compositorResourcePass = new CompositorResourcePassQuad(compositorTarget);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassDebugGui::TYPE_ID)
-		{
-			compositorResourcePass = new CompositorResourcePassDebugGui(compositorTarget);
-		}
+		IF_VALUE(CompositorResourcePassClear)
+		ELSE_IF_VALUE(CompositorResourcePassVrHiddenAreaMesh)
+		ELSE_IF_VALUE(CompositorResourcePassScene)
+		ELSE_IF_VALUE(CompositorResourcePassShadowMap)
+		ELSE_IF_VALUE(CompositorResourcePassResolveMultisample)
+		ELSE_IF_VALUE(CompositorResourcePassCopy)
+		ELSE_IF_VALUE(CompositorResourcePassQuad)
+		ELSE_IF_VALUE(CompositorResourcePassDebugGui)
+
+		// Undefine helper macros
+		#undef IF_VALUE
+		#undef ELSE_IF_VALUE
 
 		// Done
 		return compositorResourcePass;
@@ -89,36 +79,24 @@ namespace RendererRuntime
 	{
 		ICompositorInstancePass* compositorInstancePass = nullptr;
 
+		// Define helper macros
+		#define IF_VALUE(resource, instance)		   if (compositorPassTypeId == resource::TYPE_ID) compositorInstancePass = new instance(static_cast<const resource&>(compositorResourcePass), compositorNodeInstance);
+		#define ELSE_IF_VALUE(resource, instance) else if (compositorPassTypeId == resource::TYPE_ID) compositorInstancePass = new instance(static_cast<const resource&>(compositorResourcePass), compositorNodeInstance);
+
 		// Evaluate the compositor pass type
 		const CompositorPassTypeId compositorPassTypeId = compositorResourcePass.getTypeId();
-		if (compositorPassTypeId == CompositorResourcePassClear::TYPE_ID)
-		{
-			compositorInstancePass = new CompositorInstancePassClear(static_cast<const CompositorResourcePassClear&>(compositorResourcePass), compositorNodeInstance);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassScene::TYPE_ID)
-		{
-			compositorInstancePass = new CompositorInstancePassScene(static_cast<const CompositorResourcePassScene&>(compositorResourcePass), compositorNodeInstance);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassShadowMap::TYPE_ID)
-		{
-			compositorInstancePass = new CompositorInstancePassShadowMap(static_cast<const CompositorResourcePassShadowMap&>(compositorResourcePass), compositorNodeInstance);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassResolveMultisample::TYPE_ID)
-		{
-			compositorInstancePass = new CompositorInstancePassResolveMultisample(static_cast<const CompositorResourcePassResolveMultisample&>(compositorResourcePass), compositorNodeInstance);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassCopy::TYPE_ID)
-		{
-			compositorInstancePass = new CompositorInstancePassCopy(static_cast<const CompositorResourcePassCopy&>(compositorResourcePass), compositorNodeInstance);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassQuad::TYPE_ID)
-		{
-			compositorInstancePass = new CompositorInstancePassQuad(static_cast<const CompositorResourcePassQuad&>(compositorResourcePass), compositorNodeInstance);
-		}
-		else if (compositorPassTypeId == CompositorResourcePassDebugGui::TYPE_ID)
-		{
-			compositorInstancePass = new CompositorInstancePassDebugGui(static_cast<const CompositorResourcePassDebugGui&>(compositorResourcePass), compositorNodeInstance);
-		}
+		IF_VALUE(CompositorResourcePassClear,					CompositorInstancePassClear)
+		ELSE_IF_VALUE(CompositorResourcePassVrHiddenAreaMesh,	CompositorInstancePassVrHiddenAreaMesh)
+		ELSE_IF_VALUE(CompositorResourcePassScene,				CompositorInstancePassScene)
+		ELSE_IF_VALUE(CompositorResourcePassShadowMap,			CompositorInstancePassShadowMap)
+		ELSE_IF_VALUE(CompositorResourcePassResolveMultisample,	CompositorInstancePassResolveMultisample)
+		ELSE_IF_VALUE(CompositorResourcePassCopy,				CompositorInstancePassCopy)
+		ELSE_IF_VALUE(CompositorResourcePassQuad,				CompositorInstancePassQuad)
+		ELSE_IF_VALUE(CompositorResourcePassDebugGui,			CompositorInstancePassDebugGui)
+
+		// Undefine helper macros
+		#undef IF_VALUE
+		#undef ELSE_IF_VALUE
 
 		// Done
 		return compositorInstancePass;

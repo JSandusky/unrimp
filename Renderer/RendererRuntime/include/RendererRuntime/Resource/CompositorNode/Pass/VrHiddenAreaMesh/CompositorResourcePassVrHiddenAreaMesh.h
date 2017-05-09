@@ -25,15 +25,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Forward declarations                                  ]
+//[ Includes                                              ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class LightSceneItem;
-	class CameraSceneItem;
-	class MaterialBlueprintResource;
-	class CompositorInstancePassShadowMap;
-}
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h"
 
 
 //[-------------------------------------------------------]
@@ -46,50 +41,55 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Compositor context data used during compositor execution
-	*/
-	class CompositorContextData
+	class CompositorResourcePassVrHiddenAreaMesh : public ICompositorResourcePass
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class RenderQueue;	// Needs access to "mCurrentlyBoundMaterialBlueprintResource"
+		friend class CompositorPassFactory;	// The only one allowed to create instances of this class
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		RENDERERRUNTIME_API_EXPORT static const CompositorPassTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline CompositorContextData();
-		inline explicit CompositorContextData(const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem = nullptr, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = nullptr);
-		inline ~CompositorContextData();
-		inline const CameraSceneItem* getCameraSceneItem() const;
-		inline const LightSceneItem* getLightSceneItem() const;
-		inline const CompositorInstancePassShadowMap* getCompositorInstancePassShadowMap() const;
-		inline void resetCurrentlyBoundMaterialBlueprintResource() const;
+		inline uint32_t getFlags() const;	// Combination of "Renderer::ClearFlag", except for color-flag
+		inline uint32_t getStencil() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
-	private:
-		explicit CompositorContextData(const CompositorContextData&) = delete;
-		CompositorContextData& operator=(const CompositorContextData&) = delete;
+	public:
+		inline virtual CompositorPassTypeId getTypeId() const override;
+		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		inline explicit CompositorResourcePassVrHiddenAreaMesh(const CompositorTarget& compositorTarget);
+		inline virtual ~CompositorResourcePassVrHiddenAreaMesh();
+		explicit CompositorResourcePassVrHiddenAreaMesh(const CompositorResourcePassVrHiddenAreaMesh&) = delete;
+		CompositorResourcePassVrHiddenAreaMesh& operator=(const CompositorResourcePassVrHiddenAreaMesh&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		const CameraSceneItem*				   mCameraSceneItem;
-		const LightSceneItem*				   mLightSceneItem;
-		const CompositorInstancePassShadowMap* mCompositorInstancePassShadowMap;
-		// Cached "RendererRuntime::RenderQueue" data to reduce the number of state changes across different render queue instances (beneficial for complex compositors with e.g. multiple Gaussian blur passes)
-		mutable MaterialBlueprintResource* mCurrentlyBoundMaterialBlueprintResource;
+		uint32_t mFlags;	///< Combination of "Renderer::ClearFlag", except for color-flag
+		uint32_t mStencil;
 
 
 	};
@@ -104,4 +104,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.inl"
+#include "RendererRuntime/Resource/CompositorNode/Pass/VrHiddenAreaMesh/CompositorResourcePassVrHiddenAreaMesh.inl"

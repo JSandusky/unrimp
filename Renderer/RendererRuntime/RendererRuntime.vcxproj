@@ -86,6 +86,7 @@
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorResourcePassScene.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorInstancePassShadowMap.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.inl" />
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorResourcePassVrHiddenAreaMesh.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorContextData.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceInstance.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceResource.inl" />
@@ -251,6 +252,8 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorResourcePassScene.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorInstancePassShadowMap.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorInstancePassVrHiddenAreaMesh.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorResourcePassVrHiddenAreaMesh.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorContextData.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceInstance.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceResource.h" />
@@ -357,6 +360,11 @@
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_HLSL_D3D9.h" />
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_Null.h" />
+    <ClInclude Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader\VrHiddenAreaMesh_GLSL_410.h" />
+    <ClInclude Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader\VrHiddenAreaMesh_GLSL_ES3.h" />
+    <ClInclude Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader\VrHiddenAreaMesh_HLSL_D3D10_D3D11_D3D12.h" />
+    <ClInclude Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader\VrHiddenAreaMesh_HLSL_D3D9.h" />
+    <ClInclude Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader\VrHiddenAreaMesh_Null.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\External\ImGuizmo\src\ImGuizmo.cpp">
@@ -584,6 +592,8 @@
     <ClCompile Include="src\Resource\CompositorNode\Pass\Scene\CompositorResourcePassScene.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\ShadowMap\CompositorInstancePassShadowMap.cpp" />
     <ClCompile Include="src\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.cpp" />
+    <ClCompile Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorInstancePassVrHiddenAreaMesh.cpp" />
+    <ClCompile Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorResourcePassVrHiddenAreaMesh.cpp" />
     <ClCompile Include="src\Resource\CompositorWorkspace\CompositorWorkspaceInstance.cpp" />
     <ClCompile Include="src\Resource\CompositorWorkspace\CompositorWorkspaceResourceManager.cpp" />
     <ClCompile Include="src\Resource\CompositorWorkspace\Loader\CompositorWorkspaceResourceLoader.cpp" />
