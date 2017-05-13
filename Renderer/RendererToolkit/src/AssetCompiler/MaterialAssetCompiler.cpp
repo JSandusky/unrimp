@@ -112,7 +112,7 @@ namespace RendererToolkit
 		// if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			RendererRuntime::MemoryFile memoryFile;
+			RendererRuntime::MemoryFile memoryFile(0, 1024);
 
 			{ // Material
 				// Parse JSON

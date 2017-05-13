@@ -299,7 +299,7 @@ namespace RendererToolkit
 
 		{ // Write runtime asset package
 			RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = outputAssetPackage.getWritableSortedAssetVector();
-			RendererRuntime::MemoryFile memoryFile;
+			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			// Ensure the asset package is sorted
 			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), ::detail::orderByAssetId);

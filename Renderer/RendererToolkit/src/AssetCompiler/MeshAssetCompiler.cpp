@@ -668,7 +668,7 @@ namespace RendererToolkit
 		CacheManager::CacheEntries cacheEntries;
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Mesh::FORMAT_VERSION, cacheEntries))
 		{
-			RendererRuntime::MemoryFile memoryFile;
+			RendererRuntime::MemoryFile memoryFile(0, 42 * 1024);
 
 			// Setup "mikktspace" by Morten S. Mikkelsen for semi-standard tangent space generation (see e.g. https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps for background information)
 			SMikkTSpaceInterface mikkTSpaceInterface;

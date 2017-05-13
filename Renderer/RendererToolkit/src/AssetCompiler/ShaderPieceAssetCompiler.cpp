@@ -105,7 +105,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1ShaderPiece::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			RendererRuntime::MemoryFile memoryFile;
+			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			{ // Shader piece
 				// Get file size and file data

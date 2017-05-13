@@ -44,6 +44,14 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline MemoryFile::MemoryFile(size_t reserveNumberOfCompressedBytes, size_t reserveNumberOfDecompressedBytes) :
+		mNumberOfDecompressedBytes(0),
+		mCurrentDataPointer(nullptr)
+	{
+		mCompressedData.reserve(reserveNumberOfCompressedBytes);
+		mDecompressedData.reserve(reserveNumberOfDecompressedBytes);
+	}
+
 	inline MemoryFile::~MemoryFile()
 	{
 		// Nothing here

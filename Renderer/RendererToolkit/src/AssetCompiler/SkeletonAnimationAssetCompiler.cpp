@@ -115,7 +115,7 @@ namespace RendererToolkit
 		CacheManager::CacheEntries cacheEntries;
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, cacheEntries))
 		{
-			RendererRuntime::MemoryFile memoryFile;
+			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			// Create an instance of the Assimp importer class
 			Assimp::Importer assimpImporter;
