@@ -37,12 +37,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const glm::vec3 Math::ZERO_VECTOR	(0.0f, 0.0f, 0.0f);
-	const glm::vec3 Math::ONE_VECTOR	(1.0f, 1.0f, 1.0f);
-	const glm::vec3 Math::RIGHT_VECTOR	(1.0f, 0.0f, 0.0f);
-	const glm::vec3 Math::UP_VECTOR		(0.0f, 1.0f, 0.0f);
-	const glm::vec3 Math::FORWARD_VECTOR(0.0f, 0.0f, 1.0f);
-	const glm::mat4 Math::IDENTITY_MATRIX;
+	// "glm::vec3" constants
+	const glm::vec3 Math::VEC3_ZERO		(0.0f, 0.0f, 0.0f);
+	const glm::vec3 Math::VEC3_ONE		(1.0f, 1.0f, 1.0f);
+	const glm::vec3 Math::VEC3_UNIT_X	(1.0f, 0.0f, 0.0f);
+	const glm::vec3 Math::VEC3_RIGHT	(1.0f, 0.0f, 0.0f);
+	const glm::vec3 Math::VEC3_UNIT_Y	(0.0f, 1.0f, 0.0f);
+	const glm::vec3 Math::VEC3_UP		(0.0f, 1.0f, 0.0f);
+	const glm::vec3 Math::VEC3_UNIT_Z	(0.0f, 0.0f, 1.0f);
+	const glm::vec3 Math::VEC3_FORWARD	(0.0f, 0.0f, 1.0f);
+	// "glm::mat4" constants
+	const glm::mat4 Math::MAT4_IDENTITY;
+	// "glm::quat" constants
+	const glm::quat Math::QUAT_IDENTITY(1.0f, 0.0f, 0.0f, 0.0f);
 
 
 	//[-------------------------------------------------------]

@@ -194,9 +194,7 @@
     <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Math\EulerAngles.h" />
     <ClInclude Include="include\RendererRuntime\Core\Math\Math.h" />
-    <ClInclude Include="include\RendererRuntime\Core\Math\Quaternion.h" />
     <ClInclude Include="include\RendererRuntime\Core\Math\Transform.h" />
-    <ClInclude Include="include\RendererRuntime\Core\Math\Vector3.h" />
     <ClInclude Include="include\RendererRuntime\Core\PackedElementManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Platform\PlatformManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Platform\PlatformTypes.h" />
@@ -526,9 +524,7 @@
     <ClCompile Include="src\Core\File\MemoryFile.cpp" />
     <ClCompile Include="src\Core\Math\EulerAngles.cpp" />
     <ClCompile Include="src\Core\Math\Math.cpp" />
-    <ClCompile Include="src\Core\Math\Quaternion.cpp" />
     <ClCompile Include="src\Core\Math\Transform.cpp" />
-    <ClCompile Include="src\Core\Math\Vector3.cpp" />
     <ClCompile Include="src\Core\Platform\PlatformManager.cpp" />
     <ClCompile Include="src\Core\Renderer\FramebufferManager.cpp" />
     <ClCompile Include="src\Core\Renderer\FramebufferSignature.cpp" />

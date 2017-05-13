@@ -235,9 +235,9 @@ namespace
 					assert(sizeof(float) * 4 * 4 == numberOfBytes);
 					const ImGuiIO& imGuiIo = ImGui::GetIO();
 					const glm::quat rotationOffset = RendererRuntime::EulerAngles::eulerToQuaternion(glm::vec3(glm::degrees(0.0f), glm::degrees(180.0f), 0.0f));
-					const glm::mat4 guiScaleMatrix = glm::scale(RendererRuntime::Math::IDENTITY_MATRIX, glm::vec3(1.0f / imGuiIo.DisplaySize.x, 1.0f / imGuiIo.DisplaySize.y, 1.0f));
+					const glm::mat4 guiScaleMatrix = glm::scale(RendererRuntime::Math::MAT4_IDENTITY, glm::vec3(1.0f / imGuiIo.DisplaySize.x, 1.0f / imGuiIo.DisplaySize.y, 1.0f));
 					const glm::mat4& devicePoseMatrix = mVrManagerOpenVR->getDevicePoseMatrix(mVrManagerOpenVRListener->getVrControllerTrackedDeviceIndices(SECOND_CONTROLLER_INDEX));
-					const glm::mat4& cameraPositionMatrix = glm::translate(RendererRuntime::Math::IDENTITY_MATRIX, -mVrController->getCameraSceneItem().getParentSceneNodeSafe().getGlobalTransform().position);
+					const glm::mat4& cameraPositionMatrix = glm::translate(RendererRuntime::Math::MAT4_IDENTITY, -mVrController->getCameraSceneItem().getParentSceneNodeSafe().getGlobalTransform().position);
 					const glm::mat4 objectSpaceToClipSpaceMatrix = getPassData().worldSpaceToClipSpaceMatrix * cameraPositionMatrix * devicePoseMatrix * glm::mat4_cast(rotationOffset) * guiScaleMatrix;
 					memcpy(buffer, glm::value_ptr(objectSpaceToClipSpaceMatrix), numberOfBytes);
 
@@ -369,12 +369,12 @@ void VrController::onUpdate(float pastSecondsSinceLastFrame)
 
 			// Construct ray
 			const glm::vec3& rayOrigin = translation;
-			const glm::vec3 rayDirection = rotation * RendererRuntime::Math::FORWARD_VECTOR;
+			const glm::vec3 rayDirection = rotation * RendererRuntime::Math::VEC3_FORWARD;
 
 			// Simple ray-plane intersection
 			static const float MAXIMUM_TELEPORT_DISTANCE = 10.0f;
 			float distance = 0.0f;
-			if (glm::intersectRayPlane(rayOrigin, rayDirection, RendererRuntime::Math::ZERO_VECTOR, RendererRuntime::Math::UP_VECTOR, distance) && !std::isnan(distance) && distance <= MAXIMUM_TELEPORT_DISTANCE)
+			if (glm::intersectRayPlane(rayOrigin, rayDirection, RendererRuntime::Math::VEC3_ZERO, RendererRuntime::Math::VEC3_UP, distance) && !std::isnan(distance) && distance <= MAXIMUM_TELEPORT_DISTANCE)
 			{
 				mTeleportIndicationLightSceneItem->getParentSceneNode()->setPosition(rayOrigin + rayDirection * distance);
 			}

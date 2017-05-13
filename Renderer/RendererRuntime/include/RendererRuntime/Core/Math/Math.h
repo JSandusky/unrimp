@@ -69,12 +69,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		static const uint32_t FNV1a_INITIAL_HASH = 0xcbf29ce4;
-		RENDERERRUNTIME_API_EXPORT static const glm::vec3 ZERO_VECTOR;		///< 0 0 0
-		RENDERERRUNTIME_API_EXPORT static const glm::vec3 ONE_VECTOR;		///< 1 1 1
-		RENDERERRUNTIME_API_EXPORT static const glm::vec3 RIGHT_VECTOR;		///< 1 0 0
-		RENDERERRUNTIME_API_EXPORT static const glm::vec3 UP_VECTOR;		///< 0 1 0
-		RENDERERRUNTIME_API_EXPORT static const glm::vec3 FORWARD_VECTOR;	///< 0 0 1
-		RENDERERRUNTIME_API_EXPORT static const glm::mat4 IDENTITY_MATRIX;
+		// "glm::vec3" constants
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_ZERO;	///< 0 0 0
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_ONE;		///< 1 1 1
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_UNIT_X;	///< 1 0 0
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_RIGHT;	///< 1 0 0; coordinate system axis terminology, don't remove
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_UNIT_Y;	///< 0 1 0
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_UP;		///< 0 1 0; coordinate system axis terminology, don't remove
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_UNIT_Z;	///< 0 0 1
+		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_FORWARD;	///< 0 0 1; coordinate system axis terminology, don't remove
+		// "glm::mat4" constants
+		RENDERERRUNTIME_API_EXPORT static const glm::mat4 MAT4_IDENTITY;
+		// "glm::quat" constants
+		RENDERERRUNTIME_API_EXPORT static const glm::quat QUAT_IDENTITY;
 
 
 	//[-------------------------------------------------------]

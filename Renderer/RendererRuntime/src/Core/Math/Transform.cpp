@@ -53,7 +53,7 @@ namespace RendererRuntime
 	void Transform::getAsMatrix(glm::mat4& objectSpaceToWorldSpace) const
 	{
 		// TODO(co) Optimize
-		objectSpaceToWorldSpace = glm::translate(Math::IDENTITY_MATRIX, position) * glm::mat4_cast(rotation) * glm::scale(Math::IDENTITY_MATRIX, scale);
+		objectSpaceToWorldSpace = glm::translate(Math::MAT4_IDENTITY, position) * glm::mat4_cast(rotation) * glm::scale(Math::MAT4_IDENTITY, scale);
 	}
 
 	void Transform::setByMatrix(const glm::mat4& objectSpaceToWorldSpace)

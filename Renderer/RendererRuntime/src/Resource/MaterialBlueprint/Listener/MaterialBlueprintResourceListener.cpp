@@ -310,7 +310,7 @@ namespace RendererRuntime
 			// Standard rendering
 
 			// Get world space to view space matrix (Aka "view matrix")
-			mPassData->worldSpaceToViewSpaceMatrix = glm::lookAt(Transform::IDENTITY.position, Transform::IDENTITY.position + Transform::IDENTITY.rotation * Math::FORWARD_VECTOR, Math::UP_VECTOR);
+			mPassData->worldSpaceToViewSpaceMatrix = glm::lookAt(Transform::IDENTITY.position, Transform::IDENTITY.position + Transform::IDENTITY.rotation * Math::VEC3_FORWARD, Math::VEC3_UP);
 
 			// Get view space to clip space matrix (aka "projection matrix")
 			viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_NEAR_Z, CameraSceneItem::DEFAULT_FAR_Z);
@@ -461,13 +461,13 @@ namespace RendererRuntime
 			const LightSceneItem* lightSceneItem = mCompositorContextData->getLightSceneItem();
 			if (nullptr != lightSceneItem && nullptr != lightSceneItem->getParentSceneNode())
 			{
-				worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::FORWARD_VECTOR;
+				worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::VEC3_FORWARD;
 			}
 			else
 			{
 				// Error!
 				assert(false);
-				worldSpaceSunLightDirection = Math::FORWARD_VECTOR;
+				worldSpaceSunLightDirection = Math::VEC3_FORWARD;
 			}
 			const glm::vec3 viewSpaceSunLightDirection = glm::normalize(mPassData->worldSpaceToViewSpaceQuaternion * worldSpaceSunLightDirection);	// Normalize shouldn't be necessary, but last chance here to correct rounding errors before the shader is using the normalized direction vector
 			memcpy(buffer, glm::value_ptr(viewSpaceSunLightDirection), numberOfBytes);

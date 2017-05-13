@@ -79,47 +79,47 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 			}
 
 			// Get the movement vector
-			glm::vec3 movementVector = RendererRuntime::Math::ZERO_VECTOR;
+			glm::vec3 movementVector = RendererRuntime::Math::VEC3_ZERO;
 			{
 				// Move forward = "w"-key
 				if (isKeyPressed(87))
 				{
-					movementVector += transform.rotation * RendererRuntime::Math::FORWARD_VECTOR;
+					movementVector += transform.rotation * RendererRuntime::Math::VEC3_FORWARD;
 				}
 
 				// Strafe left = "a"-key
 				if (isKeyPressed(65))
 				{
-					movementVector -= transform.rotation * RendererRuntime::Math::RIGHT_VECTOR;
+					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_RIGHT;
 				}
 
 				// Move backward = "s"-key
 				if (isKeyPressed(83))
 				{
-					movementVector -= transform.rotation * RendererRuntime::Math::FORWARD_VECTOR;
+					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_FORWARD;
 				}
 
 				// Strafe right = "d"-key
 				if (isKeyPressed(68))
 				{
-					movementVector += transform.rotation * RendererRuntime::Math::RIGHT_VECTOR;
+					movementVector += transform.rotation * RendererRuntime::Math::VEC3_RIGHT;
 				}
 
 				// Strafe up = "page up"-key
 				if (isKeyPressed(33))
 				{
-					movementVector += transform.rotation * RendererRuntime::Math::UP_VECTOR;
+					movementVector += transform.rotation * RendererRuntime::Math::VEC3_UP;
 				}
 
 				// Strafe down = "page down"-key
 				if (isKeyPressed(34))
 				{
-					movementVector -= transform.rotation * RendererRuntime::Math::UP_VECTOR;
+					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_UP;
 				}
 			}
 
 			// Update the camera scene node position
-			if (movementVector != RendererRuntime::Math::ZERO_VECTOR)
+			if (movementVector != RendererRuntime::Math::VEC3_ZERO)
 			{
 				sceneNode->setPosition(transform.position + movementVector * movementSpeed);
 			}

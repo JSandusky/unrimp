@@ -51,7 +51,7 @@ namespace RendererRuntime
 
 		if (nullptr != mFramebufferPtr && nullptr != cameraSceneItem && cameraSceneItem->getParentSceneNode() && nullptr != lightSceneItem && lightSceneItem->getParentSceneNode())
 		{
-			const glm::vec3 worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::FORWARD_VECTOR;
+			const glm::vec3 worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::VEC3_FORWARD;
 
 			// Begin debug event
 			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
