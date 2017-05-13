@@ -148,6 +148,13 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		static void outputAsset(const std::string& assetIdAsString, const std::string& outputAssetFilename, RendererRuntime::AssetPackage& outputAssetPackage);
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
 	public:

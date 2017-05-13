@@ -53,6 +53,10 @@ if(UNIX)
 	add_definitions(-DRENDERER_NO_DIRECT3D9 -DRENDERER_NO_DIRECT3D10 -DRENDERER_NO_DIRECT3D11 -DRENDERER_NO_DIRECT3D12)
 endif()
 
+if (Boost_FILESYSTEM_FOUND)
+	add_definitions(-DUNRIMP_USE_BOOST_FILESYSTEM)
+endif()
+
 
 ##################################################
 ## Includes
@@ -166,6 +170,12 @@ if(STATIC_LIBRARY)
 			TARGET_LINK_LIBRARIES(ExamplesStatic ${QT_LIBRARIES})
 		endif()
 		TARGET_LINK_LIBRARIES(ExamplesStatic dl)
+
+		if (HAVE_CXX_FILESYSTEM_TS_SUPPORT)
+			TARGET_LINK_LIBRARIES(ExamplesStatic stdc++fs)
+		elseif(Boost_FILESYSTEM_FOUND)
+			TARGET_LINK_LIBRARIES(ExamplesStatic Boost::filesystem)
+		endif()
 	endif()
 
 	set(LIBRARIES NullRendererStatic)
@@ -225,6 +235,14 @@ if(SHARED_LIBRARY)
 		add_executable(Examples WIN32 ${SOURCE_CODES})
 	else()
 		add_executable(Examples ${SOURCE_CODES})
+
+		target_link_libraries(Examples X11 dl)
+
+		if (HAVE_CXX_FILESYSTEM_TS_SUPPORT)
+			TARGET_LINK_LIBRARIES(ExamplesStatic stdc++fs)
+		elseif(Boost_FILESYSTEM_FOUND)
+			TARGET_LINK_LIBRARIES(ExamplesStatic Boost::filesystem)
+		endif()
 	endif()
 	if(RENDERER_RUNTIME)
 		if(WIN32)
@@ -237,7 +255,7 @@ if(SHARED_LIBRARY)
 		TARGET_LINK_LIBRARIES(Examples ${QT_LIBRARIES})
 	endif()
 	set_target_properties(Examples PROPERTIES COMPILE_FLAGS -DSHARED_LIBRARIES)
-	target_link_libraries(Examples X11 dl)
+
 	add_dependencies(Examples Renderer)
 endif()
 

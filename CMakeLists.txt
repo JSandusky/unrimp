@@ -177,26 +177,24 @@ endif()
 include(CheckIncludeFileCXX)
 CHECK_INCLUDE_FILE_CXX("filesystem" HAVE_CXX17_FILESYSTEM)
 CHECK_INCLUDE_FILE_CXX("experimental/filesystem" HAVE_CXX1z_FILESYSTEM)
-if(RENDERER_TOOLKIT AND NOT HAVE_CXX17_FILESYSTEM AND NOT HAVE_CXX1z_FILESYSTEM)
-	message(FATAL_ERROR "Renderer toolkit needs C++ filesystem TS support but the compiler ${CMAKE_CXX_COMPILER} doesn't support C++ filesystem TS. Please use a different C++ compiler.")
+
+if(RENDERER_TOOLKIT OR EXAMPLES)
+	if (NOT HAVE_CXX17_FILESYSTEM AND NOT HAVE_CXX1z_FILESYSTEM)
+		FIND_PACKAGE(Boost COMPONENTS "filesystem")
+		if (Boost_FILESYSTEM_FOUND)
+			message(STATUS "Using boost filesystem as C++ filesystem TS replacement")
+		else()
+			message(FATAL_ERROR "Renderer toolkit and/or Examples needs C++ filesystem TS support but the compiler ${CMAKE_CXX_COMPILER} doesn't support C++ filesystem TS. Please use a different C++ compiler.")
+		endif()
+	else()
+		set(HAVE_CXX_FILESYSTEM_TS_SUPPORT "ON")
+	endif()
 endif()
 
 # Enable visibility hidden support (with gcc/clang this would be -fvisibility=hidden)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 # Enable inline visibility hidden support (with gcc/clang this would be -fvisibility-inlines-hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
-
-# Check for visibility support: -fvisibility=hidden -fvisibility-inlines-hidden
-# check_cxx_compiler_flag(-fvisibility=hidden GXX_HAS_VISIBILITY_FLAG)
-# check_cxx_compiler_flag(-fvisibility-inlines-hidden GXX_HAS_VISIBILITY_INLINES_FLAG)
-
-# if(GXX_HAS_VISIBILITY_FLAG AND NOT APPLE)
-# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-# endif()
-# 
-# if(GXX_HAS_VISIBILITY_INLINES_FLAG AND NOT APPLE)
-# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
-# endif()
 
 # At first we treat UNIX = Linux
 if(UNIX)
