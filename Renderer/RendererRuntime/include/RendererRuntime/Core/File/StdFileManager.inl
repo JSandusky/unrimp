@@ -52,7 +52,6 @@
 	#else
 		namespace std_filesystem = std::experimental::filesystem;
 	#endif
-	
 #endif
 
 

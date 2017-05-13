@@ -251,9 +251,7 @@ namespace RendererToolkit
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/SkeletonAnimation/" + assetCategory + '/' + assetName;
-
-			// Output asset
-			IAssetCompiler::outputAsset(assetIdAsString, outputAssetFilename, outputAssetPackage);
+			outputAsset(assetIdAsString, outputAssetFilename, outputAssetPackage);
 		}
 	}
 
