@@ -52,7 +52,7 @@ namespace RendererRuntime
 	*    http://www.graphicsgems.org/gemsiv/euler_angle/
 	*
 	*  @note
-	*    - GLM has Euler angles functions as well, but sadly those didn't match the required feature set
+	*    - GLM has Euler angles functions as well, but sadly those didn't match the required feature set; topic discussed here: https://github.com/g-truc/glm/issues/569
 	*    - Class originally comes from the PixelLight engine ( https://github.com/PixelLightFoundation/pixellight )
 	*    - In Unrimp we use the "YXZr" order as default:
 	*       1.) "yaw" represents a rotation around the Y-axis (= up vector)
