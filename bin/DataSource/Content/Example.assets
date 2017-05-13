@@ -178,6 +178,7 @@
 		"170": "Material/Imrod/TransparentImrod.asset",
 		"171": "ShaderBlueprint/Scene/TransparentMeshFragment.asset",
 		"172": "CompositorNode/Vr.asset",
-		"173": "CompositorWorkspace/Vr.asset"
+		"173": "CompositorWorkspace/Vr.asset",
+		"174": "Texture/Sponza/vase_spec.asset"
 	}
 }

@@ -18,7 +18,8 @@
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "ROUGHNESS_MAP",
-			"InputFile": "sponza_arch_spec.tga"
+			"InputFile": "sponza_arch_spec.tga",
+			"NormalMapInputFile": "sponza_arch_ddn.tga"
 		}
 	}
 }

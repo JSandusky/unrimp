@@ -18,7 +18,8 @@
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "ROUGHNESS_MAP",
-			"InputFile": "ImrodRoughnessMap.tga"
+			"InputFile": "ImrodRoughnessMap.tga",
+			"NormalMapInputFile": "ImrodNormalMap.tga"
 		}
 	}
 }

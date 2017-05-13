@@ -29,7 +29,14 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 
-#include <glm/detail/setup.hpp>	// For "glm::countof()"
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+	#include <glm/glm.hpp>
+	#include <glm/gtc/constants.hpp>
+PRAGMA_WARNING_POP
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -59,6 +66,106 @@ PRAGMA_WARNING_POP
 //[-------------------------------------------------------]
 namespace
 {
+	// Create Toksvig specular anti-aliasing to reduce shimmering
+	// -> Basing on "Specular Showdown in the Wild West" by Stephen Hill - http://blog.selfshadow.com/2011/07/22/specular-showdown/ - http://www.selfshadow.com/sandbox/toksvig.html
+	namespace toksvig
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		// Fixed build in values by intent: Don't provide the artists with too many opportunities to introduce editing problems and break consistency
+		static const float POWER = 100.0f;	///< Power {label:"Glossiness", default:100, min:0, max:256, step:1}
+		static const float SIGMA = 0.5f;	///< Sigma {label:"Filter width", default:0.5, step:0.02}
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		float gaussianWeight(const glm::vec2& offset)
+		{
+			const float v = 2.0f * SIGMA * SIGMA;
+			return exp(-glm::dot(offset, offset) / v) / (glm::pi<float>() * v);
+		}
+
+		glm::vec4 fetch(crnlib::image_u8& normalMapCrunchImage, const glm::vec2& position, const glm::vec2& offset)
+		{
+			const crnlib::color_quad_u8& crunchColor = normalMapCrunchImage.get_clamped(static_cast<int>(position.x + offset.x), static_cast<int>(position.y + offset.y));
+			const glm::vec3 n((crunchColor.r / 255.0f) * 2.0f - 1.0f, (crunchColor.g / 255.0f) * 2.0f - 1.0f, (crunchColor.b / 255.0f) * 2.0f - 1.0f);
+			return glm::vec4(glm::normalize(n), 1.0f) * gaussianWeight(offset);
+		}
+
+		float calculateToksvig(crnlib::image_u8& normalMapCrunchImage, const glm::vec2& position, float power)
+		{
+			glm::vec4 n;
+
+			// 3x3 filter
+			n  = fetch(normalMapCrunchImage, position, glm::vec2(-1.0f, -1.0f));
+			n += fetch(normalMapCrunchImage, position, glm::vec2( 0.0f, -1.0f));
+			n += fetch(normalMapCrunchImage, position, glm::vec2( 1.0f, -1.0f));
+
+			n += fetch(normalMapCrunchImage, position, glm::vec2(-1.0f,  0.0f));
+			n += fetch(normalMapCrunchImage, position, glm::vec2( 0.0f,  0.0f));
+			n += fetch(normalMapCrunchImage, position, glm::vec2( 1.0f,  0.0f));
+
+			n += fetch(normalMapCrunchImage, position, glm::vec2(-1.0f,  1.0f));
+			n += fetch(normalMapCrunchImage, position, glm::vec2( 0.0f,  1.0f));
+			n += fetch(normalMapCrunchImage, position, glm::vec2( 1.0f,  1.0f));
+
+			// Divide by weight sum
+			n.x /= n.w;
+			n.y /= n.w;
+			n.z /= n.w;
+
+			// Toksvig factor
+			const float length = glm::length(glm::vec3(n));
+			return length / glm::mix(power, 1.0f, length);
+		}
+
+		void createToksvigRoughnessMap(const crnlib::mip_level& normalMapCrunchMipLevel, crnlib::mip_level& toksvigCrunchMipLevel)
+		{
+			const crnlib::uint width = normalMapCrunchMipLevel.get_width();
+			const crnlib::uint height = normalMapCrunchMipLevel.get_height();
+			crnlib::image_u8* normalMapCrunchImage = normalMapCrunchMipLevel.get_image();
+			crnlib::image_u8* crunchImage = toksvigCrunchMipLevel.get_image();
+			for (crnlib::uint y = 0; y < height; ++y)
+			{
+				for (crnlib::uint x = 0; x < width; ++x)
+				{
+					// Toksvig: Areas in the original normal map that were flat are white (glossy), whereas noisy, bumpy sections are darker
+					const float toksvig = glm::clamp(calculateToksvig(*normalMapCrunchImage, glm::vec2(x, y), POWER), 0.0f, 1.0f);
+
+					// Roughness = 1 - glossiness
+					(*crunchImage)(x, y) = static_cast<crnlib::uint8>((1.0f - toksvig) * 255.0f);
+				}
+			}
+		}
+
+		void compositeToksvigRoughnessMap(const crnlib::mip_level& roughnessMapCrunchMipLevel, const crnlib::mip_level& normalMapCrunchMipLevel, crnlib::mip_level& crunchMipLevel)
+		{
+			const crnlib::uint width = normalMapCrunchMipLevel.get_width();
+			const crnlib::uint height = normalMapCrunchMipLevel.get_height();
+			crnlib::image_u8* roughnessMapCrunchImage = roughnessMapCrunchMipLevel.get_image();
+			crnlib::image_u8* normalMapCrunchImage = normalMapCrunchMipLevel.get_image();
+			crnlib::image_u8* crunchImage = crunchMipLevel.get_image();
+			for (crnlib::uint y = 0; y < height; ++y)
+			{
+				for (crnlib::uint x = 0; x < width; ++x)
+				{
+					// Toksvig: Areas in the original normal map that were flat are white (glossy), whereas noisy, bumpy sections are darker
+					const float toksvig = glm::clamp(calculateToksvig(*normalMapCrunchImage, glm::vec2(x, y), POWER), 0.0f, 1.0f);
+
+					// Roughness = 1 - glossiness
+					const float originalGlossiness = 1.0f - ((*roughnessMapCrunchImage)(x, y).r / 255.0f);
+					(*crunchImage)(x, y).r = 255 - static_cast<crnlib::uint8>(originalGlossiness * toksvig * 255.0f);
+				}
+			}
+		}
+
+
+	} // toksvig
+
 	namespace detail
 	{
 
@@ -209,73 +316,129 @@ namespace
 			}
 		}
 
-		void convertFile(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* sourceFilename, const char* destinationFilename, crnlib::texture_file_types::format outputCrunchTextureFileType, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness)
+		void loadCubeCrunchMipmappedTexture(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, crnlib::mipmapped_texture& crunchMipmappedTexture)
 		{
-			crnlib::texture_conversion::convert_params crunchConvertParams;
-
-			crnlib::mipmapped_texture crunchMipmappedTexture;
-			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
+			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
+			const std::array<std::string, 6> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, basePath);
+			for (size_t faceIndex = 0; faceIndex < faceFilenames.size(); ++faceIndex)
 			{
-				// The face order must be: +X, -X, -Y, +Y, +Z, -Z
-				const std::array<std::string, 6> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, sourceFilename);
-				for (size_t faceIndex = 0; faceIndex < faceFilenames.size(); ++faceIndex)
+				// Load the 2D source image
+				crnlib::image_u8* source2DImage = crnlib::crnlib_new<crnlib::image_u8>();
+				const std::string& inputFile = faceFilenames[faceIndex];
+				if (!crnlib::image_utils::read_from_file(*source2DImage, inputFile.c_str()))
 				{
-					// Load the 2D source image
-					crnlib::image_u8* source2DImage = crnlib::crnlib_new<crnlib::image_u8>();
-					const std::string& inputFile = faceFilenames[faceIndex];
-					if (!crnlib::image_utils::read_from_file(*source2DImage, inputFile.c_str()))
-					{
-						throw std::runtime_error(std::string("Failed to load image \"") + inputFile + '\"');
-					}
+					throw std::runtime_error(std::string("Failed to load image \"") + inputFile + '\"');
+				}
 
-					// Sanity check
-					const uint32_t width = source2DImage->get_width();
-					if (width != source2DImage->get_height())
-					{
-						throw std::runtime_error("Cube map faces must have a width which is identical to the height");
-					}
-					
-					// Process 2D source image
-					const crnlib::pixel_format pixelFormat = source2DImage->has_alpha() ? crnlib::PIXEL_FMT_A8R8G8B8 : crnlib::PIXEL_FMT_R8G8B8;
-					if (0 == faceIndex)
-					{
-						crunchMipmappedTexture.init(width, width, 1, 6, pixelFormat, "", crnlib::cDefaultOrientationFlags);
-					}
-					else if (crunchMipmappedTexture.get_format() != pixelFormat)
-					{
-						throw std::runtime_error("The pixel format of all cube map faces must be identical");
-					}
-					else if (crunchMipmappedTexture.get_width() != source2DImage->get_width())
-					{
-						throw std::runtime_error("The size of all cube map faces must be identical");
-					}
-					crunchMipmappedTexture.get_level(faceIndex, 0)->assign(source2DImage);
+				// Sanity check
+				const uint32_t width = source2DImage->get_width();
+				if (width != source2DImage->get_height())
+				{
+					throw std::runtime_error("Cube map faces must have a width which is identical to the height");
+				}
+
+				// Process 2D source image
+				const crnlib::pixel_format pixelFormat = source2DImage->has_alpha() ? crnlib::PIXEL_FMT_A8R8G8B8 : crnlib::PIXEL_FMT_R8G8B8;
+				if (0 == faceIndex)
+				{
+					crunchMipmappedTexture.init(width, width, 1, 6, pixelFormat, "", crnlib::cDefaultOrientationFlags);
+				}
+				else if (crunchMipmappedTexture.get_format() != pixelFormat)
+				{
+					throw std::runtime_error("The pixel format of all cube map faces must be identical");
+				}
+				else if (crunchMipmappedTexture.get_width() != source2DImage->get_width())
+				{
+					throw std::runtime_error("The size of all cube map faces must be identical");
+				}
+				crunchMipmappedTexture.get_level(faceIndex, 0)->assign(source2DImage);
+			}
+		}
+
+		void load2DCrunchMipmappedTextureInternal(const char* sourceFilename, crnlib::mipmapped_texture& crunchMipmappedTexture)
+		{
+			crnlib::texture_file_types::format crunchSourceFileFormat = crnlib::texture_file_types::determine_file_format(sourceFilename);
+			if (crunchSourceFileFormat == crnlib::texture_file_types::cFormatInvalid)
+			{
+				throw std::runtime_error("Unrecognized file type \"" + std::string(sourceFilename) + '\"');
+			}
+			if (!crunchMipmappedTexture.read_from_file(sourceFilename, crunchSourceFileFormat))
+			{
+				if (crunchMipmappedTexture.get_last_error().is_empty())
+				{
+					throw std::runtime_error("Failed reading source file \"" + std::string(sourceFilename) + '\"');
+				}
+				else
+				{
+					throw std::runtime_error(crunchMipmappedTexture.get_last_error().get_ptr());
 				}
 			}
-			else
+		}
+
+		void load2DCrunchMipmappedTexture(const char* sourceFilename, const char* sourceNormalMapFilename, crnlib::mipmapped_texture& crunchMipmappedTexture, crnlib::texture_conversion::convert_params& crunchConvertParams)
+		{
+			// Load, generate or compose mipmapped Crunch texture
+			if (nullptr != sourceFilename && nullptr == sourceNormalMapFilename)
 			{
-				crnlib::texture_file_types::format crunchSourceFileFormat = crnlib::texture_file_types::determine_file_format(sourceFilename);
-				if (crunchSourceFileFormat == crnlib::texture_file_types::cFormatInvalid)
-				{
-					throw std::runtime_error("Unrecognized file type \"" + std::string(sourceFilename) + '\"');
-				}
+				// Just load source texture
+				load2DCrunchMipmappedTextureInternal(sourceFilename, crunchMipmappedTexture);
 
-				if (!crunchMipmappedTexture.read_from_file(sourceFilename, crunchSourceFileFormat))
-				{
-					if (crunchMipmappedTexture.get_last_error().is_empty())
-					{
-						throw std::runtime_error("Failed reading source file \"" + std::string(sourceFilename) + '\"');
-					}
-					else
-					{
-						throw std::runtime_error(crunchMipmappedTexture.get_last_error().get_ptr());
-					}
-				}
-
-				if (crnlib::texture_file_types::supports_mipmaps(crunchSourceFileFormat))
+				// Use source texture mipmaps?
+				if (crnlib::texture_file_types::supports_mipmaps(crnlib::texture_file_types::determine_file_format(sourceFilename)))
 				{
 					crunchConvertParams.m_mipmap_params.m_mode = cCRNMipModeUseSourceMips;
 				}
+			}
+			else if (nullptr == sourceFilename && nullptr != sourceNormalMapFilename)
+			{
+				// Just generate a roughness map using a given normal map using Toksvig specular anti-aliasing to reduce shimmering
+
+				// Load normal map texture
+				crnlib::mipmapped_texture normalMapCrunchMipmappedTexture;
+				load2DCrunchMipmappedTextureInternal(sourceNormalMapFilename, normalMapCrunchMipmappedTexture);
+
+				// Create Toksvig specular anti-aliasing to reduce shimmering
+				crunchMipmappedTexture.init(normalMapCrunchMipmappedTexture.get_width(), normalMapCrunchMipmappedTexture.get_height(), 1, 1, crnlib::PIXEL_FMT_L8, "Toksvig", crnlib::cDefaultOrientationFlags);
+				::toksvig::createToksvigRoughnessMap(*normalMapCrunchMipmappedTexture.get_level(0, 0), *crunchMipmappedTexture.get_level(0, 0));
+			}
+			else
+			{
+				// Compose mipmapped Crunch texture
+
+				// Load roughness map
+				crnlib::mipmapped_texture roughnessMapCrunchMipmappedTexture;
+				load2DCrunchMipmappedTextureInternal(sourceFilename, roughnessMapCrunchMipmappedTexture);
+
+				// Load normal map
+				crnlib::mipmapped_texture normalMapCrunchMipmappedTexture;
+				load2DCrunchMipmappedTextureInternal(sourceNormalMapFilename, normalMapCrunchMipmappedTexture);
+
+				// Sanity check
+				if (roughnessMapCrunchMipmappedTexture.get_width() != normalMapCrunchMipmappedTexture.get_width() ||
+					roughnessMapCrunchMipmappedTexture.get_height() != normalMapCrunchMipmappedTexture.get_height())
+				{
+					throw std::runtime_error("Roughness map and normal map must have the same dimension");
+				}
+
+				// Create Toksvig specular anti-aliasing to reduce shimmering
+				crunchMipmappedTexture.init(normalMapCrunchMipmappedTexture.get_width(), normalMapCrunchMipmappedTexture.get_height(), 1, 1, crnlib::PIXEL_FMT_L8, "Toksvig", crnlib::cDefaultOrientationFlags);
+				::toksvig::compositeToksvigRoughnessMap(*roughnessMapCrunchMipmappedTexture.get_level(0, 0), *normalMapCrunchMipmappedTexture.get_level(0, 0), *crunchMipmappedTexture.get_level(0, 0));
+			}
+		}
+
+		void convertFile(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceFilename, const char* destinationFilename, crnlib::texture_file_types::format outputCrunchTextureFileType, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness, const char* sourceNormalMapFilename)
+		{
+			crnlib::texture_conversion::convert_params crunchConvertParams;
+
+			// Load mipmapped Crunch texture
+			crnlib::mipmapped_texture crunchMipmappedTexture;
+			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
+			{
+				loadCubeCrunchMipmappedTexture(rapidJsonValueTextureAssetCompiler, basePath, crunchMipmappedTexture);
+			}
+			else
+			{
+				load2DCrunchMipmappedTexture(sourceFilename, sourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
 			}
 
 			crunchConvertParams.m_texture_type = crunchMipmappedTexture.determine_texture_type();
@@ -563,6 +726,7 @@ namespace RendererToolkit
 		::detail::TextureSemantic textureSemantic = ::detail::TextureSemantic::UNKNOWN;
 		bool createMipmaps = true;
 		float mipmapBlurriness = 0.9f;	// Scale filter kernel, >1=blur, <1=sharpen, .01-8, default=.9, Crunch default "blurriness" factor of 0.9 actually sharpens the output a little
+		std::string normalMapInputFile;
 		const rapidjson::Value& rapidJsonValueTextureAssetCompiler = rapidJsonValueAsset["TextureAssetCompiler"];
 		{
 			::detail::optionalTextureSemanticProperty(rapidJsonValueTextureAssetCompiler, "TextureSemantic", textureSemantic);
@@ -576,6 +740,10 @@ namespace RendererToolkit
 			}
 			JsonHelper::optionalBooleanProperty(rapidJsonValueTextureAssetCompiler, "CreateMipmaps", createMipmaps);
 			JsonHelper::optionalFloatProperty(rapidJsonValueTextureAssetCompiler, "MipmapBlurriness", mipmapBlurriness);
+			if (rapidJsonValueTextureAssetCompiler.HasMember("NormalMapInputFile"))
+			{
+				normalMapInputFile = rapidJsonValueTextureAssetCompiler["NormalMapInputFile"].GetString();
+			}
 
 			// Texture semantic overrules manual settings
 			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
@@ -584,15 +752,33 @@ namespace RendererToolkit
 				createMipmaps = false;
 			}
 		}
+		const std::string inputAssetFilename = assetInputDirectory + inputFile;
+		const std::string normalMapAssetFilename = assetInputDirectory + normalMapInputFile;
+		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 
 		// Sanity checks
-		if (::detail::TextureSemantic::REFLECTION_CUBE_MAP != textureSemantic && inputFile.empty())
+		if (inputFile.empty())
 		{
-			throw std::runtime_error("Input file must be defined");
+			bool throwException = true;
+			if (::detail::TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
+			{
+				// Reflection cube maps don't have a single input file, they're composed of six input files
+				throwException = false;
+			}
+			else if (::detail::TextureSemantic::ROUGHNESS_MAP == textureSemantic)
+			{
+				// If a normal map input file is provided roughness maps can be calculated automatically using Toksvig specular anti-aliasing to reduce shimmering, in this case a input file is optional
+				throwException = normalMapInputFile.empty();
+			}
+			if (throwException)
+			{
+				throw std::runtime_error("Input file must be defined");
+			}
 		}
-
-		const std::string inputAssetFilename = assetInputDirectory + inputFile;
-		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
+		if (::detail::TextureSemantic::ROUGHNESS_MAP != textureSemantic && !normalMapInputFile.empty())
+		{
+			throw std::runtime_error("Providing a normal map is only valid for roughness maps");
+		}
 
 		// Get output related settings
 		std::string outputAssetFilename;
@@ -641,7 +827,7 @@ namespace RendererToolkit
 			}
 			else
 			{
-				detail::convertFile(configuration, rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), outputAssetFilename.c_str(), crunchOutputTextureFileType, textureSemantic, createMipmaps, mipmapBlurriness);
+				detail::convertFile(configuration, rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), inputFile.empty() ? nullptr : inputAssetFilename.c_str(), outputAssetFilename.c_str(), crunchOutputTextureFileType, textureSemantic, createMipmaps, mipmapBlurriness, normalMapInputFile.empty() ? nullptr : normalMapAssetFilename.c_str());
 			}
 
 			// Store new cache entries or update existing ones

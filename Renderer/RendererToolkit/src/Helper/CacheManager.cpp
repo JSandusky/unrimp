@@ -167,28 +167,27 @@ namespace RendererToolkit
 		const bool sourceExists = (std_filesystem::exists(sourceFilePath) && std_filesystem::is_regular_file(sourceFilePath));
 		const bool destinationExists = std_filesystem::exists(destinationFilePath);
 
-		if (sourceExists)
-		{
-			// Source exists
-			// -> Check if source has changed
-			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, cacheEntries.cacheEntry);
+		// There are assets without source assets
+		// -> For example: Roughness maps can be calculated automatically using Toksvig specular anti-aliasing to reduce shimmering using a given normal map // TODO(co) Handling of derived assets: In fact this is a source asset, cube maps are similar, we need an universal cache handling strategy for such assets
+		// -> Check if source has changed
+		const bool fileChanged = sourceExists ? checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, cacheEntries.cacheEntry) : false;
 
-			// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
-			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION, cacheEntries.assetCacheEntry);
+		// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
+		const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION, cacheEntries.assetCacheEntry);
 
-			// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
-			return (fileChanged || assetFileChanged || !destinationExists);
-		}
-		else
-		{
-			// Source could not be found, nothing to do
-			return false;
-		}
+		// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
+		return (fileChanged || assetFileChanged || !destinationExists);
 	}
 
 	void CacheManager::storeOrUpdateCacheEntriesInDatabase(const CacheEntries& cacheEntries)
 	{
-		storeOrUpdateCacheEntryInDatabase(cacheEntries.cacheEntry);
+		// There are assets without source assets
+		if (cacheEntries.cacheEntry.isValid())
+		{
+			storeOrUpdateCacheEntryInDatabase(cacheEntries.cacheEntry);
+		}
+
+		// There must always be an asset metadata file
 		storeOrUpdateCacheEntryInDatabase(cacheEntries.assetCacheEntry);
 	}
 

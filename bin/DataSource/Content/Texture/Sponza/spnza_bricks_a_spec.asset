@@ -18,7 +18,8 @@
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "ROUGHNESS_MAP",
-			"InputFile": "spnza_bricks_a_spec.tga"
+			"InputFile": "spnza_bricks_a_spec.tga",
+			"NormalMapInputFile": "spnza_bricks_a_ddn.tga"
 		}
 	}
 }

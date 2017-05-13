@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <RendererRuntime/Core/StringId.h>
+#include <RendererRuntime/Core/GetUninitialized.h>
 
 #include <string>
 #include <memory> // For std::unique_ptr
@@ -93,12 +94,17 @@ namespace RendererToolkit
 			int64_t					  fileTime;			///< The file time (last write time); SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
 			uint32_t				  compilerVersion;	///< Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
 
-			CacheEntry() :
+			inline CacheEntry() :
 				isNewEntry(false),
 				fileSize(0),
 				fileTime(0),
 				compilerVersion(0)
 			{}
+
+			inline bool isValid() const
+			{
+				return (RendererRuntime::isInitialized(fileId) && !rendererTarget.empty() && !fileHash.empty() && 0 != fileSize && 0 != fileTime);
+			};
 
 		};
 

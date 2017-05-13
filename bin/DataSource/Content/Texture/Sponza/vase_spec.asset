@@ -1,0 +1,22 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "174",
+			"AssetType": "Texture",
+			"AssetCategory": "Scene",
+			"AssetName": "vase_spec"
+		},
+		"TextureAssetCompiler":
+		{
+			"TextureSemantic": "ROUGHNESS_MAP",
+			"NormalMapInputFile": "vase_ddn.tga"
+		}
+	}
+}
