@@ -779,6 +779,7 @@ namespace RendererToolkit
 		{
 			throw std::runtime_error("Providing a normal map is only valid for roughness maps");
 		}
+		// TODO(co) Need a log for this: Quality warning in case it's a roughness map but no normal map is provided. No error, but chances are high that there will be nasty visible specular aliasing issues.
 
 		// Get output related settings
 		std::string outputAssetFilename;
