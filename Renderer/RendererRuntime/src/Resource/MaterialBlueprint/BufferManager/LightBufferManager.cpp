@@ -150,7 +150,7 @@ namespace RendererRuntime
 						LightSceneItem::PackedShaderData& packedShaderData = lightSceneItem->mPackedShaderData;
 						const Transform& transform = sceneNode->getGlobalTransform();
 						packedShaderData.position  = transform.position;
-						packedShaderData.direction = transform.rotation * Math::FORWARD_VECTOR;
+						packedShaderData.direction = transform.rotation * Math::VEC3_FORWARD;
 
 						// Copy the light data into the texture scratch buffer
 						memcpy(scratchBufferPointer, &packedShaderData, sizeof(LightSceneItem::PackedShaderData));

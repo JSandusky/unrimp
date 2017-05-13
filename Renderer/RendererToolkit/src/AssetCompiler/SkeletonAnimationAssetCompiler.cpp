@@ -115,7 +115,7 @@ namespace RendererToolkit
 		CacheManager::CacheEntries cacheEntries;
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, cacheEntries))
 		{
-			RendererRuntime::MemoryFile memoryFile;
+			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			// Create an instance of the Assimp importer class
 			Assimp::Importer assimpImporter;
@@ -251,9 +251,7 @@ namespace RendererToolkit
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/SkeletonAnimation/" + assetCategory + '/' + assetName;
-
-			// Output asset
-			IAssetCompiler::outputAsset(assetIdAsString, outputAssetFilename, outputAssetPackage);
+			outputAsset(assetIdAsString, outputAssetFilename, outputAssetPackage);
 		}
 	}
 

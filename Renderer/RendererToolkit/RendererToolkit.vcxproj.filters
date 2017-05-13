@@ -277,5 +277,8 @@
     <ClCompile Include="..\..\External\mikktspace\src\mikktspace.c">
       <Filter>External\mikktspace</Filter>
     </ClCompile>
+    <ClCompile Include="src\AssetCompiler\IAssetCompiler.cpp">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

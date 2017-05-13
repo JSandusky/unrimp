@@ -41,16 +41,13 @@ namespace RendererToolkit
 	{
 		RendererRuntime::Asset outputAsset;
 		outputAsset.assetId = StringHelper::getAssetIdByString(assetIdAsString.c_str());
-
 		if (outputAssetFilename.size() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
 		{
-			throw std::runtime_error("Output Asset filename \"" + outputAssetFilename + "\" exceeds length limit of " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH));
+			throw std::runtime_error("The output asset filename \"" + outputAssetFilename + "\" exceeds the length limit of " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH));
 		}
-
 		strcpy(outputAsset.assetFilename, outputAssetFilename.c_str());
 		outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 	}
-
 
 
 //[-------------------------------------------------------]

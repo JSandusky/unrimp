@@ -215,7 +215,7 @@ namespace RendererRuntime
 
 			// Build a transformation matrix from it
 			// TODO(co) Review temporary matrix instances on the C-runtime stack
-			mTransformMatrices[i] = glm::translate(Math::IDENTITY_MATRIX, presentPosition) * glm::toMat4(presentRotation) * glm::scale(Math::IDENTITY_MATRIX, presentScale);
+			mTransformMatrices[i] = glm::translate(Math::MAT4_IDENTITY, presentPosition) * glm::toMat4(presentRotation) * glm::scale(Math::MAT4_IDENTITY, presentScale);
 		}
 
 		mLastTimeInTicks = timeInTicks;

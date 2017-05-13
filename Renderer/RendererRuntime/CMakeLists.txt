@@ -67,9 +67,7 @@ set(SOURCE_CODES
 	src/Backend/RendererRuntimeImpl.cpp
 	src/Core/Math/Math.cpp
 	src/Core/Math/EulerAngles.cpp
-	src/Core/Math/Quaternion.cpp
 	src/Core/Math/Transform.cpp
-	src/Core/Math/Vector3.cpp
 	src/Core/Platform/PlatformManager.cpp
 	src/Core/File/MemoryFile.cpp
 	src/Core/Time/TimeManager.cpp

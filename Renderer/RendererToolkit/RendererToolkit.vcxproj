@@ -192,6 +192,7 @@
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\CompositorNodeAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\CompositorWorkspaceAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetCompiler\IAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MaterialAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MaterialBlueprintAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp" />

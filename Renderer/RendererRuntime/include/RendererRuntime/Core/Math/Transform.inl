@@ -29,17 +29,17 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline Transform::Transform() :
-		position(Vector3::ZERO),
-		rotation(Quaternion::IDENTITY),
-		scale(Vector3::UNIT_XYZ)
+		position(Math::VEC3_ZERO),
+		rotation(Math::QUAT_IDENTITY),
+		scale(Math::VEC3_ONE)
 	{
 		// Nothing here
 	}
 
 	inline Transform::Transform(const glm::vec3& _position) :
 		position(_position),
-		rotation(Quaternion::IDENTITY),
-		scale(Vector3::UNIT_XYZ)
+		rotation(Math::QUAT_IDENTITY),
+		scale(Math::VEC3_ONE)
 	{
 		// Nothing here
 	}
@@ -52,7 +52,7 @@ namespace RendererRuntime
 	inline Transform::Transform(const glm::vec3& _position, const glm::quat& _rotation) :
 		position(_position),
 		rotation(_rotation),
-		scale(Vector3::UNIT_XYZ)
+		scale(Math::VEC3_ONE)
 	{
 		// Nothing here
 	}

@@ -18,7 +18,8 @@
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "ROUGHNESS_MAP",
-			"InputFile": "sponza_column_b_spec.tga"
+			"InputFile": "sponza_column_b_spec.tga",
+			"NormalMapInputFile": "sponza_column_b_ddn.tga"
 		}
 	}
 }

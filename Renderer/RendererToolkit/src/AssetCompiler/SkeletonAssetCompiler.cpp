@@ -105,7 +105,7 @@ namespace RendererToolkit
 		{
 			// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
 			// std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			// RendererRuntime::MemoryFile memoryFile;
+			// RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
@@ -114,9 +114,7 @@ namespace RendererToolkit
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Skeleton/" + assetCategory + '/' + assetName;
-
-			// Output asset
-			IAssetCompiler::outputAsset(assetIdAsString, outputAssetFilename, outputAssetPackage);
+			outputAsset(assetIdAsString, outputAssetFilename, outputAssetPackage);
 		}
 	}
 

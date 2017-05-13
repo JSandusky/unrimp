@@ -27,8 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/Math/Vector3.h"
-#include "RendererRuntime/Core/Math/Quaternion.h"
+#include "RendererRuntime/Core/Math/Math.h"
 
 
 // Disable warnings in external headers, we can't fix them

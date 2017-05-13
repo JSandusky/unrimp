@@ -11,14 +11,15 @@
 			"AssetId": "30",
 			"AssetType": "Texture",
 			"AssetCategory": "Scene",
-			"AssetName": "sponza_thorn_spec",
-			"FileDependencies": [ "sponza_thorn_spec.tga" ],
+			"AssetName": "vase_round_spec",
+			"FileDependencies": [ "vase_round_spec.tga" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "ROUGHNESS_MAP",
-			"InputFile": "sponza_thorn_spec.tga"
+			"InputFile": "vase_round_spec.tga",
+			"NormalMapInputFile": "vase_round_ddn.tga"
 		}
 	}
 }

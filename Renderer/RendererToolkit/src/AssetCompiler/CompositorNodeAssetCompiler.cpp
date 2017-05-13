@@ -527,7 +527,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1CompositorNode::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			RendererRuntime::MemoryFile memoryFile;
+			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			{ // Compositor node
 				// Parse JSON
@@ -729,9 +729,7 @@ namespace RendererToolkit
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/CompositorNode/" + assetCategory + '/' + assetName;
-
-			// Output asset
-			IAssetCompiler::outputAsset(assetIdAsString, outputAssetFilename, outputAssetPackage);
+			outputAsset(assetIdAsString, outputAssetFilename, outputAssetPackage);
 		}
 	}
 

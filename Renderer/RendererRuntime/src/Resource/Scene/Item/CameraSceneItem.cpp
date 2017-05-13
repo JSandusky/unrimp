@@ -68,7 +68,7 @@ namespace RendererRuntime
 		if (!mHasCustomWorldSpaceToViewSpaceMatrix)
 		{
 			const Transform& worldSpaceToViewSpaceTransform = getWorldSpaceToViewSpaceTransform();
-			mWorldSpaceToViewSpaceMatrix = glm::lookAt(worldSpaceToViewSpaceTransform.position, worldSpaceToViewSpaceTransform.position + worldSpaceToViewSpaceTransform.rotation * Math::FORWARD_VECTOR, Math::UP_VECTOR);
+			mWorldSpaceToViewSpaceMatrix = glm::lookAt(worldSpaceToViewSpaceTransform.position, worldSpaceToViewSpaceTransform.position + worldSpaceToViewSpaceTransform.rotation * Math::VEC3_FORWARD, Math::VEC3_UP);
 		}
 
 		// Done

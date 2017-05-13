@@ -105,7 +105,7 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1ShaderPiece::FORMAT_VERSION, cacheEntries))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			RendererRuntime::MemoryFile memoryFile;
+			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			{ // Shader piece
 				// Get file size and file data
@@ -143,9 +143,7 @@ namespace RendererToolkit
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/ShaderPiece/" + assetCategory + '/' + assetName;
-
-			// Output asset
-			IAssetCompiler::outputAsset(assetIdAsString, outputAssetFilename, outputAssetPackage);
+			outputAsset(assetIdAsString, outputAssetFilename, outputAssetPackage);
 		}
 	}
 

@@ -76,6 +76,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline MemoryFile();
+		inline MemoryFile(size_t reserveNumberOfCompressedBytes, size_t reserveNumberOfDecompressedBytes);
 		inline virtual ~MemoryFile();
 		inline ByteVector& getByteVector();
 		inline const ByteVector& getByteVector() const;
