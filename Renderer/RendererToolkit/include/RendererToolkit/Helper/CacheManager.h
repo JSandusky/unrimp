@@ -30,6 +30,8 @@
 #include <RendererRuntime/Core/StringId.h>
 
 #include <string>
+#include <vector>
+#include <unordered_map>
 #include <memory> // For std::unique_ptr
 
 
@@ -110,6 +112,23 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Checks if the given file exists and is a regular file (e.g. not a directory)
+		*
+		*  @param[in] fileName
+		*    The file name to check
+		*
+		*  @return
+		*    True if the file exists otherwise false
+		*/
+		static bool checkIfFileExists(const std::string& fileName);
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -154,6 +173,28 @@ namespace RendererToolkit
 		*    True if the file needs to be compiled (aka source changed, destination doesn't exists or is yet unknown file) otherwise false
 		*/
 		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t compilerVersion, CacheEntries& cacheEntries);
+
+		/**
+		*  @brief
+		*    Return if an asset needs to be compiled
+		*
+		*  @param[in] rendererTarget
+		*    The renderer target for which the asset should be compiled
+		*  @param[in] assetFilename
+		*    The asset file, which contains asset meta data, of the asset
+		*  @param[in] sourceFiles
+		*    A list of source file of the asset
+		*  @param[in] destinationFile
+		*    The destination file of the asset which contains the compiled data of the source
+		*  @param[in] compilerVersion
+		*    Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
+		*  @param[out] cacheEntries
+		*    Receives information about the cache entries; to be passed into "RendererToolkit::CacheManager::storeOrUpdateCacheEntriesInDatabase()"
+		*
+		*  @return
+		*    True if the file needs to be compiled (aka source changed, destination doesn't exists or is yet unknown file) otherwise false
+		*/
+		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::vector<std::string>& sourceFiles, const std::string& destinationFile, uint32_t compilerVersion, CacheEntries& cacheEntries);
 
 		/**
 		*  @brief
@@ -242,6 +283,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	private:
 		std::unique_ptr<SQLite::Database> mDatabaseConnection;
+
+		// We use here uint32_t instead of RendererRuntime::StringId because we don't define a std::hash method for RendererRuntime::StringId, which internal stores an uint32_t
+		std::unordered_map<uint32_t, bool> mCheckedFilesStatus; ///< Holds the status of each file checked via checkIfFileChanged
 
 
 	};
