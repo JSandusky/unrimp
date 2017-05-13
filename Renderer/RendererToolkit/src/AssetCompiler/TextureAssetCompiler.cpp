@@ -41,6 +41,10 @@ PRAGMA_WARNING_POP
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4005)	// warning C4005: '_HAS_EXCEPTIONS': macro redefinition
+	PRAGMA_WARNING_DISABLE_CLANG("-Wunused-value")	// warning: expression result unused [-Wunused-value]
+	PRAGMA_WARNING_DISABLE_CLANG("-Warray-bounds")	// warning: array index 1 is past the end of the array (which contains 1 element) [-Warray-bounds]
+	PRAGMA_WARNING_DISABLE_GCC("-Wunused-value")	// warning: expression result unused [-Wunused-value]
+	PRAGMA_WARNING_DISABLE_GCC("-Wunused-local-typedefs")	// warning: typedef ‘<x>’ locally defined but not used [-Wunused-value]
 	#include <crunch/crnlib.h>
 	#include <crunch/dds_defs.h>
 	#include <crunch/crnlib/crn_texture_conversion.h>
@@ -267,15 +271,16 @@ namespace
 			}
 		}
 
-		std::array<std::string, 6> getCubemapFilenames(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const std::string& basePath)
+		std::vector<std::string> getCubemapFilenames(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const std::string& basePath)
 		{
 			static const std::array<std::string, 6> FACE_NAMES = { "PositiveXInputFile", "NegativeXInputFile", "NegativeYInputFile", "PositiveYInputFile", "PositiveZInputFile", "NegativeZInputFile" };
 
 			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
-			std::array<std::string, 6> filenames;
+			std::vector<std::string> filenames;
+			filenames.reserve(6);
 			for (size_t faceIndex = 0; faceIndex < FACE_NAMES.size(); ++faceIndex)
 			{
-				filenames[faceIndex] = basePath + rapidJsonValueTextureAssetCompiler[FACE_NAMES[faceIndex].c_str()].GetString();
+				filenames.emplace_back(basePath + rapidJsonValueTextureAssetCompiler[FACE_NAMES[faceIndex].c_str()].GetString());
 			}
 			return filenames;
 		}
@@ -286,19 +291,17 @@ namespace
 			{
 				// A cube map has six source files (for each face one source), so check if any of the six files changes
 				// -> "inputAssetFilename" specifies the base directory of the faces source files
-				const std::array<std::string, 6> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, inputAssetFilename);
-				bool cubeMapSourcesChanged = false;
-				for (const std::string& faceFilename : faceFilenames)
+				const std::vector<std::string> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, inputAssetFilename);
+				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
+				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
 				{
-					RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
-					if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilename, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
-					{
-						// A face source file has changed, mark result as true, but go on to store also for the remaining face source files an cache entry
-						cubeMapSourcesChanged = true;
-						cacheEntries.push_back(cacheEntriesCandidate);
-					}
+					// Changed
+					cacheEntries.push_back(cacheEntriesCandidate);
+					return true;
 				}
-				return cubeMapSourcesChanged;
+
+				// Not changed
+				return false;
 			}
 			else if (TextureSemantic::ROUGHNESS_MAP == textureSemantic)
 			{
@@ -357,7 +360,7 @@ namespace
 		void loadCubeCrunchMipmappedTexture(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, crnlib::mipmapped_texture& crunchMipmappedTexture)
 		{
 			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
-			const std::array<std::string, 6> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, basePath);
+			const std::vector<std::string> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, basePath);
 			for (size_t faceIndex = 0; faceIndex < faceFilenames.size(); ++faceIndex)
 			{
 				// Load the 2D source image
