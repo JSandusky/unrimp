@@ -300,6 +300,44 @@ namespace
 				}
 				return cubeMapSourcesChanged;
 			}
+			else if (TextureSemantic::ROUGHNESS_MAP == textureSemantic)
+			{
+				// A roughness map has 2 source files. First the roughness map itself and second a normal map
+				// An asset can specify both files or only one of them
+				// inputAssetFilename points to the roughness map
+				// We need to fetch the name of the input normal map.
+				std::string normalMapAssetFilename;
+				if (rapidJsonValueTextureAssetCompiler.HasMember("NormalMapInputFile"))
+				{
+					std::string normalMapInputFile = rapidJsonValueTextureAssetCompiler["NormalMapInputFile"].GetString();
+					if (!normalMapInputFile.empty())
+					{
+						normalMapAssetFilename = input.assetInputDirectory + normalMapInputFile;
+					}
+				}
+
+				// Setup a list of source files
+				std::vector<std::string> inputFilenames;
+				if (!inputAssetFilename.empty())
+				{
+					inputFilenames.emplace_back(inputAssetFilename);
+				}
+				if (!normalMapAssetFilename.empty())
+				{
+					inputFilenames.emplace_back(normalMapAssetFilename);
+				}
+
+				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
+				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
+				{
+					// Changed
+					cacheEntries.push_back(cacheEntriesCandidate);
+					return true;
+				}
+
+				// Not changed
+				return false;
+			}
 			else
 			{
 				// Asset has single source file

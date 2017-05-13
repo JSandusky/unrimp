@@ -112,7 +112,7 @@ namespace RendererToolkit
 
 		struct CacheEntries
 		{
-			CacheEntry cacheEntry;
+			std::vector<CacheEntry> sourceCacheEntries;
 			CacheEntry assetCacheEntry;
 		};
 

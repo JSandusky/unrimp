@@ -181,7 +181,9 @@ namespace RendererToolkit
 		{
 			// Source exists
 			// -> Check if source has changed
-			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, cacheEntries.cacheEntry);
+			cacheEntries.sourceCacheEntries.emplace_back(CacheEntry{});
+			CacheEntry& sourceCacheEntry = cacheEntries.sourceCacheEntries.back();
+			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, sourceCacheEntry);
 
 			// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
 			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION, cacheEntries.assetCacheEntry);
@@ -223,7 +225,9 @@ namespace RendererToolkit
 		bool sourceFilesChanged = false;
 		for (const std::string& sourceFile : sourceFiles)
 		{
-			if (checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, cacheEntries.cacheEntry))
+			cacheEntries.sourceCacheEntries.emplace_back(CacheEntry{});
+			CacheEntry& sourceCacheEntry = cacheEntries.sourceCacheEntries.back();
+			if (checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, sourceCacheEntry))
 			{
 				// One of the source files has changed;
 				sourceFilesChanged = true;
@@ -239,14 +243,21 @@ namespace RendererToolkit
 
 	void CacheManager::storeOrUpdateCacheEntriesInDatabase(const CacheEntries& cacheEntries)
 	{
-		// There are assets without source assets
-		if (cacheEntries.cacheEntry.isValid())
+		if (nullptr != mDatabaseConnection)
 		{
-			storeOrUpdateCacheEntryInDatabase(cacheEntries.cacheEntry);
-		}
+			// Write all or nothing -> use an transaction
+			SQLite::Transaction transaction(*mDatabaseConnection.get());
 
-		// There must always be an asset metadata file
-		storeOrUpdateCacheEntryInDatabase(cacheEntries.assetCacheEntry);
+			for (const CacheEntry& sourceCacheEntry : cacheEntries.sourceCacheEntries)
+			{
+				storeOrUpdateCacheEntryInDatabase(sourceCacheEntry);
+			}
+
+			// There must always be an asset metadata file
+			storeOrUpdateCacheEntryInDatabase(cacheEntries.assetCacheEntry);
+
+			transaction.commit();
+		}
 	}
 
 
