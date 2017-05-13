@@ -177,16 +177,23 @@ namespace RendererToolkit
 		const bool sourceExists = (std_filesystem::exists(sourceFilePath) && std_filesystem::is_regular_file(sourceFilePath));
 		const bool destinationExists = std_filesystem::exists(destinationFilePath);
 
-		// There are assets without source assets
-		// -> For example: Roughness maps can be calculated automatically using Toksvig specular anti-aliasing to reduce shimmering using a given normal map // TODO(co) Handling of derived assets: In fact this is a source asset, cube maps are similar, we need an universal cache handling strategy for such assets
-		// -> Check if source has changed
-		const bool fileChanged = sourceExists ? checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, cacheEntries.cacheEntry) : false;
+		if (sourceExists)
+		{
+			// Source exists
+			// -> Check if source has changed
+			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, cacheEntries.cacheEntry);
 
-		// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
-		const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION, cacheEntries.assetCacheEntry);
+			// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
+			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION, cacheEntries.assetCacheEntry);
 
-		// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
-		return (fileChanged || assetFileChanged || !destinationExists);
+			// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
+			return (fileChanged || assetFileChanged || !destinationExists);
+		}
+		else
+		{
+			// Source could not be found, nothing to do
+			return false;
+		}
 	}
 
 	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::vector<std::string>& sourceFiles, const std::string& destinationFile, uint32_t compilerVersion, CacheEntries& cacheEntries)
