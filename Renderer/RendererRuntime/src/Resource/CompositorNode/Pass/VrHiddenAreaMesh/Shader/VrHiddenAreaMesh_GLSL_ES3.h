@@ -56,8 +56,8 @@ out highp vec4 FragmentColor;	// Output variable for fragment color
 // Programs
 void main()
 {
-	// Depth only rendering
-	FragmentColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	// Grey so the VR hidden area mesh doesn't influence the adaptive luminance
+	FragmentColor = vec4(0.5f, 0.5f, 0.5f, 0.0f);
 }
 )";
 

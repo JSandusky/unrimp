@@ -37,14 +37,6 @@
 			{
 				"TextureFormat": "R11G11B10F"
 			},
-			"Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget":
-			{
-				"TextureFormat": "R32_FLOAT"
-			},
-			"Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget":
-			{
-				"TextureFormat": "R32_FLOAT"
-			},
 			"Example/Texture/Dynamic/LuminanceRenderTarget":
 			{
 				"Width": "1024",
@@ -117,14 +109,6 @@
 			"HdrFramebuffer1":
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget1" ]
-			},
-			"ScreenSpaceAmbientOcclusionFramebuffer":
-			{
-				"ColorTextures": [ "Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget" ]
-			},
-			"BlurredScreenSpaceAmbientOcclusionFramebuffer":
-			{
-				"ColorTextures": [ "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget" ]
 			},
 			"LuminanceFramebuffer":
 			{
@@ -212,31 +196,6 @@
 					"SourceMultisampleFramebuffer": "HdrMultisampleFramebuffer"
 				}
 			},
-			"ScreenSpaceAmbientOcclusionFramebuffer":
-			{
-				"Quad":
-				{
-					"Description": "Screen space ambient occlusion (SSAO) generation",
-					"MaterialBlueprintAssetId": "147",
-					"SetMaterialProperties":
-					{
-						"NormalMap": "Example/Texture/Dynamic/MultisampleNormalRenderTarget",
-						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
-					}
-				}
-			},
-			"BlurredScreenSpaceAmbientOcclusionFramebuffer":
-			{
-				"Quad":
-				{
-					"Description": "Screen space ambient occlusion (SSAO) blur",
-					"MaterialBlueprintAssetId": "149",
-					"SetMaterialProperties":
-					{
-						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget"
-					}
-				}
-			},
 			"HdrFramebuffer1":
 			{
 				"Quad":
@@ -247,7 +206,7 @@
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
 						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
-						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget"
+						"ScreenSpaceAmbientOcclusionMap": "Unrimp/Texture/DynamicByCode/WhiteMap2D"
 					}
 				}
 			},

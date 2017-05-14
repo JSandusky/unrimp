@@ -142,8 +142,9 @@ void FirstScene::onInitialization()
 				if (vrManager.startup("Example/Material/Default/VrDevice"))
 				{
 					// Select the VR compositor and enable MSAA by default since image stability is quite important for VR
+					// -> "Advanced VR Rendering" by Alex Vlachos, Valve -> page 26 -> "4xMSAA Minimum Quality" ( http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf )
 					mCurrentCompositor = mInstancedCompositor = Compositor::VR;
-					mCurrentMsaa = Msaa::TWO;
+					mCurrentMsaa = Msaa::FOUR;
 				}
 			}
 		}
@@ -476,44 +477,44 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					}
 				}
 			ImGui::End();
+		}
 
-			// Recreate the compositor workspace instance, if required
-			if (mInstancedCompositor != mCurrentCompositor)
+		// Recreate the compositor workspace instance, if required
+		if (mInstancedCompositor != mCurrentCompositor)
+		{
+			mInstancedCompositor = static_cast<Compositor>(mCurrentCompositor);
+			createCompositorWorkspace();
+		}
+
+		// Update texture resource manager
+		rendererRuntime->getTextureResourceManager().setNumberOfTopMipmapsToRemove(static_cast<uint8_t>(mNumberOfTopTextureMipmapsToRemove));
+
+		// Update compositor workspace
+		{ // MSAA
+			static const uint8_t NUMBER_OF_MULTISAMPLES[4] = { 1, 2, 4, 8 };
+			mCompositorWorkspaceInstance->setNumberOfMultisamples(NUMBER_OF_MULTISAMPLES[mCurrentMsaa]);
+		}
+		mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
+
+		{ // Update the material resource instance
+			const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
+
+			// Final compositor material
+			RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/Final");
+			if (nullptr != materialResource)
 			{
-				mInstancedCompositor = static_cast<Compositor>(mCurrentCompositor);
-				createCompositorWorkspace();
+				static const RendererRuntime::AssetId IDENTITY_TEXTURE_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D");
+				static const RendererRuntime::AssetId SEPIA_TEXTURE_ASSET_ID("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
+				materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? SEPIA_TEXTURE_ASSET_ID : IDENTITY_TEXTURE_ASSET_ID));
+				materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
 			}
 
-			// Update texture resource manager
-			rendererRuntime->getTextureResourceManager().setNumberOfTopMipmapsToRemove(static_cast<uint8_t>(mNumberOfTopTextureMipmapsToRemove));
-
-			// Update compositor workspace
-			{ // MSAA
-				static const uint8_t NUMBER_OF_MULTISAMPLES[4] = { 1, 2, 4, 8 };
-				mCompositorWorkspaceInstance->setNumberOfMultisamples(NUMBER_OF_MULTISAMPLES[mCurrentMsaa]);
-			}
-			mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
-
-			{ // Update the material resource instance
-				const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
-
-				// Final compositor material
-				RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/Final");
-				if (nullptr != materialResource)
-				{
-					static const RendererRuntime::AssetId IDENTITY_TEXTURE_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D");
-					static const RendererRuntime::AssetId SEPIA_TEXTURE_ASSET_ID("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
-					materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? SEPIA_TEXTURE_ASSET_ID : IDENTITY_TEXTURE_ASSET_ID));
-					materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
-				}
-
-				// Imrod material clone
-				materialResource = materialResourceManager.tryGetById(mCloneMaterialResourceId);
-				if (nullptr != materialResource)
-				{
-					materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
-					materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
-				}
+			// Imrod material clone
+			materialResource = materialResourceManager.tryGetById(mCloneMaterialResourceId);
+			if (nullptr != materialResource)
+			{
+				materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
+				materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
 			}
 		}
 	}
