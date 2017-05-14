@@ -51,6 +51,7 @@ INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame2VS,		 4)	// Tangent frame
 	INPUT_TEXTURE_COORDINATE				(float3, WorldSpacePositionVS,	 5)	// World space position
 	INPUT_VERTEX_DRAW_ID														// Draw ID
+	DECLARE_COVERAGE_MASK
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)	// rgb = diffuse color, a = alpha
@@ -71,6 +72,7 @@ struct PassDataStruct
 	float3   CameraWorldSpacePosition;
 	float3	 LightClustersScale;
 	float3	 LightClustersBias;
+	uint	 FullCoverageMask;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -189,7 +191,11 @@ MAIN_BEGIN
 		color += SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb * material.EmissiveIntensity;
 	@end
 
+	// Complex pixel detection
+	// -> "Antialiased Deferred Rendering" - https://docs.nvidia.com/gameworks/content/gameworkslibrary/graphicssamples/d3d_samples/antialiaseddeferredrendering.htm
+	float edgePixel = (COVERAGE_MASK != PassData.FullCoverageMask) ? 1.0f : 0.0f;
+
 	// Done
-	MAIN_OUTPUT_COLOR(0) = float4(color, 1.0f);
-	MAIN_OUTPUT_COLOR(1) = float4(viewSpaceNormal, 0.0f);
+	MAIN_OUTPUT_COLOR(0) = float4(color, edgePixel);
+	MAIN_OUTPUT_COLOR(1) = float4(viewSpaceNormal, edgePixel);
 MAIN_END

@@ -163,14 +163,23 @@ MAIN_BEGIN
 
 	// Calculate SSAO
 	@property(NumberOfMultisamples)
-		// Custom MSAA resolve
-		float sum = 0.0f;
-		@foreach(NumberOfMultisamples, i, 0)
+		// Complex pixel detection
+		float sum;
+		if (0 != SAMPLE_2D_MS(NormalMap, int2(MAIN_INPUT(TexCoordVS) * (1.0f / PassData.InverseViewportSize)), 0).a)
 		{
-			sum += CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), @i);
+			// Custom MSAA resolve
+			sum = 0.0f;
+			@foreach(NumberOfMultisamples, i, 0)
+			{
+				sum += CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), @i);
+			}
+			@end
+			sum /= @value(NumberOfMultisamples);
 		}
-		@end
-		sum /= @value(NumberOfMultisamples);
+		else
+		{
+			sum = CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), 0);
+		}
 	@end
 	@property(!NumberOfMultisamples)
 		float sum = CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), 0);

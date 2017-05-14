@@ -74,6 +74,7 @@ struct PassDataStruct
 	float3   CameraWorldSpacePosition;
 	float3	 LightClustersScale;
 	float3	 LightClustersBias;
+	uint	 FullCoverageMask;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;

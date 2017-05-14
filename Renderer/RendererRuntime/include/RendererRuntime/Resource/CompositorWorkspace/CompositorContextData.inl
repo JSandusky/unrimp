@@ -29,6 +29,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline CompositorContextData::CompositorContextData() :
+		mCompositorWorkspaceInstance(nullptr),
 		mCameraSceneItem(nullptr),
 		mLightSceneItem(nullptr),
 		mCompositorInstancePassShadowMap(nullptr),
@@ -37,7 +38,8 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline CompositorContextData::CompositorContextData(const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap) :
+	inline CompositorContextData::CompositorContextData(const CompositorWorkspaceInstance* compositorWorkspaceInstance, const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap) :
+		mCompositorWorkspaceInstance(compositorWorkspaceInstance),
 		mCameraSceneItem(cameraSceneItem),
 		mLightSceneItem(lightSceneItem),
 		mCompositorInstancePassShadowMap(compositorInstancePassShadowMap),
@@ -49,6 +51,11 @@ namespace RendererRuntime
 	inline CompositorContextData::~CompositorContextData()
 	{
 		// Nothing here
+	}
+
+	inline const CompositorWorkspaceInstance* CompositorContextData::getCompositorWorkspaceInstance() const
+	{
+		return mCompositorWorkspaceInstance;
 	}
 
 	inline const CameraSceneItem* CompositorContextData::getCameraSceneItem() const

@@ -165,8 +165,7 @@
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "PassUniformBuffer"
 						}
-					},
-					"ShaderVisibility": "VERTEX"
+					}
 				},
 				"1":
 				{
@@ -349,6 +348,12 @@
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4",
 							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_QUATERNION"
+						},
+						"FullCoverageMask":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@FULL_COVERAGE_MASK"
 						}
 					}
 				},

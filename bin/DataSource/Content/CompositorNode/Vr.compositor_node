@@ -15,7 +15,7 @@
 		{
 			"Example/Texture/Dynamic/HdrMultisampleColorRenderTarget":
 			{
-				"TextureFormat": "R11G11B10F",
+				"TextureFormat": "R16G16B16A16F",
 				"AllowMultisample": "TRUE"
 			},
 			"Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget":
@@ -31,7 +31,7 @@
 			},
 			"Example/Texture/Dynamic/HdrColorRenderTarget0":
 			{
-				"TextureFormat": "R11G11B10F"
+				"TextureFormat": "R16G16B16A16F"
 			},
 			"Example/Texture/Dynamic/HdrColorRenderTarget1":
 			{
@@ -167,7 +167,7 @@
 				"Clear":
 				{
 					"Flags": "COLOR | DEPTH",
-					"Color": "0.5 0.5 0.5 1.0"
+					"Color": "0.5 0.5 0.5 0.0"
 				},
 				"VrHiddenAreaMesh":
 				{

@@ -32,6 +32,7 @@ namespace RendererRuntime
 	class LightSceneItem;
 	class CameraSceneItem;
 	class MaterialBlueprintResource;
+	class CompositorWorkspaceInstance;
 	class CompositorInstancePassShadowMap;
 }
 
@@ -65,8 +66,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline CompositorContextData();
-		inline explicit CompositorContextData(const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem = nullptr, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = nullptr);
+		inline explicit CompositorContextData(const CompositorWorkspaceInstance* compositorWorkspaceInstance, const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem = nullptr, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = nullptr);
 		inline ~CompositorContextData();
+		inline const CompositorWorkspaceInstance* getCompositorWorkspaceInstance() const;
 		inline const CameraSceneItem* getCameraSceneItem() const;
 		inline const LightSceneItem* getLightSceneItem() const;
 		inline const CompositorInstancePassShadowMap* getCompositorInstancePassShadowMap() const;
@@ -85,6 +87,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		const CompositorWorkspaceInstance*	   mCompositorWorkspaceInstance;
 		const CameraSceneItem*				   mCameraSceneItem;
 		const LightSceneItem*				   mLightSceneItem;
 		const CompositorInstancePassShadowMap* mCompositorInstancePassShadowMap;
