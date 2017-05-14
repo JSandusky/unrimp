@@ -40,10 +40,10 @@ PRAGMA_WARNING_POP
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4005)	// warning C4005: '_HAS_EXCEPTIONS': macro redefinition
-	PRAGMA_WARNING_DISABLE_CLANG("-Wunused-value")	// warning: expression result unused [-Wunused-value]
-	PRAGMA_WARNING_DISABLE_CLANG("-Warray-bounds")	// warning: array index 1 is past the end of the array (which contains 1 element) [-Warray-bounds]
-	PRAGMA_WARNING_DISABLE_GCC("-Wunused-value")	// warning: expression result unused [-Wunused-value]
+	PRAGMA_WARNING_DISABLE_MSVC(4005)						// warning C4005: '_HAS_EXCEPTIONS': macro redefinition
+	PRAGMA_WARNING_DISABLE_CLANG("-Wunused-value")			// warning: expression result unused [-Wunused-value]
+	PRAGMA_WARNING_DISABLE_CLANG("-Warray-bounds")			// warning: array index 1 is past the end of the array (which contains 1 element) [-Warray-bounds]
+	PRAGMA_WARNING_DISABLE_GCC("-Wunused-value")			// warning: expression result unused [-Wunused-value]
 	PRAGMA_WARNING_DISABLE_GCC("-Wunused-local-typedefs")	// warning: typedef ‘<x>’ locally defined but not used [-Wunused-value]
 	#include <crunch/crnlib.h>
 	#include <crunch/dds_defs.h>
@@ -305,14 +305,14 @@ namespace
 			}
 			else if (TextureSemantic::ROUGHNESS_MAP == textureSemantic)
 			{
-				// A roughness map has 2 source files. First the roughness map itself and second a normal map
-				// An asset can specify both files or only one of them
-				// inputAssetFilename points to the roughness map
-				// We need to fetch the name of the input normal map.
+				// A roughness map has two source files: First the roughness map itself and second a normal map
+				// -> An asset can specify both files or only one of them
+				// -> "inputAssetFilename" points to the roughness map
+				// -> We need to fetch the name of the input normal map
 				std::string normalMapAssetFilename;
 				if (rapidJsonValueTextureAssetCompiler.HasMember("NormalMapInputFile"))
 				{
-					std::string normalMapInputFile = rapidJsonValueTextureAssetCompiler["NormalMapInputFile"].GetString();
+					const std::string normalMapInputFile = rapidJsonValueTextureAssetCompiler["NormalMapInputFile"].GetString();
 					if (!normalMapInputFile.empty())
 					{
 						normalMapAssetFilename = input.assetInputDirectory + normalMapInputFile;

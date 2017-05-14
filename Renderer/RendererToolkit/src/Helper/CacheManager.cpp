@@ -128,9 +128,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	bool CacheManager::checkIfFileExists(const std::string& fileName)
+	bool CacheManager::checkIfFileExists(const std::string& filename)
 	{
-		const std_filesystem::path filePath(fileName);
+		const std_filesystem::path filePath(filename);
 		return (std_filesystem::exists(filePath) && std_filesystem::is_regular_file(filePath));
 	}
 
@@ -206,7 +206,7 @@ namespace RendererToolkit
 			return false;
 		}
 
-		// First check if all source files exists.
+		// First check if all source files exists
 		for (const std::string& sourceFile : sourceFiles)
 		{
 			if (!checkIfFileExists(sourceFile))
@@ -232,7 +232,7 @@ namespace RendererToolkit
 				// One of the source files has changed;
 				sourceFilesChanged = true;
 			}
-		} 
+		}
 
 		// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
 		const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION, cacheEntries.assetCacheEntry);
@@ -361,7 +361,7 @@ namespace RendererToolkit
 
 			#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
 				// Get the last write time
-				auto lastWriteTime = std_filesystem::last_write_time(filePath);
+				const std_filesystem::file_time_type lastWriteTime = std_filesystem::last_write_time(filePath);
 				const int64_t fileTime = static_cast<int64_t>(decltype(lastWriteTime)::clock::to_time_t(lastWriteTime));
 
 				// TODO(sw) std::filesystem::file_size returns uintmax_t which is a unsigned 64 bit value (under 64 bit OS), but SQLite only supports signed 64 bit integers (for file size in bytes this would mean a maximum supported size of ~8 388 607 Terabytes)
@@ -379,10 +379,10 @@ namespace RendererToolkit
 			{
 				if (hasFileEntry)
 				{
-					// A file might be referenced by different assets so frist check if the file was already check by a previous call to this method
+					// A file might be referenced by different assets so first check if the file was already check by a previous call to this method
 					// If so return the result (the file shouldn't change between two checks while a compilation is running)
 					{
-						auto findIterator = mCheckedFilesStatus.find(fileId);
+						CheckedFilesStatus::iterator findIterator = mCheckedFilesStatus.find(fileId);
 						if (findIterator != mCheckedFilesStatus.end())
 						{
 							// The file was already checked before simply return the result
@@ -394,7 +394,6 @@ namespace RendererToolkit
 						// First and faster step: check file size and file time as well as the compiler version (needed so that we also detect compiler version changes here too)
 						if (cacheEntry.fileSize == fileSize && cacheEntry.fileTime == fileTime && cacheEntry.compilerVersion == compilerVersion)
 						{
-
 							// The file has not changed -> store the result
 							mCheckedFilesStatus[fileId] = false;
 
