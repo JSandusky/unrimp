@@ -160,6 +160,8 @@ public:
 				break;
 			}
 		}
+		
+#ifndef RENDERER_NO_RUNTIME
 
 		// TODO(co) Evil cast ahead. Maybe simplify the example application framework? After all, it's just an example framework for Unrimp and nothing too generic.
 		const IApplicationRendererRuntime* applicationRendererRuntime = dynamic_cast<IApplicationRendererRuntime*>(&mApplication);
@@ -211,6 +213,7 @@ public:
 				}
 			}
 		}
+#endif
 		return false;
 	}
 private:
