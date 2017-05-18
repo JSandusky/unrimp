@@ -15,7 +15,7 @@
 		{
 			"Example/Texture/Dynamic/HdrMultisampleColorRenderTarget":
 			{
-				"TextureFormat": "R11G11B10F",
+				"TextureFormat": "R16G16B16A16F",
 				"AllowMultisample": "TRUE"
 			},
 			"Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget":
@@ -31,19 +31,11 @@
 			},
 			"Example/Texture/Dynamic/HdrColorRenderTarget0":
 			{
-				"TextureFormat": "R11G11B10F"
+				"TextureFormat": "R16G16B16A16F"
 			},
 			"Example/Texture/Dynamic/HdrColorRenderTarget1":
 			{
 				"TextureFormat": "R11G11B10F"
-			},
-			"Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget":
-			{
-				"TextureFormat": "R32_FLOAT"
-			},
-			"Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget":
-			{
-				"TextureFormat": "R32_FLOAT"
 			},
 			"Example/Texture/Dynamic/LuminanceRenderTarget":
 			{
@@ -118,14 +110,6 @@
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget1" ]
 			},
-			"ScreenSpaceAmbientOcclusionFramebuffer":
-			{
-				"ColorTextures": [ "Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget" ]
-			},
-			"BlurredScreenSpaceAmbientOcclusionFramebuffer":
-			{
-				"ColorTextures": [ "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget" ]
-			},
 			"LuminanceFramebuffer":
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/LuminanceRenderTarget" ]
@@ -183,7 +167,7 @@
 				"Clear":
 				{
 					"Flags": "COLOR | DEPTH",
-					"Color": "0.5 0.5 0.5 1.0"
+					"Color": "0.5 0.5 0.5 0.0"
 				},
 				"VrHiddenAreaMesh":
 				{
@@ -212,31 +196,6 @@
 					"SourceMultisampleFramebuffer": "HdrMultisampleFramebuffer"
 				}
 			},
-			"ScreenSpaceAmbientOcclusionFramebuffer":
-			{
-				"Quad":
-				{
-					"Description": "Screen space ambient occlusion (SSAO) generation",
-					"MaterialBlueprintAssetId": "147",
-					"SetMaterialProperties":
-					{
-						"NormalMap": "Example/Texture/Dynamic/MultisampleNormalRenderTarget",
-						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
-					}
-				}
-			},
-			"BlurredScreenSpaceAmbientOcclusionFramebuffer":
-			{
-				"Quad":
-				{
-					"Description": "Screen space ambient occlusion (SSAO) blur",
-					"MaterialBlueprintAssetId": "149",
-					"SetMaterialProperties":
-					{
-						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget"
-					}
-				}
-			},
 			"HdrFramebuffer1":
 			{
 				"Quad":
@@ -247,7 +206,7 @@
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
 						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
-						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget"
+						"ScreenSpaceAmbientOcclusionMap": "Unrimp/Texture/DynamicByCode/WhiteMap2D"
 					}
 				}
 			},

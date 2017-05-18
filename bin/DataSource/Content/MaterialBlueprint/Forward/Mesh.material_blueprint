@@ -517,6 +517,12 @@
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@LIGHT_CLUSTERS_BIAS"
+						},
+						"FullCoverageMask":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@FULL_COVERAGE_MASK"
 						}
 					}
 				},

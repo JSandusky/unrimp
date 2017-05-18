@@ -64,6 +64,7 @@ struct PassDataStruct
 {
 	float4x4 WorldSpaceToClipSpaceMatrix;
 	float4	 WorldSpaceToViewSpaceQuaternion;
+	uint	 FullCoverageMask;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;

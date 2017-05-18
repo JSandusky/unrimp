@@ -56,8 +56,8 @@ fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 // Programs
 void main()
 {
-	// Depth only rendering
-	gl_FragColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	// Grey so the VR hidden area mesh doesn't influence the adaptive luminance
+	gl_FragColor = vec4(0.5f, 0.5f, 0.5f, 0.0f);
 }
 )";
 

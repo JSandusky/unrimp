@@ -226,7 +226,7 @@ namespace RendererRuntime
 					Renderer::IRenderTarget* currentRenderTarget = &renderTarget;
 					for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
 					{
-						currentRenderTarget = &compositorNodeInstance->fillCommandBuffer(*currentRenderTarget, CompositorContextData(cameraSceneItem, lightSceneItem, mCompositorInstancePassShadowMap), mCommandBuffer);
+						currentRenderTarget = &compositorNodeInstance->fillCommandBuffer(*currentRenderTarget, CompositorContextData(this, cameraSceneItem, lightSceneItem, mCompositorInstancePassShadowMap), mCommandBuffer);
 					}
 				}
 

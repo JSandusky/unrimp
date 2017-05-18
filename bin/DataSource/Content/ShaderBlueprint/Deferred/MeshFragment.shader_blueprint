@@ -47,6 +47,7 @@ INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame0VS,		 2)	// Tangent frame
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame1VS,		 3)	// Tangent frame
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame2VS,		 4)	// Tangent frame
+	DECLARE_COVERAGE_MASK
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
@@ -55,6 +56,15 @@ OUTPUT_BEGIN
 OUTPUT_END
 
 // Uniform buffers
+struct PassDataStruct
+{
+	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4	 WorldSpaceToViewSpaceQuaternion;
+	uint	 FullCoverageMask;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
 struct Material
 {
 	float3 DiffuseColor;
@@ -123,8 +133,12 @@ MAIN_BEGIN
 		emissive = SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb * material.EmissiveIntensity;
 	@end
 
+	// Complex pixel detection
+	// -> "Antialiased Deferred Rendering" - https://docs.nvidia.com/gameworks/content/gameworkslibrary/graphicssamples/d3d_samples/antialiaseddeferredrendering.htm
+	float edgePixel = (COVERAGE_MASK != PassData.FullCoverageMask) ? 1.0f : 0.0f;
+
 	// Done
-	MAIN_OUTPUT_COLOR(0) = float4(diffuse, 1.0f);
+	MAIN_OUTPUT_COLOR(0) = float4(diffuse, edgePixel);
 	MAIN_OUTPUT_COLOR(1) = float4(normal, roughness);
 	MAIN_OUTPUT_COLOR(2) = float4(emissive, metallic);
 MAIN_END

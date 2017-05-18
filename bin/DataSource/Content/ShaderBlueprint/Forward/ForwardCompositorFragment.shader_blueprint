@@ -111,29 +111,39 @@ float3 CalculateColor(float3 viewRay, float3 color, float2 screenSpacePosition, 
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	// Gather screen space ambient occlusion value
-	float screenSpaceAmbientOcclusion = SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).r;
-
 	// Get color
-	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)) * screenSpaceAmbientOcclusion;
+	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
+
+	// Apply screen space ambient occlusion value
+	color.rgb *= SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).r;
 
 	// Get the normalized view ray
 	float3 viewRay = normalize(MAIN_INPUT(ViewRayVS));
 
+	// Calculate fragment color
 	@property(NumberOfMultisamples)
-		// Custom MSAA resolve
-		float3 finalColor = float3(0.0f, 0.0f, 0.0f);
-		@foreach(NumberOfMultisamples, i, 0)
+		// Complex pixel detection
+		float3 finalColor;
+		if (0 != color.a)
 		{
-			finalColor += CalculateColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), @i);
+			// Custom MSAA resolve
+			finalColor = float3(0.0f, 0.0f, 0.0f);
+			@foreach(NumberOfMultisamples, i, 0)
+			{
+				finalColor += CalculateColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), @i);
+			}
+			@end
+			finalColor /= @value(NumberOfMultisamples);
 		}
-		@end
-		finalColor /= @value(NumberOfMultisamples);
+		else
+		{
+			finalColor = CalculateColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), 0);
+		}
 	@end
 	@property(!NumberOfMultisamples)
 		float3 finalColor = CalculateColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), 0);
 	@end
-
+	
 	// Done
-	MAIN_OUTPUT_COLOR(0) = float4(finalColor, 1.0f);
+	MAIN_OUTPUT_COLOR(0) = float4(finalColor, color.a);
 MAIN_END

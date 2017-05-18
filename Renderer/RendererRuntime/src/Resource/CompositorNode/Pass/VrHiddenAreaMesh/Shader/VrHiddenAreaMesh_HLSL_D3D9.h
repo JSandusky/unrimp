@@ -58,10 +58,10 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode = R"(
 // Programs
-float4 main(float4 Position : SV_POSITION) : SV_TARGET
+float4 main(float4 Position : SV_POSITION)
 {
-	// Depth only rendering
-	return float4(0.0f, 0.0f, 0.0f, 1.0f);
+	// Grey so the VR hidden area mesh doesn't influence the adaptive luminance
+	return float4(0.5f, 0.5f, 0.5f, 0.0f);
 }
 )";
 

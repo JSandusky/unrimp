@@ -103,17 +103,12 @@ namespace RendererToolkit
 				compilerVersion(0)
 			{}
 
-			inline bool isValid() const
-			{
-				return (RendererRuntime::isInitialized(fileId) && !rendererTarget.empty() && !fileHash.empty() && 0 != fileSize && 0 != fileTime);
-			};
-
 		};
 
 		struct CacheEntries
 		{
-			std::vector<CacheEntry> sourceCacheEntries;
-			CacheEntry assetCacheEntry;
+			std::vector<CacheEntry>	sourceCacheEntries;
+			CacheEntry				assetCacheEntry;
 		};
 
 
@@ -125,13 +120,13 @@ namespace RendererToolkit
 		*  @brief
 		*    Checks if the given file exists and is a regular file (e.g. not a directory)
 		*
-		*  @param[in] fileName
-		*    The file name to check
+		*  @param[in] filename
+		*    The filename to check
 		*
 		*  @return
 		*    True if the file exists otherwise false
 		*/
-		static bool checkIfFileExists(const std::string& fileName);
+		static bool checkIfFileExists(const std::string& filename);
 
 
 	//[-------------------------------------------------------]
@@ -285,13 +280,20 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::unordered_map<uint32_t, bool> CheckedFilesStatus;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
 		std::unique_ptr<SQLite::Database> mDatabaseConnection;
 
-		// We use here uint32_t instead of RendererRuntime::StringId because we don't define a std::hash method for RendererRuntime::StringId, which internal stores an uint32_t
-		std::unordered_map<uint32_t, bool> mCheckedFilesStatus; ///< Holds the status of each file checked via checkIfFileChanged
+		// We use here "uint32_t" instead of "RendererRuntime::StringId" because we don't define a "std::hash"-method for "RendererRuntime::StringId", which internal stores an "uint32_t"
+		CheckedFilesStatus mCheckedFilesStatus;	///< Holds the status of each file checked via "RendererToolkit::CacheManager::checkIfFileChanged()"
 
 
 	};

@@ -129,8 +129,10 @@
 		#define TEXTURE_FETCH_3D(name, index) name.Load(index)
 
 		// Fragment shader only
-		#define DECLARE_IS_FRONT_FACE bool IsFrontFace : SV_IsFrontFace;
+		#define DECLARE_IS_FRONT_FACE bool IsFrontFace : SV_ISFRONTFACE;
 		#define IS_FRONT_FACE ShaderInput.IsFrontFace
+		#define DECLARE_COVERAGE_MASK uint CoverageMask : SV_COVERAGE;
+		#define COVERAGE_MASK ShaderInput.CoverageMask
 	@end
 @end
 
@@ -226,6 +228,8 @@
 		// Fragment shader only
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
+		#define DECLARE_COVERAGE_MASK
+		#define COVERAGE_MASK gl_SampleMaskIn[0]
 
 		// Primitive HLSL datatypes
 		#define float2 vec2
@@ -355,6 +359,8 @@
 		// Fragment shader only
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
+		#define DECLARE_COVERAGE_MASK
+		#define COVERAGE_MASK gl_SampleMaskIn[0]
 
 		// Primitive HLSL datatypes
 		#define float2 vec2

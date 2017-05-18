@@ -99,7 +99,7 @@ float3 ToneMap(float3 color, float averageLuminance, float threshold, out float 
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	float4 textureCoordinate = float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f);
-	float3 color = SAMPLE_2D_LOD(ColorMap, SamplerPoint, textureCoordinate).rgb;
+	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerPoint, textureCoordinate);
 	float averageLuminance = SAMPLE_2D_LOD(LuminanceMap, SamplerPoint, float4(0.5f, 0.5f, 0.0f, 0.0f)).r;
 
 	// Get dirty lens value
@@ -107,7 +107,7 @@ MAIN_BEGIN
 
 	{ // Tone map
 		float exposure = 0.0f;
-		color = ToneMap(color, averageLuminance, 0.0f, exposure);
+		color.rgb = ToneMap(color.rgb, averageLuminance, 0.0f, exposure);
 	}
 
 	@property(UseLensFlareMap)
@@ -116,16 +116,16 @@ MAIN_BEGIN
 		float lensFlareIntensity = 5.0f;
 		float3 lensFlare = SAMPLE_2D_LOD(LensFlareMap, SamplerLinear, textureCoordinate).rgb;
 		float2 lensStarTexcoord = (MATRIX_MUL(float3(MAIN_INPUT(TexCoordVS), 1.0f), CAST_TO(PassData.LensStarMatrix, float3x3))).xy;
-		color += lensFlare * (dirtyLens + SAMPLE_2D_LOD(LensStarMap, SamplerLinear, float4(lensStarTexcoord, 0.0f, 0.0f)).rgb) * lensFlareIntensity;
+		color.rgb += lensFlare * (dirtyLens + SAMPLE_2D_LOD(LensStarMap, SamplerLinear, float4(lensStarTexcoord, 0.0f, 0.0f)).rgb) * lensFlareIntensity;
 	}
 	@end
 
 	{ // Apply the bloom with dirty lens
 		float3 bloom = SAMPLE_2D_LOD(BloomMap, SamplerLinear, textureCoordinate).rgb;
 		float dirtyLenseIntensity = 0.5f;
-		color += (bloom * dirtyLenseIntensity * dirtyLens + bloom * (1.0f - dirtyLenseIntensity)) * PassData.BloomIntensity;
+		color.rgb += (bloom * dirtyLenseIntensity * dirtyLens + bloom * (1.0f - dirtyLenseIntensity)) * PassData.BloomIntensity;
 	}
 
 	// Done, ensure we're in a 0..1 range
-	MAIN_OUTPUT_COLOR(0) = float4(SATURATE(color), 1.0f);
+	MAIN_OUTPUT_COLOR(0) = float4(SATURATE(color.rgb), color.a);
 MAIN_END

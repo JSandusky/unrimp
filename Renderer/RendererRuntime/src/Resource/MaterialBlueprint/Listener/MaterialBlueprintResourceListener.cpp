@@ -85,6 +85,7 @@ namespace
 			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
 			DEFINE_CONSTANT(LIGHT_CLUSTERS_SCALE)
 			DEFINE_CONSTANT(LIGHT_CLUSTERS_BIAS)
+			DEFINE_CONSTANT(FULL_COVERAGE_MASK)
 			DEFINE_CONSTANT(SHADOW_MATRIX)
 			DEFINE_CONSTANT(SHADOW_CASCADE_SPLITS)
 			DEFINE_CONSTANT(SHADOW_CASCADE_OFFSETS)
@@ -501,6 +502,12 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 3 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mRendererRuntime->getMaterialBlueprintResourceManager().getLightBufferManager().getLightClustersBias()), numberOfBytes);
+		}
+		else if (::detail::FULL_COVERAGE_MASK == referenceValue)
+		{
+			assert(sizeof(int) == numberOfBytes);
+			const int fullCoverageMask = (1 << mCompositorContextData->getCompositorWorkspaceInstance()->getNumberOfMultisamples()) - 1;	// 0xF for 4x MSAA
+			memcpy(buffer, &fullCoverageMask, numberOfBytes);
 		}
 		else if (::detail::SHADOW_MATRIX == referenceValue)
 		{

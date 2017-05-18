@@ -182,13 +182,22 @@ float4 CalculateSum(float2 textureCoordinate, int sampleIndex)
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	@property(NumberOfMultisamples)
-		// Custom MSAA resolve
-		float4 sum = float4(0.0f, 0.0f, 0.0f, 0.0f);
-		@foreach(NumberOfMultisamples, i, 0)
+		// Complex pixel detection
+		float4 sum;
+		if (0 != SAMPLE_2D_LOD(ColorMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).a)
 		{
-			sum += CalculateSum(MAIN_INPUT(TexCoordVS), @i);
+			// Custom MSAA resolve
+			sum = float4(0.0f, 0.0f, 0.0f, 0.0f);
+			@foreach(NumberOfMultisamples, i, 0)
+			{
+				sum += CalculateSum(MAIN_INPUT(TexCoordVS), @i);
+			}
+			@end
 		}
-		@end
+		else
+		{
+			sum = CalculateSum(MAIN_INPUT(TexCoordVS), 0);
+		}
 	@end
 	@property(!NumberOfMultisamples)
 		float4 sum = CalculateSum(MAIN_INPUT(TexCoordVS), 0);
