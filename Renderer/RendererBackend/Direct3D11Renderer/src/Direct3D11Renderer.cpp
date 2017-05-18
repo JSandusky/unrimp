@@ -1423,7 +1423,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D11Renderer::createSwapChain(handle nativeWindowHandle)
+	Renderer::ISwapChain *Direct3D11Renderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;

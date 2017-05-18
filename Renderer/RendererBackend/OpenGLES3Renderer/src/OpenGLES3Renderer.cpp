@@ -1295,7 +1295,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *OpenGLES3Renderer::createSwapChain(handle nativeWindowHandle)
+	Renderer::ISwapChain *OpenGLES3Renderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
