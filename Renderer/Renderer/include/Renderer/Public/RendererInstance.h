@@ -52,49 +52,49 @@
 	// Null
 	#ifndef RENDERER_NO_NULL
 		// "createNullRendererInstance()" signature
-		extern Renderer::IRenderer *createNullRendererInstance(Renderer::handle);
+		extern Renderer::IRenderer *createNullRendererInstance(Renderer::handle, bool);
 	#endif
 
 	// OpenGL
 	#ifndef RENDERER_NO_OPENGL
 		// "createOpenGLRendererInstance()" signature
-		extern Renderer::IRenderer *createOpenGLRendererInstance(Renderer::handle);
+		extern Renderer::IRenderer *createOpenGLRendererInstance(Renderer::handle, bool);
 	#endif
 
 	// OpenGLES3
 	#ifndef RENDERER_NO_OPENGLES3
 		// "createOpenGLES3RendererInstance()" signature
-		extern Renderer::IRenderer *createOpenGLES3RendererInstance(Renderer::handle);
+		extern Renderer::IRenderer *createOpenGLES3RendererInstance(Renderer::handle, bool);
 	#endif
 
 	// Vulkan
 	#ifndef RENDERER_NO_VULKAN
 		// "createVulkanRendererInstance()" signature
-		extern Renderer::IRenderer *createVulkanRendererInstance(Renderer::handle);
+		extern Renderer::IRenderer *createVulkanRendererInstance(Renderer::handle, bool);
 	#endif
 
 	// Direct3D 9
 	#ifndef RENDERER_NO_DIRECT3D9
 		// "createDirect3D9RendererInstance()" signature
-		extern Renderer::IRenderer *createDirect3D9RendererInstance(Renderer::handle);
+		extern Renderer::IRenderer *createDirect3D9RendererInstance(Renderer::handle, bool);
 	#endif
 
 	// Direct3D 10
 	#ifndef RENDERER_NO_DIRECT3D10
 		// "createDirect3D10RendererInstance()" signature
-		extern Renderer::IRenderer *createDirect3D10RendererInstance(Renderer::handle);
+		extern Renderer::IRenderer *createDirect3D10RendererInstance(Renderer::handle, bool);
 	#endif
 
 	// Direct3D 11
 	#ifndef RENDERER_NO_DIRECT3D11
 		// "createDirect3D11RendererInstance()" signature
-		extern Renderer::IRenderer *createDirect3D11RendererInstance(Renderer::handle);
+		extern Renderer::IRenderer *createDirect3D11RendererInstance(Renderer::handle, bool);
 	#endif
 
 	// Direct3D 12
 	#ifndef RENDERER_NO_DIRECT3D12
 		// "createDirect3D12RendererInstance()" signature
-		extern Renderer::IRenderer *createDirect3D12RendererInstance(Renderer::handle);
+		extern Renderer::IRenderer *createDirect3D12RendererInstance(Renderer::handle, bool);
 	#endif
 #endif
 
@@ -131,7 +131,7 @@ namespace Renderer
 		*  @param[in] rendererName
 		*    Native window handle TODO(co) A renderer instance fixed connected to a native window handle? This can't be right. If it's about OpenGL context sharing we surely can find a better solution.
 		*/
-		explicit RendererInstance(const char* rendererName, handle nativeWindowHandle)
+		explicit RendererInstance(const char* rendererName, handle nativeWindowHandle, bool useExternalContext = false)
 		{
 			// In order to keep it simple in this test project the supported renderer backends are
 			// fixed typed in. For a real system a dynamic plugin system would be a good idea.
@@ -155,10 +155,10 @@ namespace Renderer
 						if (nullptr != symbol)
 						{
 							// "createRendererInstance()" signature
-							typedef Renderer::IRenderer* (__cdecl *createRendererInstance)(Renderer::handle);
+							typedef Renderer::IRenderer* (__cdecl *createRendererInstance)(Renderer::handle, bool);
 
 							// Create the renderer instance
-							mRenderer = (static_cast<createRendererInstance>(symbol))(nativeWindowHandle);
+							mRenderer = (static_cast<createRendererInstance>(symbol))(nativeWindowHandle, useExternalContext);
 						}
 						else
 						{
@@ -188,10 +188,10 @@ namespace Renderer
 						if (nullptr != symbol)
 						{
 							// "createRendererInstance()" signature
-							typedef Renderer::IRenderer* (*createRendererInstance)(Renderer::handle);
+							typedef Renderer::IRenderer* (*createRendererInstance)(Renderer::handle, bool);
 
 							// Create the renderer instance
-							mRenderer = (reinterpret_cast<createRendererInstance>(symbol))(nativeWindowHandle);
+							mRenderer = (reinterpret_cast<createRendererInstance>(symbol))(nativeWindowHandle, useExternalContext);
 						}
 						else
 						{
@@ -216,7 +216,7 @@ namespace Renderer
 					if (0 == strcmp(rendererName, "Null"))
 					{
 						// Create the renderer instance
-						mRenderer = createNullRendererInstance(nativeWindowHandle);
+						mRenderer = createNullRendererInstance(nativeWindowHandle, useExternalContext);
 					}
 				#endif
 
@@ -225,7 +225,7 @@ namespace Renderer
 					if (0 == strcmp(rendererName, "OpenGL"))
 					{
 						// Create the renderer instance
-						mRenderer = createOpenGLRendererInstance(nativeWindowHandle);
+						mRenderer = createOpenGLRendererInstance(nativeWindowHandle, useExternalContext);
 					}
 				#endif
 
@@ -234,7 +234,7 @@ namespace Renderer
 					if (0 == strcmp(rendererName, "OpenGLES3"))
 					{
 						// Create the renderer instance
-						mRenderer = createOpenGLES3RendererInstance(nativeWindowHandle);
+						mRenderer = createOpenGLES3RendererInstance(nativeWindowHandle, useExternalContext);
 					}
 				#endif
 
@@ -243,7 +243,7 @@ namespace Renderer
 					if (0 == strcmp(rendererName, "Vulkan"))
 					{
 						// Create the renderer instance
-						mRenderer = createVulkanRendererInstance(nativeWindowHandle);
+						mRenderer = createVulkanRendererInstance(nativeWindowHandle, useExternalContext);
 					}
 				#endif
 
@@ -252,7 +252,7 @@ namespace Renderer
 					if (0 == strcmp(rendererName, "Direct3D9"))
 					{
 						// Create the renderer instance
-						mRenderer = createDirect3D9RendererInstance(nativeWindowHandle);
+						mRenderer = createDirect3D9RendererInstance(nativeWindowHandle, useExternalContext);
 					}
 				#endif
 
@@ -261,7 +261,7 @@ namespace Renderer
 					if (0 == strcmp(rendererName, "Direct3D10"))
 					{
 						// Create the renderer instance
-						mRenderer = createDirect3D10RendererInstance(nativeWindowHandle);
+						mRenderer = createDirect3D10RendererInstance(nativeWindowHandle, useExternalContext);
 					}
 				#endif
 
@@ -270,7 +270,7 @@ namespace Renderer
 					if (0 == strcmp(rendererName, "Direct3D11"))
 					{
 						// Create the renderer instance
-						mRenderer = createDirect3D11RendererInstance(nativeWindowHandle);
+						mRenderer = createDirect3D11RendererInstance(nativeWindowHandle, useExternalContext);
 					}
 				#endif
 
@@ -279,7 +279,7 @@ namespace Renderer
 					if (0 == strcmp(rendererName, "Direct3D12"))
 					{
 						// Create the renderer instance
-						mRenderer = createDirect3D12RendererInstance(nativeWindowHandle);
+						mRenderer = createDirect3D12RendererInstance(nativeWindowHandle, useExternalContext);
 					}
 				#endif
 			#endif

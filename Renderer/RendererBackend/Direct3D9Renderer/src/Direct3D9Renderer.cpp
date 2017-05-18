@@ -58,7 +58,7 @@
 #else
 	#define DIRECT3D9RENDERER_API_EXPORT
 #endif
-DIRECT3D9RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D9RendererInstance(handle nativeWindowHandle)
+DIRECT3D9RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D9RendererInstance(handle nativeWindowHandle, bool /*useExternalContext*/)
 {
 	return new Direct3D9Renderer::Direct3D9Renderer(nativeWindowHandle);
 }

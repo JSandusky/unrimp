@@ -61,15 +61,9 @@
 #else
 	#define VULKANRENDERER_API_EXPORT
 #endif
-// TODO(co) We might want to give this function a better name so one knows what it's about
-VULKANRENDERER_API_EXPORT Renderer::IRenderer *createVulkanRendererInstance2(handle nativeWindowHandle, bool externalContext)
+VULKANRENDERER_API_EXPORT Renderer::IRenderer *createVulkanRendererInstance(handle nativeWindowHandle, bool externalContext)
 {
 	return new VulkanRenderer::VulkanRenderer(nativeWindowHandle, externalContext);
-}
-
-VULKANRENDERER_API_EXPORT Renderer::IRenderer *createVulkanRendererInstance(handle nativeWindowHandle)
-{
-	return createVulkanRendererInstance2(nativeWindowHandle, false);
 }
 #undef VULKANRENDERER_API_EXPORT
 

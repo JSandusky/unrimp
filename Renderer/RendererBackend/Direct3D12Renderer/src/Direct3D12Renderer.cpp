@@ -65,7 +65,7 @@
 #else
 	#define DIRECT3D12RENDERER_API_EXPORT
 #endif
-DIRECT3D12RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D12RendererInstance(handle nativeWindowHandle)
+DIRECT3D12RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D12RendererInstance(handle nativeWindowHandle, bool /*useExternalContext*/)
 {
 	return new Direct3D12Renderer::Direct3D12Renderer(nativeWindowHandle);
 }

@@ -55,7 +55,7 @@
 #else
 	#define NULLRENDERER_API_EXPORT
 #endif
-NULLRENDERER_API_EXPORT Renderer::IRenderer *createNullRendererInstance(handle nativeWindowHandle)
+NULLRENDERER_API_EXPORT Renderer::IRenderer *createNullRendererInstance(handle nativeWindowHandle, bool /*useExternalContext*/)
 {
 	return new NullRenderer::NullRenderer(nativeWindowHandle);
 }

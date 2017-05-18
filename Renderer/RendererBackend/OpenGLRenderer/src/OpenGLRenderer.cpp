@@ -76,15 +76,9 @@
 #else
 	#define OPENGLRENDERER_API_EXPORT
 #endif
-// TODO(co) We might want to give this function a better name so one knows what it's about
-OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance2(handle nativeWindowHandle, bool externalContext)
+OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance(handle nativeWindowHandle, bool externalContext)
 {
 	return new OpenGLRenderer::OpenGLRenderer(nativeWindowHandle, externalContext);
-}
-
-OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance(handle nativeWindowHandle)
-{
-	return createOpenGLRendererInstance2(nativeWindowHandle, false);
 }
 #undef OPENGLRENDERER_API_EXPORT
 
