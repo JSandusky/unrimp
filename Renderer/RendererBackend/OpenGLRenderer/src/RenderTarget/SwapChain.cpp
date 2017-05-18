@@ -41,13 +41,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle) :
+	SwapChain::SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, bool externalContext) :
 		ISwapChain(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		#ifdef WIN32
 			mContext(new ContextWindows(nativeWindowHandle, static_cast<const ContextWindows*>(&openGLRenderer.getContext()))),
 		#elif defined LINUX
-			mContext(new ContextLinux(nativeWindowHandle, false, static_cast<const ContextLinux*>(&openGLRenderer.getContext()))),
+			mContext(new ContextLinux(nativeWindowHandle, externalContext, static_cast<const ContextLinux*>(&openGLRenderer.getContext()))),
 		#else
 			#error "Unsupported platform"
 		#endif

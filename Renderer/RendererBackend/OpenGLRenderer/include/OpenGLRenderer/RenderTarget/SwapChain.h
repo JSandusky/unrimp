@@ -70,8 +70,10 @@ namespace OpenGLRenderer
 		*    Owner OpenGL renderer instance
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
+		*  @param[in] externalContext
+		*    Indicates if an external renderer context is used. If true then no internal renderer context handling is performed
 		*/
-		SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle);
+		SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, bool externalContext);
 
 		/**
 		*  @brief

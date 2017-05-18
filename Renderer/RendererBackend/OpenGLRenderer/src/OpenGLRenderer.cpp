@@ -1755,7 +1755,7 @@ namespace OpenGLRenderer
 	Renderer::ISwapChain *OpenGLRenderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
 	{
 		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle, externalContext) : nullptr;
 	}
 
 	Renderer::IFramebuffer *OpenGLRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
