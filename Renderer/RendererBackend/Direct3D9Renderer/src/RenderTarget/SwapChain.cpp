@@ -319,6 +319,11 @@ namespace Direct3D9Renderer
 		// TODO(co) Implement me
 	}
 
+	void SwapChain::setWidthAndHeight(uint32_t width, uint32_t height)
+	{
+		// TODO(sw) implement me
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

@@ -51,7 +51,9 @@ namespace OpenGLRenderer
 		#else
 			#error "Unsupported platform"
 		#endif
-		mOwnsContext(true)
+		mOwnsContext(true),
+		mWidth(0),
+		mHeight(0)
 	{
 		// Nothing here
 	}
@@ -60,7 +62,9 @@ namespace OpenGLRenderer
 		ISwapChain(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		mContext(&context),
-		mOwnsContext(false)
+		mOwnsContext(false),
+		mWidth(0),
+		mHeight(0)
 	{
 		// Nothing here
 	}
@@ -79,6 +83,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
+		// Return stored width and height when both valid
+		if (mWidth > 0 && mHeight > 0)
+		{
+			width = mWidth;
+			height = mHeight;
+			return;
+		}
 		#ifdef WIN32
 			// Is there a valid native OS window?
 			if (NULL_HANDLE != mNativeWindowHandle)
@@ -123,7 +134,10 @@ namespace OpenGLRenderer
 				::Window rootWindow = 0;
 				int positionX = 0, positionY = 0;
 				unsigned int unsignedWidth = 0, unsignedHeight = 0, border = 0, depth = 0;
-				XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
+				if (display)
+				{
+					XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
+				}
 
 				// ... and ensure that none of them is ever zero
 				if (unsignedWidth < 1)
@@ -166,8 +180,11 @@ namespace OpenGLRenderer
 			::SwapBuffers(hDC);
 			::ReleaseDC(reinterpret_cast<HWND>(mNativeWindowHandle), hDC);
 		#elif defined LINUX
-			OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-			glXSwapBuffers(static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay(), mNativeWindowHandle);
+			if (NULL_HANDLE != mNativeWindowHandle)
+			{
+				OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+				glXSwapBuffers(static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay(), mNativeWindowHandle);
+			}
 		#else
 			#error "Unsupported platform"
 		#endif
@@ -187,6 +204,12 @@ namespace OpenGLRenderer
 	void SwapChain::setFullscreenState(bool)
 	{
 		// TODO(co) Implement me
+	}
+
+	void SwapChain::setWidthAndHeight(uint32_t width, uint32_t height)
+	{
+		mWidth = std::max(1u, width);
+		mHeight = std::max(1u, height);
 	}
 
 

@@ -106,6 +106,22 @@ namespace Renderer
 		*/
 		virtual void setFullscreenState(bool fullscreen) = 0;
 
+		/**
+		*  @brief
+		*    Sets the width and height of the swap chain
+		*
+		*  @param[in] width
+		*    Width of the swap chain
+		*  @param[in] height
+		*    Height of the swap chain
+		*
+		*  @note
+		*    This method can be used to override the width and height which gets returned by the IRenderTarget::getWidthAndHeight method.
+		*    This method can also be used to set specific size when the user don't want that the swap chain itself tempers with the given window handle (the handle might be invalid but non 0)
+		*    e.g. the user uses a windowing library (e.g. SDL2) which abstracts the window handling on different windowing platforms(e.g. Win32 or Linux/Wayland) and the application should run on a windowing platform which isn't supported by the swapchain implementation itself
+		*/
+		virtual void setWidthAndHeight(uint32_t width, uint32_t height) = 0;
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]

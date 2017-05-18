@@ -2018,6 +2018,7 @@ namespace Renderer
 			virtual void resizeBuffers() = 0;
 			virtual bool getFullscreenState() const = 0;
 			virtual void setFullscreenState(bool fullscreen) = 0;
+			virtual void setWidthAndHeight(uint32_t width, uint32_t height) = 0;
 		protected:
 			explicit ISwapChain(IRenderer& renderer);
 			explicit ISwapChain(const ISwapChain& source) = delete;

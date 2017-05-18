@@ -96,7 +96,7 @@ namespace NullRenderer
 		#elif defined LINUX
 			if (mNativeWindowHandle)
 			{
-				// TODO(sw) Resue X11 display from "Frontend"
+				// TODO(sw) Reuse X11 display from "Frontend"
 				Display *display = XOpenDisplay(0);
 
 				// Get the width and height...
@@ -158,6 +158,11 @@ namespace NullRenderer
 	void SwapChain::setFullscreenState(bool)
 	{
 		// We don't support fullscreen state change, so, nothing to do in here
+	}
+
+	void SwapChain::setWidthAndHeight(uint32_t width, uint32_t height)
+	{
+		// TODO(sw) implement me
 	}
 
 

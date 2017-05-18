@@ -118,6 +118,7 @@ namespace OpenGLRenderer
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
 		virtual void setFullscreenState(bool fullscreen) override;
+		virtual void setWidthAndHeight(uint32_t width, uint32_t height) override;
 
 
 	//[-------------------------------------------------------]
@@ -135,6 +136,8 @@ namespace OpenGLRenderer
 		handle    mNativeWindowHandle;	///< Native window handle window, can be a null handle
 		IContext* mContext;				///< Context, must be valid
 		bool	  mOwnsContext;			///< Does this swap chain own the context?
+		uint32_t  mWidth;
+		uint32_t  mHeight;
 
 
 	};

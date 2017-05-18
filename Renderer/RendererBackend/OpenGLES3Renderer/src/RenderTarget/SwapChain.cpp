@@ -38,7 +38,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	SwapChain::SwapChain(OpenGLES3Renderer &openGLES3Renderer, handle nativeWindowHandle) :
 		ISwapChain(openGLES3Renderer),
-		mNativeWindowHandle(nativeWindowHandle)
+		mNativeWindowHandle(nativeWindowHandle),
+		mWidth(0),
+		mHeight(0)
 	{
 		// TODO(co) Implement me
 	}
@@ -58,7 +60,13 @@ namespace OpenGLES3Renderer
 	//	EGLint renderTargetWidth  = 1;
 	//	EGLint renderTargetHeight = 1;
 	//	eglQuerySurface(mContext->getEGLDisplay(), mContext->getEGLDummySurface(), EGL_HEIGHT, &renderTargetHeight);
-
+		// Return stored width and height when both valid
+		if (mWidth > 0 && mHeight > 0)
+		{
+			width = mWidth;
+			height = mHeight;
+			return;
+		}
 		#ifdef WIN32
 			// Is there a valid native OS window?
 			if (NULL_HANDLE != mNativeWindowHandle)
@@ -170,6 +178,12 @@ namespace OpenGLES3Renderer
 	void SwapChain::setFullscreenState(bool)
 	{
 		// TODO(co) Implement me
+	}
+
+	void SwapChain::setWidthAndHeight(uint32_t width, uint32_t height)
+	{
+		mWidth = std::max(1u, width);
+		mHeight = std::max(1u, height);
 	}
 
 
