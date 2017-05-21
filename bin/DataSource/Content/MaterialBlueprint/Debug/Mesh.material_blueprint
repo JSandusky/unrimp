@@ -24,6 +24,13 @@
 				"Value": "TRUE",
 				"Description": "Cast shadows?"
 			},
+			"CullMode":
+			{
+				"Usage": "RASTERIZER_STATE",
+				"ValueType": "CULL_MODE",
+				"Value": "BACK",
+				"Description": "Cull mode rasterizer state"
+			},
 			"DiffuseColor":
 			{
 				"Usage": "SHADER_UNIFORM",
@@ -152,6 +159,10 @@
 			{
 				"VertexShaderBlueprintAssetId": "108",
 				"FragmentShaderBlueprintAssetId": "109"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "@CullMode"
 			}
 		},
 		"Resources":
