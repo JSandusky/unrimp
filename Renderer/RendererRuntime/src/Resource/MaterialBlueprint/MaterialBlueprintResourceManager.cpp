@@ -258,6 +258,30 @@ namespace RendererRuntime
 		delete mInternalResourceManager;
 	}
 
+	void MaterialBlueprintResourceManager::addSerializedPipelineState(uint32_t serializedPipelineStateHash, const Renderer::SerializedPipelineState& serializedPipelineState)
+	{
+		std::lock_guard<std::mutex> serializedPipelineStatesMutexLock(mSerializedPipelineStatesMutex);
+		SerializedPipelineStates::iterator iterator = mSerializedPipelineStates.find(serializedPipelineStateHash);
+		if (iterator == mSerializedPipelineStates.cend())
+		{
+			mSerializedPipelineStates.emplace(serializedPipelineStateHash, serializedPipelineState);
+		}
+	}
+
+	void MaterialBlueprintResourceManager::applySerializedPipelineState(uint32_t serializedPipelineStateHash, Renderer::PipelineState& pipelineState)
+	{
+		std::lock_guard<std::mutex> serializedPipelineStatesMutexLock(mSerializedPipelineStatesMutex);
+		RendererRuntime::MaterialBlueprintResourceManager::SerializedPipelineStates::const_iterator iterator = mSerializedPipelineStates.find(serializedPipelineStateHash);
+		if (iterator != mSerializedPipelineStates.cend())
+		{
+			static_cast<Renderer::SerializedPipelineState&>(pipelineState) = iterator->second;
+		}
+		else
+		{
+			// We can and will end up in here when e.g. heating the shader cache
+		}
+	}
+
 	void MaterialBlueprintResourceManager::clearPipelineStateObjectCache()
 	{
 		// Loop through all material blueprint resources and clear the cache entries

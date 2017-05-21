@@ -143,6 +143,15 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the FNV1a hash of "Renderer::SerializedPipelineState"
+		*
+		*  @return
+		*    The FNV1a hash of "Renderer::SerializedPipelineState"
+		*/
+		inline uint32_t getSerializedPipelineStateHash() const;
+
+		/**
+		*  @brief
 		*    Bind the material technique into the given commando buffer
 		*
 		*  @param[in] rendererRuntime
@@ -163,6 +172,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Calculate FNV1a hash of "Renderer::SerializedPipelineState"
+		*/
+		void calculateSerializedPipelineStateHash();
+
+		/**
+		*  @brief
 		*    Schedule the material slot for shader uniform update
 		*/
 		void scheduleForShaderUniformUpdate();
@@ -175,6 +190,7 @@ namespace RendererRuntime
 		MaterialTechniqueId			mMaterialTechniqueId;			///< Material technique ID
 		MaterialBlueprintResourceId	mMaterialBlueprintResourceId;	///< Material blueprint resource ID, can be set to uninitialized value
 		mutable Textures			mTextures;
+		uint32_t					mSerializedPipelineStateHash;	///< FNV1a hash of "Renderer::SerializedPipelineState"
 
 
 	};

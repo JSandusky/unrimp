@@ -36,6 +36,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline PipelineStateSignature::PipelineStateSignature() :
 		mMaterialBlueprintResourceId(getUninitialized<MaterialBlueprintResourceId>()),
+		mPrimitiveTopology(getUninitialized<Renderer::PrimitiveTopology>()),
+		mSerializedPipelineStateHash(getUninitialized<uint32_t>()),
 		mPipelineStateSignatureId(getUninitialized<PipelineStateSignatureId>()),
 		mShaderCombinationId{getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>()}
 	{
@@ -50,6 +52,16 @@ namespace RendererRuntime
 	inline MaterialBlueprintResourceId PipelineStateSignature::getMaterialBlueprintResourceId() const
 	{
 		return mMaterialBlueprintResourceId;
+	}
+
+	inline Renderer::PrimitiveTopology PipelineStateSignature::getPrimitiveTopology() const
+	{
+		return mPrimitiveTopology;
+	}
+
+	inline uint32_t PipelineStateSignature::getSerializedPipelineStateHash() const
+	{
+		return mSerializedPipelineStateHash;
 	}
 
 	inline const ShaderProperties& PipelineStateSignature::getShaderProperties() const

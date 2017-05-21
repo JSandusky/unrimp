@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return mMaterialBlueprintResourceId;
 	}
 
+	inline uint32_t MaterialTechnique::getSerializedPipelineStateHash() const
+	{
+		return mSerializedPipelineStateHash;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

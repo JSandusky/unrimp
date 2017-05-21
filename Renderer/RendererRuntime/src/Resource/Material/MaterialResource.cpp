@@ -247,16 +247,17 @@ namespace RendererRuntime
 					break;
 
 				case MaterialProperty::Usage::SHADER_COMBINATION:
-					// TODO(co)
+					// TODO(co) Gather shader properties (later on we cache as much as possible of this work inside the renderable)
 					break;
 
 				case MaterialProperty::Usage::RASTERIZER_STATE:
 				case MaterialProperty::Usage::DEPTH_STENCIL_STATE:
-					// TODO(co)
-					break;
-
 				case MaterialProperty::Usage::BLEND_STATE:
-					// TODO(co)
+					// TODO(co) Optimization: The calculation of the FNV1a hash of "Renderer::SerializedPipelineState" is pretty fast, but maybe it makes sense to schedule the calculation in case many material properties are changed in a row?
+					for (MaterialTechnique* materialTechnique : mSortedMaterialTechniqueVector)
+					{
+						materialTechnique->calculateSerializedPipelineStateHash();
+					}
 					break;
 
 				case MaterialProperty::Usage::TEXTURE_REFERENCE:

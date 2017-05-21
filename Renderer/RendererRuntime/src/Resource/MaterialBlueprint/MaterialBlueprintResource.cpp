@@ -405,7 +405,7 @@ namespace RendererRuntime
 				}
 
 				// Create the current pipeline state cache instances for the material blueprint
-				const Renderer::IPipelineStatePtr pipelineStatePtr = mPipelineStateCacheManager.getPipelineStateCacheByCombination(shaderProperties, dynamicShaderPieces, true);
+				const Renderer::IPipelineStatePtr pipelineStatePtr = mPipelineStateCacheManager.getPipelineStateCacheByCombination(Renderer::PrimitiveTopology::TRIANGLE_LIST, getUninitialized<uint32_t>(), shaderProperties, dynamicShaderPieces, true);
 				assert(nullptr != pipelineStatePtr);	// TODO(co) Decent error handling
 			}
 			while (shaderCombinationIterator.iterate());

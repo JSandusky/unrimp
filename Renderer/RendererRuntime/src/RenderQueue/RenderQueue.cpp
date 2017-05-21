@@ -269,7 +269,7 @@ namespace RendererRuntime
 								MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResourceManager.tryGetById(materialTechnique->getMaterialBlueprintResourceId());
 								if (nullptr != materialBlueprintResource && IResource::LoadingState::LOADED == materialBlueprintResource->getLoadingState())
 								{
-									// TODO(co) Pass shader properties (later on we cache as much as possible of this work inside the renderable)
+									// TODO(co) Gather shader properties (later on we cache as much as possible of this work inside the renderable)
 									ShaderProperties shaderProperties;
 									DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES];
 									{ // Gather shader properties from static material properties generating shader combinations
@@ -355,7 +355,7 @@ namespace RendererRuntime
 
 									materialBlueprintResource->optimizeShaderProperties(shaderProperties);
 
-									Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(shaderProperties, dynamicShaderPieces, false);
+									Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(renderable.getPrimitiveTopology(), materialTechnique->getSerializedPipelineStateHash(), shaderProperties, dynamicShaderPieces, false);
 									if (nullptr != pipelineStatePtr)
 									{
 										// Expensive state change: Handle material blueprint resource switches

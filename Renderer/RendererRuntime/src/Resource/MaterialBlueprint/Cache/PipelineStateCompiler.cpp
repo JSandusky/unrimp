@@ -44,46 +44,6 @@ PRAGMA_WARNING_DISABLE_MSVC(4355)	// warning C4355: 'this': used in base member 
 
 
 //[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-namespace
-{
-	namespace detail
-	{
-
-
-		//[-------------------------------------------------------]
-		//[ Global functions                                      ]
-		//[-------------------------------------------------------]
-		Renderer::IPipelineState* createPipelineState(const RendererRuntime::MaterialBlueprintResource& materialBlueprintResource, Renderer::IProgram& program)
-		{
-			// Start with the pipeline state of the material blueprint resource
-			Renderer::PipelineState pipelineState = materialBlueprintResource.getPipelineState();
-
-			// Setup the dynamic part of the pipeline state
-			const RendererRuntime::IRendererRuntime& rendererRuntime = materialBlueprintResource.getResourceManager<RendererRuntime::MaterialBlueprintResourceManager>().getRendererRuntime();
-			Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
-			pipelineState.rootSignature	   = rootSignaturePtr;
-			pipelineState.program		   = &program;
-			pipelineState.vertexAttributes = rendererRuntime.getVertexAttributesResourceManager().getById(materialBlueprintResource.getVertexAttributesResourceId()).getVertexAttributes();
-
-			// Create the pipeline state object (PSO)
-			Renderer::IPipelineState* pipelineStateResource = rootSignaturePtr->getRenderer().createPipelineState(pipelineState);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(pipelineStateResource, "Pipeline state compiler")
-
-			// Done
-			return pipelineStateResource;
-		}
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-	} // detail
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -190,13 +150,14 @@ namespace RendererRuntime
 	void PipelineStateCompiler::instantSynchronousCompilerRequest(MaterialBlueprintResource& materialBlueprintResource, PipelineStateCache& pipelineStateCache)
 	{
 		// Get the program cache; synchronous processing
-		const ProgramCache* programCache = materialBlueprintResource.getPipelineStateCacheManager().getProgramCacheManager().getProgramCacheByPipelineStateSignature(pipelineStateCache.getPipelineStateSignature());
+		const PipelineStateSignature& pipelineStateSignature = pipelineStateCache.getPipelineStateSignature();
+		const ProgramCache* programCache = materialBlueprintResource.getPipelineStateCacheManager().getProgramCacheManager().getProgramCacheByPipelineStateSignature(pipelineStateSignature);
 		if (nullptr != programCache)
 		{
 			Renderer::IProgramPtr programPtr = programCache->getProgramPtr();
 			if (nullptr != programPtr)
 			{
-				pipelineStateCache.mPipelineStateObjectPtr = ::detail::createPipelineState(materialBlueprintResource, *programPtr);
+				pipelineStateCache.mPipelineStateObjectPtr = createPipelineState(materialBlueprintResource, pipelineStateSignature.getSerializedPipelineStateHash(), *programPtr);
 			}
 		}
 	}
@@ -420,7 +381,7 @@ namespace RendererRuntime
 							RENDERER_SET_RESOURCE_DEBUG_NAME(program, "Pipeline state compiler")
 
 							// Create the pipeline state object (PSO)
-							compilerRequest.pipelineStateObject = ::detail::createPipelineState(materialBlueprintResource, *program);
+							compilerRequest.pipelineStateObject = createPipelineState(materialBlueprintResource, pipelineStateSignature.getSerializedPipelineStateHash(), *program);
 
 							{ // Program cache entry
 								ProgramCacheManager& programCacheManager = materialBlueprintResource.getPipelineStateCacheManager().getProgramCacheManager();
@@ -451,6 +412,27 @@ namespace RendererRuntime
 			// TODO(co) Error handling
 			assert(false);
 		}
+	}
+
+	Renderer::IPipelineState* PipelineStateCompiler::createPipelineState(const RendererRuntime::MaterialBlueprintResource& materialBlueprintResource, uint32_t serializedPipelineStateHash, Renderer::IProgram& program) const
+	{
+		// Start with the pipeline state of the material blueprint resource, then copy over serialized pipeline state
+		Renderer::PipelineState pipelineState = materialBlueprintResource.getPipelineState();
+		materialBlueprintResource.getResourceManager<RendererRuntime::MaterialBlueprintResourceManager>().applySerializedPipelineState(serializedPipelineStateHash, pipelineState);
+
+		// Setup the dynamic part of the pipeline state
+		const RendererRuntime::IRendererRuntime& rendererRuntime = materialBlueprintResource.getResourceManager<RendererRuntime::MaterialBlueprintResourceManager>().getRendererRuntime();
+		Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
+		pipelineState.rootSignature	   = rootSignaturePtr;
+		pipelineState.program		   = &program;
+		pipelineState.vertexAttributes = rendererRuntime.getVertexAttributesResourceManager().getById(materialBlueprintResource.getVertexAttributesResourceId()).getVertexAttributes();
+
+		// Create the pipeline state object (PSO)
+		Renderer::IPipelineState* pipelineStateResource = rootSignaturePtr->getRenderer().createPipelineState(pipelineState);
+		RENDERER_SET_RESOURCE_DEBUG_NAME(pipelineStateResource, "Pipeline state compiler")
+
+		// Done
+		return pipelineStateResource;
 	}
 
 
