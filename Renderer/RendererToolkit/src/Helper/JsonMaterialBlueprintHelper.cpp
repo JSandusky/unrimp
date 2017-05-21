@@ -670,7 +670,7 @@ namespace RendererToolkit
 			}
 
 			// Material property usage
-			// -> Optimisation: Material resources don't need to store global reference fallbacks, it's sufficient if those are just stored inside material blueprint resources
+			// -> Optimization: Material resources don't need to store global reference fallbacks, it's sufficient if those are just stored inside material blueprint resources
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(rapidJsonValueProperty);
 			if (!ignoreGlobalReferenceFallback || RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE_FALLBACK != usage)
 			{
@@ -706,19 +706,28 @@ namespace RendererToolkit
 				if (rapidJsonValueProperty.HasMember("VisualImportance"))
 				{
 					// Sanity check: "VisualImportance" is only valid for shader combination properties
-					// TODO(co) Error handling
-					assert(RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage);
 					if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage)
 					{
-						const rapidjson::Value& rapidJsonValueVisualImportance = rapidJsonValueProperty["VisualImportance"];
-						const char* valueAsString = rapidJsonValueVisualImportance.GetString();
+						const char* valueAsString = rapidJsonValueProperty["VisualImportance"].GetString();
 						int32_t visualImportanceOfShaderProperty = RendererRuntime::MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY;
 						if (strncmp(valueAsString, "MANDATORY", 9) != 0)
 						{
 							visualImportanceOfShaderProperty = std::atoi(valueAsString);
 						}
-						visualImportanceOfShaderProperties.setPropertyValue(materialPropertyId, visualImportanceOfShaderProperty);	// We're using the same string hashing for material property ID and shader property ID
+
+						// We're using the same string hashing for material property ID and shader property ID
+						visualImportanceOfShaderProperties.setPropertyValue(materialPropertyId, visualImportanceOfShaderProperty);
 					}
+					else
+					{
+						throw std::runtime_error("Specifying \"VisualImportance\" is only valid for shader combination properties");
+					}
+				}
+				else if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage)
+				{
+					// Internally, shader combination properties always need to have a visual importance set
+					// -> We're using the same string hashing for material property ID and shader property ID
+					visualImportanceOfShaderProperties.setPropertyValue(materialPropertyId, 0);
 				}
 
 				// Mandatory maximum value for integer type shader combination properties to be able to keep the total number of shader combinations manageable
