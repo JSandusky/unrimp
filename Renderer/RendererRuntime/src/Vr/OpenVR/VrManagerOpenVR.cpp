@@ -175,8 +175,13 @@ namespace
 
 		void registerRenderModel(const std::string& renderModelName, RendererRuntime::VrManagerOpenVR::RenderModelNames& renderModelNames, RendererRuntime::AssetPackage& assetPackage)
 		{
-			assetPackage.addAsset(RendererRuntime::AssetId(renderModelName.c_str()), std::to_string(renderModelNames.size()).c_str());
-			renderModelNames.push_back(renderModelName);
+			// Some render models might share component render models, so we need to ensure the render model asset ID isn't registered, yet
+			const RendererRuntime::AssetId assetId(renderModelName.c_str());
+			if (nullptr == assetPackage.tryGetAssetByAssetId(assetId))
+			{
+				assetPackage.addAsset(assetId, std::to_string(renderModelNames.size()).c_str());
+				renderModelNames.push_back(renderModelName);
+			}
 		}
 
 		glm::mat4 convertOpenVrMatrixToGlmMat34(const vr::HmdMatrix34_t& vrHmdMatrix34)
