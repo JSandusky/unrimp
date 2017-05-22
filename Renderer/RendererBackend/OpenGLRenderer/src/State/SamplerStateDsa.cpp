@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/State/SamplerStateDsa.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 
 
 //[-------------------------------------------------------]
@@ -38,7 +39,8 @@ namespace OpenGLRenderer
 		SamplerState(openGLRenderer),
 		mSamplerState(samplerState)
 	{
-		// Nothing here
+		// Sanity check
+		assert(samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy && "Maximum anisotropy value violated");
 	}
 
 	SamplerStateDsa::~SamplerStateDsa()

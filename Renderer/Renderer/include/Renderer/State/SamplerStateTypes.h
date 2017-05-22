@@ -71,7 +71,8 @@ namespace Renderer
 		COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x91,	///< Use linear interpolation for minification; use point sampling for magnification; use linear interpolation for mip-level sampling. Compare the result to the comparison value.
 		COMPARISON_MIN_MAG_LINEAR_MIP_POINT		   = 0x94,	///< Use linear interpolation for minification and magnification; use point sampling for mip-level sampling. Compare the result to the comparison value.
 		COMPARISON_MIN_MAG_MIP_LINEAR			   = 0x95,	///< Use linear interpolation for minification, magnification, and mip-level sampling. Compare the result to the comparison value.
-		COMPARISON_ANISOTROPIC					   = 0xd5	///< Use anisotropic interpolation for minification, magnification, and mip-level sampling. Compare the result to the comparison value.
+		COMPARISON_ANISOTROPIC					   = 0xd5,	///< Use anisotropic interpolation for minification, magnification, and mip-level sampling. Compare the result to the comparison value.
+		UNKNOWN									   = 0xd6	///< Unknown invalid setting
 	};
 
 	/**

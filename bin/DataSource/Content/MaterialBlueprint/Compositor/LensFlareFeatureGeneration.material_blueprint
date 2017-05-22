@@ -205,6 +205,7 @@
 				"SamplerLinear":
 				{
 					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
+					"MaxAnisotropy": "1",
 					"MaxLOD": "0.0"
 				},
 				"SamplerPoint":
@@ -212,6 +213,7 @@
 					"Filter": "MIN_MAG_MIP_POINT",
 					"AddressU": "WRAP",
 					"AddressV": "WRAP",
+					"MaxAnisotropy": "1",
 					"MaxLOD": "0.0"
 				}
 			},

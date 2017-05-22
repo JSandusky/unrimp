@@ -50,6 +50,16 @@ namespace RendererRuntime
 		return mGlobalMaterialProperties;
 	}
 
+	inline Renderer::FilterMode MaterialBlueprintResourceManager::getDefaultTextureFilterMode() const
+	{
+		return mDefaultTextureFilterMode;
+	}
+
+	inline uint8_t MaterialBlueprintResourceManager::getDefaultMaximumTextureAnisotropy() const
+	{
+		return mDefaultMaximumTextureAnisotropy;
+	}
+
 	inline InstanceBufferManager& MaterialBlueprintResourceManager::getInstanceBufferManager() const
 	{
 		// We know this pointer must always be valid

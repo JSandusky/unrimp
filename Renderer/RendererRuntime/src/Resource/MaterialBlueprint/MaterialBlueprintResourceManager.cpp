@@ -143,6 +143,22 @@ namespace RendererRuntime
 		}
 	}
 
+	void MaterialBlueprintResourceManager::setDefaultTextureFiltering(Renderer::FilterMode filterMode, uint8_t maximumAnisotropy)
+	{
+		if (mDefaultTextureFilterMode != filterMode || mDefaultMaximumTextureAnisotropy != maximumAnisotropy)
+		{
+			mDefaultTextureFilterMode = filterMode;
+			mDefaultMaximumTextureAnisotropy = maximumAnisotropy;
+
+			// Recreate sampler state instances
+			const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
+			for (uint32_t i = 0; i < numberOfElements; ++i)
+			{
+				mInternalResourceManager->getResources().getElementByIndex(i).onDefaultTextureFilteringChanged(mDefaultTextureFilterMode, mDefaultMaximumTextureAnisotropy);
+			}
+		}
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
@@ -222,6 +238,8 @@ namespace RendererRuntime
 	MaterialBlueprintResourceManager::MaterialBlueprintResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mMaterialBlueprintResourceListener(&::detail::defaultMaterialBlueprintResourceListener),
+		mDefaultTextureFilterMode(Renderer::FilterMode::MIN_MAG_MIP_LINEAR),
+		mDefaultMaximumTextureAnisotropy(1),
 		mInstanceBufferManager(nullptr),
 		mLightBufferManager(nullptr)
 	{

@@ -94,6 +94,7 @@ FirstScene::FirstScene() :
 	mCurrentCompositor(mInstancedCompositor),
 	mCurrentMsaa(Msaa::NONE),
 	mResolutionScale(1.0f),
+	mCurrentTextureFiltering(TextureFiltering::TRILINEAR),
 	mNumberOfTopTextureMipmapsToRemove(0),
 	mPerformFxaa(false),
 	mPerformSepiaColorCorrection(false),
@@ -145,6 +146,7 @@ void FirstScene::onInitialization()
 					// -> "Advanced VR Rendering" by Alex Vlachos, Valve -> page 26 -> "4xMSAA Minimum Quality" ( http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf )
 					mCurrentCompositor = mInstancedCompositor = Compositor::VR;
 					mCurrentMsaa = Msaa::FOUR;
+					mCurrentTextureFiltering = TextureFiltering::ANISOTROPIC_4;
 				}
 			}
 		}
@@ -438,6 +440,10 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					}
 				}
 				ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
+				{
+					const char* items[] = { "Point", "Bilinear", "Trilinear", "2x Anisotropic", "4x Anisotropic", "8x Anisotropic", "16x Anisotropic" };
+					ImGui::Combo("Texture filtering", &mCurrentTextureFiltering, items, static_cast<int>(glm::countof(items)));
+				}
 				ImGui::SliderInt("Mipmaps to Remove", &mNumberOfTopTextureMipmapsToRemove, 0, 8);
 				ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
 				ImGui::Checkbox("Perform Sepia Color Correction", &mPerformSepiaColorCorrection);
@@ -486,7 +492,40 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			createCompositorWorkspace();
 		}
 
-		// Update texture resource manager
+		// Update texture related settings
+		{ // Default texture filtering
+			RendererRuntime::MaterialBlueprintResourceManager& materialBlueprintResourceManager = rendererRuntime->getMaterialBlueprintResourceManager();
+			switch (mCurrentTextureFiltering)
+			{
+				case TextureFiltering::POINT:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::MIN_MAG_MIP_POINT, 1);
+					break;
+
+				case TextureFiltering::BILINEAR:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::MIN_MAG_LINEAR_MIP_POINT, 1);
+					break;
+
+				case TextureFiltering::TRILINEAR:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::MIN_MAG_MIP_LINEAR, 1);
+					break;
+
+				case TextureFiltering::ANISOTROPIC_2:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 2);
+					break;
+
+				case TextureFiltering::ANISOTROPIC_4:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 4);
+					break;
+
+				case TextureFiltering::ANISOTROPIC_8:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 8);
+					break;
+
+				case TextureFiltering::ANISOTROPIC_16:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 16);
+					break;
+			}
+		}
 		rendererRuntime->getTextureResourceManager().setNumberOfTopMipmapsToRemove(static_cast<uint8_t>(mNumberOfTopTextureMipmapsToRemove));
 
 		// Update compositor workspace

@@ -113,6 +113,13 @@ namespace RendererRuntime
 		inline const MaterialProperties& getGlobalMaterialProperties() const;
 
 		//[-------------------------------------------------------]
+		//[ Default texture filtering                             ]
+		//[-------------------------------------------------------]
+		inline Renderer::FilterMode getDefaultTextureFilterMode() const;
+		inline uint8_t getDefaultMaximumTextureAnisotropy() const;
+		RENDERERRUNTIME_API_EXPORT void setDefaultTextureFiltering(Renderer::FilterMode filterMode, uint8_t maximumAnisotropy);
+
+		//[-------------------------------------------------------]
 		//[ Manager                                               ]
 		//[-------------------------------------------------------]
 		inline InstanceBufferManager& getInstanceBufferManager() const;
@@ -165,6 +172,8 @@ namespace RendererRuntime
 		IRendererRuntime&					mRendererRuntime;					///< Renderer runtime instance, do not destroy the instance
 		IMaterialBlueprintResourceListener*	mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
 		MaterialProperties					mGlobalMaterialProperties;			///< Global material properties
+		Renderer::FilterMode				mDefaultTextureFilterMode;			///< Default texture filter mode
+		uint8_t								mDefaultMaximumTextureAnisotropy;	///< Default maximum texture anisotropy
 		std::mutex							mSerializedPipelineStatesMutex;		///< "RendererRuntime::PipelineStateCompiler" is running asynchronous, hence we need to synchronize the serialized pipeline states access
 		SerializedPipelineStates			mSerializedPipelineStates;			///< Serialized pipeline states
 		InstanceBufferManager*				mInstanceBufferManager;				///< Instance buffer manager, always valid in a sane none-legacy environment

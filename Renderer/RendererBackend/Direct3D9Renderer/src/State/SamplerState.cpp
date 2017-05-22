@@ -24,6 +24,7 @@
 #include "Direct3D9Renderer/State/SamplerState.h"
 #include "Direct3D9Renderer/d3d9.h"
 #include "Direct3D9Renderer/Mapping.h"
+#include "Direct3D9Renderer/Direct3D9Renderer.h"
 
 
 //[-------------------------------------------------------]
@@ -37,7 +38,7 @@ namespace Direct3D9Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	SamplerState::SamplerState(Direct3D9Renderer &direct3D9Renderer, const Renderer::SamplerState &samplerState) :
-		ISamplerState(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer)),
+		ISamplerState(direct3D9Renderer),
 		mDirect3D9MagFilterMode(Mapping::getDirect3D9MagFilterMode(samplerState.filter)),
 		mDirect3D9MinFilterMode(Mapping::getDirect3D9MinFilterMode(samplerState.filter)),
 		mDirect3D9MipFilterMode((0.0f == samplerState.maxLOD) ? D3DTEXF_NONE : Mapping::getDirect3D9MipFilterMode(samplerState.filter)),	// In case "Renderer::SamplerState::maxLOD" is zero, disable mipmapping in order to ensure a correct behaviour when using Direct3D 9, float equal check is valid in here
@@ -49,6 +50,9 @@ namespace Direct3D9Renderer
 		mDirect3DBorderColor(0),	// Set below
 		mDirect3DMaxMipLevel((samplerState.minLOD > 0.0f) ? static_cast<unsigned long>(samplerState.minLOD) : 0)	// Direct3D 9 type is unsigned long, lookout the Direct3D 9 name is twisted and implies "Renderer::SamplerState::maxLOD" but it's really "Renderer::SamplerState::minLOD"
 	{
+		// Sanity check
+		assert(samplerState.maxAnisotropy <= direct3D9Renderer.getCapabilities().maximumAnisotropy && "Maximum anisotropy value violated");
+
 		{ // Renderer::SamplerState::borderColor[4]
 			// For Direct3D 9, the clear color must be between [0..1]
 			float normalizedColor[4] = { samplerState.borderColor[0], samplerState.borderColor[1], samplerState.borderColor[2], samplerState.borderColor[3] } ;

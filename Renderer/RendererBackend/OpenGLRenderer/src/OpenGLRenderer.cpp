@@ -375,11 +375,11 @@ namespace OpenGLRenderer
 					}
 				#endif
 
-				// Create the default sampler state
-				mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
-
 				// Initialize the capabilities
 				initializeCapabilities();
+
+				// Create the default sampler state
+				mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
 				// Add references to the default sampler state and set it
 				if (nullptr != mDefaultSamplerState)
@@ -2472,6 +2472,11 @@ namespace OpenGLRenderer
 		{
 			mCapabilities.maximumNumberOfMultisamples = 1;
 		}
+
+		// Maximum anisotropy (always at least 1, usually 16)
+		// -> "GL_EXT_texture_filter_anisotropic"-extension
+		glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &openGLValue);
+		mCapabilities.maximumAnisotropy = static_cast<uint8_t>(openGLValue);
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;

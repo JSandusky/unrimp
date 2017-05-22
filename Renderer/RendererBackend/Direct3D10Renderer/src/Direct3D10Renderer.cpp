@@ -1771,6 +1771,9 @@ namespace Direct3D10Renderer
 		// but it's not really worth to put more effort into it to be able to handle the lack of certain features. So, just say this renderer backend doesn't support multisampling at all.
 		mCapabilities.maximumNumberOfMultisamples = 1;
 
+		// Maximum anisotropy (always at least 1, usually 16)
+		mCapabilities.maximumAnisotropy = 16;
+
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = false;
 

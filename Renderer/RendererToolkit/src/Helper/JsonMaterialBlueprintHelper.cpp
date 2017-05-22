@@ -1000,6 +1000,11 @@ namespace RendererToolkit
 			Renderer::SamplerState& samplerState = materialBlueprintSamplerState;
 			samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 
+			// By default, inside the material blueprint system the texture filter and maximum anisotropy are set to uninitialized. Unless explicitly
+			// set by a material blueprint author, those values are dynamic during runtime so the user can decide about the performance/quality trade-off.
+			samplerState.filter = Renderer::FilterMode::UNKNOWN;
+			RendererRuntime::setUninitialized(samplerState.maxAnisotropy);
+
 			// The optional properties
 			materialBlueprintSamplerState.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValueSamplerState, shaderProperties);
 			JsonMaterialHelper::optionalFilterProperty(rapidJsonValueSamplerState, "Filter", samplerState.filter, &sortedMaterialPropertyVector);

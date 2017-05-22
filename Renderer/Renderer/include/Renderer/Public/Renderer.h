@@ -312,7 +312,8 @@ namespace Renderer
 			COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x91,
 			COMPARISON_MIN_MAG_LINEAR_MIP_POINT		   = 0x94,
 			COMPARISON_MIN_MAG_MIP_LINEAR			   = 0x95,
-			COMPARISON_ANISOTROPIC					   = 0xd5
+			COMPARISON_ANISOTROPIC					   = 0xd5,
+			UNKNOWN									   = 0xd6
 		};
 		enum class TextureAddressMode
 		{
@@ -1640,6 +1641,7 @@ namespace Renderer
 			uint32_t maximumTextureBufferSize;
 			uint32_t maximumIndirectBufferSize;
 			uint8_t  maximumNumberOfMultisamples;
+			uint8_t  maximumAnisotropy;
 			bool	 individualUniforms;
 			bool	 instancedArrays;
 			bool	 drawInstanced;
@@ -1660,6 +1662,7 @@ namespace Renderer
 				maximumTextureBufferSize(0),
 				maximumIndirectBufferSize(0),
 				maximumNumberOfMultisamples(1),
+				maximumAnisotropy(1),
 				individualUniforms(false),
 				instancedArrays(false),
 				drawInstanced(false),

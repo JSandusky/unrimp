@@ -53,6 +53,9 @@ namespace OpenGLES3Renderer
 		mMinLOD(samplerState.minLOD),
 		mMaxLOD(samplerState.maxLOD)
 	{
+		// Sanity check
+		assert(samplerState.maxAnisotropy <= openGLES3Renderer.getCapabilities().maximumAnisotropy && "Maximum anisotropy value violated");
+
 		// Ignore "Renderer::SamplerState.borderColor", border color is not supported by OpenGL ES 3
 
 		// TODO(co)  "GL_COMPARE_REF_TO_TEXTURE" is not supported by OpenGL ES 3, check/inform the user?

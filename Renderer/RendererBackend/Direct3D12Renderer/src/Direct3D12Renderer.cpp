@@ -1598,6 +1598,9 @@ namespace Direct3D12Renderer
 				// Maximum number of multisamples (always at least 1, usually 8)
 				mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy DirectX 9 multisample support
 
+				// Maximum anisotropy (always at least 1, usually 16)
+				mCapabilities.maximumAnisotropy = 16;
+
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = false;
 
@@ -1634,6 +1637,9 @@ namespace Direct3D12Renderer
 				// Maximum number of multisamples (always at least 1, usually 8)
 				mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy DirectX 9 multisample support
 
+				// Maximum anisotropy (always at least 1, usually 16)
+				mCapabilities.maximumAnisotropy = 16;
+
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = false;
 
@@ -1669,6 +1675,9 @@ namespace Direct3D12Renderer
 
 				// Maximum number of multisamples (always at least 1, usually 8)
 				mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy DirectX 9 multisample support
+
+				// Maximum anisotropy (always at least 1, usually 16)
+				mCapabilities.maximumAnisotropy = 16;
 
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
@@ -1710,6 +1719,9 @@ namespace Direct3D12Renderer
 				// Maximum number of multisamples (always at least 1, usually 8)
 				mCapabilities.maximumNumberOfMultisamples = 8;
 
+				// Maximum anisotropy (always at least 1, usually 16)
+				mCapabilities.maximumAnisotropy = 16;
+
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
 
@@ -1750,6 +1762,9 @@ namespace Direct3D12Renderer
 				// Maximum number of multisamples (always at least 1, usually 8)
 				mCapabilities.maximumNumberOfMultisamples = 8;
 
+				// Maximum anisotropy (always at least 1, usually 16)
+				mCapabilities.maximumAnisotropy = 16;
+
 				// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 				mCapabilities.instancedArrays = true;
 
@@ -1786,6 +1801,9 @@ namespace Direct3D12Renderer
 
 				// Maximum number of multisamples (always at least 1, usually 8)
 				mCapabilities.maximumNumberOfMultisamples = 8;
+
+				// Maximum anisotropy (always at least 1, usually 16)
+				mCapabilities.maximumAnisotropy = 16;
 
 				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 				// TODO(co) Implement indirect buffer support

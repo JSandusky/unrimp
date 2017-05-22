@@ -806,6 +806,9 @@ namespace NullRenderer
 		// Maximum number of multisamples (always at least 1, usually 8)
 		mCapabilities.maximumNumberOfMultisamples = 1;
 
+		// Maximum anisotropy (always at least 1, usually 16)
+		mCapabilities.maximumAnisotropy = 16;
+
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;
 

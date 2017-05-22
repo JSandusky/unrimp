@@ -228,7 +228,6 @@
 			{
 				"SamplerLinear":
 				{
-
 					"AddressU": "WRAP",
 					"AddressV": "WRAP"
 				}

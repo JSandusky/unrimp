@@ -41,6 +41,10 @@ namespace Direct3D12Renderer
 		ISamplerState(direct3D12Renderer),
 		mD3D12DescriptorHeap(nullptr)
 	{
+		// Sanity checks
+		assert(samplerState.filter != Renderer::FilterMode::UNKNOWN && "Filter mode must not be unknown");
+		assert(samplerState.maxAnisotropy <= direct3D12Renderer.getCapabilities().maximumAnisotropy && "Maximum anisotropy value violated");
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D12Renderer)
 

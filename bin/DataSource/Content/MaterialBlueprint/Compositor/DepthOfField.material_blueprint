@@ -243,11 +243,13 @@
 				"SamplerPointClamp":
 				{
 					"Filter": "MIN_MAG_MIP_POINT",
+					"MaxAnisotropy": "1",
 					"MaxLOD": "0.0"
 				},
 				"SamplerLinear":
 				{
 					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
+					"MaxAnisotropy": "1",
 					"MaxLOD": "0.0"
 				}
 			},

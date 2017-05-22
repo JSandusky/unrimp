@@ -317,11 +317,11 @@ namespace OpenGLES3Renderer
 		// Initialize the context
 		if (mContext->initialize(0))
 		{
-			// Create the default sampler state
-			mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
-
 			// Initialize the capabilities
 			initializeCapabilities();
+
+			// Create the default sampler state
+			mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
 			#ifdef RENDERER_OUTPUT_DEBUG
 				// "GL_KHR_debug"-extension available?
@@ -1859,6 +1859,11 @@ namespace OpenGLES3Renderer
 
 		// Maximum number of multisamples (always at least 1, usually 8)
 		mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy OpenGL ES 3 multisample support
+
+		// Maximum anisotropy (always at least 1, usually 16)
+		// -> "GL_EXT_texture_filter_anisotropic"-extension
+		glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &openGLValue);
+		mCapabilities.maximumAnisotropy = static_cast<uint8_t>(openGLValue);
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;

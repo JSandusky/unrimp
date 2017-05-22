@@ -381,6 +381,7 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(COMPARISON_MIN_MAG_LINEAR_MIP_POINT)
 			ELSE_IF_VALUE(COMPARISON_MIN_MAG_MIP_LINEAR)
 			ELSE_IF_VALUE(COMPARISON_ANISOTROPIC)
+			ELSE_IF_VALUE(UNKNOWN)
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd

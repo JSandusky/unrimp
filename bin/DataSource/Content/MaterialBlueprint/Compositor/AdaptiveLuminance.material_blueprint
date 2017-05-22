@@ -151,7 +151,8 @@
 			{
 				"SamplerPoint":
 				{
-					"Filter": "MIN_MAG_MIP_POINT"
+					"Filter": "MIN_MAG_MIP_POINT",
+					"MaxAnisotropy": "1"
 				}
 			},
 			"Textures":

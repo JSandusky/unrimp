@@ -24,6 +24,7 @@
 #include "OpenGLRenderer/State/SamplerStateBind.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/Mapping.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 
 
 //[-------------------------------------------------------]
@@ -50,6 +51,9 @@ namespace OpenGLRenderer
 		mMinLOD(samplerState.minLOD),
 		mMaxLOD(samplerState.maxLOD)
 	{
+		// Sanity check
+		assert(samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy && "Maximum anisotropy value violated");
+
 		// Renderer::SamplerState::borderColor[4]
 		mBorderColor[0] = samplerState.borderColor[0];
 		mBorderColor[1] = samplerState.borderColor[1];

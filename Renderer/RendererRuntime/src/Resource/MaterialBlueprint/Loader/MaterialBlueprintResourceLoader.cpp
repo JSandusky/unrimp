@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
@@ -327,11 +328,23 @@ namespace RendererRuntime
 		{ // Create the sampler states
 			MaterialBlueprintResource::SamplerStates& samplerStates = mMaterialBlueprintResource->mSamplerStates;
 			const size_t numberOfSamplerStates = samplerStates.size();
-			const v1MaterialBlueprint::SamplerState* materialBlueprintSamplerState = mMaterialBlueprintSamplerStates;
+			const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mMaterialBlueprintResource->getResourceManager<MaterialBlueprintResourceManager>();
+			const Renderer::FilterMode defaultTextureFilterMode = materialBlueprintResourceManager.getDefaultTextureFilterMode();
+			const uint8_t defaultMaximumTextureAnisotropy = materialBlueprintResourceManager.getDefaultMaximumTextureAnisotropy();
+			v1MaterialBlueprint::SamplerState* materialBlueprintSamplerState = mMaterialBlueprintSamplerStates;
 			for (size_t i = 0; i < numberOfSamplerStates; ++i, ++materialBlueprintSamplerState)
 			{
 				MaterialBlueprintResource::SamplerState& samplerState = samplerStates[i];
+				memcpy(&samplerState.rendererSamplerState, static_cast<Renderer::SamplerState*>(materialBlueprintSamplerState), sizeof(Renderer::SamplerState));
 				samplerState.rootParameterIndex = materialBlueprintSamplerState->rootParameterIndex;
+				if (Renderer::FilterMode::UNKNOWN == materialBlueprintSamplerState->filter)
+				{
+					materialBlueprintSamplerState->filter = defaultTextureFilterMode;
+				}
+				if (isUninitialized(materialBlueprintSamplerState->maxAnisotropy))
+				{
+					materialBlueprintSamplerState->maxAnisotropy = defaultMaximumTextureAnisotropy;
+				}
 				samplerState.samplerStatePtr = renderer.createSamplerState(*materialBlueprintSamplerState);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(samplerState.samplerStatePtr, getAsset().assetFilename)
 			}
