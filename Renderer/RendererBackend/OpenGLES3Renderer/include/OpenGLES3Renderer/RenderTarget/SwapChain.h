@@ -95,6 +95,7 @@ namespace OpenGLES3Renderer
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
 		virtual void setFullscreenState(bool fullscreen) override;
+		virtual void setWidthAndHeight(uint32_t width, uint32_t height) override;
 
 
 	//[-------------------------------------------------------]
@@ -110,6 +111,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	private:
 		handle mNativeWindowHandle;	///< Native window handle window, can be a null handle
+		uint32_t  mWidth;
+		uint32_t  mHeight;
 
 
 	};

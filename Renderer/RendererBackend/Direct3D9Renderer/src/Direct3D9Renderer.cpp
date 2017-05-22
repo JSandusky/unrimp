@@ -58,7 +58,7 @@
 #else
 	#define DIRECT3D9RENDERER_API_EXPORT
 #endif
-DIRECT3D9RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D9RendererInstance(handle nativeWindowHandle)
+DIRECT3D9RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D9RendererInstance(handle nativeWindowHandle, bool /*useExternalContext*/)
 {
 	return new Direct3D9Renderer::Direct3D9Renderer(nativeWindowHandle);
 }
@@ -1355,7 +1355,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D9Renderer::createSwapChain(handle nativeWindowHandle)
+	Renderer::ISwapChain *Direct3D9Renderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;

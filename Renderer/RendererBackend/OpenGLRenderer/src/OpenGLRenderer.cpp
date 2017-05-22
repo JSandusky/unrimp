@@ -76,15 +76,9 @@
 #else
 	#define OPENGLRENDERER_API_EXPORT
 #endif
-// TODO(co) We might want to give this function a better name so one knows what it's about
-OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance2(handle nativeWindowHandle, bool externalContext)
+OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance(handle nativeWindowHandle, bool externalContext)
 {
 	return new OpenGLRenderer::OpenGLRenderer(nativeWindowHandle, externalContext);
-}
-
-OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance(handle nativeWindowHandle)
-{
-	return createOpenGLRendererInstance2(nativeWindowHandle, false);
 }
 #undef OPENGLRENDERER_API_EXPORT
 
@@ -1758,10 +1752,10 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *OpenGLRenderer::createSwapChain(handle nativeWindowHandle)
+	Renderer::ISwapChain *OpenGLRenderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
 	{
 		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle, externalContext) : nullptr;
 	}
 
 	Renderer::IFramebuffer *OpenGLRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)

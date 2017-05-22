@@ -63,14 +63,9 @@
 #else
 	#define OPENGLES3RENDERER_API_EXPORT
 #endif
-OPENGLES3RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES3RendererInstance2(handle nativeWindowHandle, bool useExternalContext)
+OPENGLES3RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES3RendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
 	return new OpenGLES3Renderer::OpenGLES3Renderer(nativeWindowHandle, useExternalContext);
-}
-
-OPENGLES3RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES3RendererInstance(handle nativeWindowHandle)
-{
-	return new OpenGLES3Renderer::OpenGLES3Renderer(nativeWindowHandle, false);
 }
 #undef OPENGLES3RENDERER_API_EXPORT
 
@@ -1300,7 +1295,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *OpenGLES3Renderer::createSwapChain(handle nativeWindowHandle)
+	Renderer::ISwapChain *OpenGLES3Renderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;

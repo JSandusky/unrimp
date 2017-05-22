@@ -70,8 +70,10 @@ namespace OpenGLRenderer
 		*    Owner OpenGL renderer instance
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
+		*  @param[in] externalContext
+		*    Indicates if an external renderer context is used. If true then no internal renderer context handling is performed
 		*/
-		SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle);
+		SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, bool externalContext);
 
 		/**
 		*  @brief
@@ -118,6 +120,7 @@ namespace OpenGLRenderer
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
 		virtual void setFullscreenState(bool fullscreen) override;
+		virtual void setWidthAndHeight(uint32_t width, uint32_t height) override;
 
 
 	//[-------------------------------------------------------]
@@ -135,6 +138,8 @@ namespace OpenGLRenderer
 		handle    mNativeWindowHandle;	///< Native window handle window, can be a null handle
 		IContext* mContext;				///< Context, must be valid
 		bool	  mOwnsContext;			///< Does this swap chain own the context?
+		uint32_t  mWidth;
+		uint32_t  mHeight;
 
 
 	};

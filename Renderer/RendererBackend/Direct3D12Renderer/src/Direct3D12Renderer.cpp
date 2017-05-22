@@ -65,7 +65,7 @@
 #else
 	#define DIRECT3D12RENDERER_API_EXPORT
 #endif
-DIRECT3D12RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D12RendererInstance(handle nativeWindowHandle)
+DIRECT3D12RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D12RendererInstance(handle nativeWindowHandle, bool /*useExternalContext*/)
 {
 	return new Direct3D12Renderer::Direct3D12Renderer(nativeWindowHandle);
 }
@@ -1229,7 +1229,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D12Renderer::createSwapChain(handle nativeWindowHandle)
+	Renderer::ISwapChain *Direct3D12Renderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;

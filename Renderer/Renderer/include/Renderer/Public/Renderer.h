@@ -1818,7 +1818,7 @@ namespace Renderer
 			virtual uint32_t getNumberOfShaderLanguages() const = 0;
 			virtual const char* getShaderLanguageName(uint32_t index) const = 0;
 			virtual IShaderLanguage* getShaderLanguage(const char* shaderLanguageName = nullptr) = 0;
-			virtual ISwapChain* createSwapChain(handle nativeWindowHandle) = 0;
+			virtual ISwapChain* createSwapChain(handle nativeWindowHandle, bool externalContext = false) = 0;
 			virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorTextures, ITexture** colorTextures, ITexture* depthStencilTexture = nullptr) = 0;
 			virtual IBufferManager *createBufferManager() = 0;
 			virtual ITextureManager *createTextureManager() = 0;
@@ -2021,6 +2021,7 @@ namespace Renderer
 			virtual void resizeBuffers() = 0;
 			virtual bool getFullscreenState() const = 0;
 			virtual void setFullscreenState(bool fullscreen) = 0;
+			virtual void setWidthAndHeight(uint32_t width, uint32_t height) = 0;
 		protected:
 			explicit ISwapChain(IRenderer& renderer);
 			explicit ISwapChain(const ISwapChain& source) = delete;
