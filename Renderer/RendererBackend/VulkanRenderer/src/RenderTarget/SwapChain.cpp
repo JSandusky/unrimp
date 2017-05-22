@@ -399,7 +399,7 @@ namespace VulkanRenderer
 		// TODO(co) Implement me
 	}
 
-	void SwapChain::setWidthAndHeight(uint32_t width, uint32_t height)
+	void SwapChain::setWidthAndHeight(uint32_t, uint32_t)
 	{
 		// TODO(sw) implement me
 	}

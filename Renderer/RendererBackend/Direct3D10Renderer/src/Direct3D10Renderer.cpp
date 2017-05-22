@@ -54,6 +54,8 @@
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
+#include <tuple>	// For "std::ignore"
+
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -64,8 +66,9 @@
 #else
 	#define DIRECT3D10RENDERER_API_EXPORT
 #endif
-DIRECT3D10RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D10RendererInstance(handle nativeWindowHandle, bool /*useExternalContext*/)
+DIRECT3D10RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D10RendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
+	std::ignore = useExternalContext;
 	return new Direct3D10Renderer::Direct3D10Renderer(nativeWindowHandle);
 }
 #undef DIRECT3D10RENDERER_API_EXPORT
@@ -1429,7 +1432,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D10Renderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
+	Renderer::ISwapChain *Direct3D10Renderer::createSwapChain(handle nativeWindowHandle, bool)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;

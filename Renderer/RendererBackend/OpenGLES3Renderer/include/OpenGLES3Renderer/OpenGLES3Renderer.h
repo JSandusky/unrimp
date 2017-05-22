@@ -177,7 +177,7 @@ namespace OpenGLES3Renderer
 		//[-------------------------------------------------------]
 		//[ Resource creation                                     ]
 		//[-------------------------------------------------------]
-		virtual Renderer::ISwapChain *createSwapChain(handle nativeWindowHandle, bool externalContext = false) override;
+		virtual Renderer::ISwapChain *createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) override;
 		virtual Renderer::IFramebuffer *createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture = nullptr) override;
 		virtual Renderer::IBufferManager *createBufferManager() override;
 		virtual Renderer::ITextureManager *createTextureManager() override;

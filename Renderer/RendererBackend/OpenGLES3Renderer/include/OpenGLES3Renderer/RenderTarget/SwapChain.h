@@ -110,9 +110,9 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle mNativeWindowHandle;	///< Native window handle window, can be a null handle
-		uint32_t  mWidth;
-		uint32_t  mHeight;
+		handle   mNativeWindowHandle;	///< Native window handle window, can be a null handle
+		uint32_t mWidth;
+		uint32_t mHeight;
 
 
 	};

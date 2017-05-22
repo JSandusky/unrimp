@@ -160,7 +160,7 @@ namespace NullRenderer
 		// We don't support fullscreen state change, so, nothing to do in here
 	}
 
-	void SwapChain::setWidthAndHeight(uint32_t width, uint32_t height)
+	void SwapChain::setWidthAndHeight(uint32_t, uint32_t)
 	{
 		// TODO(sw) implement me
 	}
