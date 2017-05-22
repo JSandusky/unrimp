@@ -11,14 +11,14 @@
 			"AssetId": "6",
 			"AssetType": "Texture",
 			"AssetCategory": "Character",
-			"AssetName": "ImrodNormalMap",
-			"FileDependencies": [ "ImrodNormalMap.tga" ],
+			"AssetName": "Imrod_n",
+			"FileDependencies": [ "Imrod_n.tga" ],
 			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/gallery/imrod_dw.html ) by Dmitry Parkin: http://www.parkparkin.com"
 		},
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "NORMAL_MAP",
-			"InputFile": "ImrodNormalMap.tga"
+			"InputFile": "Imrod_n.tga"
 		}
 	}
 }

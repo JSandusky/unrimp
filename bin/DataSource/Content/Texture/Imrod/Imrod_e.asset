@@ -8,18 +8,17 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "7",
+			"AssetId": "5",
 			"AssetType": "Texture",
 			"AssetCategory": "Character",
-			"AssetName": "ImrodRoughnessMap",
-			"FileDependencies": [ "ImrodRoughnessMap.tga" ],
+			"AssetName": "Imrod_e",
+			"FileDependencies": [ "Imrod_e.tga" ],
 			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/gallery/imrod_dw.html ) by Dmitry Parkin: http://www.parkparkin.com"
 		},
 		"TextureAssetCompiler":
 		{
-			"TextureSemantic": "ROUGHNESS_MAP",
-			"InputFile": "ImrodRoughnessMap.tga",
-			"NormalMapInputFile": "ImrodNormalMap.tga"
+			"TextureSemantic": "EMISSIVE_MAP",
+			"InputFile": "Imrod_e.tga"
 		}
 	}
 }

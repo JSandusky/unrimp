@@ -8,16 +8,16 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "158",
+			"AssetId": "155",
 			"AssetType": "Texture",
 			"AssetCategory": "Character",
-			"AssetName": "round_grill",
-			"FileDependencies": [ "round_grill.png" ],
+			"AssetName": "guard1_face_d",
+			"FileDependencies": [ "guard1_face_d.png" ],
 			"Copyright": "Copyright © 2009 KatsBits - Ken Beyer (kat) - http://www.katsbits.com"
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "round_grill.png"
+			"InputFile": "guard1_face_d.png"
 		}
 	}
 }

@@ -11,7 +11,7 @@
 			"AssetId": "152",
 			"AssetType": "Texture",
 			"AssetCategory": "CubeMap",
-			"AssetName": "Maskonaive3",
+			"AssetName": "Maskonaive3_rcube",
 			"FileDependencies": [ "posx.jpg", "negx.jpg", "posy.jpg", "negy.jpg", "posz.jpg", "negz.jpg" ],
 			"Copyright": "Måskonåive 3 cube map by Emil Persson - 'Creative Commons Attribution 3.0 Unported License' - http://humus.name/index.php?page=Textures&start=56 - http://humus.name/Textures/Maskonaive3.zip "
 		},
