@@ -251,7 +251,7 @@
 				"Quad":
 				{
 					"Description": "Screen space ambient occlusion (SSAO) generation",
-					"MaterialBlueprintAssetId": "147",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionGeneration.asset",
 					"SetMaterialProperties":
 					{
 						"NormalMap": "Example/Texture/Dynamic/MultisampleGBufferRenderTarget1",
@@ -264,7 +264,7 @@
 				"Quad":
 				{
 					"Description": "Screen space ambient occlusion (SSAO) blur",
-					"MaterialBlueprintAssetId": "149",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/ScreenSpaceAmbientOcclusionBlur.asset",
 					"SetMaterialProperties":
 					{
 						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget"
@@ -281,7 +281,7 @@
 				"Quad":
 				{
 					"Description": "Composite deferred data",
-					"MaterialBlueprintAssetId": "115",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Deferred/DeferredCompositor.asset",
 					"SetMaterialProperties":
 					{
 						"GBufferMap0": "Example/Texture/Dynamic/MultisampleGBufferRenderTarget0",
@@ -298,7 +298,7 @@
 				"Quad":
 				{
 					"Description": "Calculate luminance. The mipmaps are generated automatically after the next render target change.",
-					"MaterialBlueprintAssetId": "126",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/CalculateLuminance.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget"
@@ -321,7 +321,7 @@
 				{
 					"SkipFirstExecution": "TRUE",
 					"Description": "Slowly adjusts the scene luminance based on the previous scene luminance. Skip the first execution since there's no valid previous adaptive luminance available in this situation.",
-					"MaterialBlueprintAssetId": "128",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/AdaptiveLuminance.asset",
 					"SetMaterialProperties":
 					{
 						"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
@@ -332,7 +332,7 @@
 				{
 					"NumberOfExecutions": "1",
 					"Description": "During the first execution there's no valid previous adaptive luminance available, so use the just calculated luminance as previous luminance.",
-					"MaterialBlueprintAssetId": "128",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/AdaptiveLuminance.asset",
 					"SetMaterialProperties":
 					{
 						"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
@@ -345,7 +345,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Use a lower exposure to produce a value suitable for a bloom pass",
-					"MaterialBlueprintAssetId": "131",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/HdrToLdrBloomThreshold.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
@@ -358,7 +358,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Downscale",
-					"MaterialBlueprintAssetId": "134",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/BloomColorRenderTarget"
@@ -370,7 +370,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Downscale",
-					"MaterialBlueprintAssetId": "134",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
@@ -382,7 +382,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Downscale",
-					"MaterialBlueprintAssetId": "134",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
@@ -396,7 +396,7 @@
 					"Quad":
 					{
 						"Description": "Bloom pass: Vertical Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
+						"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/GaussianBlur.asset",
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "TRUE", 
@@ -409,7 +409,7 @@
 					"Quad":
 					{
 						"Description": "Bloom pass: Horizontal Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
+						"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/GaussianBlur.asset",
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "FALSE", 
@@ -423,7 +423,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Upscale",
-					"MaterialBlueprintAssetId": "134",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget"
@@ -435,7 +435,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Upscale",
-					"MaterialBlueprintAssetId": "134",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
@@ -447,7 +447,7 @@
 				"Quad":
 				{
 					"Description": "Lens flare pass: Use a lower exposure to produce a value suitable for a lens flare pass",
-					"MaterialBlueprintAssetId": "141",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/LensFlareThreshold.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget"
@@ -459,7 +459,7 @@
 				"Quad":
 				{
 					"Description": "Lens flare pass: Feature generation",
-					"MaterialBlueprintAssetId": "143",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/LensFlareFeatureGeneration.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/BloomColorRenderTarget"
@@ -471,7 +471,7 @@
 				"Quad":
 				{
 					"Description": "Lens flare pass: Vertical Gaussian blur",
-					"MaterialBlueprintAssetId": "117",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/GaussianBlur.asset",
 					"SetMaterialProperties":
 					{
 						"VerticalBlur": "TRUE", 
@@ -484,7 +484,7 @@
 				"Quad":
 				{
 					"Description": "Lens flare pass: Horizontal Gaussian blur",
-					"MaterialBlueprintAssetId": "117",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/GaussianBlur.asset",
 					"SetMaterialProperties":
 					{
 						"VerticalBlur": "FALSE", 
@@ -497,7 +497,7 @@
 				"Quad":
 				{
 					"Description": "HDR to LDR",
-					"MaterialBlueprintAssetId": "124",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/HdrToLdr.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget",
@@ -512,7 +512,7 @@
 				"Quad":
 				{
 					"Description": "Downscale",
-					"MaterialBlueprintAssetId": "134",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0"
@@ -524,7 +524,7 @@
 				"Quad":
 				{
 					"Description": "Downscale",
-					"MaterialBlueprintAssetId": "134",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/GaussianBlurDownscale2ColorRenderTarget"
@@ -538,7 +538,7 @@
 					"Quad":
 					{
 						"Description": "Vertical Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
+						"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/GaussianBlur.asset",
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "TRUE", 
@@ -551,7 +551,7 @@
 					"Quad":
 					{
 						"Description": "Horizontal Gaussian blur",
-						"MaterialBlueprintAssetId": "117",
+						"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/GaussianBlur.asset",
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "FALSE", 
@@ -565,7 +565,7 @@
 				"Quad":
 				{
 					"Description": "Upscale",
-					"MaterialBlueprintAssetId": "134",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
@@ -577,7 +577,7 @@
 				"Quad":
 				{
 					"Description": "Depth of field",
-					"MaterialBlueprintAssetId": "137",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/DepthOfField.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0",
@@ -606,7 +606,7 @@
 			{
 				"Quad":
 				{
-					"MaterialBlueprintAssetId": "102",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Final.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0"
@@ -614,7 +614,7 @@
 				},
 				"DebugGui":
 				{
-					"MaterialBlueprintAssetId": "121",
+					"MaterialBlueprintAssetId": "MaterialBlueprint/Debug/Gui.asset",
 					"SetMaterialProperties":
 					{
 						"GlyphMap": "Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D",

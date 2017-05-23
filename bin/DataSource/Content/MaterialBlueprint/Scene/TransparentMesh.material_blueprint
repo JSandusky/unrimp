@@ -161,7 +161,7 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "152",
+				"Value": "Texture/CubeMap/Maskonaive3/Maskonaive3_rcube.asset",
 				"Description": "Reflection cube map"
 			},
 			"GlobalHighQualityLighting":
@@ -431,11 +431,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "166",
+			"VertexAttributesAssetId": "VertexAttributes/Default/Mesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "12",
-				"FragmentShaderBlueprintAssetId": "171"
+				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Forward/MeshVertex.asset",
+				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Scene/TransparentMeshFragment.asset"
 			},
 			"RasterizerState":
 			{

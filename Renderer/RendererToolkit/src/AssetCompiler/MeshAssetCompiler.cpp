@@ -368,29 +368,22 @@ namespace
 					// Get the source material asset ID
 					aiString materialName;
 					assimpScene.mMaterials[assimpMesh.mMaterialIndex]->Get(AI_MATKEY_NAME, materialName);
-
-					// In case the Assimp "aiProcess_RemoveRedundantMaterials"-flag is set materials might get merged, we need to take this into account
-					if (nullptr != strstr(materialName.C_Str(), "JoinedMaterial_"))
+					if (!RendererToolkit::StringHelper::isSourceAssetIdAsString(materialName.C_Str()))
 					{
 						// If we're in luck, the diffuse texture 0 stores the material name
 						assimpScene.mMaterials[assimpMesh.mMaterialIndex]->Get(AI_MATKEY_TEXTURE_DIFFUSE(0), materialName);
-
-						// The Assimp MD5 mesh loader modifies "shader" inside "MD5Loader.cpp"
-						const char* diffuseExtension = strstr(materialName.C_Str(), "_d.tga");
-						if (nullptr != diffuseExtension)
-						{
-							// Const-casts are evil in general, but in this situation in here this is the most-simple solution to cut off "_d.tga"
-							*const_cast<char*>(diffuseExtension) = '\0';
-						}
 					}
 
 					// Add sub-mesh
-					RendererRuntime::v1Mesh::SubMesh subMesh;
-					subMesh.materialAssetId		= RendererToolkit::StringHelper::getAssetIdByString(materialName.C_Str(), input);
-					subMesh.primitiveTopology	= static_cast<uint8_t>(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-					subMesh.startIndexLocation	= previousNumberOfIndices;
-					subMesh.numberOfIndices		= numberOfIndices - previousNumberOfIndices;
-					subMeshes.push_back(subMesh);
+					if (materialName.length > 0 && nullptr == strstr(materialName.C_Str(), AI_DEFAULT_MATERIAL_NAME))
+					{
+						RendererRuntime::v1Mesh::SubMesh subMesh;
+						subMesh.materialAssetId		= RendererToolkit::StringHelper::getAssetIdByString(materialName.C_Str(), input);
+						subMesh.primitiveTopology	= static_cast<uint8_t>(Renderer::PrimitiveTopology::TRIANGLE_LIST);
+						subMesh.startIndexLocation	= previousNumberOfIndices;
+						subMesh.numberOfIndices		= numberOfIndices - previousNumberOfIndices;
+						subMeshes.push_back(subMesh);
+					}
 				}
 			}
 
@@ -690,7 +683,7 @@ namespace RendererToolkit
 			// -> "aiProcess_MakeLeftHanded" is added because the rasterizer states directly map to Direct3D
 			// -> We're using "mikktspace" by Morten S. Mikkelsen for semi-standard tangent space generation (see e.g. https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps for background information)
 			// -> "aiProcess_CalcTangentSpace" from Assimp is still used to allocate internal memory and enable Assimp to perform work regarding e.g. shared vertices
-			const aiScene *assimpScene = assimpImporter.ReadFile(inputFilename, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder);
+			const aiScene* assimpScene = assimpImporter.ReadFile(inputFilename, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder);
 			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
 				// Get the number of bones and skeleton

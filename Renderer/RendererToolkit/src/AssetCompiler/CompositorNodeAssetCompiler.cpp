@@ -74,11 +74,11 @@ namespace
 				const rapidjson::Value& rapidJsonValuePass = rapidJsonMemberIteratorPasses->value;
 				if (rapidJsonValuePass.HasMember("MaterialAssetId"))
 				{
-					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, static_cast<uint32_t>(std::atoi(rapidJsonValuePass["MaterialAssetId"].GetString())), sortedMaterialPropertyVector);
+					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValuePass["MaterialAssetId"].GetString()), sortedMaterialPropertyVector);
 				}
 				else if (rapidJsonValuePass.HasMember("MaterialBlueprintAssetId"))
 				{
-					RendererToolkit::JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, static_cast<uint32_t>(std::atoi(rapidJsonValuePass["MaterialBlueprintAssetId"].GetString())), sortedMaterialPropertyVector);
+					RendererToolkit::JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValuePass["MaterialBlueprintAssetId"].GetString()), sortedMaterialPropertyVector);
 				}
 				if (!sortedMaterialPropertyVector.empty())
 				{

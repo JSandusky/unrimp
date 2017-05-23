@@ -160,11 +160,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "167",
+			"VertexAttributesAssetId": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "165",
-				"FragmentShaderBlueprintAssetId": "146"
+				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertexRay.asset",
+				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Compositor/ScreenSpaceAmbientOcclusionGenerationFragment.asset"
 			},
 			"RasterizerState":
 			{

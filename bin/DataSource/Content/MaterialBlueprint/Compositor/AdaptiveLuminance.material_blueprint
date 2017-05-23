@@ -106,11 +106,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "167",
+			"VertexAttributesAssetId": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "129",
-				"FragmentShaderBlueprintAssetId": "127"
+				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Compositor/PositionVertex.asset",
+				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Compositor/AdaptiveLuminanceFragment.asset"
 			},
 			"RasterizerState":
 			{

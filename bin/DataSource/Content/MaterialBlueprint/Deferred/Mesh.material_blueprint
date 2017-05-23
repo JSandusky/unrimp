@@ -316,11 +316,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "166",
+			"VertexAttributesAssetId": "VertexAttributes/Default/Mesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "111",
-				"FragmentShaderBlueprintAssetId": "112"
+				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Deferred/MeshVertex.asset",
+				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Deferred/MeshFragment.asset"
 			},
 			"RasterizerState":
 			{

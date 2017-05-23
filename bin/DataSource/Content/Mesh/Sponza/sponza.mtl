@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
 # File Created: 20.08.2010 18:13:43
 
-newmtl 22
+newmtl Material/Sponza/leaf.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -18,7 +18,7 @@ newmtl 22
 	map_bump textures\sponza_thorn_ddn.tga
 	bump textures\sponza_thorn_ddn.tga
 
-newmtl 27
+newmtl Material/Sponza/vase_round.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -34,7 +34,7 @@ newmtl 27
 	map_bump textures\vase_round_ddn.tga
 	bump textures\vase_round_ddn.tga
 
-newmtl 31
+newmtl Material/Sponza/vase_plant.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -49,7 +49,7 @@ newmtl 31
 	map_Kd textures\vase_plant.tga
 	map_d textures\vase_plant_mask.tga
 
-newmtl 35
+newmtl Material/Sponza/background.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -65,7 +65,7 @@ newmtl 35
 	map_bump textures\background_ddn.tga
 	bump textures\background_ddn.tga
 
-newmtl 38
+newmtl Material/Sponza/gi_flag.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -79,7 +79,7 @@ newmtl 38
 	map_Ka textures\gi_flag.tga
 	map_Kd textures\gi_flag.tga
 
-newmtl 40
+newmtl Material/Sponza/bricks.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -95,7 +95,7 @@ newmtl 40
 	map_bump textures\spnza_bricks_a_diff.tga
 	bump textures\spnza_bricks_a_diff.tga
 
-newmtl 44
+newmtl Material/Sponza/arch.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -109,7 +109,7 @@ newmtl 44
 	map_Ka textures\sponza_arch_diff.tga
 	map_Kd textures\sponza_arch_diff.tga
 
-newmtl 48
+newmtl Material/Sponza/ceiling.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -123,7 +123,7 @@ newmtl 48
 	map_Ka textures\sponza_ceiling_a_diff.tga
 	map_Kd textures\sponza_ceiling_a_diff.tga
 
-newmtl 51
+newmtl Material/Sponza/column_a.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -139,7 +139,7 @@ newmtl 51
 	map_bump textures\sponza_column_a_ddn.tga
 	bump textures\sponza_column_a_ddn.tga
 
-newmtl 55
+newmtl Material/Sponza/floor.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -153,7 +153,7 @@ newmtl 55
 	map_Ka textures\sponza_floor_a_diff.tga
 	map_Kd textures\sponza_floor_a_diff.tga
 
-newmtl 58
+newmtl Material/Sponza/column_c.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -169,7 +169,7 @@ newmtl 58
 	map_bump textures\sponza_column_c_ddn.tga
 	bump textures\sponza_column_c_ddn.tga
 
-newmtl 62
+newmtl Material/Sponza/details.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -183,7 +183,7 @@ newmtl 62
 	map_Ka textures\sponza_details_diff.tga
 	map_Kd textures\sponza_details_diff.tga
 
-newmtl 65
+newmtl Material/Sponza/column_b.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -199,7 +199,7 @@ newmtl 65
 	map_bump textures\sponza_column_b_ddn.tga
 	bump textures\sponza_column_b_ddn.tga
 
-newmtl 69
+newmtl Material/Sponza/white.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -211,7 +211,7 @@ newmtl 69
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 
-newmtl 70
+newmtl Material/Sponza/flagpole.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -225,7 +225,7 @@ newmtl 70
 	map_Ka textures\sponza_flagpole_diff.tga
 	map_Kd textures\sponza_flagpole_diff.tga
 
-newmtl 73
+newmtl Material/Sponza/fabric_e.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -239,7 +239,7 @@ newmtl 73
 	map_Ka textures\sponza_fabric_green_diff.tga
 	map_Kd textures\sponza_fabric_green_diff.tga
 
-newmtl 75
+newmtl Material/Sponza/fabric_d.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -253,7 +253,7 @@ newmtl 75
 	map_Ka textures\sponza_fabric_blue_diff.tga
 	map_Kd textures\sponza_fabric_blue_diff.tga
 
-newmtl 77
+newmtl Material/Sponza/fabric_a.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -267,7 +267,7 @@ newmtl 77
 	map_Ka textures\sponza_fabric_diff.tga
 	map_Kd textures\sponza_fabric_diff.tga
 
-newmtl 80
+newmtl Material/Sponza/fabric_g.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -281,7 +281,7 @@ newmtl 80
 	map_Ka textures\sponza_curtain_blue_diff.tga
 	map_Kd textures\sponza_curtain_blue_diff.tga
 
-newmtl 82
+newmtl Material/Sponza/fabric_c.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -295,7 +295,7 @@ newmtl 82
 	map_Ka textures\sponza_curtain_diff.tga
 	map_Kd textures\sponza_curtain_diff.tga
 
-newmtl 84
+newmtl Material/Sponza/fabric_f.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -309,7 +309,7 @@ newmtl 84
 	map_Ka textures\sponza_curtain_green_diff.tga
 	map_Kd textures\sponza_curtain_green_diff.tga
 
-newmtl 86
+newmtl Material/Sponza/chain.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -326,7 +326,7 @@ newmtl 86
 	map_bump textures\chain_texture_ddn.tga
 	bump textures\chain_texture_ddn.tga
 
-newmtl 90
+newmtl Material/Sponza/vase_hanging.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -340,7 +340,7 @@ newmtl 90
 	map_Ka textures\vase_hanging.tga
 	map_Kd textures\vase_hanging.tga
 
-newmtl 92
+newmtl Material/Sponza/vase.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -354,7 +354,7 @@ newmtl 92
 	map_Ka textures\vase_dif.tga
 	map_Kd textures\vase_dif.tga
 
-newmtl 95
+newmtl Material/Sponza/lion.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -370,7 +370,7 @@ newmtl 95
 	map_bump textures\lion_ddn.tga
 	bump textures\lion_ddn.tga
 
-newmtl 98
+newmtl Material/Sponza/roof.asset
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000

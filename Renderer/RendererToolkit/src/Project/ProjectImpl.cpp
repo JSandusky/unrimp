@@ -25,6 +25,7 @@
 #include "RendererToolkit/Project/ProjectAssetMonitor.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
+#include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
@@ -266,7 +267,17 @@ namespace RendererToolkit
 
 		{ // Read project data
 			mProjectDirectory = std_filesystem::path(filename).parent_path().generic_string() + '/';
-			readAssetsByFilename(rapidJsonValueProject["AssetsFilename"].GetString());
+			{ // Asset packages
+				const rapidjson::Value& rapidJsonValueAssetPackages = rapidJsonValueProject["AssetPackages"];
+				if (rapidJsonValueAssetPackages.Size() > 1)
+				{
+					throw std::runtime_error("TODO(co) Support for multiple asset packages isn't implemented, yet");
+				}
+				for (rapidjson::SizeType i = 0; i < rapidJsonValueAssetPackages.Size(); ++i)
+				{
+					readAssetPackageByDirectory(std::string(rapidJsonValueAssetPackages[i].GetString()) + '/');
+				}
+			}
 			readTargetsByFilename(rapidJsonValueProject["TargetsFilename"].GetString());
 			::detail::optionalQualityStrategy(rapidJsonValueProject, "QualityStrategy", mQualityStrategy);
 
@@ -355,43 +366,38 @@ namespace RendererToolkit
 		}
 	}
 
-	void ProjectImpl::readAssetsByFilename(const std::string& filename)
+	void ProjectImpl::readAssetPackageByDirectory(const std::string& directoryName)
 	{
-		// Open the input stream
-		const std::string absoluteFilename = mProjectDirectory + filename;
-		std::ifstream inputFileStream(absoluteFilename, std::ios::binary);
-
-		// Parse JSON
-		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, absoluteFilename, "Assets", "1");
-
 		// Get the asset package name (includes "/" at the end)
-		mAssetPackageDirectoryName = std_filesystem::path(filename).parent_path().generic_string() + '/';
+		mAssetPackageDirectoryName = directoryName;
 
-		// Read project data
-		const rapidjson::Value& rapidJsonValueAssets = rapidJsonDocument["Assets"];
-		const size_t numberOfAssets = rapidJsonValueAssets.MemberCount();
+		// Discover assets
 		RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getWritableSortedAssetVector();
-		sortedAssetVector.resize(numberOfAssets);
-		size_t currentAssetIndex = 0;
-		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorAssets = rapidJsonValueAssets.MemberBegin(); rapidJsonMemberIteratorAssets != rapidJsonValueAssets.MemberEnd(); ++rapidJsonMemberIteratorAssets)
+		const std::string absoluteDirectoryName = mProjectDirectory + directoryName;
+		for (auto& iterator: std_filesystem::recursive_directory_iterator(absoluteDirectoryName))
 		{
-			// Get asset data
-			const RendererRuntime::AssetId assetId = static_cast<uint32_t>(std::atoi(rapidJsonMemberIteratorAssets->name.GetString()));
-			const std::string assetFilename = mAssetPackageDirectoryName + rapidJsonMemberIteratorAssets->value.GetString();
-			if (assetFilename.length() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
+			if (std_filesystem::is_regular_file(iterator))
 			{
-				const std::string message = "Asset filename \"" + assetFilename + "\" of asset ID " + std::to_string(assetId) + " is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
-				throw std::runtime_error(message);
+				std::string assetIdAsString = iterator.path().generic_string();
+				if (StringHelper::isSourceAssetIdAsString(assetIdAsString))
+				{
+					assetIdAsString.erase(0, absoluteDirectoryName.length());
+
+					// Get asset data
+					const std::string assetFilename = mAssetPackageDirectoryName + assetIdAsString;
+					if (assetFilename.length() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
+					{
+						const std::string message = "Asset filename \"" + assetFilename + "\" is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
+						throw std::runtime_error(message);
+					}
+
+					// Copy asset data
+					RendererRuntime::Asset asset;
+					asset.assetId = StringHelper::getSourceAssetIdByString(assetIdAsString.c_str());
+					strcpy(asset.assetFilename, assetFilename.c_str());
+					sortedAssetVector.push_back(asset);
+				}
 			}
-
-			// Copy asset data
-			RendererRuntime::Asset& asset = sortedAssetVector[currentAssetIndex];
-			asset.assetId = assetId;
-			strcpy(asset.assetFilename, assetFilename.c_str());
-
-			// Next asset, please
-			++currentAssetIndex;
 		}
 		std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), ::detail::orderByAssetId);
 

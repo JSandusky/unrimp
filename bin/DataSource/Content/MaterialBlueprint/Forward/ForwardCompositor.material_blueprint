@@ -150,11 +150,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "167",
+			"VertexAttributesAssetId": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "165",
-				"FragmentShaderBlueprintAssetId": "138"
+				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertexRay.asset",
+				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Forward/ForwardCompositorFragment.asset"
 			},
 			"RasterizerState":
 			{

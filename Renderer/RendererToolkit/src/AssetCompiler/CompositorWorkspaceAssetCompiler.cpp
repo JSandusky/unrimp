@@ -134,7 +134,7 @@ namespace RendererToolkit
 					compositorNodeAssetIds.reserve(nodes.numberOfNodes);
 					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorNodes = rapidJsonValueNodes.MemberBegin(); rapidJsonMemberIteratorNodes != rapidJsonValueNodes.MemberEnd(); ++rapidJsonMemberIteratorNodes)
 					{
-						compositorNodeAssetIds.push_back(input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(rapidJsonMemberIteratorNodes->name.GetString()))));
+						compositorNodeAssetIds.push_back(StringHelper::getAssetIdByString(rapidJsonMemberIteratorNodes->name.GetString(), input));
 					}
 
 					// Write down compositor node asset IDs

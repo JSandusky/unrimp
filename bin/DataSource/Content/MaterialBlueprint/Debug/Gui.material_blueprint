@@ -101,11 +101,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "168",
+			"VertexAttributesAssetId": "VertexAttributes/Default/DebugGui.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "119",
-				"FragmentShaderBlueprintAssetId": "120"
+				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Debug/GuiVertex.asset",
+				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Debug/GuiFragment.asset"
 			},
 			"RasterizerState":
 			{

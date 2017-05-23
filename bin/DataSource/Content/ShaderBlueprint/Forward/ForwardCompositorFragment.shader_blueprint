@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-@includepiece(15)	// "Core.shader_piece"
-@includepiece(132)	// "Color.shader_piece"
+@includepiece(ShaderPiece/Core.asset)
+@includepiece(ShaderPiece/Color.asset)
 
 
 //[-------------------------------------------------------]

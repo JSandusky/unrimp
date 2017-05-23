@@ -145,9 +145,15 @@ namespace RendererToolkit
 		return trimLeftWhitespaceCharacters(trimRightWhitespaceCharacters(s));
 	}
 
-	bool StringHelper::isPositiveInteger(const std::string& s)
+	bool StringHelper::isSourceAssetIdAsString(const std::string& sourceAssetIdAsString)
 	{
-		return (!s.empty() && (static_cast<size_t>(std::count_if(s.begin(), s.end(), static_cast<int(*)(int)>(std::isdigit))) == s.size()));
+		// Source asset ID naming scheme "<name>.asset"
+		return (sourceAssetIdAsString.length() > 6 && sourceAssetIdAsString.substr(sourceAssetIdAsString.length() - 6) == ".asset");
+	}
+
+	RendererRuntime::AssetId StringHelper::getSourceAssetIdByString(const char* sourceAssetIdAsString)
+	{
+		return RendererRuntime::StringId(sourceAssetIdAsString);
 	}
 
 	RendererRuntime::AssetId StringHelper::getAssetIdByString(const std::string& assetIdAsString)
@@ -170,10 +176,12 @@ namespace RendererToolkit
 			throw std::runtime_error("Empty strings can't be translated into asset IDs");
 		}
 
-		// Usage of asset IDs is the preferred way to go, but we also need to support the asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
-		if (StringHelper::isPositiveInteger(assetIdAsString))
+		// There are two kind of asset IDs
+		// - Source asset ID naming scheme "<name>.asset"
+		// - Compiled or runtime generated asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
+		if (isSourceAssetIdAsString(assetIdAsString))
 		{
-			return input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(assetIdAsString.c_str())));
+			return input.getCompiledAssetIdBySourceAssetIdAsString(assetIdAsString);
 		}
 		else
 		{

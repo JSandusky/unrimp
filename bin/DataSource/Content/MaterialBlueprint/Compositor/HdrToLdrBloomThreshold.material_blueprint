@@ -108,11 +108,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "167",
+			"VertexAttributesAssetId": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "100",
-				"FragmentShaderBlueprintAssetId": "130"
+				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
+				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Compositor/HdrToLdrBloomThresholdFragment.asset"
 			},
 			"RasterizerState":
 			{

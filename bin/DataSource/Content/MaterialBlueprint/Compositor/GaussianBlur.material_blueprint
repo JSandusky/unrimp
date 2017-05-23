@@ -59,11 +59,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "167",
+			"VertexAttributesAssetId": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "118",
-				"FragmentShaderBlueprintAssetId": "116"
+				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Compositor/PositionTextureCoordinateInverseTextureSize0Vertex.asset",
+				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Compositor/GaussianBlurFragment.asset"
 			},
 			"RasterizerState":
 			{

@@ -52,11 +52,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "167",
+			"VertexAttributesAssetId": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "100",
-				"FragmentShaderBlueprintAssetId": "133"
+				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
+				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Compositor/ScaleFragment.asset"
 			},
 			"RasterizerState":
 			{

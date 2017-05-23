@@ -120,7 +120,7 @@ namespace RendererToolkit
 		inline explicit ProjectImpl(const ProjectImpl &source) = delete;
 		inline ProjectImpl &operator =(const ProjectImpl &source) = delete;
 		void clear();
-		void readAssetsByFilename(const std::string& filename);
+		void readAssetPackageByDirectory(const std::string& directoryName);
 		void readTargetsByFilename(const std::string& filename);
 		std::string getRenderTargetDataRootDirectory(const char* rendererTarget) const;
 		void buildSourceAssetIdToCompiledAssetId();
@@ -133,13 +133,13 @@ namespace RendererToolkit
 	private:
 		RendererRuntime::IFileManager&  mFileManager;
 		std::string						mProjectName;
-		std::string						mProjectDirectory;
+		std::string						mProjectDirectory;			///< Includes "/" at the end
 		QualityStrategy					mQualityStrategy;
 		RendererRuntime::AssetPackage	mAssetPackage;
 		std::string						mAssetPackageDirectoryName;	///< Asset package name (includes "/" at the end)
 		SourceAssetIdToCompiledAssetId	mSourceAssetIdToCompiledAssetId;
 		SourceAssetIdToAbsoluteFilename	mSourceAssetIdToAbsoluteFilename;
-		rapidjson::Document*			mRapidJsonDocument;	///< There's no real benefit in trying to store the targets data in custom data structures, so we just stick to the read in JSON object
+		rapidjson::Document*			mRapidJsonDocument;			///< There's no real benefit in trying to store the targets data in custom data structures, so we just stick to the read in JSON object
 		ProjectAssetMonitor*			mProjectAssetMonitor;
 		std::atomic<bool>				mShutdownThread;
 		std::thread						mThread;

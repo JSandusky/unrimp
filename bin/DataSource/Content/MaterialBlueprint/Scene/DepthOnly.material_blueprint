@@ -157,11 +157,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "166",
+			"VertexAttributesAssetId": "VertexAttributes/Default/Mesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "17",
-				"FragmentShaderBlueprintAssetId": "18"
+				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Scene/DepthOnlyVertex.asset",
+				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Scene/DepthOnlyFragment.asset"
 			},
 			"RasterizerState":
 			{
