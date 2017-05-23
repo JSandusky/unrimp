@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "173",
 			"AssetType": "CompositorWorkspace",
 			"AssetCategory": "Default",
 			"AssetName": "Vr",
-			"AssetDependencies": [ "19" ],
-			"FileDependencies": [ "Vr.compositor_workspace" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team",
 			"Description": "Vr rendering compositor workspace"
 		},

@@ -8,11 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "37",
 			"AssetType": "Texture",
 			"AssetCategory": "Scene",
 			"AssetName": "background_ddn",
-			"FileDependencies": [ "background_ddn.tga" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"TextureAssetCompiler":

@@ -8,11 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "150",
 			"AssetType": "Texture",
 			"AssetCategory": "Compositor",
 			"AssetName": "IdentityColorCorrectionLookupTable16x1",
-			"FileDependencies": [ "IdentityColorCorrectionLookupTable16x1.tga" ],
 			"Description": "16x1 identity color correction lookup table. Primarily for texture compiler testing. Prefer using 'Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D' in production."
 		},
 		"TextureAssetCompiler":

@@ -8,11 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "91",
 			"AssetType": "Texture",
 			"AssetCategory": "Scene",
 			"AssetName": "vase_hanging",
-			"FileDependencies": [ "vase_hanging.tga" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"TextureAssetCompiler":

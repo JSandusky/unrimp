@@ -477,7 +477,8 @@ namespace RendererToolkit
 				RendererRuntime::AssetId textureAssetId = RendererRuntime::getUninitialized<RendererRuntime::AssetId>();
 				if (rapidJsonValue.HasMember(propertyName))
 				{
-					// Usage of asset IDs is the preferred way to go, but we also need to support the asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
+					// Usage of asset IDs is the preferred way to go, but we also need to support the asset ID naming scheme
+					// "<project name>/<asset type>/<asset category>/<asset name>" to be able to reference e.g. runtime generated assets
 					textureAssetId = StringHelper::getAssetIdByString(rapidJsonValue[propertyName].GetString(), input);
 				}
 				if (RendererRuntime::isUninitialized(textureAssetId))

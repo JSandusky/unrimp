@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "17",
 			"AssetType": "ShaderBlueprint",
 			"AssetCategory": "Scene",
 			"AssetName": "DepthOnlyVertex",
-			"AssetDependencies": [ "15", "16" ],
-			"FileDependencies": [ "DepthOnlyVertex.shader_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"ShaderBlueprintAssetCompiler":

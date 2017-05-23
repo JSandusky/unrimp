@@ -8,11 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "168",
 			"AssetType": "VertexAttributes",
 			"AssetCategory": "Default",
 			"AssetName": "DebugGui",
-			"FileDependencies": [ "DebugGui.vertex_attributes" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"VertexAttributesAssetCompiler":

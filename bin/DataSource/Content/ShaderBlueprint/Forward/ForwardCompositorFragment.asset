@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "138",
 			"AssetType": "ShaderBlueprint",
 			"AssetCategory": "Compositor",
 			"AssetName": "ForwardCompositorFragment",
-			"AssetDependencies": [ "15", "132" ],
-			"FileDependencies": [ "ForwardCompositorFragment.shader_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"ShaderBlueprintAssetCompiler":

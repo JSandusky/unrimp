@@ -8,11 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "87",
 			"AssetType": "Texture",
 			"AssetCategory": "Scene",
 			"AssetName": "chain_texture",
-			"FileDependencies": [ "chain_texture.tga" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"TextureAssetCompiler":

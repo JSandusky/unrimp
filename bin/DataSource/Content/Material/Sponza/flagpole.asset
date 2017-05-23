@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "70",
 			"AssetType": "Material",
 			"AssetCategory": "Scene",
 			"AssetName": "flagpole",
-			"AssetDependencies": [ "0", "4", "71", "72", "110", "113" ],
-			"FileDependencies": [ "flagpole.material" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"MaterialAssetCompiler":

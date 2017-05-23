@@ -157,14 +157,6 @@ namespace RendererToolkit
 		const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
 		const rapidjson::Value& rapidJsonValueAssetMetadata = rapidJsonValueAsset["AssetMetadata"];
 
-		// Check asset ID match: A sanity check in here doesn't hurt
-		const RendererRuntime::AssetId assetId = static_cast<uint32_t>(std::atoi(rapidJsonValueAssetMetadata["AssetId"].GetString()));
-		if (assetId != asset.assetId)
-		{
-			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\": According to the asset package it should be asset ID " + std::to_string(asset.assetId) + " but inside the asset file it's asset ID " + std::to_string(assetId);
-			throw std::runtime_error(message);
-		}
-
 		// Dispatch asset compiler
 		// TODO(co) Add multi-threading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
 

@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "98",
 			"AssetType": "Material",
 			"AssetCategory": "Scene",
 			"AssetName": "roof",
-			"AssetDependencies": [ "0", "4", "99", "110", "113" ],
-			"FileDependencies": [ "roof.material" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"MaterialAssetCompiler":

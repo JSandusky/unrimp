@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "40",
 			"AssetType": "Material",
 			"AssetCategory": "Scene",
 			"AssetName": "bricks",
-			"AssetDependencies": [ "0", "4", "41", "42", "43", "110", "113" ],
-			"FileDependencies": [ "bricks.material" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"MaterialAssetCompiler":

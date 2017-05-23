@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "126",
 			"AssetType": "MaterialBlueprint",
 			"AssetCategory": "Compositor",
 			"AssetName": "CalculateLuminance",
-			"AssetDependencies": [ "100", "125", "167" ],
-			"FileDependencies": [ "CalculateLuminance.material_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"MaterialBlueprintAssetCompiler":

@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "8",
 			"AssetType": "Scene",
 			"AssetCategory": "Default",
 			"AssetName": "FirstScene",
-			"AssetDependencies": [ "2", "21", "40", "169" ],
-			"FileDependencies": [ "FirstScene.scene" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"SceneAssetCompiler":

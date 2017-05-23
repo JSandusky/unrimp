@@ -152,7 +152,7 @@ namespace RendererToolkit
 
 	RendererRuntime::AssetId StringHelper::getAssetIdByString(const std::string& assetIdAsString)
 	{
-		// Enforce asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
+		// Enforce compiled asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
 		std::vector<std::string> elements;
 		splitString(assetIdAsString, "/", elements);
 		if (elements.size() != 4)
