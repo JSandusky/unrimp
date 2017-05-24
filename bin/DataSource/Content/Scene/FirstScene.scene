@@ -44,7 +44,7 @@
 				{
 					"MeshSceneItem":
 					{
-						"MeshAssetId": "Mesh/Imrod/Imrod.asset"
+						"Mesh": "Mesh/Imrod/Imrod.asset"
 					}
 				}
 			},
@@ -59,8 +59,8 @@
 				{
 					"MeshSceneItem":
 					{
-						"MeshAssetId": "Mesh/Imrod/Imrod.asset",
-						"SubMeshMaterialAssetIds": [ "Material/Sponza/bricks.asset", "Material/Imrod/TransparentImrod.asset" ]
+						"Mesh": "Mesh/Imrod/Imrod.asset",
+						"SubMeshMaterials": [ "Material/Sponza/bricks.asset", "Material/Imrod/TransparentImrod.asset" ]
 					}
 				}
 			},
@@ -75,7 +75,7 @@
 				{
 					"MeshSceneItem":
 					{
-						"MeshAssetId": "Mesh/Imrod/Imrod.asset"
+						"Mesh": "Mesh/Imrod/Imrod.asset"
 					}
 				}
 			},
@@ -89,7 +89,7 @@
 				{
 					"MeshSceneItem":
 					{
-						"MeshAssetId": "Mesh/Sponza/sponza.asset"
+						"Mesh": "Mesh/Sponza/sponza.asset"
 					}
 				}
 			},
@@ -184,8 +184,8 @@
 				{
 					"SkeletonMeshSceneItem":
 					{
-						"MeshAssetId": "Mesh/Bob/Bob.asset",
-						"SkeletonAnimationAssetId": "SkeletonAnimation/Bob/Bob.asset"
+						"Mesh": "Mesh/Bob/Bob.asset",
+						"SkeletonAnimation": "SkeletonAnimation/Bob/Bob.asset"
 					}
 				}
 			},

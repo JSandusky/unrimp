@@ -154,11 +154,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "VertexAttributes/Default/Mesh.asset",
+			"VertexAttributes": "VertexAttributes/Default/Mesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Debug/MeshVertex.asset",
-				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Debug/MeshFragment.asset"
+				"VertexShaderBlueprint": "ShaderBlueprint/Debug/MeshVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Debug/MeshFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -236,7 +236,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DiffuseMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				}
 			}

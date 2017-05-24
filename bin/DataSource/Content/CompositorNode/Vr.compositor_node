@@ -158,7 +158,7 @@
 				"ShadowMap":
 				{
 					"MaterialTechnique": "DepthOnly",
-					"TextureAssetId": "Example/Texture/Dynamic/ShadowMapRenderTarget"
+					"Texture": "Example/Texture/Dynamic/ShadowMapRenderTarget"
 				}
 			},
 			"HdrMultisampleFramebuffer":
@@ -201,7 +201,7 @@
 				"Quad":
 				{
 					"Description": "Composite forward data",
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Forward/ForwardCompositor.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Forward/ForwardCompositor.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
@@ -215,7 +215,7 @@
 				"Quad":
 				{
 					"Description": "Calculate luminance. The mipmaps are generated automatically after the next render target change.",
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/CalculateLuminance.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/CalculateLuminance.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1"
@@ -228,8 +228,8 @@
 				{
 					"SkipFirstExecution": "TRUE",
 					"Description": "Backup the adaptive luminance from the previous frame. Skip the first execution since there's no valid previous adaptive luminance available in this situation. The current compositor target isn't used for this.",
-					"DestinationTextureAssetId": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget",
-					"SourceTextureAssetId": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
+					"DestinationTexture": "Example/Texture/Dynamic/PreviousLuminanceRenderTarget",
+					"SourceTexture": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
 				}
 			},
 			"AdaptiveLuminanceFramebuffer":
@@ -238,7 +238,7 @@
 				{
 					"SkipFirstExecution": "TRUE",
 					"Description": "Slowly adjusts the scene luminance based on the previous scene luminance. Skip the first execution since there's no valid previous adaptive luminance available in this situation.",
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/AdaptiveLuminance.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/AdaptiveLuminance.asset",
 					"SetMaterialProperties":
 					{
 						"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
@@ -249,7 +249,7 @@
 				{
 					"NumberOfExecutions": "1",
 					"Description": "During the first execution there's no valid previous adaptive luminance available, so use the just calculated luminance as previous luminance.",
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/AdaptiveLuminance.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/AdaptiveLuminance.asset",
 					"SetMaterialProperties":
 					{
 						"CurrentLuminanceMap": "Example/Texture/Dynamic/LuminanceRenderTarget",
@@ -262,7 +262,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Use a lower exposure to produce a value suitable for a bloom pass",
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/HdrToLdrBloomThreshold.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/HdrToLdrBloomThreshold.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
@@ -275,7 +275,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Downscale",
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/BloomColorRenderTarget"
@@ -287,7 +287,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Downscale",
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget"
@@ -299,7 +299,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Downscale",
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
@@ -313,7 +313,7 @@
 					"Quad":
 					{
 						"Description": "Bloom pass: Vertical Gaussian blur",
-						"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/GaussianBlur.asset",
+						"MaterialBlueprint": "MaterialBlueprint/Compositor/GaussianBlur.asset",
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "TRUE", 
@@ -326,7 +326,7 @@
 					"Quad":
 					{
 						"Description": "Bloom pass: Horizontal Gaussian blur",
-						"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/GaussianBlur.asset",
+						"MaterialBlueprint": "MaterialBlueprint/Compositor/GaussianBlur.asset",
 						"SetMaterialProperties":
 						{
 							"VerticalBlur": "FALSE", 
@@ -340,7 +340,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Upscale",
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/BloomDownscale8ColorRenderTarget"
@@ -352,7 +352,7 @@
 				"Quad":
 				{
 					"Description": "Bloom pass: Upscale",
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Scale.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/Scale.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/BloomDownscale4ColorRenderTarget"
@@ -364,7 +364,7 @@
 				"Quad":
 				{
 					"Description": "HDR to LDR",
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/HdrToLdr.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/HdrToLdr.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
@@ -378,7 +378,7 @@
 			{
 				"Quad":
 				{
-					"MaterialBlueprintAssetId": "MaterialBlueprint/Compositor/Final.asset",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/Final.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0"

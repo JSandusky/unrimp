@@ -106,11 +106,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Compositor/PositionVertex.asset",
-				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Compositor/AdaptiveLuminanceFragment.asset"
+				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/AdaptiveLuminanceFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -162,14 +162,14 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@CurrentLuminanceMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D"
 				},
 				"PreviousLuminanceMap":
 				{
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@PreviousLuminanceMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

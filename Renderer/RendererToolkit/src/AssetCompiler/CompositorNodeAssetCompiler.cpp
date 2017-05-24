@@ -76,9 +76,9 @@ namespace
 				{
 					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValuePass["MaterialAssetId"].GetString()), sortedMaterialPropertyVector);
 				}
-				else if (rapidJsonValuePass.HasMember("MaterialBlueprintAssetId"))
+				else if (rapidJsonValuePass.HasMember("MaterialBlueprint"))
 				{
-					RendererToolkit::JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValuePass["MaterialBlueprintAssetId"].GetString()), sortedMaterialPropertyVector);
+					RendererToolkit::JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValuePass["MaterialBlueprint"].GetString()), sortedMaterialPropertyVector);
 				}
 				if (!sortedMaterialPropertyVector.empty())
 				{
@@ -141,7 +141,7 @@ namespace
 			RendererRuntime::AssetId materialBlueprintAssetId;
 			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialAssetId", materialAssetId);
 			RendererToolkit::JsonHelper::optionalStringIdProperty(rapidJsonValuePass, "MaterialTechnique", passQuad.materialTechniqueId);
-			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialBlueprintAssetId", materialBlueprintAssetId);
+			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialBlueprint", materialBlueprintAssetId);
 			passQuad.materialAssetId = materialAssetId;
 			passQuad.materialBlueprintAssetId = materialBlueprintAssetId;
 			passQuad.numberOfMaterialProperties = static_cast<uint32_t>(sortedMaterialPropertyVector.size());
@@ -388,7 +388,7 @@ namespace
 								RendererRuntime::v1CompositorNode::PassShadowMap passShadowMap;
 								readPass(rapidJsonValuePass, passShadowMap);
 								readPassScene(rapidJsonValuePass, passShadowMap);
-								RendererToolkit::JsonHelper::mandatoryAssetIdProperty(rapidJsonValuePass, "TextureAssetId", passShadowMap.textureAssetId);
+								RendererToolkit::JsonHelper::mandatoryAssetIdProperty(rapidJsonValuePass, "Texture", passShadowMap.textureAssetId);
 								renderTargetTextureAssetIds.insert(passShadowMap.textureAssetId);
 
 								// Write down
@@ -409,15 +409,15 @@ namespace
 							{
 								RendererRuntime::v1CompositorNode::PassCopy passCopy;
 								readPass(rapidJsonValuePass, passCopy);
-								RendererToolkit::JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "DestinationTextureAssetId", passCopy.destinationTextureAssetId);
-								RendererToolkit::JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "SourceTextureAssetId", passCopy.sourceTextureAssetId);
+								RendererToolkit::JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "DestinationTexture", passCopy.destinationTextureAssetId);
+								RendererToolkit::JsonHelper::mandatoryStringIdProperty(rapidJsonValuePass, "SourceTexture", passCopy.sourceTextureAssetId);
 								if (renderTargetTextureAssetIds.find(passCopy.destinationTextureAssetId) == renderTargetTextureAssetIds.end())
 								{
-									throw std::runtime_error(std::string("Destination texture asset ID \"") + rapidJsonValuePass["DestinationTextureAssetId"].GetString() + "\" is unknown");
+									throw std::runtime_error(std::string("Destination texture asset ID \"") + rapidJsonValuePass["DestinationTexture"].GetString() + "\" is unknown");
 								}
 								if (renderTargetTextureAssetIds.find(passCopy.sourceTextureAssetId) == renderTargetTextureAssetIds.end())
 								{
-									throw std::runtime_error(std::string("Source texture asset ID \"") + rapidJsonValuePass["SourceTextureAssetId"].GetString() + "\" is unknown");
+									throw std::runtime_error(std::string("Source texture asset ID \"") + rapidJsonValuePass["SourceTexture"].GetString() + "\" is unknown");
 								}
 								file.write(&passCopy, sizeof(RendererRuntime::v1CompositorNode::PassCopy));
 							}

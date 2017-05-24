@@ -160,11 +160,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertexRay.asset",
-				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Compositor/ScreenSpaceAmbientOcclusionGenerationFragment.asset"
+				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertexRay.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/ScreenSpaceAmbientOcclusionGenerationFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -255,7 +255,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@NormalMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"DepthMap":
@@ -263,7 +263,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DepthMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"SsaoSampleKernelMap":
@@ -272,7 +272,7 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Unrimp/Texture/DynamicByCode/SsaoSampleKernel",
 					"Description": "1D screen space ambient occlusion sample kernel map",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap1D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap1D",
 					"MipmapsUsed": "FALSE"
 				},
 				"SsaoNoise4x4Map":
@@ -281,7 +281,7 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Unrimp/Texture/DynamicByCode/SsaoNoise4x4",
 					"Description": "2D screen space ambient occlusion 4x4 noise map",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

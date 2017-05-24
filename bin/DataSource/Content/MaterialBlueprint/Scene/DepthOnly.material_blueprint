@@ -157,11 +157,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "VertexAttributes/Default/Mesh.asset",
+			"VertexAttributes": "VertexAttributes/Default/Mesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Scene/DepthOnlyVertex.asset",
-				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Scene/DepthOnlyFragment.asset"
+				"VertexShaderBlueprint": "ShaderBlueprint/Scene/DepthOnlyVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Scene/DepthOnlyFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -239,7 +239,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@AlphaMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
 				}
 			}
 		}

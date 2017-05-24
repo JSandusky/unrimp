@@ -66,11 +66,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
-				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Compositor/ScreenSpaceAmbientOcclusionBlurFragment.asset"
+				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/ScreenSpaceAmbientOcclusionBlurFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -117,7 +117,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ScreenSpaceAmbientOcclusionMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

@@ -431,11 +431,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "VertexAttributes/Default/Mesh.asset",
+			"VertexAttributes": "VertexAttributes/Default/Mesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Forward/MeshVertex.asset",
-				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Scene/TransparentMeshFragment.asset"
+				"VertexShaderBlueprint": "ShaderBlueprint/Forward/MeshVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Scene/TransparentMeshFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -617,7 +617,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DiffuseMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				},
 				"AlphaMap":
@@ -625,14 +625,14 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@AlphaMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
 				},
 				"EmissiveMap":
 				{
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@EmissiveMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				},
 				"NormalMap":
@@ -640,28 +640,28 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@NormalMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
 				},
 				"RoughnessMap":
 				{
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@RoughnessMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
 				},
 				"MetallicMap":
 				{
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@MetallicMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D"
 				},
 				"ShadowMap":
 				{
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Example/Texture/Dynamic/ShadowMapRenderTarget",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"ReflectionCubeMap":
@@ -669,7 +669,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ReflectionCubeMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMapCube",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMapCube",
 					"RgbHardwareGammaCorrection": "TRUE"
 				},
 				"LightClustersMap3D":
@@ -677,7 +677,7 @@
 					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/LightClustersMap3D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/LightClustersMap3D"
 				}
 			}
 		}

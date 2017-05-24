@@ -141,11 +141,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
-				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Compositor/LensFlareFeatureGenerationFragment.asset"
+				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/LensFlareFeatureGenerationFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -224,7 +224,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"LensColorMap":
@@ -232,7 +232,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LensColorMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap1D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap1D",
 					"RgbHardwareGammaCorrection": "TRUE",
 					"MipmapsUsed": "FALSE"
 				}

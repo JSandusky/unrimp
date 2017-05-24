@@ -59,11 +59,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "ShaderBlueprint/Compositor/PositionTextureCoordinateInverseTextureSize0Vertex.asset",
-				"FragmentShaderBlueprintAssetId": "ShaderBlueprint/Compositor/GaussianBlurFragment.asset"
+				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionTextureCoordinateInverseTextureSize0Vertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/GaussianBlurFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -93,7 +93,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				}
 			}
