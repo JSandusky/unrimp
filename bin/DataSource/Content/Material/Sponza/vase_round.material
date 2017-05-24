@@ -16,11 +16,8 @@
 		},
 		"Properties":
 		{
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Sponza/vase_round.asset",
-			"UseNormalMap": "TRUE",
 			"NormalMap": "Texture/Sponza/vase_round_ddn.asset",
-			"UseRoughnessMap": "TRUE",
 			"RoughnessMap": "Texture/Sponza/vase_round_spec.asset"
 		}
 	}

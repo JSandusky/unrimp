@@ -16,11 +16,8 @@
 		},
 		"Properties":
 		{
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Sponza/sponza_arch_diff.asset",
-			"UseNormalMap": "TRUE",
 			"NormalMap": "Texture/Sponza/sponza_arch_ddn.asset",
-			"UseRoughnessMap": "TRUE",
 			"RoughnessMap": "Texture/Sponza/sponza_arch_spec.asset"
 		}
 	}

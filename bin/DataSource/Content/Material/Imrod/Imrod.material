@@ -17,14 +17,11 @@
 		"Properties":
 		{
 			"DiffuseColor": "1.0 1.0 1.0",
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Imrod/Imrod_d.asset",
 			"UseEmissiveMap": "TRUE",
 			"EmissiveMap": "Texture/Imrod/Imrod_e.asset",
 			"EmissiveIntensity": "10.0",
-			"UseNormalMap": "TRUE",
 			"NormalMap": "Texture/Imrod/Imrod_n.asset",
-			"UseRoughnessMap": "TRUE",
 			"RoughnessMap": "Texture/Imrod/Imrod_r.asset"
 		}
 	}

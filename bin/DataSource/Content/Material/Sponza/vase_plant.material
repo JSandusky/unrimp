@@ -17,12 +17,10 @@
 		"Properties":
 		{
 			"CullMode": "NONE",
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Sponza/vase_plant.asset",
 			"UseAlphaMap": "TRUE",
 			"AlphaMap": "Texture/Sponza/vase_plant_mask.asset",
 			"AlphaReference": "0.2",
-			"UseRoughnessMap": "TRUE",
 			"RoughnessMap": "Texture/Sponza/vase_plant_spec.asset"
 		}
 	}

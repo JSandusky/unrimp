@@ -46,13 +46,6 @@
 				"Description": "Use GPU skinning?",
 				"VisualImportance": "MANDATORY"
 			},
-			"UseDiffuseMap":
-			{
-				"Usage": "UNKNOWN",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use diffuse map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a diffuse map."
-			},
 			"DiffuseMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -107,13 +100,6 @@
 				"Value": "1.0",
 				"Description": "Material emissive intensity, has only an effect if there's an emissive map"
 			},
-			"UseNormalMap":
-			{
-				"Usage": "UNKNOWN",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use normal map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a normal map."
-			},
 			"NormalMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -121,26 +107,12 @@
 				"Value": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",
 				"Description": "2D material tangent space BC5/3DC/ATI2N stored normal map"
 			},
-			"UseRoughnessMap":
-			{
-				"Usage": "UNKNOWN",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use roughness map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a roughness map."
-			},
 			"RoughnessMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D",
 				"Description": "2D material roughness map = 1 - gloss map. Metal-rough-worfkow: Describes the microsurface of the object. White 1.0 is rough and black 0.0 is smooth. The microsurface if rough can cause the light rays to scatter and make the highlight appear dimmer and more broad. The same amount of light energy is reflected going out as coming into the surface. This map has the most artistic freedom. There is no wrong answers here. This map gives the asset the most character as it truly describes the surface e.g. scratches, fingerprints, smudges, grime etc."
-			},
-			"UseMetallicMap":
-			{
-				"Usage": "UNKNOWN",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use metallic map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a metallic map."
 			},
 			"MetallicMap":
 			{

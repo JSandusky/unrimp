@@ -17,14 +17,11 @@
 		"Properties":
 		{
 			"CullMode": "NONE",
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Sponza/sponza_thorn_diff.asset",
 			"UseAlphaMap": "TRUE",
 			"AlphaMap": "Texture/Sponza/sponza_thorn_mask.asset",
 			"AlphaReference": "0.2",
-			"UseNormalMap": "TRUE",
 			"NormalMap": "Texture/Sponza/sponza_thorn_ddn.asset",
-			"UseRoughnessMap": "TRUE",
 			"RoughnessMap": "Texture/Sponza/sponza_thorn_spec.asset"
 		}
 	}

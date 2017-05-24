@@ -16,7 +16,6 @@
 		},
 		"Properties":
 		{
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Sponza/gi_flag.asset"
 		}
 	}

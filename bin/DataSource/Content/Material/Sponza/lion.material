@@ -16,9 +16,7 @@
 		},
 		"Properties":
 		{
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Sponza/lion.asset",
-			"UseNormalMap": "TRUE",
 			"NormalMap": "Texture/Sponza/lion_ddn.asset"
 		}
 	}

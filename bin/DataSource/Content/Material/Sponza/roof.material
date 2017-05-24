@@ -16,7 +16,6 @@
 		},
 		"Properties":
 		{
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Sponza/sponza_roof_diff.asset"
 		}
 	}

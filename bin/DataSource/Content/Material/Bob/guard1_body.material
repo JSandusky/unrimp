@@ -16,7 +16,6 @@
 		},
 		"Properties":
 		{
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Bob/guard1_body_d.asset"
 		}
 	}

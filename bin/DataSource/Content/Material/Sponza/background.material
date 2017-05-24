@@ -16,9 +16,7 @@
 		},
 		"Properties":
 		{
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Sponza/background.asset",
-			"UseNormalMap": "TRUE",
 			"NormalMap": "Texture/Sponza/background_ddn.asset"
 		}
 	}

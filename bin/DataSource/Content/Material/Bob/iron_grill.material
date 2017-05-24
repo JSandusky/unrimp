@@ -16,7 +16,6 @@
 		},
 		"Properties":
 		{
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Bob/iron_grill_d.asset"
 		}
 	}

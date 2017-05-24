@@ -16,9 +16,7 @@
 		},
 		"Properties":
 		{
-			"UseDiffuseMap": "TRUE",
 			"DiffuseMap": "Texture/Sponza/sponza_fabric_blue_diff.asset",
-			"UseRoughnessMap": "TRUE",
 			"RoughnessMap": "Texture/Sponza/sponza_fabric_spec.asset"
 		}
 	}
