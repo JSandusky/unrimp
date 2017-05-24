@@ -16,7 +16,7 @@
 		},
 		"Properties":
 		{
-			"DiffuseMap": "Texture/Sponza/sponza_roof_diff.asset"
+			"_drgb_nxa": "Texture/Sponza/sponza_roof_drgb_nxa.asset"
 		}
 	}
 }

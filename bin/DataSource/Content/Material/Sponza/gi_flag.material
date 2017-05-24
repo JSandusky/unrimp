@@ -16,7 +16,7 @@
 		},
 		"Properties":
 		{
-			"DiffuseMap": "Texture/Sponza/gi_flag.asset"
+			"_drgb_nxa": "Texture/Sponza/gi_flag_drgb_nxa.asset"
 		}
 	}
 }

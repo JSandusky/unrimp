@@ -16,7 +16,7 @@
 		},
 		"Properties":
 		{
-			"DiffuseMap": "Texture/Bob/guard1_body_d.asset"
+			"_drgb_nxa": "Texture/Bob/guard1_body_drgb_nxa.asset"
 		}
 	}
 }

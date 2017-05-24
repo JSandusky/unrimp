@@ -16,9 +16,8 @@
 		},
 		"Properties":
 		{
-			"DiffuseMap": "Texture/Sponza/spnza_bricks_a_diff.asset",
-			"NormalMap": "Texture/Sponza/spnza_bricks_a_ddn.asset",
-			"RoughnessMap": "Texture/Sponza/spnza_bricks_a_spec.asset"
+			"_drgb_nxa": "Texture/Sponza/spnza_bricks_a_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "Texture/Sponza/spnza_bricks_a_hr_rg_mb_nya.asset"
 		}
 	}
 }

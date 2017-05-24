@@ -195,6 +195,7 @@ namespace
 			REFLECTION_2D_MAP,
 			REFLECTION_CUBE_MAP,
 			COLOR_CORRECTION_LOOKUP_TABLE,
+			PACKED_CHANNELS,
 			UNKNOWN
 		};
 
@@ -210,198 +211,42 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		bool crunchConsoleOutput(crnlib::eConsoleMessageType type, const char* message, void*)
+		TextureSemantic getTextureSemanticByRapidJsonValue(const rapidjson::Value& rapidJsonValue)
 		{
-			// Filter Crunch output to ignore messages like "Flipping texture on Y axis" or "Generated 11 mipmap levels in 3.261s"
-			// -> Warnings like "Target bitrate/quality level is not supported for this output file format." don't cause harm either, but just show them so we're aware of possible issues
-			// TODO(co) More context information like which asset is compiled right now might be useful. We need to keep in mind that there can be multiple texture compiler instances
-			//          running at one and the same time. We could use the Crunch console output data to transport this information, on the other hand we need to ensure that we can
-			//          unregister our function when we're done. "crnlib::console::remove_console_output_func() only checks the function pointer.
-			if (crnlib::cMessageConsoleMessage == type || crnlib::cWarningConsoleMessage == type || crnlib::cErrorConsoleMessage == type)
-			{
-				RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(message);
-				RENDERERTOOLKIT_OUTPUT_DEBUG_STRING("\n");
-			}
+			const char* valueAsString = rapidJsonValue.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValue.GetStringLength();
 
-			// We handled the console output
-			return true;
-		}
+			// Define helper macros
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) return TextureSemantic::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) return TextureSemantic::name;
 
-		void initializeCrunch()
-		{
-			if (!g_CrunchInitialized)
-			{
-				// The Crunch console is using "printf()" by default if no console output function handles Crunch console output
-				// -> Redirect the Crunch console output into our log so we have an uniform handling of such information
-				crnlib::console::add_console_output_func(crunchConsoleOutput, nullptr);
-				g_CrunchInitialized = true;
-			}
-		}
-
-		std::string widthHeightToString(uint32_t width, uint32_t height)
-		{
-			return std::to_string(width) + 'x' + std::to_string(height);
-		}
-
-		void optionalTextureSemanticProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, TextureSemantic& value)
-		{
-			if (rapidJsonValue.HasMember(propertyName))
-			{
-				const rapidjson::Value& rapidJsonValueValue = rapidJsonValue[propertyName];
-				const char* valueAsString = rapidJsonValueValue.GetString();
-				const rapidjson::SizeType valueStringLength = rapidJsonValueValue.GetStringLength();
-
-				// Define helper macros
-				#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = TextureSemantic::name;
-				#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = TextureSemantic::name;
-
-				// Evaluate value
-				IF_VALUE(DIFFUSE_MAP)
-				ELSE_IF_VALUE(ALPHA_MAP)
-				ELSE_IF_VALUE(NORMAL_MAP)
-				ELSE_IF_VALUE(ROUGHNESS_MAP)
-				ELSE_IF_VALUE(METALLIC_MAP)
-				ELSE_IF_VALUE(EMISSIVE_MAP)
-				ELSE_IF_VALUE(HEIGHT_MAP)
-				ELSE_IF_VALUE(TINT_MAP)
-				ELSE_IF_VALUE(AMBIENT_OCCLUSION_MAP)
-				ELSE_IF_VALUE(REFLECTION_2D_MAP)
-				ELSE_IF_VALUE(REFLECTION_CUBE_MAP)
-				ELSE_IF_VALUE(COLOR_CORRECTION_LOOKUP_TABLE)
-				else
-				{
-					throw std::runtime_error(std::string("Unknown texture semantic \"") + valueAsString + '\"');
-				}
-
-				// Undefine helper macros
-				#undef IF_VALUE
-				#undef ELSE_IF_VALUE
-			}
-		}
-
-		std::vector<std::string> getCubemapFilenames(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const std::string& basePath)
-		{
-			static const std::array<std::string, 6> FACE_NAMES = { "PositiveXInputFile", "NegativeXInputFile", "NegativeYInputFile", "PositiveYInputFile", "PositiveZInputFile", "NegativeZInputFile" };
-
-			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
-			std::vector<std::string> filenames;
-			filenames.reserve(6);
-			for (size_t faceIndex = 0; faceIndex < FACE_NAMES.size(); ++faceIndex)
-			{
-				filenames.emplace_back(basePath + rapidJsonValueTextureAssetCompiler[FACE_NAMES[faceIndex].c_str()].GetString());
-			}
-			return filenames;
-		}
-
-		bool checkIfChanged(const RendererToolkit::IAssetCompiler::Input& input, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, TextureSemantic textureSemantic, const std::string& inputAssetFilename, const std::string& outputAssetFilename, std::vector<RendererToolkit::CacheManager::CacheEntries>& cacheEntries)
-		{
-			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
-			{
-				// A cube map has six source files (for each face one source), so check if any of the six files changes
-				// -> "inputAssetFilename" specifies the base directory of the faces source files
-				const std::vector<std::string> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, inputAssetFilename);
-				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
-				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
-				{
-					// Changed
-					cacheEntries.push_back(cacheEntriesCandidate);
-					return true;
-				}
-
-				// Not changed
-				return false;
-			}
-			else if (TextureSemantic::ROUGHNESS_MAP == textureSemantic)
-			{
-				// A roughness map has two source files: First the roughness map itself and second a normal map
-				// -> An asset can specify both files or only one of them
-				// -> "inputAssetFilename" points to the roughness map
-				// -> We need to fetch the name of the input normal map
-				std::string normalMapAssetFilename;
-				if (rapidJsonValueTextureAssetCompiler.HasMember("NormalMapInputFile"))
-				{
-					const std::string normalMapInputFile = rapidJsonValueTextureAssetCompiler["NormalMapInputFile"].GetString();
-					if (!normalMapInputFile.empty())
-					{
-						normalMapAssetFilename = input.assetInputDirectory + normalMapInputFile;
-					}
-				}
-
-				// Setup a list of source files
-				std::vector<std::string> inputFilenames;
-				if (!inputAssetFilename.empty())
-				{
-					inputFilenames.emplace_back(inputAssetFilename);
-				}
-				if (!normalMapAssetFilename.empty())
-				{
-					inputFilenames.emplace_back(normalMapAssetFilename);
-				}
-
-				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
-				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
-				{
-					// Changed
-					cacheEntries.push_back(cacheEntriesCandidate);
-					return true;
-				}
-
-				// Not changed
-				return false;
-			}
+			// Evaluate value
+			IF_VALUE(DIFFUSE_MAP)
+			ELSE_IF_VALUE(ALPHA_MAP)
+			ELSE_IF_VALUE(NORMAL_MAP)
+			ELSE_IF_VALUE(ROUGHNESS_MAP)
+			ELSE_IF_VALUE(METALLIC_MAP)
+			ELSE_IF_VALUE(EMISSIVE_MAP)
+			ELSE_IF_VALUE(HEIGHT_MAP)
+			ELSE_IF_VALUE(TINT_MAP)
+			ELSE_IF_VALUE(AMBIENT_OCCLUSION_MAP)
+			ELSE_IF_VALUE(REFLECTION_2D_MAP)
+			ELSE_IF_VALUE(REFLECTION_CUBE_MAP)
+			ELSE_IF_VALUE(COLOR_CORRECTION_LOOKUP_TABLE)
+			ELSE_IF_VALUE(PACKED_CHANNELS)
 			else
 			{
-				// Asset has single source file
-				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
-				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputAssetFilename, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
-				{
-					// Changed
-					cacheEntries.push_back(cacheEntriesCandidate);
-					return true;
-				}
-
-				// Not changed
-				return false;
+				throw std::runtime_error(std::string("Unknown texture semantic \"") + valueAsString + '\"');
 			}
+
+			// Undefine helper macros
+			#undef IF_VALUE
+			#undef ELSE_IF_VALUE
 		}
 
-		void loadCubeCrunchMipmappedTexture(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, crnlib::mipmapped_texture& crunchMipmappedTexture)
+		void mandatoryTextureSemanticProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, TextureSemantic& value)
 		{
-			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
-			const std::vector<std::string> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, basePath);
-			for (size_t faceIndex = 0; faceIndex < faceFilenames.size(); ++faceIndex)
-			{
-				// Load the 2D source image
-				crnlib::image_u8* source2DImage = crnlib::crnlib_new<crnlib::image_u8>();
-				const std::string& inputFile = faceFilenames[faceIndex];
-				if (!crnlib::image_utils::read_from_file(*source2DImage, inputFile.c_str()))
-				{
-					throw std::runtime_error(std::string("Failed to load image \"") + inputFile + '\"');
-				}
-
-				// Sanity check
-				const uint32_t width = source2DImage->get_width();
-				if (width != source2DImage->get_height())
-				{
-					throw std::runtime_error("Cube map faces must have a width which is identical to the height");
-				}
-
-				// Process 2D source image
-				const crnlib::pixel_format pixelFormat = source2DImage->has_alpha() ? crnlib::PIXEL_FMT_A8R8G8B8 : crnlib::PIXEL_FMT_R8G8B8;
-				if (0 == faceIndex)
-				{
-					crunchMipmappedTexture.init(width, width, 1, 6, pixelFormat, "", crnlib::cDefaultOrientationFlags);
-				}
-				else if (crunchMipmappedTexture.get_format() != pixelFormat)
-				{
-					throw std::runtime_error("The pixel format of all cube map faces must be identical");
-				}
-				else if (crunchMipmappedTexture.get_width() != source2DImage->get_width())
-				{
-					throw std::runtime_error("The size of all cube map faces must be identical");
-				}
-				crunchMipmappedTexture.get_level(faceIndex, 0)->assign(source2DImage);
-			}
+			value = getTextureSemanticByRapidJsonValue(rapidJsonValue[propertyName]);
 		}
 
 		void load2DCrunchMipmappedTextureInternal(const char* sourceFilename, crnlib::mipmapped_texture& crunchMipmappedTexture)
@@ -475,6 +320,536 @@ namespace
 			}
 		}
 
+
+		//[-------------------------------------------------------]
+		//[ Global classes                                        ]
+		//[-------------------------------------------------------]
+		class TextureChannelPacking
+		{
+
+
+		//[-------------------------------------------------------]
+		//[ Public definitions                                    ]
+		//[-------------------------------------------------------]
+		public:
+			struct Source
+			{
+				TextureSemantic			  textureSemantic  = TextureSemantic::UNKNOWN;
+				uint8_t					  numberOfChannels = RendererRuntime::getUninitialized<uint8_t>();
+				float					  defaultColor[4]  = { 0.0f, 0.0f, 0.0f, 0.0f };
+				crnlib::mipmapped_texture crunchMipmappedTexture;
+			};
+			typedef std::vector<Source> Sources;
+
+			struct Destination
+			{
+				uint8_t sourceIndex	  = RendererRuntime::getUninitialized<uint8_t>();
+				uint8_t sourceChannel = RendererRuntime::getUninitialized<uint8_t>();
+			};
+			typedef std::vector<Destination> Destinations;
+
+
+		//[-------------------------------------------------------]
+		//[ Public methods                                        ]
+		//[-------------------------------------------------------]
+		public:
+			TextureChannelPacking(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceNormalMapFilename, crnlib::texture_conversion::convert_params& crunchConvertParams)
+			{
+				loadLayout(configuration, rapidJsonValueTextureAssetCompiler, crunchConvertParams);
+				loadSourceCrunchMipmappedTextures(rapidJsonValueTextureAssetCompiler, basePath, sourceNormalMapFilename);
+			}
+
+			crnlib::uint getDestinationWidth() const
+			{
+				for (const Source& source : mSources)
+				{
+					if (source.crunchMipmappedTexture.is_valid())
+					{
+						return source.crunchMipmappedTexture.get_width();
+					}
+				}
+				throw std::runtime_error("Texture channel packing needs at least one source texture");
+			}
+
+			crnlib::uint getDestinationHeight() const
+			{
+				for (const Source& source : mSources)
+				{
+					if (source.crunchMipmappedTexture.is_valid())
+					{
+						return source.crunchMipmappedTexture.get_height();
+					}
+				}
+				throw std::runtime_error("Texture channel packing needs at least one source texture");
+			}
+
+			crnlib::pixel_format getDestinationCrunchPixelFormat() const
+			{
+				switch (mDestinations.size())
+				{
+					case 1:
+						return crnlib::PIXEL_FMT_L8;
+
+					case 3:
+						return crnlib::PIXEL_FMT_R8G8B8;
+
+					case 4:
+						return crnlib::PIXEL_FMT_A8R8G8B8;
+
+					default:
+						throw std::runtime_error("Invalid number of destination channels, must be 1, 3 or 4");
+				}
+			}
+
+			inline const Sources& getSources() const
+			{
+				return mSources;
+			}
+
+			inline const Destinations& getDestinations() const
+			{
+				return mDestinations;
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Private methods                                       ]
+		//[-------------------------------------------------------]
+		private:
+			void loadLayout(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, crnlib::texture_conversion::convert_params& crunchConvertParams)
+			{
+				const std::string textureChannelPacking = rapidJsonValueTextureAssetCompiler["TextureChannelPacking"].GetString();
+				const rapidjson::Value& rapidJsonValueTextureChannelPackings = configuration.rapidJsonValueTargets["TextureChannelPackings"];
+				const rapidjson::Value& rapidJsonValueTextureChannelPacking = rapidJsonValueTextureChannelPackings[textureChannelPacking.c_str()];
+
+				{ // Sources
+					const rapidjson::Value& rapidJsonValueSources = rapidJsonValueTextureChannelPacking["Sources"];
+					if (rapidJsonValueSources.Size() > 4)
+					{
+						throw std::runtime_error("Texture channel packing \"" + textureChannelPacking + "\" has more than four sources which is invalid");
+					}
+					mSources.resize(rapidJsonValueSources.Size());
+					for (rapidjson::size_t i = 0; i < rapidJsonValueSources.Size(); ++i)
+					{
+						const rapidjson::Value& rapidJsonValueSource = rapidJsonValueSources[i];
+						Source& source = mSources[i];
+						mandatoryTextureSemanticProperty(rapidJsonValueSource, "TextureSemantic", source.textureSemantic);
+						for (rapidjson::size_t k = 0; k < i; ++k)
+						{
+							if (mSources[k].textureSemantic == source.textureSemantic)
+							{
+								throw std::runtime_error("Texture channel packing \"" + textureChannelPacking + "\" source " + std::to_string(i) + ": The texture semantic \"" + rapidJsonValueSource["TextureSemantic"].GetString() + "\" is used multiple times which is invalid");
+							}
+						}
+						source.numberOfChannels = rapidJsonValueSource["NumberOfChannels"].GetUint();
+						if (source.numberOfChannels > 4)
+						{
+							throw std::runtime_error("Texture channel packing \"" + textureChannelPacking + "\" source " + std::to_string(i) + ": The number of texture channel packing source channels must not be greater as four");
+						}
+						RendererToolkit::JsonHelper::optionalFloatNProperty(rapidJsonValueSource, "DefaultColor", source.defaultColor, source.numberOfChannels);
+					}
+				}
+
+				{ // Destinations
+					const rapidjson::Value& rapidJsonValueDestinations = rapidJsonValueTextureChannelPacking["Destinations"];
+					if (rapidJsonValueDestinations.Size() > 4)
+					{
+						throw std::runtime_error("Texture channel packing \"" + textureChannelPacking + "\" has more than four destinations which is invalid");
+					}
+					mDestinations.resize(rapidJsonValueDestinations.Size());
+					for (rapidjson::size_t i = 0; i < rapidJsonValueDestinations.Size(); ++i)
+					{
+						const rapidjson::Value& rapidJsonValueDestination = rapidJsonValueDestinations[i];
+						Destination& destination = mDestinations[i];
+						{ // Get source index by texture semantic
+							TextureSemantic textureSemantic = TextureSemantic::UNKNOWN;
+							mandatoryTextureSemanticProperty(rapidJsonValueDestination, "TextureSemantic", textureSemantic);
+							for (uint8_t sourceIndex = 0; sourceIndex < mSources.size(); ++sourceIndex)
+							{
+								if (mSources[sourceIndex].textureSemantic == textureSemantic)
+								{
+									destination.sourceIndex = sourceIndex;
+									break;
+								}
+							}
+							if (RendererRuntime::isUninitialized(destination.sourceIndex))
+							{
+								throw std::runtime_error("Texture channel packing \"" + textureChannelPacking + "\" destination " + std::to_string(i) + ": Found no texture channel packing source for the given texture semantic");
+							}
+						}
+						destination.sourceChannel = rapidJsonValueDestination["SourceChannel"].GetUint();
+						if (destination.sourceChannel > mSources[destination.sourceIndex].numberOfChannels)
+						{
+							throw std::runtime_error("Texture channel packing \"" + textureChannelPacking + "\" destination " + std::to_string(i) + " is referencing a source channel which doesn't exist");
+						}
+					}
+				}
+
+				{ // RGB hardware gamma correction used during runtime? (= sRGB)
+				  // -> The "RgbHardwareGammaCorrection"-name was chosen to stay consistent to material blueprints (don't use too many different names for more or less the same topic)
+					bool rgbHardwareGammaCorrection = false;
+					RendererToolkit::JsonHelper::optionalBooleanProperty(rapidJsonValueTextureChannelPacking, "RgbHardwareGammaCorrection", rgbHardwareGammaCorrection);
+					if (!rgbHardwareGammaCorrection)
+					{
+						crunchConvertParams.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
+						crunchConvertParams.m_mipmap_params.m_gamma_filtering = false;
+						crunchConvertParams.m_mipmap_params.m_gamma = 1.0f;	// Mipmap gamma correction value, default=2.2, use 1.0 for linear
+					}
+				}
+			}
+
+			std::string getSourceNormalMapFilename(const char* basePath, const char* sourceNormalMapFilename, const rapidjson::Value& rapidJsonValueInputFiles) const
+			{
+				if (nullptr != sourceNormalMapFilename)
+				{
+					// Use the normal map we received
+					return sourceNormalMapFilename;
+				}
+				else
+				{
+					// Search for a normal map inside the texture channel packing layout
+					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorInputFile = rapidJsonValueInputFiles.MemberBegin(); rapidJsonMemberIteratorInputFile != rapidJsonValueInputFiles.MemberEnd(); ++rapidJsonMemberIteratorInputFile)
+					{
+						if (getTextureSemanticByRapidJsonValue(rapidJsonMemberIteratorInputFile->name) == TextureSemantic::NORMAL_MAP)
+						{
+							return std::string(basePath) + rapidJsonMemberIteratorInputFile->value.GetString();
+						}
+					}
+				}
+
+				// No normal map filename found
+				return "";
+			}
+
+			void loadSourceCrunchMipmappedTextures(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceNormalMapFilename)
+			{
+				// Load provided source textures
+				const rapidjson::Value& rapidJsonValueInputFiles = rapidJsonValueTextureAssetCompiler["InputFiles"];
+				if (rapidJsonValueInputFiles.MemberCount() == 0)
+				{
+					throw std::runtime_error("No input files defined");
+				}
+				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorInputFile = rapidJsonValueInputFiles.MemberBegin(); rapidJsonMemberIteratorInputFile != rapidJsonValueInputFiles.MemberEnd(); ++rapidJsonMemberIteratorInputFile)
+				{
+					const TextureSemantic textureSemantic = getTextureSemanticByRapidJsonValue(rapidJsonMemberIteratorInputFile->name);
+					for (Source& source : mSources)
+					{
+						if (source.textureSemantic == textureSemantic)
+						{
+							// Support for Toksvig specular anti-aliasing to reduce shimmering
+							std::string usedSourceNormalMapFilename;
+							if (textureSemantic == TextureSemantic::ROUGHNESS_MAP)
+							{
+								// Search for normal map
+								usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, sourceNormalMapFilename, rapidJsonValueInputFiles);
+							}
+
+							// Load Crunch mipmapped texture
+							crnlib::texture_conversion::convert_params crunchConvertParams;
+							load2DCrunchMipmappedTexture((std::string(basePath) + rapidJsonMemberIteratorInputFile->value.GetString()).c_str(), usedSourceNormalMapFilename.empty() ? nullptr : usedSourceNormalMapFilename.c_str(), source.crunchMipmappedTexture, crunchConvertParams);
+
+							// Sanity check: Ensure the number of channels matches
+							const crnlib::image_u8* crunchImage = source.crunchMipmappedTexture.get_level(0, 0)->get_image();
+							for (uint8_t i = 0; i < source.numberOfChannels; ++i)
+							{
+								if (!crunchImage->is_component_valid(i))
+								{
+									throw std::runtime_error("Texture input file \"" + std::string(rapidJsonMemberIteratorInputFile->value.GetString()) + "\" has less channels then required by texture semantic \"" + std::string(rapidJsonMemberIteratorInputFile->name.GetString()) + '\"');
+								}
+							}
+							break;
+						}
+					}
+				}
+
+				// Support for Toksvig specular anti-aliasing to reduce shimmering: Handle case if no roughness map to adjust was provided
+				for (Source& source : mSources)
+				{
+					if (source.textureSemantic == TextureSemantic::ROUGHNESS_MAP)
+					{
+						if (!source.crunchMipmappedTexture.is_valid())
+						{
+							// Search for normal map
+							const std::string usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, sourceNormalMapFilename, rapidJsonValueInputFiles);
+							if (!usedSourceNormalMapFilename.empty())
+							{
+								// Load Crunch mipmapped texture
+								crnlib::texture_conversion::convert_params crunchConvertParams;
+								load2DCrunchMipmappedTexture(nullptr, usedSourceNormalMapFilename.c_str(), source.crunchMipmappedTexture, crunchConvertParams);
+							}
+						}
+						break;
+					}
+				}
+
+				// Sanity check: All source textures must have the same dimension
+				for (uint8_t i = 0; i < mSources.size(); ++i)
+				{
+					const Source& source = mSources[i];
+					if (source.crunchMipmappedTexture.is_valid())
+					{
+						for (uint8_t k = i + 1; k < mSources.size(); ++k)
+						{
+							const Source& otherSource = mSources[k];
+							if (otherSource.crunchMipmappedTexture.is_valid() && (source.crunchMipmappedTexture.get_width() != otherSource.crunchMipmappedTexture.get_width() || source.crunchMipmappedTexture.get_height() != otherSource.crunchMipmappedTexture.get_height()))
+							{
+								throw std::runtime_error("All input textures must have the same dimension");
+							}
+						}
+						break;
+					}
+				}
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Private data                                          ]
+		//[-------------------------------------------------------]
+		private:
+			Sources		 mSources;
+			Destinations mDestinations;
+
+
+		};
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		bool crunchConsoleOutput(crnlib::eConsoleMessageType type, const char* message, void*)
+		{
+			// Filter Crunch output to ignore messages like "Flipping texture on Y axis" or "Generated 11 mipmap levels in 3.261s"
+			// -> Warnings like "Target bitrate/quality level is not supported for this output file format." don't cause harm either, but just show them so we're aware of possible issues
+			// TODO(co) More context information like which asset is compiled right now might be useful. We need to keep in mind that there can be multiple texture compiler instances
+			//          running at one and the same time. We could use the Crunch console output data to transport this information, on the other hand we need to ensure that we can
+			//          unregister our function when we're done. "crnlib::console::remove_console_output_func() only checks the function pointer.
+			if (crnlib::cMessageConsoleMessage == type || crnlib::cWarningConsoleMessage == type || crnlib::cErrorConsoleMessage == type)
+			{
+				RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(message);
+				RENDERERTOOLKIT_OUTPUT_DEBUG_STRING("\n");
+			}
+
+			// We handled the console output
+			return true;
+		}
+
+		void initializeCrunch()
+		{
+			if (!g_CrunchInitialized)
+			{
+				// The Crunch console is using "printf()" by default if no console output function handles Crunch console output
+				// -> Redirect the Crunch console output into our log so we have an uniform handling of such information
+				crnlib::console::add_console_output_func(crunchConsoleOutput, nullptr);
+				g_CrunchInitialized = true;
+			}
+		}
+
+		std::string widthHeightToString(uint32_t width, uint32_t height)
+		{
+			return std::to_string(width) + 'x' + std::to_string(height);
+		}
+
+		void optionalTextureSemanticProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, TextureSemantic& value)
+		{
+			if (rapidJsonValue.HasMember(propertyName))
+			{
+				mandatoryTextureSemanticProperty(rapidJsonValue, propertyName, value);
+			}
+		}
+
+		std::vector<std::string> getCubemapFilenames(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const std::string& basePath)
+		{
+			const rapidjson::Value& rapidJsonValueInputFiles = rapidJsonValueTextureAssetCompiler["InputFiles"];
+			static const std::array<std::string, 6> FACE_NAMES = { "PositiveX", "NegativeX", "NegativeY", "PositiveY", "PositiveZ", "NegativeZ" };
+
+			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
+			std::vector<std::string> filenames;
+			filenames.reserve(6);
+			for (size_t faceIndex = 0; faceIndex < FACE_NAMES.size(); ++faceIndex)
+			{
+				filenames.emplace_back(basePath + rapidJsonValueInputFiles[FACE_NAMES[faceIndex].c_str()].GetString());
+			}
+			return filenames;
+		}
+
+		bool checkIfChanged(const RendererToolkit::IAssetCompiler::Input& input, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, TextureSemantic textureSemantic, const std::string& inputAssetFilename, const std::string& outputAssetFilename, std::vector<RendererToolkit::CacheManager::CacheEntries>& cacheEntries)
+		{
+			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
+			{
+				// A cube map has six source files (for each face one source), so check if any of the six files has been changed
+				// -> "inputAssetFilename" specifies the base directory of the faces source files
+				const std::vector<std::string> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, inputAssetFilename);
+				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
+				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
+				{
+					// Changed
+					cacheEntries.push_back(cacheEntriesCandidate);
+					return true;
+				}
+
+				// Not changed
+				return false;
+			}
+			else if (TextureSemantic::ROUGHNESS_MAP == textureSemantic)
+			{
+				// A roughness map has two source files: First the roughness map itself and second a normal map
+				// -> An asset can specify both files or only one of them
+				// -> "inputAssetFilename" points to the roughness map
+				// -> We need to fetch the name of the input normal map
+				std::string normalMapAssetFilename;
+				if (rapidJsonValueTextureAssetCompiler.HasMember("NormalMapInputFile"))
+				{
+					const std::string normalMapInputFile = rapidJsonValueTextureAssetCompiler["NormalMapInputFile"].GetString();
+					if (!normalMapInputFile.empty())
+					{
+						normalMapAssetFilename = input.assetInputDirectory + normalMapInputFile;
+					}
+				}
+
+				// Setup a list of source files
+				std::vector<std::string> inputFilenames;
+				if (!inputAssetFilename.empty())
+				{
+					inputFilenames.emplace_back(inputAssetFilename);
+				}
+				if (!normalMapAssetFilename.empty())
+				{
+					inputFilenames.emplace_back(normalMapAssetFilename);
+				}
+
+				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
+				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
+				{
+					// Changed
+					cacheEntries.push_back(cacheEntriesCandidate);
+					return true;
+				}
+
+				// Not changed
+				return false;
+			}
+			else if (TextureSemantic::PACKED_CHANNELS == textureSemantic)
+			{
+				const rapidjson::Value& rapidJsonValueInputFiles = rapidJsonValueTextureAssetCompiler["InputFiles"];
+				std::vector<std::string> filenames;
+				filenames.reserve(rapidJsonValueInputFiles.MemberCount());
+				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorInputFile = rapidJsonValueInputFiles.MemberBegin(); rapidJsonMemberIteratorInputFile != rapidJsonValueInputFiles.MemberEnd(); ++rapidJsonMemberIteratorInputFile)
+				{
+					filenames.emplace_back(inputAssetFilename + rapidJsonMemberIteratorInputFile->value.GetString());
+				}
+				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
+				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, filenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
+				{
+					// Changed
+					cacheEntries.push_back(cacheEntriesCandidate);
+					return true;
+				}
+
+				// Not changed
+				return false;
+			}
+			else
+			{
+				// Asset has single source file
+				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
+				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputAssetFilename, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
+				{
+					// Changed
+					cacheEntries.push_back(cacheEntriesCandidate);
+					return true;
+				}
+
+				// Not changed
+				return false;
+			}
+		}
+
+		void loadCubeCrunchMipmappedTexture(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, crnlib::mipmapped_texture& crunchMipmappedTexture)
+		{
+			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
+			const std::vector<std::string> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, basePath);
+			for (size_t faceIndex = 0; faceIndex < faceFilenames.size(); ++faceIndex)
+			{
+				// Load the 2D source image
+				crnlib::image_u8* source2DImage = crnlib::crnlib_new<crnlib::image_u8>();
+				const std::string& inputFile = faceFilenames[faceIndex];
+				if (!crnlib::image_utils::read_from_file(*source2DImage, inputFile.c_str()))
+				{
+					throw std::runtime_error(std::string("Failed to load image \"") + inputFile + '\"');
+				}
+
+				// Sanity check
+				const uint32_t width = source2DImage->get_width();
+				if (width != source2DImage->get_height())
+				{
+					throw std::runtime_error("Cube map faces must have a width which is identical to the height");
+				}
+
+				// Process 2D source image
+				const crnlib::pixel_format pixelFormat = source2DImage->has_alpha() ? crnlib::PIXEL_FMT_A8R8G8B8 : crnlib::PIXEL_FMT_R8G8B8;
+				if (0 == faceIndex)
+				{
+					crunchMipmappedTexture.init(width, width, 1, 6, pixelFormat, "", crnlib::cDefaultOrientationFlags);
+				}
+				else if (crunchMipmappedTexture.get_format() != pixelFormat)
+				{
+					throw std::runtime_error("The pixel format of all cube map faces must be identical");
+				}
+				else if (crunchMipmappedTexture.get_width() != source2DImage->get_width())
+				{
+					throw std::runtime_error("The size of all cube map faces must be identical");
+				}
+				crunchMipmappedTexture.get_level(faceIndex, 0)->assign(source2DImage);
+			}
+		}
+
+		void loadPackedChannelsCrunchMipmappedTexture(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceNormalMapFilename, crnlib::mipmapped_texture& crunchMipmappedTexture, crnlib::texture_conversion::convert_params& crunchConvertParams)
+		{
+			// Load texture channel packing layout and source textures
+			TextureChannelPacking textureChannelPacking(configuration, rapidJsonValueTextureAssetCompiler, basePath, sourceNormalMapFilename, crunchConvertParams);
+
+			// Allocate the resulting Crunch mipmapped texture
+			const crnlib::uint width = textureChannelPacking.getDestinationWidth();
+			const crnlib::uint height = textureChannelPacking.getDestinationHeight();
+			crunchMipmappedTexture.init(width, height, 1, 1, textureChannelPacking.getDestinationCrunchPixelFormat(), "Channel Packed Texture", crnlib::cDefaultOrientationFlags);
+
+			// Fill the resulting Crunch mipmapped texture
+			const TextureChannelPacking::Sources& sources = textureChannelPacking.getSources();
+			const TextureChannelPacking::Destinations& destinations = textureChannelPacking.getDestinations();
+			const crnlib::uint numberOfDestinationChannels = destinations.size();
+			crnlib::image_u8* destinationCrunchImage = crunchMipmappedTexture.get_level(0, 0)->get_image();
+			for (crnlib::uint destinationChannel = 0; destinationChannel < numberOfDestinationChannels; ++destinationChannel)
+			{
+				const TextureChannelPacking::Destination& destination = destinations[destinationChannel];
+				const TextureChannelPacking::Source& source = sources[destination.sourceIndex];
+				if (source.crunchMipmappedTexture.is_valid())
+				{
+					// Fill with source texture channel color
+					const crnlib::image_u8* sourceCrunchImage = source.crunchMipmappedTexture.get_level(0, 0)->get_image();
+					const uint8_t sourceChannel = destination.sourceChannel;
+					for (crnlib::uint y = 0; y < height; ++y)
+					{
+						for (crnlib::uint x = 0; x < width; ++x)
+						{
+							(*destinationCrunchImage)(x, y).c[destinationChannel] = (*sourceCrunchImage)(x, y).c[sourceChannel];
+						}
+					}
+				}
+				else
+				{
+					// Fill with uniform default color
+					const crnlib::uint8 value = static_cast<crnlib::uint8>(source.defaultColor[destination.sourceChannel] * 255.0f);
+					for (crnlib::uint y = 0; y < height; ++y)
+					{
+						for (crnlib::uint x = 0; x < width; ++x)
+						{
+							(*destinationCrunchImage)(x, y).c[destinationChannel] = value;
+						}
+					}
+				}
+			}
+		}
+
 		void convertFile(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceFilename, const char* destinationFilename, crnlib::texture_file_types::format outputCrunchTextureFileType, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness, const char* sourceNormalMapFilename)
 		{
 			crnlib::texture_conversion::convert_params crunchConvertParams;
@@ -484,6 +859,11 @@ namespace
 			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
 			{
 				loadCubeCrunchMipmappedTexture(rapidJsonValueTextureAssetCompiler, basePath, crunchMipmappedTexture);
+				crunchConvertParams.m_texture_type = crnlib::cTextureTypeCubemap;
+			}
+			else if (TextureSemantic::PACKED_CHANNELS == textureSemantic)
+			{
+				loadPackedChannelsCrunchMipmappedTexture(configuration, rapidJsonValueTextureAssetCompiler, basePath, sourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
 			}
 			else
 			{
@@ -551,10 +931,8 @@ namespace
 					break;
 
 				case TextureSemantic::REFLECTION_CUBE_MAP:
-					crunchConvertParams.m_texture_type = crnlib::cTextureTypeCubemap;
-					break;
-
 				case TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE:
+				case TextureSemantic::PACKED_CHANNELS:
 					// Nothing here, handled elsewhere
 					break;
 
@@ -813,9 +1191,9 @@ namespace RendererToolkit
 		if (inputFile.empty())
 		{
 			bool throwException = true;
-			if (::detail::TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
+			if (::detail::TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic || ::detail::TextureSemantic::PACKED_CHANNELS == textureSemantic)
 			{
-				// Reflection cube maps don't have a single input file, they're composed of six input files
+				// Reflection cube maps or packed channels don't have a single input file, they're composed of multiple input files
 				throwException = false;
 			}
 			else if (::detail::TextureSemantic::ROUGHNESS_MAP == textureSemantic)
@@ -828,9 +1206,9 @@ namespace RendererToolkit
 				throw std::runtime_error("Input file must be defined");
 			}
 		}
-		if (::detail::TextureSemantic::ROUGHNESS_MAP != textureSemantic && !normalMapInputFile.empty())
+		if (::detail::TextureSemantic::ROUGHNESS_MAP != textureSemantic && ::detail::TextureSemantic::PACKED_CHANNELS != textureSemantic && !normalMapInputFile.empty())
 		{
-			throw std::runtime_error("Providing a normal map is only valid for roughness maps");
+			throw std::runtime_error("Providing a normal map is only valid for roughness maps or packed channels");
 		}
 		// TODO(co) Need a log for this: Quality warning in case it's a roughness map but no normal map is provided. No error, but chances are high that there will be nasty visible specular aliasing issues.
 

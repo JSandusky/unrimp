@@ -16,9 +16,8 @@
 		},
 		"Properties":
 		{
-			"DiffuseMap": "Texture/Sponza/vase_round.asset",
-			"NormalMap": "Texture/Sponza/vase_round_ddn.asset",
-			"RoughnessMap": "Texture/Sponza/vase_round_spec.asset"
+			"_drgb_nxa": "Texture/Sponza/vase_round_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "Texture/Sponza/vase_round_hr_rg_mb_nya.asset"
 		}
 	}
 }

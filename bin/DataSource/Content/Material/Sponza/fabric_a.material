@@ -16,8 +16,8 @@
 		},
 		"Properties":
 		{
-			"DiffuseMap": "Texture/Sponza/sponza_fabric_diff.asset",
-			"RoughnessMap": "Texture/Sponza/sponza_fabric_spec.asset"
+			"_drgb_nxa": "Texture/Sponza/sponza_fabric_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "Texture/Sponza/sponza_fabric_hr_rg_mb_nya.asset"
 		}
 	}
 }

@@ -16,7 +16,7 @@
 		},
 		"Properties":
 		{
-			"DiffuseMap": "Texture/Bob/iron_grill_d.asset"
+			"_drgb_nxa": "Texture/Bob/iron_grill_drgb_nxa.asset"
 		}
 	}
 }

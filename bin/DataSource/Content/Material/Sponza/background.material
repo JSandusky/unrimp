@@ -16,8 +16,8 @@
 		},
 		"Properties":
 		{
-			"DiffuseMap": "Texture/Sponza/background.asset",
-			"NormalMap": "Texture/Sponza/background_ddn.asset"
+			"_drgb_nxa": "Texture/Sponza/background_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "Texture/Sponza/background_hr_rg_mb_nya.asset"
 		}
 	}
 }

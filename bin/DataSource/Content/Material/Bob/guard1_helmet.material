@@ -16,7 +16,7 @@
 		},
 		"Properties":
 		{
-			"DiffuseMap": "Texture/Bob/guard1_helmet_d.asset"
+			"_drgb_nxa": "Texture/Bob/guard1_helmet_drgb_nxa.asset"
 		}
 	}
 }

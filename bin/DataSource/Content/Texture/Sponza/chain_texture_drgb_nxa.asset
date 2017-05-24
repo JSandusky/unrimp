@@ -1,0 +1,27 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetType": "Texture",
+			"AssetCategory": "Scene",
+			"AssetName": "chain_texture_drgb_nxa",
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"TextureAssetCompiler":
+		{
+			"TextureSemantic": "PACKED_CHANNELS",
+			"TextureChannelPacking": "_drgb_nxa",
+			"InputFiles":
+			{
+				"DIFFUSE_MAP": "chain_texture.tga",
+				"NORMAL_MAP": "chain_texture_ddn.tga"
+			}
+		}
+	}
+}
