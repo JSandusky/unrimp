@@ -8,11 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "24",
 			"AssetType": "Texture",
 			"AssetCategory": "Scene",
 			"AssetName": "sponza_thorn_mask",
-			"FileDependencies": [ "sponza_thorn_mask.tga" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"TextureAssetCompiler":

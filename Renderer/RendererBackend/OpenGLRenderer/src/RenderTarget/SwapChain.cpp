@@ -30,6 +30,9 @@
 	#include "OpenGLRenderer/OpenGLRuntimeLinking.h" // For "glxSwapBuffers()"
 #endif
 
+#include <tuple>	// For "std::ignore"
+#include <algorithm>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -41,13 +44,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, bool externalContext) :
+	SwapChain::SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, bool useExternalContext) :
 		ISwapChain(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		#ifdef WIN32
 			mContext(new ContextWindows(nativeWindowHandle, static_cast<const ContextWindows*>(&openGLRenderer.getContext()))),
 		#elif defined LINUX
-			mContext(new ContextLinux(nativeWindowHandle, externalContext, static_cast<const ContextLinux*>(&openGLRenderer.getContext()))),
+			mContext(new ContextLinux(nativeWindowHandle, useExternalContext, static_cast<const ContextLinux*>(&openGLRenderer.getContext()))),
 		#else
 			#error "Unsupported platform"
 		#endif
@@ -55,7 +58,9 @@ namespace OpenGLRenderer
 		mWidth(0),
 		mHeight(0)
 	{
-		// Nothing here
+		#ifdef WIN32
+			std::ignore = useExternalContext;
+		#endif
 	}
 
 	SwapChain::SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, IContext& context) :
@@ -134,7 +139,7 @@ namespace OpenGLRenderer
 				::Window rootWindow = 0;
 				int positionX = 0, positionY = 0;
 				unsigned int unsignedWidth = 0, unsignedHeight = 0, border = 0, depth = 0;
-				if (display)
+				if (nullptr != display)
 				{
 					XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
 				}

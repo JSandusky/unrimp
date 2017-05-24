@@ -25,6 +25,8 @@
 #include "OpenGLES3Renderer/IContext.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
+#include <algorithm>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

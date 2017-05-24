@@ -24,6 +24,7 @@
 #include "RendererToolkit/Helper/JsonMaterialHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
+#include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 // Disable warnings in external headers, we can't fix them
@@ -381,6 +382,7 @@ namespace RendererToolkit
 			ELSE_IF_VALUE(COMPARISON_MIN_MAG_LINEAR_MIP_POINT)
 			ELSE_IF_VALUE(COMPARISON_MIN_MAG_MIP_LINEAR)
 			ELSE_IF_VALUE(COMPARISON_ANISOTROPIC)
+			ELSE_IF_VALUE(UNKNOWN)
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd
@@ -506,7 +508,7 @@ namespace RendererToolkit
 			// Add technique
 			RendererRuntime::v1Material::Technique technique;
 			technique.materialTechniqueId	   = RendererRuntime::StringId(rapidJsonMemberIteratorTechniques->name.GetString());
-			technique.materialBlueprintAssetId = static_cast<uint32_t>(std::atoi(rapidJsonMemberIteratorTechniques->value.GetString()));
+			technique.materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString());
 			techniques.push_back(technique);
 			materialTechniqueIdToName.emplace(technique.materialTechniqueId, rapidJsonMemberIteratorTechniques->name.GetString());
 		}

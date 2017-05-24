@@ -8,21 +8,21 @@
 	{
 		"Techniques":
 		{
-			"Transparent": "169"
+			"Transparent": "MaterialBlueprint/Scene/TransparentMesh.asset"
 		},
 		"Properties":
 		{
 			"Opacity": "0.6",
 			"DiffuseColor": "1.0 1.0 1.0",
 			"UseDiffuseMap": "TRUE",
-			"DiffuseMap": "4",
+			"DiffuseMap": "Texture/Imrod/Imrod_d.asset",
 			"UseEmissiveMap": "TRUE",
-			"EmissiveMap": "5",
+			"EmissiveMap": "Texture/Imrod/Imrod_e.asset",
 			"EmissiveIntensity": "10.0",
 			"UseNormalMap": "TRUE",
-			"NormalMap": "6",
+			"NormalMap": "Texture/Imrod/Imrod_n.asset",
 			"UseRoughnessMap": "TRUE",
-			"RoughnessMap": "7"
+			"RoughnessMap": "Texture/Imrod/Imrod_r.asset"
 		}
 	}
 }

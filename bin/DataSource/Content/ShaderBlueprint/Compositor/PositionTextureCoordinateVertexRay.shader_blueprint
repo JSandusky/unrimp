@@ -53,7 +53,7 @@ For more background formation regarding reconstructing position from depth pleas
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-@includepiece(15)	// "Core.shader_piece"
+@includepiece(ShaderPiece/Core.asset)
 
 
 //[-------------------------------------------------------]

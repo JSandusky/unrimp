@@ -477,7 +477,8 @@ namespace RendererToolkit
 				RendererRuntime::AssetId textureAssetId = RendererRuntime::getUninitialized<RendererRuntime::AssetId>();
 				if (rapidJsonValue.HasMember(propertyName))
 				{
-					// Usage of asset IDs is the preferred way to go, but we also need to support the asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
+					// Usage of asset IDs is the preferred way to go, but we also need to support the asset ID naming scheme
+					// "<project name>/<asset type>/<asset category>/<asset name>" to be able to reference e.g. runtime generated assets
 					textureAssetId = StringHelper::getAssetIdByString(rapidJsonValue[propertyName].GetString(), input);
 				}
 				if (RendererRuntime::isUninitialized(textureAssetId))
@@ -670,7 +671,7 @@ namespace RendererToolkit
 			}
 
 			// Material property usage
-			// -> Optimisation: Material resources don't need to store global reference fallbacks, it's sufficient if those are just stored inside material blueprint resources
+			// -> Optimization: Material resources don't need to store global reference fallbacks, it's sufficient if those are just stored inside material blueprint resources
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(rapidJsonValueProperty);
 			if (!ignoreGlobalReferenceFallback || RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE_FALLBACK != usage)
 			{
@@ -706,19 +707,28 @@ namespace RendererToolkit
 				if (rapidJsonValueProperty.HasMember("VisualImportance"))
 				{
 					// Sanity check: "VisualImportance" is only valid for shader combination properties
-					// TODO(co) Error handling
-					assert(RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage);
 					if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage)
 					{
-						const rapidjson::Value& rapidJsonValueVisualImportance = rapidJsonValueProperty["VisualImportance"];
-						const char* valueAsString = rapidJsonValueVisualImportance.GetString();
+						const char* valueAsString = rapidJsonValueProperty["VisualImportance"].GetString();
 						int32_t visualImportanceOfShaderProperty = RendererRuntime::MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY;
 						if (strncmp(valueAsString, "MANDATORY", 9) != 0)
 						{
 							visualImportanceOfShaderProperty = std::atoi(valueAsString);
 						}
-						visualImportanceOfShaderProperties.setPropertyValue(materialPropertyId, visualImportanceOfShaderProperty);	// We're using the same string hashing for material property ID and shader property ID
+
+						// We're using the same string hashing for material property ID and shader property ID
+						visualImportanceOfShaderProperties.setPropertyValue(materialPropertyId, visualImportanceOfShaderProperty);
 					}
+					else
+					{
+						throw std::runtime_error("Specifying \"VisualImportance\" is only valid for shader combination properties");
+					}
+				}
+				else if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage)
+				{
+					// Internally, shader combination properties always need to have a visual importance set
+					// -> We're using the same string hashing for material property ID and shader property ID
+					visualImportanceOfShaderProperties.setPropertyValue(materialPropertyId, 0);
 				}
 
 				// Mandatory maximum value for integer type shader combination properties to be able to keep the total number of shader combinations manageable
@@ -749,7 +759,7 @@ namespace RendererToolkit
 	void JsonMaterialBlueprintHelper::readPipelineStateObject(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValuePipelineState, RendererRuntime::IFile& file, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
 	{
 		{ // Vertex attributes asset ID
-			const RendererRuntime::AssetId vertexAttributesAssetId = StringHelper::getAssetIdByString(rapidJsonValuePipelineState["VertexAttributesAssetId"].GetString(), input);
+			const RendererRuntime::AssetId vertexAttributesAssetId = StringHelper::getAssetIdByString(rapidJsonValuePipelineState["VertexAttributes"].GetString(), input);
 			file.write(&vertexAttributesAssetId, sizeof(RendererRuntime::AssetId));
 		}
 
@@ -758,11 +768,11 @@ namespace RendererToolkit
 
 			RendererRuntime::AssetId shaderBlueprintAssetId[RendererRuntime::NUMBER_OF_SHADER_TYPES];
 			memset(shaderBlueprintAssetId, static_cast<int>(RendererRuntime::getUninitialized<RendererRuntime::AssetId>()), sizeof(RendererRuntime::AssetId) * RendererRuntime::NUMBER_OF_SHADER_TYPES);
-			shaderBlueprintAssetId[static_cast<uint8_t>(RendererRuntime::ShaderType::Vertex)] = JsonHelper::getCompiledAssetId(input, rapidJsonValueShaderBlueprints, "VertexShaderBlueprintAssetId");
-			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "TessellationControlShaderBlueprintAssetId", shaderBlueprintAssetId[static_cast<uint8_t>(RendererRuntime::ShaderType::TessellationControl)]);
-			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "TessellationEvaluationShaderBlueprintAssetId", shaderBlueprintAssetId[static_cast<uint8_t>(RendererRuntime::ShaderType::TessellationEvaluation)]);
-			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "GeometryShaderBlueprintAssetId", shaderBlueprintAssetId[static_cast<uint8_t>(RendererRuntime::ShaderType::Geometry)]);
-			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "FragmentShaderBlueprintAssetId", shaderBlueprintAssetId[static_cast<uint8_t>(RendererRuntime::ShaderType::Fragment)]);
+			shaderBlueprintAssetId[static_cast<uint8_t>(RendererRuntime::ShaderType::Vertex)] = JsonHelper::getCompiledAssetId(input, rapidJsonValueShaderBlueprints, "VertexShaderBlueprint");
+			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "TessellationControlShaderBlueprint", shaderBlueprintAssetId[static_cast<uint8_t>(RendererRuntime::ShaderType::TessellationControl)]);
+			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "TessellationEvaluationShaderBlueprint", shaderBlueprintAssetId[static_cast<uint8_t>(RendererRuntime::ShaderType::TessellationEvaluation)]);
+			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "GeometryShaderBlueprint", shaderBlueprintAssetId[static_cast<uint8_t>(RendererRuntime::ShaderType::Geometry)]);
+			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "FragmentShaderBlueprint", shaderBlueprintAssetId[static_cast<uint8_t>(RendererRuntime::ShaderType::Fragment)]);
 
 			// Write down the shader blueprints
 			file.write(&shaderBlueprintAssetId, sizeof(RendererRuntime::AssetId) * RendererRuntime::NUMBER_OF_SHADER_TYPES);
@@ -991,6 +1001,11 @@ namespace RendererToolkit
 			Renderer::SamplerState& samplerState = materialBlueprintSamplerState;
 			samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 
+			// By default, inside the material blueprint system the texture filter and maximum anisotropy are set to uninitialized. Unless explicitly
+			// set by a material blueprint author, those values are dynamic during runtime so the user can decide about the performance/quality trade-off.
+			samplerState.filter = Renderer::FilterMode::UNKNOWN;
+			RendererRuntime::setUninitialized(samplerState.maxAnisotropy);
+
 			// The optional properties
 			materialBlueprintSamplerState.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValueSamplerState, shaderProperties);
 			JsonMaterialHelper::optionalFilterProperty(rapidJsonValueSamplerState, "Filter", samplerState.filter, &sortedMaterialPropertyVector);
@@ -1021,7 +1036,7 @@ namespace RendererToolkit
 			// Mandatory fallback texture asset ID
 			// -> We could make this optional, but it's better to be totally restrictive in here so asynchronous texture loading always works nicely (easy when done from the beginning, hard to add this afterwards)
 			// -> Often, but not always this value is identical to a texture asset referencing material property. So, we really have to define an own property for this.
-			const RendererRuntime::AssetId fallbackTextureAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueTexture, "FallbackTextureAssetId");
+			const RendererRuntime::AssetId fallbackTextureAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueTexture, "FallbackTexture");
 
 			// Optional RGB hardware gamma correction
 			bool rgbHardwareGammaCorrection = false;

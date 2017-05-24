@@ -8,17 +8,15 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "4",
 			"AssetType": "Texture",
 			"AssetCategory": "Character",
-			"AssetName": "ImrodDiffuseMap",
-			"FileDependencies": [ "ImrodDiffuseMap.tga" ],
+			"AssetName": "Imrod_e",
 			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/gallery/imrod_dw.html ) by Dmitry Parkin: http://www.parkparkin.com"
 		},
 		"TextureAssetCompiler":
 		{
-			"TextureSemantic": "DIFFUSE_MAP",
-			"InputFile": "ImrodDiffuseMap.tga"
+			"TextureSemantic": "EMISSIVE_MAP",
+			"InputFile": "Imrod_e.tga"
 		}
 	}
 }

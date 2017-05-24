@@ -30,6 +30,9 @@
 #include "RendererRuntime/Resource/Detail/ResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialProperties.h"
 
+#include <mutex>
+#include <unordered_map>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -72,7 +75,16 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
-		friend class IResource;	// Needed so that inside this classes an static_cast<CompositorNodeResourceManager*>(IResourceManager*) works
+		friend class IResource;				// Needed so that inside this classes an static_cast<CompositorNodeResourceManager*>(IResourceManager*) works
+		friend class MaterialTechnique;		// Needs to be able to call "RendererRuntime::MaterialBlueprintResourceManager::addSerializedPipelineState()"
+		friend class PipelineStateCompiler;	// Needs to be able to call "RendererRuntime::MaterialBlueprintResourceManager::applySerializedPipelineState()"
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::unordered_map<uint32_t, Renderer::SerializedPipelineState> SerializedPipelineStates;	///< Key = FNV1a hash of "Renderer::SerializedPipelineState"
 
 
 	//[-------------------------------------------------------]
@@ -99,6 +111,13 @@ namespace RendererRuntime
 		*/
 		inline MaterialProperties& getGlobalMaterialProperties();
 		inline const MaterialProperties& getGlobalMaterialProperties() const;
+
+		//[-------------------------------------------------------]
+		//[ Default texture filtering                             ]
+		//[-------------------------------------------------------]
+		inline Renderer::FilterMode getDefaultTextureFilterMode() const;
+		inline uint8_t getDefaultMaximumTextureAnisotropy() const;
+		RENDERERRUNTIME_API_EXPORT void setDefaultTextureFiltering(Renderer::FilterMode filterMode, uint8_t maximumAnisotropy);
 
 		//[-------------------------------------------------------]
 		//[ Manager                                               ]
@@ -138,6 +157,8 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Pipeline state object cache                           ]
 		//[-------------------------------------------------------]
+		void addSerializedPipelineState(uint32_t serializedPipelineStateHash, const Renderer::SerializedPipelineState& serializedPipelineState);
+		void applySerializedPipelineState(uint32_t serializedPipelineStateHash, Renderer::PipelineState& pipelineState);
 		void clearPipelineStateObjectCache();
 		void loadPipelineStateObjectCache(IFile& file);
 		bool doesPipelineStateObjectCacheNeedSaving() const;
@@ -151,6 +172,10 @@ namespace RendererRuntime
 		IRendererRuntime&					mRendererRuntime;					///< Renderer runtime instance, do not destroy the instance
 		IMaterialBlueprintResourceListener*	mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
 		MaterialProperties					mGlobalMaterialProperties;			///< Global material properties
+		Renderer::FilterMode				mDefaultTextureFilterMode;			///< Default texture filter mode
+		uint8_t								mDefaultMaximumTextureAnisotropy;	///< Default maximum texture anisotropy
+		std::mutex							mSerializedPipelineStatesMutex;		///< "RendererRuntime::PipelineStateCompiler" is running asynchronous, hence we need to synchronize the serialized pipeline states access
+		SerializedPipelineStates			mSerializedPipelineStates;			///< Serialized pipeline states
 		InstanceBufferManager*				mInstanceBufferManager;				///< Instance buffer manager, always valid in a sane none-legacy environment
 		LightBufferManager*					mLightBufferManager;				///< Light buffer manager, always valid in a sane none-legacy environment
 

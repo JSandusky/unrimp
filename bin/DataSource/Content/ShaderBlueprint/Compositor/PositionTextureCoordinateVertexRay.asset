@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "165",
 			"AssetType": "ShaderBlueprint",
 			"AssetCategory": "Compositor",
 			"AssetName": "PositionTextureCoordinateVertexRay",
-			"AssetDependencies": [ "15" ],
-			"FileDependencies": [ "PositionTextureCoordinateVertexRay.shader_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"ShaderBlueprintAssetCompiler":

@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "90",
 			"AssetType": "Material",
 			"AssetCategory": "Scene",
 			"AssetName": "vase_hanging",
-			"AssetDependencies": [ "0", "4", "91", "110", "113" ],
-			"FileDependencies": [ "vase_hanging.material" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"MaterialAssetCompiler":

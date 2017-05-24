@@ -30,6 +30,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
+#include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -46,13 +47,17 @@ namespace RendererRuntime
 	MaterialTechnique::MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource, MaterialBlueprintResourceId materialBlueprintResourceId) :
 		MaterialBufferSlot(materialResource),
 		mMaterialTechniqueId(materialTechniqueId),
-		mMaterialBlueprintResourceId(materialBlueprintResourceId)
+		mMaterialBlueprintResourceId(materialBlueprintResourceId),
+		mSerializedPipelineStateHash(getUninitialized<uint32_t>())
 	{
 		MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
 		if (nullptr != materialBufferManager)
 		{
 			materialBufferManager->requestSlot(*this);
 		}
+
+		// Calculate FNV1a hash of "Renderer::SerializedPipelineState"
+		calculateSerializedPipelineStateHash();
 	}
 
 	MaterialTechnique::~MaterialTechnique()
@@ -174,6 +179,71 @@ namespace RendererRuntime
 		// It's valid if a material blueprint resource doesn't contain a material uniform buffer (usually the case for compositor material blueprint resources)
 		const MaterialBlueprintResource* materialBlueprintResource = getMaterialResourceManager().getRendererRuntime().getMaterialBlueprintResourceManager().tryGetById(mMaterialBlueprintResourceId);
 		return (nullptr != materialBlueprintResource) ? materialBlueprintResource->getMaterialBufferManager() : nullptr;
+	}
+
+	void MaterialTechnique::calculateSerializedPipelineStateHash()
+	{
+		const MaterialBlueprintResource* materialBlueprintResource = getMaterialResourceManager().getRendererRuntime().getMaterialBlueprintResourceManager().tryGetById(mMaterialBlueprintResourceId);
+		if (nullptr != materialBlueprintResource)
+		{
+			// Start with the pipeline state of the material blueprint resource
+			Renderer::SerializedPipelineState serializedPipelineState = materialBlueprintResource->getPipelineState();
+
+			// Apply material properties
+			// -> Renderer toolkit counterpart is "RendererToolkit::JsonMaterialBlueprintHelper::readPipelineStateObject()"
+			const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = getMaterialResource().getSortedPropertyVector();
+			const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
+			for (size_t i = 0; i < numberOfMaterialProperties; ++i)
+			{
+				const MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
+				switch (materialProperty.getUsage())
+				{
+					case MaterialProperty::Usage::UNKNOWN:
+					case MaterialProperty::Usage::STATIC:
+					case MaterialProperty::Usage::SHADER_UNIFORM:
+					case MaterialProperty::Usage::SHADER_COMBINATION:
+						// Nothing here
+						break;
+
+					case MaterialProperty::Usage::RASTERIZER_STATE:
+						// TODO(co) Implement all rasterizer state properties
+						if (materialProperty.getValueType() == MaterialPropertyValue::ValueType::CULL_MODE)
+						{
+							serializedPipelineState.rasterizerState.cullMode = materialProperty.getCullModeValue();
+						}
+						break;
+
+					case MaterialProperty::Usage::DEPTH_STENCIL_STATE:
+						// TODO(co) Implement all depth stencil state properties
+						break;
+
+					case MaterialProperty::Usage::BLEND_STATE:
+						// TODO(co) Implement all blend state properties
+						break;
+
+					case MaterialProperty::Usage::SAMPLER_STATE:
+					case MaterialProperty::Usage::TEXTURE_REFERENCE:
+					case MaterialProperty::Usage::GLOBAL_REFERENCE:
+					case MaterialProperty::Usage::UNKNOWN_REFERENCE:
+					case MaterialProperty::Usage::PASS_REFERENCE:
+					case MaterialProperty::Usage::MATERIAL_REFERENCE:
+					case MaterialProperty::Usage::INSTANCE_REFERENCE:
+					case MaterialProperty::Usage::GLOBAL_REFERENCE_FALLBACK:
+						// Nothing here
+						break;
+				}
+			}
+
+			// Calculate the FNV1a hash of "Renderer::SerializedPipelineState"
+			mSerializedPipelineStateHash = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&serializedPipelineState), sizeof(Renderer::SerializedPipelineState));
+
+			// Register the FNV1a hash of "Renderer::SerializedPipelineState" inside the material blueprint resource manager so it's sufficient to pass around the tiny hash instead the over 400 bytes full serialized pipeline state
+			getMaterialResourceManager().getRendererRuntime().getMaterialBlueprintResourceManager().addSerializedPipelineState(mSerializedPipelineStateHash, serializedPipelineState);
+		}
+		else
+		{
+			setUninitialized(mSerializedPipelineStateHash);
+		}
 	}
 
 	void MaterialTechnique::scheduleForShaderUniformUpdate()

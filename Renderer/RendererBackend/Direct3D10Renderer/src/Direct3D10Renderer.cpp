@@ -54,6 +54,8 @@
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
+#include <tuple>	// For "std::ignore"
+
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -64,8 +66,9 @@
 #else
 	#define DIRECT3D10RENDERER_API_EXPORT
 #endif
-DIRECT3D10RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D10RendererInstance(handle nativeWindowHandle, bool /*useExternalContext*/)
+DIRECT3D10RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D10RendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
+	std::ignore = useExternalContext;
 	return new Direct3D10Renderer::Direct3D10Renderer(nativeWindowHandle);
 }
 #undef DIRECT3D10RENDERER_API_EXPORT
@@ -1429,7 +1432,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D10Renderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
+	Renderer::ISwapChain *Direct3D10Renderer::createSwapChain(handle nativeWindowHandle, bool)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
@@ -1770,6 +1773,9 @@ namespace Direct3D10Renderer
 		// error messages when trying to create a depth texture render target which one also wants to read from inside shaders. The Direct3D 10 renderer backend is still maintained for curiosity reasons,
 		// but it's not really worth to put more effort into it to be able to handle the lack of certain features. So, just say this renderer backend doesn't support multisampling at all.
 		mCapabilities.maximumNumberOfMultisamples = 1;
+
+		// Maximum anisotropy (always at least 1, usually 16)
+		mCapabilities.maximumAnisotropy = 16;
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = false;

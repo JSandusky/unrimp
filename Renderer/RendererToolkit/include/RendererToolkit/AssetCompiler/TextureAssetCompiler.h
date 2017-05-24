@@ -40,6 +40,29 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Texture asset compiler
+	*
+	*  @remarks
+	*    == Texture Semantics ==
+	*    Overview of source texture semantics including recommended postfixes to use while authoring texture source assets:
+	*    --------------------------------------------------------------
+	*    Texture Semantic                 Postfix    Data         sRGB    Comment
+	*    --------------------------------------------------------------
+	*    DIFFUSE_MAP                      _d         rgb          Yes     Diffuse map. Also known as base color or albedo. Raw color with no lighting information. Small amount of ambient occlusion can be baked in if using it for micro-surface occlusion. For a metal-rough-worfkow, the color range for dark values should stay within 30-50 RGB. Never have dark values below 30 RGB. The brightest color value should not go above 240 RGB. With metal/rough, the areas indicated as metal in the metallic map have a corresponding metal reflectance value in the base color map. The metal reflectance value in the base color needs to be a measured real-world value. Transitional areas in the metal map (not raw metal 1.0 white) need to have the metal reflectance value lowered to indicate that its reflectance value is not raw metal.
+	*    ALPHA_MAP                        _a         luminance    No      Alpha map. 8-bit-alpha as some artists might call it.
+	*    NORMAL_MAP                       _n         rgb          No      Tangent space normal map
+	*    ROUGHNESS_MAP                    _r         luminance    No      Roughness map = 1 - gloss map. Metal-rough-worfkow: Describes the microsurface of the object. White 1.0 is rough and black 0.0 is smooth. The microsurface if rough can cause the light rays to scatter and make the highlight appear dimmer and more broad. The same amount of light energy is reflected going out as coming into the surface. This map has the most artistic freedom. There is no wrong answers here. This map gives the asset the most character as it truly describes the surface e.g. scratches, fingerprints, smudges, grime etc.
+	*    METALLIC_MAP                     _m         luminance    No      Metallic map. Metal-rough-worfkow: Tells the shader if something is metal or not. Raw Metal = 1.0 white and non metal = 0.0 black. There can be transitional gray values that indicate something covering the raw metal such as dirt. With metal/rough, you only have control over metal reflectance values. The dielectric values are set to 0.04 or 4% which is most dielectric materials.
+	*    EMISSIVE_MAP                     _e         rgb          Yes     Emissive map
+	*    HEIGHT_MAP                       _h         luminance    No      Height map
+	*    TINT_MAP                         _t         luminance    No      Tint map
+	*    AMBIENT_OCCLUSION_MAP            _ao        luminance    No      Ambient occlusion map
+	*    REFLECTION_2D_MAP                _r2d       rgb          Yes     Reflection 2D map
+	*    REFLECTION_CUBE_MAP              _rcube     rgb          Yes     Reflection cube map
+	*    COLOR_CORRECTION_LOOKUP_TABLE    _lut       rgb          No      Color correction lookup table
+	*/
 	class TextureAssetCompiler : public IAssetCompiler
 	{
 

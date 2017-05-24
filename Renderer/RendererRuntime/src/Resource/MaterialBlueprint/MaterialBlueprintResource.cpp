@@ -29,6 +29,7 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
+#include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <chrono>
@@ -405,7 +406,7 @@ namespace RendererRuntime
 				}
 
 				// Create the current pipeline state cache instances for the material blueprint
-				const Renderer::IPipelineStatePtr pipelineStatePtr = mPipelineStateCacheManager.getPipelineStateCacheByCombination(shaderProperties, dynamicShaderPieces, true);
+				const Renderer::IPipelineStatePtr pipelineStatePtr = mPipelineStateCacheManager.getPipelineStateCacheByCombination(Renderer::PrimitiveTopology::TRIANGLE_LIST, getUninitialized<uint32_t>(), shaderProperties, dynamicShaderPieces, true);
 				assert(nullptr != pipelineStatePtr);	// TODO(co) Decent error handling
 			}
 			while (shaderCombinationIterator.iterate());
@@ -459,6 +460,33 @@ namespace RendererRuntime
 		TextureBuffer* mInstanceTextureBuffer;	///< Can be a null pointer, don't destroy the instance
 		TextureBuffer* mLightTextureBuffer;		///< Can be a null pointer, don't destroy the instance
 		*/
+	}
+
+	void MaterialBlueprintResource::onDefaultTextureFilteringChanged(Renderer::FilterMode defaultFilterMode, uint8_t maximumDefaultAnisotropy)
+	{
+		const IRendererRuntime& rendererRuntime = getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime();
+		Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
+		const Asset* asset = rendererRuntime.getAssetManager().tryGetAssetByAssetId(getAssetId());
+		if (nullptr != asset)
+		{
+			for (SamplerState& samplerState : mSamplerStates)
+			{
+				if (Renderer::FilterMode::UNKNOWN == samplerState.rendererSamplerState.filter || isUninitialized(samplerState.rendererSamplerState.maxAnisotropy))
+				{
+					Renderer::SamplerState rendererSamplerState = samplerState.rendererSamplerState;
+					if (Renderer::FilterMode::UNKNOWN == rendererSamplerState.filter)
+					{
+						rendererSamplerState.filter = defaultFilterMode;
+					}
+					if (isUninitialized(rendererSamplerState.maxAnisotropy))
+					{
+						rendererSamplerState.maxAnisotropy = maximumDefaultAnisotropy;
+					}
+					samplerState.samplerStatePtr = renderer.createSamplerState(rendererSamplerState);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(samplerState.samplerStatePtr, asset->assetFilename)
+				}
+			}
+		}
 	}
 
 	void MaterialBlueprintResource::clearPipelineStateObjectCache()

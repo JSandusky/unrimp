@@ -95,6 +95,10 @@ namespace OpenGLES3Renderer
 			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
 				return GL_LINEAR;	// There's no special setting in OpenGL ES 3
 
+			case Renderer::FilterMode::UNKNOWN:
+				assert(false && "Filter mode must not be unknown");
+				return GL_NEAREST;
+
 			default:
 				return GL_NEAREST;	// We should never be in here
 		}
@@ -157,6 +161,10 @@ namespace OpenGLES3Renderer
 
 			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
 				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL ES 3
+
+			case Renderer::FilterMode::UNKNOWN:
+				assert(false && "Filter mode must not be unknown");
+				return GL_NEAREST;
 
 			default:
 				return GL_NEAREST;	// We should never be in here

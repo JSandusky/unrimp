@@ -130,8 +130,10 @@ namespace Renderer
 		*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 		*  @param[in] rendererName
 		*    Native window handle TODO(co) A renderer instance fixed connected to a native window handle? This can't be right. If it's about OpenGL context sharing we surely can find a better solution.
+		*  @param[in] useExternalContext
+		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
 		*/
-		explicit RendererInstance(const char* rendererName, handle nativeWindowHandle, bool useExternalContext = false)
+		RendererInstance(const char* rendererName, handle nativeWindowHandle, bool useExternalContext = false)
 		{
 			// In order to keep it simple in this test project the supported renderer backends are
 			// fixed typed in. For a real system a dynamic plugin system would be a good idea.

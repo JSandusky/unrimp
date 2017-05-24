@@ -57,7 +57,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("MaterialBlueprint");
-		static const uint32_t FORMAT_VERSION = 3;
+		static const uint32_t FORMAT_VERSION = 4;
 
 		#pragma pack(push)
 		#pragma pack(1)

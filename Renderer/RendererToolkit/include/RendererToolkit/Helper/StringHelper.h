@@ -64,7 +64,8 @@ namespace RendererToolkit
 		static std::string& trimRightWhitespaceCharacters(std::string& s);
 		static std::string& trimLeftWhitespaceCharacters(std::string& s);
 		static std::string& trimWhitespaceCharacters(std::string& s);
-		static bool isPositiveInteger(const std::string& s);
+		static bool isSourceAssetIdAsString(const std::string& sourceAssetIdAsString);
+		static RendererRuntime::AssetId getSourceAssetIdByString(const char* sourceAssetIdAsString);
 		static RendererRuntime::AssetId getAssetIdByString(const std::string& assetIdAsString);	// Asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>" only
 		static RendererRuntime::AssetId getAssetIdByString(const std::string& assetIdAsString, const RendererToolkit::IAssetCompiler::Input& input);	// Asset ID name + ID directly
 		static void stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode);

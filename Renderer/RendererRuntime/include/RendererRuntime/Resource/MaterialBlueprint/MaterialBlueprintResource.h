@@ -137,6 +137,7 @@ namespace RendererRuntime
 			UniformBufferElementProperties uniformBufferElementProperties;
 			uint32_t					   uniformBufferNumberOfBytes;	///< Includes handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 		};
+		typedef std::vector<UniformBuffer> UniformBuffers;
 
 		struct TextureBuffer
 		{
@@ -165,9 +166,11 @@ namespace RendererRuntime
 
 		struct SamplerState
 		{
+			Renderer::SamplerState	   rendererSamplerState;
 			uint32_t				   rootParameterIndex;
 			Renderer::ISamplerStatePtr samplerStatePtr;
 		};
+		typedef std::vector<SamplerState> SamplerStates;
 
 		struct Texture
 		{
@@ -189,10 +192,7 @@ namespace RendererRuntime
 				// Nothing here
 			}
 		};
-
-		typedef std::vector<UniformBuffer> UniformBuffers;
-		typedef std::vector<SamplerState>  SamplerStates;
-		typedef std::vector<Texture>	   Textures;
+		typedef std::vector<Texture> Textures;
 
 
 	//[-------------------------------------------------------]
@@ -453,6 +453,7 @@ namespace RendererRuntime
 		virtual ~MaterialBlueprintResource();
 		explicit MaterialBlueprintResource(const MaterialBlueprintResource&) = delete;
 		MaterialBlueprintResource& operator=(const MaterialBlueprintResource&) = delete;
+		void onDefaultTextureFilteringChanged(Renderer::FilterMode defaultFilterMode, uint8_t maximumDefaultAnisotropy);
 
 		//[-------------------------------------------------------]
 		//[ Pipeline state object cache                           ]

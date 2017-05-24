@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "115",
 			"AssetType": "MaterialBlueprint",
 			"AssetCategory": "Deferred",
 			"AssetName": "DeferredCompositor",
-			"AssetDependencies": [ "165", "114", "167" ],
-			"FileDependencies": [ "DeferredCompositor.material_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"MaterialBlueprintAssetCompiler":

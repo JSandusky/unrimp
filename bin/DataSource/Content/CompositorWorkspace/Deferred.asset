@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "107",
 			"AssetType": "CompositorWorkspace",
 			"AssetCategory": "Default",
 			"AssetName": "Deferred",
-			"AssetDependencies": [ "106" ],
-			"FileDependencies": [ "Deferred.compositor_workspace" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team",
 			"Description": "Deferred rendering compositor workspace"
 		},

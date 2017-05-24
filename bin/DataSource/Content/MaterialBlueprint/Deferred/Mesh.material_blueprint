@@ -133,7 +133,7 @@
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D",
-				"Description": "2D material roughness map. Metal-rough-worfkow: Describes the microsurface of the object. White 1.0 is rough and black 0.0 is smooth. The microsurface if rough can cause the light rays to scatter and make the highlight appear dimmer and more broad. The same amount of light energy is reflected going out as coming into the surface. This map has the most artistic freedom. There is no wrong answers here. This map gives the asset the most character as it truly describes the surface e.g. scratches, fingerprints, smudges, grime etc."
+				"Description": "2D material roughness map = 1 - gloss map. Metal-rough-worfkow: Describes the microsurface of the object. White 1.0 is rough and black 0.0 is smooth. The microsurface if rough can cause the light rays to scatter and make the highlight appear dimmer and more broad. The same amount of light energy is reflected going out as coming into the surface. This map has the most artistic freedom. There is no wrong answers here. This map gives the asset the most character as it truly describes the surface e.g. scratches, fingerprints, smudges, grime etc."
 			},
 			"UseMetallicMap":
 			{
@@ -316,11 +316,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "166",
+			"VertexAttributes": "VertexAttributes/Default/Mesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "111",
-				"FragmentShaderBlueprintAssetId": "112"
+				"VertexShaderBlueprint": "ShaderBlueprint/Deferred/MeshVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Deferred/MeshFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -422,7 +422,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DiffuseMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				},
 				"AlphaMap":
@@ -430,14 +430,14 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@AlphaMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
 				},
 				"EmissiveMap":
 				{
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@EmissiveMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				},
 				"NormalMap":
@@ -445,21 +445,21 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@NormalMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
 				},
 				"RoughnessMap":
 				{
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@RoughnessMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
 				},
 				"MetallicMap":
 				{
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@MetallicMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D"
 				}
 			}
 		}

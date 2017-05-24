@@ -8,11 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "33",
 			"AssetType": "Texture",
 			"AssetCategory": "Scene",
 			"AssetName": "vase_plant_mask",
-			"FileDependencies": [ "vase_plant_mask.tga" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"TextureAssetCompiler":

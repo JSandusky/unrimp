@@ -76,9 +76,9 @@
 #else
 	#define OPENGLRENDERER_API_EXPORT
 #endif
-OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance(handle nativeWindowHandle, bool externalContext)
+OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
-	return new OpenGLRenderer::OpenGLRenderer(nativeWindowHandle, externalContext);
+	return new OpenGLRenderer::OpenGLRenderer(nativeWindowHandle, useExternalContext);
 }
 #undef OPENGLRENDERER_API_EXPORT
 
@@ -369,11 +369,11 @@ namespace OpenGLRenderer
 					}
 				#endif
 
-				// Create the default sampler state
-				mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
-
 				// Initialize the capabilities
 				initializeCapabilities();
+
+				// Create the default sampler state
+				mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
 				// Add references to the default sampler state and set it
 				if (nullptr != mDefaultSamplerState)
@@ -1752,10 +1752,10 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *OpenGLRenderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
+	Renderer::ISwapChain *OpenGLRenderer::createSwapChain(handle nativeWindowHandle, bool useExternalContext)
 	{
 		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle, externalContext) : nullptr;
+		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle, useExternalContext) : nullptr;
 	}
 
 	Renderer::IFramebuffer *OpenGLRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
@@ -2466,6 +2466,11 @@ namespace OpenGLRenderer
 		{
 			mCapabilities.maximumNumberOfMultisamples = 1;
 		}
+
+		// Maximum anisotropy (always at least 1, usually 16)
+		// -> "GL_EXT_texture_filter_anisotropic"-extension
+		glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &openGLValue);
+		mCapabilities.maximumAnisotropy = static_cast<uint8_t>(openGLValue);
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;

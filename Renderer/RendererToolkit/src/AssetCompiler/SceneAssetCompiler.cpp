@@ -225,7 +225,7 @@ namespace RendererToolkit
 								}
 								else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 								{
-									const uint32_t numberOfSubMeshMaterialAssetIds = rapidJsonValueItem.HasMember("SubMeshMaterialAssetIds") ? rapidJsonValueItem["SubMeshMaterialAssetIds"].Size() : 0;
+									const uint32_t numberOfSubMeshMaterialAssetIds = rapidJsonValueItem.HasMember("SubMeshMaterials") ? rapidJsonValueItem["SubMeshMaterials"].Size() : 0;
 									numberOfBytes = sizeof(RendererRuntime::v1Scene::MeshItem) + sizeof(RendererRuntime::AssetId) * numberOfSubMeshMaterialAssetIds;
 									if (RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 									{
@@ -300,7 +300,7 @@ namespace RendererToolkit
 											RendererRuntime::v1Scene::SkeletonMeshItem skeletonMeshItem;
 
 											// Map the source asset ID to the compiled asset ID
-											skeletonMeshItem.skeletonAnimationAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "SkeletonAnimationAssetId");
+											skeletonMeshItem.skeletonAnimationAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "SkeletonAnimation");
 
 											// Write down
 											memoryFile.write(&skeletonMeshItem, sizeof(RendererRuntime::v1Scene::SkeletonMeshItem));
@@ -310,13 +310,13 @@ namespace RendererToolkit
 										RendererRuntime::v1Scene::MeshItem meshItem;
 
 										// Map the source asset ID to the compiled asset ID
-										meshItem.meshAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "MeshAssetId");
+										meshItem.meshAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "Mesh");
 
 										// Optional sub-mesh material asset IDs to be able to overwrite the original material asset ID of sub-meshes
 										std::vector<RendererRuntime::AssetId> subMeshMaterialAssetIds;
-										if (rapidJsonValueItem.HasMember("SubMeshMaterialAssetIds"))
+										if (rapidJsonValueItem.HasMember("SubMeshMaterials"))
 										{
-											const rapidjson::Value& rapidJsonValueSubMeshMaterialAssetIds = rapidJsonValueItem["SubMeshMaterialAssetIds"];
+											const rapidjson::Value& rapidJsonValueSubMeshMaterialAssetIds = rapidJsonValueItem["SubMeshMaterials"];
 											const uint32_t numberOfSubMeshMaterialAssetIds = rapidJsonValueSubMeshMaterialAssetIds.Size();
 											subMeshMaterialAssetIds.resize(numberOfSubMeshMaterialAssetIds);
 											for (uint32_t i = 0; i < numberOfSubMeshMaterialAssetIds; ++i)

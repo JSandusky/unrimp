@@ -8,11 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "99",
 			"AssetType": "Texture",
 			"AssetCategory": "Scene",
 			"AssetName": "sponza_roof_diff",
-			"FileDependencies": [ "sponza_roof_diff.tga" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"TextureAssetCompiler":

@@ -24,6 +24,7 @@
 #include "OpenGLRenderer/State/SamplerStateSo.h"
 #include "OpenGLRenderer/Mapping.h"
 #include "OpenGLRenderer/Extensions.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 
 
 //[-------------------------------------------------------]
@@ -40,6 +41,9 @@ namespace OpenGLRenderer
 		SamplerState(openGLRenderer),
 		mOpenGLSampler(0)
 	{
+		// Sanity check
+		assert(samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy && "Maximum anisotropy value violated");
+
 		// Create the OpenGL sampler
 		glGenSamplers(1, &mOpenGLSampler);
 

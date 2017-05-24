@@ -22,6 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/State/SamplerState.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+
+#include <tuple>	// For "std::ignore"
 
 
 //[-------------------------------------------------------]
@@ -34,10 +37,13 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerState::SamplerState(VulkanRenderer &vulkanRenderer, const Renderer::SamplerState&) :
-		ISamplerState(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	SamplerState::SamplerState(VulkanRenderer &vulkanRenderer, const Renderer::SamplerState& samplerState) :
+		ISamplerState(vulkanRenderer)
 	{
-		// Nothing here
+		// Sanity checks
+		assert(samplerState.filter != Renderer::FilterMode::UNKNOWN && "Filter mode must not be unknown");
+		assert(samplerState.maxAnisotropy <= vulkanRenderer.getCapabilities().maximumAnisotropy && "Maximum anisotropy value violated");
+		std::ignore = samplerState;
 	}
 
 	SamplerState::~SamplerState()

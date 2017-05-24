@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "153",
 			"AssetType": "Mesh",
 			"AssetCategory": "Character",
 			"AssetName": "Bob",
-			"AssetDependencies": [ "159", "160", "161", "162", "163" ],
-			"FileDependencies": [ "Bob.md5mesh" ],
 			"Copyright": "Copyright © 2009 KatsBits - Ken Beyer (kat) - http://www.katsbits.com"
 		},
 		"MeshAssetCompiler":

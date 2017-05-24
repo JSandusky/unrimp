@@ -8,16 +8,14 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "157",
 			"AssetType": "Texture",
 			"AssetCategory": "Character",
-			"AssetName": "iron_grill",
-			"FileDependencies": [ "iron_grill.png" ],
+			"AssetName": "round_grill_d",
 			"Copyright": "Copyright © 2009 KatsBits - Ken Beyer (kat) - http://www.katsbits.com"
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "iron_grill.png"
+			"InputFile": "round_grill_d.png"
 		}
 	}
 }

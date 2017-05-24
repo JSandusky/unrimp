@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "112",
 			"AssetType": "ShaderBlueprint",
 			"AssetCategory": "Deferred",
 			"AssetName": "MeshFragment",
-			"AssetDependencies": [ "15" ],
-			"FileDependencies": [ "MeshFragment.shader_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"ShaderBlueprintAssetCompiler":

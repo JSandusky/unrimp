@@ -102,8 +102,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineStateSignature::PipelineStateSignature(const MaterialBlueprintResource& materialBlueprintResource, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES]) :
+	PipelineStateSignature::PipelineStateSignature(const MaterialBlueprintResource& materialBlueprintResource, Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES]) :
 		mMaterialBlueprintResourceId(materialBlueprintResource.getId()),
+		mPrimitiveTopology(primitiveTopology),
+		mSerializedPipelineStateHash(serializedPipelineStateHash),
 		mShaderProperties(shaderProperties),
 		mPipelineStateSignatureId(Math::FNV1a_INITIAL_HASH),
 		mShaderCombinationId{getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>()}
@@ -114,8 +116,12 @@ namespace RendererRuntime
 			mDynamicShaderPieces[i] = dynamicShaderPieces[i];
 		}
 
-		// TODO(co) We need to be DirectX 12 ready: Rasterizer state, depth stencil state and blend state are not considered yet. So, for now pipeline state cache = program cache.
+		// Incorporate primitive hashes
 		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mMaterialBlueprintResourceId), sizeof(uint32_t), mPipelineStateSignatureId);
+		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mPrimitiveTopology), sizeof(Renderer::PrimitiveTopology), mPipelineStateSignatureId);
+		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mSerializedPipelineStateHash), sizeof(uint32_t), mPipelineStateSignatureId);
+
+		// Incorporate shader related hashes
 		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = materialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getShaderBlueprintResourceManager();
 		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 		{
@@ -130,6 +136,8 @@ namespace RendererRuntime
 
 	PipelineStateSignature::PipelineStateSignature(const PipelineStateSignature& pipelineStateSignature) :
 		mMaterialBlueprintResourceId(pipelineStateSignature.mMaterialBlueprintResourceId),
+		mPrimitiveTopology(pipelineStateSignature.mPrimitiveTopology),
+		mSerializedPipelineStateHash(pipelineStateSignature.mSerializedPipelineStateHash),
 		mShaderProperties(pipelineStateSignature.mShaderProperties),
 		mPipelineStateSignatureId(pipelineStateSignature.mPipelineStateSignatureId),
 		mShaderCombinationId{getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>()}
@@ -144,6 +152,8 @@ namespace RendererRuntime
 	PipelineStateSignature& PipelineStateSignature::operator=(const PipelineStateSignature& pipelineStateSignature)
 	{
 		mMaterialBlueprintResourceId = pipelineStateSignature.mMaterialBlueprintResourceId;
+		mPrimitiveTopology = pipelineStateSignature.mPrimitiveTopology;
+		mSerializedPipelineStateHash = pipelineStateSignature.mSerializedPipelineStateHash;
 		mShaderProperties = pipelineStateSignature.mShaderProperties;
 		mPipelineStateSignatureId = pipelineStateSignature.mPipelineStateSignatureId;
 		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)

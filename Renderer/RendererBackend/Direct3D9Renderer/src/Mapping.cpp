@@ -93,6 +93,10 @@ namespace Direct3D9Renderer
 			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
 				return D3DTEXF_LINEAR;
 
+			case Renderer::FilterMode::UNKNOWN:
+				assert(false && "Filter mode must not be unknown");
+				return D3DTEXF_POINT;
+
 			default:
 				return D3DTEXF_POINT;	// We should never be in here
 		}
@@ -156,6 +160,10 @@ namespace Direct3D9Renderer
 			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
 				return D3DTEXF_ANISOTROPIC;
 
+			case Renderer::FilterMode::UNKNOWN:
+				assert(false && "Filter mode must not be unknown");
+				return D3DTEXF_POINT;
+
 			default:
 				return D3DTEXF_POINT;	// We should never be in here
 		}
@@ -218,6 +226,10 @@ namespace Direct3D9Renderer
 
 			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
 				return D3DTEXF_ANISOTROPIC;
+
+			case Renderer::FilterMode::UNKNOWN:
+				assert(false && "Filter mode must not be unknown");
+				return D3DTEXF_POINT;
 
 			default:
 				return D3DTEXF_POINT;	// We should never be in here

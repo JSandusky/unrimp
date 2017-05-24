@@ -268,13 +268,13 @@ namespace Renderer
 		*
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
-		*  @param[in] externalContext
-		*    Indicates if an external renderer context is used (In this case the renderer itself has nothing to do with the creation/managing of an renderer context)
+		*  @param[in] useExternalContext
+		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
 		*
 		*  @return
 		*    The created swap chain instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual ISwapChain* createSwapChain(handle nativeWindowHandle, bool externalContext = false) = 0;
+		virtual ISwapChain* createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) = 0;
 
 		/**
 		*  @brief

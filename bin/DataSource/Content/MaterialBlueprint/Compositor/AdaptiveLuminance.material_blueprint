@@ -106,11 +106,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "167",
+			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "129",
-				"FragmentShaderBlueprintAssetId": "127"
+				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/AdaptiveLuminanceFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -151,7 +151,8 @@
 			{
 				"SamplerPoint":
 				{
-					"Filter": "MIN_MAG_MIP_POINT"
+					"Filter": "MIN_MAG_MIP_POINT",
+					"MaxAnisotropy": "1"
 				}
 			},
 			"Textures":
@@ -161,14 +162,14 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@CurrentLuminanceMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D"
 				},
 				"PreviousLuminanceMap":
 				{
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@PreviousLuminanceMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

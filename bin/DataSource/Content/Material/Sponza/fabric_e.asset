@@ -8,12 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "73",
 			"AssetType": "Material",
 			"AssetCategory": "Scene",
 			"AssetName": "fabric_e",
-			"AssetDependencies": [ "0", "4", "74", "79", "110", "113" ],
-			"FileDependencies": [ "fabric_e.material" ],
 			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"MaterialAssetCompiler":

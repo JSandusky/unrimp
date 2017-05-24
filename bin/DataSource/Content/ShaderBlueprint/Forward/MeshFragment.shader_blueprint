@@ -21,9 +21,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-@includepiece(15)	// "Core.shader_piece"
-@includepiece(16)	// "TangentFrame.shader_piece"
-@includepiece(164)	// "PhysicallyBasedShading.shader_piece"
+@includepiece(ShaderPiece/Core.asset)
+@includepiece(ShaderPiece/TangentFrame.asset)
+@includepiece(ShaderPiece/PhysicallyBasedShading.asset)
 
 
 //[-------------------------------------------------------]
@@ -52,6 +52,7 @@ INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE				(float3, WorldSpacePositionVS,	 5)	// World space position
 	INPUT_VERTEX_DRAW_ID														// Draw ID
 	DECLARE_COVERAGE_MASK
+	DECLARE_IS_FRONT_FACE
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)	// rgb = diffuse color, a = alpha
@@ -155,6 +156,10 @@ MAIN_BEGIN
 
 	// Transform the tangent space normal into view space
 	viewSpaceNormal = normalize(viewSpaceNormal.x * MAIN_INPUT(TangentFrame0VS) + viewSpaceNormal.y * MAIN_INPUT(TangentFrame1VS) + viewSpaceNormal.z * MAIN_INPUT(TangentFrame2VS));
+
+	// Handle two sided lighting
+	// -> It's not worth to add additional expensive shader combinations just for this tiny thing
+	viewSpaceNormal = IS_FRONT_FACE ? viewSpaceNormal : -viewSpaceNormal;
 
 	// Derive data
 	float3 worldSpaceNormal = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceNormal);

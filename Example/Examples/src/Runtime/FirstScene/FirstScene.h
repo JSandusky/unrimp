@@ -144,6 +144,16 @@ private:
 		FOUR,
 		EIGHT
 	};
+	enum TextureFiltering
+	{
+		POINT,
+		BILINEAR,
+		TRILINEAR,
+		ANISOTROPIC_2,
+		ANISOTROPIC_4,
+		ANISOTROPIC_8,
+		ANISOTROPIC_16
+	};
 
 
 //[-------------------------------------------------------]
@@ -168,6 +178,7 @@ private:
 	int		   mCurrentCompositor;
 	int		   mCurrentMsaa;
 	float	   mResolutionScale;
+	int		   mCurrentTextureFiltering;
 	int		   mNumberOfTopTextureMipmapsToRemove;
 	bool	   mPerformFxaa;
 	bool	   mPerformSepiaColorCorrection;

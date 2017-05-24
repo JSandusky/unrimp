@@ -8,11 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "151",
 			"AssetType": "Texture",
 			"AssetCategory": "Compositor",
 			"AssetName": "SepiaColorCorrectionLookupTable16x1",
-			"FileDependencies": [ "SepiaColorCorrectionLookupTable16x1.tga" ],
 			"Description": "16x1 Sepia color correction lookup table"
 		},
 		"TextureAssetCompiler":

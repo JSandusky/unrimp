@@ -24,6 +24,13 @@
 				"Value": "TRUE",
 				"Description": "Cast shadows?"
 			},
+			"CullMode":
+			{
+				"Usage": "RASTERIZER_STATE",
+				"ValueType": "CULL_MODE",
+				"Value": "BACK",
+				"Description": "Cull mode rasterizer state"
+			},
 			"DiffuseColor":
 			{
 				"Usage": "SHADER_UNIFORM",
@@ -147,11 +154,15 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "166",
+			"VertexAttributes": "VertexAttributes/Default/Mesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "108",
-				"FragmentShaderBlueprintAssetId": "109"
+				"VertexShaderBlueprint": "ShaderBlueprint/Debug/MeshVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Debug/MeshFragment.asset"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "@CullMode"
 			}
 		},
 		"Resources":
@@ -225,7 +236,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DiffuseMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				}
 			}

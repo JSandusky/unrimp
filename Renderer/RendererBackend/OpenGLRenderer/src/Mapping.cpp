@@ -93,6 +93,10 @@ namespace OpenGLRenderer
 			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
 				return GL_LINEAR;	// There's no special setting in OpenGL
 
+			case Renderer::FilterMode::UNKNOWN:
+				assert(false && "Filter mode must not be unknown");
+				return GL_NEAREST;
+
 			default:
 				return GL_NEAREST;	// We should never be in here
 		}
@@ -156,6 +160,10 @@ namespace OpenGLRenderer
 			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
 				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL
 
+			case Renderer::FilterMode::UNKNOWN:
+				assert(false && "Filter mode must not be unknown");
+				return GL_NEAREST;
+
 			default:
 				return GL_NEAREST;	// We should never be in here
 		}
@@ -186,6 +194,10 @@ namespace OpenGLRenderer
 			case Renderer::FilterMode::COMPARISON_MIN_MAG_MIP_LINEAR:
 			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
 				return GL_COMPARE_REF_TO_TEXTURE;
+
+			case Renderer::FilterMode::UNKNOWN:
+				assert(false && "Filter mode must not be unknown");
+				return GL_NEAREST;
 
 			default:
 				return GL_NEAREST;	// We should never be in here

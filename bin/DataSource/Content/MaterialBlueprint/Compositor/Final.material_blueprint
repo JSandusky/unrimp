@@ -96,11 +96,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "167",
+			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "100",
-				"FragmentShaderBlueprintAssetId": "101"
+				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/FinalFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -142,6 +142,7 @@
 				"SamplerLinear":
 				{
 					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
+					"MaxAnisotropy": "1",
 					"MaxLOD": "0.0"
 				}
 			},
@@ -152,7 +153,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"MipmapsUsed": "FALSE"
 				},
 				"ColorCorrectionLookupTableMap":
@@ -160,7 +161,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorCorrectionLookupTableMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

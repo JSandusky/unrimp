@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-@includepiece(15)	// "Core.shader_piece"
+@includepiece(ShaderPiece/Core.asset)
 
 
 //[-------------------------------------------------------]
@@ -48,6 +48,7 @@ INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame1VS,		 3)	// Tangent frame
 	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame2VS,		 4)	// Tangent frame
 	DECLARE_COVERAGE_MASK
+	DECLARE_IS_FRONT_FACE
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
@@ -119,6 +120,10 @@ MAIN_BEGIN
 
 	// Transform the tangent space normal into view space
 	normal = normalize(normal.x * MAIN_INPUT(TangentFrame0VS) + normal.y * MAIN_INPUT(TangentFrame1VS) + normal.z * MAIN_INPUT(TangentFrame2VS));
+
+	// Handle two sided lighting
+	// -> It's not worth to add additional expensive shader combinations just for this tiny thing
+	normal = IS_FRONT_FACE ? normal : -normal;
 
 	// Diffuse
 	float3 diffuse = material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;

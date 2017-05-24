@@ -121,6 +121,16 @@ namespace RendererToolkit
 				}
 				return iterator->second;
 			}
+			uint32_t getCompiledAssetIdBySourceAssetIdAsString(const std::string& sourceAssetIdAsString) const
+			{
+				SourceAssetIdToCompiledAssetId::const_iterator iterator = sourceAssetIdToCompiledAssetId.find(RendererRuntime::StringId(sourceAssetIdAsString.c_str()));
+				if (iterator == sourceAssetIdToCompiledAssetId.cend())
+				{
+					throw std::runtime_error(std::string("Source asset ID \"") + sourceAssetIdAsString + "\" is unknown");
+				}
+				return iterator->second;
+			}
+
 			Input(const Input&) = delete;
 			Input& operator=(const Input&) = delete;
 		};

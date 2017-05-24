@@ -8,11 +8,9 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "10",
 			"AssetType": "CompositorWorkspace",
 			"AssetCategory": "Default",
 			"AssetName": "First",
-			"FileDependencies": [ "First.compositor_workspace" ],
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"CompositorWorkspaceAssetCompiler":

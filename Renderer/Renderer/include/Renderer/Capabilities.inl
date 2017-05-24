@@ -37,6 +37,7 @@ namespace Renderer
 		maximumTextureBufferSize(0),
 		maximumIndirectBufferSize(0),
 		maximumNumberOfMultisamples(1),
+		maximumAnisotropy(1),
 		individualUniforms(false),
 		instancedArrays(false),
 		drawInstanced(false),

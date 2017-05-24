@@ -189,6 +189,10 @@ namespace
 			ROUGHNESS_MAP,
 			METALLIC_MAP,
 			EMISSIVE_MAP,
+			HEIGHT_MAP,
+			TINT_MAP,
+			AMBIENT_OCCLUSION_MAP,
+			REFLECTION_2D_MAP,
 			REFLECTION_CUBE_MAP,
 			COLOR_CORRECTION_LOOKUP_TABLE,
 			UNKNOWN
@@ -258,6 +262,10 @@ namespace
 				ELSE_IF_VALUE(ROUGHNESS_MAP)
 				ELSE_IF_VALUE(METALLIC_MAP)
 				ELSE_IF_VALUE(EMISSIVE_MAP)
+				ELSE_IF_VALUE(HEIGHT_MAP)
+				ELSE_IF_VALUE(TINT_MAP)
+				ELSE_IF_VALUE(AMBIENT_OCCLUSION_MAP)
+				ELSE_IF_VALUE(REFLECTION_2D_MAP)
 				ELSE_IF_VALUE(REFLECTION_CUBE_MAP)
 				ELSE_IF_VALUE(COLOR_CORRECTION_LOOKUP_TABLE)
 				else
@@ -502,6 +510,7 @@ namespace
 			switch (textureSemantic)
 			{
 				case TextureSemantic::DIFFUSE_MAP:
+				case TextureSemantic::REFLECTION_2D_MAP:
 					// Nothing here, just a regular texture
 					break;
 
@@ -529,6 +538,9 @@ namespace
 
 				case TextureSemantic::ROUGHNESS_MAP:
 				case TextureSemantic::METALLIC_MAP:
+				case TextureSemantic::HEIGHT_MAP:
+				case TextureSemantic::TINT_MAP:
+				case TextureSemantic::AMBIENT_OCCLUSION_MAP:
 					crunchConvertParams.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
 					crunchConvertParams.m_mipmap_params.m_gamma_filtering = false;
 					crunchConvertParams.m_mipmap_params.m_gamma = 1.0f;	// Mipmap gamma correction value, default=2.2, use 1.0 for linear

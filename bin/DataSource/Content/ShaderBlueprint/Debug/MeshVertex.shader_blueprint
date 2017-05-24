@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-@includepiece(15)	// "Core.shader_piece"
-@includepiece(16)	// "TangentFrame.shader_piece"
+@includepiece(ShaderPiece/Core.asset)
+@includepiece(ShaderPiece/TangentFrame.asset)
 
 
 //[-------------------------------------------------------]

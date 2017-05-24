@@ -44,6 +44,7 @@
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
 #include <string.h>
+#include <tuple>	// For "std::ignore"
 
 
 //[-------------------------------------------------------]
@@ -55,8 +56,9 @@
 #else
 	#define NULLRENDERER_API_EXPORT
 #endif
-NULLRENDERER_API_EXPORT Renderer::IRenderer *createNullRendererInstance(handle nativeWindowHandle, bool /*useExternalContext*/)
+NULLRENDERER_API_EXPORT Renderer::IRenderer *createNullRendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
+	std::ignore = useExternalContext;
 	return new NullRenderer::NullRenderer(nativeWindowHandle);
 }
 #undef NULLRENDERER_API_EXPORT
@@ -643,7 +645,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *NullRenderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
+	Renderer::ISwapChain *NullRenderer::createSwapChain(handle nativeWindowHandle, bool)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
@@ -805,6 +807,9 @@ namespace NullRenderer
 
 		// Maximum number of multisamples (always at least 1, usually 8)
 		mCapabilities.maximumNumberOfMultisamples = 1;
+
+		// Maximum anisotropy (always at least 1, usually 16)
+		mCapabilities.maximumAnisotropy = 16;
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;

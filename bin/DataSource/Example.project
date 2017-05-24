@@ -11,7 +11,7 @@
 			"Name": "Example",
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
-		"AssetsFilename": "Content/Example.assets",
+		"AssetPackages": ["Content"],
 		"TargetsFilename": "Example.targets",
 		"QualityStrategy": "PRODUCTION"
 	}

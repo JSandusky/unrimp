@@ -48,6 +48,8 @@
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
+#include <tuple>	// For "std::ignore"
+
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -58,8 +60,9 @@
 #else
 	#define DIRECT3D9RENDERER_API_EXPORT
 #endif
-DIRECT3D9RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D9RendererInstance(handle nativeWindowHandle, bool /*useExternalContext*/)
+DIRECT3D9RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D9RendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
+	std::ignore = useExternalContext;
 	return new Direct3D9Renderer::Direct3D9Renderer(nativeWindowHandle);
 }
 #undef DIRECT3D9RENDERER_API_EXPORT
@@ -1355,7 +1358,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D9Renderer::createSwapChain(handle nativeWindowHandle, bool externalContext)
+	Renderer::ISwapChain *Direct3D9Renderer::createSwapChain(handle nativeWindowHandle, bool)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
@@ -1735,6 +1738,9 @@ namespace Direct3D9Renderer
 
 		// Maximum number of multisamples (always at least 1, usually 8)
 		mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy DirectX 9 multisample support
+
+		// Maximum anisotropy (always at least 1, usually 16)
+		mCapabilities.maximumAnisotropy = 16;
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;

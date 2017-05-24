@@ -101,11 +101,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributesAssetId": "168",
+			"VertexAttributes": "VertexAttributes/Default/DebugGui.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprintAssetId": "119",
-				"FragmentShaderBlueprintAssetId": "120"
+				"VertexShaderBlueprint": "ShaderBlueprint/Debug/GuiVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Debug/GuiFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -151,10 +151,13 @@
 			{
 				"GlyphSampler":
 				{
+					"Filter": "MIN_MAG_MIP_LINEAR",
+					"MaxAnisotropy": "1"
 				},
 				"BackgroundSampler":
 				{
 					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
+					"MaxAnisotropy": "1",
 					"MaxLOD": "0.0"
 				}
 			},
@@ -165,14 +168,14 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@GlyphMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/WhiteMap2D"
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D"
 				},
 				"BackgroundMap":
 				{
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@BackgroundMap",
-					"FallbackTextureAssetId": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE"
 				}
 			}

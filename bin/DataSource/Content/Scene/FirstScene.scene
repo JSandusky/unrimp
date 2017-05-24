@@ -35,7 +35,6 @@
 			},
 			"2":
 			{
-				"Description": "Imrod character",
 				"Properties":
 				{
 					"Rotation": "0.0 45.0 0.0 DEGREES",
@@ -45,13 +44,12 @@
 				{
 					"MeshSceneItem":
 					{
-						"MeshAssetId": "2"
+						"Mesh": "Mesh/Imrod/Imrod.asset"
 					}
 				}
 			},
 			"3":
 			{
-				"Description": "Imrod character",
 				"Properties":
 				{
 					"Position": "-4.0 0.0 1.0",
@@ -61,14 +59,13 @@
 				{
 					"MeshSceneItem":
 					{
-						"MeshAssetId": "2",
-						"SubMeshMaterialAssetIds": [ "40", "170" ]
+						"Mesh": "Mesh/Imrod/Imrod.asset",
+						"SubMeshMaterials": [ "Material/Sponza/bricks.asset", "Material/Imrod/TransparentImrod.asset" ]
 					}
 				}
 			},
 			"4":
 			{
-				"Description": "Imrod character",
 				"Properties":
 				{
 					"Position": "2.0 0.0 -5.0",
@@ -78,13 +75,12 @@
 				{
 					"MeshSceneItem":
 					{
-						"MeshAssetId": "2"
+						"Mesh": "Mesh/Imrod/Imrod.asset"
 					}
 				}
 			},
 			"5":
 			{
-				"Description": "Sponza scene",
 				"Properties":
 				{
 					"Scale": "0.01 0.01 0.01"
@@ -93,7 +89,7 @@
 				{
 					"MeshSceneItem":
 					{
-						"MeshAssetId": "21"
+						"Mesh": "Mesh/Sponza/sponza.asset"
 					}
 				}
 			},
@@ -179,7 +175,6 @@
 			},
 			"11":
 			{
-				"Description": "Bob character",
 				"Properties":
 				{
 					"Position": "8.0 0.0 1.5",
@@ -189,8 +184,8 @@
 				{
 					"SkeletonMeshSceneItem":
 					{
-						"MeshAssetId": "153",
-						"SkeletonAnimationAssetId": "11"
+						"Mesh": "Mesh/Bob/Bob.asset",
+						"SkeletonAnimation": "SkeletonAnimation/Bob/Bob.asset"
 					}
 				}
 			},
