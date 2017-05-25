@@ -46,14 +46,6 @@
 				"Description": "Use GPU skinning?",
 				"VisualImportance": "MANDATORY"
 			},
-			"UseDiffuseMap":
-			{
-				"Usage": "SHADER_COMBINATION",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use diffuse map?",
-				"VisualImportance": "100"
-			},
 			"_drgb_nxa":
 			{
 				"Usage": "TEXTURE_REFERENCE",

@@ -63,9 +63,7 @@ UNIFORM_BUFFER_END
 SAMPLER_STATE(SamplerLinear, 0)
 
 // Textures: We need to start at texture unit 1 instead of texture unit 0 because the vertex shader has an instance texture buffer bound at texture unit 0 (OpenGL shares those bindings accros all shader stages while Direct3D doesn't)
-@property(UseDiffuseMap)
-	TEXTURE_2D(_drgb_nxa, 1)	// RGB channel = Diffuse map ("_d"-postfix), A channel = x component of normal map ("_n"-postfix)
-@end
+TEXTURE_2D(_drgb_nxa, 1)	// RGB channel = Diffuse map ("_d"-postfix), A channel = x component of normal map ("_n"-postfix)
 
 
 //[-------------------------------------------------------]
@@ -82,13 +80,8 @@ MAIN_BEGIN
 	Material material = Materials[MAIN_INPUT(AssignedMaterialSlotVS)];
 
 	// Diffuse term
-	@property(UseDiffuseMap)
-		// Usually we're using sRGB textures, so textures might already be loaded in this format when switching to the debug compositor, convert back from linear space to gamma space
-		float3 color = material.DiffuseColor * LinearSpaceToGammaSpace3(SAMPLE_2D(_drgb_nxa, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb);
-	@end
-	@property(!UseDiffuseMap)
-		float3 color = material.DiffuseColor;
-	@end
+	// -> Usually we're using sRGB textures, so textures might already be loaded in this format when switching to the debug compositor, convert back from linear space to gamma space
+	float3 color = material.DiffuseColor * LinearSpaceToGammaSpace3(SAMPLE_2D(_drgb_nxa, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb);
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = min(float4(color, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
