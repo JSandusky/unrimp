@@ -50,7 +50,7 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
+				"Value": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
 				"Description": "RGB channel = Diffuse map ('_d'-postfix), A channel = x component of normal map ('_n'-postfix)"
 			}
 		},
@@ -228,7 +228,7 @@
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@_drgb_nxa",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				}
 			}
