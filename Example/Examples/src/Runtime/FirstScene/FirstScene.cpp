@@ -92,9 +92,9 @@ FirstScene::FirstScene() :
 	// States for runtime-fun
 	mInstancedCompositor(Compositor::FORWARD),
 	mCurrentCompositor(mInstancedCompositor),
-	mCurrentMsaa(Msaa::NONE),
+	mCurrentMsaa(Msaa::FOUR),
 	mResolutionScale(1.0f),
-	mCurrentTextureFiltering(TextureFiltering::TRILINEAR),
+	mCurrentTextureFiltering(TextureFiltering::ANISOTROPIC_4),
 	mNumberOfTopTextureMipmapsToRemove(0),
 	mPerformFxaa(false),
 	mPerformSepiaColorCorrection(false),
