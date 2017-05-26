@@ -162,31 +162,11 @@ MAIN_BEGIN
 	float3 viewRay = normalize(MAIN_INPUT(ViewRayVS));
 
 	// Calculate SSAO
-	@property(NumberOfMultisamples)
-		// Complex pixel detection
-		float sum;
-		if (0 != SAMPLE_2D_MS(NormalMap, int2(MAIN_INPUT(TexCoordVS) * (1.0f / PassData.InverseViewportSize)), 0).a)
-		{
-			// Custom MSAA resolve
-			sum = 0.0f;
-			@foreach(NumberOfMultisamples, i, 0)
-			{
-				sum += CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), @i);
-			}
-			@end
-			sum /= @value(NumberOfMultisamples);
-		}
-		else
-		{
-			sum = CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), 0);
-		}
-	@end
-	@property(!NumberOfMultisamples)
-		float sum = CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), 0);
-	@end
+	// -> No complex pixel detection since it doesn't make a notable visual difference here
+	float sum = CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), 0);
 
 	// Increase SSAO strength to make it more visible
-	sum = pow(sum, 4.0f);	// TODO(co) "PassData"
+	sum = pow(sum, 4.0f);
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(sum, sum, sum, sum);
