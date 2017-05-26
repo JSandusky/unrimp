@@ -51,6 +51,7 @@ namespace RendererRuntime
 	class Transform;
 	class IBufferManager;
 	class IRendererRuntime;
+	class MaterialResource;
 	class CompositorContextData;
 	class MaterialBlueprintResource;
 	class MaterialBlueprintResourceManager;
@@ -117,8 +118,10 @@ namespace RendererRuntime
 		*    Render target to render into
 		*  @param[in] compositorContextData
 		*    Compositor context data
+		*  @param[in] materialResource
+		*    Currently used material resource
 		*/
-		void fillBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData);
+		void fillBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, const MaterialResource& materialResource);
 
 		/**
 		*  @brief

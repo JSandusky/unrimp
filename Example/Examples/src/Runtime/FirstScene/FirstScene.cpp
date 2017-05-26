@@ -98,6 +98,7 @@ FirstScene::FirstScene() :
 	mNumberOfTopTextureMipmapsToRemove(0),
 	mPerformFxaa(false),
 	mPerformSepiaColorCorrection(false),
+	mDepthOfFieldBlurrinessCutoff(0.0f),
 	mRotationSpeed(0.0f),
 	mShowSkeleton(false),
 	mHighQualityLighting(true),
@@ -447,6 +448,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				ImGui::SliderInt("Mipmaps to Remove", &mNumberOfTopTextureMipmapsToRemove, 0, 8);
 				ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
 				ImGui::Checkbox("Perform Sepia Color Correction", &mPerformSepiaColorCorrection);
+				ImGui::SliderFloat("Depth of Field", &mDepthOfFieldBlurrinessCutoff, 0.0f, 1.0f, "%.3f");
 
 				// Scene
 				ImGui::Separator();
@@ -538,8 +540,15 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 		{ // Update the material resource instance
 			const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
 
+			// Depth of field compositor material
+			RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/DepthOfField");
+			if (nullptr != materialResource)
+			{
+				materialResource->setPropertyById("BlurrinessCutoff", RendererRuntime::MaterialPropertyValue::fromFloat(mDepthOfFieldBlurrinessCutoff));
+			}
+
 			// Final compositor material
-			RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/Final");
+			materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/Final");
 			if (nullptr != materialResource)
 			{
 				static const RendererRuntime::AssetId IDENTITY_TEXTURE_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D");

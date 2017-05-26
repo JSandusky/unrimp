@@ -182,6 +182,7 @@ private:
 	int		   mNumberOfTopTextureMipmapsToRemove;
 	bool	   mPerformFxaa;
 	bool	   mPerformSepiaColorCorrection;
+	float	   mDepthOfFieldBlurrinessCutoff;
 	float	   mRotationSpeed;
 	bool	   mShowSkeleton;
 	bool	   mHighQualityLighting;

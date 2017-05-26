@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -62,7 +63,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void PassBufferManager::fillBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData)
+	void PassBufferManager::fillBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, const MaterialResource& materialResource)
 	{
 		// Even if there's no pass uniform buffer, there must still be a pass buffer manager filling "RendererRuntime::PassBufferManager::PassData" which is used to fill the instances texture buffer
 
@@ -135,7 +136,7 @@ namespace RendererRuntime
 					else if (MaterialProperty::Usage::MATERIAL_REFERENCE == usage)
 					{
 						// Figure out the material property value
-						const MaterialProperty* materialProperty = mMaterialBlueprintResource.getMaterialProperties().getPropertyById(uniformBufferElementProperty.getReferenceValue());
+						const MaterialProperty* materialProperty = materialResource.getPropertyById(uniformBufferElementProperty.getReferenceValue());
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
