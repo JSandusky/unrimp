@@ -19,16 +19,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
-@includepiece(ShaderPiece/Color.asset)
-
-
-//[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/Core.asset)
+	@insertpiece(SetCrossPlatformSettings)
 
 
 //[-------------------------------------------------------]
@@ -77,24 +71,11 @@ TEXTURE_2D(ScreenSpaceAmbientOcclusionMap, 2)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@insertpiece(DefineCalculateFoggedColor)
-
-// TODO(co) Make this to a shader piece
-float GetDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
-{
-	@property(NumberOfMultisamples)
-		return SAMPLE_DEPTH_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex);
-	@end
-	@property(!NumberOfMultisamples)
-		return SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f));
-	@end
-}
-
-// TODO(co) Make this to a shader piece
-float GetLinearDepth(float depth)
-{
-	return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
-}
+@includepiece(ShaderPiece/Color.asset)
+	@insertpiece(DefineCalculateFoggedColor)
+@includepiece(ShaderPiece/Depth.asset)
+	@insertpiece(DefineGetLinearDepth)
+	@insertpiece(DefineGetDepthFromDepthMap)
 
 float3 CalculateColor(float3 viewRay, float3 color, float2 screenSpacePosition, int sampleIndex)
 {

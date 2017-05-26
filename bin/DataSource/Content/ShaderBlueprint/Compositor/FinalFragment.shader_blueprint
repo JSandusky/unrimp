@@ -19,28 +19,23 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
-@includepiece(ShaderPiece/Compositor/Fxaa.asset)
-
-
-//[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@insertpiece(SetCrossPlatformSettings)
-@property(Fxaa)
-	#define FXAA_PC				 1
-	@property(HLSL)
-		#define FXAA_HLSL_5		 1
+@includepiece(ShaderPiece/Core.asset)
+	@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/Compositor/Fxaa.asset)
+	@property(Fxaa)
+		#define FXAA_PC				 1
+		@property(HLSL)
+			#define FXAA_HLSL_5		 1
+		@end
+		@property(GLSL || GLSLES)
+			#define FXAA_GLSL_130	 1
+		@end
+		#define FXAA_QUALITY__PRESET 39
+		#define FXAA_GREEN_AS_LUMA	 1
+		@insertpiece(FxaaFunction)
 	@end
-	@property(GLSL || GLSLES)
-		#define FXAA_GLSL_130	 1
-	@end
-	#define FXAA_QUALITY__PRESET 39
-	#define FXAA_GREEN_AS_LUMA	 1
-	@insertpiece(FxaaFunction)
-@end
 
 
 //[-------------------------------------------------------]

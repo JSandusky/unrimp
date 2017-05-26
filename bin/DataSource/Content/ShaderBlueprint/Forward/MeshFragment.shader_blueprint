@@ -19,17 +19,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
-@includepiece(ShaderPiece/TangentFrame.asset)
-@includepiece(ShaderPiece/PhysicallyBasedShading.asset)
-
-
-//[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/Core.asset)
+	@insertpiece(SetCrossPlatformSettings)
 
 
 //[-------------------------------------------------------]
@@ -112,13 +105,15 @@ TEXTURE_3D_UINT(LightClustersMap3D, 8)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@insertpiece(DefineGetTangentFrame)
-@property(HighQualityLighting)
-	@insertpiece(DefinePhysicallyBasedShading)
-@end
-@property(!HighQualityLighting)
-	@insertpiece(DefineBlinnPhongBasedShading)
-@end
+@includepiece(ShaderPiece/TangentFrame.asset)
+	@insertpiece(DefineGetTangentFrame)
+@includepiece(ShaderPiece/PhysicallyBasedShading.asset)
+	@property(HighQualityLighting)
+		@insertpiece(DefinePhysicallyBasedShading)
+	@end
+	@property(!HighQualityLighting)
+		@insertpiece(DefineBlinnPhongBasedShading)
+	@end
 
 
 //[-------------------------------------------------------]

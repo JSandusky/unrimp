@@ -19,16 +19,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
-@includepiece(ShaderPiece/Color.asset)
-
-
-//[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/Core.asset)
+	@insertpiece(SetCrossPlatformSettings)
 
 
 //[-------------------------------------------------------]
@@ -69,7 +63,8 @@ TEXTURE_2D(_drgb_nxa, 1)	// RGB channel = Diffuse map ("_d"-postfix), A channel 
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@insertpiece(DefineLinearSpaceToGammaSpace3)
+@includepiece(ShaderPiece/Color.asset)
+	@insertpiece(DefineLinearSpaceToGammaSpace3)
 
 
 //[-------------------------------------------------------]

@@ -19,15 +19,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
-
-
-//[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/Core.asset)
+	@insertpiece(SetCrossPlatformSettings)
 
 
 //[-------------------------------------------------------]
@@ -77,24 +72,10 @@ TEXTURE_2D(SsaoNoise4x4Map, 3)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-// TODO(co) Make this to a shader piece
-float GetLinearDepth(float depth)
-{
-	return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
-}
+@includepiece(ShaderPiece/Depth.asset)
+	@insertpiece(DefineGetLinearDepth)
+	@insertpiece(DefineGetDepthFromDepthMap)
 
-// TODO(co) Make this to a shader piece
-float GetDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
-{
-	@property(NumberOfMultisamples)
-		return SAMPLE_DEPTH_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex);
-	@end
-	@property(!NumberOfMultisamples)
-		return SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f));
-	@end
-}
-
-// TODO(co) Make this to a shader piece
 float3 GetNormalFromNormalMap(float2 textureCoordinate, int sampleIndex)
 {
 	@property(NumberOfMultisamples)

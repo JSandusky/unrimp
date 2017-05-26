@@ -19,34 +19,30 @@
 
 
 //[-------------------------------------------------------]
-//[ Definitions                                           ]
+//[ Pieces                                                ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
-	@insertpiece(SetCrossPlatformSettings)
+@piece(DefineGetLinearDepth)
+	float GetLinearDepth(float depth)
+	{
+		return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
+	}
+@end
 
+@piece(DefineGetDepthFromDepthMap)
+	float GetDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
+	{
+		@property(NumberOfMultisamples)
+			return SAMPLE_DEPTH_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex);
+		@end
+		@property(!NumberOfMultisamples)
+			return SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f));
+		@end
+	}
+@end
 
-//[-------------------------------------------------------]
-//[ Input / output                                        ]
-//[-------------------------------------------------------]
-// Attribute input / output
-INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
-INPUT_END
-OUTPUT_BEGIN
-	OUTPUT_COLOR(0)
-OUTPUT_END
-
-// Samplers
-SAMPLER_STATE(SamplerLinear, 0)
-
-// Textures
-TEXTURE_2D(ColorMap, 0)
-
-
-//[-------------------------------------------------------]
-//[ Main                                                  ]
-//[-------------------------------------------------------]
-MAIN_BEGIN
-	// Using hardware bilinear filtering for upscaling or downscaling
-	MAIN_OUTPUT_COLOR(0) = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
-MAIN_END
+@piece(DefineGetLinearDepthFromDepthMap)
+	float GetLinearDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
+	{
+		return GetLinearDepth(GetDepthFromDepthMap(textureCoordinate, sampleIndex));
+	}
+@end

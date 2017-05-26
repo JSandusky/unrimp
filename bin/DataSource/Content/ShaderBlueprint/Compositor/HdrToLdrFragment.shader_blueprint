@@ -19,16 +19,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
-@includepiece(ShaderPiece/Color.asset)
-
-
-//[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/Core.asset)
+	@insertpiece(SetCrossPlatformSettings)
 
 
 //[-------------------------------------------------------]
@@ -71,8 +65,9 @@ TEXTURE_2D(DirtyLensMap, 3)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@insertpiece(DefineColorToLuminance)
-@insertpiece(DefineCalculateExposedColor)
+@includepiece(ShaderPiece/Color.asset)
+	@insertpiece(DefineColorToLuminance)
+	@insertpiece(DefineCalculateExposedColor)
 
 // Apply the filmic curve from John Hable's presentation
 float3 ToneMapFilmicAlu(float3 color)
