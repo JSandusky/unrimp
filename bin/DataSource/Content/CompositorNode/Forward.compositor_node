@@ -104,31 +104,27 @@
 			{
 				"TextureFormat": "R8G8B8A8"
 			},
-			"Example/Texture/Dynamic/LdrColorRenderTarget1":
-			{
-				"TextureFormat": "R8G8B8A8"
-			},
 			"Example/Texture/Dynamic/GaussianBlurDownscale2ColorRenderTarget":
 			{
-				"TextureFormat": "R8G8B8A8",
+				"TextureFormat": "R11G11B10F",
 				"AllowResolutionScale": "FALSE",
 				"Scale": "0.5"
 			},
 			"Example/Texture/Dynamic/GaussianBlurDownscale4ColorRenderTarget":
 			{
-				"TextureFormat": "R8G8B8A8",
+				"TextureFormat": "R11G11B10F",
 				"AllowResolutionScale": "FALSE",
 				"Scale": "0.25"
 			},
 			"Example/Texture/Dynamic/GaussianBlurRenderTarget0":
 			{
-				"TextureFormat": "R8G8B8A8",
+				"TextureFormat": "R11G11B10F",
 				"AllowResolutionScale": "FALSE",
 				"Scale": "0.25"
 			},
 			"Example/Texture/Dynamic/GaussianBlurRenderTarget1":
 			{
-				"TextureFormat": "R8G8B8A8",
+				"TextureFormat": "R11G11B10F",
 				"AllowResolutionScale": "FALSE",
 				"Scale": "0.25"
 			}
@@ -195,10 +191,6 @@
 			"LdrFramebuffer0":
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget0" ]
-			},
-			"LdrFramebuffer1":
-			{
-				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget1" ]
 			},
 			"GaussianBlurDownscale2Framebuffer":
 			{
@@ -344,6 +336,85 @@
 					}
 				}
 			},
+			"GaussianBlurDownscale2Framebuffer":
+			{
+				"Quad":
+				{
+					"Description": "Downscale",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/Scale.asset",
+					"SetMaterialProperties":
+					{
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1"
+					}
+				}
+			},
+			"GaussianBlurDownscale4Framebuffer":
+			{
+				"Quad":
+				{
+					"Description": "Downscale",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/Scale.asset",
+					"SetMaterialProperties":
+					{
+						"ColorMap": "Example/Texture/Dynamic/GaussianBlurDownscale2ColorRenderTarget"
+					}
+				}
+			},
+			"@foreach(4, i)":
+			{
+				"GaussianBlurFramebuffer0":
+				{
+					"Quad":
+					{
+						"Description": "Vertical Gaussian blur",
+						"MaterialBlueprint": "MaterialBlueprint/Compositor/GaussianBlur.asset",
+						"SetMaterialProperties":
+						{
+							"VerticalBlur": "TRUE", 
+							"ColorMap": "Example/Texture/Dynamic/GaussianBlurDownscale4ColorRenderTarget"
+						}
+					}
+				},
+				"GaussianBlurFramebuffer1":
+				{
+					"Quad":
+					{
+						"Description": "Horizontal Gaussian blur",
+						"MaterialBlueprint": "MaterialBlueprint/Compositor/GaussianBlur.asset",
+						"SetMaterialProperties":
+						{
+							"VerticalBlur": "FALSE", 
+							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
+						}
+					}
+				}
+			},
+			"GaussianBlurDownscale2Framebuffer":
+			{
+				"Quad":
+				{
+					"Description": "Upscale",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/Scale.asset",
+					"SetMaterialProperties":
+					{
+						"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
+					}
+				}
+			},
+			"HdrFramebuffer0":
+			{
+				"Quad":
+				{
+					"Description": "Depth of field",
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/DepthOfField.asset",
+					"SetMaterialProperties":
+					{
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
+						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
+						"BlurMap": "Example/Texture/Dynamic/GaussianBlurDownscale2ColorRenderTarget"
+					}
+				}
+			},
 			"BloomFramebuffer":
 			{
 				"Quad":
@@ -352,7 +423,7 @@
 					"MaterialBlueprint": "MaterialBlueprint/Compositor/HdrToLdrBloomThreshold.asset",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
 						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
 					}
 				}
@@ -454,7 +525,7 @@
 					"MaterialBlueprint": "MaterialBlueprint/Compositor/LensFlareThreshold.asset",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1"
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0"
 					}
 				}
 			},
@@ -504,89 +575,10 @@
 					"MaterialBlueprint": "MaterialBlueprint/Compositor/HdrToLdr.asset",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
 						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget",
 						"BloomMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget",
 						"LensFlareMap": "Example/Texture/Dynamic/LensFlareColorRenderTarget"
-					}
-				}
-			},
-			"GaussianBlurDownscale2Framebuffer":
-			{
-				"Quad":
-				{
-					"Description": "Downscale",
-					"MaterialBlueprint": "MaterialBlueprint/Compositor/Scale.asset",
-					"SetMaterialProperties":
-					{
-						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0"
-					}
-				}
-			},
-			"GaussianBlurDownscale4Framebuffer":
-			{
-				"Quad":
-				{
-					"Description": "Downscale",
-					"MaterialBlueprint": "MaterialBlueprint/Compositor/Scale.asset",
-					"SetMaterialProperties":
-					{
-						"ColorMap": "Example/Texture/Dynamic/GaussianBlurDownscale2ColorRenderTarget"
-					}
-				}
-			},
-			"@foreach(4, i)":
-			{
-				"GaussianBlurFramebuffer0":
-				{
-					"Quad":
-					{
-						"Description": "Vertical Gaussian blur",
-						"MaterialBlueprint": "MaterialBlueprint/Compositor/GaussianBlur.asset",
-						"SetMaterialProperties":
-						{
-							"VerticalBlur": "TRUE", 
-							"ColorMap": "Example/Texture/Dynamic/GaussianBlurDownscale4ColorRenderTarget"
-						}
-					}
-				},
-				"GaussianBlurFramebuffer1":
-				{
-					"Quad":
-					{
-						"Description": "Horizontal Gaussian blur",
-						"MaterialBlueprint": "MaterialBlueprint/Compositor/GaussianBlur.asset",
-						"SetMaterialProperties":
-						{
-							"VerticalBlur": "FALSE", 
-							"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget0"
-						}
-					}
-				}
-			},
-			"GaussianBlurDownscale2Framebuffer":
-			{
-				"Quad":
-				{
-					"Description": "Upscale",
-					"MaterialBlueprint": "MaterialBlueprint/Compositor/Scale.asset",
-					"SetMaterialProperties":
-					{
-						"ColorMap": "Example/Texture/Dynamic/GaussianBlurRenderTarget1"
-					}
-				}
-			},
-			"LdrFramebuffer1":
-			{
-				"Quad":
-				{
-					"Description": "Depth of field",
-					"MaterialBlueprint": "MaterialBlueprint/Compositor/DepthOfField.asset",
-					"SetMaterialProperties":
-					{
-						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0",
-						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
-						"BlurMap": "Example/Texture/Dynamic/GaussianBlurDownscale2ColorRenderTarget"
 					}
 				}
 			},
@@ -597,7 +589,7 @@
 					"MaterialBlueprint": "MaterialBlueprint/Compositor/Final.asset",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget1"
+						"ColorMap": "Example/Texture/Dynamic/LdrColorRenderTarget0"
 					}
 				},
 				"DebugGui":
