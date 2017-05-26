@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
@@ -1185,7 +1186,7 @@ namespace RendererToolkit
 		}
 		const std::string inputAssetFilename = assetInputDirectory + inputFile;
 		const std::string normalMapAssetFilename = assetInputDirectory + normalMapInputFile;
-		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
+		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
 
 		// Sanity checks
 		if (inputFile.empty())

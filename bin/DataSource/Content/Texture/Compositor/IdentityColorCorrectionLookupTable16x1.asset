@@ -10,7 +10,6 @@
 		{
 			"AssetType": "Texture",
 			"AssetCategory": "Compositor",
-			"AssetName": "IdentityColorCorrectionLookupTable16x1",
 			"Description": "16x1 identity color correction lookup table. Primarily for texture compiler testing. Prefer using 'Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D' in production."
 		},
 		"TextureAssetCompiler":

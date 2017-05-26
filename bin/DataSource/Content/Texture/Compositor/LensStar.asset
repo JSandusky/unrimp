@@ -10,7 +10,6 @@
 		{
 			"AssetType": "Texture",
 			"AssetCategory": "Compositor",
-			"AssetName": "LensStar",
 			"Copyright": "'Pseudo Lens Flare' from John Chapman - http://john-chapman-graphics.blogspot.de/2013/02/pseudo-lens-flare.html"
 		},
 		"TextureAssetCompiler":

@@ -453,8 +453,8 @@ namespace RendererToolkit
 			// Get the relevant asset metadata parts
 			const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
 			const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
-			const std::string assetName = rapidJsonValueAssetMetadata["AssetName"].GetString();
-			
+			const std::string assetName = std_filesystem::path(asset.assetFilename).stem().generic_string();
+
 			// Construct the asset ID as string
 			const std::string compiledAssetIdAsString = mProjectName + '/' + assetType + '/' + assetCategory + '/' + assetName;
 

@@ -10,7 +10,6 @@
 		{
 			"AssetType": "MaterialBlueprint",
 			"AssetCategory": "Debug",
-			"AssetName": "Gui",
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"MaterialBlueprintAssetCompiler":

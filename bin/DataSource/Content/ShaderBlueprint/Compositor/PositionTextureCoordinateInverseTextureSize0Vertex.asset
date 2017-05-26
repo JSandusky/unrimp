@@ -10,7 +10,6 @@
 		{
 			"AssetType": "ShaderBlueprint",
 			"AssetCategory": "Compositor",
-			"AssetName": "PositionTextureCoordinateInverseTextureSize0Vertex",
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"ShaderBlueprintAssetCompiler":
