@@ -16,7 +16,8 @@
 		},
 		"Properties":
 		{
-			"_drgb_nxa": "Texture/Sponza/vase_hanging_drgb_nxa.asset"
+			"_drgb_nxa": "Texture/Sponza/vase_hanging_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "Texture/Sponza/vase_hanging_hr_rg_mb_nya.asset"
 		}
 	}
 }
