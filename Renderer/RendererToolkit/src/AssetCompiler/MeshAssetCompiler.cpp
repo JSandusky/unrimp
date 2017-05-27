@@ -467,7 +467,7 @@ namespace
 		*  @param[out] numberOfIndices
 		*    Receives the number of processed indices
 		*/
-		void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, const Skeleton& skeleton, uint8_t numberOfBytesPerVertex, uint8_t *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
+		void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, const Skeleton& skeleton, uint8_t numberOfBytesPerVertex, uint8_t *vertexBuffer, uint32_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
 		{
 			// Get the absolute transformation matrix of this Assimp node
 			const aiMatrix4x4 currentAssimpTransformation = assimpTransformation * assimpNode.mTransformation;
@@ -616,7 +616,7 @@ namespace
 				numberOfVertices += assimpMesh.mNumVertices;
 
 				// Loop through all Assimp mesh faces
-				uint16_t *currentIndexBuffer = indexBuffer + numberOfIndices;
+				uint32_t *currentIndexBuffer = indexBuffer + numberOfIndices;
 				for (uint32_t j = 0; j < assimpMesh.mNumFaces; ++j)
 				{
 					// Get the Assimp face
@@ -625,8 +625,8 @@ namespace
 					// Loop through all indices of the Assimp face and set our indices
 					for (uint32_t assimpIndex = 0; assimpIndex < assimpFace.mNumIndices; ++assimpIndex, ++currentIndexBuffer)
 					{
-						//					  Assimp mesh vertex index									Where the Assimp mesh starts within the our vertex buffer
-						*currentIndexBuffer = static_cast<uint16_t>(assimpFace.mIndices[assimpIndex] + starVertex);
+						//					  Assimp mesh vertex index			 Where the Assimp mesh starts within the our vertex buffer
+						*currentIndexBuffer = assimpFace.mIndices[assimpIndex] + starVertex;
 					}
 
 					// Update the number if processed indices
@@ -754,6 +754,11 @@ namespace RendererToolkit
 				uint32_t numberOfIndices = 0;
 				::detail::SubMeshes subMeshes;
 				::detail::getNumberOfVerticesAndIndicesRecursive(input, *assimpScene, *assimpScene->mRootNode, numberOfVertices, numberOfIndices, subMeshes);
+				if (subMeshes.size() > std::numeric_limits<uint16_t>::max())
+				{
+					throw std::runtime_error("The maximum number of supported sub-meshes is " + std::to_string(std::numeric_limits<uint16_t>::max()));
+				}
+				const Renderer::IndexBufferFormat::Enum indexBufferFormat = (numberOfVertices > std::numeric_limits<uint16_t>::max()) ? Renderer::IndexBufferFormat::UNSIGNED_INT : Renderer::IndexBufferFormat::UNSIGNED_SHORT;
 
 				// Is there an optional skeleton?
 				const Renderer::VertexAttributes& vertexAttributes = (numberOfBones > 0) ? RendererRuntime::MeshResource::SKINNED_VERTEX_ATTRIBUTES : RendererRuntime::MeshResource::VERTEX_ATTRIBUTES;
@@ -763,10 +768,10 @@ namespace RendererToolkit
 					RendererRuntime::v1Mesh::MeshHeader meshHeader;
 					meshHeader.numberOfBytesPerVertex	= numberOfBytesPerVertex;
 					meshHeader.numberOfVertices			= numberOfVertices;
-					meshHeader.indexBufferFormat		= Renderer::IndexBufferFormat::UNSIGNED_SHORT;	// TODO(co) Support of 32 bit indices if there are too many vertices
+					meshHeader.indexBufferFormat		= static_cast<uint8_t>(indexBufferFormat);
 					meshHeader.numberOfIndices			= numberOfIndices;
 					meshHeader.numberOfVertexAttributes = static_cast<uint8_t>(vertexAttributes.numberOfAttributes);
-					meshHeader.numberOfSubMeshes		= static_cast<uint8_t>(subMeshes.size());
+					meshHeader.numberOfSubMeshes		= static_cast<uint16_t>(subMeshes.size());
 					meshHeader.numberOfBones			= skeleton.numberOfBones;
 					memoryFile.write(&meshHeader, sizeof(RendererRuntime::v1Mesh::MeshHeader));
 				}
@@ -776,21 +781,36 @@ namespace RendererToolkit
 					// -> Do also initialize the vertex buffer data with zero to handle not filled vertex bone weights
 					uint8_t *vertexBufferData = new uint8_t[numberOfBytesPerVertex * numberOfVertices];
 					memset(vertexBufferData, 0, numberOfBytesPerVertex * numberOfVertices);
-					uint16_t *indexBufferData = new uint16_t[numberOfIndices];
+					uint32_t *indexBufferData = new uint32_t[numberOfIndices];
 
 					{ // Fill the mesh data recursively
 						uint32_t numberOfFilledVertices = 0;
 						uint32_t numberOfFilledIndices  = 0;
 						::detail::fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, skeleton, numberOfBytesPerVertex, vertexBufferData, indexBufferData, aiMatrix4x4(), numberOfFilledVertices, numberOfFilledIndices);
-
-						// TODO(co) ?
-						numberOfVertices = numberOfFilledVertices;
-						numberOfIndices  = numberOfFilledIndices;
+						if (numberOfVertices != numberOfFilledVertices || numberOfIndices != numberOfFilledIndices)
+						{
+							throw std::runtime_error("Error while recursively filling the mesh data");
+						}
 					}
 
 					// Write down the vertex and index buffer
 					memoryFile.write(vertexBufferData, numberOfBytesPerVertex * numberOfVertices);
-					memoryFile.write(indexBufferData, sizeof(uint16_t) * numberOfIndices);
+					if (Renderer::IndexBufferFormat::UNSIGNED_INT == indexBufferFormat)
+					{
+						// Dump the 32-bit indices we have in memory
+						memoryFile.write(indexBufferData, sizeof(uint32_t) * numberOfIndices);
+					}
+					else
+					{
+						// Convert the 32-bit indices we have in memory to 16-bit indices
+						uint16_t *shortIndexBufferData = new uint16_t[numberOfIndices];
+						for (uint32_t i = 0; i < numberOfIndices; ++i)
+						{
+							shortIndexBufferData[i] = static_cast<uint16_t>(indexBufferData[i]);
+						}
+						memoryFile.write(shortIndexBufferData, sizeof(uint16_t) * numberOfIndices);
+						delete [] shortIndexBufferData;
+					}
 
 					// Destroy local vertex and input buffer data
 					delete [] vertexBufferData;
