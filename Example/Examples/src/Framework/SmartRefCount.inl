@@ -35,14 +35,14 @@ SmartRefCount<AType>::SmartRefCount() :
 }
 
 template <class AType>
-SmartRefCount<AType>::SmartRefCount(AType *ptr) :
+SmartRefCount<AType>::SmartRefCount(AType* ptr) :
 	mPtr(nullptr)
 {
 	setPtr(ptr);
 }
 
 template <class AType>
-SmartRefCount<AType>::SmartRefCount(const SmartRefCount<AType> &ptr) :
+SmartRefCount<AType>::SmartRefCount(const SmartRefCount<AType>& ptr) :
 	mPtr(nullptr)
 {
 	setPtr(ptr.getPtr());
@@ -55,7 +55,7 @@ SmartRefCount<AType>::~SmartRefCount()
 }
 
 template <class AType>
-SmartRefCount<AType> &SmartRefCount<AType>::operator =(AType *ptr)
+SmartRefCount<AType>& SmartRefCount<AType>::operator =(AType* ptr)
 {
 	if (getPointer() != ptr)
 	{
@@ -65,7 +65,7 @@ SmartRefCount<AType> &SmartRefCount<AType>::operator =(AType *ptr)
 }
 
 template <class AType>
-SmartRefCount<AType> &SmartRefCount<AType>::operator =(const SmartRefCount<AType> &ptr)
+SmartRefCount<AType>& SmartRefCount<AType>::operator =(const SmartRefCount<AType>& ptr)
 {
 	if (getPointer() != ptr.getPointer())
 	{
@@ -75,13 +75,13 @@ SmartRefCount<AType> &SmartRefCount<AType>::operator =(const SmartRefCount<AType
 }
 
 template <class AType>
-AType *SmartRefCount<AType>::getPointer() const
+AType* SmartRefCount<AType>::getPointer() const
 {
 	return mPtr ? static_cast<AType*>(mPtr->getPointer()) : nullptr;
 }
 
 template <class AType>
-AType *SmartRefCount<AType>::operator ->() const
+AType* SmartRefCount<AType>::operator ->() const
 {
 	return getPointer();
 }
@@ -99,25 +99,25 @@ bool SmartRefCount<AType>::operator !() const
 }
 
 template <class AType>
-bool SmartRefCount<AType>::operator ==(AType *ptr) const
+bool SmartRefCount<AType>::operator ==(AType* ptr) const
 {
 	return (getPointer() == ptr);
 }
 
 template <class AType>
-bool SmartRefCount<AType>::operator ==(const SmartRefCount<AType> &ptr) const
+bool SmartRefCount<AType>::operator ==(const SmartRefCount<AType>& ptr) const
 {
 	return (getPointer() == ptr.getPointer());
 }
 
 template <class AType>
-bool SmartRefCount<AType>::operator !=(AType *ptr) const
+bool SmartRefCount<AType>::operator !=(AType* ptr) const
 {
 	return (getPointer() != ptr);
 }
 
 template <class AType>
-bool SmartRefCount<AType>::operator !=(const SmartRefCount<AType> &ptr) const
+bool SmartRefCount<AType>::operator !=(const SmartRefCount<AType>& ptr) const
 {
 	return (getPointer() != ptr.getPointer());
 }
@@ -127,7 +127,7 @@ bool SmartRefCount<AType>::operator !=(const SmartRefCount<AType> &ptr) const
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 template <class AType>
-void SmartRefCount<AType>::setPtr(AType *ptr)
+void SmartRefCount<AType>::setPtr(AType* ptr)
 {
 	// Release old pointer
 	if (nullptr != mPtr)
@@ -144,7 +144,7 @@ void SmartRefCount<AType>::setPtr(AType *ptr)
 }
 
 template <class AType>
-AType *SmartRefCount<AType>::getPtr() const
+AType* SmartRefCount<AType>::getPtr() const
 {
 	// Return pointer
 	return mPtr;

@@ -377,8 +377,8 @@ namespace RendererRuntime
 		*/
 		inline IRendererRuntime();
 
-		explicit IRendererRuntime(const IRendererRuntime &source) = delete;
-		IRendererRuntime &operator =(const IRendererRuntime &source) = delete;
+		explicit IRendererRuntime(const IRendererRuntime& source) = delete;
+		IRendererRuntime& operator =(const IRendererRuntime& source) = delete;
 
 
 	//[-------------------------------------------------------]

@@ -35,14 +35,14 @@ SmartPtr<AType>::SmartPtr() :
 }
 
 template <class AType>
-SmartPtr<AType>::SmartPtr(AType *ptr) :
+SmartPtr<AType>::SmartPtr(AType* ptr) :
 	mPtr(nullptr)
 {
 	setPtr(ptr);
 }
 
 template <class AType>
-SmartPtr<AType>::SmartPtr(const SmartPtr<AType> &ptr) :
+SmartPtr<AType>::SmartPtr(const SmartPtr<AType>& ptr) :
 	mPtr(nullptr)
 {
 	setPtr(ptr.getPtr());
@@ -55,7 +55,7 @@ SmartPtr<AType>::~SmartPtr()
 }
 
 template <class AType>
-SmartPtr<AType> &SmartPtr<AType>::operator =(AType *ptr)
+SmartPtr<AType>& SmartPtr<AType>::operator =(AType* ptr)
 {
 	if (getPointer() != ptr)
 	{
@@ -65,7 +65,7 @@ SmartPtr<AType> &SmartPtr<AType>::operator =(AType *ptr)
 }
 
 template <class AType>
-SmartPtr<AType> &SmartPtr<AType>::operator =(const SmartPtr<AType> &ptr)
+SmartPtr<AType>& SmartPtr<AType>::operator =(const SmartPtr<AType>& ptr)
 {
 	if (getPointer() != ptr.getPointer())
 	{
@@ -75,13 +75,13 @@ SmartPtr<AType> &SmartPtr<AType>::operator =(const SmartPtr<AType> &ptr)
 }
 
 template <class AType>
-AType *SmartPtr<AType>::getPointer() const
+AType* SmartPtr<AType>::getPointer() const
 {
 	return mPtr ? mPtr->getPointer() : nullptr;
 }
 
 template <class AType>
-AType *SmartPtr<AType>::operator ->() const
+AType* SmartPtr<AType>::operator ->() const
 {
 	return getPointer();
 }
@@ -99,25 +99,25 @@ bool SmartPtr<AType>::operator !() const
 }
 
 template <class AType>
-bool SmartPtr<AType>::operator ==(AType *ptr) const
+bool SmartPtr<AType>::operator ==(AType* ptr) const
 {
 	return (getPointer() == ptr);
 }
 
 template <class AType>
-bool SmartPtr<AType>::operator ==(const SmartPtr<AType> &ptr) const
+bool SmartPtr<AType>::operator ==(const SmartPtr<AType>& ptr) const
 {
 	return (getPointer() == ptr.getPointer());
 }
 
 template <class AType>
-bool SmartPtr<AType>::operator !=(AType *ptr) const
+bool SmartPtr<AType>::operator !=(AType* ptr) const
 {
 	return (getPointer() != ptr);
 }
 
 template <class AType>
-bool SmartPtr<AType>::operator !=(const SmartPtr<AType> &ptr) const
+bool SmartPtr<AType>::operator !=(const SmartPtr<AType>& ptr) const
 {
 	return (getPointer() != ptr.getPointer());
 }
@@ -127,14 +127,14 @@ bool SmartPtr<AType>::operator !=(const SmartPtr<AType> &ptr) const
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 template <class AType>
-void SmartPtr<AType>::setPtr(void *ptr)
+void SmartPtr<AType>::setPtr(void* ptr)
 {
 	// Create a reference counter for the object, then assign it
 	setPtr(ptr ? new RefCountPtr<AType>(static_cast<AType*>(ptr)) : static_cast<RefCount<AType>*>(nullptr));
 }
 
 template <class AType>
-void SmartPtr<AType>::setPtr(RefCount<AType> *ptr)
+void SmartPtr<AType>::setPtr(RefCount<AType>* ptr)
 {
 	// Release old pointer
 	if (nullptr != mPtr)
@@ -151,7 +151,7 @@ void SmartPtr<AType>::setPtr(RefCount<AType> *ptr)
 }
 
 template <class AType>
-RefCount<AType> *SmartPtr<AType>::getPtr() const
+RefCount<AType>* SmartPtr<AType>::getPtr() const
 {
 	// Return pointer
 	return mPtr;

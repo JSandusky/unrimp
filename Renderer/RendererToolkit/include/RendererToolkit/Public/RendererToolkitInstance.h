@@ -114,11 +114,11 @@ namespace RendererToolkit
 					if (nullptr != mRendererToolkitSharedLibrary)
 					{
 						// Get the "createRendererToolkitInstance()" function pointer
-						void *symbol = ::GetProcAddress(static_cast<HMODULE>(mRendererToolkitSharedLibrary), "createRendererToolkitInstance");
+						void* symbol = ::GetProcAddress(static_cast<HMODULE>(mRendererToolkitSharedLibrary), "createRendererToolkitInstance");
 						if (nullptr != symbol)
 						{
 							// "createRendererToolkitInstance()" signature
-							typedef RendererToolkit::IRendererToolkit *(__cdecl *createRendererToolkitInstance)(RendererRuntime::IFileManager& fileManager);
+							typedef RendererToolkit::IRendererToolkit* (__cdecl *createRendererToolkitInstance)(RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer toolkit instance
 							mRendererToolkit = static_cast<createRendererToolkitInstance>(symbol)(fileManager);
@@ -146,11 +146,11 @@ namespace RendererToolkit
 					if (nullptr != mRendererToolkitSharedLibrary)
 					{
 						// Get the "createRendererToolkitInstance()" function pointer
-						void *symbol = dlsym(mRendererToolkitSharedLibrary, "createRendererToolkitInstance");
+						void* symbol = dlsym(mRendererToolkitSharedLibrary, "createRendererToolkitInstance");
 						if (nullptr != symbol)
 						{
 							// "createRendererToolkitInstance()" signature
-							typedef RendererToolkit::IRendererToolkit *(*createRendererToolkitInstance)(RendererRuntime::IFileManager& fileManager);
+							typedef RendererToolkit::IRendererToolkit* (*createRendererToolkitInstance)(RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer toolkit instance
 							mRendererToolkit = reinterpret_cast<createRendererToolkitInstance>(symbol)(fileManager);
@@ -214,7 +214,7 @@ namespace RendererToolkit
 		*  @remarks
 		*    The renderer toolkit instance, can be a null pointer
 		*/
-		inline RendererToolkit::IRendererToolkit *getRendererToolkit() const
+		inline RendererToolkit::IRendererToolkit* getRendererToolkit() const
 		{
 			return mRendererToolkit;
 		}
@@ -224,8 +224,8 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void								 *mRendererToolkitSharedLibrary;	///< Renderer toolkit shared library, can be a null pointer
-		RendererToolkit::IRendererToolkitPtr  mRendererToolkit;					///< Renderer toolkit instance, can be a null pointer
+		void*								 mRendererToolkitSharedLibrary;	///< Renderer toolkit shared library, can be a null pointer
+		RendererToolkit::IRendererToolkitPtr mRendererToolkit;				///< Renderer toolkit instance, can be a null pointer
 
 
 	};

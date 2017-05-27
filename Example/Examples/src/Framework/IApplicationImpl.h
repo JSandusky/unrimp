@@ -132,8 +132,8 @@ protected:
 	*/
 	explicit IApplicationImpl(IApplication& application);
 
-	explicit IApplicationImpl(const IApplicationImpl &source) = delete;
-	IApplicationImpl &operator =(const IApplicationImpl &source) = delete;
+	explicit IApplicationImpl(const IApplicationImpl& source) = delete;
+	IApplicationImpl& operator =(const IApplicationImpl& source) = delete;
 
 
 //[-------------------------------------------------------]

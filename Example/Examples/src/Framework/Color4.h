@@ -113,13 +113,13 @@ public:
 	*  @return
 	*    Reference to this instance
 	*/
-	inline Color4 &operator =(const Color4 &source);
+	inline Color4& operator =(const Color4& source);
 
 	//[-------------------------------------------------------]
 	//[ Assignment operators                                  ]
 	//[-------------------------------------------------------]
-	inline operator float *();
-	inline operator const float *() const;
+	inline operator float* ();
+	inline operator const float* () const;
 
 
 };

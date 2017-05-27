@@ -202,6 +202,8 @@ namespace
 
 		static const uint16_t TEXTURE_FORMAT_VERSION = 0;
 
+		typedef std::vector<std::string> Filenames;
+
 
 		//[-------------------------------------------------------]
 		//[ Global variables                                      ]
@@ -658,13 +660,13 @@ namespace
 			}
 		}
 
-		std::vector<std::string> getCubemapFilenames(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const std::string& basePath)
+		Filenames getCubemapFilenames(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const std::string& basePath)
 		{
 			const rapidjson::Value& rapidJsonValueInputFiles = rapidJsonValueTextureAssetCompiler["InputFiles"];
 			static const std::array<std::string, 6> FACE_NAMES = { "PositiveX", "NegativeX", "NegativeY", "PositiveY", "PositiveZ", "NegativeZ" };
 
 			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
-			std::vector<std::string> filenames;
+			Filenames filenames;
 			filenames.reserve(6);
 			for (size_t faceIndex = 0; faceIndex < FACE_NAMES.size(); ++faceIndex)
 			{
@@ -679,7 +681,7 @@ namespace
 			{
 				// A cube map has six source files (for each face one source), so check if any of the six files has been changed
 				// -> "inputAssetFilename" specifies the base directory of the faces source files
-				const std::vector<std::string> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, inputAssetFilename);
+				const Filenames faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, inputAssetFilename);
 				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
 				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
 				{
@@ -708,7 +710,7 @@ namespace
 				}
 
 				// Setup a list of source files
-				std::vector<std::string> inputFilenames;
+				Filenames inputFilenames;
 				if (!inputAssetFilename.empty())
 				{
 					inputFilenames.emplace_back(inputAssetFilename);
@@ -732,7 +734,7 @@ namespace
 			else if (TextureSemantic::PACKED_CHANNELS == textureSemantic)
 			{
 				const rapidjson::Value& rapidJsonValueInputFiles = rapidJsonValueTextureAssetCompiler["InputFiles"];
-				std::vector<std::string> filenames;
+				Filenames filenames;
 				filenames.reserve(rapidJsonValueInputFiles.MemberCount());
 				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorInputFile = rapidJsonValueInputFiles.MemberBegin(); rapidJsonMemberIteratorInputFile != rapidJsonValueInputFiles.MemberEnd(); ++rapidJsonMemberIteratorInputFile)
 				{
@@ -768,7 +770,7 @@ namespace
 		void loadCubeCrunchMipmappedTexture(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, crnlib::mipmapped_texture& crunchMipmappedTexture)
 		{
 			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
-			const std::vector<std::string> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, basePath);
+			const Filenames faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, basePath);
 			for (size_t faceIndex = 0; faceIndex < faceFilenames.size(); ++faceIndex)
 			{
 				// Load the 2D source image

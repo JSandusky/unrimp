@@ -108,8 +108,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit RendererRuntimeImpl(const RendererRuntimeImpl &source) = delete;
-		RendererRuntimeImpl &operator =(const RendererRuntimeImpl &source) = delete;
+		explicit RendererRuntimeImpl(const RendererRuntimeImpl& source) = delete;
+		RendererRuntimeImpl& operator =(const RendererRuntimeImpl& source) = delete;
 
 
 	//[-------------------------------------------------------]

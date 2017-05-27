@@ -98,8 +98,8 @@ public:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
-	explicit BatchInstancedArrays(const BatchInstancedArrays &source) = delete;
-	BatchInstancedArrays &operator =(const BatchInstancedArrays &source) = delete;
+	explicit BatchInstancedArrays(const BatchInstancedArrays& source) = delete;
+	BatchInstancedArrays& operator =(const BatchInstancedArrays& source) = delete;
 
 
 //[-------------------------------------------------------]

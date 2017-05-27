@@ -206,7 +206,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		explicit IContext(const IContext &source);
+		explicit IContext(const IContext& source);
 
 		/**
 		*  @brief
@@ -224,7 +224,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    Reference to this instance
 		*/
-		IContext &operator =(const IContext &source);
+		IContext& operator =(const IContext& source);
 
 
 	//[-------------------------------------------------------]

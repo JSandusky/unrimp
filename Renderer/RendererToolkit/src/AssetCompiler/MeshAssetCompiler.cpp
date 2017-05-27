@@ -467,7 +467,7 @@ namespace
 		*  @param[out] numberOfIndices
 		*    Receives the number of processed indices
 		*/
-		void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, const Skeleton& skeleton, uint8_t numberOfBytesPerVertex, uint8_t *vertexBuffer, uint32_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
+		void fillMeshRecursive(const aiScene& assimpScene, const aiNode& assimpNode, const Skeleton& skeleton, uint8_t numberOfBytesPerVertex, uint8_t* vertexBuffer, uint32_t* indexBuffer, const aiMatrix4x4& assimpTransformation, uint32_t& numberOfVertices, uint32_t& numberOfIndices)
 		{
 			// Get the absolute transformation matrix of this Assimp node
 			const aiMatrix4x4 currentAssimpTransformation = assimpTransformation * assimpNode.mTransformation;
@@ -569,7 +569,7 @@ namespace
 					memset(numberOfWeightsPerVertex.data(), 0, sizeof(uint8_t) * assimpMesh.mNumVertices);
 
 					// Loop through the Assimp bones
-					uint8_t *currentVertexBuffer = vertexBuffer + numberOfVertices * numberOfBytesPerVertex;
+					uint8_t* currentVertexBuffer = vertexBuffer + numberOfVertices * numberOfBytesPerVertex;
 					for (unsigned int bone = 0; bone < assimpMesh.mNumBones; ++bone)
 					{
 						const aiBone* assimpBone = assimpMesh.mBones[bone];
@@ -616,11 +616,11 @@ namespace
 				numberOfVertices += assimpMesh.mNumVertices;
 
 				// Loop through all Assimp mesh faces
-				uint32_t *currentIndexBuffer = indexBuffer + numberOfIndices;
+				uint32_t* currentIndexBuffer = indexBuffer + numberOfIndices;
 				for (uint32_t j = 0; j < assimpMesh.mNumFaces; ++j)
 				{
 					// Get the Assimp face
-					const aiFace &assimpFace = assimpMesh.mFaces[j];
+					const aiFace& assimpFace = assimpMesh.mFaces[j];
 
 					// Loop through all indices of the Assimp face and set our indices
 					for (uint32_t assimpIndex = 0; assimpIndex < assimpFace.mNumIndices; ++assimpIndex, ++currentIndexBuffer)
@@ -779,9 +779,9 @@ namespace RendererToolkit
 				{ // Vertex and index buffer data
 					// Allocate memory for the local vertex and index buffer data
 					// -> Do also initialize the vertex buffer data with zero to handle not filled vertex bone weights
-					uint8_t *vertexBufferData = new uint8_t[numberOfBytesPerVertex * numberOfVertices];
+					uint8_t* vertexBufferData = new uint8_t[numberOfBytesPerVertex * numberOfVertices];
 					memset(vertexBufferData, 0, numberOfBytesPerVertex * numberOfVertices);
-					uint32_t *indexBufferData = new uint32_t[numberOfIndices];
+					uint32_t* indexBufferData = new uint32_t[numberOfIndices];
 
 					{ // Fill the mesh data recursively
 						uint32_t numberOfFilledVertices = 0;
@@ -803,7 +803,7 @@ namespace RendererToolkit
 					else
 					{
 						// Convert the 32-bit indices we have in memory to 16-bit indices
-						uint16_t *shortIndexBufferData = new uint16_t[numberOfIndices];
+						uint16_t* shortIndexBufferData = new uint16_t[numberOfIndices];
 						for (uint32_t i = 0; i < numberOfIndices; ++i)
 						{
 							shortIndexBufferData[i] = static_cast<uint16_t>(indexBufferData[i]);

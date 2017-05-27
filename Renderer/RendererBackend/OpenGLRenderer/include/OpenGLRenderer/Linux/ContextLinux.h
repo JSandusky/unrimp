@@ -111,8 +111,8 @@ namespace OpenGLRenderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit ContextLinux(const ContextLinux &source) = delete;
-		ContextLinux &operator =(const ContextLinux &source) = delete;
+		explicit ContextLinux(const ContextLinux& source) = delete;
+		ContextLinux& operator =(const ContextLinux& source) = delete;
 
 		/**
 		*  @brief
