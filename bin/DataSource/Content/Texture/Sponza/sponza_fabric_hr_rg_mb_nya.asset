@@ -21,7 +21,8 @@
 				"ROUGHNESS_MAP": "Sponza_Fabric_roughness.png",
 				"METALLIC_MAP": "Sponza_Fabric_metallic.png",
 				"NORMAL_MAP": "Sponza_Fabric_normal.png"
-			}
+			},
+			"ToksvigSpecularAntiAliasing": "FALSE"
 		}
 	}
 }

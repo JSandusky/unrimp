@@ -20,7 +20,8 @@
 			{
 				"ROUGHNESS_MAP": "Sponza_Bricks_a_Roughness.png",
 				"NORMAL_MAP": "Sponza_Bricks_a_Normal.png"
-			}
+			},
+			"ToksvigSpecularAntiAliasing": "FALSE"
 		}
 	}
 }

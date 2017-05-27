@@ -323,6 +323,13 @@ namespace
 			}
 		}
 
+		bool isToksvigSpecularAntiAliasingEnabled(const rapidjson::Value& rapidJsonValueTextureAssetCompiler)
+		{
+			bool toksvigSpecularAntiAliasing = true;
+			RendererToolkit::JsonHelper::optionalBooleanProperty(rapidJsonValueTextureAssetCompiler, "ToksvigSpecularAntiAliasing", toksvigSpecularAntiAliasing);
+			return toksvigSpecularAntiAliasing;
+		}
+
 
 		//[-------------------------------------------------------]
 		//[ Global classes                                        ]
@@ -526,6 +533,8 @@ namespace
 
 			void loadSourceCrunchMipmappedTextures(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceNormalMapFilename)
 			{
+				const bool toksvigSpecularAntiAliasing = isToksvigSpecularAntiAliasingEnabled(rapidJsonValueTextureAssetCompiler);
+
 				// Load provided source textures
 				const rapidjson::Value& rapidJsonValueInputFiles = rapidJsonValueTextureAssetCompiler["InputFiles"];
 				if (rapidJsonValueInputFiles.MemberCount() == 0)
@@ -541,7 +550,7 @@ namespace
 						{
 							// Support for Toksvig specular anti-aliasing to reduce shimmering
 							std::string usedSourceNormalMapFilename;
-							if (textureSemantic == TextureSemantic::ROUGHNESS_MAP)
+							if (textureSemantic == TextureSemantic::ROUGHNESS_MAP && toksvigSpecularAntiAliasing)
 							{
 								// Search for normal map
 								usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, sourceNormalMapFilename, rapidJsonValueInputFiles);
@@ -566,22 +575,25 @@ namespace
 				}
 
 				// Support for Toksvig specular anti-aliasing to reduce shimmering: Handle case if no roughness map to adjust was provided
-				for (Source& source : mSources)
+				if (toksvigSpecularAntiAliasing)
 				{
-					if (source.textureSemantic == TextureSemantic::ROUGHNESS_MAP)
+					for (Source& source : mSources)
 					{
-						if (!source.crunchMipmappedTexture.is_valid())
+						if (source.textureSemantic == TextureSemantic::ROUGHNESS_MAP)
 						{
-							// Search for normal map
-							const std::string usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, sourceNormalMapFilename, rapidJsonValueInputFiles);
-							if (!usedSourceNormalMapFilename.empty())
+							if (!source.crunchMipmappedTexture.is_valid())
 							{
-								// Load Crunch mipmapped texture
-								crnlib::texture_conversion::convert_params crunchConvertParams;
-								load2DCrunchMipmappedTexture(nullptr, usedSourceNormalMapFilename.c_str(), source.crunchMipmappedTexture, crunchConvertParams);
+								// Search for normal map
+								const std::string usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, sourceNormalMapFilename, rapidJsonValueInputFiles);
+								if (!usedSourceNormalMapFilename.empty())
+								{
+									// Load Crunch mipmapped texture
+									crnlib::texture_conversion::convert_params crunchConvertParams;
+									load2DCrunchMipmappedTexture(nullptr, usedSourceNormalMapFilename.c_str(), source.crunchMipmappedTexture, crunchConvertParams);
+								}
 							}
+							break;
 						}
-						break;
 					}
 				}
 
@@ -870,6 +882,10 @@ namespace
 			}
 			else
 			{
+				if (!isToksvigSpecularAntiAliasingEnabled(rapidJsonValueTextureAssetCompiler))
+				{
+					sourceNormalMapFilename = nullptr;
+				}
 				load2DCrunchMipmappedTexture(sourceFilename, sourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
 			}
 
@@ -1213,7 +1229,6 @@ namespace RendererToolkit
 		{
 			throw std::runtime_error("Providing a normal map is only valid for roughness maps or packed channels");
 		}
-		// TODO(co) Need a log for this: Quality warning in case it's a roughness map but no normal map is provided. No error, but chances are high that there will be nasty visible specular aliasing issues.
 
 		// Get output related settings
 		std::string outputAssetFilename;

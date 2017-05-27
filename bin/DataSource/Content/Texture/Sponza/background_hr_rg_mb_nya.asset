@@ -20,7 +20,8 @@
 			{
 				"ROUGHNESS_MAP": "Background_Roughness.png",
 				"NORMAL_MAP": "Background_Normal.png"
-			}
+			},
+			"ToksvigSpecularAntiAliasing": "FALSE"
 		}
 	}
 }
