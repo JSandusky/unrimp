@@ -17,15 +17,11 @@
 		"Properties":
 		{
 			"CullMode": "NONE",
-			"UseDiffuseMap": "TRUE",
-			"DiffuseMap": "Texture/Sponza/sponza_thorn_diff.asset",
+			"_drgb_nxa": "Texture/Sponza/sponza_thorn_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "Texture/Sponza/sponza_thorn_hr_rg_mb_nya.asset",
 			"UseAlphaMap": "TRUE",
 			"AlphaMap": "Texture/Sponza/sponza_thorn_mask.asset",
-			"AlphaReference": "0.2",
-			"UseNormalMap": "TRUE",
-			"NormalMap": "Texture/Sponza/sponza_thorn_ddn.asset",
-			"UseRoughnessMap": "TRUE",
-			"RoughnessMap": "Texture/Sponza/sponza_thorn_spec.asset"
+			"AlphaReference": "0.2"
 		}
 	}
 }

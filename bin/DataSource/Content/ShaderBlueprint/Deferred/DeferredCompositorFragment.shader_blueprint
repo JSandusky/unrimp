@@ -19,18 +19,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
-@includepiece(ShaderPiece/Color.asset)
-@includepiece(ShaderPiece/TangentFrame.asset)
-@includepiece(ShaderPiece/PhysicallyBasedShading.asset)
-
-
-//[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/Core.asset)
+	@insertpiece(SetCrossPlatformSettings)
 
 
 //[-------------------------------------------------------]
@@ -99,20 +91,19 @@ TEXTURE_3D_UINT(LightClustersMap3D, 8)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@insertpiece(DefineCalculateFoggedColor)
-@insertpiece(DefineGetTangentFrame)
-@property(HighQualityLighting)
-	@insertpiece(DefinePhysicallyBasedShading)
-@end
-@property(!HighQualityLighting)
-	@insertpiece(DefineBlinnPhongBasedShading)
-@end
-
-// TODO(co) Make this to a shader piece
-float GetLinearDepth(float depth)
-{
-	return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
-}
+@includepiece(ShaderPiece/Color.asset)
+	@insertpiece(DefineCalculateFoggedColor)
+@includepiece(ShaderPiece/TangentFrame.asset)
+	@insertpiece(DefineGetTangentFrame)
+@includepiece(ShaderPiece/PhysicallyBasedShading.asset)
+	@property(HighQualityLighting)
+		@insertpiece(DefinePhysicallyBasedShading)
+	@end
+	@property(!HighQualityLighting)
+		@insertpiece(DefineBlinnPhongBasedShading)
+	@end
+@includepiece(ShaderPiece/Depth.asset)
+	@insertpiece(DefineGetLinearDepth)
 
 float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depth, float screenSpaceAmbientOcclusion)
 {

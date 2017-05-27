@@ -97,7 +97,7 @@ namespace RendererToolkit
 
 		// Open the input file
 		const std::string inputFilename = assetInputDirectory + inputFile;
-		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
+		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".shader_piece";
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)

@@ -373,7 +373,7 @@ namespace RendererRuntime
 											passBufferManager = materialBlueprintResource->getPassBufferManager();
 											if (nullptr != passBufferManager)
 											{
-												passBufferManager->fillBuffer(renderTarget, compositorContextData);
+												passBufferManager->fillBuffer(renderTarget, compositorContextData, *materialResource);
 												enforcePassBufferManagerFillBuffer = false;
 											}
 										}

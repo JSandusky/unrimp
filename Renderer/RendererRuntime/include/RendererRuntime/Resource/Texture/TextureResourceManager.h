@@ -80,6 +80,8 @@ namespace RendererRuntime
 	*    - "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D"
+	*    - "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D"
+	*    - "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D"
 	*/
 	class TextureResourceManager : public ResourceManager<TextureResource>
 	{

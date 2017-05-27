@@ -19,15 +19,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
-
-
-//[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/Core.asset)
+	@insertpiece(SetCrossPlatformSettings)
 
 
 //[-------------------------------------------------------]
@@ -77,24 +72,10 @@ TEXTURE_2D(SsaoNoise4x4Map, 3)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-// TODO(co) Make this to a shader piece
-float GetLinearDepth(float depth)
-{
-	return PassData.ProjectionParameters.y / (depth - PassData.ProjectionParameters.x);
-}
+@includepiece(ShaderPiece/Depth.asset)
+	@insertpiece(DefineGetLinearDepth)
+	@insertpiece(DefineGetDepthFromDepthMap)
 
-// TODO(co) Make this to a shader piece
-float GetDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
-{
-	@property(NumberOfMultisamples)
-		return SAMPLE_DEPTH_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex);
-	@end
-	@property(!NumberOfMultisamples)
-		return SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f));
-	@end
-}
-
-// TODO(co) Make this to a shader piece
 float3 GetNormalFromNormalMap(float2 textureCoordinate, int sampleIndex)
 {
 	@property(NumberOfMultisamples)
@@ -162,31 +143,11 @@ MAIN_BEGIN
 	float3 viewRay = normalize(MAIN_INPUT(ViewRayVS));
 
 	// Calculate SSAO
-	@property(NumberOfMultisamples)
-		// Complex pixel detection
-		float sum;
-		if (0 != SAMPLE_2D_MS(NormalMap, int2(MAIN_INPUT(TexCoordVS) * (1.0f / PassData.InverseViewportSize)), 0).a)
-		{
-			// Custom MSAA resolve
-			sum = 0.0f;
-			@foreach(NumberOfMultisamples, i, 0)
-			{
-				sum += CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), @i);
-			}
-			@end
-			sum /= @value(NumberOfMultisamples);
-		}
-		else
-		{
-			sum = CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), 0);
-		}
-	@end
-	@property(!NumberOfMultisamples)
-		float sum = CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), 0);
-	@end
+	// -> No complex pixel detection since it doesn't make a notable visual difference here
+	float sum = CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), 0);
 
 	// Increase SSAO strength to make it more visible
-	sum = pow(sum, 4.0f);	// TODO(co) "PassData"
+	sum = pow(sum, 4.0f);
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(sum, sum, sum, sum);

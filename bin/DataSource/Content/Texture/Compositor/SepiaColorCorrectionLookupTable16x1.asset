@@ -10,7 +10,6 @@
 		{
 			"AssetType": "Texture",
 			"AssetCategory": "Compositor",
-			"AssetName": "SepiaColorCorrectionLookupTable16x1",
 			"Description": "16x1 Sepia color correction lookup table"
 		},
 		"TextureAssetCompiler":

@@ -19,16 +19,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
-@includepiece(ShaderPiece/TangentFrame.asset)
-
-
-//[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/Core.asset)
+	@insertpiece(SetCrossPlatformSettings)
 
 
 //[-------------------------------------------------------]
@@ -84,7 +78,8 @@ TEXTURE_BUFFER(float4, InstanceTextureBuffer, 0)	// "POSITION_ROTATION_SCALE"
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@insertpiece(DefineGetTangentFrame)
+@includepiece(ShaderPiece/TangentFrame.asset)
+	@insertpiece(DefineGetTangentFrame)
 
 
 //[-------------------------------------------------------]

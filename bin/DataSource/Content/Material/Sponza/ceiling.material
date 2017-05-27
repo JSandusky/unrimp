@@ -16,10 +16,8 @@
 		},
 		"Properties":
 		{
-			"UseDiffuseMap": "TRUE",
-			"DiffuseMap": "Texture/Sponza/sponza_ceiling_a_diff.asset",
-			"UseRoughnessMap": "TRUE",
-			"RoughnessMap": "Texture/Sponza/sponza_ceiling_a_spec.asset"
+			"_drgb_nxa": "Texture/Sponza/sponza_ceiling_a_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "Texture/Sponza/sponza_ceiling_a_hr_rg_mb_nya.asset"
 		}
 	}
 }

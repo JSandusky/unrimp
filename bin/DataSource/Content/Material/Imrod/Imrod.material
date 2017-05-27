@@ -17,15 +17,11 @@
 		"Properties":
 		{
 			"DiffuseColor": "1.0 1.0 1.0",
-			"UseDiffuseMap": "TRUE",
-			"DiffuseMap": "Texture/Imrod/Imrod_d.asset",
+			"_drgb_nxa": "Texture/Imrod/Imrod_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "Texture/Imrod/Imrod_hr_rg_mb_nya.asset",
 			"UseEmissiveMap": "TRUE",
 			"EmissiveMap": "Texture/Imrod/Imrod_e.asset",
-			"EmissiveIntensity": "10.0",
-			"UseNormalMap": "TRUE",
-			"NormalMap": "Texture/Imrod/Imrod_n.asset",
-			"UseRoughnessMap": "TRUE",
-			"RoughnessMap": "Texture/Imrod/Imrod_r.asset"
+			"EmissiveIntensity": "10.0"
 		}
 	}
 }

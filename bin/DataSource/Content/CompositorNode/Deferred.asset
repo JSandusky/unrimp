@@ -10,7 +10,6 @@
 		{
 			"AssetType": "CompositorNode",
 			"AssetCategory": "Default",
-			"AssetName": "Deferred",
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team",
 			"Description": "Deferred rendering compositor node"
 		},

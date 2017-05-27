@@ -6,6 +6,91 @@
 	},
 	"Targets":
 	{
+		"TextureChannelPackings":
+		{
+			"_drgb_nxa":
+			{
+				"Sources":
+				[
+					{
+						"TextureSemantic": "DIFFUSE_MAP",
+						"NumberOfChannels": 3,
+						"DefaultColor": "0.0 0.0 0.0"
+					},
+					{
+						"TextureSemantic": "NORMAL_MAP",
+						"NumberOfChannels": 3,
+						"DefaultColor": "0.5 0.5 1.0"
+					}
+				],
+				"Destinations":
+				[
+					{
+						"TextureSemantic": "DIFFUSE_MAP",
+						"SourceChannel": 0
+					},
+					{
+						"TextureSemantic": "DIFFUSE_MAP",
+						"SourceChannel": 1
+					},
+					{
+						"TextureSemantic": "DIFFUSE_MAP",
+						"SourceChannel": 2
+					},
+					{
+						"TextureSemantic": "NORMAL_MAP",
+						"SourceChannel": 0
+					}
+				],
+				"RgbHardwareGammaCorrection": "TRUE"
+			},
+			"_hr_rg_mb_nya":
+			{
+				"Sources":
+				[
+					{
+						"TextureSemantic": "HEIGHT_MAP",
+						"NumberOfChannels": 1,
+						"DefaultColor": "0.0"
+					},
+					{
+						"TextureSemantic": "ROUGHNESS_MAP",
+						"NumberOfChannels": 1,
+						"DefaultColor": "1.0"
+					},
+					{
+						"TextureSemantic": "METALLIC_MAP",
+						"NumberOfChannels": 1,
+						"DefaultColor": "0.0"
+					},
+					{
+						"TextureSemantic": "NORMAL_MAP",
+						"NumberOfChannels": 3,
+						"DefaultColor": "0.5 0.5 1.0"
+					}
+				],
+				"Destinations":
+				[
+					{
+						"TextureSemantic": "HEIGHT_MAP",
+						"SourceChannel": 0
+					},
+					{
+						"TextureSemantic": "ROUGHNESS_MAP",
+						"SourceChannel": 0
+					},
+					{
+						"TextureSemantic": "METALLIC_MAP",
+						"SourceChannel": 0
+					},
+					{
+						"TextureSemantic": "NORMAL_MAP",
+						"SourceChannel": 1
+					}
+				],
+				"RgbHardwareGammaCorrection": "FALSE"
+			}
+		},
 		"TextureTargets":
 		{
 			"PcLegacy":

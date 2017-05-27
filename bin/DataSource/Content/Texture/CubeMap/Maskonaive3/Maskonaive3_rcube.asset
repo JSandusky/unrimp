@@ -10,19 +10,21 @@
 		{
 			"AssetType": "Texture",
 			"AssetCategory": "CubeMap",
-			"AssetName": "Maskonaive3_rcube",
 			"Copyright": "Måskonåive 3 cube map by Emil Persson - 'Creative Commons Attribution 3.0 Unported License' - http://humus.name/index.php?page=Textures&start=56 - http://humus.name/Textures/Maskonaive3.zip "
 		},
 		"TextureAssetCompiler":
 		{
-			"Description": "Increase mipmap blurriness, used for physically based shading (PBS) roughness",
 			"TextureSemantic": "REFLECTION_CUBE_MAP",
-			"PositiveXInputFile": "posx.jpg",
-			"NegativeXInputFile": "negx.jpg",
-			"PositiveYInputFile": "posy.jpg",
-			"NegativeYInputFile": "negy.jpg",
-			"PositiveZInputFile": "posz.jpg",
-			"NegativeZInputFile": "negz.jpg",
+			"InputFiles":
+			{
+				"PositiveX": "posx.jpg",
+				"NegativeX": "negx.jpg",
+				"PositiveY": "posy.jpg",
+				"NegativeY": "negy.jpg",
+				"PositiveZ": "posz.jpg",
+				"NegativeZ": "negz.jpg"
+			},
+			"Description": "Increase mipmap blurriness, used for physically based shading (PBS) roughness",
 			"MipmapBlurriness": "4.0"
 		}
 	}

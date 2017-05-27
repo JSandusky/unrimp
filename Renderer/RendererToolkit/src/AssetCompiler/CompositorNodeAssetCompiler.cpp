@@ -519,7 +519,7 @@ namespace RendererToolkit
 
 		// Open the input file
 		const std::string inputFilename = assetInputDirectory + inputFile;
-		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
+		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".compositor_node";
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
@@ -577,6 +577,8 @@ namespace RendererToolkit
 					renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"));
 					renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D"));
 					renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D"));
+					renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D"));
+					renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D"));
 					renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D"));
 					renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D"));
 					renderTargetTextureAssetIds.insert(StringHelper::getAssetIdByString("Unrimp/Texture/DynamicByCode/SsaoSampleKernel"));

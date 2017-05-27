@@ -1,0 +1,26 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetType": "Texture",
+			"AssetCategory": "Scene",
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+		},
+		"TextureAssetCompiler":
+		{
+			"TextureSemantic": "PACKED_CHANNELS",
+			"TextureChannelPacking": "_hr_rg_mb_nya",
+			"InputFiles":
+			{
+				"ROUGHNESS_MAP": "sponza_column_a_spec.tga",
+				"NORMAL_MAP": "sponza_column_a_ddn.tga"
+			}
+		}
+	}
+}

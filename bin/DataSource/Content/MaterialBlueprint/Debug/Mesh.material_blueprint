@@ -46,20 +46,12 @@
 				"Description": "Use GPU skinning?",
 				"VisualImportance": "MANDATORY"
 			},
-			"UseDiffuseMap":
-			{
-				"Usage": "SHADER_COMBINATION",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use diffuse map?",
-				"VisualImportance": "100"
-			},
-			"DiffuseMap":
+			"_drgb_nxa":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
-				"Description": "2D material diffuse map. Also known as base color or albedo. Raw color with no lighting information. Small amount of ambient occlusion can be baked in if using it for micro-surface occlusion. For a metal-rough-worfkow, the color range for dark values should stay within 30-50 RGB. Never have dark values below 30 RGB. The brightest color value should not go above 240 RGB. With metal/rough, the areas indicated as metal in the metallic map have a corresponding metal reflectance value in the base color map. The metal reflectance value in the base color needs to be a measured real-world value. Transitional areas in the metal map (not raw metal 1.0 white) need to have the metal reflectance value lowered to indicate that its reflectance value is not raw metal."
+				"Value": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
+				"Description": "RGB channel = Diffuse map ('_d'-postfix), A channel = x component of normal map ('_n'-postfix)"
 			}
 		},
 		"RootSignature":
@@ -144,7 +136,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "DiffuseMap",
+							"BaseShaderRegisterName": "_drgb_nxa",
 							"SamplerRootParameterIndex": "4"
 						}
 					},
@@ -231,12 +223,12 @@
 			},
 			"Textures":
 			{
-				"DiffuseMap":
+				"_drgb_nxa":
 				{
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DiffuseMap",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
+					"Value": "@_drgb_nxa",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
 					"RgbHardwareGammaCorrection": "TRUE"
 				}
 			}

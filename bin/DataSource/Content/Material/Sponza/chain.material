@@ -16,12 +16,10 @@
 		},
 		"Properties":
 		{
-			"UseDiffuseMap": "TRUE",
-			"DiffuseMap": "Texture/Sponza/chain_texture.asset",
-			"UseNormalMap": "TRUE",
-			"NormalMap": "Texture/Sponza/chain_texture_mask.asset",
-			"UseRoughnessMap": "TRUE",
-			"RoughnessMap": "Texture/Sponza/chain_texture_ddn.asset"
+			"_drgb_nxa": "Texture/Sponza/chain_texture_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "Texture/Sponza/chain_texture_hr_rg_mb_nya.asset",
+			"UseAlphaMap": "TRUE",
+			"AlphaMap": "Texture/Sponza/chain_texture_mask.asset"
 		}
 	}
 }

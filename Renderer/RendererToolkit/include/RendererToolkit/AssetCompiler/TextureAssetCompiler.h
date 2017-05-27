@@ -62,6 +62,23 @@ namespace RendererToolkit
 	*    REFLECTION_2D_MAP                _r2d       rgb          Yes     Reflection 2D map
 	*    REFLECTION_CUBE_MAP              _rcube     rgb          Yes     Reflection cube map
 	*    COLOR_CORRECTION_LOOKUP_TABLE    _lut       rgb          No      Color correction lookup table
+	*
+	*
+	*   == Texture Channel Packing ==
+	*   To be as memory efficient as possible during runtime, the texture compiler supports texture channel packing. Meaning for example that the luminance roughness, metallic and height maps are not
+	*   used as individual textures during runtime, but are packed into a single texture. The recommended texture asset naming scheme is as following: "<texture name><semantic postfix><optional source component><channel>"
+	*
+	*   Using the texture semantics as specified in the table above here are more concrete examples and how to read them:
+	*   - "<texture name>_drgb_nxa", e.g. "stone_drgb_nxa"
+	*     - RGB channel = Diffuse map ("_d"-postfix)
+	*     - A channel   = x component of normal map ("_n"-postfix)
+	*   - "<texture name>_hr_rg_mb_nya", e.g. "stone_hr_rg_mb_nya"
+	*     - R channel = Height map ("_h"-postfix)
+	*     - G channel = Roughness map ("_r"-postfix)
+	*     - B channel = Metallic map ("_m"-postfix)
+	*     - A channel = y component of normal map ("_n"-postfix)
+	*
+	*   The rest of the textures are not getting packed since those are more special and not that often used textures.
 	*/
 	class TextureAssetCompiler : public IAssetCompiler
 	{

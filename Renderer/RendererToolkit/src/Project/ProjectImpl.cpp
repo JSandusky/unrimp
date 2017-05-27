@@ -241,7 +241,7 @@ namespace RendererToolkit
 		}
 		catch (const std::exception& e)
 		{
-			throw std::runtime_error("Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\" and ID " + std::to_string(asset.assetId) + ": " + std::string(e.what()));
+			throw std::runtime_error("Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\": " + std::string(e.what()));
 		}
 	}
 
@@ -453,8 +453,8 @@ namespace RendererToolkit
 			// Get the relevant asset metadata parts
 			const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
 			const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
-			const std::string assetName = rapidJsonValueAssetMetadata["AssetName"].GetString();
-			
+			const std::string assetName = std_filesystem::path(asset.assetFilename).stem().generic_string();
+
 			// Construct the asset ID as string
 			const std::string compiledAssetIdAsString = mProjectName + '/' + assetType + '/' + assetCategory + '/' + assetName;
 

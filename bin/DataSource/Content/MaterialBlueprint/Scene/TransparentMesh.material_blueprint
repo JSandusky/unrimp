@@ -54,19 +54,19 @@
 				"Description": "Use GPU skinning?",
 				"VisualImportance": "MANDATORY"
 			},
-			"UseDiffuseMap":
-			{
-				"Usage": "UNKNOWN",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use diffuse map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a diffuse map."
-			},
-			"DiffuseMap":
+			"_drgb_nxa":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
-				"Description": "2D material diffuse map. Also known as base color or albedo. Raw color with no lighting information. Small amount of ambient occlusion can be baked in if using it for micro-surface occlusion. For a metal-rough-worfkow, the color range for dark values should stay within 30-50 RGB. Never have dark values below 30 RGB. The brightest color value should not go above 240 RGB. With metal/rough, the areas indicated as metal in the metallic map have a corresponding metal reflectance value in the base color map. The metal reflectance value in the base color needs to be a measured real-world value. Transitional areas in the metal map (not raw metal 1.0 white) need to have the metal reflectance value lowered to indicate that its reflectance value is not raw metal."
+				"Value": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
+				"Description": "RGB channel = Diffuse map ('_d'-postfix), A channel = x component of normal map ('_n'-postfix)"
+			},
+			"_hr_rg_mb_nya":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D",
+				"Description": "R channel = Height map ('_h'-postfix), G channel = Roughness map ('_r'-postfix), B channel = Metallic map ('_m'-postfix), A channel = y component of normal map ('_n'-postfix)"
 			},
 			"UseAlphaMap":
 			{
@@ -114,48 +114,6 @@
 				"ValueType": "FLOAT",
 				"Value": "1.0",
 				"Description": "Material emissive intensity, has only an effect if there's an emissive map"
-			},
-			"UseNormalMap":
-			{
-				"Usage": "UNKNOWN",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use normal map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a normal map."
-			},
-			"NormalMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",
-				"Description": "2D material tangent space BC5/3DC/ATI2N stored normal map"
-			},
-			"UseRoughnessMap":
-			{
-				"Usage": "UNKNOWN",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use roughness map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a roughness map."
-			},
-			"RoughnessMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D",
-				"Description": "2D material roughness map = 1 - gloss map. Metal-rough-worfkow: Describes the microsurface of the object. White 1.0 is rough and black 0.0 is smooth. The microsurface if rough can cause the light rays to scatter and make the highlight appear dimmer and more broad. The same amount of light energy is reflected going out as coming into the surface. This map has the most artistic freedom. There is no wrong answers here. This map gives the asset the most character as it truly describes the surface e.g. scratches, fingerprints, smudges, grime etc."
-			},
-			"UseMetallicMap":
-			{
-				"Usage": "UNKNOWN",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use metallic map? Property added for consistency and it should always be edited. No shader combination property to avoid shader combination explosion. Usually there's always a metallic map."
-			},
-			"MetallicMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D",
-				"Description": "2D material metallic map. Metal-rough-worfkow: Tells the shader if something is metal or not. Raw Metal = 1.0 white and non metal = 0.0 black. There can be transitional gray values that indicate something covering the raw metal such as dirt. With metal/rough, you only have control over metal reflectance values. The dielectric values are set to 0.04 or 4% which is most dielectric materials."
 			},
 			"ReflectionCubeMap":
 			{
@@ -301,7 +259,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "DiffuseMap",
+							"BaseShaderRegisterName": "_drgb_nxa",
 							"SamplerRootParameterIndex": "6"
 						}
 					},
@@ -316,7 +274,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
-							"BaseShaderRegisterName": "AlphaMap",
+							"BaseShaderRegisterName": "_hr_rg_mb_nya",
 							"SamplerRootParameterIndex": "6"
 						}
 					},
@@ -331,7 +289,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "4",
-							"BaseShaderRegisterName": "EmissiveMap",
+							"BaseShaderRegisterName": "AlphaMap",
 							"SamplerRootParameterIndex": "6"
 						}
 					},
@@ -346,7 +304,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "5",
-							"BaseShaderRegisterName": "NormalMap",
+							"BaseShaderRegisterName": "EmissiveMap",
 							"SamplerRootParameterIndex": "6"
 						}
 					},
@@ -361,8 +319,8 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "6",
-							"BaseShaderRegisterName": "RoughnessMap",
-							"SamplerRootParameterIndex": "6"
+							"BaseShaderRegisterName": "ShadowMap",
+							"SamplerRootParameterIndex": "5"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -376,7 +334,7 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "7",
-							"BaseShaderRegisterName": "MetallicMap",
+							"BaseShaderRegisterName": "ReflectionCubeMap",
 							"SamplerRootParameterIndex": "6"
 						}
 					},
@@ -391,36 +349,6 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "8",
-							"BaseShaderRegisterName": "ShadowMap",
-							"SamplerRootParameterIndex": "5"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"14":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "9",
-							"BaseShaderRegisterName": "ReflectionCubeMap",
-							"SamplerRootParameterIndex": "6"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"15":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "10",
 							"BaseShaderRegisterName": "LightClustersMap3D",
 							"SamplerRootParameterIndex": "5"
 						}
@@ -612,13 +540,20 @@
 			},
 			"Textures":
 			{
-				"DiffuseMap":
+				"_drgb_nxa":
 				{
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DiffuseMap",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",
+					"Value": "@_drgb_nxa",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
 					"RgbHardwareGammaCorrection": "TRUE"
+				},
+				"_hr_rg_mb_nya":
+				{
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@_hr_rg_mb_nya",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D"
 				},
 				"AlphaMap":
 				{
@@ -634,27 +569,6 @@
 					"Value": "@EmissiveMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",
 					"RgbHardwareGammaCorrection": "TRUE"
-				},
-				"NormalMap":
-				{
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@NormalMap",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
-				},
-				"RoughnessMap":
-				{
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@RoughnessMap",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
-				},
-				"MetallicMap":
-				{
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@MetallicMap",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D"
 				},
 				"ShadowMap":
 				{

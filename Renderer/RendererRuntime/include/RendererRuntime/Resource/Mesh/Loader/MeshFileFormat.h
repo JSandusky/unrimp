@@ -57,7 +57,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("Mesh");
-		static const uint32_t FORMAT_VERSION = 2;
+		static const uint32_t FORMAT_VERSION = 3;
 
 		#pragma pack(push)
 		#pragma pack(1)
@@ -70,7 +70,7 @@ namespace RendererRuntime
 				uint32_t numberOfIndices;
 				uint8_t  numberOfVertexAttributes;
 				// Sub-meshes
-				uint8_t  numberOfSubMeshes;
+				uint16_t numberOfSubMeshes;
 				// Optional skeleton
 				uint8_t  numberOfBones;
 			};
