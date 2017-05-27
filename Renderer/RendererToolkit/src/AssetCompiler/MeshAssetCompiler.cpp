@@ -38,6 +38,7 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator 'FORCE_32BIT' in switch of enum 'aiMetadataType' is not explicitly handled by a case label
 	#include <assimp/scene.h>
 	#include <assimp/Importer.hpp>
+	#include <assimp/DefaultLogger.hpp>
 	#include <assimp/postprocess.h>
 PRAGMA_WARNING_POP
 
@@ -148,6 +149,55 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Classes                                               ]
 		//[-------------------------------------------------------]
+		class AssimpLogStream : public Assimp::LogStream
+		{
+
+
+		//[-------------------------------------------------------]
+		//[ Public data                                           ]
+		//[-------------------------------------------------------]
+		public:
+			inline const std::string& getLastErrorMessage() const
+			{
+				return mLastErrorMessage;
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Public methods                                        ]
+		//[-------------------------------------------------------]
+		public:
+			AssimpLogStream()
+			{
+				// Nothing here
+			}
+
+			virtual ~AssimpLogStream()
+			{
+				// Nothing here
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Public virtual Assimp::LogStream methods              ]
+		//[-------------------------------------------------------]
+		public:
+			virtual void write(const char* message) override
+			{
+				mLastErrorMessage = message;
+				throw std::runtime_error(message);
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Private data                                          ]
+		//[-------------------------------------------------------]
+		private:
+			std::string mLastErrorMessage;
+
+
+		};
+
 		class Skeleton
 		{
 
@@ -675,6 +725,11 @@ namespace RendererToolkit
 			mikktspace::g_MikkTSpaceContext.m_pInterface = &mikkTSpaceInterface;
 			mikktspace::g_MikkTSpaceContext.m_pUserData  = nullptr;
 
+			// Startup Assimp logging
+			::detail::AssimpLogStream assimpLogStream;
+			Assimp::DefaultLogger::create("", Assimp::Logger::NORMAL, aiDefaultLogStream_DEBUGGER);
+			Assimp::DefaultLogger::get()->attachStream(&assimpLogStream, Assimp::DefaultLogger::Err);
+
 			// Create an instance of the Assimp importer class
 			Assimp::Importer assimpImporter;
 			// assimpImporter.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4);	// We're using the "aiProcess_LimitBoneWeights"-flag, 4 is already the default value (don't delete this reminder comment)
@@ -766,7 +821,7 @@ namespace RendererToolkit
 			}
 			else
 			{
-				throw std::runtime_error("Assimp failed to load in the given mesh");
+				throw std::runtime_error("Assimp failed to load in the given mesh: " + assimpLogStream.getLastErrorMessage());
 			}
 
 			// Write LZ4 compressed output
@@ -774,6 +829,10 @@ namespace RendererToolkit
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
+
+			// Shutdown Assimp logging
+			Assimp::DefaultLogger::get()->detatchStream(&assimpLogStream, Assimp::DefaultLogger::Err);
+			Assimp::DefaultLogger::kill();
 		}
 
 		{ // Update the output asset package

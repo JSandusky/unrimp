@@ -241,7 +241,7 @@ namespace RendererToolkit
 		}
 		catch (const std::exception& e)
 		{
-			throw std::runtime_error("Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\" and ID " + std::to_string(asset.assetId) + ": " + std::string(e.what()));
+			throw std::runtime_error("Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\": " + std::string(e.what()));
 		}
 	}
 
