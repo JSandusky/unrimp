@@ -39,6 +39,7 @@ PRAGMA_WARNING_PUSH
 	#include <assimp/scene.h>
 	#include <assimp/Importer.hpp>
 	#include <assimp/postprocess.h>
+	#include <assimp/DefaultLogger.hpp>
 PRAGMA_WARNING_POP
 
 // Disable warnings in external headers, we can't fix them
@@ -49,6 +50,75 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Classes                                               ]
+		//[-------------------------------------------------------]
+		class AssimpLogStream : public Assimp::LogStream
+		{
+
+
+		//[-------------------------------------------------------]
+		//[ Public data                                           ]
+		//[-------------------------------------------------------]
+		public:
+			inline const std::string& getLastErrorMessage() const
+			{
+				return mLastErrorMessage;
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Public methods                                        ]
+		//[-------------------------------------------------------]
+		public:
+			AssimpLogStream()
+			{
+				// Nothing here
+			}
+
+			virtual ~AssimpLogStream()
+			{
+				// Nothing here
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Public virtual Assimp::LogStream methods              ]
+		//[-------------------------------------------------------]
+		public:
+			virtual void write(const char* message) override
+			{
+				mLastErrorMessage = message;
+				throw std::runtime_error(message);
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Private data                                          ]
+		//[-------------------------------------------------------]
+		private:
+			std::string mLastErrorMessage;
+
+
+		};
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -116,6 +186,11 @@ namespace RendererToolkit
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, cacheEntries))
 		{
 			RendererRuntime::MemoryFile memoryFile(0, 4096);
+
+			// Startup Assimp logging
+			::detail::AssimpLogStream assimpLogStream;
+			Assimp::DefaultLogger::create("", Assimp::Logger::NORMAL, aiDefaultLogStream_DEBUGGER);
+			Assimp::DefaultLogger::get()->attachStream(&assimpLogStream, Assimp::DefaultLogger::Err);
 
 			// Create an instance of the Assimp importer class
 			Assimp::Importer assimpImporter;
@@ -240,12 +315,20 @@ namespace RendererToolkit
 					}
 				}
 			}
+			else
+			{
+				throw std::runtime_error("Assimp failed to load in the given skeleton: " + assimpLogStream.getLastErrorMessage());
+			}
 
 			// Write LZ4 compressed output
 			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1SkeletonAnimation::FORMAT_TYPE, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, outputAssetFilename, input.fileManager);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
+
+			// Shutdown Assimp logging
+			Assimp::DefaultLogger::get()->detatchStream(&assimpLogStream, Assimp::DefaultLogger::Err);
+			Assimp::DefaultLogger::kill();
 		}
 
 		{ // Update the output asset package

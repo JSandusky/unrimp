@@ -38,8 +38,8 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator 'FORCE_32BIT' in switch of enum 'aiMetadataType' is not explicitly handled by a case label
 	#include <assimp/scene.h>
 	#include <assimp/Importer.hpp>
-	#include <assimp/DefaultLogger.hpp>
 	#include <assimp/postprocess.h>
+	#include <assimp/DefaultLogger.hpp>
 PRAGMA_WARNING_POP
 
 #include <mikktspace/mikktspace.h>
