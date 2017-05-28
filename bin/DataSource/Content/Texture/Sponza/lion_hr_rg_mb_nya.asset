@@ -20,8 +20,7 @@
 			{
 				"ROUGHNESS_MAP": "Lion_Roughness.png",
 				"NORMAL_MAP": "Lion_Normal.png"
-			},
-			"ToksvigSpecularAntiAliasing": "FALSE"
+			}
 		}
 	}
 }

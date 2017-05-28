@@ -20,8 +20,7 @@
 			{
 				"ROUGHNESS_MAP": "Sponza_Thorn_roughness.png",
 				"NORMAL_MAP": "Sponza_Thorn_normal.png"
-			},
-			"ToksvigSpecularAntiAliasing": "FALSE"
+			}
 		}
 	}
 }

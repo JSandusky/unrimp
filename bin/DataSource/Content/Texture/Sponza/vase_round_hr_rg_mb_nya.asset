@@ -20,8 +20,7 @@
 			{
 				"ROUGHNESS_MAP": "VaseRound_roughness.png",
 				"NORMAL_MAP": "VaseRound_normal.png"
-			},
-			"ToksvigSpecularAntiAliasing": "FALSE"
+			}
 		}
 	}
 }

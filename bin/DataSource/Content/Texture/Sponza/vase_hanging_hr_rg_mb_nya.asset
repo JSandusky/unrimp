@@ -21,8 +21,7 @@
 				"ROUGHNESS_MAP": "VaseHanging_roughness.png",
 				"METALLIC_MAP": "VaseHanging_metallic.png",
 				"NORMAL_MAP": "VaseHanging_normal.png"
-			},
-			"ToksvigSpecularAntiAliasing": "FALSE"
+			}
 		}
 	}
 }

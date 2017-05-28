@@ -21,8 +21,7 @@
 				"ROUGHNESS_MAP": "ChainTexture_Roughness.png",
 				"METALLIC_MAP": "ChainTexture_Metallic.png",
 				"NORMAL_MAP": "ChainTexture_Normal.png"
-			},
-			"ToksvigSpecularAntiAliasing": "FALSE"
+			}
 		}
 	}
 }

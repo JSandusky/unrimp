@@ -325,7 +325,7 @@ namespace
 
 		bool isToksvigSpecularAntiAliasingEnabled(const rapidjson::Value& rapidJsonValueTextureAssetCompiler)
 		{
-			bool toksvigSpecularAntiAliasing = true;
+			bool toksvigSpecularAntiAliasing = false;
 			RendererToolkit::JsonHelper::optionalBooleanProperty(rapidJsonValueTextureAssetCompiler, "ToksvigSpecularAntiAliasing", toksvigSpecularAntiAliasing);
 			return toksvigSpecularAntiAliasing;
 		}

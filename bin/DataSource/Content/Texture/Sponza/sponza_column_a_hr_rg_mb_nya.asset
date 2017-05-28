@@ -20,8 +20,7 @@
 			{
 				"ROUGHNESS_MAP": "Sponza_Column_a_roughness.png",
 				"NORMAL_MAP": "Sponza_Column_a_normal.png"
-			},
-			"ToksvigSpecularAntiAliasing": "FALSE"
+			}
 		}
 	}
 }

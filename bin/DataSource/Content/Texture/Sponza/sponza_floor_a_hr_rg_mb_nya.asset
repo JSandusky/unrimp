@@ -20,8 +20,7 @@
 			{
 				"ROUGHNESS_MAP": "Sponza_Floor_roughness.png",
 				"NORMAL_MAP": "Sponza_Floor_normal.png"
-			},
-			"ToksvigSpecularAntiAliasing": "FALSE"
+			}
 		}
 	}
 }
