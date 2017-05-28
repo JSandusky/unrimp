@@ -184,8 +184,12 @@ namespace
 		public:
 			virtual void write(const char* message) override
 			{
-				mLastErrorMessage = message;
-				throw std::runtime_error(message);
+				// Ignore "Error, T88896: Failed to compute tangents; need UV data in channel0" since some sub-meshes might have no texture coordinates, worth a hint but no error
+				if (nullptr != strstr(message, "Error, T88896: Failed to compute tangents; need UV data in channel0"))
+				{
+					mLastErrorMessage = message;
+					throw std::runtime_error(message);
+				}
 			}
 
 
@@ -480,10 +484,13 @@ namespace
 				aiMesh& assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
 
 				// Use "mikktspace" by Morten S. Mikkelsen for semi-standard tangent space generation and overwrite what Assimp calculated (see e.g. https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps for background information)
-				mikktspace::g_MikkTSpaceContext.m_pUserData = reinterpret_cast<void*>(&assimpMesh);
-				if (genTangSpaceDefault(&mikktspace::g_MikkTSpaceContext) == 0)
+				if (0 != assimpMesh.mNumUVComponents[0])
 				{
-					throw std::runtime_error("mikktspace for semi-standard tangent space generation failed");
+					mikktspace::g_MikkTSpaceContext.m_pUserData = reinterpret_cast<void*>(&assimpMesh);
+					if (genTangSpaceDefault(&mikktspace::g_MikkTSpaceContext) == 0)
+					{
+						throw std::runtime_error("mikktspace for semi-standard tangent space generation failed");
+					}
 				}
 
 				// Get the start vertex inside the our vertex buffer
@@ -512,7 +519,9 @@ namespace
 							currentVertex += sizeof(float) * 3;
 						}
 
-						{ // 32 bit texture coordinate
+						// 32 bit texture coordinate
+						if (0 != assimpMesh.mNumUVComponents[0])
+						{
 							// Get the Assimp mesh vertex texture coordinate
 							aiVector3D assimpTexCoord = assimpMesh.mTextureCoords[0][j];
 
@@ -523,14 +532,28 @@ namespace
 							*currentVertexBufferFloat = assimpTexCoord.y;
 							currentVertex += sizeof(float) * 2;
 						}
+						else
+						{
+							// Set our vertex buffer 32 bit texture coordinate
+							float* currentVertexBufferFloat = reinterpret_cast<float*>(currentVertex);
+							*currentVertexBufferFloat = 0.0f;
+							++currentVertexBufferFloat;
+							*currentVertexBufferFloat = 0.0f;
+							currentVertex += sizeof(float) * 2;
+						}
 
 						{ // 16 bit QTangent
 						  // - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 						  //   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
 							// Get the Assimp mesh vertex tangent, binormal and normal
-							aiVector3D tangent = assimpMesh.mTangents[j];
-							aiVector3D binormal = assimpMesh.mBitangents[j];
+							aiVector3D tangent(1.0f, 0.0f, 0.0f);
+							aiVector3D binormal(0.0f, 1.0f, 0.0f);
 							aiVector3D normal = assimpMesh.mNormals[j];
+							if (0 != assimpMesh.mNumUVComponents[0])
+							{
+								tangent = assimpMesh.mTangents[j];
+								binormal = assimpMesh.mBitangents[j];
+							}
 
 							// Transform the Assimp mesh vertex data into global space
 							tangent *= currentAssimpNormalTransformation;
