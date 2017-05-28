@@ -420,14 +420,14 @@ namespace RendererRuntime
 	MaterialBlueprintResource::MaterialBlueprintResource() :
 		mPipelineStateCacheManager(*this),
 		mPipelineState(Renderer::PipelineStateBuilder()),
+		mVertexAttributesResourceId(getUninitialized<ShaderBlueprintResourceId>()),
 		mPassUniformBuffer(nullptr),
 		mMaterialUniformBuffer(nullptr),
 		mInstanceUniformBuffer(nullptr),
 		mInstanceTextureBuffer(nullptr),
 		mLightTextureBuffer(nullptr),
 		mPassBufferManager(nullptr),
-		mMaterialBufferManager(nullptr),
-		mVertexAttributesResourceId(getUninitialized<ShaderBlueprintResourceId>())
+		mMaterialBufferManager(nullptr)
 	{
 		memset(mShaderBlueprintResourceId, static_cast<int>(getUninitialized<ShaderBlueprintResourceId>()), sizeof(ShaderBlueprintResourceId) * NUMBER_OF_SHADER_TYPES);
 	}
