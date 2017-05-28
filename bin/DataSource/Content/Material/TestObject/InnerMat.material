@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "MaterialAsset",
+		"Version": "1"
+	},
+	"MaterialAsset":
+	{
+		"Techniques":
+		{
+			"Default": "MaterialBlueprint/Debug/Mesh.asset",
+			"Debug": "MaterialBlueprint/Debug/Mesh.asset",
+			"Forward": "MaterialBlueprint/Forward/Mesh.asset",
+			"Deferred": "MaterialBlueprint/Deferred/Mesh.asset",
+			"DepthOnly": "MaterialBlueprint/Scene/DepthOnly.asset"
+		},
+		"Properties":
+		{
+			"DiffuseColor": "0.2 0.2 0.2",
+			"Roughness": "0.0",
+			"Metallic": "1.0"
+		}
+	}
+}

@@ -222,6 +222,21 @@
 						"Radius": "2.0"
 					}
 				}
+			},
+			"14":
+			{
+				"Properties":
+				{
+					"Rotation": "0.0 -145.0 0.0 DEGREES",
+					"Position": "6.0 0.47 2.0"
+				},
+				"Items":
+				{
+					"MeshSceneItem":
+					{
+						"Mesh": "Mesh/TestObject/testObj.asset"
+					}
+				}
 			}
 		}
 	}

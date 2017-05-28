@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/JsonHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -61,6 +62,13 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	void JsonHelper::parseDocumentByInputFileStream(rapidjson::Document& rapidJsonDocument, std::ifstream& inputFileStream, const std::string& inputFilename, const std::string& formatType, const std::string& formatVersion)
 	{
+		// Sanity check
+		if (!std_filesystem::exists(inputFilename))
+		{
+			throw std::runtime_error("Failed to parse JSON file \"" + inputFilename + "\": File doesn't exist");
+		}
+
+		// Load the JSON document
 		rapidjson::IStreamWrapper rapidJsonIStreamWrapper(inputFileStream);
 		const rapidjson::ParseResult rapidJsonParseResult = rapidJsonDocument.ParseStream(rapidJsonIStreamWrapper);
 		if (rapidJsonParseResult.Code() != rapidjson::kParseErrorNone)

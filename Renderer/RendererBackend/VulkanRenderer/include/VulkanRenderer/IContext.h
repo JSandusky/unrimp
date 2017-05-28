@@ -167,7 +167,7 @@ namespace VulkanRenderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		explicit IContext(const IContext &source) = delete;
+		explicit IContext(const IContext& source) = delete;
 
 		/**
 		*  @brief
@@ -179,7 +179,7 @@ namespace VulkanRenderer
 		*  @return
 		*    Reference to this instance
 		*/
-		IContext &operator =(const IContext &source) = delete;
+		IContext& operator =(const IContext& source) = delete;
 
 
 	//[-------------------------------------------------------]

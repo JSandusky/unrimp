@@ -147,7 +147,7 @@ MAIN_BEGIN
 	float sum = CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), 0);
 
 	// Increase SSAO strength to make it more visible
-	sum = pow(sum, 4.0f);
+	sum = pow(sum, 2.0f);
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(sum, sum, sum, sum);

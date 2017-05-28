@@ -1,0 +1,25 @@
+#
+#
+#
+
+newmtl Material/TestObject/InnerMat.asset
+Ka 0.100 .1000 0.1000 
+Kd 0.200 .2000 0.2000 
+Ks .300 .300 .300 
+Ns 8.0000
+
+newmtl Material/TestObject/LTELogo.asset
+Ka 0.100 .1000 0.1000 
+Kd 0.2500 .25000 0.25000 
+Ks .500 .500 .500 
+Ns 200.0000 
+sharpness 100
+
+newmtl Material/TestObject/OuterMat.asset
+Ka 0.1000 .0400 0.0100
+Kd 0.1000 .0400 0.0100 
+Ks 0.1000 .100 0.100 
+Ni 1.01
+Tf 0.7500 .920 0.9900
+Ns 10.0000 
+

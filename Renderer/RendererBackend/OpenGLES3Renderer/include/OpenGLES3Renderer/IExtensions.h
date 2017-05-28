@@ -92,8 +92,8 @@ namespace OpenGLES3Renderer
 		*/
 		IExtensions();
 
-		explicit IExtensions(const IExtensions &source) = delete;
-		IExtensions &operator =(const IExtensions &source) = delete;
+		explicit IExtensions(const IExtensions& source) = delete;
+		IExtensions& operator =(const IExtensions& source) = delete;
 
 
 	};

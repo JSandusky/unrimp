@@ -202,6 +202,8 @@ namespace
 
 		static const uint16_t TEXTURE_FORMAT_VERSION = 0;
 
+		typedef std::vector<std::string> Filenames;
+
 
 		//[-------------------------------------------------------]
 		//[ Global variables                                      ]
@@ -319,6 +321,13 @@ namespace
 				crunchMipmappedTexture.init(normalMapCrunchMipmappedTexture.get_width(), normalMapCrunchMipmappedTexture.get_height(), 1, 1, crnlib::PIXEL_FMT_L8, "Toksvig", crnlib::cDefaultOrientationFlags);
 				::toksvig::compositeToksvigRoughnessMap(*roughnessMapCrunchMipmappedTexture.get_level(0, 0), *normalMapCrunchMipmappedTexture.get_level(0, 0), *crunchMipmappedTexture.get_level(0, 0));
 			}
+		}
+
+		bool isToksvigSpecularAntiAliasingEnabled(const rapidjson::Value& rapidJsonValueTextureAssetCompiler)
+		{
+			bool toksvigSpecularAntiAliasing = false;
+			RendererToolkit::JsonHelper::optionalBooleanProperty(rapidJsonValueTextureAssetCompiler, "ToksvigSpecularAntiAliasing", toksvigSpecularAntiAliasing);
+			return toksvigSpecularAntiAliasing;
 		}
 
 
@@ -524,6 +533,8 @@ namespace
 
 			void loadSourceCrunchMipmappedTextures(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceNormalMapFilename)
 			{
+				const bool toksvigSpecularAntiAliasing = isToksvigSpecularAntiAliasingEnabled(rapidJsonValueTextureAssetCompiler);
+
 				// Load provided source textures
 				const rapidjson::Value& rapidJsonValueInputFiles = rapidJsonValueTextureAssetCompiler["InputFiles"];
 				if (rapidJsonValueInputFiles.MemberCount() == 0)
@@ -539,7 +550,7 @@ namespace
 						{
 							// Support for Toksvig specular anti-aliasing to reduce shimmering
 							std::string usedSourceNormalMapFilename;
-							if (textureSemantic == TextureSemantic::ROUGHNESS_MAP)
+							if (textureSemantic == TextureSemantic::ROUGHNESS_MAP && toksvigSpecularAntiAliasing)
 							{
 								// Search for normal map
 								usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, sourceNormalMapFilename, rapidJsonValueInputFiles);
@@ -564,22 +575,25 @@ namespace
 				}
 
 				// Support for Toksvig specular anti-aliasing to reduce shimmering: Handle case if no roughness map to adjust was provided
-				for (Source& source : mSources)
+				if (toksvigSpecularAntiAliasing)
 				{
-					if (source.textureSemantic == TextureSemantic::ROUGHNESS_MAP)
+					for (Source& source : mSources)
 					{
-						if (!source.crunchMipmappedTexture.is_valid())
+						if (source.textureSemantic == TextureSemantic::ROUGHNESS_MAP)
 						{
-							// Search for normal map
-							const std::string usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, sourceNormalMapFilename, rapidJsonValueInputFiles);
-							if (!usedSourceNormalMapFilename.empty())
+							if (!source.crunchMipmappedTexture.is_valid())
 							{
-								// Load Crunch mipmapped texture
-								crnlib::texture_conversion::convert_params crunchConvertParams;
-								load2DCrunchMipmappedTexture(nullptr, usedSourceNormalMapFilename.c_str(), source.crunchMipmappedTexture, crunchConvertParams);
+								// Search for normal map
+								const std::string usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, sourceNormalMapFilename, rapidJsonValueInputFiles);
+								if (!usedSourceNormalMapFilename.empty())
+								{
+									// Load Crunch mipmapped texture
+									crnlib::texture_conversion::convert_params crunchConvertParams;
+									load2DCrunchMipmappedTexture(nullptr, usedSourceNormalMapFilename.c_str(), source.crunchMipmappedTexture, crunchConvertParams);
+								}
 							}
+							break;
 						}
-						break;
 					}
 				}
 
@@ -658,13 +672,13 @@ namespace
 			}
 		}
 
-		std::vector<std::string> getCubemapFilenames(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const std::string& basePath)
+		Filenames getCubemapFilenames(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const std::string& basePath)
 		{
 			const rapidjson::Value& rapidJsonValueInputFiles = rapidJsonValueTextureAssetCompiler["InputFiles"];
 			static const std::array<std::string, 6> FACE_NAMES = { "PositiveX", "NegativeX", "NegativeY", "PositiveY", "PositiveZ", "NegativeZ" };
 
 			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
-			std::vector<std::string> filenames;
+			Filenames filenames;
 			filenames.reserve(6);
 			for (size_t faceIndex = 0; faceIndex < FACE_NAMES.size(); ++faceIndex)
 			{
@@ -679,7 +693,7 @@ namespace
 			{
 				// A cube map has six source files (for each face one source), so check if any of the six files has been changed
 				// -> "inputAssetFilename" specifies the base directory of the faces source files
-				const std::vector<std::string> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, inputAssetFilename);
+				const Filenames faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, inputAssetFilename);
 				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
 				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
 				{
@@ -708,7 +722,7 @@ namespace
 				}
 
 				// Setup a list of source files
-				std::vector<std::string> inputFilenames;
+				Filenames inputFilenames;
 				if (!inputAssetFilename.empty())
 				{
 					inputFilenames.emplace_back(inputAssetFilename);
@@ -732,7 +746,7 @@ namespace
 			else if (TextureSemantic::PACKED_CHANNELS == textureSemantic)
 			{
 				const rapidjson::Value& rapidJsonValueInputFiles = rapidJsonValueTextureAssetCompiler["InputFiles"];
-				std::vector<std::string> filenames;
+				Filenames filenames;
 				filenames.reserve(rapidJsonValueInputFiles.MemberCount());
 				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorInputFile = rapidJsonValueInputFiles.MemberBegin(); rapidJsonMemberIteratorInputFile != rapidJsonValueInputFiles.MemberEnd(); ++rapidJsonMemberIteratorInputFile)
 				{
@@ -768,7 +782,7 @@ namespace
 		void loadCubeCrunchMipmappedTexture(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, crnlib::mipmapped_texture& crunchMipmappedTexture)
 		{
 			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
-			const std::vector<std::string> faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, basePath);
+			const Filenames faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, basePath);
 			for (size_t faceIndex = 0; faceIndex < faceFilenames.size(); ++faceIndex)
 			{
 				// Load the 2D source image
@@ -868,6 +882,10 @@ namespace
 			}
 			else
 			{
+				if (!isToksvigSpecularAntiAliasingEnabled(rapidJsonValueTextureAssetCompiler))
+				{
+					sourceNormalMapFilename = nullptr;
+				}
 				load2DCrunchMipmappedTexture(sourceFilename, sourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
 			}
 
@@ -1211,7 +1229,6 @@ namespace RendererToolkit
 		{
 			throw std::runtime_error("Providing a normal map is only valid for roughness maps or packed channels");
 		}
-		// TODO(co) Need a log for this: Quality warning in case it's a roughness map but no normal map is provided. No error, but chances are high that there will be nasty visible specular aliasing issues.
 
 		// Get output related settings
 		std::string outputAssetFilename;

@@ -117,8 +117,8 @@ namespace RendererToolkit
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline explicit ProjectImpl(const ProjectImpl &source) = delete;
-		inline ProjectImpl &operator =(const ProjectImpl &source) = delete;
+		inline explicit ProjectImpl(const ProjectImpl& source) = delete;
+		inline ProjectImpl& operator =(const ProjectImpl& source) = delete;
 		void clear();
 		void readAssetPackageByDirectory(const std::string& directoryName);
 		void readTargetsByFilename(const std::string& filename);

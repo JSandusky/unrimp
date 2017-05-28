@@ -20,7 +20,8 @@
 			{
 				"ROUGHNESS_MAP": "Imrod_r.tga",
 				"NORMAL_MAP": "Imrod_n.tga"
-			}
+			},
+			"ToksvigSpecularAntiAliasing": "TRUE"
 		}
 	}
 }

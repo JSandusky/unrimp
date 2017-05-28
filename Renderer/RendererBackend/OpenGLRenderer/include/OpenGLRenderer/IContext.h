@@ -107,8 +107,8 @@ namespace OpenGLRenderer
 		*/
 		explicit IContext(OpenGLRuntimeLinking* openGLRuntimeLinking);
 
-		explicit IContext(const IContext &source) = delete;
-		IContext &operator =(const IContext &source) = delete;
+		explicit IContext(const IContext& source) = delete;
+		IContext& operator =(const IContext& source) = delete;
 
 		/**
 		*  @brief

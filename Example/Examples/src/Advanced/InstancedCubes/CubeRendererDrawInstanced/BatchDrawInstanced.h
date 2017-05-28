@@ -94,8 +94,8 @@ public:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
-	explicit BatchDrawInstanced(const BatchDrawInstanced &source) = delete;
-	BatchDrawInstanced &operator =(const BatchDrawInstanced &source) = delete;
+	explicit BatchDrawInstanced(const BatchDrawInstanced& source) = delete;
+	BatchDrawInstanced& operator =(const BatchDrawInstanced& source) = delete;
 
 
 //[-------------------------------------------------------]

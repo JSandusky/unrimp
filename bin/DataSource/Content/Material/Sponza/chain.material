@@ -16,6 +16,7 @@
 		},
 		"Properties":
 		{
+			"CullMode": "NONE",
 			"_drgb_nxa": "Texture/Sponza/chain_texture_drgb_nxa.asset",
 			"_hr_rg_mb_nya": "Texture/Sponza/chain_texture_hr_rg_mb_nya.asset",
 			"UseAlphaMap": "TRUE",

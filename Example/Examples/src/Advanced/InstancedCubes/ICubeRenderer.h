@@ -93,8 +93,8 @@ protected:
 	*/
 	ICubeRenderer();
 
-	explicit ICubeRenderer(const ICubeRenderer &source) = delete;
-	ICubeRenderer &operator =(const ICubeRenderer &source) = delete;
+	explicit ICubeRenderer(const ICubeRenderer& source) = delete;
+	ICubeRenderer& operator =(const ICubeRenderer& source) = delete;
 
 
 //[-------------------------------------------------------]

@@ -10,7 +10,7 @@
 		{
 			"AssetType": "Texture",
 			"AssetCategory": "Scene",
-			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads - 'Base color, Roughness and Metallic textures for Sponza' by Alexandre Pestana ( http://www.alexandre-pestana.com/pbr-textures-sponza/ )"
 		},
 		"TextureAssetCompiler":
 		{
@@ -18,7 +18,8 @@
 			"TextureChannelPacking": "_drgb_nxa",
 			"InputFiles":
 			{
-				"DIFFUSE_MAP": "sponza_roof_diff.tga"
+				"DIFFUSE_MAP": "Sponza_Roof_diffuse.png",
+				"NORMAL_MAP": "Sponza_Roof_normal.png"
 			}
 		}
 	}

@@ -73,7 +73,7 @@ namespace Renderer
 		inline explicit IIndexBuffer(IRenderer& renderer);
 
 		explicit IIndexBuffer(const IIndexBuffer& source) = delete;
-		IIndexBuffer &operator =(const IIndexBuffer& source) = delete;
+		IIndexBuffer& operator =(const IIndexBuffer& source) = delete;
 
 
 	};

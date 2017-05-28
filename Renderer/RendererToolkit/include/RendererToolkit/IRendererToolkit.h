@@ -85,8 +85,8 @@ namespace RendererToolkit
 		*/
 		inline IRendererToolkit();
 
-		explicit IRendererToolkit(const IRendererToolkit &source) = delete;
-		IRendererToolkit &operator =(const IRendererToolkit &source) = delete;
+		explicit IRendererToolkit(const IRendererToolkit& source) = delete;
+		IRendererToolkit& operator =(const IRendererToolkit& source) = delete;
 
 
 	};

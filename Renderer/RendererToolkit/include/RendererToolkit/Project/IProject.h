@@ -96,8 +96,8 @@ namespace RendererToolkit
 		*/
 		inline IProject();
 
-		explicit IProject(const IProject &source) = delete;
-		IProject &operator =(const IProject &source) = delete;
+		explicit IProject(const IProject& source) = delete;
+		IProject& operator =(const IProject& source) = delete;
 
 
 	};

@@ -93,8 +93,8 @@ namespace RendererToolkit
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline explicit RendererToolkitImpl(const RendererToolkitImpl &source) = delete;
-		inline RendererToolkitImpl &operator =(const RendererToolkitImpl &source) = delete;
+		inline explicit RendererToolkitImpl(const RendererToolkitImpl& source) = delete;
+		inline RendererToolkitImpl& operator =(const RendererToolkitImpl& source) = delete;
 
 
 	//[-------------------------------------------------------]

@@ -18,7 +18,7 @@
 			"TextureChannelPacking": "_drgb_nxa",
 			"InputFiles":
 			{
-				"DIFFUSE_MAP": "gi_flag.tga"
+				"DIFFUSE_MAP": "gi_flag.png"
 			}
 		}
 	}

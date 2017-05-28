@@ -86,11 +86,10 @@ private:
 	*  @param[in] cSource
 	*    Source to copy from
 	*/
-	CLocaleChanger(const CLocaleChanger &)
+	CLocaleChanger(const CLocaleChanger&)
 	{
 		// No implementation because the copy constructor is never used
 	}
-	
 
 	/**
 	*  @brief
@@ -102,7 +101,7 @@ private:
 	*  @return
 	*    Reference to this instance
 	*/
-	CLocaleChanger &operator =(const CLocaleChanger &)
+	CLocaleChanger& operator =(const CLocaleChanger&)
 	{
 		// No implementation because the copy operator is never used
 		return *this;

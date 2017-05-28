@@ -50,10 +50,10 @@ class X11Window
 public:
 	X11Window();
 	virtual ~X11Window();
-	virtual bool HandleEvent(XEvent &event);
+	virtual bool HandleEvent(XEvent& event);
 	void setTitle(const char *title);
 	void show();
-	void getWindowSize(int &width, int &height) const;
+	void getWindowSize(int& width, int& height) const;
 	void refresh();
 	Window winId() const { return mWindowId; }
 	bool isDestroyed() const { return mDestroyed; }
@@ -63,8 +63,8 @@ public:
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
-	X11Window(const X11Window &other);
-	virtual X11Window &operator=(const X11Window &other);
+	X11Window(const X11Window& other);
+	virtual X11Window& operator=(const X11Window& other);
 
 
 //[-------------------------------------------------------]

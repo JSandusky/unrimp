@@ -66,8 +66,8 @@ namespace RendererToolkit
 		virtual IProject* createProject() = 0;
 	protected:
 		IRendererToolkit();
-		explicit IRendererToolkit(const IRendererToolkit &source) = delete;
-		IRendererToolkit &operator =(const IRendererToolkit &source) = delete;
+		explicit IRendererToolkit(const IRendererToolkit& source) = delete;
+		IRendererToolkit& operator =(const IRendererToolkit& source) = delete;
 	};
 	typedef Renderer::SmartRefCount<IRendererToolkit> IRendererToolkitPtr;
 
@@ -83,8 +83,8 @@ namespace RendererToolkit
 		virtual void shutdownAssetMonitor() = 0;
 	protected:
 		IProject();
-		explicit IProject(const IProject &source) = delete;
-		IProject &operator =(const IProject &source) = delete;
+		explicit IProject(const IProject& source) = delete;
+		IProject& operator =(const IProject& source) = delete;
 	};
 	typedef Renderer::SmartRefCount<IProject> IProjectPtr;
 

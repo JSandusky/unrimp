@@ -234,17 +234,17 @@ protected:
 	*  @param[in] windowTitle
 	*    ASCII window title, can be a null pointer
 	*/
-	explicit IApplication(const char *windowTitle);
+	explicit IApplication(const char* windowTitle);
 
-	explicit IApplication(const IApplication &source) = delete;
-	IApplication &operator =(const IApplication &source) = delete;
+	explicit IApplication(const IApplication& source) = delete;
+	IApplication& operator =(const IApplication& source) = delete;
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	IApplicationImpl *mApplicationImpl;	///< Application implementation instance, always valid
+	IApplicationImpl* mApplicationImpl;	///< Application implementation instance, always valid
 
 
 };

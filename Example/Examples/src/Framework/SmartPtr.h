@@ -59,7 +59,7 @@ public:
 	*  @param[in] ptr
 	*    Direct pointer to initialize with, can be a null pointer
 	*/
-	explicit SmartPtr(AType *ptr);
+	explicit SmartPtr(AType* ptr);
 
 	/**
 	*  @brief
@@ -68,7 +68,7 @@ public:
 	*  @param[in] ptr
 	*    Smart pointer to initialize with
 	*/
-	explicit SmartPtr(const SmartPtr<AType> &ptr);
+	explicit SmartPtr(const SmartPtr<AType>& ptr);
 
 	/**
 	*  @brief
@@ -86,7 +86,7 @@ public:
 	*  @return
 	*    Reference to the smart pointer
 	*/
-	SmartPtr<AType> &operator =(AType *ptr);
+	SmartPtr<AType>& operator =(AType* ptr);
 
 	/**
 	*  @brief
@@ -98,7 +98,7 @@ public:
 	*  @return
 	*    Reference to the smart pointer
 	*/
-	SmartPtr<AType> &operator =(const SmartPtr<AType> &ptr);
+	SmartPtr<AType>& operator =(const SmartPtr<AType>& ptr);
 
 	/**
 	*  @brief
@@ -107,7 +107,7 @@ public:
 	*  @return
 	*    Pointer to the object, can be a null pointer
 	*/
-	AType *getPointer() const;
+	AType* getPointer() const;
 
 	/**
 	*  @brief
@@ -116,7 +116,7 @@ public:
 	*  @return
 	*    Pointer to the object, can be a null pointer
 	*/
-	AType *operator ->() const;
+	AType* operator ->() const;
 
 	/**
 	*  @brief
@@ -146,7 +146,7 @@ public:
 	*  @return
 	*    "true" if the two pointers are equal
 	*/
-	bool operator ==(AType *ptr) const;
+	bool operator ==(AType* ptr) const;
 
 	/**
 	*  @brief
@@ -158,7 +158,7 @@ public:
 	*  @return
 	*    "true" if the two pointers are equal
 	*/
-	bool operator ==(const SmartPtr<AType> &ptr) const;
+	bool operator ==(const SmartPtr<AType>& ptr) const;
 
 	/**
 	*  @brief
@@ -170,7 +170,7 @@ public:
 	*  @return
 	*    "true" if the two pointers are not equal
 	*/
-	bool operator !=(AType *ptr) const;
+	bool operator !=(AType* ptr) const;
 
 	/**
 	*  @brief
@@ -182,7 +182,7 @@ public:
 	*  @return
 	*    "true" if the two pointers are not equal
 	*/
-	bool operator !=(const SmartPtr<AType> &ptr) const;
+	bool operator !=(const SmartPtr<AType>& ptr) const;
 
 
 //[-------------------------------------------------------]
@@ -196,7 +196,7 @@ private:
 	*  @param[in] ptr
 	*    Pointer to assign, can be a null pointer
 	*/
-	void setPtr(void *ptr);
+	void setPtr(void* ptr);
 
 	/**
 	*  @brief
@@ -205,7 +205,7 @@ private:
 	*  @param[in] ptr
 	*    Pointer to assign, can be a null pointer
 	*/
-	void setPtr(RefCount<AType> *ptr);
+	void setPtr(RefCount<AType>* ptr);
 
 	/**
 	*  @brief
@@ -214,14 +214,14 @@ private:
 	*  @return
 	*    Pointer to the RefCount object, can be a null pointer
 	*/
-	RefCount<AType> *getPtr() const;
+	RefCount<AType>* getPtr() const;
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RefCount<AType> *mPtr; ///< Pointer to reference counter, can be a null pointer
+	RefCount<AType>* mPtr; ///< Pointer to reference counter, can be a null pointer
 
 
 };

@@ -87,7 +87,7 @@ namespace Renderer
 		inline IBuffer(ResourceType resourceType, IRenderer& renderer);
 
 		explicit IBuffer(const IBuffer& source) = delete;
-		IBuffer &operator =(const IBuffer& source) = delete;
+		IBuffer& operator =(const IBuffer& source) = delete;
 
 
 	};

@@ -74,6 +74,8 @@ UNIFORM_BUFFER_END
 struct Material
 {
 	float3 DiffuseColor;
+	float  Roughness;
+	float  Metallic;
 	float  AlphaReference;
 	float  EmissiveIntensity;
 };
@@ -139,8 +141,8 @@ MAIN_BEGIN
 
 	// Get diffuse, roughness and metallic
 	float3 diffuse = material.DiffuseColor * value_drgb_nxa.rgb;
-	float roughness = value_hr_rg_mb_nya.g;
-	float metallic = SATURATE(PassData.Wetness + value_hr_rg_mb_nya.b);
+	float roughness = material.Roughness * value_hr_rg_mb_nya.g;
+	float metallic = SATURATE(PassData.Wetness + material.Metallic + value_hr_rg_mb_nya.b);
 
 	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
 	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html

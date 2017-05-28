@@ -140,7 +140,7 @@ namespace RendererToolkit
 			const rapidjson::Value&    rapidJsonValueTargets;
 			std::string				   rendererTarget;
 			QualityStrategy			   qualityStrategy;
-			Configuration(const rapidjson::Document& _rapidJsonDocumentAsset, const rapidjson::Value& _rapidJsonValueTargets, const std::string &_rendererTarget, QualityStrategy _qualityStrategy) :
+			Configuration(const rapidjson::Document& _rapidJsonDocumentAsset, const rapidjson::Value& _rapidJsonValueTargets, const std::string& _rendererTarget, QualityStrategy _qualityStrategy) :
 				rapidJsonDocumentAsset(_rapidJsonDocumentAsset),
 				rapidJsonValueTargets(_rapidJsonValueTargets),
 				rendererTarget(_rendererTarget),

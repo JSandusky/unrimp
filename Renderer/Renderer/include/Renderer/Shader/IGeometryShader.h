@@ -73,7 +73,7 @@ namespace Renderer
 		inline explicit IGeometryShader(IRenderer& renderer);
 
 		explicit IGeometryShader(const IGeometryShader& source) = delete;
-		IGeometryShader &operator =(const IGeometryShader& source) = delete;
+		IGeometryShader& operator =(const IGeometryShader& source) = delete;
 
 
 	};
