@@ -400,6 +400,12 @@
 							"ValueType": "FLOAT_4_4",
 							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
 						},
+						"PreviousWorldSpaceToClipSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@PREVIOUS_WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
+						},
 						"ShadowMatrix":
 						{
 							"Usage": "PASS_REFERENCE",
@@ -465,6 +471,12 @@
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "INTEGER",
 							"Value": "@FULL_COVERAGE_MASK"
+						},
+						"ViewportSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@VIEWPORT_SIZE"
 						}
 					}
 				},

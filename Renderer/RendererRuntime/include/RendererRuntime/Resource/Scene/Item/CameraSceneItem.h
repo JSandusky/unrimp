@@ -97,7 +97,9 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		// World space to view space matrix (Aka "view matrix")
 		RENDERERRUNTIME_API_EXPORT const Transform& getWorldSpaceToViewSpaceTransform() const;
+		RENDERERRUNTIME_API_EXPORT const Transform& getPreviousWorldSpaceToViewSpaceTransform() const;
 		RENDERERRUNTIME_API_EXPORT const glm::mat4& getWorldSpaceToViewSpaceMatrix() const;
+		RENDERERRUNTIME_API_EXPORT void getPreviousWorldSpaceToViewSpaceMatrix(glm::mat4& previousWorldSpaceToViewSpaceMatrix) const;
 		inline bool hasCustomWorldSpaceToViewSpaceMatrix() const;
 		inline void unsetCustomWorldSpaceToViewSpaceMatrix();
 		inline void setCustomWorldSpaceToViewSpaceMatrix(const glm::mat4& customWorldSpaceToViewSpaceMatrix);

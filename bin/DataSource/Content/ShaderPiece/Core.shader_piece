@@ -129,6 +129,8 @@
 		#define TEXTURE_FETCH_3D(name, index) name.Load(index)
 
 		// Fragment shader only
+		#define DECLARE_FRAGMENT_POSITION float4 FragmentPosition : SV_POSITION;
+		#define FRAGMENT_POSITION ShaderInput.FragmentPosition
 		#define DECLARE_IS_FRONT_FACE bool IsFrontFace : SV_ISFRONTFACE;
 		#define IS_FRONT_FACE ShaderInput.IsFrontFace
 		#define DECLARE_COVERAGE_MASK uint CoverageMask : SV_COVERAGE;
@@ -226,6 +228,8 @@
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 
 		// Fragment shader only
+		#define DECLARE_FRAGMENT_POSITION
+		#define FRAGMENT_POSITION gl_FragCoord
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
 		#define DECLARE_COVERAGE_MASK
@@ -357,6 +361,8 @@
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 
 		// Fragment shader only
+		#define DECLARE_FRAGMENT_POSITION
+		#define FRAGMENT_POSITION gl_FragCoord
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
 		#define DECLARE_COVERAGE_MASK

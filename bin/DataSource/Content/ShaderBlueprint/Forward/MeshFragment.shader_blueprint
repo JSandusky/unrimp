@@ -37,25 +37,29 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(uint,   AssignedMaterialSlotVS, 0)	// The assigned material slot inside the material uniform buffer
-	INPUT_TEXTURE_COORDINATE				(float2, TexCoordVS,			 1)	// Texture coordinate
-	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame0VS,		 2)	// Tangent frame
-	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame1VS,		 3)	// Tangent frame
-	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame2VS,		 4)	// Tangent frame
-	INPUT_TEXTURE_COORDINATE				(float3, WorldSpacePositionVS,	 5)	// World space position
-	INPUT_VERTEX_DRAW_ID														// Draw ID
+	INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(uint,   AssignedMaterialSlotVS,		0)	// The assigned material slot inside the material uniform buffer
+	INPUT_TEXTURE_COORDINATE				(float2, TexCoordVS,					1)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame0VS,				2)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame1VS,				3)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame2VS,				4)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE				(float3, WorldSpacePositionVS,			5)	// World space position
+	INPUT_TEXTURE_COORDINATE				(float3, PreviousClipSpacePositionVS,	6)	// Previous clip space position
+	INPUT_VERTEX_DRAW_ID																// Draw ID
+	DECLARE_FRAGMENT_POSITION
 	DECLARE_COVERAGE_MASK
 	DECLARE_IS_FRONT_FACE
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)	// rgb = diffuse color, a = alpha
 	OUTPUT_COLOR(1)	// rgb = view space normal
+	OUTPUT_COLOR(2)	// rg  = screen space velocity
 OUTPUT_END
 
 // Uniform buffers
 struct PassDataStruct
 {
 	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4x4 PreviousWorldSpaceToClipSpaceMatrix;
 	float4x4 ShadowMatrix;
 	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float4	 WorldSpaceToViewSpaceQuaternion;
@@ -67,6 +71,7 @@ struct PassDataStruct
 	float3	 LightClustersScale;
 	float3	 LightClustersBias;
 	uint	 FullCoverageMask;
+	float2   ViewportSize;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -202,7 +207,20 @@ MAIN_BEGIN
 	// -> "Antialiased Deferred Rendering" - https://docs.nvidia.com/gameworks/content/gameworkslibrary/graphicssamples/d3d_samples/antialiaseddeferredrendering.htm
 	float edgePixel = (COVERAGE_MASK != PassData.FullCoverageMask) ? 1.0f : 0.0f;
 
+	// Calculate screen space velocity
+	float2 previousClipSpacePosition = (MAIN_INPUT(PreviousClipSpacePositionVS).xy / MAIN_INPUT(PreviousClipSpacePositionVS).z);
+	@property(HLSL)
+		previousClipSpacePosition = previousClipSpacePosition * float2(0.5f, -0.5f) + 0.5f;
+	@end
+	@property(!HLSL)
+		previousClipSpacePosition = previousClipSpacePosition * float2(0.5f, 0.5f) + 0.5f;
+	@end
+	previousClipSpacePosition *= PassData.ViewportSize;
+	float2 velocity = FRAGMENT_POSITION.xy - previousClipSpacePosition;
+	velocity /= PassData.ViewportSize;
+
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(color, edgePixel);
 	MAIN_OUTPUT_COLOR(1) = float4(viewSpaceNormal, edgePixel);
+	MAIN_OUTPUT_COLOR(2) = float4(velocity.x, velocity.y, 0.0f, 0.0f);
 MAIN_END

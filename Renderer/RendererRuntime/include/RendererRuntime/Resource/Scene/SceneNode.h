@@ -88,6 +88,7 @@ namespace RendererRuntime
 		//[ Derived global transform                              ]
 		//[-------------------------------------------------------]
 		inline const Transform& getGlobalTransform() const;
+		inline const Transform& getPreviousGlobalTransform() const;
 
 		//[-------------------------------------------------------]
 		//[ Attached scene nodes                                  ]
@@ -127,9 +128,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		SceneNode*		   mParentSceneNode;	///< Parent scene node the scene node is attached to, can be a null pointer, don't destroy the instance
-		Transform		   mTransform;			///< Local transform
-		Transform		   mGlobalTransform;	///< Derived global transform - TODO(co) Will of course later on be handled in another way to be cache efficient and more efficient to calculate and incrementally update. But lets start simple.
+		SceneNode*		   mParentSceneNode;			///< Parent scene node the scene node is attached to, can be a null pointer, don't destroy the instance
+		Transform		   mTransform;					///< Local transform
+		Transform		   mGlobalTransform;			///< Derived global transform - TODO(co) Will of course later on be handled in another way to be cache efficient and more efficient to calculate and incrementally update. But lets start simple.
+		Transform		   mPreviousGlobalTransform;	///< Previous derived global transform
 		AttachedSceneNodes mAttachedSceneNodes;
 		AttachedSceneItems mAttachedSceneItems;
 

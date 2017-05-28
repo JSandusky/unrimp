@@ -54,10 +54,14 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 	assert(pastSecondsSinceLastFrame > 0.0f);
 
 	RendererRuntime::SceneNode* sceneNode = mCameraSceneItem.getParentSceneNode();
-	if (nullptr != sceneNode && (!mPressedKeys.empty() || !mPressedMouseButtons.empty()))
+	// TODO(co) Currently disabled early escape tests for velocity buffer (used e.g. for motion blur) kickoff. Need a general strategy how to update scene graph related data (also considering multi-threading, maybe communicate exclusively over a command buffer here as well?).
+	// if (nullptr != sceneNode && (!mPressedKeys.empty() || !mPressedMouseButtons.empty()))
+	if (nullptr != sceneNode)
 	{
 		// Get the current local transform
 		const RendererRuntime::Transform& transform = sceneNode->getTransform();
+		glm::vec3 newPosition = transform.position;
+		glm::quat newRotation = transform.rotation;
 
 		// Keyboard
 		if (!mPressedKeys.empty())
@@ -119,10 +123,7 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 			}
 
 			// Update the camera scene node position
-			if (movementVector != RendererRuntime::Math::VEC3_ZERO)
-			{
-				sceneNode->setPosition(transform.position + movementVector * movementSpeed);
-			}
+			newPosition += movementVector * movementSpeed;
 		}
 
 		// Mouse: Camera look around = right mouse button pressed down + mouse move
@@ -164,8 +165,11 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 			}
 
 			// Update the camera scene node rotation
-			sceneNode->setRotation(glm::quat(glm::vec3(glm::radians(pitch), glm::radians(yaw), 0.0f)));
+			newRotation = glm::quat(glm::vec3(glm::radians(pitch), glm::radians(yaw), 0.0f));
 		}
+
+		// Tell the camera scene node about the new transform
+		sceneNode->setPositionRotation(newPosition, newRotation);
 	}
 
 	// Call the base implementation

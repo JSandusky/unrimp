@@ -1,0 +1,204 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "1"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"NumberOfMultisamples":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "GLOBAL_MATERIAL_PROPERTY_ID",
+				"Value": "@GlobalNumberOfMultisamples",
+				"Description": "Number of multisamples. Valid values are 0, 2, 4, 8. Use 0 to disable multisample.",
+				"VisualImportance": "100",
+				"MaximumIntegerValue": "8",
+				"ValidIntegerValues": [ 0, 2, 4, 8 ]
+			},
+			"NumberOfSamples":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "INTEGER",
+				"Value": "12",
+				"MinimumValue": "4",
+				"MaximumValue": "16",
+				"StepSize": "1",
+				"Description": "Number of samples"
+			},
+			"Strength":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "1.0",
+				"MinimumValue": "0.0",
+				"MaximumValue": "2.0",
+				"StepSize": "0.01",
+				"Description": "Motion blur strength"
+			},
+			"ColorMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+				"Description": "2D color map"
+			},
+			"VelocityMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D screen space velocity map"
+			}
+		},
+		"RootSignature":
+		{
+			"RootParameters":
+			{
+				"0":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "PassUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"2":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "ColorMap",
+							"SamplerRootParameterIndex": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"3":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "VelocityMap",
+							"SamplerRootParameterIndex": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				}
+			}
+		},
+		"PipelineState":
+		{
+			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/MotionBlurFragment.asset"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "NONE"
+			},
+			"DepthStencilState":
+			{
+				"DepthEnable": "FALSE",
+				"DepthWriteMask": "ZERO"
+			}
+		},
+		"Resources":
+		{
+			"UniformBuffers":
+			{
+				"PassUniformBuffer":
+				{
+					"BufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"InverseViewportSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@INVERSE_VIEWPORT_SIZE"
+						},
+						"PastSecondsSinceLastFrame":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@GlobalPastSecondsSinceLastFrame"
+						},
+						"Strength":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@Strength"
+						},
+						"NumberOfSamples":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@NumberOfSamples"
+						}
+					}
+				}
+			},
+			"SamplerStates":
+			{
+				"SamplerPoint":
+				{
+					"Filter": "MIN_MAG_MIP_POINT",
+					"MaxAnisotropy": "1",
+					"MaxLOD": "0.0"
+				}
+			},
+			"Textures":
+			{
+				"ColorMap":
+				{
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@ColorMap",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"MipmapsUsed": "FALSE"
+				},
+				"VelocityMap":
+				{
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@VelocityMap",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"MipmapsUsed": "FALSE"
+				}
+			}
+		}
+	}
+}

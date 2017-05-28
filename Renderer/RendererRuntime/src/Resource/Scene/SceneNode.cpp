@@ -93,6 +93,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void SceneNode::updateGlobalTransformRecursive()
 	{
+		// Backup the previous global transform
+		mPreviousGlobalTransform = mGlobalTransform;
+
 		// Update this node
 		if (nullptr != mParentSceneNode)
 		{

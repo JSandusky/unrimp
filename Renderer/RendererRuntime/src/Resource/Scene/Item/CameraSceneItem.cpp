@@ -62,6 +62,12 @@ namespace RendererRuntime
 		return (nullptr != parentSceneNode) ? parentSceneNode->getGlobalTransform() : Transform::IDENTITY;
 	}
 
+	const Transform& CameraSceneItem::getPreviousWorldSpaceToViewSpaceTransform() const
+	{
+		const SceneNode* parentSceneNode = getParentSceneNode();
+		return (nullptr != parentSceneNode) ? parentSceneNode->getPreviousGlobalTransform() : Transform::IDENTITY;
+	}
+
 	const glm::mat4& CameraSceneItem::getWorldSpaceToViewSpaceMatrix() const
 	{
 		// Calculate the world space to view space matrix (Aka "view matrix")
@@ -73,6 +79,13 @@ namespace RendererRuntime
 
 		// Done
 		return mWorldSpaceToViewSpaceMatrix;
+	}
+
+	void CameraSceneItem::getPreviousWorldSpaceToViewSpaceMatrix(glm::mat4& previousWorldSpaceToViewSpaceMatrix) const
+	{
+		// Calculate the previous world space to view space matrix (Aka "view matrix")
+		const Transform& worldSpaceToViewSpaceTransform = getPreviousWorldSpaceToViewSpaceTransform();
+		previousWorldSpaceToViewSpaceMatrix = glm::lookAt(worldSpaceToViewSpaceTransform.position, worldSpaceToViewSpaceTransform.position + worldSpaceToViewSpaceTransform.rotation * Math::VEC3_FORWARD, Math::VEC3_UP);
 	}
 
 	const glm::mat4& CameraSceneItem::getViewSpaceToClipSpaceMatrix(float aspectRatio) const

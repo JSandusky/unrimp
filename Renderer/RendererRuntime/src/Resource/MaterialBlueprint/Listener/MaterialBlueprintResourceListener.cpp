@@ -72,6 +72,7 @@ namespace
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_QUATERNION)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_QUATERNION)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
+			DEFINE_CONSTANT(PREVIOUS_WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_TEXTURE_SPACE_MATRIX)
 			DEFINE_CONSTANT(CLIP_SPACE_TO_VIEW_SPACE_MATRIX)
@@ -281,6 +282,7 @@ namespace RendererRuntime
 
 		// Calculate required matrices basing whether or not the VR-manager is currently running
 		glm::mat4 viewSpaceToClipSpaceMatrix;
+		glm::mat4 previousWorldSpaceToViewSpaceMatrix;
 		const IVrManager& vrManager = rendererRuntime.getVrManager();
 		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye() && (nullptr != cameraSceneItem) && !cameraSceneItem->hasCustomWorldSpaceToViewSpaceMatrix() && !cameraSceneItem->hasCustomViewSpaceToClipSpaceMatrix())
 		{
@@ -295,6 +297,9 @@ namespace RendererRuntime
 			const Transform& worldSpaceToViewSpaceTransform = cameraSceneItem->getWorldSpaceToViewSpaceTransform();
 			mPassData->worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
 			mPassData->worldSpaceToViewSpaceMatrix = viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;
+
+			// TODO(co) Implement "previousWorldSpaceToViewSpaceMatrix"
+			previousWorldSpaceToViewSpaceMatrix = mPassData->worldSpaceToViewSpaceMatrix;
 		}
 		else if (nullptr != cameraSceneItem)
 		{
@@ -302,6 +307,7 @@ namespace RendererRuntime
 
 			// Get world space to view space matrix (Aka "view matrix")
 			mPassData->worldSpaceToViewSpaceMatrix = cameraSceneItem->getWorldSpaceToViewSpaceMatrix();
+			cameraSceneItem->getPreviousWorldSpaceToViewSpaceMatrix(previousWorldSpaceToViewSpaceMatrix);
 
 			// Get view space to clip space matrix (aka "projection matrix")
 			viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrix(static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight);
@@ -311,13 +317,14 @@ namespace RendererRuntime
 			// Standard rendering
 
 			// Get world space to view space matrix (Aka "view matrix")
-			mPassData->worldSpaceToViewSpaceMatrix = glm::lookAt(Transform::IDENTITY.position, Transform::IDENTITY.position + Transform::IDENTITY.rotation * Math::VEC3_FORWARD, Math::VEC3_UP);
+			mPassData->worldSpaceToViewSpaceMatrix = previousWorldSpaceToViewSpaceMatrix = glm::lookAt(Transform::IDENTITY.position, Transform::IDENTITY.position + Transform::IDENTITY.rotation * Math::VEC3_FORWARD, Math::VEC3_UP);
 
 			// Get view space to clip space matrix (aka "projection matrix")
 			viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_NEAR_Z, CameraSceneItem::DEFAULT_FAR_Z);
 		}
 		mPassData->worldSpaceToViewSpaceQuaternion = glm::quat(mPassData->worldSpaceToViewSpaceMatrix);
 		mPassData->worldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * mPassData->worldSpaceToViewSpaceMatrix;
+		mPassData->previousWorldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * previousWorldSpaceToViewSpaceMatrix;	// TODO(co) Do also support the previous view space to clip space matrix so e.g. FOV changes have an influence?
 		mPassData->viewSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix;
 	}
 
@@ -350,6 +357,11 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix), numberOfBytes);
+		}
+		else if (::detail::PREVIOUS_WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->previousWorldSpaceToClipSpaceMatrix), numberOfBytes);
 		}
 		else if (::detail::VIEW_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{

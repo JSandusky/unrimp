@@ -1,0 +1,111 @@
+/*********************************************************\
+ * Copyright (c) 2012-2017 The Unrimp Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+//[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+@includepiece(ShaderPiece/Core.asset)
+	@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_COLOR(0)
+OUTPUT_END
+
+// Uniform buffers
+struct PassDataStruct
+{
+	float2 InverseViewportSize;
+	float  PastSecondsSinceLastFrame;
+	float  Strength;
+	int    NumberOfSamples;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
+
+// Samplers
+SAMPLER_STATE(SamplerPoint, 0)
+
+// Textures
+TEXTURE_2D(ColorMap, 0)
+@property(NumberOfMultisamples)
+	TEXTURE_2D_MS(VelocityMap, @value(NumberOfMultisamples), 1)
+@end
+@property(!NumberOfMultisamples)
+	TEXTURE_2D(VelocityMap, 1)
+@end
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+MAIN_BEGIN
+	@property(NumberOfMultisamples)
+		// Complex pixel detection
+		float2 velocity = float2(0.0f, 0.0f);
+		if (0 != SAMPLE_2D_LOD(ColorMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).a)
+		{
+			// Custom MSAA resolve
+			@foreach(NumberOfMultisamples, i, 0)
+			{
+				velocity += SAMPLE_2D_MS(VelocityMap, int2(MAIN_INPUT(TexCoordVS) * (1.0f / PassData.InverseViewportSize)), @i).xy;
+			}
+			@end
+			velocity /= @value(NumberOfMultisamples);
+		}
+		else
+		{
+			velocity = SAMPLE_2D_MS(VelocityMap, int2(MAIN_INPUT(TexCoordVS) * (1.0f / PassData.InverseViewportSize)), 0).xy;
+		}
+	@end
+	@property(!NumberOfMultisamples)
+		float2 velocity = SAMPLE_2D_LOD(VelocityMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).xy;
+	@end
+
+	// Apply timing to velocity
+	velocity *= PassData.PastSecondsSinceLastFrame * PassData.Strength;
+
+	// Clamp to a maximum velocity: The maximum we can go without artifacts is 1.4f * PassData.NumberOfSamples... but we can fudge things a little
+	// -> Basing on https://mynameismjp.wordpress.com/the-museum/samples-tutorials-tools/motion-blur-sample/
+	float2 maximumVelocity = (2.0f * PassData.NumberOfSamples) * PassData.InverseViewportSize;
+	velocity = clamp(velocity, -maximumVelocity, maximumVelocity);
+
+	// For each sample, sum up each sample's color in "sum" and then divide to average the color after all the samples are added
+	float4 sum = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	for (int i = 0; i < PassData.NumberOfSamples; ++i)
+	{
+		// Sample texture in a new spot based on velocity vector and average it with the other samples
+		float2 sampleTexCoord = MAIN_INPUT(TexCoordVS) + (velocity * (i / float(PassData.NumberOfSamples)));
+
+		// Lookup the color at this new spot and add it with the other samples
+		sum += SAMPLE_2D_LOD(ColorMap, SamplerPoint, float4(sampleTexCoord, 0.0f, 0.0f));
+	}
+
+	// Return the average color of all the samples
+	MAIN_OUTPUT_COLOR(0) = float4(sum.rgb / float(PassData.NumberOfSamples), 1.0f);
+MAIN_END

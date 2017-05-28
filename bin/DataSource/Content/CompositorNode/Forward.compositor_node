@@ -29,6 +29,11 @@
 				"TextureFormat": "R16G16B16A16F",
 				"AllowMultisample": "TRUE"
 			},
+			"Example/Texture/Dynamic/MultisampleVelocityRenderTarget":
+			{
+				"TextureFormat": "R16G16_SNORM",
+				"AllowMultisample": "TRUE"
+			},
 			"Example/Texture/Dynamic/HdrColorRenderTarget0":
 			{
 				"TextureFormat": "R16G16B16A16F"
@@ -133,7 +138,7 @@
 		{
 			"HdrMultisampleFramebuffer":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/HdrMultisampleColorRenderTarget", "Example/Texture/Dynamic/MultisampleNormalRenderTarget" ],
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrMultisampleColorRenderTarget", "Example/Texture/Dynamic/MultisampleNormalRenderTarget", "Example/Texture/Dynamic/MultisampleVelocityRenderTarget" ],
 				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			},
 			"HdrFramebuffer0":
@@ -405,13 +410,24 @@
 			{
 				"Quad":
 				{
-					"Description": "Depth of field",
 					"MaterialBlueprint": "MaterialBlueprint/Compositor/DepthOfField.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
 						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
 						"BlurMap": "Example/Texture/Dynamic/GaussianBlurDownscale2ColorRenderTarget"
+					}
+				}
+			},
+			"HdrFramebuffer1":
+			{
+				"Quad":
+				{
+					"MaterialBlueprint": "MaterialBlueprint/Compositor/MotionBlur.asset",
+					"SetMaterialProperties":
+					{
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
+						"VelocityMap": "Example/Texture/Dynamic/MultisampleVelocityRenderTarget"
 					}
 				}
 			},
@@ -423,7 +439,7 @@
 					"MaterialBlueprint": "MaterialBlueprint/Compositor/HdrToLdrBloomThreshold.asset",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
 						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget"
 					}
 				}
@@ -525,7 +541,7 @@
 					"MaterialBlueprint": "MaterialBlueprint/Compositor/LensFlareThreshold.asset",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0"
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1"
 					}
 				}
 			},
@@ -575,7 +591,7 @@
 					"MaterialBlueprint": "MaterialBlueprint/Compositor/HdrToLdr.asset",
 					"SetMaterialProperties":
 					{
-						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
+						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
 						"LuminanceMap": "Example/Texture/Dynamic/AdaptiveLuminanceRenderTarget",
 						"BloomMap": "Example/Texture/Dynamic/BloomDownscale2ColorRenderTarget",
 						"LensFlareMap": "Example/Texture/Dynamic/LensFlareColorRenderTarget"

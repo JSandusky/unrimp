@@ -69,6 +69,11 @@ namespace RendererRuntime
 		return mGlobalTransform;
 	}
 
+	inline const Transform& SceneNode::getPreviousGlobalTransform() const
+	{
+		return mPreviousGlobalTransform;
+	}
+
 	inline const SceneNode::AttachedSceneNodes& SceneNode::getAttachedSceneNodes() const
 	{
 		return mAttachedSceneNodes;
@@ -86,7 +91,8 @@ namespace RendererRuntime
 	inline SceneNode::SceneNode(const Transform& transform) :
 		mParentSceneNode(nullptr),
 		mTransform(transform),
-		mGlobalTransform(transform)
+		mGlobalTransform(transform),
+		mPreviousGlobalTransform(transform)
 	{
 		// Nothing here
 	}

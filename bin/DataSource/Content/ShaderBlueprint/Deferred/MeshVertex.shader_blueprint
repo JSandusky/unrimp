@@ -45,19 +45,22 @@ INPUT_BEGIN
 	INPUT_VERTEX_DRAW_ID								// Draw ID
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(uint,   AssignedMaterialSlotVS, 0)	// The assigned material slot inside the material uniform buffer
-	OUTPUT_TEXTURE_COORDINATE				 (float2, TexCoordVS,			  1)	// Texture coordinate
-	OUTPUT_TEXTURE_COORDINATE				 (float3, TangentFrame0VS,		  2)	// Tangent frame
-	OUTPUT_TEXTURE_COORDINATE				 (float3, TangentFrame1VS,		  3)	// Tangent frame
-	OUTPUT_TEXTURE_COORDINATE				 (float3, TangentFrame2VS,		  4)	// Tangent frame
-	OUTPUT_POSITION																	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(uint,   AssignedMaterialSlotVS,		0)	// The assigned material slot inside the material uniform buffer
+	OUTPUT_TEXTURE_COORDINATE				 (float2, TexCoordVS,					1)	// Texture coordinate
+	OUTPUT_TEXTURE_COORDINATE				 (float3, TangentFrame0VS,				2)	// Tangent frame
+	OUTPUT_TEXTURE_COORDINATE				 (float3, TangentFrame1VS,				3)	// Tangent frame
+	OUTPUT_TEXTURE_COORDINATE				 (float3, TangentFrame2VS,				4)	// Tangent frame
+	OUTPUT_TEXTURE_COORDINATE				 (float3, PreviousClipSpacePositionVS,	5)	// Previous clip space position
+	OUTPUT_POSITION																		// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
 OUTPUT_END
 
 // Uniform buffers
 struct PassDataStruct
 {
 	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4x4 PreviousWorldSpaceToClipSpaceMatrix;
 	float4	 WorldSpaceToViewSpaceQuaternion;
+	float2   ViewportSize;
 	uint	 FullCoverageMask;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
@@ -105,6 +108,7 @@ MAIN_BEGIN
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, float4(worldSpacePosition, 1.0f));
+	MAIN_OUTPUT(PreviousClipSpacePositionVS) = MATRIX_MUL(PassData.PreviousWorldSpaceToClipSpaceMatrix, float4(worldSpacePosition, 1.0f)).xyw;
 
 	// Pass through the assigned material slot inside the material uniform buffer
 	MAIN_OUTPUT(AssignedMaterialSlotVS) = instanceIndices.y;
