@@ -122,6 +122,8 @@ namespace Direct3D12Renderer
 			DXGI_FORMAT_R32_UINT,				// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
 			DXGI_FORMAT_R32_FLOAT,				// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			DXGI_FORMAT_D32_FLOAT,				// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			DXGI_FORMAT_R16G16_SNORM,			// Renderer::TextureFormat::R16G16_SNORM  - A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
+			DXGI_FORMAT_R16G16_FLOAT,			// Renderer::TextureFormat::R16G16_FLOAT  - A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
 			DXGI_FORMAT_UNKNOWN					// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];

@@ -754,8 +754,10 @@ namespace Renderer
 				R32_UINT		  = 16,
 				R32_FLOAT		  = 17,
 				D32_FLOAT		  = 18,
-				UNKNOWN			  = 19,
-				NUMBER_OF_FORMATS = 20
+				R16G16_SNORM	  = 19,
+				R16G16_FLOAT	  = 20,
+				UNKNOWN			  = 21,
+				NUMBER_OF_FORMATS = 22
 			};
 			inline static bool isCompressed(Enum textureFormat)
 			{
@@ -777,6 +779,8 @@ namespace Renderer
 					true,
 					true,
 					true,
+					false,
+					false,
 					false,
 					false,
 					false,
@@ -807,6 +811,8 @@ namespace Renderer
 					false,
 					false,
 					true,
+					false,
+					false,
 					false
 				};
 				return MAPPING[textureFormat];
@@ -833,6 +839,8 @@ namespace Renderer
 					sizeof(uint8_t) * 3,
 					sizeof(uint32_t),
 					sizeof(float),
+					sizeof(float),
+					sizeof(uint32_t),
 					sizeof(float),
 					0
 				};
@@ -874,6 +882,10 @@ namespace Renderer
 						return sizeof(uint32_t) * width;
 					case R32_FLOAT:
 					case D32_FLOAT:
+						return sizeof(float) * width;
+					case R16G16_SNORM:
+						return sizeof(uint32_t) * width;
+					case R16G16_FLOAT:
 						return sizeof(float) * width;
 					case UNKNOWN:
 					case NUMBER_OF_FORMATS:
@@ -921,6 +933,10 @@ namespace Renderer
 						return sizeof(uint32_t) * width * height;
 					case R32_FLOAT:
 					case D32_FLOAT:
+						return sizeof(float) * width * height;
+					case R16G16_SNORM:
+						return sizeof(uint32_t) * width * height;
+					case R16G16_FLOAT:
 						return sizeof(float) * width * height;
 					case UNKNOWN:
 					case NUMBER_OF_FORMATS:

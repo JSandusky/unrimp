@@ -67,8 +67,10 @@ namespace Renderer
 			R32_UINT		  = 16,	///< 32-bit unsigned integer format
 			R32_FLOAT		  = 17,	///< 32-bit float format
 			D32_FLOAT		  = 18,	///< 32-bit float depth format
-			UNKNOWN			  = 19,	///< Unknown
-			NUMBER_OF_FORMATS = 20	///< Number of texture formats
+			R16G16_SNORM	  = 19,	///< A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
+			R16G16_FLOAT	  = 20,	///< A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
+			UNKNOWN			  = 21,	///< Unknown
+			NUMBER_OF_FORMATS = 22	///< Number of texture formats
 		};
 
 		/**

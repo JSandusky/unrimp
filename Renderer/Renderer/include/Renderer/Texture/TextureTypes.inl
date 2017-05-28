@@ -51,6 +51,8 @@ namespace Renderer
 			false,	// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
 			false,	// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			false,	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			false,	// Renderer::TextureFormat::R16G16_SNORM  - A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
+			false,	// Renderer::TextureFormat::R16G16_FLOAT  - A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
 			false	// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];
@@ -79,6 +81,8 @@ namespace Renderer
 			false,	// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
 			false,	// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			true,	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			false,	// Renderer::TextureFormat::R16G16_SNORM  - A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
+			false,	// Renderer::TextureFormat::R16G16_FLOAT  - A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
 			false	// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];
@@ -107,6 +111,8 @@ namespace Renderer
 			sizeof(uint32_t),		// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
 			sizeof(float),			// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			sizeof(float),			// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			sizeof(uint32_t),		// Renderer::TextureFormat::R16G16_SNORM  - A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
+			sizeof(float),			// Renderer::TextureFormat::R16G16_FLOAT  - A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
 			0						// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];
@@ -175,6 +181,14 @@ namespace Renderer
 			// 32-bit float red/depth format
 			case R32_FLOAT:
 			case D32_FLOAT:
+				return sizeof(float) * width;
+
+			// A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
+			case R16G16_SNORM:
+				return sizeof(uint32_t) * width;
+
+			// A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
+			case R16G16_FLOAT:
 				return sizeof(float) * width;
 
 			// Unknown
@@ -254,6 +268,14 @@ namespace Renderer
 			// 32-bit float depth format
 			case R32_FLOAT:
 			case D32_FLOAT:
+				return sizeof(float) * width * height;
+
+			// A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
+			case R16G16_SNORM:
+				return sizeof(uint32_t) * width * height;
+
+			// A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
+			case R16G16_FLOAT:
 				return sizeof(float) * width * height;
 
 			// Unknown

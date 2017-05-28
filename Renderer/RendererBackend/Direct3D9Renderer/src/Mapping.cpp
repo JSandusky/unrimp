@@ -407,6 +407,8 @@ namespace Direct3D9Renderer
 			D3DFMT_UNKNOWN,				// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format	TODO(co) Not available in Direct3D 9 as it looks like
 			D3DFMT_R32F,				// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			D3DFMT_D32F_LOCKABLE,		// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format	TODO(co) Check depth texture format INTZ: http://aras-p.info/texts/D3D9GPUHacks.html and http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/Advanced-DX9-Capabilities-for-ATI-Radeon-Cards_v2.pdf
+			D3DFMT_UNKNOWN,				// Renderer::TextureFormat::R16G16_SNORM  - A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
+			D3DFMT_UNKNOWN,				// Renderer::TextureFormat::R16G16_FLOAT  - A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
 			D3DFMT_UNKNOWN				// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];
