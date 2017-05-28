@@ -78,7 +78,7 @@ namespace RendererRuntime
 	*    - "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
-	*    - "Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D"
+	*    - "Unrimp/Texture/DynamicByCode/DielectricMetallicMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D"
 	*    - "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D"

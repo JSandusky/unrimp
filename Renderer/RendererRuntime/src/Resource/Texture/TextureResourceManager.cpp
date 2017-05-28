@@ -117,7 +117,7 @@ namespace
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",	  *whiteA2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",	  *normalMapIdentity2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D",  *whiteA2DTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityMetallicMap2D",   *blackA2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/DielectricMetallicMap2D", *blackA2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",	  *blackRgb2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",	  *_drgb_nxaIdentity2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D", *_hr_rg_mb_nyaIdentity2DTexturePtr);
