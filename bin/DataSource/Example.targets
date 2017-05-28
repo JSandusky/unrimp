@@ -15,7 +15,7 @@
 					{
 						"TextureSemantic": "DIFFUSE_MAP",
 						"NumberOfChannels": 3,
-						"DefaultColor": "0.0 0.0 0.0"
+						"DefaultColor": "1.0 1.0 1.0"
 					},
 					{
 						"TextureSemantic": "NORMAL_MAP",

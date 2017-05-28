@@ -97,7 +97,8 @@ namespace
 			RENDERER_SET_RESOURCE_DEBUG_NAME(blackA2DTexturePtr, "Black 2D alpha texture")
 
 			// "_drgb_nxa"-texture
-			const uint8_t _drgb_nxaIdentityData[] = { 0, 0, 0, 128 };
+			// -> Must be white so e.g. diffuse color can be multiplied in
+			const uint8_t _drgb_nxaIdentityData[] = { 255, 255, 255, 128 };
 			Renderer::ITexturePtr _drgb_nxaIdentity2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, _drgb_nxaIdentityData));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(_drgb_nxaIdentity2DTexturePtr, "2D _drgb_nxa identity texture")
 
@@ -113,7 +114,7 @@ namespace
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMap1D",			  *blackRgb1DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMap2D",			  *blackRgb2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMapCube",			  *blackRgbCubeTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",	  *blackRgb2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",	  *whiteRgb2DTexturePtr);	// Must be white so e.g. diffuse color can be multiplied in
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",	  *whiteA2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",	  *normalMapIdentity2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D",  *whiteA2DTexturePtr);

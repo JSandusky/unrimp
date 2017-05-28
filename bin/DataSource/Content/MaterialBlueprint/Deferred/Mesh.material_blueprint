@@ -38,6 +38,20 @@
 				"Value": "1.0 1.0 1.0",
 				"Description": "Material diffuse color"
 			},
+			"Roughness":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Roughness": "1.0",
+				"Description": "Metal-rough-worfkow: Roughness describes the microsurface of the object. White 1.0 is rough and black 0.0 is smooth. The microsurface if rough can cause the light rays to scatter and make the highlight appear dimmer and more broad. The same amount of light energy is reflected going out as coming into the surface. This map has the most artistic freedom. There is no wrong answers here. This map gives the asset the most character as it truly describes the surface e.g. scratches, fingerprints, smudges, grime etc."
+			},
+			"Metallic":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Roughness": "0.0",
+				"Description": "Metal-rough-worfkow: Metallic tells the shader if something is metal or not. Raw Metal = 1.0 white and non metal = 0.0 black. There can be transitional gray values that indicate something covering the raw metal such as dirt. With metal/rough, you only have control over metal reflectance values. The dielectric values are set to 0.04 or 4% which is most dielectric materials."
+			},
 			"UseGpuSkinning":
 			{
 				"Usage": "SHADER_COMBINATION",
@@ -296,6 +310,18 @@
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@DiffuseColor"
+						},
+						"Roughness":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@Roughness"
+						},
+						"Metallic":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@Metallic"
 						},
 						"AlphaReference":
 						{

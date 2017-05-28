@@ -16,7 +16,9 @@
 		},
 		"Properties":
 		{
-			"DiffuseColor": "0.25 0.25 0.25"
+			"DiffuseColor": "0.25 0.25 0.25",
+			"Roughness": "0.8",
+			"Metallic": "1.0"
 		}
 	}
 }
