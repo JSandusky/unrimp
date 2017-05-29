@@ -51,6 +51,7 @@ namespace RendererRuntime
 			mPastSecondsSinceLastFrame = 0.06f;
 		}
 		mGlobalTimeInSeconds += mPastSecondsSinceLastFrame;
+		++mNumberOfRenderedFrames;
 
 		// Start the stopwatch
 		mStopwatch.start();

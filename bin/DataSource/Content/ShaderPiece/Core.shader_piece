@@ -126,6 +126,7 @@
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
 
 		// Load/fetch
+		#define TEXTURE_FETCH_2D(name, index) name.Load(index)
 		#define TEXTURE_FETCH_3D(name, index) name.Load(index)
 
 		// Fragment shader only
@@ -135,6 +136,9 @@
 		#define IS_FRONT_FACE ShaderInput.IsFrontFace
 		#define DECLARE_COVERAGE_MASK uint CoverageMask : SV_COVERAGE;
 		#define COVERAGE_MASK ShaderInput.CoverageMask
+
+		// Compiler hints
+		#define UNROLL_HINT [unroll]
 	@end
 @end
 
@@ -235,6 +239,9 @@
 		#define DECLARE_COVERAGE_MASK
 		#define COVERAGE_MASK gl_SampleMaskIn[0]
 
+		// Compiler hints
+		#define UNROLL_HINT
+
 		// Primitive HLSL datatypes
 		#define float2 vec2
 		#define float3 vec3
@@ -253,6 +260,7 @@
 		#define uint4 uvec4
 
 		// Load/fetch
+		#define TEXTURE_FETCH_2D(name, index) texelFetch(name, index.xy, index.z)
 		#define TEXTURE_FETCH_3D(name, index) texelFetch(name, index.xyz, index.w)
 
 		// HLSL math functions
@@ -368,6 +376,9 @@
 		#define DECLARE_COVERAGE_MASK
 		#define COVERAGE_MASK gl_SampleMaskIn[0]
 
+		// Compiler hints
+		#define UNROLL_HINT
+
 		// Primitive HLSL datatypes
 		#define float2 vec2
 		#define float3 vec3
@@ -386,6 +397,7 @@
 		#define uint4 uvec4
 
 		// Load/fetch
+		#define TEXTURE_FETCH_2D(name, index) texelFetch(name, index.xy, index.z)
 		#define TEXTURE_FETCH_3D(name, index) texelFetch(name, index.xyz, index.w)
 
 		// HLSL math functions

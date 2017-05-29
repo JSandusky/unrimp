@@ -32,6 +32,7 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Core/Time/TimeManager.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/Vr/IVrManager.h"
@@ -92,6 +93,7 @@ namespace
 			DEFINE_CONSTANT(SHADOW_CASCADE_OFFSETS)
 			DEFINE_CONSTANT(SHADOW_CASCADE_SCALES)
 			DEFINE_CONSTANT(LENS_STAR_MATRIX)
+			DEFINE_CONSTANT(JITTER_OFFSET)
 
 			// Instance
 			DEFINE_CONSTANT(INSTANCE_INDICES)
@@ -230,6 +232,32 @@ namespace
 
 			// Create dynamic texture asset
 			return rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/SsaoNoise4x4", *texturePtr);
+		}
+
+		/**
+		*  @brief
+		*    Compute a radical inverse with base 2 using crazy bit-twiddling from "Hacker's Delight"
+		*/
+		inline float radicalInverseBase2(uint32_t bits)
+		{
+			bits = (bits << 16u) | (bits >> 16u);
+			bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
+			bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
+			bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
+			bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
+			return float(bits) * 2.3283064365386963e-10f;	// / 0x100000000
+		}
+
+		/**
+		*  @brief
+		*    Return a single 2D point in a Hammersley sequence of length "numberOfSamples", using base 1 and base 2
+		*
+		*  @note
+		*    - From "MSAA Resolve + Temporal AA" from https://github.com/TheRealMJP/MSAAFilter with background information at https://mynameismjp.wordpress.com/2012/10/28/msaa-resolve-filters/
+		*/
+		inline glm::vec2 hammersley2D(uint64_t sampleIndex, uint64_t numberOfSamples)
+		{
+			return glm::vec2(float(sampleIndex) / float(numberOfSamples), radicalInverseBase2(uint32_t(sampleIndex)));
 		}
 
 
@@ -612,6 +640,25 @@ namespace RendererRuntime
 
 			// Copy the matrix over
 			memcpy(buffer, glm::value_ptr(uLensStarMatrix), numberOfBytes);
+		}
+		else if (::detail::JITTER_OFFSET == referenceValue)
+		{
+			assert(sizeof(float) * 2 == numberOfBytes);
+
+			// Calculate the jitter offset using "Hammersley 4x" from "MSAA Resolve + Temporal AA" from https://github.com/TheRealMJP/MSAAFilter with background information at https://mynameismjp.wordpress.com/2012/10/28/msaa-resolve-filters/
+			const uint64_t numberOfRenderedFrames = mRendererRuntime->getTimeManager().getNumberOfRenderedFrames();
+			if (numberOfRenderedFrames != mPreviousNumberOfRenderedFrames)
+			{
+				const uint64_t index = (numberOfRenderedFrames % 4);
+				glm::vec2 jitter = ::detail::hammersley2D(index, 4) * 2.0f - glm::vec2(1.0f);
+				jitter *= 0.2f;
+				const glm::vec2 jitterOffset = (jitter - mPreviousJitter) * 0.5f;
+				mPreviousJitter = jitter;
+				mPreviousNumberOfRenderedFrames = numberOfRenderedFrames;
+
+				// Copy over
+				memcpy(buffer, glm::value_ptr(jitterOffset), numberOfBytes);
+			}
 		}
 		else
 		{

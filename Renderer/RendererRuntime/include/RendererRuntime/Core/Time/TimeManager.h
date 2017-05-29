@@ -57,6 +57,7 @@ namespace RendererRuntime
 		inline ~TimeManager();
 		inline float getPastSecondsSinceLastFrame() const;
 		inline float getGlobalTimeInSeconds() const;
+		inline uint64_t getNumberOfRenderedFrames() const;
 
 		/**
 		*  @brief
@@ -83,6 +84,7 @@ namespace RendererRuntime
 		Stopwatch mStopwatch;
 		float	  mPastSecondsSinceLastFrame;
 		float	  mGlobalTimeInSeconds;
+		uint64_t  mNumberOfRenderedFrames;
 
 
 	};

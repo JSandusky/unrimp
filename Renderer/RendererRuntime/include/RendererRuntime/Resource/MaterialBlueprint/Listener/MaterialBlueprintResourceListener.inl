@@ -47,6 +47,7 @@ namespace RendererRuntime
 		mRenderTargetHeight(1),
 		mNearZ(0.0f),
 		mFarZ(0.0f),
+		mPreviousNumberOfRenderedFrames(getUninitialized<uint64_t>()),
 		mObjectSpaceToWorldSpaceTransform(nullptr),
 		mMaterialTechnique(nullptr)
 	{

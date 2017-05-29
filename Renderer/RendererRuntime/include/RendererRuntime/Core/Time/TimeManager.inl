@@ -36,7 +36,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline TimeManager::TimeManager() :
 		mPastSecondsSinceLastFrame(std::numeric_limits<float>::min()),	// Don't initialize with zero or time advancing enforcement asserts will get more complicated
-		mGlobalTimeInSeconds(0.0f)
+		mGlobalTimeInSeconds(0.0f),
+		mNumberOfRenderedFrames(0)
 	{
 		// Nothing here
 	}
@@ -54,6 +55,11 @@ namespace RendererRuntime
 	inline float TimeManager::getGlobalTimeInSeconds() const
 	{
 		return mGlobalTimeInSeconds;
+	}
+
+	inline uint64_t TimeManager::getNumberOfRenderedFrames() const
+	{
+		return mNumberOfRenderedFrames;
 	}
 
 

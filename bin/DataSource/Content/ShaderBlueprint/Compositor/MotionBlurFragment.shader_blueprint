@@ -91,7 +91,7 @@ MAIN_BEGIN
 	velocity *= PassData.PastSecondsSinceLastFrame * PassData.Strength;
 
 	// Clamp to a maximum velocity: The maximum we can go without artifacts is 1.4f * PassData.NumberOfSamples... but we can fudge things a little
-	// -> Basing on https://mynameismjp.wordpress.com/the-museum/samples-tutorials-tools/motion-blur-sample/
+	// -> Basing on https://mynameismjp.wordpress.com/the-museum/samples-tutorials-tools/motion-blur-sample/ and http://john-chapman-graphics.blogspot.de/2013/01/per-object-motion-blur.html
 	float2 maximumVelocity = (2.0f * PassData.NumberOfSamples) * PassData.InverseViewportSize;
 	velocity = clamp(velocity, -maximumVelocity, maximumVelocity);
 

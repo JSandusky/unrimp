@@ -128,6 +128,8 @@ namespace RendererRuntime
 		uint32_t					 mRenderTargetHeight;
 		float						 mNearZ;
 		float						 mFarZ;
+		glm::vec2					 mPreviousJitter;
+		uint64_t					 mPreviousNumberOfRenderedFrames;
 
 		// Instance
 		const Transform*   mObjectSpaceToWorldSpaceTransform;
