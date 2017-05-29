@@ -96,8 +96,8 @@ namespace
 			return (input + factor - 1) / factor * factor;
 		}
 
-		// TODO(co) Currently unused
-		// TODO(sw) Then delete it when unused? It causes an unused-function warning under gcc/clang
+		// TODO(co) Currently unused. Don't delete the function because it will be used in the future (topic: some more scripting features inside material blueprints).
+		/*
 		void executeParameterSetInstruction(const std::string& instructionAsString, RendererRuntime::ShaderProperties& shaderProperties)
 		{
 			// "@pset(<parameter name>, <parameter value to set>)" (same syntax as in "RendererRuntime::ShaderBuilder")
@@ -118,6 +118,7 @@ namespace
 				throw std::runtime_error("Invalid parameter set instruction, syntax is \"@pset(<parameter name>, <parameter value to set>)\"");
 			}
 		}
+		*/
 
 		int32_t executeCounterInstruction(const std::string& instructionAsString, RendererRuntime::ShaderProperties& shaderProperties)
 		{

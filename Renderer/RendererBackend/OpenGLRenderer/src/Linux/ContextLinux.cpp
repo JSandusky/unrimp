@@ -84,7 +84,7 @@ namespace OpenGLRenderer
 	void ContextLinux::makeCurrent() const
 	{
 		// Only do something when have created our renderer context and don't use a external renderer context
-		if(!mUseExternalContext)
+		if (!mUseExternalContext)
 		{
 			glXMakeCurrent(getDisplay(), mNativeWindowHandle, getRenderContext());
 		}
