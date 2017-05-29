@@ -97,6 +97,7 @@ namespace
 		}
 
 		// TODO(co) Currently unused
+		// TODO(sw) Then delete it when unused? It causes an unused-function warning under gcc/clang
 		void executeParameterSetInstruction(const std::string& instructionAsString, RendererRuntime::ShaderProperties& shaderProperties)
 		{
 			// "@pset(<parameter name>, <parameter value to set>)" (same syntax as in "RendererRuntime::ShaderBuilder")

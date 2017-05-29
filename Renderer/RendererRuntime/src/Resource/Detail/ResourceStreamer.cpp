@@ -149,8 +149,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	ResourceStreamer::ResourceStreamer(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mDeserializationWaitingQueueRequests(0),
 		mShutdownDeserializationThread(false),
+		mDeserializationWaitingQueueRequests(0),
 		mDeserializationThread(&ResourceStreamer::deserializationThreadWorker, this),
 		mShutdownProcessingThread(false),
 		mProcessingThread(&ResourceStreamer::processingThreadWorker, this)

@@ -148,8 +148,7 @@ if(UNIX)
 	)
 endif()
 if(RENDERER_OPENGL_GLSLTOSPIRV)
-	set(SOURCE_CODES
-		${SOURCE_CODES}
+	set(GLSLANG_SOURCE_CODES
 		${GLSLANG_DIR}/glslang/GenericCodeGen/CodeGen.cpp
 		${GLSLANG_DIR}/glslang/GenericCodeGen/Link.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/Pp.cpp
@@ -188,19 +187,31 @@ if(RENDERER_OPENGL_GLSLTOSPIRV)
 	)
 	if(WIN32)
 		# Windows source codes
-		set(SOURCE_CODES
-			${SOURCE_CODES}
+		set(GLSLANG_SOURCE_CODES
+			${GLSLANG_SOURCE_CODES}
 			${GLSLANG_DIR}/glslang/OSDependent/Windows/ossource.cpp
 		)
 	endif()
 	if(UNIX)
 		# Linux source codes
-		set(SOURCE_CODES
-			${SOURCE_CODES}
+		set(GLSLANG_SOURCE_CODES
+			${GLSLANG_SOURCE_CODES}
 			${GLSLANG_DIR}/glslang/OSDependent/Unix/ossource.cpp
 		)
 	endif()
+	
+	# Append GLSLANG sources to SOURCE_CODES variable
+	set(SOURCE_CODES
+		${SOURCE_CODES}
+		${GLSLANG_SOURCE_CODES}
+	)
+	
+	# Disable some warnings for the glslang code
+	set_source_files_properties( ${GLSLANG_SOURCE_CODES} PROPERTIES COMPILE_FLAGS "-Wno-missing-field-initializers -Wno-reorder" )
 endif()
+
+# Disable some warnings for smol-v code
+set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/../../../External/smol-v/src/smolv.cpp PROPERTIES COMPILE_FLAGS "-Wno-sign-compare" )
 
 
 ##################################################
