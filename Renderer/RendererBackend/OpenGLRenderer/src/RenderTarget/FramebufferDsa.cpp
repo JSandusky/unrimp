@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/RenderTarget/FramebufferDsa.h"
+#include "OpenGLRenderer/Texture/Texture2DArray.h"
 #include "OpenGLRenderer/Texture/Texture2D.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
@@ -38,8 +39,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FramebufferDsa::FramebufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
-		Framebuffer(openGLRenderer, numberOfColorTextures, colorTextures, depthStencilTexture)
+	FramebufferDsa::FramebufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
+		Framebuffer(openGLRenderer, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment)
 	{
 		// Texture reference handling is done within the base class "Framebuffer"
 		const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
@@ -55,16 +56,18 @@ namespace OpenGLRenderer
 		}
 
 		// Loop through all framebuffer color attachments
-		Renderer::ITexture **colorTexture    = colorTextures;
-		Renderer::ITexture **colorTextureEnd = colorTextures + numberOfColorTextures;
-		for (GLenum openGLAttachment = GL_COLOR_ATTACHMENT0; colorTexture < colorTextureEnd; ++colorTexture, ++openGLAttachment)
+		const Renderer::FramebufferAttachment *colorFramebufferAttachment    = colorFramebufferAttachments;
+		const Renderer::FramebufferAttachment *colorFramebufferAttachmentEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
+		for (GLenum openGLAttachment = GL_COLOR_ATTACHMENT0; colorFramebufferAttachment < colorFramebufferAttachmentEnd; ++colorFramebufferAttachment, ++openGLAttachment)
 		{
+			Renderer::ITexture* texture = colorFramebufferAttachment->texture;
+
 			// Security check: Is the given resource owned by this renderer?
 			#ifndef OPENGLRENDERER_NO_RENDERERMATCHCHECK
-				if (&openGLRenderer != &(*colorTexture)->getRenderer())
+				if (&openGLRenderer != &texture->getRenderer())
 				{
 					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The given color texture at index %d is owned by another renderer instance", colorTexture - colorTextures)
+					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The given color texture at index %d is owned by another renderer instance", colorFramebufferAttachment - colorFramebufferAttachments)
 
 					// Continue, there's no point in trying to do any error handling in here
 					continue;
@@ -72,21 +75,40 @@ namespace OpenGLRenderer
 			#endif
 
 			// Evaluate the color texture type
-			switch ((*colorTexture)->getResourceType())
+			switch (texture->getResourceType())
 			{
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
 					// Set the OpenGL framebuffer color attachment
-					const Texture2D* texture2D = static_cast<const Texture2D*>(*colorTexture);
+					const Texture2D* texture2D = static_cast<const Texture2D*>(texture);
 					if (isArbDsa)
 					{
-						glNamedFramebufferTexture(mOpenGLFramebuffer, openGLAttachment, texture2D->getOpenGLTexture(), 0);
+						glNamedFramebufferTexture(mOpenGLFramebuffer, openGLAttachment, texture2D->getOpenGLTexture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex));
 					}
 					else
 					{
-						glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, openGLAttachment, static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture(), 0);
+						glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, openGLAttachment, static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex));
 					}
 					if (!mMultisampleRenderTarget && texture2D->getNumberOfMultisamples() > 1)
+					{
+						mMultisampleRenderTarget = true;
+					}
+					break;
+				}
+
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				{
+					// Set the OpenGL framebuffer color attachment
+					const Texture2DArray* texture2DArray = static_cast<const Texture2DArray*>(texture);
+					if (isArbDsa)
+					{
+						glNamedFramebufferTextureLayer(mOpenGLFramebuffer, openGLAttachment, texture2DArray->getOpenGLTexture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex),  static_cast<GLint>(colorFramebufferAttachment->layerIndex));
+					}
+					else
+					{
+						glNamedFramebufferTextureLayerEXT(mOpenGLFramebuffer, openGLAttachment, texture2DArray->getOpenGLTexture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex), static_cast<GLint>(colorFramebufferAttachment->layerIndex));
+					}
+					if (!mMultisampleRenderTarget && texture2DArray->getNumberOfMultisamples() > 1)
 					{
 						mMultisampleRenderTarget = true;
 					}
@@ -104,7 +126,6 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::INDIRECT_BUFFER:
 				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::TEXTURE_3D:
 				case Renderer::ResourceType::TEXTURE_CUBE:
 				case Renderer::ResourceType::PIPELINE_STATE:
@@ -115,36 +136,90 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
 				default:
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The type of the given color texture at index %ld is not supported", colorTexture - colorTextures)
+					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The type of the given color texture at index %ld is not supported", colorFramebufferAttachment - colorFramebufferAttachments)
 					break;
 			}
 		}
 
 		// Depth stencil texture
-		if (nullptr != depthStencilTexture)
+		if (nullptr != mDepthStencilTexture)
 		{
 			// Security check: Is the given resource owned by this renderer?
 			#ifndef OPENGLRENDERER_NO_RENDERERMATCHCHECK
-				if (&openGLRenderer != &depthStencilTexture->getRenderer())
+				if (&openGLRenderer != &mDepthStencilTexture->getRenderer())
 				{
 					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
 					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The given depth stencil texture is owned by another renderer instance")
 				}
 			#endif
 
-			// Bind the depth stencil texture to framebuffer
-			const Texture2D* texture2D = static_cast<const Texture2D*>(depthStencilTexture);
-			if (isArbDsa)
+			// Evaluate the depth stencil texture type
+			switch (mDepthStencilTexture->getResourceType())
 			{
-				glNamedFramebufferTexture(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, texture2D->getOpenGLTexture(), 0);
-			}
-			else
-			{
-				glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture(), 0);
-			}
-			if (!mMultisampleRenderTarget && texture2D->getNumberOfMultisamples() > 1)
-			{
-				mMultisampleRenderTarget = true;
+				case Renderer::ResourceType::TEXTURE_2D:
+				{
+					// Sanity check
+					assert(0 == depthStencilFramebufferAttachment->layerIndex);
+
+					// Bind the depth stencil texture to framebuffer
+					const Texture2D* texture2D = static_cast<const Texture2D*>(mDepthStencilTexture);
+					if (isArbDsa)
+					{
+						glNamedFramebufferTexture(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, texture2D->getOpenGLTexture(), static_cast<GLint>(depthStencilFramebufferAttachment->mipmapIndex));
+					}
+					else
+					{
+						glNamedFramebufferTexture2DEXT(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture(), static_cast<GLint>(depthStencilFramebufferAttachment->mipmapIndex));
+					}
+					if (!mMultisampleRenderTarget && texture2D->getNumberOfMultisamples() > 1)
+					{
+						mMultisampleRenderTarget = true;
+					}
+					break;
+				}
+
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				{
+					// Bind the depth stencil texture to framebuffer
+					const Texture2DArray* texture2DArray = static_cast<const Texture2DArray*>(mDepthStencilTexture);
+					if (isArbDsa)
+					{
+						glNamedFramebufferTextureLayer(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, texture2DArray->getOpenGLTexture(), static_cast<GLint>(depthStencilFramebufferAttachment->mipmapIndex), static_cast<GLint>(depthStencilFramebufferAttachment->layerIndex));
+					}
+					else
+					{
+						glNamedFramebufferTextureLayerEXT(mOpenGLFramebuffer, GL_DEPTH_ATTACHMENT, texture2DArray->getOpenGLTexture(), static_cast<GLint>(depthStencilFramebufferAttachment->mipmapIndex), static_cast<GLint>(depthStencilFramebufferAttachment->layerIndex));
+					}
+					if (!mMultisampleRenderTarget && texture2DArray->getNumberOfMultisamples() > 1)
+					{
+						mMultisampleRenderTarget = true;
+					}
+					break;
+				}
+
+				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::PROGRAM:
+				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::SWAP_CHAIN:
+				case Renderer::ResourceType::FRAMEBUFFER:
+				case Renderer::ResourceType::INDEX_BUFFER:
+				case Renderer::ResourceType::VERTEX_BUFFER:
+				case Renderer::ResourceType::UNIFORM_BUFFER:
+				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::INDIRECT_BUFFER:
+				case Renderer::ResourceType::TEXTURE_1D:
+				case Renderer::ResourceType::TEXTURE_3D:
+				case Renderer::ResourceType::TEXTURE_CUBE:
+				case Renderer::ResourceType::PIPELINE_STATE:
+				case Renderer::ResourceType::SAMPLER_STATE:
+				case Renderer::ResourceType::VERTEX_SHADER:
+				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+				case Renderer::ResourceType::GEOMETRY_SHADER:
+				case Renderer::ResourceType::FRAGMENT_SHADER:
+				default:
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: The type of the given depth stencil texture is not supported")
+					break;
 			}
 		}
 

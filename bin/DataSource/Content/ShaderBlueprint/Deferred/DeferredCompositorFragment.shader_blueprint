@@ -82,7 +82,7 @@ SAMPLER_STATE(SamplerLinear, 1)
 	TEXTURE_2D(GBufferMap2, 3)	// GBuffer 2: rgb = emissive color, a = metallic
 	TEXTURE_2D(DepthMap, 4)
 @end
-TEXTURE_2D(ShadowMap, 5)
+TEXTURE_ARRAY(ShadowMap, 5)
 TEXTURE_2D(ScreenSpaceAmbientOcclusionMap, 6)
 TEXTURE_CUBE(ReflectionCubeMap, 7)
 TEXTURE_3D_UINT(LightClustersMap3D, 8)
@@ -127,7 +127,7 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 	float shadowVisibility = 1.0f;
 	{
 		float4 shadowTextureCoordinate = MATRIX_MUL(PassData.ShadowMatrix, float4(worldSpacePosition, 1.0f));
-		if (SAMPLE_2D_LOD(ShadowMap, SamplerPoint, float4(shadowTextureCoordinate.xy, 0.0f, 0.0f)).r < shadowTextureCoordinate.z - 0.001f)
+		if (SAMPLE_ARRAY_LOD(ShadowMap, SamplerPoint, float4(shadowTextureCoordinate.xy, 1.0f, 0.0f)).r < shadowTextureCoordinate.z - 0.001f)
 		{
 			shadowVisibility = 0.0f;
 		}

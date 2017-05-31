@@ -54,6 +54,7 @@ namespace Renderer
 		class IRenderTarget;
 			class ISwapChain;
 			class IFramebuffer;
+			struct FramebufferAttachment;
 		class CommandBuffer;
 		class IBufferManager;
 		class IBuffer;
@@ -1835,7 +1836,7 @@ namespace Renderer
 			virtual const char* getShaderLanguageName(uint32_t index) const = 0;
 			virtual IShaderLanguage* getShaderLanguage(const char* shaderLanguageName = nullptr) = 0;
 			virtual ISwapChain* createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) = 0;
-			virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorTextures, ITexture** colorTextures, ITexture* depthStencilTexture = nullptr) = 0;
+			virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const FramebufferAttachment* colorFramebufferAttachments, const FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) = 0;
 			virtual IBufferManager *createBufferManager() = 0;
 			virtual ITextureManager *createTextureManager() = 0;
 			virtual IRootSignature* createRootSignature(const RootSignature& rootSignature) = 0;
@@ -2049,6 +2050,22 @@ namespace Renderer
 	// Renderer/RenderTarget/IFramebuffer.h
 	#ifndef __RENDERER_IFRAMEBUFFER_H__
 	#define __RENDERER_IFRAMEBUFFER_H__
+		struct FramebufferAttachment
+		{
+			ITexture* texture;
+			uint32_t  mipmapIndex;
+			uint32_t  layerIndex;
+			inline FramebufferAttachment() :
+				texture(nullptr),
+				mipmapIndex(0),
+				layerIndex(0)
+			{}
+			inline FramebufferAttachment(ITexture* _texture, uint32_t _mipmapIndex = 0, uint32_t _layerIndex = 0) :
+				texture(_texture),
+				mipmapIndex(_mipmapIndex),
+				layerIndex(_layerIndex)
+			{}
+		};
 		class IFramebuffer : public IRenderTarget
 		{
 		public:

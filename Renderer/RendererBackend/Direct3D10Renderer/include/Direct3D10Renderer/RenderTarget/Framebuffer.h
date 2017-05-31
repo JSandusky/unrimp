@@ -36,10 +36,6 @@
 struct ID3D10Device;
 struct ID3D10RenderTargetView;
 struct ID3D10DepthStencilView;
-namespace Renderer
-{
-	class ITexture;
-}
 namespace Direct3D10Renderer
 {
 	class Direct3D10Renderer;
@@ -74,18 +70,18 @@ namespace Direct3D10Renderer
 		*
 		*  @param[in] direct3D10Renderer
 		*    Owner Direct3D 10 renderer instance
-		*  @param[in] numberOfColorTextures
+		*  @param[in] numberOfColorFramebufferAttachments
 		*    Number of color render target textures
-		*  @param[in] colorTextures
+		*  @param[in] colorFramebufferAttachments
 		*    The color render target textures, can be a null pointer or can contain null pointers, if not a null pointer there must be at
 		*    least "numberOfColorTextures" textures in the provided C-array of pointers
-		*  @param[in] depthStencilTexture
+		*  @param[in] depthStencilFramebufferAttachment
 		*    The depth stencil render target texture, can be a null pointer
 		*
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
+		Framebuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment);
 
 		/**
 		*  @brief

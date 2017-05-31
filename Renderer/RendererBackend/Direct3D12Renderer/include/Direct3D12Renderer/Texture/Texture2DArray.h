@@ -34,6 +34,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+struct ID3D12Resource;
 // struct ID3D12ShaderResourceView;	// TODO(co) Direct3D 12 update
 namespace Direct3D12Renderer
 {
@@ -94,6 +95,24 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
+		*    Return the DXGI format
+		*
+		*  @return
+		*    The DDXGI format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
+		*/
+		inline uint32_t getDxgiFormat() const;
+
+		/**
+		*  @brief
+		*    Return the Direct3D 12 resource instance
+		*
+		*  @return
+		*    The Direct3D 12 resource instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline ID3D12Resource* getD3D12Resource() const;
+
+		/**
+		*  @brief
 		*    Return the Direct3D shader resource view instance
 		*
 		*  @return
@@ -126,6 +145,8 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		uint32_t			  mDxgiFormat;	//// DXGI format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
+		ID3D12Resource*		  mD3D12Resource;
 		// TODO(co) Direct3D 12 update
 		//ID3D12ShaderResourceView *mD3D12ShaderResourceViewTexture;	///< Direct3D 12 shader resource view, can be a null pointer
 

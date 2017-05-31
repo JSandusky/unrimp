@@ -342,7 +342,9 @@ namespace RendererRuntime
 				RENDERER_SET_RESOURCE_DEBUG_NAME(depthStencilTexture2D, "OpenVR depth stencil render target texture")
 
 				// Create the framebuffer object (FBO) instance
-				mFramebuffer = renderer.createFramebuffer(1, &colorTexture2D, depthStencilTexture2D);
+				Renderer::FramebufferAttachment colorFramebufferAttachment(colorTexture2D);
+				Renderer::FramebufferAttachment depthStencilFramebufferAttachment(depthStencilTexture2D);
+				mFramebuffer = renderer.createFramebuffer(1, &colorFramebufferAttachment, &depthStencilFramebufferAttachment);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mFramebuffer, "OpenVR framebuffer")
 			}
 

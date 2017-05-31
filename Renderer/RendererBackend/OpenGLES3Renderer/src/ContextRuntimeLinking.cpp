@@ -513,6 +513,7 @@ namespace OpenGLES3Renderer
 		IMPORT_FUNC(glFlush);
 		IMPORT_FUNC(glFramebufferRenderbuffer);
 		IMPORT_FUNC(glFramebufferTexture2D);
+		IMPORT_FUNC(glFramebufferTextureLayer);
 		IMPORT_FUNC(glBlitFramebuffer);
 		IMPORT_FUNC(glFrontFace);
 		IMPORT_FUNC(glGenBuffers);

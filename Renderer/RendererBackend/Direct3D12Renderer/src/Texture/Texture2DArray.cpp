@@ -38,8 +38,10 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArray::Texture2DArray(Direct3D12Renderer& direct3D12Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, const void*, uint32_t, Renderer::TextureUsage) :
-		ITexture2DArray(direct3D12Renderer, width, height, numberOfSlices)
+	Texture2DArray::Texture2DArray(Direct3D12Renderer& direct3D12Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void*, uint32_t, Renderer::TextureUsage) :
+		ITexture2DArray(direct3D12Renderer, width, height, numberOfSlices),
+		mDxgiFormat(Mapping::getDirect3D12Format(textureFormat)),
+		mD3D12Resource(nullptr)
 	//	mD3D12ShaderResourceViewTexture(nullptr)	// TODO(co) Direct3D 12 update
 	{
 		// TODO(co) Direct3D 12 update

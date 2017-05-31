@@ -69,6 +69,15 @@ namespace OpenGLRenderer
 
 		/**
 		*  @brief
+		*    Return the number of multisamples
+		*
+		*  @return
+		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
+		*/
+		inline uint8_t getNumberOfMultisamples() const;
+
+		/**
+		*  @brief
 		*    Return the OpenGL texture
 		*
 		*  @return
@@ -101,7 +110,8 @@ namespace OpenGLRenderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		uint32_t mOpenGLTexture;	///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint8_t  mNumberOfMultisamples;	///< The number of multisamples per pixel (valid values: 1, 2, 4, 8)
+		uint32_t mOpenGLTexture;		///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	//[-------------------------------------------------------]

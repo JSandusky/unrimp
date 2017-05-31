@@ -95,6 +95,31 @@ namespace Direct3D10Renderer
 
 		/**
 		*  @brief
+		*    Return the texture format
+		*
+		*  @return
+		*    The texture format
+		*
+		*  @remarks
+		*    For textures used as depth stencil render target, Direct3D 10 format handling becomes a little bit more complex due to
+		*    the offered flexibility. For example the abstract texture format "Renderer::TextureFormat::D32_FLOAT" translates into
+		*    - Direct3D 10 texture format is "DXGI_FORMAT_R32_TYPELESS"
+		*    - Direct3D 10 shader resource view format is "DXGI_FORMAT_R32_FLOAT"
+		*    - Direct3D 10 depth stencil view format is "DXGI_FORMAT_D32_FLOAT"
+		*/
+		inline Renderer::TextureFormat::Enum getTextureFormat() const;
+
+		/**
+		*  @brief
+		*    Return the number of multisamples
+		*
+		*  @return
+		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
+		*/
+		inline uint8_t getNumberOfMultisamples() const;
+
+		/**
+		*  @brief
 		*    Return whether or not mipmaps should be generated automatically
 		*
 		*  @return
@@ -144,9 +169,11 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		bool					  mGenerateMipmaps;
-		ID3D10Texture2D			 *mD3D10Texture2D;					///< Direct3D 10 texture 2D resource, can be a null pointer
-		ID3D10ShaderResourceView *mD3D10ShaderResourceViewTexture;	///< Direct3D 10 shader resource view, can be a null pointer
+		Renderer::TextureFormat::Enum  mTextureFormat;
+		uint8_t						   mNumberOfMultisamples;
+		bool						   mGenerateMipmaps;
+		ID3D10Texture2D				  *mD3D10Texture2D;					///< Direct3D 10 texture 2D resource, can be a null pointer
+		ID3D10ShaderResourceView	  *mD3D10ShaderResourceViewTexture;	///< Direct3D 10 shader resource view, can be a null pointer
 
 
 	};

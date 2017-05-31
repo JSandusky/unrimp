@@ -89,6 +89,7 @@
 		// Texture
 		#define TEXTURE_1D(name, index) Texture1D name : register(t##index);
 		#define TEXTURE_2D(name, index) Texture2D name : register(t##index);
+		#define TEXTURE_ARRAY(name, index) Texture2DArray name : register(t##index);
 		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) Texture2DMS<float4, numberOfMultisamples> name : register(t##index);
 		#define TEXTURE_3D(name, index) Texture3D name : register(t##index);
 		#define TEXTURE_3D_UINT(name, index) Texture3D<uint> name : register(t##index);
@@ -117,6 +118,8 @@
 		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.x, coordinate.w)
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
 		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_ARRAY(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
+		#define SAMPLE_ARRAY_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xy, coordinate.w).r
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) textureObject.Load(coordinate, sampleIndex)
 		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) textureObject.Load(coordinate, sampleIndex).r
@@ -210,6 +213,7 @@
 		#define TEXTURE_1D(name, index) uniform sampler1D name;
 		#define TEXTURE_2D(name, index) uniform sampler2D name;
 		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) uniform sampler2DMS name;
+		#define TEXTURE_ARRAY(name, index) uniform sampler2DArray name;
 		#define TEXTURE_3D(name, index) uniform sampler3D name;
 		#define TEXTURE_3D_UINT(name, index) uniform isampler3D name;
 		#define TEXTURE_CUBE(name, index) uniform samplerCube name;
@@ -223,6 +227,8 @@
 		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.x, coordinate.w)
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_ARRAY(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
+		#define SAMPLE_ARRAY_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
 		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1
@@ -347,6 +353,7 @@
 		#define TEXTURE_1D(name, index) uniform highp sampler2D name;	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
 		#define TEXTURE_2D(name, index) uniform highp sampler2D name;
 		#define TEXTURE_2D_MS(name, numberOfMultisamples, index) uniform sampler2DMS name;
+		#define TEXTURE_ARRAY(name, index) uniform highp sampler2DArray name;
 		#define TEXTURE_3D(name, index) uniform highp sampler3D name;
 		#define TEXTURE_3D_UINT(name, index) uniform highp isampler3D name;
 		#define TEXTURE_CUBE(name, index) uniform highp samplerCube name;
@@ -360,6 +367,8 @@
 		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, vec2(coordinate.x, 0.0f), coordinate.w)	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_ARRAY(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
+		#define SAMPLE_ARRAY_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
 		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1

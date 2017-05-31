@@ -154,17 +154,17 @@ namespace RendererRuntime
 					{
 						// Get the texture instances
 						const uint8_t numberOfColorTextures = framebufferSignature.getNumberOfColorTextures();
-						Renderer::ITexture* colorTextures[8] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+						Renderer::FramebufferAttachment colorFramebufferAttachments[8];
 						for (uint8_t i = 0; i < numberOfColorTextures; ++i)
 						{
 							const AssetId colorTextureAssetId = framebufferSignature.getColorTextureAssetId(i);
-							colorTextures[i] = isInitialized(colorTextureAssetId) ? mRenderTargetTextureManager.getTextureByAssetId(colorTextureAssetId, renderTarget, numberOfMultisamples, resolutionScale) : nullptr;
+							colorFramebufferAttachments[i].texture = isInitialized(colorTextureAssetId) ? mRenderTargetTextureManager.getTextureByAssetId(colorTextureAssetId, renderTarget, numberOfMultisamples, resolutionScale) : nullptr;
 						}
-						Renderer::ITexture* depthStencilTexture = isInitialized(framebufferSignature.getDepthStencilTextureAssetId()) ? mRenderTargetTextureManager.getTextureByAssetId(framebufferSignature.getDepthStencilTextureAssetId(), renderTarget, numberOfMultisamples, resolutionScale) : nullptr;
+						Renderer::FramebufferAttachment depthStencilFramebufferAttachment(isInitialized(framebufferSignature.getDepthStencilTextureAssetId()) ? mRenderTargetTextureManager.getTextureByAssetId(framebufferSignature.getDepthStencilTextureAssetId(), renderTarget, numberOfMultisamples, resolutionScale) : nullptr);
 
 						// Create the framebuffer object (FBO) instance
 						// -> The framebuffer automatically adds a reference to the provided textures
-						framebufferElement.framebuffer = mRenderTargetTextureManager.getRendererRuntime().getRenderer().createFramebuffer(numberOfColorTextures, colorTextures, depthStencilTexture);
+						framebufferElement.framebuffer = mRenderTargetTextureManager.getRendererRuntime().getRenderer().createFramebuffer(numberOfColorTextures, colorFramebufferAttachments, (nullptr != depthStencilFramebufferAttachment.texture) ? &depthStencilFramebufferAttachment : nullptr);
 						RENDERER_SET_RESOURCE_DEBUG_NAME(framebufferElement.framebuffer, "Framebuffer manager")
 						framebufferElement.framebuffer->addReference();
 					}

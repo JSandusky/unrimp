@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/RenderTarget/Framebuffer.h"
+#include "OpenGLRenderer/Texture/Texture2DArray.h"
 #include "OpenGLRenderer/Texture/Texture2D.h"
 #include "OpenGLRenderer/Extensions.h"
 
@@ -74,12 +75,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(OpenGLRenderer &openGLRenderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
+	Framebuffer::Framebuffer(OpenGLRenderer &openGLRenderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
 		IFramebuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLFramebuffer(0),
-		mNumberOfColorTextures(numberOfColorTextures),
+		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
 		mColorTextures(nullptr),	// Set below
-		mDepthStencilTexture(depthStencilTexture),
+		mDepthStencilTexture(nullptr),
 		mWidth(UINT_MAX),
 		mHeight(UINT_MAX),
 		mMultisampleRenderTarget(false),
@@ -97,13 +98,13 @@ namespace OpenGLRenderer
 
 			// Loop through all color textures
 			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorTextures)
+			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments)
 			{
 				// Valid entry?
-				if (nullptr != *colorTextures)
+				if (nullptr != colorFramebufferAttachments->texture)
 				{
 					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					*colorTexture = *colorTextures;
+					*colorTexture = colorFramebufferAttachments->texture;
 					(*colorTexture)->addReference();
 
 					// Evaluate the color texture type
@@ -111,6 +112,9 @@ namespace OpenGLRenderer
 					{
 						case Renderer::ResourceType::TEXTURE_2D:
 						{
+							// Sanity check
+							assert(0 == colorFramebufferAttachments->layerIndex);
+
 							// Update the framebuffer width and height if required
 							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
 							if (mWidth > texture2D->getWidth())
@@ -130,6 +134,21 @@ namespace OpenGLRenderer
 							break;
 						}
 
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						{
+							// Update the framebuffer width and height if required
+							Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+							if (mWidth > texture2DArray->getWidth())
+							{
+								mWidth = texture2DArray->getWidth();
+							}
+							if (mHeight > texture2DArray->getHeight())
+							{
+								mHeight = texture2DArray->getHeight();
+							}
+							break;
+						}
+
 						case Renderer::ResourceType::ROOT_SIGNATURE:
 						case Renderer::ResourceType::PROGRAM:
 						case Renderer::ResourceType::VERTEX_ARRAY:
@@ -141,7 +160,6 @@ namespace OpenGLRenderer
 						case Renderer::ResourceType::TEXTURE_BUFFER:
 						case Renderer::ResourceType::INDIRECT_BUFFER:
 						case Renderer::ResourceType::TEXTURE_1D:
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 						case Renderer::ResourceType::TEXTURE_3D:
 						case Renderer::ResourceType::TEXTURE_CUBE:
 						case Renderer::ResourceType::PIPELINE_STATE:
@@ -164,8 +182,10 @@ namespace OpenGLRenderer
 		}
 
 		// Add a reference to the used depth stencil texture
-		if (nullptr != mDepthStencilTexture)
+		if (nullptr != depthStencilFramebufferAttachment)
 		{
+			mDepthStencilTexture = depthStencilFramebufferAttachment->texture;
+			assert(nullptr != mDepthStencilTexture);
 			mDepthStencilTexture->addReference();
 
 			// Evaluate the depth stencil texture type
@@ -173,6 +193,9 @@ namespace OpenGLRenderer
 			{
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
+					// Sanity check
+					assert(0 == depthStencilFramebufferAttachment->layerIndex);
+
 					// Update the framebuffer width and height if required
 					Texture2D *texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
 					if (mWidth > texture2D->getWidth())
@@ -192,6 +215,21 @@ namespace OpenGLRenderer
 					break;
 				}
 
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				{
+					// Update the framebuffer width and height if required
+					Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(mDepthStencilTexture);
+					if (mWidth > texture2DArray->getWidth())
+					{
+						mWidth = texture2DArray->getWidth();
+					}
+					if (mHeight > texture2DArray->getHeight())
+					{
+						mHeight = texture2DArray->getHeight();
+					}
+					break;
+				}
+
 				case Renderer::ResourceType::ROOT_SIGNATURE:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
@@ -203,7 +241,6 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::INDIRECT_BUFFER:
 				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::TEXTURE_3D:
 				case Renderer::ResourceType::TEXTURE_CUBE:
 				case Renderer::ResourceType::PIPELINE_STATE:

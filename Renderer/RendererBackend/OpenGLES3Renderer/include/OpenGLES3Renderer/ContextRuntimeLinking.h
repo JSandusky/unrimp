@@ -274,6 +274,7 @@ namespace OpenGLES3Renderer
 	FNDEF_GL(void,				glFlush,								(void));
 	FNDEF_GL(void,				glFramebufferRenderbuffer,				(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer));
 	FNDEF_GL(void,				glFramebufferTexture2D,					(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level));
+	FNDEF_GL(void,				glFramebufferTextureLayer,				(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer));
 	FNDEF_GL(void,				glBlitFramebuffer,						(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter));
 	FNDEF_GL(void,				glFrontFace,							(GLenum mode));
 	FNDEF_GL(void,				glGenBuffers,							(GLsizei n, GLuint* buffers));
@@ -481,6 +482,7 @@ namespace OpenGLES3Renderer
 	#define	glFlush									FNPTR(glFlush)
 	#define	glFramebufferRenderbuffer				FNPTR(glFramebufferRenderbuffer)
 	#define	glFramebufferTexture2D					FNPTR(glFramebufferTexture2D)
+	#define	glFramebufferTextureLayer				FNPTR(glFramebufferTextureLayer)
 	#define	glBlitFramebuffer						FNPTR(glBlitFramebuffer)
 	#define	glFrontFace								FNPTR(glFrontFace)
 	#define	glGenBuffers							FNPTR(glGenBuffers)

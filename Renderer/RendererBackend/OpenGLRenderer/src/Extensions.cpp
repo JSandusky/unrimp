@@ -389,6 +389,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glEnableVertexArrayAttribEXT)
 			IMPORT_FUNC(glBindMultiTextureEXT)
 			IMPORT_FUNC(glNamedFramebufferTexture2DEXT)
+			IMPORT_FUNC(glNamedFramebufferTextureLayerEXT)
 			IMPORT_FUNC(glCheckNamedFramebufferStatusEXT)
 			IMPORT_FUNC(glNamedRenderbufferStorageEXT);
 			IMPORT_FUNC(glNamedFramebufferRenderbufferEXT);
@@ -414,6 +415,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glGenFramebuffers)
 			IMPORT_FUNC(glCheckFramebufferStatus)
 			IMPORT_FUNC(glFramebufferTexture2D)
+			IMPORT_FUNC(glFramebufferTextureLayer)
 			IMPORT_FUNC(glFramebufferRenderbuffer)
 			IMPORT_FUNC(glBlitFramebuffer)
 			IMPORT_FUNC(glGenerateMipmap)
@@ -731,6 +733,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glNamedRenderbufferStorage)
 			IMPORT_FUNC(glNamedFramebufferRenderbuffer)
 			IMPORT_FUNC(glNamedFramebufferTexture)
+			IMPORT_FUNC(glNamedFramebufferTextureLayer)
 			IMPORT_FUNC(glTextureBuffer)
 			IMPORT_FUNC(glBindTextureUnit)
 			IMPORT_FUNC(glCompressedTextureSubImage1D)

@@ -67,14 +67,14 @@ void FirstMultipleRenderTargets::onInitialization()
 			// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 			// -> Not required for OpenGL and OpenGL ES 2
 			// -> The optimized texture clear value is a Direct3D 12 related option
-			Renderer::ITexture *texture2D[NUMBER_OF_TEXTURES];
+			Renderer::FramebufferAttachment colorFramebufferAttachments[NUMBER_OF_TEXTURES];
 			for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 			{
-				texture2D[i] = mTexture2D[i] = mTextureManager->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
+				colorFramebufferAttachments[i].texture = mTexture2D[i] = mTextureManager->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
 			}
 
 			// Create the framebuffer object (FBO) instance
-			mFramebuffer = renderer->createFramebuffer(NUMBER_OF_TEXTURES, texture2D);
+			mFramebuffer = renderer->createFramebuffer(NUMBER_OF_TEXTURES, colorFramebufferAttachments);
 
 			{ // Create sampler state: We don't use mipmaps
 				Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();

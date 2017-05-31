@@ -1758,7 +1758,7 @@ namespace OpenGLRenderer
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle, useExternalContext) : nullptr;
 	}
 
-	Renderer::IFramebuffer *OpenGLRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	Renderer::IFramebuffer *OpenGLRenderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment)
 	{
 		// "GL_ARB_framebuffer_object" required
 		if (mExtensions->isGL_ARB_framebuffer_object())
@@ -1768,13 +1768,13 @@ namespace OpenGLRenderer
 			{
 				// Effective direct state access (DSA)
 				// -> Validation is done inside the framebuffer implementation
-				return new FramebufferDsa(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
+				return new FramebufferDsa(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 			}
 			else
 			{
 				// Traditional bind version
 				// -> Validation is done inside the framebuffer implementation
-				return new FramebufferBind(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
+				return new FramebufferBind(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 			}
 		}
 		else

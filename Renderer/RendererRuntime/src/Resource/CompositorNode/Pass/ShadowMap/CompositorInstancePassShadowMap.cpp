@@ -147,15 +147,18 @@ namespace RendererRuntime
 			// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 			// -> Not required for OpenGL and OpenGL ES 2
 			// -> The optimized texture clear value is a Direct3D 12 related option
-			Renderer::ITexture* texture2D = rendererRuntime.getTextureManager().createTexture2D(shadowMapSize, shadowMapSize, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(texture2D, "Compositor instance pass shadow map")
+			Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2DArray(shadowMapSize, shadowMapSize, 2, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(texture, "Compositor instance pass shadow map")
 
-			// Create the framebuffer object (FBO) instance
-			mFramebufferPtr = rendererRuntime.getRenderer().createFramebuffer(0, nullptr, texture2D);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(mFramebufferPtr, "Compositor instance pass shadow map")
+			{ // Create the framebuffer object (FBO) instance
+				// TODO(co) This is an infrastructure preparation for cascaded shadow maps support
+				Renderer::FramebufferAttachment depthStencilFramebufferAttachment(texture, 0, 1);
+				mFramebufferPtr = rendererRuntime.getRenderer().createFramebuffer(0, nullptr, &depthStencilFramebufferAttachment);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(mFramebufferPtr, "Compositor instance pass shadow map")
+			}
 
 			// Create texture resource
-			mTextureResourceId = textureResourceManager.createTextureResourceByAssetId(assetId, *texture2D);
+			mTextureResourceId = textureResourceManager.createTextureResourceByAssetId(assetId, *texture);
 		}
 		else
 		{

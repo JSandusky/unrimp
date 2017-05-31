@@ -117,7 +117,8 @@ void FirstGpgpu::onInitialization()
 		Renderer::ITexture *texture2D = mTexture2D[i] = mTextureManager->createTexture2D(64, 64, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLUE));
 
 		// Create the framebuffer object (FBO) instance
-		mFramebuffer[i] = mRenderer->createFramebuffer(1, &texture2D);
+		Renderer::FramebufferAttachment colorFramebufferAttachment(texture2D);
+		mFramebuffer[i] = mRenderer->createFramebuffer(1, &colorFramebufferAttachment);
 	}
 
 	{ // Create sampler state: We don't use mipmaps

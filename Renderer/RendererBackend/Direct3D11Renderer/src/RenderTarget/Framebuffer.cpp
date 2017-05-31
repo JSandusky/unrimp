@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/RenderTarget/Framebuffer.h"
 #include "Direct3D11Renderer/Texture/Texture2D.h"
+#include "Direct3D11Renderer/Texture/Texture2DArray.h"
 #include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D11Renderer/D3D11.h"
 #include "Direct3D11Renderer/Mapping.h"
@@ -41,11 +42,11 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
+	Framebuffer::Framebuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
 		IFramebuffer(direct3D11Renderer),
-		mNumberOfColorTextures(numberOfColorTextures),
+		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
 		mColorTextures(nullptr),	// Set below
-		mDepthStencilTexture(depthStencilTexture),
+		mDepthStencilTexture(nullptr),
 		mWidth(UINT_MAX),
 		mHeight(UINT_MAX),
 		mGenerateMipmaps(false),
@@ -66,13 +67,13 @@ namespace Direct3D11Renderer
 			// Loop through all color textures
 			ID3D11RenderTargetView **d3d11RenderTargetView = mD3D11RenderTargetViews;
 			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorTextures, ++d3d11RenderTargetView)
+			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++d3d11RenderTargetView)
 			{
 				// Valid entry?
-				if (nullptr != *colorTextures)
+				if (nullptr != colorFramebufferAttachments->texture)
 				{
 					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					*colorTexture = *colorTextures;
+					*colorTexture = colorFramebufferAttachments->texture;
 					(*colorTexture)->addReference();
 
 					// Evaluate the color texture type
@@ -80,6 +81,9 @@ namespace Direct3D11Renderer
 					{
 						case Renderer::ResourceType::TEXTURE_2D:
 						{
+							// Sanity check
+							assert(0 == colorFramebufferAttachments->layerIndex);
+
 							// Update the framebuffer width and height if required
 							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
 							if (mWidth > texture2D->getWidth())
@@ -95,11 +99,41 @@ namespace Direct3D11Renderer
 							D3D11_RENDER_TARGET_VIEW_DESC d3d11RenderTargetViewDesc = {};
 							d3d11RenderTargetViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(texture2D->getTextureFormat()));
 							d3d11RenderTargetViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
-							d3d11RenderTargetViewDesc.Texture2D.MipSlice = 0;
+							d3d11RenderTargetViewDesc.Texture2D.MipSlice = colorFramebufferAttachments->mipmapIndex;
 							direct3D11Renderer.getD3D11Device()->CreateRenderTargetView(texture2D->getD3D11Texture2D(), &d3d11RenderTargetViewDesc, d3d11RenderTargetView);
 
 							// Generate mipmaps?
 							if (texture2D->getGenerateMipmaps())
+							{
+								mGenerateMipmaps = true;
+							}
+							break;
+						}
+
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						{
+							// Update the framebuffer width and height if required
+							Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+							if (mWidth > texture2DArray->getWidth())
+							{
+								mWidth = texture2DArray->getWidth();
+							}
+							if (mHeight > texture2DArray->getHeight())
+							{
+								mHeight = texture2DArray->getHeight();
+							}
+
+							// Create the Direct3D 11 render target view instance
+							D3D11_RENDER_TARGET_VIEW_DESC d3d11RenderTargetViewDesc = {};
+							d3d11RenderTargetViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(texture2DArray->getTextureFormat()));
+							d3d11RenderTargetViewDesc.ViewDimension		 = (texture2DArray->getNumberOfMultisamples() > 1) ? D3D11_RTV_DIMENSION_TEXTURE2DMSARRAY : D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+							d3d11RenderTargetViewDesc.Texture2DArray.MipSlice		 = colorFramebufferAttachments->mipmapIndex;
+							d3d11RenderTargetViewDesc.Texture2DArray.FirstArraySlice = colorFramebufferAttachments->layerIndex;
+							d3d11RenderTargetViewDesc.Texture2DArray.ArraySize		 = 1;
+							direct3D11Renderer.getD3D11Device()->CreateRenderTargetView(texture2DArray->getD3D11Texture2D(), &d3d11RenderTargetViewDesc, d3d11RenderTargetView);
+
+							// Generate mipmaps?
+							if (texture2DArray->getGenerateMipmaps())
 							{
 								mGenerateMipmaps = true;
 							}
@@ -117,7 +151,6 @@ namespace Direct3D11Renderer
 						case Renderer::ResourceType::TEXTURE_BUFFER:
 						case Renderer::ResourceType::INDIRECT_BUFFER:
 						case Renderer::ResourceType::TEXTURE_1D:
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 						case Renderer::ResourceType::TEXTURE_3D:
 						case Renderer::ResourceType::TEXTURE_CUBE:
 						case Renderer::ResourceType::PIPELINE_STATE:
@@ -128,7 +161,7 @@ namespace Direct3D11Renderer
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
 						default:
-							RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 11 error: The type of the given color texture at index %d is not supported", colorTexture - colorTextures)
+							RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 11 error: The type of the given color texture at index %d is not supported", colorTexture - mColorTextures)
 							*d3d11RenderTargetView = nullptr;
 							break;
 					}
@@ -142,8 +175,10 @@ namespace Direct3D11Renderer
 		}
 
 		// Add a reference to the used depth stencil texture
-		if (nullptr != mDepthStencilTexture)
+		if (nullptr != depthStencilFramebufferAttachment)
 		{
+			mDepthStencilTexture = depthStencilFramebufferAttachment->texture;
+			assert(nullptr != mDepthStencilTexture);
 			mDepthStencilTexture->addReference();
 
 			// Evaluate the depth stencil texture type
@@ -151,6 +186,9 @@ namespace Direct3D11Renderer
 			{
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
+					// Sanity check
+					assert(0 == depthStencilFramebufferAttachment->layerIndex);
+
 					// Update the framebuffer width and height if required
 					Texture2D *texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
 					if (mWidth > texture2D->getWidth())
@@ -166,11 +204,41 @@ namespace Direct3D11Renderer
 					D3D11_DEPTH_STENCIL_VIEW_DESC d3d11DepthStencilViewDesc = {};
 					d3d11DepthStencilViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(texture2D->getTextureFormat()));
 					d3d11DepthStencilViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D11_DSV_DIMENSION_TEXTURE2DMS : D3D11_DSV_DIMENSION_TEXTURE2D;
-					d3d11DepthStencilViewDesc.Texture2D.MipSlice = 0;
+					d3d11DepthStencilViewDesc.Texture2D.MipSlice = depthStencilFramebufferAttachment->mipmapIndex;
 					direct3D11Renderer.getD3D11Device()->CreateDepthStencilView(texture2D->getD3D11Texture2D(), &d3d11DepthStencilViewDesc, &mD3D11DepthStencilView);
 
 					// Generate mipmaps?
 					if (texture2D->getGenerateMipmaps())
+					{
+						mGenerateMipmaps = true;
+					}
+					break;
+				}
+
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				{
+					// Update the framebuffer width and height if required
+					Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(mDepthStencilTexture);
+					if (mWidth > texture2DArray->getWidth())
+					{
+						mWidth = texture2DArray->getWidth();
+					}
+					if (mHeight > texture2DArray->getHeight())
+					{
+						mHeight = texture2DArray->getHeight();
+					}
+
+					// Create the Direct3D 11 render target view instance
+					D3D11_DEPTH_STENCIL_VIEW_DESC d3d11DepthStencilViewDesc = {};
+					d3d11DepthStencilViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(texture2DArray->getTextureFormat()));
+					d3d11DepthStencilViewDesc.ViewDimension		 = (texture2DArray->getNumberOfMultisamples() > 1) ? D3D11_DSV_DIMENSION_TEXTURE2DMSARRAY : D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+					d3d11DepthStencilViewDesc.Texture2DArray.MipSlice		 = depthStencilFramebufferAttachment->mipmapIndex;
+					d3d11DepthStencilViewDesc.Texture2DArray.FirstArraySlice = depthStencilFramebufferAttachment->layerIndex;
+					d3d11DepthStencilViewDesc.Texture2DArray.ArraySize		 = 1;
+					direct3D11Renderer.getD3D11Device()->CreateDepthStencilView(texture2DArray->getD3D11Texture2D(), &d3d11DepthStencilViewDesc, &mD3D11DepthStencilView);
+
+					// Generate mipmaps?
+					if (texture2DArray->getGenerateMipmaps())
 					{
 						mGenerateMipmaps = true;
 					}
@@ -188,7 +256,6 @@ namespace Direct3D11Renderer
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::INDIRECT_BUFFER:
 				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::TEXTURE_3D:
 				case Renderer::ResourceType::TEXTURE_CUBE:
 				case Renderer::ResourceType::PIPELINE_STATE:

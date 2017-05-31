@@ -28,6 +28,16 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline Renderer::TextureFormat::Enum Texture2DArray::getTextureFormat() const
+	{
+		return mTextureFormat;
+	}
+
+	inline uint8_t Texture2DArray::getNumberOfMultisamples() const
+	{
+		return mNumberOfMultisamples;
+	}
+
 	inline bool Texture2DArray::getGenerateMipmaps() const
 	{
 		return mGenerateMipmaps;

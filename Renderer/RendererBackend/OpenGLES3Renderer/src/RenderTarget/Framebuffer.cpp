@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/RenderTarget/Framebuffer.h"
+#include "OpenGLES3Renderer/Texture/Texture2DArray.h"
 #include "OpenGLES3Renderer/Texture/Texture2D.h"
 #include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
@@ -39,13 +40,13 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
+	Framebuffer::Framebuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
 		IFramebuffer(openGLES3Renderer),
 		mOpenGLES3Framebuffer(0),
 		mDepthRenderbuffer(0),
-		mNumberOfColorTextures(numberOfColorTextures),
+		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
 		mColorTextures(nullptr),	// Set below
-		mDepthStencilTexture(depthStencilTexture),
+		mDepthStencilTexture(nullptr),
 		mWidth(1),
 		mHeight(1),
 		mGenerateMipmaps(false)
@@ -72,24 +73,24 @@ namespace OpenGLES3Renderer
 
 			// Loop through all framebuffer color attachments
 			// -> "GL_COLOR_ATTACHMENT0" and "GL_COLOR_ATTACHMENT0_NV" have the same value
-			Renderer::ITexture **colorTextureToSetup = mColorTextures;
-			Renderer::ITexture **colorTexture		 = colorTextures;
-			Renderer::ITexture **colorTextureEnd     = colorTextures + numberOfColorTextures;
-			for (GLenum openGLES3Attachment = GL_COLOR_ATTACHMENT0; colorTexture < colorTextureEnd; ++colorTexture, ++openGLES3Attachment, ++colorTextureToSetup)
+			Renderer::ITexture **colorTexture = mColorTextures;
+			const Renderer::FramebufferAttachment *colorFramebufferAttachment	 = colorFramebufferAttachments;
+			const Renderer::FramebufferAttachment *colorFramebufferAttachmentEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
+			for (GLenum openGLES3Attachment = GL_COLOR_ATTACHMENT0; colorFramebufferAttachment < colorFramebufferAttachmentEnd; ++colorFramebufferAttachment, ++openGLES3Attachment, ++colorTexture)
 			{
 				// Valid entry?
-				if (nullptr != *colorTextures)
+				if (nullptr != colorFramebufferAttachment->texture)
 				{
 					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					*colorTextureToSetup = *colorTextures;
-					(*colorTextureToSetup)->addReference();
+					*colorTexture = colorFramebufferAttachment->texture;
+					(*colorTexture)->addReference();
 
 					// Security check: Is the given resource owned by this renderer?
 					#ifndef OPENGLES3RENDERER_NO_RENDERERMATCHCHECK
 						if (&openGLES3Renderer != &(*colorTexture)->getRenderer())
 						{
 							// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
-							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: The given color texture at index %d is owned by another renderer instance", colorTexture - colorTextures)
+							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: The given color texture at index %d is owned by another renderer instance", colorTexture - mColorTextures)
 
 							// Continue, there's no point in trying to do any error handling in here
 							continue;
@@ -101,10 +102,12 @@ namespace OpenGLES3Renderer
 					{
 						case Renderer::ResourceType::TEXTURE_2D:
 						{
-							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+							// Sanity check
+							assert(0 == colorFramebufferAttachment->layerIndex);
 
 							// Set the OpenGL ES 3 framebuffer color attachment
-							glFramebufferTexture2D(GL_FRAMEBUFFER, openGLES3Attachment, GL_TEXTURE_2D, texture2D->getOpenGLES3Texture(), 0);
+							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+							glFramebufferTexture2D(GL_FRAMEBUFFER, openGLES3Attachment, GL_TEXTURE_2D, texture2D->getOpenGLES3Texture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex));
 
 							// If this is the primary render target, get the framebuffer width and height
 							if (GL_COLOR_ATTACHMENT0 == openGLES3Attachment)
@@ -121,6 +124,21 @@ namespace OpenGLES3Renderer
 							break;
 						}
 
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						{
+							// Set the OpenGL ES 3 framebuffer color attachment
+							Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+							glFramebufferTextureLayer(GL_FRAMEBUFFER, openGLES3Attachment, texture2DArray->getOpenGLES3Texture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex), static_cast<GLint>(depthStencilFramebufferAttachment->layerIndex));
+
+							// If this is the primary render target, get the framebuffer width and height
+							if (GL_COLOR_ATTACHMENT0 == openGLES3Attachment)
+							{
+								mWidth  = texture2DArray->getWidth();
+								mHeight = texture2DArray->getHeight();
+							}
+							break;
+						}
+
 						case Renderer::ResourceType::ROOT_SIGNATURE:
 						case Renderer::ResourceType::PROGRAM:
 						case Renderer::ResourceType::VERTEX_ARRAY:
@@ -132,7 +150,6 @@ namespace OpenGLES3Renderer
 						case Renderer::ResourceType::TEXTURE_BUFFER:
 						case Renderer::ResourceType::INDIRECT_BUFFER:
 						case Renderer::ResourceType::TEXTURE_1D:
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 						case Renderer::ResourceType::TEXTURE_3D:
 						case Renderer::ResourceType::TEXTURE_CUBE:
 						case Renderer::ResourceType::PIPELINE_STATE:
@@ -143,7 +160,7 @@ namespace OpenGLES3Renderer
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
 						default:
-							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: The type of the given color texture at index %ld is not supported", colorTexture - colorTextures)
+							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: The type of the given color texture at index %ld is not supported", colorTexture - mColorTextures)
 							break;
 					}
 				}
@@ -155,8 +172,10 @@ namespace OpenGLES3Renderer
 		}
 
 		// Add a reference to the used depth stencil texture
-		if (nullptr != mDepthStencilTexture)
+		if (nullptr != depthStencilFramebufferAttachment)
 		{
+			mDepthStencilTexture = depthStencilFramebufferAttachment->texture;
+			assert(nullptr != mDepthStencilTexture);
 			mDepthStencilTexture->addReference();
 
 			// Evaluate the color texture type
@@ -164,15 +183,26 @@ namespace OpenGLES3Renderer
 			{
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
+					// Sanity check
+					assert(0 == depthStencilFramebufferAttachment->layerIndex);
+
 					// Bind the depth stencil texture to framebuffer
-					const Texture2D* texture2D = static_cast<const Texture2D*>(depthStencilTexture);
-					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture2D->getOpenGLES3Texture(), 0);
+					const Texture2D* texture2D = static_cast<const Texture2D*>(mDepthStencilTexture);
+					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture2D->getOpenGLES3Texture(), static_cast<GLint>(depthStencilFramebufferAttachment->mipmapIndex));
 
 					// Generate mipmaps?
 					if (texture2D->getGenerateMipmaps())
 					{
 						mGenerateMipmaps = true;
 					}
+					break;
+				}
+
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				{
+					// Bind the depth stencil texture to framebuffer
+					const Texture2DArray* texture2DArray = static_cast<const Texture2DArray*>(mDepthStencilTexture);
+					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture2DArray->getOpenGLES3Texture(), static_cast<GLint>(depthStencilFramebufferAttachment->mipmapIndex), static_cast<GLint>(depthStencilFramebufferAttachment->layerIndex));
 					break;
 				}
 
@@ -187,7 +217,6 @@ namespace OpenGLES3Renderer
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::INDIRECT_BUFFER:
 				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::TEXTURE_3D:
 				case Renderer::ResourceType::TEXTURE_CUBE:
 				case Renderer::ResourceType::PIPELINE_STATE:

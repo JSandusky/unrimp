@@ -57,6 +57,7 @@ namespace Renderer
 	struct PipelineState;
 	class ITextureManager;
 	class IShaderLanguage;
+	struct FramebufferAttachment;
 }
 
 
@@ -280,12 +281,12 @@ namespace Renderer
 		*  @brief
 		*    Create a framebuffer object (FBO) instance
 		*
-		*  @param[in] numberOfColorTextures
+		*  @param[in] numberOfColorFramebufferAttachments
 		*    Number of color render target textures, must be <="Renderer::Capabilities::maximumNumberOfSimultaneousRenderTargets"
-		*  @param[in] colorTextures
+		*  @param[in] colorFramebufferAttachments
 		*    The color render target textures, can be a null pointer or can contain null pointers, if not a null pointer there must be at
-		*    least "numberOfColorTextures" textures in the provided C-array of pointers
-		*  @param[in] depthStencilTexture
+		*    least "numberOfColorFramebufferAttachment" textures in the provided C-array of pointers
+		*  @param[in] depthStencilFramebufferAttachment
 		*    The optional depth stencil render target texture, can be a null pointer
 		*
 		*  @return
@@ -298,7 +299,7 @@ namespace Renderer
 		*    - Depending on the used graphics API and feature set, there might be the requirement that all provided textures have the same size
 		*      (in order to be on the save side, ensure that all provided textures have the same size)
 		*/
-		virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorTextures, ITexture** colorTextures, ITexture* depthStencilTexture = nullptr) = 0;
+		virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const FramebufferAttachment* colorFramebufferAttachments, const FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) = 0;
 
 		/**
 		*  @brief

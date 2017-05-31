@@ -37,11 +37,11 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
+	Framebuffer::Framebuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
 		IFramebuffer(direct3D9Renderer),
-		mNumberOfColorTextures(numberOfColorTextures),
+		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
 		mColorTextures(nullptr),	// Set below
-		mDepthStencilTexture(depthStencilTexture),
+		mDepthStencilTexture(nullptr),
 		mWidth(UINT_MAX),
 		mHeight(UINT_MAX),
 		mDirect3D9ColorSurfaces(nullptr),
@@ -60,13 +60,13 @@ namespace Direct3D9Renderer
 			// Loop through all color textures
 			IDirect3DSurface9 **direct3D9ColorSurface = mDirect3D9ColorSurfaces;
 			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorTextures, ++direct3D9ColorSurface)
+			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++direct3D9ColorSurface)
 			{
 				// Valid entry?
-				if (nullptr != *colorTextures)
+				if (nullptr != colorFramebufferAttachments->texture)
 				{
 					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					*colorTexture = *colorTextures;
+					*colorTexture = colorFramebufferAttachments->texture;
 					(*colorTexture)->addReference();
 
 					// Evaluate the color texture type
@@ -74,6 +74,9 @@ namespace Direct3D9Renderer
 					{
 						case Renderer::ResourceType::TEXTURE_2D:
 						{
+							// Sanity check
+							assert(0 == colorFramebufferAttachments->layerIndex);
+
 							// Update the framebuffer width and height if required
 							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
 							if (mWidth > texture2D->getWidth())
@@ -86,7 +89,7 @@ namespace Direct3D9Renderer
 							}
 
 							// Get the Direct3D 9 surface
-							texture2D->getDirect3DTexture9()->GetSurfaceLevel(0, direct3D9ColorSurface);
+							texture2D->getDirect3DTexture9()->GetSurfaceLevel(colorFramebufferAttachments->mipmapIndex, direct3D9ColorSurface);
 							break;
 						}
 
@@ -112,7 +115,7 @@ namespace Direct3D9Renderer
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
 						default:
-							RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 9 error: The type of the given color texture at index %d is not supported", colorTexture - colorTextures)
+							RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 9 error: The type of the given color texture at index %d is not supported", colorTexture - mColorTextures)
 							*direct3D9ColorSurface = nullptr;
 							break;
 					}
@@ -126,8 +129,10 @@ namespace Direct3D9Renderer
 		}
 
 		// Add a reference to the used depth stencil texture
-		if (nullptr != mDepthStencilTexture)
+		if (nullptr != depthStencilFramebufferAttachment)
 		{
+			mDepthStencilTexture = depthStencilFramebufferAttachment->texture;
+			assert(nullptr != mDepthStencilTexture);
 			mDepthStencilTexture->addReference();
 
 			// Evaluate the depth stencil texture type
@@ -135,6 +140,9 @@ namespace Direct3D9Renderer
 			{
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
+					// Sanity check
+					assert(0 == depthStencilFramebufferAttachment->layerIndex);
+
 					// Update the framebuffer width and height if required
 					Texture2D *texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
 					if (mWidth > texture2D->getWidth())
@@ -147,7 +155,7 @@ namespace Direct3D9Renderer
 					}
 
 					// Get the Direct3D 9 surface
-					texture2D->getDirect3DTexture9()->GetSurfaceLevel(0, &mDirect3D9DepthStencilSurface);
+					texture2D->getDirect3DTexture9()->GetSurfaceLevel(depthStencilFramebufferAttachment->mipmapIndex, &mDirect3D9DepthStencilSurface);
 					break;
 				}
 

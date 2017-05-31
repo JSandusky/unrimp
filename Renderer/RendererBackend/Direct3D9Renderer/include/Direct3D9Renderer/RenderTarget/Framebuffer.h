@@ -34,10 +34,6 @@
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct IDirect3DSurface9;
-namespace Renderer
-{
-	class ITexture;
-}
 namespace Direct3D9Renderer
 {
 	class Direct3D9Renderer;
@@ -72,18 +68,18 @@ namespace Direct3D9Renderer
 		*
 		*  @param[in] direct3D9Renderer
 		*    Owner Direct3D 9 renderer instance
-		*  @param[in] numberOfColorTextures
+		*  @param[in] numberOfColorFramebufferAttachments
 		*    Number of color render target textures
-		*  @param[in] colorTextures
+		*  @param[in] colorFramebufferAttachments
 		*    The color render target textures, can be a null pointer or can contain null pointers, if not a null pointer there must be at
 		*    least "numberOfColorTextures" textures in the provided C-array of pointers
-		*  @param[in] depthStencilTexture
+		*  @param[in] depthStencilFramebufferAttachment
 		*    The depth stencil render target texture, can be a null pointer
 		*
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
+		Framebuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment);
 
 		/**
 		*  @brief

@@ -40,6 +40,8 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	Texture2DArray::Texture2DArray(Direct3D11Renderer &direct3D11Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2DArray(direct3D11Renderer, width, height, numberOfSlices),
+		mTextureFormat(textureFormat),
+		mNumberOfMultisamples(1),	// TODO(co) Currently no MSAA support for 2D array textures
 		mGenerateMipmaps(false),
 		mD3D11Texture2D(nullptr),
 		mD3D11ShaderResourceViewTexture(nullptr)
@@ -54,7 +56,7 @@ namespace Direct3D11Renderer
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Direct3D 11 2D array texture description
-		const DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
+		DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
 		D3D11_TEXTURE2D_DESC d3d11Texture2DDesc;
 		d3d11Texture2DDesc.Width			  = width;
 		d3d11Texture2DDesc.Height			  = height;
@@ -69,9 +71,21 @@ namespace Direct3D11Renderer
 		d3d11Texture2DDesc.MiscFlags		  = mGenerateMipmaps ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0u;
 
 		// Use this texture as render target?
+		const bool isDepthFormat = Renderer::TextureFormat::isDepth(textureFormat);
 		if (flags & Renderer::TextureFlag::RENDER_TARGET)
 		{
-			d3d11Texture2DDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+			if (isDepthFormat)
+			{
+				d3d11Texture2DDesc.BindFlags |= D3D11_BIND_DEPTH_STENCIL;
+
+				// See "Direct3D11Renderer::Texture2D::getTextureFormat()" for details
+				d3d11Texture2DDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+				dxgiFormat = DXGI_FORMAT_R32_FLOAT;
+			}
+			else
+			{
+				d3d11Texture2DDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+			}
 		}
 
 		// Create the Direct3D 11 2D texture instance
@@ -173,8 +187,9 @@ namespace Direct3D11Renderer
 			D3D11_SHADER_RESOURCE_VIEW_DESC d3d11ShaderResourceViewDesc = {};
 			d3d11ShaderResourceViewDesc.Format							= dxgiFormat;
 			d3d11ShaderResourceViewDesc.ViewDimension					= D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-			d3d11ShaderResourceViewDesc.Texture2DArray.MipLevels		= numberOfMipmaps;
 			d3d11ShaderResourceViewDesc.Texture2DArray.MostDetailedMip	= 0;
+			d3d11ShaderResourceViewDesc.Texture2DArray.MipLevels		= numberOfMipmaps;
+			d3d11ShaderResourceViewDesc.Texture2DArray.FirstArraySlice	= 0;
 			d3d11ShaderResourceViewDesc.Texture2DArray.ArraySize		= numberOfSlices;
 
 			// Create the Direct3D 11 shader resource view instance

@@ -180,7 +180,7 @@ namespace Direct3D9Renderer
 		//[ Resource creation                                     ]
 		//[-------------------------------------------------------]
 		virtual Renderer::ISwapChain *createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) override;
-		virtual Renderer::IFramebuffer *createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture = nullptr) override;
+		virtual Renderer::IFramebuffer *createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment = nullptr) override;
 		virtual Renderer::IBufferManager *createBufferManager() override;
 		virtual Renderer::ITextureManager *createTextureManager() override;
 		virtual Renderer::IRootSignature *createRootSignature(const Renderer::RootSignature &rootSignature) override;

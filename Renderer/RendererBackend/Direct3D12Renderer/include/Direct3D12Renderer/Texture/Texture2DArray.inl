@@ -28,6 +28,16 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline uint32_t Texture2DArray::getDxgiFormat() const
+	{
+		return mDxgiFormat;
+	}
+
+	inline ID3D12Resource* Texture2DArray::getD3D12Resource() const
+	{
+		return mD3D12Resource;
+	}
+
 	// TODO(co) Direct3D 12 update
 	/*
 	inline ID3D12ShaderResourceView *Texture2DArray::getD3D12ShaderResourceView() const

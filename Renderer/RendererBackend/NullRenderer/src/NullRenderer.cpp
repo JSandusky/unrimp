@@ -651,33 +651,33 @@ namespace NullRenderer
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *NullRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	Renderer::IFramebuffer *NullRenderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment)
 	{
 		// We don't keep a reference to the provided textures in here
 		// -> Ensure a correct reference counter behaviour
 
 		// Are there any color textures?
-		if (numberOfColorTextures > 0)
+		if (numberOfColorFramebufferAttachments > 0)
 		{
 			// Loop through all color textures
-			Renderer::ITexture **colorTexturesEnd = colorTextures + numberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = colorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorTextures)
+			const Renderer::FramebufferAttachment *colorFramebufferAttachmentsEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
+			for (const Renderer::FramebufferAttachment *colorFramebufferAttachment = colorFramebufferAttachments; colorFramebufferAttachment < colorFramebufferAttachmentsEnd; ++colorFramebufferAttachment)
 			{
 				// Valid entry?
-				if (nullptr != *colorTextures)
+				if (nullptr != colorFramebufferAttachment->texture)
 				{
 					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					(*colorTextures)->addReference();
-					(*colorTextures)->releaseReference();
+					colorFramebufferAttachment->texture->addReference();
+					colorFramebufferAttachment->texture->releaseReference();
 				}
 			}
 		}
 
 		// Add a reference to the used depth stencil texture
-		if (nullptr != depthStencilTexture)
+		if (nullptr != depthStencilFramebufferAttachment)
 		{
-			depthStencilTexture->addReference();
-			depthStencilTexture->releaseReference();
+			depthStencilFramebufferAttachment->texture->addReference();
+			depthStencilFramebufferAttachment->texture->releaseReference();
 		}
 
 		// Create the framebuffer instance

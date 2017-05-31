@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/RenderTarget/Framebuffer.h"
+#include "Direct3D12Renderer/Texture/Texture2DArray.h"
 #include "Direct3D12Renderer/Texture/Texture2D.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D12Renderer/D3D12.h"
@@ -40,11 +41,11 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
+	Framebuffer::Framebuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
 		IFramebuffer(direct3D12Renderer),
-		mNumberOfColorTextures(numberOfColorTextures),
+		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
 		mColorTextures(nullptr),	// Set below
-		mDepthStencilTexture(depthStencilTexture),
+		mDepthStencilTexture(nullptr),
 		mWidth(UINT_MAX),
 		mHeight(UINT_MAX),
 		mD3D12DescriptorHeapRenderTargetViews(nullptr),
@@ -62,13 +63,13 @@ namespace Direct3D12Renderer
 			// Loop through all color textures
 			ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = mD3D12DescriptorHeapRenderTargetViews;
 			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorTextures, ++d3d12DescriptorHeapRenderTargetView)
+			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++d3d12DescriptorHeapRenderTargetView)
 			{
 				// Valid entry?
-				if (nullptr != *colorTextures)
+				if (nullptr != colorFramebufferAttachments->texture)
 				{
 					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					*colorTexture = *colorTextures;
+					*colorTexture = colorFramebufferAttachments->texture;
 					(*colorTexture)->addReference();
 
 					// Evaluate the color texture type
@@ -76,6 +77,9 @@ namespace Direct3D12Renderer
 					{
 						case Renderer::ResourceType::TEXTURE_2D:
 						{
+							// Sanity check
+							assert(0 == colorFramebufferAttachments->layerIndex);
+
 							// Update the framebuffer width and height if required
 							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
 							if (mWidth > texture2D->getWidth())
@@ -99,7 +103,41 @@ namespace Direct3D12Renderer
 								D3D12_RENDER_TARGET_VIEW_DESC d3d12RenderTargetViewDesc = {};
 								d3d12RenderTargetViewDesc.Format = static_cast<DXGI_FORMAT>(texture2D->getDxgiFormat());
 								d3d12RenderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-								d3d12RenderTargetViewDesc.Texture2D.MipSlice = 0;
+								d3d12RenderTargetViewDesc.Texture2D.MipSlice = colorFramebufferAttachments->mipmapIndex;
+								d3d12Device->CreateRenderTargetView(d3d12Resource, &d3d12RenderTargetViewDesc, (*d3d12DescriptorHeapRenderTargetView)->GetCPUDescriptorHandleForHeapStart());
+							}
+							break;
+						}
+
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						{
+							// Update the framebuffer width and height if required
+							Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+							if (mWidth > texture2DArray->getWidth())
+							{
+								mWidth = texture2DArray->getWidth();
+							}
+							if (mHeight > texture2DArray->getHeight())
+							{
+								mHeight = texture2DArray->getHeight();
+							}
+
+							// Get the Direct3D 12 resource
+							ID3D12Resource *d3d12Resource = texture2DArray->getD3D12Resource();
+
+							// Create the Direct3D 12 render target view instance
+							D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
+							d3d12DescriptorHeapDesc.NumDescriptors = 1;
+							d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+							if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(d3d12DescriptorHeapRenderTargetView))))
+							{
+								D3D12_RENDER_TARGET_VIEW_DESC d3d12RenderTargetViewDesc = {};
+								d3d12RenderTargetViewDesc.Format = static_cast<DXGI_FORMAT>(texture2DArray->getDxgiFormat());
+								d3d12RenderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DARRAY;
+								d3d12RenderTargetViewDesc.Texture2DArray.MipSlice		 = colorFramebufferAttachments->mipmapIndex;
+								d3d12RenderTargetViewDesc.Texture2DArray.FirstArraySlice = colorFramebufferAttachments->layerIndex;
+								d3d12RenderTargetViewDesc.Texture2DArray.ArraySize		 = 1;
+								d3d12RenderTargetViewDesc.Texture2DArray.PlaneSlice		 = 0;
 								d3d12Device->CreateRenderTargetView(d3d12Resource, &d3d12RenderTargetViewDesc, (*d3d12DescriptorHeapRenderTargetView)->GetCPUDescriptorHandleForHeapStart());
 							}
 							break;
@@ -116,7 +154,6 @@ namespace Direct3D12Renderer
 						case Renderer::ResourceType::TEXTURE_BUFFER:
 						case Renderer::ResourceType::INDIRECT_BUFFER:
 						case Renderer::ResourceType::TEXTURE_1D:
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 						case Renderer::ResourceType::TEXTURE_3D:
 						case Renderer::ResourceType::TEXTURE_CUBE:
 						case Renderer::ResourceType::PIPELINE_STATE:
@@ -127,7 +164,7 @@ namespace Direct3D12Renderer
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
 						default:
-							RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: The type of the given color texture at index %d is not supported", colorTexture - colorTextures)
+							RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: The type of the given color texture at index %d is not supported", colorTexture - mColorTextures)
 							*d3d12DescriptorHeapRenderTargetView = nullptr;
 							break;
 					}
@@ -141,8 +178,10 @@ namespace Direct3D12Renderer
 		}
 
 		// Add a reference to the used depth stencil texture
-		if (nullptr != mDepthStencilTexture)
+		if (nullptr != depthStencilFramebufferAttachment)
 		{
+			mDepthStencilTexture = depthStencilFramebufferAttachment->texture;
+			assert(nullptr != mDepthStencilTexture);
 			mDepthStencilTexture->addReference();
 
 			// Evaluate the depth stencil texture type
@@ -150,6 +189,9 @@ namespace Direct3D12Renderer
 			{
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
+					// Sanity check
+					assert(0 == depthStencilFramebufferAttachment->layerIndex);
+
 					// Update the framebuffer width and height if required
 					Texture2D *texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
 					if (mWidth > texture2D->getWidth())
@@ -173,7 +215,41 @@ namespace Direct3D12Renderer
 						D3D12_RENDER_TARGET_VIEW_DESC d3d12RenderTargetViewDesc = {};
 						d3d12RenderTargetViewDesc.Format = static_cast<DXGI_FORMAT>(texture2D->getDxgiFormat());
 						d3d12RenderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-						d3d12RenderTargetViewDesc.Texture2D.MipSlice = 0;
+						d3d12RenderTargetViewDesc.Texture2D.MipSlice = depthStencilFramebufferAttachment->mipmapIndex;
+						d3d12Device->CreateRenderTargetView(d3d12Resource, &d3d12RenderTargetViewDesc, mD3D12DescriptorHeapDepthStencilView->GetCPUDescriptorHandleForHeapStart());
+					}
+					break;
+				}
+
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				{
+					// Update the framebuffer width and height if required
+					Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(mDepthStencilTexture);
+					if (mWidth > texture2DArray->getWidth())
+					{
+						mWidth = texture2DArray->getWidth();
+					}
+					if (mHeight > texture2DArray->getHeight())
+					{
+						mHeight = texture2DArray->getHeight();
+					}
+
+					// Get the Direct3D 12 resource
+					ID3D12Resource *d3d12Resource = texture2DArray->getD3D12Resource();
+
+					// Create the Direct3D 12 render target view instance
+					D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
+					d3d12DescriptorHeapDesc.NumDescriptors = 1;
+					d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+					if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(&mD3D12DescriptorHeapDepthStencilView))))
+					{
+						D3D12_RENDER_TARGET_VIEW_DESC d3d12RenderTargetViewDesc = {};
+						d3d12RenderTargetViewDesc.Format = static_cast<DXGI_FORMAT>(texture2DArray->getDxgiFormat());
+						d3d12RenderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DARRAY;
+						d3d12RenderTargetViewDesc.Texture2DArray.MipSlice		 = depthStencilFramebufferAttachment->mipmapIndex;
+						d3d12RenderTargetViewDesc.Texture2DArray.FirstArraySlice = depthStencilFramebufferAttachment->layerIndex;
+						d3d12RenderTargetViewDesc.Texture2DArray.ArraySize		 = 1;
+						d3d12RenderTargetViewDesc.Texture2DArray.PlaneSlice		 = 0;
 						d3d12Device->CreateRenderTargetView(d3d12Resource, &d3d12RenderTargetViewDesc, mD3D12DescriptorHeapDepthStencilView->GetCPUDescriptorHandleForHeapStart());
 					}
 					break;
@@ -190,7 +266,6 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::INDIRECT_BUFFER:
 				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::TEXTURE_3D:
 				case Renderer::ResourceType::TEXTURE_CUBE:
 				case Renderer::ResourceType::PIPELINE_STATE:
