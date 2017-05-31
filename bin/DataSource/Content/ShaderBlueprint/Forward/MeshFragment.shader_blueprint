@@ -61,6 +61,9 @@ struct PassDataStruct
 	float4x4 WorldSpaceToClipSpaceMatrix;
 	float4x4 PreviousWorldSpaceToClipSpaceMatrix;
 	float4x4 ShadowMatrix;
+	float4   ShadowCascadeOffsets[4];
+	float4   ShadowCascadeScales[4];
+	float4   ShadowCascadeSplits;
 	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float4	 WorldSpaceToViewSpaceQuaternion;
 	float3	 ViewSpaceSunLightDirection;
@@ -72,6 +75,7 @@ struct PassDataStruct
 	float3	 LightClustersBias;
 	uint	 FullCoverageMask;
 	float2   ViewportSize;
+	float2   ProjectionParameters;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -121,6 +125,11 @@ TEXTURE_3D_UINT(LightClustersMap3D, 8)
 	@property(!HighQualityLighting)
 		@insertpiece(DefineBlinnPhongBasedShading)
 	@end
+@includepiece(ShaderPiece/Depth.asset)
+	@insertpiece(DefineGetLinearDepthByFragmentDepth)
+@includepiece(ShaderPiece/Shadow.asset)
+	@insertpiece(DefineCalculateShadowVisibility)
+	@insertpiece(DefineShadowDebugging)
 
 
 //[-------------------------------------------------------]
@@ -175,21 +184,12 @@ MAIN_BEGIN
 	// Ambient term
 	float3 color = diffuse * (PassData.AmbientColor.rgb + CalculateHemisphereLighting(worldSpaceNormal.xyz, PassData.AmbientColor.rgb * 0.7f, PassData.AmbientColor.rgb * 0.2f));
 
-	// TODO(co) Shadow: Totally primitive to have something to start with
-	float shadowVisibility = 1.0f;
-	{
-		float4 shadowTextureCoordinate = MATRIX_MUL(PassData.ShadowMatrix, float4(worldSpacePosition, 1.0f));
-		if (SAMPLE_ARRAY_LOD(ShadowMap, SamplerPoint, float4(shadowTextureCoordinate.xy, 1.0f, 0.0f)).r < shadowTextureCoordinate.z - 0.001f)
-		{
-			shadowVisibility = 0.0f;
-		}
-	}
-
 	// Get view space incident vector
 	float3 viewSpaceIncident = normalize(PassData.CameraWorldSpacePosition - worldSpacePosition);
 	viewSpaceIncident = MultiplyQuaternionVector(PassData.WorldSpaceToViewSpaceQuaternion, viewSpaceIncident);
 
 	// Directional sun light, our primary light
+	float shadowVisibility = CalculateShadowVisibility(worldSpacePosition, GetLinearDepthByFragmentDepth(FRAGMENT_POSITION.z));
 	if (shadowVisibility > 0.0f)
 	{
 		color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);

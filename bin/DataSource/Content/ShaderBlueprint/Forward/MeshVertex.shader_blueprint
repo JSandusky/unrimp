@@ -61,6 +61,9 @@ struct PassDataStruct
 	float4x4 WorldSpaceToClipSpaceMatrix;
 	float4x4 PreviousWorldSpaceToClipSpaceMatrix;
 	float4x4 ShadowMatrix;
+	float4   ShadowCascadeOffsets[4];
+	float4   ShadowCascadeScales[4];
+	float4   ShadowCascadeSplits;
 	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float4	 WorldSpaceToViewSpaceQuaternion;
 	float3	 ViewSpaceSunLightDirection;
@@ -72,6 +75,7 @@ struct PassDataStruct
 	float3	 LightClustersBias;
 	uint	 FullCoverageMask;
 	float2   ViewportSize;
+	float2   ProjectionParameters;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;

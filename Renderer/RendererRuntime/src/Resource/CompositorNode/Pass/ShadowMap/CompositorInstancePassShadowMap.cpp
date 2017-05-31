@@ -35,6 +35,38 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		static const float SHADOW_MAP_FILTER_SIZE = 7.0f;
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		glm::vec4 transformVectorByMatrix(const glm::mat4& matrix, const glm::vec4& vector)
+		{
+			const glm::vec4 temporaryVector = matrix * vector;
+			return temporaryVector / temporaryVector.w;
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -48,61 +80,211 @@ namespace RendererRuntime
 	{
 		const CameraSceneItem* cameraSceneItem = compositorContextData.getCameraSceneItem();
 		const LightSceneItem* lightSceneItem = compositorContextData.getLightSceneItem();
-
 		if (nullptr != mFramebufferPtr && nullptr != cameraSceneItem && cameraSceneItem->getParentSceneNode() && nullptr != lightSceneItem && lightSceneItem->getParentSceneNode())
 		{
 			const glm::vec3 worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::VEC3_FORWARD;
+			const CompositorResourcePassShadowMap& compositorResourcePassShadowMap = static_cast<const CompositorResourcePassShadowMap&>(getCompositorResourcePass());
+			const uint32_t shadowMapSize = compositorResourcePassShadowMap.getShadowMapSize();
+			const uint8_t numberOfShadowCascades = compositorResourcePassShadowMap.getNumberOfShadowCascades();
+
+			// TODO(co) The minimum and maximum distance need to be calculated dynamically via depth buffer reduction as seen inside e.g. https://github.com/TheRealMJP/MSAAFilter/tree/master/MSAAFilter
+			const float minimumDistance = 0.0f;
+			const float maximumDistance = 0.5f;
+
+			// Compute the split distances based on the partitioning mode
+			float cascadeSplits[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+			{
+				const float nearClip = cameraSceneItem->getNearZ();
+				const float farClip = cameraSceneItem->getFarZ();
+				const float clipRange = farClip - nearClip;
+				const float minimumZ = nearClip + minimumDistance * clipRange;
+				const float maximumZ = nearClip + maximumDistance * clipRange;
+				const float range = maximumZ - minimumZ;
+				const float ratio = maximumZ / minimumZ;
+
+				for (uint8_t cascadeIndex = 0; cascadeIndex < numberOfShadowCascades; ++cascadeIndex)
+				{
+					const float p = (cascadeIndex + 1) / static_cast<float>(numberOfShadowCascades);
+					const float log = minimumZ * std::pow(ratio, p);
+					const float uniform = minimumZ + range * p;
+					const float d = compositorResourcePassShadowMap.getCascadeSplitsLambda() * (log - uniform) + uniform;
+					cascadeSplits[cascadeIndex] = (d - nearClip) / clipRange;
+				}
+			}
+
+			// OpenGL needs some adjustments
+			// -> Direct3D: Left-handed coordinate system with clip space depth value range 0..1
+			// -> OpenGL: Right-handed coordinate system with clip space depth value range -1..1
+			const char* name = renderTarget.getRenderer().getName();
+			const bool isOpenGL = (0 == strcmp(name, "OpenGL") || 0 == strcmp(name, "OpenGLES3"));
+			const float nearZ = isOpenGL ? -1.0f : 0.0f;
+
+			// Get the 8 points of the view frustum in world space
+			glm::vec4 worldSpaceFrustumCorners[8] =
+			{
+				// Near
+				glm::vec4(-1.0f,  1.0f, nearZ, 1.0f),	// 0: Near top left
+				glm::vec4( 1.0f,  1.0f, nearZ, 1.0f),	// 1: Near top right
+				glm::vec4(-1.0f, -1.0f, nearZ, 1.0f),	// 2: Near bottom left
+				glm::vec4( 1.0f, -1.0f, nearZ, 1.0f),	// 3: Near bottom right
+				// Far
+				glm::vec4(-1.0f,  1.0f, 1.0f, 1.0f),	// 4: Far top left
+				glm::vec4( 1.0f,  1.0f, 1.0f, 1.0f),	// 5: Far top right
+				glm::vec4(-1.0f, -1.0f, 1.0f, 1.0f),	// 6: Far bottom left
+				glm::vec4( 1.0f, -1.0f, 1.0f, 1.0f)		// 7: Far bottom right
+			};
+			{
+				uint32_t renderTargetWidth = 0;
+				uint32_t renderTargetHeight = 0;
+				renderTarget.getWidthAndHeight(renderTargetWidth, renderTargetHeight);
+				const glm::mat4 worldSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrix(static_cast<float>(renderTargetWidth) / renderTargetHeight) * cameraSceneItem->getWorldSpaceToViewSpaceMatrix();
+				const glm::mat4 clipSpaceToWorldSpaceMatrix = glm::inverse(worldSpaceToClipSpaceMatrix);
+				for (int i = 0; i < 8; ++i)
+				{
+					worldSpaceFrustumCorners[i] = ::detail::transformVectorByMatrix(clipSpaceToWorldSpaceMatrix, worldSpaceFrustumCorners[i]);
+				}
+			}
 
 			// Begin debug event
 			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
-			// Set render target
-			Renderer::Command::SetRenderTarget::create(commandBuffer, mFramebufferPtr);
-
-			{ // Set the viewport and scissor rectangle
-				const CompositorResourcePassShadowMap& compositorResourcePassShadowMap = static_cast<const CompositorResourcePassShadowMap&>(getCompositorResourcePass());
-				const uint32_t shadowMapSize = compositorResourcePassShadowMap.getShadowMapSize();
-				Renderer::Command::SetViewportAndScissorRectangle::create(commandBuffer, 0, 0, shadowMapSize, shadowMapSize);
-			}
-
-			{ // Clear the depth buffer of the current render target
-				const float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-				Renderer::Command::Clear::create(commandBuffer, Renderer::ClearFlag::DEPTH, color, 1.0f, 0);
-			}
-
-			// TODO(co) Totally primitive to have something to start with
-			// Compute the MVP matrix from the light's point of view
-			glm::mat4 depthProjectionMatrix = glm::ortho(-8.0f, 8.0f, -8.0f, 8.0f, -30.0f, 30.0f);
-			glm::mat4 depthViewMatrix = glm::lookAt(worldSpaceSunLightDirection, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-			// Set custom camera matrices
-			const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomWorldSpaceToViewSpaceMatrix(depthViewMatrix);
-			const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomViewSpaceToClipSpaceMatrix(depthProjectionMatrix);
-
-			{ // Render shadow casters
-				assert(nullptr != mRenderQueueIndexRange);
-				for (const RenderableManager* renderableManager : mRenderQueueIndexRange->renderableManagers)
+			// Render the meshes to each cascade
+			for (uint8_t cascadeIndex = 0; cascadeIndex < numberOfShadowCascades; ++cascadeIndex)
+			{
+				// Compute the MVP matrix from the light's point of view
+				glm::mat4 depthProjectionMatrix;
+				glm::mat4 depthViewMatrix;
+				const float splitDistance = cascadeSplits[cascadeIndex];
 				{
-					// The render queue index range covered by this compositor instance pass scene might be smaller than the range of the
-					// cached render queue index range. So, we could add a range check in here to reject renderable managers, but it's not
-					// really worth to do so since the render queue only considers renderables inside the render queue range anyway.
-					if (renderableManager->getCastShadows())
+					const float previousSplitDistance = (0 == cascadeIndex) ? minimumDistance : cascadeSplits[cascadeIndex - 1];
+
+					// Get the corners of the current cascade slice of the view frustum
+					glm::vec4 cascadeSliceWorldSpaceFrustumCorners[8];
+					for (int i = 0; i < 4; ++i)
 					{
-						mRenderQueue.addRenderablesFromRenderableManager(*renderableManager, true);
+						const glm::vec4 cornerRay = worldSpaceFrustumCorners[i + 4] - worldSpaceFrustumCorners[i];
+						const glm::vec4 nearCornerRay = cornerRay * previousSplitDistance;
+						const glm::vec4 farCornerRay = cornerRay * splitDistance;
+						cascadeSliceWorldSpaceFrustumCorners[i + 4] = worldSpaceFrustumCorners[i] + farCornerRay;
+						cascadeSliceWorldSpaceFrustumCorners[i] = worldSpaceFrustumCorners[i] + nearCornerRay;
 					}
+
+					// Calculate the centroid of the view frustum slice
+					glm::vec4 temporaryFrustumCenter;
+					for (int i = 0; i < 8; ++i)
+					{
+						temporaryFrustumCenter += cascadeSliceWorldSpaceFrustumCorners[i];
+					}
+					const glm::vec3 frustumCenter = temporaryFrustumCenter / 8.0f;
+
+					// Pick the right vector to use for the light camera
+					const glm::vec3 rightDirection = cameraSceneItem->getParentSceneNodeSafe().getTransform().rotation * Math::VEC3_RIGHT;
+
+					// Calculate the minimum and maximum extents
+					glm::vec3 minimumExtents;
+					glm::vec3 maximumExtents;
+					{
+						// Create a temporary view matrix for the light
+						const glm::vec3& lightCameraPosition = frustumCenter;
+						const glm::vec3 lightCameraTarget = frustumCenter - worldSpaceSunLightDirection;
+						const glm::mat4 lightView = glm::lookAt(lightCameraPosition, lightCameraTarget, rightDirection);
+
+						// Calculate an AABB around the frustum corners
+						glm::vec4 mins(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+						glm::vec4 maxes(std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
+						for (int i = 0; i < 8; ++i)
+						{
+							const glm::vec4 corner = ::detail::transformVectorByMatrix(lightView, cascadeSliceWorldSpaceFrustumCorners[i]);
+							mins = glm::min(mins, corner);
+							maxes = glm::max(maxes, corner);
+						}
+						minimumExtents = mins;
+						maximumExtents = maxes;
+
+						// Adjust the minimum/maximum to accommodate the filtering size
+						const float scale = (static_cast<float>(shadowMapSize) + ::detail::SHADOW_MAP_FILTER_SIZE) / static_cast<float>(shadowMapSize);
+						minimumExtents.x *= scale;
+						minimumExtents.y *= scale;
+						maximumExtents.x *= scale;
+						maximumExtents.x *= scale;
+					}
+					const glm::vec3 cascadeExtents = maximumExtents - minimumExtents;
+
+					// Get position of the shadow camera
+					const glm::vec3 shadowCameraPosition = frustumCenter + worldSpaceSunLightDirection * -minimumExtents.z;
+
+					// Come up with a new orthographic camera for the shadow caster
+					depthProjectionMatrix = glm::ortho(minimumExtents.x, maximumExtents.x, minimumExtents.y, maximumExtents.y, 0.0f, cascadeExtents.z);
+					depthViewMatrix = glm::lookAt(shadowCameraPosition, frustumCenter, rightDirection);
 				}
-				mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassScene&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
+
+				// Set custom camera matrices
+				const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomWorldSpaceToViewSpaceMatrix(depthViewMatrix);
+				const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomViewSpaceToClipSpaceMatrix(depthProjectionMatrix);
+
+				{ // Render shadow casters
+					// Set render target
+					Renderer::Command::SetRenderTarget::create(commandBuffer, mFramebufferPtr[cascadeIndex]);
+
+					// Set the viewport and scissor rectangle
+					Renderer::Command::SetViewportAndScissorRectangle::create(commandBuffer, 0, 0, shadowMapSize, shadowMapSize);
+
+					{ // Clear the depth buffer of the current render target
+						const float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+						Renderer::Command::Clear::create(commandBuffer, Renderer::ClearFlag::DEPTH, color, 1.0f, 0);
+					}
+
+					// Render shadow casters
+					// TODO(co) Optimization: Do only render stuff which calls into the current shadow cascade
+					assert(nullptr != mRenderQueueIndexRange);
+					for (const RenderableManager* renderableManager : mRenderQueueIndexRange->renderableManagers)
+					{
+						// The render queue index range covered by this compositor instance pass scene might be smaller than the range of the
+						// cached render queue index range. So, we could add a range check in here to reject renderable managers, but it's not
+						// really worth to do so since the render queue only considers renderables inside the render queue range anyway.
+						if (renderableManager->getCastShadows())
+						{
+							mRenderQueue.addRenderablesFromRenderableManager(*renderableManager, true);
+						}
+					}
+					mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassScene&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
+					mRenderQueue.clear();
+				}
+
+				// Unset custom camera matrices
+				const_cast<CameraSceneItem*>(cameraSceneItem)->unsetCustomWorldSpaceToViewSpaceMatrix();
+				const_cast<CameraSceneItem*>(cameraSceneItem)->unsetCustomViewSpaceToClipSpaceMatrix();
+
+				// Apply the scale/offset matrix, which transforms from [-1,1] post-projection space to [0,1] UV space
+				const glm::mat4 viewSpaceToClipSpace = depthProjectionMatrix * depthViewMatrix;
+				const glm::mat4 shadowMatrix = Math::getTextureScaleBiasMatrix(getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getRenderer()) * viewSpaceToClipSpace;
+
+				// Store the split distance in terms of view space depth
+				const float clipDistance = cameraSceneItem->getFarZ() - cameraSceneItem->getNearZ();
+				mPassData.shadowCascadeSplits[cascadeIndex] = cameraSceneItem->getNearZ() + splitDistance * clipDistance;
+				if (0 == cascadeIndex)
+				{
+					mPassData.shadowMatrix = shadowMatrix;
+					mPassData.shadowCascadeOffsets[0] = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+					mPassData.shadowCascadeScales[0] = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+				}
+				else
+				{
+					// Calculate the position of the lower corner of the cascade partition, in the UV space of the first cascade partition
+					const glm::mat4 inverseShadowMatrix = glm::inverse(shadowMatrix);
+					glm::vec4 cascadeCorner = ::detail::transformVectorByMatrix(inverseShadowMatrix, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+					cascadeCorner = ::detail::transformVectorByMatrix(mPassData.shadowMatrix, cascadeCorner);
+
+					// Do the same for the upper corner
+					glm::vec4 otherCorner = ::detail::transformVectorByMatrix(inverseShadowMatrix, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+					otherCorner = ::detail::transformVectorByMatrix(mPassData.shadowMatrix, otherCorner);
+
+					// Calculate the scale and offset
+					const glm::vec4 cascadeScale = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) / (otherCorner - cascadeCorner);
+					mPassData.shadowCascadeOffsets[cascadeIndex] = glm::vec4(-glm::vec3(cascadeCorner), 0.0f);
+					mPassData.shadowCascadeScales[cascadeIndex] = glm::vec4(glm::vec3(cascadeScale), 1.0f);
+				}
 			}
-
-			// Unset custom camera matrices
-			const_cast<CameraSceneItem*>(cameraSceneItem)->unsetCustomWorldSpaceToViewSpaceMatrix();
-			const_cast<CameraSceneItem*>(cameraSceneItem)->unsetCustomViewSpaceToClipSpaceMatrix();
-
-			// Apply the scale/offset matrix, which transforms from [-1,1]
-			// post-projection space to [0,1] UV space
-			glm::mat4 depthMVP = depthProjectionMatrix * depthViewMatrix;
-			glm::mat4 depthBiasMVP = Math::getTextureScaleBiasMatrix(getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getRenderer()) * depthMVP;
-			mPassData.shadowMatrix = depthBiasMVP;
 
 			// Reset to previous render target
 			// TODO(co) Get rid of this
@@ -141,20 +323,27 @@ namespace RendererRuntime
 		if (nullptr == textureResource)
 		{
 			const uint32_t shadowMapSize = compositorResourcePassShadowMap.getShadowMapSize();
+			const uint8_t numberOfShadowCascades = compositorResourcePassShadowMap.getNumberOfShadowCascades();
+			assert(numberOfShadowCascades <= CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES);
 
 			// Create the texture instance, but without providing texture data (we use the texture as render target)
 			// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
 			// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 			// -> Not required for OpenGL and OpenGL ES 2
 			// -> The optimized texture clear value is a Direct3D 12 related option
-			Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2DArray(shadowMapSize, shadowMapSize, 2, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+			Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2DArray(shadowMapSize, shadowMapSize, numberOfShadowCascades, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET);
 			RENDERER_SET_RESOURCE_DEBUG_NAME(texture, "Compositor instance pass shadow map")
 
-			{ // Create the framebuffer object (FBO) instance
-				// TODO(co) This is an infrastructure preparation for cascaded shadow maps support
-				Renderer::FramebufferAttachment depthStencilFramebufferAttachment(texture, 0, 1);
-				mFramebufferPtr = rendererRuntime.getRenderer().createFramebuffer(0, nullptr, &depthStencilFramebufferAttachment);
-				RENDERER_SET_RESOURCE_DEBUG_NAME(mFramebufferPtr, "Compositor instance pass shadow map")
+			// Create the framebuffer object (FBO) instances
+			for (uint8_t cascadeIndex = 0; cascadeIndex < numberOfShadowCascades; ++cascadeIndex)
+			{
+				Renderer::FramebufferAttachment depthStencilFramebufferAttachment(texture, 0, cascadeIndex);
+				mFramebufferPtr[cascadeIndex] = rendererRuntime.getRenderer().createFramebuffer(0, nullptr, &depthStencilFramebufferAttachment);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(mFramebufferPtr[cascadeIndex], ("Compositor instance pass shadow map " + std::to_string(cascadeIndex)).c_str())
+			}
+			for (uint8_t cascadeIndex = numberOfShadowCascades; cascadeIndex < CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES; ++cascadeIndex)
+			{
+				mFramebufferPtr[cascadeIndex] = nullptr;
 			}
 
 			// Create texture resource
@@ -171,11 +360,14 @@ namespace RendererRuntime
 	{
 		assert(isInitialized(mTextureResourceId) && nullptr != mFramebufferPtr);
 
+		// Release the framebuffers and other renderer resources referenced by the framebuffers
+		for (uint8_t cascadeIndex = 0; cascadeIndex < CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES; ++cascadeIndex)
+		{
+			mFramebufferPtr[cascadeIndex] = nullptr;
+		}
+
 		// Inform the texture resource manager that our render target texture is gone now
 		getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getTextureResourceManager().destroyTextureResource(mTextureResourceId);
-
-		// Release the framebuffer and other renderer resources referenced by the framebuffer
-		mFramebufferPtr = nullptr;
 	}
 
 

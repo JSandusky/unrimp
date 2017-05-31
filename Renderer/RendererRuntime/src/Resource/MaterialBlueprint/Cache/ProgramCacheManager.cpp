@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCacheManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateSignature.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"

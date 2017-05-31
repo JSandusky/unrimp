@@ -38,6 +38,16 @@ namespace RendererRuntime
 		return mShadowMapSize;
 	}
 
+	inline uint8_t CompositorResourcePassShadowMap::getNumberOfShadowCascades() const
+	{
+		return mNumberOfShadowCascades;
+	}
+
+	inline float CompositorResourcePassShadowMap::getCascadeSplitsLambda() const
+	{
+		return mCascadeSplitsLambda;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
@@ -53,7 +63,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline CompositorResourcePassShadowMap::CompositorResourcePassShadowMap(const CompositorTarget& compositorTarget) :
 		CompositorResourcePassScene(compositorTarget),
-		mShadowMapSize(2048)
+		mShadowMapSize(1024),
+		mNumberOfShadowCascades(4),
+		mCascadeSplitsLambda(0.99f)
 	{
 		// Nothing here
 	}

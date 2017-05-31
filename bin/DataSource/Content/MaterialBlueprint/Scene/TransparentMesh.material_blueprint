@@ -426,6 +426,24 @@
 							"ValueType": "FLOAT_4_4",
 							"Value": "@SHADOW_MATRIX"
 						},
+						"ShadowCascadeOffsets":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@SHADOW_CASCADE_OFFSETS"
+						},
+						"ShadowCascadeScales":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@SHADOW_CASCADE_SCALES"
+						},
+						"ShadowCascadeSplits":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4",
+							"Value": "@SHADOW_CASCADE_SPLITS"
+						},
 						"ViewSpaceToWorldSpaceQuaternion":
 						{
 							"Usage": "PASS_REFERENCE",
@@ -479,6 +497,24 @@
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@LIGHT_CLUSTERS_BIAS"
+						},
+						"FullCoverageMask":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@FULL_COVERAGE_MASK"
+						},
+						"ViewportSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@VIEWPORT_SIZE"
+						},
+						"ProjectionParameters":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@PROJECTION_PARAMETERS"
 						}
 					}
 				},

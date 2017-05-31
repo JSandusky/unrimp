@@ -99,7 +99,7 @@ namespace RendererRuntime
 		*  @param[in] dynamicShaderPieces
 		*    Dynamic via C++ generated shader pieces to use
 		*/
-		PipelineStateSignature(const MaterialBlueprintResource& materialBlueprintResource, Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES]);
+		inline PipelineStateSignature(const MaterialBlueprintResource& materialBlueprintResource, Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES]);
 
 		/**
 		*  @brief
@@ -121,6 +121,23 @@ namespace RendererRuntime
 		*    Copy operator
 		*/
 		PipelineStateSignature& operator=(const PipelineStateSignature& pipelineStateSignature);
+
+		/**
+		*  @brief
+		*    Setter
+		*
+		*  @param[in] materialBlueprintResource
+		*    Material blueprint resource to use
+		*  @param[in] primitiveTopology
+		*    Primitive topology
+		*  @param[in] serializedPipelineStateHash
+		*    FNV1a hash of "Renderer::SerializedPipelineState"
+		*  @param[in] shaderProperties
+		*    Shader properties to use, you should ensure that this shader properties are already optimized by using e.g. "RendererRuntime::MaterialBlueprintResource::optimizeShaderProperties()"
+		*  @param[in] dynamicShaderPieces
+		*    Dynamic via C++ generated shader pieces to use
+		*/
+		void set(const MaterialBlueprintResource& materialBlueprintResource, Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES]);
 
 		//[-------------------------------------------------------]
 		//[ Getter for input data                                 ]

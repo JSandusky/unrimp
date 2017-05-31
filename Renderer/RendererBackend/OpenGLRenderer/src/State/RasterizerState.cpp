@@ -92,6 +92,14 @@ namespace OpenGLRenderer
 		// RasterizerState::slopeScaledDepthBias
 
 		// RasterizerState::depthClipEnable
+		if (mRasterizerState.depthClipEnable)
+		{
+			glDisable(GL_DEPTH_CLAMP);
+		}
+		else
+		{
+			glEnable(GL_DEPTH_CLAMP);
+		}
 
 		// RasterizerState::scissorEnable
 		if (mRasterizerState.scissorEnable)

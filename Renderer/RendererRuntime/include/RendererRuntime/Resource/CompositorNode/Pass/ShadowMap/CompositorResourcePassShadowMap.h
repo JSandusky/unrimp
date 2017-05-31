@@ -66,7 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT static const CompositorPassTypeId TYPE_ID;
-		static const uint32_t NUMBER_OF_CASCADES = 4;	///< TODO(co) Port https://github.com/TheRealMJP/Shadows/tree/master/Shadows
+		static const uint32_t MAXIMUM_NUMBER_OF_SHADOW_CASCADES = 4;
 
 
 	//[-------------------------------------------------------]
@@ -75,6 +75,8 @@ namespace RendererRuntime
 	public:
 		inline AssetId getTextureAssetId() const;
 		inline uint32_t getShadowMapSize() const;
+		inline uint8_t getNumberOfShadowCascades() const;
+		inline float getCascadeSplitsLambda() const;
 
 
 	//[-------------------------------------------------------]
@@ -99,8 +101,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		AssetId	 mTextureAssetId;	///< Shadow map texture asset ID
-		uint32_t mShadowMapSize;	///< The shadow map size is usually 512, 1024 or 2048
+		AssetId	 mTextureAssetId;			///< Shadow map texture asset ID
+		uint32_t mShadowMapSize;			///< The shadow map size is usually 512, 1024 or 2048
+		uint8_t  mNumberOfShadowCascades;	///< Number of shadow cascades, usually 4
+		float	 mCascadeSplitsLambda;		///< Cascade splits lambda
 
 
 	};

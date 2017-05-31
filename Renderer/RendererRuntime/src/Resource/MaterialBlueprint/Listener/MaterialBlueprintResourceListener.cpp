@@ -570,7 +570,7 @@ namespace RendererRuntime
 			const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = mCompositorContextData->getCompositorInstancePassShadowMap();
 			if (nullptr != compositorInstancePassShadowMap)
 			{
-				memcpy(buffer, compositorInstancePassShadowMap->getPassData().cascadeSplits, numberOfBytes);
+				memcpy(buffer, compositorInstancePassShadowMap->getPassData().shadowCascadeSplits, numberOfBytes);
 			}
 			else
 			{
@@ -585,7 +585,7 @@ namespace RendererRuntime
 			const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = mCompositorContextData->getCompositorInstancePassShadowMap();
 			if (nullptr != compositorInstancePassShadowMap)
 			{
-				memcpy(buffer, compositorInstancePassShadowMap->getPassData().cascadeOffsets, numberOfBytes);
+				memcpy(buffer, compositorInstancePassShadowMap->getPassData().shadowCascadeOffsets, numberOfBytes);
 			}
 			else
 			{
@@ -600,7 +600,7 @@ namespace RendererRuntime
 			const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = mCompositorContextData->getCompositorInstancePassShadowMap();
 			if (nullptr != compositorInstancePassShadowMap)
 			{
-				memcpy(buffer, compositorInstancePassShadowMap->getPassData().cascadeScales, numberOfBytes);
+				memcpy(buffer, compositorInstancePassShadowMap->getPassData().shadowCascadeScales, numberOfBytes);
 			}
 			else
 			{

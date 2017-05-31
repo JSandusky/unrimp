@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateSignature.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCacheManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
 #include "RendererRuntime/Core/StringId.h"
@@ -182,9 +183,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialBlueprintResource&					 mMaterialBlueprintResource;	///< Owner material blueprint resource
+		MaterialBlueprintResource&					 mMaterialBlueprintResource;		///< Owner material blueprint resource
 		ProgramCacheManager							 mProgramCacheManager;
 		PipelineStateCacheByPipelineStateSignatureId mPipelineStateCacheByPipelineStateSignatureId;
+		PipelineStateSignature						 mTemporaryPipelineStateSignature;	///< Temporary pipeline state signature to reduce the number of memory allocations/deallocations
 
 
 	};

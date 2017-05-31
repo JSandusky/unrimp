@@ -95,6 +95,46 @@ namespace OpenGLES3Renderer
 		// RasterizerState::slopeScaledDepthBias
 
 		// RasterizerState::depthClipEnable
+			/*
+			TODO(co) OpenGL has the "GL_ARB_depth_clamp"-extension
+			if (mRasterizerState.depthClipEnable)
+			{
+				glDisable(GL_DEPTH_CLAMP);
+			}
+			else
+			{
+				glEnable(GL_DEPTH_CLAMP);
+			}
+
+			Odd possible workaround mentioned at https://stackoverflow.com/questions/5960757/how-to-emulate-gl-depth-clamp-nv
+			"
+			You can emulate ARB_depth_clamp by using a separate varying for the z-component.
+
+			Vertex Shader:
+
+			varying float z;
+			void main()
+			{
+				gl_Position = ftransform();
+
+				// transform z to window coordinates
+				z = gl_Position.z / gl_Position.w;
+				z = (gl_DepthRange.diff * z + gl_DepthRange.near + gl_DepthRange.far) * 0.5;
+
+				// prevent z-clipping
+				gl_Position.z = 0.0;
+			}
+
+			Fragment shader:
+
+			varying float z;
+			void main()
+			{
+				gl_FragColor = vec4(vec3(z), 1.0);
+				gl_FragDepth = clamp(z, 0.0, 1.0);
+			}
+			"
+			*/
 
 		// RasterizerState::scissorEnable
 		if (mRasterizerState.scissorEnable)

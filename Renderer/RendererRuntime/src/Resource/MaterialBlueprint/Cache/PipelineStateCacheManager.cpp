@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCacheManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateSignature.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCompiler.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCache.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
@@ -47,9 +46,9 @@ namespace RendererRuntime
 		assert(IResource::LoadingState::LOADED == mMaterialBlueprintResource.getLoadingState());
 
 		// Generate the pipeline state signature
-		const PipelineStateSignature pipelineStateSignature(mMaterialBlueprintResource, primitiveTopology, serializedPipelineStateHash, shaderProperties, dynamicShaderPieces);	// TODO(co) Optimization: There are allocations for vector and map involved in here, we might want to get rid of those
+		mTemporaryPipelineStateSignature.set(mMaterialBlueprintResource, primitiveTopology, serializedPipelineStateHash, shaderProperties, dynamicShaderPieces);
 		{
-			PipelineStateCacheByPipelineStateSignatureId::const_iterator iterator = mPipelineStateCacheByPipelineStateSignatureId.find(pipelineStateSignature.getPipelineStateSignatureId());
+			PipelineStateCacheByPipelineStateSignatureId::const_iterator iterator = mPipelineStateCacheByPipelineStateSignatureId.find(mTemporaryPipelineStateSignature.getPipelineStateSignatureId());
 			if (iterator != mPipelineStateCacheByPipelineStateSignatureId.cend())
 			{
 				// There's already a pipeline state cache for the pipeline state signature ID
@@ -144,8 +143,8 @@ namespace RendererRuntime
 		}
 
 		// Create the new pipeline state cache instance
-		PipelineStateCache* pipelineStateCache = new PipelineStateCache(pipelineStateSignature);
-		mPipelineStateCacheByPipelineStateSignatureId.emplace(pipelineStateSignature.getPipelineStateSignatureId(), pipelineStateCache);
+		PipelineStateCache* pipelineStateCache = new PipelineStateCache(mTemporaryPipelineStateSignature);
+		mPipelineStateCacheByPipelineStateSignatureId.emplace(mTemporaryPipelineStateSignature.getPipelineStateSignatureId(), pipelineStateCache);
 
 		// If we've got a fallback pipeline state cache then commit the asynchronous pipeline state compiler request now, else we must proceed synchronous (risk of notable runtime hiccups)
 		if (nullptr != fallbackPipelineStateCache)

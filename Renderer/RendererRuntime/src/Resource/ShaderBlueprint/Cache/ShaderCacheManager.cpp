@@ -30,7 +30,6 @@
 #include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResourceManager.h"
 #include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateSignature.h"
 #include "RendererRuntime/Core/File/MemoryFile.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"

@@ -102,38 +102,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineStateSignature::PipelineStateSignature(const MaterialBlueprintResource& materialBlueprintResource, Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES]) :
-		mMaterialBlueprintResourceId(materialBlueprintResource.getId()),
-		mPrimitiveTopology(primitiveTopology),
-		mSerializedPipelineStateHash(serializedPipelineStateHash),
-		mShaderProperties(shaderProperties),
-		mPipelineStateSignatureId(Math::FNV1a_INITIAL_HASH),
-		mShaderCombinationId{getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>()}
-	{
-		// Before doing anything else: Copy the dynamic shader properties because they're an important part of the pipeline state signature
-		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
-		{
-			mDynamicShaderPieces[i] = dynamicShaderPieces[i];
-		}
-
-		// Incorporate primitive hashes
-		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mMaterialBlueprintResourceId), sizeof(uint32_t), mPipelineStateSignatureId);
-		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mPrimitiveTopology), sizeof(Renderer::PrimitiveTopology), mPipelineStateSignatureId);
-		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mSerializedPipelineStateHash), sizeof(uint32_t), mPipelineStateSignatureId);
-
-		// Incorporate shader related hashes
-		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = materialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getShaderBlueprintResourceManager();
-		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
-		{
-			const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResourceManager.tryGetById(materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(i)));
-			if (nullptr != shaderBlueprintResource)
-			{
-				const uint32_t hash = mShaderCombinationId[i] = ::detail::generateShaderCombinationId(*shaderBlueprintResource, mShaderProperties, mDynamicShaderPieces[i]);
-				mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&hash), sizeof(uint32_t), mPipelineStateSignatureId);
-			}
-		}
-	}
-
 	PipelineStateSignature::PipelineStateSignature(const PipelineStateSignature& pipelineStateSignature) :
 		mMaterialBlueprintResourceId(pipelineStateSignature.mMaterialBlueprintResourceId),
 		mPrimitiveTopology(pipelineStateSignature.mPrimitiveTopology),
@@ -164,6 +132,42 @@ namespace RendererRuntime
 
 		// Done
 		return *this;
+	}
+
+	void PipelineStateSignature::set(const MaterialBlueprintResource& materialBlueprintResource, Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES])
+	{
+		mMaterialBlueprintResourceId = materialBlueprintResource.getId();
+		mPrimitiveTopology			 = primitiveTopology;
+		mSerializedPipelineStateHash = serializedPipelineStateHash;
+		mShaderProperties			 = shaderProperties;
+		mPipelineStateSignatureId	 = Math::FNV1a_INITIAL_HASH;
+		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+		{
+			mShaderCombinationId[i] = getUninitialized<ShaderCombinationId>();
+		}
+
+		// Before doing anything else: Copy the dynamic shader properties because they're an important part of the pipeline state signature
+		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+		{
+			mDynamicShaderPieces[i] = dynamicShaderPieces[i];
+		}
+
+		// Incorporate primitive hashes
+		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mMaterialBlueprintResourceId), sizeof(uint32_t), mPipelineStateSignatureId);
+		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mPrimitiveTopology), sizeof(Renderer::PrimitiveTopology), mPipelineStateSignatureId);
+		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mSerializedPipelineStateHash), sizeof(uint32_t), mPipelineStateSignatureId);
+
+		// Incorporate shader related hashes
+		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = materialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getShaderBlueprintResourceManager();
+		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+		{
+			const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResourceManager.tryGetById(materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(i)));
+			if (nullptr != shaderBlueprintResource)
+			{
+				const uint32_t hash = mShaderCombinationId[i] = ::detail::generateShaderCombinationId(*shaderBlueprintResource, mShaderProperties, mDynamicShaderPieces[i]);
+				mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&hash), sizeof(uint32_t), mPipelineStateSignatureId);
+			}
+		}
 	}
 
 

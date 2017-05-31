@@ -135,6 +135,10 @@ namespace Direct3D12Renderer
 		{
 			mD3D12ShaderResourceViewTexture->Release();
 		}
+		if (nullptr != mD3D12Texture2D)
+		{
+			mD3D12Texture2D->Release();
+		}
 		*/
 	}
 

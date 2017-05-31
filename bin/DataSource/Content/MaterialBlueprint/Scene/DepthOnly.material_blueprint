@@ -24,13 +24,6 @@
 				"Value": "TRUE",
 				"Description": "Cast shadows?"
 			},
-			"CullMode":
-			{
-				"Usage": "RASTERIZER_STATE",
-				"ValueType": "CULL_MODE",
-				"Value": "BACK",
-				"Description": "Cull mode rasterizer state"
-			},
 			"UseGpuSkinning":
 			{
 				"Usage": "SHADER_COMBINATION",
@@ -165,7 +158,8 @@
 			},
 			"RasterizerState":
 			{
-				"CullMode": "@CullMode"
+				"CullMode": "NONE",
+				"DepthClipEnable": "FALSE"
 			}
 		},
 		"Resources":

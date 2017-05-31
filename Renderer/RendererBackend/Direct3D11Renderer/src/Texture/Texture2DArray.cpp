@@ -211,6 +211,10 @@ namespace Direct3D11Renderer
 		{
 			mD3D11ShaderResourceViewTexture->Release();
 		}
+		if (nullptr != mD3D11Texture2D)
+		{
+			mD3D11Texture2D->Release();
+		}
 	}
 
 

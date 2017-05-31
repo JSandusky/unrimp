@@ -67,6 +67,9 @@ namespace RendererRuntime
 	/**
 	*  @brief
 	*    Compositor instance pass shadow map
+	*
+	*  @note
+	*    - The implementation is basing on https://github.com/TheRealMJP/MSAAFilter/tree/master/MSAAFilter - see https://github.com/TheRealMJP/Shadows for a sophisticated shadow mapping sample including a lot of parameters to play with
 	*/
 	class CompositorInstancePassShadowMap : public CompositorInstancePassScene
 	{
@@ -85,9 +88,9 @@ namespace RendererRuntime
 		struct PassData
 		{
 			glm::mat4	shadowMatrix;
-			float		cascadeSplits[CompositorResourcePassShadowMap::NUMBER_OF_CASCADES] = {};
-			glm::vec4	cascadeOffsets[CompositorResourcePassShadowMap::NUMBER_OF_CASCADES];
-			glm::vec4	cascadeScales[CompositorResourcePassShadowMap::NUMBER_OF_CASCADES];
+			float		shadowCascadeSplits[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES] = {};
+			glm::vec4	shadowCascadeOffsets[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES];
+			glm::vec4	shadowCascadeScales[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES];
 		};
 
 
@@ -122,7 +125,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		PassData				  mPassData;
-		Renderer::IFramebufferPtr mFramebufferPtr;
+		Renderer::IFramebufferPtr mFramebufferPtr[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES];
 		TextureResourceId		  mTextureResourceId;
 
 

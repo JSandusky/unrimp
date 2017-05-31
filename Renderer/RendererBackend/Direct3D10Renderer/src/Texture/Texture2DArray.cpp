@@ -210,6 +210,10 @@ namespace Direct3D10Renderer
 		{
 			mD3D10ShaderResourceViewTexture->Release();
 		}
+		if (nullptr != mD3D10Texture2D)
+		{
+			mD3D10Texture2D->Release();
+		}
 	}
 
 

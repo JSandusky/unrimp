@@ -44,6 +44,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline PipelineStateSignature::PipelineStateSignature(const MaterialBlueprintResource& materialBlueprintResource, Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES])
+	{
+		set(materialBlueprintResource, primitiveTopology, serializedPipelineStateHash, shaderProperties, dynamicShaderPieces);
+	}
+
 	inline PipelineStateSignature::~PipelineStateSignature()
 	{
 		// Nothing here

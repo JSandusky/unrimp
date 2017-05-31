@@ -352,6 +352,24 @@
 							"ValueType": "FLOAT_4_4",
 							"Value": "@SHADOW_MATRIX"
 						},
+						"ShadowCascadeOffsets":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@SHADOW_CASCADE_OFFSETS"
+						},
+						"ShadowCascadeScales":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@SHADOW_CASCADE_SCALES"
+						},
+						"ShadowCascadeSplits":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4",
+							"Value": "@SHADOW_CASCADE_SPLITS"
+						},
 						"ViewSpaceSunLightDirection":
 						{
 							"Usage": "PASS_REFERENCE",

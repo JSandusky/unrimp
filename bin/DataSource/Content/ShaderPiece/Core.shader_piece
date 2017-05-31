@@ -142,6 +142,7 @@
 
 		// Compiler hints
 		#define UNROLL_HINT [unroll]
+		#define FLATTEN_HINT [flatten]
 	@end
 @end
 
@@ -247,6 +248,7 @@
 
 		// Compiler hints
 		#define UNROLL_HINT
+		#define FLATTEN_HINT
 
 		// Primitive HLSL datatypes
 		#define float2 vec2
@@ -387,6 +389,7 @@
 
 		// Compiler hints
 		#define UNROLL_HINT
+		#define FLATTEN_HINT
 
 		// Primitive HLSL datatypes
 		#define float2 vec2

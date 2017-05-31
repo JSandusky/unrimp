@@ -197,6 +197,8 @@ namespace RendererRuntime
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
 		// TODO(co) This is just a dummy implementation. For example automatic instancing has to be incorporated as well as more efficient buffer management.
+		ShaderProperties shaderProperties;
+		DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES];
 
 		const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
@@ -270,8 +272,11 @@ namespace RendererRuntime
 								if (nullptr != materialBlueprintResource && IResource::LoadingState::LOADED == materialBlueprintResource->getLoadingState())
 								{
 									// TODO(co) Gather shader properties (later on we cache as much as possible of this work inside the renderable)
-									ShaderProperties shaderProperties;
-									DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES];
+									shaderProperties.clear();
+									for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+									{
+										dynamicShaderPieces[i].clear();
+									}
 									{ // Gather shader properties from static material properties generating shader combinations
 										const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialResource->getSortedPropertyVector();
 										const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
