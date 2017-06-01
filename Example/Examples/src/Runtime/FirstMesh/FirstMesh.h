@@ -105,9 +105,8 @@ private:
 	Renderer::IPipelineStatePtr			  mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
 	RendererRuntime::MeshResourceId		  mMeshResourceId;			///< Mesh resource ID, can be set to uninitialized value
-	RendererRuntime::TextureResourceId	  mDiffuseTextureResourceId;
-	RendererRuntime::TextureResourceId	  mNormalTextureResourceId;
-	RendererRuntime::TextureResourceId	  mRoughnessTextureResourceId;
+	RendererRuntime::TextureResourceId	  m_drgb_nxaTextureResourceId;
+	RendererRuntime::TextureResourceId	  m_hr_rg_mb_nyaTextureResourceId;
 	RendererRuntime::TextureResourceId	  mEmissiveTextureResourceId;
 	Renderer::ISamplerStatePtr			  mSamplerState;			///< Sampler state, can be a null pointer
 	Renderer::CommandBuffer				  mCommandBuffer;			///< Command buffer

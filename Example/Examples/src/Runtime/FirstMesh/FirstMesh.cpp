@@ -40,9 +40,8 @@
 //[-------------------------------------------------------]
 FirstMesh::FirstMesh() :
 	mMeshResourceId(RendererRuntime::getUninitialized<RendererRuntime::MeshResourceId>()),
-	mDiffuseTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
-	mNormalTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
-	mRoughnessTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
+	m_drgb_nxaTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
+	m_hr_rg_mb_nyaTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	mEmissiveTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 	mObjectSpaceToViewSpaceMatrixUniformHandle(NULL_HANDLE),
@@ -126,21 +125,19 @@ void FirstMesh::onInitialization()
 			const Renderer::VertexAttributes vertexAttributes(static_cast<uint32_t>(glm::countof(vertexAttributesLayout)), vertexAttributesLayout);
 
 			{ // Create the root signature
-				Renderer::DescriptorRangeBuilder ranges[6];
+				Renderer::DescriptorRangeBuilder ranges[5];
 				ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", 0);
 				ranges[1].initializeSampler(1, 0);
-				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 1);
-				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "EmissiveMap", 1);
-				ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "NormalMap", 1);
-				ranges[5].initialize(Renderer::DescriptorRangeType::SRV, 1, 3, "RoughnessMap", 1);
+				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "_drgb_nxa", 1);
+				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "_hr_rg_mb_nya", 1);
+				ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "EmissiveMap", 1);
 
-				Renderer::RootParameterBuilder rootParameters[6];
+				Renderer::RootParameterBuilder rootParameters[5];
 				rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
 				rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
 				rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
 				rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
 				rootParameters[4].initializeAsDescriptorTable(1, &ranges[4], Renderer::ShaderVisibility::FRAGMENT);
-				rootParameters[5].initializeAsDescriptorTable(1, &ranges[5], Renderer::ShaderVisibility::FRAGMENT);
 
 				// Setup
 				Renderer::RootSignatureBuilder rootSignature;
@@ -188,13 +185,10 @@ void FirstMesh::onInitialization()
 			rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId("Example/Mesh/Character/Imrod", mMeshResourceId);
 
 			{ // Load in the diffuse, emissive, normal and roughness texture
-			  // -> The tangent space normal map is stored with three components, two would be enough to recalculate the third component within the fragment shader
-			  // -> The roughness map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodDiffuseMap",   "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",   mDiffuseTextureResourceId);
-				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodEmissiveMap",  "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",  mNormalTextureResourceId);
-				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodNormalMap",    "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",    mRoughnessTextureResourceId);
-				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodRoughnessMap", "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D", mEmissiveTextureResourceId);
+				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_drgb_nxa",     "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",     m_drgb_nxaTextureResourceId);
+				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_hr_rg_mb_nya", "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D", m_hr_rg_mb_nyaTextureResourceId);
+				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_e",            "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",   mEmissiveTextureResourceId);
 			}
 
 			{ // Create sampler state
@@ -212,9 +206,8 @@ void FirstMesh::onDeinitialization()
 	// Release the used renderer resources
 	mCommandBuffer.clear();
 	mSamplerState = nullptr;
-	RendererRuntime::setUninitialized(mDiffuseTextureResourceId);
-	RendererRuntime::setUninitialized(mNormalTextureResourceId);
-	RendererRuntime::setUninitialized(mRoughnessTextureResourceId);
+	RendererRuntime::setUninitialized(m_drgb_nxaTextureResourceId);
+	RendererRuntime::setUninitialized(m_hr_rg_mb_nyaTextureResourceId);
 	RendererRuntime::setUninitialized(mEmissiveTextureResourceId);
 	RendererRuntime::setUninitialized(mMeshResourceId);
 	mPipelineState = nullptr;
@@ -251,13 +244,11 @@ void FirstMesh::onDraw()
 
 	// Due to background texture loading, some textures might not be ready, yet
 	const RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-	const RendererRuntime::TextureResource* diffuseTextureResource = textureResourceManager.tryGetById(mDiffuseTextureResourceId);
-	const RendererRuntime::TextureResource* normalTextureResource = textureResourceManager.tryGetById(mNormalTextureResourceId);
-	const RendererRuntime::TextureResource* roughnessTextureResource = textureResourceManager.tryGetById(mRoughnessTextureResourceId);
+	const RendererRuntime::TextureResource* _drgb_nxaTextureResource = textureResourceManager.tryGetById(m_drgb_nxaTextureResourceId);
+	const RendererRuntime::TextureResource* _hr_rg_mb_nyaTextureResource = textureResourceManager.tryGetById(m_hr_rg_mb_nyaTextureResourceId);
 	const RendererRuntime::TextureResource* emissiveTextureResource = textureResourceManager.tryGetById(mEmissiveTextureResourceId);
-	if (nullptr == diffuseTextureResource || nullptr == diffuseTextureResource->getTexture() ||
-		nullptr == normalTextureResource || nullptr == normalTextureResource->getTexture() ||
-		nullptr == roughnessTextureResource || nullptr == roughnessTextureResource->getTexture() ||
+	if (nullptr == _drgb_nxaTextureResource || nullptr == _drgb_nxaTextureResource->getTexture() ||
+		nullptr == _hr_rg_mb_nyaTextureResource || nullptr == _hr_rg_mb_nyaTextureResource->getTexture() ||
 		nullptr == emissiveTextureResource || nullptr == emissiveTextureResource->getTexture())
 	{
 		return;
@@ -295,10 +286,9 @@ void FirstMesh::onDraw()
 		// Set sampler and textures
 		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 0, mUniformBuffer);
 		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mSamplerState);
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, diffuseTextureResource->getTexture());
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 3, normalTextureResource->getTexture());
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, roughnessTextureResource->getTexture());
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 5, emissiveTextureResource->getTexture());
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, _drgb_nxaTextureResource->getTexture());
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 3, _hr_rg_mb_nyaTextureResource->getTexture());
+		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, emissiveTextureResource->getTexture());
 
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);

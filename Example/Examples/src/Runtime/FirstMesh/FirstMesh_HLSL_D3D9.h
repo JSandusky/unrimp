@@ -108,10 +108,9 @@ struct VS_OUTPUT
 };
 
 // Uniforms
-uniform sampler2D DiffuseMap   : register(s0);
-uniform sampler2D EmissiveMap  : register(s1);
-uniform sampler2D NormalMap    : register(s2);	// Tangent space normal map
-uniform sampler2D RoughnessMap : register(s3);
+uniform sampler2D _drgb_nxa     : register(s0);
+uniform sampler2D _hr_rg_mb_nya : register(s1);
+uniform sampler2D EmissiveMap   : register(s2);
 
 // Programs
 float4 main(VS_OUTPUT input) : SV_TARGET
@@ -120,9 +119,17 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 	float3 ViewSpaceLightDirection = normalize(float3(0.5f, 0.5f, -1.0f));	// View space light direction
 	float3 ViewSpaceViewVector     = float3(0.0f, 0.0f, -1.0f);				// In view space, we always look along the negative z-axis
 
+	// Read channel packed texture data
+	// -> "_drgb_nxa" = RGB channel = Diffuse map ("_d"-postfix), A channel = x component of normal map ("_n"-postfix)
+	// -> "_hr_rg_mb_nya" = R channel = Height map ("_h"-postfix), G channel = Roughness map ("_r"-postfix), B channel = Metallic map ("_m"-postfix), A channel = y component of normal map ("_n"-postfix)
+	float4 value_drgb_nxa = tex2D(_drgb_nxa, input.TexCoord);
+	float4 value_hr_rg_mb_nya = tex2D(_hr_rg_mb_nya, input.TexCoord);
+
 	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
 	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
-	float3 normal = tex2D(NormalMap, input.TexCoord).yxx * 2.0f - 1.0f;
+	float3 normal;
+	normal.x = value_drgb_nxa.a * 2.0f - 1.0f;
+	normal.y = value_hr_rg_mb_nya.a * 2.0f - 1.0f;
 	normal.z = sqrt(1.0f - dot(normal.xy, normal.xy));
 
 	// Transform the tangent space normal into view space
@@ -138,9 +145,9 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 	float specularLight = (diffuseLight > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
 
 	// Calculate the fragment color
-	float4 color = diffuseLight * tex2D(DiffuseMap, input.TexCoord).rgba;	// Diffuse term
-	color.rgb += specularLight * tex2D(RoughnessMap, input.TexCoord).rgb;	// Specular term
-	color.rgb += tex2D(EmissiveMap, input.TexCoord).rgb;					// Emissive term
+	float4 color = diffuseLight * float4(value_drgb_nxa.rgb, 1.0f);		// Diffuse term
+	color.rgb += specularLight * value_hr_rg_mb_nya.g;					// Specular term
+	color.rgb += tex2D(EmissiveMap, input.TexCoord).rgb;				// Emissive term
 
 	// Done
 	return min(color, float4(1.0f, 1.0f, 1.0f, 1.0f));

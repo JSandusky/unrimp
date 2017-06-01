@@ -342,11 +342,11 @@ namespace Direct3D9Renderer
 						D3DPERF_SetOptions(1);
 					#endif
 
-					// Create the default sampler state
-					mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
-
 					// Initialize the capabilities
 					initializeCapabilities();
+
+					// Create the default sampler state
+					mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
 					// Add references to the default sampler state and set it
 					if (nullptr != mDefaultSamplerState)
