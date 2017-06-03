@@ -543,11 +543,14 @@ namespace
 				}
 				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorInputFile = rapidJsonValueInputFiles.MemberBegin(); rapidJsonMemberIteratorInputFile != rapidJsonValueInputFiles.MemberEnd(); ++rapidJsonMemberIteratorInputFile)
 				{
+					bool textureSemanticFound = false;
 					const TextureSemantic textureSemantic = getTextureSemanticByRapidJsonValue(rapidJsonMemberIteratorInputFile->name);
 					for (Source& source : mSources)
 					{
 						if (source.textureSemantic == textureSemantic)
 						{
+							textureSemanticFound = true;
+
 							// Support for Toksvig specular anti-aliasing to reduce shimmering
 							std::string usedSourceNormalMapFilename;
 							if (textureSemantic == TextureSemantic::ROUGHNESS_MAP && toksvigSpecularAntiAliasing)
@@ -571,6 +574,10 @@ namespace
 							}
 							break;
 						}
+					}
+					if (!textureSemanticFound)
+					{
+						throw std::runtime_error("Texture semantic \"" + std::string(rapidJsonMemberIteratorInputFile->name.GetString()) + "\" isn't defined inside texture channel packing \"" + rapidJsonValueTextureAssetCompiler["TextureChannelPacking"].GetString() + '\"');
 					}
 				}
 
