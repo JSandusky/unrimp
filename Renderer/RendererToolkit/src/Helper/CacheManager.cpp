@@ -193,8 +193,8 @@ namespace RendererToolkit
 		}
 		else
 		{
-			// Source could not be found, nothing to do
-			return false;
+			// Error! Source could not be found.
+			throw std::runtime_error("Source file \"" + sourceFile + "\" doesn't exist");
 		}
 	}
 
@@ -211,9 +211,8 @@ namespace RendererToolkit
 		{
 			if (!checkIfFileExists(sourceFile))
 			{
-				// One of the source files doesn't exists -> nothing to do
-				// TODO(sw) Issue here a warning/error?
-				return false;
+				// Error! Source could not be found.
+				throw std::runtime_error("Source file \"" + sourceFile + "\" doesn't exist");
 			}
 		}
 
