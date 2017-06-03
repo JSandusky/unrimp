@@ -138,7 +138,7 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 	float shadowVisibility = CalculateShadowVisibility(worldSpacePosition, linearDepth);
 	if (shadowVisibility > 0.0f)
 	{
-		color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
+		color += shadowVisibility * CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
 	}
 
 	// Perform clustered shading

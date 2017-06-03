@@ -79,6 +79,8 @@ namespace RendererRuntime
 		inline uint8_t getNumberOfShadowMultisamples() const;
 		inline float getCascadeSplitsLambda() const;
 		inline AssetId getDepthToExponentialVarianceMaterialBlueprintAssetId() const;
+		inline AssetId getBlurMaterialBlueprintAssetId() const;
+		inline float getShadowFilterSize() const;
 
 
 	//[-------------------------------------------------------]
@@ -109,6 +111,8 @@ namespace RendererRuntime
 		uint8_t  mNumberOfShadowMultisamples;							///< The number of shadow multisamples per pixel (valid values: 1, 2, 4, 8)
 		float	 mCascadeSplitsLambda;									///< Cascade splits lambda
 		AssetId  mDepthToExponentialVarianceMaterialBlueprintAssetId;	///< Depth to exponential variance material blueprint asset ID
+		AssetId  mBlurMaterialBlueprintAssetId;							///< Blur material blueprint asset ID
+		float	 mShadowFilterSize;										///< Shadow filter size
 
 
 	};

@@ -50,6 +50,7 @@ namespace
 		//[-------------------------------------------------------]
 		static const float SHADOW_MAP_FILTER_SIZE = 7.0f;
 		static const RendererRuntime::AssetId DEPTH_SHADOW_MAP_TEXTURE_ASSET_ID("Unrimp/Texture/DynamicByCode/DepthShadowMap");
+		static const RendererRuntime::AssetId INTERMEDIATE_DEPTH_BLUR_SHADOW_MAP_TEXTURE_ASSET_ID("Unrimp/Texture/DynamicByCode/IntermediateDepthBlurShadowMap");
 
 
 		//[-------------------------------------------------------]
@@ -88,7 +89,9 @@ namespace RendererRuntime
 			const glm::vec3 worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::VEC3_FORWARD;
 			const CompositorResourcePassShadowMap& compositorResourcePassShadowMap = static_cast<const CompositorResourcePassShadowMap&>(getCompositorResourcePass());
 			const uint32_t shadowMapSize = compositorResourcePassShadowMap.getShadowMapSize();
+			mPassData.shadowMapSize = static_cast<int>(shadowMapSize);
 			const uint8_t numberOfShadowCascades = compositorResourcePassShadowMap.getNumberOfShadowCascades();
+			const float shadowFilterSize = compositorResourcePassShadowMap.getShadowFilterSize();
 
 			// TODO(co) The minimum and maximum distance need to be calculated dynamically via depth buffer reduction as seen inside e.g. https://github.com/TheRealMJP/MSAAFilter/tree/master/MSAAFilter
 			const float minimumDistance = 0.0f;
@@ -154,6 +157,8 @@ namespace RendererRuntime
 			// Render the meshes to each cascade
 			for (uint8_t cascadeIndex = 0; cascadeIndex < numberOfShadowCascades; ++cascadeIndex)
 			{
+				COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, ("Shadow cascade " + std::to_string(cascadeIndex)).c_str())
+
 				// Compute the MVP matrix from the light's point of view
 				glm::mat4 depthProjectionMatrix;
 				glm::mat4 depthViewMatrix;
@@ -226,6 +231,8 @@ namespace RendererRuntime
 				const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomViewSpaceToClipSpaceMatrix(depthProjectionMatrix);
 
 				{ // Render shadow casters
+					COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, "Render shadow casters")
+
 					// Set render target
 					Renderer::Command::SetRenderTarget::create(commandBuffer, mDepthFramebufferPtr);
 
@@ -252,6 +259,9 @@ namespace RendererRuntime
 					}
 					mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassScene&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
 					mRenderQueue.clear();
+
+					// End debug event
+					COMMAND_END_DEBUG_EVENT(commandBuffer)
 				}
 
 				// Unset custom camera matrices
@@ -289,15 +299,51 @@ namespace RendererRuntime
 				}
 				mPassData.currentShadowCascadeIndex = cascadeIndex;
 
-				{ // Calculate exponential variance shadow map (EVSM)
-					// Set render target
+				// Calculate exponential variance shadow map (EVSM) and blur if necessary
+				const glm::vec4& cascadeScale = mPassData.shadowCascadeScales[cascadeIndex];
+				const float filterSizeX = std::max(shadowFilterSize * cascadeScale.x, 1.0f);
+				const float filterSizeY = std::max(shadowFilterSize * cascadeScale.y, 1.0f);
+				if (filterSizeX > 1.0f || filterSizeY > 1.0f)
+				{
+					// Execute compositor instance pass quad, use cascade index three as intermediate render target
+					const uint8_t INTERMEDIATE_CASCADE_INDEX = 3;
+					assert(nullptr != mVarianceFramebufferPtr[INTERMEDIATE_CASCADE_INDEX]);
+					COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, "Depth to exponential variance")
+					Renderer::Command::SetRenderTarget::create(commandBuffer, mVarianceFramebufferPtr[INTERMEDIATE_CASCADE_INDEX]);
+					mDepthToExponentialVarianceCompositorInstancePassQuad->onFillCommandBuffer(*mVarianceFramebufferPtr[INTERMEDIATE_CASCADE_INDEX], compositorContextData, commandBuffer);
+					mDepthToExponentialVarianceCompositorInstancePassQuad->onFrameEnded();
+					COMMAND_END_DEBUG_EVENT(commandBuffer)
+
+					// Horizontal blur
+					mPassData.shadowFilterSize = filterSizeX;
+					COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, "Horizontal blur")
+					Renderer::Command::SetRenderTarget::create(commandBuffer, mIntermediateFramebufferPtr);
+					mHorizontalBlurCompositorInstancePassQuad->onFillCommandBuffer(*mIntermediateFramebufferPtr, compositorContextData, commandBuffer);
+					mHorizontalBlurCompositorInstancePassQuad->onFrameEnded();
+					COMMAND_END_DEBUG_EVENT(commandBuffer)
+
+					// Vertical blur
+					mPassData.shadowFilterSize = filterSizeY;
+					assert(nullptr != mVarianceFramebufferPtr[cascadeIndex]);
+					COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, "Vertical blur")
+					Renderer::Command::SetRenderTarget::create(commandBuffer, mVarianceFramebufferPtr[cascadeIndex]);
+					mVerticalBlurCompositorInstancePassQuad->onFillCommandBuffer(*mVarianceFramebufferPtr[cascadeIndex], compositorContextData, commandBuffer);
+					mVerticalBlurCompositorInstancePassQuad->onFrameEnded();
+					COMMAND_END_DEBUG_EVENT(commandBuffer)
+				}
+				else
+				{
+					// Execute compositor instance pass quad
+					COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, "Depth to exponential variance")
 					assert(nullptr != mVarianceFramebufferPtr[cascadeIndex]);
 					Renderer::Command::SetRenderTarget::create(commandBuffer, mVarianceFramebufferPtr[cascadeIndex]);
-
-					// Execute compositor instance pass quad
 					mDepthToExponentialVarianceCompositorInstancePassQuad->onFillCommandBuffer(*mVarianceFramebufferPtr[cascadeIndex], compositorContextData, commandBuffer);
 					mDepthToExponentialVarianceCompositorInstancePassQuad->onFrameEnded();
+					COMMAND_END_DEBUG_EVENT(commandBuffer)
 				}
+
+				// End debug event
+				COMMAND_END_DEBUG_EVENT(commandBuffer)
 			}
 
 			// Reset to previous render target
@@ -322,8 +368,13 @@ namespace RendererRuntime
 		CompositorInstancePassScene(compositorResourcePassShadowMap, compositorNodeInstance),
 		mDepthTextureResourceId(getUninitialized<TextureResourceId>()),
 		mVarianceTextureResourceId(getUninitialized<TextureResourceId>()),
+		mIntermediateDepthBlurTextureResourceId(getUninitialized<TextureResourceId>()),
 		mDepthToExponentialVarianceCompositorResourcePassQuad(nullptr),
-		mDepthToExponentialVarianceCompositorInstancePassQuad(nullptr)
+		mDepthToExponentialVarianceCompositorInstancePassQuad(nullptr),
+		mHorizontalBlurCompositorResourcePassQuad(nullptr),
+		mHorizontalBlurCompositorInstancePassQuad(nullptr),
+		mVerticalBlurCompositorResourcePassQuad(nullptr),
+		mVerticalBlurCompositorInstancePassQuad(nullptr)
 	{
 		createShadowMapRenderTarget();
 	}
@@ -384,6 +435,35 @@ namespace RendererRuntime
 				// Create texture resource
 				mVarianceTextureResourceId = textureResourceManager.createTextureResourceByAssetId(assetId, *texture);
 			}
+
+			{ // Intermediate depth blur shadow map
+				Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2D(shadowMapSize, shadowMapSize, Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(texture, "Compositor instance pass intermediate depth blur shadow map")
+
+				// Create the framebuffer object (FBO) instance
+				Renderer::FramebufferAttachment colorFramebufferAttachment(texture);
+				mIntermediateFramebufferPtr = rendererRuntime.getRenderer().createFramebuffer(1, &colorFramebufferAttachment);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(mIntermediateFramebufferPtr, "Compositor instance pass intermediate depth blur shadow map")
+
+				// Create texture resource
+				mIntermediateDepthBlurTextureResourceId = textureResourceManager.createTextureResourceByAssetId(::detail::INTERMEDIATE_DEPTH_BLUR_SHADOW_MAP_TEXTURE_ASSET_ID, *texture);
+			}
+
+			{ // Horizontal blur
+				MaterialProperties materialProperties;
+				materialProperties.setPropertyById("VerticalBlur", MaterialPropertyValue::fromBoolean(false), MaterialProperty::Usage::UNKNOWN, true);
+				materialProperties.setPropertyById("ColorMap", MaterialPropertyValue::fromTextureAssetId(assetId), MaterialProperty::Usage::UNKNOWN, true);
+				mHorizontalBlurCompositorResourcePassQuad = new CompositorResourcePassQuad(compositorResourcePassShadowMap.getCompositorTarget(), compositorResourcePassShadowMap.getBlurMaterialBlueprintAssetId(), materialProperties);
+				mHorizontalBlurCompositorInstancePassQuad = new CompositorInstancePassQuad(*mHorizontalBlurCompositorResourcePassQuad, getCompositorNodeInstance());
+			}
+
+			{ // Vertical blur
+				MaterialProperties materialProperties;
+				materialProperties.setPropertyById("VerticalBlur", MaterialPropertyValue::fromBoolean(true), MaterialProperty::Usage::UNKNOWN, true);
+				materialProperties.setPropertyById("ColorMap", MaterialPropertyValue::fromTextureAssetId(::detail::INTERMEDIATE_DEPTH_BLUR_SHADOW_MAP_TEXTURE_ASSET_ID), MaterialProperty::Usage::UNKNOWN, true);
+				mVerticalBlurCompositorResourcePassQuad = new CompositorResourcePassQuad(compositorResourcePassShadowMap.getCompositorTarget(), compositorResourcePassShadowMap.getBlurMaterialBlueprintAssetId(), materialProperties);
+				mVerticalBlurCompositorInstancePassQuad = new CompositorInstancePassQuad(*mVerticalBlurCompositorResourcePassQuad, getCompositorNodeInstance());
+			}
 		}
 		else
 		{
@@ -394,9 +474,25 @@ namespace RendererRuntime
 
 	void CompositorInstancePassShadowMap::destroyShadowMapRenderTarget()
 	{
-		assert(isInitialized(mDepthTextureResourceId) && isInitialized(mVarianceTextureResourceId) && nullptr != mDepthFramebufferPtr);
+		assert(isInitialized(mDepthTextureResourceId) && isInitialized(mVarianceTextureResourceId) && isInitialized(mIntermediateDepthBlurTextureResourceId) && nullptr != mDepthFramebufferPtr);
+
+		// Depth to exponential variance
 		delete mDepthToExponentialVarianceCompositorInstancePassQuad;
+		mDepthToExponentialVarianceCompositorInstancePassQuad = nullptr;
 		delete mDepthToExponentialVarianceCompositorResourcePassQuad;
+		mDepthToExponentialVarianceCompositorResourcePassQuad = nullptr;
+
+		// Horizontal blur
+		delete mHorizontalBlurCompositorResourcePassQuad;
+		mHorizontalBlurCompositorResourcePassQuad = nullptr;
+		delete mHorizontalBlurCompositorInstancePassQuad;
+		mHorizontalBlurCompositorInstancePassQuad = nullptr;
+
+		// Vertical blur
+		delete mVerticalBlurCompositorResourcePassQuad;
+		mVerticalBlurCompositorResourcePassQuad = nullptr;
+		delete mVerticalBlurCompositorInstancePassQuad;
+		mVerticalBlurCompositorInstancePassQuad = nullptr;
 
 		// Release the framebuffers and other renderer resources referenced by the framebuffers
 		mDepthFramebufferPtr = nullptr;
@@ -404,11 +500,13 @@ namespace RendererRuntime
 		{
 			mVarianceFramebufferPtr[cascadeIndex] = nullptr;
 		}
+		mIntermediateFramebufferPtr = nullptr;
 
 		// Inform the texture resource manager that our render target texture is gone now
 		TextureResourceManager& textureResourceManager = getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getTextureResourceManager();
 		textureResourceManager.destroyTextureResource(mDepthTextureResourceId);
 		textureResourceManager.destroyTextureResource(mVarianceTextureResourceId);
+		textureResourceManager.destroyTextureResource(mIntermediateDepthBlurTextureResourceId);
 	}
 
 

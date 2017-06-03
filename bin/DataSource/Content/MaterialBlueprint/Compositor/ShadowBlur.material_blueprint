@@ -1,0 +1,145 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "1"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"VerticalBlur":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Perform vertical blur?",
+				"VisualImportance": "MANDATORY"
+			},
+			"ColorMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+				"Description": "2D color map"
+			}
+		},
+		"RootSignature":
+		{
+			"RootParameters":
+			{
+				"0":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "UBV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "PassUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"2":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "ColorMap",
+							"SamplerRootParameterIndex": "1"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				}
+			}
+		},
+		"PipelineState":
+		{
+			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/ShadowBlurFragment.asset"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "NONE"
+			},
+			"DepthStencilState":
+			{
+				"DepthEnable": "FALSE",
+				"DepthWriteMask": "ZERO"
+			}
+		},
+		"Resources":
+		{
+			"UniformBuffers":
+			{
+				"PassUniformBuffer":
+				{
+					"BufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"ShadowMapSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@SHADOW_MAP_SIZE"
+						},
+						"ShadowFilterSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@SHADOW_FILTER_SIZE"
+						},
+						"ShadowSampleRadius":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@SHADOW_SAMPLE_RADIUS"
+						}
+					}
+				}
+			},
+			"SamplerStates":
+			{
+				"SamplerPoint":
+				{
+					"Filter": "MIN_MAG_MIP_POINT",
+					"MaxAnisotropy": "1"
+				}
+			},
+			"Textures":
+			{
+				"ColorMap":
+				{
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@ColorMap",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"MipmapsUsed": "FALSE"
+				}
+			}
+		}
+	}
+}

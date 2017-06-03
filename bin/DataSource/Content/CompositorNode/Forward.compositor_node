@@ -230,7 +230,8 @@
 				{
 					"MaterialTechnique": "DepthOnly",
 					"Texture": "Example/Texture/Dynamic/ShadowMapRenderTarget",
-					"DepthToExponentialVarianceMaterialBlueprint": "MaterialBlueprint/Compositor/DepthToExponentialVariance.asset"
+					"DepthToExponentialVarianceMaterialBlueprint": "MaterialBlueprint/Compositor/DepthToExponentialVariance.asset",
+					"BlurMaterialBlueprint": "MaterialBlueprint/Compositor/ShadowBlur.asset"
 				}
 			},
 			"HdrMultisampleFramebuffer":

@@ -93,6 +93,9 @@ namespace
 			DEFINE_CONSTANT(SHADOW_CASCADE_OFFSETS)
 			DEFINE_CONSTANT(SHADOW_CASCADE_SCALES)
 			DEFINE_CONSTANT(CURRENT_SHADOW_CASCADE_SCALE)
+			DEFINE_CONSTANT(SHADOW_MAP_SIZE)
+			DEFINE_CONSTANT(SHADOW_FILTER_SIZE)
+			DEFINE_CONSTANT(SHADOW_SAMPLE_RADIUS)
 			DEFINE_CONSTANT(LENS_STAR_MATRIX)
 			DEFINE_CONSTANT(JITTER_OFFSET)
 
@@ -618,6 +621,52 @@ namespace RendererRuntime
 			{
 				const CompositorInstancePassShadowMap::PassData& passData = compositorInstancePassShadowMap->getPassData();
 				memcpy(buffer, &passData.shadowCascadeScales[passData.currentShadowCascadeIndex], numberOfBytes);
+			}
+			else
+			{
+				// Error!
+				assert(false);
+				memset(buffer, 0, numberOfBytes);
+			}
+		}
+		else if (::detail::SHADOW_MAP_SIZE == referenceValue)
+		{
+			assert(sizeof(int) == numberOfBytes);
+			const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = mCompositorContextData->getCompositorInstancePassShadowMap();
+			if (nullptr != compositorInstancePassShadowMap)
+			{
+				memcpy(buffer, &compositorInstancePassShadowMap->getPassData().shadowMapSize, numberOfBytes);
+			}
+			else
+			{
+				// Error!
+				assert(false);
+				memset(buffer, 0, numberOfBytes);
+			}
+		}
+		else if (::detail::SHADOW_FILTER_SIZE == referenceValue)
+		{
+			assert(sizeof(float) == numberOfBytes);
+			const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = mCompositorContextData->getCompositorInstancePassShadowMap();
+			if (nullptr != compositorInstancePassShadowMap)
+			{
+				memcpy(buffer, &compositorInstancePassShadowMap->getPassData().shadowFilterSize, numberOfBytes);
+			}
+			else
+			{
+				// Error!
+				assert(false);
+				memset(buffer, 0, numberOfBytes);
+			}
+		}
+		else if (::detail::SHADOW_SAMPLE_RADIUS == referenceValue)
+		{
+			assert(sizeof(int) == numberOfBytes);
+			const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = mCompositorContextData->getCompositorInstancePassShadowMap();
+			if (nullptr != compositorInstancePassShadowMap)
+			{
+				const int shadowSampleRadius = static_cast<int>((compositorInstancePassShadowMap->getPassData().shadowFilterSize * 0.5f) + 0.499f);
+				memcpy(buffer, &shadowSampleRadius, numberOfBytes);
 			}
 			else
 			{

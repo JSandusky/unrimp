@@ -186,7 +186,7 @@ MAIN_BEGIN
 	float shadowVisibility = CalculateShadowVisibility(worldSpacePosition, GetLinearDepthByFragmentDepth(FRAGMENT_POSITION.z));
 	if (shadowVisibility > 0.0f)
 	{
-		color += CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
+		color += shadowVisibility * CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
 	}
 
 	// Perform clustered shading

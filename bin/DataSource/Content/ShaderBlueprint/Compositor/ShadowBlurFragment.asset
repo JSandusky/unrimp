@@ -8,13 +8,13 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetType": "MaterialBlueprint",
+			"AssetType": "ShaderBlueprint",
 			"AssetCategory": "Compositor",
 			"Copyright": "Basing on https://mynameismjp.wordpress.com/2013/09/10/shadow-maps/ - https://github.com/TheRealMJP/Shadows"
 		},
-		"MaterialBlueprintAssetCompiler":
+		"ShaderBlueprintAssetCompiler":
 		{
-			"InputFile": "DepthToExponentialVariance.material_blueprint"
+			"InputFile": "ShadowBlurFragment.shader_blueprint"
 		}
 	}
 }

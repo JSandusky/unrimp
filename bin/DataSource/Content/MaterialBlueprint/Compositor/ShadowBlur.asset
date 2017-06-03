@@ -14,7 +14,7 @@
 		},
 		"MaterialBlueprintAssetCompiler":
 		{
-			"InputFile": "DepthToExponentialVariance.material_blueprint"
+			"InputFile": "ShadowBlur.material_blueprint"
 		}
 	}
 }

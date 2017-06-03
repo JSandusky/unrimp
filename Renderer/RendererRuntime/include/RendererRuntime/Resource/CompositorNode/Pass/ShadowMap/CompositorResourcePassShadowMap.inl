@@ -58,6 +58,16 @@ namespace RendererRuntime
 		return mDepthToExponentialVarianceMaterialBlueprintAssetId;
 	}
 
+	inline AssetId CompositorResourcePassShadowMap::getBlurMaterialBlueprintAssetId() const
+	{
+		return mBlurMaterialBlueprintAssetId;
+	}
+
+	inline float CompositorResourcePassShadowMap::getShadowFilterSize() const
+	{
+		return mShadowFilterSize;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
@@ -76,7 +86,8 @@ namespace RendererRuntime
 		mShadowMapSize(1024),
 		mNumberOfShadowCascades(4),
 		mNumberOfShadowMultisamples(4),
-		mCascadeSplitsLambda(0.99f)
+		mCascadeSplitsLambda(0.99f),
+		mShadowFilterSize(8.0f)
 	{
 		// Nothing here
 	}

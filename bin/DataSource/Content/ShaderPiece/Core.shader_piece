@@ -131,6 +131,7 @@
 
 		// Load/fetch
 		#define TEXTURE_FETCH_2D(name, index) name.Load(index)
+		#define TEXTURE_FETCH_ARRAY(name, index) name.Load(index)
 		#define TEXTURE_FETCH_3D(name, index) name.Load(index)
 
 		// Fragment shader only
@@ -271,6 +272,7 @@
 
 		// Load/fetch
 		#define TEXTURE_FETCH_2D(name, index) texelFetch(name, index.xy, index.z)
+		#define TEXTURE_FETCH_ARRAY(name, index) texelFetch(name, index.xyz, index.w)
 		#define TEXTURE_FETCH_3D(name, index) texelFetch(name, index.xyz, index.w)
 
 		// HLSL math functions
@@ -413,6 +415,7 @@
 
 		// Load/fetch
 		#define TEXTURE_FETCH_2D(name, index) texelFetch(name, index.xy, index.z)
+		#define TEXTURE_FETCH_ARRAY(name, index) texelFetch(name, index.xyz, index.w)
 		#define TEXTURE_FETCH_3D(name, index) texelFetch(name, index.xyz, index.w)
 
 		// HLSL math functions
