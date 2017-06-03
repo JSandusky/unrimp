@@ -666,6 +666,16 @@ namespace
 			}
 		}
 
+		void deinitializeCrunch()
+		{
+			if (g_CrunchInitialized)
+			{
+				crnlib::console::remove_console_output_func(crunchConsoleOutput);
+				crnlib::console::deinit();
+				g_CrunchInitialized = false;
+			}
+		}
+
 		std::string widthHeightToString(uint32_t width, uint32_t height)
 		{
 			return std::to_string(width) + 'x' + std::to_string(height);
@@ -1155,7 +1165,7 @@ namespace RendererToolkit
 
 	TextureAssetCompiler::~TextureAssetCompiler()
 	{
-		// Nothing here, a Crunch de-initialization call wouldn't add any benefit in here
+		::detail::deinitializeCrunch();
 	}
 
 
