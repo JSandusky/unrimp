@@ -76,7 +76,9 @@ namespace RendererRuntime
 		inline AssetId getTextureAssetId() const;
 		inline uint32_t getShadowMapSize() const;
 		inline uint8_t getNumberOfShadowCascades() const;
+		inline uint8_t getNumberOfShadowMultisamples() const;
 		inline float getCascadeSplitsLambda() const;
+		inline AssetId getDepthToExponentialVarianceMaterialBlueprintAssetId() const;
 
 
 	//[-------------------------------------------------------]
@@ -101,10 +103,12 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		AssetId	 mTextureAssetId;			///< Shadow map texture asset ID
-		uint32_t mShadowMapSize;			///< The shadow map size is usually 512, 1024 or 2048
-		uint8_t  mNumberOfShadowCascades;	///< Number of shadow cascades, usually 4
-		float	 mCascadeSplitsLambda;		///< Cascade splits lambda
+		AssetId	 mTextureAssetId;										///< Shadow map texture asset ID
+		uint32_t mShadowMapSize;										///< The shadow map size is usually 512, 1024 or 2048
+		uint8_t  mNumberOfShadowCascades;								///< Number of shadow cascades, usually 4
+		uint8_t  mNumberOfShadowMultisamples;							///< The number of shadow multisamples per pixel (valid values: 1, 2, 4, 8)
+		float	 mCascadeSplitsLambda;									///< Cascade splits lambda
+		AssetId  mDepthToExponentialVarianceMaterialBlueprintAssetId;	///< Depth to exponential variance material blueprint asset ID
 
 
 	};

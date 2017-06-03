@@ -24,6 +24,29 @@
 @piece(DefineCalculateShadowVisibility)
 	/**
 	*  @brief
+	*    Sample the EVSM shadow map
+	*/
+	float SampleShadowMapEvsm(float3 shadowPosition, float3 shadowPositionDX, float3 shadowPositionDY, uint cascadeIndex)
+	{
+		float2 exponents = GetEvsmExponents(PassData.ShadowCascadeScales[cascadeIndex].xyz);
+		float2 warpedDepth = WarpDepth(shadowPosition.z, exponents);
+		float4 occluder = SAMPLE_ARRAY_GRAD(ShadowMap, SamplerLinear, float4(shadowPosition.xy, cascadeIndex, 0.0f), shadowPositionDX.xy, shadowPositionDY.xy);
+
+		// Derivative of warping at depth
+		float2 depthScale = 0.0001f * exponents * warpedDepth;
+		float2 minimumVariance = depthScale * depthScale;
+
+		float positiveContribution = ChebyshevUpperBound(occluder.xz, warpedDepth.x, minimumVariance.x);
+		float negativeContribution = ChebyshevUpperBound(occluder.yw, warpedDepth.y, minimumVariance.y);
+		float shadowContribution = positiveContribution;
+		shadowContribution = min(shadowContribution, negativeContribution);
+
+		// Done
+		return shadowContribution;
+	}
+
+	/**
+	*  @brief
 	*    Sample the appropriate shadow map cascade
 	*/
 	float SampleShadowCascade(float3 shadowPosition, float3 shadowPositionDX, float3 shadowPositionDY, uint cascadeIndex)
@@ -34,16 +57,7 @@
 		shadowPositionDX *= PassData.ShadowCascadeScales[cascadeIndex].xyz;
 		shadowPositionDY *= PassData.ShadowCascadeScales[cascadeIndex].xyz;
 
-		// TODO(co) Shadow: Totally primitive to have something to start with
-		float shadowVisibility = 1.0f;
-		if (SAMPLE_ARRAY_LOD(ShadowMap, SamplerPoint, float4(shadowPosition.xy, cascadeIndex, 0.0f)).r < shadowPosition.z - 0.001f)
-		{
-			shadowVisibility = 0.0f;
-		}
-		return shadowVisibility;
-
-		// TODO(co) Implement exponential shadow maps (EVSM)
-		// return SampleShadowMapEVSM(shadowPosition, shadowPositionDX, shadowPositionDY, cascadeIndex);
+		return SampleShadowMapEvsm(shadowPosition, shadowPositionDX, shadowPositionDY, cascadeIndex);
 	}
 
 	/**

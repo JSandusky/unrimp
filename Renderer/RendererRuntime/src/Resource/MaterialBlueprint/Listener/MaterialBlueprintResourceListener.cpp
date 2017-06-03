@@ -92,6 +92,7 @@ namespace
 			DEFINE_CONSTANT(SHADOW_CASCADE_SPLITS)
 			DEFINE_CONSTANT(SHADOW_CASCADE_OFFSETS)
 			DEFINE_CONSTANT(SHADOW_CASCADE_SCALES)
+			DEFINE_CONSTANT(CURRENT_SHADOW_CASCADE_SCALE)
 			DEFINE_CONSTANT(LENS_STAR_MATRIX)
 			DEFINE_CONSTANT(JITTER_OFFSET)
 
@@ -601,6 +602,22 @@ namespace RendererRuntime
 			if (nullptr != compositorInstancePassShadowMap)
 			{
 				memcpy(buffer, compositorInstancePassShadowMap->getPassData().shadowCascadeScales, numberOfBytes);
+			}
+			else
+			{
+				// Error!
+				assert(false);
+				memset(buffer, 0, numberOfBytes);
+			}
+		}
+		else if (::detail::CURRENT_SHADOW_CASCADE_SCALE == referenceValue)
+		{
+			assert(sizeof(float) * 3 == numberOfBytes);
+			const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = mCompositorContextData->getCompositorInstancePassShadowMap();
+			if (nullptr != compositorInstancePassShadowMap)
+			{
+				const CompositorInstancePassShadowMap::PassData& passData = compositorInstancePassShadowMap->getPassData();
+				memcpy(buffer, &passData.shadowCascadeScales[passData.currentShadowCascadeIndex], numberOfBytes);
 			}
 			else
 			{

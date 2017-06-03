@@ -44,6 +44,8 @@ PRAGMA_WARNING_POP
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class CompositorResourcePassQuad;
+	class CompositorInstancePassQuad;
 	class CompositorResourcePassShadowMap;
 }
 
@@ -69,7 +71,7 @@ namespace RendererRuntime
 	*    Compositor instance pass shadow map
 	*
 	*  @note
-	*    - The implementation is basing on https://github.com/TheRealMJP/MSAAFilter/tree/master/MSAAFilter - see https://github.com/TheRealMJP/Shadows for a sophisticated shadow mapping sample including a lot of parameters to play with
+	*    - Basing on https://mynameismjp.wordpress.com/2013/09/10/shadow-maps/ - https://github.com/TheRealMJP/Shadows
 	*/
 	class CompositorInstancePassShadowMap : public CompositorInstancePassScene
 	{
@@ -91,6 +93,7 @@ namespace RendererRuntime
 			float		shadowCascadeSplits[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES] = {};
 			glm::vec4	shadowCascadeOffsets[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES];
 			glm::vec4	shadowCascadeScales[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES];
+			uint8_t		currentShadowCascadeIndex = 0;
 		};
 
 
@@ -124,9 +127,13 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		PassData				  mPassData;
-		Renderer::IFramebufferPtr mFramebufferPtr[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES];
-		TextureResourceId		  mTextureResourceId;
+		PassData					mPassData;
+		Renderer::IFramebufferPtr	mDepthFramebufferPtr;
+		Renderer::IFramebufferPtr	mVarianceFramebufferPtr[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES];
+		TextureResourceId			mDepthTextureResourceId;
+		TextureResourceId			mVarianceTextureResourceId;
+		CompositorResourcePassQuad* mDepthToExponentialVarianceCompositorResourcePassQuad;
+		CompositorInstancePassQuad* mDepthToExponentialVarianceCompositorInstancePassQuad;
 
 
 	};

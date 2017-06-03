@@ -51,6 +51,12 @@ namespace RendererRuntime
 		{
 			// Add new material property
 			iterator = mSortedPropertyVector.insert(iterator, MaterialProperty(materialPropertyId, materialPropertyUsage, materialPropertyValue));
+			if (changeOverwrittenState)
+			{
+				MaterialProperty* materialProperty = &*iterator;
+				materialProperty->mOverwritten = true;
+				return materialProperty;
+			}
 			return &*iterator;
 		}
 

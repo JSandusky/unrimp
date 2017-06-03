@@ -54,6 +54,7 @@ namespace RendererRuntime
 		// Read data
 		const v1CompositorNode::PassShadowMap* passShadowMap = reinterpret_cast<const v1CompositorNode::PassShadowMap*>(data);
 		mTextureAssetId = passShadowMap->textureAssetId;
+		mDepthToExponentialVarianceMaterialBlueprintAssetId = passShadowMap->depthToExponentialVarianceMaterialBlueprintAssetId;
 	}
 
 

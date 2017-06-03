@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.h"
 #include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h"
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 
 
 //[-------------------------------------------------------]
@@ -37,6 +38,20 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	const CompositorPassTypeId CompositorResourcePassQuad::TYPE_ID("Quad");
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	CompositorResourcePassQuad::CompositorResourcePassQuad(const CompositorTarget& compositorTarget, AssetId materialBlueprintAssetId, const MaterialProperties& materialProperties) :
+		ICompositorResourcePass(compositorTarget),
+		mMaterialDefinitionMandatory(true),
+		mMaterialTechniqueId(MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID),
+		mMaterialBlueprintAssetId(materialBlueprintAssetId),
+		mMaterialProperties(materialProperties)
+	{
+		// Nothing here
+	}
 
 
 	//[-------------------------------------------------------]

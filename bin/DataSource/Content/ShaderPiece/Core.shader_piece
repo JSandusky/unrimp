@@ -120,6 +120,7 @@
 		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xy, coordinate.w)
 		#define SAMPLE_ARRAY(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
 		#define SAMPLE_ARRAY_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
+		#define SAMPLE_ARRAY_GRAD(textureObject, samplerObject, coordinate, _ddx, _ddy) textureObject.SampleGrad(samplerObject, coordinate.xyz, _ddx, _ddy)
 		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xy, coordinate.w).r
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) textureObject.Load(coordinate, sampleIndex)
 		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) textureObject.Load(coordinate, sampleIndex).r
@@ -230,6 +231,7 @@
 		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w)
 		#define SAMPLE_ARRAY(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_ARRAY_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
+		#define SAMPLE_ARRAY_GRAD(textureObject, samplerObject, coordinate, _ddx, _ddy) textureGrad(textureObject, coordinate.xyz, _ddx, _ddy)
 		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
 		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1
@@ -371,6 +373,7 @@
 		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w)
 		#define SAMPLE_ARRAY(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_ARRAY_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xyz, coordinate.w)
+		#define SAMPLE_ARRAY_GRAD(textureObject, samplerObject, coordinate, _ddx, _ddy) textureGrad(textureObject, coordinate.xyz, _ddx, _ddy)
 		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
 		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1

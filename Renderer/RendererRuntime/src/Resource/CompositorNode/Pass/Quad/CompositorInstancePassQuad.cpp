@@ -116,27 +116,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
-	//[-------------------------------------------------------]
-	void CompositorInstancePassQuad::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer)
-	{
-		if (!mRenderableManager.getRenderables().empty())
-		{
-			// Begin debug event
-			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
-
-			// Fill command buffer
-			mRenderQueue.addRenderablesFromRenderableManager(mRenderableManager);
-			mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
-
-			// End debug event
-			COMMAND_END_DEBUG_EVENT(commandBuffer)
-		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	CompositorInstancePassQuad::CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorNodeInstance& compositorNodeInstance) :
 		ICompositorInstancePass(compositorResourcePassQuad, compositorNodeInstance),
@@ -186,6 +166,26 @@ namespace RendererRuntime
 
 			// Destroy the material resource the compositor instance pass quad created
 			getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getMaterialResourceManager().destroyMaterialResource(mMaterialResourceId);
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[-------------------------------------------------------]
+	void CompositorInstancePassQuad::onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer)
+	{
+		if (!mRenderableManager.getRenderables().empty())
+		{
+			// Begin debug event
+			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+
+			// Fill command buffer
+			mRenderQueue.addRenderablesFromRenderableManager(mRenderableManager);
+			mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
+
+			// End debug event
+			COMMAND_END_DEBUG_EVENT(commandBuffer)
 		}
 	}
 

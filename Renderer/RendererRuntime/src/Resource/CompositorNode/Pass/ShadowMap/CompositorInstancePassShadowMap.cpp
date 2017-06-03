@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorInstancePassQuad.h"
+#include "RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
@@ -47,6 +49,7 @@ namespace
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		static const float SHADOW_MAP_FILTER_SIZE = 7.0f;
+		static const RendererRuntime::AssetId DEPTH_SHADOW_MAP_TEXTURE_ASSET_ID("Unrimp/Texture/DynamicByCode/DepthShadowMap");
 
 
 		//[-------------------------------------------------------]
@@ -80,7 +83,7 @@ namespace RendererRuntime
 	{
 		const CameraSceneItem* cameraSceneItem = compositorContextData.getCameraSceneItem();
 		const LightSceneItem* lightSceneItem = compositorContextData.getLightSceneItem();
-		if (nullptr != mFramebufferPtr && nullptr != cameraSceneItem && cameraSceneItem->getParentSceneNode() && nullptr != lightSceneItem && lightSceneItem->getParentSceneNode())
+		if (nullptr != mDepthFramebufferPtr && nullptr != cameraSceneItem && cameraSceneItem->getParentSceneNode() && nullptr != lightSceneItem && lightSceneItem->getParentSceneNode())
 		{
 			const glm::vec3 worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::VEC3_FORWARD;
 			const CompositorResourcePassShadowMap& compositorResourcePassShadowMap = static_cast<const CompositorResourcePassShadowMap&>(getCompositorResourcePass());
@@ -224,7 +227,7 @@ namespace RendererRuntime
 
 				{ // Render shadow casters
 					// Set render target
-					Renderer::Command::SetRenderTarget::create(commandBuffer, mFramebufferPtr[cascadeIndex]);
+					Renderer::Command::SetRenderTarget::create(commandBuffer, mDepthFramebufferPtr);
 
 					// Set the viewport and scissor rectangle
 					Renderer::Command::SetViewportAndScissorRectangle::create(commandBuffer, 0, 0, shadowMapSize, shadowMapSize);
@@ -284,6 +287,17 @@ namespace RendererRuntime
 					mPassData.shadowCascadeOffsets[cascadeIndex] = glm::vec4(-glm::vec3(cascadeCorner), 0.0f);
 					mPassData.shadowCascadeScales[cascadeIndex] = glm::vec4(glm::vec3(cascadeScale), 1.0f);
 				}
+				mPassData.currentShadowCascadeIndex = cascadeIndex;
+
+				{ // Calculate exponential variance shadow map (EVSM)
+					// Set render target
+					assert(nullptr != mVarianceFramebufferPtr[cascadeIndex]);
+					Renderer::Command::SetRenderTarget::create(commandBuffer, mVarianceFramebufferPtr[cascadeIndex]);
+
+					// Execute compositor instance pass quad
+					mDepthToExponentialVarianceCompositorInstancePassQuad->onFillCommandBuffer(*mVarianceFramebufferPtr[cascadeIndex], compositorContextData, commandBuffer);
+					mDepthToExponentialVarianceCompositorInstancePassQuad->onFrameEnded();
+				}
 			}
 
 			// Reset to previous render target
@@ -306,7 +320,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorInstancePassShadowMap::CompositorInstancePassShadowMap(const CompositorResourcePassShadowMap& compositorResourcePassShadowMap, const CompositorNodeInstance& compositorNodeInstance) :
 		CompositorInstancePassScene(compositorResourcePassShadowMap, compositorNodeInstance),
-		mTextureResourceId(getUninitialized<TextureResourceId>())
+		mDepthTextureResourceId(getUninitialized<TextureResourceId>()),
+		mVarianceTextureResourceId(getUninitialized<TextureResourceId>()),
+		mDepthToExponentialVarianceCompositorResourcePassQuad(nullptr),
+		mDepthToExponentialVarianceCompositorInstancePassQuad(nullptr)
 	{
 		createShadowMapRenderTarget();
 	}
@@ -325,29 +342,48 @@ namespace RendererRuntime
 			const uint32_t shadowMapSize = compositorResourcePassShadowMap.getShadowMapSize();
 			const uint8_t numberOfShadowCascades = compositorResourcePassShadowMap.getNumberOfShadowCascades();
 			assert(numberOfShadowCascades <= CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES);
+			const uint8_t numberOfShadowMultisamples = compositorResourcePassShadowMap.getNumberOfShadowMultisamples();
 
-			// Create the texture instance, but without providing texture data (we use the texture as render target)
-			// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
-			// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
-			// -> Not required for OpenGL and OpenGL ES 2
-			// -> The optimized texture clear value is a Direct3D 12 related option
-			Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2DArray(shadowMapSize, shadowMapSize, numberOfShadowCascades, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(texture, "Compositor instance pass shadow map")
+			{ // Depth shadow map
+				Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2D(shadowMapSize, shadowMapSize, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, numberOfShadowMultisamples);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(texture, "Compositor instance pass depth shadow map")
 
-			// Create the framebuffer object (FBO) instances
-			for (uint8_t cascadeIndex = 0; cascadeIndex < numberOfShadowCascades; ++cascadeIndex)
-			{
-				Renderer::FramebufferAttachment depthStencilFramebufferAttachment(texture, 0, cascadeIndex);
-				mFramebufferPtr[cascadeIndex] = rendererRuntime.getRenderer().createFramebuffer(0, nullptr, &depthStencilFramebufferAttachment);
-				RENDERER_SET_RESOURCE_DEBUG_NAME(mFramebufferPtr[cascadeIndex], ("Compositor instance pass shadow map " + std::to_string(cascadeIndex)).c_str())
-			}
-			for (uint8_t cascadeIndex = numberOfShadowCascades; cascadeIndex < CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES; ++cascadeIndex)
-			{
-				mFramebufferPtr[cascadeIndex] = nullptr;
+				// Create the framebuffer object (FBO) instance
+				Renderer::FramebufferAttachment depthStencilFramebufferAttachment(texture);
+				mDepthFramebufferPtr = rendererRuntime.getRenderer().createFramebuffer(0, nullptr, &depthStencilFramebufferAttachment);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(mDepthFramebufferPtr, "Compositor instance pass depth shadow map")
+
+				// Create texture resource
+				mDepthTextureResourceId = textureResourceManager.createTextureResourceByAssetId(::detail::DEPTH_SHADOW_MAP_TEXTURE_ASSET_ID, *texture);
 			}
 
-			// Create texture resource
-			mTextureResourceId = textureResourceManager.createTextureResourceByAssetId(assetId, *texture);
+			{ // Depth to exponential variance
+				MaterialProperties materialProperties;
+				materialProperties.setPropertyById("DepthMap", MaterialPropertyValue::fromTextureAssetId(::detail::DEPTH_SHADOW_MAP_TEXTURE_ASSET_ID), MaterialProperty::Usage::UNKNOWN, true);
+				materialProperties.setPropertyById("NumberOfMultisamples", MaterialPropertyValue::fromInteger((numberOfShadowMultisamples == 1) ? 0 : numberOfShadowMultisamples), MaterialProperty::Usage::UNKNOWN, true);
+				mDepthToExponentialVarianceCompositorResourcePassQuad = new CompositorResourcePassQuad(compositorResourcePassShadowMap.getCompositorTarget(), compositorResourcePassShadowMap.getDepthToExponentialVarianceMaterialBlueprintAssetId(), materialProperties);
+				mDepthToExponentialVarianceCompositorInstancePassQuad = new CompositorInstancePassQuad(*mDepthToExponentialVarianceCompositorResourcePassQuad, getCompositorNodeInstance());
+			}
+
+			{ // Variance shadow map
+				Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2DArray(shadowMapSize, shadowMapSize, numberOfShadowCascades, Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(texture, "Compositor instance pass variance shadow map")
+
+				// Create the framebuffer object (FBO) instances
+				for (uint8_t cascadeIndex = 0; cascadeIndex < numberOfShadowCascades; ++cascadeIndex)
+				{
+					Renderer::FramebufferAttachment colorFramebufferAttachment(texture, 0, cascadeIndex);
+					mVarianceFramebufferPtr[cascadeIndex] = rendererRuntime.getRenderer().createFramebuffer(1, &colorFramebufferAttachment);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(mVarianceFramebufferPtr[cascadeIndex], ("Compositor instance pass variance shadow map " + std::to_string(cascadeIndex)).c_str())
+				}
+				for (uint8_t cascadeIndex = numberOfShadowCascades; cascadeIndex < CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES; ++cascadeIndex)
+				{
+					mVarianceFramebufferPtr[cascadeIndex] = nullptr;
+				}
+
+				// Create texture resource
+				mVarianceTextureResourceId = textureResourceManager.createTextureResourceByAssetId(assetId, *texture);
+			}
 		}
 		else
 		{
@@ -358,16 +394,21 @@ namespace RendererRuntime
 
 	void CompositorInstancePassShadowMap::destroyShadowMapRenderTarget()
 	{
-		assert(isInitialized(mTextureResourceId) && nullptr != mFramebufferPtr);
+		assert(isInitialized(mDepthTextureResourceId) && isInitialized(mVarianceTextureResourceId) && nullptr != mDepthFramebufferPtr);
+		delete mDepthToExponentialVarianceCompositorInstancePassQuad;
+		delete mDepthToExponentialVarianceCompositorResourcePassQuad;
 
 		// Release the framebuffers and other renderer resources referenced by the framebuffers
+		mDepthFramebufferPtr = nullptr;
 		for (uint8_t cascadeIndex = 0; cascadeIndex < CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES; ++cascadeIndex)
 		{
-			mFramebufferPtr[cascadeIndex] = nullptr;
+			mVarianceFramebufferPtr[cascadeIndex] = nullptr;
 		}
 
 		// Inform the texture resource manager that our render target texture is gone now
-		getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getTextureResourceManager().destroyTextureResource(mTextureResourceId);
+		TextureResourceManager& textureResourceManager = getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getTextureResourceManager();
+		textureResourceManager.destroyTextureResource(mDepthTextureResourceId);
+		textureResourceManager.destroyTextureResource(mVarianceTextureResourceId);
 	}
 
 

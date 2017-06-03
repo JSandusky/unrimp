@@ -127,6 +127,8 @@ TEXTURE_3D_UINT(LightClustersMap3D, 8)
 	@end
 @includepiece(ShaderPiece/Depth.asset)
 	@insertpiece(DefineGetLinearDepthByFragmentDepth)
+@includepiece(ShaderPiece/ExponentialShadow.asset)
+	@insertpiece(DefineExponentialShadow)
 @includepiece(ShaderPiece/Shadow.asset)
 	@insertpiece(DefineCalculateShadowVisibility)
 	@insertpiece(DefineShadowDebugging)

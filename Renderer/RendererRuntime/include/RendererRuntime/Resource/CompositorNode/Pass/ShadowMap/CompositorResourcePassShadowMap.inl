@@ -43,9 +43,19 @@ namespace RendererRuntime
 		return mNumberOfShadowCascades;
 	}
 
+	inline uint8_t CompositorResourcePassShadowMap::getNumberOfShadowMultisamples() const
+	{
+		return mNumberOfShadowMultisamples;
+	}
+
 	inline float CompositorResourcePassShadowMap::getCascadeSplitsLambda() const
 	{
 		return mCascadeSplitsLambda;
+	}
+
+	inline AssetId CompositorResourcePassShadowMap::getDepthToExponentialVarianceMaterialBlueprintAssetId() const
+	{
+		return mDepthToExponentialVarianceMaterialBlueprintAssetId;
 	}
 
 
@@ -65,6 +75,7 @@ namespace RendererRuntime
 		CompositorResourcePassScene(compositorTarget),
 		mShadowMapSize(1024),
 		mNumberOfShadowCascades(4),
+		mNumberOfShadowMultisamples(4),
 		mCascadeSplitsLambda(0.99f)
 	{
 		// Nothing here

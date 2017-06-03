@@ -85,13 +85,15 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorNodeInstance& compositorNodeInstance);
+		virtual ~CompositorInstancePassQuad();
 		inline MaterialResourceId getMaterialResourceId() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[ Public virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	protected:
+	public:
 		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer) override;
 		inline virtual void onFrameEnded() override;
 
@@ -114,8 +116,6 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorNodeInstance& compositorNodeInstance);
-		virtual ~CompositorInstancePassQuad();
 		explicit CompositorInstancePassQuad(const CompositorInstancePassQuad&) = delete;
 		CompositorInstancePassQuad& operator=(const CompositorInstancePassQuad&) = delete;
 

@@ -28,6 +28,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline CompositorResourcePassQuad::~CompositorResourcePassQuad()
+	{
+		// Nothing here
+	}
+
 	inline bool CompositorResourcePassQuad::isMaterialDefinitionMandatory() const
 	{
 		return mMaterialDefinitionMandatory;
@@ -76,11 +81,6 @@ namespace RendererRuntime
 	inline CompositorResourcePassQuad::CompositorResourcePassQuad(const CompositorTarget& compositorTarget, bool materialDefinitionMandatory) :
 		ICompositorResourcePass(compositorTarget),
 		mMaterialDefinitionMandatory(materialDefinitionMandatory)
-	{
-		// Nothing here
-	}
-
-	inline CompositorResourcePassQuad::~CompositorResourcePassQuad()
 	{
 		// Nothing here
 	}

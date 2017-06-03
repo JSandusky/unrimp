@@ -80,6 +80,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		CompositorResourcePassQuad(const CompositorTarget& compositorTarget, AssetId materialBlueprintAssetId, const MaterialProperties& materialProperties);
+		inline virtual ~CompositorResourcePassQuad();
 		inline bool isMaterialDefinitionMandatory() const;
 		inline AssetId getMaterialAssetId() const;
 		inline MaterialTechniqueId getMaterialTechniqueId() const;
@@ -101,7 +103,6 @@ namespace RendererRuntime
 	protected:
 		inline explicit CompositorResourcePassQuad(const CompositorTarget& compositorTarget);
 		inline CompositorResourcePassQuad(const CompositorTarget& compositorTarget, bool materialDefinitionMandatory);
-		inline virtual ~CompositorResourcePassQuad();
 		explicit CompositorResourcePassQuad(const CompositorResourcePassQuad&) = delete;
 		CompositorResourcePassQuad& operator=(const CompositorResourcePassQuad&) = delete;
 

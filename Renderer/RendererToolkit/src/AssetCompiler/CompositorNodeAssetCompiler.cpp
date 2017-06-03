@@ -389,6 +389,7 @@ namespace
 								readPass(rapidJsonValuePass, passShadowMap);
 								readPassScene(rapidJsonValuePass, passShadowMap);
 								RendererToolkit::JsonHelper::mandatoryAssetIdProperty(rapidJsonValuePass, "Texture", passShadowMap.textureAssetId);
+								passShadowMap.depthToExponentialVarianceMaterialBlueprintAssetId = RendererToolkit::JsonHelper::getCompiledAssetId(input, rapidJsonValuePass, "DepthToExponentialVarianceMaterialBlueprint");
 								renderTargetTextureAssetIds.insert(passShadowMap.textureAssetId);
 
 								// Write down

@@ -60,7 +60,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("CompositorNode");
-		static const uint32_t FORMAT_VERSION = 3;
+		static const uint32_t FORMAT_VERSION = 4;
 
 		#pragma pack(push)
 		#pragma pack(1)
@@ -158,6 +158,7 @@ namespace RendererRuntime
 			struct PassShadowMap : public PassScene
 			{
 				AssetId textureAssetId;
+				AssetId depthToExponentialVarianceMaterialBlueprintAssetId;
 			};
 
 			struct PassResolveMultisample : public Pass
