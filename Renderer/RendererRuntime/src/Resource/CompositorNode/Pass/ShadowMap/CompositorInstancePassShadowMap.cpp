@@ -92,6 +92,7 @@ namespace RendererRuntime
 			mPassData.shadowMapSize = static_cast<int>(shadowMapSize);
 			const uint8_t numberOfShadowCascades = compositorResourcePassShadowMap.getNumberOfShadowCascades();
 			const float shadowFilterSize = compositorResourcePassShadowMap.getShadowFilterSize();
+			const bool stabilizeCascades = compositorResourcePassShadowMap.getStabilizeCascades();
 
 			// TODO(co) The minimum and maximum distance need to be calculated dynamically via depth buffer reduction as seen inside e.g. https://github.com/TheRealMJP/MSAAFilter/tree/master/MSAAFilter
 			const float minimumDistance = 0.0f;
@@ -185,12 +186,26 @@ namespace RendererRuntime
 					}
 					const glm::vec3 frustumCenter = temporaryFrustumCenter / 8.0f;
 
-					// Pick the right vector to use for the light camera
-					const glm::vec3 rightDirection = cameraSceneItem->getParentSceneNodeSafe().getTransform().rotation * Math::VEC3_RIGHT;
+					// Pick the right vector to use for the light camera, this needs to be constant for it to be stable
+					const glm::vec3 rightDirection = stabilizeCascades ? Math::VEC3_RIGHT : (cameraSceneItem->getParentSceneNodeSafe().getTransform().rotation * Math::VEC3_RIGHT);
 
 					// Calculate the minimum and maximum extents
 					glm::vec3 minimumExtents;
 					glm::vec3 maximumExtents;
+					if (stabilizeCascades)
+					{
+						// Calculate the radius of a bounding sphere surrounding the frustum corners
+						float sphereRadius = 0.0f;
+						for (int i = 0; i < 8; ++i)
+						{
+							const float distance = glm::distance(glm::vec3(cascadeSliceWorldSpaceFrustumCorners[i]), frustumCenter);
+							sphereRadius = std::max(sphereRadius, distance);
+						}
+						sphereRadius = std::ceil(sphereRadius * 16.0f) / 16.0f;
+						maximumExtents = glm::vec3(sphereRadius, sphereRadius, sphereRadius);
+						minimumExtents = -maximumExtents;
+					}
+					else
 					{
 						// Create a temporary view matrix for the light
 						const glm::vec3& lightCameraPosition = frustumCenter;
@@ -224,6 +239,24 @@ namespace RendererRuntime
 					// Come up with a new orthographic camera for the shadow caster
 					depthProjectionMatrix = glm::ortho(minimumExtents.x, maximumExtents.x, minimumExtents.y, maximumExtents.y, 0.0f, cascadeExtents.z);
 					depthViewMatrix = glm::lookAt(shadowCameraPosition, frustumCenter, rightDirection);
+				}
+
+				// Create the rounding matrix, by projecting the world-space origin and determining the fractional offset in texel space
+				glm::mat4 viewSpaceToClipSpace = depthProjectionMatrix * depthViewMatrix;
+				if (stabilizeCascades)
+				{
+					glm::vec4 shadowOrigin(0.0f, 0.0f, 0.0f, 1.0f);
+					shadowOrigin = ::detail::transformVectorByMatrix(viewSpaceToClipSpace, shadowOrigin);
+					shadowOrigin *= static_cast<float>(shadowMapSize) * 0.5f;
+
+					const glm::vec4 roundedOrigin = glm::round(shadowOrigin);
+					glm::vec4 roundOffset = roundedOrigin - shadowOrigin;
+					roundOffset *= 2.0f / static_cast<float>(shadowMapSize);
+					roundOffset.z = 0.0f;
+					roundOffset.w = 0.0f;
+
+					depthProjectionMatrix[3] += roundOffset;
+					viewSpaceToClipSpace = depthProjectionMatrix * depthViewMatrix;
 				}
 
 				// Set custom camera matrices
@@ -269,7 +302,6 @@ namespace RendererRuntime
 				const_cast<CameraSceneItem*>(cameraSceneItem)->unsetCustomViewSpaceToClipSpaceMatrix();
 
 				// Apply the scale/offset matrix, which transforms from [-1,1] post-projection space to [0,1] UV space
-				const glm::mat4 viewSpaceToClipSpace = depthProjectionMatrix * depthViewMatrix;
 				const glm::mat4 shadowMatrix = Math::getTextureScaleBiasMatrix(getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getRenderer()) * viewSpaceToClipSpace;
 
 				// Store the split distance in terms of view space depth

@@ -81,6 +81,7 @@ namespace RendererRuntime
 		inline AssetId getDepthToExponentialVarianceMaterialBlueprintAssetId() const;
 		inline AssetId getBlurMaterialBlueprintAssetId() const;
 		inline float getShadowFilterSize() const;
+		inline bool getStabilizeCascades() const;
 
 
 	//[-------------------------------------------------------]
@@ -113,6 +114,7 @@ namespace RendererRuntime
 		AssetId  mDepthToExponentialVarianceMaterialBlueprintAssetId;	///< Depth to exponential variance material blueprint asset ID
 		AssetId  mBlurMaterialBlueprintAssetId;							///< Blur material blueprint asset ID
 		float	 mShadowFilterSize;										///< Shadow filter size
+		bool	 mStabilizeCascades;									///< Keeps consistent sizes for each cascade, and snaps each cascade so that they move in texel-sized increments. Reduces temporal aliasing artifacts, but reduces the effective resolution of the cascades. See Valient, M., "Stable Rendering of Cascaded Shadow Maps", In: Engel, W. F ., et al., "ShaderX6: Advanced Rendering Techniques", Charles River Media, 2008, ISBN 1-58450-544-3.
 
 
 	};

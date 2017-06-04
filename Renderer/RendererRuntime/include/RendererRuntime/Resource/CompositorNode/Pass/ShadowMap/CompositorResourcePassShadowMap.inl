@@ -68,6 +68,11 @@ namespace RendererRuntime
 		return mShadowFilterSize;
 	}
 
+	inline bool CompositorResourcePassShadowMap::getStabilizeCascades() const
+	{
+		return mStabilizeCascades;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
@@ -87,7 +92,8 @@ namespace RendererRuntime
 		mNumberOfShadowCascades(4),
 		mNumberOfShadowMultisamples(4),
 		mCascadeSplitsLambda(0.99f),
-		mShadowFilterSize(8.0f)
+		mShadowFilterSize(8.0f),
+		mStabilizeCascades(true)
 	{
 		// Nothing here
 	}
