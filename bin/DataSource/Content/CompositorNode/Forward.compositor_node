@@ -240,7 +240,7 @@
 				"Clear":
 				{
 					"Flags": "COLOR | DEPTH",
-					"Color": "0.5 0.5 0.5 0.0"
+					"Color": "0.0 0.0 0.0 0.0"
 				},
 				"Scene":
 				{
