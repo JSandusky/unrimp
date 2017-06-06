@@ -174,14 +174,15 @@ namespace RendererToolkit
 				const rapidjson::Value& rapidJsonValueNodes = rapidJsonValueSceneAsset["Nodes"];
 
 				{ // Write down the scene nodes
+					const rapidjson::SizeType numberOfNodes = rapidJsonValueNodes.Size();
 					RendererRuntime::v1Scene::Nodes nodes;
-					nodes.numberOfNodes = rapidJsonValueNodes.MemberCount();
+					nodes.numberOfNodes = numberOfNodes;
 					memoryFile.write(&nodes, sizeof(RendererRuntime::v1Scene::Nodes));
 
 					// Loop through all scene nodes
-					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorNodes = rapidJsonValueNodes.MemberBegin(); rapidJsonMemberIteratorNodes != rapidJsonValueNodes.MemberEnd(); ++rapidJsonMemberIteratorNodes)
+					for (rapidjson::SizeType nodeIndex = 0; nodeIndex < numberOfNodes; ++nodeIndex)
 					{
-						const rapidjson::Value& rapidJsonValueNode = rapidJsonMemberIteratorNodes->value;
+						const rapidjson::Value& rapidJsonValueNode = rapidJsonValueNodes[nodeIndex];
 						const rapidjson::Value* rapidJsonValueItems = rapidJsonValueNode.HasMember("Items") ? &rapidJsonValueNode["Items"] : nullptr;
 
 						{ // Write down the scene node
