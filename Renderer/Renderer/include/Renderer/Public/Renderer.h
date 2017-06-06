@@ -2843,7 +2843,7 @@ namespace Renderer
 				{
 					*commandBuffer.addCommand<SetViewports>() = SetViewports(numberOfViewports, viewports);
 				}
-				inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height)
+				inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height, float minimumDepth = 0.0f, float maximumDepth = 1.0f)
 				{
 					SetViewports* setViewportsCommand = commandBuffer.addCommand<SetViewports>(sizeof(Viewport));
 					Viewport* viewport = reinterpret_cast<Viewport*>(CommandPacketHelper::getAuxiliaryMemory(setViewportsCommand));
@@ -2851,8 +2851,8 @@ namespace Renderer
 					viewport->topLeftY = static_cast<float>(topLeftY);
 					viewport->width	   = static_cast<float>(width);
 					viewport->height   = static_cast<float>(height);
-					viewport->minDepth = 0.0f;
-					viewport->maxDepth = 1.0f;
+					viewport->minDepth = minimumDepth;
+					viewport->maxDepth = maximumDepth;
 					setViewportsCommand->numberOfViewports = 1;
 					setViewportsCommand->viewports		   = nullptr;
 				}
@@ -2891,9 +2891,9 @@ namespace Renderer
 			};
 			struct SetViewportAndScissorRectangle
 			{
-				inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height)
+				inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height, float minimumDepth = 0.0f, float maximumDepth = 1.0f)
 				{
-					SetViewports::create(commandBuffer, topLeftX, topLeftY, width, height);
+					SetViewports::create(commandBuffer, topLeftX, topLeftY, width, height, minimumDepth, maximumDepth);
 					SetScissorRectangles::create(commandBuffer, static_cast<long>(topLeftX), static_cast<long>(topLeftY), static_cast<long>(topLeftX + width), static_cast<long>(topLeftY + height));
 				}
 			};

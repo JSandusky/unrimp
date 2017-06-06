@@ -112,7 +112,7 @@ namespace RendererRuntime
 				}
 
 				// Calculate the sun direction vector
-				const float ydeg = (glm::pi<float>() * 0.5f) * y;
+				const float ydeg = glm::pi<float>() * 0.5f * y;
 				const float sn = std::sin(ydeg);
 				const float cs = std::cos(ydeg);
 				glm::vec3 sunDirection = glm::vec3(eastDirection.x * cs, sn, eastDirection.y * cs);

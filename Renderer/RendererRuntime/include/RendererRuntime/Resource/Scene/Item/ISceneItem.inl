@@ -87,6 +87,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline const RenderableManager* ISceneItem::getRenderableManager() const
+	{
+		return nullptr;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]

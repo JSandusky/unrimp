@@ -77,14 +77,24 @@ TEXTURE_2D(ScreenSpaceAmbientOcclusionMap, 2)
 	@insertpiece(DefineGetLinearDepth)
 	@insertpiece(DefineGetDepthFromDepthMap)
 
-float3 CalculateColor(float3 viewRay, float3 color, float2 screenSpacePosition, int sampleIndex)
+float3 CalculateColor(float3 viewRay, float3 color, float screenSpaceAmbientOcclusion, float2 screenSpacePosition, int sampleIndex)
 {
-	// Scale the view ray by the ratio of the linear z value to the projected view ray
-	// -> For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
-	float3 viewSpacePosition = viewRay * (GetLinearDepth(GetDepthFromDepthMap(screenSpacePosition, sampleIndex)) / dot(float3(0.0f, 0.0f, 1.0f), viewRay));
+	// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
+	float depth = GetDepthFromDepthMap(screenSpacePosition, sampleIndex);
+	if (1.0f != depth)
+	{
+		// Scale the view ray by the ratio of the linear z value to the projected view ray
+		// -> For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
+		float3 viewSpacePosition = viewRay * (GetLinearDepth(depth) / dot(float3(0.0f, 0.0f, 1.0f), viewRay));
 
-	// Calculate fogged color
-	return CalculateFoggedColor(viewSpacePosition, color);
+		// Calculate fogged color
+		return CalculateFoggedColor(viewSpacePosition, color * screenSpaceAmbientOcclusion);
+	}
+	else
+	{
+		// Sky
+		return color;
+	}
 }
 
 
@@ -92,11 +102,9 @@ float3 CalculateColor(float3 viewRay, float3 color, float2 screenSpacePosition, 
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	// Get color
+	// Get color and screen space ambient occlusion value
 	float4 color = SAMPLE_2D_LOD(ColorMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
-
-	// Apply screen space ambient occlusion value
-	color.rgb *= SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).r;
+	float screenSpaceAmbientOcclusion = SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionMap, SamplerPointClamp, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).r;
 
 	// Get the normalized view ray
 	float3 viewRay = normalize(MAIN_INPUT(ViewRayVS));
@@ -111,18 +119,18 @@ MAIN_BEGIN
 			finalColor = float3(0.0f, 0.0f, 0.0f);
 			@foreach(NumberOfMultisamples, i, 0)
 			{
-				finalColor += CalculateColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), @i);
+				finalColor += CalculateColor(viewRay, color.rgb, screenSpaceAmbientOcclusion, MAIN_INPUT(TexCoordVS), @i);
 			}
 			@end
 			finalColor /= @value(NumberOfMultisamples);
 		}
 		else
 		{
-			finalColor = CalculateColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), 0);
+			finalColor = CalculateColor(viewRay, color.rgb, screenSpaceAmbientOcclusion, MAIN_INPUT(TexCoordVS), 0);
 		}
 	@end
 	@property(!NumberOfMultisamples)
-		float3 finalColor = CalculateColor(viewRay, color.rgb, MAIN_INPUT(TexCoordVS), 0);
+		float3 finalColor = CalculateColor(viewRay, color.rgb, screenSpaceAmbientOcclusion, MAIN_INPUT(TexCoordVS), 0);
 	@end
 	
 	// Done

@@ -66,12 +66,11 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void fillSortedMaterialPropertyVector(const RendererToolkit::IAssetCompiler::Input& input, const std::unordered_set<uint32_t>& renderTargetTextureAssetIds, const rapidjson::Value::ConstMemberIterator& rapidJsonMemberIteratorPasses, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+		void fillSortedMaterialPropertyVector(const RendererToolkit::IAssetCompiler::Input& input, const std::unordered_set<uint32_t>& renderTargetTextureAssetIds, const rapidjson::Value& rapidJsonValuePass, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
 		{
 			// Check whether or not material properties should be set
-			if (rapidJsonMemberIteratorPasses->value.HasMember("SetMaterialProperties"))
+			if (rapidJsonValuePass.HasMember("SetMaterialProperties"))
 			{
-				const rapidjson::Value& rapidJsonValuePass = rapidJsonMemberIteratorPasses->value;
 				if (rapidJsonValuePass.HasMember("MaterialAssetId"))
 				{
 					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValuePass["MaterialAssetId"].GetString()), sortedMaterialPropertyVector);
@@ -83,7 +82,7 @@ namespace
 				if (!sortedMaterialPropertyVector.empty())
 				{
 					// Update material property values were required
-					const rapidjson::Value& rapidJsonValueProperties = rapidJsonMemberIteratorPasses->value["SetMaterialProperties"];
+					const rapidjson::Value& rapidJsonValueProperties = rapidJsonValuePass["SetMaterialProperties"];
 					RendererToolkit::JsonMaterialHelper::readMaterialPropertyValues(input, rapidJsonValueProperties, sortedMaterialPropertyVector);
 
 					{ // Need a second round for referenced render target textures so we can write e.g. "ColorMap": "ColorRenderTargetTexture0" ("ColorRenderTargetTexture0" = render target texture)
@@ -120,6 +119,8 @@ namespace
 		void readPass(const rapidjson::Value& rapidJsonValuePass, RendererRuntime::v1CompositorNode::Pass& pass)
 		{
 			// Read properties
+			RendererToolkit::JsonHelper::optionalFloatProperty(rapidJsonValuePass, "MinimumDepth", pass.minimumDepth);
+			RendererToolkit::JsonHelper::optionalFloatProperty(rapidJsonValuePass, "MaximumDepth", pass.maximumDepth);
 			RendererToolkit::JsonHelper::optionalIntegerProperty(rapidJsonValuePass, "NumberOfExecutions", pass.numberOfExecutions);
 			RendererToolkit::JsonHelper::optionalBooleanProperty(rapidJsonValuePass, "SkipFirstExecution", pass.skipFirstExecution);
 
@@ -313,12 +314,12 @@ namespace
 						}
 						else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 						{
-							fillSortedMaterialPropertyVector(input, renderTargetTextureAssetIds, rapidJsonMemberIteratorPasses, sortedMaterialPropertyVector);
+							fillSortedMaterialPropertyVector(input, renderTargetTextureAssetIds, rapidJsonMemberIteratorPasses->value, sortedMaterialPropertyVector);
 							numberOfBytes = static_cast<uint32_t>(sizeof(RendererRuntime::v1CompositorNode::PassQuad) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
 						}
 						else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == compositorPassTypeId)
 						{
-							fillSortedMaterialPropertyVector(input, renderTargetTextureAssetIds, rapidJsonMemberIteratorPasses, sortedMaterialPropertyVector);
+							fillSortedMaterialPropertyVector(input, renderTargetTextureAssetIds, rapidJsonMemberIteratorPasses->value, sortedMaterialPropertyVector);
 							numberOfBytes = static_cast<uint32_t>(sizeof(RendererRuntime::v1CompositorNode::PassDebugGui) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
 						}
 

@@ -22,6 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
+#include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
+#include "RendererToolkit/Helper/JsonMaterialHelper.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
@@ -29,10 +31,13 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
-#include <RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h>
+#include <RendererRuntime/Resource/Material/MaterialProperties.h>
+#include <RendererRuntime/Resource/Material/MaterialResourceManager.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -82,6 +87,77 @@ namespace
 				// Undefine helper macros
 				#undef IF_VALUE
 				#undef ELSE_IF_VALUE
+			}
+		}
+
+		void fillSortedMaterialPropertyVector(const RendererToolkit::IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueSceneItem, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+		{
+			// Check whether or not material properties should be set
+			if (rapidJsonValueSceneItem.HasMember("SetMaterialProperties"))
+			{
+				if (rapidJsonValueSceneItem.HasMember("MaterialAssetId"))
+				{
+					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValueSceneItem["MaterialAssetId"].GetString()), sortedMaterialPropertyVector);
+				}
+				else if (rapidJsonValueSceneItem.HasMember("MaterialBlueprint"))
+				{
+					RendererToolkit::JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValueSceneItem["MaterialBlueprint"].GetString()), sortedMaterialPropertyVector);
+				}
+				if (!sortedMaterialPropertyVector.empty())
+				{
+					// Update material property values were required
+					const rapidjson::Value& rapidJsonValueProperties = rapidJsonValueSceneItem["SetMaterialProperties"];
+					RendererToolkit::JsonMaterialHelper::readMaterialPropertyValues(input, rapidJsonValueProperties, sortedMaterialPropertyVector);
+
+					// Collect all material property IDs explicitly defined inside the scene item
+					typedef std::unordered_map<uint32_t, std::string> DefinedMaterialPropertyIds;	// Key = "RendererRuntime::RendererRuntime::MaterialPropertyId"
+					DefinedMaterialPropertyIds definedMaterialPropertyIds;
+					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorProperties = rapidJsonValueProperties.MemberBegin(); rapidJsonMemberIteratorProperties != rapidJsonValueProperties.MemberEnd(); ++rapidJsonMemberIteratorProperties)
+					{
+						definedMaterialPropertyIds.emplace(RendererRuntime::MaterialPropertyId(rapidJsonMemberIteratorProperties->name.GetString()), rapidJsonMemberIteratorProperties->value.GetString());
+					}
+
+					// Mark material properties as overwritten
+					for (RendererRuntime::MaterialProperty& materialProperty : sortedMaterialPropertyVector)
+					{
+						DefinedMaterialPropertyIds::const_iterator iterator = definedMaterialPropertyIds.find(materialProperty.getMaterialPropertyId());
+						if (iterator!= definedMaterialPropertyIds.end())
+						{
+							materialProperty.setOverwritten(true);
+						}
+					}
+				}
+			}
+		}
+
+		void readSkyboxSceneItem(const RendererToolkit::IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueSceneItem, RendererRuntime::v1Scene::SkyboxItem& skyboxItem)
+		{
+			// Set data
+			RendererRuntime::AssetId materialAssetId;
+			RendererRuntime::AssetId materialBlueprintAssetId;
+			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValueSceneItem, "MaterialAssetId", materialAssetId);
+			RendererToolkit::JsonHelper::optionalStringIdProperty(rapidJsonValueSceneItem, "MaterialTechnique", skyboxItem.materialTechniqueId);
+			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValueSceneItem, "MaterialBlueprint", materialBlueprintAssetId);
+			skyboxItem.materialAssetId = materialAssetId;
+			skyboxItem.materialBlueprintAssetId = materialBlueprintAssetId;
+			skyboxItem.numberOfMaterialProperties = static_cast<uint32_t>(sortedMaterialPropertyVector.size());
+
+			// Sanity checks
+			if (RendererRuntime::isUninitialized(skyboxItem.materialAssetId) && RendererRuntime::isUninitialized(skyboxItem.materialBlueprintAssetId))
+			{
+				throw std::runtime_error("Material asset ID or material blueprint asset ID must be defined");
+			}
+			if (RendererRuntime::isInitialized(skyboxItem.materialAssetId) && RendererRuntime::isInitialized(skyboxItem.materialBlueprintAssetId))
+			{
+				throw std::runtime_error("Material asset ID is defined, but material blueprint asset ID is defined as well. Only one asset ID is allowed.");
+			}
+			if (RendererRuntime::isInitialized(skyboxItem.materialAssetId) && RendererRuntime::isUninitialized(skyboxItem.materialTechniqueId))
+			{
+				throw std::runtime_error("Material asset ID is defined, but material technique is not defined");
+			}
+			if (RendererRuntime::isInitialized(skyboxItem.materialBlueprintAssetId) && RendererRuntime::isUninitialized(skyboxItem.materialTechniqueId))
+			{
+				skyboxItem.materialTechniqueId = RendererRuntime::MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID;
 			}
 		}
 
@@ -216,6 +292,7 @@ namespace RendererToolkit
 								// Get the scene item type specific data number of bytes
 								// TODO(co) Make this more generic via scene factory
 								uint32_t numberOfBytes = 0;
+								RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
 								if (RendererRuntime::CameraSceneItem::TYPE_ID == typeId)
 								{
 									// Nothing here
@@ -236,6 +313,16 @@ namespace RendererToolkit
 									{
 										numberOfBytes += sizeof(RendererRuntime::v1Scene::SkeletonMeshItem);
 									}
+								}
+								else if (RendererRuntime::SkyboxSceneItem::TYPE_ID == typeId)
+								{
+									::detail::fillSortedMaterialPropertyVector(input, rapidJsonValueItem, sortedMaterialPropertyVector);
+									numberOfBytes = static_cast<uint32_t>(sizeof(RendererRuntime::v1Scene::SkyboxItem) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
+								}
+								else
+								{
+									// Error!
+									throw std::runtime_error("Scene item type \"" + std::string(rapidJsonMemberIteratorItems->name.GetString()) + "\" is unknown");
 								}
 
 								{ // Write down the scene item header
@@ -353,6 +440,19 @@ namespace RendererToolkit
 										{
 											// Write down all sub-mesh material asset IDs
 											memoryFile.write(subMeshMaterialAssetIds.data(), sizeof(RendererRuntime::AssetId) * subMeshMaterialAssetIds.size());
+										}
+									}
+									else if (RendererRuntime::SkyboxSceneItem::TYPE_ID == typeId)
+									{
+										RendererRuntime::v1Scene::SkyboxItem skyboxItem;
+										::detail::readSkyboxSceneItem(input, sortedMaterialPropertyVector, rapidJsonValueItem, skyboxItem);
+
+										// Write down
+										memoryFile.write(&skyboxItem, sizeof(RendererRuntime::v1Scene::SkyboxItem));
+										if (!sortedMaterialPropertyVector.empty())
+										{
+											// Write down all material properties
+											memoryFile.write(sortedMaterialPropertyVector.data(), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
 										}
 									}
 								}

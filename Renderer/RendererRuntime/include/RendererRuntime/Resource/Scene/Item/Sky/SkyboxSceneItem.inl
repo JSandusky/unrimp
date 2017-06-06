@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -28,32 +34,41 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MeshResourceId MeshSceneItem::getMeshResourceId() const
+	inline AssetId SkyboxSceneItem::getMaterialAssetId() const
 	{
-		return mMeshResourceId;
+		return mMaterialAssetId;
 	}
 
-	inline uint32_t MeshSceneItem::getNumberOfSubMeshes() const
+	inline MaterialTechniqueId SkyboxSceneItem::getMaterialTechniqueId() const
 	{
-		return static_cast<uint32_t>(mRenderableManager.getRenderables().size());
+		return mMaterialTechniqueId;
 	}
 
-	inline MaterialResourceId MeshSceneItem::getMaterialResourceIdOfSubMesh(uint32_t subMeshIndex) const
+	inline AssetId SkyboxSceneItem::getMaterialBlueprintAssetId() const
 	{
-		assert(subMeshIndex < mRenderableManager.getRenderables().size());
-		return mRenderableManager.getRenderables()[subMeshIndex].getMaterialResourceId();
+		return mMaterialBlueprintAssetId;
+	}
+
+	inline const MaterialProperties& SkyboxSceneItem::getMaterialProperties() const
+	{
+		return mMaterialProperties;
+	}
+
+	inline MaterialResourceId SkyboxSceneItem::getMaterialResourceId() const
+	{
+		return mMaterialResourceId;
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	inline SceneItemTypeId MeshSceneItem::getSceneItemTypeId() const
+	inline SceneItemTypeId SkyboxSceneItem::getSceneItemTypeId() const
 	{
 		return TYPE_ID;
 	}
 
-	inline void MeshSceneItem::onDetachedFromSceneNode(SceneNode& sceneNode)
+	inline void SkyboxSceneItem::onDetachedFromSceneNode(SceneNode& sceneNode)
 	{
 		mRenderableManager.setTransform(nullptr);
 
@@ -61,28 +76,18 @@ namespace RendererRuntime
 		ISceneItem::onDetachedFromSceneNode(sceneNode);
 	}
 
-	inline void MeshSceneItem::setVisible(bool visible)
+	inline void SkyboxSceneItem::setVisible(bool visible)
 	{
 		mRenderableManager.setVisible(visible);
-	}
-
-	inline const RenderableManager* MeshSceneItem::getRenderableManager() const
-	{
-		return &mRenderableManager;
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline MeshSceneItem::MeshSceneItem(SceneResource& sceneResource) :
+	inline SkyboxSceneItem::SkyboxSceneItem(SceneResource& sceneResource) :
 		ISceneItem(sceneResource),
-		mMeshResourceId(getUninitialized<MeshResourceId>())
-	{
-		// Nothing here
-	}
-
-	inline MeshSceneItem::~MeshSceneItem()
+		mMaterialResourceId(getUninitialized<MaterialResourceId>())
 	{
 		// Nothing here
 	}

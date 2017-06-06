@@ -42,6 +42,16 @@ namespace RendererRuntime
 		return mCompositorTarget;
 	}
 
+	inline float ICompositorResourcePass::getMinimumDepth() const
+	{
+		return mMinimumDepth;
+	}
+
+	inline float ICompositorResourcePass::getMaximumDepth() const
+	{
+		return mMaximumDepth;
+	}
+
 	inline bool ICompositorResourcePass::getSkipFirstExecution() const
 	{
 		return mSkipFirstExecution;
@@ -64,13 +74,10 @@ namespace RendererRuntime
 		#pragma pack(1)
 			struct PassData
 			{
-				uint32_t numberOfExecutions;
-				bool	 skipFirstExecution;
-
-				PassData() :
-					numberOfExecutions(RendererRuntime::getUninitialized<uint32_t>()),
-					skipFirstExecution(false)
-				{}
+				float	 minimumDepth		= 0.0f;
+				float	 maximumDepth		= 1.0f;
+				uint32_t numberOfExecutions	= RendererRuntime::getUninitialized<uint32_t>();
+				bool	 skipFirstExecution	= false;
 			};
 		#pragma pack(pop)
 
@@ -80,6 +87,8 @@ namespace RendererRuntime
 
 		// Read data
 		const PassData* pass = reinterpret_cast<const PassData*>(data);
+		mMinimumDepth		= pass->minimumDepth;
+		mMaximumDepth		= pass->maximumDepth;
 		mNumberOfExecutions = pass->numberOfExecutions;
 		mSkipFirstExecution = pass->skipFirstExecution;
 
@@ -100,6 +109,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline ICompositorResourcePass::ICompositorResourcePass(const CompositorTarget& compositorTarget) :
 		mCompositorTarget(compositorTarget),
+		mMinimumDepth(0.0f),
+		mMaximumDepth(1.0f),
 		mSkipFirstExecution(false),
 		mNumberOfExecutions(RendererRuntime::getUninitialized<uint32_t>())
 	{

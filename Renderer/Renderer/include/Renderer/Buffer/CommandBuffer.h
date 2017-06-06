@@ -613,7 +613,7 @@ namespace Renderer
 			{
 				*commandBuffer.addCommand<SetViewports>() = SetViewports(numberOfViewports, viewports);
 			}
-			inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height)
+			inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height, float minimumDepth = 0.0f, float maximumDepth = 1.0f)
 			{
 				SetViewports* setViewportsCommand = commandBuffer.addCommand<SetViewports>(sizeof(Viewport));
 
@@ -623,8 +623,8 @@ namespace Renderer
 				viewport->topLeftY = static_cast<float>(topLeftY);
 				viewport->width	   = static_cast<float>(width);
 				viewport->height   = static_cast<float>(height);
-				viewport->minDepth = 0.0f;
-				viewport->maxDepth = 1.0f;
+				viewport->minDepth = minimumDepth;
+				viewport->maxDepth = maximumDepth;
 
 				// Finalize command
 				setViewportsCommand->numberOfViewports = 1;
@@ -701,6 +701,10 @@ namespace Renderer
 		*    Width
 		*  @param[in] height
 		*    Height
+		*  @param[in] minimumDepth
+		*    Minimum depth
+		*  @param[in] maximumDepth
+		*    Maximum depth
 		*
 		*  @note
 		*    - Lookout! In Direct3D 12 the scissor test can't be deactivated and hence one always needs to set a valid scissor rectangle.
@@ -709,10 +713,10 @@ namespace Renderer
 		struct SetViewportAndScissorRectangle
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height)
+			inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height, float minimumDepth = 0.0f, float maximumDepth = 1.0f)
 			{
 				// Set the viewport
-				SetViewports::create(commandBuffer, topLeftX, topLeftY, width, height);
+				SetViewports::create(commandBuffer, topLeftX, topLeftY, width, height, minimumDepth, maximumDepth);
 
 				// Set the scissor rectangle
 				SetScissorRectangles::create(commandBuffer, static_cast<long>(topLeftX), static_cast<long>(topLeftY), static_cast<long>(topLeftX + width), static_cast<long>(topLeftY + height));

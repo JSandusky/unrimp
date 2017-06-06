@@ -70,6 +70,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline const CompositorTarget& getCompositorTarget() const;
+		inline float getMinimumDepth() const;
+		inline float getMaximumDepth() const;
 		inline bool getSkipFirstExecution() const;
 		inline uint32_t getNumberOfExecutions() const;
 
@@ -111,6 +113,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		const CompositorTarget& mCompositorTarget;
+		float					mMinimumDepth;
+		float					mMaximumDepth;
 		bool					mSkipFirstExecution;
 		uint32_t				mNumberOfExecutions;
 

@@ -207,8 +207,7 @@
 			},
 			"LdrFramebuffer0":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget0" ],
-				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
+				"ColorTextures": [ "Example/Texture/Dynamic/LdrColorRenderTarget0" ]
 			},
 			"LdrFramebuffer1":
 			{
@@ -237,6 +236,8 @@
 			{
 				"ShadowMap":
 				{
+					"MinimumRenderQueueIndex": "0",
+					"MaximumRenderQueueIndex": "253",
 					"MaterialTechnique": "DepthOnly",
 					"Texture": "Example/Texture/Dynamic/ShadowMapRenderTarget",
 					"DepthToExponentialVarianceMaterialBlueprint": "MaterialBlueprint/Compositor/DepthToExponentialVariance.asset",
@@ -253,8 +254,16 @@
 				{
 					"Description": "Render solid objects into GBuffer",
 					"MinimumRenderQueueIndex": "0",
-					"MaximumRenderQueueIndex": "254",
+					"MaximumRenderQueueIndex": "253",
 					"MaterialTechnique": "Deferred"
+				},
+				"Scene":
+				{
+					"Description": "Render skybox",
+					"MinimumDepth": "1.0", 
+					"MinimumRenderQueueIndex": "254",
+					"MaximumRenderQueueIndex": "254",
+					"MaterialTechnique": "Default"
 				}
 			},
 			"ScreenSpaceAmbientOcclusionFramebuffer":

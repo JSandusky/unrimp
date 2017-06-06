@@ -22,7 +22,17 @@
 				},
 				"Scene":
 				{
+					"MinimumRenderQueueIndex": "0",
+					"MaximumRenderQueueIndex": "253",
 					"MaterialTechnique": "Debug"
+				},
+				"Scene":
+				{
+					"Description": "Render skybox",
+					"MinimumDepth": "1.0",
+					"MinimumRenderQueueIndex": "254",
+					"MaximumRenderQueueIndex": "254",
+					"MaterialTechnique": "Default"
 				},
 				"DebugGui":
 				{

@@ -215,6 +215,7 @@ namespace RendererToolkit
 				{
 					// Gather "@includepiece(<asset ID>)" and then remove them from the shader source code
 					// TODO(co) This is hacked on-the-fly, we certainly need something more robust
+					std::unordered_map<uint32_t, std::string> assetIdToString;
 					size_t includePiecePosition = sourceCode.find("@includepiece");
 					while (std::string::npos != includePiecePosition)
 					{
@@ -223,7 +224,9 @@ namespace RendererToolkit
 						const size_t closingPosition = sourceCode.find(")", openingPosition);
 						const size_t numberOfCharacters = closingPosition - openingPosition - 1;
 						const std::string assetIdAsString = sourceCode.substr(openingPosition + 1, numberOfCharacters);
-						includeShaderPieceAssetIds.push_back(StringHelper::getSourceAssetIdByString(assetIdAsString.c_str()));
+						const RendererRuntime::AssetId assetId = StringHelper::getSourceAssetIdByString(assetIdAsString.c_str());
+						includeShaderPieceAssetIds.push_back(assetId);
+						assetIdToString.emplace(assetId, assetIdAsString);
 						for (size_t i = includePiecePosition; i < closingPosition + 1; ++i)
 						{
 							sourceCode[i] = ' ';
@@ -237,7 +240,14 @@ namespace RendererToolkit
 					for (RendererRuntime::AssetId& assetId : includeShaderPieceAssetIds)
 					{
 						SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(assetId);
-						assetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
+						if (iterator != input.sourceAssetIdToCompiledAssetId.cend())
+						{
+							assetId = iterator->second;
+						}
+						else
+						{
+							throw std::runtime_error("Failed to include unknown shader piece asset \"" + assetIdToString[assetId] + '\"');
+						}
 					}
 				}
 

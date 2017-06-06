@@ -91,17 +91,9 @@ namespace RendererRuntime
 
 			struct TextureBufferHeader
 			{
-				MaterialPropertyValue				   materialPropertyValue;
-				uint32_t							   rootParameterIndex;
-				MaterialBlueprintResource::BufferUsage bufferUsage;
-
-				TextureBufferHeader() :
-					materialPropertyValue(MaterialPropertyValue::fromUnknown()),
-					rootParameterIndex(getUninitialized<uint32_t>()),
-					bufferUsage(MaterialBlueprintResource::BufferUsage::UNKNOWN)
-				{
-					// Nothing here
-				}
+				MaterialPropertyValue				   materialPropertyValue = MaterialPropertyValue::fromUnknown();
+				uint32_t							   rootParameterIndex	 = getUninitialized<uint32_t>();
+				MaterialBlueprintResource::BufferUsage bufferUsage			 = MaterialBlueprintResource::BufferUsage::UNKNOWN;
 			};
 
 			struct SamplerState : public Renderer::SamplerState

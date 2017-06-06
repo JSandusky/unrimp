@@ -60,7 +60,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("CompositorNode");
-		static const uint32_t FORMAT_VERSION = 5;
+		static const uint32_t FORMAT_VERSION = 6;
 
 		#pragma pack(push)
 		#pragma pack(1)
@@ -106,53 +106,32 @@ namespace RendererRuntime
 			// Keep this in sync with "RendererRuntime::ICompositorResourcePass::deserialize() -> PassData"
 			struct Pass
 			{
-				uint32_t numberOfExecutions;
-				bool	 skipFirstExecution;
-
-				Pass() :
-					numberOfExecutions(RendererRuntime::getUninitialized<uint32_t>()),
-					skipFirstExecution(false)
-				{}
+				float	 minimumDepth		= 0.0f;
+				float	 maximumDepth		= 1.0f;
+				uint32_t numberOfExecutions	= RendererRuntime::getUninitialized<uint32_t>();
+				bool	 skipFirstExecution	= false;
 			};
 
 			struct PassClear : public Pass
 			{
-				uint32_t flags;		///< Combination of "Renderer::ClearFlag"
-				float	 color[4];
-				float	 z;
-				uint32_t stencil;
-
-				PassClear() :
-					flags(0),
-					color{ 0.0f, 0.0f, 0.0f, 0.0f },
-					z(1.0f),
-					stencil(0)
-				{}
+				uint32_t flags	  = 0;	///< Combination of "Renderer::ClearFlag"
+				float	 color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+				float	 z		  = 1.0f;
+				uint32_t stencil  = 0;
 			};
 
 			struct PassVrHiddenAreaMesh : public Pass
 			{
-				uint32_t flags;		///< Combination of "Renderer::ClearFlag", except for color-flag
-				uint32_t stencil;
-
-				PassVrHiddenAreaMesh() :
-					flags(0),
-					stencil(0)
-				{}
+				uint32_t flags	 = 0;	///< Combination of "Renderer::ClearFlag", except for color-flag
+				uint32_t stencil = 0;
 			};
 
 			struct PassScene : public Pass
 			{
-				uint8_t				minimumRenderQueueIndex;	///< Inclusive
-				uint8_t				maximumRenderQueueIndex;	///< Inclusive
-				bool				transparentPass;
+				uint8_t				minimumRenderQueueIndex = 0;	///< Inclusive
+				uint8_t				maximumRenderQueueIndex = 255;	///< Inclusive
+				bool				transparentPass			= false;
 				MaterialTechniqueId	materialTechniqueId;
-
-				PassScene() :
-					minimumRenderQueueIndex(0),
-					maximumRenderQueueIndex(255),
-					transparentPass(false)
-				{}
 			};
 
 			struct PassShadowMap : public PassScene
@@ -175,14 +154,10 @@ namespace RendererRuntime
 
 			struct PassQuad : public Pass
 			{
-				AssetId				materialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
-				MaterialTechniqueId	materialTechniqueId;		///< Must always be valid
-				AssetId				materialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized
-				uint32_t			numberOfMaterialProperties;
-
-				PassQuad() :
-					numberOfMaterialProperties(0)
-				{}
+				AssetId				materialAssetId;				///< If material blueprint asset ID is set, material asset ID must be uninitialized
+				MaterialTechniqueId	materialTechniqueId;			///< Must always be valid
+				AssetId				materialBlueprintAssetId;		///< If material asset ID is set, material blueprint asset ID must be uninitialized
+				uint32_t			numberOfMaterialProperties = 0;
 			};
 
 			// The material definition is not mandatory for the debug GUI, if nothing is defined the fixed build in renderer configuration resources will be used instead

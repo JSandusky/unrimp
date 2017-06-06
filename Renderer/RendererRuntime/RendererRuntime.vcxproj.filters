@@ -218,6 +218,9 @@
     <Filter Include="Source Files\Resource\Scene\Item\Camera">
       <UniqueIdentifier>{34ba9228-3b50-4478-bf6e-6ae09df638a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Scene\Item\Sky">
+      <UniqueIdentifier>{08e94f8b-27c8-4028-8835-9f8c0978f6e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -602,6 +605,9 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Scene\Item\Light\SunLightSceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item\Light</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkyboxSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1200,6 +1206,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Light\SunLightSceneItem.h">
       <Filter>Source Files\Resource\Scene\Item\Light</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkyboxSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1570,6 +1579,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\Light\SunLightSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\Sky\SkyboxSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -228,6 +228,8 @@
 			{
 				"ShadowMap":
 				{
+					"MinimumRenderQueueIndex": "0",
+					"MaximumRenderQueueIndex": "253",
 					"MaterialTechnique": "DepthOnly",
 					"Texture": "Example/Texture/Dynamic/ShadowMapRenderTarget",
 					"DepthToExponentialVarianceMaterialBlueprint": "MaterialBlueprint/Compositor/DepthToExponentialVariance.asset",
@@ -246,8 +248,16 @@
 				{
 					"Description": "Render solid objects",
 					"MinimumRenderQueueIndex": "0",
-					"MaximumRenderQueueIndex": "254",
+					"MaximumRenderQueueIndex": "253",
 					"MaterialTechnique": "Forward"
+				},
+				"Scene":
+				{
+					"Description": "Render skybox",
+					"MinimumDepth": "1.0",
+					"MinimumRenderQueueIndex": "254",
+					"MaximumRenderQueueIndex": "254",
+					"MaterialTechnique": "Default"
 				},
 				"Scene":
 				{

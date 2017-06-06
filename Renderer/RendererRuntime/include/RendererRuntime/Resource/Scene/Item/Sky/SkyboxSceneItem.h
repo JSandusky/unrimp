@@ -27,18 +27,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class SceneNode;
-	class SceneResource;
-	class RenderableManager;
-}
+#include "RendererRuntime/RenderQueue/RenderableManager.h"
+#include "RendererRuntime/Resource/IResourceListener.h"
+#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
+#include "RendererRuntime/Resource/Material/MaterialProperties.h"
 
 
 //[-------------------------------------------------------]
@@ -51,62 +43,87 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
+	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
+	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
 
 
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ISceneItem
+	/**
+	*  @brief
+	*    Skybox scene item
+	*/
+	class SkyboxSceneItem : public ISceneItem, public IResourceListener
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneResource;	// Needs to be able to destroy scene items
+		friend class SceneFactory;	// Needs to be able to create scene item instances
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline SceneResource& getSceneResource() const;
-		inline bool hasParentSceneNode() const;
-		inline SceneNode* getParentSceneNode();
-		inline const SceneNode* getParentSceneNode() const;
-		inline SceneNode& getParentSceneNodeSafe();				// Just safe in context known as safe
-		inline const SceneNode& getParentSceneNodeSafe() const;	// Just safe in context known as safe
+		inline AssetId getMaterialAssetId() const;
+		inline MaterialTechniqueId getMaterialTechniqueId() const;
+		inline AssetId getMaterialBlueprintAssetId() const;
+		inline const MaterialProperties& getMaterialProperties() const;
+		inline MaterialResourceId getMaterialResourceId() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual SceneItemTypeId getSceneItemTypeId() const = 0;
-		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) = 0;
-		inline virtual void onAttachedToSceneNode(SceneNode& sceneNode);
-		inline virtual void onDetachedFromSceneNode(SceneNode& sceneNode);
-		inline virtual void setVisible(bool visible);
-		inline virtual const RenderableManager* getRenderableManager() const;
+		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
+		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
+		virtual void onAttachedToSceneNode(SceneNode& sceneNode) override;
+		inline virtual void onDetachedFromSceneNode(SceneNode& sceneNode) override;
+		inline virtual void setVisible(bool visible) override;
+		virtual const RenderableManager* getRenderableManager() const override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void onLoadingStateChange(const IResource& resource) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit ISceneItem(SceneResource& sceneResource);
-		inline virtual ~ISceneItem();
-		explicit ISceneItem(const ISceneItem&) = delete;
-		ISceneItem& operator=(const ISceneItem&) = delete;
+		inline explicit SkyboxSceneItem(SceneResource& sceneResource);
+		virtual ~SkyboxSceneItem();
+		explicit SkyboxSceneItem(const SkyboxSceneItem&) = delete;
+		SkyboxSceneItem& operator=(const SkyboxSceneItem&) = delete;
+		void initialize();
+		void createMaterialResource(MaterialResourceId parentMaterialResourceId);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		SceneResource& mSceneResource;
-		SceneNode*	   mParentSceneNode;	///< Parent scene node, can be a null pointer, don't destroy the instance
+		AssetId				mMaterialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
+		MaterialTechniqueId	mMaterialTechniqueId;		///< Must always be valid
+		AssetId				mMaterialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized
+		MaterialProperties	mMaterialProperties;
+		MaterialResourceId  mMaterialResourceId;
+		RenderableManager	mRenderableManager;
 
 
 	};
@@ -121,4 +138,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Item/ISceneItem.inl"
+#include "RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.inl"

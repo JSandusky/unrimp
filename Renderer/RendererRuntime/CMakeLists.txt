@@ -140,6 +140,7 @@ set(SOURCE_CODES
 	src/Resource/Scene/Item/Light/SunLightSceneItem.cpp
 	src/Resource/Scene/Item/Mesh/MeshSceneItem.cpp
 	src/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.cpp
+	src/Resource/Scene/Item/Sky/SkyboxSceneItem.cpp
 	src/Resource/Scene/Loader/SceneResourceLoader.cpp
 	src/Resource/Scene/SceneNode.cpp
 	src/Resource/Scene/SceneResource.cpp

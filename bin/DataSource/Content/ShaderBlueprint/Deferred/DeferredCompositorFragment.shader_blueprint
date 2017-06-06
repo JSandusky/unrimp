@@ -169,55 +169,57 @@ MAIN_BEGIN
 	float screenSpaceAmbientOcclusion = SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).r;
 
 	// Calculate color by GBuffer
+	float3 color = float3(0.0f, 0.0f, 0.0f);
 	@property(NumberOfMultisamples)
 		// Custom MSAA resolve
 		int2 textureCoordinate = int2(MAIN_INPUT(TexCoordVS) * PassData.ViewportSize);
-		float3 color = float3(0.0f, 0.0f, 0.0f);
-		int numberOfValues = 0;
 		@foreach(NumberOfMultisamples, i, 0)
 		{
+			// Read GBuffer data
+			float4 gbuffer0Value = SAMPLE_2D_MS(GBufferMap0, textureCoordinate, @i);
+
 			// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
 			float depth = SAMPLE_DEPTH_2D_MS(DepthMap, textureCoordinate, @i);
 			if (1.0f != depth)
 			{
 				// Read GBuffer data
-				float4 gbuffer0Value = SAMPLE_2D_MS(GBufferMap0, textureCoordinate, @i);
 				float4 gbuffer1Value = SAMPLE_2D_MS(GBufferMap1, textureCoordinate, @i);
 				float4 gbuffer2Value = SAMPLE_2D_MS(GBufferMap2, textureCoordinate, @i);
 
 				// Calculate color by GBuffer
 				color += CalculateColorByGBuffer(viewRay, MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion);
-				++numberOfValues;
+			}
+			else
+			{
+				// Sky
+				color += gbuffer0Value.rgb;
 			}
 		}
 		@end
-		if (numberOfValues > 0)
-		{
-			color /= numberOfValues;
-		}
-		else
-		{
-			// Visible aliasing comes up. Since there's still also shader aliasing etc. one might want to use FXAA or so on top of everything.
-			discard;
-		}
+		color /= @value(NumberOfMultisamples);
 	@end
 	@property(!NumberOfMultisamples)
 		float4 textureCoordinate = float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f);
 
-		// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
-		float depth = SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPoint, textureCoordinate);
-		if (1.0f == depth)
-		{
-			discard;
-		}
-
 		// Read GBuffer data
 		float4 gbuffer0Value = SAMPLE_2D_LOD(GBufferMap0, SamplerPoint, textureCoordinate);
-		float4 gbuffer1Value = SAMPLE_2D_LOD(GBufferMap1, SamplerPoint, textureCoordinate);
-		float4 gbuffer2Value = SAMPLE_2D_LOD(GBufferMap2, SamplerPoint, textureCoordinate);
 
-		// Calculate color by GBuffer
-		float3 color = CalculateColorByGBuffer(viewRay, MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion);
+		// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
+		float depth = SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPoint, textureCoordinate);
+		if (1.0f != depth)
+		{
+			// Read GBuffer data
+			float4 gbuffer1Value = SAMPLE_2D_LOD(GBufferMap1, SamplerPoint, textureCoordinate);
+			float4 gbuffer2Value = SAMPLE_2D_LOD(GBufferMap2, SamplerPoint, textureCoordinate);
+
+			// Calculate color by GBuffer
+			color = CalculateColorByGBuffer(viewRay, MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion);
+		}
+		else
+		{
+			// Sky
+			color = gbuffer0Value.rgb;
+		}
 	@end
 
 	// Done

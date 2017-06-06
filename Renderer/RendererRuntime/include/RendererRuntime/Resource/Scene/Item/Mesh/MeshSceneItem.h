@@ -77,7 +77,6 @@ namespace RendererRuntime
 		inline MaterialResourceId getMaterialResourceIdOfSubMesh(uint32_t subMeshIndex) const;
 		RENDERERRUNTIME_API_EXPORT void setMaterialResourceIdOfSubMesh(uint32_t subMeshIndex, MaterialResourceId materialResourceId);
 		RENDERERRUNTIME_API_EXPORT void setMaterialResourceIdOfAllSubMeshes(MaterialResourceId materialResourceId);
-		inline const RenderableManager& getRenderableManager() const;
 
 
 	//[-------------------------------------------------------]
@@ -89,6 +88,7 @@ namespace RendererRuntime
 		virtual void onAttachedToSceneNode(SceneNode& sceneNode) override;
 		inline virtual void onDetachedFromSceneNode(SceneNode& sceneNode) override;
 		inline virtual void setVisible(bool visible) override;
+		inline virtual const RenderableManager* getRenderableManager() const override;
 
 
 	//[-------------------------------------------------------]

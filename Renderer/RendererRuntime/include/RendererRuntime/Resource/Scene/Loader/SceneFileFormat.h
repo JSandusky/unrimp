@@ -42,8 +42,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
-	typedef StringId AssetId;			///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef StringId SceneItemTypeId;		///< Scene item type identifier, internally just a POD "uint32_t"
+	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
 
 
 	// Scene file format content:
@@ -116,6 +117,14 @@ namespace RendererRuntime
 			struct SkeletonMeshItem	// : public MeshItem -> Not derived by intent to be able to reuse the mesh item serialization 1:1
 			{
 				AssetId skeletonAnimationAssetId;
+			};
+
+			struct SkyboxItem
+			{
+				AssetId				materialAssetId;				///< If material blueprint asset ID is set, material asset ID must be uninitialized
+				MaterialTechniqueId	materialTechniqueId;			///< Must always be valid
+				AssetId				materialBlueprintAssetId;		///< If material asset ID is set, material blueprint asset ID must be uninitialized
+				uint32_t			numberOfMaterialProperties = 0;
 			};
 		#pragma pack(pop)
 

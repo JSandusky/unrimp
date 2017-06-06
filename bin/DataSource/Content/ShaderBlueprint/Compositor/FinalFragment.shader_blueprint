@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 @includepiece(ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
-@includepiece(ShaderPiece/Compositor/Fxaa.asset)
+@includepiece(ShaderPiece/Fxaa.asset) 
 	@property(Fxaa)
 		#define FXAA_PC				 1
 		@property(HLSL)

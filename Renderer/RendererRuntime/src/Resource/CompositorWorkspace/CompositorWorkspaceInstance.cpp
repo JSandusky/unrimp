@@ -487,23 +487,20 @@ namespace RendererRuntime
 			const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
 			for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
 			{
-				const ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
-				if (sceneItem->getSceneItemTypeId() == MeshSceneItem::TYPE_ID || sceneItem->getSceneItemTypeId() == SkeletonMeshSceneItem::TYPE_ID)
+				RenderableManager* renderableManager = const_cast<RenderableManager*>(attachedSceneItems[attachedSceneItemIndex]->getRenderableManager());	// TODO(co) Get rid of the evil const-cast
+				if (nullptr != renderableManager && renderableManager->isVisible() && !renderableManager->getRenderables().empty())
 				{
-					RenderableManager& renderableManager = const_cast<RenderableManager&>(static_cast<const MeshSceneItem*>(sceneItem)->getRenderableManager());	// TODO(co) Get rid of the evil const-cast
-					if (renderableManager.isVisible() && !renderableManager.getRenderables().empty())
-					{
-						renderableManager.setCachedDistanceToCamera(distanceToCamera);
+					renderableManager->setCachedDistanceToCamera(distanceToCamera);
 
-						// A renderable manager can be inside multiple render queue index ranges
-						for (RenderQueueIndexRange& renderQueueIndexRange : mRenderQueueIndexRanges)
+					// A renderable manager can be inside multiple render queue index ranges
+					for (RenderQueueIndexRange& renderQueueIndexRange : mRenderQueueIndexRanges)
+					{
+						const uint8_t minimumRenderQueueIndex = renderableManager->getMinimumRenderQueueIndex();
+						const uint8_t maximumRenderQueueIndex = renderableManager->getMaximumRenderQueueIndex();
+						if (minimumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && minimumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex ||
+							maximumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && maximumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex)
 						{
-							// We only need to check the minimum render queue index to figure out whether or not the renderable manager falls into this render queue index range
-							const uint8_t minimumRenderQueueIndex = renderableManager.getMinimumRenderQueueIndex();
-							if (minimumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && minimumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex)
-							{
-								renderQueueIndexRange.renderableManagers.push_back(&renderableManager);
-							}
+							renderQueueIndexRange.renderableManagers.push_back(renderableManager);
 						}
 					}
 				}

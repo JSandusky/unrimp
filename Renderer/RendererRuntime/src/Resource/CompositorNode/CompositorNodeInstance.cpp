@@ -78,16 +78,16 @@ namespace RendererRuntime
 					{
 						currentRenderTarget = newRenderTarget;
 						Renderer::Command::SetRenderTarget::create(commandBuffer, currentRenderTarget);
+					}
 
-						{ // Set the viewport and scissor rectangle
-							// Get the window size
-							uint32_t width  = 1;
-							uint32_t height = 1;
-							currentRenderTarget->getWidthAndHeight(width, height);
+					{ // Set the viewport and scissor rectangle
+						// Get the window size
+						uint32_t width  = 1;
+						uint32_t height = 1;
+						currentRenderTarget->getWidthAndHeight(width, height);
 
-							// Set the viewport and scissor rectangle
-							Renderer::Command::SetViewportAndScissorRectangle::create(commandBuffer, 0, 0, width, height);
-						}
+						// Set the viewport and scissor rectangle
+						Renderer::Command::SetViewportAndScissorRectangle::create(commandBuffer, 0, 0, width, height, compositorResourcePass.getMinimumDepth(), compositorResourcePass.getMaximumDepth());
 					}
 				}
 

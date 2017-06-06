@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
+#include "RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h"
@@ -51,10 +52,6 @@ namespace RendererRuntime
 		{
 			sceneItem = new LightSceneItem(sceneResource);
 		}
-		else if (sceneItemTypeId == SunLightSceneItem::TYPE_ID)
-		{
-			sceneItem = new SunLightSceneItem(sceneResource);
-		}
 		else if (sceneItemTypeId == SkeletonMeshSceneItem::TYPE_ID)
 		{
 			sceneItem = new SkeletonMeshSceneItem(sceneResource);
@@ -62,6 +59,14 @@ namespace RendererRuntime
 		else if (sceneItemTypeId == CameraSceneItem::TYPE_ID)
 		{
 			sceneItem = new CameraSceneItem(sceneResource);
+		}
+		else if (sceneItemTypeId == SunLightSceneItem::TYPE_ID)
+		{
+			sceneItem = new SunLightSceneItem(sceneResource);
+		}
+		else if (sceneItemTypeId == SkyboxSceneItem::TYPE_ID)
+		{
+			sceneItem = new SkyboxSceneItem(sceneResource);
 		}
 
 		// Done
