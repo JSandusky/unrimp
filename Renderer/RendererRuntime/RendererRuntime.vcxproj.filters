@@ -209,6 +209,15 @@
     <Filter Include="Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader">
       <UniqueIdentifier>{46975305-57ad-457e-80d4-b83ae0d921de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Scene\Item\Mesh">
+      <UniqueIdentifier>{b7c45340-ee15-4865-afd8-608dc9ec0f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\Scene\Item\Light">
+      <UniqueIdentifier>{13de92dc-4695-4a68-9cc8-001eaef1187c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\Scene\Item\Camera">
+      <UniqueIdentifier>{34ba9228-3b50-4478-bf6e-6ae09df638a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -256,9 +265,6 @@
       <Filter>Source Files\Resource</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.inl">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.inl">
@@ -384,9 +390,6 @@
     <None Include="include\RendererRuntime\Resource\Scene\Factory\SceneFactory.inl">
       <Filter>Source Files\Resource\Scene\Factory</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Scene\Item\CameraSceneItem.inl">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.inl">
       <Filter>Source Files\Resource\Scene\Memory</Filter>
     </None>
@@ -507,9 +510,6 @@
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.inl">
       <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Scene\Item\LightSceneItem.inl">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorContextData.inl">
       <Filter>Source Files\Resource\CompositorWorkspace</Filter>
     </None>
@@ -539,9 +539,6 @@
     </None>
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResource.inl">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Scene\Item\SkeletonMeshSceneItem.inl">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.inl">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
@@ -590,6 +587,18 @@
     </None>
     <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorResourcePassVrHiddenAreaMesh.inl">
       <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Mesh\MeshSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item\Mesh</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Mesh\SkeletonMeshSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item\Mesh</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Light\LightSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item\Light</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Camera\CameraSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item\Camera</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -686,12 +695,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneFileFormat.h">
       <Filter>Source Files\Resource\Scene\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.h">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\CameraSceneItem.h">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.h">
       <Filter>Source Files\Resource\Scene\Item</Filter>
@@ -1029,9 +1032,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ShadowMap\CompositorResourcePassShadowMap.h">
       <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\LightSceneItem.h">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorContextData.h">
       <Filter>Source Files\Resource\CompositorWorkspace</Filter>
     </ClInclude>
@@ -1082,9 +1082,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationResourceManager.h">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\SkeletonMeshSceneItem.h">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.h">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
@@ -1185,6 +1182,18 @@
     <ClInclude Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader\VrHiddenAreaMesh_GLSL_410.h">
       <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Mesh\SkeletonMeshSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Mesh\MeshSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Light\LightSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Camera\CameraSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1228,12 +1237,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Loader\SceneResourceLoader.cpp">
       <Filter>Source Files\Resource\Scene\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Item\MeshSceneItem.cpp">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Item\CameraSceneItem.cpp">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Factory\SceneFactory.cpp">
       <Filter>Source Files\Resource\Scene\Factory</Filter>
@@ -1454,9 +1457,6 @@
     <ClCompile Include="src\Resource\CompositorNode\Pass\ShadowMap\CompositorInstancePassShadowMap.cpp">
       <Filter>Source Files\Resource\CompositorNode\Pass\ShadowMap</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Item\LightSceneItem.cpp">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\LightBufferManager.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClCompile>
@@ -1483,9 +1483,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Skeleton\SkeletonResource.cpp">
       <Filter>Source Files\Resource\Skeleton</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Item\SkeletonMeshSceneItem.cpp">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.cpp">
       <Filter>Source Files\Resource\SkeletonAnimation</Filter>
@@ -1552,6 +1549,18 @@
     </ClCompile>
     <ClCompile Include="src\Resource\CompositorNode\Pass\VrHiddenAreaMesh\CompositorResourcePassVrHiddenAreaMesh.cpp">
       <Filter>Source Files\Resource\CompositorNode\Pass\VrHiddenAreaMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\Mesh\MeshSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\Mesh\SkeletonMeshSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\Light\LightSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\Camera\CameraSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item\Camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

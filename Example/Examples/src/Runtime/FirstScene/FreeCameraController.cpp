@@ -27,7 +27,7 @@
 #include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Core/Math/EulerAngles.h>
 #include <RendererRuntime/Resource/Scene/SceneNode.h>
-#include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
 
 
 //[-------------------------------------------------------]

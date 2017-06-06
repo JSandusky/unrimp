@@ -136,4 +136,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.inl"
+#include "RendererRuntime/Resource/Scene/Item/Mesh/MeshSceneItem.inl"

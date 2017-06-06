@@ -36,9 +36,9 @@
 #include <RendererRuntime/Resource/Scene/SceneNode.h>
 #include <RendererRuntime/Resource/Scene/SceneResource.h>
 #include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
-#include <RendererRuntime/Resource/Scene/Item/LightSceneItem.h>
-#include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
-#include <RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h>
 #include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h>

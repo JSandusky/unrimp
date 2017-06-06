@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/Math/Transform.h"
-#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.h"
 
 
 //[-------------------------------------------------------]

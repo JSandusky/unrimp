@@ -161,4 +161,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.inl"
+#include "RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.inl"

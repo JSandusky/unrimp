@@ -23,9 +23,9 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
-#include "RendererRuntime/Resource/Scene/Item/LightSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h"
 
 
 //[-------------------------------------------------------]

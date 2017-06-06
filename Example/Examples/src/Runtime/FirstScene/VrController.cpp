@@ -30,9 +30,9 @@
 #include <RendererRuntime/Core/Math/EulerAngles.h>
 #include <RendererRuntime/Resource/Scene/SceneNode.h>
 #include <RendererRuntime/Resource/Scene/SceneResource.h>
-#include <RendererRuntime/Resource/Scene/Item/MeshSceneItem.h>
-#include <RendererRuntime/Resource/Scene/Item/LightSceneItem.h>
-#include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Mesh/MeshSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h>
 #include <RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h>

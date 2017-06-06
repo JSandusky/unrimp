@@ -27,16 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
-
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
-	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
-	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
-	#include <glm/glm.hpp>
-PRAGMA_WARNING_POP
+#include "RendererRuntime/Resource/Scene/Item/Mesh/MeshSceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -44,7 +35,7 @@ PRAGMA_WARNING_POP
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class Transform;
+	class SkeletonAnimationController;
 }
 
 
@@ -56,9 +47,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t SkeletonResourceId;	///< POD skeleton resource identifier
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CameraSceneItem : public ISceneItem
+	/**
+	*  @brief
+	*    Skeleton mesh scene item class
+	*/
+	class SkeletonMeshSceneItem : public MeshSceneItem
 	{
 
 
@@ -73,43 +74,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
-		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_FOV_Y;
-		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_NEAR_Z;
-		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_FAR_Z;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		//[-------------------------------------------------------]
-		//[ Data                                                  ]
-		//[-------------------------------------------------------]
-		inline float getFovY() const;
-		inline void setFovY(float fovY);
-		inline float getNearZ() const;
-		inline void setNearZ(float nearZ);
-		inline float getFarZ() const;
-		inline void setFarZ(float farZ);
-
-		//[-------------------------------------------------------]
-		//[ Derived or custom data                                ]
-		//[-------------------------------------------------------]
-		// World space to view space matrix (Aka "view matrix")
-		RENDERERRUNTIME_API_EXPORT const Transform& getWorldSpaceToViewSpaceTransform() const;
-		RENDERERRUNTIME_API_EXPORT const Transform& getPreviousWorldSpaceToViewSpaceTransform() const;
-		RENDERERRUNTIME_API_EXPORT const glm::mat4& getWorldSpaceToViewSpaceMatrix() const;
-		RENDERERRUNTIME_API_EXPORT void getPreviousWorldSpaceToViewSpaceMatrix(glm::mat4& previousWorldSpaceToViewSpaceMatrix) const;
-		inline bool hasCustomWorldSpaceToViewSpaceMatrix() const;
-		inline void unsetCustomWorldSpaceToViewSpaceMatrix();
-		inline void setCustomWorldSpaceToViewSpaceMatrix(const glm::mat4& customWorldSpaceToViewSpaceMatrix);
-
-		// View space to clip space matrix (aka "projection matrix")
-		inline const glm::mat4& getViewSpaceToClipSpaceMatrix() const;	// No matrix update, just returning that's there
-		RENDERERRUNTIME_API_EXPORT const glm::mat4& getViewSpaceToClipSpaceMatrix(float aspectRatio) const;
-		inline bool hasCustomViewSpaceToClipSpaceMatrix() const;
-		inline void unsetCustomViewSpaceToClipSpaceMatrix();
-		inline void setCustomViewSpaceToClipSpaceMatrix(const glm::mat4& customViewSpaceToClipSpaceMatrix);
+		inline AssetId getSkeletonAnimationAssetId() const;
+		RENDERERRUNTIME_API_EXPORT SkeletonResourceId getSkeletonResourceId() const;
 
 
 	//[-------------------------------------------------------]
@@ -124,25 +96,25 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit CameraSceneItem(SceneResource& sceneResource);
-		inline virtual ~CameraSceneItem();
-		explicit CameraSceneItem(const CameraSceneItem&) = delete;
-		CameraSceneItem& operator=(const CameraSceneItem&) = delete;
+		inline explicit SkeletonMeshSceneItem(SceneResource& sceneResource);
+		virtual ~SkeletonMeshSceneItem();
+		explicit SkeletonMeshSceneItem(const SkeletonMeshSceneItem&) = delete;
+		SkeletonMeshSceneItem& operator=(const SkeletonMeshSceneItem&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void onLoadingStateChange(const IResource& resource) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// Data
-		float mFovY;
-		float mNearZ;
-		float mFarZ;
-		// Derived or custom data
-		mutable glm::mat4 mWorldSpaceToViewSpaceMatrix;				// Aka "view matrix"
-		mutable glm::mat4 mViewSpaceToClipSpaceMatrix;				// Aka "projection matrix"
-		bool			  mHasCustomWorldSpaceToViewSpaceMatrix;	// Aka "view matrix"
-		bool			  mHasCustomViewSpaceToClipSpaceMatrix;		// Aka "projection matrix"
+		AssetId						 mSkeletonAnimationAssetId;		///< Skeleton animation asset ID, can be set to uninitialized value
+		SkeletonAnimationController* mSkeletonAnimationController;	///< Skeleton animation controller instance, can be a null pointer, destroy the instance if you no longer need it
 
 
 	};
@@ -157,4 +129,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.inl"
+#include "RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.inl"

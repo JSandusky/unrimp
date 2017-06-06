@@ -29,9 +29,9 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
-#include <RendererRuntime/Resource/Scene/Item/LightSceneItem.h>
-#include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
-#include <RendererRuntime/Resource/Scene/Item/SkeletonMeshSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
