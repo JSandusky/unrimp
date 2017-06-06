@@ -41,8 +41,8 @@ class IController;
 namespace RendererRuntime
 {
 	class SceneNode;
-	class LightSceneItem;
 	class CameraSceneItem;
+	class SunLightSceneItem;
 	class SkeletonMeshSceneItem;
 	class CompositorWorkspaceInstance;
 }
@@ -168,7 +168,7 @@ private:
 	IController*								  mController;
 	// Crazy raw-pointers to point-of-interest scene stuff
 	RendererRuntime::CameraSceneItem*		mCameraSceneItem;
-	RendererRuntime::LightSceneItem*		mLightSceneItem;
+	RendererRuntime::SunLightSceneItem*		mSunLightSceneItem;
 	RendererRuntime::SkeletonMeshSceneItem*	mSkeletonMeshSceneItem;
 	RendererRuntime::SceneNode*				mSceneNode;
 	// States for runtime-editing

@@ -23,8 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
-#include "RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h"
 
 
@@ -50,6 +50,10 @@ namespace RendererRuntime
 		else if (sceneItemTypeId == LightSceneItem::TYPE_ID)
 		{
 			sceneItem = new LightSceneItem(sceneResource);
+		}
+		else if (sceneItemTypeId == SunLightSceneItem::TYPE_ID)
+		{
+			sceneItem = new SunLightSceneItem(sceneResource);
 		}
 		else if (sceneItemTypeId == SkeletonMeshSceneItem::TYPE_ID)
 		{

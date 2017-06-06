@@ -57,7 +57,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("Scene");
-		static const uint32_t FORMAT_VERSION = 2;
+		static const uint32_t FORMAT_VERSION = 3;
 
 		#pragma pack(push)
 		#pragma pack(1)
@@ -95,6 +95,16 @@ namespace RendererRuntime
 				float					  innerAngle	   = glm::radians(40.0f);
 				float					  outerAngle	   = glm::radians(50.0f);
 				float					  nearClipDistance = 0.0f;
+			};
+
+			struct SunLightItem
+			{
+				// Usually fixed
+				float sunriseTime	   = 07.50f;	// O'clock
+				float sunsetTime	   = 20.50f;	// O'clock
+				float eastDirection	   = 0.0f;
+				float angleOfIncidence = glm::radians(20.0f);
+				float timeOfDay		   = 10.00f;	// O'clock
 			};
 
 			struct MeshItem

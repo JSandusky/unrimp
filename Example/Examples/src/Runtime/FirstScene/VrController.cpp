@@ -160,8 +160,7 @@ namespace
 					if (0 == mNumberOfVrControllers && nullptr != lightSceneItem)
 					{
 						// Spot light for the first VR controller
-						lightSceneItem->setLightType(RendererRuntime::LightSceneItem::LightType::SPOT);
-						lightSceneItem->setRadius(5.0f);
+						lightSceneItem->setLightTypeAndRadius(RendererRuntime::LightSceneItem::LightType::SPOT, 5.0f);
 						lightSceneItem->setColor(glm::vec3(10.0f, 10.0f, 10.0f));
 						lightSceneItem->setInnerOuterAngle(glm::radians(20.0f), glm::radians(30.0f));
 						lightSceneItem->setNearClipDistance(0.05f);

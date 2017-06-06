@@ -95,7 +95,7 @@ namespace RendererRuntime
 		mInnerAngle = innerAngle;
 
 		// Derive data
-		mPackedShaderData.innerAngle = glm::cos(mInnerAngle);
+		mPackedShaderData.innerAngle = std::cos(mInnerAngle);
 
 		// Sanity checks
 		assert(mInnerAngle >= 0.0f);
@@ -112,7 +112,7 @@ namespace RendererRuntime
 		mOuterAngle = outerAngle;
 
 		// Derive data
-		mPackedShaderData.outerAngle = glm::cos(mOuterAngle);
+		mPackedShaderData.outerAngle = std::cos(mOuterAngle);
 
 		// Sanity checks
 		assert(mOuterAngle < glm::radians(90.0f));
@@ -125,8 +125,8 @@ namespace RendererRuntime
 		mOuterAngle = outerAngle;
 
 		// Derive data
-		mPackedShaderData.innerAngle = glm::cos(mInnerAngle);
-		mPackedShaderData.outerAngle = glm::cos(mOuterAngle);
+		mPackedShaderData.innerAngle = std::cos(mInnerAngle);
+		mPackedShaderData.outerAngle = std::cos(mOuterAngle);
 
 		// Sanity checks
 		assert(mInnerAngle >= 0.0f);

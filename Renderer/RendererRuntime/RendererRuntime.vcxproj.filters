@@ -600,6 +600,9 @@
     <None Include="include\RendererRuntime\Resource\Scene\Item\Camera\CameraSceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item\Camera</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Light\SunLightSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item\Light</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1194,6 +1197,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Camera\CameraSceneItem.h">
       <Filter>Source Files\Resource\Scene\Item\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Light\SunLightSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item\Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1561,6 +1567,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\Camera\CameraSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\Light\SunLightSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item\Light</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

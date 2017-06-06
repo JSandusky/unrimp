@@ -19,17 +19,12 @@
 			},
 			"1":
 			{
-				"Description": "Sun light",
-				"Properties":
-				{
-					"Rotation": "-0.723630846 -0.170361593 0.153269514 0.651032865 QUATERNION"
-				},
 				"Items":
 				{
-					"LightSceneItem":
+					"SunLightSceneItem":
 					{
-						"LightType": "DIRECTIONAL",
-						"Radius": "0.0"
+						"EastDirection": "25.0 DEGREES",
+						"TimeOfDay": "14.42 O_CLOCK"
 					}
 				}
 			},

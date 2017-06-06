@@ -29,7 +29,7 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
-#include <RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h>
@@ -223,6 +223,10 @@ namespace RendererToolkit
 								{
 									numberOfBytes = sizeof(RendererRuntime::v1Scene::LightItem);
 								}
+								else if (RendererRuntime::SunLightSceneItem::TYPE_ID == typeId)
+								{
+									numberOfBytes = sizeof(RendererRuntime::v1Scene::SunLightItem);
+								}
 								else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 								{
 									const uint32_t numberOfSubMeshMaterialAssetIds = rapidJsonValueItem.HasMember("SubMeshMaterials") ? rapidJsonValueItem["SubMeshMaterials"].Size() : 0;
@@ -291,6 +295,20 @@ namespace RendererToolkit
 
 										// Write down
 										memoryFile.write(&lightItem, sizeof(RendererRuntime::v1Scene::LightItem));
+									}
+									else if (RendererRuntime::SunLightSceneItem::TYPE_ID == typeId)
+									{
+										RendererRuntime::v1Scene::SunLightItem sunLightItem;
+
+										// Read properties
+										JsonHelper::optionalTimeOfDayProperty(rapidJsonValueItem, "SunriseTime", sunLightItem.sunriseTime);
+										JsonHelper::optionalTimeOfDayProperty(rapidJsonValueItem, "SunsetTime", sunLightItem.sunsetTime);
+										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "EastDirection", sunLightItem.eastDirection);
+										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "AngleOfIncidence", sunLightItem.angleOfIncidence);
+										JsonHelper::optionalTimeOfDayProperty(rapidJsonValueItem, "TimeOfDay", sunLightItem.timeOfDay);
+
+										// Write down
+										memoryFile.write(&sunLightItem, sizeof(RendererRuntime::v1Scene::SunLightItem));
 									}
 									else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 									{

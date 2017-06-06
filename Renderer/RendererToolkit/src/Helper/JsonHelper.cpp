@@ -291,6 +291,35 @@ namespace RendererToolkit
 		}
 	}
 
+	void JsonHelper::optionalTimeOfDayProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float& value)
+	{
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			std::vector<std::string> elements;
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+			if (elements.size() == 2)
+			{
+				value = std::stof(elements[0].c_str());
+				if (elements[1] == "O_CLOCK")
+				{
+					// Sanity check
+					if (value < 00.00f || value >= 24.00f)	// O'clock
+					{
+						throw std::runtime_error("Time-of-day must be within 00.00>= and <24.00 o'clock");
+					}
+				}
+				else
+				{
+					throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x time-of-day in O_CLOCK");
+				}
+			}
+			else
+			{
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x time-of-day in O_CLOCK");
+			}
+		}
+	}
+
 	void JsonHelper::optionalStringProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, char* value, uint32_t maximumLength)
 	{
 		if (0 == maximumLength)

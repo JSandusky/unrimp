@@ -27,16 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
-
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
-	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
-	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
-	#include <glm/glm.hpp>
-PRAGMA_WARNING_POP
+#include "RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -51,17 +42,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Light scene item
+	*    Sun light scene item
+	*
+	*  @note
+	*    - Automatically controls light parameters as well as the owner scene node rotation via time-of-day
 	*/
-	class LightSceneItem : public ISceneItem
+	class SunLightSceneItem : public LightSceneItem
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneFactory;			// Needs to be able to create scene item instances
-		friend class LightBufferManager;	// Needs access to "RendererRuntime::LightSceneItem::mPackedShaderData"
+		friend class SceneFactory;	// Needs to be able to create scene item instances
 
 
 	//[-------------------------------------------------------]
@@ -69,33 +62,29 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
-		enum class LightType
-		{
-			DIRECTIONAL = 0,
-			POINT,
-			SPOT
-		};
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline LightType getLightType() const;
-		inline void setLightType(LightType lightType);
-		inline void setLightTypeAndRadius(LightType lightType, float radius);
-		inline const glm::vec3& getColor() const;
-		inline void setColor(const glm::vec3& color);
-		inline float getRadius() const;
-		inline void setRadius(float radius);
-		inline float getInnerAngle() const;
-		inline void setInnerAngle(float innerAngle);
-		inline float getOuterAngle() const;
-		inline void setOuterAngle(float outerAngle);
-		inline void setInnerOuterAngle(float innerAngle, float outerAngle);
-		inline float getNearClipDistance() const;
-		inline void setNearClipDistance(float nearClipDistance);
-		inline bool isVisible() const;
+		//[-------------------------------------------------------]
+		//[ Usually fixed                                         ]
+		//[-------------------------------------------------------]
+		inline float getSunriseTime() const;
+		inline void setSunriseTime(float sunriseTime);
+		inline float getSunsetTime() const;
+		inline void setSunsetTime(float sunsetTime);
+		inline float getEastDirection() const;
+		inline void setEastDirection(float eastDirection);
+		inline float getAngleOfIncidence() const;
+		inline void setAngleOfIncidence(float angleOfIncidence);
+
+		//[-------------------------------------------------------]
+		//[ Usually animated                                      ]
+		//[-------------------------------------------------------]
+		inline float getTimeOfDay() const;
+		inline void setTimeOfDay(float timeOfDay);
 
 
 	//[-------------------------------------------------------]
@@ -104,53 +93,37 @@ namespace RendererRuntime
 	public:
 		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
-		inline virtual void setVisible(bool visible) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual void onAttachedToSceneNode(SceneNode& sceneNode) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit LightSceneItem(SceneResource& sceneResource);
-		inline virtual ~LightSceneItem();
-		explicit LightSceneItem(const LightSceneItem&) = delete;
-		LightSceneItem& operator=(const LightSceneItem&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		/**
-		*  @brief
-		*    Light data packed into a form which can be directly 1:1 copied into a GPU buffer; don't change the layout in here without updating the shaders using the data
-		*/
-		struct PackedShaderData
-		{
-			// float4 0: xyz = world space light position, w = light radius
-			glm::vec3 position;				///< Parent scene node world space position
-			float	  radius = 1.0f;
-			// float4 1: xyz = RGB light diffuse color, w = unused
-			glm::vec3 color{1.0f, 1.0f, 1.0f};
-			float	  lightType = static_cast<float>(LightType::POINT);
-			// float4 2: Only used for spot-light: x = spot-light inner angle in radians, y = spot-light outer angle in radians, z = spot-light near clip distance, w = unused
-			float innerAngle       = 0.0f;	///< Cosine of the inner angle in radians; interval in degrees: 0..90, must be smaller as the outer angle
-			float outerAngle       = 0.0f;	///< Cosine of the outer angle in radians; interval in degrees: 0..90, must be greater as the inner angle
-			float nearClipDistance = 0.0f;
-			float unused           = 0.0f;
-			// float4 3: Only used for spot-light: xyz = normalized view space light direction, w = unused
-			glm::vec3 direction;			///< Derived from the parent scene node world space rotation
-			uint32_t  visible = 1;			///< Boolean, not used inside the shader but well, there's currently space left in here so we're using it
-		};
+		inline explicit SunLightSceneItem(SceneResource& sceneResource);
+		inline virtual ~SunLightSceneItem();
+		explicit SunLightSceneItem(const SunLightSceneItem&) = delete;
+		SunLightSceneItem& operator=(const SunLightSceneItem&) = delete;
+		RENDERERRUNTIME_API_EXPORT void calculatedDerivedSunLightProperties();
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		PackedShaderData mPackedShaderData;
-		float			 mInnerAngle;	///< Inner angle in radians; interval in degrees: 0..90, must be smaller as the outer angle
-		float			 mOuterAngle;	///< Outer angle in radians; interval in degrees: 0..90, must be greater as the inner angle
+		// Usually fixed
+		float mSunriseTime;			///< Sunrise time in "hour.minute"
+		float mSunsetTime;			///< Sunset time in "hour.minute"
+		float mEastDirection;		///< East direction in radians, clockwise orientation starting from north for zero
+		float mAngleOfIncidence;	///< Angle of incidence in radians
+		// Usually animated
+		float mTimeOfDay;			///< Current time-of-day in "hour.minute"
 
 
 	};
@@ -165,4 +138,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.inl"
+#include "RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.inl"

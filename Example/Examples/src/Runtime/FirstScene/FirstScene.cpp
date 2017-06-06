@@ -36,8 +36,8 @@
 #include <RendererRuntime/Resource/Scene/SceneNode.h>
 #include <RendererRuntime/Resource/Scene/SceneResource.h>
 #include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
-#include <RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h>
@@ -86,7 +86,7 @@ FirstScene::FirstScene() :
 	mController(nullptr),
 	// Crazy raw-pointers to point-of-interest scene stuff
 	mCameraSceneItem(nullptr),
-	mLightSceneItem(nullptr),
+	mSunLightSceneItem(nullptr),
 	mSkeletonMeshSceneItem(nullptr),
 	mSceneNode(nullptr),
 	// States for runtime-fun
@@ -272,7 +272,7 @@ void FirstScene::onDraw()
 		if (nullptr != sceneResource && sceneResource->getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
 		{
 			// Execute the compositor workspace instance
-			mCompositorWorkspaceInstance->executeVr(*mainRenderTarget, mCameraSceneItem, mLightSceneItem);
+			mCompositorWorkspaceInstance->executeVr(*mainRenderTarget, mCameraSceneItem, mSunLightSceneItem);
 		}
 	}
 }
@@ -297,7 +297,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 			// Sanity checks
 			assert(nullptr == mSceneNode);
 			assert(nullptr == mCameraSceneItem);
-			assert(nullptr == mLightSceneItem);
+			assert(nullptr == mSunLightSceneItem);
 			assert(nullptr == mSkeletonMeshSceneItem);
 
 			// Loop through all scene nodes and grab the first found camera, directional light and mesh
@@ -329,16 +329,12 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 							}
 						}
 					}
-					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::LightSceneItem::TYPE_ID)
+					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::SunLightSceneItem::TYPE_ID)
 					{
-						// Grab the first found directional light scene item
-						if (nullptr == mLightSceneItem)
+						// Grab the first found sun light scene item
+						if (nullptr == mSunLightSceneItem)
 						{
-							RendererRuntime::LightSceneItem* lightSceneItem = static_cast<RendererRuntime::LightSceneItem*>(sceneItem);
-							if (lightSceneItem->getLightType() == RendererRuntime::LightSceneItem::LightType::DIRECTIONAL)
-							{
-								mLightSceneItem = lightSceneItem;
-							}
+							mSunLightSceneItem = static_cast<RendererRuntime::SunLightSceneItem*>(sceneItem);
 						}
 					}
 					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::SkeletonMeshSceneItem::TYPE_ID)
@@ -377,7 +373,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 		else
 		{
 			mCameraSceneItem = nullptr;
-			mLightSceneItem = nullptr;
+			mSunLightSceneItem = nullptr;
 			mSkeletonMeshSceneItem = nullptr;
 			if (nullptr != mController)
 			{
@@ -458,6 +454,12 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				// Global material properties
 				ImGui::Separator();
 				ImGui::Checkbox("High Quality Lighting", &mHighQualityLighting);
+				if (nullptr != mSunLightSceneItem)
+				{
+					float timeOfDay = mSunLightSceneItem->getTimeOfDay();
+					ImGui::SliderFloat("Time of Day", &timeOfDay, 0.0f, 23.59f, "%.2f");
+					mSunLightSceneItem->setTimeOfDay(timeOfDay);
+				}
 				ImGui::ColorEdit3("Sun Light Color", mSunLightColor);
 				ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
 

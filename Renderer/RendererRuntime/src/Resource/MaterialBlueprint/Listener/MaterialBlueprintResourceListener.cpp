@@ -693,8 +693,8 @@ namespace RendererRuntime
 				0.0f, 0.0f,  1.0f
 			);
 			const glm::mat3 rotation(
-				glm::cos(cameraRotation), -glm::sin(cameraRotation),  0.0f,
-				glm::sin(cameraRotation),  glm::cos(cameraRotation),  0.0f,
+				std::cos(cameraRotation), -std::sin(cameraRotation),  0.0f,
+				std::sin(cameraRotation),  std::cos(cameraRotation),  0.0f,
 				0.0f,                      0.0f,                      1.0f
 			);
 			const glm::mat3 scaleBias2(
