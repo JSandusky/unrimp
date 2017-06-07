@@ -609,6 +609,9 @@
     <None Include="include\RendererRuntime\Resource\Scene\Item\Light\SunlightSceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item\Light</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Sky\HosekWilkieSky.inl">
+      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1209,6 +1212,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Light\SunlightSceneItem.h">
       <Filter>Source Files\Resource\Scene\Item\Light</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\HosekWilkieSky.h">
+      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\ArHosekSkyModelData_RGB.h">
+      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1582,6 +1591,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\Light\SunlightSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\Sky\HosekWilkieSky.cpp">
+      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

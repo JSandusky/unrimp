@@ -48,13 +48,9 @@ namespace RendererRuntime
 		mNearZ(0.0f),
 		mFarZ(0.0f),
 		mPreviousNumberOfRenderedFrames(getUninitialized<uint64_t>()),
+		mHosekWilkieSky(nullptr),
 		mObjectSpaceToWorldSpaceTransform(nullptr),
 		mMaterialTechnique(nullptr)
-	{
-		// Nothing here
-	}
-
-	inline MaterialBlueprintResourceListener::~MaterialBlueprintResourceListener()
 	{
 		// Nothing here
 	}

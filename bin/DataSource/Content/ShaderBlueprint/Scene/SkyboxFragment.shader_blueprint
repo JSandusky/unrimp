@@ -36,19 +36,105 @@ OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
 OUTPUT_END
 
-// Samplers
-SAMPLER_STATE(SamplerLinear, 0)
+// Uniform buffers
+struct PassDataStruct
+{
+	float4x4 WorldSpaceToViewSpaceMatrix;
+	float4x4 ViewSpaceToClipSpaceMatrix;
+	float4   HosekWilkieSkyCoefficients1[4];
+	float4   HosekWilkieSkyCoefficients2[4];
+	float3   WorldSpaceSunlightDirection;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
 
-// Textures
-TEXTURE_CUBE(EnvironmentCubeMap, 0)
+@property(!UseProceduralSky)
+	// Samplers
+	SAMPLER_STATE(SamplerLinear, 0)
+
+	// Textures
+	TEXTURE_CUBE(EnvironmentCubeMap, 0)
+@end
+
+
+//[-------------------------------------------------------]
+//[ Functions                                             ]
+//[-------------------------------------------------------]
+/**
+*  @brief
+*    Hosek-Wilkie sky
+*
+*  @remarks
+*    The following pass parameters are needed
+*    - PassData.WorldSpaceSunlightDirection
+*    - PassData.HosekWilkieSkyCoefficients1
+*    - PassData.HosekWilkieSkyCoefficients2
+*
+*    Hosek-Wilkie Sky needs the 10 float3 coefficients A, B, C, D, E, F, G, H, I, Z. In order to transport them inside uniform buffers in an efficient way, we pack them into two float4x4 matrices.
+*    - HosekWilkieSkyCoefficients1: A, B, C, D, E
+*        Row 0: A.xyz B.x
+*        Row 1: B.yz  C.xy
+*        Row 2: C.z   D.xyz
+*        Row 3: E.xyz F.x
+*    - HosekWilkieSkyCoefficients2: F, G, H, I, Z
+*        Row 0: F.yz  G.xy
+*        Row 1: G.z   H.xyz
+*        Row 2: I.xyz Z.x
+*        Row 3: Z.yz
+*
+*  @note
+*    - "An Analytic Model for Full Spectral Sky-Dome Radiance (Lukas Hosek, Alexander Wilkie)"
+*    - The implementation is basing on https://github.com/ddiakopoulos/sandbox/blob/master/assets/shaders/sky_hosek_frag.glsl (has also a Preetham implementation)
+*/
+@property(UseProceduralSky)
+	float3 HosekWilkie(float cos_theta, float gamma, float cos_gamma)
+	{
+		// Unpack
+		float3 A = PassData.HosekWilkieSkyCoefficients1[0].xyz;
+		float3 B = float3(PassData.HosekWilkieSkyCoefficients1[0].w, PassData.HosekWilkieSkyCoefficients1[1].xy);
+		float3 C = float3(PassData.HosekWilkieSkyCoefficients1[1].zw, PassData.HosekWilkieSkyCoefficients1[2].x);
+		float3 D = PassData.HosekWilkieSkyCoefficients1[2].yzw;
+		float3 E = PassData.HosekWilkieSkyCoefficients1[3].xyz;
+		float3 F = float3(PassData.HosekWilkieSkyCoefficients1[3].w, PassData.HosekWilkieSkyCoefficients2[0].xy);
+		float3 G = float3(PassData.HosekWilkieSkyCoefficients2[0].zw, PassData.HosekWilkieSkyCoefficients2[1].x);
+		float3 H = PassData.HosekWilkieSkyCoefficients2[1].yzw;
+		float3 I = PassData.HosekWilkieSkyCoefficients2[2].xyz;
+
+		// Basing on the "ArHosekSkyModel_GetRadianceInternal"-function ( http://cgg.mff.cuni.cz/projects/SkylightModelling/ )
+		float3 chi = (1 + cos_gamma * cos_gamma) / pow(abs(1 + H * H - 2 * cos_gamma * H), float3(1.5f, 1.5f, 1.5f));
+		return (1 + A * exp(B / (cos_theta + 0.01))) * (C + D * exp(E * gamma) + F * (cos_gamma * cos_gamma) + G * chi + I * sqrt(cos_theta));
+	}
+
+	/**
+	*  @brief
+	*    Calculate the Hosek-Wilkie Sky color for the given normalized world space direction vector
+	*/
+	float3 CalculateHosekWilkieSkyColor(float3 direction)
+	{
+		// Unpack
+		float3 Z = float3(PassData.HosekWilkieSkyCoefficients2[2].w, PassData.HosekWilkieSkyCoefficients2[3].xy);
+
+		// Calculate
+		float cos_theta = SATURATE(direction.y);
+		float cos_gamma = dot(direction, PassData.WorldSpaceSunlightDirection);
+		float gamma = acos(cos_gamma);
+		return Z * HosekWilkie(cos_theta, gamma, cos_gamma);
+	}
+@end
 
 
 //[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	// Sample the environment cube map
-	float3 color = SAMPLE_CUBE_LOD(EnvironmentCubeMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f)).rgb;
+	@property(UseProceduralSky)
+		float3 color = CalculateHosekWilkieSkyColor(normalize(MAIN_INPUT(TexCoordVS)));
+	@end
+	@property(!UseProceduralSky)
+		// Sample the environment cube map
+		float3 color = SAMPLE_CUBE_LOD(EnvironmentCubeMap, SamplerLinear, float4(-MAIN_INPUT(TexCoordVS), 0.0f)).rgb;
+	@end
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(color, 1.0f);

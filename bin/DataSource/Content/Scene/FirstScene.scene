@@ -29,7 +29,7 @@
 						"MaterialBlueprint": "MaterialBlueprint/Scene/Skybox.asset",
 						"SetMaterialProperties":
 						{
-							"EnvironmentCubeMap": "Texture/CubeMap/Maskonaive3/Maskonaive3_rcube.asset"
+							"UseProceduralSky": "TRUE"
 						}
 					}
 				}

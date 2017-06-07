@@ -40,6 +40,15 @@ PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class HosekWilkieSky;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -83,7 +92,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~MaterialBlueprintResourceListener();
+		RENDERERRUNTIME_API_EXPORT virtual ~MaterialBlueprintResourceListener();
 
 
 	//[-------------------------------------------------------]
@@ -112,6 +121,13 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		glm::vec3 getWorldSpaceSunlightDirection() const;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
@@ -130,6 +146,7 @@ namespace RendererRuntime
 		float						 mFarZ;
 		glm::vec2					 mPreviousJitter;
 		uint64_t					 mPreviousNumberOfRenderedFrames;
+		HosekWilkieSky*				 mHosekWilkieSky;
 
 		// Instance
 		const Transform*   mObjectSpaceToWorldSpaceTransform;

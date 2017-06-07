@@ -28,6 +28,7 @@
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Light/LightSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/Sky/HosekWilkieSky.h"
 #include "RendererRuntime/Resource/Scene/SceneNode.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
@@ -83,6 +84,7 @@ namespace
 			DEFINE_CONSTANT(VIEW_SPACE_FRUSTUM_CORNERS)
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_SUNLIGHT_DIRECTION)
+			DEFINE_CONSTANT(WORLD_SPACE_SUNLIGHT_DIRECTION)
 			DEFINE_CONSTANT(VIEWPORT_SIZE)
 			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
 			DEFINE_CONSTANT(LIGHT_CLUSTERS_SCALE)
@@ -98,6 +100,8 @@ namespace
 			DEFINE_CONSTANT(SHADOW_SAMPLE_RADIUS)
 			DEFINE_CONSTANT(LENS_STAR_MATRIX)
 			DEFINE_CONSTANT(JITTER_OFFSET)
+			DEFINE_CONSTANT(HOSEK_WILKIE_SKY_COEFFICIENTS_1)
+			DEFINE_CONSTANT(HOSEK_WILKIE_SKY_COEFFICIENTS_2)
 
 			// Instance
 			DEFINE_CONSTANT(INSTANCE_INDICES)
@@ -277,6 +281,15 @@ namespace
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	MaterialBlueprintResourceListener::~MaterialBlueprintResourceListener()
+	{
+		delete mHosekWilkieSky;
+	}
 
 
 	//[-------------------------------------------------------]
@@ -502,20 +515,13 @@ namespace RendererRuntime
 		else if (::detail::VIEW_SPACE_SUNLIGHT_DIRECTION == referenceValue)
 		{
 			assert(sizeof(float) * 3 == numberOfBytes);
-			glm::vec3 worldSpaceSunlightDirection;
-			const LightSceneItem* lightSceneItem = mCompositorContextData->getLightSceneItem();
-			if (nullptr != lightSceneItem && nullptr != lightSceneItem->getParentSceneNode())
-			{
-				worldSpaceSunlightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::VEC3_FORWARD;
-			}
-			else
-			{
-				// Error!
-				assert(false);
-				worldSpaceSunlightDirection = Math::VEC3_FORWARD;
-			}
-			const glm::vec3 viewSpaceSunlightDirection = glm::normalize(mPassData->worldSpaceToViewSpaceQuaternion * worldSpaceSunlightDirection);	// Normalize shouldn't be necessary, but last chance here to correct rounding errors before the shader is using the normalized direction vector
+			const glm::vec3 viewSpaceSunlightDirection = glm::normalize(mPassData->worldSpaceToViewSpaceQuaternion * getWorldSpaceSunlightDirection());	// Normalize shouldn't be necessary, but last chance here to correct rounding errors before the shader is using the normalized direction vector
 			memcpy(buffer, glm::value_ptr(viewSpaceSunlightDirection), numberOfBytes);
+		}
+		else if (::detail::WORLD_SPACE_SUNLIGHT_DIRECTION == referenceValue)
+		{
+			assert(sizeof(float) * 3 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(getWorldSpaceSunlightDirection()), numberOfBytes);
 		}
 		else if (::detail::VIEWPORT_SIZE == referenceValue)
 		{
@@ -726,6 +732,34 @@ namespace RendererRuntime
 				memcpy(buffer, glm::value_ptr(jitterOffset), numberOfBytes);
 			}
 		}
+		else if (::detail::HOSEK_WILKIE_SKY_COEFFICIENTS_1 == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+
+			// Calculate the data
+			if (nullptr == mHosekWilkieSky)
+			{
+				mHosekWilkieSky = new HosekWilkieSky();
+			}
+			mHosekWilkieSky->recalculate(getWorldSpaceSunlightDirection());
+
+			// Copy the data
+			memcpy(buffer, glm::value_ptr(mHosekWilkieSky->getCoefficients().A), numberOfBytes);
+		}
+		else if (::detail::HOSEK_WILKIE_SKY_COEFFICIENTS_2 == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+
+			// Calculate the data
+			if (nullptr == mHosekWilkieSky)
+			{
+				mHosekWilkieSky = new HosekWilkieSky();
+			}
+			mHosekWilkieSky->recalculate(getWorldSpaceSunlightDirection());
+
+			// Copy the data
+			memcpy(buffer, glm::value_ptr(mHosekWilkieSky->getCoefficients().F) + 1, numberOfBytes);
+		}
 		else
 		{
 			// Value not filled
@@ -782,6 +816,25 @@ namespace RendererRuntime
 
 		// Done
 		return valueFilled;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	glm::vec3 MaterialBlueprintResourceListener::getWorldSpaceSunlightDirection() const
+	{
+		const LightSceneItem* lightSceneItem = mCompositorContextData->getLightSceneItem();
+		if (nullptr != lightSceneItem && nullptr != lightSceneItem->getParentSceneNode())
+		{
+			return lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::VEC3_FORWARD;
+		}
+		else
+		{
+			// Error!
+			assert(false);
+			return Math::VEC3_FORWARD;
+		}
 	}
 
 

@@ -42,6 +42,9 @@ struct PassDataStruct
 {
 	float4x4 WorldSpaceToViewSpaceMatrix;
 	float4x4 ViewSpaceToClipSpaceMatrix;
+	float4   HosekWilkieSkyCoefficients1[4];
+	float4   HosekWilkieSkyCoefficients2[4];
+	float3   WorldSpaceSunlightDirection;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -59,5 +62,5 @@ MAIN_BEGIN
 	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, float4(viewSpacePosition, 1.0f));
 
 	// Pass through the object space position as texture coordinate
-	MAIN_OUTPUT(TexCoordVS) = -MAIN_INPUT(Position);
+	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(Position);
 MAIN_END
