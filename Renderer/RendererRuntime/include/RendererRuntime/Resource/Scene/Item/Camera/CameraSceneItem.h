@@ -73,7 +73,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
-		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_FOV_Y;
+		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_FOV_Y;	///< Default Y field of view in radians
 		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_NEAR_Z;
 		RENDERERRUNTIME_API_EXPORT static const float DEFAULT_FAR_Z;
 
@@ -135,7 +135,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		// Data
-		float mFovY;
+		float mFovY;	///< Y field of view in radians
 		float mNearZ;
 		float mFarZ;
 		// Derived or custom data

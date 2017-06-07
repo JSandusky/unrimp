@@ -48,7 +48,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	const SceneItemTypeId CameraSceneItem::TYPE_ID("CameraSceneItem");
-	const float CameraSceneItem::DEFAULT_FOV_Y  = 45.0f;
+	const float CameraSceneItem::DEFAULT_FOV_Y  = glm::radians(45.0f);
 	const float CameraSceneItem::DEFAULT_NEAR_Z = 0.1f;
 	const float CameraSceneItem::DEFAULT_FAR_Z  = 1000.0f;
 
@@ -93,7 +93,7 @@ namespace RendererRuntime
 		// Calculate the view space to clip space matrix (aka "projection matrix")
 		if (!mHasCustomViewSpaceToClipSpaceMatrix)
 		{
-			mViewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(mFovY), aspectRatio, mNearZ, mFarZ);
+			mViewSpaceToClipSpaceMatrix = glm::perspective(mFovY, aspectRatio, mNearZ, mFarZ);
 		}
 
 		// Done
