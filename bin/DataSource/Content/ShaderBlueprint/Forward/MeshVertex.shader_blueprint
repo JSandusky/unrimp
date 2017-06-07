@@ -66,10 +66,10 @@ struct PassDataStruct
 	float4   ShadowCascadeSplits;
 	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float4	 WorldSpaceToViewSpaceQuaternion;
-	float3	 ViewSpaceSunLightDirection;
+	float3	 ViewSpaceSunlightDirection;
 	float	 Wetness;
 	float3	 AmbientColor;
-	float3	 SunLightColor;
+	float3	 SunlightColor;
 	float3   CameraWorldSpacePosition;
 	float3	 LightClustersScale;
 	float3	 LightClustersBias;

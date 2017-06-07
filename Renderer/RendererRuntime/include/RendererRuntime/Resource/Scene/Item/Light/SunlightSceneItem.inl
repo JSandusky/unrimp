@@ -28,85 +28,85 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline float SunLightSceneItem::getSunriseTime() const
+	inline float SunlightSceneItem::getSunriseTime() const
 	{
 		return mSunriseTime;
 	}
 
-	inline void SunLightSceneItem::setSunriseTime(float sunriseTime)
+	inline void SunlightSceneItem::setSunriseTime(float sunriseTime)
 	{
 		if (mSunriseTime != sunriseTime)
 		{
 			// Sanity check
 			assert(sunriseTime >= 00.00f && sunriseTime < 24.00f);	// O'clock
 
-			// Set new value and calculate derived sun light properties
+			// Set new value and calculate derived sunlight properties
 			mSunriseTime = sunriseTime;
-			calculatedDerivedSunLightProperties();
+			calculatedDerivedSunlightProperties();
 		}
 	}
 
-	inline float SunLightSceneItem::getSunsetTime() const
+	inline float SunlightSceneItem::getSunsetTime() const
 	{
 		return mSunsetTime;
 	}
 
-	inline void SunLightSceneItem::setSunsetTime(float sunsetTime)
+	inline void SunlightSceneItem::setSunsetTime(float sunsetTime)
 	{
 		if (mSunsetTime != sunsetTime)
 		{
 			// Sanity check
 			assert(sunsetTime >= 00.00f && sunsetTime < 24.00f);	// O'clock
 
-			// Set new value and calculate derived sun light properties
+			// Set new value and calculate derived sunlight properties
 			mSunsetTime = sunsetTime;
-			calculatedDerivedSunLightProperties();
+			calculatedDerivedSunlightProperties();
 		}
 	}
 
-	inline float SunLightSceneItem::getEastDirection() const
+	inline float SunlightSceneItem::getEastDirection() const
 	{
 		return mEastDirection;
 	}
 
-	inline void SunLightSceneItem::setEastDirection(float eastDirection)
+	inline void SunlightSceneItem::setEastDirection(float eastDirection)
 	{
 		if (mEastDirection != eastDirection)
 		{
 			mEastDirection = eastDirection;
-			calculatedDerivedSunLightProperties();
+			calculatedDerivedSunlightProperties();
 		}
 	}
 
-	inline float SunLightSceneItem::getAngleOfIncidence() const
+	inline float SunlightSceneItem::getAngleOfIncidence() const
 	{
 		return mAngleOfIncidence;
 	}
 
-	inline void SunLightSceneItem::setAngleOfIncidence(float angleOfIncidence)
+	inline void SunlightSceneItem::setAngleOfIncidence(float angleOfIncidence)
 	{
 		if (mAngleOfIncidence != angleOfIncidence)
 		{
 			mAngleOfIncidence = angleOfIncidence;
-			calculatedDerivedSunLightProperties();
+			calculatedDerivedSunlightProperties();
 		}
 	}
 
-	inline float SunLightSceneItem::getTimeOfDay() const
+	inline float SunlightSceneItem::getTimeOfDay() const
 	{
 		return mTimeOfDay;
 	}
 
-	void SunLightSceneItem::setTimeOfDay(float timeOfDay)
+	void SunlightSceneItem::setTimeOfDay(float timeOfDay)
 	{
 		if (mTimeOfDay != timeOfDay)
 		{
 			// Sanity check
 			assert(timeOfDay >= 00.00f && timeOfDay < 24.00f);	// O'clock
 
-			// Set new value and calculate derived sun light properties
+			// Set new value and calculate derived sunlight properties
 			mTimeOfDay = timeOfDay;
-			calculatedDerivedSunLightProperties();
+			calculatedDerivedSunlightProperties();
 		}
 	}
 
@@ -114,7 +114,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	inline SceneItemTypeId SunLightSceneItem::getSceneItemTypeId() const
+	inline SceneItemTypeId SunlightSceneItem::getSceneItemTypeId() const
 	{
 		return TYPE_ID;
 	}
@@ -123,20 +123,20 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	inline void SunLightSceneItem::onAttachedToSceneNode(SceneNode& sceneNode)
+	inline void SunlightSceneItem::onAttachedToSceneNode(SceneNode& sceneNode)
 	{
 		// Call base implementation
 		LightSceneItem::onAttachedToSceneNode(sceneNode);
 
-		// Calculate derived sun light properties
-		calculatedDerivedSunLightProperties();
+		// Calculate derived sunlight properties
+		calculatedDerivedSunlightProperties();
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline SunLightSceneItem::SunLightSceneItem(SceneResource& sceneResource) :
+	inline SunlightSceneItem::SunlightSceneItem(SceneResource& sceneResource) :
 		LightSceneItem(sceneResource),
 		// Usually fixed
 		mSunriseTime(07.50f),	// O'clock
@@ -149,7 +149,7 @@ namespace RendererRuntime
 		setLightTypeAndRadius(LightType::DIRECTIONAL, 0.0f);
 	}
 
-	inline SunLightSceneItem::~SunLightSceneItem()
+	inline SunlightSceneItem::~SunlightSceneItem()
 	{
 		// Nothing here
 	}

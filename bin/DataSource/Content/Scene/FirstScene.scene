@@ -19,7 +19,7 @@
 			{
 				"Items":
 				{
-					"SunLightSceneItem":
+					"SunlightSceneItem":
 					{
 						"EastDirection": "25.0 DEGREES",
 						"TimeOfDay": "14.42 O_CLOCK"

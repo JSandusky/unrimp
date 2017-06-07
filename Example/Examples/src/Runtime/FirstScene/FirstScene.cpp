@@ -37,7 +37,7 @@
 #include <RendererRuntime/Resource/Scene/SceneResource.h>
 #include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
 #include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
-#include <RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Light/SunlightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h>
@@ -86,7 +86,7 @@ FirstScene::FirstScene() :
 	mController(nullptr),
 	// Crazy raw-pointers to point-of-interest scene stuff
 	mCameraSceneItem(nullptr),
-	mSunLightSceneItem(nullptr),
+	mSunlightSceneItem(nullptr),
 	mSkeletonMeshSceneItem(nullptr),
 	mSceneNode(nullptr),
 	// States for runtime-fun
@@ -102,7 +102,7 @@ FirstScene::FirstScene() :
 	mRotationSpeed(0.0f),
 	mShowSkeleton(false),
 	mHighQualityLighting(true),
-	mSunLightColor{1.0f, 1.0f, 1.0f},
+	mSunlightColor{1.0f, 1.0f, 1.0f},
 	mWetness(0.0f),
 	mUseEmissiveMap(true),
 	mDiffuseColor{1.0f, 1.0f, 1.0f},
@@ -231,7 +231,7 @@ void FirstScene::onUpdate()
 		{ // Tell the material blueprint resource manager about our global material properties
 			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
 			globalMaterialProperties.setPropertyById("GlobalHighQualityLighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mHighQualityLighting));
-			globalMaterialProperties.setPropertyById("GlobalSunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunLightColor[0] * 2.0f, mSunLightColor[1] * 2.0f, mSunLightColor[2] * 2.0f));
+			globalMaterialProperties.setPropertyById("GlobalSunlightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunlightColor[0] * 2.0f, mSunlightColor[1] * 2.0f, mSunlightColor[2] * 2.0f));
 			globalMaterialProperties.setPropertyById("GlobalWetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
 		}
 
@@ -272,7 +272,7 @@ void FirstScene::onDraw()
 		if (nullptr != sceneResource && sceneResource->getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
 		{
 			// Execute the compositor workspace instance
-			mCompositorWorkspaceInstance->executeVr(*mainRenderTarget, mCameraSceneItem, mSunLightSceneItem);
+			mCompositorWorkspaceInstance->executeVr(*mainRenderTarget, mCameraSceneItem, mSunlightSceneItem);
 		}
 	}
 }
@@ -297,7 +297,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 			// Sanity checks
 			assert(nullptr == mSceneNode);
 			assert(nullptr == mCameraSceneItem);
-			assert(nullptr == mSunLightSceneItem);
+			assert(nullptr == mSunlightSceneItem);
 			assert(nullptr == mSkeletonMeshSceneItem);
 
 			// Loop through all scene nodes and grab the first found camera, directional light and mesh
@@ -329,12 +329,12 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 							}
 						}
 					}
-					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::SunLightSceneItem::TYPE_ID)
+					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::SunlightSceneItem::TYPE_ID)
 					{
-						// Grab the first found sun light scene item
-						if (nullptr == mSunLightSceneItem)
+						// Grab the first found sunlight scene item
+						if (nullptr == mSunlightSceneItem)
 						{
-							mSunLightSceneItem = static_cast<RendererRuntime::SunLightSceneItem*>(sceneItem);
+							mSunlightSceneItem = static_cast<RendererRuntime::SunlightSceneItem*>(sceneItem);
 						}
 					}
 					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::SkeletonMeshSceneItem::TYPE_ID)
@@ -373,7 +373,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 		else
 		{
 			mCameraSceneItem = nullptr;
-			mSunLightSceneItem = nullptr;
+			mSunlightSceneItem = nullptr;
 			mSkeletonMeshSceneItem = nullptr;
 			if (nullptr != mController)
 			{
@@ -454,13 +454,13 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				// Global material properties
 				ImGui::Separator();
 				ImGui::Checkbox("High Quality Lighting", &mHighQualityLighting);
-				if (nullptr != mSunLightSceneItem)
+				if (nullptr != mSunlightSceneItem)
 				{
-					float timeOfDay = mSunLightSceneItem->getTimeOfDay();
+					float timeOfDay = mSunlightSceneItem->getTimeOfDay();
 					ImGui::SliderFloat("Time of Day", &timeOfDay, 0.0f, 23.59f, "%.2f");
-					mSunLightSceneItem->setTimeOfDay(timeOfDay);
+					mSunlightSceneItem->setTimeOfDay(timeOfDay);
 				}
-				ImGui::ColorEdit3("Sun Light Color", mSunLightColor);
+				ImGui::ColorEdit3("Sunlight Color", mSunlightColor);
 				ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
 
 				// Material properties

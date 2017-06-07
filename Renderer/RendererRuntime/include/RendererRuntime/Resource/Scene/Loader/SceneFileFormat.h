@@ -98,7 +98,7 @@ namespace RendererRuntime
 				float					  nearClipDistance = 0.0f;
 			};
 
-			struct SunLightItem
+			struct SunlightItem
 			{
 				// Usually fixed
 				float sunriseTime	   = 07.50f;	// O'clock

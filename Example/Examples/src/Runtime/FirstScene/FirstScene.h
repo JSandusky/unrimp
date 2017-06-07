@@ -42,7 +42,7 @@ namespace RendererRuntime
 {
 	class SceneNode;
 	class CameraSceneItem;
-	class SunLightSceneItem;
+	class SunlightSceneItem;
 	class SkeletonMeshSceneItem;
 	class CompositorWorkspaceInstance;
 }
@@ -168,7 +168,7 @@ private:
 	IController*								  mController;
 	// Crazy raw-pointers to point-of-interest scene stuff
 	RendererRuntime::CameraSceneItem*		mCameraSceneItem;
-	RendererRuntime::SunLightSceneItem*		mSunLightSceneItem;
+	RendererRuntime::SunlightSceneItem*		mSunlightSceneItem;
 	RendererRuntime::SkeletonMeshSceneItem*	mSkeletonMeshSceneItem;
 	RendererRuntime::SceneNode*				mSceneNode;
 	// States for runtime-editing
@@ -186,7 +186,7 @@ private:
 	float	   mRotationSpeed;
 	bool	   mShowSkeleton;
 	bool	   mHighQualityLighting;
-	float	   mSunLightColor[3];
+	float	   mSunlightColor[3];
 	float	   mWetness;
 	bool	   mUseEmissiveMap;
 	float	   mDiffuseColor[3];

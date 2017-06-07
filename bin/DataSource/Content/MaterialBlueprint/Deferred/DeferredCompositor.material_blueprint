@@ -113,12 +113,12 @@
 				"Value": "0.2 0.2 0.2",
 				"Description": "Fallback value in case there's no ambient color global material property"
 			},
-			"GlobalSunLightColor":
+			"GlobalSunlightColor":
 			{
 				"Usage": "GLOBAL_REFERENCE_FALLBACK",
 				"ValueType": "FLOAT_3",
 				"Value": "1.0 1.0 1.0",
-				"Description": "Fallback value in case there's no sun light color global material property"
+				"Description": "Fallback value in case there's no sunlight color global material property"
 			}			
 		},
 		"RootSignature":
@@ -370,11 +370,11 @@
 							"ValueType": "FLOAT_4",
 							"Value": "@SHADOW_CASCADE_SPLITS"
 						},
-						"ViewSpaceSunLightDirection":
+						"ViewSpaceSunlightDirection":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "@VIEW_SPACE_SUN_LIGHT_DIRECTION"
+							"Value": "@VIEW_SPACE_SUNLIGHT_DIRECTION"
 						},
 						"Wetness":
 						{
@@ -400,11 +400,11 @@
 							"ValueType": "FLOAT_4",
 							"Value": "@VIEW_SPACE_TO_WORLD_SPACE_QUATERNION"
 						},
-						"SunLightColor":
+						"SunlightColor":
 						{
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "@GlobalSunLightColor"
+							"Value": "@GlobalSunlightColor"
 						},
 						"DiffuseFogColor":
 						{

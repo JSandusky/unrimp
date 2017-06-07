@@ -86,7 +86,7 @@ namespace RendererRuntime
 		const LightSceneItem* lightSceneItem = compositorContextData.getLightSceneItem();
 		if (nullptr != mDepthFramebufferPtr && nullptr != cameraSceneItem && cameraSceneItem->getParentSceneNode() && nullptr != lightSceneItem && lightSceneItem->getParentSceneNode())
 		{
-			const glm::vec3 worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::VEC3_FORWARD;
+			const glm::vec3 worldSpaceSunlightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::VEC3_FORWARD;
 			const CompositorResourcePassShadowMap& compositorResourcePassShadowMap = static_cast<const CompositorResourcePassShadowMap&>(getCompositorResourcePass());
 			const uint32_t shadowMapSize = compositorResourcePassShadowMap.getShadowMapSize();
 			mPassData.shadowMapSize = static_cast<int>(shadowMapSize);
@@ -209,7 +209,7 @@ namespace RendererRuntime
 					{
 						// Create a temporary view matrix for the light
 						const glm::vec3& lightCameraPosition = frustumCenter;
-						const glm::vec3 lightCameraTarget = frustumCenter - worldSpaceSunLightDirection;
+						const glm::vec3 lightCameraTarget = frustumCenter - worldSpaceSunlightDirection;
 						const glm::mat4 lightView = glm::lookAt(lightCameraPosition, lightCameraTarget, rightDirection);
 
 						// Calculate an AABB around the frustum corners
@@ -234,7 +234,7 @@ namespace RendererRuntime
 					const glm::vec3 cascadeExtents = maximumExtents - minimumExtents;
 
 					// Get position of the shadow camera
-					const glm::vec3 shadowCameraPosition = frustumCenter + worldSpaceSunLightDirection * -minimumExtents.z;
+					const glm::vec3 shadowCameraPosition = frustumCenter + worldSpaceSunlightDirection * -minimumExtents.z;
 
 					// Come up with a new orthographic camera for the shadow caster
 					depthProjectionMatrix = glm::ortho(minimumExtents.x, maximumExtents.x, minimumExtents.y, maximumExtents.y, 0.0f, cascadeExtents.z);

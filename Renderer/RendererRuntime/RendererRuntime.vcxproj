@@ -127,7 +127,7 @@
     <None Include="include\RendererRuntime\Resource\Scene\Item\Camera\CameraSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\Light\LightSceneItem.inl" />
-    <None Include="include\RendererRuntime\Resource\Scene\Item\Light\SunLightSceneItem.inl" />
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Light\SunlightSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\Mesh\MeshSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\Mesh\SkeletonMeshSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkyboxSceneItem.inl" />
@@ -303,7 +303,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Camera\CameraSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Light\LightSceneItem.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Light\SunLightSceneItem.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Light\SunlightSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Mesh\MeshSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Mesh\SkeletonMeshSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkyboxSceneItem.h" />
@@ -626,7 +626,7 @@
     <ClCompile Include="src\Resource\Scene\Factory\SceneFactory.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\Camera\CameraSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\Light\LightSceneItem.cpp" />
-    <ClCompile Include="src\Resource\Scene\Item\Light\SunLightSceneItem.cpp" />
+    <ClCompile Include="src\Resource\Scene\Item\Light\SunlightSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\Mesh\MeshSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\Mesh\SkeletonMeshSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\Sky\SkyboxSceneItem.cpp" />

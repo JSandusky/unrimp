@@ -82,7 +82,7 @@ namespace
 			DEFINE_CONSTANT(PROJECTION_PARAMETERS)
 			DEFINE_CONSTANT(VIEW_SPACE_FRUSTUM_CORNERS)
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
-			DEFINE_CONSTANT(VIEW_SPACE_SUN_LIGHT_DIRECTION)
+			DEFINE_CONSTANT(VIEW_SPACE_SUNLIGHT_DIRECTION)
 			DEFINE_CONSTANT(VIEWPORT_SIZE)
 			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
 			DEFINE_CONSTANT(LIGHT_CLUSTERS_SCALE)
@@ -499,23 +499,23 @@ namespace RendererRuntime
 			};
 			memcpy(buffer, objectSpaceToClipSpaceMatrix, numberOfBytes);
 		}
-		else if (::detail::VIEW_SPACE_SUN_LIGHT_DIRECTION == referenceValue)
+		else if (::detail::VIEW_SPACE_SUNLIGHT_DIRECTION == referenceValue)
 		{
 			assert(sizeof(float) * 3 == numberOfBytes);
-			glm::vec3 worldSpaceSunLightDirection;
+			glm::vec3 worldSpaceSunlightDirection;
 			const LightSceneItem* lightSceneItem = mCompositorContextData->getLightSceneItem();
 			if (nullptr != lightSceneItem && nullptr != lightSceneItem->getParentSceneNode())
 			{
-				worldSpaceSunLightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::VEC3_FORWARD;
+				worldSpaceSunlightDirection = lightSceneItem->getParentSceneNode()->getGlobalTransform().rotation * Math::VEC3_FORWARD;
 			}
 			else
 			{
 				// Error!
 				assert(false);
-				worldSpaceSunLightDirection = Math::VEC3_FORWARD;
+				worldSpaceSunlightDirection = Math::VEC3_FORWARD;
 			}
-			const glm::vec3 viewSpaceSunLightDirection = glm::normalize(mPassData->worldSpaceToViewSpaceQuaternion * worldSpaceSunLightDirection);	// Normalize shouldn't be necessary, but last chance here to correct rounding errors before the shader is using the normalized direction vector
-			memcpy(buffer, glm::value_ptr(viewSpaceSunLightDirection), numberOfBytes);
+			const glm::vec3 viewSpaceSunlightDirection = glm::normalize(mPassData->worldSpaceToViewSpaceQuaternion * worldSpaceSunlightDirection);	// Normalize shouldn't be necessary, but last chance here to correct rounding errors before the shader is using the normalized direction vector
+			memcpy(buffer, glm::value_ptr(viewSpaceSunlightDirection), numberOfBytes);
 		}
 		else if (::detail::VIEWPORT_SIZE == referenceValue)
 		{

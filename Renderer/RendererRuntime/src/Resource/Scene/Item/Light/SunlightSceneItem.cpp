@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/Light/SunlightSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 #include "RendererRuntime/Resource/Scene/SceneNode.h"
 
@@ -37,13 +37,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const SceneItemTypeId SunLightSceneItem::TYPE_ID("SunLightSceneItem");
+	const SceneItemTypeId SunlightSceneItem::TYPE_ID("SunlightSceneItem");
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	void SunLightSceneItem::calculatedDerivedSunLightProperties()
+	void SunlightSceneItem::calculatedDerivedSunlightProperties()
 	{
 		SceneNode* parentSceneNode = getParentSceneNode();
 		if (nullptr != parentSceneNode)
@@ -133,26 +133,26 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	void SunLightSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t* data)
+	void SunlightSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
-		assert(sizeof(v1Scene::SunLightItem) == numberOfBytes);
+		assert(sizeof(v1Scene::SunlightItem) == numberOfBytes);
 		std::ignore = numberOfBytes;
 
 		// Read data
-		const v1Scene::SunLightItem* sunLightItem = reinterpret_cast<const v1Scene::SunLightItem*>(data);
-		mSunriseTime	  = sunLightItem->sunriseTime;
-		mSunsetTime		  = sunLightItem->sunsetTime;
-		mEastDirection	  = sunLightItem->eastDirection;
-		mAngleOfIncidence = sunLightItem->angleOfIncidence;
-		mTimeOfDay		  = sunLightItem->timeOfDay;
+		const v1Scene::SunlightItem* sunlightItem = reinterpret_cast<const v1Scene::SunlightItem*>(data);
+		mSunriseTime	  = sunlightItem->sunriseTime;
+		mSunsetTime		  = sunlightItem->sunsetTime;
+		mEastDirection	  = sunlightItem->eastDirection;
+		mAngleOfIncidence = sunlightItem->angleOfIncidence;
+		mTimeOfDay		  = sunlightItem->timeOfDay;
 
 		// Sanity checks
 		assert(mSunriseTime >= 00.00f && mSunriseTime < 24.00f);	// O'clock
 		assert(mSunsetTime >= 00.00f && mSunsetTime < 24.00f);		// O'clock
 		assert(mTimeOfDay >= 00.00f && mTimeOfDay < 24.00f);		// O'clock
 
-		// Calculated derived sun light properties
-		calculatedDerivedSunLightProperties();
+		// Calculated derived sunlight properties
+		calculatedDerivedSunlightProperties();
 	}
 
 

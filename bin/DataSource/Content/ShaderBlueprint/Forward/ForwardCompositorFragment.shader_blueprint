@@ -42,10 +42,10 @@ struct PassDataStruct
 {
 	float4   ViewSpaceFrustumCorners[4];
 	float4x4 ClipSpaceToViewSpaceMatrix;
-	float3	 ViewSpaceSunLightDirection;
+	float3	 ViewSpaceSunlightDirection;
 	float	 AtmosphereFogDensity;
 	float3	 AmbientColor;
-	float3	 SunLightColor;
+	float3	 SunlightColor;
 	float3   DiffuseFogColor;
 	float2	 InverseViewportSize;
 	float2	 ProjectionParameters;

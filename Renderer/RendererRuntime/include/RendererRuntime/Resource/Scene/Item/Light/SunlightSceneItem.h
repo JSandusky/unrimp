@@ -42,12 +42,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Sun light scene item
+	*    Sunlight scene item
 	*
 	*  @note
 	*    - Automatically controls light parameters as well as the owner scene node rotation via time-of-day
 	*/
-	class SunLightSceneItem : public LightSceneItem
+	class SunlightSceneItem : public LightSceneItem
 	{
 
 
@@ -106,11 +106,11 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit SunLightSceneItem(SceneResource& sceneResource);
-		inline virtual ~SunLightSceneItem();
-		explicit SunLightSceneItem(const SunLightSceneItem&) = delete;
-		SunLightSceneItem& operator=(const SunLightSceneItem&) = delete;
-		RENDERERRUNTIME_API_EXPORT void calculatedDerivedSunLightProperties();
+		inline explicit SunlightSceneItem(SceneResource& sceneResource);
+		inline virtual ~SunlightSceneItem();
+		explicit SunlightSceneItem(const SunlightSceneItem&) = delete;
+		SunlightSceneItem& operator=(const SunlightSceneItem&) = delete;
+		RENDERERRUNTIME_API_EXPORT void calculatedDerivedSunlightProperties();
 
 
 	//[-------------------------------------------------------]
@@ -138,4 +138,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.inl"
+#include "RendererRuntime/Resource/Scene/Item/Light/SunlightSceneItem.inl"

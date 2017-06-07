@@ -66,10 +66,10 @@ struct PassDataStruct
 	float4   ShadowCascadeSplits;
 	float4	 ViewSpaceToWorldSpaceQuaternion;
 	float4	 WorldSpaceToViewSpaceQuaternion;
-	float3	 ViewSpaceSunLightDirection;
+	float3	 ViewSpaceSunlightDirection;
 	float	 Wetness;
 	float3	 AmbientColor;
-	float3	 SunLightColor;
+	float3	 SunlightColor;
 	float3   CameraWorldSpacePosition;
 	float3	 LightClustersScale;
 	float3	 LightClustersBias;
@@ -190,11 +190,11 @@ MAIN_BEGIN
 	float3 viewSpaceIncident = normalize(PassData.CameraWorldSpacePosition - worldSpacePosition);
 	viewSpaceIncident = MultiplyQuaternionVector(PassData.WorldSpaceToViewSpaceQuaternion, viewSpaceIncident);
 
-	// Directional sun light, our primary light
+	// Directional sunlight, our primary light
 	float shadowVisibility = CalculateShadowVisibility(worldSpacePosition, GetLinearDepthByFragmentDepth(FRAGMENT_POSITION.z));
 	if (shadowVisibility > 0.0f)
 	{
-		color += shadowVisibility * CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunLightDirection, PassData.SunLightColor);
+		color += shadowVisibility * CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, PassData.ViewSpaceSunlightDirection, PassData.SunlightColor);
 	}
 
 	// Perform clustered shading

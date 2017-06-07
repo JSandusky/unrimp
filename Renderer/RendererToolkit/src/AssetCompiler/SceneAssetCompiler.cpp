@@ -33,7 +33,7 @@
 #include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
-#include <RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Light/SunlightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h>
 #include <RendererRuntime/Resource/Material/MaterialProperties.h>
@@ -301,9 +301,9 @@ namespace RendererToolkit
 								{
 									numberOfBytes = sizeof(RendererRuntime::v1Scene::LightItem);
 								}
-								else if (RendererRuntime::SunLightSceneItem::TYPE_ID == typeId)
+								else if (RendererRuntime::SunlightSceneItem::TYPE_ID == typeId)
 								{
-									numberOfBytes = sizeof(RendererRuntime::v1Scene::SunLightItem);
+									numberOfBytes = sizeof(RendererRuntime::v1Scene::SunlightItem);
 								}
 								else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 								{
@@ -384,19 +384,19 @@ namespace RendererToolkit
 										// Write down
 										memoryFile.write(&lightItem, sizeof(RendererRuntime::v1Scene::LightItem));
 									}
-									else if (RendererRuntime::SunLightSceneItem::TYPE_ID == typeId)
+									else if (RendererRuntime::SunlightSceneItem::TYPE_ID == typeId)
 									{
-										RendererRuntime::v1Scene::SunLightItem sunLightItem;
+										RendererRuntime::v1Scene::SunlightItem sunlightItem;
 
 										// Read properties
-										JsonHelper::optionalTimeOfDayProperty(rapidJsonValueItem, "SunriseTime", sunLightItem.sunriseTime);
-										JsonHelper::optionalTimeOfDayProperty(rapidJsonValueItem, "SunsetTime", sunLightItem.sunsetTime);
-										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "EastDirection", sunLightItem.eastDirection);
-										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "AngleOfIncidence", sunLightItem.angleOfIncidence);
-										JsonHelper::optionalTimeOfDayProperty(rapidJsonValueItem, "TimeOfDay", sunLightItem.timeOfDay);
+										JsonHelper::optionalTimeOfDayProperty(rapidJsonValueItem, "SunriseTime", sunlightItem.sunriseTime);
+										JsonHelper::optionalTimeOfDayProperty(rapidJsonValueItem, "SunsetTime", sunlightItem.sunsetTime);
+										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "EastDirection", sunlightItem.eastDirection);
+										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "AngleOfIncidence", sunlightItem.angleOfIncidence);
+										JsonHelper::optionalTimeOfDayProperty(rapidJsonValueItem, "TimeOfDay", sunlightItem.timeOfDay);
 
 										// Write down
-										memoryFile.write(&sunLightItem, sizeof(RendererRuntime::v1Scene::SunLightItem));
+										memoryFile.write(&sunlightItem, sizeof(RendererRuntime::v1Scene::SunlightItem));
 									}
 									else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId || RendererRuntime::SkeletonMeshSceneItem::TYPE_ID == typeId)
 									{

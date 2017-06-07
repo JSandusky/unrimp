@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
 #include "RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/Light/SunLightSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/Light/SunlightSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h"
 
 
@@ -60,9 +60,9 @@ namespace RendererRuntime
 		{
 			sceneItem = new CameraSceneItem(sceneResource);
 		}
-		else if (sceneItemTypeId == SunLightSceneItem::TYPE_ID)
+		else if (sceneItemTypeId == SunlightSceneItem::TYPE_ID)
 		{
-			sceneItem = new SunLightSceneItem(sceneResource);
+			sceneItem = new SunlightSceneItem(sceneResource);
 		}
 		else if (sceneItemTypeId == SkyboxSceneItem::TYPE_ID)
 		{
