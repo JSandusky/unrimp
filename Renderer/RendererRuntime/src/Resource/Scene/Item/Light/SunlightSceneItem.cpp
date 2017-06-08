@@ -48,85 +48,82 @@ namespace RendererRuntime
 		SceneNode* parentSceneNode = getParentSceneNode();
 		if (nullptr != parentSceneNode)
 		{
-			{ // Calculate normalized world space sun direction vector
-			  // -> Basing on https://raw.githubusercontent.com/aoighost/SkyX/master/SkyX/Source/BasicController.cpp - "SkyX::BasicController::update()"
-			  // -> TODO(co) Review "Simulating a day’s sky" - "Calculating solar position" - https://nicoschertler.wordpress.com/2013/04/03/simulating-a-days-sky/
-			  // -> 24h day: 0______A(Sunrise)_______B(Sunset)______24
-				float y = 0.0f;
-				const float X = mTimeOfDay;
-				const float A = mSunriseTime;
-				const float B = mSunsetTime;
-				const float AB  = A + 24.0f - B;
-				const float AB_ = B - A;
-				const float XB  = X + 24.0f - B;
-				if (X < A || X > B)
+			// Calculate normalized world space sun direction vector
+			// -> Basing on https://raw.githubusercontent.com/aoighost/SkyX/master/SkyX/Source/BasicController.cpp - "SkyX::BasicController::update()"
+			// -> TODO(co) Review "Simulating a day’s sky" - "Calculating solar position" - https://nicoschertler.wordpress.com/2013/04/03/simulating-a-days-sky/
+			// -> 24h day: 0______A(Sunrise)_______B(Sunset)______24
+			float y = 0.0f;
+			const float X = mTimeOfDay;
+			const float A = mSunriseTime;
+			const float B = mSunsetTime;
+			const float AB  = A + 24.0f - B;
+			const float AB_ = B - A;
+			const float XB  = X + 24.0f - B;
+			if (X < A || X > B)
+			{
+				if (X < A)
 				{
-					if (X < A)
-					{
-						y = -XB / AB;
-					}
-					else
-					{
-						y = -(X - B) / AB;
-					}
-					if (y > -0.5f)
-					{
-						y *= 2.0f;
-					}
-					else
-					{
-						y = -(1.0f + y) * 2.0f;
-					}
+					y = -XB / AB;
 				}
 				else
 				{
-					y = (X - A) / (B - A);
-					if (y < 0.5f)
-					{
-						y *= 2.0f;
-					}
-					else
-					{
-						y = (1.0f - y) * 2.0f;
-					}
+					y = -(X - B) / AB;
 				}
+				if (y > -0.5f)
+				{
+					y *= 2.0f;
+				}
+				else
+				{
+					y = -(1.0f + y) * 2.0f;
+				}
+			}
+			else
+			{
+				y = (X - A) / (B - A);
+				if (y < 0.5f)
+				{
+					y *= 2.0f;
+				}
+				else
+				{
+					y = (1.0f - y) * 2.0f;
+				}
+			}
 
-				// Get the east direction vector, clockwise orientation starting from north for zero
-				glm::vec2 eastDirection = glm::vec2(-std::sin(mEastDirection), std::cos(mEastDirection));
-				if (X > A && X < B)
-				{
-					if (X > (A + AB_ * 0.5f))
-					{
-						eastDirection = -eastDirection;
-					}
-				}
-				else if (X <= A)
-				{
-					if (XB < (24.0f - AB_) * 0.5f)
-					{
-						eastDirection = -eastDirection;
-					}
-				}
-				else if ((X - B) < (24.0f - AB_) * 0.5f)
+			// Get the east direction vector, clockwise orientation starting from north for zero
+			glm::vec2 eastDirection = glm::vec2(-std::sin(mEastDirection), std::cos(mEastDirection));
+			if (X > A && X < B)
+			{
+				if (X > (A + AB_ * 0.5f))
 				{
 					eastDirection = -eastDirection;
 				}
-
-				// Calculate the sun direction vector
-				const float ydeg = glm::pi<float>() * 0.5f * y;
-				const float sn = std::sin(ydeg);
-				const float cs = std::cos(ydeg);
-				glm::vec3 sunDirection = glm::vec3(eastDirection.x * cs, sn, eastDirection.y * cs);
-
-				// Modify the sun direction vector so one can control whether or not the light comes perpendicularly at 12 o'clock
-				sunDirection = glm::angleAxis(mAngleOfIncidence, Math::VEC3_FORWARD) * sunDirection;
-
-				// Tell the owner scene node about the new rotation
-				// TODO(co) Can we simplify this?
-				parentSceneNode->setRotation(glm::inverse(glm::quat(glm::lookAt(Math::VEC3_ZERO, sunDirection, Math::VEC3_UP))));
+			}
+			else if (X <= A)
+			{
+				if (XB < (24.0f - AB_) * 0.5f)
+				{
+					eastDirection = -eastDirection;
+				}
+			}
+			else if ((X - B) < (24.0f - AB_) * 0.5f)
+			{
+				eastDirection = -eastDirection;
 			}
 
-			// TODO(co) Calculate sun color via "Solar Radiance Calculation" - https://www.gamedev.net/topic/671214-simple-solar-radiance-calculation/
+			// Calculate the sun direction vector
+			const float ydeg = glm::pi<float>() * 0.5f * y;
+			const float sn = std::sin(ydeg);
+			const float cs = std::cos(ydeg);
+			glm::vec3 sunDirection = glm::vec3(eastDirection.x * cs, sn, eastDirection.y * cs);
+
+			// Modify the sun direction vector so one can control whether or not the light comes perpendicularly at 12 o'clock
+			sunDirection = glm::angleAxis(mAngleOfIncidence, Math::VEC3_FORWARD) * sunDirection;
+
+			// Tell the owner scene node about the new rotation
+			// TODO(co) Can we simplify this?
+			parentSceneNode->setRotation(glm::inverse(glm::quat(glm::lookAt(Math::VEC3_ZERO, sunDirection, Math::VEC3_UP))));
 		}
 	}
 
