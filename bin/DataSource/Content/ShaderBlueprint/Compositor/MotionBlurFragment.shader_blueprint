@@ -87,8 +87,14 @@ MAIN_BEGIN
 		float2 velocity = SAMPLE_2D_LOD(VelocityMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).xy;
 	@end
 
+	// Apply strength to velocity
+	velocity *= PassData.Strength;
+
 	// Apply timing to velocity
-	velocity *= PassData.PastSecondsSinceLastFrame * PassData.Strength;
+	// -> "Motion Blur Tutorial" - "A sly problem" - "mblurScale = currentFps / targeFps" - http://john-chapman-graphics.blogspot.de/2013/01/what-is-motion-blur-motion-pictures-are.html
+	//    "... if the framerate goes up we increase the blur length, if it goes down we decrease the blur length. When I say "goes up" or "goes down" I mean "changes relative to the target framerate.""
+	const float TARGET_FPS = 60.0f;
+	velocity *= (1.0f / TARGET_FPS) / PassData.PastSecondsSinceLastFrame;
 
 	// Clamp to a maximum velocity: The maximum we can go without artifacts is 1.4f * PassData.NumberOfSamples... but we can fudge things a little
 	// -> Basing on https://mynameismjp.wordpress.com/the-museum/samples-tutorials-tools/motion-blur-sample/ and http://john-chapman-graphics.blogspot.de/2013/01/per-object-motion-blur.html
