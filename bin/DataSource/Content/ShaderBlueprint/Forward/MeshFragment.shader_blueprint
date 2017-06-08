@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 @includepiece(ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/MotionBlur.asset)
 
 
 //[-------------------------------------------------------]
@@ -210,16 +211,7 @@ MAIN_BEGIN
 	float edgePixel = (COVERAGE_MASK != PassData.FullCoverageMask) ? 1.0f : 0.0f;
 
 	// Calculate screen space velocity
-	float2 previousClipSpacePosition = (MAIN_INPUT(PreviousClipSpacePositionVS).xy / MAIN_INPUT(PreviousClipSpacePositionVS).z);
-	@property(HLSL)
-		previousClipSpacePosition = previousClipSpacePosition * float2(0.5f, -0.5f) + 0.5f;
-	@end
-	@property(!HLSL)
-		previousClipSpacePosition = previousClipSpacePosition * float2(0.5f, 0.5f) + 0.5f;
-	@end
-	previousClipSpacePosition *= PassData.ViewportSize;
-	float2 velocity = FRAGMENT_POSITION.xy - previousClipSpacePosition;
-	velocity /= PassData.ViewportSize;
+	@insertpiece(DefineCalculateScreenSpaceVelocity)
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(color, edgePixel);

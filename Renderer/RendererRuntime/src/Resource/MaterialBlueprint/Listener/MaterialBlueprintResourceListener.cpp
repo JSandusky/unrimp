@@ -75,6 +75,7 @@ namespace
 			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_QUATERNION)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(PREVIOUS_WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
+			DEFINE_CONSTANT(PREVIOUS_WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_TEXTURE_SPACE_MATRIX)
 			DEFINE_CONSTANT(CLIP_SPACE_TO_VIEW_SPACE_MATRIX)
@@ -371,6 +372,7 @@ namespace RendererRuntime
 		mPassData->worldSpaceToViewSpaceQuaternion = glm::quat(mPassData->worldSpaceToViewSpaceMatrix);
 		mPassData->worldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * mPassData->worldSpaceToViewSpaceMatrix;
 		mPassData->previousWorldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * previousWorldSpaceToViewSpaceMatrix;	// TODO(co) Do also support the previous view space to clip space matrix so e.g. FOV changes have an influence?
+		mPassData->previousWorldSpaceToViewSpaceMatrix = previousWorldSpaceToViewSpaceMatrix;
 		mPassData->viewSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix;
 	}
 
@@ -408,6 +410,11 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->previousWorldSpaceToClipSpaceMatrix), numberOfBytes);
+		}
+		else if (::detail::PREVIOUS_WORLD_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->previousWorldSpaceToViewSpaceMatrix), numberOfBytes);
 		}
 		else if (::detail::VIEW_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{

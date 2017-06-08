@@ -114,6 +114,12 @@
 							"ValueType": "FLOAT_4_4",
 							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_MATRIX"
 						},
+						"PreviousWorldSpaceToViewSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@PREVIOUS_WORLD_SPACE_TO_VIEW_SPACE_MATRIX"
+						},
 						"ViewSpaceToClipSpaceMatrix":
 						{
 							"Usage": "PASS_REFERENCE",
@@ -137,6 +143,12 @@
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@WORLD_SPACE_SUNLIGHT_DIRECTION"
+						},
+						"ViewportSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@VIEWPORT_SIZE"
 						}
 					}
 				}

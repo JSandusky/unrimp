@@ -149,8 +149,12 @@
 		{
 			"GBufferFramebuffer":
 			{
-				"Description": "GBuffer render target",
 				"ColorTextures": [ "Example/Texture/Dynamic/MultisampleGBufferRenderTarget0", "Example/Texture/Dynamic/MultisampleGBufferRenderTarget1", "Example/Texture/Dynamic/MultisampleGBufferRenderTarget2", "Example/Texture/Dynamic/MultisampleVelocityRenderTarget" ],
+				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
+			},
+			"GBufferSkyFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/MultisampleGBufferRenderTarget0", "Example/Texture/Dynamic/MultisampleVelocityRenderTarget" ],
 				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			},
 			"ScreenSpaceAmbientOcclusionFramebuffer":
@@ -256,7 +260,10 @@
 					"MinimumRenderQueueIndex": "0",
 					"MaximumRenderQueueIndex": "253",
 					"MaterialTechnique": "Deferred"
-				},
+				}
+			},
+			"GBufferSkyFramebuffer":
+			{
 				"Scene":
 				{
 					"Description": "Render skybox",

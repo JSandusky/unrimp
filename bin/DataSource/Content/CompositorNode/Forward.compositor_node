@@ -145,6 +145,16 @@
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrMultisampleColorRenderTarget", "Example/Texture/Dynamic/MultisampleNormalRenderTarget", "Example/Texture/Dynamic/MultisampleVelocityRenderTarget" ],
 				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			},
+			"HdrSkyMultisampleFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrMultisampleColorRenderTarget", "Example/Texture/Dynamic/MultisampleVelocityRenderTarget" ],
+				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
+			},
+			"HdrTransparentMultisampleFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrMultisampleColorRenderTarget" ],
+				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
+			},
 			"HdrFramebuffer0":
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget0" ]
@@ -250,7 +260,10 @@
 					"MinimumRenderQueueIndex": "0",
 					"MaximumRenderQueueIndex": "253",
 					"MaterialTechnique": "Forward"
-				},
+				}
+			},
+			"HdrSkyMultisampleFramebuffer":
+			{
 				"Scene":
 				{
 					"Description": "Render skybox",
@@ -258,7 +271,10 @@
 					"MinimumRenderQueueIndex": "254",
 					"MaximumRenderQueueIndex": "254",
 					"MaterialTechnique": "Default"
-				},
+				}
+			},
+			"HdrTransparentMultisampleFramebuffer":
+			{
 				"Scene":
 				{
 					"Description": "Render transparent objects",

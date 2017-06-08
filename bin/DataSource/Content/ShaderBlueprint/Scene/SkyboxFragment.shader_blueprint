@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 @includepiece(ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/MotionBlur.asset)
 
 
 //[-------------------------------------------------------]
@@ -30,20 +31,25 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE(float3, TexCoordVS, 0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(float3, TexCoordVS, 				  0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(float3, PreviousClipSpacePositionVS, 1)	// Previous clip space position
+	DECLARE_FRAGMENT_POSITION
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_COLOR(0)
+	OUTPUT_COLOR(0)	// rgb = diffuse color, a = alpha
+	OUTPUT_COLOR(1)	// rg  = screen space velocity
 OUTPUT_END
 
 // Uniform buffers
 struct PassDataStruct
 {
 	float4x4 WorldSpaceToViewSpaceMatrix;
+	float4x4 PreviousWorldSpaceToViewSpaceMatrix;
 	float4x4 ViewSpaceToClipSpaceMatrix;
 	float4   HosekWilkieSkyCoefficients1[4];
 	float4   HosekWilkieSkyCoefficients2[4];
 	float3   WorldSpaceSunlightDirection;
+	float2   ViewportSize;
 };
 UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -128,6 +134,7 @@ UNIFORM_BUFFER_END
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
+	// Calculate the sky color
 	@property(UseProceduralSky)
 		float3 color = CalculateHosekWilkieSkyColor(normalize(MAIN_INPUT(TexCoordVS)));
 	@end
@@ -136,6 +143,10 @@ MAIN_BEGIN
 		float3 color = SAMPLE_CUBE_LOD(EnvironmentCubeMap, SamplerLinear, float4(-MAIN_INPUT(TexCoordVS), 0.0f)).rgb;
 	@end
 
+	// Calculate screen space velocity
+	@insertpiece(DefineCalculateScreenSpaceVelocity)
+
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(color, 1.0f);
+	MAIN_OUTPUT_COLOR(1) = float4(velocity.x, velocity.y, 0.0f, 0.0f);
 MAIN_END
