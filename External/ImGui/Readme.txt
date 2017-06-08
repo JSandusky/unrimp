@@ -1,4 +1,4 @@
-ImGui (latest commit c4db79f34baab154df9882b67a1404be00d11fd5 - June 12, 2016)
+ImGui (latest commit 1cd1ca259efd38d560ac3c44e6353af81a9b72e3 - June 2, 2017)
 - License: "MIT License"
 - Online: https://github.com/ocornut/imgui
 - Directly compiled and linked inside renderer runtime, hence "src" sub-directory
