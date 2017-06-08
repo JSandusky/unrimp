@@ -64,7 +64,7 @@ MAIN_BEGIN
 
 	// Transform to clip-space
 	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, float4(viewSpacePosition, 1.0f));
-	MAIN_OUTPUT(PreviousClipSpacePositionVS) = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, float4(previousPiewSpacePosition, 1.0f)).xyz;
+	MAIN_OUTPUT(PreviousClipSpacePositionVS) = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, float4(previousPiewSpacePosition, 1.0f)).xyw;
 
 	// Pass through the object space position as texture coordinate
 	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(Position);
