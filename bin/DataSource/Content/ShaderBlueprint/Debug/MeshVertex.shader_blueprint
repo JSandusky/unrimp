@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 @includepiece(ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
+@includepiece(ShaderPiece/Skinning.asset)
 
 
 //[-------------------------------------------------------]
