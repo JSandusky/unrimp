@@ -362,6 +362,14 @@ namespace RendererRuntime
 			imGuiIo.IniFilename = nullptr;
 			imGuiIo.LogFilename = nullptr;
 		}
+
+		// TODO(co) When having ImGui window rounding and anti-aliased shapes active (ImGui default) and using
+		//          "unrimp\bin\DataSource\Content\ShaderBlueprint\Debug\GuiFragment.shader_blueprint" for a blurred
+		//          GUI background, there's a nasty bright line at the left and top side. When disabling anti-aliased
+		//          shapes or window rounding this artifact is gone. Decided to disable window rounding to keep the
+		//          nicely blurred GUI background without the visual artifact. Might be worth digging into
+		//          "ImDrawList::AddConvexPolyFilled()" in detail so see whether or not we can change something inside ImGui.
+		ImGui::GetStyle().WindowRounding = 0.0f;
 	}
 
 	DebugGuiManager::~DebugGuiManager()
