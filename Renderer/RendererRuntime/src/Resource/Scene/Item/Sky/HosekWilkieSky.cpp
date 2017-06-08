@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Item/Sky/HosekWilkieSky.h"
+#include "RendererRuntime/Core/Math/Math.h"
 
 
 //[-------------------------------------------------------]
@@ -81,26 +82,6 @@ namespace
 			return (1.0f + A * glm::exp(B / (cos_theta + 0.01f))) * (C + D * glm::exp(E * gamma) + F * (cos_gamma * cos_gamma) + G * chi + I * static_cast<float>(std::sqrt(std::max(0.0f, cos_theta))));
 		}
 
-		/*
-		TOOD(co) Can this be used for procedural sun color? Other solution at "Simple Solar Radiance Calculation" - https://www.gamedev.net/topic/671214-simple-solar-radiance-calculation/ 
-		float perez(float theta, float gamma, float A, float B, float C, float D, float E)
-		{
-			return static_cast<float>(1.0f + A * glm::exp(B / (std::cos(theta) + 0.01))) * (1.0f + C * glm::exp(D * gamma) + E * std::cos(gamma) * std::cos(gamma));
-		}
-
-		float zenith_luminance(float sunTheta, float turbidity)
-		{
-			const float chi = (4.0f / 9.0f - turbidity / 120) * (glm::pi<float>() - 2 * sunTheta);
-			return static_cast<float>((4.0453 * turbidity - 4.9710) * std::tan(chi) - 0.2155 * turbidity + 2.4192);
-		}
-
-		float zenith_chromacity(const glm::vec4& c0, const glm::vec4& c1, const glm::vec4& c2, float sunTheta, float turbidity)
-		{
-			const glm::vec4 thetav = glm::vec4(sunTheta * sunTheta * sunTheta, sunTheta * sunTheta, sunTheta, 1);
-			return dot(glm::vec3(turbidity * turbidity, turbidity, 1), glm::vec3(dot(thetav, c0), dot(thetav, c1), dot(thetav, c2)));
-		}
-		*/
-
 		RendererRuntime::HosekWilkieSky::Coefficients compute(const glm::vec3& worldSpaceSunDirection, float turbidity, float albedo, float normalizedSunY)
 		{
 			glm::vec3 A, B, C, D, E, F, G, H, I;
@@ -135,6 +116,59 @@ namespace
 			return {A, B, C, D, E, F, G, H, I, Z};
 		}
 
+		/**
+		*  @brief
+		*    Implementation of Peter Shirley's method for mapping from a unit square to a unit circle
+		*
+		*  @note
+		*    - The implementation is basing on "Solar Radiance Calculation" - https://www.gamedev.net/topic/671214-simple-solar-radiance-calculation/
+		*/
+		glm::vec2 squareToConcentricDiskMapping(float x, float y)
+		{
+			float phi = 0.0f;
+			float r = 0.0f;
+
+			// -- (a,b) is now on [-1,1]ˆ2
+			const float a = 2.0f * x - 1.0f;
+			const float b = 2.0f * y - 1.0f;
+			if (a > -b)		// Region 1 or 2
+			{
+				if (a > b)	// Region 1, also |a| > |b|
+				{
+					r = a;
+					phi = (glm::pi<float>() * 0.25f) * (b / a);
+				}
+				else		// Region 2, also |b| > |a|
+				{
+					r = b;
+					phi = (glm::pi<float>() * 0.25f) * (2.0f - (a / b));
+				}
+			}
+			else			// region 3 or 4
+			{
+				if (a < b)	// Region 3, also |a| >= |b|, a != 0
+				{
+					r = -a;
+					phi = (glm::pi<float>() * 0.25f) * (4.0f + (b / a));
+				}
+				else		// Region 4, |b| >= |a|, but a==0 and b==0 could occur.
+				{
+					r = -b;
+					if (b != 0.0f)
+					{
+						phi = (glm::pi<float>() * 0.25f) * (6.0f - (a / b));
+					}
+					else
+					{
+						phi = 0.0f;
+					}
+				}
+			}
+
+			// Done
+			return glm::vec2(r * std::cos(phi), r * std::sin(phi));
+		}
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -162,6 +196,36 @@ namespace RendererRuntime
 			mAlbedo = albedo;
 			mNormalizedSunY = normalizedSunY;
 			mCoefficients = ::detail::compute(mWorldSpaceSunDirection, mTurbidity, mAlbedo, mNormalizedSunY);
+
+			// Approximation of the sun color
+			// TODO(co) This is a most simple hack, evaluate more accurate solutions like "Solar Radiance Calculation" - https://www.gamedev.net/topic/671214-simple-solar-radiance-calculation/
+			mSunColor = Math::VEC3_ZERO;
+			if (worldSpaceSunDirection.y > 0.0f)
+			{
+				// The idea is basing on "Solar Radiance Calculation" - https://www.gamedev.net/topic/671214-simple-solar-radiance-calculation/
+				const float thetaS = std::acos(1.0f - worldSpaceSunDirection.y);
+				const float elevation = (glm::pi<float>() * 0.5f) - thetaS;
+				const float SunSize = glm::radians(0.27f);	// Angular radius of the sun from Earth
+				static const int NUMBER_OF_DISC_SAMPLES = 8;
+				for (int x = 0; x < NUMBER_OF_DISC_SAMPLES; ++x)
+				{
+					for (int y = 0; y < NUMBER_OF_DISC_SAMPLES; ++y)
+					{
+						const float u = (x + 0.5f) / NUMBER_OF_DISC_SAMPLES;
+						const float v = (y + 0.5f) / NUMBER_OF_DISC_SAMPLES;
+						const glm::vec2 discSamplePos = ::detail::squareToConcentricDiskMapping(u, v);
+						const float cos_theta = elevation + discSamplePos.y * SunSize;
+						const float cos_gamma = discSamplePos.x * SunSize;
+						const float gamma = acos(cos_gamma);
+						mSunColor += ::detail::hosekWilkie(cos_theta, gamma, cos_gamma, mCoefficients.A, mCoefficients.B, mCoefficients.C, mCoefficients.D, mCoefficients.E, mCoefficients.F, mCoefficients.G, mCoefficients.H, mCoefficients.I);
+					}
+				}
+				mSunColor /= NUMBER_OF_DISC_SAMPLES * NUMBER_OF_DISC_SAMPLES;
+				mSunColor = glm::max(mSunColor, Math::VEC3_ZERO);
+
+				// Some visual adjustments so the simple approximation doesn't look that wrong
+				mSunColor = glm::vec3(mSunColor.b, mSunColor.g, mSunColor.r) * 2.0f;
+			}
 		}
 	}
 

@@ -102,7 +102,6 @@ FirstScene::FirstScene() :
 	mRotationSpeed(0.0f),
 	mShowSkeleton(false),
 	mHighQualityLighting(true),
-	mSunlightColor{1.0f, 1.0f, 1.0f},
 	mWetness(0.0f),
 	mUseEmissiveMap(true),
 	mDiffuseColor{1.0f, 1.0f, 1.0f},
@@ -231,7 +230,6 @@ void FirstScene::onUpdate()
 		{ // Tell the material blueprint resource manager about our global material properties
 			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
 			globalMaterialProperties.setPropertyById("GlobalHighQualityLighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mHighQualityLighting));
-			globalMaterialProperties.setPropertyById("GlobalSunlightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunlightColor[0] * 2.0f, mSunlightColor[1] * 2.0f, mSunlightColor[2] * 2.0f));
 			globalMaterialProperties.setPropertyById("GlobalWetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
 		}
 
@@ -460,7 +458,6 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					ImGui::SliderFloat("Time of Day", &timeOfDay, 0.0f, 23.59f, "%.2f");
 					mSunlightSceneItem->setTimeOfDay(timeOfDay);
 				}
-				ImGui::ColorEdit3("Sunlight Color", mSunlightColor);
 				ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
 
 				// Material properties

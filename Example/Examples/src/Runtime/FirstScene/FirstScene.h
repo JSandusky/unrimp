@@ -186,7 +186,6 @@ private:
 	float	   mRotationSpeed;
 	bool	   mShowSkeleton;
 	bool	   mHighQualityLighting;
-	float	   mSunlightColor[3];
 	float	   mWetness;
 	bool	   mUseEmissiveMap;
 	float	   mDiffuseColor[3];

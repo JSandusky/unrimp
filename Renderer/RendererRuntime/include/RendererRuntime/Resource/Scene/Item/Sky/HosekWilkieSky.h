@@ -77,6 +77,7 @@ namespace RendererRuntime
 		inline HosekWilkieSky();
 		inline ~HosekWilkieSky();
 		inline const Coefficients& getCoefficients() const;
+		inline const glm::vec3& getSunColor() const;
 		void recalculate(const glm::vec3& worldSpaceSunDirection, float turbidity = 4.0f, float albedo = 0.1f, float normalizedSunY = 1.15f);
 
 
@@ -89,6 +90,7 @@ namespace RendererRuntime
 		float		 mAlbedo;
 		float		 mNormalizedSunY;
 		Coefficients mCoefficients;
+		glm::vec3	 mSunColor;
 
 
 	};

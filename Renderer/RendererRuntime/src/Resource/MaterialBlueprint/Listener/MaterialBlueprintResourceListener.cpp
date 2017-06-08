@@ -85,6 +85,7 @@ namespace
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_SUNLIGHT_DIRECTION)
 			DEFINE_CONSTANT(WORLD_SPACE_SUNLIGHT_DIRECTION)
+			DEFINE_CONSTANT(SUNLIGHT_COLOR)
 			DEFINE_CONSTANT(VIEWPORT_SIZE)
 			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
 			DEFINE_CONSTANT(LIGHT_CLUSTERS_SCALE)
@@ -523,6 +524,19 @@ namespace RendererRuntime
 			assert(sizeof(float) * 3 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(getWorldSpaceSunlightDirection()), numberOfBytes);
 		}
+		else if (::detail::SUNLIGHT_COLOR == referenceValue)
+		{
+			assert(sizeof(float) * 3 == numberOfBytes);
+			const LightSceneItem* lightSceneItem = mCompositorContextData->getLightSceneItem();
+			if (nullptr != lightSceneItem)
+			{
+				memcpy(buffer, glm::value_ptr(lightSceneItem->getColor()), numberOfBytes);
+			}
+			else
+			{
+				memcpy(buffer, glm::value_ptr(Math::VEC3_ONE), numberOfBytes);
+			}
+		}
 		else if (::detail::VIEWPORT_SIZE == referenceValue)
 		{
 			assert(sizeof(float) * 2 == numberOfBytes);
@@ -756,6 +770,14 @@ namespace RendererRuntime
 				mHosekWilkieSky = new HosekWilkieSky();
 			}
 			mHosekWilkieSky->recalculate(getWorldSpaceSunlightDirection());
+			{ // Set sunlight color
+				// TODO(co) Get rid of the evil const-cast
+				LightSceneItem* lightSceneItem = const_cast<LightSceneItem*>(mCompositorContextData->getLightSceneItem());
+				if (nullptr != lightSceneItem)
+				{
+					lightSceneItem->setColor(mHosekWilkieSky->getSunColor());
+				}
+			}
 
 			// Copy the data
 			memcpy(buffer, glm::value_ptr(mHosekWilkieSky->getCoefficients().F) + 1, numberOfBytes);

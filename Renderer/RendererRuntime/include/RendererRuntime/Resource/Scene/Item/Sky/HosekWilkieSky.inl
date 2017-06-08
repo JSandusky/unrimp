@@ -46,6 +46,11 @@ namespace RendererRuntime
 		return mCoefficients;
 	}
 
+	inline const glm::vec3& HosekWilkieSky::getSunColor() const
+	{
+		return mSunColor;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

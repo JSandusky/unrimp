@@ -80,6 +80,21 @@
 			{
 				"Properties":
 				{
+					"Position": "7 13.3 3",
+					"Rotation": "0.0 45.0 0.0 DEGREES",
+					"Scale": "0.07 0.07 0.07"
+				},
+				"Items":
+				{
+					"MeshSceneItem":
+					{
+						"Mesh": "Mesh/Imrod/Imrod.asset"
+					}
+				}
+			},
+			{
+				"Properties":
+				{
 					"Scale": "0.01 0.01 0.01"
 				},
 				"Items":

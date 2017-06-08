@@ -62,14 +62,7 @@
 				"ValueType": "FLOAT_3",
 				"Value": "0.2 0.2 0.2",
 				"Description": "Fallback value in case there's no ambient color global material property"
-			},
-			"GlobalSunlightColor":
-			{
-				"Usage": "GLOBAL_REFERENCE_FALLBACK",
-				"ValueType": "FLOAT_3",
-				"Value": "1.0 1.0 1.0",
-				"Description": "Fallback value in case there's no sunlight color global material property"
-			}			
+			}
 		},
 		"RootSignature":
 		{
@@ -208,9 +201,9 @@
 						},
 						"SunlightColor":
 						{
-							"Usage": "GLOBAL_REFERENCE",
+							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "@GlobalSunlightColor"
+							"Value": "@SUNLIGHT_COLOR"
 						},
 						"DiffuseFogColor":
 						{

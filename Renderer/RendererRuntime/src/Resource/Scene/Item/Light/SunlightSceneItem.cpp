@@ -50,6 +50,7 @@ namespace RendererRuntime
 		{
 			{ // Calculate normalized world space sun direction vector
 			  // -> Basing on https://raw.githubusercontent.com/aoighost/SkyX/master/SkyX/Source/BasicController.cpp - "SkyX::BasicController::update()"
+			  // -> TODO(co) Review "Simulating a day’s sky" - "Calculating solar position" - https://nicoschertler.wordpress.com/2013/04/03/simulating-a-days-sky/
 			  // -> 24h day: 0______A(Sunrise)_______B(Sunset)______24
 				float y = 0.0f;
 				const float X = mTimeOfDay;
