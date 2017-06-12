@@ -300,16 +300,16 @@ MAIN_BEGIN
 	}
 
 	@property(NumberOfMultisamples)
-		float3 output = sum / max(totalWeight, 0.00001f);
+		float3 result = sum / max(totalWeight, 0.00001f);
 		float alpha = SAMPLE_2D_MS(ColorMap, int2(FRAGMENT_POSITION.xy), 0).a;
 	@end
 	@property(!NumberOfMultisamples)
 		float4 color = TEXTURE_FETCH_2D(ColorMap, int3(fragmentPosition, 0));
-		float3 output = color.rgb;
+		float3 result = color.rgb;
 		float alpha = color.a;
 	@end
 
-	output = max(output, float3(0.0f, 0.0f, 0.0f));
+	result = max(result, float3(0.0f, 0.0f, 0.0f));
 
 	// Avoid floating point division by zero
 	if (0.0f == mWeight)
@@ -318,7 +318,7 @@ MAIN_BEGIN
 	}
 
 	{ // Temporal AA
-		float3 currentColor = output;
+		float3 currentColor = result;
 		float3 previousColor = Reproject(fragmentPosition);
 
 		{ // Clamp mode: Variance clip
@@ -336,9 +336,9 @@ MAIN_BEGIN
 		weightA *= 1.0f / (1.0f + ColorToLuminance(currentColor));
 		weightB *= 1.0f / (1.0f + ColorToLuminance(previousColor));
 
-		output = (currentColor * weightA + previousColor * weightB) / (weightA + weightB);
+		result = (currentColor * weightA + previousColor * weightB) / (weightA + weightB);
 	}
 
 	// Done
-	MAIN_OUTPUT_COLOR(0) = float4(output.rgb, alpha);
+	MAIN_OUTPUT_COLOR(0) = float4(result.rgb, alpha);
 MAIN_END
