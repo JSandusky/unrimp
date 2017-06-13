@@ -51,6 +51,126 @@ PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		// Implementation from https://gist.github.com/fairlight1337/4935ae72bcbcc1ba5c72 - with Unrimp code style adoptions
+
+		// Copyright (c) 2014, Jan Winkler <winkler@cs.uni-bremen.de>
+		// All rights reserved.
+		//
+		// Redistribution and use in source and binary forms, with or without
+		// modification, are permitted provided that the following conditions are met:
+		//
+		//     * Redistributions of source code must retain the above copyright
+		//       notice, this list of conditions and the following disclaimer.
+		//     * Redistributions in binary form must reproduce the above copyright
+		//       notice, this list of conditions and the following disclaimer in the
+		//       documentation and/or other materials provided with the distribution.
+		//     * Neither the name of Universität Bremen nor the names of its
+		//       contributors may be used to endorse or promote products derived from
+		//       this software without specific prior written permission.
+		//
+		// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+		// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+		// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+		// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+		// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+		// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+		// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+		// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+		// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+		// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+		// POSSIBILITY OF SUCH DAMAGE.
+
+		/* Author: Jan Winkler */
+		/*! \brief Convert HSV to RGB color space
+
+		  Converts a given set of HSV values `h', `s', `v' into RGB
+		  coordinates. The output RGB values are in the range [0, 1], and
+		  the input HSV values are in the ranges h = [0, 360], and s, v =
+		  [0, 1], respectively.
+
+		  \param h Hue component, used as input, range: [0, 360]
+		  \param s Hue component, used as input, range: [0, 1]
+		  \param v Hue component, used as input, range: [0, 1]
+		  \param r Red component, used as output, range: [0, 1]
+		  \param g Green component, used as output, range: [0, 1]
+		  \param b Blue component, used as output, range: [0, 1]
+
+		*/
+		void hsvToRgb(float h, float s, float v, float& r, float& g, float& b)
+		{
+			const float c = v * s;	// Chroma
+			const float hPrime = static_cast<float>(fmod(h / 60.0, 6));
+			const float x = static_cast<float>(c * (1 - fabs(fmod(hPrime, 2) - 1)));
+			const float m = v - c;
+
+			if (0 <= hPrime && hPrime < 1)
+			{
+				r = c;
+				g = x;
+				b = 0;
+			}
+			else if (1 <= hPrime && hPrime < 2)
+			{
+				r = x;
+				g = c;
+				b = 0;
+			}
+			else if (2 <= hPrime && hPrime < 3)
+			{
+				r = 0;
+				g = c;
+				b = x;
+			}
+			else if (3 <= hPrime && hPrime < 4)
+			{
+				r = 0;
+				g = x;
+				b = c;
+			}
+			else if (4 <= hPrime && hPrime < 5)
+			{
+				r = x;
+				g = 0;
+				b = c;
+			}
+			else if (5 <= hPrime && hPrime < 6)
+			{
+				r = c;
+				g = 0;
+				b = x;
+			}
+			else
+			{
+				r = 0;
+				g = 0;
+				b = 0;
+			}
+
+			r += m;
+			g += m;
+			b += m;
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -209,6 +329,74 @@ namespace RendererToolkit
 			else
 			{
 				throw std::runtime_error('\"' + std::string(propertyName) + "\" needs exactly" + std::to_string(numberOfComponents) + " components, but " + std::to_string(elements.size()) + " components given");
+			}
+		}
+	}
+
+	void JsonHelper::optionalRgbColorProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float value[3])
+	{
+		// RGB color values can be defined as "RGB" (e.g. "255 0 255 RGB"), "RGB_FLOAT" (e.g. "1.0 0.0 1.0 RGB_FLOAT"), "HEX" (e.g. "FF00FF HEX") or "HSV" (e.g. "120.0 1 1 HSV")
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			std::vector<std::string> elements;
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+			if (elements.size() == 4)
+			{
+				if (elements[3] == "RGB")
+				{
+					for (uint8_t i = 0; i < 3; ++i)
+					{
+						const int integerValue = std::stoi(elements[i].c_str());
+						if (integerValue < 0 || integerValue > 255)
+						{
+							throw std::runtime_error("8-bit RGB color values must be between [0, 255]");
+						}
+						value[i] = static_cast<float>(integerValue) / 255.0f;
+					}
+				}
+				else if (elements[3] == "RGB_FLOAT")
+				{
+					for (uint8_t i = 0; i < 3; ++i)
+					{
+						value[i] = std::stof(elements[i].c_str());
+					}
+				}
+				else if (elements[3] == "HSV")
+				{
+					for (uint8_t i = 0; i < 3; ++i)
+					{
+						value[i] = std::stof(elements[i].c_str());
+					}
+					::detail::hsvToRgb(value[0], value[1], value[2], value[0], value[1], value[2]);
+				}
+				else
+				{
+					elements.clear();
+				}
+			}
+			else if (elements.size() == 2)
+			{
+				if (elements[1] == "HEX")
+				{
+					// TODO(co) Error handling
+					int r = 0, g = 0, b = 0;
+					sscanf(elements[0].c_str(), "%02x%02x%02x", &r, &g, &b);
+					value[0] = r / 255.0f;
+					value[1] = g / 255.0f;
+					value[2] = b / 255.0f;
+				}
+				else
+				{
+					elements.clear();
+				}
+			}
+			else
+			{
+				elements.clear();
+			}
+			if (elements.empty())
+			{
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" is using an unknown RGB color format");
 			}
 		}
 	}

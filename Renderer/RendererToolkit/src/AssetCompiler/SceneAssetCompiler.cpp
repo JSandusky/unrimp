@@ -345,7 +345,7 @@ namespace RendererToolkit
 
 										// Read properties
 										::detail::optionalLightTypeProperty(rapidJsonValueItem, "LightType", lightItem.lightType);
-										JsonHelper::optionalFloatNProperty(rapidJsonValueItem, "Color", lightItem.color, 3);
+										JsonHelper::optionalRgbColorProperty(rapidJsonValueItem, "Color", lightItem.color);
 										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "Radius", lightItem.radius);
 										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "InnerAngle", lightItem.innerAngle);
 										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "OuterAngle", lightItem.outerAngle);
