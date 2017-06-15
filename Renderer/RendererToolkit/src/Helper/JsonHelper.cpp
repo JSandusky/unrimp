@@ -333,6 +333,54 @@ namespace RendererToolkit
 		}
 	}
 
+	void JsonHelper::optionalFactorNProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float value[], uint32_t numberOfComponents)
+	{
+		// Factor values can be defined as "FACTOR" (e.g. "0.42 FACTOR") or "PERCENTAGE" (e.g. "42.0 PERCENTAGE")
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			std::vector<std::string> elements;
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+			if (elements.size() == numberOfComponents + 1)	// +1 for the value semantic
+			{
+				// Get the value semantic
+				enum class ValueSemantic
+				{
+					FACTOR,
+					PERCENTAGE,
+					UNKNOWN
+				};
+				const std::string& valueSemanticAsString = elements[3];
+				ValueSemantic valueSemantic = ValueSemantic::UNKNOWN;
+				if (valueSemanticAsString == "FACTOR")
+				{
+					valueSemantic = ValueSemantic::FACTOR;
+				}
+				else if (valueSemanticAsString == "PERCENTAGE")
+				{
+					valueSemantic = ValueSemantic::PERCENTAGE;
+				}
+				if (ValueSemantic::UNKNOWN == valueSemantic)
+				{
+					throw std::runtime_error('\"' + std::string(propertyName) + "\" is using unknown value semantic \"" + std::string(valueSemanticAsString) + '\"');
+				}
+
+				// Get component values
+				for (size_t i = 0; i < numberOfComponents; ++i)
+				{
+					value[i] = std::stof(elements[i].c_str());
+					if (ValueSemantic::PERCENTAGE == valueSemantic)
+					{
+						value[i] *= 0.01f;
+					}
+				}
+			}
+			else
+			{
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" needs exactly" + std::to_string(numberOfComponents) + " components and a value semantic \"FACTOR\" or \"PERCENTAGE\", but " + std::to_string(elements.size()) + " string parts given");
+			}
+		}
+	}
+
 	void JsonHelper::optionalRgbColorProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float value[3])
 	{
 		// RGB color values can be defined as "RGB" (e.g. "255 0 255 RGB"), "RGB_FLOAT" (e.g. "1.0 0.0 1.0 RGB_FLOAT"), "HEX" (e.g. "FF00FF HEX") or "HSV" (e.g. "120.0 1 1 HSV")
