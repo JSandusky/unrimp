@@ -119,6 +119,9 @@ namespace RendererRuntime
 
 	void IResource::deinitializeElement()
 	{
+		// Sanity check
+		assert((LoadingState::LOADED == mLoadingState || LoadingState::UNLOADED == mLoadingState) && "Resource deinitialized while in-flight inside the resource streamer");
+
 		// Disconnect all resource listeners
 		const IResourceListener::ResourceConnection resourceConnection(mResourceManager, mResourceId);
 		for (IResourceListener* resourceListener : mSortedResourceListeners)

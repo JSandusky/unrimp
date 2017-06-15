@@ -41,12 +41,21 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ResourceStreamer::LoadRequest methods ]
+	//[-------------------------------------------------------]
+	IResource& ResourceStreamer::LoadRequest::getResource() const
+	{
+		return resourceManager->getResourceByResourceId(resourceId);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	void ResourceStreamer::commitLoadRequest(const LoadRequest& loadRequest)
 	{
 		// The first thing we do: Update the resource loading state
-		loadRequest.resource->setLoadingState(IResource::LoadingState::LOADING);
+		loadRequest.getResource().setLoadingState(IResource::LoadingState::LOADING);
 
 		// Push the load request into the queue of the first resource streamer pipeline stage
 		// -> Resource streamer stage: 1. Asynchronous deserialization
@@ -204,7 +213,7 @@ namespace RendererRuntime
 						ResourceLoaderType resourceLoaderType;
 						resourceLoaderType.numberOfInstances = 1;
 						mResourceLoaderTypeManager.emplace(resourceLoaderTypeId, resourceLoaderType);
-						loadRequest.resourceLoader = loadRequest.resource->getResourceManager().createResourceLoaderInstance(resourceLoaderTypeId);
+						loadRequest.resourceLoader = loadRequest.resourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
 					}
 					else
 					{
@@ -218,7 +227,7 @@ namespace RendererRuntime
 							// In order to keep the memory consumption under control, we limit the number of simultaneous resource loader type instances
 							if (resourceLoaderType.numberOfInstances < 5)
 							{
-								loadRequest.resourceLoader = loadRequest.resource->getResourceManager().createResourceLoaderInstance(resourceLoaderTypeId);
+								loadRequest.resourceLoader = loadRequest.resourceManager->createResourceLoaderInstance(resourceLoaderTypeId);
 								assert(nullptr != loadRequest.resourceLoader);
 								++resourceLoaderType.numberOfInstances;
 							}
@@ -241,7 +250,7 @@ namespace RendererRuntime
 				if (nullptr != loadRequest.resourceLoader)
 				{
 					deserializationMutexLock.unlock();
-					loadRequest.resourceLoader->initialize(*loadRequest.asset, loadRequest.reload, *loadRequest.resource);
+					loadRequest.resourceLoader->initialize(*loadRequest.asset, loadRequest.reload, loadRequest.getResource());
 
 					// Do the work
 					if (loadRequest.resourceLoader->hasDeserialization())
@@ -343,7 +352,7 @@ namespace RendererRuntime
 		}
 
 		// The last thing we do: Update the resource loading state
-		loadRequest.resource->setLoadingState(IResource::LoadingState::LOADED);
+		loadRequest.getResource().setLoadingState(IResource::LoadingState::LOADED);
 	}
 
 

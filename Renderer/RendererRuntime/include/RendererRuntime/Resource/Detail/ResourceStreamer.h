@@ -44,6 +44,7 @@ namespace RendererRuntime
 {
 	class IResource;
 	class IResourceLoader;
+	class IResourceManager;
 	class IRendererRuntime;
 }
 
@@ -58,6 +59,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
+	typedef uint32_t ResourceId;			///< POD resource identifier
 	typedef StringId ResourceLoaderTypeId;	///< Resource loader type identifier, internally just a POD "uint32_t", usually created by hashing the file format extension (if the resource loader is processing file data in the first place)
 
 
@@ -103,20 +105,23 @@ namespace RendererRuntime
 			const Asset*		 asset;					///< Used asset, must be valid
 			ResourceLoaderTypeId resourceLoaderTypeId;	///< Must be valid
 			bool				 reload;				///< "true" if the resource is new in memory, else "false" for reload an already loaded resource (and e.g. update cache entries)
-			IResource*			 resource;				///< Must be valid, do not destroy the instance
+			IResourceManager*	 resourceManager;		///< Must be valid, do not destroy the instance
+			ResourceId			 resourceId;			///< Must be valid
 			// In flight data
 			mutable IResourceLoader* resourceLoader;	///< Null pointer at first, must be valid as soon as the load request is in flight, do not destroy the instance
 
 			// Methods
-			inline LoadRequest(const Asset& _asset, ResourceLoaderTypeId _resourceLoaderTypeId, bool _reload, IResource& _resource) :
+			inline LoadRequest(const Asset& _asset, ResourceLoaderTypeId _resourceLoaderTypeId, bool _reload, IResourceManager& _resourceManager, ResourceId _resourceId) :
 				asset(&_asset),
 				resourceLoaderTypeId(_resourceLoaderTypeId),
 				reload(_reload),
-				resource(&_resource),
+				resourceManager(&_resourceManager),
+				resourceId(_resourceId),
 				resourceLoader(nullptr)
 			{
 				// Nothing here
 			}
+			IResource& getResource() const;
 		};
 
 
