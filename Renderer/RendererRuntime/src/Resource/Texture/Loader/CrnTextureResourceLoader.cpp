@@ -156,7 +156,7 @@ namespace RendererRuntime
 		int startLevelIndex = mRendererRuntime.getTextureResourceManager().getNumberOfTopMipmapsToRemove();
 		if (startLevelIndex >= static_cast<int>(crnTextureInfo.m_levels))
 		{
-			startLevelIndex = 0;
+			startLevelIndex = static_cast<int>(crnTextureInfo.m_levels) - 1;
 		}
 
 		// Optional top mipmap removal security checks
