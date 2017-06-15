@@ -115,7 +115,7 @@
 					"LightSceneItem":
 					{
 						"LightType": "POINT",
-						"Color": "2.0 0.0 0.0 RGB_FLOAT",
+						"Color": "1.0 0.0 0.0 RGB_FLOAT 2.0 INTENSITY",
 						"Radius": "2.0 METER"
 					}
 				}
@@ -130,7 +130,7 @@
 					"LightSceneItem":
 					{
 						"LightType": "POINT",
-						"Color": "0 255 0 RGB",
+						"Color": "0 255 0 RGB 6600.0 KELVIN",
 						"Radius": "1.0 METER"
 					}
 				}
@@ -145,7 +145,7 @@
 					"LightSceneItem":
 					{
 						"LightType": "POINT",
-						"Color": "0.0 0.0 3.0 RGB_FLOAT",
+						"Color": "6600.0 KELVIN",
 						"Radius": "3.0 METER"
 					}
 				}
@@ -205,7 +205,7 @@
 					"LightSceneItem":
 					{
 						"LightType": "SPOT",
-						"Color": "10.0 10.0 10.0 RGB_FLOAT",
+						"Color": "10.0 INTENSITY 6600.0 KELVIN",
 						"Radius": "5.0 METER",
 						"InnerAngle": "45.0 DEGREE",
 						"OuterAngle": "50.0 DEGREE"

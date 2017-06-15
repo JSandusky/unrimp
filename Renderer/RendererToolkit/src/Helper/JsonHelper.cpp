@@ -62,6 +62,113 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return a RGB color by using a given Kelvin value
+		*
+		*  @param[in] kelvin
+		*    Kelvin value to return as RGB color
+		*
+		*  @return
+		*    RGB color from the given Kelvin value
+		*
+		*  @note
+		*    - Basing on "How to Convert Temperature (K) to RGB: Algorithm and Sample Code" ( http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/ )
+		*    - See also "Moving Frostbite to Physically Based Rendering" from DICE, starting page 35 ( http://www.frostbite.com/wp-content/uploads/2014/11/s2014_pbs_frostbite_slides.pdf )
+		*/
+		glm::vec3 getRgbColorFromKelvin(float kelvin)
+		{
+			if (kelvin > 40000.0f)
+			{
+				kelvin = 40000.0f;
+			}
+			else if (kelvin < 1000.0f)
+			{
+				kelvin = 1000.0f;
+			}
+			kelvin = kelvin / 100.0f;
+
+			// Red
+			float red = 0.0f;
+			if (kelvin <= 66.0f)
+			{
+				red = 255.0f;
+			}
+			else
+			{
+				float temporary = kelvin - 60.0f;
+				temporary = 329.698727446f * std::pow(temporary, -0.1332047592f);
+				red = temporary;
+				if (red < 0.0f)
+				{
+					red = 0.0f;
+				}
+				else if (red > 255.0f)
+				{
+					red = 255.0f;
+				}
+			}
+
+			// Green
+			float green = 0.0f;
+			if (kelvin <= 66.0f)
+			{
+				float temporary = kelvin;
+				temporary = 99.4708025861f * std::log(temporary) - 161.1195681661f;
+				green = temporary;
+				if (green < 0.0f)
+				{
+					green = 0.0f;
+				}
+				else if (green > 255.0f)
+				{
+					green = 255.0f;
+				}
+			}
+			else
+			{
+				float temporary = kelvin - 60.0f;
+				temporary = 288.1221695283f * std::pow(temporary, -0.0755148492f);
+				green = temporary;
+				if (green < 0.0f)
+				{
+					green = 0.0f;
+				}
+				else if (green > 255.0f)
+				{
+					green = 255.0f;
+				}
+			}
+
+			// Blue
+			float blue = 0.0f;
+			if (kelvin >= 66.0f)
+			{
+				blue = 255.0f;
+			}
+			else if (kelvin <= 19.0f)
+			{
+				blue = 0.0f;
+			}
+			else
+			{
+				float temporary = kelvin - 10.0f;
+				temporary = 138.5177312231f * std::log(temporary) - 305.0447927307f;
+				blue = temporary;
+				if (blue < 0.0f)
+				{
+					blue = 0.0f;
+				}
+				else if (blue > 255.0f)
+				{
+					blue = 255.0f;
+				}
+			}
+
+			// Done
+			return glm::vec3(std::pow(red / 255.0f, 2.2f), std::pow(green / 255.0f, 2.2f), std::pow(blue / 255.0f, 2.2f));
+		}
+
 		// Implementation from https://gist.github.com/fairlight1337/4935ae72bcbcc1ba5c72 - with Unrimp code style adoptions
 
 		// Copyright (c) 2014, Jan Winkler <winkler@cs.uni-bremen.de>
@@ -423,69 +530,126 @@ namespace RendererToolkit
 
 	void JsonHelper::optionalRgbColorProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float value[3])
 	{
-		// RGB color values can be defined as "RGB" (e.g. "255 0 255 RGB"), "RGB_FLOAT" (e.g. "1.0 0.0 1.0 RGB_FLOAT"), "HEX" (e.g. "FF00FF HEX") or "HSV" (e.g. "120.0 1 1 HSV")
+		// RGB color values can be defined as
+		// - "RGB" (e.g. "255 0 255 RGB")
+		// - "RGB_FLOAT" (e.g. "1.0 0.0 1.0 RGB_FLOAT")
+		// - "HSV" (e.g. "120.0 1 1 HSV")
+		// - "HEX" (e.g. "FF00FF HEX")
+		// - "INTENSITY" (e.g. "1.0 INTENSITY")
+		// - "KELVIN" (e.g. "6600.0 KELVIN")
+		// including a combination of color * intensity * kelvin
 		if (rapidJsonValue.HasMember(propertyName))
 		{
+			// Split string
 			std::vector<std::string> elements;
 			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
-			if (elements.size() == 4)
+
+			// The elements the final color will be composed of
+			glm::vec3 color(1.0f, 1.0f, 1.0f);
+			float intensity = 1.0f;
+			float kelvin = 6600.0f;	// Results in white ("1.0 1.0 1.0")
+
+			// Color
+			for (size_t elementIndex = 0; elementIndex < elements.size(); ++elementIndex)
 			{
-				if (elements[3] == "RGB")
+				const std::string& element = elements[elementIndex];
+				if ("RGB" == element)
 				{
+					if (elementIndex < 3)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": RGB colors need three color components");
+					}
 					for (uint8_t i = 0; i < 3; ++i)
 					{
-						const int integerValue = std::stoi(elements[i].c_str());
+						const int integerValue = std::stoi(elements[elementIndex - (3 - i)].c_str());
 						if (integerValue < 0 || integerValue > 255)
 						{
 							throw std::runtime_error("8-bit RGB color values must be between [0, 255]");
 						}
-						value[i] = static_cast<float>(integerValue) / 255.0f;
+						color[i] = static_cast<float>(integerValue) / 255.0f;
 					}
+					break;
 				}
-				else if (elements[3] == "RGB_FLOAT")
+				else if ("RGB_FLOAT" == element)
 				{
+					if (elementIndex < 3)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": RGB colors need three color components");
+					}
 					for (uint8_t i = 0; i < 3; ++i)
 					{
-						value[i] = std::stof(elements[i].c_str());
+						color[i] = std::stof(elements[elementIndex - (3 - i)].c_str());
 					}
+					break;
 				}
-				else if (elements[3] == "HSV")
+				else if ("HSV" == element)
 				{
+					if (elementIndex < 3)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": HSV colors need three color components");
+					}
 					for (uint8_t i = 0; i < 3; ++i)
 					{
-						value[i] = std::stof(elements[i].c_str());
+						color[i] = std::stof(elements[elementIndex - (3 - i)].c_str());
 					}
-					::detail::hsvToRgb(value[0], value[1], value[2], value[0], value[1], value[2]);
+					::detail::hsvToRgb(color[0], color[1], color[2], color[0], color[1], color[2]);
+					break;
 				}
-				else
+				else if ("HEX" == element)
 				{
-					elements.clear();
-				}
-			}
-			else if (elements.size() == 2)
-			{
-				if (elements[1] == "HEX")
-				{
+					if (elementIndex < 1)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": HEX colors need one color component");
+					}
+
 					// TODO(co) Error handling
 					unsigned int r = 0, g = 0, b = 0;
-					sscanf(elements[0].c_str(), "%02x%02x%02x", &r, &g, &b);
-					value[0] = r / 255.0f;
-					value[1] = g / 255.0f;
-					value[2] = b / 255.0f;
+					sscanf(elements[elementIndex - 1].c_str(), "%02x%02x%02x", &r, &g, &b);
+					color[0] = r / 255.0f;
+					color[1] = g / 255.0f;
+					color[2] = b / 255.0f;
+					break;
 				}
-				else
+			}
+
+			// Intensity
+			for (size_t elementIndex = 0; elementIndex < elements.size(); ++elementIndex)
+			{
+				const std::string& element = elements[elementIndex];
+				if ("INTENSITY" == element)
 				{
-					elements.clear();
+					if (elementIndex < 1)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": Intensity needs one component");
+					}
+					intensity = std::stof(elements[elementIndex - 1].c_str());
+					break;
 				}
 			}
-			else
+
+			// Kelvin
+			for (size_t elementIndex = 0; elementIndex < elements.size(); ++elementIndex)
 			{
-				elements.clear();
+				const std::string& element = elements[elementIndex];
+				if ("KELVIN" == element)
+				{
+					if (elementIndex < 1)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": Kelvin needs one component");
+					}
+					kelvin = std::stof(elements[elementIndex - 1].c_str());
+					break;
+				}
 			}
-			if (elements.empty())
-			{
-				throw std::runtime_error('\"' + std::string(propertyName) + "\" is using an unknown RGB color format");
-			}
+
+			// Calculate final composed color
+			color *= intensity;
+			color *= ::detail::getRgbColorFromKelvin(kelvin);
+
+			// Done
+			value[0] = color.r;
+			value[1] = color.g;
+			value[2] = color.b;
 		}
 	}
 
