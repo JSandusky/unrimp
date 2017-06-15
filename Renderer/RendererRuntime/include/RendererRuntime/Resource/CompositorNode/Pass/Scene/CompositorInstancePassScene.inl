@@ -37,7 +37,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	inline void CompositorInstancePassScene::onFrameEnded()
+	inline void CompositorInstancePassScene::onPostCommandBufferExecution()
 	{
 		// Directly clear the render queue as soon as the frame rendering has been finished to avoid evil dangling pointers
 		mRenderQueue.clear();

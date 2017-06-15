@@ -52,7 +52,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void ICompositorInstancePass::onFrameEnded()
+	inline void ICompositorInstancePass::onPostCommandBufferExecution()
 	{
 		// Nothing here
 	}

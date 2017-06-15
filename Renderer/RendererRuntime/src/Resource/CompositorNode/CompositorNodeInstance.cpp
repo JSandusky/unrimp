@@ -107,11 +107,11 @@ namespace RendererRuntime
 		return *currentRenderTarget;
 	}
 
-	void CompositorNodeInstance::frameEnded() const
+	void CompositorNodeInstance::onPostCommandBufferExecution() const
 	{
 		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
 		{
-			compositorInstancePass->onFrameEnded();
+			compositorInstancePass->onPostCommandBufferExecution();
 		}
 	}
 

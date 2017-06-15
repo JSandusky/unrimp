@@ -90,7 +90,12 @@ namespace RendererRuntime
 		CompositorNodeInstance& operator=(const CompositorNodeInstance&) = delete;
 		void compositorWorkspaceInstanceLoadingFinished() const;
 		Renderer::IRenderTarget& fillCommandBuffer(Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer) const;
-		void frameEnded() const;
+
+		/**
+		*  @brief
+		*    Called post command buffer execution
+		*/
+		void onPostCommandBufferExecution() const;
 
 
 	//[-------------------------------------------------------]

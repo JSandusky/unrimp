@@ -99,12 +99,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Method is called when all compositor passes have been executed and everything has been pushed into the renderer
+		*    Called post command buffer execution
 		*
 		*  @note
 		*    - The default implementation is empty
 		*/
-		inline virtual void onFrameEnded();
+		inline virtual void onPostCommandBufferExecution();
 
 
 	//[-------------------------------------------------------]

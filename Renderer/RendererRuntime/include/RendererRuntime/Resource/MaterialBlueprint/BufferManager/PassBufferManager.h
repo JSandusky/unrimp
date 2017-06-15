@@ -145,12 +145,9 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Reset current pass buffer
-		*
-		*  @note
-		*    - Should be called once per frame
+		*    Called post command buffer execution
 		*/
-		inline void resetCurrentPassBuffer();
+		inline void onPostCommandBufferExecution();
 
 
 	//[-------------------------------------------------------]
