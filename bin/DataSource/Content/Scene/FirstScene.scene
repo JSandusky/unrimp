@@ -51,7 +51,7 @@
 			{
 				"Properties":
 				{
-					"Position": "-4.0 0.0 1.0",
+					"Position": "-4.0 0.0 1.0 METER",
 					"Scale": "0.07 0.07 0.07 FACTOR"
 				},
 				"Items":
@@ -66,7 +66,7 @@
 			{
 				"Properties":
 				{
-					"Position": "2.0 0.0 -5.0",
+					"Position": "2.0 0.0 -5.0 METER",
 					"Scale": "0.07 0.07 0.07 FACTOR"
 				},
 				"Items":
@@ -80,7 +80,7 @@
 			{
 				"Properties":
 				{
-					"Position": "7 13.3 3",
+					"Position": "7 13.3 3 METER",
 					"Rotation": "0.0 45.0 0.0 DEGREES",
 					"Scale": "0.07 0.07 0.07 FACTOR"
 				},
@@ -108,7 +108,7 @@
 			{
 				"Properties":
 				{
-					"Position": "-2.56804585 1.92319942 1.58084095"
+					"Position": "-2.56804585 1.92319942 1.58084095 METER"
 				},
 				"Items":
 				{
@@ -116,14 +116,14 @@
 					{
 						"LightType": "POINT",
 						"Color": "2.0 0.0 0.0 RGB_FLOAT",
-						"Radius": "2.0"
+						"Radius": "2.0 METER"
 					}
 				}
 			},
 			{
 				"Properties":
 				{
-					"Position": "1.20822608 2.13819814 3.82538891"
+					"Position": "1.20822608 2.13819814 3.82538891 METER"
 				},
 				"Items":
 				{
@@ -131,14 +131,14 @@
 					{
 						"LightType": "POINT",
 						"Color": "0 255 0 RGB",
-						"Radius": "1.0"
+						"Radius": "1.0 METER"
 					}
 				}
 			},
 			{
 				"Properties":
 				{
-					"Position": "-1.91534328 2.73809576 -5.37067556"
+					"Position": "-1.91534328 2.73809576 -5.37067556 METER"
 				},
 				"Items":
 				{
@@ -146,14 +146,14 @@
 					{
 						"LightType": "POINT",
 						"Color": "0.0 0.0 3.0 RGB_FLOAT",
-						"Radius": "3.0"
+						"Radius": "3.0 METER"
 					}
 				}
 			},
 			{
 				"Properties":
 				{
-					"Position": "0.448334336 2.81350160 -5.06476307"
+					"Position": "0.448334336 2.81350160 -5.06476307 METER"
 				},
 				"Items":
 				{
@@ -161,14 +161,14 @@
 					{
 						"LightType": "POINT",
 						"Color": "0.0 1.5 1.5 RGB_FLOAT",
-						"Radius": "2.5"
+						"Radius": "2.5 METER"
 					}
 				}
 			},
 			{
 				"Properties":
 				{
-					"Position": "12.5456219 0.492846817 -5.29046202"
+					"Position": "12.5456219 0.492846817 -5.29046202 METER"
 				},
 				"Items":
 				{
@@ -176,14 +176,14 @@
 					{
 						"LightType": "POINT",
 						"Color": "FF00FF HEX",
-						"Radius": "2.5"
+						"Radius": "2.5 METER"
 					}
 				}
 			},
 			{
 				"Properties":
 				{
-					"Position": "8.0 0.0 1.5",
+					"Position": "8.0 0.0 1.5 METER",
 					"Scale": "0.03 0.03 0.03 FACTOR"
 				},
 				"Items":
@@ -198,7 +198,7 @@
 			{
 				"Properties":
 				{
-					"Position": "0.0 0.1 -1.5"
+					"Position": "0.0 0.1 -1.5 METER"
 				},
 				"Items":
 				{
@@ -206,7 +206,7 @@
 					{
 						"LightType": "SPOT",
 						"Color": "10.0 10.0 10.0 RGB_FLOAT",
-						"Radius": "5.0",
+						"Radius": "5.0 METER",
 						"InnerAngle": "45.0 DEGREES",
 						"OuterAngle": "50.0 DEGREES"
 					}
@@ -215,7 +215,7 @@
 			{
 				"Properties":
 				{
-					"Position": "-3.0 1.0 2.0"
+					"Position": "-3.0 1.0 2.0 METER"
 				},
 				"Items":
 				{
@@ -223,14 +223,14 @@
 					{
 						"LightType": "POINT",
 						"Color": "120.0 1 1 HSV",
-						"Radius": "2.0"
+						"Radius": "2.0 METER"
 					}
 				}
 			},
 			{
 				"Properties":
 				{
-					"Position": "6.0 0.47 2.0",
+					"Position": "6.0 0.47 2.0 METER",
 					"Rotation": "0.0 -145.0 0.0 DEGREES"
 				},
 				"Items":

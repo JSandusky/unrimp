@@ -333,6 +333,46 @@ namespace RendererToolkit
 		}
 	}
 
+	void JsonHelper::optionalUnitNProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float value[], uint32_t numberOfComponents)
+	{
+		// Unit values can be defined as "METER" (e.g. "0.42 METER")
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			std::vector<std::string> elements;
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+			if (elements.size() == numberOfComponents + 1)	// +1 for the value semantic
+			{
+				// Get the value semantic
+				enum class ValueSemantic
+				{
+					METER,
+					UNKNOWN
+				};
+				const std::string& valueSemanticAsString = elements[numberOfComponents];
+				ValueSemantic valueSemantic = ValueSemantic::UNKNOWN;
+				if (valueSemanticAsString == "METER")
+				{
+					valueSemantic = ValueSemantic::METER;
+				}
+				if (ValueSemantic::UNKNOWN == valueSemantic)
+				{
+					throw std::runtime_error('\"' + std::string(propertyName) + "\" is using unknown value semantic \"" + std::string(valueSemanticAsString) + '\"');
+				}
+
+				// Get component values
+				for (size_t i = 0; i < numberOfComponents; ++i)
+				{
+					// One unit = one meter
+					value[i] = std::stof(elements[i].c_str());
+				}
+			}
+			else
+			{
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" needs exactly" + std::to_string(numberOfComponents) + " components and a value semantic \"METER\", but " + std::to_string(elements.size()) + " string parts given");
+			}
+		}
+	}
+
 	void JsonHelper::optionalFactorNProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float value[], uint32_t numberOfComponents)
 	{
 		// Factor values can be defined as "FACTOR" (e.g. "0.42 FACTOR") or "PERCENTAGE" (e.g. "42.0 PERCENTAGE")
@@ -349,7 +389,7 @@ namespace RendererToolkit
 					PERCENTAGE,
 					UNKNOWN
 				};
-				const std::string& valueSemanticAsString = elements[3];
+				const std::string& valueSemanticAsString = elements[numberOfComponents];
 				ValueSemantic valueSemantic = ValueSemantic::UNKNOWN;
 				if (valueSemanticAsString == "FACTOR")
 				{

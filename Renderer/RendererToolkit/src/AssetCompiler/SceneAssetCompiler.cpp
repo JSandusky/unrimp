@@ -271,7 +271,7 @@ namespace RendererToolkit
 								const rapidjson::Value& rapidJsonValueProperties = rapidJsonValueNode["Properties"];
 
 								// Position, rotation and scale
-								JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Position", &node.transform.position.x, 3);
+								JsonHelper::optionalUnitNProperty(rapidJsonValueProperties, "Position", &node.transform.position.x, 3);
 								JsonHelper::optionalRotationQuaternionProperty(rapidJsonValueProperties, "Rotation", node.transform.rotation);
 								JsonHelper::optionalFactorNProperty(rapidJsonValueProperties, "Scale", &node.transform.scale.x, 3);
 							}
@@ -346,10 +346,10 @@ namespace RendererToolkit
 										// Read properties
 										::detail::optionalLightTypeProperty(rapidJsonValueItem, "LightType", lightItem.lightType);
 										JsonHelper::optionalRgbColorProperty(rapidJsonValueItem, "Color", lightItem.color);
-										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "Radius", lightItem.radius);
+										JsonHelper::optionalUnitNProperty(rapidJsonValueItem, "Radius", &lightItem.radius, 1);
 										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "InnerAngle", lightItem.innerAngle);
 										JsonHelper::optionalAngleProperty(rapidJsonValueItem, "OuterAngle", lightItem.outerAngle);
-										JsonHelper::optionalFloatProperty(rapidJsonValueItem, "NearClipDistance", lightItem.nearClipDistance);
+										JsonHelper::optionalUnitNProperty(rapidJsonValueItem, "NearClipDistance", &lightItem.nearClipDistance, 1);
 
 										// Sanity checks
 										if (lightItem.color[0] < 0.0f || lightItem.color[1] < 0.0f || lightItem.color[2] < 0.0f)
