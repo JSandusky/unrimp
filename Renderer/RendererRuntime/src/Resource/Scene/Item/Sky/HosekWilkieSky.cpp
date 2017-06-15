@@ -82,12 +82,19 @@ namespace
 			return (1.0f + A * glm::exp(B / (cos_theta + 0.01f))) * (C + D * glm::exp(E * gamma) + F * (cos_gamma * cos_gamma) + G * chi + I * static_cast<float>(std::sqrt(std::max(0.0f, cos_theta))));
 		}
 
-		RendererRuntime::HosekWilkieSky::Coefficients compute(const glm::vec3& worldSpaceSunDirection, float turbidity, float albedo, float normalizedSunY)
+		void compute(const glm::vec3& worldSpaceSunDirection, float turbidity, float albedo, float normalizedSunY, RendererRuntime::HosekWilkieSky::Coefficients& coefficients)
 		{
-			glm::vec3 A, B, C, D, E, F, G, H, I;
-			glm::vec3 Z;
-
 			const float sunTheta = std::acos(glm::clamp(worldSpaceSunDirection.y, 0.0f, 1.0f));
+			glm::vec3& A = coefficients.A;
+			glm::vec3& B = coefficients.B;
+			glm::vec3& C = coefficients.C;
+			glm::vec3& D = coefficients.D;
+			glm::vec3& E = coefficients.E;
+			glm::vec3& F = coefficients.F;
+			glm::vec3& G = coefficients.G;
+			glm::vec3& H = coefficients.H;
+			glm::vec3& I = coefficients.I;
+			glm::vec3& Z = coefficients.Z;
 
 			for (int i = 0; i < 3; ++i)
 			{
@@ -112,8 +119,6 @@ namespace
 				Z /= glm::dot(S, glm::vec3(0.2126f, 0.7152f, 0.0722f));
 				Z *= normalizedSunY;
 			}
-
-			return {A, B, C, D, E, F, G, H, I, Z};
 		}
 
 		/**
@@ -195,7 +200,7 @@ namespace RendererRuntime
 			mTurbidity = turbidity;
 			mAlbedo = albedo;
 			mNormalizedSunY = normalizedSunY;
-			mCoefficients = ::detail::compute(mWorldSpaceSunDirection, mTurbidity, mAlbedo, mNormalizedSunY);
+			::detail::compute(mWorldSpaceSunDirection, mTurbidity, mAlbedo, mNormalizedSunY, mCoefficients);
 
 			// Approximation of the sun color
 			// TODO(co) This is a most simple hack, evaluate more accurate solutions like "Solar Radiance Calculation" - https://www.gamedev.net/topic/671214-simple-solar-radiance-calculation/

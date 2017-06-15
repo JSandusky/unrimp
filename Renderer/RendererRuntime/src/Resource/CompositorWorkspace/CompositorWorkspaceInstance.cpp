@@ -497,8 +497,8 @@ namespace RendererRuntime
 					{
 						const uint8_t minimumRenderQueueIndex = renderableManager->getMinimumRenderQueueIndex();
 						const uint8_t maximumRenderQueueIndex = renderableManager->getMaximumRenderQueueIndex();
-						if (minimumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && minimumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex ||
-							maximumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && maximumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex)
+						if ((minimumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && minimumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex) ||
+							(maximumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && maximumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex))
 						{
 							renderQueueIndexRange.renderableManagers.push_back(renderableManager);
 						}
