@@ -491,7 +491,7 @@ namespace RendererToolkit
 
 	void JsonHelper::optionalAngleProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float& value)
 	{
-		// Angle values can be defined as Euler angle in "DEGREES" or Euler angle in "RADIANS"
+		// Angle values can be defined as Euler angle in "DEGREE" or Euler angle in "RADIAN"
 		if (rapidJsonValue.HasMember(propertyName))
 		{
 			std::vector<std::string> elements;
@@ -499,29 +499,29 @@ namespace RendererToolkit
 			if (elements.size() == 2)
 			{
 				value = std::stof(elements[0].c_str());
-				if (elements[1] == "DEGREES")
+				if (elements[1] == "DEGREE")
 				{
 					value = glm::radians(value);
 				}
-				else if (elements[1] == "RADIANS")
+				else if (elements[1] == "RADIAN")
 				{
 					// Nothing here
 				}
 				else
 				{
-					throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x Euler angle in DEGREES/RADIANS");
+					throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x Euler angle in DEGREE/RADIAN");
 				}
 			}
 			else
 			{
-				throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x Euler angle in DEGREES/RADIANS");
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x Euler angle in DEGREE/RADIAN");
 			}
 		}
 	}
 
 	void JsonHelper::optionalRotationQuaternionProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, glm::quat& value)
 	{
-		// Rotation quaternion values can be defined as "QUATERNION", Euler angles in "DEGREES" or Euler angles in "RADIANS"
+		// Rotation quaternion values can be defined as "QUATERNION", Euler angles in "DEGREE" or Euler angles in "RADIAN"
 		if (rapidJsonValue.HasMember(propertyName))
 		{
 			std::vector<std::string> elements;
@@ -547,22 +547,22 @@ namespace RendererToolkit
 				const float pitch = std::stof(elements[0].c_str());
 				const float yaw   = std::stof(elements[1].c_str());
 				const float roll  = std::stof(elements[2].c_str());
-				if (elements[3] == "DEGREES")
+				if (elements[3] == "DEGREE")
 				{
 					value = glm::quat(glm::vec3(glm::radians(pitch), glm::radians(yaw), glm::radians(roll)));
 				}
-				else if (elements[3] == "RADIANS")
+				else if (elements[3] == "RADIAN")
 				{
 					value = glm::quat(glm::vec3(pitch, yaw, roll));
 				}
 				else
 				{
-					throw std::runtime_error('\"' + std::string(propertyName) + "\" must be a x y z w QUATERNION, or x y z Euler angles in DEGREES/RADIANS");
+					throw std::runtime_error('\"' + std::string(propertyName) + "\" must be a x y z w QUATERNION, or x y z Euler angles in DEGREE/RADIAN");
 				}
 			}
 			else
 			{
-				throw std::runtime_error('\"' + std::string(propertyName) + "\" must be a x y z w QUATERNION, or x y z Euler angles in DEGREES/RADIANS");
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" must be a x y z w QUATERNION, or x y z Euler angles in DEGREE/RADIAN");
 			}
 		}
 	}

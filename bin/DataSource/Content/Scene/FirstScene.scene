@@ -21,7 +21,7 @@
 				{
 					"SunlightSceneItem":
 					{
-						"EastDirection": "25.0 DEGREES",
+						"EastDirection": "25.0 DEGREE",
 						"TimeOfDay": "14.42 O_CLOCK"
 					},
 					"SkyboxSceneItem":
@@ -37,7 +37,7 @@
 			{
 				"Properties":
 				{
-					"Rotation": "0.0 45.0 0.0 DEGREES",
+					"Rotation": "0.0 45.0 0.0 DEGREE",
 					"Scale": "0.07 0.07 0.07 FACTOR"
 				},
 				"Items":
@@ -81,7 +81,7 @@
 				"Properties":
 				{
 					"Position": "7 13.3 3 METER",
-					"Rotation": "0.0 45.0 0.0 DEGREES",
+					"Rotation": "0.0 45.0 0.0 DEGREE",
 					"Scale": "0.07 0.07 0.07 FACTOR"
 				},
 				"Items":
@@ -207,8 +207,8 @@
 						"LightType": "SPOT",
 						"Color": "10.0 10.0 10.0 RGB_FLOAT",
 						"Radius": "5.0 METER",
-						"InnerAngle": "45.0 DEGREES",
-						"OuterAngle": "50.0 DEGREES"
+						"InnerAngle": "45.0 DEGREE",
+						"OuterAngle": "50.0 DEGREE"
 					}
 				}
 			},
@@ -231,7 +231,7 @@
 				"Properties":
 				{
 					"Position": "6.0 0.47 2.0 METER",
-					"Rotation": "0.0 -145.0 0.0 DEGREES"
+					"Rotation": "0.0 -145.0 0.0 DEGREE"
 				},
 				"Items":
 				{
