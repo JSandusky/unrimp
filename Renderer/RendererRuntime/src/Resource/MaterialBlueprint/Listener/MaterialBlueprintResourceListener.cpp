@@ -288,9 +288,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	MaterialBlueprintResourceListener::~MaterialBlueprintResourceListener()
+	void MaterialBlueprintResourceListener::clear()
 	{
-		delete mHosekWilkieSky;
+		if (nullptr != mHosekWilkieSky)
+		{
+			delete mHosekWilkieSky;
+			mHosekWilkieSky = nullptr;
+		}
 	}
 
 
