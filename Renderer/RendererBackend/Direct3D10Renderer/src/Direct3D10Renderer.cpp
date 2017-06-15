@@ -1388,14 +1388,11 @@ namespace Direct3D10Renderer
 
 	const char *Direct3D10Renderer::getShaderLanguageName(uint32_t index) const
 	{
-		uint32_t currentIndex = 0;
-
 		// HLSL supported
-		if (currentIndex == index)
+		if (0 == index)
 		{
 			return ShaderLanguageHlsl::NAME;
 		}
-		++currentIndex;
 
 		// Error!
 		return nullptr;

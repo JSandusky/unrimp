@@ -379,7 +379,7 @@ namespace RendererToolkit
 				if (elements[1] == "HEX")
 				{
 					// TODO(co) Error handling
-					int r = 0, g = 0, b = 0;
+					unsigned int r = 0, g = 0, b = 0;
 					sscanf(elements[0].c_str(), "%02x%02x%02x", &r, &g, &b);
 					value[0] = r / 255.0f;
 					value[1] = g / 255.0f;

@@ -150,12 +150,11 @@ namespace OpenGLES3Renderer
 		EGLConfig eglConfig = nullptr;
 		EGLint numberOfConfigurations = 0;
 		bool chooseConfigCapitulated = false;
-		bool multisampleAntialiasing = false;
 		EGLint multisampleAntialiasingSamplesCurrent = static_cast<EGLint>(multisampleAntialiasingSamples);
 		do
 		{
 			// Get the current multisample antialiasing settings
-			multisampleAntialiasing = (multisampleAntialiasingSamplesCurrent > 1);	// Multisample antialiasing with just one sample per per pixel isn't real multisample, is it? :D
+			const bool multisampleAntialiasing = (multisampleAntialiasingSamplesCurrent > 1);	// Multisample antialiasing with just one sample per per pixel isn't real multisample, is it? :D
 			// const EGLint multisampleAntialiasingSampleBuffers = multisampleAntialiasing ? 1 : 0;
 
 			// Set desired configuration
