@@ -197,9 +197,6 @@ namespace RendererRuntime
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
 		// TODO(co) This is just a dummy implementation. For example automatic instancing has to be incorporated as well as more efficient buffer management.
-		ShaderProperties shaderProperties;
-		DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES];
-
 		const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
@@ -272,10 +269,10 @@ namespace RendererRuntime
 								if (nullptr != materialBlueprintResource && IResource::LoadingState::LOADED == materialBlueprintResource->getLoadingState())
 								{
 									// TODO(co) Gather shader properties (later on we cache as much as possible of this work inside the renderable)
-									shaderProperties.clear();
+									mScratchShaderProperties.clear();
 									for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 									{
-										dynamicShaderPieces[i].clear();
+										mScratchDynamicShaderPieces[i].clear();
 									}
 									{ // Gather shader properties from static material properties generating shader combinations
 										const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialResource->getSortedPropertyVector();
@@ -288,11 +285,11 @@ namespace RendererRuntime
 												switch (materialProperty.getValueType())
 												{
 													case MaterialPropertyValue::ValueType::BOOLEAN:
-														shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
+														mScratchShaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
 														break;
 
 													case MaterialPropertyValue::ValueType::INTEGER:
-														shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getIntegerValue());
+														mScratchShaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getIntegerValue());
 														break;
 
 													case MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
@@ -300,7 +297,7 @@ namespace RendererRuntime
 														const MaterialProperty* globalMaterialProperty = globalMaterialProperties.getPropertyById(materialProperty.getGlobalMaterialPropertyId());
 														if (nullptr != globalMaterialProperty)
 														{
-															::detail::setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, shaderProperties);
+															::detail::setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, mScratchShaderProperties);
 														}
 														else
 														{
@@ -308,7 +305,7 @@ namespace RendererRuntime
 															globalMaterialProperty = materialBlueprintResource->getMaterialProperties().getPropertyById(materialProperty.getGlobalMaterialPropertyId());
 															if (nullptr != globalMaterialProperty)
 															{
-																::detail::setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, shaderProperties);
+																::detail::setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, mScratchShaderProperties);
 															}
 															else
 															{
@@ -354,13 +351,13 @@ namespace RendererRuntime
 										static const StringId USE_GPU_SKINNING("UseGpuSkinning");
 										if (nullptr != materialBlueprintResource->getMaterialProperties().getPropertyById(USE_GPU_SKINNING))
 										{
-											shaderProperties.setPropertyValue(USE_GPU_SKINNING, 1);
+											mScratchShaderProperties.setPropertyValue(USE_GPU_SKINNING, 1);
 										}
 									}
 
-									materialBlueprintResource->optimizeShaderProperties(shaderProperties);
+									materialBlueprintResource->optimizeShaderProperties(mScratchShaderProperties);
 
-									Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(renderable.getPrimitiveTopology(), materialTechnique->getSerializedPipelineStateHash(), shaderProperties, dynamicShaderPieces, false);
+									Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(renderable.getPrimitiveTopology(), materialTechnique->getSerializedPipelineStateHash(), mScratchShaderProperties, mScratchDynamicShaderPieces, false);
 									if (nullptr != pipelineStatePtr)
 									{
 										// Expensive state change: Handle material blueprint resource switches
@@ -406,7 +403,8 @@ namespace RendererRuntime
 										}
 
 										// Fill the instance buffer manager
-										instanceBufferManager.fillBuffer(materialBlueprintResource->getPassBufferManager(), materialBlueprintResource->getInstanceUniformBuffer(), materialBlueprintResource->getInstanceTextureBuffer(), renderable, *materialTechnique, commandBuffer);
+										const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
+										const uint32_t startInstanceLocation = (nullptr != instanceUniformBuffer) ? instanceBufferManager.fillBuffer(materialBlueprintResource->getPassBufferManager(), *instanceUniformBuffer, renderable, *materialTechnique) : 0;
 
 										// Render the specified geometric primitive, based on indexing into an array of vertices
 										// -> Please note that it's valid that there are no indices, for example "RendererRuntime::CompositorInstancePassDebugGui" is using the render queue only to set the material resource blueprint
@@ -414,11 +412,11 @@ namespace RendererRuntime
 										{
 											if (renderable.getDrawIndexed())
 											{
-												Renderer::Command::DrawIndexed::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
+												Renderer::Command::DrawIndexed::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation(), 0, startInstanceLocation);
 											}
 											else
 											{
-												Renderer::Command::Draw::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation());
+												Renderer::Command::Draw::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation(), startInstanceLocation);
 											}
 										}
 									}

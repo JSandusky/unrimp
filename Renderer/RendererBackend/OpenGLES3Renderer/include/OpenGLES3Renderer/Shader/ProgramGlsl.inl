@@ -33,6 +33,11 @@ namespace OpenGLES3Renderer
 		return mOpenGLES3Program;
 	}
 
+	inline int ProgramGlsl::getDrawIdUniformLocation() const
+	{
+		return mDrawIdUniformLocation;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -108,8 +108,8 @@ UNIFORM_BUFFER_END
 		float3 I = PassData.HosekWilkieSkyCoefficients2[2].xyz;
 
 		// Basing on the "ArHosekSkyModel_GetRadianceInternal"-function ( http://cgg.mff.cuni.cz/projects/SkylightModelling/ )
-		float3 chi = (1 + cos_gamma * cos_gamma) / pow(abs(1 + H * H - 2 * cos_gamma * H), float3(1.5f, 1.5f, 1.5f));
-		return (1 + A * exp(B / (cos_theta + 0.01))) * (C + D * exp(E * gamma) + F * (cos_gamma * cos_gamma) + G * chi + I * sqrt(cos_theta));
+		float3 chi = (1.0f + cos_gamma * cos_gamma) / pow(abs(1.0f + H * H - 2.0f * cos_gamma * H), float3(1.5f, 1.5f, 1.5f));
+		return (1.0f + A * exp(B / (cos_theta + 0.01f))) * (C + D * exp(E * gamma) + F * (cos_gamma * cos_gamma) + G * chi + I * sqrt(cos_theta));
 	}
 
 	/**

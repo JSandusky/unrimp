@@ -122,6 +122,7 @@
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\IMeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResource.inl" />
+    <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Factory\ISceneFactory.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Factory\SceneFactory.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\Camera\CameraSceneItem.inl" />

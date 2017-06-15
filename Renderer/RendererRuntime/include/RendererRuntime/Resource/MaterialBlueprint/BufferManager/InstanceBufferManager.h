@@ -88,19 +88,16 @@ namespace RendererRuntime
 		*  @param[in] passBufferManager
 		*    Pass buffer manager instance to use, can be a null pointer
 		*  @param[in] instanceUniformBuffer
-		*    Instance uniform buffer instance to use, can be a null pointer
-		*  @param[in] instanceTextureBuffer
-		*    Instance texture buffer instance to use, can be a null pointer
+		*    Instance uniform buffer instance to use
 		*  @param[in] renderable
 		*    Renderable to fill the buffer for
 		*  @param[in] materialTechnique
 		*    Used material technique
-		*  @param[out] commandBuffer
-		*    Command buffer to fill
+		*
+		*  @return
+		*    Start instance location, used for draw ID (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
 		*/
-		void fillBuffer(PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer,
-						const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer, const Renderable& renderable,
-						MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer);
+		uint32_t fillBuffer(PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer& instanceUniformBuffer, const Renderable& renderable, MaterialTechnique& materialTechnique);
 
 		/**
 		*  @brief
@@ -113,6 +110,12 @@ namespace RendererRuntime
 		*/
 		void fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer);
 
+		/**
+		*  @brief
+		*    Called pre command buffer execution
+		*/
+		void onPreCommandBufferExecution();
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -123,21 +126,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::vector<uint8_t> ScratchBuffer;
-
-
-	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		  mRendererRuntime;	///< Renderer runtime instance to use
-		Renderer::IUniformBuffer* mUniformBuffer;	///< Uniform buffer instance, always valid
-		Renderer::ITextureBuffer* mTextureBuffer;	///< Texture buffer instance, always valid
-		ScratchBuffer			  mUniformScratchBuffer;
-		ScratchBuffer			  mTextureScratchBuffer;
+		IRendererRuntime&		  mRendererRuntime;			///< Renderer runtime instance to use
+		uint32_t				  mStartInstanceLocation;	///< Start instance location, used for draw ID (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
+		// TODO(co) This is just a placeholder implementation until "RendererRuntime::InstanceBufferManager" is ready
+		Renderer::IUniformBuffer* mUniformBuffer;			///< Uniform buffer instance, always valid
+		Renderer::ITextureBuffer* mTextureBuffer;			///< Texture buffer instance, always valid
+		bool					  mMapped;
+		uint8_t*				  mStartUniformBufferPointer;
+		uint8_t*				  mCurrentUniformBufferPointer;
+		float*					  mStartTextureBufferPointer;
+		float*					  mCurrentTextureBufferPointer;
 
 
 	};

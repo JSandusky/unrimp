@@ -108,6 +108,15 @@ namespace OpenGLRenderer
 		*/
 		inline uint32_t getOpenGLShaderProgram() const;
 
+		/**
+		*  @brief
+		*    Return the draw ID uniform location
+		*
+		*  @return
+		*    Draw ID uniform location, -1 if there's no such uniform (type "GLuint" not used in here in order to keep the header slim)
+		*/
+		inline int getDrawIdUniformLocation() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
@@ -128,7 +137,8 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t mOpenGLShaderProgram;	///< OpenGL shader program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLShaderProgram;		///< OpenGL shader program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		int		 mDrawIdUniformLocation;	///< Draw ID uniform location (type "GLuint" not used in here in order to keep the header slim), used for "GL_ARB_base_instance"-emulation (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
 
 
 	};

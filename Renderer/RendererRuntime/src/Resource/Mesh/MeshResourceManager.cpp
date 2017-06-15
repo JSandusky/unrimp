@@ -130,6 +130,15 @@ namespace RendererRuntime
 	MeshResourceManager::MeshResourceManager(IRendererRuntime& rendererRuntime)
 	{
 		mInternalResourceManager = new ResourceManagerTemplate<MeshResource, IMeshResourceLoader, MeshResourceId, 4096>(rendererRuntime, *this);
+
+		// Create the draw ID vertex buffer, see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html
+		uint32_t drawIds[4096];
+		for (uint32_t i = 0; i < 4096; ++i)
+		{
+			drawIds[i] = i;
+		}
+		mDrawIdVertexBufferPtr = rendererRuntime.getBufferManager().createVertexBuffer(sizeof(drawIds), drawIds, Renderer::BufferUsage::STATIC_DRAW);
+		RENDERER_SET_RESOURCE_DEBUG_NAME(mDrawIdVertexBufferPtr, "Draw ID VBO")
 	}
 
 	MeshResourceManager::~MeshResourceManager()

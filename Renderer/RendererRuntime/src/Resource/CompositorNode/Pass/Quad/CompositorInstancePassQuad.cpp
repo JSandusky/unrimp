@@ -81,11 +81,6 @@ namespace
 			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Compositor instance pass quad")
 
 			// Create vertex array object (VAO)
-			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-			// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
 			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 			{
 				{ // Vertex buffer 0

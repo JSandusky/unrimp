@@ -21,25 +21,20 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t ProgramSeparate::getOpenGLProgramPipeline() const
+	inline Renderer::IVertexBufferPtr MeshResourceManager::getDrawIdVertexBufferPtr() const
 	{
-		return mOpenGLProgramPipeline;
-	}
-
-	inline VertexShaderSeparate* ProgramSeparate::getVertexShaderSeparate() const
-	{
-		return mVertexShaderSeparate;
+		return mDrawIdVertexBufferPtr;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // RendererRuntime

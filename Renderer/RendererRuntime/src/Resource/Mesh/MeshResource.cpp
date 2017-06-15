@@ -75,6 +75,18 @@ namespace
 				sizeof(float) * 3 + sizeof(float) * 2,		// alignedByteOffset (uint32_t)
 				// Data source, instancing part
 				0											// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 3, see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html
+				// Data destination
+				Renderer::VertexAttributeFormat::UINT_1,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+				"drawId",									// name[32] (char)
+				"DRAWID",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				1,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				1											// instancesPerElement (uint32_t)
 			}
 		};
 		const Renderer::VertexAttribute SkinnedVertexAttributesLayout[] =
@@ -115,7 +127,19 @@ namespace
 				// Data source, instancing part
 				0												// instancesPerElement (uint32_t)
 			},
-			{ // Attribute 3
+			{ // Attribute 3, see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html
+				// Data destination
+				Renderer::VertexAttributeFormat::UINT_1,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+				"drawId",									// name[32] (char)
+				"DRAWID",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				1,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				1											// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 4
 				// Data destination
 				Renderer::VertexAttributeFormat::R8G8B8A8_UINT,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 				"BlendIndices",									// name[32] (char)
@@ -127,7 +151,7 @@ namespace
 				// Data source, instancing part
 				0												// instancesPerElement (uint32_t)
 			},
-			{ // Attribute 4
+			{ // Attribute 5
 				// Data destination
 				Renderer::VertexAttributeFormat::R8G8B8A8_UINT,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 				"BlendWeights",									// name[32] (char)

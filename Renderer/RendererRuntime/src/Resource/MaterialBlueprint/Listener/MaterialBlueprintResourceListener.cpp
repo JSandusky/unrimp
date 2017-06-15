@@ -803,7 +803,7 @@ namespace RendererRuntime
 		return valueFilled;
 	}
 
-	bool MaterialBlueprintResourceListener::fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes)
+	bool MaterialBlueprintResourceListener::fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes, uint32_t instanceTextureBufferStartIndex)
 	{
 		bool valueFilled = true;
 		std::ignore = numberOfBytes;
@@ -815,7 +815,7 @@ namespace RendererRuntime
 			uint32_t* integerBuffer = reinterpret_cast<uint32_t*>(buffer);
 
 			// 0 = x = The instance texture buffer start index
-			integerBuffer[0] = 0;
+			integerBuffer[0] = instanceTextureBufferStartIndex;
 
 			// 1 = y = The assigned material slot inside the material uniform buffer
 			integerBuffer[1] = mMaterialTechnique->getAssignedMaterialSlot();

@@ -532,7 +532,13 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 		// Update compositor workspace
 		{ // MSAA
 			static const uint8_t NUMBER_OF_MULTISAMPLES[4] = { 1, 2, 4, 8 };
-			mCompositorWorkspaceInstance->setNumberOfMultisamples(NUMBER_OF_MULTISAMPLES[mCurrentMsaa]);
+			uint8_t numberOfMultisamples = NUMBER_OF_MULTISAMPLES[mCurrentMsaa];
+			const uint8_t maximumNumberOfMultisamples = rendererRuntime->getRenderer().getCapabilities().maximumNumberOfMultisamples;
+			if (numberOfMultisamples > maximumNumberOfMultisamples)
+			{
+				numberOfMultisamples = maximumNumberOfMultisamples;
+			}
+			mCompositorWorkspaceInstance->setNumberOfMultisamples(numberOfMultisamples);
 		}
 		mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
 

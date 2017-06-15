@@ -51,7 +51,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract OpenGL ES texture buffer object (TBO) interface
+	*    Abstract OpenGL ES 3 texture buffer object (TBO) interface
 	*/
 	class TextureBuffer : public Renderer::ITextureBuffer
 	{
@@ -69,21 +69,23 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Return the OpenGL ES texture buffer instance
+		*    Return the OpenGL ES 3 texture buffer instance
 		*
 		*  @return
-		*    The OpenGL ES texture buffer instance, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*    The OpenGL ES 3 texture buffer instance, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline uint32_t getOpenGLESTextureBuffer() const;
+		inline uint32_t getOpenGLES3TextureBuffer() const;
 
 		/**
 		*  @brief
-		*    Return the OpenGL ES texture instance
+		*    Return the OpenGL ES 3 texture instance
 		*
 		*  @return
-		*    The OpenGL ES texture instance, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		*    The OpenGL ES 3 texture instance, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline uint32_t getOpenGLESTexture() const;
+		inline uint32_t getOpenGLES3Texture() const;
+
+		inline uint32_t getBufferSize() const;
 
 
 	//[-------------------------------------------------------]
@@ -95,17 +97,20 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES renderer instance
+		*    Owner OpenGL ES 3 renderer instance
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the texture buffer, must be valid
 		*/
-		explicit TextureBuffer(OpenGLES3Renderer &openGLES3Renderer);
+		TextureBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes);
 
 
 	//[-------------------------------------------------------]
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		uint32_t mOpenGLESTextureBuffer;	///< OpenGL ES texture buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		uint32_t mOpenGLESTexture;			///< OpenGL ES texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES3TextureBuffer;	///< OpenGL ES 3 texture buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES3Texture;			///< OpenGL ES 3 texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mBufferSize;				///< Holds the size of the buffer
 
 
 	//[-------------------------------------------------------]

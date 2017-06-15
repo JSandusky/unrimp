@@ -37,29 +37,30 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	TextureBuffer::~TextureBuffer()
 	{
-		// Destroy the OpenGL texture instance
+		// Destroy the OpenGL ES 3 texture instance
 		// -> Silently ignores 0's and names that do not correspond to existing textures
-		glDeleteTextures(1, &mOpenGLESTexture);
+		glDeleteTextures(1, &mOpenGLES3Texture);
 
-		// Destroy the OpenGL texture buffer
+		// Destroy the OpenGL ES 3  texture buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteBuffers(1, &mOpenGLESTextureBuffer);
+		glDeleteBuffers(1, &mOpenGLES3TextureBuffer);
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(OpenGLES3Renderer &openGLES3Renderer) :
+	TextureBuffer::TextureBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes) :
 		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES3Renderer)),
-		mOpenGLESTextureBuffer(0),
-		mOpenGLESTexture(0)
+		mOpenGLES3TextureBuffer(0),
+		mOpenGLES3Texture(0),
+		mBufferSize(numberOfBytes)
 	{
-		// Create the OpenGL texture buffer
-		glGenBuffers(1, &mOpenGLESTextureBuffer);
+		// Create the OpenGL ES 3 texture buffer
+		glGenBuffers(1, &mOpenGLES3TextureBuffer);
 
-		// Create the OpenGL texture instance
-		glGenTextures(1, &mOpenGLESTexture);
+		// Create the OpenGL ES 3 texture instance
+		glGenTextures(1, &mOpenGLES3Texture);
 	}
 
 

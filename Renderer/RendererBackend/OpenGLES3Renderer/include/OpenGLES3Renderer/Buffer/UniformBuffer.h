@@ -69,12 +69,14 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Return the OpenGL ES uniform buffer instance
+		*    Return the OpenGL ES 3 uniform buffer instance
 		*
 		*  @return
-		*    The OpenGL ES uniform buffer instance, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*    The OpenGL ES 3 uniform buffer instance, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline uint32_t getOpenGLESUniformBuffer() const;
+		inline uint32_t getOpenGLES3UniformBuffer() const;
+
+		inline uint32_t getBufferSize() const;
 
 
 	//[-------------------------------------------------------]
@@ -87,15 +89,18 @@ namespace OpenGLES3Renderer
 		*
 		*  @param[in] openGLES3Renderer
 		*    Owner OpenGL ES2 renderer instance
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the uniform buffer, must be valid
 		*/
-		explicit UniformBuffer(OpenGLES3Renderer &openGLES3Renderer);
+		UniformBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes);
 
 
 	//[-------------------------------------------------------]
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		uint32_t mOpenGLESUniformBuffer;	///< OpenGL ES uniform buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES3UniformBuffer;	///< OpenGL ES 3 uniform buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mBufferSize;				///< Holds the size of the buffer
 
 
 	//[-------------------------------------------------------]

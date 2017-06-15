@@ -612,6 +612,9 @@
     <None Include="include\RendererRuntime\Resource\Scene\Item\Sky\HosekWilkieSky.inl">
       <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.inl">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">

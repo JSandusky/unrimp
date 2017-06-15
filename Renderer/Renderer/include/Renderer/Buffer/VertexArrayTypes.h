@@ -62,7 +62,8 @@ namespace Renderer
 		R8G8B8A8_UNORM	= 4,	///< Unsigned byte 4 (four components per element, 8 bit integer per component), will be passed in a normalized form into shaders, supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
 		R8G8B8A8_UINT	= 5,	///< Unsigned byte 4 (four components per element, 8 bit integer per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
 		SHORT_2			= 6,	///< Short 2 (two components per element, 16 bit integer per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
-		SHORT_4			= 7		///< Short 4 (four components per element, 16 bit integer per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
+		SHORT_4			= 7,	///< Short 4 (four components per element, 16 bit integer per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
+		UINT_1			= 8		///< Unsigned integer 1 (one components per element, 32 bit unsigned integer per component), supported by DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
 	};
 
 

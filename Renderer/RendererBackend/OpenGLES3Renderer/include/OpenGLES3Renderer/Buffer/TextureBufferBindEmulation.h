@@ -45,7 +45,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL texture buffer object (TBO) class, traditional bind version and uniform buffer to emulate texture buffer behaviour (with limitations, of course)
+	*    OpenGL ES 3 texture buffer object (TBO) class, traditional bind version and uniform buffer to emulate texture buffer behaviour (with limitations, of course)
 	*/
 	class TextureBufferBindEmulation : public TextureBuffer
 	{
@@ -60,7 +60,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGLES renderer instance
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the texture buffer, must be valid
 		*  @param[in] textureFormat

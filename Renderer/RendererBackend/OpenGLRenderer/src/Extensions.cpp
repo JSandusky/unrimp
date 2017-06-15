@@ -93,6 +93,7 @@ namespace OpenGLRenderer
 	bool Extensions::isGL_ARB_geometry_shader4()			const { return mGL_ARB_geometry_shader4;			}
 	bool Extensions::isGL_ARB_fragment_shader()				const { return mGL_ARB_fragment_shader;				}
 	bool Extensions::isGL_ARB_draw_instanced()				const { return mGL_ARB_draw_instanced;				}
+	bool Extensions::isGL_ARB_base_instance()				const { return mGL_ARB_base_instance;				}
 	bool Extensions::isGL_ARB_instanced_arrays()			const { return mGL_ARB_instanced_arrays;			}
 	bool Extensions::isGL_ARB_vertex_array_object()			const { return mGL_ARB_vertex_array_object;			}
 	bool Extensions::isGL_ARB_sampler_objects()				const { return mGL_ARB_sampler_objects;				}
@@ -261,6 +262,7 @@ namespace OpenGLRenderer
 		mGL_ARB_geometry_shader4			= false;
 		mGL_ARB_fragment_shader				= false;
 		mGL_ARB_draw_instanced				= false;
+		mGL_ARB_base_instance				= false;
 		mGL_ARB_instanced_arrays			= false;
 		mGL_ARB_vertex_array_object			= false;
 		mGL_ARB_sampler_objects				= false;
@@ -371,6 +373,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glMapNamedBufferEXT)
 			IMPORT_FUNC(glUnmapNamedBufferEXT)
 			IMPORT_FUNC(glProgramUniform1iEXT)
+			IMPORT_FUNC(glProgramUniform1uiEXT)
 			IMPORT_FUNC(glProgramUniform1fEXT)
 			IMPORT_FUNC(glProgramUniform2fvEXT)
 			IMPORT_FUNC(glProgramUniform3fvEXT)
@@ -477,6 +480,7 @@ namespace OpenGLRenderer
 			// Load the entry points
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glVertexAttribPointerARB)
+			IMPORT_FUNC(glVertexAttribIPointerARB)	// GL_NV_vertex_program4
 			IMPORT_FUNC(glEnableVertexAttribArrayARB)
 			IMPORT_FUNC(glDisableVertexAttribArrayARB)
 			mGL_ARB_vertex_program = result;
@@ -646,6 +650,18 @@ namespace OpenGLRenderer
 			mGL_ARB_draw_instanced = result;
 		}
 
+		// GL_ARB_base_instance - Is core since OpenGL 4.3
+		mGL_ARB_base_instance = isSupported("GL_ARB_base_instance");
+		if (mGL_ARB_base_instance)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glDrawArraysInstancedBaseInstanceARB)
+			IMPORT_FUNC(glDrawElementsInstancedBaseInstanceARB)
+			IMPORT_FUNC(glDrawElementsInstancedBaseVertexBaseInstanceARB)
+			mGL_ARB_base_instance = result;
+		}
+
 		// GL_ARB_instanced_arrays
 		mGL_ARB_instanced_arrays = isSupported("GL_ARB_instanced_arrays");
 		if (mGL_ARB_instanced_arrays)
@@ -720,6 +736,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glMapNamedBuffer)
 			IMPORT_FUNC(glUnmapNamedBuffer)
 			IMPORT_FUNC(glProgramUniform1i)
+			IMPORT_FUNC(glProgramUniform1ui)
 			IMPORT_FUNC(glProgramUniform1f)
 			IMPORT_FUNC(glProgramUniform2fv)
 			IMPORT_FUNC(glProgramUniform3fv)
@@ -743,6 +760,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glTextureSubImage2D)
 			IMPORT_FUNC(glTextureSubImage3D)
 			IMPORT_FUNC(glVertexArrayAttribFormat)
+			IMPORT_FUNC(glVertexArrayAttribIFormat)
 			IMPORT_FUNC(glVertexArrayAttribBinding)
 			IMPORT_FUNC(glVertexArrayVertexBuffer)
 			IMPORT_FUNC(glVertexArrayBindingDivisor)

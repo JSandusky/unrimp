@@ -149,6 +149,7 @@ namespace OpenGLRenderer
 		bool isGL_ARB_geometry_shader4() const;
 		bool isGL_ARB_fragment_shader() const;
 		bool isGL_ARB_draw_instanced() const;
+		bool isGL_ARB_base_instance() const;
 		bool isGL_ARB_instanced_arrays() const;
 		bool isGL_ARB_vertex_array_object() const;
 		bool isGL_ARB_sampler_objects() const;
@@ -259,6 +260,7 @@ namespace OpenGLRenderer
 		bool mGL_ARB_geometry_shader4;
 		bool mGL_ARB_fragment_shader;
 		bool mGL_ARB_draw_instanced;
+		bool mGL_ARB_base_instance;
 		bool mGL_ARB_instanced_arrays;
 		bool mGL_ARB_vertex_array_object;
 		bool mGL_ARB_sampler_objects;
@@ -304,6 +306,7 @@ namespace OpenGLRenderer
 	FNDEF_EX(glMapNamedBufferEXT,					PFNGLMAPNAMEDBUFFEREXTPROC);
 	FNDEF_EX(glUnmapNamedBufferEXT,					PFNGLUNMAPNAMEDBUFFEREXTPROC);
 	FNDEF_EX(glProgramUniform1iEXT,					PFNGLPROGRAMUNIFORM1IEXTPROC);
+	FNDEF_EX(glProgramUniform1uiEXT,				PFNGLPROGRAMUNIFORM1UIEXTPROC);
 	FNDEF_EX(glProgramUniform1fEXT,					PFNGLPROGRAMUNIFORM1FEXTPROC);
 	FNDEF_EX(glProgramUniform2fvEXT,				PFNGLPROGRAMUNIFORM2FVEXTPROC);
 	FNDEF_EX(glProgramUniform3fvEXT,				PFNGLPROGRAMUNIFORM3FVEXTPROC);
@@ -368,6 +371,7 @@ namespace OpenGLRenderer
 
 	// GL_ARB_vertex_program
 	FNDEF_EX(glVertexAttribPointerARB,		PFNGLVERTEXATTRIBPOINTERARBPROC);
+	FNDEF_EX(glVertexAttribIPointerARB,		PFNGLVERTEXATTRIBIPOINTERPROC);	// GL_NV_vertex_program4
 	FNDEF_EX(glEnableVertexAttribArrayARB,	PFNGLENABLEVERTEXATTRIBARRAYARBPROC);
 	FNDEF_EX(glDisableVertexAttribArrayARB,	PFNGLDISABLEVERTEXATTRIBARRAYARBPROC);
 
@@ -443,6 +447,11 @@ namespace OpenGLRenderer
 	FNDEF_EX(glDrawArraysInstancedARB,		PFNGLDRAWARRAYSINSTANCEDARBPROC);
 	FNDEF_EX(glDrawElementsInstancedARB,	PFNGLDRAWELEMENTSINSTANCEDARBPROC);
 
+	// GL_ARB_base_instance
+	FNDEF_EX(glDrawArraysInstancedBaseInstanceARB,				PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEPROC);
+	FNDEF_EX(glDrawElementsInstancedBaseInstanceARB,			PFNGLDRAWELEMENTSINSTANCEDBASEINSTANCEPROC);
+	FNDEF_EX(glDrawElementsInstancedBaseVertexBaseInstanceARB,	PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEPROC);
+
 	// GL_ARB_instanced_arrays
 	FNDEF_EX(glVertexAttribDivisorARB,	PFNGLVERTEXATTRIBDIVISORARBPROC);
 
@@ -477,6 +486,7 @@ namespace OpenGLRenderer
 	FNDEF_EX(glMapNamedBuffer,					PFNGLMAPNAMEDBUFFERPROC);
 	FNDEF_EX(glUnmapNamedBuffer,				PFNGLUNMAPNAMEDBUFFERPROC);
 	FNDEF_EX(glProgramUniform1i,				PFNGLPROGRAMUNIFORM1IPROC);
+	FNDEF_EX(glProgramUniform1ui,				PFNGLPROGRAMUNIFORM1UIPROC);
 	FNDEF_EX(glProgramUniform1f,				PFNGLPROGRAMUNIFORM1FPROC);
 	FNDEF_EX(glProgramUniform2fv,				PFNGLPROGRAMUNIFORM2FVPROC);
 	FNDEF_EX(glProgramUniform3fv,				PFNGLPROGRAMUNIFORM3FVPROC);
@@ -500,6 +510,7 @@ namespace OpenGLRenderer
 	FNDEF_EX(glTextureSubImage2D,				PFNGLTEXTURESUBIMAGE2DPROC);
 	FNDEF_EX(glTextureSubImage3D,				PFNGLTEXTURESUBIMAGE3DPROC);
 	FNDEF_EX(glVertexArrayAttribFormat,			PFNGLVERTEXARRAYATTRIBFORMATPROC);
+	FNDEF_EX(glVertexArrayAttribIFormat,		PFNGLVERTEXARRAYATTRIBIFORMATPROC);
 	FNDEF_EX(glVertexArrayAttribBinding,		PFNGLVERTEXARRAYATTRIBBINDINGPROC);
 	FNDEF_EX(glVertexArrayVertexBuffer,			PFNGLVERTEXARRAYVERTEXBUFFERPROC);
 	FNDEF_EX(glVertexArrayBindingDivisor,		PFNGLVERTEXARRAYBINDINGDIVISORPROC);

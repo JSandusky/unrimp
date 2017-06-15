@@ -278,6 +278,15 @@ namespace OpenGLRenderer
 		*/
 		void setProgram(Renderer::IProgram *program);
 
+		/**
+		*  @brief
+		*    Update "GL_ARB_base_instance" emulation
+		*
+		*  @param[in] startInstanceLocation
+		*    Start instance location
+		*/
+		void updateGL_ARB_base_instanceEmulation(uint32_t startInstanceLocation);
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
@@ -301,6 +310,10 @@ namespace OpenGLRenderer
 		// State cache to avoid making redundant OpenGL calls
 		uint32_t mOpenGLProgramPipeline;	///< Currently set OpenGL program pipeline, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t mOpenGLProgram;			///< Currently set OpenGL program, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
+		// Draw ID uniform location for "GL_ARB_base_instance"-emulation (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
+		uint32_t mOpenGLVertexProgram;			///< Currently set OpenGL vertex program, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
+		int		 mDrawIdUniformLocation;		///< Draw ID uniform location (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mCurrentStartInstanceLocation;	///< Currently set start instance location
 
 
 	};

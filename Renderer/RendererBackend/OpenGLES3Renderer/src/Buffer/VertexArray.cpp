@@ -88,12 +88,23 @@ namespace OpenGLES3Renderer
 				// Set the OpenGL ES 3 vertex attribute pointer
 				const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
 				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES3ArrayBuffer());
-				glVertexAttribPointer(attributeLocation,
-									  Mapping::getOpenGLES3Size(attribute->vertexAttributeFormat),
-									  Mapping::getOpenGLES3Type(attribute->vertexAttributeFormat),
-									  static_cast<GLboolean>(Mapping::isOpenGLES3VertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
-									  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
-									  reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
+				if (Mapping::isOpenGLES3VertexAttributeFormatInteger(attribute->vertexAttributeFormat))
+				{
+					glVertexAttribIPointer(attributeLocation,
+										   Mapping::getOpenGLES3Size(attribute->vertexAttributeFormat),
+										   Mapping::getOpenGLES3Type(attribute->vertexAttributeFormat),
+										   static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+										   reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
+				}
+				else
+				{
+					glVertexAttribPointer(attributeLocation,
+										  Mapping::getOpenGLES3Size(attribute->vertexAttributeFormat),
+										  Mapping::getOpenGLES3Type(attribute->vertexAttributeFormat),
+										  static_cast<GLboolean>(Mapping::isOpenGLES3VertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
+										  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+										  reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
+				}
 
 				// Enable OpenGL ES 3 vertex attribute array
 				glEnableVertexAttribArray(attributeLocation);

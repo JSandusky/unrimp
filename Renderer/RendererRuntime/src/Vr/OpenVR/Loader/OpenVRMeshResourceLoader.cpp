@@ -25,6 +25,7 @@
 #include "RendererRuntime/Vr/OpenVR/Loader/OpenVRMeshResourceLoader.h"
 #include "RendererRuntime/Vr/OpenVR/Loader/OpenVRTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
+#include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
@@ -369,8 +370,12 @@ namespace RendererRuntime
 		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 		{
 			{ // Vertex buffer 0
-				vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-				::detail::NUMBER_OF_BYTES_PER_VERTEX	// strideInBytes (uint32_t)
+				vertexBuffer,															// vertexBuffer (Renderer::IVertexBuffer *)
+				::detail::NUMBER_OF_BYTES_PER_VERTEX									// strideInBytes (uint32_t)
+			},
+			{ // Vertex buffer 1
+				mRendererRuntime.getMeshResourceManager().getDrawIdVertexBufferPtr(),	// vertexBuffer (Renderer::IVertexBuffer *)
+				sizeof(uint32_t)														// strideInBytes (uint32_t)
 			}
 		};
 		Renderer::IVertexArray* vertexArray = bufferManager.createVertexArray(MeshResource::VERTEX_ATTRIBUTES, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBuffer);

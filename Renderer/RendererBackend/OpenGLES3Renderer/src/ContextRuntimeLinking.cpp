@@ -584,6 +584,7 @@ namespace OpenGLES3Renderer
 		IMPORT_FUNC(glUniform1fv);
 		IMPORT_FUNC(glUniform1i);
 		IMPORT_FUNC(glUniform1iv);
+		IMPORT_FUNC(glUniform1ui);
 		IMPORT_FUNC(glUniform2f);
 		IMPORT_FUNC(glUniform2fv);
 		IMPORT_FUNC(glUniform2i);
@@ -610,6 +611,7 @@ namespace OpenGLES3Renderer
 		IMPORT_FUNC(glVertexAttrib4f);
 		IMPORT_FUNC(glVertexAttrib4fv);
 		IMPORT_FUNC(glVertexAttribPointer);
+		IMPORT_FUNC(glVertexAttribIPointer);
 		IMPORT_FUNC(glViewport);
 		IMPORT_FUNC(glBindBufferBase);
 		IMPORT_FUNC(glUnmapBuffer);

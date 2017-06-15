@@ -73,7 +73,14 @@ namespace OpenGLRenderer
 				glEnableVertexArrayAttrib(mOpenGLVertexArray, attributeLocation);
 
 				// Set up the format for my attribute
-				glVertexArrayAttribFormat(mOpenGLVertexArray, attributeLocation, Mapping::getOpenGLSize(attribute->vertexAttributeFormat), Mapping::getOpenGLType(attribute->vertexAttributeFormat), static_cast<GLboolean>(Mapping::isOpenGLVertexAttributeFormatNormalized(attribute->vertexAttributeFormat)), static_cast<GLuint>(attribute->alignedByteOffset));
+				if (Mapping::isOpenGLVertexAttributeFormatInteger(attribute->vertexAttributeFormat))
+				{
+					glVertexArrayAttribIFormat(mOpenGLVertexArray, attributeLocation, Mapping::getOpenGLSize(attribute->vertexAttributeFormat), Mapping::getOpenGLType(attribute->vertexAttributeFormat), static_cast<GLuint>(attribute->alignedByteOffset));
+				}
+				else
+				{
+					glVertexArrayAttribFormat(mOpenGLVertexArray, attributeLocation, Mapping::getOpenGLSize(attribute->vertexAttributeFormat), Mapping::getOpenGLType(attribute->vertexAttributeFormat), static_cast<GLboolean>(Mapping::isOpenGLVertexAttributeFormatNormalized(attribute->vertexAttributeFormat)), static_cast<GLuint>(attribute->alignedByteOffset));
+				}
 				glVertexArrayAttribBinding(mOpenGLVertexArray, attributeLocation, attributeLocation);
 
 				// Bind vertex buffer to buffer point

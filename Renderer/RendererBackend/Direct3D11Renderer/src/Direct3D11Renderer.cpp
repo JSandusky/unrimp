@@ -1245,7 +1245,7 @@ namespace Direct3D11Renderer
 			const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
 
 			// Draw
-			if (drawInstancedArguments.instanceCount > 1)
+			if (drawInstancedArguments.instanceCount > 1 || drawInstancedArguments.startInstanceLocation > 0)
 			{
 				// With instancing
 				mD3D11DeviceContext->DrawInstanced(
@@ -1283,7 +1283,7 @@ namespace Direct3D11Renderer
 			const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
 
 			// Draw
-			if (drawIndexedInstancedArguments.instanceCount > 1)
+			if (drawIndexedInstancedArguments.instanceCount > 1 || drawIndexedInstancedArguments.startInstanceLocation > 0)
 			{
 				// With instancing
 				mD3D11DeviceContext->DrawIndexedInstanced(

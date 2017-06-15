@@ -32,7 +32,6 @@
 INPUT_BEGIN
 	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
 	INPUT_TEXTURE_COORDINATE(float3, ViewRayVS,  1)	// View space ray used for view space position reconstruction
-	INPUT_VERTEX_DRAW_ID							// Draw ID
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)

@@ -33,6 +33,11 @@ namespace OpenGLRenderer
 		return mOpenGLProgram;
 	}
 
+	inline int ProgramMonolithic::getDrawIdUniformLocation() const
+	{
+		return mDrawIdUniformLocation;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

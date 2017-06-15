@@ -38,12 +38,12 @@ out gl_PerVertex
 {
 	vec4 gl_Position;
 };
-in  vec2 TexCoord;		// 32 bit texture coordinate
-out vec2 TexCoordVs;	// Texture coordinate
-in  vec4 QTangent;		// 16 bit QTangent
-out vec3 TangentVs;		// Tangent space to view space, x-axis
-out vec3 BinormalVs;	// Tangent space to view space, y-axis
-out vec3 NormalVs;		// Tangent space to view space, z-axis
+in  vec2  TexCoord;		// 32 bit texture coordinate
+out vec2  TexCoordVs;	// Texture coordinate
+in  ivec4 QTangent;		// 16 bit QTangent
+out vec3  TangentVs;	// Tangent space to view space, x-axis
+out vec3  BinormalVs;	// Tangent space to view space, y-axis
+out vec3  NormalVs;		// Tangent space to view space, z-axis
 
 // Uniforms
 layout(std140) uniform UniformBlockDynamicVs

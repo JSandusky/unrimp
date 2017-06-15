@@ -28,14 +28,19 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t TextureBuffer::getOpenGLESTextureBuffer() const
+	inline uint32_t TextureBuffer::getOpenGLES3TextureBuffer() const
 	{
-		return mOpenGLESTextureBuffer;
+		return mOpenGLES3TextureBuffer;
 	}
 
-	inline uint32_t TextureBuffer::getOpenGLESTexture() const
+	inline uint32_t TextureBuffer::getOpenGLES3Texture() const
 	{
-		return mOpenGLESTexture;
+		return mOpenGLES3Texture;
+	}
+
+	inline uint32_t TextureBuffer::getBufferSize() const
+	{
+		return mBufferSize;
 	}
 
 

@@ -28,9 +28,14 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t UniformBuffer::getOpenGLESUniformBuffer() const
+	inline uint32_t UniformBuffer::getOpenGLES3UniformBuffer() const
 	{
-		return mOpenGLESUniformBuffer;
+		return mOpenGLES3UniformBuffer;
+	}
+
+	inline uint32_t UniformBuffer::getBufferSize() const
+	{
+		return mBufferSize;
 	}
 
 

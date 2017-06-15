@@ -346,6 +346,7 @@ namespace OpenGLES3Renderer
 	FNDEF_GL(void,				glUniform1fv,							(GLint location, GLsizei count, const GLfloat* v));
 	FNDEF_GL(void,				glUniform1i,							(GLint location, GLint x));
 	FNDEF_GL(void,				glUniform1iv,							(GLint location, GLsizei count, const GLint* v));
+	FNDEF_GL(void,				glUniform1ui,							(GLint location, GLuint x));
 	FNDEF_GL(void,				glUniform2f,							(GLint location, GLfloat x, GLfloat y));
 	FNDEF_GL(void,				glUniform2fv,							(GLint location, GLsizei count, const GLfloat* v));
 	FNDEF_GL(void,				glUniform2i,							(GLint location, GLint x, GLint y));
@@ -372,6 +373,7 @@ namespace OpenGLES3Renderer
 	FNDEF_GL(void,				glVertexAttrib4f,						(GLuint indx, GLfloat x, GLfloat y, GLfloat z, GLfloat w));
 	FNDEF_GL(void,				glVertexAttrib4fv,						(GLuint indx, const GLfloat* values));
 	FNDEF_GL(void,				glVertexAttribPointer,					(GLuint indx, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* ptr));
+	FNDEF_GL(void,				glVertexAttribIPointer,					(GLuint indx, GLint size, GLenum type, GLsizei stride, const GLvoid* ptr));
 	FNDEF_GL(void,				glViewport,								(GLint x, GLint y, GLsizei width, GLsizei height));
 	// ES 3.0
 	FNDEF_GL(void,				glBindBufferBase,						(GLenum target, GLuint index, GLuint buffer));
@@ -554,6 +556,7 @@ namespace OpenGLES3Renderer
 	#define	glUniform1fv							FNPTR(glUniform1fv)
 	#define	glUniform1i								FNPTR(glUniform1i)
 	#define	glUniform1iv							FNPTR(glUniform1iv)
+	#define	glUniform1ui							FNPTR(glUniform1ui)
 	#define	glUniform2f								FNPTR(glUniform2f)
 	#define	glUniform2fv							FNPTR(glUniform2fv)
 	#define	glUniform2i								FNPTR(glUniform2i)
@@ -580,6 +583,7 @@ namespace OpenGLES3Renderer
 	#define	glVertexAttrib4f						FNPTR(glVertexAttrib4f)
 	#define	glVertexAttrib4fv						FNPTR(glVertexAttrib4fv)
 	#define	glVertexAttribPointer					FNPTR(glVertexAttribPointer)
+	#define	glVertexAttribIPointer					FNPTR(glVertexAttribIPointer)
 	#define	glViewport								FNPTR(glViewport)
 
 	// ES 3.0

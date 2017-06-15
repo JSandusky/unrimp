@@ -45,7 +45,8 @@ namespace OpenGLES3Renderer
 		IProgram(openGLES3Renderer),
 		mNumberOfRootSignatureParameters(0),
 		mRootSignatureParameterIndexToUniformLocation(nullptr),
-		mOpenGLES3Program(0)
+		mOpenGLES3Program(0),
+		mDrawIdUniformLocation(-1)
 	{
 		// Create the OpenGL ES 3 program
 		mOpenGLES3Program = glCreateProgram();
@@ -81,6 +82,12 @@ namespace OpenGLES3Renderer
 		glGetProgramiv(mOpenGLES3Program, GL_LINK_STATUS, &linked);
 		if (GL_TRUE == linked)
 		{
+			// Get draw ID uniform location
+			if (!openGLES3Renderer.getContext().getExtensions().isGL_EXT_base_instance())
+			{
+				mDrawIdUniformLocation = glGetUniformLocation(mOpenGLES3Program, "drawIdUniform");
+			}
+
 			// The actual locations assigned to uniform variables are not known until the program object is linked successfully
 			// -> So we have to build a root signature parameter index -> uniform location mapping here
 			const Renderer::RootSignature& rootSignatureData = static_cast<const RootSignature&>(rootSignature).getRootSignature();

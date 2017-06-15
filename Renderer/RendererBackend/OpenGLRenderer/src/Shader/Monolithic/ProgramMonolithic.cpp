@@ -48,7 +48,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	ProgramMonolithic::ProgramMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderMonolithic *vertexShaderMonolithic, TessellationControlShaderMonolithic *tessellationControlShaderMonolithic, TessellationEvaluationShaderMonolithic *tessellationEvaluationShaderMonolithic, GeometryShaderMonolithic *geometryShaderMonolithic, FragmentShaderMonolithic *fragmentShaderMonolithic) :
 		IProgram(openGLRenderer),
-		mOpenGLProgram(glCreateProgramObjectARB())
+		mOpenGLProgram(glCreateProgramObjectARB()),
+		mDrawIdUniformLocation(-1)
 	{
 		// Attach the shaders to the program
 		// -> We don't need to keep a reference to the shader, to add and release at once to ensure a nice behaviour
@@ -125,6 +126,12 @@ namespace OpenGLRenderer
 			// -> Use legacy GLSL if necessary:
 			//    "gl_FragData[0] = vec4(1.0f, 0.0f, 0.0f, 0.0f);"
 			//    "gl_FragData[1] = vec4(0.0f, 0.0f, 1.0f, 0.0f);"
+
+			// Get draw ID uniform location
+			if (!openGLRenderer.getExtensions().isGL_ARB_base_instance())
+			{
+				mDrawIdUniformLocation = glGetUniformLocationARB(mOpenGLProgram, "drawIdUniform");
+			}
 
 			// The actual locations assigned to uniform variables are not known until the program object is linked successfully
 			// -> So we have to build a root signature parameter index -> uniform location mapping here

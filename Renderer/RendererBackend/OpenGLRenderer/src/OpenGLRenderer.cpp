@@ -56,6 +56,7 @@
 #include "OpenGLRenderer/Shader/Monolithic/ProgramMonolithic.h"
 #include "OpenGLRenderer/Shader/Separate/ShaderLanguageSeparate.h"
 #include "OpenGLRenderer/Shader/Separate/ProgramSeparate.h"
+#include "OpenGLRenderer/Shader/Separate/VertexShaderSeparate.h"
 
 #ifdef WIN32
 	#include "OpenGLRenderer/Windows/ContextWindows.h"
@@ -65,6 +66,8 @@
 
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
+
+#include <tuple>	// For "std::ignore"
 
 
 //[-------------------------------------------------------]
@@ -95,6 +98,96 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
+		bool mapBuffer(const OpenGLRenderer::Extensions& extensions, GLenum target, GLenum bindingTarget, GLuint openGLBuffer, Renderer::MapType mapType, Renderer::MappedSubresource& mappedSubresource)
+		{
+			// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
+
+			// Is "GL_ARB_direct_state_access" there?
+			if (extensions.isGL_ARB_direct_state_access())
+			{
+				// Effective direct state access (DSA)
+				mappedSubresource.data		 = OpenGLRenderer::glMapNamedBuffer(openGLBuffer, OpenGLRenderer::Mapping::getOpenGLMapType(mapType));
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+			}
+			// Is "GL_EXT_direct_state_access" there?
+			else if (extensions.isGL_EXT_direct_state_access())
+			{
+				// Effective direct state access (DSA)
+				mappedSubresource.data		 = OpenGLRenderer::glMapNamedBufferEXT(openGLBuffer, OpenGLRenderer::Mapping::getOpenGLMapType(mapType));
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+			}
+			else
+			{
+				// Traditional bind version
+
+				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+					// Backup the currently bound OpenGL buffer
+					GLint openGLBufferBackup = 0;
+					OpenGLRenderer::glGetIntegerv(bindingTarget, &openGLBufferBackup);
+				#else
+					std::ignore = bindingTarget;
+				#endif
+
+				// Bind this OpenGL buffer
+				OpenGLRenderer::glBindBufferARB(target, openGLBuffer);
+
+				// Map
+				mappedSubresource.data		 = OpenGLRenderer::glMapBufferARB(target, OpenGLRenderer::Mapping::getOpenGLMapType(mapType));
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+					// Be polite and restore the previous bound OpenGL buffer
+					OpenGLRenderer::glBindBufferARB(target, static_cast<GLuint>(openGLBufferBackup));
+				#endif
+			}
+
+			// Done
+			assert(nullptr != mappedSubresource.data && "Mapping of OpenGL buffer failed");
+			return (nullptr != mappedSubresource.data);
+		}
+
+		void unmapBuffer(const OpenGLRenderer::Extensions& extensions, GLenum target, GLenum bindingTarget, GLuint openGLBuffer)
+		{
+			// Is "GL_ARB_direct_state_access" there?
+			if (extensions.isGL_ARB_direct_state_access())
+			{
+				// Effective direct state access (DSA)
+				OpenGLRenderer::glUnmapNamedBuffer(openGLBuffer);
+			}
+			// Is "GL_EXT_direct_state_access" there?
+			else if (extensions.isGL_EXT_direct_state_access())
+			{
+				// Effective direct state access (DSA)
+				OpenGLRenderer::glUnmapNamedBufferEXT(openGLBuffer);
+			}
+			else
+			{
+				// Traditional bind version
+
+				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+					// Backup the currently bound OpenGL buffer
+					GLint openGLBufferBackup = 0;
+					OpenGLRenderer::glGetIntegerv(bindingTarget, &openGLBufferBackup);
+				#else
+					std::ignore = bindingTarget;
+				#endif
+
+				// Bind this OpenGL buffer
+				OpenGLRenderer::glBindBufferARB(target, openGLBuffer);
+
+				// Unmap
+				OpenGLRenderer::glUnmapBufferARB(target);
+
+				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+					// Be polite and restore the previous bound OpenGL buffer
+					OpenGLRenderer::glBindBufferARB(target, static_cast<GLuint>(openGLBufferBackup));
+				#endif
+			}
+		}
+
 		namespace BackendDispatch
 		{
 
@@ -327,7 +420,11 @@ namespace OpenGLRenderer
 		mRenderTarget(nullptr),
 		// State cache to avoid making redundant OpenGL calls
 		mOpenGLProgramPipeline(0),
-		mOpenGLProgram(0)
+		mOpenGLProgram(0),
+		// Draw ID uniform location for "GL_ARB_base_instance"-emulation (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
+		mOpenGLVertexProgram(0),
+		mDrawIdUniformLocation(-1),
+		mCurrentStartInstanceLocation(~0u)
 	{
 		// Is OpenGL available?
 		if (mOpenGLRuntimeLinking->isOpenGLAvaiable())
@@ -1421,7 +1518,7 @@ namespace OpenGLRenderer
 
 			if (mExtensions->isGL_ARB_draw_indirect())
 			{
-				if (numberOfDraws == 1)
+				if (1 == numberOfDraws)
 				{
 					// TODO(co) Optimization: Don't bind if it's already the currently bound thing
 					glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
@@ -1460,13 +1557,20 @@ namespace OpenGLRenderer
 			for (uint32_t i = 0; i < numberOfDraws; ++i)
 			{
 				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
-				assert(0 == drawInstancedArguments.startInstanceLocation);	// TODO(co) Add support for this
+				updateGL_ARB_base_instanceEmulation(drawInstancedArguments.startInstanceLocation);
 
 				// Draw and advance
-				if (drawInstancedArguments.instanceCount > 1 && mExtensions->isGL_ARB_draw_instanced())
+				if ((drawInstancedArguments.instanceCount > 1 && mExtensions->isGL_ARB_draw_instanced()) || (drawInstancedArguments.startInstanceLocation > 0 && mExtensions->isGL_ARB_base_instance()))
 				{
 					// With instancing
-					glDrawArraysInstancedARB(mOpenGLPrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount));
+					if (drawInstancedArguments.startInstanceLocation > 0 && mExtensions->isGL_ARB_base_instance())
+					{
+						glDrawArraysInstancedBaseInstanceARB(mOpenGLPrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount), drawInstancedArguments.startInstanceLocation);
+					}
+					else
+					{
+						glDrawArraysInstancedARB(mOpenGLPrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount));
+					}
 				}
 				else
 				{
@@ -1503,7 +1607,7 @@ namespace OpenGLRenderer
 				{
 					if (mExtensions->isGL_ARB_draw_indirect())
 					{
-						if (numberOfDraws == 1)
+						if (1 == numberOfDraws)
 						{
 							// TODO(co) Optimization: Don't bind if it's already the currently bound thing
 							glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
@@ -1548,18 +1652,23 @@ namespace OpenGLRenderer
 				for (uint32_t i = 0; i < numberOfDraws; ++i)
 				{
 					const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
-					assert(0 == drawIndexedInstancedArguments.startInstanceLocation);	// TODO(co) Add support for this
+					updateGL_ARB_base_instanceEmulation(drawIndexedInstancedArguments.startInstanceLocation);
 
 					// Draw and advance
-					if (drawIndexedInstancedArguments.instanceCount > 1 && mExtensions->isGL_ARB_draw_instanced())
+					if ((drawIndexedInstancedArguments.instanceCount > 1 && mExtensions->isGL_ARB_draw_instanced()) || (drawIndexedInstancedArguments.startInstanceLocation > 0 && mExtensions->isGL_ARB_base_instance()))
 					{
 						// With instancing
-
-						// Use base vertex location?
 						if (drawIndexedInstancedArguments.baseVertexLocation > 0)
 						{
+							// Use start instance location?
+							if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mExtensions->isGL_ARB_base_instance())
+							{
+								// Draw with base vertex location and start instance location
+								glDrawElementsInstancedBaseVertexBaseInstanceARB(mOpenGLPrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLType(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation), drawIndexedInstancedArguments.startInstanceLocation);
+							}
+
 							// Is the "GL_ARB_draw_elements_base_vertex" extension there?
-							if (mExtensions->isGL_ARB_draw_elements_base_vertex())
+							else if (mExtensions->isGL_ARB_draw_elements_base_vertex())
 							{
 								// Draw with base vertex location
 								glDrawElementsInstancedBaseVertex(mOpenGLPrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLType(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
@@ -1569,6 +1678,11 @@ namespace OpenGLRenderer
 								// Error!
 								assert(false);
 							}
+						}
+						else if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mExtensions->isGL_ARB_base_instance())
+						{
+							// Draw without base vertex location and with start instance location
+							glDrawElementsInstancedBaseInstanceARB(mOpenGLPrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLType(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), drawIndexedInstancedArguments.startInstanceLocation);
 						}
 						else
 						{
@@ -1593,6 +1707,7 @@ namespace OpenGLRenderer
 							else
 							{
 								// Error!
+								assert(false);
 							}
 						}
 						else
@@ -1812,19 +1927,17 @@ namespace OpenGLRenderer
 			// Effective sampler object (SO)
 			return new SamplerStateSo(*this, samplerState);
 		}
+
+		// Is "GL_EXT_direct_state_access" there?
+		else if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
+		{
+			// Direct state access (DSA) version to emulate a sampler object
+			return new SamplerStateDsa(*this, samplerState);
+		}
 		else
 		{
-			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
-			{
-				// Direct state access (DSA) version to emulate a sampler object
-				return new SamplerStateDsa(*this, samplerState);
-			}
-			else
-			{
-				// Traditional bind version to emulate a sampler object
-				return new SamplerStateBind(*this, samplerState);
-			}
+			// Traditional bind version to emulate a sampler object
+			return new SamplerStateBind(*this, samplerState);
 		}
 	}
 
@@ -1838,110 +1951,16 @@ namespace OpenGLRenderer
 		switch (resource.getResourceType())
 		{
 			case Renderer::ResourceType::INDEX_BUFFER:
-			{
-				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
-
-				// Is "GL_ARB_direct_state_access" there?
-				if (mExtensions->isGL_ARB_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					mappedSubresource.data		 = glMapNamedBuffer(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer(), Mapping::getOpenGLMapType(mapType));
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-				}
-				// Is "GL_EXT_direct_state_access" there?
-				else if (mExtensions->isGL_EXT_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					mappedSubresource.data		 = glMapNamedBufferEXT(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer(), Mapping::getOpenGLMapType(mapType));
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-				}
-				else
-				{
-					// Traditional bind version
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Backup the currently bound OpenGL array element buffer
-						GLint openGLArrayElementBufferBackup = 0;
-						glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, &openGLArrayElementBufferBackup);
-					#endif
-
-					// Bind this OpenGL element buffer and upload the data
-					glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
-
-					// Map
-					mappedSubresource.data		 = glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, Mapping::getOpenGLMapType(mapType));
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Be polite and restore the previous bound OpenGL array element buffer
-						glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLArrayElementBufferBackup));
-					#endif
-				}
-
-				// Done
-				return true;
-			}
+				return ::detail::mapBuffer(*mExtensions, GL_ELEMENT_ARRAY_BUFFER_ARB, GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::VERTEX_BUFFER:
-			{
-				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
-
-				// Is "GL_ARB_direct_state_access" there?
-				if (mExtensions->isGL_ARB_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					mappedSubresource.data		 = glMapNamedBuffer(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer(), Mapping::getOpenGLMapType(mapType));
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-				}
-				// Is "GL_EXT_direct_state_access" there?
-				else if (mExtensions->isGL_EXT_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					mappedSubresource.data		 = glMapNamedBufferEXT(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer(), Mapping::getOpenGLMapType(mapType));
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-				}
-				else
-				{
-					// Traditional bind version
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Backup the currently bound OpenGL array buffer
-						GLint openGLArrayBufferBackup = 0;
-						glGetIntegerv(GL_ARRAY_BUFFER_BINDING_ARB, &openGLArrayBufferBackup);
-					#endif
-
-					// Bind this OpenGL array buffer and upload the data
-					glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
-
-					// Map
-					mappedSubresource.data		 = glMapBufferARB(GL_ARRAY_BUFFER_ARB, Mapping::getOpenGLMapType(mapType));
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Be polite and restore the previous bound OpenGL array buffer
-						glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLArrayBufferBackup));
-					#endif
-				}
-
-				// Done
-				return true;
-			}
+				return ::detail::mapBuffer(*mExtensions, GL_ARRAY_BUFFER_ARB, GL_ARRAY_BUFFER_BINDING_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// TODO(co) Implement me
-				// return (S_OK == mD3D11DeviceContext->Map(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-				return false;
+				return ::detail::mapBuffer(*mExtensions, GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, static_cast<UniformBuffer&>(resource).getOpenGLUniformBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// TODO(co) Implement me
-				// return (S_OK == mD3D11DeviceContext->Map(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-				return false;
+				return ::detail::mapBuffer(*mExtensions, GL_TEXTURE_BUFFER_ARB, GL_TEXTURE_BINDING_BUFFER_ARB, static_cast<TextureBuffer&>(resource).getOpenGLTextureBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
 				// TODO(co) Implement me
@@ -2053,90 +2072,16 @@ namespace OpenGLRenderer
 		switch (resource.getResourceType())
 		{
 			case Renderer::ResourceType::INDEX_BUFFER:
-			{
-				// Is "GL_ARB_direct_state_access" there?
-				if (mExtensions->isGL_ARB_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					glUnmapNamedBuffer(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
-				}
-				// Is "GL_EXT_direct_state_access" there?
-				else if (mExtensions->isGL_EXT_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					glUnmapNamedBufferEXT(static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
-				}
-				else
-				{
-					// Traditional bind version
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Backup the currently bound OpenGL array element buffer
-						GLint openGLArrayElementBufferBackup = 0;
-						glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, &openGLArrayElementBufferBackup);
-					#endif
-
-					// Bind this OpenGL element buffer and upload the data
-					glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
-
-					// Map
-					glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Be polite and restore the previous bound OpenGL array element buffer
-						glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLArrayElementBufferBackup));
-					#endif
-				}
-				break;
-			}
+				return ::detail::unmapBuffer(*mExtensions, GL_ELEMENT_ARRAY_BUFFER_ARB, GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
 
 			case Renderer::ResourceType::VERTEX_BUFFER:
-			{
-				// Is "GL_ARB_direct_state_access" there?
-				if (mExtensions->isGL_ARB_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					glUnmapNamedBuffer(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
-				}
-				// Is "GL_EXT_direct_state_access" there?
-				else if (mExtensions->isGL_EXT_direct_state_access())
-				{
-					// Effective direct state access (DSA)
-					glUnmapNamedBufferEXT(static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
-				}
-				else
-				{
-					// Traditional bind version
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Backup the currently bound OpenGL array buffer
-						GLint openGLArrayBufferBackup = 0;
-						glGetIntegerv(GL_ARRAY_BUFFER_BINDING_ARB, &openGLArrayBufferBackup);
-					#endif
-
-					// Bind this OpenGL array buffer and upload the data
-					glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
-
-					// Map
-					glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Be polite and restore the previous bound OpenGL array buffer
-						glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLArrayBufferBackup));
-					#endif
-				}
-				break;
-			}
+				return ::detail::unmapBuffer(*mExtensions, GL_ARRAY_BUFFER_ARB, GL_ARRAY_BUFFER_BINDING_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// TODO(co) Implement me
-				// mD3D11DeviceContext->Unmap(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource);
-				break;
+				return ::detail::unmapBuffer(*mExtensions, GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, static_cast<UniformBuffer&>(resource).getOpenGLUniformBuffer());
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// TODO(co) Implement me
-				// mD3D11DeviceContext->Unmap(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource);
-				break;
+				return ::detail::unmapBuffer(*mExtensions, GL_TEXTURE_BUFFER_ARB, GL_TEXTURE_BINDING_BUFFER_ARB, static_cast<TextureBuffer&>(resource).getOpenGLTextureBuffer());
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
 				// TODO(co) Implement me
@@ -2556,20 +2501,38 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_ARB_separate_shader_objects())
 			{
 				// Bind the program pipeline, if required
-				const uint32_t openGLProgramPipeline = static_cast<ProgramSeparate*>(program)->getOpenGLProgramPipeline();
+				ProgramSeparate* programSeparate = static_cast<ProgramSeparate*>(program);
+				const uint32_t openGLProgramPipeline = programSeparate->getOpenGLProgramPipeline();
 				if (openGLProgramPipeline != mOpenGLProgramPipeline)
 				{
 					mOpenGLProgramPipeline = openGLProgramPipeline;
+					{ // Draw ID uniform location for "GL_ARB_base_instance"-emulation (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
+						const VertexShaderSeparate* vertexShaderSeparate = programSeparate->getVertexShaderSeparate();
+						if (nullptr != vertexShaderSeparate)
+						{
+							mOpenGLVertexProgram = vertexShaderSeparate->getOpenGLShaderProgram();
+							mDrawIdUniformLocation = vertexShaderSeparate->getDrawIdUniformLocation();
+						}
+						else
+						{
+							mOpenGLVertexProgram = 0;
+							mDrawIdUniformLocation = -1;
+						}
+						mCurrentStartInstanceLocation = ~0u;
+					}
 					glBindProgramPipeline(mOpenGLProgramPipeline);
 				}
 			}
 			else if (mExtensions->isGL_ARB_shader_objects())
 			{
 				// Bind the program, if required
-				const uint32_t openGLProgram = static_cast<ProgramMonolithic*>(program)->getOpenGLProgram();
+				const ProgramMonolithic* programMonolithic = static_cast<ProgramMonolithic*>(program);
+				const uint32_t openGLProgram = programMonolithic->getOpenGLProgram();
 				if (openGLProgram != mOpenGLProgram)
 				{
-					mOpenGLProgram = openGLProgram;
+					mOpenGLProgram = mOpenGLVertexProgram = openGLProgram;
+					mDrawIdUniformLocation = programMonolithic->getDrawIdUniformLocation();
+					mCurrentStartInstanceLocation = ~0u;
 					glUseProgramObjectARB(mOpenGLProgram);
 				}
 			}
@@ -2595,6 +2558,18 @@ namespace OpenGLRenderer
 					mOpenGLProgram = 0;
 				}
 			}
+			mOpenGLVertexProgram = 0;
+			mDrawIdUniformLocation = -1;
+			mCurrentStartInstanceLocation = ~0u;
+		}
+	}
+
+	void OpenGLRenderer::updateGL_ARB_base_instanceEmulation(uint32_t startInstanceLocation)
+	{
+		if (mDrawIdUniformLocation != -1 && 0 != mOpenGLVertexProgram && mCurrentStartInstanceLocation != startInstanceLocation)
+		{
+			glProgramUniform1ui(mOpenGLVertexProgram, mDrawIdUniformLocation, startInstanceLocation);
+			mCurrentStartInstanceLocation = startInstanceLocation;
 		}
 	}
 

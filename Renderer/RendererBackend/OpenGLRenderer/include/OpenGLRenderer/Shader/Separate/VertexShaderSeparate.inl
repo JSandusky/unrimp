@@ -33,6 +33,11 @@ namespace OpenGLRenderer
 		return mOpenGLShaderProgram;
 	}
 
+	inline int VertexShaderSeparate::getDrawIdUniformLocation() const
+	{
+		return mDrawIdUniformLocation;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

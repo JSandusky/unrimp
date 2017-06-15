@@ -278,7 +278,8 @@ namespace Direct3D9Renderer
 			D3DDECLTYPE_UBYTE4N,	// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
 			D3DDECLTYPE_UBYTE4,		// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
 			D3DDECLTYPE_SHORT2,		// Renderer::VertexAttributeFormat::SHORT_2
-			D3DDECLTYPE_SHORT4		// Renderer::VertexAttributeFormat::SHORT_4
+			D3DDECLTYPE_SHORT4,		// Renderer::VertexAttributeFormat::SHORT_4
+			D3DDECLTYPE_UNUSED		// Renderer::VertexAttributeFormat::UINT_1 - not supported by DirectX 9
 		};
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}

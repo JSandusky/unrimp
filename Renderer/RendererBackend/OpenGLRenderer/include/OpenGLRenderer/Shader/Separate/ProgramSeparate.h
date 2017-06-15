@@ -109,6 +109,15 @@ namespace OpenGLRenderer
 		*/
 		inline uint32_t getOpenGLProgramPipeline() const;
 
+		/**
+		*  @brief
+		*    Return the vertex shader the program is using
+		*
+		*  @return
+		*    Vertex shader the program is using, can be a null pointer, don't destroy the instance
+		*/
+		inline VertexShaderSeparate* getVertexShaderSeparate() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]

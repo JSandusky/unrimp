@@ -44,7 +44,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES uniform buffer object (UBO, "constant buffer" in Direct3D terminology) class, traditional bind version
+	*    OpenGL ES 3 uniform buffer object (UBO, "constant buffer" in Direct3D terminology) class, traditional bind version
 	*/
 	class UniformBufferBind : public UniformBuffer
 	{
@@ -59,7 +59,7 @@ namespace OpenGLES3Renderer
 		*    Constructor
 		*
 		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES2 renderer instance
+		*    Owner OpenGL ES3 renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the uniform buffer, must be valid
 		*  @param[in] data

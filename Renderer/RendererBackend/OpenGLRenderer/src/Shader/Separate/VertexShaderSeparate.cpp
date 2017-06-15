@@ -25,6 +25,7 @@
 #include "OpenGLRenderer/Shader/Separate/ShaderLanguageSeparate.h"
 #include "OpenGLRenderer/Shader/Monolithic/ShaderLanguageMonolithic.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/Buffer/VertexArrayTypes.h>
@@ -180,15 +181,17 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer& openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderBytecode& shaderBytecode) :
-		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(::detail::loadShaderProgramFromBytecode(vertexAttributes, GL_VERTEX_SHADER_ARB, shaderBytecode))
+		IVertexShader(static_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLShaderProgram(::detail::loadShaderProgramFromBytecode(vertexAttributes, GL_VERTEX_SHADER_ARB, shaderBytecode)),
+		mDrawIdUniformLocation(openGLRenderer.getExtensions().isGL_ARB_base_instance() ? -1 : glGetUniformLocationARB(mOpenGLShaderProgram, "drawIdUniform"))
 	{
 		// Nothing here
 	}
 
 	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
-		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(::detail::loadShaderProgramFromSourcecode(vertexAttributes, GL_VERTEX_SHADER_ARB, sourceCode))
+		IVertexShader(static_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLShaderProgram(::detail::loadShaderProgramFromSourcecode(vertexAttributes, GL_VERTEX_SHADER_ARB, sourceCode)),
+		mDrawIdUniformLocation(openGLRenderer.getExtensions().isGL_ARB_base_instance() ? -1 : glGetUniformLocationARB(mOpenGLShaderProgram, "drawIdUniform"))
 	{
 		// Return shader bytecode, if requested do to so
 		if (nullptr != shaderBytecode)

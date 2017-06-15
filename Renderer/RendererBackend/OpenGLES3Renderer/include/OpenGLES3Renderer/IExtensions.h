@@ -69,6 +69,7 @@ namespace OpenGLES3Renderer
 		virtual bool isGL_EXT_texture_compression_latc() const = 0;
 		virtual bool isGL_EXT_texture_buffer() const = 0;
 		virtual bool isGL_EXT_draw_elements_base_vertex() const = 0;
+		virtual bool isGL_EXT_base_instance() const = 0;
 		// AMD
 		virtual bool isGL_AMD_compressed_3DC_texture() const = 0;
 		// NV

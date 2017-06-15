@@ -54,6 +54,11 @@ namespace OpenGLES3Renderer
 		return mGL_EXT_draw_elements_base_vertex;
 	}
 
+	inline bool ExtensionsRuntimeLinking::isGL_EXT_base_instance() const
+	{
+		return mGL_EXT_base_instance;
+	}
+
 	// AMD
 	inline bool ExtensionsRuntimeLinking::isGL_AMD_compressed_3DC_texture() const
 	{

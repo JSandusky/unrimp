@@ -33,10 +33,10 @@ if (0 == strcmp(renderer->getName(), "OpenGLES3"))
 vertexShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
 
 // Attribute input/output
-in  highp vec3 Position;	// Object space vertex position
-in  highp vec2 TexCoord;	// 32 bit texture coordinate
-out highp vec2 TexCoordVs;	// Texture coordinate
-in  highp vec4 QTangent;	// 16 bit QTangent
+in  highp vec3  Position;	// Object space vertex position
+in  highp vec2  TexCoord;	// 32 bit texture coordinate
+out highp vec2  TexCoordVs;	// Texture coordinate
+in  highp ivec4 QTangent;	// 16 bit QTangent
 out vec3 TangentVs;			// Tangent space to view space, x-axis
 out vec3 BinormalVs;		// Tangent space to view space, y-axis
 out vec3 NormalVs;			// Tangent space to view space, z-axis
@@ -77,7 +77,7 @@ void main()
 	// Calculate the tangent space to view space tangent, binormal and normal
 	// - 16 bit QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 	//   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
-	mat3 tangentFrame = GetTangentFrame(mat3(ObjectSpaceToViewSpaceMatrix), QTangent / 32767.0);
+	mat3 tangentFrame = GetTangentFrame(mat3(ObjectSpaceToViewSpaceMatrix), vec4(QTangent) / 32767.0);
 	TangentVs = tangentFrame[0];
 	BinormalVs = tangentFrame[1];
 	NormalVs = tangentFrame[2];

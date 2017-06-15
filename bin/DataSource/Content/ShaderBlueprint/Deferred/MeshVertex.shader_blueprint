@@ -33,12 +33,7 @@
 INPUT_BEGIN
 	INPUT_VERTEX_POSITION(float3, Position)				// Object space vertex position
 	INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)		// 32 bit texture coordinate
-	@property(HLSL)
-		INPUT_TEXTURE_COORDINATE(int4, QTangent, 1)		// 16 bit QTangent
-	@end
-	@property(GLSL || GLSLES)
-		INPUT_TEXTURE_COORDINATE(float4, QTangent, 1)	// 16 bit QTangent
-	@end
+	INPUT_TEXTURE_COORDINATE(int4, QTangent, 1)			// 16 bit QTangent
 	@property(UseGpuSkinning)
 		INPUT_VERTEX_BLEND_INDICES(uint4, BlendIndices)	// 8 bit bone indices
 		INPUT_VERTEX_BLEND_WEIGHTS(uint4, BlendWeights)	// 8 bit bone weights
@@ -121,7 +116,7 @@ MAIN_BEGIN
 	// - 16 bit QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 	//   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
 	float4 objectSpaceToViewSpaceQuaternion = MultiplyQuaternions(PassData.WorldSpaceToViewSpaceQuaternion, rotationQuaternion);
-	float3x3 tangentFrame = GetTangentFrame(objectSpaceToViewSpaceQuaternion, MAIN_INPUT(QTangent) / 32767.0f);
+	float3x3 tangentFrame = GetTangentFrame(objectSpaceToViewSpaceQuaternion, float4(MAIN_INPUT(QTangent)) / 32767.0f);
 	@property(UseGpuSkinning)
 	{
 		float3x3 normalMatrix = ROW_MATRIX_3x3(objectSpaceToWorldSpaceMatrix[0].xyz, objectSpaceToWorldSpaceMatrix[1].xyz, objectSpaceToWorldSpaceMatrix[2].xyz);

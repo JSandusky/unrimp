@@ -27,9 +27,11 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 
-#include <vector>
+#include <map>
+#include <string>
 
 
 //[-------------------------------------------------------]
@@ -60,7 +62,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
+	typedef StringId						MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
+	typedef std::map<StringId, std::string>	DynamicShaderPieces;	// TODO(co) Unordered map might perform better
 
 
 	//[-------------------------------------------------------]
@@ -165,6 +168,9 @@ namespace RendererRuntime
 		uint8_t					mMaximumRenderQueueIndex;	///< Inclusive
 		bool					mTransparentPass;
 		bool					mDoSort;
+		// Scratch buffers to reduce dynamic memory allocations
+		ShaderProperties	mScratchShaderProperties;
+		DynamicShaderPieces mScratchDynamicShaderPieces[NUMBER_OF_SHADER_TYPES];
 
 
 	};

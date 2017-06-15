@@ -76,12 +76,23 @@ namespace OpenGLRenderer
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 			const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer());
-			glVertexAttribPointerARB(attributeLocation,
-									 Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
-									 Mapping::getOpenGLType(attribute->vertexAttributeFormat),
-									 static_cast<GLboolean>(Mapping::isOpenGLVertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
-									 static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
-									 reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
+			if (Mapping::isOpenGLVertexAttributeFormatInteger(attribute->vertexAttributeFormat))
+			{
+				glVertexAttribIPointerARB(attributeLocation,
+										 Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
+										 Mapping::getOpenGLType(attribute->vertexAttributeFormat),
+										 static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+										 reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
+			}
+			else
+			{
+				glVertexAttribPointerARB(attributeLocation,
+										 Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
+										 Mapping::getOpenGLType(attribute->vertexAttributeFormat),
+										 static_cast<GLboolean>(Mapping::isOpenGLVertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
+										 static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+										 reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
+			}
 
 			// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
 			if (attribute->instancesPerElement > 0 && openGLRenderer.getExtensions().isGL_ARB_instanced_arrays())

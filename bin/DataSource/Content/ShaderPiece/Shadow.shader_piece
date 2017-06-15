@@ -67,14 +67,14 @@
 	uint GetShadowCascadeIndex(float linearDepth)
 	{
 		// We support up to four shadow cascades
-		uint cascadeIndex = 0;
+		uint cascadeIndex = 0u;
 		UNROLL_HINT
-		for(uint i = 0; i < 4 - 1; ++i)
+		for(uint i = 0u; i < (4u - 1u); ++i)
 		{
 			FLATTEN_HINT
 			if (linearDepth > PassData.ShadowCascadeSplits[i])
 			{
-				cascadeIndex = i + 1;
+				cascadeIndex = i + 1u;
 			}
 		}
 		return cascadeIndex;

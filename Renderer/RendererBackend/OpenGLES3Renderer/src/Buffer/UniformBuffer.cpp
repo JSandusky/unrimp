@@ -37,21 +37,22 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	UniformBuffer::~UniformBuffer()
 	{
-		// Destroy the OpenGL ES uniform buffer
+		// Destroy the OpenGL ES 3 uniform buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteBuffers(1, &mOpenGLESUniformBuffer);
+		glDeleteBuffers(1, &mOpenGLES3UniformBuffer);
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(OpenGLES3Renderer &openGLES3Renderer) :
+	UniformBuffer::UniformBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes) :
 		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES3Renderer)),
-		mOpenGLESUniformBuffer(0)
+		mOpenGLES3UniformBuffer(0),
+		mBufferSize(numberOfBytes)
 	{
-		// Create the OpenGL uniform buffer
-		glGenBuffers(1, &mOpenGLESUniformBuffer);
+		// Create the OpenGL ES 3 uniform buffer
+		glGenBuffers(1, &mOpenGLES3UniformBuffer);
 	}
 
 

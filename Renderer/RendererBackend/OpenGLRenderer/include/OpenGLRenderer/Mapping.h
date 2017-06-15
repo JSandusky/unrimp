@@ -167,6 +167,18 @@ namespace OpenGLRenderer
 		*/
 		static uint32_t isOpenGLVertexAttributeFormatNormalized(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
+		/**
+		*  @brief
+		*    Return whether or not "Renderer::VertexAttributeFormat" is an integer format
+		*
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to check
+		*
+		*  @return
+		*    "1" if the format is integer, else "0" (type "GLboolean" not used in here in order to keep the header slim)
+		*/
+		static uint32_t isOpenGLVertexAttributeFormatInteger(Renderer::VertexAttributeFormat vertexAttributeFormat);
+
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]
 		//[-------------------------------------------------------]

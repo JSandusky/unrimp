@@ -47,7 +47,8 @@ namespace Direct3D10Renderer
 			DXGI_FORMAT_R8G8B8A8_UNORM,		// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
 			DXGI_FORMAT_R8G8B8A8_UINT,		// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
 			DXGI_FORMAT_R16G16_SINT,		// Renderer::VertexAttributeFormat::SHORT_2
-			DXGI_FORMAT_R16G16B16A16_SINT	// Renderer::VertexAttributeFormat::SHORT_4
+			DXGI_FORMAT_R16G16B16A16_SINT,	// Renderer::VertexAttributeFormat::SHORT_4
+			DXGI_FORMAT_R32_UINT			// Renderer::VertexAttributeFormat::UINT_1
 		};
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}

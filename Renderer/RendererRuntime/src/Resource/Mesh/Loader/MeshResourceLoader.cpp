@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Mesh/Loader/MeshResourceLoader.h"
 #include "RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h"
+#include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
@@ -250,17 +251,16 @@ namespace RendererRuntime
 		RENDERER_SET_RESOURCE_DEBUG_NAME(indexBuffer, getAsset().assetFilename)
 
 		// Create vertex array object (VAO)
-		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-		// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-		// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-		//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-		//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
 		const uint32_t numberOfVertices = mMeshResource->getNumberOfVertices();
 		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 		{
 			{ // Vertex buffer 0
 				vertexBuffer,																		// vertexBuffer (Renderer::IVertexBuffer *)
 				(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0	// strideInBytes (uint32_t)
+			},
+			{ // Vertex buffer 1
+				mRendererRuntime.getMeshResourceManager().getDrawIdVertexBufferPtr(),				// vertexBuffer (Renderer::IVertexBuffer *)
+				sizeof(uint32_t)																	// strideInBytes (uint32_t)
 			}
 		};
 		Renderer::IVertexArray* vertexArray = mBufferManager.createVertexArray(Renderer::VertexAttributes(mNumberOfUsedVertexAttributes, mVertexAttributes), static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBuffer);

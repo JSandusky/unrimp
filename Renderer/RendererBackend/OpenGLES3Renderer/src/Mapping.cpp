@@ -217,7 +217,8 @@ namespace OpenGLES3Renderer
 			4,	// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
 			4,	// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
 			2,	// Renderer::VertexAttributeFormat::SHORT_2
-			4	// Renderer::VertexAttributeFormat::SHORT_4
+			4,	// Renderer::VertexAttributeFormat::SHORT_4
+			1	// Renderer::VertexAttributeFormat::UINT_1
 		};
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
@@ -233,7 +234,8 @@ namespace OpenGLES3Renderer
 			GL_UNSIGNED_BYTE,	// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
 			GL_UNSIGNED_BYTE,	// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
 			GL_SHORT,			// Renderer::VertexAttributeFormat::SHORT_2
-			GL_SHORT			// Renderer::VertexAttributeFormat::SHORT_4
+			GL_SHORT,			// Renderer::VertexAttributeFormat::SHORT_4
+			GL_UNSIGNED_INT		// Renderer::VertexAttributeFormat::UINT_1
 		};
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
@@ -249,7 +251,25 @@ namespace OpenGLES3Renderer
 			1,	// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
 			0,	// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
 			0,	// Renderer::VertexAttributeFormat::SHORT_2
-			0	// Renderer::VertexAttributeFormat::SHORT_4
+			0,	// Renderer::VertexAttributeFormat::SHORT_4
+			0	// Renderer::VertexAttributeFormat::UINT_1
+		};
+		return MAPPING[static_cast<int>(vertexAttributeFormat)];
+	}
+
+	uint32_t Mapping::isOpenGLES3VertexAttributeFormatInteger(Renderer::VertexAttributeFormat vertexAttributeFormat)
+	{
+		static const GLenum MAPPING[] =
+		{
+			0,	// Renderer::VertexAttributeFormat::FLOAT_1
+			0,	// Renderer::VertexAttributeFormat::FLOAT_2
+			0,	// Renderer::VertexAttributeFormat::FLOAT_3
+			0,	// Renderer::VertexAttributeFormat::FLOAT_4
+			0,	// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
+			1,	// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
+			1,	// Renderer::VertexAttributeFormat::SHORT_2
+			1,	// Renderer::VertexAttributeFormat::SHORT_4
+			1	// Renderer::VertexAttributeFormat::UINT_1
 		};
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}

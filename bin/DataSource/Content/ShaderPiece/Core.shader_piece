@@ -28,11 +28,7 @@
 		// Shader attribute input
 		#define INPUT_BEGIN struct SHADER_INPUT {
 			#define INPUT_VERTEX_ID uint vertexId : SV_VERTEXID;
-
-			// TODO(co) Add "DRAWID" semantic
-			#define INPUT_VERTEX_DRAW_ID	// "DRAWID" is a special vertex attribute semantic introduced
-			//#define INPUT_VERTEX_DRAW_ID uint drawId : DRAWID;	// "DRAWID" is a special vertex attribute semantic introduced
-
+			#define INPUT_VERTEX_DRAW_ID uint drawId : DRAWID;	// "DRAWID" is a special vertex attribute semantic introduced, see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html
 			#define INPUT_VERTEX_POSITION(type, name) type name : POSITION;
 			#define INPUT_VERTEX_COLOR(type, name) type name : COLOR;
 			#define INPUT_VERTEX_NORMAL(type, name) type name : NORMAL;
@@ -56,11 +52,7 @@
 		#define MAIN_BEGIN_NO_OUTPUT void main(SHADER_INPUT ShaderInput) {
 			#define MAIN_INPUT(name) ShaderInput.name
 			#define MAIN_INPUT_VERTEX_ID ShaderInput.vertexId
-
-			// TODO(co) Add "DRAWID" semantic
-			#define MAIN_INPUT_DRAW_ID 0
-			// #define MAIN_INPUT_DRAW_ID ShaderInput.drawId
-
+			#define MAIN_INPUT_DRAW_ID ShaderInput.drawId
 			#define MAIN_OUTPUT(name) shaderOutput.name
 			#define MAIN_OUTPUT_POSITION shaderOutput.OutputClipSpacePosition
 			#define MAIN_OUTPUT_COLOR(index) shaderOutput.OutputColor##index
@@ -162,15 +154,15 @@
 		// Shader attribute input
 		#define INPUT_BEGIN
 			#define INPUT_VERTEX_ID
-			#define INPUT_VERTEX_DRAW_ID uniform uvec2 drawId;	// TODO(co) We're using OpenGL only for Mac OS X 10.11 which hasn't support for e.g. "glDrawElementsInstancedBaseVertexBaseInstance()", so we have to hack around. Mac OS X 10.11 also has no "glTexBufferRange()". On decent platforms this should be: #define INPUT_VERTEX_DRAW_ID in uint drawId;
+			#define INPUT_VERTEX_DRAW_ID in uint drawId; uniform uint drawIdUniform;	// See "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html - "drawIdUniform" is used in case "GL_ARB_base_instance" isn't supported (Mac OS X 10.11 for example)
 			#define INPUT_VERTEX_POSITION(type, name) in type name;
 			#define INPUT_VERTEX_COLOR(type, name) in type name;
 			#define INPUT_VERTEX_NORMAL(type, name) in type name;
 			#define INPUT_VERTEX_TANGENT(type, name) in type name;
 			#define INPUT_TEXTURE_COORDINATE(type, name, index) in type name;
 			#define INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(type, name, index) flat in type name;
-			#define INPUT_VERTEX_BLEND_INDICES(type, name) in vec4 name;	// TODO(co) "uvec4" doesn't work? (no error or so)
-			#define INPUT_VERTEX_BLEND_WEIGHTS(type, name) in vec4 name;	// TODO(co) "uvec4" doesn't work? (no error or so)
+			#define INPUT_VERTEX_BLEND_INDICES(type, name) in type name;
+			#define INPUT_VERTEX_BLEND_WEIGHTS(type, name) in type name;
 		#define INPUT_END
 
 		// Shader attribute output
@@ -186,7 +178,7 @@
 		#define MAIN_BEGIN_NO_OUTPUT void main() {
 			#define MAIN_INPUT(name) name
 			#define MAIN_INPUT_VERTEX_ID gl_VertexID
-			#define MAIN_INPUT_DRAW_ID (drawId.x + gl_InstanceID)
+			#define MAIN_INPUT_DRAW_ID (drawId + drawIdUniform + uint(gl_InstanceID))
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(index) OutputColor##index
@@ -210,7 +202,7 @@
 
 		// Texture buffer
 		#define TEXTURE_BUFFER(type, name, index) uniform samplerBuffer name;
-		#define TEXTURE_BUFFER_FETCH(name, index) texelFetch(name, int(index + drawId.y / 16))	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way
+		#define TEXTURE_BUFFER_FETCH(name, index) texelFetch(name, int(index))
 
 		// Texture
 		#define TEXTURE_1D(name, index) uniform sampler1D name;
@@ -302,15 +294,15 @@
 		// Shader attribute input// Shader attribute input
 		#define INPUT_BEGIN
 			#define INPUT_VERTEX_ID
-			#define INPUT_VERTEX_DRAW_ID uniform highp uvec2 drawId;	// TODO(co) We're using OpenGL only for Mac OS X 10.11 which hasn't support for e.g. "glDrawElementsInstancedBaseVertexBaseInstance()", so we have to hack around. Mac OS X 10.11 also has no "glTexBufferRange()". On decent platforms this should be: #define INPUT_VERTEX_DRAW_ID in uint drawId; TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.0
+			#define INPUT_VERTEX_DRAW_ID in uint drawId; uniform uint drawIdUniform;	// See "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html - "drawIdUniform" is used in case "GL_EXT_base_instance" isn't supported
 			#define INPUT_VERTEX_POSITION(type, name) in highp type name;
 			#define INPUT_VERTEX_COLOR(type, name) in highp type name;
 			#define INPUT_VERTEX_NORMAL(type, name) in highp type name;
 			#define INPUT_VERTEX_TANGENT(type, name) in highp type name;
 			#define INPUT_TEXTURE_COORDINATE(type, name, index) in highp type name;
 			#define INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(type, name, index) flat in highp type name;
-			#define INPUT_VERTEX_BLEND_INDICES(type, name) in highp vec4 name;	// TODO(co) "uvec4" doesn't work? (no error or so)
-			#define INPUT_VERTEX_BLEND_WEIGHTS(type, name) in highp vec4 name;	// TODO(co) "uvec4" doesn't work? (no error or so)
+			#define INPUT_VERTEX_BLEND_INDICES(type, name) in highp type name;
+			#define INPUT_VERTEX_BLEND_WEIGHTS(type, name) in highp type name;
 		#define INPUT_END
 
 		// Shader attribute output
@@ -326,7 +318,7 @@
 		#define MAIN_BEGIN_NO_OUTPUT void main() {
 			#define MAIN_INPUT(name) name
 			#define MAIN_INPUT_VERTEX_ID gl_VertexID
-			#define MAIN_INPUT_DRAW_ID (drawId.x + uint(gl_InstanceID))
+			#define MAIN_INPUT_DRAW_ID (drawId + drawIdUniform + uint(gl_InstanceID))
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(index) OutputColor##index
@@ -353,7 +345,7 @@
 		// #define TEXTURE_BUFFER(type, name, index) uniform highp samplerBuffer name;
 		// #define TEXTURE_BUFFER_FETCH(name, index) texelFetch(name, int(index + drawId.y / 16u))	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
 		#define TEXTURE_BUFFER(type, name, index) layout(std140) uniform name { highp float4 textureBufferEmulation_##name[4096]; };
-		#define TEXTURE_BUFFER_FETCH(name, index) textureBufferEmulation_##name[int(index + drawId.y / 16u)]	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
+		#define TEXTURE_BUFFER_FETCH(name, index) textureBufferEmulation_##name[int(index)]
 
 		// Texture
 		#define TEXTURE_1D(name, index) uniform highp sampler2D name;	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
@@ -390,7 +382,7 @@
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
 		#define DECLARE_COVERAGE_MASK
-		#define COVERAGE_MASK gl_SampleMaskIn[0]
+		#define COVERAGE_MASK 0u	// OpenGL ES shading language version 3.20 needed
 
 		// Compiler hints
 		#define UNROLL_HINT
@@ -424,6 +416,6 @@
 		#define rcp(x) (1.0f / x)
 
 		// HLSL bit functions
-		#define firstbitlow(x) findLSB(x)	// OpenGL ES 3.10
+		#define firstbitlow(x) 0u	// TODO(co) "findLSB(x)" needs OpenGL ES 3.10, emulation needed
 	@end
 @end

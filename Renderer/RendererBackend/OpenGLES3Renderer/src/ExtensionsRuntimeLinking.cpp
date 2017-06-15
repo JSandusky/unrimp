@@ -46,6 +46,7 @@ namespace OpenGLES3Renderer
 		mGL_EXT_texture_compression_latc(false),
 		mGL_EXT_texture_buffer(false),
 		mGL_EXT_draw_elements_base_vertex(false),
+		mGL_EXT_base_instance(false),
 		// AMD
 		mGL_AMD_compressed_3DC_texture(false),
 		// NV
@@ -113,8 +114,20 @@ namespace OpenGLES3Renderer
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glDrawElementsBaseVertexEXT)
 			IMPORT_FUNC(glDrawElementsInstancedBaseVertexEXT)
-			mGL_EXT_texture_buffer = result;
+			mGL_EXT_draw_elements_base_vertex = result;
 		}
+
+		mGL_EXT_base_instance = (nullptr != strstr(extensions, "GL_EXT_base_instance"));
+		if (mGL_EXT_base_instance)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glDrawArraysInstancedBaseInstanceEXT)
+			IMPORT_FUNC(glDrawElementsInstancedBaseInstanceEXT)
+			IMPORT_FUNC(glDrawElementsInstancedBaseVertexBaseInstanceEXT)
+			mGL_EXT_base_instance = result;
+		}
+
 
 		//[-------------------------------------------------------]
 		//[ AMD                                                   ]

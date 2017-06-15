@@ -34,6 +34,7 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
@@ -233,26 +234,31 @@ namespace RendererRuntime
 				// End debug event
 				COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 
-				// Submit command buffer to the renderer backend
-				mCommandBuffer.submitAndClear(renderer);
+				{ // Submit command buffer to the renderer backend
+					// The command buffer is about to be submitted, inform everyone who cares about this
+					materialBlueprintResourceManager.getInstanceBufferManager().onPreCommandBufferExecution();
 
-				// The command buffer has been submitted, inform everyone who cares about this
-				for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
-				{
-					compositorNodeInstance->onPostCommandBufferExecution();
-				}
-				{
-					const uint32_t numberOfResources = materialBlueprintResourceManager.getNumberOfResources();
-					for (uint32_t i = 0; i < numberOfResources; ++i)
+					// Submit command buffer to the renderer backend
+					mCommandBuffer.submitAndClear(renderer);
+
+					// The command buffer has been submitted, inform everyone who cares about this
+					for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
 					{
-						PassBufferManager* passBufferManager = materialBlueprintResourceManager.getByIndex(i).getPassBufferManager();
-						if (nullptr != passBufferManager)
+						compositorNodeInstance->onPostCommandBufferExecution();
+					}
+					{
+						const uint32_t numberOfResources = materialBlueprintResourceManager.getNumberOfResources();
+						for (uint32_t i = 0; i < numberOfResources; ++i)
 						{
-							passBufferManager->onPostCommandBufferExecution();
+							PassBufferManager* passBufferManager = materialBlueprintResourceManager.getByIndex(i).getPassBufferManager();
+							if (nullptr != passBufferManager)
+							{
+								passBufferManager->onPostCommandBufferExecution();
+							}
 						}
 					}
+					mIndirectBufferManager.onPostCommandBufferExecution();
 				}
-				mIndirectBufferManager.onPostCommandBufferExecution();
 
 				// End scene rendering
 				// -> Required for Direct3D 9 and Direct3D 12

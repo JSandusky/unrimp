@@ -168,6 +168,18 @@ namespace OpenGLES3Renderer
 		*/
 		static uint32_t isOpenGLES3VertexAttributeFormatNormalized(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
+		/**
+		*  @brief
+		*    Return whether or not "Renderer::VertexAttributeFormat" is an integer format
+		*
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to check
+		*
+		*  @return
+		*    "1" if the format is integer, else "0" (type "GLboolean" not used in here in order to keep the header slim)
+		*/
+		static uint32_t isOpenGLES3VertexAttributeFormatInteger(Renderer::VertexAttributeFormat vertexAttributeFormat);
+
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]
 		//[-------------------------------------------------------]

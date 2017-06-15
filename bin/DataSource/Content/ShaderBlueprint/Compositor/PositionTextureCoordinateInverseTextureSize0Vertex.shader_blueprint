@@ -31,7 +31,6 @@
 // Attribute input / output
 INPUT_BEGIN
 	INPUT_VERTEX_POSITION(float4, PositionTexCoord)	// xy = position, zw = texture coordinate
-	INPUT_VERTEX_DRAW_ID							// Draw ID
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_TEXTURE_COORDINATE				 (float2, TexCoordVS, 0)			// Texture coordinate

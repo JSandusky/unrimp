@@ -16,6 +16,7 @@
 		},
 		"Properties":
 		{
+			"CullMode": "NONE",
 			"_drgb_nxa": "Texture/Bob/guard1_helmet_drgb_nxa.asset"
 		}
 	}

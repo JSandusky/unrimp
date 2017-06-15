@@ -82,6 +82,54 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
+		bool mapBuffer(GLenum target, GLenum bindingTarget, GLuint openGLES3Buffer, uint32_t bufferSize, Renderer::MapType mapType, Renderer::MappedSubresource& mappedSubresource)
+		{
+			// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
+
+			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
+				// Backup the currently bound OpenGL ES 3 buffer
+				GLint openGLES3BufferBackup = 0;
+				OpenGLES3Renderer::glGetIntegerv(bindingTarget, &openGLES3BufferBackup);
+			#endif
+
+			// Bind this OpenGL ES 3 buffer
+			OpenGLES3Renderer::glBindBuffer(target, openGLES3Buffer);
+
+			// Map
+			mappedSubresource.data		 = OpenGLES3Renderer::glMapBufferRange(target, 0, static_cast<GLsizeiptr>(bufferSize), OpenGLES3Renderer::Mapping::getOpenGLES3MapRangeType(mapType));
+			mappedSubresource.rowPitch   = 0;
+			mappedSubresource.depthPitch = 0;
+
+			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
+				// Be polite and restore the previous bound OpenGL ES 3 buffer
+				OpenGLES3Renderer::glBindBuffer(target, static_cast<GLuint>(openGLES3BufferBackup));
+			#endif
+
+			// Done
+			assert(nullptr != mappedSubresource.data && "Mapping of OpenGL ES 3 buffer failed");
+			return (nullptr != mappedSubresource.data);
+		}
+
+		void unmapBuffer(GLenum target, GLenum bindingTarget, GLuint openGLES3Buffer)
+		{
+			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
+				// Backup the currently bound OpenGL ES 3 buffer
+				GLint openGLES3BufferBackup = 0;
+				OpenGLES3Renderer::glGetIntegerv(bindingTarget, &openGLES3BufferBackup);
+			#endif
+
+			// Bind this OpenGL ES 3 buffer
+			OpenGLES3Renderer::glBindBuffer(target, openGLES3Buffer);
+
+			// Unmap
+			OpenGLES3Renderer::glUnmapBuffer(target);
+
+			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
+				// Be polite and restore the previous bound OpenGL ES 3 buffer
+				OpenGLES3Renderer::glBindBuffer(target, static_cast<GLuint>(openGLES3BufferBackup));
+			#endif
+		}
+
 		namespace BackendDispatch
 		{
 
@@ -307,7 +355,10 @@ namespace OpenGLES3Renderer
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
 		// State cache to avoid making redundant OpenGL ES 3 calls
-		mOpenGLES3Program(0)
+		mOpenGLES3Program(0),
+		// Draw ID uniform location for "GL_EXT_base_instance"-emulation (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
+		mDrawIdUniformLocation(-1),
+		mCurrentStartInstanceLocation(~0u)
 	{
 		// Initialize the context
 		if (mContext->initialize(0))
@@ -506,7 +557,7 @@ namespace OpenGLES3Renderer
 					// Attach the buffer to the given UBO binding point
 					// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 					// -> Direct3D 10 and Direct3D 11 have explicit binding points
-					glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<UniformBuffer*>(resource)->getOpenGLESUniformBuffer());
+					glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<UniformBuffer*>(resource)->getOpenGLES3UniformBuffer());
 					break;
 				}
 
@@ -522,7 +573,7 @@ namespace OpenGLES3Renderer
 						// Attach the buffer to the given UBO binding point
 						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 						// -> Direct3D 10 and Direct3D 11 have explicit binding points
-						glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<TextureBuffer*>(resource)->getOpenGLESTextureBuffer());
+						glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<TextureBuffer*>(resource)->getOpenGLES3TextureBuffer());
 						break;
 					}
 
@@ -551,7 +602,7 @@ namespace OpenGLES3Renderer
 							// Bind texture or texture buffer
 							if (resourceType == Renderer::ResourceType::TEXTURE_BUFFER)
 							{
-								glBindTexture(GL_TEXTURE_BUFFER_EXT, static_cast<TextureBuffer*>(resource)->getOpenGLESTexture());
+								glBindTexture(GL_TEXTURE_BUFFER_EXT, static_cast<TextureBuffer*>(resource)->getOpenGLES3Texture());
 							}
 							else if (resourceType == Renderer::ResourceType::TEXTURE_1D)
 							{
@@ -1092,12 +1143,20 @@ namespace OpenGLES3Renderer
 			for (uint32_t i = 0; i < numberOfDraws; ++i)
 			{
 				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
+				updateGL_EXT_base_instanceEmulation(drawInstancedArguments.startInstanceLocation);
 
 				// Draw and advance
-				if (drawInstancedArguments.instanceCount > 1)
+				if (drawInstancedArguments.instanceCount > 1 || (drawInstancedArguments.startInstanceLocation > 0 && mContext->getExtensions().isGL_EXT_base_instance()))
 				{
 					// With instancing
-					glDrawArraysInstanced(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount));
+					if (drawInstancedArguments.startInstanceLocation > 0 && mContext->getExtensions().isGL_EXT_base_instance())
+					{
+						glDrawArraysInstancedBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount), drawInstancedArguments.startInstanceLocation);
+					}
+					else
+					{
+						glDrawArraysInstanced(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount));
+					}
 				}
 				else
 				{
@@ -1128,16 +1187,23 @@ namespace OpenGLES3Renderer
 				for (uint32_t i = 0; i < numberOfDraws; ++i)
 				{
 					const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
+					updateGL_EXT_base_instanceEmulation(drawIndexedInstancedArguments.startInstanceLocation);
 
-					if (drawIndexedInstancedArguments.instanceCount > 1)
+					// Draw and advance
+					if (drawIndexedInstancedArguments.instanceCount > 1 || (drawIndexedInstancedArguments.startInstanceLocation > 0 && mContext->getExtensions().isGL_EXT_base_instance()))
 					{
 						// With instancing
-
-						// Use base vertex location?
 						if (drawIndexedInstancedArguments.baseVertexLocation > 0)
 						{
+							// Use start instance location?
+							if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mContext->getExtensions().isGL_EXT_base_instance())
+							{
+								// Draw with base vertex location and start instance location
+								glDrawElementsInstancedBaseVertexBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation), drawIndexedInstancedArguments.startInstanceLocation);
+							}
+
 							// Is the "GL_EXT_draw_elements_base_vertex" extension there?
-							if (mContext->getExtensions().isGL_EXT_draw_elements_base_vertex())
+							else if (mContext->getExtensions().isGL_EXT_draw_elements_base_vertex())
 							{
 								// Draw with base vertex location
 								glDrawElementsInstancedBaseVertexEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
@@ -1148,6 +1214,11 @@ namespace OpenGLES3Renderer
 								assert(false);
 							}
 						}
+						else if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mContext->getExtensions().isGL_EXT_base_instance())
+						{
+							// Draw without base vertex location and with start instance location
+							glDrawElementsInstancedBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), drawIndexedInstancedArguments.startInstanceLocation);
+						}
 						else
 						{
 							// Draw without base vertex location
@@ -1156,9 +1227,7 @@ namespace OpenGLES3Renderer
 					}
 					else
 					{
-
 						// Without instancing
-						assert(drawIndexedInstancedArguments.instanceCount <= 1);
 
 						// Use base vertex location?
 						if (drawIndexedInstancedArguments.baseVertexLocation > 0)
@@ -1172,6 +1241,7 @@ namespace OpenGLES3Renderer
 							else
 							{
 								// Error!
+								assert(false);
 							}
 						}
 						else
@@ -1343,67 +1413,27 @@ namespace OpenGLES3Renderer
 		{
 			case Renderer::ResourceType::INDEX_BUFFER:
 			{
-				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
-
-				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 3 array element buffer
-					GLint openGLES3ArrayElementBufferBackup = 0;
-					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES3ArrayElementBufferBackup);
-				#endif
-
-				// Bind this OpenGL ES 3 element buffer and upload the data
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES3ElementArrayBuffer());
-
-				// Map
-				mappedSubresource.data		 = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<IndexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES3MapRangeType(mapType));
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-
-				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 3 array element buffer
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ArrayElementBufferBackup));
-				#endif
-
-				// Done
-				return true;
+				const IndexBuffer& indexBuffer = static_cast<IndexBuffer&>(resource);
+				return ::detail::mapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING, indexBuffer.getOpenGLES3ElementArrayBuffer(), indexBuffer.getBufferSize(), mapType, mappedSubresource);
 			}
 
 			case Renderer::ResourceType::VERTEX_BUFFER:
 			{
-				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
-
-				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 3 array buffer
-					GLint openGLES3ArrayBufferBackup = 0;
-					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES3ArrayBufferBackup);
-				#endif
-
-				// Bind this OpenGL ES 3 array buffer and upload the data
-				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES3ArrayBuffer());
-
-				// Map
-				mappedSubresource.data		 = glMapBufferRange(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(static_cast<VertexBuffer&>(resource).getBufferSize()), Mapping::getOpenGLES3MapRangeType(mapType));
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-
-				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 3 array buffer
-					glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ArrayBufferBackup));
-				#endif
-
-				// Done
-				return true;
+				const VertexBuffer& vertexBuffer = static_cast<VertexBuffer&>(resource);
+				return ::detail::mapBuffer(GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING, vertexBuffer.getOpenGLES3ArrayBuffer(), vertexBuffer.getBufferSize(), mapType, mappedSubresource);
 			}
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// OpenGL ES 3 has no uniform buffer
-				// TODO(co) Error handling
-				return false;
+			{
+				const UniformBuffer& uniformBuffer = static_cast<UniformBuffer&>(resource);
+				return ::detail::mapBuffer(GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, uniformBuffer.getOpenGLES3UniformBuffer(), uniformBuffer.getBufferSize(), mapType, mappedSubresource);
+			}
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// OpenGL ES 3 has no texture buffer
-				// TODO(co) Error handling
-				return false;
+			{
+				const TextureBuffer& textureBuffer = static_cast<TextureBuffer&>(resource);
+				return ::detail::mapBuffer(GL_TEXTURE_BUFFER_EXT, GL_TEXTURE_BINDING_BUFFER_EXT, textureBuffer.getOpenGLES3TextureBuffer(), textureBuffer.getBufferSize(), mapType, mappedSubresource);
+			}
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
 				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
@@ -1516,56 +1546,16 @@ namespace OpenGLES3Renderer
 		switch (resource.getResourceType())
 		{
 			case Renderer::ResourceType::INDEX_BUFFER:
-			{
-				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 3 array element buffer
-					GLint openGLES3ArrayElementBufferBackup = 0;
-					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES3ArrayElementBufferBackup);
-				#endif
-
-				// Bind this OpenGL ES 3 element buffer and upload the data
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES3ElementArrayBuffer());
-
-				// Unmap
-				glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-
-				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 3 array element buffer
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ArrayElementBufferBackup));
-				#endif
-				break;
-			}
+				return ::detail::unmapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING, static_cast<IndexBuffer&>(resource).getOpenGLES3ElementArrayBuffer());
 
 			case Renderer::ResourceType::VERTEX_BUFFER:
-			{
-				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-					// Backup the currently bound OpenGL ES 3 array buffer
-					GLint openGLES3ArrayBufferBackup = 0;
-					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES3ArrayBufferBackup);
-				#endif
-
-				// Bind this OpenGL ES 3 array buffer and upload the data
-				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES3ArrayBuffer());
-
-				// Unmap
-				glUnmapBuffer(GL_ARRAY_BUFFER);
-
-				#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL ES 3 array buffer
-					glBindBuffer(GL_ARRAY_BUFFER, static_cast<GLuint>(openGLES3ArrayBufferBackup));
-				#endif
-				break;
-			}
+				return ::detail::unmapBuffer(GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING, static_cast<VertexBuffer&>(resource).getOpenGLES3ArrayBuffer());
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
-				// OpenGL ES 3 has no uniform buffer
-				// TODO(co) Error handling
-				break;
+				return ::detail::unmapBuffer(GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, static_cast<UniformBuffer&>(resource).getOpenGLES3UniformBuffer());
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-				// OpenGL ES 3 has no texture buffer
-				// TODO(co) Error handling
-				break;
+				return ::detail::unmapBuffer(GL_TEXTURE_BUFFER_EXT, GL_TEXTURE_BINDING_BUFFER_EXT, static_cast<TextureBuffer&>(resource).getOpenGLES3TextureBuffer());
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
 				// Nothing here, it's a software emulated indirect buffer
@@ -1899,10 +1889,13 @@ namespace OpenGLES3Renderer
 			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
 			// Bind the program, if required
-			const uint32_t openGLES3Program = static_cast<ProgramGlsl*>(program)->getOpenGLES3Program();
+			const ProgramGlsl* programGlsl = static_cast<ProgramGlsl*>(program);
+			const uint32_t openGLES3Program = programGlsl->getOpenGLES3Program();
 			if (openGLES3Program != mOpenGLES3Program)
 			{
 				mOpenGLES3Program = openGLES3Program;
+				mDrawIdUniformLocation = programGlsl->getDrawIdUniformLocation();
+				mCurrentStartInstanceLocation = ~0u;
 				glUseProgram(mOpenGLES3Program);
 			}
 		}
@@ -1911,6 +1904,17 @@ namespace OpenGLES3Renderer
 			// Unbind the program
 			glUseProgram(0);
 			mOpenGLES3Program = 0;
+			mDrawIdUniformLocation = -1;
+			mCurrentStartInstanceLocation = ~0u;
+		}
+	}
+
+	void OpenGLES3Renderer::updateGL_EXT_base_instanceEmulation(uint32_t startInstanceLocation)
+	{
+		if (mDrawIdUniformLocation != -1 && 0 != mOpenGLES3Program && mCurrentStartInstanceLocation != startInstanceLocation)
+		{
+			glUniform1ui(mDrawIdUniformLocation, startInstanceLocation);
+			mCurrentStartInstanceLocation = startInstanceLocation;
 		}
 	}
 

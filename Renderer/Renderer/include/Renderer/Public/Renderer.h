@@ -1150,7 +1150,8 @@ namespace Renderer
 			R8G8B8A8_UNORM	= 4,
 			R8G8B8A8_UINT	= 5,
 			SHORT_2			= 6,
-			SHORT_4			= 7
+			SHORT_4			= 7,
+			UINT_1			= 8
 		};
 		#pragma pack(push)
 		#pragma pack(1)
