@@ -319,7 +319,7 @@ namespace Direct3D9Renderer
 		// TODO(co) Implement me
 	}
 
-	void SwapChain::setWidthAndHeight(uint32_t, uint32_t)
+	void SwapChain::setRenderWindow(Renderer::IRenderWindow*)
 	{
 		// TODO(sw) implement me
 	}

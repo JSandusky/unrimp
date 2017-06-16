@@ -41,8 +41,7 @@ namespace OpenGLES3Renderer
 	SwapChain::SwapChain(OpenGLES3Renderer &openGLES3Renderer, handle nativeWindowHandle) :
 		ISwapChain(openGLES3Renderer),
 		mNativeWindowHandle(nativeWindowHandle),
-		mWidth(0),
-		mHeight(0)
+		mRenderWindow(nullptr)
 	{
 		// TODO(co) Implement me
 	}
@@ -63,10 +62,9 @@ namespace OpenGLES3Renderer
 	//	EGLint renderTargetHeight = 1;
 	//	eglQuerySurface(mContext->getEGLDisplay(), mContext->getEGLDummySurface(), EGL_HEIGHT, &renderTargetHeight);
 		// Return stored width and height when both valid
-		if (mWidth > 0 && mHeight > 0)
+		if (nullptr != mRenderWindow)
 		{
-			width = mWidth;
-			height = mHeight;
+			mRenderWindow->getWidthAndHeight(width, height);
 			return;
 		}
 		#ifdef WIN32
@@ -160,10 +158,17 @@ namespace OpenGLES3Renderer
 
 	void SwapChain::present()
 	{
-		// TODO(co) Correct implementation
-		IContext &context = static_cast<OpenGLES3Renderer&>(getRenderer()).getContext();
-		// Swap buffers
-		eglSwapBuffers(context.getEGLDisplay(), context.getEGLDummySurface());
+		if (nullptr != mRenderWindow)
+		{
+			mRenderWindow->present();
+		}
+		else
+		{
+			// TODO(co) Correct implementation
+			IContext &context = static_cast<OpenGLES3Renderer&>(getRenderer()).getContext();
+			// Swap buffers
+			eglSwapBuffers(context.getEGLDisplay(), context.getEGLDummySurface());
+		}
 	}
 
 	void SwapChain::resizeBuffers()
@@ -182,10 +187,9 @@ namespace OpenGLES3Renderer
 		// TODO(co) Implement me
 	}
 
-	void SwapChain::setWidthAndHeight(uint32_t width, uint32_t height)
+	void SwapChain::setRenderWindow(Renderer::IRenderWindow* renderWindow)
 	{
-		mWidth = std::max(1u, width);
-		mHeight = std::max(1u, height);
+		mRenderWindow = renderWindow;
 	}
 
 

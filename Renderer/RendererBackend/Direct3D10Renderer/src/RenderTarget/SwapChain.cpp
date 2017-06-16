@@ -340,7 +340,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void SwapChain::setWidthAndHeight(uint32_t, uint32_t)
+	void SwapChain::setRenderWindow(Renderer::IRenderWindow*)
 	{
 		// TODO(sw) implement me
 	}

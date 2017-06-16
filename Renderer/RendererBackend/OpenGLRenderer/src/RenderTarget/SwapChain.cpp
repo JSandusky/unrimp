@@ -55,6 +55,7 @@ namespace OpenGLRenderer
 			#error "Unsupported platform"
 		#endif
 		mOwnsContext(true),
+		mRendererWindow(nullptr),
 		mWidth(0),
 		mHeight(0)
 	{
@@ -68,8 +69,7 @@ namespace OpenGLRenderer
 		mNativeWindowHandle(nativeWindowHandle),
 		mContext(&context),
 		mOwnsContext(false),
-		mWidth(0),
-		mHeight(0)
+		mRendererWindow(nullptr)
 	{
 		// Nothing here
 	}
@@ -89,10 +89,9 @@ namespace OpenGLRenderer
 	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
 		// Return stored width and height when both valid
-		if (mWidth > 0 && mHeight > 0)
+		if (nullptr != mRendererWindow)
 		{
-			width = mWidth;
-			height = mHeight;
+			mRendererWindow->getWidthAndHeight(width, height);
 			return;
 		}
 		#ifdef WIN32
@@ -180,6 +179,12 @@ namespace OpenGLRenderer
 
 	void SwapChain::present()
 	{
+		// TODO(sw) Needs rendererwindow abstraction so that this works also with SDL2 which manages the window and context for opengl/opengles
+		if (nullptr != mRendererWindow)
+		{
+			mRendererWindow->present();
+			return;
+		}
 		#ifdef WIN32
 			HDC hDC = ::GetDC(reinterpret_cast<HWND>(mNativeWindowHandle));
 			::SwapBuffers(hDC);
@@ -211,10 +216,9 @@ namespace OpenGLRenderer
 		// TODO(co) Implement me
 	}
 
-	void SwapChain::setWidthAndHeight(uint32_t width, uint32_t height)
+	void SwapChain::setRenderWindow(Renderer::IRenderWindow* renderWindow)
 	{
-		mWidth = std::max(1u, width);
-		mHeight = std::max(1u, height);
+		mRendererWindow = rendererWindow;
 	}
 
 

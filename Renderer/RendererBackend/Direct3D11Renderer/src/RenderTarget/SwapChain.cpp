@@ -341,7 +341,7 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void SwapChain::setWidthAndHeight(uint32_t, uint32_t)
+	void SwapChain::setRenderWindow(Renderer::IRenderWindow*)
 	{
 		// TODO(sw) implement me
 	}
