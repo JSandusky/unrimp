@@ -139,7 +139,7 @@ namespace OpenGLRenderer
 		IContext* mContext;				///< Context, must be valid
 		bool	  mOwnsContext;			///< Does this swap chain own the context?
 		
-		Renderer::IRendererWindow* mRendererWindow;
+		Renderer::IRenderWindow* mRenderWindow;
 
 
 	};

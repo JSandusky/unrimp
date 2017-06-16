@@ -2051,7 +2051,7 @@ namespace Renderer
 			virtual void resizeBuffers() = 0;
 			virtual bool getFullscreenState() const = 0;
 			virtual void setFullscreenState(bool fullscreen) = 0;
-			virtual setRenderWindow(IRenderWindow* renderWindow) = 0;
+			virtual void setRenderWindow(IRenderWindow* renderWindow) = 0;
 		protected:
 			explicit ISwapChain(IRenderer& renderer);
 			explicit ISwapChain(const ISwapChain& source) = delete;
