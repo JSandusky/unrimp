@@ -100,8 +100,9 @@ namespace RendererRuntime
 		return indirectBuffer;
 	}
 
-	void IndirectBufferManager::freeAllUsedIndirectBuffers()
+	void IndirectBufferManager::onPostCommandBufferExecution()
 	{
+		// Free all used indirect buffers
 		mFreeIndirectBuffers.insert(mFreeIndirectBuffers.end(), mUsedIndirectBuffers.begin(), mUsedIndirectBuffers.end());
 		mUsedIndirectBuffers.clear();
 	}

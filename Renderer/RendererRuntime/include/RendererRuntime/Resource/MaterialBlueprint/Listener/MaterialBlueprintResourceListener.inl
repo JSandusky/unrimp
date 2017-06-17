@@ -55,6 +55,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline MaterialBlueprintResourceListener::~MaterialBlueprintResourceListener()
+	{
+		clear();
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]

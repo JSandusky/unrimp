@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 // Disable warnings in external headers, we can't fix them -> those warnings here happen apparently when instancing a template
-#include <RendererRuntime/Core/Platform/PlatformTypes.h>
+#include "RendererToolkit/PlatformTypes.h"
 PRAGMA_WARNING_DISABLE_MSVC(4242)	// warning C4242: '<x>': conversion from '<y>' to '<z>', possible loss of data
 PRAGMA_WARNING_DISABLE_MSVC(4244)	// warning C4244: '<x>': conversion from '<y>' to '<z>', possible loss of data
 
@@ -149,9 +149,12 @@ namespace RendererToolkit
 		// Try open the database
 		try
 		{
+			if (sqlite3_initialize() != SQLITE_OK)
+			{
+				throw std::runtime_error("Failed to initialize SQLite");
+			}
 			std_filesystem::path databasePath(cachePath);
 			databasePath /= projectName + ".db3";
-
 			mDatabaseConnection = std::make_unique<SQLite::Database>(databasePath.string(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE | SQLITE_OPEN_NOMUTEX);
 		}
 		catch (const std::exception& e)
@@ -164,7 +167,11 @@ namespace RendererToolkit
 
 	CacheManager::~CacheManager()
 	{
-		// Nothing here, only needed to support unique_ptr with forward declared classes
+		mDatabaseConnection.reset();
+		if (sqlite3_shutdown() != SQLITE_OK)
+		{
+			RENDERERTOOLKIT_OUTPUT_ERROR_STRING("Failed to shutdown SQLite")
+		}
 	}
 
 	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t compilerVersion, CacheEntries& cacheEntries)

@@ -236,28 +236,28 @@ namespace RendererRuntime
 				// Submit command buffer to the renderer backend
 				mCommandBuffer.submitAndClear(renderer);
 
-				// End scene rendering
-				// -> Required for Direct3D 9 and Direct3D 12
-				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
-				renderer.endScene();
-
-				// The frame has ended, inform everyone who cares about this
+				// The command buffer has been submitted, inform everyone who cares about this
 				for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
 				{
-					compositorNodeInstance->frameEnded();
+					compositorNodeInstance->onPostCommandBufferExecution();
 				}
-				{ // Reset current pass buffer from all material blueprint resources
+				{
 					const uint32_t numberOfResources = materialBlueprintResourceManager.getNumberOfResources();
 					for (uint32_t i = 0; i < numberOfResources; ++i)
 					{
 						PassBufferManager* passBufferManager = materialBlueprintResourceManager.getByIndex(i).getPassBufferManager();
 						if (nullptr != passBufferManager)
 						{
-							passBufferManager->resetCurrentPassBuffer();
+							passBufferManager->onPostCommandBufferExecution();
 						}
 					}
 				}
-				mIndirectBufferManager.freeAllUsedIndirectBuffers();
+				mIndirectBufferManager.onPostCommandBufferExecution();
+
+				// End scene rendering
+				// -> Required for Direct3D 9 and Direct3D 12
+				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+				renderer.endScene();
 			}
 
 			// In case the render target is a swap chain, present the content of the current back buffer
@@ -497,8 +497,8 @@ namespace RendererRuntime
 					{
 						const uint8_t minimumRenderQueueIndex = renderableManager->getMinimumRenderQueueIndex();
 						const uint8_t maximumRenderQueueIndex = renderableManager->getMaximumRenderQueueIndex();
-						if (minimumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && minimumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex ||
-							maximumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && maximumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex)
+						if ((minimumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && minimumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex) ||
+							(maximumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && maximumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex))
 						{
 							renderQueueIndexRange.renderableManagers.push_back(renderableManager);
 						}

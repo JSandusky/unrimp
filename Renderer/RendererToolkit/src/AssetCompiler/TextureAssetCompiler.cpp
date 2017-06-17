@@ -896,6 +896,7 @@ namespace
 			else if (TextureSemantic::PACKED_CHANNELS == textureSemantic)
 			{
 				loadPackedChannelsCrunchMipmappedTexture(configuration, rapidJsonValueTextureAssetCompiler, basePath, sourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
+				crunchConvertParams.m_texture_type = crunchMipmappedTexture.determine_texture_type();
 			}
 			else
 			{
@@ -904,9 +905,9 @@ namespace
 					sourceNormalMapFilename = nullptr;
 				}
 				load2DCrunchMipmappedTexture(sourceFilename, sourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
+				crunchConvertParams.m_texture_type = crunchMipmappedTexture.determine_texture_type();
 			}
 
-			crunchConvertParams.m_texture_type = crunchMipmappedTexture.determine_texture_type();
 			crunchConvertParams.m_pInput_texture = &crunchMipmappedTexture;
 			crunchConvertParams.m_dst_filename = destinationFilename;
 			crunchConvertParams.m_dst_file_type = outputCrunchTextureFileType;

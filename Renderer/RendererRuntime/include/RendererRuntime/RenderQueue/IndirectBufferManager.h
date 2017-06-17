@@ -106,9 +106,9 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Free all used indirect buffers
+		*    Called post command buffer execution
 		*/
-		void freeAllUsedIndirectBuffers();
+		void onPostCommandBufferExecution();
 
 
 	//[-------------------------------------------------------]

@@ -117,7 +117,7 @@ namespace RendererRuntime
 		if (load)
 		{
 			// Commit resource streamer asset load request
-			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, resourceLoaderTypeId, reload, *materialBlueprintResource));
+			mRendererRuntime.getResourceStreamer().commitLoadRequest(ResourceStreamer::LoadRequest(*asset, resourceLoaderTypeId, reload, *this, materialBlueprintResourceId));
 
 			// TODO(co) Currently material blueprint resource loading is a blocking process.
 			//          Later on, we can probably just write "mInternalResourceManager->loadResourceByAssetId(assetId, meshResourceId, resourceListener, reload, resourceLoaderTypeId);" and be done in this method.
@@ -274,6 +274,9 @@ namespace RendererRuntime
 
 		// Destroy internal resource manager
 		delete mInternalResourceManager;
+
+		// Explicitly clear the default material blueprint resource listener in order to avoid false-positive "_CrtMemDumpAllObjectsSince()" memory leak detection
+		::detail::defaultMaterialBlueprintResourceListener.clear();
 	}
 
 	void MaterialBlueprintResourceManager::addSerializedPipelineState(uint32_t serializedPipelineStateHash, const Renderer::SerializedPipelineState& serializedPipelineState)

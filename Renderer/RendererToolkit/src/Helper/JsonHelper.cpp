@@ -51,6 +51,233 @@ PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return a RGB color by using a given Kelvin value
+		*
+		*  @param[in] kelvin
+		*    Kelvin value to return as RGB color
+		*
+		*  @return
+		*    RGB color from the given Kelvin value
+		*
+		*  @note
+		*    - Basing on "How to Convert Temperature (K) to RGB: Algorithm and Sample Code" ( http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/ )
+		*    - See also "Moving Frostbite to Physically Based Rendering" from DICE, starting page 35 ( http://www.frostbite.com/wp-content/uploads/2014/11/s2014_pbs_frostbite_slides.pdf )
+		*/
+		glm::vec3 getRgbColorFromKelvin(float kelvin)
+		{
+			if (kelvin > 40000.0f)
+			{
+				kelvin = 40000.0f;
+			}
+			else if (kelvin < 1000.0f)
+			{
+				kelvin = 1000.0f;
+			}
+			kelvin = kelvin / 100.0f;
+
+			// Red
+			float red = 0.0f;
+			if (kelvin <= 66.0f)
+			{
+				red = 255.0f;
+			}
+			else
+			{
+				float temporary = kelvin - 60.0f;
+				temporary = 329.698727446f * std::pow(temporary, -0.1332047592f);
+				red = temporary;
+				if (red < 0.0f)
+				{
+					red = 0.0f;
+				}
+				else if (red > 255.0f)
+				{
+					red = 255.0f;
+				}
+			}
+
+			// Green
+			float green = 0.0f;
+			if (kelvin <= 66.0f)
+			{
+				float temporary = kelvin;
+				temporary = 99.4708025861f * std::log(temporary) - 161.1195681661f;
+				green = temporary;
+				if (green < 0.0f)
+				{
+					green = 0.0f;
+				}
+				else if (green > 255.0f)
+				{
+					green = 255.0f;
+				}
+			}
+			else
+			{
+				float temporary = kelvin - 60.0f;
+				temporary = 288.1221695283f * std::pow(temporary, -0.0755148492f);
+				green = temporary;
+				if (green < 0.0f)
+				{
+					green = 0.0f;
+				}
+				else if (green > 255.0f)
+				{
+					green = 255.0f;
+				}
+			}
+
+			// Blue
+			float blue = 0.0f;
+			if (kelvin >= 66.0f)
+			{
+				blue = 255.0f;
+			}
+			else if (kelvin <= 19.0f)
+			{
+				blue = 0.0f;
+			}
+			else
+			{
+				float temporary = kelvin - 10.0f;
+				temporary = 138.5177312231f * std::log(temporary) - 305.0447927307f;
+				blue = temporary;
+				if (blue < 0.0f)
+				{
+					blue = 0.0f;
+				}
+				else if (blue > 255.0f)
+				{
+					blue = 255.0f;
+				}
+			}
+
+			// Done
+			return glm::vec3(std::pow(red / 255.0f, 2.2f), std::pow(green / 255.0f, 2.2f), std::pow(blue / 255.0f, 2.2f));
+		}
+
+		// Implementation from https://gist.github.com/fairlight1337/4935ae72bcbcc1ba5c72 - with Unrimp code style adoptions
+
+		// Copyright (c) 2014, Jan Winkler <winkler@cs.uni-bremen.de>
+		// All rights reserved.
+		//
+		// Redistribution and use in source and binary forms, with or without
+		// modification, are permitted provided that the following conditions are met:
+		//
+		//     * Redistributions of source code must retain the above copyright
+		//       notice, this list of conditions and the following disclaimer.
+		//     * Redistributions in binary form must reproduce the above copyright
+		//       notice, this list of conditions and the following disclaimer in the
+		//       documentation and/or other materials provided with the distribution.
+		//     * Neither the name of Universität Bremen nor the names of its
+		//       contributors may be used to endorse or promote products derived from
+		//       this software without specific prior written permission.
+		//
+		// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+		// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+		// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+		// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+		// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+		// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+		// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+		// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+		// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+		// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+		// POSSIBILITY OF SUCH DAMAGE.
+
+		/* Author: Jan Winkler */
+		/*! \brief Convert HSV to RGB color space
+
+		  Converts a given set of HSV values `h', `s', `v' into RGB
+		  coordinates. The output RGB values are in the range [0, 1], and
+		  the input HSV values are in the ranges h = [0, 360], and s, v =
+		  [0, 1], respectively.
+
+		  \param h Hue component, used as input, range: [0, 360]
+		  \param s Hue component, used as input, range: [0, 1]
+		  \param v Hue component, used as input, range: [0, 1]
+		  \param r Red component, used as output, range: [0, 1]
+		  \param g Green component, used as output, range: [0, 1]
+		  \param b Blue component, used as output, range: [0, 1]
+
+		*/
+		void hsvToRgb(float h, float s, float v, float& r, float& g, float& b)
+		{
+			const float c = v * s;	// Chroma
+			const float hPrime = static_cast<float>(fmod(h / 60.0, 6));
+			const float x = static_cast<float>(c * (1 - fabs(fmod(hPrime, 2) - 1)));
+			const float m = v - c;
+
+			if (0 <= hPrime && hPrime < 1)
+			{
+				r = c;
+				g = x;
+				b = 0;
+			}
+			else if (1 <= hPrime && hPrime < 2)
+			{
+				r = x;
+				g = c;
+				b = 0;
+			}
+			else if (2 <= hPrime && hPrime < 3)
+			{
+				r = 0;
+				g = c;
+				b = x;
+			}
+			else if (3 <= hPrime && hPrime < 4)
+			{
+				r = 0;
+				g = x;
+				b = c;
+			}
+			else if (4 <= hPrime && hPrime < 5)
+			{
+				r = x;
+				g = 0;
+				b = c;
+			}
+			else if (5 <= hPrime && hPrime < 6)
+			{
+				r = c;
+				g = 0;
+				b = x;
+			}
+			else
+			{
+				r = 0;
+				g = 0;
+				b = 0;
+			}
+
+			r += m;
+			g += m;
+			b += m;
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -213,9 +440,222 @@ namespace RendererToolkit
 		}
 	}
 
+	void JsonHelper::optionalUnitNProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float value[], uint32_t numberOfComponents)
+	{
+		// Unit values can be defined as "METER" (e.g. "0.42 METER")
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			std::vector<std::string> elements;
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+			if (elements.size() == numberOfComponents + 1)	// +1 for the value semantic
+			{
+				// Get the value semantic
+				enum class ValueSemantic
+				{
+					METER,
+					UNKNOWN
+				};
+				const std::string& valueSemanticAsString = elements[numberOfComponents];
+				ValueSemantic valueSemantic = ValueSemantic::UNKNOWN;
+				if (valueSemanticAsString == "METER")
+				{
+					valueSemantic = ValueSemantic::METER;
+				}
+				if (ValueSemantic::UNKNOWN == valueSemantic)
+				{
+					throw std::runtime_error('\"' + std::string(propertyName) + "\" is using unknown value semantic \"" + std::string(valueSemanticAsString) + '\"');
+				}
+
+				// Get component values
+				for (size_t i = 0; i < numberOfComponents; ++i)
+				{
+					// One unit = one meter
+					value[i] = std::stof(elements[i].c_str());
+				}
+			}
+			else
+			{
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" needs exactly" + std::to_string(numberOfComponents) + " components and a value semantic \"METER\", but " + std::to_string(elements.size()) + " string parts given");
+			}
+		}
+	}
+
+	void JsonHelper::optionalFactorNProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float value[], uint32_t numberOfComponents)
+	{
+		// Factor values can be defined as "FACTOR" (e.g. "0.42 FACTOR") or "PERCENTAGE" (e.g. "42.0 PERCENTAGE")
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			std::vector<std::string> elements;
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+			if (elements.size() == numberOfComponents + 1)	// +1 for the value semantic
+			{
+				// Get the value semantic
+				enum class ValueSemantic
+				{
+					FACTOR,
+					PERCENTAGE,
+					UNKNOWN
+				};
+				const std::string& valueSemanticAsString = elements[numberOfComponents];
+				ValueSemantic valueSemantic = ValueSemantic::UNKNOWN;
+				if (valueSemanticAsString == "FACTOR")
+				{
+					valueSemantic = ValueSemantic::FACTOR;
+				}
+				else if (valueSemanticAsString == "PERCENTAGE")
+				{
+					valueSemantic = ValueSemantic::PERCENTAGE;
+				}
+				if (ValueSemantic::UNKNOWN == valueSemantic)
+				{
+					throw std::runtime_error('\"' + std::string(propertyName) + "\" is using unknown value semantic \"" + std::string(valueSemanticAsString) + '\"');
+				}
+
+				// Get component values
+				for (size_t i = 0; i < numberOfComponents; ++i)
+				{
+					value[i] = std::stof(elements[i].c_str());
+					if (ValueSemantic::PERCENTAGE == valueSemantic)
+					{
+						value[i] *= 0.01f;
+					}
+				}
+			}
+			else
+			{
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" needs exactly" + std::to_string(numberOfComponents) + " components and a value semantic \"FACTOR\" or \"PERCENTAGE\", but " + std::to_string(elements.size()) + " string parts given");
+			}
+		}
+	}
+
+	void JsonHelper::optionalRgbColorProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float value[3])
+	{
+		// RGB color values can be defined as
+		// - "RGB" (e.g. "255 0 255 RGB")
+		// - "RGB_FLOAT" (e.g. "1.0 0.0 1.0 RGB_FLOAT")
+		// - "HSV" (e.g. "120.0 1 1 HSV")
+		// - "HEX" (e.g. "FF00FF HEX")
+		// - "INTENSITY" (e.g. "1.0 INTENSITY")
+		// - "KELVIN" (e.g. "6600.0 KELVIN")
+		// including a combination of color * intensity * kelvin
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			// Split string
+			std::vector<std::string> elements;
+			StringHelper::splitString(rapidJsonValue[propertyName].GetString(), ' ', elements);
+
+			// The elements the final color will be composed of
+			glm::vec3 color(1.0f, 1.0f, 1.0f);
+			float intensity = 1.0f;
+			float kelvin = 6600.0f;	// Results in white ("1.0 1.0 1.0")
+
+			// Color
+			for (size_t elementIndex = 0; elementIndex < elements.size(); ++elementIndex)
+			{
+				const std::string& element = elements[elementIndex];
+				if ("RGB" == element)
+				{
+					if (elementIndex < 3)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": RGB colors need three color components");
+					}
+					for (uint8_t i = 0; i < 3; ++i)
+					{
+						const int integerValue = std::stoi(elements[elementIndex - (3 - i)].c_str());
+						if (integerValue < 0 || integerValue > 255)
+						{
+							throw std::runtime_error("8-bit RGB color values must be between [0, 255]");
+						}
+						color[i] = static_cast<float>(integerValue) / 255.0f;
+					}
+					break;
+				}
+				else if ("RGB_FLOAT" == element)
+				{
+					if (elementIndex < 3)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": RGB colors need three color components");
+					}
+					for (uint8_t i = 0; i < 3; ++i)
+					{
+						color[i] = std::stof(elements[elementIndex - (3 - i)].c_str());
+					}
+					break;
+				}
+				else if ("HSV" == element)
+				{
+					if (elementIndex < 3)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": HSV colors need three color components");
+					}
+					for (uint8_t i = 0; i < 3; ++i)
+					{
+						color[i] = std::stof(elements[elementIndex - (3 - i)].c_str());
+					}
+					::detail::hsvToRgb(color[0], color[1], color[2], color[0], color[1], color[2]);
+					break;
+				}
+				else if ("HEX" == element)
+				{
+					if (elementIndex < 1)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": HEX colors need one color component");
+					}
+
+					// TODO(co) Error handling
+					unsigned int r = 0, g = 0, b = 0;
+					sscanf(elements[elementIndex - 1].c_str(), "%02x%02x%02x", &r, &g, &b);
+					color[0] = r / 255.0f;
+					color[1] = g / 255.0f;
+					color[2] = b / 255.0f;
+					break;
+				}
+			}
+
+			// Intensity
+			for (size_t elementIndex = 0; elementIndex < elements.size(); ++elementIndex)
+			{
+				const std::string& element = elements[elementIndex];
+				if ("INTENSITY" == element)
+				{
+					if (elementIndex < 1)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": Intensity needs one component");
+					}
+					intensity = std::stof(elements[elementIndex - 1].c_str());
+					break;
+				}
+			}
+
+			// Kelvin
+			for (size_t elementIndex = 0; elementIndex < elements.size(); ++elementIndex)
+			{
+				const std::string& element = elements[elementIndex];
+				if ("KELVIN" == element)
+				{
+					if (elementIndex < 1)
+					{
+						throw std::runtime_error('\"' + std::string(propertyName) + "\": Kelvin needs one component");
+					}
+					kelvin = std::stof(elements[elementIndex - 1].c_str());
+					break;
+				}
+			}
+
+			// Calculate final composed color
+			color *= intensity;
+			color *= ::detail::getRgbColorFromKelvin(kelvin);
+
+			// Done
+			value[0] = color.r;
+			value[1] = color.g;
+			value[2] = color.b;
+		}
+	}
+
 	void JsonHelper::optionalAngleProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, float& value)
 	{
-		// Angle values can be defined as Euler angle in "DEGREES" or Euler angle in "RADIANS"
+		// Angle values can be defined as Euler angle in "DEGREE" or Euler angle in "RADIAN"
 		if (rapidJsonValue.HasMember(propertyName))
 		{
 			std::vector<std::string> elements;
@@ -223,29 +663,29 @@ namespace RendererToolkit
 			if (elements.size() == 2)
 			{
 				value = std::stof(elements[0].c_str());
-				if (elements[1] == "DEGREES")
+				if (elements[1] == "DEGREE")
 				{
 					value = glm::radians(value);
 				}
-				else if (elements[1] == "RADIANS")
+				else if (elements[1] == "RADIAN")
 				{
 					// Nothing here
 				}
 				else
 				{
-					throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x Euler angle in DEGREES/RADIANS");
+					throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x Euler angle in DEGREE/RADIAN");
 				}
 			}
 			else
 			{
-				throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x Euler angle in DEGREES/RADIANS");
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" must be x Euler angle in DEGREE/RADIAN");
 			}
 		}
 	}
 
 	void JsonHelper::optionalRotationQuaternionProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, glm::quat& value)
 	{
-		// Rotation quaternion values can be defined as "QUATERNION", Euler angles in "DEGREES" or Euler angles in "RADIANS"
+		// Rotation quaternion values can be defined as "QUATERNION", Euler angles in "DEGREE" or Euler angles in "RADIAN"
 		if (rapidJsonValue.HasMember(propertyName))
 		{
 			std::vector<std::string> elements;
@@ -271,22 +711,22 @@ namespace RendererToolkit
 				const float pitch = std::stof(elements[0].c_str());
 				const float yaw   = std::stof(elements[1].c_str());
 				const float roll  = std::stof(elements[2].c_str());
-				if (elements[3] == "DEGREES")
+				if (elements[3] == "DEGREE")
 				{
 					value = glm::quat(glm::vec3(glm::radians(pitch), glm::radians(yaw), glm::radians(roll)));
 				}
-				else if (elements[3] == "RADIANS")
+				else if (elements[3] == "RADIAN")
 				{
 					value = glm::quat(glm::vec3(pitch, yaw, roll));
 				}
 				else
 				{
-					throw std::runtime_error('\"' + std::string(propertyName) + "\" must be a x y z w QUATERNION, or x y z Euler angles in DEGREES/RADIANS");
+					throw std::runtime_error('\"' + std::string(propertyName) + "\" must be a x y z w QUATERNION, or x y z Euler angles in DEGREE/RADIAN");
 				}
 			}
 			else
 			{
-				throw std::runtime_error('\"' + std::string(propertyName) + "\" must be a x y z w QUATERNION, or x y z Euler angles in DEGREES/RADIANS");
+				throw std::runtime_error('\"' + std::string(propertyName) + "\" must be a x y z w QUATERNION, or x y z Euler angles in DEGREE/RADIAN");
 			}
 		}
 	}

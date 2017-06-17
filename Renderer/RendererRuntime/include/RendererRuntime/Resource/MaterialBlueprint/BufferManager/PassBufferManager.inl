@@ -33,7 +33,7 @@ namespace RendererRuntime
 		return mPassData;
 	}
 
-	inline void PassBufferManager::resetCurrentPassBuffer()
+	inline void PassBufferManager::onPostCommandBufferExecution()
 	{
 		mCurrentUniformBufferIndex = 0;
 	}

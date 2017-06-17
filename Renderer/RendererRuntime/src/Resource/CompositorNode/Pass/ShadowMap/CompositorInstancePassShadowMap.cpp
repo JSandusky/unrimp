@@ -343,7 +343,7 @@ namespace RendererRuntime
 					COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, "Depth to exponential variance")
 					Renderer::Command::SetRenderTarget::create(commandBuffer, mVarianceFramebufferPtr[INTERMEDIATE_CASCADE_INDEX]);
 					mDepthToExponentialVarianceCompositorInstancePassQuad->onFillCommandBuffer(*mVarianceFramebufferPtr[INTERMEDIATE_CASCADE_INDEX], compositorContextData, commandBuffer);
-					mDepthToExponentialVarianceCompositorInstancePassQuad->onFrameEnded();
+					mDepthToExponentialVarianceCompositorInstancePassQuad->onPostCommandBufferExecution();
 					COMMAND_END_DEBUG_EVENT(commandBuffer)
 
 					// Horizontal blur
@@ -351,7 +351,7 @@ namespace RendererRuntime
 					COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, "Horizontal blur")
 					Renderer::Command::SetRenderTarget::create(commandBuffer, mIntermediateFramebufferPtr);
 					mHorizontalBlurCompositorInstancePassQuad->onFillCommandBuffer(*mIntermediateFramebufferPtr, compositorContextData, commandBuffer);
-					mHorizontalBlurCompositorInstancePassQuad->onFrameEnded();
+					mHorizontalBlurCompositorInstancePassQuad->onPostCommandBufferExecution();
 					COMMAND_END_DEBUG_EVENT(commandBuffer)
 
 					// Vertical blur
@@ -360,7 +360,7 @@ namespace RendererRuntime
 					COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, "Vertical blur")
 					Renderer::Command::SetRenderTarget::create(commandBuffer, mVarianceFramebufferPtr[cascadeIndex]);
 					mVerticalBlurCompositorInstancePassQuad->onFillCommandBuffer(*mVarianceFramebufferPtr[cascadeIndex], compositorContextData, commandBuffer);
-					mVerticalBlurCompositorInstancePassQuad->onFrameEnded();
+					mVerticalBlurCompositorInstancePassQuad->onPostCommandBufferExecution();
 					COMMAND_END_DEBUG_EVENT(commandBuffer)
 				}
 				else
@@ -370,7 +370,7 @@ namespace RendererRuntime
 					assert(nullptr != mVarianceFramebufferPtr[cascadeIndex]);
 					Renderer::Command::SetRenderTarget::create(commandBuffer, mVarianceFramebufferPtr[cascadeIndex]);
 					mDepthToExponentialVarianceCompositorInstancePassQuad->onFillCommandBuffer(*mVarianceFramebufferPtr[cascadeIndex], compositorContextData, commandBuffer);
-					mDepthToExponentialVarianceCompositorInstancePassQuad->onFrameEnded();
+					mDepthToExponentialVarianceCompositorInstancePassQuad->onPostCommandBufferExecution();
 					COMMAND_END_DEBUG_EVENT(commandBuffer)
 				}
 

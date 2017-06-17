@@ -92,7 +92,13 @@ namespace RendererRuntime
 		*  @brief
 		*    Destructor
 		*/
-		RENDERERRUNTIME_API_EXPORT virtual ~MaterialBlueprintResourceListener();
+		inline virtual ~MaterialBlueprintResourceListener();
+
+		/**
+		*  @brief
+		*    Clear the material blueprint resource listener by freeing e.g. allocated memory
+		*/
+		RENDERERRUNTIME_API_EXPORT void clear();
 
 
 	//[-------------------------------------------------------]

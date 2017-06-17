@@ -95,7 +95,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		virtual void onFillCommandBuffer(const Renderer::IRenderTarget& renderTarget, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer) override;
-		inline virtual void onFrameEnded() override;
+		inline virtual void onPostCommandBufferExecution() override;
 
 
 	//[-------------------------------------------------------]
