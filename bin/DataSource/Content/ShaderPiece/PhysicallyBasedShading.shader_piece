@@ -280,11 +280,11 @@
 	uint lightMask = TEXTURE_FETCH_3D(LightClustersMap3D, int4(worldSpacePosition * PassData.LightClustersScale + PassData.LightClustersBias, 0)).x;
 
 	// Point and spot lights using clustered shading
-	while (0 != lightMask)
+	while (0u != lightMask)
 	{
 		// Extract a light from the mask and disable that bit
 		uint lightIndex = firstbitlow(lightMask);
-		lightMask &= ~(1 << lightIndex);
+		lightMask &= ~(1u << lightIndex);
 
 		// Check if the fragment is inside the bounding volume of the light
 		float4 lightPositionRadius = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u);
