@@ -173,8 +173,7 @@ namespace
 					if (nullptr != materialResource)
 					{
 						// TODO(co) It must be possible to set the property name from the outside
-						materialResource->setPropertyById("DiffuseMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(diffuseTextureAssetId));
-						materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(true));
+						materialResource->setPropertyById("_drgb_nxa", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(diffuseTextureAssetId));
 					}
 				}
 			}
