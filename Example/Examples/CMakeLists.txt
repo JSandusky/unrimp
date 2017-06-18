@@ -208,10 +208,8 @@ if(STATIC_LIBRARY)
 	endif()
 	if(RENDERER_RUNTIME)
 		set(LIBRARIES ${LIBRARIES} RendererRuntimeStatic)
-		if(UNIX)
-			set(LIBRARIES ${LIBRARIES} pthread)
-		endif()
 	endif()
+	set(LIBRARIES ${LIBRARIES} pthread)
 	target_link_libraries(ExamplesStatic ${LIBRARIES})
 
 	if(WIN32)
@@ -274,4 +272,8 @@ if(SHARED_LIBRARY)
 	add_custom_command(TARGET Examples
 		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/Examples${CMAKE_EXECUTABLE_SUFFIX}" ${OUTPUT_BIN_DIR}
 	)
+endif()
+
+if (EXAMPLE_RUNNER_SDL2)
+	add_subdirectory(sdl2)
 endif()
