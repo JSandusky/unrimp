@@ -108,7 +108,7 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
 
 
 	//[-------------------------------------------------------]
