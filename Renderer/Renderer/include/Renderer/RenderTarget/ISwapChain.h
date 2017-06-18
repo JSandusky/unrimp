@@ -43,6 +43,67 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
+	*    Abstract render window interface
+	*    This is used to implement some platfrom specific functionality regarding render window needed by the swap chain implementation
+	* 
+	*  @remarks
+	*    This interface can be used to implement the needed platfrom specific functionality for a platform which isn't known by the renderer backend
+	*    e.g. the user uses a windowing library (e.g. SDL2) which abstracts the window handling on different windowing platforms (e.g. Win32 or Linux/Wayland)
+	*    and the application should run on a windowing platform which isn't supported by the swap chain implementation itself.
+	*/
+	class IRenderWindow
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~IRenderWindow() {}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual IRendererWindow methods                ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+ 		*  @brief
+		*    Returns the width and height of the renderer window
+		*
+		*  @param[out] width
+		*    Width of the render window
+		*  @param[out] height
+		*    Height of the render window
+ 		*/
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const = 0;
+
+		/**
+		*  @brief
+		*    Present the content of the current back buffer
+		*
+		*  @note
+		*    - Swap of front and back buffer
+		*/
+		virtual void present() = 0;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		inline explicit IRenderWindow() {}
+		explicit IRenderWindow(const IRenderWindow& source) = delete;
+		IRenderWindow& operator =(const IRenderWindow& source) = delete;
+
+
+	};
+
+	/**
+	*  @brief
 	*    Abstract swap chain interface
 	*/
 	class ISwapChain : public IRenderTarget
@@ -108,21 +169,19 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Set the width and height of the swap chain
+		*    Set an IRenderWindow instance
 		*
-		*  @param[in] width
-		*    Width of the swap chain
-		*  @param[in] height
-		*    Height of the swap chain
+		*  @param[in] renderWindow
+		*    The render window interface instance
 		*
 		*  @remarks
-		*    This method can be used to override the width and height which gets returned by the "Renderer::IRenderTarget::getWidthAndHeight()" method.
-		*    Additionally, this method can also be used to set a specific size when the user don't want that the swap chain itself tempers with the
+		*    This method can be used to override the platfrom specific handling for retreiving window size and doing an buffer swap on the render window (aka present)
+		*    An instance can be set when the user don't want that the swap chain itself tempers with the
 		*    given window handle (the handle might be invalid but non zero) e.g. the user uses a windowing library (e.g. SDL2) which abstracts the window
 		*    handling on different windowing platforms (e.g. Win32 or Linux/Wayland) and the application should run on a windowing platform which isn't
 		*    supported by the swap chain implementation itself.
 		*/
-		virtual void setWidthAndHeight(uint32_t width, uint32_t height) = 0;
+		virtual void setRenderWindow(IRenderWindow* renderWindow) = 0;
 
 
 	//[-------------------------------------------------------]

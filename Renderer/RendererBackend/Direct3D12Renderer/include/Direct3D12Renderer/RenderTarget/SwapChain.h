@@ -176,7 +176,7 @@ namespace Direct3D12Renderer
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
 		virtual void setFullscreenState(bool fullscreen) override;
-		virtual void setWidthAndHeight(uint32_t width, uint32_t height) override;
+		virtual void setRenderWindow(Renderer::IRenderWindow* renderWindow) override;
 
 
 	//[-------------------------------------------------------]

@@ -55,8 +55,7 @@ namespace OpenGLRenderer
 			#error "Unsupported platform"
 		#endif
 		mOwnsContext(true),
-		mWidth(0),
-		mHeight(0)
+		mRenderWindow(nullptr)
 	{
 		#ifdef WIN32
 			std::ignore = useExternalContext;
@@ -68,8 +67,7 @@ namespace OpenGLRenderer
 		mNativeWindowHandle(nativeWindowHandle),
 		mContext(&context),
 		mOwnsContext(false),
-		mWidth(0),
-		mHeight(0)
+		mRenderWindow(nullptr)
 	{
 		// Nothing here
 	}
@@ -89,10 +87,9 @@ namespace OpenGLRenderer
 	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
 		// Return stored width and height when both valid
-		if (mWidth > 0 && mHeight > 0)
+		if (nullptr != mRenderWindow)
 		{
-			width = mWidth;
-			height = mHeight;
+			mRenderWindow->getWidthAndHeight(width, height);
 			return;
 		}
 		#ifdef WIN32
@@ -180,6 +177,11 @@ namespace OpenGLRenderer
 
 	void SwapChain::present()
 	{
+		if (nullptr != mRenderWindow)
+		{
+			mRenderWindow->present();
+			return;
+		}
 		#ifdef WIN32
 			HDC hDC = ::GetDC(reinterpret_cast<HWND>(mNativeWindowHandle));
 			::SwapBuffers(hDC);
@@ -211,10 +213,9 @@ namespace OpenGLRenderer
 		// TODO(co) Implement me
 	}
 
-	void SwapChain::setWidthAndHeight(uint32_t width, uint32_t height)
+	void SwapChain::setRenderWindow(Renderer::IRenderWindow* renderWindow)
 	{
-		mWidth = std::max(1u, width);
-		mHeight = std::max(1u, height);
+		mRenderWindow = renderWindow;
 	}
 
 

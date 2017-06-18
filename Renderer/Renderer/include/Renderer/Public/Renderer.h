@@ -2029,6 +2029,19 @@ namespace Renderer
 	// Renderer/RenderTarget/ISwapChain.h
 	#ifndef __RENDERER_ISWAPCHAIN_H__
 	#define __RENDERER_ISWAPCHAIN_H__
+		class IRenderWindow
+		{
+		public:
+			virtual ~IRenderWindow(){};
+		public:
+			virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const = 0;
+			virtual void present() = 0;
+		protected:
+			explicit IRenderWindow(){};
+			explicit IRenderWindow(const IRenderWindow& source) = delete;
+			IRenderWindow& operator =(const IRenderWindow& source) = delete;
+		};
+	
 		class ISwapChain : public IRenderTarget
 		{
 		public:
@@ -2039,7 +2052,7 @@ namespace Renderer
 			virtual void resizeBuffers() = 0;
 			virtual bool getFullscreenState() const = 0;
 			virtual void setFullscreenState(bool fullscreen) = 0;
-			virtual void setWidthAndHeight(uint32_t width, uint32_t height) = 0;
+			virtual void setRenderWindow(IRenderWindow* renderWindow) = 0;
 		protected:
 			explicit ISwapChain(IRenderer& renderer);
 			explicit ISwapChain(const ISwapChain& source) = delete;
