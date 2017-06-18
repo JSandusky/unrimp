@@ -138,7 +138,7 @@ namespace Direct3D10Renderer
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
 		virtual void setFullscreenState(bool fullscreen) override;
-		virtual setRenderWindow(Renderer::IRenderWindow* renderWindow) override;
+		virtual void setRenderWindow(Renderer::IRenderWindow* renderWindow) override;
 
 
 	//[-------------------------------------------------------]

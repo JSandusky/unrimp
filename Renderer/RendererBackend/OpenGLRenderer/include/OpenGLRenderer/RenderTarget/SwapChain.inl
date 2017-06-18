@@ -34,6 +34,20 @@ namespace OpenGLRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ISwapChain methods           ]
+	//[-------------------------------------------------------]
+	inline handle SwapChain::getNativeWindowHandle() const
+	{
+		return mNativeWindowHandle;
+	}
+
+	inline void SwapChain::setRenderWindow(Renderer::IRenderWindow* renderWindow)
+	{
+		mRenderWindow = renderWindow;
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

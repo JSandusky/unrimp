@@ -36,6 +36,24 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline IRenderWindow::~IRenderWindow()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline IRenderWindow::IRenderWindow()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
 	inline ISwapChain::~ISwapChain()
 	{
 		#ifndef RENDERER_NO_STATISTICS

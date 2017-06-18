@@ -2032,16 +2032,18 @@ namespace Renderer
 		class IRenderWindow
 		{
 		public:
-			virtual ~IRenderWindow(){};
+			inline virtual ~IRenderWindow()
+			{}
 		public:
 			virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const = 0;
 			virtual void present() = 0;
 		protected:
-			explicit IRenderWindow(){};
+			inline IRenderWindow()
+			{}
 			explicit IRenderWindow(const IRenderWindow& source) = delete;
 			IRenderWindow& operator =(const IRenderWindow& source) = delete;
 		};
-	
+
 		class ISwapChain : public IRenderTarget
 		{
 		public:

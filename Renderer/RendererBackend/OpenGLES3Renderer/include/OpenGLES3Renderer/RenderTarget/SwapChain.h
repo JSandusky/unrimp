@@ -90,12 +90,12 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::ISwapChain methods           ]
 	//[-------------------------------------------------------]
 	public:
-		virtual handle getNativeWindowHandle() const override;
+		inline virtual handle getNativeWindowHandle() const override;
 		virtual void present() override;
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
 		virtual void setFullscreenState(bool fullscreen) override;
-		virtual void setRenderWindow(Renderer::IRenderWindow* renderWindow) override;
+		inline virtual void setRenderWindow(Renderer::IRenderWindow* renderWindow) override;
 
 
 	//[-------------------------------------------------------]
@@ -110,8 +110,8 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle   mNativeWindowHandle;	///< Native window handle window, can be a null handle
-		Renderer::IRenderWindow* mRenderWindow;
+		handle					 mNativeWindowHandle;	///< Native window handle window, can be a null handle
+		Renderer::IRenderWindow* mRenderWindow;			///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
 
 
 	};

@@ -151,11 +151,6 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ISwapChain methods           ]
 	//[-------------------------------------------------------]
-	handle SwapChain::getNativeWindowHandle() const
-	{
-		return mNativeWindowHandle;
-	}
-
 	void SwapChain::present()
 	{
 		if (nullptr != mRenderWindow)
@@ -185,11 +180,6 @@ namespace OpenGLES3Renderer
 	void SwapChain::setFullscreenState(bool)
 	{
 		// TODO(co) Implement me
-	}
-
-	void SwapChain::setRenderWindow(Renderer::IRenderWindow* renderWindow)
-	{
-		mRenderWindow = renderWindow;
 	}
 
 

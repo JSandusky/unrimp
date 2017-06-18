@@ -43,11 +43,10 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract render window interface
-	*    This is used to implement some platfrom specific functionality regarding render window needed by the swap chain implementation
-	* 
+	*    Abstract render window interface which is used to implement some platform specific functionality regarding render window needed by the swap chain implementation
+	*
 	*  @remarks
-	*    This interface can be used to implement the needed platfrom specific functionality for a platform which isn't known by the renderer backend
+	*    This interface can be used to implement the needed platform specific functionality for a platform which isn't known by the renderer backend
 	*    e.g. the user uses a windowing library (e.g. SDL2) which abstracts the window handling on different windowing platforms (e.g. Win32 or Linux/Wayland)
 	*    and the application should run on a windowing platform which isn't supported by the swap chain implementation itself.
 	*/
@@ -63,7 +62,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IRenderWindow() {}
+		inline virtual ~IRenderWindow();
 
 
 	//[-------------------------------------------------------]
@@ -71,14 +70,14 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	public:
 		/**
- 		*  @brief
-		*    Returns the width and height of the renderer window
+		*  @brief
+		*    Return the width and height of the render window
 		*
 		*  @param[out] width
 		*    Width of the render window
 		*  @param[out] height
 		*    Height of the render window
- 		*/
+		*/
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const = 0;
 
 		/**
@@ -95,7 +94,7 @@ namespace Renderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit IRenderWindow() {}
+		inline IRenderWindow();
 		explicit IRenderWindow(const IRenderWindow& source) = delete;
 		IRenderWindow& operator =(const IRenderWindow& source) = delete;
 
@@ -169,17 +168,16 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Set an IRenderWindow instance
+		*    Set an render window instance
 		*
 		*  @param[in] renderWindow
-		*    The render window interface instance
+		*    The render window interface instance, can be a null pointer, if valid the instance must stay valid as long as it's connected to the swap chain instance
 		*
 		*  @remarks
-		*    This method can be used to override the platfrom specific handling for retreiving window size and doing an buffer swap on the render window (aka present)
-		*    An instance can be set when the user don't want that the swap chain itself tempers with the
-		*    given window handle (the handle might be invalid but non zero) e.g. the user uses a windowing library (e.g. SDL2) which abstracts the window
-		*    handling on different windowing platforms (e.g. Win32 or Linux/Wayland) and the application should run on a windowing platform which isn't
-		*    supported by the swap chain implementation itself.
+		*    This method can be used to override the platform specific handling for retrieving window size and doing an buffer swap on the render window (aka present).
+		*    An instance can be set when the user don't want that the swap chain itself tempers with the given window handle (the handle might be invalid but non zero)
+		*    e.g. the user uses a windowing library (e.g. SDL2) which abstracts the window handling on different windowing platforms (e.g. Win32 or Linux/Wayland) and
+		*    the application should run on a windowing platform which isn't supported by the swap chain implementation itself.
 		*/
 		virtual void setRenderWindow(IRenderWindow* renderWindow) = 0;
 

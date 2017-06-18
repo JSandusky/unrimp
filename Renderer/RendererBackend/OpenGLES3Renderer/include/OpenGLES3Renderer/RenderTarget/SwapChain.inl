@@ -26,9 +26,17 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public virtual Renderer::ISwapChain methods           ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement me
+	inline handle SwapChain::getNativeWindowHandle() const
+	{
+		return mNativeWindowHandle;
+	}
+
+	inline void SwapChain::setRenderWindow(Renderer::IRenderWindow* renderWindow)
+	{
+		mRenderWindow = renderWindow;
+	}
 
 
 //[-------------------------------------------------------]

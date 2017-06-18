@@ -387,7 +387,7 @@ namespace Direct3D12Renderer
 		}
 	}
 
-	void SwapChain::setRenderWindow(Renderer::IRenderWindow)
+	void SwapChain::setRenderWindow(Renderer::IRenderWindow*)
 	{
 		// TODO(sw) implement me
 	}

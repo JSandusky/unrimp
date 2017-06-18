@@ -108,7 +108,7 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		inline virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -120,7 +120,7 @@ namespace OpenGLRenderer
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
 		virtual void setFullscreenState(bool fullscreen) override;
-		virtual void setRenderWindow(Renderer::IRenderWindow* renderWindow) override;
+		inline virtual void setRenderWindow(Renderer::IRenderWindow* renderWindow) override;
 
 
 	//[-------------------------------------------------------]
@@ -135,11 +135,10 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle    mNativeWindowHandle;	///< Native window handle window, can be a null handle
-		IContext* mContext;				///< Context, must be valid
-		bool	  mOwnsContext;			///< Does this swap chain own the context?
-		
-		Renderer::IRenderWindow* mRenderWindow;
+		handle					 mNativeWindowHandle;	///< Native window handle window, can be a null handle
+		IContext*				 mContext;				///< Context, must be valid
+		bool					 mOwnsContext;			///< Does this swap chain own the context?
+		Renderer::IRenderWindow* mRenderWindow;			///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
 
 
 	};
