@@ -115,7 +115,7 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::ISwapChain methods           ]
 	//[-------------------------------------------------------]
 	public:
-		virtual handle getNativeWindowHandle() const override;
+		inline virtual handle getNativeWindowHandle() const override;
 		virtual void present() override;
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
