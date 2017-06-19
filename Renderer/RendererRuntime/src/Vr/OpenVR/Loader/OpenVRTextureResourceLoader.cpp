@@ -66,6 +66,15 @@ namespace RendererRuntime
 			return;
 		}
 
+		{ // The "_drgb_nxa" texture channel packing stores the x channel of a normal map inside the alpha channel, set identity normal map x value
+			uint8_t* rubTextureMapData = const_cast<uint8_t*>(mVrRenderModelTextureMap->rubTextureMapData);	// Evil const-cast since I don't want to copy the data
+			const uint8_t* rubTextureMapDataEnd = rubTextureMapData + mVrRenderModelTextureMap->unWidth * mVrRenderModelTextureMap->unHeight * 4;
+			for (; rubTextureMapData < rubTextureMapDataEnd; rubTextureMapData += 4)
+			{
+				rubTextureMapData[3] = 128;
+			}
+		}
+
 		// Can we create the renderer resource asynchronous as well?
 		if (mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading)
 		{
