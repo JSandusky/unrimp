@@ -656,9 +656,9 @@ namespace OpenGLRenderer
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
-			IMPORT_FUNC(glDrawArraysInstancedBaseInstanceARB)
-			IMPORT_FUNC(glDrawElementsInstancedBaseInstanceARB)
-			IMPORT_FUNC(glDrawElementsInstancedBaseVertexBaseInstanceARB)
+			IMPORT_FUNC(glDrawArraysInstancedBaseInstance)
+			IMPORT_FUNC(glDrawElementsInstancedBaseInstance)
+			IMPORT_FUNC(glDrawElementsInstancedBaseVertexBaseInstance)
 			mGL_ARB_base_instance = result;
 		}
 
