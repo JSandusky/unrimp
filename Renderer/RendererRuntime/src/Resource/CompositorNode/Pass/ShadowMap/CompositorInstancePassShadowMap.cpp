@@ -425,7 +425,15 @@ namespace RendererRuntime
 			const uint32_t shadowMapSize = compositorResourcePassShadowMap.getShadowMapSize();
 			const uint8_t numberOfShadowCascades = compositorResourcePassShadowMap.getNumberOfShadowCascades();
 			assert(numberOfShadowCascades <= CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES);
-			const uint8_t numberOfShadowMultisamples = compositorResourcePassShadowMap.getNumberOfShadowMultisamples();
+			uint8_t numberOfShadowMultisamples = compositorResourcePassShadowMap.getNumberOfShadowMultisamples();
+			{ // Multisamples sanity check
+				const uint8_t maximumNumberOfMultisamples = rendererRuntime.getRenderer().getCapabilities().maximumNumberOfMultisamples;
+				if (numberOfShadowMultisamples > maximumNumberOfMultisamples)
+				{
+					assert(false && "Number of shadow multisamples not supported by the renderer backend");
+					numberOfShadowMultisamples = maximumNumberOfMultisamples;
+				}
+			}
 
 			{ // Depth shadow map
 				Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2D(shadowMapSize, shadowMapSize, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, numberOfShadowMultisamples);
