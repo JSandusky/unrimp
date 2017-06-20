@@ -153,8 +153,8 @@
 			"VertexAttributes": "VertexAttributes/Default/Mesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Scene/DepthOnlyVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Scene/DepthOnlyFragment.asset"
+				"VertexShaderBlueprint": "ShaderBlueprint/Scene/MeshDepthOnlyVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Scene/MeshDepthOnlyFragment.asset"
 			},
 			"RasterizerState":
 			{

@@ -14,7 +14,7 @@
 		},
 		"MaterialBlueprintAssetCompiler":
 		{
-			"InputFile": "DepthOnly.material_blueprint"
+			"InputFile": "MeshDepthOnly.material_blueprint"
 		}
 	}
 }

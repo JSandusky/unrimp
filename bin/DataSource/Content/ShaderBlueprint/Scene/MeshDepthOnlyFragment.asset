@@ -14,7 +14,7 @@
 		},
 		"ShaderBlueprintAssetCompiler":
 		{
-			"InputFile": "DepthOnlyFragment.shader_blueprint"
+			"InputFile": "MeshDepthOnlyFragment.shader_blueprint"
 		}
 	}
 }
