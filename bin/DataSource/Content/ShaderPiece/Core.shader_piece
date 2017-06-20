@@ -364,9 +364,9 @@
 		#define SAMPLE_1D(textureObject, samplerObject, coordinate) texture(textureObject, vec2(coordinate, 0.0f))							// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
 		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, vec2(coordinate.x, 0.0f), coordinate.w)	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
-		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w)
+		#define SAMPLE_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w)
 		#define SAMPLE_ARRAY(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
-		#define SAMPLE_ARRAY_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xyz, coordinate.w)
+		#define SAMPLE_ARRAY_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_ARRAY_GRAD(textureObject, samplerObject, coordinate, _ddx, _ddy) textureGrad(textureObject, coordinate.xyz, _ddx, _ddy)
 		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
