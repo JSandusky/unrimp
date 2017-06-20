@@ -153,11 +153,11 @@ void FirstInstancing::onInitialization()
 					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 					{
 						{ // Vertex buffer 0
-							vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
+							vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer*)
 							sizeof(float) * 2		// strideInBytes (uint32_t)
 						},
 						{ // Vertex buffer 1
-							vertexBufferInstanceId,	// vertexBuffer (Renderer::IVertexBuffer *)
+							vertexBufferInstanceId,	// vertexBuffer (Renderer::IVertexBuffer*)
 							sizeof(float)			// strideInBytes (uint32_t)
 						}
 					};
@@ -231,7 +231,7 @@ void FirstInstancing::onInitialization()
 					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 					{
 						{ // Vertex buffer 0
-							vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+							vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer*)
 							sizeof(float) * 2	// strideInBytes (uint32_t)
 						}
 					};

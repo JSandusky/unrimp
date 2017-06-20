@@ -103,7 +103,7 @@ void FirstGeometryShader::onInitialization()
 			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 			{
 				{ // Vertex buffer 0
-					vertexBuffer,	// vertexBuffer (Renderer::IVertexBuffer *)
+					vertexBuffer,	// vertexBuffer (Renderer::IVertexBuffer*)
 					sizeof(float)	// strideInBytes (uint32_t)
 				}
 			};

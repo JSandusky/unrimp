@@ -161,7 +161,7 @@ namespace RendererRuntime
 					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 					{
 						{ // Vertex buffer 0
-							mVertexBufferPtr,	// vertexBuffer (Renderer::IVertexBuffer *)
+							mVertexBufferPtr,	// vertexBuffer (Renderer::IVertexBuffer*)
 							sizeof(ImDrawVert)	// strideInBytes (uint32_t)
 						}
 					};

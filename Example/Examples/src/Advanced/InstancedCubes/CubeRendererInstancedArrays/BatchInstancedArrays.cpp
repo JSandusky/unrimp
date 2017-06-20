@@ -115,11 +115,11 @@ void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, R
 			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 			{
 				{ // Vertex buffer 0
-					&vertexBuffer,				// vertexBuffer (Renderer::IVertexBuffer *)
+					&vertexBuffer,				// vertexBuffer (Renderer::IVertexBuffer*)
 					sizeof(float) * (3 + 2 + 3)	// strideInBytes (uint32_t)
 				},
 				{ // Vertex buffer 1
-					vertexBufferPerInstanceData,	// vertexBuffer (Renderer::IVertexBuffer *)
+					vertexBufferPerInstanceData,	// vertexBuffer (Renderer::IVertexBuffer*)
 					sizeof(float) * 4 * 2			// strideInBytes (uint32_t)
 				}
 			};

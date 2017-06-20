@@ -255,11 +255,11 @@ namespace RendererRuntime
 		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 		{
 			{ // Vertex buffer 0
-				vertexBuffer,																		// vertexBuffer (Renderer::IVertexBuffer *)
+				vertexBuffer,																		// vertexBuffer (Renderer::IVertexBuffer*)
 				(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0	// strideInBytes (uint32_t)
 			},
 			{ // Vertex buffer 1
-				mRendererRuntime.getMeshResourceManager().getDrawIdVertexBufferPtr(),				// vertexBuffer (Renderer::IVertexBuffer *)
+				mRendererRuntime.getMeshResourceManager().getDrawIdVertexBufferPtr(),				// vertexBuffer (Renderer::IVertexBuffer*)
 				sizeof(uint32_t)																	// strideInBytes (uint32_t)
 			}
 		};

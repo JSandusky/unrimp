@@ -272,7 +272,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 		{
 			{ // Vertex buffer 0
-				vertexBuffer,				// vertexBuffer (Renderer::IVertexBuffer *)
+				vertexBuffer,				// vertexBuffer (Renderer::IVertexBuffer*)
 				sizeof(float) * (3 + 2 + 3)	// strideInBytes (uint32_t)
 			}
 		};

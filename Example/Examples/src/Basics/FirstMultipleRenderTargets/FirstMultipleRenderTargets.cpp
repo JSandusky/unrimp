@@ -140,7 +140,7 @@ void FirstMultipleRenderTargets::onInitialization()
 				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 				{
 					{ // Vertex buffer 0
-						vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+						vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer*)
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};

@@ -148,7 +148,7 @@ void VertexBuffer::onInitialization()
 			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 			{
 				{ // Vertex buffer 0
-					vertexBufferPositionColor,	// vertexBuffer (Renderer::IVertexBuffer *)
+					vertexBufferPositionColor,	// vertexBuffer (Renderer::IVertexBuffer*)
 					sizeof(float) * (2 + 3)		// strideInBytes (uint32_t)
 				}
 			};
@@ -180,11 +180,11 @@ void VertexBuffer::onInitialization()
 			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 			{
 				{ // Vertex buffer 0
-					vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
+					vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer*)
 					sizeof(float) * 2		// strideInBytes (uint32_t)
 				},
 				{ // Vertex buffer 1
-					vertexBufferColor,		// vertexBuffer (Renderer::IVertexBuffer *)
+					vertexBufferColor,		// vertexBuffer (Renderer::IVertexBuffer*)
 					sizeof(float) * 3		// strideInBytes (uint32_t)
 				}
 			};

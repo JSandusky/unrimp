@@ -182,7 +182,7 @@ void FirstGpgpu::onInitialization()
 		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 		{
 			{ // Vertex buffer 0
-				vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+				vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer*)
 				sizeof(float) * 2	// strideInBytes (uint32_t)
 			}
 		};
@@ -195,7 +195,7 @@ void FirstGpgpu::onInitialization()
 		static const float VERTEX_POSITION[] =
 		{					// Vertex ID	Triangle strip on screen
 			-1.0f, -1.0f,	// 0			  1.......3
-			-1.0f,  1.0f,	// 1			  .	  .   .
+			-1.0f,  1.0f,	// 1			  .   .   .
 			 1.0f, -1.0f,	// 2			  0.......2
 			 1.0f,  1.0f	// 3
 		};
@@ -210,7 +210,7 @@ void FirstGpgpu::onInitialization()
 		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 		{
 			{ // Vertex buffer 0
-				vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+				vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer*)
 				sizeof(float) * 2	// strideInBytes (uint32_t)
 			}
 		};
