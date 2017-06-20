@@ -128,7 +128,7 @@ namespace OpenGLES3Renderer
 						{
 							// Set the OpenGL ES 3 framebuffer color attachment
 							Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
-							glFramebufferTextureLayer(GL_FRAMEBUFFER, openGLES3Attachment, texture2DArray->getOpenGLES3Texture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex), static_cast<GLint>(depthStencilFramebufferAttachment->layerIndex));
+							glFramebufferTextureLayer(GL_FRAMEBUFFER, openGLES3Attachment, texture2DArray->getOpenGLES3Texture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex), static_cast<GLint>(colorFramebufferAttachment->layerIndex));
 
 							// If this is the primary render target, get the framebuffer width and height
 							if (GL_COLOR_ATTACHMENT0 == openGLES3Attachment)
