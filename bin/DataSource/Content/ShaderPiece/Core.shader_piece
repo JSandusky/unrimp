@@ -188,7 +188,7 @@
 
 		// Math
 		#define LERP(a, b, t) mix(a, b, t)
-		#define SATURATE(a) clamp(a, 0.0, 1.0f)
+		#define SATURATE(a) clamp(a, 0.0f, 1.0f)
 		#define ROW_MATRIX_3x3(r0, r1, r2) transpose(mat3(r0, r1, r2))
 		#define ROW_MATRIX_4x4(r0, r1, r2, r3) transpose(mat4(r0, r1, r2, r3))
 		#define MATRIX_MUL(m, v) (m * v)
@@ -328,7 +328,7 @@
 
 		// Math
 		#define LERP(a, b, t) mix(a, b, t)
-		#define SATURATE(a) clamp(a, 0.0, 1.0f)
+		#define SATURATE(a) clamp(a, 0.0f, 1.0f)
 		#define ROW_MATRIX_3x3(r0, r1, r2) transpose(mat3(r0, r1, r2))
 		#define ROW_MATRIX_4x4(r0, r1, r2, r3) transpose(mat4(r0, r1, r2, r3))
 		#define MATRIX_MUL(m, v) (m * v)
@@ -368,7 +368,7 @@
 		#define SAMPLE_ARRAY(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_ARRAY_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_ARRAY_GRAD(textureObject, samplerObject, coordinate, _ddx, _ddy) textureGrad(textureObject, coordinate.xyz, _ddx, _ddy)
-		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
+		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
 		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_CMP_LEVEL_ZERO(textureObject, samplerObject, coordinate) vec4(coordinate.w <= textureLod(textureObject, coordinate.xy, 0.0f).r, 0.0f, 0.0f, 0.0f)

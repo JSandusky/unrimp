@@ -98,7 +98,7 @@ MAIN_BEGIN
 
 	// Clamp to a maximum velocity: The maximum we can go without artifacts is 1.4f * PassData.NumberOfSamples... but we can fudge things a little
 	// -> Basing on https://mynameismjp.wordpress.com/the-museum/samples-tutorials-tools/motion-blur-sample/ and http://john-chapman-graphics.blogspot.de/2013/01/per-object-motion-blur.html
-	float2 maximumVelocity = (2.0f * PassData.NumberOfSamples) * PassData.InverseViewportSize;
+	float2 maximumVelocity = (2.0f * float(PassData.NumberOfSamples)) * PassData.InverseViewportSize;
 	velocity = clamp(velocity, -maximumVelocity, maximumVelocity);
 
 	// For each sample, sum up each sample's color in "sum" and then divide to average the color after all the samples are added
@@ -106,7 +106,7 @@ MAIN_BEGIN
 	for (int i = 0; i < PassData.NumberOfSamples; ++i)
 	{
 		// Sample texture in a new spot based on velocity vector and average it with the other samples
-		float2 sampleTexCoord = MAIN_INPUT(TexCoordVS) + (velocity * (i / float(PassData.NumberOfSamples)));
+		float2 sampleTexCoord = MAIN_INPUT(TexCoordVS) + (velocity * (float(i) / float(PassData.NumberOfSamples)));
 
 		// Lookup the color at this new spot and add it with the other samples
 		sum += SAMPLE_2D_LOD(ColorMap, SamplerPoint, float4(sampleTexCoord, 0.0f, 0.0f));

@@ -63,12 +63,12 @@ float4 BlurSample(float2 screenPosition, float offset, float mapSize)
 {
 	@property(VerticalBlur)
 		float2 samplePosition = screenPosition;
-		samplePosition.y = clamp(screenPosition.y + offset, 0, mapSize);
+		samplePosition.y = clamp(screenPosition.y + offset, 0.0f, mapSize);
 		return TEXTURE_FETCH_2D(ColorMap, int3(samplePosition, 0)); 
 	@end
 	@property(!VerticalBlur)
 		float2 samplePosition = screenPosition;
-		samplePosition.x = clamp(screenPosition.x + offset, 0, mapSize);
+		samplePosition.x = clamp(screenPosition.x + offset, 0.0f, mapSize);
 		const float INTERMEDIATE_CASCADE_INDEX = 3.0f;
 		return TEXTURE_FETCH_ARRAY(ColorMap, int4(samplePosition, 3, 0)); 
 	@end
@@ -84,8 +84,8 @@ MAIN_BEGIN
 
 	for (int i = -PassData.ShadowSampleRadius; i <= PassData.ShadowSampleRadius; ++i)
 	{
-		float4 sampleValue = BlurSample(FRAGMENT_POSITION.xy, i, float(PassData.ShadowMapSize));
-		sampleValue *= SATURATE((radius + 0.5f) - abs(i));
+		float4 sampleValue = BlurSample(FRAGMENT_POSITION.xy, float(i), float(PassData.ShadowMapSize));
+		sampleValue *= SATURATE((radius + 0.5f) - float(abs(i)));
 		sum += sampleValue;
 	}
 
