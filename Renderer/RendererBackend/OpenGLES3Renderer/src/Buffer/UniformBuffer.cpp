@@ -35,6 +35,33 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	UniformBuffer::UniformBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
+		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES3Renderer)),
+		mOpenGLES3UniformBuffer(0),
+		mBufferSize(numberOfBytes)
+	{
+		// Create the OpenGL ES 3 uniform buffer
+		glGenBuffers(1, &mOpenGLES3UniformBuffer);
+
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
+			// Backup the currently bound OpenGL ES 3 uniform buffer
+			GLint openGLES3UniformBufferBackup = 0;
+			glGetIntegerv(GL_UNIFORM_BUFFER_BINDING, &openGLES3UniformBufferBackup);
+		#endif
+
+		// TODO(co) Review OpenGL ES 3 uniform buffer alignment topic
+
+		// Bind this OpenGL ES 3 uniform buffer and upload the data
+		glBindBuffer(GL_UNIFORM_BUFFER, mOpenGLES3UniformBuffer);
+		// -> Usage: These constants directly map to GL_EXT_vertex_buffer_object and OpenGL ES 3 constants, do not change them
+		glBufferData(GL_UNIFORM_BUFFER, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
+
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
+			// Be polite and restore the previous bound OpenGL ES 3 uniform buffer
+			glBindBuffer(GL_UNIFORM_BUFFER, static_cast<GLuint>(openGLES3UniformBufferBackup));
+		#endif
+	}
+
 	UniformBuffer::~UniformBuffer()
 	{
 		// Destroy the OpenGL ES 3 uniform buffer
@@ -44,15 +71,28 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes) :
-		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES3Renderer)),
-		mOpenGLES3UniformBuffer(0),
-		mBufferSize(numberOfBytes)
+	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
-		// Create the OpenGL ES 3 uniform buffer
-		glGenBuffers(1, &mOpenGLES3UniformBuffer);
+		// Sanity check
+		assert(nullptr != data);
+
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
+			// Backup the currently bound OpenGL ES 3 uniform buffer
+			GLint openGLES3UniformBufferBackup = 0;
+			glGetIntegerv(GL_UNIFORM_BUFFER_BINDING, &openGLES3UniformBufferBackup);
+		#endif
+
+		// Bind this OpenGL ES 3 uniform buffer and upload the data
+		// -> Subdata is quite optimized for uniform buffers, see http://on-demand.gputechconf.com/siggraph/2014/presentation/SG4117-OpenGL-Scene-Rendering-Techniques.pdf
+		glBindBuffer(GL_UNIFORM_BUFFER, mOpenGLES3UniformBuffer);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
+
+		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
+			// Be polite and restore the previous bound OpenGL ES 3 uniform buffer
+			glBindBuffer(GL_UNIFORM_BUFFER, static_cast<GLuint>(openGLES3UniformBufferBackup));
+		#endif
 	}
 
 

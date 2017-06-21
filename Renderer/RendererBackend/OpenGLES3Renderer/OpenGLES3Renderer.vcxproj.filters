@@ -184,9 +184,6 @@
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBufferBind.h">
-      <Filter>Source Files\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
@@ -283,9 +280,6 @@
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer\UniformBuffer.cpp">
-      <Filter>Source Files\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Buffer\UniformBufferBind.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer\VertexBuffer.cpp">

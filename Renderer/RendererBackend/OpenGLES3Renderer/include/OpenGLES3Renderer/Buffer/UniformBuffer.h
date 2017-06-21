@@ -63,6 +63,21 @@ namespace OpenGLES3Renderer
 	public:
 		/**
 		*  @brief
+		*    Constructor
+		*
+		*  @param[in] openGLES3Renderer
+		*    Owner OpenGL ES3 renderer instance
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the uniform buffer, must be valid
+		*  @param[in] data
+		*    Uniform buffer data, can be a null pointer (empty buffer)
+		*  @param[in] bufferUsage
+		*    Indication of the buffer usage
+		*/
+		UniformBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage);
+
+		/**
+		*  @brief
 		*    Destructor
 		*/
 		virtual ~UniformBuffer();
@@ -80,19 +95,10 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	protected:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES2 renderer instance
-		*  @param[in] numberOfBytes
-		*    Number of bytes within the uniform buffer, must be valid
-		*/
-		UniformBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes);
+	public:
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
 
 
 	//[-------------------------------------------------------]

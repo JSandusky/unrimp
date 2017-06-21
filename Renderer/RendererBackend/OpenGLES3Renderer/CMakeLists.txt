@@ -54,7 +54,6 @@ set(SOURCE_CODES
 	src/Buffer/TextureBufferBind.cpp
 	src/Buffer/TextureBufferBindEmulation.cpp
 	src/Buffer/UniformBuffer.cpp
-	src/Buffer/UniformBufferBind.cpp
 	src/Buffer/VertexArray.cpp
 	src/Buffer/VertexBuffer.cpp
 	src/ContextRuntimeLinking.cpp
