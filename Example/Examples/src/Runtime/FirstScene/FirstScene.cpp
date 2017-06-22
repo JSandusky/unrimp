@@ -139,7 +139,7 @@ void FirstScene::onInitialization()
 		if (strcmp(rendererRuntime->getRenderer().getName(), "OpenGLES3") == 0)
 		{
 			// TODO(co) Add compositor designed for mobile devices, for now we're using the most simple debug compositor to have something on the screen
-			mInstancedCompositor = Compositor::DEBUG;
+			mCurrentCompositor = mInstancedCompositor = Compositor::DEBUG;
 		}
 		else
 		{
