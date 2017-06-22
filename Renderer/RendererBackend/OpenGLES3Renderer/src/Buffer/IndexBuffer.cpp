@@ -70,7 +70,8 @@ namespace OpenGLES3Renderer
 		}
 		else
 		{
-			// Error! "GL_UNSIGNED_INT" is only allowed when the "GL_OES_element_index_uint" extension is there!
+			// Error!
+			assert(false && "\"GL_UNSIGNED_INT\" is only allowed in case the \"GL_OES_element_index_uint\" extension is there");
 		}
 	}
 
