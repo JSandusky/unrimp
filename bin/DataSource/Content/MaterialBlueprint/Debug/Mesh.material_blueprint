@@ -108,7 +108,7 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
+							"BaseShaderRegister": "3",
 							"BaseShaderRegisterName": "InstanceTextureBuffer"
 						}
 					},

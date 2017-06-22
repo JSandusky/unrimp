@@ -62,7 +62,8 @@ UNIFORM_BUFFER_BEGIN(InstanceUniformBuffer, 2)
 UNIFORM_BUFFER_END
 
 // Texture buffers
-TEXTURE_BUFFER(float4, InstanceTextureBuffer, 0)	// "POSITION_ROTATION_SCALE"
+// -> We're using base shader register 3 instead of 0 to be compatible to the OpenGL ES 3 renderer backend texture buffer emulation, which is using an uniform buffer for the emulation
+TEXTURE_BUFFER(float4, InstanceTextureBuffer, 3)	// "POSITION_ROTATION_SCALE"
 
 
 //[-------------------------------------------------------]
