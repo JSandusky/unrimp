@@ -33,10 +33,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class ShaderBytecode;
-}
 namespace OpenGLES3Renderer
 {
 	class OpenGLES3Renderer;
@@ -67,17 +63,6 @@ namespace OpenGLES3Renderer
 	public:
 		/**
 		*  @brief
-		*    Constructor for creating a vertex shader from shader bytecode
-		*
-		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 3 renderer instance
-		*  @param[in] shaderBytecode
-		*    Shader bytecode
-		*/
-		VertexShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const Renderer::ShaderBytecode& shaderBytecode);
-
-		/**
-		*  @brief
 		*    Constructor for creating a vertex shader from shader source code
 		*
 		*  @param[in] openGLES3Renderer
@@ -85,7 +70,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		VertexShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
+		VertexShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode);
 
 		/**
 		*  @brief

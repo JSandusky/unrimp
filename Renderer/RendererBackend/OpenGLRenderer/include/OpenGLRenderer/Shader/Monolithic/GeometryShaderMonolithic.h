@@ -34,10 +34,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class ShaderBytecode;
-}
 namespace OpenGLRenderer
 {
 	class OpenGLRenderer;
@@ -66,23 +62,6 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor for creating a geometry shader from shader bytecode
-		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
-		*  @param[in] shaderBytecode
-		*    Shader bytecode
-		*  @param[in] gsInputPrimitiveTopology
-		*    Geometry shader input primitive topology
-		*  @param[in] gsOutputPrimitiveTopology
-		*    Geometry shader output primitive topology
-		*  @param[in] numberOfOutputVertices
-		*    Number of output vertices
-		*/
-		GeometryShaderMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
-
 		/**
 		*  @brief
 		*    Constructor for creating a geometry shader from shader source code

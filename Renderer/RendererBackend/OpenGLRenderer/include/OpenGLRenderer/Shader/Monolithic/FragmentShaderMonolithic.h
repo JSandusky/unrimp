@@ -33,10 +33,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class ShaderBytecode;
-}
 namespace OpenGLRenderer
 {
 	class OpenGLRenderer;
@@ -65,17 +61,6 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor for creating a fragment shader from shader bytecode
-		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
-		*  @param[in] shaderBytecode
-		*    Shader bytecode
-		*/
-		FragmentShaderMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode);
-
 		/**
 		*  @brief
 		*    Constructor for creating a fragment shader from shader source code
