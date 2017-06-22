@@ -135,7 +135,15 @@ void FirstScene::onInitialization()
 		// Load the material resource we're going to clone
 		rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::IMROD_MATERIAL_ASSET_ID, mMaterialResourceId, this);
 
-		{ // Startup the VR-manager
+		// When using OpenGL ES 3, switch to a compositor which is designed for mobile devices
+		if (strcmp(rendererRuntime->getRenderer().getName(), "OpenGLES3") == 0)
+		{
+			// TODO(co) Add compositor designed for mobile devices, for now we're using the most simple debug compositor to have something on the screen
+			mInstancedCompositor = Compositor::DEBUG;
+		}
+		else
+		{
+			// Desktop-PC: Try to startup the VR-manager if a HMD is present
 			RendererRuntime::IVrManager& vrManager = rendererRuntime->getVrManager();
 			if (vrManager.isHmdPresent())
 			{
