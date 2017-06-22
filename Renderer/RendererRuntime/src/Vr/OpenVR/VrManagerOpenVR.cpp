@@ -295,7 +295,7 @@ namespace RendererRuntime
 			if (!isOpenGLRenderer && !isDirect3D11Renderer)
 			{
 				// Error!
-				RENDERERRUNTIME_OUTPUT_DEBUG_STRING("Error: The VR OpenVR manager currently doesn't support Vulkan and Direct3D 12");
+				RENDERERRUNTIME_OUTPUT_DEBUG_STRING("Error: The VR OpenVR manager currently only supports Direct3D 11 and OpenGL");
 				return false;
 			}
 			mVrTextureType = isOpenGLRenderer ? vr::TextureType_OpenGL : vr::TextureType_DirectX;
