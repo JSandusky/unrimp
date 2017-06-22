@@ -106,16 +106,16 @@
 	{
 		switch (GetShadowCascadeIndex(linearDepth))
 		{
-			case 0:
+			case 0u:
 				return float3(1.0f, 0.0f, 0.0f);	// Red
 
-			case 1:
+			case 1u:
 				return float3(0.0f, 1.0f, 0.0f);	// Green
 
-			case 2:
+			case 2u:
 				return float3(0.0f, 0.0f, 1.0f);	// Blue
 
-			case 3:
+			case 3u:
 				return float3(1.0f, 0.0f, 1.0f);	// Pink
 
 			default:
