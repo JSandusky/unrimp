@@ -122,7 +122,10 @@ namespace OpenGLRenderer
 					glBindVertexArray(mOpenGLVertexArray);
 
 					// Set divisor
-					glVertexAttribDivisorARB(attributeLocation, attribute->instancesPerElement);
+					if (attribute->instancesPerElement > 0)
+					{
+						glVertexAttribDivisorARB(attributeLocation, attribute->instancesPerElement);
+					}
 
 					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 						// Be polite and restore the previous bound OpenGL vertex array

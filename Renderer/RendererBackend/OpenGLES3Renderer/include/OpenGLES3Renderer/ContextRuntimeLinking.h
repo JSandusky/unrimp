@@ -374,8 +374,8 @@ namespace OpenGLES3Renderer
 	FNDEF_GL(void,				glVertexAttrib4fv,						(GLuint indx, const GLfloat* values));
 	FNDEF_GL(void,				glVertexAttribPointer,					(GLuint indx, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* ptr));
 	FNDEF_GL(void,				glVertexAttribIPointer,					(GLuint indx, GLint size, GLenum type, GLsizei stride, const GLvoid* ptr));
+	FNDEF_GL(void,				glVertexAttribDivisor,					(GLuint index, GLuint divisor));
 	FNDEF_GL(void,				glViewport,								(GLint x, GLint y, GLsizei width, GLsizei height));
-	// ES 3.0
 	FNDEF_GL(void,				glBindBufferBase,						(GLenum target, GLuint index, GLuint buffer));
 	FNDEF_GL(void,				glUnmapBuffer,							(GLenum target));
 	FNDEF_GL(void*,				glMapBufferRange,						(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access));
@@ -584,6 +584,7 @@ namespace OpenGLES3Renderer
 	#define	glVertexAttrib4fv						FNPTR(glVertexAttrib4fv)
 	#define	glVertexAttribPointer					FNPTR(glVertexAttribPointer)
 	#define	glVertexAttribIPointer					FNPTR(glVertexAttribIPointer)
+	#define	glVertexAttribDivisor					FNPTR(glVertexAttribDivisor)
 	#define	glViewport								FNPTR(glViewport)
 
 	// ES 3.0

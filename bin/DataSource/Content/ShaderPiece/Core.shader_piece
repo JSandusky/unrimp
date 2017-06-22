@@ -343,7 +343,7 @@
 		// Texture buffer
 		// TODO(co) Currently we only emulate texture buffer using limited uniform buffer
 		// #define TEXTURE_BUFFER(type, name, index) uniform highp samplerBuffer name;
-		// #define TEXTURE_BUFFER_FETCH(name, index) texelFetch(name, int(index + drawId.y / 16u))	// TODO(co) Mac OS X 10.11 also has no "glTexBufferRange()", so we need to apply the texture buffer offset in here in a pretty inefficient way TODO(sw) On opengles glTexBufferRange is only supported with opengl es 3.2, but for now we support only opengl es 3.1
+		// #define TEXTURE_BUFFER_FETCH(name, index) texelFetch(name, int(index))
 		#define TEXTURE_BUFFER(type, name, index) layout(std140) uniform name { highp float4 textureBufferEmulation_##name[4096]; };
 		#define TEXTURE_BUFFER_FETCH(name, index) textureBufferEmulation_##name[int(index)]
 

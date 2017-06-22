@@ -106,6 +106,12 @@ namespace OpenGLES3Renderer
 										  reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 				}
 
+				// Set divisor
+				if (attribute->instancesPerElement > 0)
+				{
+					glVertexAttribDivisor(attributeLocation, attribute->instancesPerElement);
+				}
+
 				// Enable OpenGL ES 3 vertex attribute array
 				glEnableVertexAttribArray(attributeLocation);
 			}
