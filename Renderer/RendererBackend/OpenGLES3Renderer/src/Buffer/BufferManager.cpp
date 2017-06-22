@@ -28,7 +28,7 @@
 #include "OpenGLES3Renderer/Buffer/IndexBuffer.h"
 #include "OpenGLES3Renderer/Buffer/TextureBufferBind.h"
 #include "OpenGLES3Renderer/Buffer/TextureBufferBindEmulation.h"
-#include "OpenGLES3Renderer/Buffer/UniformBufferBind.h"
+#include "OpenGLES3Renderer/Buffer/UniformBuffer.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/IExtensions.h"
 #include "OpenGLES3Renderer/IContext.h"
@@ -74,7 +74,7 @@ namespace OpenGLES3Renderer
 
 	Renderer::IUniformBuffer* BufferManager::createUniformBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage)
 	{
-		return new UniformBufferBind(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+		return new UniformBuffer(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 	}
 
 	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void* data, Renderer::BufferUsage bufferUsage)

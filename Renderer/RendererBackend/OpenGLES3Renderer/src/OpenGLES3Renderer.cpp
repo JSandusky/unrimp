@@ -32,7 +32,7 @@
 #include "OpenGLES3Renderer/Buffer/BufferManager.h"
 #include "OpenGLES3Renderer/Buffer/IndexBuffer.h"
 #include "OpenGLES3Renderer/Buffer/TextureBufferBind.h"
-#include "OpenGLES3Renderer/Buffer/UniformBufferBind.h"
+#include "OpenGLES3Renderer/Buffer/UniformBuffer.h"
 #include "OpenGLES3Renderer/Buffer/VertexBuffer.h"
 #include "OpenGLES3Renderer/Buffer/VertexArray.h"
 #include "OpenGLES3Renderer/Buffer/IndirectBuffer.h"
