@@ -27,6 +27,10 @@
 #include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+// TODO(sw) Replace with own defines when we know all format types we want to support loading?
+#include <GLES3/gl3.h>  // Needed for the internal format type definitions
+#include <GLES3/gl2ext.h> // Needed for the GL_ETC1_RGB8_OES internal format type definition
+
 #include <algorithm>
 
 
@@ -76,7 +80,30 @@ namespace RendererRuntime
 		file.skip(ktxHeader.bytesOfKeyValueData);
 		mWidth = ktxHeader.pixelWidth;
 		mHeight = ktxHeader.pixelHeight;
-		mTextureFormat = Renderer::TextureFormat::ETC1;	// TODO(co) Make this dynamic
+
+		if (ktxHeader.glFormat == 0)
+		{
+			// When glFormat == 0 -> compressed version
+			// For now we only support ETC1 compression
+			if (ktxHeader.glInternalFormat != GL_ETC1_RGB8_OES)
+			{
+				assert(false && "unsupported compressed glInternalFormat");
+			}
+			mTextureFormat = Renderer::TextureFormat::ETC1;
+		}
+		else
+		{
+			// glInternalFormat defines the format of the texture
+			// For now we only support R8G8B8A8
+			if (ktxHeader.glInternalFormat == GL_RGBA8)
+			{
+				mTextureFormat = Renderer::TextureFormat::R8G8B8A8;
+			}
+			else
+			{
+				assert(false && "unsupported uncompressed glInternalFormat");
+			}
+		}
 
 		// Does the data contain mipmaps?
 		mDataContainsMipmaps = (ktxHeader.numberOfMipmapLevels > 1);
@@ -88,7 +115,14 @@ namespace RendererRuntime
 			uint32_t height = mHeight;
 			for (uint32_t mipmap = 0; mipmap < ktxHeader.numberOfMipmapLevels; ++mipmap)
 			{
-				mNumberOfUsedImageDataBytes += std::max((width * height) >> 1, 8u);
+				if (ktxHeader.glInternalFormat == GL_ETC1_RGB8_OES)
+				{
+					mNumberOfUsedImageDataBytes += std::max((width * height) >> 1, 8u);
+				}
+				else if (ktxHeader.glInternalFormat == GL_RGBA8)
+				{
+					mNumberOfUsedImageDataBytes += (width * height * 4);
+				}
 				width = std::max(width >> 1, 1u);	// /= 2
 				height = std::max(height >> 1, 1u);	// /= 2
 			}
@@ -108,7 +142,13 @@ namespace RendererRuntime
 		{
 			uint32_t imageSize = 0;
 			file.read(&imageSize, sizeof(uint32_t));
+
+			// Read the image data
 			file.read(currentImageData, imageSize);
+
+			// An mipmap level data might have padding bytes (up to 3) formular from https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
+			const uint32_t paddingBytes = 3 - ((imageSize + 3) % 4);
+			file.skip(paddingBytes);
 
 			// Move on to the next mipmap
 			currentImageData += imageSize;

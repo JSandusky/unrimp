@@ -46,6 +46,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenGLES/include) # Needed for the ktx loader
 
 
 ##################################################
