@@ -30,11 +30,13 @@
 
 #include <exception>
 
+#include <iostream>
+
 
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
-int programEntryPoint()
+int programEntryPoint(CommandLineArguments& args)
 {
 	RendererRuntime::StdFileManager stdFileManager;
 	RendererToolkit::RendererToolkitInstance rendererToolkitInstance(stdFileManager);
@@ -46,15 +48,29 @@ int programEntryPoint()
 		try
 		{
 			project->loadByFilename("../DataSource/Example.project");
-		//	project->compileAllAssets("Direct3D9_30");
-			project->compileAllAssets("Direct3D11_50");
-		//	project->compileAllAssets("Direct3D12_50");
-		//	project->compileAllAssets("OpenGLES3_300");
+
+			if (args.empty())
+			{
+				//	project->compileAllAssets("Direct3D9_30");
+				//	project->compileAllAssets("Direct3D11_50");
+				//	project->compileAllAssets("Direct3D12_50");
+				//	project->compileAllAssets("OpenGLES3_300");
+					project->compileAllAssets("OpenGL_440");
+			}
+			else
+			{
+				// For now all given arguments are interpreted as render target
+				for (auto& renderTarget : args)
+				{
+					std::cout<<"compile for target: "<<renderTarget<<'\n';
+					project->compileAllAssets(renderTarget.c_str());
+					std::cout<<"compilation done\n";
+				}
+			}
 		}
 		catch (const std::exception& e)
 		{
-			const char* text = e.what();
-			text = text;
+			std::cout<<"Project compilation failed: "<<e.what()<<"\n";
 		}
 		delete project;
 	}

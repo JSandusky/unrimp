@@ -25,9 +25,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "CommandLineArguments.h"
+
+
+//[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
-int programEntryPoint();
+int programEntryPoint(CommandLineArguments &args);
 
 
 //[-------------------------------------------------------]
@@ -50,8 +56,14 @@ int programEntryPoint();
 			int main(int argc, char **argv)
 		#endif
 			{
-				// Call the platform independent program entry point
-				const int result = programEntryPoint();
+				int result;
+				{
+					// Uses internally GetCommandline to fetch the command line arguments
+					CommandLineArguments arguments;
+
+					// Call the platform independent program entry point
+					result = programEntryPoint(arguments);
+				}
 
 				// For memory leak detection
 				#ifdef _DEBUG
@@ -69,8 +81,14 @@ int programEntryPoint();
 			int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		#endif
 			{
-				// Call the platform independent program entry point
-				const int result = programEntryPoint();
+				int result = 0;
+				{
+					// Uses internally GetCommandline to fetch the command line arguments
+					CommandLineArguments arguments;
+
+					// Call the platform independent program entry point
+					result = programEntryPoint(arguments);
+				}
 
 				// For memory leak detection
 				#ifdef _DEBUG
@@ -84,9 +102,11 @@ int programEntryPoint();
 
 // Linux implementation
 #elif LINUX
-	int main(int, char **)
+	int main(int argc, char **argv)
 	{
+		CommandLineArguments arguments(argc, argv);
+
 		// Call the platform independent program entry point
-		return programEntryPoint();
+		return programEntryPoint(arguments);
 	}
 #endif

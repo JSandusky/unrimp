@@ -38,6 +38,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Renderer/RendererToolkit/i
 set(SOURCE_CODES
 	# Cross-platform source codes
 	src/Main.cpp
+	src/CommandLineArguments.cpp
 )
 
 
