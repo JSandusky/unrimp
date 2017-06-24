@@ -28,7 +28,6 @@
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
-#include "RendererRuntime/RenderQueue/Renderable.h"
 #include "RendererRuntime/RenderQueue/RenderableManager.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -71,62 +70,82 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	InstanceBufferManager::InstanceBufferManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mStartInstanceLocation(0),
-		mUniformBuffer(nullptr),
-		mTextureBuffer(nullptr),
-		mMapped(false),
+		mMaximumUniformBufferSize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumUniformBufferSize, ::detail::DEFAULT_UNIFORM_BUFFER_NUMBER_OF_BYTES)),
+		mMaximumTextureBufferSize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumTextureBufferSize, ::detail::DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES)),
+		// Current instance buffer related data
+		mCurrentInstanceBufferIndex(getUninitialized<size_t>()),
+		mCurrentInstanceBuffer(nullptr),
 		mStartUniformBufferPointer(nullptr),
 		mCurrentUniformBufferPointer(nullptr),
 		mStartTextureBufferPointer(nullptr),
-		mCurrentTextureBufferPointer(nullptr)
+		mCurrentTextureBufferPointer(nullptr),
+		mStartInstanceLocation(0)
 	{
-		Renderer::IBufferManager& bufferManager = rendererRuntime.getBufferManager();
-
-		// Create uniform buffer instance
-		const uint32_t maximumUniformBufferSize = std::min(rendererRuntime.getRenderer().getCapabilities().maximumUniformBufferSize, ::detail::DEFAULT_UNIFORM_BUFFER_NUMBER_OF_BYTES);
-		mUniformBuffer = bufferManager.createUniformBuffer(maximumUniformBufferSize, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-		RENDERER_SET_RESOURCE_DEBUG_NAME(mUniformBuffer, "Instance buffer manager")
-
-		// Create texture buffer instance
-		const uint32_t maximumTextureBufferSize = std::min(rendererRuntime.getRenderer().getCapabilities().maximumTextureBufferSize, ::detail::DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES);
-		mTextureBuffer = bufferManager.createTextureBuffer(maximumTextureBufferSize, Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-		RENDERER_SET_RESOURCE_DEBUG_NAME(mTextureBuffer, "Instance buffer manager")
+		// There must always be at least one instance buffer instance
+		createInstanceBuffer();
 	}
 
 	InstanceBufferManager::~InstanceBufferManager()
 	{
 		// Release uniform and texture buffer instances
-		mUniformBuffer->releaseReference();
-		mTextureBuffer->releaseReference();
+		for (InstanceBuffer& instanceBuffer : mInstanceBuffers)
+		{
+			instanceBuffer.uniformBuffer->releaseReference();
+			instanceBuffer.textureBuffer->releaseReference();
+		}
 	}
 
-	uint32_t InstanceBufferManager::fillBuffer(PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer& instanceUniformBuffer, const Renderable& renderable, MaterialTechnique& materialTechnique)
+	void InstanceBufferManager::startupBufferFilling(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer)
 	{
-		// TODO(co) This is just a placeholder implementation until "RendererRuntime::InstanceBufferManager" is ready
-		if (!mMapped)
-		{
-			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
-			Renderer::MappedSubresource mappedSubresource;
-			renderer.map(*mUniformBuffer, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource);
-			mStartUniformBufferPointer = mCurrentUniformBufferPointer = static_cast<uint8_t*>(mappedSubresource.data);
-			renderer.map(*mTextureBuffer, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource);
-			mStartTextureBufferPointer = mCurrentTextureBufferPointer = static_cast<float*>(mappedSubresource.data);
-			mMapped = true;
+		// Sanity check
+		assert(nullptr != mCurrentInstanceBuffer);
+
+		// Map the current instance buffer
+		mapCurrentInstanceBuffer();
+
+		{ // Instance uniform buffer
+			const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource.getInstanceUniformBuffer();
+			if (nullptr != instanceUniformBuffer)
+			{
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceUniformBuffer->rootParameterIndex, mCurrentInstanceBuffer->uniformBuffer);
+			}
 		}
 
-		// TODO(co) Implement automatic instancing
-		assert(1 == instanceUniformBuffer.numberOfElements);
+		{ // Instance texture buffer
+			const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource.getInstanceTextureBuffer();
+			if (nullptr != instanceTextureBuffer)
+			{
+				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceTextureBuffer->rootParameterIndex, mCurrentInstanceBuffer->textureBuffer);
+			}
+		}
+	}
 
+	uint32_t InstanceBufferManager::fillBuffer(const MaterialBlueprintResource& materialBlueprintResource, PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer& instanceUniformBuffer, const Renderable& renderable, MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer)
+	{
+		// Sanity checks
+		assert(nullptr != mCurrentInstanceBuffer);
+		assert(nullptr != mStartUniformBufferPointer);
+		assert(nullptr != mCurrentUniformBufferPointer);
+		assert(nullptr != mStartTextureBufferPointer);
+		assert(nullptr != mCurrentTextureBufferPointer);
+		// assert(0 == mStartInstanceLocation); -> Not done by intent
+		assert(MaterialBlueprintResource::BufferUsage::INSTANCE == instanceUniformBuffer.bufferUsage && "Currently only the uniform buffer instance buffer usage is supported");
+
+		// Get relevant data
 		const Transform& objectSpaceToWorldSpaceTransform = renderable.getRenderableManager().getTransform();
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = materialBlueprintResourceManager.getMaterialBlueprintResourceListener();
+		const MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = instanceUniformBuffer.uniformBufferElementProperties;
+		const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
+		const SkeletonResourceId skeletonResourceId = renderable.getSkeletonResourceId();
+		const SkeletonResource* skeletonResource = isInitialized(skeletonResourceId) ? &mRendererRuntime.getSkeletonResourceManager().getById(skeletonResourceId) : nullptr;
 		static const PassBufferManager::PassData passData = {};
 		materialBlueprintResourceListener.beginFillInstance((nullptr != passBufferManager) ? passBufferManager->getPassData() : passData, objectSpaceToWorldSpaceTransform, materialTechnique);
 
-		{ // Update the uniform buffer
-			const MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = instanceUniformBuffer.uniformBufferElementProperties;
-			const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
+		{ // Handle instance buffer overflow
+			// Calculate number of additionally needed uniform buffer bytes
+			uint32_t newNeededUniformBufferSize = 0;
 			for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
 			{
 				const MaterialProperty& uniformBufferElementProperty = uniformBufferElementProperties[i];
@@ -138,28 +157,79 @@ namespace RendererRuntime
 				if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
 				{
 					// Move the buffer pointer to the location of the next aligned package and restart the package bytes counter
-					mCurrentUniformBufferPointer += 4 * 4 - numberOfPackageBytes;
+					newNeededUniformBufferSize += static_cast<uint32_t>(sizeof(float) * 4 - numberOfPackageBytes);
 					numberOfPackageBytes = 0;
 				}
 				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
 
-				// Copy the property value into the buffer
-				const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
-				if (MaterialProperty::Usage::INSTANCE_REFERENCE == usage)	// Most likely the case, so check this first
-				{
-					const uint32_t instanceTextureBufferStartIndex = static_cast<uint32_t>(mCurrentTextureBufferPointer - mStartTextureBufferPointer) / 4;	// /4 since the texture buffer is working with float4
-					if (!materialBlueprintResourceListener.fillInstanceValue(uniformBufferElementProperty.getReferenceValue(), mCurrentUniformBufferPointer, valueTypeNumberOfBytes, instanceTextureBufferStartIndex))
-					{
-						// Error, can't resolve reference
-						assert(false);
-					}
-				}
-				else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
-				{
-					// Referencing a global material property inside an instance uniform buffer doesn't make really sense performance wise, but don't forbid it
+				// Next property
+				newNeededUniformBufferSize += valueTypeNumberOfBytes;
+			}
 
-					// Figure out the global material property value
-					const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
+			// Calculate number of additionally needed texture buffer bytes
+			uint32_t newNeededTextureBufferSize = sizeof(float) * 4 * 3;	// xyz position (float4) + xyzw rotation quaternion (float4) + xyz scale (float4)
+			if (nullptr != skeletonResource)
+			{
+				const uint8_t numberOfBones = skeletonResource->getNumberOfBones();
+				assert(0 != numberOfBones && "Each skeleton must have at least one bone");
+				const uint32_t numberOfBytes = sizeof(glm::mat3x4) * numberOfBones;
+				assert(numberOfBytes <= mMaximumTextureBufferSize && "The skeleton has too many bones for the available maximum texture buffer size");
+				newNeededTextureBufferSize += numberOfBytes;
+			}
+
+			// Detect and handle instance buffer overflow
+			const uint32_t totalNeededUniformBufferSize = (static_cast<uint32_t>(mCurrentUniformBufferPointer - mStartUniformBufferPointer) + newNeededUniformBufferSize);
+			const uint32_t totalNeededTextureBufferSize = (static_cast<uint32_t>(mCurrentTextureBufferPointer - mStartTextureBufferPointer) * sizeof(float) + newNeededTextureBufferSize);
+			if (totalNeededUniformBufferSize > mMaximumUniformBufferSize || totalNeededTextureBufferSize > mMaximumTextureBufferSize)
+			{
+				createInstanceBuffer();
+				startupBufferFilling(materialBlueprintResource, commandBuffer);
+			}
+		}
+
+		// Fill the uniform buffer
+		for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
+		{
+			const MaterialProperty& uniformBufferElementProperty = uniformBufferElementProperties[i];
+
+			// Get value type number of bytes
+			const uint32_t valueTypeNumberOfBytes = uniformBufferElementProperty.getValueTypeNumberOfBytes(uniformBufferElementProperty.getValueType());
+
+			// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+			if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
+			{
+				// Move the buffer pointer to the location of the next aligned package and restart the package bytes counter
+				mCurrentUniformBufferPointer += sizeof(float) * 4 - numberOfPackageBytes;
+				numberOfPackageBytes = 0;
+			}
+			numberOfPackageBytes += valueTypeNumberOfBytes % 16;
+
+			// Copy the property value into the buffer
+			const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
+			if (MaterialProperty::Usage::INSTANCE_REFERENCE == usage)	// Most likely the case, so check this first
+			{
+				const uint32_t instanceTextureBufferStartIndex = static_cast<uint32_t>(mCurrentTextureBufferPointer - mStartTextureBufferPointer) / 4;	// /4 since the texture buffer is working with float4
+				if (!materialBlueprintResourceListener.fillInstanceValue(uniformBufferElementProperty.getReferenceValue(), mCurrentUniformBufferPointer, valueTypeNumberOfBytes, instanceTextureBufferStartIndex))
+				{
+					// Error, can't resolve reference
+					assert(false);
+				}
+			}
+			else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
+			{
+				// Referencing a global material property inside an instance uniform buffer doesn't make really sense performance wise, but don't forbid it
+
+				// Figure out the global material property value
+				const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
+				if (nullptr != materialProperty)
+				{
+					// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
+					memcpy(mCurrentUniformBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
+				}
+				else
+				{
+					// Try global material property reference fallback
+					materialProperty = materialBlueprintResourceManager.getById(materialTechnique.getMaterialBlueprintResourceId()).getMaterialProperties().getPropertyById(uniformBufferElementProperty.getReferenceValue());
 					if (nullptr != materialProperty)
 					{
 						// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
@@ -167,41 +237,29 @@ namespace RendererRuntime
 					}
 					else
 					{
-						// Try global material property reference fallback
-						materialProperty = materialBlueprintResourceManager.getById(materialTechnique.getMaterialBlueprintResourceId()).getMaterialProperties().getPropertyById(uniformBufferElementProperty.getReferenceValue());
-						if (nullptr != materialProperty)
-						{
-							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
-							memcpy(mCurrentUniformBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
-						}
-						else
-						{
-							// Error, can't resolve reference
-							assert(false);	// RendererRuntime::PassBufferManager::fillBuffer(): Failed to fill pass uniform buffer element " << i << " by using unknown global material property
-						}
+						// Error, can't resolve reference
+						assert(false);	// RendererRuntime::PassBufferManager::fillBuffer(): Failed to fill pass uniform buffer element " << i << " by using unknown global material property
 					}
 				}
-				else if (!uniformBufferElementProperty.isReferenceUsage())	// TODO(co) Performance: Think about such tests, the toolkit should already take care of this so we have well known verified runtime data
-				{
-					// Referencing a static uniform buffer element property inside an instance uniform buffer doesn't make really sense performance wise, but don't forbid it
-
-					// Just copy over the property value
-					memcpy(mCurrentUniformBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
-				}
-				else
-				{
-					// Error, invalid property
-					assert(false);
-				}
-
-				// Next property
-				mCurrentUniformBufferPointer += valueTypeNumberOfBytes;
 			}
+			else if (!uniformBufferElementProperty.isReferenceUsage())	// TODO(co) Performance: Think about such tests, the toolkit should already take care of this so we have well known verified runtime data
+			{
+				// Referencing a static uniform buffer element property inside an instance uniform buffer doesn't make really sense performance wise, but don't forbid it
+
+				// Just copy over the property value
+				memcpy(mCurrentUniformBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
+			}
+			else
+			{
+				// Error, invalid property
+				assert(false);
+			}
+
+			// Next property
+			mCurrentUniformBufferPointer += valueTypeNumberOfBytes;
 		}
 
-		{ // Update the texture buffer
-			// TODO(co) Check "InstanceTextureBuffer" value
-
+		{ // Fill the texture buffer
 			{ // "POSITION_ROTATION_SCALE"-semantic
 				// xyz position
 				memcpy(mCurrentTextureBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceTransform.position), sizeof(float) * 3);
@@ -219,16 +277,14 @@ namespace RendererRuntime
 			}
 
 			// Do we also need to pass on bone transform matrices?
-			const SkeletonResourceId skeletonResourceId = renderable.getSkeletonResourceId();
-			if (isInitialized(skeletonResourceId))
+			if (nullptr != skeletonResource)
 			{
-				const SkeletonResource& skeletonResource = mRendererRuntime.getSkeletonResourceManager().getById(skeletonResourceId);
-				const uint8_t numberOfBones = skeletonResource.getNumberOfBones();
-				assert(0 != numberOfBones);	// Each skeleton must have at least one bone
-				const glm::mat3x4* boneSpaceMatrices = skeletonResource.getBoneSpaceMatrices();
+				const uint8_t numberOfBones = skeletonResource->getNumberOfBones();
+				assert(0 != numberOfBones && "Each skeleton must have at least one bone");
+				const glm::mat3x4* boneSpaceMatrices = skeletonResource->getBoneSpaceMatrices();
 				assert(nullptr != boneSpaceMatrices);
-				// TODO(co) Bone transform matrices can consume up to 16 KiB, our texture buffer is at least 64 KiB. So, currently no security checks required, but will be later on.
 				const size_t numberOfBytes = sizeof(glm::mat3x4) * numberOfBones;
+				assert(numberOfBytes <= mMaximumTextureBufferSize && "The skeleton has too many bones for the available maximum texture buffer size");
 				memcpy(mCurrentTextureBufferPointer, boneSpaceMatrices, numberOfBytes);
 				mCurrentTextureBufferPointer += numberOfBytes / sizeof(float);
 			}
@@ -239,34 +295,84 @@ namespace RendererRuntime
 		return mStartInstanceLocation - 1;
 	}
 
-	void InstanceBufferManager::fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer)
+	void InstanceBufferManager::onPreCommandBufferExecution()
 	{
-		{ // Instance uniform buffer
-			const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource.getInstanceUniformBuffer();
-			if (nullptr != instanceUniformBuffer)
-			{
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceUniformBuffer->rootParameterIndex, mUniformBuffer);
-			}
-		}
-
-		{ // Instance texture buffer
-			const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource.getInstanceTextureBuffer();
-			if (nullptr != instanceTextureBuffer)
-			{
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceTextureBuffer->rootParameterIndex, mTextureBuffer);
-			}
+		// Unmap the current instance buffer and reset the current instance buffer to the first instance
+		if (isInitialized(mCurrentInstanceBufferIndex))
+		{
+			unmapCurrentInstanceBuffer();
+			mCurrentInstanceBufferIndex = 0;
+			mCurrentInstanceBuffer = &mInstanceBuffers[mCurrentInstanceBufferIndex];
 		}
 	}
 
-	void InstanceBufferManager::onPreCommandBufferExecution()
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	void InstanceBufferManager::createInstanceBuffer()
 	{
-		// TODO(co) This is just a placeholder implementation until "RendererRuntime::InstanceBufferManager" is ready
-		if (mMapped)
+		Renderer::IBufferManager& bufferManager = mRendererRuntime.getBufferManager();
+
+		// Before doing anything else: Unmap the current instance buffer
+		unmapCurrentInstanceBuffer();
+
+		// Update current instance buffer
+		mCurrentInstanceBufferIndex = isInitialized(mCurrentInstanceBufferIndex) ? (mCurrentInstanceBufferIndex + 1) : 0;
+		if (mCurrentInstanceBufferIndex >= mInstanceBuffers.size())
 		{
+			// Create uniform buffer instance
+			Renderer::IUniformBuffer* uniformBuffer = bufferManager.createUniformBuffer(mMaximumUniformBufferSize, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(uniformBuffer, "Instance buffer manager")
+
+			// Create texture buffer instance
+			Renderer::ITextureBuffer* textureBuffer = bufferManager.createTextureBuffer(mMaximumTextureBufferSize, Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(textureBuffer, "Instance buffer manager")
+
+			// Create instance buffer instance
+			mInstanceBuffers.emplace_back(*uniformBuffer, *textureBuffer);
+		}
+		mCurrentInstanceBuffer = &mInstanceBuffers[mCurrentInstanceBufferIndex];
+	}
+
+	void InstanceBufferManager::mapCurrentInstanceBuffer()
+	{
+		if (nullptr != mCurrentInstanceBuffer && !mCurrentInstanceBuffer->mapped)
+		{
+			// Sanity checks: Only one mapped instance buffer at a time
+			assert(nullptr == mStartUniformBufferPointer);
+			assert(nullptr == mCurrentUniformBufferPointer);
+			assert(nullptr == mStartTextureBufferPointer);
+			assert(nullptr == mCurrentTextureBufferPointer);
+			assert(0 == mStartInstanceLocation);
+
+			// Map instance buffer
 			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
-			renderer.unmap(*mUniformBuffer, 0);
-			renderer.unmap(*mTextureBuffer, 0);
-			mMapped = false;
+			Renderer::MappedSubresource mappedSubresource;
+			renderer.map(*mCurrentInstanceBuffer->uniformBuffer, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource);
+			mStartUniformBufferPointer = mCurrentUniformBufferPointer = static_cast<uint8_t*>(mappedSubresource.data);
+			renderer.map(*mCurrentInstanceBuffer->textureBuffer, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource);
+			mStartTextureBufferPointer = mCurrentTextureBufferPointer = static_cast<float*>(mappedSubresource.data);
+			mCurrentInstanceBuffer->mapped = true;
+		}
+	}
+
+	void InstanceBufferManager::unmapCurrentInstanceBuffer()
+	{
+		if (nullptr != mCurrentInstanceBuffer && mCurrentInstanceBuffer->mapped)
+		{
+			// Sanity checks
+			assert(nullptr != mStartUniformBufferPointer);
+			assert(nullptr != mCurrentUniformBufferPointer);
+			assert(nullptr != mStartTextureBufferPointer);
+			assert(nullptr != mCurrentTextureBufferPointer);
+			// assert(0 == mStartInstanceLocation); -> Not done by intent
+
+			// Unmap instance buffer
+			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+			renderer.unmap(*mCurrentInstanceBuffer->uniformBuffer, 0);
+			renderer.unmap(*mCurrentInstanceBuffer->textureBuffer, 0);
+			mCurrentInstanceBuffer->mapped = false;
 			mStartUniformBufferPointer = nullptr;
 			mCurrentUniformBufferPointer = nullptr;
 			mStartTextureBufferPointer = nullptr;

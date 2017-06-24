@@ -364,6 +364,7 @@ namespace RendererRuntime
 										// -> Render queue should be sorted by material blueprint resource first to reduce those expensive state changes
 										bool bindMaterialBlueprint = false;
 										PassBufferManager* passBufferManager = nullptr;
+										const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
 										if (compositorContextData.mCurrentlyBoundMaterialBlueprintResource != materialBlueprintResource)
 										{
 											compositorContextData.mCurrentlyBoundMaterialBlueprintResource = materialBlueprintResource;
@@ -383,7 +384,10 @@ namespace RendererRuntime
 										{
 											// Bind the material blueprint resource and instance and light buffer manager to the used renderer
 											materialBlueprintResource->fillCommandBuffer(commandBuffer);
-											instanceBufferManager.fillCommandBuffer(*materialBlueprintResource, commandBuffer);
+											if (nullptr != instanceUniformBuffer)
+											{
+												instanceBufferManager.startupBufferFilling(*materialBlueprintResource, commandBuffer);
+											}
 											lightBufferManager.fillCommandBuffer(*materialBlueprintResource, commandBuffer);
 										}
 										else if (nullptr != passBufferManager)
@@ -403,8 +407,7 @@ namespace RendererRuntime
 										}
 
 										// Fill the instance buffer manager
-										const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
-										const uint32_t startInstanceLocation = (nullptr != instanceUniformBuffer) ? instanceBufferManager.fillBuffer(materialBlueprintResource->getPassBufferManager(), *instanceUniformBuffer, renderable, *materialTechnique) : 0;
+										const uint32_t startInstanceLocation = (nullptr != instanceUniformBuffer) ? instanceBufferManager.fillBuffer(*materialBlueprintResource, materialBlueprintResource->getPassBufferManager(), *instanceUniformBuffer, renderable, *materialTechnique, commandBuffer) : 0;
 
 										// Render the specified geometric primitive, based on indexing into an array of vertices
 										// -> Please note that it's valid that there are no indices, for example "RendererRuntime::CompositorInstancePassDebugGui" is using the render queue only to set the material resource blueprint
