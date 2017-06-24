@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/Buffer/IUniformBuffer.h>
+#include <Renderer/Buffer/BufferTypes.h>
 
 
 //[-------------------------------------------------------]

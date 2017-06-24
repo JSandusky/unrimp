@@ -36,7 +36,6 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class Transform;
 	class Renderable;
 	class IRendererRuntime;
 	class MaterialTechnique;
@@ -83,8 +82,21 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Startup instance buffer filling
+		*
+		*  @param[in] materialBlueprintResource
+		*    Material blueprint resource
+		*  @param[out] commandBuffer
+		*    Command buffer to fill
+		*/
+		void startupBufferFilling(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer);
+
+		/**
+		*  @brief
 		*    Fill the instance buffer
 		*
+		*  @param[in] materialBlueprintResource
+		*    Material blueprint resource
 		*  @param[in] passBufferManager
 		*    Pass buffer manager instance to use, can be a null pointer
 		*  @param[in] instanceUniformBuffer
@@ -93,22 +105,13 @@ namespace RendererRuntime
 		*    Renderable to fill the buffer for
 		*  @param[in] materialTechnique
 		*    Used material technique
+		*  @param[out] commandBuffer
+		*    Command buffer to fill
 		*
 		*  @return
 		*    Start instance location, used for draw ID (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
 		*/
-		uint32_t fillBuffer(PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer& instanceUniformBuffer, const Renderable& renderable, MaterialTechnique& materialTechnique);
-
-		/**
-		*  @brief
-		*    Bind the instance buffer manager into the given commando buffer
-		*
-		*  @param[in] materialBlueprintResource
-		*    Material blueprint resource
-		*  @param[out] commandBuffer
-		*    Command buffer to fill
-		*/
-		void fillCommandBuffer(const MaterialBlueprintResource& materialBlueprintResource, Renderer::CommandBuffer& commandBuffer);
+		uint32_t fillBuffer(const MaterialBlueprintResource& materialBlueprintResource, PassBufferManager* passBufferManager, const MaterialBlueprintResource::UniformBuffer& instanceUniformBuffer, const Renderable& renderable, MaterialTechnique& materialTechnique, Renderer::CommandBuffer& commandBuffer);
 
 		/**
 		*  @brief
@@ -123,22 +126,48 @@ namespace RendererRuntime
 	private:
 		explicit InstanceBufferManager(const InstanceBufferManager&) = delete;
 		InstanceBufferManager& operator=(const InstanceBufferManager&) = delete;
+		void createInstanceBuffer();
+		void mapCurrentInstanceBuffer();
+		void unmapCurrentInstanceBuffer();
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		struct InstanceBuffer
+		{
+			Renderer::IUniformBuffer* uniformBuffer;	///< Uniform buffer instance, always valid
+			Renderer::ITextureBuffer* textureBuffer;	///< Texture buffer instance, always valid
+			bool					  mapped;
+			InstanceBuffer(Renderer::IUniformBuffer& _uniformBuffer, Renderer::ITextureBuffer& _textureBuffer) :
+				uniformBuffer(&_uniformBuffer),
+				textureBuffer(&_textureBuffer),
+				mapped(false)
+			{
+				// Nothing here
+			}
+
+		};
+		typedef std::vector<InstanceBuffer> InstanceBuffers;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		  mRendererRuntime;			///< Renderer runtime instance to use
-		uint32_t				  mStartInstanceLocation;	///< Start instance location, used for draw ID (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
-		// TODO(co) This is just a placeholder implementation until "RendererRuntime::InstanceBufferManager" is ready
-		Renderer::IUniformBuffer* mUniformBuffer;			///< Uniform buffer instance, always valid
-		Renderer::ITextureBuffer* mTextureBuffer;			///< Texture buffer instance, always valid
-		bool					  mMapped;
-		uint8_t*				  mStartUniformBufferPointer;
-		uint8_t*				  mCurrentUniformBufferPointer;
-		float*					  mStartTextureBufferPointer;
-		float*					  mCurrentTextureBufferPointer;
+		IRendererRuntime& mRendererRuntime;				///< Renderer runtime instance to use
+		const uint32_t	  mMaximumUniformBufferSize;	///< Maximum uniform buffer size in bytes
+		const uint32_t	  mMaximumTextureBufferSize;	///< Maximum texture buffer size in bytes
+		InstanceBuffers	  mInstanceBuffers;				///< Instance buffers
+		// Current instance buffer related data
+		size_t			mCurrentInstanceBufferIndex;	///< Current instance buffer index, can be uninitialized if there's currently no current instance buffer
+		InstanceBuffer* mCurrentInstanceBuffer;			///< Current instance buffer, can be a null pointer, don't destroy the instance since this is just a reference
+		uint8_t*		mStartUniformBufferPointer;
+		uint8_t*		mCurrentUniformBufferPointer;
+		float*			mStartTextureBufferPointer;
+		float*			mCurrentTextureBufferPointer;
+		uint32_t		mStartInstanceLocation;			///< Start instance location, used for draw ID (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
 
 
 	};
