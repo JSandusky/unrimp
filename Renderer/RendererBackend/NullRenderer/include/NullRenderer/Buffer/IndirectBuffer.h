@@ -68,7 +68,7 @@ namespace NullRenderer
 		*  @param[in] nullRenderer
 		*    Owner null renderer instance
 		*/
-		explicit IndirectBuffer(NullRenderer &nullRenderer);
+		explicit IndirectBuffer(NullRenderer& nullRenderer);
 
 		/**
 		*  @brief
@@ -82,7 +82,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	public:
 		virtual const uint8_t* getEmulationData() const override;
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 
 	//[-------------------------------------------------------]

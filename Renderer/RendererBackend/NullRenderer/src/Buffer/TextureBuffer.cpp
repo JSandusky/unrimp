@@ -34,7 +34,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(NullRenderer &nullRenderer) :
+	TextureBuffer::TextureBuffer(NullRenderer& nullRenderer) :
 		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here
@@ -49,7 +49,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	void TextureBuffer::copyDataFrom(uint32_t, const void *)
+	void TextureBuffer::copyDataFrom(uint32_t, const void*)
 	{
 		// Nothing here
 	}

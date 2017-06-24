@@ -40,13 +40,13 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const char *ShaderLanguageHlsl::NAME = "HLSL";
+	const char* ShaderLanguageHlsl::NAME = "HLSL";
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D10Renderer &direct3D10Renderer) :
+	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D10Renderer& direct3D10Renderer) :
 		IShaderLanguage(direct3D10Renderer)
 	{
 		// Nothing here
@@ -57,7 +57,7 @@ namespace Direct3D10Renderer
 		// Nothing here
 	}
 
-	ID3DBlob *ShaderLanguageHlsl::loadShaderFromSourcecode(const char *shaderModel, const char *shaderSource, const char *entryPoint) const
+	ID3DBlob* ShaderLanguageHlsl::loadShaderFromSourcecode(const char* shaderModel, const char* shaderSource, const char* entryPoint) const
 	{
 		// Get compile flags
 		UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
@@ -93,8 +93,8 @@ namespace Direct3D10Renderer
 				break;
 		}
 
-		ID3DBlob *d3dBlob = nullptr;
-		ID3DBlob *errorBlob = nullptr;
+		ID3DBlob* d3dBlob = nullptr;
+		ID3DBlob* errorBlob = nullptr;
 		if (FAILED(D3DX10CompileFromMemory(shaderSource, strlen(shaderSource), nullptr, nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, 0, nullptr, &d3dBlob, &errorBlob, nullptr)))
 		{
 			if (nullptr != errorBlob)
@@ -119,48 +119,48 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShaderLanguage methods      ]
 	//[-------------------------------------------------------]
-	const char *ShaderLanguageHlsl::getShaderLanguageName() const
+	const char* ShaderLanguageHlsl::getShaderLanguageName() const
 	{
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode& shaderBytecode)
+	Renderer::IVertexShader* ShaderLanguageHlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), shaderBytecode);
 	}
 
-	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::IVertexShader* ShaderLanguageHlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
+	Renderer::ITessellationControlShader* ShaderLanguageHlsl::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error! Direct3D 10 has no tessellation control shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
+	Renderer::ITessellationControlShader* ShaderLanguageHlsl::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// Error! Direct3D 10 has no tessellation control shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode&)
+	Renderer::ITessellationEvaluationShader* ShaderLanguageHlsl::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error! Direct3D 10 has no tessellation evaluation shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
+	Renderer::ITessellationEvaluationShader* ShaderLanguageHlsl::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// Error! Direct3D 10 has no tessellation evaluation shader support.
 		return nullptr;
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t)
+	Renderer::IGeometryShader* ShaderLanguageHlsl::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfGsOutputVertices", we know there's geometry shader support
 		// Ignore "gsInputPrimitiveTopology", it's directly set within HLSL
@@ -169,7 +169,7 @@ namespace Direct3D10Renderer
 		return new GeometryShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), shaderBytecode);
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::IGeometryShader* ShaderLanguageHlsl::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfGsOutputVertices", we know there's geometry shader support
 		// Ignore "gsInputPrimitiveTopology", it's directly set within HLSL
@@ -178,19 +178,19 @@ namespace Direct3D10Renderer
 		return new GeometryShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
+	Renderer::IFragmentShader* ShaderLanguageHlsl::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
 		return new FragmentShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), shaderBytecode);
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::IFragmentShader* ShaderLanguageHlsl::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
 		return new FragmentShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
-	Renderer::IProgram *ShaderLanguageHlsl::createProgram(const Renderer::IRootSignature&, const Renderer::VertexAttributes&, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
+	Renderer::IProgram* ShaderLanguageHlsl::createProgram(const Renderer::IRootSignature&, const Renderer::VertexAttributes&, Renderer::IVertexShader* vertexShader, Renderer::ITessellationControlShader* tessellationControlShader, Renderer::ITessellationEvaluationShader* tessellationEvaluationShader, Renderer::IGeometryShader* geometryShader, Renderer::IFragmentShader* fragmentShader)
 	{
 		// A shader can be a null pointer, but if it's not the shader and program language must match!
 		// -> Optimization: Comparing the shader language name by directly comparing the pointer address of

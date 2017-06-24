@@ -80,7 +80,7 @@ namespace VulkanRenderer
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(VulkanRenderer &vulkanRenderer, handle nativeWindowHandle);
+		SwapChain(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle);
 
 		/**
 		*  @brief
@@ -93,7 +93,7 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
 	//[-------------------------------------------------------]

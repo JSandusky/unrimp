@@ -53,7 +53,7 @@ namespace Direct3D10Renderer
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::getDirect3D10UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t &cpuAccessFlags)
+	uint32_t Mapping::getDirect3D10UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t& cpuAccessFlags)
 	{
 		// Direct3D 10 only supports a subset of the OpenGL usage indications
 		// -> See "D3D10_USAGE enumeration "-documentation at http://msdn.microsoft.com/en-us/library/windows/desktop/bb172499%28v=vs.85%29.aspx

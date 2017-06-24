@@ -73,7 +73,7 @@ namespace OpenGLRenderer
 		*  @param[in] numberOfMultisamples
 		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
 		*/
-		Texture2DDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, uint8_t numberOfMultisamples);
+		Texture2DDsa(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, uint8_t numberOfMultisamples);
 
 		/**
 		*  @brief

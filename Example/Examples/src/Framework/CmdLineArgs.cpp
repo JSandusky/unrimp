@@ -43,9 +43,9 @@ CmdLineArgs::CmdLineArgs()
 #if WIN32
 	#ifdef UNICODE
 		int wargc;
-		wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(),&wargc);
+		wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(),&wargc);
 		if (wargc > 0) {			
-			// argv[0] is the path+name of the programm
+			// argv[0] is the path+name of the program
 			// -> ignore it
 			m_args.reserve(wargc-1);
 			std::vector<std::wstring> lines(wargv+1, wargv+wargc);
@@ -72,7 +72,7 @@ CmdLineArgs::CmdLineArgs()
 #endif
 }
 
-CmdLineArgs::CmdLineArgs(int argc, char **argv)
+CmdLineArgs::CmdLineArgs(int argc, char** argv)
 	: m_args(argv+1, argv+argc)
 {
 }

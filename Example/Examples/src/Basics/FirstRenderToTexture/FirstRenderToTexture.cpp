@@ -147,8 +147,8 @@ void FirstRenderToTexture::onInitialization()
 			Renderer::IProgramPtr program;
 			{
 				// Get the shader source code (outsourced to keep an overview)
-				const char *vertexShaderSourceCode = nullptr;
-				const char *fragmentShaderSourceCode = nullptr;
+				const char* vertexShaderSourceCode = nullptr;
+				const char* fragmentShaderSourceCode = nullptr;
 				#include "FirstRenderToTexture_GLSL_410.h"
 				#include "FirstRenderToTexture_GLSL_ES3.h"
 				#include "FirstRenderToTexture_HLSL_D3D9.h"

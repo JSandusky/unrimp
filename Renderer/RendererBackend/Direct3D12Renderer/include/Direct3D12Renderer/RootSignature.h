@@ -75,7 +75,7 @@ namespace Direct3D12Renderer
 		*  @param[in] rootSignature
 		*    Root signature to use
 		*/
-		RootSignature(Direct3D12Renderer &direct3D12Renderer, const Renderer::RootSignature &rootSignature);
+		RootSignature(Direct3D12Renderer& direct3D12Renderer, const Renderer::RootSignature& rootSignature);
 
 		/**
 		*  @brief
@@ -97,7 +97,7 @@ namespace Direct3D12Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]

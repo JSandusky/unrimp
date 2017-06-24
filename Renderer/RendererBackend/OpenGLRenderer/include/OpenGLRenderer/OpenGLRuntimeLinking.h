@@ -140,7 +140,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void *mOpenGLSharedLibrary;		///< OpenGL shared library, can be a null pointer
+		void* mOpenGLSharedLibrary;		///< OpenGL shared library, can be a null pointer
 		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
 		bool  mInitialized;				///< Already initialized?
 
@@ -156,15 +156,15 @@ namespace OpenGLRenderer
 	#else
 		#define FNDEF_GL(retType, funcName, args) extern retType (GLAPIENTRY *funcPtr_##funcName) args
 	#endif
-	FNDEF_GL(GLubyte *,	glGetString,		(GLenum));
-	FNDEF_GL(void,		glGetIntegerv,		(GLenum, GLint *));
+	FNDEF_GL(GLubyte*,	glGetString,		(GLenum));
+	FNDEF_GL(void,		glGetIntegerv,		(GLenum, GLint*));
 	FNDEF_GL(void,		glBindTexture,		(GLenum, GLuint));
 	FNDEF_GL(void,		glClear,			(GLbitfield));
 	FNDEF_GL(void,		glClearStencil,		(GLint));
 	FNDEF_GL(void,		glClearDepth,		(GLclampd));
 	FNDEF_GL(void,		glClearColor,		(GLclampf, GLclampf, GLclampf, GLclampf));
 	FNDEF_GL(void,		glDrawArrays,		(GLenum, GLint, GLsizei));
-	FNDEF_GL(void,		glDrawElements,		(GLenum, GLsizei, GLenum, const GLvoid *));
+	FNDEF_GL(void,		glDrawElements,		(GLenum, GLsizei, GLenum, const GLvoid*));
 	FNDEF_GL(void,		glColor4f,			(GLfloat, GLfloat, GLfloat, GLfloat));
 	FNDEF_GL(void,		glEnable,			(GLenum));
 	FNDEF_GL(void,		glDisable,			(GLenum));
@@ -173,10 +173,10 @@ namespace OpenGLRenderer
 	FNDEF_GL(void,		glCullFace,			(GLenum));
 	FNDEF_GL(void,		glPolygonMode,		(GLenum, GLenum));
 	FNDEF_GL(void,		glTexParameteri,	(GLenum, GLenum, GLint));
-	FNDEF_GL(void,		glGenTextures,		(GLsizei, GLuint *));
-	FNDEF_GL(void,		glDeleteTextures,	(GLsizei, const GLuint *));
-	FNDEF_GL(void,		glTexImage1D,		(GLenum, GLint, GLint, GLsizei, GLint, GLenum, GLenum, const GLvoid *));
-	FNDEF_GL(void,		glTexImage2D,		(GLenum, GLint, GLint, GLsizei, GLsizei, GLint, GLenum, GLenum, const GLvoid *));
+	FNDEF_GL(void,		glGenTextures,		(GLsizei, GLuint*));
+	FNDEF_GL(void,		glDeleteTextures,	(GLsizei, const GLuint*));
+	FNDEF_GL(void,		glTexImage1D,		(GLenum, GLint, GLint, GLsizei, GLint, GLenum, GLenum, const GLvoid*));
+	FNDEF_GL(void,		glTexImage2D,		(GLenum, GLint, GLint, GLsizei, GLsizei, GLint, GLenum, GLenum, const GLvoid*));
 	FNDEF_GL(void,		glPixelStorei,		(GLenum, GLint));
 	FNDEF_GL(void,		glDepthFunc,		(GLenum func));
 	FNDEF_GL(void,		glDepthMask,		(GLboolean));
@@ -197,17 +197,17 @@ namespace OpenGLRenderer
 		FNDEF_GL(BOOL,	wglDeleteContext,	(HGLRC));
 		FNDEF_GL(BOOL,	wglMakeCurrent,		(HDC, HGLRC));
 	#elif LINUX
-		FNDEF_GL(Bool, glXMakeCurrent, (Display*, GLXDrawable	,GLXContext));
-		FNDEF_GL(XVisualInfo*, glXChooseVisual, ( Display*, int, int* ));
-		FNDEF_GL(GLXContext, glXCreateContext, ( Display*, XVisualInfo*, GLXContext, int ));
-		FNDEF_GL(void, glXDestroyContext, ( Display*, GLXContext ));
-		FNDEF_GL(GLXContext, glXGetCurrentContext, ( void ));
-		FNDEF_GL(const char*, glXQueryExtensionsString, ( Display*, int));
-		FNDEF_GL(__GLXextFuncPtr, glXGetProcAddress, (const GLubyte *));
-		FNDEF_GL(__GLXextFuncPtr, glXGetProcAddressARB, (const GLubyte *));
-		FNDEF_GL(GLXFBConfig*, glXChooseFBConfig, ( Display*, int, const int *, int *));
-		FNDEF_GL(void, glXSwapBuffers, ( Display *, GLXDrawable ));
-		FNDEF_GL(const char*, glXGetClientString, ( Display *, int));
+		FNDEF_GL(Bool,			  glXMakeCurrent,			(Display*, GLXDrawable, GLXContext));
+		FNDEF_GL(XVisualInfo*,	  glXChooseVisual,			(Display*, int, int*));
+		FNDEF_GL(GLXContext,	  glXCreateContext,			(Display*, XVisualInfo*, GLXContext, int));
+		FNDEF_GL(void,			  glXDestroyContext,		(Display*, GLXContext));
+		FNDEF_GL(GLXContext,	  glXGetCurrentContext,		(void));
+		FNDEF_GL(const char*,	  glXQueryExtensionsString, (Display*, int));
+		FNDEF_GL(__GLXextFuncPtr, glXGetProcAddress,		(const GLubyte*));
+		FNDEF_GL(__GLXextFuncPtr, glXGetProcAddressARB,		(const GLubyte*));
+		FNDEF_GL(GLXFBConfig*,	  glXChooseFBConfig,		(Display*, int, const int*, int*));
+		FNDEF_GL(void,			  glXSwapBuffers,			(Display*, GLXDrawable));
+		FNDEF_GL(const char*,	  glXGetClientString,		(Display*, int));
 	#endif
 
 

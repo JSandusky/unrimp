@@ -97,7 +97,7 @@ namespace OpenGLRenderer
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
 		*/
-		explicit TextureBuffer(OpenGLRenderer &openGLRenderer);
+		explicit TextureBuffer(OpenGLRenderer& openGLRenderer);
 
 
 	//[-------------------------------------------------------]

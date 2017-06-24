@@ -63,7 +63,7 @@ namespace Direct3D9Renderer
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const char *NAME;	///< ASCII name of this shader language, always valid (do not free the memory the returned pointer is pointing to)
+		static const char* NAME;	///< ASCII name of this shader language, always valid (do not free the memory the returned pointer is pointing to)
 
 
 	//[-------------------------------------------------------]
@@ -77,7 +77,7 @@ namespace Direct3D9Renderer
 		*  @param[in] direct3D9Renderer
 		*    Owner Direct3D 9 renderer instance
 		*/
-		explicit ShaderLanguageHlsl(Direct3D9Renderer &direct3D9Renderer);
+		explicit ShaderLanguageHlsl(Direct3D9Renderer& direct3D9Renderer);
 
 		/**
 		*  @brief
@@ -101,25 +101,25 @@ namespace Direct3D9Renderer
 		*  @return
 		*    The loaded and compiled shader, can be a null pointer, release the instance if you no longer need it
 		*/
-		ID3DXBuffer *loadShaderFromSourcecode(const char *shaderModel, const char *shaderSource, const char *entryPoint, ID3DXConstantTable **d3dXConstantTable) const;
+		ID3DXBuffer* loadShaderFromSourcecode(const char* shaderModel, const char* shaderSource, const char* entryPoint, ID3DXConstantTable** d3dXConstantTable) const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShaderLanguage methods      ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
-		virtual Renderer::IVertexShader *createVertexShaderFromBytecode(const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderBytecode& shaderBytecode) override;
-		virtual Renderer::IVertexShader *createVertexShaderFromSourceCode(const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr) override;
-		virtual Renderer::ITessellationControlShader *createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode) override;
-		virtual Renderer::ITessellationControlShader *createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr) override;
-		virtual Renderer::ITessellationEvaluationShader *createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode) override;
-		virtual Renderer::ITessellationEvaluationShader *createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr) override;
-		virtual Renderer::IGeometryShader *createGeometryShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) override;
-		virtual Renderer::IGeometryShader *createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode = nullptr) override;
-		virtual Renderer::IFragmentShader *createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode) override;
-		virtual Renderer::IFragmentShader *createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr) override;
-		virtual Renderer::IProgram *createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader) override;
+		virtual const char* getShaderLanguageName() const override;
+		virtual Renderer::IVertexShader* createVertexShaderFromBytecode(const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderBytecode& shaderBytecode) override;
+		virtual Renderer::IVertexShader* createVertexShaderFromSourceCode(const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr) override;
+		virtual Renderer::ITessellationControlShader* createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode) override;
+		virtual Renderer::ITessellationControlShader* createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr) override;
+		virtual Renderer::ITessellationEvaluationShader* createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode) override;
+		virtual Renderer::ITessellationEvaluationShader* createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr) override;
+		virtual Renderer::IGeometryShader* createGeometryShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) override;
+		virtual Renderer::IGeometryShader* createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode = nullptr) override;
+		virtual Renderer::IFragmentShader* createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode) override;
+		virtual Renderer::IFragmentShader* createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr) override;
+		virtual Renderer::IProgram* createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader* vertexShader, Renderer::ITessellationControlShader* tessellationControlShader, Renderer::ITessellationEvaluationShader* tessellationEvaluationShader, Renderer::IGeometryShader* geometryShader, Renderer::IFragmentShader* fragmentShader) override;
 
 
 	//[-------------------------------------------------------]
@@ -134,7 +134,7 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D9Renderer *mDirect3D9Renderer;	///< Owner Direct3D 9 renderer instance, always valid
+		Direct3D9Renderer* mDirect3D9Renderer;	///< Owner Direct3D 9 renderer instance, always valid
 
 
 	};

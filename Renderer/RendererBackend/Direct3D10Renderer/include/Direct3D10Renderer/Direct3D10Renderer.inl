@@ -28,12 +28,12 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D10Device *Direct3D10Renderer::getD3D10Device() const
+	inline ID3D10Device* Direct3D10Renderer::getD3D10Device() const
 	{
 		return mD3D10Device;
 	}
 
-	inline Renderer::IRenderTarget *Direct3D10Renderer::omGetRenderTarget() const
+	inline Renderer::IRenderTarget* Direct3D10Renderer::omGetRenderTarget() const
 	{
 		return mRenderTarget;
 	}
@@ -42,7 +42,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
-	inline const char *Direct3D10Renderer::getName() const
+	inline const char* Direct3D10Renderer::getName() const
 	{
 		return "Direct3D10";
 	}

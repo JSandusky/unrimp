@@ -40,13 +40,13 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const char *ShaderLanguage::NAME = "Null";
+	const char* ShaderLanguage::NAME = "Null";
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ShaderLanguage::ShaderLanguage(NullRenderer &nullRenderer) :
+	ShaderLanguage::ShaderLanguage(NullRenderer& nullRenderer) :
 		IShaderLanguage(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here
@@ -61,72 +61,72 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShaderLanguage methods      ]
 	//[-------------------------------------------------------]
-	const char *ShaderLanguage::getShaderLanguageName() const
+	const char* ShaderLanguage::getShaderLanguageName() const
 	{
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguage::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode&)
+	Renderer::IVertexShader* ShaderLanguage::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode&)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::IVertexShader *ShaderLanguage::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
+	Renderer::IVertexShader* ShaderLanguage::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguage::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
+	Renderer::ITessellationControlShader* ShaderLanguage::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfPatchVertices", we know there's tessellation control shader support
 		return new TessellationControlShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguage::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
+	Renderer::ITessellationControlShader* ShaderLanguage::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfPatchVertices", we know there's tessellation control shader support
 		return new TessellationControlShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguage::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode&)
+	Renderer::ITessellationEvaluationShader* ShaderLanguage::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfPatchVertices", we know there's tessellation evaluation shader support
 		return new TessellationEvaluationShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguage::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
+	Renderer::ITessellationEvaluationShader* ShaderLanguage::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfPatchVertices", we know there's tessellation evaluation shader support
 		return new TessellationEvaluationShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::IGeometryShader *ShaderLanguage::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t)
+	Renderer::IGeometryShader* ShaderLanguage::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfGsOutputVertices", we know there's geometry shader support
 		return new GeometryShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::IGeometryShader *ShaderLanguage::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, Renderer::ShaderBytecode*)
+	Renderer::IGeometryShader* ShaderLanguage::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, Renderer::ShaderBytecode*)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfGsOutputVertices", we know there's geometry shader support
 		return new GeometryShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::IFragmentShader *ShaderLanguage::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode&)
+	Renderer::IFragmentShader* ShaderLanguage::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
 		return new FragmentShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::IFragmentShader *ShaderLanguage::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
+	Renderer::IFragmentShader* ShaderLanguage::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
 		return new FragmentShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::IProgram *ShaderLanguage::createProgram(const Renderer::IRootSignature&, const Renderer::VertexAttributes&, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
+	Renderer::IProgram* ShaderLanguage::createProgram(const Renderer::IRootSignature&, const Renderer::VertexAttributes&, Renderer::IVertexShader* vertexShader, Renderer::ITessellationControlShader* tessellationControlShader, Renderer::ITessellationEvaluationShader* tessellationEvaluationShader, Renderer::IGeometryShader* geometryShader, Renderer::IFragmentShader* fragmentShader)
 	{
 		// A shader can be a null pointer, but if it's not the shader and program language must match!
 		// -> Optimization: Comparing the shader language name by directly comparing the pointer address of

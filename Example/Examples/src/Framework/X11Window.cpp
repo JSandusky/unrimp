@@ -34,7 +34,7 @@
 X11Window::X11Window() :
 	mDestroyed(false)
 {
-	Display *display = X11Application::instance()->getDisplay();
+	Display* display = X11Application::instance()->getDisplay();
 
 	WM_DELETE_WINDOW	 = XInternAtom(display, "WM_DELETE_WINDOW",		True);
 	UTF8_STRING			 = XInternAtom(display, "UTF8_STRING",			False);
@@ -45,7 +45,7 @@ X11Window::X11Window() :
 	const uint32_t  width  = 640;
 	const uint32_t  height = 480;
 	const int       screen = DefaultScreen(display);
-	Visual         *visual = DefaultVisual(display, screen);
+	Visual*         visual = DefaultVisual(display, screen);
 	const int       depth  = DefaultDepth(display, screen);
 
 	// Create the native OS window instance with a black background (else we will see trash if nothing has been drawn, yet)
@@ -99,9 +99,9 @@ bool X11Window::HandleEvent(XEvent &event)
 	return false;
 }
 
-void X11Window::setTitle(const char *title)
+void X11Window::setTitle(const char* title)
 {
-	Display *display = X11Application::instance()->getDisplay();
+	Display* display = X11Application::instance()->getDisplay();
 	const int numberOfElements = std::strlen(title);
 	const unsigned char* windowTitle = reinterpret_cast<const unsigned char*>(title);
 	XChangeProperty(display, mWindowId, WM_NAME,				UTF8_STRING, 8, PropModeReplace, windowTitle, numberOfElements);
@@ -114,7 +114,7 @@ void X11Window::show()
 	XMapWindow(X11Application::instance()->getDisplay(), mWindowId);
 }
 
-void X11Window::getWindowSize(int &width, int &height) const
+void X11Window::getWindowSize(int& width, int& height) const
 {
 	// Is there a valid OS window?
 	if (mWindowId)
@@ -156,12 +156,12 @@ void X11Window::refresh()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-X11Window::X11Window(const X11Window &)
+X11Window::X11Window(const X11Window&)
 {
 	// Nothing here
 }
 
-X11Window& X11Window::operator=(const X11Window &)
+X11Window& X11Window::operator=(const X11Window&)
 {
 	return *this;
 }

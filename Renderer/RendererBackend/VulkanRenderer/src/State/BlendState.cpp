@@ -35,7 +35,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	BlendState::BlendState(const Renderer::BlendState &blendState) :
+	BlendState::BlendState(const Renderer::BlendState& blendState) :
 		mBlendState(blendState)
 	{
 		// Nothing here

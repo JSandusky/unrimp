@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCubeBind::TextureCubeBind(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	TextureCubeBind::TextureCubeBind(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		TextureCube(openGLRenderer, width, height)
 	{
 		// Sanity checks

@@ -37,7 +37,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
+	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D12Renderer& direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		ITessellationControlShader(direct3D12Renderer),
 		mD3DBlobHullShader(nullptr)
 	{
@@ -46,7 +46,7 @@ namespace Direct3D12Renderer
 		memcpy(mD3DBlobHullShader->GetBufferPointer(), shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes());
 	}
 
-	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D12Renderer& direct3D12Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		ITessellationControlShader(direct3D12Renderer),
 		mD3DBlobHullShader(nullptr)
 	{
@@ -75,7 +75,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *TessellationControlShaderHlsl::getShaderLanguageName() const
+	const char* TessellationControlShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
 	}

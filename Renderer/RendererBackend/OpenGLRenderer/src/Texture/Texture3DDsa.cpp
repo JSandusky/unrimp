@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture3DDsa::Texture3DDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	Texture3DDsa::Texture3DDsa(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		Texture3D(openGLRenderer, width, height, depth, textureFormat)
 	{
 		// Sanity checks

@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCubeDsa::TextureCubeDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	TextureCubeDsa::TextureCubeDsa(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		TextureCube(openGLRenderer, width, height)
 	{
 		// Sanity checks

@@ -110,8 +110,8 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void *mD3D9SharedLibrary;		///< D3D9 shared library, can be a null pointer
-		void *mD3DX9SharedLibrary;		///< D3DX9 shared library, can be a null pointer
+		void* mD3D9SharedLibrary;		///< D3D9 shared library, can be a null pointer
+		void* mD3DX9SharedLibrary;		///< D3DX9 shared library, can be a null pointer
 		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
 		bool  mInitialized;				///< Already initialized?
 
@@ -146,9 +146,9 @@ namespace Direct3D9Renderer
 	#else
 		#define FNDEF_D3DX9(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
-	FNDEF_D3DX9(HRESULT,	D3DXLoadSurfaceFromMemory,	(LPDIRECT3DSURFACE9, CONST PALETTEENTRY *, CONST RECT *, LPCVOID, D3DFORMAT, UINT, CONST PALETTEENTRY *, CONST RECT *, DWORD, D3DCOLOR));
-	FNDEF_D3DX9(HRESULT,	D3DXCompileShader,			(LPCSTR, UINT, CONST D3DXMACRO *, LPD3DXINCLUDE, LPCSTR, LPCSTR, DWORD, LPD3DXBUFFER *, LPD3DXBUFFER *, LPD3DXCONSTANTTABLE *));
-	FNDEF_D3DX9(HRESULT,	D3DXGetShaderConstantTable,	(const DWORD *, LPD3DXCONSTANTTABLE *));
+	FNDEF_D3DX9(HRESULT,	D3DXLoadSurfaceFromMemory,	(LPDIRECT3DSURFACE9, CONST PALETTEENTRY*, CONST RECT*, LPCVOID, D3DFORMAT, UINT, CONST PALETTEENTRY*, CONST RECT*, DWORD, D3DCOLOR));
+	FNDEF_D3DX9(HRESULT,	D3DXCompileShader,			(LPCSTR, UINT, CONST D3DXMACRO*, LPD3DXINCLUDE, LPCSTR, LPCSTR, DWORD, LPD3DXBUFFER*, LPD3DXBUFFER*, LPD3DXCONSTANTTABLE*));
+	FNDEF_D3DX9(HRESULT,	D3DXGetShaderConstantTable,	(const DWORD*, LPD3DXCONSTANTTABLE*));
 
 
 	//[-------------------------------------------------------]

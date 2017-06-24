@@ -51,13 +51,13 @@ class ApplicationWindow : public X11Window
 												{XK_D, 'D'}
 											};
 public:
-	explicit ApplicationWindow(IApplication &application) :
+	explicit ApplicationWindow(IApplication& application) :
 		mApplication(application)
 	{
 		// Nothing here
 	}
 
-	virtual bool HandleEvent(XEvent &event)
+	virtual bool HandleEvent(XEvent& event)
 	{
 		X11Window::HandleEvent(event);
 
@@ -217,14 +217,14 @@ public:
 		return false;
 	}
 private:
-	IApplication &mApplication;
+	IApplication& mApplication;
 };
 
 
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-ApplicationImplLinux::ApplicationImplLinux(IApplication &application, const char *windowTitle) :
+ApplicationImplLinux::ApplicationImplLinux(IApplication& application, const char* windowTitle) :
 	IApplicationImpl(application),
 	mApplication(&application),
 	mX11EventLoop(nullptr),
@@ -283,7 +283,7 @@ bool ApplicationImplLinux::processMessages()
 	return mX11EventLoop->handlePendingEvents();
 }
 
-void ApplicationImplLinux::getWindowSize(int &width, int &height) const
+void ApplicationImplLinux::getWindowSize(int& width, int& height) const
 {
 	// Is there a valid OS window?
 	if (nullptr != mMainWindow)

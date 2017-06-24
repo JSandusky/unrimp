@@ -28,7 +28,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IDirect3DIndexBuffer9 *IndexBuffer::getDirect3DIndexBuffer9() const
+	inline IDirect3DIndexBuffer9* IndexBuffer::getDirect3DIndexBuffer9() const
 	{
 		return mDirect3DIndexBuffer9;
 	}

@@ -37,7 +37,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RootSignature::RootSignature(Direct3D10Renderer &direct3D10Renderer, const Renderer::RootSignature &rootSignature) :
+	RootSignature::RootSignature(Direct3D10Renderer& direct3D10Renderer, const Renderer::RootSignature& rootSignature) :
 		IRootSignature(direct3D10Renderer),
 		mRootSignature(rootSignature)
 	{

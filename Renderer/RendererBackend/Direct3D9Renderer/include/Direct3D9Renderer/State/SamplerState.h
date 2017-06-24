@@ -71,7 +71,7 @@ namespace Direct3D9Renderer
 		*  @param[in] samplerState
 		*    Sampler state to use
 		*/
-		SamplerState(Direct3D9Renderer &direct3D9Renderer, const Renderer::SamplerState &samplerState);
+		SamplerState(Direct3D9Renderer& direct3D9Renderer, const Renderer::SamplerState& samplerState);
 
 		/**
 		*  @brief
@@ -88,14 +88,14 @@ namespace Direct3D9Renderer
 		*  @param[in] direct3DDevice9
 		*    Direct3D 9 device instance to use
 		*/
-		void setDirect3D9SamplerStates(uint32_t sampler, IDirect3DDevice9 &direct3DDevice9) const;
+		void setDirect3D9SamplerStates(uint32_t sampler, IDirect3DDevice9& direct3DDevice9) const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]

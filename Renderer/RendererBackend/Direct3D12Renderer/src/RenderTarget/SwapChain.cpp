@@ -182,7 +182,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void SwapChain::setDebugName(const char *name)
+	void SwapChain::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Assign a debug name to the DXGI swap chain
@@ -322,7 +322,7 @@ namespace Direct3D12Renderer
 			Direct3D12Renderer& direct3D12Renderer = static_cast<Direct3D12Renderer&>(getRenderer());
 
 			// Get the currently set render target
-			Renderer::IRenderTarget *renderTargetBackup = direct3D12Renderer.omGetRenderTarget();
+			Renderer::IRenderTarget* renderTargetBackup = direct3D12Renderer.omGetRenderTarget();
 
 			// In case this swap chain is the current render target, we have to unset it before continuing
 			if (this == renderTargetBackup)

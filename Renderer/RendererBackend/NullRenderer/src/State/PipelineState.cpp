@@ -36,7 +36,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(NullRenderer &nullRenderer, const Renderer::PipelineState& pipelineState) :
+	PipelineState::PipelineState(NullRenderer& nullRenderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(nullRenderer),
 		mProgram(pipelineState.program)
 	{

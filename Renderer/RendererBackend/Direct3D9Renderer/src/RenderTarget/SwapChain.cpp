@@ -37,14 +37,14 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Direct3D9Renderer &direct3D9Renderer, handle nativeWindowHandle) :
+	SwapChain::SwapChain(Direct3D9Renderer& direct3D9Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D9Renderer),
 		mDirect3DSwapChain9(nullptr),
 		mDirect3DSurface9RenderTarget(nullptr),
 		mDirect3DSurface9DepthStencil(nullptr)
 	{
 		// Get the Direct3D 9 device instance
-		IDirect3DDevice9 *direct3DDevice9 = direct3D9Renderer.getDirect3DDevice9();
+		IDirect3DDevice9* direct3DDevice9 = direct3D9Renderer.getDirect3DDevice9();
 
 		// Get the native window handle
 		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);
@@ -127,7 +127,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void SwapChain::setDebugName(const char *name)
+	void SwapChain::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D9RENDERER_NO_DEBUG
 			// "IDirect3DSwapChain9" is not derived from "IDirect3DResource9", meaning we can't use the "IDirect3DResource9::SetPrivateData()"-method
@@ -156,7 +156,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// Is there a valid swap chain?
 		if (nullptr != mDirect3DSwapChain9)
@@ -238,7 +238,7 @@ namespace Direct3D9Renderer
 		if (nullptr != mDirect3DSwapChain9)
 		{
 			// Get the Direct3D 9 device instance
-			IDirect3DDevice9 *direct3DDevice9 = nullptr;
+			IDirect3DDevice9* direct3DDevice9 = nullptr;
 			mDirect3DSwapChain9->GetDevice(&direct3DDevice9);
 
 			// Get the Direct3D 9 present parameters to query the native window handle
@@ -252,7 +252,7 @@ namespace Direct3D9Renderer
 			getSafeWidthAndHeight(width, height);
 
 			// Get the currently set render target
-			Renderer::IRenderTarget *renderTargetBackup = static_cast<Direct3D9Renderer&>(getRenderer()).omGetRenderTarget();
+			Renderer::IRenderTarget* renderTargetBackup = static_cast<Direct3D9Renderer&>(getRenderer()).omGetRenderTarget();
 
 			// In case this swap chain is the current render target, we have to unset it before continuing
 			if (this == renderTargetBackup)
@@ -328,7 +328,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void SwapChain::getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getSafeWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// Get the Direct3D 9 present parameters
 		D3DPRESENT_PARAMETERS d3dPresentParameters;

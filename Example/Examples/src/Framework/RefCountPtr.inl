@@ -22,7 +22,7 @@
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 template <class AType>
-RefCountPtr<AType>::RefCountPtr(AType *pointer) :
+RefCountPtr<AType>::RefCountPtr(AType* pointer) :
 	mPointer(pointer)
 {
 	// Nothing here
@@ -36,13 +36,13 @@ RefCountPtr<AType>::~RefCountPtr()
 }
 
 template <class AType>
-const AType *RefCountPtr<AType>::getPointer() const
+const AType* RefCountPtr<AType>::getPointer() const
 {
 	return mPointer;
 }
 
 template <class AType>
-AType *RefCountPtr<AType>::getPointer()
+AType* RefCountPtr<AType>::getPointer()
 {
 	return mPointer;
 }

@@ -67,7 +67,7 @@
 #else
 	#define DIRECT3D11RENDERER_API_EXPORT
 #endif
-DIRECT3D11RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D11RendererInstance(handle nativeWindowHandle, bool useExternalContext)
+DIRECT3D11RENDERER_API_EXPORT Renderer::IRenderer* createDirect3D11RendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
 	std::ignore = useExternalContext;
 	return new Direct3D11Renderer::Direct3D11Renderer(nativeWindowHandle);
@@ -534,7 +534,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::setGraphicsRootSignature(Renderer::IRootSignature *rootSignature)
+	void Direct3D11Renderer::setGraphicsRootSignature(Renderer::IRootSignature* rootSignature)
 	{
 		if (nullptr != mGraphicsRootSignature)
 		{
@@ -603,7 +603,7 @@ namespace Direct3D11Renderer
 			{
 				case Renderer::ResourceType::UNIFORM_BUFFER:
 				{
-					ID3D11Buffer *d3d11Buffers = static_cast<UniformBuffer*>(resource)->getD3D11Buffer();
+					ID3D11Buffer* d3d11Buffers = static_cast<UniformBuffer*>(resource)->getD3D11Buffer();
 					const UINT startSlot = descriptorRange->baseShaderRegister;
 					switch (rootParameter.shaderVisibility)
 					{
@@ -648,7 +648,7 @@ namespace Direct3D11Renderer
 				case Renderer::ResourceType::TEXTURE_3D:
 				case Renderer::ResourceType::TEXTURE_CUBE:
 				{
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
+					ID3D11ShaderResourceView* d3d11ShaderResourceView = nullptr;
 					switch (resourceType)
 					{
 						case Renderer::ResourceType::TEXTURE_BUFFER:
@@ -733,7 +733,7 @@ namespace Direct3D11Renderer
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					ID3D11SamplerState *d3d11SamplerState = static_cast<SamplerState*>(resource)->getD3D11SamplerState();
+					ID3D11SamplerState* d3d11SamplerState = static_cast<SamplerState*>(resource)->getD3D11SamplerState();
 					const UINT startSlot = descriptorRange->baseShaderRegister;
 					switch (rootParameter.shaderVisibility)
 					{
@@ -815,7 +815,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
+	void Direct3D11Renderer::iaSetVertexArray(Renderer::IVertexArray* vertexArray)
 	{
 		if (nullptr != vertexArray)
 		{
@@ -848,7 +848,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
+	void Direct3D11Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
@@ -860,7 +860,7 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void Direct3D11Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
@@ -876,7 +876,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
+	void Direct3D11Renderer::omSetRenderTarget(Renderer::IRenderTarget* renderTarget)
 	{
 		// New render target?
 		if (mRenderTarget != renderTarget)
@@ -913,10 +913,10 @@ namespace Direct3D11Renderer
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
 						// Get the Direct3D 11 swap chain instance
-						SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
+						const SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
 
 						// Direct3D 11 needs a pointer to a pointer, so give it one
-						ID3D11RenderTargetView *d3d11RenderTargetView = swapChain->getD3D11RenderTargetView();
+						ID3D11RenderTargetView* d3d11RenderTargetView = swapChain->getD3D11RenderTargetView();
 						mD3D11DeviceContext->OMSetRenderTargets(1, &d3d11RenderTargetView, swapChain->getD3D11DepthStencilView());
 						break;
 					}
@@ -924,7 +924,7 @@ namespace Direct3D11Renderer
 					case Renderer::ResourceType::FRAMEBUFFER:
 					{
 						// Get the Direct3D 11 framebuffer instance
-						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+						const Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 						// Set the Direct3D 11 render targets
 						mD3D11DeviceContext->OMSetRenderTargets(framebuffer->getNumberOfColorTextures(), framebuffer->getD3D11RenderTargetViews(), framebuffer->getD3D11DepthStencilView());
@@ -998,7 +998,7 @@ namespace Direct3D11Renderer
 				case Renderer::ResourceType::SWAP_CHAIN:
 				{
 					// Get the Direct3D 11 swap chain instance
-					SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
+					SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
 
 					// Clear the Direct3D 11 render target view?
 					if (flags & Renderer::ClearFlag::COLOR)
@@ -1027,14 +1027,14 @@ namespace Direct3D11Renderer
 				case Renderer::ResourceType::FRAMEBUFFER:
 				{
 					// Get the Direct3D 11 framebuffer instance
-					Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+					Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 					// Clear all Direct3D 11 render target views?
 					if (flags & Renderer::ClearFlag::COLOR)
 					{
 						// Loop through all Direct3D 11 render target views
-						ID3D11RenderTargetView **d3d11RenderTargetViewsEnd = framebuffer->getD3D11RenderTargetViews() + framebuffer->getNumberOfColorTextures();
-						for (ID3D11RenderTargetView **d3d11RenderTargetView = framebuffer->getD3D11RenderTargetViews(); d3d11RenderTargetView < d3d11RenderTargetViewsEnd; ++d3d11RenderTargetView)
+						ID3D11RenderTargetView** d3d11RenderTargetViewsEnd = framebuffer->getD3D11RenderTargetViews() + framebuffer->getNumberOfColorTextures();
+						for (ID3D11RenderTargetView** d3d11RenderTargetView = framebuffer->getD3D11RenderTargetViews(); d3d11RenderTargetView < d3d11RenderTargetViewsEnd; ++d3d11RenderTargetView)
 						{
 							// Valid Direct3D 11 render target view?
 							if (nullptr != *d3d11RenderTargetView)
@@ -1313,7 +1313,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::setDebugMarker(const char *name)
+	void Direct3D11Renderer::setDebugMarker(const char* name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			if (nullptr != mD3DUserDefinedAnnotation)
@@ -1326,7 +1326,7 @@ namespace Direct3D11Renderer
 		#endif
 	}
 
-	void Direct3D11Renderer::beginDebugEvent(const char *name)
+	void Direct3D11Renderer::beginDebugEvent(const char* name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			if (nullptr != mD3DUserDefinedAnnotation)
@@ -1363,7 +1363,7 @@ namespace Direct3D11Renderer
 		return (nullptr != mD3DUserDefinedAnnotation && mD3DUserDefinedAnnotation->GetStatus() != 0);
 	}
 
-	Renderer::ISwapChain *Direct3D11Renderer::getMainSwapChain() const
+	Renderer::ISwapChain* Direct3D11Renderer::getMainSwapChain() const
 	{
 		return static_cast<Renderer::ISwapChain*>(mMainSwapChain);
 	}
@@ -1380,7 +1380,7 @@ namespace Direct3D11Renderer
 		return numberOfShaderLanguages;
 	}
 
-	const char *Direct3D11Renderer::getShaderLanguageName(uint32_t index) const
+	const char* Direct3D11Renderer::getShaderLanguageName(uint32_t index) const
 	{
 		// HLSL supported
 		if (0 == index)
@@ -1392,7 +1392,7 @@ namespace Direct3D11Renderer
 		return nullptr;
 	}
 
-	Renderer::IShaderLanguage *Direct3D11Renderer::getShaderLanguage(const char *shaderLanguageName)
+	Renderer::IShaderLanguage* Direct3D11Renderer::getShaderLanguage(const char* shaderLanguageName)
 	{
 		// In case "shaderLanguage" is a null pointer, use the default shader language
 		if (nullptr != shaderLanguageName)
@@ -1423,39 +1423,39 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D11Renderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::ISwapChain* Direct3D11Renderer::createSwapChain(handle nativeWindowHandle, bool)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *Direct3D11Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment)
+	Renderer::IFramebuffer* Direct3D11Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
 	{
 		// Validation is done inside the framebuffer implementation
 		return new Framebuffer(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
-	Renderer::IBufferManager *Direct3D11Renderer::createBufferManager()
+	Renderer::IBufferManager* Direct3D11Renderer::createBufferManager()
 	{
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITextureManager *Direct3D11Renderer::createTextureManager()
+	Renderer::ITextureManager* Direct3D11Renderer::createTextureManager()
 	{
 		return new TextureManager(*this);
 	}
 
-	Renderer::IRootSignature *Direct3D11Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	Renderer::IRootSignature* Direct3D11Renderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
 		return new RootSignature(*this, rootSignature);
 	}
 
-	Renderer::IPipelineState *Direct3D11Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
+	Renderer::IPipelineState* Direct3D11Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::ISamplerState *Direct3D11Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	Renderer::ISamplerState* Direct3D11Renderer::createSamplerState(const Renderer::SamplerState& samplerState)
 	{
 		return new SamplerState(*this, samplerState);
 	}
@@ -1464,7 +1464,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool Direct3D11Renderer::map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource)
+	bool Direct3D11Renderer::map(Renderer::IResource& resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource& mappedSubresource)
 	{
 		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 constants, do not change them
 		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
@@ -1475,7 +1475,7 @@ namespace Direct3D11Renderer
 			{ \
 				bool result = false; \
 				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this) \
-				ID3D11Resource *d3d11Resource = nullptr; \
+				ID3D11Resource* d3d11Resource = nullptr; \
 				static_cast<typeClass&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource); \
 				if (nullptr != d3d11Resource) \
 				{ \
@@ -1541,13 +1541,13 @@ namespace Direct3D11Renderer
 		#undef TEXTURE_RESOURCE
 	}
 
-	void Direct3D11Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
+	void Direct3D11Renderer::unmap(Renderer::IResource& resource, uint32_t subresource)
 	{
 		// Define helper macro
 		#define TEXTURE_RESOURCE(type, typeClass) \
 			case type: \
 			{ \
-				ID3D11Resource *d3d11Resource = nullptr; \
+				ID3D11Resource* d3d11Resource = nullptr; \
 				static_cast<typeClass&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource); \
 				if (nullptr != d3d11Resource) \
 				{ \
@@ -1968,7 +1968,7 @@ namespace Direct3D11Renderer
 		mCapabilities.fragmentShader = true;
 	}
 
-	void Direct3D11Renderer::setProgram(Renderer::IProgram *program)
+	void Direct3D11Renderer::setProgram(Renderer::IProgram* program)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -1979,17 +1979,17 @@ namespace Direct3D11Renderer
 			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
 			// Get shaders
-			const ProgramHlsl					   *programHlsl						 = static_cast<ProgramHlsl*>(program);
-			const VertexShaderHlsl				   *vertexShaderHlsl				 = programHlsl->getVertexShaderHlsl();
-			const TessellationControlShaderHlsl	   *tessellationControlShaderHlsl	 = programHlsl->getTessellationControlShaderHlsl();
-			const TessellationEvaluationShaderHlsl *tessellationEvaluationShaderHlsl = programHlsl->getTessellationEvaluationShaderHlsl();
-			const GeometryShaderHlsl			   *geometryShaderHlsl				 = programHlsl->getGeometryShaderHlsl();
-			const FragmentShaderHlsl			   *fragmentShaderHlsl				 = programHlsl->getFragmentShaderHlsl();
-			ID3D11VertexShader   *d3d11VertexShader   = (nullptr != vertexShaderHlsl)				  ? vertexShaderHlsl->getD3D11VertexShader()				 : nullptr;
-			ID3D11HullShader     *d3d11HullShader     = (nullptr != tessellationControlShaderHlsl)	  ? tessellationControlShaderHlsl->getD3D11HullShader()		 : nullptr;
-			ID3D11DomainShader   *d3d11DomainShader   = (nullptr != tessellationEvaluationShaderHlsl) ? tessellationEvaluationShaderHlsl->getD3D11DomainShader() : nullptr;
-			ID3D11GeometryShader *d3d11GeometryShader = (nullptr != geometryShaderHlsl)				  ? geometryShaderHlsl->getD3D11GeometryShader()			 : nullptr;
-			ID3D11PixelShader	 *d3d11PixelShader    = (nullptr != fragmentShaderHlsl)				  ? fragmentShaderHlsl->getD3D11PixelShader()				 : nullptr;
+			const ProgramHlsl*					    programHlsl						 = static_cast<ProgramHlsl*>(program);
+			const VertexShaderHlsl*				    vertexShaderHlsl				 = programHlsl->getVertexShaderHlsl();
+			const TessellationControlShaderHlsl*	tessellationControlShaderHlsl	 = programHlsl->getTessellationControlShaderHlsl();
+			const TessellationEvaluationShaderHlsl* tessellationEvaluationShaderHlsl = programHlsl->getTessellationEvaluationShaderHlsl();
+			const GeometryShaderHlsl*			    geometryShaderHlsl				 = programHlsl->getGeometryShaderHlsl();
+			const FragmentShaderHlsl*			    fragmentShaderHlsl				 = programHlsl->getFragmentShaderHlsl();
+			ID3D11VertexShader*   d3d11VertexShader   = (nullptr != vertexShaderHlsl)				  ? vertexShaderHlsl->getD3D11VertexShader()				 : nullptr;
+			ID3D11HullShader*     d3d11HullShader     = (nullptr != tessellationControlShaderHlsl)	  ? tessellationControlShaderHlsl->getD3D11HullShader()		 : nullptr;
+			ID3D11DomainShader*   d3d11DomainShader   = (nullptr != tessellationEvaluationShaderHlsl) ? tessellationEvaluationShaderHlsl->getD3D11DomainShader() : nullptr;
+			ID3D11GeometryShader* d3d11GeometryShader = (nullptr != geometryShaderHlsl)				  ? geometryShaderHlsl->getD3D11GeometryShader()			 : nullptr;
+			ID3D11PixelShader*	  d3d11PixelShader    = (nullptr != fragmentShaderHlsl)				  ? fragmentShaderHlsl->getD3D11PixelShader()				 : nullptr;
 
 			// Set shaders
 			if (mD3d11VertexShader != d3d11VertexShader)

@@ -28,7 +28,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D10RasterizerState *RasterizerState::getD3D10RasterizerState() const
+	inline ID3D10RasterizerState* RasterizerState::getD3D10RasterizerState() const
 	{
 		return mD3D10RasterizerState;
 	}

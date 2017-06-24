@@ -33,22 +33,22 @@ namespace Direct3D11Renderer
 		return mNumberOfColorTextures;
 	}
 
-	inline Renderer::ITexture **Framebuffer::getColorTextures() const
+	inline Renderer::ITexture** Framebuffer::getColorTextures() const
 	{
 		return mColorTextures;
 	}
 
-	inline Renderer::ITexture *Framebuffer::getDepthStencilTexture() const
+	inline Renderer::ITexture* Framebuffer::getDepthStencilTexture() const
 	{
 		return mDepthStencilTexture;
 	}
 
-	inline ID3D11RenderTargetView **Framebuffer::getD3D11RenderTargetViews() const
+	inline ID3D11RenderTargetView** Framebuffer::getD3D11RenderTargetViews() const
 	{
 		return mD3D11RenderTargetViews;
 	}
 
-	inline ID3D11DepthStencilView *Framebuffer::getD3D11DepthStencilView() const
+	inline ID3D11DepthStencilView* Framebuffer::getD3D11DepthStencilView() const
 	{
 		return mD3D11DepthStencilView;
 	}

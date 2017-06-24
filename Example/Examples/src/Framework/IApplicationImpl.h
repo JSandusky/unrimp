@@ -101,7 +101,7 @@ public:
 	*  @param[out] height
 	*    Receives the window height
 	*/
-	virtual void getWindowSize(int &width, int &height) const = 0;
+	virtual void getWindowSize(int& width, int& height) const = 0;
 
 	/**
 	*  @brief

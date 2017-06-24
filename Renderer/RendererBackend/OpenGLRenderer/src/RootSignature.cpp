@@ -87,7 +87,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RootSignature::RootSignature(OpenGLRenderer &openGLRenderer, const Renderer::RootSignature &rootSignature) :
+	RootSignature::RootSignature(OpenGLRenderer& openGLRenderer, const Renderer::RootSignature& rootSignature) :
 		IRootSignature(openGLRenderer),
 		mRootSignature(rootSignature),
 		mSamplerStates(nullptr)

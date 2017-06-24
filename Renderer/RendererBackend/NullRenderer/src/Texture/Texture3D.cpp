@@ -34,7 +34,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture3D::Texture3D(NullRenderer &nullRenderer, uint32_t width, uint32_t height, uint32_t depth) :
+	Texture3D::Texture3D(NullRenderer& nullRenderer, uint32_t width, uint32_t height, uint32_t depth) :
 		ITexture3D(reinterpret_cast<Renderer::IRenderer&>(nullRenderer), width, height, depth)
 	{
 		// Nothing here

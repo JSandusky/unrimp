@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationControlShaderMonolithic::TessellationControlShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
+	TessellationControlShaderMonolithic::TessellationControlShaderMonolithic(OpenGLRenderer& openGLRenderer, const char* sourceCode) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(ShaderLanguageMonolithic::loadShaderFromSourcecode(GL_TESS_CONTROL_SHADER, sourceCode))
 	{
@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *TessellationControlShaderMonolithic::getShaderLanguageName() const
+	const char* TessellationControlShaderMonolithic::getShaderLanguageName() const
 	{
 		return ShaderLanguageMonolithic::NAME;
 	}

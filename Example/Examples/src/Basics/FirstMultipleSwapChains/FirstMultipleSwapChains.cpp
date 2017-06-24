@@ -44,7 +44,7 @@
 	LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		// Get pointer to the swap chain implementation
-		Renderer::ISwapChain *swapChain = (NULL_HANDLE != hWnd) ? reinterpret_cast<Renderer::ISwapChain*>(GetWindowLongPtr(hWnd, GWLP_USERDATA)) : nullptr;
+		Renderer::ISwapChain* swapChain = (NULL_HANDLE != hWnd) ? reinterpret_cast<Renderer::ISwapChain*>(GetWindowLongPtr(hWnd, GWLP_USERDATA)) : nullptr;
 
 		// Evaluate message
 		switch (message)
@@ -80,7 +80,7 @@
 			// Nothing here
 		}
 
-		void setSwapChain(Renderer::ISwapChain *swapChain)
+		void setSwapChain(Renderer::ISwapChain* swapChain)
 		{
 			mSwapChain = swapChain;
 		}
@@ -102,7 +102,7 @@
 			return false;
 		}
 	private:
-		Renderer::ISwapChain *mSwapChain;
+		Renderer::ISwapChain* mSwapChain;
 	};
 	// TODO(co) Even inside an example, we might not want to use global variables
 	SwapChainWindow *gSwapChainWindow = nullptr;
@@ -112,7 +112,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstMultipleSwapChains::FirstMultipleSwapChains(const char *rendererName) :
+FirstMultipleSwapChains::FirstMultipleSwapChains(const char* rendererName) :
 	IApplicationRenderer(rendererName)
 {
 	// Nothing here
@@ -202,8 +202,8 @@ void FirstMultipleSwapChains::onInitialization()
 			Renderer::IProgramPtr program;
 			{
 				// Get the shader source code (outsourced to keep an overview)
-				const char *vertexShaderSourceCode = nullptr;
-				const char *fragmentShaderSourceCode = nullptr;
+				const char* vertexShaderSourceCode = nullptr;
+				const char* fragmentShaderSourceCode = nullptr;
 				#include "FirstMultipleSwapChains_GLSL_410.h"
 				#include "FirstMultipleSwapChains_GLSL_ES3.h"
 				#include "FirstMultipleSwapChains_HLSL_D3D9_D3D10_D3D11_D3D12.h"

@@ -47,7 +47,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(Direct3D12Renderer &direct3D12Renderer, const Renderer::PipelineState& pipelineState) :
+	PipelineState::PipelineState(Direct3D12Renderer& direct3D12Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(direct3D12Renderer),
 		mD3D12PipelineState(nullptr),
 		mRootSignature(pipelineState.rootSignature),
@@ -178,7 +178,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void PipelineState::setDebugName(const char *name)
+	void PipelineState::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 pipeline state?

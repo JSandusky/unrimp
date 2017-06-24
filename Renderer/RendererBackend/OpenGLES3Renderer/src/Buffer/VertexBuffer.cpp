@@ -37,7 +37,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
+	VertexBuffer::VertexBuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
 		IVertexBuffer(openGLES3Renderer),
 		mOpenGLES3ArrayBuffer(0),
 		mBufferSize(numberOfBytes)

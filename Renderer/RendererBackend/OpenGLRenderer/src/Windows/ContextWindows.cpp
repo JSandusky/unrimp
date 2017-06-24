@@ -238,7 +238,7 @@ namespace OpenGLRenderer
 		if (nullptr != wglGetExtensionsStringARBLocal)
 		{
 			// Get the available WGL extensions as string
-			const char *extensions = wglGetExtensionsStringARBLocal(mWindowDeviceContext);
+			const char* extensions = wglGetExtensionsStringARBLocal(mWindowDeviceContext);
 
 			// Check whether or not "WGL_ARB_create_context" is a substring of the WGL extension string meaning that this OpenGL extension is supported
 			if (nullptr != strstr(extensions, "WGL_ARB_create_context"))

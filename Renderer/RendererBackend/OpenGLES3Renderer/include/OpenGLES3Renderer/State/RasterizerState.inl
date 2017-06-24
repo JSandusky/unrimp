@@ -33,7 +33,7 @@ namespace OpenGLES3Renderer
 		// Nothing here
 	}
 
-	inline const Renderer::RasterizerState &RasterizerState::getRasterizerState() const
+	inline const Renderer::RasterizerState& RasterizerState::getRasterizerState() const
 	{
 		return mRasterizerState;
 	}

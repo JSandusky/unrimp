@@ -37,7 +37,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBufferDsa::IndexBufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
+	IndexBufferDsa::IndexBufferDsa(OpenGLRenderer& openGLRenderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data, Renderer::BufferUsage bufferUsage) :
 		IndexBuffer(openGLRenderer, indexBufferFormat)
 	{
 		if (openGLRenderer.getExtensions().isGL_ARB_direct_state_access())

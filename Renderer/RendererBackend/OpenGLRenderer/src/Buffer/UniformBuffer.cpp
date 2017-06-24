@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(OpenGLRenderer &openGLRenderer) :
+	UniformBuffer::UniformBuffer(OpenGLRenderer& openGLRenderer) :
 		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLUniformBuffer(0)
 	{

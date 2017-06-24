@@ -28,17 +28,17 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline VertexShaderHlsl *ProgramHlsl::getVertexShaderHlsl() const
+	inline VertexShaderHlsl* ProgramHlsl::getVertexShaderHlsl() const
 	{
 		return mVertexShaderHlsl;
 	}
 
-	inline GeometryShaderHlsl *ProgramHlsl::getGeometryShaderHlsl() const
+	inline GeometryShaderHlsl* ProgramHlsl::getGeometryShaderHlsl() const
 	{
 		return mGeometryShaderHlsl;
 	}
 
-	inline FragmentShaderHlsl *ProgramHlsl::getFragmentShaderHlsl() const
+	inline FragmentShaderHlsl* ProgramHlsl::getFragmentShaderHlsl() const
 	{
 		return mFragmentShaderHlsl;
 	}

@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
+typedef __interface ID3D10Blob* LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
 typedef ID3D10Blob ID3DBlob;
 struct ID3D11VertexShader;
 namespace Renderer
@@ -77,7 +77,7 @@ namespace Direct3D11Renderer
 		*  @param[in] shaderBytecode
 		*    Shader bytecode
 		*/
-		VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const Renderer::ShaderBytecode& shaderBytecode);
+		VertexShaderHlsl(Direct3D11Renderer& direct3D11Renderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -88,7 +88,7 @@ namespace Direct3D11Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
+		VertexShaderHlsl(Direct3D11Renderer& direct3D11Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief
@@ -103,7 +103,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    Direct3D 11 vertex shader blob, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3DBlob *getD3DBlobVertexShader() const;
+		inline ID3DBlob* getD3DBlobVertexShader() const;
 
 		/**
 		*  @brief
@@ -112,21 +112,21 @@ namespace Direct3D11Renderer
 		*  @return
 		*    Direct3D 11 vertex shader, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11VertexShader *getD3D11VertexShader() const;
+		inline ID3D11VertexShader* getD3D11VertexShader() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]
@@ -141,8 +141,8 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3DBlob		   *mD3DBlobVertexShader;	///< Direct3D 11 vertex shader blob, can be a null pointer
-		ID3D11VertexShader *mD3D11VertexShader;		///< Direct3D 11 vertex shader, can be a null pointer
+		ID3DBlob*		    mD3DBlobVertexShader;	///< Direct3D 11 vertex shader blob, can be a null pointer
+		ID3D11VertexShader* mD3D11VertexShader;		///< Direct3D 11 vertex shader, can be a null pointer
 
 
 	};

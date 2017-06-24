@@ -82,7 +82,7 @@ namespace VulkanRenderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArray(VulkanRenderer &vulkanRenderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArray(VulkanRenderer& vulkanRenderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer);
 
 		/**
 		*  @brief
@@ -97,7 +97,7 @@ namespace VulkanRenderer
 		*  @return
 		*    The used index buffer, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IndexBuffer *getIndexBuffer() const;
+		inline IndexBuffer* getIndexBuffer() const;
 
 
 	//[-------------------------------------------------------]
@@ -112,7 +112,7 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IndexBuffer *mIndexBuffer;	///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
+		IndexBuffer* mIndexBuffer;	///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 
 
 	};

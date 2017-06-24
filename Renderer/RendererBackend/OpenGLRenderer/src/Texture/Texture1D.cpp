@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	Texture1D::Texture1D(OpenGLRenderer &openGLRenderer, uint32_t width) :
+	Texture1D::Texture1D(OpenGLRenderer& openGLRenderer, uint32_t width) :
 		ITexture1D(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width),
 		mOpenGLTexture(0),
 		mGenerateMipmaps(false)

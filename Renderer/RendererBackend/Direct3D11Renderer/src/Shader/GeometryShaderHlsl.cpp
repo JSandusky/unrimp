@@ -38,7 +38,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
+	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D11Renderer& direct3D11Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IGeometryShader(direct3D11Renderer),
 		mD3D11GeometryShader(nullptr)
 	{
@@ -48,12 +48,12 @@ namespace Direct3D11Renderer
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name
 	}
 
-	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D11Renderer& direct3D11Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IGeometryShader(direct3D11Renderer),
 		mD3D11GeometryShader(nullptr)
 	{
 		// Create the Direct3D 11 binary large object for the geometry shader
-		ID3DBlob *d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D11Renderer.getShaderLanguage())->loadShaderFromSourcecode("gs_5_0", sourceCode, nullptr);
+		ID3DBlob* d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D11Renderer.getShaderLanguage())->loadShaderFromSourcecode("gs_5_0", sourceCode, nullptr);
 		if (nullptr != d3dBlob)
 		{
 			// Create the Direct3D 11 geometry shader
@@ -85,7 +85,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void GeometryShaderHlsl::setDebugName(const char *name)
+	void GeometryShaderHlsl::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			// Valid Direct3D 11 geometry shader?
@@ -103,7 +103,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *GeometryShaderHlsl::getShaderLanguageName() const
+	const char* GeometryShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
 	}

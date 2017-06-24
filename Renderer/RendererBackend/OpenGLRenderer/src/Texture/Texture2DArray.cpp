@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	Texture2DArray::Texture2DArray(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices) :
+	Texture2DArray::Texture2DArray(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices) :
 		ITexture2DArray(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height, numberOfSlices),
 		mNumberOfMultisamples(1),	// TODO(co) Currently no MSAA support for 2D array textures
 		mOpenGLTexture(0)

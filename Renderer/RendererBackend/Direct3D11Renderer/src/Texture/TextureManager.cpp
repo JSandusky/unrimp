@@ -50,7 +50,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
-	Renderer::ITexture1D *TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	Renderer::ITexture1D* TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0)
@@ -63,7 +63,7 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, uint8_t numberOfMultisamples, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D* TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage, uint8_t numberOfMultisamples, const Renderer::OptimizedTextureClearValue*)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
@@ -76,7 +76,7 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	Renderer::ITexture2DArray *TextureManager::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	Renderer::ITexture2DArray* TextureManager::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && numberOfSlices > 0)
@@ -89,7 +89,7 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	Renderer::ITexture3D *TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	Renderer::ITexture3D* TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && depth > 0)
@@ -102,7 +102,7 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	Renderer::ITextureCube *TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	Renderer::ITextureCube* TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)

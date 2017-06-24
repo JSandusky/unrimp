@@ -36,7 +36,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(VulkanRenderer &vulkanRenderer, uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage) :
+	TextureBuffer::TextureBuffer(VulkanRenderer& vulkanRenderer, uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage) :
 		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me

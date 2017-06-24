@@ -33,7 +33,7 @@ namespace OpenGLES3Renderer
 		// Nothing here
 	}
 
-	inline const Renderer::DepthStencilState &DepthStencilState::getDepthStencilState() const
+	inline const Renderer::DepthStencilState& DepthStencilState::getDepthStencilState() const
 	{
 		return mDepthStencilState;
 	}

@@ -77,7 +77,7 @@ namespace Direct3D12Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		UniformBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		UniformBuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -99,14 +99,14 @@ namespace Direct3D12Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 
 	//[-------------------------------------------------------]

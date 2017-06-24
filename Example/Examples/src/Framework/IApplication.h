@@ -75,7 +75,7 @@ public:
 	*  @param[out] height
 	*    Receives the window height
 	*/
-	inline void getWindowSize(int &width, int &height) const;
+	inline void getWindowSize(int& width, int& height) const;
 
 	/**
 	*  @brief

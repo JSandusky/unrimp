@@ -70,7 +70,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(OpenGLES3Renderer &openGLES3Renderer, handle nativeWindowHandle);
+		SwapChain(OpenGLES3Renderer& openGLES3Renderer, handle nativeWindowHandle);
 
 		/**
 		*  @brief
@@ -83,7 +83,7 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
 	//[-------------------------------------------------------]

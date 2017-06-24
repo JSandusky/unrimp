@@ -37,7 +37,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBufferDsa::VertexBufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
+	VertexBufferDsa::VertexBufferDsa(OpenGLRenderer& openGLRenderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
 		VertexBuffer(openGLRenderer)
 	{
 		if (openGLRenderer.getExtensions().isGL_ARB_direct_state_access())

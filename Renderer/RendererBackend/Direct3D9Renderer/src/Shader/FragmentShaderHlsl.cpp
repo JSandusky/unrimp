@@ -38,7 +38,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer& direct3D9Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IFragmentShader(direct3D9Renderer),
 		mDirect3DPixelShader9(nullptr),
 		mD3DXConstantTable(nullptr)
@@ -48,13 +48,13 @@ namespace Direct3D9Renderer
 		D3DXGetShaderConstantTable(reinterpret_cast<const DWORD*>(shaderBytecode.getBytecode()), &mD3DXConstantTable);
 	}
 
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer& direct3D9Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IFragmentShader(direct3D9Renderer),
 		mDirect3DPixelShader9(nullptr),
 		mD3DXConstantTable(nullptr)
 	{
 		// Create the Direct3D 9 buffer object for the pixel shader
-		ID3DXBuffer *d3dXBuffer = static_cast<ShaderLanguageHlsl*>(direct3D9Renderer.getShaderLanguage())->loadShaderFromSourcecode("ps_3_0", sourceCode, nullptr, &mD3DXConstantTable);
+		ID3DXBuffer* d3dXBuffer = static_cast<ShaderLanguageHlsl*>(direct3D9Renderer.getShaderLanguage())->loadShaderFromSourcecode("ps_3_0", sourceCode, nullptr, &mD3DXConstantTable);
 		if (nullptr != d3dXBuffer)
 		{
 			// Create the Direct3D 9 pixel shader
@@ -90,7 +90,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void FragmentShaderHlsl::setDebugName(const char *)
+	void FragmentShaderHlsl::setDebugName(const char*)
 	{
 		// "IDirect3DPixelShader9" and "ID3DXConstantTable" are not derived from "IDirect3DResource9", meaning we can't use the "IDirect3DResource9::SetPrivateData()"-method
 	}
@@ -99,7 +99,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *FragmentShaderHlsl::getShaderLanguageName() const
+	const char* FragmentShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
 	}

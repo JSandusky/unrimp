@@ -81,7 +81,7 @@ namespace Direct3D11Renderer
 		*  @param[in] textureUsage
 		*    Indication of the texture usage (only relevant for Direct3D, OpenGL has no texture usage indication)
 		*/
-		Texture1D(Direct3D11Renderer &direct3D11Renderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage);
+		Texture1D(Direct3D11Renderer& direct3D11Renderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage);
 
 		/**
 		*  @brief
@@ -121,7 +121,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The Direct3D texture 1D resource instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11Texture1D *getD3D11Texture1D() const;
+		inline ID3D11Texture1D* getD3D11Texture1D() const;
 
 		/**
 		*  @brief
@@ -134,14 +134,14 @@ namespace Direct3D11Renderer
 		*    - It's not recommended to manipulate the returned Direct3D 11 resource
 		*      view by e.g. assigning another Direct3D 11 resource to it
 		*/
-		inline ID3D11ShaderResourceView *getD3D11ShaderResourceView() const;
+		inline ID3D11ShaderResourceView* getD3D11ShaderResourceView() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 		virtual void* getInternalResourceHandle() const override;
 
 
@@ -159,8 +159,8 @@ namespace Direct3D11Renderer
 	private:
 		Renderer::TextureFormat::Enum  mTextureFormat;
 		bool						   mGenerateMipmaps;
-		ID3D11Texture1D				  *mD3D11Texture1D;					///< Direct3D 11 texture 1D resource, can be a null pointer
-		ID3D11ShaderResourceView	  *mD3D11ShaderResourceViewTexture;	///< Direct3D 11 shader resource view, can be a null pointer
+		ID3D11Texture1D*			   mD3D11Texture1D;					///< Direct3D 11 texture 1D resource, can be a null pointer
+		ID3D11ShaderResourceView*	   mD3D11ShaderResourceViewTexture;	///< Direct3D 11 shader resource view, can be a null pointer
 
 
 	};

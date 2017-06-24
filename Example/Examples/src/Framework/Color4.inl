@@ -30,7 +30,7 @@ inline Color4::Color4() :
 	// Nothing here
 }
 
-inline Color4::Color4(const Color4 &source) :
+inline Color4::Color4(const Color4& source) :
 	r(source.r),
 	g(source.g),
 	b(source.b),
@@ -53,7 +53,7 @@ inline Color4::~Color4()
 	// Nothing here
 }
 
-inline Color4 &Color4::operator =(const Color4 &source)
+inline Color4& Color4::operator =(const Color4& source)
 {
 	r = source.r;
 	g = source.g;

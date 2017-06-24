@@ -113,7 +113,7 @@ namespace OpenGLRenderer
 		*  @param[in] textureFormat
 		*    Texture format
 		*/
-		Texture3D(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat);
+		Texture3D(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat);
 
 
 	//[-------------------------------------------------------]

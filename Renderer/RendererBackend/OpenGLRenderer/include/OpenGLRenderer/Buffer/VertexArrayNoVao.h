@@ -83,7 +83,7 @@ namespace OpenGLRenderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArrayNoVao(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArrayNoVao(OpenGLRenderer& openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer);
 
 		/**
 		*  @brief
@@ -117,9 +117,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	private:
 		uint32_t						   mNumberOfAttributes;			///< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
-		Renderer::VertexAttribute		  *mAttributes;					///< At least "numberOfAttributes" instances of vertex attributes, can be a null pointer in case there are zero attributes
+		Renderer::VertexAttribute*		   mAttributes;					///< At least "numberOfAttributes" instances of vertex attributes, can be a null pointer in case there are zero attributes
 		uint32_t						   mNumberOfVertexBuffers;		///< Number of vertex buffers, having zero vertex buffers is valid
-		Renderer::VertexArrayVertexBuffer *mVertexBuffers;				///< At least mNumberOfVertexBuffers instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
+		Renderer::VertexArrayVertexBuffer* mVertexBuffers;				///< At least mNumberOfVertexBuffers instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
 		bool							   mIsGL_ARB_instanced_arrays;	///< Is the "GL_ARB_instanced_arrays"-extension supported?
 
 

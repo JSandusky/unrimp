@@ -57,7 +57,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
-	Renderer::ITexture1D *TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	Renderer::ITexture1D* TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 
@@ -82,7 +82,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, uint8_t numberOfMultisamples, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D* TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage, uint8_t numberOfMultisamples, const Renderer::OptimizedTextureClearValue*)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 
@@ -107,7 +107,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITexture2DArray *TextureManager::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	Renderer::ITexture2DArray* TextureManager::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 
@@ -132,7 +132,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITexture3D *TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	Renderer::ITexture3D* TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 
@@ -157,7 +157,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITextureCube *TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage)
+	Renderer::ITextureCube* TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 

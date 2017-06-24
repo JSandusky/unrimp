@@ -43,7 +43,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	SamplerState::SamplerState(OpenGLRenderer &openGLRenderer) :
+	SamplerState::SamplerState(OpenGLRenderer& openGLRenderer) :
 		ISamplerState(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer))
 	{
 		// Nothing here

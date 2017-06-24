@@ -43,7 +43,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(Direct3D11Renderer &direct3D11Renderer, const Renderer::PipelineState& pipelineState) :
+	PipelineState::PipelineState(Direct3D11Renderer& direct3D11Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(direct3D11Renderer),
 		mProgram(pipelineState.program),
 		mD3D11DeviceContext(direct3D11Renderer.getD3D11DeviceContext()),
@@ -69,9 +69,9 @@ namespace Direct3D11Renderer
 				const Renderer::VertexAttribute* attributes = pipelineState.vertexAttributes.attributes;
 
 				// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
-				D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescs   = numberOfAttributes ? new D3D11_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D11_INPUT_ELEMENT_DESC[1];
-				D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDesc    = d3d11InputElementDescs;
-				D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescEnd = d3d11InputElementDescs + numberOfAttributes;
+				D3D11_INPUT_ELEMENT_DESC* d3d11InputElementDescs   = numberOfAttributes ? new D3D11_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D11_INPUT_ELEMENT_DESC[1];
+				D3D11_INPUT_ELEMENT_DESC* d3d11InputElementDesc    = d3d11InputElementDescs;
+				D3D11_INPUT_ELEMENT_DESC* d3d11InputElementDescEnd = d3d11InputElementDescs + numberOfAttributes;
 				for (; d3d11InputElementDesc < d3d11InputElementDescEnd; ++d3d11InputElementDesc, ++attributes)
 				{
 					// Fill the "D3D11_INPUT_ELEMENT_DESC"-content
@@ -157,7 +157,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void PipelineState::setDebugName(const char *name)
+	void PipelineState::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			// Valid Direct3D 11 input layout?

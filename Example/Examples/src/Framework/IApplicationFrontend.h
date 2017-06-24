@@ -76,7 +76,7 @@ public:
 	*  @return
 	*    The renderer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 	*/
-	virtual Renderer::IRenderer *getRenderer() const = 0;
+	virtual Renderer::IRenderer* getRenderer() const = 0;
 
 	/**
 	*  @brief
@@ -85,7 +85,7 @@ public:
 	*  @return
 	*    The main renderer target instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 	*/
-	virtual Renderer::IRenderTarget *getMainRenderTarget() const = 0;
+	virtual Renderer::IRenderTarget* getMainRenderTarget() const = 0;
 
 	/**
 	*  @brief
@@ -94,7 +94,7 @@ public:
 	*  @return
 	*    The renderer runtime instance, can be a null pointer
 	*/
-	inline virtual RendererRuntime::IRendererRuntime *getRendererRuntime() const;
+	inline virtual RendererRuntime::IRendererRuntime* getRendererRuntime() const;
 
 	/**
 	*  @brief
@@ -112,7 +112,7 @@ public:
 	*    the renderer toolkit shared library is not there, this method will return a null pointer. This is a developer-feature
 	*    and as such, it's not available in static builds which are meant for the end-user who e.g. just want to "play the game".
 	*/
-	inline virtual RendererToolkit::IRendererToolkit *getRendererToolkit();
+	inline virtual RendererToolkit::IRendererToolkit* getRendererToolkit();
 
 
 };

@@ -71,7 +71,7 @@ namespace NullRenderer
 		*  @param[in] rootSignature
 		*    Root signature to use
 		*/
-		RootSignature(NullRenderer &nullRenderer, const Renderer::RootSignature &rootSignature);
+		RootSignature(NullRenderer& nullRenderer, const Renderer::RootSignature& rootSignature);
 
 		/**
 		*  @brief

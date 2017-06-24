@@ -56,7 +56,7 @@
 #else
 	#define NULLRENDERER_API_EXPORT
 #endif
-NULLRENDERER_API_EXPORT Renderer::IRenderer *createNullRendererInstance(handle nativeWindowHandle, bool useExternalContext)
+NULLRENDERER_API_EXPORT Renderer::IRenderer* createNullRendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
 	std::ignore = useExternalContext;
 	return new NullRenderer::NullRenderer(nativeWindowHandle);
@@ -440,7 +440,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
 	//[-------------------------------------------------------]
-	void NullRenderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
+	void NullRenderer::iaSetVertexArray(Renderer::IVertexArray* vertexArray)
 	{
 		// Nothing here, the following is just for debugging
 		if (nullptr != vertexArray)
@@ -459,12 +459,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void NullRenderer::rsSetViewports(uint32_t, const Renderer::Viewport *)
+	void NullRenderer::rsSetViewports(uint32_t, const Renderer::Viewport*)
 	{
 		// Nothing here
 	}
 
-	void NullRenderer::rsSetScissorRectangles(uint32_t, const Renderer::ScissorRectangle *)
+	void NullRenderer::rsSetScissorRectangles(uint32_t, const Renderer::ScissorRectangle*)
 	{
 		// Nothing here
 	}
@@ -473,7 +473,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	void NullRenderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
+	void NullRenderer::omSetRenderTarget(Renderer::IRenderTarget* renderTarget)
 	{
 		// New render target?
 		if (mRenderTarget != renderTarget)
@@ -547,12 +547,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void NullRenderer::setDebugMarker(const char *)
+	void NullRenderer::setDebugMarker(const char*)
 	{
 		// Nothing here
 	}
 
-	void NullRenderer::beginDebugEvent(const char *)
+	void NullRenderer::beginDebugEvent(const char*)
 	{
 		// Nothing here
 	}
@@ -566,7 +566,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
-	const char *NullRenderer::getName() const
+	const char* NullRenderer::getName() const
 	{
 		return "Null";
 	}
@@ -584,7 +584,7 @@ namespace NullRenderer
 		return false;
 	}
 
-	Renderer::ISwapChain *NullRenderer::getMainSwapChain() const
+	Renderer::ISwapChain* NullRenderer::getMainSwapChain() const
 	{
 		return mMainSwapChain;
 	}
@@ -599,7 +599,7 @@ namespace NullRenderer
 		return 1;
 	}
 
-	const char *NullRenderer::getShaderLanguageName(uint32_t index) const
+	const char* NullRenderer::getShaderLanguageName(uint32_t index) const
 	{
 		// Only one shader language supported in here
 		if (0 == index)
@@ -613,7 +613,7 @@ namespace NullRenderer
 		}
 	}
 
-	Renderer::IShaderLanguage *NullRenderer::getShaderLanguage(const char *shaderLanguageName)
+	Renderer::IShaderLanguage* NullRenderer::getShaderLanguage(const char* shaderLanguageName)
 	{
 		// In case "shaderLanguage" is a null pointer, use the default shader language
 		if (nullptr != shaderLanguageName)
@@ -645,13 +645,13 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *NullRenderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::ISwapChain* NullRenderer::createSwapChain(handle nativeWindowHandle, bool)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *NullRenderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment)
+	Renderer::IFramebuffer* NullRenderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
 	{
 		// We don't keep a reference to the provided textures in here
 		// -> Ensure a correct reference counter behaviour
@@ -660,8 +660,8 @@ namespace NullRenderer
 		if (numberOfColorFramebufferAttachments > 0)
 		{
 			// Loop through all color textures
-			const Renderer::FramebufferAttachment *colorFramebufferAttachmentsEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
-			for (const Renderer::FramebufferAttachment *colorFramebufferAttachment = colorFramebufferAttachments; colorFramebufferAttachment < colorFramebufferAttachmentsEnd; ++colorFramebufferAttachment)
+			const Renderer::FramebufferAttachment* colorFramebufferAttachmentsEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
+			for (const Renderer::FramebufferAttachment* colorFramebufferAttachment = colorFramebufferAttachments; colorFramebufferAttachment < colorFramebufferAttachmentsEnd; ++colorFramebufferAttachment)
 			{
 				// Valid entry?
 				if (nullptr != colorFramebufferAttachment->texture)
@@ -684,27 +684,27 @@ namespace NullRenderer
 		return new Framebuffer(*this);
 	}
 
-	Renderer::IBufferManager *NullRenderer::createBufferManager()
+	Renderer::IBufferManager* NullRenderer::createBufferManager()
 	{
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITextureManager *NullRenderer::createTextureManager()
+	Renderer::ITextureManager* NullRenderer::createTextureManager()
 	{
 		return new TextureManager(*this);
 	}
 
-	Renderer::IRootSignature *NullRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	Renderer::IRootSignature* NullRenderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
 		return new RootSignature(*this, rootSignature);
 	}
 
-	Renderer::IPipelineState *NullRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)
+	Renderer::IPipelineState* NullRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::ISamplerState *NullRenderer::createSamplerState(const Renderer::SamplerState &)
+	Renderer::ISamplerState* NullRenderer::createSamplerState(const Renderer::SamplerState &)
 	{
 		return new SamplerState(*this);
 	}

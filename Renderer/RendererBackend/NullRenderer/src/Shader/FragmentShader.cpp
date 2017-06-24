@@ -35,7 +35,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShader::FragmentShader(NullRenderer &nullRenderer) :
+	FragmentShader::FragmentShader(NullRenderer& nullRenderer) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here
@@ -50,7 +50,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *FragmentShader::getShaderLanguageName() const
+	const char* FragmentShader::getShaderLanguageName() const
 	{
 		return ShaderLanguage::NAME;
 	}

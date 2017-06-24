@@ -41,7 +41,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
+	Framebuffer::Framebuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
 		IFramebuffer(direct3D12Renderer),
 		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
 		mColorTextures(nullptr),	// Set below
@@ -62,8 +62,8 @@ namespace Direct3D12Renderer
 
 			// Loop through all color textures
 			ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = mD3D12DescriptorHeapRenderTargetViews;
-			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++d3d12DescriptorHeapRenderTargetView)
+			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++d3d12DescriptorHeapRenderTargetView)
 			{
 				// Valid entry?
 				if (nullptr != colorFramebufferAttachments->texture)
@@ -81,7 +81,7 @@ namespace Direct3D12Renderer
 							assert(0 == colorFramebufferAttachments->layerIndex);
 
 							// Update the framebuffer width and height if required
-							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+							Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
 							if (mWidth > texture2D->getWidth())
 							{
 								mWidth = texture2D->getWidth();
@@ -112,7 +112,7 @@ namespace Direct3D12Renderer
 						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 						{
 							// Update the framebuffer width and height if required
-							Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+							Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
 							if (mWidth > texture2DArray->getWidth())
 							{
 								mWidth = texture2DArray->getWidth();
@@ -193,7 +193,7 @@ namespace Direct3D12Renderer
 					assert(0 == depthStencilFramebufferAttachment->layerIndex);
 
 					// Update the framebuffer width and height if required
-					Texture2D *texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
+					Texture2D* texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
 					if (mWidth > texture2D->getWidth())
 					{
 						mWidth = texture2D->getWidth();
@@ -224,7 +224,7 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
 					// Update the framebuffer width and height if required
-					Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(mDepthStencilTexture);
+					Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(mDepthStencilTexture);
 					if (mWidth > texture2DArray->getWidth())
 					{
 						mWidth = texture2DArray->getWidth();
@@ -321,8 +321,8 @@ namespace Direct3D12Renderer
 		if (nullptr != mColorTextures)
 		{
 			// Release references
-			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 			{
 				// Valid entry?
 				if (nullptr != *colorTexture)
@@ -357,7 +357,7 @@ namespace Direct3D12Renderer
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			{ // Assign a debug name to the Direct3D 12 render target view, do also add the index to the name
 				const size_t nameLength = strlen(name) + 5;	// Direct3D 12 supports 8 render targets ("D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT", so: One digit + one [ + one ] + one space + terminating zero = 5 characters)
-				char *nameWithIndex = new char[nameLength];
+				char* nameWithIndex = new char[nameLength];
 				ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetViewsEnd = mD3D12DescriptorHeapRenderTargetViews + mNumberOfColorTextures;
 				for (ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = mD3D12DescriptorHeapRenderTargetViews; d3d12DescriptorHeapRenderTargetView < d3d12DescriptorHeapRenderTargetViewsEnd; ++d3d12DescriptorHeapRenderTargetView)
 				{
@@ -385,7 +385,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void Framebuffer::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void Framebuffer::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// No fancy implementation in here, just copy over the internal information
 		width  = mWidth;

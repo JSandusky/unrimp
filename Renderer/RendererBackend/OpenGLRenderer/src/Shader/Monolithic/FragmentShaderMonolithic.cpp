@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderMonolithic::FragmentShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
+	FragmentShaderMonolithic::FragmentShaderMonolithic(OpenGLRenderer& openGLRenderer, const char* sourceCode) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(ShaderLanguageMonolithic::loadShaderFromSourcecode(GL_FRAGMENT_SHADER_ARB, sourceCode))
 	{
@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *FragmentShaderMonolithic::getShaderLanguageName() const
+	const char* FragmentShaderMonolithic::getShaderLanguageName() const
 	{
 		return ShaderLanguageMonolithic::NAME;
 	}

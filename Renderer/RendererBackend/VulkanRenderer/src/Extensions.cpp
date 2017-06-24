@@ -70,7 +70,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	bool Extensions::isSupported(const char *extension) const
+	bool Extensions::isSupported(const char* extension) const
 	{
 		// Check whether or not the given extension string pointer is valid
 		if (nullptr != extension)
@@ -87,7 +87,7 @@ namespace VulkanRenderer
 		return false;
 	}
 
-	bool Extensions::checkExtension(const char *extension) const
+	bool Extensions::checkExtension(const char* extension) const
 	{
 		// Check whether or not the given extension string pointer is valid
 		if (nullptr != extension)

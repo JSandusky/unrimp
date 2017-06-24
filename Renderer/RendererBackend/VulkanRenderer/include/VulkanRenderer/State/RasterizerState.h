@@ -70,7 +70,7 @@ namespace VulkanRenderer
 		*  @param[in] rasterizerState
 		*    Rasterizer state to use
 		*/
-		RasterizerState(const Renderer::RasterizerState &rasterizerState);
+		RasterizerState(const Renderer::RasterizerState& rasterizerState);
 
 		/**
 		*  @brief

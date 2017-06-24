@@ -67,8 +67,8 @@ namespace NullRenderer
 	{
 		// We don't keep a reference to the vertex buffers used by the vertex array attributes in here
 		// -> Ensure a correct reference counter behaviour
-		const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + numberOfVertexBuffers;
-		for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
+		const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + numberOfVertexBuffers;
+		for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
 		{
 			vertexBuffer->vertexBuffer->addReference();
 			vertexBuffer->vertexBuffer->releaseReference();

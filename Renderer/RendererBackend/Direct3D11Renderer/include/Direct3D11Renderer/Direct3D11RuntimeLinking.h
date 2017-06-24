@@ -119,9 +119,9 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void *mD3D11SharedLibrary;			///< D3D11 shared library, can be a null pointer
-		void *mD3DX11SharedLibrary;			///< D3DX11 shared library, can be a null pointer
-		void *mD3DCompilerSharedLibrary;	///< D3DCompiler shared library, can be a null pointer
+		void* mD3D11SharedLibrary;			///< D3D11 shared library, can be a null pointer
+		void* mD3DX11SharedLibrary;			///< D3DX11 shared library, can be a null pointer
+		void* mD3DCompilerSharedLibrary;	///< D3DCompiler shared library, can be a null pointer
 		bool  mEntryPointsRegistered;		///< Entry points successfully registered?
 		bool  mInitialized;					///< Already initialized?
 
@@ -137,7 +137,7 @@ namespace Direct3D11Renderer
 	#else
 		#define FNDEF_D3D11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
-	FNDEF_D3D11(HRESULT,	D3D11CreateDevice,	(__in_opt IDXGIAdapter *, D3D_DRIVER_TYPE, HMODULE, UINT, __in_ecount_opt( FeatureLevels ) CONST D3D_FEATURE_LEVEL *, UINT, UINT, __out_opt ID3D11Device **, __out_opt D3D_FEATURE_LEVEL *, __out_opt ID3D11DeviceContext **));
+	FNDEF_D3D11(HRESULT,	D3D11CreateDevice,	(__in_opt IDXGIAdapter*, D3D_DRIVER_TYPE, HMODULE, UINT, __in_ecount_opt( FeatureLevels ) CONST D3D_FEATURE_LEVEL*, UINT, UINT, __out_opt ID3D11Device**, __out_opt D3D_FEATURE_LEVEL*, __out_opt ID3D11DeviceContext**));
 
 
 	//[-------------------------------------------------------]
@@ -148,8 +148,8 @@ namespace Direct3D11Renderer
 	#else
 		#define FNDEF_D3DX11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
-	FNDEF_D3DX11(HRESULT,	D3DX11CompileFromMemory,	(LPCSTR, SIZE_T, LPCSTR, CONST D3D10_SHADER_MACRO *, LPD3D10INCLUDE, LPCSTR, LPCSTR, UINT, UINT, ID3DX11ThreadPump *, ID3D10Blob **, ID3D10Blob **, HRESULT *));
-	FNDEF_D3DX11(HRESULT,	D3DX11FilterTexture,		(ID3D11DeviceContext *, ID3D11Resource *, UINT, UINT));
+	FNDEF_D3DX11(HRESULT,	D3DX11CompileFromMemory,	(LPCSTR, SIZE_T, LPCSTR, CONST D3D10_SHADER_MACRO*, LPD3D10INCLUDE, LPCSTR, LPCSTR, UINT, UINT, ID3DX11ThreadPump*, ID3D10Blob**, ID3D10Blob**, HRESULT*));
+	FNDEF_D3DX11(HRESULT,	D3DX11FilterTexture,		(ID3D11DeviceContext*, ID3D11Resource*, UINT, UINT));
 
 
 	//[-------------------------------------------------------]

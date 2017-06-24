@@ -83,7 +83,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArray(OpenGLES3Renderer &openGLES3Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArray(OpenGLES3Renderer& openGLES3Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer);
 
 		/**
 		*  @brief
@@ -98,7 +98,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    The used index buffer, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IndexBuffer *getIndexBuffer() const;
+		inline IndexBuffer* getIndexBuffer() const;
 
 		/**
 		*  @brief
@@ -124,8 +124,8 @@ namespace OpenGLES3Renderer
 	private:
 		uint32_t	   mOpenGLES3VertexArray;	///< OpenGL ES 3 vertex array, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t	   mNumberOfVertexBuffers;	///< Number of vertex buffers
-		VertexBuffer **mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
-		IndexBuffer   *mIndexBuffer;			///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
+		VertexBuffer** mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
+		IndexBuffer*   mIndexBuffer;			///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 
 
 	};

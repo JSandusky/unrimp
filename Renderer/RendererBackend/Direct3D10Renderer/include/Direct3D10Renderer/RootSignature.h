@@ -71,7 +71,7 @@ namespace Direct3D10Renderer
 		*  @param[in] rootSignature
 		*    Root signature to use
 		*/
-		RootSignature(Direct3D10Renderer &direct3D10Renderer, const Renderer::RootSignature &rootSignature);
+		RootSignature(Direct3D10Renderer& direct3D10Renderer, const Renderer::RootSignature& rootSignature);
 
 		/**
 		*  @brief

@@ -36,13 +36,13 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer &vulkanRenderer, const Renderer::ShaderBytecode&) :
+	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode&) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me
 	}
 
-	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer &vulkanRenderer, const char*, Renderer::ShaderBytecode*) :
+	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer& vulkanRenderer, const char*, Renderer::ShaderBytecode*) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me
@@ -57,7 +57,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *VertexShaderGlsl::getShaderLanguageName() const
+	const char* VertexShaderGlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageGlsl::NAME;
 	}

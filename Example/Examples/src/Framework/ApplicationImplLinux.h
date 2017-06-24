@@ -63,7 +63,7 @@ public:
 	*  @param[in] windowTitle
 	*    ASCII window title, can be a null pointer
 	*/
-	ApplicationImplLinux(IApplication &application, const char *windowTitle);
+	ApplicationImplLinux(IApplication& application, const char* windowTitle);
 
 	/**
 	*  @brief
@@ -79,7 +79,7 @@ public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
 	virtual bool processMessages() override;
-	virtual void getWindowSize(int &width, int &height) const override;
+	virtual void getWindowSize(int& width, int& height) const override;
 	virtual handle getNativeWindowHandle() const override;
 	virtual void redraw() override;
 
@@ -96,10 +96,10 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	IApplication   *mApplication;		///< The owner application instance, always valid
+	IApplication*   mApplication;		///< The owner application instance, always valid
 	char			mWindowTitle[64];	///< ASCII window title
-	X11Application *mX11EventLoop;		///< X11 event loop application, can be a null pointer, destroy the instance in case you no longer need it
-	X11Window	   *mMainWindow;		///< X11 window, can be a null pointer, destroy the instance in case you no longer need it
+	X11Application* mX11EventLoop;		///< X11 event loop application, can be a null pointer, destroy the instance in case you no longer need it
+	X11Window*	    mMainWindow;		///< X11 window, can be a null pointer, destroy the instance in case you no longer need it
 
 
 };

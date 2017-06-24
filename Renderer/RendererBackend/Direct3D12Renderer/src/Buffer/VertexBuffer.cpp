@@ -108,7 +108,7 @@ namespace Direct3D12Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	#if !defined(DIRECT3D12RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
-		void VertexBuffer::setDebugName(const char *name)
+		void VertexBuffer::setDebugName(const char* name)
 		{
 			// Valid Direct3D 12 vertex buffer?
 			if (nullptr != mD3D12Resource)

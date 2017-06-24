@@ -38,12 +38,12 @@ namespace Direct3D11Renderer
 		return mGenerateMipmaps;
 	}
 
-	inline ID3D11Texture3D *Texture3D::getD3D11Texture3D() const
+	inline ID3D11Texture3D* Texture3D::getD3D11Texture3D() const
 	{
 		return mD3D11Texture3D;
 	}
 
-	inline ID3D11ShaderResourceView *Texture3D::getD3D11ShaderResourceView() const
+	inline ID3D11ShaderResourceView* Texture3D::getD3D11ShaderResourceView() const
 	{
 		return mD3D11ShaderResourceViewTexture;
 	}

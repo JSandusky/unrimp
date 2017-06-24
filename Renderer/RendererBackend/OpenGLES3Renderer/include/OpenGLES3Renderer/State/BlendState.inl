@@ -33,7 +33,7 @@ namespace OpenGLES3Renderer
 		// Nothing here
 	}
 
-	inline const Renderer::BlendState &BlendState::getBlendState() const
+	inline const Renderer::BlendState& BlendState::getBlendState() const
 	{
 		return mBlendState;
 	}

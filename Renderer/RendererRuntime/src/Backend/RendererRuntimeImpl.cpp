@@ -56,7 +56,7 @@
 //[ Global functions                                      ]
 //[-------------------------------------------------------]
 // Export the instance creation function
-RENDERERRUNTIME_FUNCTION_EXPORT RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager)
+RENDERERRUNTIME_FUNCTION_EXPORT RendererRuntime::IRendererRuntime* createRendererRuntimeInstance(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager)
 {
 	return new RendererRuntime::RendererRuntimeImpl(renderer, fileManager);
 }

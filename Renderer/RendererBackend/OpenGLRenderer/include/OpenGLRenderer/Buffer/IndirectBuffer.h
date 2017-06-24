@@ -95,7 +95,7 @@ namespace OpenGLRenderer
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
 		*/
-		explicit IndirectBuffer(OpenGLRenderer &openGLRenderer);
+		explicit IndirectBuffer(OpenGLRenderer& openGLRenderer);
 
 
 	//[-------------------------------------------------------]

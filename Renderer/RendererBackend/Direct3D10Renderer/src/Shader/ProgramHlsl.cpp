@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramHlsl::ProgramHlsl(Direct3D10Renderer &direct3D10Renderer, VertexShaderHlsl *vertexShaderHlsl, GeometryShaderHlsl *geometryShaderHlsl, FragmentShaderHlsl *fragmentShaderHlsl) :
+	ProgramHlsl::ProgramHlsl(Direct3D10Renderer& direct3D10Renderer, VertexShaderHlsl* vertexShaderHlsl, GeometryShaderHlsl* geometryShaderHlsl, FragmentShaderHlsl* fragmentShaderHlsl) :
 		IProgram(direct3D10Renderer),
 		mDirect3D10Renderer(&direct3D10Renderer),
 		mVertexShaderHlsl(vertexShaderHlsl),
@@ -81,7 +81,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void ProgramHlsl::setDebugName(const char *)
+	void ProgramHlsl::setDebugName(const char*)
 	{
 		// In here we could assign the given debug name to all shaders assigned to the program,
 		// but this might end up within a naming chaos due to overwriting possible already set
@@ -92,7 +92,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	handle ProgramHlsl::getUniformHandle(const char *)
+	handle ProgramHlsl::getUniformHandle(const char*)
 	{
 		// Not supported by Direct3D 10
 		return NULL_HANDLE;
@@ -103,17 +103,17 @@ namespace Direct3D10Renderer
 		// Not supported by Direct3D 10
 	}
 
-	void ProgramHlsl::setUniform2fv(handle, const float *)
+	void ProgramHlsl::setUniform2fv(handle, const float*)
 	{
 		// Not supported by Direct3D 10
 	}
 
-	void ProgramHlsl::setUniform3fv(handle, const float *)
+	void ProgramHlsl::setUniform3fv(handle, const float*)
 	{
 		// Not supported by Direct3D 10
 	}
 
-	void ProgramHlsl::setUniform4fv(handle, const float *)
+	void ProgramHlsl::setUniform4fv(handle, const float*)
 	{
 		// Not supported by Direct3D 10
 	}

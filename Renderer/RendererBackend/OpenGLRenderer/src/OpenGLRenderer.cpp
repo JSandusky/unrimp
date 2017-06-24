@@ -79,7 +79,7 @@
 #else
 	#define OPENGLRENDERER_API_EXPORT
 #endif
-OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance(handle nativeWindowHandle, bool useExternalContext)
+OPENGLRENDERER_API_EXPORT Renderer::IRenderer* createOpenGLRendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
 	return new OpenGLRenderer::OpenGLRenderer(nativeWindowHandle, useExternalContext);
 }
@@ -999,7 +999,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
+	void OpenGLRenderer::iaSetVertexArray(Renderer::IVertexArray* vertexArray)
 	{
 		// New vertex array?
 		if (mVertexArray != vertexArray)
@@ -1075,7 +1075,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
+	void OpenGLRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
@@ -1105,7 +1105,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void OpenGLRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
@@ -1140,7 +1140,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
+	void OpenGLRenderer::omSetRenderTarget(Renderer::IRenderTarget* renderTarget)
 	{
 		// New render target?
 		if (mRenderTarget != renderTarget)
@@ -1196,7 +1196,7 @@ namespace OpenGLRenderer
 					case Renderer::ResourceType::FRAMEBUFFER:
 					{
 						// Get the OpenGL framebuffer instance
-						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+						Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 						// Bind the OpenGL framebuffer
 						glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->getOpenGLFramebuffer());
@@ -1602,7 +1602,7 @@ namespace OpenGLRenderer
 			if (nullptr != mVertexArray)
 			{
 				// Get the used index buffer
-				IndexBuffer *indexBuffer = mVertexArray->getIndexBuffer();
+				IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
 				if (nullptr != indexBuffer)
 				{
 					if (mExtensions->isGL_ARB_draw_indirect())
@@ -1642,7 +1642,7 @@ namespace OpenGLRenderer
 		if (numberOfDraws > 0 && nullptr != mVertexArray)
 		{
 			// Get the used index buffer
-			IndexBuffer *indexBuffer = mVertexArray->getIndexBuffer();
+			IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
 			if (nullptr != indexBuffer)
 			{
 				// TODO(co) Currently no buffer overflow check due to lack of interface provided data
@@ -1726,7 +1726,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::setDebugMarker(const char *)
+	void OpenGLRenderer::setDebugMarker(const char*)
 	{
 		// TODO(co) Implement me. See
 		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
@@ -1734,7 +1734,7 @@ namespace OpenGLRenderer
 		// - https://www.opengl.org/registry/specs/KHR/debug.txt
 	}
 
-	void OpenGLRenderer::beginDebugEvent(const char *)
+	void OpenGLRenderer::beginDebugEvent(const char*)
 	{
 		// TODO(co) Implement me. See
 		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
@@ -1754,7 +1754,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
-	const char *OpenGLRenderer::getName() const
+	const char* OpenGLRenderer::getName() const
 	{
 		return "OpenGL";
 	}
@@ -1773,7 +1773,7 @@ namespace OpenGLRenderer
 		return false;
 	}
 
-	Renderer::ISwapChain *OpenGLRenderer::getMainSwapChain() const
+	Renderer::ISwapChain* OpenGLRenderer::getMainSwapChain() const
 	{
 		return mMainSwapChain;
 	}
@@ -1797,7 +1797,7 @@ namespace OpenGLRenderer
 		return numberOfShaderLanguages;
 	}
 
-	const char *OpenGLRenderer::getShaderLanguageName(uint32_t index) const
+	const char* OpenGLRenderer::getShaderLanguageName(uint32_t index) const
 	{
 		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
 		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
@@ -1813,7 +1813,7 @@ namespace OpenGLRenderer
 		return nullptr;
 	}
 
-	Renderer::IShaderLanguage *OpenGLRenderer::getShaderLanguage(const char *shaderLanguageName)
+	Renderer::IShaderLanguage* OpenGLRenderer::getShaderLanguage(const char* shaderLanguageName)
 	{
 		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
 		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
@@ -1867,13 +1867,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *OpenGLRenderer::createSwapChain(handle nativeWindowHandle, bool useExternalContext)
+	Renderer::ISwapChain* OpenGLRenderer::createSwapChain(handle nativeWindowHandle, bool useExternalContext)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle, useExternalContext) : nullptr;
 	}
 
-	Renderer::IFramebuffer *OpenGLRenderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment)
+	Renderer::IFramebuffer* OpenGLRenderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
 	{
 		// "GL_ARB_framebuffer_object" required
 		if (mExtensions->isGL_ARB_framebuffer_object())
@@ -1899,27 +1899,27 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IBufferManager *OpenGLRenderer::createBufferManager()
+	Renderer::IBufferManager* OpenGLRenderer::createBufferManager()
 	{
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITextureManager *OpenGLRenderer::createTextureManager()
+	Renderer::ITextureManager* OpenGLRenderer::createTextureManager()
 	{
 		return new TextureManager(*this);
 	}
 
-	Renderer::IRootSignature *OpenGLRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	Renderer::IRootSignature* OpenGLRenderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
 		return new RootSignature(*this, rootSignature);
 	}
 
-	Renderer::IPipelineState *OpenGLRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
+	Renderer::IPipelineState* OpenGLRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::ISamplerState *OpenGLRenderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	Renderer::ISamplerState* OpenGLRenderer::createSamplerState(const Renderer::SamplerState& samplerState)
 	{
 		// Is "GL_ARB_sampler_objects" there?
 		if (mExtensions->isGL_ARB_sampler_objects())
@@ -1983,7 +1983,7 @@ namespace OpenGLRenderer
 				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
 				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
+				ID3D11Resource* d3d11Resource = nullptr;
 				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
 				if (nullptr != d3d11Resource)
 				{
@@ -2012,7 +2012,7 @@ namespace OpenGLRenderer
 				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
 				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
+				ID3D11Resource* d3d11Resource = nullptr;
 				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
 				if (nullptr != d3d11Resource)
 				{
@@ -2099,7 +2099,7 @@ namespace OpenGLRenderer
 				// TODO(co) Implement me
 				/*
 				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
+				ID3D11Resource* d3d11Resource = nullptr;
 				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
 				if (nullptr != d3d11Resource)
 				{
@@ -2118,7 +2118,7 @@ namespace OpenGLRenderer
 				// TODO(co) Implement me
 				/*
 				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
+				ID3D11Resource* d3d11Resource = nullptr;
 				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
 				if (nullptr != d3d11Resource)
 				{
@@ -2221,7 +2221,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char *message, const void *)
+	void OpenGLRenderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void*)
 	{
 		// Source to string
 		char debugSource[20 + 1]{0};	// +1 for terminating zero
@@ -2490,7 +2490,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::setProgram(Renderer::IProgram *program)
+	void OpenGLRenderer::setProgram(Renderer::IProgram* program)
 	{
 		if (nullptr != program)
 		{

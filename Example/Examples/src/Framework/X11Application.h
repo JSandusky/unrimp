@@ -63,7 +63,7 @@ class X11Application
 //[ Public static methods                                 ]
 //[-------------------------------------------------------]
 public:
-	static X11Application *instance() {return _self;}
+	static X11Application* instance() {return _self;}
 
 
 //[-------------------------------------------------------]
@@ -74,25 +74,25 @@ public:
 	~X11Application();
 	int run();
 	bool handlePendingEvents();
-	Display *getDisplay() { return mDisplay; }
+	Display* getDisplay() { return mDisplay; }
 
 
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
 private:
-	bool HandleEvent(XEvent &event);
-	void AddWindowToEventLoop(X11Window &window);
-	void RemoveWindowFromEventLoop(const X11Window &window);
-	X11Application(const X11Application &other);
-	X11Application& operator=(const X11Application &other);
+	bool HandleEvent(XEvent& event);
+	void AddWindowToEventLoop(X11Window& window);
+	void RemoveWindowFromEventLoop(const X11Window& window);
+	X11Application(const X11Application& other);
+	X11Application& operator=(const X11Application& other);
 
 
 //[-------------------------------------------------------]
 //[ Public static data                                    ]
 //[-------------------------------------------------------]
 private:
-	static X11Application *_self;
+	static X11Application* _self;
 
 
 //[-------------------------------------------------------]
@@ -102,7 +102,7 @@ private:
 	struct WindowEntry
 	{
 		WindowHandle window;
-		X11Window *x11Window;
+		X11Window* x11Window;
 	};
 
 
@@ -110,7 +110,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Display *mDisplay;
+	Display* mDisplay;
 	std::map<WindowHandle, WindowEntry> mWindows;
 
 

@@ -28,7 +28,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D11RasterizerState *RasterizerState::getD3D11RasterizerState() const
+	inline ID3D11RasterizerState* RasterizerState::getD3D11RasterizerState() const
 	{
 		return mD3D11RasterizerState;
 	}

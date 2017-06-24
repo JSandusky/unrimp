@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture1D::Texture1D(Direct3D10Renderer &direct3D10Renderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
+	Texture1D::Texture1D(Direct3D10Renderer& direct3D10Renderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture1D(direct3D10Renderer, width),
 		mTextureFormat(textureFormat),
 		mGenerateMipmaps(false),
@@ -187,7 +187,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Texture1D::setDebugName(const char *name)
+	void Texture1D::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			// Valid Direct3D 10 shader resource view?

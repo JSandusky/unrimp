@@ -80,7 +80,7 @@ namespace Direct3D12Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		IndexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		IndexBuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -111,7 +111,7 @@ namespace Direct3D12Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]

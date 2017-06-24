@@ -37,7 +37,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
+	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D12Renderer& direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IGeometryShader(direct3D12Renderer),
 		mD3DBlobGeometryShader(nullptr)
 	{
@@ -46,7 +46,7 @@ namespace Direct3D12Renderer
 		memcpy(mD3DBlobGeometryShader->GetBufferPointer(), shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes());
 	}
 
-	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D12Renderer& direct3D12Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IGeometryShader(direct3D12Renderer),
 		mD3DBlobGeometryShader(nullptr)
 	{
@@ -75,7 +75,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *GeometryShaderHlsl::getShaderLanguageName() const
+	const char* GeometryShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
 	}

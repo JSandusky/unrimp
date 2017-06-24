@@ -49,7 +49,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererName, ExampleBase* exampleBase) :
+IApplicationRendererRuntime::IApplicationRendererRuntime(const char* rendererName, ExampleBase* exampleBase) :
 	IApplicationRenderer(rendererName, exampleBase),
 	mFileManager(nullptr),
 	mRendererRuntimeInstance(nullptr)
@@ -72,12 +72,12 @@ IApplicationRendererRuntime::~IApplicationRendererRuntime()
 //[-------------------------------------------------------]
 //[ Public virtual IApplicationFrontend methods           ]
 //[-------------------------------------------------------]
-RendererRuntime::IRendererRuntime *IApplicationRendererRuntime::getRendererRuntime() const
+RendererRuntime::IRendererRuntime* IApplicationRendererRuntime::getRendererRuntime() const
 {
 	return (nullptr != mRendererRuntimeInstance) ? mRendererRuntimeInstance->getRendererRuntime() : nullptr;
 }
 
-RendererToolkit::IRendererToolkit *IApplicationRendererRuntime::getRendererToolkit()
+RendererToolkit::IRendererToolkit* IApplicationRendererRuntime::getRendererToolkit()
 {
 	#ifdef SHARED_LIBRARIES
 		// Create the renderer toolkit instance, if required
@@ -104,7 +104,7 @@ void IApplicationRendererRuntime::onInitialization()
 	createRenderer();
 
 	// Is there a valid renderer instance?
-	Renderer::IRenderer *renderer = getRenderer();
+	Renderer::IRenderer* renderer = getRenderer();
 	if (nullptr != renderer)
 	{
 		// Create the renderer runtime instance
@@ -210,7 +210,7 @@ void IApplicationRendererRuntime::onUpdate()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererName) :
+IApplicationRendererRuntime::IApplicationRendererRuntime(const char* rendererName) :
 	IApplicationRendererRuntime(rendererName, nullptr)
 {
 	// Nothing here

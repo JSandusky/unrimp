@@ -69,7 +69,7 @@ public:
 	*  @param[in] argv
 	*    List of arguments
 	*/
-	CmdLineArgs(int argc, char **argv);
+	CmdLineArgs(int argc, char** argv);
 
 	/**
 	*  @brief

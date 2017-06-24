@@ -68,7 +68,7 @@ namespace NullRenderer
 		*  @param[in] nullRenderer
 		*    Owner null renderer instance
 		*/
-		explicit TextureBuffer(NullRenderer &nullRenderer);
+		explicit TextureBuffer(NullRenderer& nullRenderer);
 
 		/**
 		*  @brief
@@ -81,7 +81,7 @@ namespace NullRenderer
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 
 	//[-------------------------------------------------------]

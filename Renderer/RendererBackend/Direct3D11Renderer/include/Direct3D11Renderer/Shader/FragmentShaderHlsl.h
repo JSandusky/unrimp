@@ -75,7 +75,7 @@ namespace Direct3D11Renderer
 		*  @param[in] shaderBytecode
 		*    Shader bytecode
 		*/
-		FragmentShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const Renderer::ShaderBytecode& shaderBytecode);
+		FragmentShaderHlsl(Direct3D11Renderer& direct3D11Renderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -86,7 +86,7 @@ namespace Direct3D11Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		FragmentShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
+		FragmentShaderHlsl(Direct3D11Renderer& direct3D11Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief
@@ -101,21 +101,21 @@ namespace Direct3D11Renderer
 		*  @return
 		*    Direct3D 11 pixel shader, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11PixelShader *getD3D11PixelShader() const;
+		inline ID3D11PixelShader* getD3D11PixelShader() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]
@@ -130,7 +130,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11PixelShader *mD3D11PixelShader;	///< Direct3D 11 pixel shader, can be a null pointer
+		ID3D11PixelShader* mD3D11PixelShader;	///< Direct3D 11 pixel shader, can be a null pointer
 
 
 	};

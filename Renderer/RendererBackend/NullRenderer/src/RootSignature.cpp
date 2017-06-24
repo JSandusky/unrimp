@@ -37,7 +37,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RootSignature::RootSignature(NullRenderer &nullRenderer, const Renderer::RootSignature &rootSignature) :
+	RootSignature::RootSignature(NullRenderer& nullRenderer, const Renderer::RootSignature& rootSignature) :
 		IRootSignature(nullRenderer),
 		mRootSignature(rootSignature)
 	{

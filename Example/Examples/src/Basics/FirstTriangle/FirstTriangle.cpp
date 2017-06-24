@@ -122,19 +122,19 @@ void FirstTriangle::onInitialization()
 			Renderer::IProgramPtr program;
 			{
 				// Get the shader source code (outsourced to keep an overview)
-				const char *vertexShaderSourceCode = nullptr;
-				const char *fragmentShaderSourceCode = nullptr;
+				const char* vertexShaderSourceCode = nullptr;
+				const char* fragmentShaderSourceCode = nullptr;
 				#include "FirstTriangle_GLSL_410.h"
 				#include "FirstTriangle_GLSL_ES3.h"
 				#include "FirstTriangle_HLSL_D3D9_D3D10_D3D11_D3D12.h"
 				#include "FirstTriangle_Null.h"
 
 				// Create the vertex shader
-				Renderer::IVertexShader *vertexShader = shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode);
+				Renderer::IVertexShader* vertexShader = shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(vertexShader, "Triangle VS")
 
 				// Create the fragment shader
-				Renderer::IFragmentShader *fragmentShader = shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode);
+				Renderer::IFragmentShader* fragmentShader = shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(fragmentShader, "Triangle FS")
 
 				// Create the program

@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayNoVao::VertexArrayNoVao(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArrayNoVao::VertexArrayNoVao(OpenGLRenderer& openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
 		VertexArray(openGLRenderer, indexBuffer, InternalResourceType::NO_VAO),
 		mNumberOfAttributes(vertexAttributes.numberOfAttributes),
 		mAttributes(mNumberOfAttributes ? new Renderer::VertexAttribute[mNumberOfAttributes] : nullptr),
@@ -63,8 +63,8 @@ namespace OpenGLRenderer
 		}
 
 		// Add a reference to the used vertex buffers
-		const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = mVertexBuffers + mNumberOfVertexBuffers;
-		for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = mVertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
+		const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = mVertexBuffers + mNumberOfVertexBuffers;
+		for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = mVertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
 		{
 			vertexBuffer->vertexBuffer->addReference();
 		}
@@ -79,8 +79,8 @@ namespace OpenGLRenderer
 		if (nullptr != mVertexBuffers)
 		{
 			// Release the reference to the used vertex buffers
-			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = mVertexBuffers + mNumberOfVertexBuffers;
-			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = mVertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
+			const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = mVertexBuffers + mNumberOfVertexBuffers;
+			for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = mVertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
 			{
 				vertexBuffer->vertexBuffer->releaseReference();
 			}
@@ -102,8 +102,8 @@ namespace OpenGLRenderer
 		// Loop through all attributes
 		// -> We're using "glBindAttribLocationARB()" when linking the program so we have known attribute locations (the vertex array can't know about the program)
 		GLuint attributeLocation = 0;
-		const Renderer::VertexAttribute *attributeEnd = mAttributes + mNumberOfAttributes;
-		for (const Renderer::VertexAttribute *attribute = mAttributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
+		const Renderer::VertexAttribute* attributeEnd = mAttributes + mNumberOfAttributes;
+		for (const Renderer::VertexAttribute* attribute = mAttributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
 		{
 			// Set the OpenGL vertex attribute pointer
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
@@ -144,7 +144,7 @@ namespace OpenGLRenderer
 
 		// Get the used index buffer
 		// -> In case of no index buffer we don't bind buffer 0, there's not really a point in it
-		const IndexBuffer *indexBuffer = getIndexBuffer();
+		const IndexBuffer* indexBuffer = getIndexBuffer();
 		if (nullptr != indexBuffer)
 		{
 			// Bind OpenGL element array buffer
@@ -159,8 +159,8 @@ namespace OpenGLRenderer
 		// Loop through all attributes
 		// -> We're using "glBindAttribLocationARB()" when linking the program so we have known attribute locations (the vertex array can't know about the program)
 		GLuint attributeLocation = 0;
-		const Renderer::VertexAttribute *attributeEnd = mAttributes + mNumberOfAttributes;
-		for (const Renderer::VertexAttribute *attribute = mAttributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
+		const Renderer::VertexAttribute* attributeEnd = mAttributes + mNumberOfAttributes;
+		for (const Renderer::VertexAttribute* attribute = mAttributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
 		{
 			// Disable OpenGL vertex attribute array
 			glDisableVertexAttribArrayARB(attributeLocation);

@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
+	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer& direct3D10Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IGeometryShader(direct3D10Renderer),
 		mD3D10GeometryShader(nullptr)
 	{
@@ -48,12 +48,12 @@ namespace Direct3D10Renderer
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 10 automatically sets a decent default name
 	}
 
-	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer& direct3D10Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IGeometryShader(direct3D10Renderer),
 		mD3D10GeometryShader(nullptr)
 	{
 		// Create the Direct3D 10 binary large object for the geometry shader
-		ID3DBlob *d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D10Renderer.getShaderLanguage())->loadShaderFromSourcecode("gs_4_0", sourceCode, nullptr);
+		ID3DBlob* d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D10Renderer.getShaderLanguage())->loadShaderFromSourcecode("gs_4_0", sourceCode, nullptr);
 		if (nullptr != d3dBlob)
 		{
 			// Create the Direct3D 10 geometry shader
@@ -85,7 +85,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void GeometryShaderHlsl::setDebugName(const char *name)
+	void GeometryShaderHlsl::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			// Valid Direct3D 10 geometry shader?
@@ -103,7 +103,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *GeometryShaderHlsl::getShaderLanguageName() const
+	const char* GeometryShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
 	}

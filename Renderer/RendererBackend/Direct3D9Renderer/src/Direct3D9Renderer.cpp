@@ -60,7 +60,7 @@
 #else
 	#define DIRECT3D9RENDERER_API_EXPORT
 #endif
-DIRECT3D9RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D9RendererInstance(handle nativeWindowHandle, bool useExternalContext)
+DIRECT3D9RENDERER_API_EXPORT Renderer::IRenderer* createDirect3D9RendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
 	std::ignore = useExternalContext;
 	return new Direct3D9Renderer::Direct3D9Renderer(nativeWindowHandle);
@@ -736,7 +736,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
+	void Direct3D9Renderer::iaSetVertexArray(Renderer::IVertexArray* vertexArray)
 	{
 		if (nullptr != vertexArray)
 		{
@@ -768,7 +768,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
+	void Direct3D9Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
@@ -794,7 +794,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void Direct3D9Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
@@ -816,7 +816,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
+	void Direct3D9Renderer::omSetRenderTarget(Renderer::IRenderTarget* renderTarget)
 	{
 		// New render target?
 		if (mRenderTarget != renderTarget)
@@ -858,7 +858,7 @@ namespace Direct3D9Renderer
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
 						// Get the Direct3D 9 swap chain instance
-						SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
+						SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
 
 						// Set the Direct3D 9 default color surfaces
 						mDirect3DDevice9->SetRenderTarget(0, swapChain->getDirect3DSurface9RenderTarget());
@@ -875,12 +875,12 @@ namespace Direct3D9Renderer
 					case Renderer::ResourceType::FRAMEBUFFER:
 					{
 						// Get the Direct3D 9 framebuffer instance
-						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+						Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 						// Set the Direct3D 9 color surfaces
 						DWORD direct3D9RenderTargetIndex = 0;
-						IDirect3DSurface9 **direct3D9ColorSurfacesEnd = framebuffer->getDirect3DSurface9Colors() + framebuffer->getNumberOfDirect3DSurface9Colors();
-						for (IDirect3DSurface9 **direct3D9ColorSurface = framebuffer->getDirect3DSurface9Colors(); direct3D9ColorSurface < direct3D9ColorSurfacesEnd; ++direct3D9ColorSurface, ++direct3D9RenderTargetIndex)
+						IDirect3DSurface9** direct3D9ColorSurfacesEnd = framebuffer->getDirect3DSurface9Colors() + framebuffer->getNumberOfDirect3DSurface9Colors();
+						for (IDirect3DSurface9** direct3D9ColorSurface = framebuffer->getDirect3DSurface9Colors(); direct3D9ColorSurface < direct3D9ColorSurfacesEnd; ++direct3D9ColorSurface, ++direct3D9RenderTargetIndex)
 						{
 							mDirect3DDevice9->SetRenderTarget(direct3D9RenderTargetIndex, *direct3D9ColorSurface);
 						}
@@ -984,7 +984,7 @@ namespace Direct3D9Renderer
 		mDirect3DDevice9->GetRenderState(D3DRS_SCISSORTESTENABLE, &direct3D9ScissorTestBackup);
 
 		// Get the current primary render target
-		IDirect3DSurface9 *direct3DSurface9 = nullptr;
+		IDirect3DSurface9* direct3DSurface9 = nullptr;
 		if (D3D_OK == mDirect3DDevice9->GetRenderTarget(0, &direct3DSurface9))
 		{
 			// Get the surface description of the primary render target
@@ -1245,7 +1245,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::setDebugMarker(const char *name)
+	void Direct3D9Renderer::setDebugMarker(const char* name)
 	{
 		#ifndef DIRECT3D9RENDERER_NO_DEBUG
 			if (nullptr != D3DPERF_SetMarker)
@@ -1258,7 +1258,7 @@ namespace Direct3D9Renderer
 		#endif
 	}
 
-	void Direct3D9Renderer::beginDebugEvent(const char *name)
+	void Direct3D9Renderer::beginDebugEvent(const char* name)
 	{
 		#ifndef DIRECT3D9RENDERER_NO_DEBUG
 			if (nullptr != D3DPERF_BeginEvent)
@@ -1295,7 +1295,7 @@ namespace Direct3D9Renderer
 		return (nullptr != D3DPERF_GetStatus && D3DPERF_GetStatus() != 0);
 	}
 
-	Renderer::ISwapChain *Direct3D9Renderer::getMainSwapChain() const
+	Renderer::ISwapChain* Direct3D9Renderer::getMainSwapChain() const
 	{
 		return mMainSwapChain;
 	}
@@ -1312,7 +1312,7 @@ namespace Direct3D9Renderer
 		return numberOfShaderLanguages;
 	}
 
-	const char *Direct3D9Renderer::getShaderLanguageName(uint32_t index) const
+	const char* Direct3D9Renderer::getShaderLanguageName(uint32_t index) const
 	{
 		// HLSL supported
 		if (0 == index)
@@ -1324,7 +1324,7 @@ namespace Direct3D9Renderer
 		return nullptr;
 	}
 
-	Renderer::IShaderLanguage *Direct3D9Renderer::getShaderLanguage(const char *shaderLanguageName)
+	Renderer::IShaderLanguage* Direct3D9Renderer::getShaderLanguage(const char* shaderLanguageName)
 	{
 		// In case "shaderLanguage" is a null pointer, use the default shader language
 		if (nullptr != shaderLanguageName)
@@ -1355,39 +1355,39 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D9Renderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::ISwapChain* Direct3D9Renderer::createSwapChain(handle nativeWindowHandle, bool)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *Direct3D9Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment)
+	Renderer::IFramebuffer* Direct3D9Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
 	{
 		// Validation is done inside the framebuffer implementation
 		return new Framebuffer(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
-	Renderer::IBufferManager *Direct3D9Renderer::createBufferManager()
+	Renderer::IBufferManager* Direct3D9Renderer::createBufferManager()
 	{
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITextureManager *Direct3D9Renderer::createTextureManager()
+	Renderer::ITextureManager* Direct3D9Renderer::createTextureManager()
 	{
 		return new TextureManager(*this);
 	}
 
-	Renderer::IRootSignature *Direct3D9Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	Renderer::IRootSignature* Direct3D9Renderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
 		return new RootSignature(*this, rootSignature);
 	}
 
-	Renderer::IPipelineState *Direct3D9Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
+	Renderer::IPipelineState* Direct3D9Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::ISamplerState *Direct3D9Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	Renderer::ISamplerState* Direct3D9Renderer::createSamplerState(const Renderer::SamplerState& samplerState)
 	{
 		return new SamplerState(*this, samplerState);
 	}
@@ -1396,7 +1396,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool Direct3D9Renderer::map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t, Renderer::MappedSubresource &mappedSubresource)
+	bool Direct3D9Renderer::map(Renderer::IResource& resource, uint32_t subresource, Renderer::MapType mapType, uint32_t, Renderer::MappedSubresource& mappedSubresource)
 	{
 		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 constants, do not change them
 		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
@@ -1566,7 +1566,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
+	void Direct3D9Renderer::unmap(Renderer::IResource& resource, uint32_t subresource)
 	{
 		// Evaluate the resource type
 		switch (resource.getResourceType())
@@ -1788,7 +1788,7 @@ namespace Direct3D9Renderer
 		#endif
 	}
 
-	void Direct3D9Renderer::setProgram(Renderer::IProgram *program)
+	void Direct3D9Renderer::setProgram(Renderer::IProgram* program)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -1799,11 +1799,11 @@ namespace Direct3D9Renderer
 			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
 			// Get shaders
-			const ProgramHlsl		 *programHlsl		 = static_cast<ProgramHlsl*>(program);
-			const VertexShaderHlsl	 *vertexShaderHlsl	 = programHlsl->getVertexShaderHlsl();
-			const FragmentShaderHlsl *fragmentShaderHlsl = programHlsl->getFragmentShaderHlsl();
-			IDirect3DVertexShader9 *direct3DVertexShader9 = vertexShaderHlsl  ? vertexShaderHlsl->getDirect3DVertexShader9()  : nullptr;
-			IDirect3DPixelShader9  *direct3DPixelShader9  = fragmentShaderHlsl ? fragmentShaderHlsl->getDirect3DPixelShader9() : nullptr;
+			const ProgramHlsl*		  programHlsl			= static_cast<ProgramHlsl*>(program);
+			const VertexShaderHlsl*	  vertexShaderHlsl		= programHlsl->getVertexShaderHlsl();
+			const FragmentShaderHlsl* fragmentShaderHlsl	= programHlsl->getFragmentShaderHlsl();
+			IDirect3DVertexShader9*   direct3DVertexShader9 = vertexShaderHlsl  ? vertexShaderHlsl->getDirect3DVertexShader9()  : nullptr;
+			IDirect3DPixelShader9*    direct3DPixelShader9  = fragmentShaderHlsl ? fragmentShaderHlsl->getDirect3DPixelShader9() : nullptr;
 
 			// Set shaders
 			if (mDirect3DVertexShader9 != direct3DVertexShader9)

@@ -21,22 +21,22 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-inline Renderer::IRenderer *ExampleBase::getRenderer() const
+inline Renderer::IRenderer* ExampleBase::getRenderer() const
 {
 	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRenderer() : nullptr;
 }
 
-inline Renderer::IRenderTarget *ExampleBase::getMainRenderTarget() const
+inline Renderer::IRenderTarget* ExampleBase::getMainRenderTarget() const
 {
 	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getMainRenderTarget() : nullptr;
 }
 
-inline RendererRuntime::IRendererRuntime *ExampleBase::getRendererRuntime() const
+inline RendererRuntime::IRendererRuntime* ExampleBase::getRendererRuntime() const
 {
 	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRendererRuntime() : nullptr;
 }
 
-inline RendererToolkit::IRendererToolkit *ExampleBase::getRendererToolkit()
+inline RendererToolkit::IRendererToolkit* ExampleBase::getRendererToolkit()
 {
 	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRendererToolkit() : nullptr;
 }

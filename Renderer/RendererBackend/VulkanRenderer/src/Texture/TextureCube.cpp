@@ -35,7 +35,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCube::TextureCube(VulkanRenderer &vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void*, uint32_t) :
+	TextureCube::TextureCube(VulkanRenderer& vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void*, uint32_t) :
 		ITextureCube(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer), width, height)
 	{
 		// TODO(co) Implement me

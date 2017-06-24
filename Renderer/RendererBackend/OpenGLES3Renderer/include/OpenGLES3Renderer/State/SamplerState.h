@@ -70,7 +70,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] samplerState
 		*    Sampler state to use
 		*/
-		SamplerState(OpenGLES3Renderer &openGLES3Renderer, const Renderer::SamplerState &samplerState);
+		SamplerState(OpenGLES3Renderer& openGLES3Renderer, const Renderer::SamplerState& samplerState);
 
 		/**
 		*  @brief

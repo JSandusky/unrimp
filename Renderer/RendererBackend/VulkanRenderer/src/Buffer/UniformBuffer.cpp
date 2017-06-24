@@ -35,7 +35,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(VulkanRenderer &vulkanRenderer, uint32_t, const void*, Renderer::BufferUsage) :
+	UniformBuffer::UniformBuffer(VulkanRenderer& vulkanRenderer, uint32_t, const void*, Renderer::BufferUsage) :
 		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me

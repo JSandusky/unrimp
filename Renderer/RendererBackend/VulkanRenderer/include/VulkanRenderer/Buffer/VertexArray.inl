@@ -28,7 +28,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IndexBuffer *VertexArray::getIndexBuffer() const
+	inline IndexBuffer* VertexArray::getIndexBuffer() const
 	{
 		return mIndexBuffer;
 	}

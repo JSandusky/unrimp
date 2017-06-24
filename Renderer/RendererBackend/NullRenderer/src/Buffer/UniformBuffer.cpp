@@ -34,7 +34,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(NullRenderer &nullRenderer) :
+	UniformBuffer::UniformBuffer(NullRenderer& nullRenderer) :
 		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here
@@ -49,7 +49,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::copyDataFrom(uint32_t, const void *)
+	void UniformBuffer::copyDataFrom(uint32_t, const void*)
 	{
 		// Nothing here
 	}

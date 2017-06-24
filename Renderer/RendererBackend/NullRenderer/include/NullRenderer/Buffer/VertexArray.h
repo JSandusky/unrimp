@@ -68,7 +68,7 @@ namespace NullRenderer
 		*  @param[in] nullRenderer
 		*    Owner null renderer instance
 		*/
-		explicit VertexArray(NullRenderer &nullRenderer);
+		explicit VertexArray(NullRenderer& nullRenderer);
 
 		/**
 		*  @brief

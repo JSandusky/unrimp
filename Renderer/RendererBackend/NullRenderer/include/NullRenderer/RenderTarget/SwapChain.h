@@ -70,7 +70,7 @@ namespace NullRenderer
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(NullRenderer &nullRenderer, handle nativeWindowHandle);
+		SwapChain(NullRenderer& nullRenderer, handle nativeWindowHandle);
 
 		/**
 		*  @brief
@@ -83,7 +83,7 @@ namespace NullRenderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
 	//[-------------------------------------------------------]

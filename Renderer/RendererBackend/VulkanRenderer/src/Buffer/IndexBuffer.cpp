@@ -36,7 +36,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(VulkanRenderer &vulkanRenderer, uint32_t, Renderer::IndexBufferFormat::Enum, const void*, Renderer::BufferUsage) :
+	IndexBuffer::IndexBuffer(VulkanRenderer& vulkanRenderer, uint32_t, Renderer::IndexBufferFormat::Enum, const void*, Renderer::BufferUsage) :
 		IIndexBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me

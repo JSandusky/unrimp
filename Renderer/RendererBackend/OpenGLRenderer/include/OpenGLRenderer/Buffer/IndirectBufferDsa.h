@@ -67,7 +67,7 @@ namespace OpenGLRenderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		IndirectBufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		IndirectBufferDsa(OpenGLRenderer& openGLRenderer, uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -80,7 +80,7 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 
 	//[-------------------------------------------------------]

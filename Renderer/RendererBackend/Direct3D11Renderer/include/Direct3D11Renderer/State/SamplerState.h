@@ -75,7 +75,7 @@ namespace Direct3D11Renderer
 		*  @param[in] samplerState
 		*    Sampler state to use
 		*/
-		SamplerState(Direct3D11Renderer &direct3D11Renderer, const Renderer::SamplerState &samplerState);
+		SamplerState(Direct3D11Renderer& direct3D11Renderer, const Renderer::SamplerState& samplerState);
 
 		/**
 		*  @brief
@@ -90,14 +90,14 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The Direct3D 11 sampler state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11SamplerState *getD3D11SamplerState() const;
+		inline ID3D11SamplerState* getD3D11SamplerState() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
@@ -112,7 +112,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11SamplerState *mD3D11SamplerState;	///< Direct3D 11 sampler state, can be a null pointer
+		ID3D11SamplerState* mD3D11SamplerState;	///< Direct3D 11 sampler state, can be a null pointer
 
 
 	};

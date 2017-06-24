@@ -87,7 +87,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RootSignature::RootSignature(OpenGLES3Renderer &openGLES3Renderer, const Renderer::RootSignature &rootSignature) :
+	RootSignature::RootSignature(OpenGLES3Renderer& openGLES3Renderer, const Renderer::RootSignature& rootSignature) :
 		IRootSignature(openGLES3Renderer),
 		mRootSignature(rootSignature),
 		mSamplerStates(nullptr)

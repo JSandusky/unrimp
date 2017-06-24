@@ -28,7 +28,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D11PixelShader *FragmentShaderHlsl::getD3D11PixelShader() const
+	inline ID3D11PixelShader* FragmentShaderHlsl::getD3D11PixelShader() const
 	{
 		return mD3D11PixelShader;
 	}

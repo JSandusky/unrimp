@@ -80,7 +80,7 @@ namespace Direct3D9Renderer
 		*  @param[in] textureUsage
 		*    Indication of the texture usage (only relevant for Direct3D, OpenGL has no texture usage indication)
 		*/
-		Texture1D(Direct3D9Renderer &direct3D9Renderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage = Renderer::TextureUsage::DEFAULT);
+		Texture1D(Direct3D9Renderer& direct3D9Renderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage = Renderer::TextureUsage::DEFAULT);
 
 		/**
 		*  @brief
@@ -95,14 +95,14 @@ namespace Direct3D9Renderer
 		*  @return
 		*    The Direct3D texture instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IDirect3DTexture9 *getDirect3DTexture9() const;
+		inline IDirect3DTexture9* getDirect3DTexture9() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
@@ -117,7 +117,7 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDirect3DTexture9 *mDirect3DTexture9;	///< Direct3D 9 texture instance, can be a null pointer
+		IDirect3DTexture9* mDirect3DTexture9;	///< Direct3D 9 texture instance, can be a null pointer
 
 
 	};

@@ -72,7 +72,7 @@ namespace NullRenderer
 		*  @param[in] height
 		*    The height of the texture
 		*/
-		TextureCube(NullRenderer &nullRenderer, uint32_t width, uint32_t height);
+		TextureCube(NullRenderer& nullRenderer, uint32_t width, uint32_t height);
 
 		/**
 		*  @brief

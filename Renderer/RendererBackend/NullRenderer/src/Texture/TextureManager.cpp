@@ -50,7 +50,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
-	Renderer::ITexture1D *TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
+	Renderer::ITexture1D* TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0)
@@ -63,7 +63,7 @@ namespace NullRenderer
 		}
 	}
 
-	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage, uint8_t, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D* TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage, uint8_t, const Renderer::OptimizedTextureClearValue*)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
@@ -76,7 +76,7 @@ namespace NullRenderer
 		}
 	}
 
-	Renderer::ITexture2DArray *TextureManager::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
+	Renderer::ITexture2DArray* TextureManager::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && numberOfSlices > 0)
@@ -89,7 +89,7 @@ namespace NullRenderer
 		}
 	}
 
-	Renderer::ITexture3D *TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
+	Renderer::ITexture3D* TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && depth > 0)
@@ -102,7 +102,7 @@ namespace NullRenderer
 		}
 	}
 
-	Renderer::ITextureCube *TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
+	Renderer::ITextureCube* TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)

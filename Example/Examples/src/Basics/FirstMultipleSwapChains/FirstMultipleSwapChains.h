@@ -70,7 +70,7 @@ public:
 	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
 	*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 	*/
-	explicit FirstMultipleSwapChains(const char *rendererName);
+	explicit FirstMultipleSwapChains(const char* rendererName);
 
 	/**
 	*  @brief

@@ -81,7 +81,7 @@ namespace VulkanRenderer
 		*  @param[in] numberOfOutputVertices
 		*    Number of output vertices
 		*/
-		GeometryShaderGlsl(VulkanRenderer &vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
+		GeometryShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
 
 		/**
 		*  @brief
@@ -98,7 +98,7 @@ namespace VulkanRenderer
 		*  @param[in] numberOfOutputVertices
 		*    Number of output vertices
 		*/
-		GeometryShaderGlsl(VulkanRenderer &vulkanRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode = nullptr);
+		GeometryShaderGlsl(VulkanRenderer& vulkanRenderer, const char* sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief
@@ -111,7 +111,7 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]

@@ -81,7 +81,7 @@ namespace OpenGLRenderer
 		*  @param[in] pipelineState
 		*    Pipeline state to use
 		*/
-		PipelineState(OpenGLRenderer &openGLRenderer, const Renderer::PipelineState &pipelineState);
+		PipelineState(OpenGLRenderer& openGLRenderer, const Renderer::PipelineState& pipelineState);
 
 		/**
 		*  @brief
@@ -128,9 +128,3 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "OpenGLRenderer/State/PipelineState.inl"

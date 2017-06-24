@@ -79,7 +79,7 @@ namespace Direct3D10Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		IndexBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		IndexBuffer(Direct3D10Renderer& direct3D10Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -94,7 +94,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The Direct3D index buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D10Buffer *getD3D10Buffer() const;
+		inline ID3D10Buffer* getD3D10Buffer() const;
 
 		/**
 		*  @brief
@@ -110,7 +110,7 @@ namespace Direct3D10Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
@@ -125,7 +125,7 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10Buffer *mD3D10Buffer;	///< Direct3D index buffer instance, can be a null pointer
+		ID3D10Buffer* mD3D10Buffer;	///< Direct3D index buffer instance, can be a null pointer
 		uint32_t	  mDXGIFormat;	///< DXGI index buffer data format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 
 

@@ -39,7 +39,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	BlendState::BlendState(Direct3D11Renderer &direct3D11Renderer, const Renderer::BlendState &blendState) :
+	BlendState::BlendState(Direct3D11Renderer& direct3D11Renderer, const Renderer::BlendState& blendState) :
 		mD3D11BlendState(nullptr)
 	{
 		// Create the Direct3D 11 depth stencil state
@@ -65,7 +65,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Direct3D11Renderer::IState methods     ]
 	//[-------------------------------------------------------]
-	void BlendState::setDebugName(const char *name)
+	void BlendState::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			// Valid Direct3D 11 blend state?

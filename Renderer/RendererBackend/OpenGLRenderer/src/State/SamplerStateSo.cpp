@@ -37,7 +37,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerStateSo::SamplerStateSo(OpenGLRenderer &openGLRenderer, const Renderer::SamplerState &samplerState) :
+	SamplerStateSo::SamplerStateSo(OpenGLRenderer& openGLRenderer, const Renderer::SamplerState& samplerState) :
 		SamplerState(openGLRenderer),
 		mOpenGLSampler(0)
 	{

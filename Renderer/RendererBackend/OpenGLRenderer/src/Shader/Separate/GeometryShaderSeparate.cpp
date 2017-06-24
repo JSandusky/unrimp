@@ -36,14 +36,14 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t) :
+	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer& openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromBytecode(GL_GEOMETRY_SHADER_ARB, shaderBytecode))
 	{
 		// Nothing here
 	}
 
-	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode) :
+	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer& openGLRenderer, const char* sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromSourceCode(GL_GEOMETRY_SHADER_ARB, sourceCode))
 	{
@@ -73,7 +73,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *GeometryShaderSeparate::getShaderLanguageName() const
+	const char* GeometryShaderSeparate::getShaderLanguageName() const
 	{
 		return ShaderLanguageSeparate::NAME;
 	}

@@ -37,7 +37,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture3D::Texture3D(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	Texture3D::Texture3D(OpenGLES3Renderer& openGLES3Renderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		ITexture3D(openGLES3Renderer, width, height, depth),
 		mTextureFormat(textureFormat),
 		mOpenGLES3Texture(0),

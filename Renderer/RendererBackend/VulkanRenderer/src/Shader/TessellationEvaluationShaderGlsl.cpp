@@ -36,13 +36,13 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer &vulkanRenderer, const Renderer::ShaderBytecode&):
+	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode&):
 		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me
 	}
 
-	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer &vulkanRenderer, const char*, Renderer::ShaderBytecode*) :
+	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer& vulkanRenderer, const char*, Renderer::ShaderBytecode*) :
 		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me
@@ -57,7 +57,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *TessellationEvaluationShaderGlsl::getShaderLanguageName() const
+	const char* TessellationEvaluationShaderGlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageGlsl::NAME;
 	}

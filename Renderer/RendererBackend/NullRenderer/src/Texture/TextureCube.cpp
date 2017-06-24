@@ -34,7 +34,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCube::TextureCube(NullRenderer &nullRenderer, uint32_t width, uint32_t height) :
+	TextureCube::TextureCube(NullRenderer& nullRenderer, uint32_t width, uint32_t height) :
 		ITextureCube(reinterpret_cast<Renderer::IRenderer&>(nullRenderer), width, height)
 	{
 		// Nothing here

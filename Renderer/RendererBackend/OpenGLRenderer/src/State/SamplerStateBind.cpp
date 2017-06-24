@@ -37,7 +37,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerStateBind::SamplerStateBind(OpenGLRenderer &openGLRenderer, const Renderer::SamplerState &samplerState) :
+	SamplerStateBind::SamplerStateBind(OpenGLRenderer& openGLRenderer, const Renderer::SamplerState& samplerState) :
 		SamplerState(openGLRenderer),
 		mOpenGLMagFilterMode(Mapping::getOpenGLMagFilterMode(samplerState.filter)),
 		mOpenGLMinFilterMode(Mapping::getOpenGLMinFilterMode(samplerState.filter, samplerState.maxLOD > 0.0f)),

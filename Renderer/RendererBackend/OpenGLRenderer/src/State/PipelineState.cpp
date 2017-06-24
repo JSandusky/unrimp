@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(OpenGLRenderer &openGLRenderer, const Renderer::PipelineState& pipelineState) :
+	PipelineState::PipelineState(OpenGLRenderer& openGLRenderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(openGLRenderer),
 		mProgram(pipelineState.program),
 		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),

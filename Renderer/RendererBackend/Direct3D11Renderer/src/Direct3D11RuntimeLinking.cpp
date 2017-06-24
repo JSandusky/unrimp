@@ -127,7 +127,7 @@ namespace Direct3D11Renderer
 		#define IMPORT_FUNC(funcName)																																					\
 			if (result)																																									\
 			{																																											\
-				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D11SharedLibrary), #funcName);																					\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D11SharedLibrary), #funcName);																					\
 				if (nullptr != symbol)																																					\
 				{																																										\
 					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
@@ -160,7 +160,7 @@ namespace Direct3D11Renderer
 		#define IMPORT_FUNC(funcName)																																					\
 			if (result)																																									\
 			{																																											\
-				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX11SharedLibrary), #funcName);																					\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX11SharedLibrary), #funcName);																					\
 				if (nullptr != symbol)																																					\
 				{																																										\
 					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
@@ -194,7 +194,7 @@ namespace Direct3D11Renderer
 		#define IMPORT_FUNC(funcName)																																					\
 			if (result)																																									\
 			{																																											\
-				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DCompilerSharedLibrary), #funcName);																			\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DCompilerSharedLibrary), #funcName);																			\
 				if (nullptr != symbol)																																					\
 				{																																										\
 					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\

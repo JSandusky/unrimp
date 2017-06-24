@@ -80,7 +80,7 @@ namespace Direct3D10Renderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramHlsl(Direct3D10Renderer &direct3D10Renderer, VertexShaderHlsl *vertexShaderHlsl, GeometryShaderHlsl *geometryShaderHlsl, FragmentShaderHlsl *fragmentShaderHlsl);
+		ProgramHlsl(Direct3D10Renderer& direct3D10Renderer, VertexShaderHlsl* vertexShaderHlsl, GeometryShaderHlsl* geometryShaderHlsl, FragmentShaderHlsl* fragmentShaderHlsl);
 
 		/**
 		*  @brief
@@ -95,7 +95,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The HLSL vertex shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline VertexShaderHlsl *getVertexShaderHlsl() const;
+		inline VertexShaderHlsl* getVertexShaderHlsl() const;
 
 		/**
 		*  @brief
@@ -104,7 +104,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The HLSL geometry shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline GeometryShaderHlsl *getGeometryShaderHlsl() const;
+		inline GeometryShaderHlsl* getGeometryShaderHlsl() const;
 
 		/**
 		*  @brief
@@ -113,25 +113,25 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The HLSL fragment shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline FragmentShaderHlsl *getFragmentShaderHlsl() const;
+		inline FragmentShaderHlsl* getFragmentShaderHlsl() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	public:
-		virtual handle getUniformHandle(const char *uniformName) override;
+		virtual handle getUniformHandle(const char* uniformName) override;
 		virtual void setUniform1f(handle uniformHandle, float value) override;
-		virtual void setUniform2fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform4fv(handle uniformHandle, const float *value) override;
+		virtual void setUniform2fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform4fv(handle uniformHandle, const float* value) override;
 
 
 	//[-------------------------------------------------------]
@@ -146,10 +146,10 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D10Renderer *mDirect3D10Renderer;	///< Owner Direct3D 10 renderer instance, always valid
-		VertexShaderHlsl   *mVertexShaderHlsl;		///< Vertex shader the program is using (we keep a reference to it), can be a null pointer
-		GeometryShaderHlsl *mGeometryShaderHlsl;	///< Geometry shader the program is using (we keep a reference to it), can be a null pointer
-		FragmentShaderHlsl *mFragmentShaderHlsl;	///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
+		Direct3D10Renderer* mDirect3D10Renderer;	///< Owner Direct3D 10 renderer instance, always valid
+		VertexShaderHlsl*   mVertexShaderHlsl;		///< Vertex shader the program is using (we keep a reference to it), can be a null pointer
+		GeometryShaderHlsl* mGeometryShaderHlsl;	///< Geometry shader the program is using (we keep a reference to it), can be a null pointer
+		FragmentShaderHlsl* mFragmentShaderHlsl;	///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
 
 
 	};

@@ -39,7 +39,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderHlsl::VertexShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
+	VertexShaderHlsl::VertexShaderHlsl(Direct3D10Renderer& direct3D10Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IVertexShader(direct3D10Renderer),
 		mD3DBlobVertexShader(nullptr),
 		mD3D10VertexShader(nullptr)
@@ -54,7 +54,7 @@ namespace Direct3D10Renderer
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 10 automatically sets a decent default name
 	}
 
-	VertexShaderHlsl::VertexShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+	VertexShaderHlsl::VertexShaderHlsl(Direct3D10Renderer& direct3D10Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IVertexShader(direct3D10Renderer),
 		mD3DBlobVertexShader(nullptr),
 		mD3D10VertexShader(nullptr)
@@ -95,7 +95,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void VertexShaderHlsl::setDebugName(const char *name)
+	void VertexShaderHlsl::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			// Valid Direct3D 10 vertex shader?
@@ -113,7 +113,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *VertexShaderHlsl::getShaderLanguageName() const
+	const char* VertexShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
 	}

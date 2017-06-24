@@ -101,7 +101,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	public:
 		virtual bool initialize(uint32_t multisampleAntialiasingSamples) override;
-		virtual const IExtensions &getExtensions() const override;
+		virtual const IExtensions& getExtensions() const override;
 
 
 	//[-------------------------------------------------------]
@@ -153,10 +153,10 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void					 *mEGLSharedLibrary;		///< EGL shared library, can be a null pointer
-		void					 *mGLESSharedLibrary;		///< OpenGL ES 3 shared library, can be a null pointer
+		void*					  mEGLSharedLibrary;		///< EGL shared library, can be a null pointer
+		void*					  mGLESSharedLibrary;		///< OpenGL ES 3 shared library, can be a null pointer
 		bool					  mEntryPointsRegistered;	///< Entry points successfully registered?
-		ExtensionsRuntimeLinking *mExtensions;				///< Extensions instance, always valid!
+		ExtensionsRuntimeLinking* mExtensions;				///< Extensions instance, always valid!
 
 
 	};
@@ -181,18 +181,18 @@ namespace OpenGLES3Renderer
 	#else
 		#define FNDEF_EGL(retType, funcName, args) extern retType (EGLAPIENTRY *funcPtr_##funcName) args
 	#endif
-	FNDEF_EGL(void*,		eglGetProcAddress,		(const char *procname));
+	FNDEF_EGL(void*,		eglGetProcAddress,		(const char* procname));
 	FNDEF_EGL(EGLint,		eglGetError,			(void));
 	FNDEF_EGL(EGLDisplay,	eglGetDisplay,			(NativeDisplayType display));
-	FNDEF_EGL(EGLBoolean,	eglInitialize,			(EGLDisplay dpy, EGLint *major, EGLint *minor));
+	FNDEF_EGL(EGLBoolean,	eglInitialize,			(EGLDisplay dpy, EGLint* major, EGLint* minor));
 	FNDEF_EGL(EGLBoolean,	eglTerminate,			(EGLDisplay dpy));
 	FNDEF_EGL(const char*,	eglQueryString,			(EGLDisplay dpy, EGLint name));
-	FNDEF_EGL(EGLBoolean,	eglGetConfigs,			(EGLDisplay dpy, EGLConfig *configs, EGLint config_size, EGLint *num_config));
-	FNDEF_EGL(EGLBoolean,	eglChooseConfig,		(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *configs, EGLint config_size, EGLint *num_config));
-	FNDEF_EGL(EGLBoolean,	eglGetConfigAttrib,		(EGLDisplay dpy, EGLConfig config, EGLint attribute, EGLint *value));
-	FNDEF_EGL(EGLSurface,	eglCreateWindowSurface,	(EGLDisplay dpy, EGLConfig config, NativeWindowType window, const EGLint *attrib_list));
+	FNDEF_EGL(EGLBoolean,	eglGetConfigs,			(EGLDisplay dpy, EGLConfig* configs, EGLint config_size, EGLint* num_config));
+	FNDEF_EGL(EGLBoolean,	eglChooseConfig,		(EGLDisplay dpy, const EGLint* attrib_list, EGLConfig* configs, EGLint config_size, EGLint* num_config));
+	FNDEF_EGL(EGLBoolean,	eglGetConfigAttrib,		(EGLDisplay dpy, EGLConfig config, EGLint attribute, EGLint* value));
+	FNDEF_EGL(EGLSurface,	eglCreateWindowSurface,	(EGLDisplay dpy, EGLConfig config, NativeWindowType window, const EGLint* attrib_list));
 	FNDEF_EGL(EGLBoolean,	eglDestroySurface,		(EGLDisplay dpy, EGLSurface surface));
-	FNDEF_EGL(EGLBoolean,	eglQuerySurface,		(EGLDisplay dpy, EGLSurface surface, EGLint attribute, EGLint *value));
+	FNDEF_EGL(EGLBoolean,	eglQuerySurface,		(EGLDisplay dpy, EGLSurface surface, EGLint attribute, EGLint* value));
 	FNDEF_EGL(EGLBoolean,	eglBindAPI,				(EGLenum api));
 	FNDEF_EGL(EGLenum,		eglQueryAPI,			(void));
 	FNDEF_EGL(EGLBoolean,	eglWaitClient,			(void));
@@ -201,13 +201,13 @@ namespace OpenGLES3Renderer
 	FNDEF_EGL(EGLBoolean,	eglBindTexImage,		(EGLDisplay dpy, EGLSurface surface, EGLint buffer));
 	FNDEF_EGL(EGLBoolean,	eglReleaseTexImage,		(EGLDisplay dpy, EGLSurface surface, EGLint buffer));
 	FNDEF_EGL(EGLBoolean,	eglSwapInterval,		(EGLDisplay dpy, EGLint interval));
-	FNDEF_EGL(EGLContext,	eglCreateContext,		(EGLDisplay dpy, EGLConfig config, EGLContext share_list, const EGLint *attrib_list));
+	FNDEF_EGL(EGLContext,	eglCreateContext,		(EGLDisplay dpy, EGLConfig config, EGLContext share_list, const EGLint* attrib_list));
 	FNDEF_EGL(EGLBoolean,	eglDestroyContext,		(EGLDisplay dpy, EGLContext ctx));
 	FNDEF_EGL(EGLBoolean,	eglMakeCurrent,			(EGLDisplay dpy, EGLSurface draw, EGLSurface read, EGLContext ctx));
 	FNDEF_EGL(EGLContext,	eglGetCurrentContext,	(void));
 	FNDEF_EGL(EGLSurface,	eglGetCurrentSurface,	(EGLint readdraw));
 	FNDEF_EGL(EGLDisplay,	eglGetCurrentDisplay,	(void));
-	FNDEF_EGL(EGLBoolean,	eglQueryContext,		(EGLDisplay dpy, EGLContext ctx, EGLint attribute, EGLint *value));
+	FNDEF_EGL(EGLBoolean,	eglQueryContext,		(EGLDisplay dpy, EGLContext ctx, EGLint attribute, EGLint* value));
 	FNDEF_EGL(EGLBoolean,	eglWaitGL,				(void));
 	FNDEF_EGL(EGLBoolean,	eglWaitNative,			(EGLint engine));
 	FNDEF_EGL(EGLBoolean,	eglSwapBuffers,			(EGLDisplay dpy, EGLSurface draw));
@@ -379,14 +379,14 @@ namespace OpenGLES3Renderer
 	FNDEF_GL(void,				glBindBufferBase,						(GLenum target, GLuint index, GLuint buffer));
 	FNDEF_GL(void,				glUnmapBuffer,							(GLenum target));
 	FNDEF_GL(void*,				glMapBufferRange,						(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access));
-	FNDEF_GL(void*,				glDrawBuffers,							(GLsizei n, const GLenum *bufs));
-	FNDEF_GL(void,				glTexSubImage3D,						(GLenum target, int level, int xoffset, int yoffset, int zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void *pixels));
+	FNDEF_GL(void*,				glDrawBuffers,							(GLsizei n, const GLenum* bufs));
+	FNDEF_GL(void,				glTexSubImage3D,						(GLenum target, int level, int xoffset, int yoffset, int zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void* pixels));
 	FNDEF_GL(void,				glCopyTexSubImage3D,					(GLenum target, int level, int xoffset, int yoffset, int zoffset, int x, int y, GLsizei width, GLsizei height));
-	FNDEF_GL(void,				glCompressedTexSubImage3D,				(GLenum target, int level, int xoffset, int yoffset, int zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *data));
-	FNDEF_GL(void,				glGetBufferPointerv,					(GLenum target, GLenum pname, void **params));
+	FNDEF_GL(void,				glCompressedTexSubImage3D,				(GLenum target, int level, int xoffset, int yoffset, int zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void* data));
+	FNDEF_GL(void,				glGetBufferPointerv,					(GLenum target, GLenum pname, void** params));
 	FNDEF_GL(void,				glBindVertexArray,						(GLuint array));
-	FNDEF_GL(void,				glDeleteVertexArrays,					(GLsizei n, const GLuint *arrays));
-	FNDEF_GL(void,				glGenVertexArrays,						(GLsizei n, GLuint *arrays));
+	FNDEF_GL(void,				glDeleteVertexArrays,					(GLsizei n, const GLuint* arrays));
+	FNDEF_GL(void,				glGenVertexArrays,						(GLsizei n, GLuint* arrays));
 	#undef FNDEF_GL
 
 

@@ -34,7 +34,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(NullRenderer &nullRenderer) :
+	VertexArray::VertexArray(NullRenderer& nullRenderer) :
 		IVertexArray(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here

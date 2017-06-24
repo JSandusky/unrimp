@@ -85,7 +85,7 @@ namespace Direct3D11Renderer
 		*  @param[in] textureUsage
 		*    Indication of the texture usage (only relevant for Direct3D, OpenGL has no texture usage indication)
 		*/
-		Texture3D(Direct3D11Renderer &direct3D11Renderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage);
+		Texture3D(Direct3D11Renderer& direct3D11Renderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage);
 
 		/**
 		*  @brief
@@ -125,7 +125,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The Direct3D texture 3D resource instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11Texture3D *getD3D11Texture3D() const;
+		inline ID3D11Texture3D* getD3D11Texture3D() const;
 
 		/**
 		*  @brief
@@ -138,7 +138,7 @@ namespace Direct3D11Renderer
 		*    - It's not recommended to manipulate the returned Direct3D 11 resource
 		*      view by e.g. assigning another Direct3D 11 resource to it
 		*/
-		inline ID3D11ShaderResourceView *getD3D11ShaderResourceView() const;
+		inline ID3D11ShaderResourceView* getD3D11ShaderResourceView() const;
 
 
 	//[-------------------------------------------------------]
@@ -152,7 +152,7 @@ namespace Direct3D11Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 		virtual void* getInternalResourceHandle() const override;
 
 
@@ -168,10 +168,10 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::TextureFormat::Enum  mTextureFormat;
-		bool						   mGenerateMipmaps;
-		ID3D11Texture3D				  *mD3D11Texture3D;					///< Direct3D 11 texture 3D resource, can be a null pointer
-		ID3D11ShaderResourceView	  *mD3D11ShaderResourceViewTexture;	///< Direct3D 11 shader resource view, can be a null pointer
+		Renderer::TextureFormat::Enum mTextureFormat;
+		bool						  mGenerateMipmaps;
+		ID3D11Texture3D*			  mD3D11Texture3D;					///< Direct3D 11 texture 3D resource, can be a null pointer
+		ID3D11ShaderResourceView*	  mD3D11ShaderResourceViewTexture;	///< Direct3D 11 shader resource view, can be a null pointer
 
 
 	};

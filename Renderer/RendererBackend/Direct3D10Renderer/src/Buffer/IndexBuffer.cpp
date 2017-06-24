@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
+	IndexBuffer::IndexBuffer(Direct3D10Renderer& direct3D10Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data, Renderer::BufferUsage bufferUsage) :
 		IIndexBuffer(direct3D10Renderer),
 		mD3D10Buffer(nullptr),
 		mDXGIFormat(DXGI_FORMAT_UNKNOWN)
@@ -99,7 +99,7 @@ namespace Direct3D10Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	#if !defined(DIRECT3D10RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
-		void IndexBuffer::setDebugName(const char *name)
+		void IndexBuffer::setDebugName(const char* name)
 		{
 			// Valid Direct3D 10 index buffer?
 			if (nullptr != mD3D10Buffer)

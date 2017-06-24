@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DBind::Texture2DBind(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, uint8_t numberOfMultisamples) :
+	Texture2DBind::Texture2DBind(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, uint8_t numberOfMultisamples) :
 		Texture2D(openGLRenderer, width, height, numberOfMultisamples)
 	{
 		// Sanity checks

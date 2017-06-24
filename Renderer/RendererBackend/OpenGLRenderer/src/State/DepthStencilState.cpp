@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState &depthStencilState) :
+	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState& depthStencilState) :
 		mDepthStencilState(depthStencilState),
 		mOpenGLDepthFunc(Mapping::getOpenGLComparisonFunc(depthStencilState.depthFunc))
 	{

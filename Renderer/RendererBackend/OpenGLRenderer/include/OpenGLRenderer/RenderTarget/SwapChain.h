@@ -73,7 +73,7 @@ namespace OpenGLRenderer
 		*  @param[in] useExternalContext
 		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
 		*/
-		SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, bool useExternalContext);
+		SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
@@ -86,7 +86,7 @@ namespace OpenGLRenderer
 		*  @param[in] context
 		*    Context to use
 		*/
-		SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, IContext& context);
+		SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, IContext& context);
 
 		/**
 		*  @brief
@@ -108,7 +108,7 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
 	//[-------------------------------------------------------]

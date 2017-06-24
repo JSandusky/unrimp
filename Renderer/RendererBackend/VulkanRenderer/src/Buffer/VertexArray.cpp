@@ -37,7 +37,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(VulkanRenderer &vulkanRenderer, const Renderer::VertexAttributes&, uint32_t, const Renderer::VertexArrayVertexBuffer*, IndexBuffer* indexBuffer) :
+	VertexArray::VertexArray(VulkanRenderer& vulkanRenderer, const Renderer::VertexAttributes&, uint32_t, const Renderer::VertexArrayVertexBuffer*, IndexBuffer* indexBuffer) :
 		IVertexArray(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer)),
 		mIndexBuffer(indexBuffer)
 	{

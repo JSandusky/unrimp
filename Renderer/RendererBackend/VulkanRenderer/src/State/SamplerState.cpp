@@ -37,7 +37,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerState::SamplerState(VulkanRenderer &vulkanRenderer, const Renderer::SamplerState& samplerState) :
+	SamplerState::SamplerState(VulkanRenderer& vulkanRenderer, const Renderer::SamplerState& samplerState) :
 		ISamplerState(vulkanRenderer)
 	{
 		// Sanity checks

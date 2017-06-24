@@ -66,7 +66,7 @@
 #else
 	#define DIRECT3D10RENDERER_API_EXPORT
 #endif
-DIRECT3D10RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D10RendererInstance(handle nativeWindowHandle, bool useExternalContext)
+DIRECT3D10RENDERER_API_EXPORT Renderer::IRenderer* createDirect3D10RendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
 	std::ignore = useExternalContext;
 	return new Direct3D10Renderer::Direct3D10Renderer(nativeWindowHandle);
@@ -514,7 +514,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::setGraphicsRootSignature(Renderer::IRootSignature *rootSignature)
+	void Direct3D10Renderer::setGraphicsRootSignature(Renderer::IRootSignature* rootSignature)
 	{
 		if (nullptr != mGraphicsRootSignature)
 		{
@@ -583,7 +583,7 @@ namespace Direct3D10Renderer
 			{
 				case Renderer::ResourceType::UNIFORM_BUFFER:
 				{
-					ID3D10Buffer *d3d10Buffers = static_cast<UniformBuffer*>(resource)->getD3D10Buffer();
+					ID3D10Buffer* d3d10Buffers = static_cast<UniformBuffer*>(resource)->getD3D10Buffer();
 					const UINT startSlot = descriptorRange->baseShaderRegister;
 					switch (rootParameter.shaderVisibility)
 					{
@@ -624,7 +624,7 @@ namespace Direct3D10Renderer
 				case Renderer::ResourceType::TEXTURE_3D:
 				case Renderer::ResourceType::TEXTURE_CUBE:
 				{
-					ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
+					ID3D10ShaderResourceView* d3d10ShaderResourceView = nullptr;
 					switch (resourceType)
 					{
 						case Renderer::ResourceType::TEXTURE_BUFFER:
@@ -705,7 +705,7 @@ namespace Direct3D10Renderer
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					ID3D10SamplerState *d3d10SamplerState = static_cast<SamplerState*>(resource)->getD3D10SamplerState();
+					ID3D10SamplerState* d3d10SamplerState = static_cast<SamplerState*>(resource)->getD3D10SamplerState();
 					const UINT startSlot = descriptorRange->baseShaderRegister;
 					switch (rootParameter.shaderVisibility)
 					{
@@ -783,7 +783,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
+	void Direct3D10Renderer::iaSetVertexArray(Renderer::IVertexArray* vertexArray)
 	{
 		if (nullptr != vertexArray)
 		{
@@ -815,7 +815,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
+	void Direct3D10Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
@@ -831,7 +831,7 @@ namespace Direct3D10Renderer
 
 			// Set the Direct3D 10 viewports
 			D3D10_VIEWPORT d3dViewports[D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX];
-			D3D10_VIEWPORT *d3dViewport = d3dViewports;
+			D3D10_VIEWPORT* d3dViewport = d3dViewports;
 			for (uint32_t i = 0; i < numberOfViewports; ++i, ++d3dViewport, ++viewports)
 			{
 				d3dViewport->TopLeftX = static_cast<INT> (viewports->topLeftX);
@@ -845,7 +845,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void Direct3D10Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
@@ -861,7 +861,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
+	void Direct3D10Renderer::omSetRenderTarget(Renderer::IRenderTarget* renderTarget)
 	{
 		// New render target?
 		if (mRenderTarget != renderTarget)
@@ -898,10 +898,10 @@ namespace Direct3D10Renderer
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
 						// Get the Direct3D 10 swap chain instance
-						SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
+						SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
 
 						// Direct3D 10 needs a pointer to a pointer, so give it one
-						ID3D10RenderTargetView *d3d10RenderTargetView = swapChain->getD3D10RenderTargetView();
+						ID3D10RenderTargetView* d3d10RenderTargetView = swapChain->getD3D10RenderTargetView();
 						mD3D10Device->OMSetRenderTargets(1, &d3d10RenderTargetView, swapChain->getD3D10DepthStencilView());
 						break;
 					}
@@ -909,7 +909,7 @@ namespace Direct3D10Renderer
 					case Renderer::ResourceType::FRAMEBUFFER:
 					{
 						// Get the Direct3D 10 framebuffer instance
-						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+						Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 						// Set the Direct3D 10 render targets
 						mD3D10Device->OMSetRenderTargets(framebuffer->getNumberOfColorTextures(), framebuffer->getD3D10RenderTargetViews(), framebuffer->getD3D10DepthStencilView());
@@ -983,7 +983,7 @@ namespace Direct3D10Renderer
 				case Renderer::ResourceType::SWAP_CHAIN:
 				{
 					// Get the Direct3D 10 swap chain instance
-					SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
+					SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
 
 					// Clear the Direct3D 10 render target view?
 					if (flags & Renderer::ClearFlag::COLOR)
@@ -1012,14 +1012,14 @@ namespace Direct3D10Renderer
 				case Renderer::ResourceType::FRAMEBUFFER:
 				{
 					// Get the Direct3D 10 framebuffer instance
-					Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+					Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 					// Clear all Direct3D 10 render target views?
 					if (flags & Renderer::ClearFlag::COLOR)
 					{
 						// Loop through all Direct3D 10 render target views
-						ID3D10RenderTargetView **d3d10RenderTargetViewsEnd = framebuffer->getD3D10RenderTargetViews() + framebuffer->getNumberOfColorTextures();
-						for (ID3D10RenderTargetView **d3d10RenderTargetView = framebuffer->getD3D10RenderTargetViews(); d3d10RenderTargetView < d3d10RenderTargetViewsEnd; ++d3d10RenderTargetView)
+						ID3D10RenderTargetView** d3d10RenderTargetViewsEnd = framebuffer->getD3D10RenderTargetViews() + framebuffer->getNumberOfColorTextures();
+						for (ID3D10RenderTargetView** d3d10RenderTargetView = framebuffer->getD3D10RenderTargetViews(); d3d10RenderTargetView < d3d10RenderTargetViewsEnd; ++d3d10RenderTargetView)
 						{
 							// Valid Direct3D 10 render target view?
 							if (nullptr != *d3d10RenderTargetView)
@@ -1298,7 +1298,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::setDebugMarker(const char *name)
+	void Direct3D10Renderer::setDebugMarker(const char* name)
 	{
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
@@ -1318,7 +1318,7 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	void Direct3D10Renderer::beginDebugEvent(const char *name)
+	void Direct3D10Renderer::beginDebugEvent(const char* name)
 	{
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
@@ -1369,7 +1369,7 @@ namespace Direct3D10Renderer
 		return (nullptr != D3DPERF_GetStatus && D3DPERF_GetStatus() != 0);
 	}
 
-	Renderer::ISwapChain *Direct3D10Renderer::getMainSwapChain() const
+	Renderer::ISwapChain* Direct3D10Renderer::getMainSwapChain() const
 	{
 		return mMainSwapChain;
 	}
@@ -1386,7 +1386,7 @@ namespace Direct3D10Renderer
 		return numberOfShaderLanguages;
 	}
 
-	const char *Direct3D10Renderer::getShaderLanguageName(uint32_t index) const
+	const char* Direct3D10Renderer::getShaderLanguageName(uint32_t index) const
 	{
 		// HLSL supported
 		if (0 == index)
@@ -1398,7 +1398,7 @@ namespace Direct3D10Renderer
 		return nullptr;
 	}
 
-	Renderer::IShaderLanguage *Direct3D10Renderer::getShaderLanguage(const char *shaderLanguageName)
+	Renderer::IShaderLanguage* Direct3D10Renderer::getShaderLanguage(const char* shaderLanguageName)
 	{
 		// In case "shaderLanguage" is a null pointer, use the default shader language
 		if (nullptr != shaderLanguageName)
@@ -1429,39 +1429,39 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D10Renderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::ISwapChain* Direct3D10Renderer::createSwapChain(handle nativeWindowHandle, bool)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *Direct3D10Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment)
+	Renderer::IFramebuffer* Direct3D10Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
 	{
 		// Validation is done inside the framebuffer implementation
 		return new Framebuffer(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
-	Renderer::IBufferManager *Direct3D10Renderer::createBufferManager()
+	Renderer::IBufferManager* Direct3D10Renderer::createBufferManager()
 	{
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITextureManager *Direct3D10Renderer::createTextureManager()
+	Renderer::ITextureManager* Direct3D10Renderer::createTextureManager()
 	{
 		return new TextureManager(*this);
 	}
 
-	Renderer::IRootSignature *Direct3D10Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	Renderer::IRootSignature* Direct3D10Renderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
 		return new RootSignature(*this, rootSignature);
 	}
 
-	Renderer::IPipelineState *Direct3D10Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
+	Renderer::IPipelineState* Direct3D10Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::ISamplerState *Direct3D10Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	Renderer::ISamplerState* Direct3D10Renderer::createSamplerState(const Renderer::SamplerState& samplerState)
 	{
 		return new SamplerState(*this, samplerState);
 	}
@@ -1470,7 +1470,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool Direct3D10Renderer::map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource)
+	bool Direct3D10Renderer::map(Renderer::IResource& resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource& mappedSubresource)
 	{
 		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 constants, do not change them
 		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
@@ -1576,7 +1576,7 @@ namespace Direct3D10Renderer
 		#undef TEXTURE_RESOURCE
 	}
 
-	void Direct3D10Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
+	void Direct3D10Renderer::unmap(Renderer::IResource& resource, uint32_t subresource)
 	{
 		// Define helper macro
 		#define TEXTURE_RESOURCE(type, typeClass, d3dClass) \
@@ -1806,7 +1806,7 @@ namespace Direct3D10Renderer
 		mCapabilities.fragmentShader = true;
 	}
 
-	void Direct3D10Renderer::setProgram(Renderer::IProgram *program)
+	void Direct3D10Renderer::setProgram(Renderer::IProgram* program)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -1817,13 +1817,13 @@ namespace Direct3D10Renderer
 			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
 			// Get shaders
-			const ProgramHlsl					   *programHlsl						 = static_cast<ProgramHlsl*>(program);
-			const VertexShaderHlsl				   *vertexShaderHlsl				 = programHlsl->getVertexShaderHlsl();
-			const GeometryShaderHlsl			   *geometryShaderHlsl				 = programHlsl->getGeometryShaderHlsl();
-			const FragmentShaderHlsl			   *fragmentShaderHlsl				 = programHlsl->getFragmentShaderHlsl();
-			ID3D10VertexShader   *d3d10VertexShader   = (nullptr != vertexShaderHlsl)	? vertexShaderHlsl->getD3D10VertexShader()	   : nullptr;
-			ID3D10GeometryShader *d3d10GeometryShader = (nullptr != geometryShaderHlsl) ? geometryShaderHlsl->getD3D10GeometryShader() : nullptr;
-			ID3D10PixelShader	 *d3d10PixelShader    = (nullptr != fragmentShaderHlsl) ? fragmentShaderHlsl->getD3D10PixelShader()	   : nullptr;
+			const ProgramHlsl*		  programHlsl		  = static_cast<ProgramHlsl*>(program);
+			const VertexShaderHlsl*   vertexShaderHlsl	  = programHlsl->getVertexShaderHlsl();
+			const GeometryShaderHlsl* geometryShaderHlsl  = programHlsl->getGeometryShaderHlsl();
+			const FragmentShaderHlsl* fragmentShaderHlsl  = programHlsl->getFragmentShaderHlsl();
+			ID3D10VertexShader*		  d3d10VertexShader   = (nullptr != vertexShaderHlsl)	? vertexShaderHlsl->getD3D10VertexShader()	   : nullptr;
+			ID3D10GeometryShader*	  d3d10GeometryShader = (nullptr != geometryShaderHlsl) ? geometryShaderHlsl->getD3D10GeometryShader() : nullptr;
+			ID3D10PixelShader*		  d3d10PixelShader    = (nullptr != fragmentShaderHlsl) ? fragmentShaderHlsl->getD3D10PixelShader()	   : nullptr;
 
 			// Set shaders
 			if (mD3d10VertexShader != d3d10VertexShader)

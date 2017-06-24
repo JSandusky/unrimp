@@ -108,7 +108,7 @@ namespace OpenGLRenderer
 		*  @param[in] height
 		*    The height of the texture
 		*/
-		TextureCube(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height);
+		TextureCube(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height);
 
 
 	//[-------------------------------------------------------]

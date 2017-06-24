@@ -74,7 +74,7 @@ namespace OpenGLRenderer
 		*  @param[in] shaderBytecode
 		*    Shader bytecode
 		*/
-		TessellationEvaluationShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode);
+		TessellationEvaluationShaderSeparate(OpenGLRenderer& openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -85,7 +85,7 @@ namespace OpenGLRenderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		TessellationEvaluationShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
+		TessellationEvaluationShaderSeparate(OpenGLRenderer& openGLRenderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief
@@ -107,7 +107,7 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]

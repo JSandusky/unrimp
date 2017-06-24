@@ -33,7 +33,7 @@ namespace OpenGLRenderer
 		// Nothing here
 	}
 
-	inline const Renderer::DepthStencilState &DepthStencilState::getDepthStencilState() const
+	inline const Renderer::DepthStencilState& DepthStencilState::getDepthStencilState() const
 	{
 		return mDepthStencilState;
 	}

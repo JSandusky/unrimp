@@ -37,7 +37,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(VulkanRenderer &vulkanRenderer, handle nativeWindowHandle) :
+	SwapChain::SwapChain(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle) :
 		ISwapChain(vulkanRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		mVkSurfaceKHR(VK_NULL_HANDLE),
@@ -287,7 +287,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		#ifdef WIN32
 			// Is there a valid native OS window?
@@ -326,8 +326,8 @@ namespace VulkanRenderer
 		#elif defined LINUX
 			if (NULL_HANDLE != mNativeWindowHandle)
 			{
-				VulkanRenderer &vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
-				Display *display = static_cast<const ContextLinux&>(vulkanRenderer.getContext()).getDisplay();
+				VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+				Display* display = static_cast<const ContextLinux&>(vulkanRenderer.getContext()).getDisplay();
 
 				// Get the width and height...
 				::Window rootWindow = 0;
@@ -376,7 +376,7 @@ namespace VulkanRenderer
 			::SwapBuffers(hDC);
 			::ReleaseDC(reinterpret_cast<HWND>(mNativeWindowHandle), hDC);
 		#elif defined LINUX
-			VulkanRenderer &vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+			VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
 			glXSwapBuffers(static_cast<const ContextLinux&>(vulkanRenderer.getContext()).getDisplay(), mNativeWindowHandle);
 		#else
 			#error "Unsupported platform"

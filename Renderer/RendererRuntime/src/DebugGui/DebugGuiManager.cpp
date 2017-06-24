@@ -410,8 +410,8 @@ namespace RendererRuntime
 			{ // Create the pipeline state instance
 				{ // Create the program
 					// Get the shader source code (outsourced to keep an overview)
-					const char *vertexShaderSourceCode = nullptr;
-					const char *fragmentShaderSourceCode = nullptr;
+					const char* vertexShaderSourceCode = nullptr;
+					const char* fragmentShaderSourceCode = nullptr;
 					#include "Detail/Shader/DebugGui_GLSL_410.h"
 					#include "Detail/Shader/DebugGui_GLSL_ES3.h"
 					#include "Detail/Shader/DebugGui_HLSL_D3D9.h"

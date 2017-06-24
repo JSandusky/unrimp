@@ -62,8 +62,8 @@ public:
 	*  @return
 	*    Pointer to the reference counter's object, never a null pointer!
 	*/
-	virtual const AType *getPointer() const;
-	virtual AType *getPointer();
+	virtual const AType* getPointer() const;
+	virtual AType* getPointer();
 
 	/**
 	*  @brief

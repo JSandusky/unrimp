@@ -54,7 +54,7 @@
 	// This is needed to do here because the methods in the library are also defined in global namespace
 
 	// "createRendererRuntimeInstance()" signature
-	extern RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
+	extern RendererRuntime::IRendererRuntime* createRendererRuntimeInstance(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
 #endif
 
 
@@ -102,11 +102,11 @@ namespace RendererRuntime
 					if (nullptr != mRendererRuntimeSharedLibrary)
 					{
 						// Get the "createRendererRuntimeInstance()" function pointer
-						void *symbol = ::GetProcAddress(static_cast<HMODULE>(mRendererRuntimeSharedLibrary), "createRendererRuntimeInstance");
+						void* symbol = ::GetProcAddress(static_cast<HMODULE>(mRendererRuntimeSharedLibrary), "createRendererRuntimeInstance");
 						if (nullptr != symbol)
 						{
 							// "createRendererRuntimeInstance()" signature
-							typedef RendererRuntime::IRendererRuntime *(__cdecl *createRendererRuntimeInstance)(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
+							typedef RendererRuntime::IRendererRuntime* (__cdecl *createRendererRuntimeInstance)(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer runtime instance
 							mRendererRuntime = static_cast<createRendererRuntimeInstance>(symbol)(renderer, fileManager);
@@ -134,11 +134,11 @@ namespace RendererRuntime
 					if (nullptr != mRendererRuntimeSharedLibrary)
 					{
 						// Get the "createRendererRuntimeInstance()" function pointer
-						void *symbol = dlsym(mRendererRuntimeSharedLibrary, "createRendererRuntimeInstance");
+						void* symbol = dlsym(mRendererRuntimeSharedLibrary, "createRendererRuntimeInstance");
 						if (nullptr != symbol)
 						{
 							// "createRendererRuntimeInstance()" signature
-							typedef RendererRuntime::IRendererRuntime *(*createRendererRuntimeInstance)(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
+							typedef RendererRuntime::IRendererRuntime* (*createRendererRuntimeInstance)(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer runtime instance
 							mRendererRuntime = reinterpret_cast<createRendererRuntimeInstance>(symbol)(renderer, fileManager);
@@ -202,7 +202,7 @@ namespace RendererRuntime
 		*  @remarks
 		*    The renderer runtime instance, can be a null pointer
 		*/
-		inline RendererRuntime::IRendererRuntime *getRendererRuntime() const
+		inline RendererRuntime::IRendererRuntime* getRendererRuntime() const
 		{
 			return mRendererRuntime;
 		}

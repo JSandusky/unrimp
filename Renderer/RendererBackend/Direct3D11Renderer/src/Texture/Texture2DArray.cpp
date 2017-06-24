@@ -38,7 +38,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArray::Texture2DArray(Direct3D11Renderer &direct3D11Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
+	Texture2DArray::Texture2DArray(Direct3D11Renderer& direct3D11Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2DArray(direct3D11Renderer, width, height, numberOfSlices),
 		mTextureFormat(textureFormat),
 		mNumberOfMultisamples(1),	// TODO(co) Currently no MSAA support for 2D array textures
@@ -221,7 +221,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Texture2DArray::setDebugName(const char *name)
+	void Texture2DArray::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			// Valid Direct3D 11 shader resource view?
@@ -236,7 +236,7 @@ namespace Direct3D11Renderer
 				// -> In our use case, this resource is tightly coupled with the view
 				// -> In principle the user can assign another resource to the view, but our interface documentation
 				//    asks the user to not do so, so we ignore this situation when assigning the name
-				ID3D11Resource *d3d11Resource = nullptr;
+				ID3D11Resource* d3d11Resource = nullptr;
 				mD3D11ShaderResourceViewTexture->GetResource(&d3d11Resource);
 				if (nullptr != d3d11Resource)
 				{

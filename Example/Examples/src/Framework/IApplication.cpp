@@ -131,7 +131,7 @@ void IApplication::onDraw()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-IApplication::IApplication(const char *windowTitle) :
+IApplication::IApplication(const char* windowTitle) :
 	mApplicationImpl(nullptr)
 {
 	// We're using "this" in here, so we are not allowed to write the following within the initializer list

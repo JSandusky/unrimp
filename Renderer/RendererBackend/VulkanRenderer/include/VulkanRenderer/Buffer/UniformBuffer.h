@@ -75,7 +75,7 @@ namespace VulkanRenderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		UniformBuffer(VulkanRenderer &vulkanRenderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		UniformBuffer(VulkanRenderer& vulkanRenderer, uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -88,7 +88,7 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 
 	//[-------------------------------------------------------]

@@ -75,7 +75,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		VertexBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		VertexBuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief

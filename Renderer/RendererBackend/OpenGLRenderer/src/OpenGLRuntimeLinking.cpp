@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 		#define IMPORT_FUNC(funcName)																																			\
 			if (result)																																							\
 			{																																									\
-				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mOpenGLSharedLibrary), #funcName);																			\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mOpenGLSharedLibrary), #funcName);																			\
 				if (nullptr == symbol)																																			\
 				{																																								\
 					symbol = wglGetProcAddress(#funcName);																														\
@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 		#define IMPORT_FUNC(funcName)																																			\
 			if (result)																																							\
 			{																																									\
-				void *symbol = ::dlsym(mOpenGLSharedLibrary, #funcName);																										\
+				void* symbol = ::dlsym(mOpenGLSharedLibrary, #funcName);																										\
 				if (nullptr != symbol)																																			\
 				{																																								\
 					*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\

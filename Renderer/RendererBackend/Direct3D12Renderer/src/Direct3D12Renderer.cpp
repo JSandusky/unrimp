@@ -67,7 +67,7 @@
 #else
 	#define DIRECT3D12RENDERER_API_EXPORT
 #endif
-DIRECT3D12RENDERER_API_EXPORT Renderer::IRenderer *createDirect3D12RendererInstance(handle nativeWindowHandle, bool useExternalContext)
+DIRECT3D12RENDERER_API_EXPORT Renderer::IRenderer* createDirect3D12RendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
 	std::ignore = useExternalContext;
 	return new Direct3D12Renderer::Direct3D12Renderer(nativeWindowHandle);
@@ -687,7 +687,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
+	void Direct3D12Renderer::iaSetVertexArray(Renderer::IVertexArray* vertexArray)
 	{
 		if (nullptr != vertexArray)
 		{
@@ -720,7 +720,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
+	void Direct3D12Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
@@ -732,7 +732,7 @@ namespace Direct3D12Renderer
 		}
 	}
 
-	void Direct3D12Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void Direct3D12Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
@@ -748,7 +748,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
+	void Direct3D12Renderer::omSetRenderTarget(Renderer::IRenderTarget* renderTarget)
 	{
 		// New render target?
 		if (mRenderTarget != renderTarget)
@@ -762,7 +762,7 @@ namespace Direct3D12Renderer
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
 						// Get the Direct3D 12 swap chain instance
-						SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
+						SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
 
 						// Inform Direct3D 12 about the resource transition
 						CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
@@ -775,7 +775,7 @@ namespace Direct3D12Renderer
 						// TODO(co) Implement resource transition handling (first "Direct3D12Renderer::Texture2D" needs to be cleaned up)
 						/*
 						// Get the Direct3D 12 framebuffer instance
-						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+						Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 						// Inform Direct3D 12 about the resource transitions
 						const uint32_t numberOfColorTextures = framebuffer->getNumberOfColorTextures();
@@ -841,7 +841,7 @@ namespace Direct3D12Renderer
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
 						// Get the Direct3D 12 swap chain instance
-						SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
+						SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
 
 						{ // Inform Direct3D 12 about the resource transition
 							CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -858,7 +858,7 @@ namespace Direct3D12Renderer
 					case Renderer::ResourceType::FRAMEBUFFER:
 					{
 						// Get the Direct3D 12 framebuffer instance
-						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+						Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 						// Set the Direct3D 12 render targets
 						const uint32_t numberOfColorTextures = framebuffer->getNumberOfColorTextures();
@@ -952,7 +952,7 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::SWAP_CHAIN:
 				{
 					// Get the Direct3D 12 swap chain instance
-					SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
+					SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
 
 					// Clear the Direct3D 12 render target view?
 					if (flags & Renderer::ClearFlag::COLOR)
@@ -983,7 +983,7 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::FRAMEBUFFER:
 				{
 					// Get the Direct3D 12 framebuffer instance
-					Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+					Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 					// Clear all Direct3D 12 render target views?
 					if (flags & Renderer::ClearFlag::COLOR)
@@ -1124,7 +1124,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::setDebugMarker(const char *name)
+	void Direct3D12Renderer::setDebugMarker(const char* name)
 	{
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			if (nullptr != mD3D12GraphicsCommandList)
@@ -1135,7 +1135,7 @@ namespace Direct3D12Renderer
 		#endif
 	}
 
-	void Direct3D12Renderer::beginDebugEvent(const char *name)
+	void Direct3D12Renderer::beginDebugEvent(const char* name)
 	{
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			if (nullptr != mD3D12GraphicsCommandList)
@@ -1169,7 +1169,7 @@ namespace Direct3D12Renderer
 		#endif
 	}
 
-	Renderer::ISwapChain *Direct3D12Renderer::getMainSwapChain() const
+	Renderer::ISwapChain* Direct3D12Renderer::getMainSwapChain() const
 	{
 		return static_cast<Renderer::ISwapChain*>(mMainSwapChain);
 	}
@@ -1186,7 +1186,7 @@ namespace Direct3D12Renderer
 		return numberOfShaderLanguages;
 	}
 
-	const char *Direct3D12Renderer::getShaderLanguageName(uint32_t index) const
+	const char* Direct3D12Renderer::getShaderLanguageName(uint32_t index) const
 	{
 		// HLSL supported
 		if (0 == index)
@@ -1198,7 +1198,7 @@ namespace Direct3D12Renderer
 		return nullptr;
 	}
 
-	Renderer::IShaderLanguage *Direct3D12Renderer::getShaderLanguage(const char *shaderLanguageName)
+	Renderer::IShaderLanguage* Direct3D12Renderer::getShaderLanguage(const char* shaderLanguageName)
 	{
 		// In case "shaderLanguage" is a null pointer, use the default shader language
 		if (nullptr != shaderLanguageName)
@@ -1229,39 +1229,39 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *Direct3D12Renderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::ISwapChain* Direct3D12Renderer::createSwapChain(handle nativeWindowHandle, bool)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *Direct3D12Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment)
+	Renderer::IFramebuffer* Direct3D12Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
 	{
 		// Validation is done inside the framebuffer implementation
 		return new Framebuffer(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
-	Renderer::IBufferManager *Direct3D12Renderer::createBufferManager()
+	Renderer::IBufferManager* Direct3D12Renderer::createBufferManager()
 	{
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITextureManager *Direct3D12Renderer::createTextureManager()
+	Renderer::ITextureManager* Direct3D12Renderer::createTextureManager()
 	{
 		return new TextureManager(*this);
 	}
 
-	Renderer::IRootSignature *Direct3D12Renderer::createRootSignature(const Renderer::RootSignature& rootSignature)
+	Renderer::IRootSignature* Direct3D12Renderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
 		return new RootSignature(*this, rootSignature);
 	}
 
-	Renderer::IPipelineState *Direct3D12Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
+	Renderer::IPipelineState* Direct3D12Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::ISamplerState *Direct3D12Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	Renderer::ISamplerState* Direct3D12Renderer::createSamplerState(const Renderer::SamplerState& samplerState)
 	{
 		return new SamplerState(*this, samplerState);
 	}

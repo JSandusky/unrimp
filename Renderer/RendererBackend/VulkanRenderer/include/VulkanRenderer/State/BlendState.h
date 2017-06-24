@@ -70,7 +70,7 @@ namespace VulkanRenderer
 		*  @param[in] blendState
 		*    Blend state to use
 		*/
-		BlendState(const Renderer::BlendState &blendState);
+		BlendState(const Renderer::BlendState& blendState);
 
 		/**
 		*  @brief

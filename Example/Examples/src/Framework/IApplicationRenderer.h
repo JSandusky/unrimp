@@ -139,7 +139,7 @@ public:
 	*  @param[in] example
 	*    Pointer to an example which should be used
 	*/
-	explicit IApplicationRenderer(const char *rendererName, ExampleBase* example);
+	explicit IApplicationRenderer(const char* rendererName, ExampleBase* example);
 
 	/**
 	*  @brief
@@ -152,8 +152,8 @@ public:
 //[ Public virtual IApplicationFrontend methods           ]
 //[-------------------------------------------------------]
 public:
-	inline Renderer::IRenderer *getRenderer() const override;
-	inline Renderer::IRenderTarget *getMainRenderTarget() const override;
+	inline Renderer::IRenderer* getRenderer() const override;
+	inline Renderer::IRenderTarget* getMainRenderTarget() const override;
 
 
 //[-------------------------------------------------------]
@@ -185,7 +185,7 @@ protected:
 	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
 	*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 	*/
-	explicit IApplicationRenderer(const char *rendererName);
+	explicit IApplicationRenderer(const char* rendererName);
 
 	/**
 	*  @brief
@@ -224,7 +224,7 @@ private:
 	*  @return
 	*    The created renderer instance, null pointer on error
 	*/
-	Renderer::IRenderer *createRendererInstance(const char *rendererName);
+	Renderer::IRenderer* createRendererInstance(const char* rendererName);
 
 
 //[-------------------------------------------------------]

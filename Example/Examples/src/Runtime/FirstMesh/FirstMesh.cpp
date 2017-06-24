@@ -151,8 +151,8 @@ void FirstMesh::onInitialization()
 			Renderer::IProgramPtr program;
 			{
 				// Get the shader source code (outsourced to keep an overview)
-				const char *vertexShaderSourceCode = nullptr;
-				const char *fragmentShaderSourceCode = nullptr;
+				const char* vertexShaderSourceCode = nullptr;
+				const char* fragmentShaderSourceCode = nullptr;
 				#include "FirstMesh_GLSL_410.h"
 				#include "FirstMesh_GLSL_ES3.h"
 				#include "FirstMesh_HLSL_D3D9.h"
@@ -265,7 +265,7 @@ void FirstMesh::onDraw()
 		float aspectRatio = 4.0f / 3.0f;
 		{
 			// Get the render target with and height
-			Renderer::IRenderTarget *renderTarget = getMainRenderTarget();
+			Renderer::IRenderTarget* renderTarget = getMainRenderTarget();
 			if (nullptr != renderTarget)
 			{
 				uint32_t width  = 1;

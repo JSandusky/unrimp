@@ -38,7 +38,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCube::TextureCube(Direct3D11Renderer &direct3D11Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
+	TextureCube::TextureCube(Direct3D11Renderer& direct3D11Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITextureCube(direct3D11Renderer, width, height),
 		mTextureFormat(textureFormat),
 		mGenerateMipmaps(false),
@@ -91,8 +91,8 @@ namespace Direct3D11Renderer
 					ID3D11DeviceContext* d3d11DeviceContext = direct3D11Renderer.getD3D11DeviceContext();
 
 					{ // Update Direct3D 11 subresource data of the base-map
-						const uint32_t  bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-						const uint32_t  bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+						const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+						const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
 						for (uint32_t arraySlice = 0; arraySlice < NUMBER_OF_SLICES; ++arraySlice)
 						{
 							d3d11DeviceContext->UpdateSubresource(mD3D11TextureCube, D3D11CalcSubresource(0, arraySlice, numberOfMipmaps), nullptr, data, bytesPerRow, bytesPerSlice);
@@ -202,7 +202,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void TextureCube::setDebugName(const char *name)
+	void TextureCube::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			// Valid Direct3D 11 shader resource view?

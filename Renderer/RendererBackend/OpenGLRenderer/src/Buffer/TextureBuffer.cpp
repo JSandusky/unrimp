@@ -51,7 +51,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(OpenGLRenderer &openGLRenderer) :
+	TextureBuffer::TextureBuffer(OpenGLRenderer& openGLRenderer) :
 		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLTextureBuffer(0),
 		mOpenGLTexture(0)

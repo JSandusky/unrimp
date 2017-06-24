@@ -99,7 +99,7 @@ namespace OpenGLRenderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArrayVao(OpenGLRenderer &openGLRenderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArrayVao(OpenGLRenderer& openGLRenderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer);
 
 
 	//[-------------------------------------------------------]
@@ -108,7 +108,7 @@ namespace OpenGLRenderer
 	protected:
 		uint32_t	   mOpenGLVertexArray;		///< OpenGL vertex array ("container" object, not shared between OpenGL contexts), can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t	   mNumberOfVertexBuffers;	///< Number of vertex buffers
-		VertexBuffer **mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
+		VertexBuffer** mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
 
 
 	//[-------------------------------------------------------]

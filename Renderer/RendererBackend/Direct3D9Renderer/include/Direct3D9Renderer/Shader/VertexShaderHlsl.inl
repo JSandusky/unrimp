@@ -28,12 +28,12 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IDirect3DVertexShader9 *VertexShaderHlsl::getDirect3DVertexShader9() const
+	inline IDirect3DVertexShader9* VertexShaderHlsl::getDirect3DVertexShader9() const
 	{
 		return mDirect3DVertexShader9;
 	}
 
-	inline ID3DXConstantTable *VertexShaderHlsl::getD3DXConstantTable() const
+	inline ID3DXConstantTable* VertexShaderHlsl::getD3DXConstantTable() const
 	{
 		return mD3DXConstantTable;
 	}

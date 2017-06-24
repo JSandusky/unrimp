@@ -37,7 +37,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RasterizerState::RasterizerState(const Renderer::RasterizerState &rasterizerState) :
+	RasterizerState::RasterizerState(const Renderer::RasterizerState& rasterizerState) :
 		mDirect3DFillMode(0),	// Set below
 		mDirect3DCullMode(0),	// Set below
 		mDirect3DDepthBias(*(reinterpret_cast<const DWORD*>(&rasterizerState.depthBias))),	// Direct3D 9 type is float, but has to be handed over by using DWORD

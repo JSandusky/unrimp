@@ -76,7 +76,7 @@ namespace Direct3D12Renderer
 		*  @param[in] shaderBytecode
 		*    Shader bytecode
 		*/
-		FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode);
+		FragmentShaderHlsl(Direct3D12Renderer& direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -87,7 +87,7 @@ namespace Direct3D12Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
+		FragmentShaderHlsl(Direct3D12Renderer& direct3D12Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief
@@ -102,14 +102,14 @@ namespace Direct3D12Renderer
 		*  @return
 		*    Direct3D 12 fragment shader blob, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3DBlob *getD3DBlobFragmentShader() const;
+		inline ID3DBlob* getD3DBlobFragmentShader() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]
@@ -124,7 +124,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3DBlob *mD3DBlobFragmentShader;	///< Direct3D 12 fragment shader blob, can be a null pointer
+		ID3DBlob* mD3DBlobFragmentShader;	///< Direct3D 12 fragment shader blob, can be a null pointer
 
 
 	};

@@ -70,7 +70,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] depthStencilState
 		*    Depth stencil state to use
 		*/
-		explicit DepthStencilState(const Renderer::DepthStencilState &depthStencilState);
+		explicit DepthStencilState(const Renderer::DepthStencilState& depthStencilState);
 
 		/**
 		*  @brief
@@ -85,7 +85,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    The depth stencil state
 		*/
-		inline const Renderer::DepthStencilState &getDepthStencilState() const;
+		inline const Renderer::DepthStencilState& getDepthStencilState() const;
 
 		/**
 		*  @brief

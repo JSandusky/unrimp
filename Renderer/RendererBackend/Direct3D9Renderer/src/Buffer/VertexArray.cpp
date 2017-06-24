@@ -40,7 +40,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D9Renderer &direct3D9Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D9Renderer& direct3D9Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
 		IVertexArray(direct3D9Renderer),
 		mDirect3DDevice9(direct3D9Renderer.getDirect3DDevice9()),
 		mIndexBuffer(indexBuffer),
@@ -71,9 +71,9 @@ namespace Direct3D9Renderer
 			IDirect3DVertexBuffer9** currentDirect3DVertexBuffer9 = mDirect3DVertexBuffer9;
 			UINT* currentStride = mStrides;
 			UINT* currentInstancesPerElement = mInstancesPerElement;
-			VertexBuffer **currentVertexBuffer = mVertexBuffers;
-			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + mNumberOfSlots;
-			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentDirect3DVertexBuffer9, ++currentStride, ++currentInstancesPerElement, ++currentVertexBuffer)
+			VertexBuffer** currentVertexBuffer = mVertexBuffers;
+			const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + mNumberOfSlots;
+			for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentDirect3DVertexBuffer9, ++currentStride, ++currentInstancesPerElement, ++currentVertexBuffer)
 			{
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 				*currentStride = vertexBuffer->strideInBytes;
@@ -85,7 +85,7 @@ namespace Direct3D9Renderer
 
 			// Gather instances per element
 			// TODO(co) This will not work when multiple attributes using the same slot, but with a different setting. On the other hand, Direct3D 9 is totally out-of-date and this is just a proof-of-concept.
-			const Renderer::VertexAttribute *attribute = vertexAttributes.attributes;
+			const Renderer::VertexAttribute* attribute = vertexAttributes.attributes;
 			const Renderer::VertexAttribute* attributesEnd = attribute + vertexAttributes.numberOfAttributes;
 			for (; attribute < attributesEnd;  ++attribute)
 			{
@@ -114,8 +114,8 @@ namespace Direct3D9Renderer
 		if (nullptr != mVertexBuffers)
 		{
 			// Release references
-			VertexBuffer **vertexBuffersEnd = mVertexBuffers + mNumberOfSlots;
-			for (VertexBuffer **vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
+			VertexBuffer** vertexBuffersEnd = mVertexBuffers + mNumberOfSlots;
+			for (VertexBuffer** vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
 			{
 				(*vertexBuffer)->releaseReference();
 			}
@@ -132,8 +132,8 @@ namespace Direct3D9Renderer
 	{
 		{ // Set the Direct3D 9 stream sources
 			IDirect3DVertexBuffer9 **currentDirect3DVertexBuffer9AtSlot = mDirect3DVertexBuffer9;
-			uint32_t *currentStrideAtSlot = mStrides;
-			uint32_t *currentInstancesPerElementAtSlot = mInstancesPerElement;
+			uint32_t* currentStrideAtSlot = mStrides;
+			uint32_t* currentInstancesPerElementAtSlot = mInstancesPerElement;
 			for (uint32_t slot = 0; slot < mNumberOfSlots; ++slot, ++currentDirect3DVertexBuffer9AtSlot, ++currentStrideAtSlot, ++currentInstancesPerElementAtSlot)
 			{
 				// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either

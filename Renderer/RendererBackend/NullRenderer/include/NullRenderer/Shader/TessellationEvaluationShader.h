@@ -68,7 +68,7 @@ namespace NullRenderer
 		*  @param[in] nullRenderer
 		*    Owner null renderer instance
 		*/
-		explicit TessellationEvaluationShader(NullRenderer &nullRenderer);
+		explicit TessellationEvaluationShader(NullRenderer& nullRenderer);
 
 		/**
 		*  @brief
@@ -81,7 +81,7 @@ namespace NullRenderer
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]

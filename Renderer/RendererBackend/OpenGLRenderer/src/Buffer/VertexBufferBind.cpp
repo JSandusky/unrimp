@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBufferBind::VertexBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
+	VertexBufferBind::VertexBufferBind(OpenGLRenderer& openGLRenderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
 		VertexBuffer(openGLRenderer)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP

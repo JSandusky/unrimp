@@ -73,7 +73,7 @@ namespace Direct3D11Renderer
 		*  @see
 		*    - "Renderer::IRenderer::isDebugEnabled()"
 		*/
-		virtual void setDebugName(const char *name) = 0;
+		virtual void setDebugName(const char* name) = 0;
 
 
 	};

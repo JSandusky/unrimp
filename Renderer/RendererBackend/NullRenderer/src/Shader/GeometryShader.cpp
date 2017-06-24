@@ -35,7 +35,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShader::GeometryShader(NullRenderer &nullRenderer) :
+	GeometryShader::GeometryShader(NullRenderer& nullRenderer) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here
@@ -50,7 +50,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *GeometryShader::getShaderLanguageName() const
+	const char* GeometryShader::getShaderLanguageName() const
 	{
 		return ShaderLanguage::NAME;
 	}

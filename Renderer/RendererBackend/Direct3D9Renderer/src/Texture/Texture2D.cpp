@@ -38,7 +38,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D9Renderer &direct3D9Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
+	Texture2D::Texture2D(Direct3D9Renderer& direct3D9Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2D(direct3D9Renderer, width, height),
 		mDirect3DTexture9(nullptr)
 	{
@@ -92,7 +92,7 @@ namespace Direct3D9Renderer
 					// Upload the current mipmap
 
 					// Get the surface
-					IDirect3DSurface9 *direct3DSurface9 = nullptr;
+					IDirect3DSurface9* direct3DSurface9 = nullptr;
 					mDirect3DTexture9->GetSurfaceLevel(mipmap, &direct3DSurface9);
 					if (nullptr != direct3DSurface9)
 					{
@@ -115,7 +115,7 @@ namespace Direct3D9Renderer
 				// The user only provided us with the base texture, no mipmaps
 
 				// Get the surface
-				IDirect3DSurface9 *direct3DSurface9 = nullptr;
+				IDirect3DSurface9* direct3DSurface9 = nullptr;
 				mDirect3DTexture9->GetSurfaceLevel(0, &direct3DSurface9);
 				if (nullptr != direct3DSurface9)
 				{
@@ -150,7 +150,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Texture2D::setDebugName(const char *name)
+	void Texture2D::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D9RENDERER_NO_DEBUG
 			// Valid Direct3D 9 texture?
@@ -167,7 +167,7 @@ namespace Direct3D9Renderer
 				{
 					// Get the Direct3D 9 surface
 					const size_t nameLength = strlen(name);
-					IDirect3DSurface9 *direct3DSurface9 = nullptr;
+					IDirect3DSurface9* direct3DSurface9 = nullptr;
 					mDirect3DTexture9->GetSurfaceLevel(level, &direct3DSurface9);
 					if (nullptr != direct3DSurface9)
 					{

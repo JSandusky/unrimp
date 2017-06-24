@@ -37,7 +37,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode) :
+	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES3Renderer& openGLES3Renderer, const char* sourceCode) :
 		IFragmentShader(openGLES3Renderer),
 		mOpenGLES3Shader(ShaderLanguageGlsl::loadShaderFromSourcecode(GL_FRAGMENT_SHADER, sourceCode))
 	{
@@ -55,7 +55,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *FragmentShaderGlsl::getShaderLanguageName() const
+	const char* FragmentShaderGlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageGlsl::NAME;
 	}

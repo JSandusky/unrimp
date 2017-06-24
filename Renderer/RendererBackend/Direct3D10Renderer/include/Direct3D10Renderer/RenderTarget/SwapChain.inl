@@ -28,17 +28,17 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IDXGISwapChain *SwapChain::getDXGISwapChain() const
+	inline IDXGISwapChain* SwapChain::getDXGISwapChain() const
 	{
 		return mDxgiSwapChain;
 	}
 
-	inline ID3D10RenderTargetView *SwapChain::getD3D10RenderTargetView() const
+	inline ID3D10RenderTargetView* SwapChain::getD3D10RenderTargetView() const
 	{
 		return mD3D10RenderTargetView;
 	}
 
-	inline ID3D10DepthStencilView *SwapChain::getD3D10DepthStencilView() const
+	inline ID3D10DepthStencilView* SwapChain::getD3D10DepthStencilView() const
 	{
 		return mD3D10DepthStencilView;
 	}

@@ -79,13 +79,13 @@ bool X11Application::handlePendingEvents()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-bool X11Application::HandleEvent(XEvent &event)
+bool X11Application::HandleEvent(XEvent& event)
 {
 	std::map<WindowHandle, WindowEntry>::iterator it = mWindows.find(event.xany.window);
 	return (it != mWindows.end()) ? it->second.x11Window->HandleEvent(event) : false;
 }
 
-void X11Application::AddWindowToEventLoop(X11Window &window)
+void X11Application::AddWindowToEventLoop(X11Window& window)
 {
 	// Ensure that the window was not already added
 	std::map<WindowHandle, WindowEntry>::iterator it = mWindows.find(window.winId());
@@ -96,7 +96,7 @@ void X11Application::AddWindowToEventLoop(X11Window &window)
 	}
 }
 
-void X11Application::RemoveWindowFromEventLoop(const X11Window &window)
+void X11Application::RemoveWindowFromEventLoop(const X11Window& window)
 {
 	std::map<WindowHandle, WindowEntry>::iterator it = mWindows.find(window.winId());
 	if (it != mWindows.end())
@@ -105,13 +105,13 @@ void X11Application::RemoveWindowFromEventLoop(const X11Window &window)
 	}
 }
 
-X11Application::X11Application(const X11Application &) :
+X11Application::X11Application(const X11Application&) :
 	mDisplay(nullptr)
 {
 	// Nothing here
 }
 
-X11Application& X11Application::operator=(const X11Application &)
+X11Application& X11Application::operator=(const X11Application&)
 {
 	return *this;
 }

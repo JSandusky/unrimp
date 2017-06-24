@@ -34,7 +34,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(NullRenderer &nullRenderer, uint32_t width, uint32_t height) :
+	Texture2D::Texture2D(NullRenderer& nullRenderer, uint32_t width, uint32_t height) :
 		ITexture2D(reinterpret_cast<Renderer::IRenderer&>(nullRenderer), width, height)
 	{
 		// Nothing here

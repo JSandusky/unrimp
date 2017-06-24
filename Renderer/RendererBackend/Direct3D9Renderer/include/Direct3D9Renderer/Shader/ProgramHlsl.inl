@@ -28,12 +28,12 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline VertexShaderHlsl *ProgramHlsl::getVertexShaderHlsl() const
+	inline VertexShaderHlsl* ProgramHlsl::getVertexShaderHlsl() const
 	{
 		return mVertexShaderHlsl;
 	}
 
-	inline FragmentShaderHlsl *ProgramHlsl::getFragmentShaderHlsl() const
+	inline FragmentShaderHlsl* ProgramHlsl::getFragmentShaderHlsl() const
 	{
 		return mFragmentShaderHlsl;
 	}

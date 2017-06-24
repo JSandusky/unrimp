@@ -94,7 +94,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The used index buffer, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IndexBuffer *getIndexBuffer() const;
+		inline IndexBuffer* getIndexBuffer() const;
 
 		/**
 		*  @brief
@@ -121,7 +121,7 @@ namespace OpenGLRenderer
 		*  @param[in] internalResourceType
 		*    Internal resource type
 		*/
-		VertexArray(OpenGLRenderer &openGLRenderer, IndexBuffer *indexBuffer, InternalResourceType::Enum internalResourceType);
+		VertexArray(OpenGLRenderer& openGLRenderer, IndexBuffer* indexBuffer, InternalResourceType::Enum internalResourceType);
 
 
 	//[-------------------------------------------------------]
@@ -136,8 +136,8 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IndexBuffer				   *mIndexBuffer;			///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
-		InternalResourceType::Enum  mInternalResourceType;	///< Internal resource type
+		IndexBuffer*			   mIndexBuffer;			///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
+		InternalResourceType::Enum mInternalResourceType;	///< Internal resource type
 
 
 	};

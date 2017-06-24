@@ -28,7 +28,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D10BlendState *BlendState::getD3D10BlendState() const
+	inline ID3D10BlendState* BlendState::getD3D10BlendState() const
 	{
 		return mD3D10BlendState;
 	}

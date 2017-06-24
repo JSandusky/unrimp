@@ -42,7 +42,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
+	Framebuffer::Framebuffer(Direct3D11Renderer& direct3D11Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
 		IFramebuffer(direct3D11Renderer),
 		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
 		mColorTextures(nullptr),	// Set below
@@ -65,9 +65,9 @@ namespace Direct3D11Renderer
 			mD3D11RenderTargetViews = new ID3D11RenderTargetView*[mNumberOfColorTextures];
 
 			// Loop through all color textures
-			ID3D11RenderTargetView **d3d11RenderTargetView = mD3D11RenderTargetViews;
-			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++d3d11RenderTargetView)
+			ID3D11RenderTargetView** d3d11RenderTargetView = mD3D11RenderTargetViews;
+			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++d3d11RenderTargetView)
 			{
 				// Valid entry?
 				if (nullptr != colorFramebufferAttachments->texture)
@@ -85,7 +85,7 @@ namespace Direct3D11Renderer
 							assert(0 == colorFramebufferAttachments->layerIndex);
 
 							// Update the framebuffer width and height if required
-							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+							Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
 							if (mWidth > texture2D->getWidth())
 							{
 								mWidth = texture2D->getWidth();
@@ -113,7 +113,7 @@ namespace Direct3D11Renderer
 						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 						{
 							// Update the framebuffer width and height if required
-							Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+							Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
 							if (mWidth > texture2DArray->getWidth())
 							{
 								mWidth = texture2DArray->getWidth();
@@ -190,7 +190,7 @@ namespace Direct3D11Renderer
 					assert(0 == depthStencilFramebufferAttachment->layerIndex);
 
 					// Update the framebuffer width and height if required
-					Texture2D *texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
+					Texture2D* texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
 					if (mWidth > texture2D->getWidth())
 					{
 						mWidth = texture2D->getWidth();
@@ -218,7 +218,7 @@ namespace Direct3D11Renderer
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
 					// Update the framebuffer width and height if required
-					Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(mDepthStencilTexture);
+					Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(mDepthStencilTexture);
 					if (mWidth > texture2DArray->getWidth())
 					{
 						mWidth = texture2DArray->getWidth();
@@ -295,8 +295,8 @@ namespace Direct3D11Renderer
 		if (nullptr != mD3D11RenderTargetViews)
 		{
 			// Release references
-			ID3D11RenderTargetView **d3d11RenderTargetViewsEnd = mD3D11RenderTargetViews + mNumberOfColorTextures;
-			for (ID3D11RenderTargetView **d3d11RenderTargetView = mD3D11RenderTargetViews; d3d11RenderTargetView < d3d11RenderTargetViewsEnd; ++d3d11RenderTargetView)
+			ID3D11RenderTargetView** d3d11RenderTargetViewsEnd = mD3D11RenderTargetViews + mNumberOfColorTextures;
+			for (ID3D11RenderTargetView** d3d11RenderTargetView = mD3D11RenderTargetViews; d3d11RenderTargetView < d3d11RenderTargetViewsEnd; ++d3d11RenderTargetView)
 			{
 				// Valid entry?
 				if (nullptr != *d3d11RenderTargetView)
@@ -311,8 +311,8 @@ namespace Direct3D11Renderer
 		if (nullptr != mColorTextures)
 		{
 			// Release references
-			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 			{
 				// Valid entry?
 				if (nullptr != *colorTexture)
@@ -344,13 +344,13 @@ namespace Direct3D11Renderer
 		assert(mGenerateMipmaps);
 
 		// TODO(co) Complete, currently only 2D textures are supported
-		Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-		for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+		Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+		for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 		{
 			// Valid entry?
 			if (nullptr != *colorTexture && (*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
 			{
-				Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+				Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
 				if (texture2D->getGenerateMipmaps())
 				{
 					d3d11DeviceContext.GenerateMips(texture2D->getD3D11ShaderResourceView());
@@ -363,14 +363,14 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Framebuffer::setDebugName(const char *name)
+	void Framebuffer::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			{ // Assign a debug name to the Direct3D 11 render target view, do also add the index to the name
 				const size_t nameLength = strlen(name) + 5;	// Direct3D 11 supports 8 render targets ("D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT", so: One digit + one [ + one ] + one space + terminating zero = 5 characters)
-				char *nameWithIndex = new char[nameLength];
-				ID3D11RenderTargetView **d3d11RenderTargetViewsEnd = mD3D11RenderTargetViews + mNumberOfColorTextures;
-				for (ID3D11RenderTargetView **d3d11RenderTargetView = mD3D11RenderTargetViews; d3d11RenderTargetView < d3d11RenderTargetViewsEnd; ++d3d11RenderTargetView)
+				char* nameWithIndex = new char[nameLength];
+				ID3D11RenderTargetView** d3d11RenderTargetViewsEnd = mD3D11RenderTargetViews + mNumberOfColorTextures;
+				for (ID3D11RenderTargetView** d3d11RenderTargetView = mD3D11RenderTargetViews; d3d11RenderTargetView < d3d11RenderTargetViewsEnd; ++d3d11RenderTargetView)
 				{
 					// Set the debug name
 					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
@@ -396,7 +396,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void Framebuffer::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void Framebuffer::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// No fancy implementation in here, just copy over the internal information
 		width  = mWidth;

@@ -134,7 +134,7 @@ namespace Direct3D12Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	#if !defined(DIRECT3D12RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
-		void IndirectBuffer::setDebugName(const char *)
+		void IndirectBuffer::setDebugName(const char*)
 		{
 			// TODO(co) Direct3D 12 update
 			/*
@@ -160,7 +160,7 @@ namespace Direct3D12Renderer
 		*/
 		}
 	#else
-		void IndirectBuffer::setDebugName(const char *)
+		void IndirectBuffer::setDebugName(const char*)
 		{
 			// Nothing here
 		}

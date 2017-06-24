@@ -38,7 +38,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBufferDsa::TextureBufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage) :
+	TextureBufferDsa::TextureBufferDsa(OpenGLRenderer& openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void* data, Renderer::BufferUsage bufferUsage) :
 		TextureBuffer(openGLRenderer)
 	{
 		if (openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
@@ -104,7 +104,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	void TextureBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	void TextureBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
 		assert(nullptr != data);

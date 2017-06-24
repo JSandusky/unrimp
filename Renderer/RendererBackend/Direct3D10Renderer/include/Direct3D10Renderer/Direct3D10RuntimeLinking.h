@@ -110,8 +110,8 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void *mD3D10SharedLibrary;		///< D3D10 shared library, can be a null pointer
-		void *mD3DX10SharedLibrary;		///< D3DX10 shared library, can be a null pointer
+		void* mD3D10SharedLibrary;		///< D3D10 shared library, can be a null pointer
+		void* mD3DX10SharedLibrary;		///< D3DX10 shared library, can be a null pointer
 		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
 		bool  mInitialized;				///< Already initialized?
 
@@ -129,8 +129,8 @@ namespace Direct3D10Renderer
 	#endif
 	typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
 	typedef ID3D10Blob ID3DBlob;
-	FNDEF_D3D10(HRESULT,	D3D10CreateDevice,	(IDXGIAdapter *, D3D10_DRIVER_TYPE, HMODULE, UINT, UINT, ID3D10Device **));
-	FNDEF_D3D10(HRESULT,	D3D10CreateBlob,	(SIZE_T NumBytes, LPD3D10BLOB *ppBuffer));
+	FNDEF_D3D10(HRESULT,	D3D10CreateDevice,	(IDXGIAdapter*, D3D10_DRIVER_TYPE, HMODULE, UINT, UINT, ID3D10Device**));
+	FNDEF_D3D10(HRESULT,	D3D10CreateBlob,	(SIZE_T NumBytes, LPD3D10BLOB* ppBuffer));
 
 
 	//[-------------------------------------------------------]
@@ -141,8 +141,8 @@ namespace Direct3D10Renderer
 	#else
 		#define FNDEF_D3DX10(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
-	FNDEF_D3DX10(HRESULT,	D3DX10CompileFromMemory,	(LPCSTR, SIZE_T, LPCSTR, CONST D3D10_SHADER_MACRO *, LPD3D10INCLUDE, LPCSTR, LPCSTR, UINT, UINT, ID3DX10ThreadPump *, ID3D10Blob **, ID3D10Blob **, HRESULT *));
-	FNDEF_D3DX10(HRESULT,	D3DX10FilterTexture,		(ID3D10Resource *, UINT, UINT));
+	FNDEF_D3DX10(HRESULT,	D3DX10CompileFromMemory,	(LPCSTR, SIZE_T, LPCSTR, CONST D3D10_SHADER_MACRO*, LPD3D10INCLUDE, LPCSTR, LPCSTR, UINT, UINT, ID3DX10ThreadPump*, ID3D10Blob**, ID3D10Blob**, HRESULT*));
+	FNDEF_D3DX10(HRESULT,	D3DX10FilterTexture,		(ID3D10Resource*, UINT, UINT));
 
 
 	//[-------------------------------------------------------]

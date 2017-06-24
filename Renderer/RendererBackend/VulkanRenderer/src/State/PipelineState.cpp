@@ -39,7 +39,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(VulkanRenderer &vulkanRenderer, const Renderer::PipelineState& pipelineState) :
+	PipelineState::PipelineState(VulkanRenderer& vulkanRenderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(vulkanRenderer),
 		mProgram(pipelineState.program),
 		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),

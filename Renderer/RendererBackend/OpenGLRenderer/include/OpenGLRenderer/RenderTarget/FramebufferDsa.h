@@ -69,7 +69,7 @@ namespace OpenGLRenderer
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		FramebufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment);
+		FramebufferDsa(OpenGLRenderer& openGLRenderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment);
 
 		/**
 		*  @brief

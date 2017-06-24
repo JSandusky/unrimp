@@ -87,7 +87,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The primary device context, null pointer on error
 		*/
-		inline Display *getDisplay() const;
+		inline Display* getDisplay() const;
 
 		/**
 		*  @brief
@@ -145,8 +145,8 @@ namespace OpenGLRenderer
 	private:
 		handle		 mNativeWindowHandle;	///< OpenGL window, can be a null pointer (Window)
 		handle		 mDummyWindow;			///< OpenGL dummy window, can be a null pointer (Window)
-		Display		*mDisplay;				///< The device context of the OpenGL dummy window, can be a null pointer
-		XVisualInfo *m_pDummyVisualInfo;
+		Display*	 mDisplay;				///< The device context of the OpenGL dummy window, can be a null pointer
+		XVisualInfo* m_pDummyVisualInfo;
 		GLXContext	 mWindowRenderContext;	///< The render context of the OpenGL dummy window, can be a null pointer
 		bool		 mUseExternalContext;
 		bool		 mOwnsRenderContext;	///< Does this context own the OpenGL render context?

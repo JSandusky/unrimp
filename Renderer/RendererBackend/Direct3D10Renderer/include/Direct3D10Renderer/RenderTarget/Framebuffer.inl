@@ -33,22 +33,22 @@ namespace Direct3D10Renderer
 		return mNumberOfColorTextures;
 	}
 
-	inline Renderer::ITexture **Framebuffer::getColorTextures() const
+	inline Renderer::ITexture** Framebuffer::getColorTextures() const
 	{
 		return mColorTextures;
 	}
 
-	inline Renderer::ITexture *Framebuffer::getDepthStencilTexture() const
+	inline Renderer::ITexture* Framebuffer::getDepthStencilTexture() const
 	{
 		return mDepthStencilTexture;
 	}
 
-	inline ID3D10RenderTargetView **Framebuffer::getD3D10RenderTargetViews() const
+	inline ID3D10RenderTargetView** Framebuffer::getD3D10RenderTargetViews() const
 	{
 		return mD3D10RenderTargetViews;
 	}
 
-	inline ID3D10DepthStencilView *Framebuffer::getD3D10DepthStencilView() const
+	inline ID3D10DepthStencilView* Framebuffer::getD3D10DepthStencilView() const
 	{
 		return mD3D10DepthStencilView;
 	}

@@ -70,7 +70,7 @@ namespace VulkanRenderer
 		*  @param[in] samplerState
 		*    Sampler state to use
 		*/
-		SamplerState(VulkanRenderer &vulkanRenderer, const Renderer::SamplerState &samplerState);
+		SamplerState(VulkanRenderer& vulkanRenderer, const Renderer::SamplerState& samplerState);
 
 		/**
 		*  @brief

@@ -39,7 +39,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(VulkanRenderer &vulkanRenderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
+	Framebuffer::Framebuffer(VulkanRenderer& vulkanRenderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
 		IFramebuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer)),
 		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
 		mColorTextures(nullptr),	// Set below
@@ -53,8 +53,8 @@ namespace VulkanRenderer
 			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];
 
 			// Loop through all color textures
-			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments)
+			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments)
 			{
 				// Valid entry?
 				if (nullptr != colorFramebufferAttachments->texture)
@@ -72,7 +72,7 @@ namespace VulkanRenderer
 							assert(0 == colorFramebufferAttachments->layerIndex);
 
 							// Update the framebuffer width and height if required
-							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+							Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
 							if (mWidth > texture2D->getWidth())
 							{
 								mWidth = texture2D->getWidth();
@@ -87,7 +87,7 @@ namespace VulkanRenderer
 						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 						{
 							// Update the framebuffer width and height if required
-							Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+							Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
 							if (mWidth > texture2DArray->getWidth())
 							{
 								mWidth = texture2DArray->getWidth();
@@ -147,7 +147,7 @@ namespace VulkanRenderer
 					assert(0 == depthStencilFramebufferAttachment->layerIndex);
 
 					// Update the framebuffer width and height if required
-					Texture2D *texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
+					Texture2D* texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
 					if (mWidth > texture2D->getWidth())
 					{
 						mWidth = texture2D->getWidth();
@@ -162,7 +162,7 @@ namespace VulkanRenderer
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
 					// Update the framebuffer width and height if required
-					Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(mDepthStencilTexture);
+					Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(mDepthStencilTexture);
 					if (mWidth > texture2DArray->getWidth())
 					{
 						mWidth = texture2DArray->getWidth();
@@ -223,8 +223,8 @@ namespace VulkanRenderer
 		if (nullptr != mColorTextures)
 		{
 			// Release references
-			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 			{
 				// Valid entry?
 				if (nullptr != *colorTexture)
@@ -249,7 +249,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void Framebuffer::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void Framebuffer::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// No fancy implementation in here, just copy over the internal information
 		width  = mWidth;

@@ -78,7 +78,7 @@ namespace VulkanRenderer
 		*  @param[in] pipelineState
 		*    Pipeline state to use
 		*/
-		PipelineState(VulkanRenderer &vulkanRenderer, const Renderer::PipelineState &pipelineState);
+		PipelineState(VulkanRenderer& vulkanRenderer, const Renderer::PipelineState& pipelineState);
 
 		/**
 		*  @brief

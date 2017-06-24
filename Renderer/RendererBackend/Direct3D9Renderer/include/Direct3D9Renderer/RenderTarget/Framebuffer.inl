@@ -33,12 +33,12 @@ namespace Direct3D9Renderer
 		return mNumberOfColorTextures;
 	}
 
-	inline IDirect3DSurface9 **Framebuffer::getDirect3DSurface9Colors() const
+	inline IDirect3DSurface9** Framebuffer::getDirect3DSurface9Colors() const
 	{
 		return mDirect3D9ColorSurfaces;
 	}
 
-	inline IDirect3DSurface9 *Framebuffer::getDirect3DSurface9DepthStencil() const
+	inline IDirect3DSurface9* Framebuffer::getDirect3DSurface9DepthStencil() const
 	{
 		return mDirect3D9DepthStencilSurface;
 	}

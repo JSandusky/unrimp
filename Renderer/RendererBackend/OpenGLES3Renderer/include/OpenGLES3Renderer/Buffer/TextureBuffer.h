@@ -101,7 +101,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the texture buffer, must be valid
 		*/
-		TextureBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes);
+		TextureBuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfBytes);
 
 
 	//[-------------------------------------------------------]

@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramMonolithicDsa::ProgramMonolithicDsa(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderMonolithic *vertexShaderMonolithic, TessellationControlShaderMonolithic *tessellationControlShaderMonolithic, TessellationEvaluationShaderMonolithic *tessellationEvaluationShaderMonolithic, GeometryShaderMonolithic *geometryShaderMonolithic, FragmentShaderMonolithic *fragmentShaderMonolithic) :
+	ProgramMonolithicDsa::ProgramMonolithicDsa(OpenGLRenderer& openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderMonolithic* vertexShaderMonolithic, TessellationControlShaderMonolithic* tessellationControlShaderMonolithic, TessellationEvaluationShaderMonolithic* tessellationEvaluationShaderMonolithic, GeometryShaderMonolithic* geometryShaderMonolithic, FragmentShaderMonolithic* fragmentShaderMonolithic) :
 		ProgramMonolithic(openGLRenderer, rootSignature, vertexAttributes, vertexShaderMonolithic, tessellationControlShaderMonolithic, tessellationEvaluationShaderMonolithic, geometryShaderMonolithic, fragmentShaderMonolithic)
 	{
 		// Nothing here
@@ -63,7 +63,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void ProgramMonolithicDsa::setUniform2fv(handle uniformHandle, const float *value)
+	void ProgramMonolithicDsa::setUniform2fv(handle uniformHandle, const float* value)
 	{
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
 		{
@@ -75,7 +75,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void ProgramMonolithicDsa::setUniform3fv(handle uniformHandle, const float *value)
+	void ProgramMonolithicDsa::setUniform3fv(handle uniformHandle, const float* value)
 	{
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
 		{
@@ -87,7 +87,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void ProgramMonolithicDsa::setUniform4fv(handle uniformHandle, const float *value)
+	void ProgramMonolithicDsa::setUniform4fv(handle uniformHandle, const float* value)
 	{
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
 		{
@@ -99,7 +99,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void ProgramMonolithicDsa::setUniformMatrix3fv(handle uniformHandle, const float *value)
+	void ProgramMonolithicDsa::setUniformMatrix3fv(handle uniformHandle, const float* value)
 	{
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
 		{
@@ -111,7 +111,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void ProgramMonolithicDsa::setUniformMatrix4fv(handle uniformHandle, const float *value)
+	void ProgramMonolithicDsa::setUniformMatrix4fv(handle uniformHandle, const float* value)
 	{
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
 		{

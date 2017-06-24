@@ -85,7 +85,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    Direct3D 12 usage (type "D3D12_USAGE" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getDirect3D12UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t &cpuAccessFlags);
+		static uint32_t getDirect3D12UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t& cpuAccessFlags);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]

@@ -39,7 +39,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RootSignature::RootSignature(Direct3D12Renderer &direct3D12Renderer, const Renderer::RootSignature& rootSignature) :
+	RootSignature::RootSignature(Direct3D12Renderer& direct3D12Renderer, const Renderer::RootSignature& rootSignature) :
 		IRootSignature(direct3D12Renderer),
 		mD3D12RootSignature(nullptr)
 	{
@@ -153,7 +153,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void RootSignature::setDebugName(const char *name)
+	void RootSignature::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 root signature?

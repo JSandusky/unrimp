@@ -92,7 +92,7 @@ namespace OpenGLRenderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramSeparate(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate);
+		ProgramSeparate(OpenGLRenderer& openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate* vertexShaderSeparate, TessellationControlShaderSeparate* tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate* tessellationEvaluationShaderSeparate, GeometryShaderSeparate* geometryShaderSeparate, FragmentShaderSeparate* fragmentShaderSeparate);
 
 		/**
 		*  @brief
@@ -123,14 +123,14 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	public:
-		virtual handle getUniformHandle(const char *uniformName) override;
+		virtual handle getUniformHandle(const char* uniformName) override;
 		virtual void setUniform1i(handle uniformHandle, int value) override;
 		virtual void setUniform1f(handle uniformHandle, float value) override;
-		virtual void setUniform2fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform4fv(handle uniformHandle, const float *value) override;
-		virtual void setUniformMatrix3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniformMatrix4fv(handle uniformHandle, const float *value) override;
+		virtual void setUniform2fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform4fv(handle uniformHandle, const float* value) override;
+		virtual void setUniformMatrix3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniformMatrix4fv(handle uniformHandle, const float* value) override;
 
 
 	//[-------------------------------------------------------]
@@ -138,11 +138,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	protected:
 		uint32_t							  mOpenGLProgramPipeline;					///< OpenGL program pipeline ("container" object, not shared between OpenGL contexts), can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		VertexShaderSeparate				 *mVertexShaderSeparate;					///< Vertex shader the program is using (we keep a reference to it), can be a null pointer
-		TessellationControlShaderSeparate	 *mTessellationControlShaderSeparate;		///< Tessellation control shader the program is using (we keep a reference to it), can be a null pointer
-		TessellationEvaluationShaderSeparate *mTessellationEvaluationShaderSeparate;	///< Tessellation evaluation shader the program is using (we keep a reference to it), can be a null pointer
-		GeometryShaderSeparate				 *mGeometryShaderSeparate;					///< Geometry shader the program is using (we keep a reference to it), can be a null pointer
-		FragmentShaderSeparate				 *mFragmentShaderSeparate;					///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
+		VertexShaderSeparate*				  mVertexShaderSeparate;					///< Vertex shader the program is using (we keep a reference to it), can be a null pointer
+		TessellationControlShaderSeparate*	  mTessellationControlShaderSeparate;		///< Tessellation control shader the program is using (we keep a reference to it), can be a null pointer
+		TessellationEvaluationShaderSeparate* mTessellationEvaluationShaderSeparate;	///< Tessellation evaluation shader the program is using (we keep a reference to it), can be a null pointer
+		GeometryShaderSeparate*				  mGeometryShaderSeparate;					///< Geometry shader the program is using (we keep a reference to it), can be a null pointer
+		FragmentShaderSeparate*				  mFragmentShaderSeparate;					///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
 
 
 	//[-------------------------------------------------------]

@@ -104,7 +104,7 @@ namespace OpenGLES3Renderer
 		*  @note
 		*    - Do never ever use a not properly initialized renderer! Use "Renderer::IRenderer::isInitialized()" to check the initialization state.
 		*/
-		explicit OpenGLES3Renderer(handle nativeWindowHandle, bool useExternalContext);
+		OpenGLES3Renderer(handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
@@ -119,28 +119,28 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    The context instance, do not free the memory the reference is pointing to
 		*/
-		inline IContext &getContext() const;
+		inline IContext& getContext() const;
 
 		//[-------------------------------------------------------]
 		//[ States                                                ]
 		//[-------------------------------------------------------]
-		void setGraphicsRootSignature(Renderer::IRootSignature *rootSignature);
+		void setGraphicsRootSignature(Renderer::IRootSignature* rootSignature);
 		void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource);
-		void setPipelineState(Renderer::IPipelineState *pipelineState);
+		void setPipelineState(Renderer::IPipelineState* pipelineState);
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
-		void iaSetVertexArray(Renderer::IVertexArray *vertexArray);
+		void iaSetVertexArray(Renderer::IVertexArray* vertexArray);
 		void iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]
-		void rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports);
-		void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles);
+		void rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports);
+		void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles);
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
-		void omSetRenderTarget(Renderer::IRenderTarget *renderTarget);
+		void omSetRenderTarget(Renderer::IRenderTarget* renderTarget);
 		//[-------------------------------------------------------]
 		//[ Operations                                            ]
 		//[-------------------------------------------------------]
@@ -155,8 +155,8 @@ namespace OpenGLES3Renderer
 		//[-------------------------------------------------------]
 		//[ Debug                                                 ]
 		//[-------------------------------------------------------]
-		void setDebugMarker(const char *name);
-		void beginDebugEvent(const char *name);
+		void setDebugMarker(const char* name);
+		void beginDebugEvent(const char* name);
 		void endDebugEvent();
 
 
@@ -164,31 +164,31 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getName() const override;
+		virtual const char* getName() const override;
 		virtual bool isInitialized() const override;
 		virtual bool isDebugEnabled() override;
-		virtual Renderer::ISwapChain *getMainSwapChain() const override;
+		virtual Renderer::ISwapChain* getMainSwapChain() const override;
 		//[-------------------------------------------------------]
 		//[ Shader language                                       ]
 		//[-------------------------------------------------------]
 		virtual uint32_t getNumberOfShaderLanguages() const override;
-		virtual const char *getShaderLanguageName(uint32_t index) const override;
-		virtual Renderer::IShaderLanguage *getShaderLanguage(const char *shaderLanguageName = nullptr) override;
+		virtual const char* getShaderLanguageName(uint32_t index) const override;
+		virtual Renderer::IShaderLanguage* getShaderLanguage(const char* shaderLanguageName = nullptr) override;
 		//[-------------------------------------------------------]
 		//[ Resource creation                                     ]
 		//[-------------------------------------------------------]
-		virtual Renderer::ISwapChain *createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) override;
-		virtual Renderer::IFramebuffer *createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment = nullptr) override;
-		virtual Renderer::IBufferManager *createBufferManager() override;
-		virtual Renderer::ITextureManager *createTextureManager() override;
-		virtual Renderer::IRootSignature *createRootSignature(const Renderer::RootSignature &rootSignature) override;
-		virtual Renderer::IPipelineState *createPipelineState(const Renderer::PipelineState &pipelineState) override;
-		virtual Renderer::ISamplerState *createSamplerState(const Renderer::SamplerState &samplerState) override;
+		virtual Renderer::ISwapChain* createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) override;
+		virtual Renderer::IFramebuffer* createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) override;
+		virtual Renderer::IBufferManager* createBufferManager() override;
+		virtual Renderer::ITextureManager* createTextureManager() override;
+		virtual Renderer::IRootSignature* createRootSignature(const Renderer::RootSignature& rootSignature) override;
+		virtual Renderer::IPipelineState* createPipelineState(const Renderer::PipelineState& pipelineState) override;
+		virtual Renderer::ISamplerState* createSamplerState(const Renderer::SamplerState& samplerState) override;
 		//[-------------------------------------------------------]
 		//[ Resource handling                                     ]
 		//[-------------------------------------------------------]
-		virtual bool map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource) override;
-		virtual void unmap(Renderer::IResource &resource, uint32_t subresource) override;
+		virtual bool map(Renderer::IResource& resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource& mappedSubresource) override;
+		virtual void unmap(Renderer::IResource& resource, uint32_t subresource) override;
 		//[-------------------------------------------------------]
 		//[ Operations                                            ]
 		//[-------------------------------------------------------]
@@ -225,7 +225,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] userParam
 		*    Additional user parameter of the debug message
 		*/
-		static void CALLBACK debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int length, const char *message, const void *userParam);
+		static void CALLBACK debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int length, const char* message, const void* userParam);
 
 
 	//[-------------------------------------------------------]
@@ -248,7 +248,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] program
 		*    Program to set
 		*/
-		void setProgram(Renderer::IProgram *program);
+		void setProgram(Renderer::IProgram* program);
 
 		/**
 		*  @brief
@@ -264,19 +264,19 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IContext				  *mContext;							///< Context instance, always valid
-		Renderer::IShaderLanguage *mShaderLanguageGlsl;					///< GLSL shader language instance (we keep a reference to it), can be a null pointer
-		RootSignature			  *mGraphicsRootSignature;				///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
-		Renderer::ISamplerState	  *mDefaultSamplerState;				///< Default rasterizer state (we keep a reference to it), can be a null pointer
+		IContext*				   mContext;							///< Context instance, always valid
+		Renderer::IShaderLanguage* mShaderLanguageGlsl;					///< GLSL shader language instance (we keep a reference to it), can be a null pointer
+		RootSignature*			   mGraphicsRootSignature;				///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
+		Renderer::ISamplerState*   mDefaultSamplerState;				///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		uint32_t				   mOpenGLES3CopyResourceFramebuffer;	///< OpenGL ES 3 framebuffer ("container" object, not shared between OpenGL ES 3 contexts) used by "OpenGLES3Renderer::OpenGLES3Renderer::copyResource()", can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		// States
-		PipelineState *mPipelineState;	///< Currently set pipeline state (we keep a reference to it), can be a null pointer
+		PipelineState* mPipelineState;	///< Currently set pipeline state (we keep a reference to it), can be a null pointer
 		// Input-assembler (IA) stage
-		VertexArray *mVertexArray;					///< Currently set vertex array (we keep a reference to it), can be a null pointer
+		VertexArray* mVertexArray;					///< Currently set vertex array (we keep a reference to it), can be a null pointer
 		uint32_t	 mOpenGLES3PrimitiveTopology;	///< OpenGL ES 3 primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
 		// Output-merger (OM) stage
-		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "OpenGLES3Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
-		Renderer::IRenderTarget *mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
+		SwapChain*				 mMainSwapChain;	///< In case the optional native main window handle within the "OpenGLES3Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
+		Renderer::IRenderTarget* mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
 		// State cache to avoid making redundant OpenGL ES 3 calls
 		uint32_t mOpenGLES3Program;	///< Currently set OpenGL ES 3 program, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
 		// Draw ID uniform location for "GL_EXT_base_instance"-emulation (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)

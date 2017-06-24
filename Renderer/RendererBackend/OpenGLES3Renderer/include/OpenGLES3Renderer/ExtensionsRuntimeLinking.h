@@ -174,15 +174,15 @@ namespace OpenGLES3Renderer
 	#define glTexBufferEXT	FNPTR(glTexBufferEXT)
 
 	// GL_EXT_draw_elements_base_vertex
-	FNDEF_EX(void,	glDrawElementsBaseVertexEXT,			(GLenum mode, GLsizei count, GLenum type, const void *indices, GLint basevertex));
-	FNDEF_EX(void,	glDrawElementsInstancedBaseVertexEXT,	(GLenum mode, GLsizei count, GLenum type, const void *indices, GLsizei instancecount, GLint basevertex));
+	FNDEF_EX(void,	glDrawElementsBaseVertexEXT,			(GLenum mode, GLsizei count, GLenum type, const void* indices, GLint basevertex));
+	FNDEF_EX(void,	glDrawElementsInstancedBaseVertexEXT,	(GLenum mode, GLsizei count, GLenum type, const void* indices, GLsizei instancecount, GLint basevertex));
 	#define glDrawElementsBaseVertexEXT				FNPTR(glDrawElementsBaseVertexEXT)
 	#define glDrawElementsInstancedBaseVertexEXT	FNPTR(glDrawElementsInstancedBaseVertexEXT)
 
 	// GL_EXT_base_instance
 	FNDEF_EX(void,	glDrawArraysInstancedBaseInstanceEXT,				(GLenum mode, int first, GLsizei count, GLsizei instancecount, GLuint baseinstance));
-	FNDEF_EX(void,	glDrawElementsInstancedBaseInstanceEXT,				(GLenum mode, GLsizei count, GLenum type, const void *indices, GLsizei instancecount, GLuint baseinstance));
-	FNDEF_EX(void,	glDrawElementsInstancedBaseVertexBaseInstanceEXT,	(GLenum mode, GLsizei count, GLenum type, const void *indices, GLsizei instancecount, GLint basevertex, GLuint baseinstance));
+	FNDEF_EX(void,	glDrawElementsInstancedBaseInstanceEXT,				(GLenum mode, GLsizei count, GLenum type, const void* indices, GLsizei instancecount, GLuint baseinstance));
+	FNDEF_EX(void,	glDrawElementsInstancedBaseVertexBaseInstanceEXT,	(GLenum mode, GLsizei count, GLenum type, const void* indices, GLsizei instancecount, GLint basevertex, GLuint baseinstance));
 	#define glDrawArraysInstancedBaseInstanceEXT				FNPTR(glDrawArraysInstancedBaseInstanceEXT)
 	#define glDrawElementsInstancedBaseInstanceEXT				FNPTR(glDrawElementsInstancedBaseInstanceEXT)
 	#define glDrawElementsInstancedBaseVertexBaseInstanceEXT	FNPTR(glDrawElementsInstancedBaseVertexBaseInstanceEXT)
@@ -240,7 +240,7 @@ namespace OpenGLES3Renderer
 	//[ KHR definitions                                       ]
 	//[-------------------------------------------------------]
 	// GL_KHR_debug
-	FNDEF_EX(void,	glDebugMessageCallbackKHR,	(GLDEBUGPROCKHR callback, const void *userParam));
+	FNDEF_EX(void,	glDebugMessageCallbackKHR,	(GLDEBUGPROCKHR callback, const void* userParam));
 	#define glDebugMessageCallbackKHR	FNPTR(glDebugMessageCallbackKHR)
 
 

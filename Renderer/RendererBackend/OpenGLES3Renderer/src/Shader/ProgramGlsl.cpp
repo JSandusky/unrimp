@@ -41,7 +41,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramGlsl::ProgramGlsl(OpenGLES3Renderer &openGLES3Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
+	ProgramGlsl::ProgramGlsl(OpenGLES3Renderer& openGLES3Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl* vertexShaderGlsl, FragmentShaderGlsl* fragmentShaderGlsl) :
 		IProgram(openGLES3Renderer),
 		mNumberOfRootSignatureParameters(0),
 		mRootSignatureParameterIndexToUniformLocation(nullptr),
@@ -195,7 +195,7 @@ namespace OpenGLES3Renderer
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					char *informationLog = new char[static_cast<uint32_t>(informationLength)];
+					char* informationLog = new char[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
 					glGetProgramInfoLog(mOpenGLES3Program, informationLength, nullptr, informationLog);
@@ -224,7 +224,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	handle ProgramGlsl::getUniformHandle(const char *uniformName)
+	handle ProgramGlsl::getUniformHandle(const char* uniformName)
 	{
 		return static_cast<handle>(glGetUniformLocation(mOpenGLES3Program, uniformName));
 	}
@@ -283,7 +283,7 @@ namespace OpenGLES3Renderer
 		#endif
 	}
 
-	void ProgramGlsl::setUniform2fv(handle uniformHandle, const float *value)
+	void ProgramGlsl::setUniform2fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program
@@ -310,7 +310,7 @@ namespace OpenGLES3Renderer
 		#endif
 	}
 
-	void ProgramGlsl::setUniform3fv(handle uniformHandle, const float *value)
+	void ProgramGlsl::setUniform3fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program
@@ -337,7 +337,7 @@ namespace OpenGLES3Renderer
 		#endif
 	}
 
-	void ProgramGlsl::setUniform4fv(handle uniformHandle, const float *value)
+	void ProgramGlsl::setUniform4fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program
@@ -364,7 +364,7 @@ namespace OpenGLES3Renderer
 		#endif
 	}
 
-	void ProgramGlsl::setUniformMatrix3fv(handle uniformHandle, const float *value)
+	void ProgramGlsl::setUniformMatrix3fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program
@@ -391,7 +391,7 @@ namespace OpenGLES3Renderer
 		#endif
 	}
 
-	void ProgramGlsl::setUniformMatrix4fv(handle uniformHandle, const float *value)
+	void ProgramGlsl::setUniformMatrix4fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL ES 3 program

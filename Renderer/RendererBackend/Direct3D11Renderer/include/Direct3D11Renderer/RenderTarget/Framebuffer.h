@@ -81,7 +81,7 @@ namespace Direct3D11Renderer
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment);
+		Framebuffer(Direct3D11Renderer& direct3D11Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment);
 
 		/**
 		*  @brief
@@ -105,7 +105,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The color textures, can be a null pointer, do not release the returned instances unless you added an own reference to it
 		*/
-		inline Renderer::ITexture **getColorTextures() const;
+		inline Renderer::ITexture** getColorTextures() const;
 
 		/**
 		*  @brief
@@ -114,7 +114,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The depth stencil texture, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline Renderer::ITexture *getDepthStencilTexture() const;
+		inline Renderer::ITexture* getDepthStencilTexture() const;
 
 		/**
 		*  @brief
@@ -123,7 +123,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The Direct3D 11 render target views, can be a null pointer, do not release the returned instances unless you added an own reference to it
 		*/
-		inline ID3D11RenderTargetView **getD3D11RenderTargetViews() const;
+		inline ID3D11RenderTargetView** getD3D11RenderTargetViews() const;
 
 		/**
 		*  @brief
@@ -132,7 +132,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The Direct3D 11 depth stencil view, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11DepthStencilView *getD3D11DepthStencilView() const;
+		inline ID3D11DepthStencilView* getD3D11DepthStencilView() const;
 
 		/**
 		*  @brief
@@ -157,14 +157,14 @@ namespace Direct3D11Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -181,14 +181,14 @@ namespace Direct3D11Renderer
 	private:
 		// Generic part
 		uint32_t			 mNumberOfColorTextures;	///< Number of color render target textures
-		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" textures in the provided C-array of pointers
-		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
+		Renderer::ITexture** mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" textures in the provided C-array of pointers
+		Renderer::ITexture*  mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
 		bool				 mGenerateMipmaps;			///< "true" if mipmaps should be generated automatically, else "false"
 		// Direct3D 11 part
-		ID3D11RenderTargetView **mD3D11RenderTargetViews;	///< The Direct3D 11 render target views (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" views in the provided C-array of pointers
-		ID3D11DepthStencilView  *mD3D11DepthStencilView;	///< The Direct3D 11 depth stencil view (we keep a reference to it), can be a null pointer
+		ID3D11RenderTargetView** mD3D11RenderTargetViews;	///< The Direct3D 11 render target views (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" views in the provided C-array of pointers
+		ID3D11DepthStencilView*  mD3D11DepthStencilView;	///< The Direct3D 11 depth stencil view (we keep a reference to it), can be a null pointer
 
 
 	};

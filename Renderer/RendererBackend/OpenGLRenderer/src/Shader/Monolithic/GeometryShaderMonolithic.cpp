@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderMonolithic::GeometryShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) :
+	GeometryShaderMonolithic::GeometryShaderMonolithic(OpenGLRenderer& openGLRenderer, const char* sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(ShaderLanguageMonolithic::loadShaderFromSourcecode(GL_GEOMETRY_SHADER_ARB, sourceCode)),
 		mOpenGLGsInputPrimitiveTopology(static_cast<int>(gsInputPrimitiveTopology)),	// The "Renderer::GsInputPrimitiveTopology" values directly map to OpenGL constants, do not change them
@@ -57,7 +57,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *GeometryShaderMonolithic::getShaderLanguageName() const
+	const char* GeometryShaderMonolithic::getShaderLanguageName() const
 	{
 		return ShaderLanguageMonolithic::NAME;
 	}

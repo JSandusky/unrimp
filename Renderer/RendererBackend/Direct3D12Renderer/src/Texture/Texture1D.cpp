@@ -63,7 +63,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Texture1D::setDebugName(const char * name)
+	void Texture1D::setDebugName(const char*  name)
 	{
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			if (nullptr != mD3D12Resource)

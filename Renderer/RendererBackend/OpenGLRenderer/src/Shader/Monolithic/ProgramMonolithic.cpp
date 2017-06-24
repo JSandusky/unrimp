@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramMonolithic::ProgramMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderMonolithic *vertexShaderMonolithic, TessellationControlShaderMonolithic *tessellationControlShaderMonolithic, TessellationEvaluationShaderMonolithic *tessellationEvaluationShaderMonolithic, GeometryShaderMonolithic *geometryShaderMonolithic, FragmentShaderMonolithic *fragmentShaderMonolithic) :
+	ProgramMonolithic::ProgramMonolithic(OpenGLRenderer& openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderMonolithic* vertexShaderMonolithic, TessellationControlShaderMonolithic* tessellationControlShaderMonolithic, TessellationEvaluationShaderMonolithic* tessellationEvaluationShaderMonolithic, GeometryShaderMonolithic* geometryShaderMonolithic, FragmentShaderMonolithic* fragmentShaderMonolithic) :
 		IProgram(openGLRenderer),
 		mOpenGLProgram(glCreateProgramObjectARB()),
 		mDrawIdUniformLocation(-1)
@@ -225,7 +225,7 @@ namespace OpenGLRenderer
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					char *informationLog = new char[static_cast<uint32_t>(informationLength)];
+					char* informationLog = new char[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
 					glGetInfoLogARB(mOpenGLProgram, informationLength, nullptr, informationLog);
@@ -251,7 +251,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	handle ProgramMonolithic::getUniformHandle(const char *uniformName)
+	handle ProgramMonolithic::getUniformHandle(const char* uniformName)
 	{
 		return static_cast<handle>(glGetUniformLocationARB(mOpenGLProgram, uniformName));
 	}
@@ -308,7 +308,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramMonolithic::setUniform2fv(handle uniformHandle, const float *value)
+	void ProgramMonolithic::setUniform2fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
@@ -334,7 +334,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramMonolithic::setUniform3fv(handle uniformHandle, const float *value)
+	void ProgramMonolithic::setUniform3fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
@@ -360,7 +360,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramMonolithic::setUniform4fv(handle uniformHandle, const float *value)
+	void ProgramMonolithic::setUniform4fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
@@ -386,7 +386,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramMonolithic::setUniformMatrix3fv(handle uniformHandle, const float *value)
+	void ProgramMonolithic::setUniformMatrix3fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
@@ -412,7 +412,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramMonolithic::setUniformMatrix4fv(handle uniformHandle, const float *value)
+	void ProgramMonolithic::setUniformMatrix4fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program

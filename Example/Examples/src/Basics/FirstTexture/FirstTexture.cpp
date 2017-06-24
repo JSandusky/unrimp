@@ -67,7 +67,7 @@ void FirstTexture::onInitialization()
 			static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH;
 
 			// Allocate memory for the texture
-			uint8_t *data = new uint8_t[NUMBER_OF_BYTES];
+			uint8_t* data = new uint8_t[NUMBER_OF_BYTES];
 
 			// Fill the texture data with a color gradient
 			for (uint32_t n = 0; n < NUMBER_OF_BYTES; n += TEXEL_ELEMENTS)
@@ -89,7 +89,7 @@ void FirstTexture::onInitialization()
 			static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * TEXEL_ELEMENTS;
 
 			// Allocate memory for the texture
-			uint8_t *data = new uint8_t[NUMBER_OF_BYTES];
+			uint8_t* data = new uint8_t[NUMBER_OF_BYTES];
 
 			{ // Fill the texture data with a defective checkboard
 				const uint32_t rowPitch   = TEXTURE_WIDTH * TEXEL_ELEMENTS;
@@ -207,8 +207,8 @@ void FirstTexture::onInitialization()
 			Renderer::IProgramPtr program;
 			{
 				// Get the shader source code (outsourced to keep an overview)
-				const char *vertexShaderSourceCode = nullptr;
-				const char *fragmentShaderSourceCode = nullptr;
+				const char* vertexShaderSourceCode = nullptr;
+				const char* fragmentShaderSourceCode = nullptr;
 				#include "FirstTexture_GLSL_410.h"
 				#include "FirstTexture_GLSL_ES3.h"
 				#include "FirstTexture_HLSL_D3D9.h"

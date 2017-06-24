@@ -33,7 +33,7 @@
 
 /**
 *  @brief
-*    Changes the current locale to 'C' locale temporaly. (RAII, Resource Acquisition Is Initialization)
+*    Changes the current locale to 'C' locale temporarily. (RAII, Resource Acquisition Is Initialization)
 *    When this instance gets destroyed the old locale setting is restored
 *    => Not possible to forget the restore anymore ;)
 */
@@ -51,7 +51,7 @@ public:
 	CLocaleChanger()
 	{
 		// Get the currently set locale, if it's a null pointer or already "C" just do nothing
-		const char *pszCurrentLocale = setlocale(LC_ALL, nullptr);
+		const char* pszCurrentLocale = setlocale(LC_ALL, nullptr);
 		if (pszCurrentLocale && pszCurrentLocale[0] != 'C') {
 
 			// Duplicate the string

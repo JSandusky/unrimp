@@ -53,7 +53,7 @@ namespace Direct3D11Renderer
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::getDirect3D11UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t &cpuAccessFlags)
+	uint32_t Mapping::getDirect3D11UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t& cpuAccessFlags)
 	{
 		// Direct3D 11 only supports a subset of the OpenGL usage indications
 		// -> See "D3D11_USAGE enumeration "-documentation at http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259%28v=vs.85%29.aspx

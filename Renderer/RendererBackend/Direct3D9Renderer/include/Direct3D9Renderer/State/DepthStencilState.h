@@ -71,7 +71,7 @@ namespace Direct3D9Renderer
 		*  @param[in] depthStencilState
 		*    Depth stencil state to use
 		*/
-		DepthStencilState(const Renderer::DepthStencilState &depthStencilState);
+		DepthStencilState(const Renderer::DepthStencilState& depthStencilState);
 
 		/**
 		*  @brief
@@ -86,7 +86,7 @@ namespace Direct3D9Renderer
 		*  @param[in] direct3DDevice9
 		*    Direct3D 9 device instance to use
 		*/
-		void setDirect3D9DepthStencilStates(IDirect3DDevice9 &direct3DDevice9) const;
+		void setDirect3D9DepthStencilStates(IDirect3DDevice9& direct3DDevice9) const;
 
 
 	//[-------------------------------------------------------]

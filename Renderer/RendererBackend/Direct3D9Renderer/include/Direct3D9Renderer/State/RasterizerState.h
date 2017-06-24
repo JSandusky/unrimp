@@ -73,7 +73,7 @@ namespace Direct3D9Renderer
 		*  @param[in] rasterizerState
 		*    Rasterizer state to use
 		*/
-		RasterizerState(const Renderer::RasterizerState &rasterizerState);
+		RasterizerState(const Renderer::RasterizerState& rasterizerState);
 
 		/**
 		*  @brief
@@ -88,7 +88,7 @@ namespace Direct3D9Renderer
 		*  @param[in] direct3DDevice9
 		*    Direct3D 9 device instance to use
 		*/
-		void setDirect3D9RasterizerStates(IDirect3DDevice9 &direct3DDevice9) const;
+		void setDirect3D9RasterizerStates(IDirect3DDevice9& direct3DDevice9) const;
 
 
 	//[-------------------------------------------------------]

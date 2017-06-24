@@ -152,7 +152,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 semantic, "D3DDECLUSAGE_POSITION" as fallback if no match was found (type "BYTE" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getDirect3D9Semantic(const char *semanticName);
+		static uint32_t getDirect3D9Semantic(const char* semanticName);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]
