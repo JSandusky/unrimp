@@ -27,12 +27,213 @@
 #include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-// TODO(sw) Replace with own defines when we know all format types we want to support loading?
-#include <GL/gl.h>
-#include <GLES3/gl3.h>  // Needed for the internal format type definitions
-#include <GLES3/gl2ext.h> // Needed for the GL_ETC1_RGB8_OES internal format type definition
-
 #include <algorithm>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		// These codes are basing on https://github.com/KhronosGroup/KTX/tree/master/lib
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		// From "gl.h"
+		#define GL_TEXTURE_1D		0x0DE0
+		#define GL_TEXTURE_2D		0x0DE1
+		#define GL_TEXTURE_3D		0x806F
+		#define GL_TEXTURE_CUBE_MAP	0x8513
+		#define GL_RGBA8			0x8058
+
+		// From "gl2ext.h"
+		#define GL_ETC1_RGB8_OES 0x8D64
+
+		// From "khrplatform.h"
+		typedef uint32_t khronos_uint32_t;
+
+		// From https://github.com/KhronosGroup/KTX/tree/master/lib
+		#define KTX_IDENTIFIER_REF	{ 0xAB, 0x4B, 0x54, 0x58, 0x20, 0x31, 0x31, 0xBB, 0x0D, 0x0A, 0x1A, 0x0A }
+		#define KTX_ENDIAN_REF		0x04030201
+		#define KTX_ENDIAN_REF_REV	0x01020304
+
+		#pragma pack(push)
+		#pragma pack(1)
+			/**
+			*  @brief
+			*    Read in the image header
+			*/
+			struct KtxHeader
+			{
+				uint8_t  identifier[12];
+				uint32_t endianness;
+				uint32_t glType;
+				uint32_t glTypeSize;
+				uint32_t glFormat;
+				uint32_t glInternalFormat;
+				uint32_t glBaseInternalFormat;
+				uint32_t pixelWidth;
+				uint32_t pixelHeight;
+				uint32_t pixelDepth;
+				uint32_t numberOfArrayElements;
+				uint32_t numberOfFaces;
+				uint32_t numberOfMipmapLevels;
+				uint32_t bytesOfKeyValueData;
+			};
+		#pragma pack(pop)
+
+		// TODO(sw) cleanup and simplify it when possible
+		struct KTX_texinfo
+		{
+			// Data filled in by _ktxCheckHeader()
+			uint32_t textureDimensions;
+			uint32_t glTarget;
+			uint32_t compressed;
+			uint32_t generateMipmaps;
+		};
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void ktxSwapEndian16(uint16_t* data, uint32_t count)
+		{
+			for (uint32_t i = 0; i < count; ++i)
+			{
+				const uint16_t x = *data;
+				*data++ = static_cast<uint16_t>((x << 8) | (x >> 8));
+			}
+		}
+
+		/**
+		*  @brief
+		*    SwapEndian32: Swap endianness in an array of 32-bit values
+		*/
+		void ktxSwapEndian32(uint32_t* data, uint32_t count)
+		{
+			for (uint32_t i = 0; i < count; ++i)
+			{
+				const uint32_t x = *data;
+				*data++ = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
+			}
+		}
+
+		bool checkHeader(KtxHeader& ktxHeader, KTX_texinfo& ktxTexinfo)
+		{
+			{ // Compare identifier, is this a KTX file?
+				const uint8_t identifierReference[12] = KTX_IDENTIFIER_REF;
+				if (memcmp(ktxHeader.identifier, identifierReference, 12) != 0)
+				{
+					// KTX_UNKNOWN_FILE_FORMAT
+					return false;
+				}
+			}
+
+			if (KTX_ENDIAN_REF_REV == ktxHeader.endianness)
+			{
+				// Convert endianness of header fields
+				ktxSwapEndian32(&ktxHeader.glType, 12);
+				if (1 != ktxHeader.glTypeSize && 2 != ktxHeader.glTypeSize && 4 != ktxHeader.glTypeSize)
+				{
+					// Only 8-, 16-, and 32-bit types supported so far
+					// KTX_INVALID_VALUE
+					return false;
+				}
+			}
+			else if (KTX_ENDIAN_REF != ktxHeader.endianness)
+			{
+				// KTX_INVALID_VALUE
+				return false;
+			}
+
+			// Check "glType" and "glFormat"
+			ktxTexinfo.compressed = 0;
+			if (0 == ktxHeader.glType || 0 == ktxHeader.glFormat)
+			{
+				if ((ktxHeader.glType + ktxHeader.glFormat) != 0)
+				{
+					// Either both or none of glType, glFormat must be zero
+					// KTX_INVALID_VALUE
+					return false;
+				}
+				ktxTexinfo.compressed = 1;
+			}
+
+			// Check texture dimensions. KTX files can store 8 types of textures:
+			// 1D, 2D, 3D, cube, and array variants of these. There is currently no GL extension for 3D array textures.
+			if ((0 == ktxHeader.pixelWidth) || (ktxHeader.pixelDepth > 0 && 0 == ktxHeader.pixelHeight))
+			{
+				// Texture must have width
+				// Texture must have height if it has depth
+				// KTX_INVALID_VALUE
+				return false;
+			}
+
+			ktxTexinfo.textureDimensions = 1;
+			ktxTexinfo.glTarget			 = GL_TEXTURE_1D;
+			ktxTexinfo.generateMipmaps	 = 0;
+			if (ktxHeader.pixelHeight > 0)
+			{
+				ktxTexinfo.textureDimensions = 2;
+				ktxTexinfo.glTarget			 = GL_TEXTURE_2D;
+			}
+			if (ktxHeader.pixelDepth > 0)
+			{
+				ktxTexinfo.textureDimensions = 3;
+				ktxTexinfo.glTarget			 = GL_TEXTURE_3D;
+			}
+
+			if (6 == ktxHeader.numberOfFaces)
+			{
+				if (2 == ktxTexinfo.textureDimensions)
+				{
+					ktxTexinfo.glTarget = GL_TEXTURE_CUBE_MAP;
+				}
+				else
+				{
+					// KTX_INVALID_VALUE
+					return false;
+				}
+			}
+			else if (1 != ktxHeader.numberOfFaces)
+			{
+				// "numberOfFaces" must be either 1 or 6
+				// KTX_INVALID_VALUE
+				return false;
+			}
+
+			// Check number of mipmap levels
+			if (0 == ktxHeader.numberOfMipmapLevels)
+			{
+				ktxTexinfo.generateMipmaps = 1;
+				ktxHeader.numberOfMipmapLevels = 1;
+			}
+
+			// This test works for arrays too because height or depth will be 0
+			const khronos_uint32_t maximumDimension = std::max(std::max(ktxHeader.pixelWidth, ktxHeader.pixelHeight), ktxHeader.pixelDepth);
+			if (maximumDimension < (1u << (ktxHeader.numberOfMipmapLevels - 1)))
+			{
+				// Can't have more mip levels than 1 + log2(max(width, height, depth))
+				// KTX_INVALID_VALUE
+				return false;
+			}
+
+			// Done
+			return true;
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -46,176 +247,6 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	const ResourceLoaderTypeId KtxTextureResourceLoader::TYPE_ID("ktx");
-	
-	// Read in the image header
-	#pragma pack(push)
-	#pragma pack(1)
-		struct KtxHeader
-		{
-			uint8_t  identifier[12];
-			uint32_t endianness;
-			uint32_t glType;
-			uint32_t glTypeSize;
-			uint32_t glFormat;
-			uint32_t glInternalFormat;
-			uint32_t glBaseInternalFormat;
-			uint32_t pixelWidth;
-			uint32_t pixelHeight;
-			uint32_t pixelDepth;
-			uint32_t numberOfArrayElements;
-			uint32_t numberOfFaces;
-			uint32_t numberOfMipmapLevels;
-			uint32_t bytesOfKeyValueData;
-		};
-	#pragma pack(pop)
-		
-	
-	// This codes are base of codes from https://github.com/KhronosGroup/KTX/tree/master/lib
-	// TODO(sw) cleanup and simplify it when possible
-	struct KTX_texinfo {
-		/* Data filled in by _ktxCheckHeader() */
-		uint32_t textureDimensions;
-		uint32_t glTarget;
-		uint32_t compressed;
-		uint32_t generateMipmaps;
-	};
-
-	#define KTX_IDENTIFIER_REF  { 0xAB, 0x4B, 0x54, 0x58, 0x20, 0x31, 0x31, 0xBB, 0x0D, 0x0A, 0x1A, 0x0A }
-	#define KTX_ENDIAN_REF      (0x04030201)
-	#define KTX_ENDIAN_REF_REV  (0x01020304)
-	#define KTX_HEADER_SIZE	(64)
-
-	static void _ktxSwapEndian16(uint16_t* pData16, int count)
-	{
-		int i;
-		for (i = 0; i < count; ++i)
-		{
-			uint16_t x = *pData16;
-			*pData16++ = (x << 8) | (x >> 8);
-		}
-	}
-
-	/*
-	* SwapEndian32: Swaps endianness in an array of 32-bit values
-	*/
-	static void _ktxSwapEndian32(uint32_t* pData32, int count)
-	{
-		int i;
-		for (i = 0; i < count; ++i)
-		{
-			uint32_t x = *pData32;
-			*pData32++ = (x << 24) | ((x & 0xFF00) << 8) | ((x & 0xFF0000) >> 8) | (x >> 24);
-		}
-	}
-
-	static bool checkHeader(KtxHeader& header, KTX_texinfo& texinfo)
-	{
-		uint8_t identifier_reference[12] = KTX_IDENTIFIER_REF;
-		khronos_uint32_t max_dim;
-
-		/* Compare identifier, is this a KTX file? */
-		if (memcmp(header.identifier, identifier_reference, 12) != 0)
-		{
-			// KTX_UNKNOWN_FILE_FORMAT;
-			return false;
-		}
-
-		if (header.endianness == KTX_ENDIAN_REF_REV)
-		{
-			/* Convert endianness of header fields. */
-			_ktxSwapEndian32(&header.glType, 12);
-
-			if (header.glTypeSize != 1 &&
-				header.glTypeSize != 2 &&
-				header.glTypeSize != 4)
-			{
-				/* Only 8-, 16-, and 32-bit types supported so far. */
-				//KTX_INVALID_VALUE
-				return false;
-			}
-		}
-		else if (header.endianness != KTX_ENDIAN_REF)
-		{
-			// KTX_INVALID_VALUE
-			return false;
-		}
-
-		/* Check glType and glFormat */
-		texinfo.compressed = 0;
-		if (header.glType == 0 || header.glFormat == 0)
-		{
-			if (header.glType + header.glFormat != 0)
-			{
-				/* either both or none of glType, glFormat must be zero */
-				// KTX_INVALID_VALUE;
-				return false;
-			}
-			texinfo.compressed = 1;
-		}
-
-		/* Check texture dimensions. KTX files can store 8 types of textures:
-		1D, 2D, 3D, cube, and array variants of these. There is currently
-		no GL extension for 3D array textures. */
-		if ((header.pixelWidth == 0) ||
-			(header.pixelDepth > 0 && header.pixelHeight == 0))
-		{
-			/* texture must have width */
-			/* texture must have height if it has depth */
-			// KTX_INVALID_VALUE;
-			return false; 
-		}
-
-		texinfo.textureDimensions = 1;
-		texinfo.glTarget = GL_TEXTURE_1D;
-		texinfo.generateMipmaps = 0;
-		if (header.pixelHeight > 0)
-		{
-			texinfo.textureDimensions = 2;
-			texinfo.glTarget = GL_TEXTURE_2D;
-		}
-		if (header.pixelDepth > 0)
-		{
-			texinfo.textureDimensions = 3;
-			texinfo.glTarget = GL_TEXTURE_3D;
-		}
-
-		if (header.numberOfFaces == 6)
-		{
-			if (texinfo.textureDimensions == 2)
-			{
-				texinfo.glTarget = GL_TEXTURE_CUBE_MAP;
-			}
-			else
-			{
-				// KTX_INVALID_VALUE;
-				return false; 
-			}
-		}
-		else if (header.numberOfFaces != 1)
-		{
-			/* numberOfFaces must be either 1 or 6 */
-			// KTX_INVALID_VALUE;
-			return false; 
-		}
-		
-		/* Check number of mipmap levels */
-		if (header.numberOfMipmapLevels == 0)
-		{
-			texinfo.generateMipmaps = 1;
-			header.numberOfMipmapLevels = 1;
-		}
-		/* This test works for arrays too because height or depth will be 0. */
-		max_dim = std::max(std::max(header.pixelWidth, header.pixelHeight), header.pixelDepth);
-		if (max_dim < ((uint32_t)1 << (header.numberOfMipmapLevels - 1)))
-		{
-			/* Can't have more mip levels than 1 + log2(max(width, height, depth)) */
-			// KTX_INVALID_VALUE;
-			return false; 
-		}
-
-		return true;
-
-	}
 
 
 	//[-------------------------------------------------------]
@@ -224,73 +255,79 @@ namespace RendererRuntime
 	void KtxTextureResourceLoader::onDeserialization(IFile& file)
 	{
 		// TODO(co) Add optional top mipmap removal support (see "RendererRuntime::TextureResourceManager::NumberOfTopMipmapsToRemove")
+		// TODO(co) Add support for 3D textures (if supported by the KTX format)
 
-		KtxHeader ktxHeader;
-		file.read(&ktxHeader, sizeof(KtxHeader));
+		// KTX header
+		::detail::KtxHeader ktxHeader;
+		file.read(&ktxHeader, sizeof(::detail::KtxHeader));
 
-		KTX_texinfo texInfo;
-		if (!checkHeader(ktxHeader, texInfo))
-		{
-			assert(false && "ktx header invalid");
+		{ // KTX texture information
+			::detail::KTX_texinfo ktxTexinfo;
+			if (!checkHeader(ktxHeader, ktxTexinfo))
+			{
+				assert(false && "KTX header invalid");
+			}
 		}
-
 		file.skip(ktxHeader.bytesOfKeyValueData);
-		mWidth = ktxHeader.pixelWidth;
+
+		// Texture dimension
+		mWidth  = ktxHeader.pixelWidth;
 		mHeight = ktxHeader.pixelHeight;
 
 		// Check if the file contains data for one texture or for 6 textures
-		if (ktxHeader.numberOfFaces != 1 && ktxHeader.numberOfFaces != 6 )
+		if (1 != ktxHeader.numberOfFaces && 6 != ktxHeader.numberOfFaces)
 		{
 			assert(false && "Don't support more then one faces or exactly 6 faces");
 		}
 
-		if (ktxHeader.glFormat == 0)
+		// Texture format
+		if (0 == ktxHeader.glFormat)
 		{
-			// When glFormat == 0 -> compressed version
-			// For now we only support ETC1 compression
-			if (ktxHeader.glInternalFormat != GL_ETC1_RGB8_OES)
+			// When "glFormat == 0" -> compressed version
+			// -> For now we only support ETC1 compression
+			if (GL_ETC1_RGB8_OES != ktxHeader.glInternalFormat)
 			{
-				assert(false && "unsupported compressed glInternalFormat");
+				assert(false && "Unsupported compressed \"glInternalFormat\"");
 			}
 			mTextureFormat = Renderer::TextureFormat::ETC1;
 		}
 		else
 		{
-			// glInternalFormat defines the format of the texture
-			// For now we only support R8G8B8A8
-			if (ktxHeader.glInternalFormat == GL_RGBA8)
+			// "glInternalFormat" defines the format of the texture
+			// -> For now we only support R8G8B8A8
+			if (GL_RGBA8 == ktxHeader.glInternalFormat)
 			{
 				mTextureFormat = Renderer::TextureFormat::R8G8B8A8;
 			}
 			else
 			{
-				assert(false && "unsupported uncompressed glInternalFormat");
+				assert(false && "Unsupported uncompressed \"glInternalFormat\"");
 			}
 		}
 
 		// Does the data contain mipmaps?
 		mDataContainsMipmaps = (ktxHeader.numberOfMipmapLevels > 1);
-		mCubeMap = (ktxHeader.numberOfFaces > 1);
+		mCubeMap			 = (ktxHeader.numberOfFaces > 1);
 
 		// Get the size of the compressed image
 		mNumberOfUsedImageDataBytes = 0;
 		{
-			uint32_t width = mWidth;
+			uint32_t width  = mWidth;
 			uint32_t height = mHeight;
 			for (uint32_t mipmap = 0; mipmap < ktxHeader.numberOfMipmapLevels; ++mipmap)
 			{
 				for (uint32_t face = 0; face < ktxHeader.numberOfFaces; ++face)
 				{
-					if (ktxHeader.glInternalFormat == GL_ETC1_RGB8_OES)
+					if (GL_ETC1_RGB8_OES == ktxHeader.glInternalFormat)
 					{
 						mNumberOfUsedImageDataBytes += std::max((width * height) >> 1, 8u);
 					}
-					else if (ktxHeader.glInternalFormat == GL_RGBA8)
+					else if (GL_RGBA8 == ktxHeader.glInternalFormat)
 					{
 						mNumberOfUsedImageDataBytes += (width * height * 4);
 					}
 				}
-				width = std::max(width >> 1, 1u);	// /= 2
+				width  = std::max(width >> 1, 1u);	// /= 2
 				height = std::max(height >> 1, 1u);	// /= 2
 			}
 		}
@@ -311,9 +348,9 @@ namespace RendererRuntime
 			file.read(&imageSize, sizeof(uint32_t));
 
 			// Perform endianness conversion on image size data
-			if (ktxHeader.endianness == KTX_ENDIAN_REF_REV)
+			if (KTX_ENDIAN_REF_REV == ktxHeader.endianness)
 			{
-				_ktxSwapEndian32(&imageSize, 1);
+				::detail::ktxSwapEndian32(&imageSize, 1);
 			}
 
 			for (uint32_t face = 0; face < ktxHeader.numberOfFaces; ++face)
@@ -322,20 +359,20 @@ namespace RendererRuntime
 				file.read(currentImageData, imageSize);
 
 				// Perform endianness conversion on texture data
-				if (ktxHeader.endianness == KTX_ENDIAN_REF_REV && ktxHeader.glTypeSize == 2)
+				if (KTX_ENDIAN_REF_REV == ktxHeader.endianness && 2 == ktxHeader.glTypeSize)
 				{
-					_ktxSwapEndian16((uint16_t*)currentImageData, imageSize / 2);
+					::detail::ktxSwapEndian16(reinterpret_cast<uint16_t*>(currentImageData), imageSize / 2);
 				}
-				else if (ktxHeader.endianness == KTX_ENDIAN_REF_REV && ktxHeader.glTypeSize == 4)
+				else if (KTX_ENDIAN_REF_REV == ktxHeader.endianness && 4 == ktxHeader.glTypeSize)
 				{
-					_ktxSwapEndian32((uint32_t*)currentImageData, imageSize / 4);
+					::detail::ktxSwapEndian32(reinterpret_cast<uint32_t*>(currentImageData), imageSize / 4);
 				}
 
 				// Move on to the next face of the current mipmap
 				currentImageData += imageSize;
 			}
 
-			// An mipmap level data might have padding bytes (up to 3) formular from https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
+			// An mipmap level data might have padding bytes (up to 3) formula from https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
 			const uint32_t paddingBytes = 3 - ((imageSize + 3) % 4);
 			file.skip(paddingBytes);
 
