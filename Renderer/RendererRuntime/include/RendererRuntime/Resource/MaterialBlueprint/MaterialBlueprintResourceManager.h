@@ -44,6 +44,7 @@ namespace RendererRuntime
 	class IRendererRuntime;
 	class LightBufferManager;
 	class InstanceBufferManager;
+	class IndirectBufferManager;
 	class MaterialBlueprintResource;
 	class MaterialBlueprintResourceLoader;
 	class IMaterialBlueprintResourceListener;
@@ -123,6 +124,7 @@ namespace RendererRuntime
 		//[ Manager                                               ]
 		//[-------------------------------------------------------]
 		inline InstanceBufferManager& getInstanceBufferManager() const;
+		inline IndirectBufferManager& getIndirectBufferManager() const;
 		inline LightBufferManager& getLightBufferManager() const;
 
 
@@ -177,6 +179,7 @@ namespace RendererRuntime
 		std::mutex							mSerializedPipelineStatesMutex;		///< "RendererRuntime::PipelineStateCompiler" is running asynchronous, hence we need to synchronize the serialized pipeline states access
 		SerializedPipelineStates			mSerializedPipelineStates;			///< Serialized pipeline states
 		InstanceBufferManager*				mInstanceBufferManager;				///< Instance buffer manager, always valid in a sane none-legacy environment
+		IndirectBufferManager*				mIndirectBufferManager;				///< Indirect buffer manager, always valid in a sane none-legacy environment
 		LightBufferManager*					mLightBufferManager;				///< Light buffer manager, always valid in a sane none-legacy environment
 
 		// Internal resource manager implementation

@@ -106,6 +106,7 @@ namespace RendererRuntime
 		RenderQueue(IndirectBufferManager& indirectBufferManager, uint8_t minimumRenderQueueIndex, uint8_t maximumRenderQueueIndex, bool transparentPass, bool doSort);
 
 		inline ~RenderQueue();
+		inline uint32_t getNumberOfDrawCalls() const;
 		inline uint8_t getMinimumRenderQueueIndex() const;
 		inline uint8_t getMaximumRenderQueueIndex() const;
 		void clear();
@@ -164,6 +165,9 @@ namespace RendererRuntime
 		const IRendererRuntime&	mRendererRuntime;			///< Renderer runtime instance, we don't own the instance so don't delete it
 		IndirectBufferManager&	mIndirectBufferManager;		///< Indirect buffer manager instance, we don't own the instance so don't delete it
 		Queues					mQueues;
+		uint32_t				mNumberOfNullDrawCalls;
+		uint32_t				mNumberOfDrawIndexedInstancedCalls;
+		uint32_t				mNumberOfDrawInstancedCalls;
 		uint8_t					mMinimumRenderQueueIndex;	///< Inclusive
 		uint8_t					mMaximumRenderQueueIndex;	///< Inclusive
 		bool					mTransparentPass;

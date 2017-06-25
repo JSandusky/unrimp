@@ -25,6 +25,8 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/Scene/CompositorInstancePassScene.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/Scene/CompositorResourcePassScene.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -60,7 +62,10 @@ namespace RendererRuntime
 			// really worth to do so since the render queue only considers renderables inside the render queue range anyway.
 			mRenderQueue.addRenderablesFromRenderableManager(*renderableManager);
 		}
-		mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassScene&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
+		if (mRenderQueue.getNumberOfDrawCalls() > 0)
+		{
+			mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassScene&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
+		}
 
 		// End debug event
 		COMMAND_END_DEBUG_EVENT(commandBuffer)
@@ -72,7 +77,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorInstancePassScene::CompositorInstancePassScene(const CompositorResourcePassScene& compositorResourcePassScene, const CompositorNodeInstance& compositorNodeInstance) :
 		ICompositorInstancePass(compositorResourcePassScene, compositorNodeInstance),
-		mRenderQueue(compositorNodeInstance.getCompositorWorkspaceInstance().getIndirectBufferManager(), compositorResourcePassScene.getMinimumRenderQueueIndex(), compositorResourcePassScene.getMaximumRenderQueueIndex(), compositorResourcePassScene.isTransparentPass(), true),
+		mRenderQueue(compositorNodeInstance.getCompositorWorkspaceInstance().getRendererRuntime().getMaterialBlueprintResourceManager().getIndirectBufferManager(), compositorResourcePassScene.getMinimumRenderQueueIndex(), compositorResourcePassScene.getMaximumRenderQueueIndex(), compositorResourcePassScene.isTransparentPass(), true),
 		mRenderQueueIndexRange(nullptr)
 	{
 		// Nothing here

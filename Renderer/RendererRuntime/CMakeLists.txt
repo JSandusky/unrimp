@@ -79,7 +79,6 @@ set(SOURCE_CODES
 	src/Core/String.cpp
 	src/DebugGui/DebugGuiManager.cpp
 	src/DebugGui/DebugGuiHelper.cpp
-	src/RenderQueue/IndirectBufferManager.cpp
 	src/RenderQueue/Renderable.cpp
 	src/RenderQueue/RenderableManager.cpp
 	src/RenderQueue/RenderQueue.cpp
@@ -112,6 +111,7 @@ set(SOURCE_CODES
 	src/Resource/Detail/ResourceStreamer.cpp
 	src/Resource/IResourceListener.cpp
 	src/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.cpp
+	src/Resource/MaterialBlueprint/BufferManager/IndirectBufferManager.cpp
 	src/Resource/MaterialBlueprint/BufferManager/LightBufferManager.cpp
 	src/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.cpp
 	src/Resource/MaterialBlueprint/BufferManager/MaterialBufferSlot.cpp

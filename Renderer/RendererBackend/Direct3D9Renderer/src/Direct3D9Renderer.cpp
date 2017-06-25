@@ -1731,7 +1731,7 @@ namespace Direct3D9Renderer
 		mCapabilities.maximumTextureBufferSize = 0;
 
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-		mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+		mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 		// Maximum number of multisamples (always at least 1, usually 8)
 		mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy DirectX 9 multisample support

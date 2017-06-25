@@ -33,11 +33,6 @@ namespace RendererRuntime
 		return mRendererRuntime;
 	}
 
-	inline IndirectBufferManager& CompositorWorkspaceInstance::getIndirectBufferManager() const
-	{
-		return mIndirectBufferManager;
-	}
-
 	inline uint8_t CompositorWorkspaceInstance::getNumberOfMultisamples() const
 	{
 		return mNumberOfMultisamples;

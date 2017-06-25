@@ -1762,7 +1762,7 @@ namespace Direct3D10Renderer
 
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 		// -> DirectX 10 has no indirect buffer
-		mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+		mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 		// Maximum number of multisamples (always at least 1, usually 8)
 		// TODO(co) Currently Direct3D 10 instead of Direct3D 10.1 is used causing

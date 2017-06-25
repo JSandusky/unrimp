@@ -113,17 +113,18 @@ namespace RendererRuntime
 		return mTextures;
 	}
 
-	void MaterialTechnique::fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer)
+	bool MaterialTechnique::fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer)
 	{
-		assert(isInitialized(mMaterialBlueprintResourceId));
+		bool assignedMaterialPoolChange = false;
 
-		// TODO(co) This is experimental and will certainly look different when everything is in place
+		// Sanity check
+		assert(isInitialized(mMaterialBlueprintResourceId));
 
 		{ // Bind the material buffer manager
 			MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
 			if (nullptr != materialBufferManager)
 			{
-				materialBufferManager->fillCommandBuffer(*this, commandBuffer);
+				assignedMaterialPoolChange = materialBufferManager->fillCommandBuffer(*this, commandBuffer);
 			}
 		}
 
@@ -168,6 +169,9 @@ namespace RendererRuntime
 				}
 			}
 		}
+
+		// Done
+		return assignedMaterialPoolChange;
 	}
 
 

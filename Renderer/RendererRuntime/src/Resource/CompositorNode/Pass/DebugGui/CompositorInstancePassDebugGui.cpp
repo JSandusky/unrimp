@@ -66,7 +66,10 @@ namespace RendererRuntime
 				}
 			}
 			mRenderQueue.addRenderablesFromRenderableManager(mRenderableManager);
-			mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassDebugGui&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
+			if (mRenderQueue.getNumberOfDrawCalls() > 0)
+			{
+				mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassDebugGui&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
+			}
 
 			// Fill command buffer using custom material blueprint resource
 			debugGuiManager.fillCommandBuffer(commandBuffer);

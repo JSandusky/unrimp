@@ -24,7 +24,6 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/RenderQueue/RenderQueue.h"
 #include "RendererRuntime/RenderQueue/RenderableManager.h"
-#include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
@@ -33,6 +32,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/IndirectBufferManager.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -138,6 +138,9 @@ namespace RendererRuntime
 	RenderQueue::RenderQueue(IndirectBufferManager& indirectBufferManager, uint8_t minimumRenderQueueIndex, uint8_t maximumRenderQueueIndex, bool transparentPass, bool doSort) :
 		mRendererRuntime(indirectBufferManager.getRendererRuntime()),
 		mIndirectBufferManager(indirectBufferManager),
+		mNumberOfNullDrawCalls(0),
+		mNumberOfDrawIndexedInstancedCalls(0),
+		mNumberOfDrawInstancedCalls(0),
 		mMinimumRenderQueueIndex(minimumRenderQueueIndex),
 		mMaximumRenderQueueIndex(maximumRenderQueueIndex),
 		mTransparentPass(transparentPass),
@@ -149,10 +152,14 @@ namespace RendererRuntime
 
 	void RenderQueue::clear()
 	{
-		for (Queue& queue : mQueues)
+		if (getNumberOfDrawCalls() > 0)
 		{
-			queue.queuedRenderables.clear();
-			queue.sorted = false;
+			for (Queue& queue : mQueues)
+			{
+				queue.queuedRenderables.clear();
+				queue.sorted = false;
+			}
+			mNumberOfNullDrawCalls = mNumberOfDrawIndexedInstancedCalls = mNumberOfDrawInstancedCalls = 0;
 		}
 	}
 
@@ -186,6 +193,21 @@ namespace RendererRuntime
 					Queue& queue = mQueues[static_cast<size_t>(renderQueueIndex - mMinimumRenderQueueIndex)];
 					assert(!queue.sorted);	// Ensure render queue is still in filling state and not already in rendering state
 					queue.queuedRenderables.emplace_back(renderable, sortingKey);
+					if (0 != renderable.getNumberOfIndices())
+					{
+						if (renderable.getDrawIndexed())
+						{
+							++mNumberOfDrawIndexedInstancedCalls;
+						}
+						else
+						{
+							++mNumberOfDrawInstancedCalls;
+						}
+					}
+					else
+					{
+						++mNumberOfNullDrawCalls;
+					}
 				}
 			}
 		}
@@ -193,6 +215,9 @@ namespace RendererRuntime
 
 	void RenderQueue::fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, MaterialTechniqueId materialTechniqueId, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer)
 	{
+		// Sanity check
+		assert(getNumberOfDrawCalls() > 0 && "Don't call the fill command buffer method if there's no work to be done");
+
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
@@ -211,6 +236,19 @@ namespace RendererRuntime
 		// We try to minimize state changes across multiple render queue fill command buffer calls, but while doing so we still need to take into account
 		// that pass data like world space to clip space transform might have been changed and needs to be updated inside the pass uniform buffer
 		bool enforcePassBufferManagerFillBuffer = true;
+
+		// Get indirect buffer
+		Renderer::IIndirectBuffer* indirectBuffer = nullptr;
+		uint32_t indirectBufferOffset = 0;
+		uint8_t* indirectBufferData = nullptr;
+		if (mNumberOfDrawIndexedInstancedCalls > 0 || mNumberOfDrawInstancedCalls > 0 )
+		{
+			IndirectBufferManager::IndirectBuffer* managedIndirectBuffer = mIndirectBufferManager.getIndirectBuffer(sizeof(Renderer::DrawIndexedInstancedArguments) * mNumberOfDrawIndexedInstancedCalls + sizeof(Renderer::DrawInstancedArguments) * mNumberOfDrawInstancedCalls);
+			assert(nullptr != managedIndirectBuffer);
+			indirectBuffer		 = managedIndirectBuffer->indirectBuffer;
+			indirectBufferOffset = managedIndirectBuffer->indirectBufferOffset;
+			indirectBufferData   = managedIndirectBuffer->mappedData;
+		}
 
 		// Process all render queues
 		// -> When adding renderables from renderable manager we could build up a minimum/maximum used render queue index to sometimes reduce
@@ -244,20 +282,6 @@ namespace RendererRuntime
 					Renderer::IVertexArrayPtr vertexArrayPtr = renderable.getVertexArrayPtr();
 					if (nullptr != vertexArrayPtr)
 					{
-						// Setup input assembly (IA): Set the used vertex array
-						if (currentVertexArray != vertexArrayPtr)
-						{
-							currentVertexArray = vertexArrayPtr;
-							Renderer::Command::SetVertexArray::create(commandBuffer, currentVertexArray);
-						}
-
-						// Setup input assembly (IA): Set the primitive topology used for draw calls
-						if (currentPrimitiveTopology != renderable.getPrimitiveTopology())
-						{
-							currentPrimitiveTopology = renderable.getPrimitiveTopology();
-							Renderer::Command::SetPrimitiveTopology::create(commandBuffer, currentPrimitiveTopology);
-						}
-
 						// Material resource
 						const MaterialResource* materialResource = materialResourceManager.tryGetById(renderable.getMaterialResourceId());
 						if (nullptr != materialResource)
@@ -397,7 +421,27 @@ namespace RendererRuntime
 										}
 
 										// Cheap state change: Bind the material technique to the used renderer
-										materialTechnique->fillCommandBuffer(mRendererRuntime, commandBuffer);
+										if (materialTechnique->fillCommandBuffer(mRendererRuntime, commandBuffer))
+										{
+											// Assigned material pool changed
+											// TODO(co) Break instancing
+											NOP;
+										}
+										// TODO(co) Detect texture hash change: Break instancing
+
+										// Setup input assembly (IA): Set the used vertex array
+										if (currentVertexArray != vertexArrayPtr)
+										{
+											currentVertexArray = vertexArrayPtr;
+											Renderer::Command::SetVertexArray::create(commandBuffer, currentVertexArray);
+										}
+
+										// Setup input assembly (IA): Set the primitive topology used for draw calls
+										if (currentPrimitiveTopology != renderable.getPrimitiveTopology())
+										{
+											currentPrimitiveTopology = renderable.getPrimitiveTopology();
+											Renderer::Command::SetPrimitiveTopology::create(commandBuffer, currentPrimitiveTopology);
+										}
 
 										// Set the used pipeline state object (PSO)
 										if (currentPipelineState != pipelineStatePtr)
@@ -413,13 +457,41 @@ namespace RendererRuntime
 										// -> Please note that it's valid that there are no indices, for example "RendererRuntime::CompositorInstancePassDebugGui" is using the render queue only to set the material resource blueprint
 										if (0 != renderable.getNumberOfIndices())
 										{
+											// Sanity checks
+											assert(nullptr != indirectBuffer);
+											assert(nullptr != indirectBufferData);
+
+											// Draw
 											if (renderable.getDrawIndexed())
 											{
-												Renderer::Command::DrawIndexed::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation(), 0, startInstanceLocation);
+												// Fill indirect buffer
+												Renderer::DrawIndexedInstancedArguments* drawIndexedInstancedArguments = reinterpret_cast<Renderer::DrawIndexedInstancedArguments*>(indirectBufferData + indirectBufferOffset);
+												drawIndexedInstancedArguments->indexCountPerInstance = renderable.getNumberOfIndices();
+												drawIndexedInstancedArguments->instanceCount		 = 1;
+												drawIndexedInstancedArguments->startIndexLocation	 = renderable.getStartIndexLocation();
+												drawIndexedInstancedArguments->baseVertexLocation	 = 0;
+												drawIndexedInstancedArguments->startInstanceLocation = startInstanceLocation;
+
+												// Draw
+												Renderer::Command::DrawIndexed::create(commandBuffer, *indirectBuffer, indirectBufferOffset);
+
+												// Advance indirect buffer offset
+												indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
 											}
 											else
 											{
-												Renderer::Command::Draw::create(commandBuffer, renderable.getNumberOfIndices(), 1, renderable.getStartIndexLocation(), startInstanceLocation);
+												// Fill indirect buffer
+												Renderer::DrawInstancedArguments* drawInstancedArguments = reinterpret_cast<Renderer::DrawInstancedArguments*>(indirectBufferData + indirectBufferOffset);
+												drawInstancedArguments->vertexCountPerInstance = renderable.getNumberOfIndices();
+												drawInstancedArguments->instanceCount		   = 1;
+												drawInstancedArguments->startVertexLocation	   = renderable.getStartIndexLocation();
+												drawInstancedArguments->startInstanceLocation  = startInstanceLocation;
+
+												// Draw
+												Renderer::Command::Draw::create(commandBuffer, *indirectBuffer, indirectBufferOffset);
+
+												// Advance indirect buffer offset
+												indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
 											}
 										}
 									}

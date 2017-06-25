@@ -37,7 +37,6 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	class IBufferManager;
 	class IIndirectBuffer;
 }
 namespace RendererRuntime
@@ -62,6 +61,23 @@ namespace RendererRuntime
 	*/
 	class IndirectBufferManager : private Manager
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		struct IndirectBuffer
+		{
+			Renderer::IIndirectBuffer* indirectBuffer;			///< Indirect buffer instance, always valid
+			uint32_t				   indirectBufferOffset;	///< Current indirect buffer offset
+			uint8_t*				   mappedData;				///< Currently mapped data, don't destroy the data
+			IndirectBuffer(Renderer::IIndirectBuffer* _indirectBuffer) :
+				indirectBuffer(_indirectBuffer),
+				indirectBufferOffset(0),
+				mappedData(nullptr)
+			{}
+		};
 
 
 	//[-------------------------------------------------------]
@@ -96,19 +112,19 @@ namespace RendererRuntime
 		*  @brief
 		*    Return a indirect buffer
 		*
-		*  @param[in] maximumNumberOfDrawCalls
-		*    Maximum number of draw calls ("Renderer::DrawIndexedInstancedArguments") the indirect buffer must be able to hold
+		*  @param[in] numberOfBytes
+		*    Number of bytes the indirect buffer must be able to hold
 		*
 		*  @return
 		*    The requested indirect buffer, don't destroy the instance, null pointer in case of a horrible nightmare apocalypse scenario
 		*/
-		Renderer::IIndirectBuffer* getIndirectBuffer(uint32_t maximumNumberOfDrawCalls);
+		IndirectBuffer* getIndirectBuffer(uint32_t numberOfBytes);
 
 		/**
 		*  @brief
-		*    Called post command buffer execution
+		*    Called pre command buffer execution
 		*/
-		void onPostCommandBufferExecution();
+		void onPreCommandBufferExecution();
 
 
 	//[-------------------------------------------------------]
@@ -117,21 +133,13 @@ namespace RendererRuntime
 	private:
 		explicit IndirectBufferManager(const IndirectBufferManager&) = delete;
 		IndirectBufferManager& operator=(const IndirectBufferManager&) = delete;
+		void unmapCurrentIndirectBuffer();
 
 
 	//[-------------------------------------------------------]
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		struct IndirectBuffer
-		{
-			Renderer::IIndirectBuffer* indirectBuffer;
-			uint32_t				   numberOfBytes;
-			IndirectBuffer(Renderer::IIndirectBuffer* _indirectBuffer, uint32_t _numberOfBytes) :
-				indirectBuffer(_indirectBuffer),
-				numberOfBytes(_numberOfBytes)
-			{}
-		};
 		typedef std::vector<IndirectBuffer> IndirectBuffers;
 
 
@@ -139,10 +147,12 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		const IRendererRuntime&   mRendererRuntime;
-		Renderer::IBufferManager& mBufferManager;
-		IndirectBuffers			  mFreeIndirectBuffers;
-		IndirectBuffers			  mUsedIndirectBuffers;
+		const IRendererRuntime& mRendererRuntime;
+		const uint32_t			mMaximumIndirectBufferSize;	///< Maximum indirect buffer size in bytes
+		IndirectBuffers			mFreeIndirectBuffers;
+		IndirectBuffers			mUsedIndirectBuffers;
+		IndirectBuffer*			mCurrentIndirectBuffer;		///< Currently filled indirect buffer, can be a null pointer, don't destroy the instance since it's just a reference
+		uint32_t				mPreviouslyRequestedNumberOfBytes;
 
 
 	};
@@ -157,4 +167,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/RenderQueue/IndirectBufferManager.inl"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/IndirectBufferManager.inl"

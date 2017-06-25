@@ -290,8 +290,11 @@ namespace RendererRuntime
 							mRenderQueue.addRenderablesFromRenderableManager(*renderableManager, true);
 						}
 					}
-					mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassScene&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
-					mRenderQueue.clear();
+					if (mRenderQueue.getNumberOfDrawCalls() > 0)
+					{
+						mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassScene&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
+						mRenderQueue.clear();
+					}
 
 					// End debug event
 					COMMAND_END_DEBUG_EVENT(commandBuffer)

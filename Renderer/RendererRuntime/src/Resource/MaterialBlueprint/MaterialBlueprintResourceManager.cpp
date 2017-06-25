@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/IndirectBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
@@ -241,6 +242,7 @@ namespace RendererRuntime
 		mDefaultTextureFilterMode(Renderer::FilterMode::MIN_MAG_MIP_LINEAR),
 		mDefaultMaximumTextureAnisotropy(1),
 		mInstanceBufferManager(nullptr),
+		mIndirectBufferManager(nullptr),
 		mLightBufferManager(nullptr)
 	{
 		// Create internal resource manager
@@ -254,6 +256,7 @@ namespace RendererRuntime
 		if (capabilities.maximumUniformBufferSize > 0 && capabilities.maximumTextureBufferSize > 0)
 		{
 			mInstanceBufferManager = new InstanceBufferManager(rendererRuntime);
+			mIndirectBufferManager = new IndirectBufferManager(rendererRuntime);
 			mLightBufferManager = new LightBufferManager(rendererRuntime);
 		}
 
@@ -264,8 +267,9 @@ namespace RendererRuntime
 
 	MaterialBlueprintResourceManager::~MaterialBlueprintResourceManager()
 	{
-		// Destroy buffer managers, if needed
+		// Destroy buffer managers
 		delete mInstanceBufferManager;
+		delete mIndirectBufferManager;
 		delete mLightBufferManager;
 
 		// Shutdown material blueprint resource listener (we know there must be such an instance)

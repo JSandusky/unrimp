@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/Quad/CompositorResourcePassQuad.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -115,7 +116,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorInstancePassQuad::CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorNodeInstance& compositorNodeInstance) :
 		ICompositorInstancePass(compositorResourcePassQuad, compositorNodeInstance),
-		mRenderQueue(compositorNodeInstance.getCompositorWorkspaceInstance().getIndirectBufferManager(), 0, 0, false, false),
+		mRenderQueue(compositorNodeInstance.getCompositorWorkspaceInstance().getRendererRuntime().getMaterialBlueprintResourceManager().getIndirectBufferManager(), 0, 0, false, false),
 		mMaterialResourceId(getUninitialized<MaterialResourceId>())
 	{
 		// Sanity checks
@@ -177,7 +178,10 @@ namespace RendererRuntime
 
 			// Fill command buffer
 			mRenderQueue.addRenderablesFromRenderableManager(mRenderableManager);
-			mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
+			if (mRenderQueue.getNumberOfDrawCalls() > 0)
+			{
+				mRenderQueue.fillCommandBuffer(renderTarget, static_cast<const CompositorResourcePassQuad&>(getCompositorResourcePass()).getMaterialTechniqueId(), compositorContextData, commandBuffer);
+			}
 
 			// End debug event
 			COMMAND_END_DEBUG_EVENT(commandBuffer)

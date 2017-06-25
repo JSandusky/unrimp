@@ -421,6 +421,7 @@ namespace OpenGLRenderer
 		// State cache to avoid making redundant OpenGL calls
 		mOpenGLProgramPipeline(0),
 		mOpenGLProgram(0),
+		mOpenGLIndirectBuffer(0),
 		// Draw ID uniform location for "GL_ARB_base_instance"-emulation (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
 		mOpenGLVertexProgram(0),
 		mDrawIdUniformLocation(-1),
@@ -1513,34 +1514,36 @@ namespace OpenGLRenderer
 		}
 		else
 		{
+			// Sanity check
+			assert(mExtensions->isGL_ARB_draw_indirect());
+
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
 
-			if (mExtensions->isGL_ARB_draw_indirect())
-			{
-				if (1 == numberOfDraws)
+			{ // Bind indirect buffer
+				const GLuint openGLIndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer();
+				if (openGLIndirectBuffer != mOpenGLIndirectBuffer)
 				{
-					// TODO(co) Optimization: Don't bind if it's already the currently bound thing
-					glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
-					glDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)));
-				}
-				else if (numberOfDraws > 1)
-				{
-					// TODO(co) Optimization: Don't bind if it's already the currently bound thing
-					glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
-					if (mExtensions->isGL_ARB_multi_draw_indirect())
-					{
-						glMultiDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed
-					}
-					else
-					{
-						// TODO(co) Emulation (see specification for examples)
-					}
+					mOpenGLIndirectBuffer = openGLIndirectBuffer;
+					glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, mOpenGLIndirectBuffer);
 				}
 			}
-			else
+
+			// Draw indirect
+			if (1 == numberOfDraws)
 			{
-				// TODO(co) Emulation (see specification for examples)
+				glDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)));
+			}
+			else if (numberOfDraws > 1)
+			{
+				if (mExtensions->isGL_ARB_multi_draw_indirect())
+				{
+					glMultiDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed
+				}
+				else
+				{
+					// TODO(co) Emulation (see specification for examples)
+				}
 			}
 		}
 	}
@@ -1595,6 +1598,9 @@ namespace OpenGLRenderer
 		}
 		else
 		{
+			// Sanity check
+			assert(mExtensions->isGL_ARB_draw_indirect());
+
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
 
@@ -1605,31 +1611,30 @@ namespace OpenGLRenderer
 				IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
 				if (nullptr != indexBuffer)
 				{
-					if (mExtensions->isGL_ARB_draw_indirect())
-					{
-						if (1 == numberOfDraws)
+					{ // Bind indirect buffer
+						const GLuint openGLIndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer();
+						if (openGLIndirectBuffer != mOpenGLIndirectBuffer)
 						{
-							// TODO(co) Optimization: Don't bind if it's already the currently bound thing
-							glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
-							glDrawElementsIndirect(mOpenGLPrimitiveTopology, indexBuffer->getOpenGLType(), reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)));
-						}
-						else if (numberOfDraws > 1)
-						{
-							// TODO(co) Optimization: Don't bind if it's already the currently bound thing
-							glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer());
-							if (mExtensions->isGL_ARB_multi_draw_indirect())
-							{
-								glMultiDrawElementsIndirect(mOpenGLPrimitiveTopology, indexBuffer->getOpenGLType(), reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed
-							}
-							else
-							{
-								// TODO(co) Emulation (see specification for examples)
-							}
+							mOpenGLIndirectBuffer = openGLIndirectBuffer;
+							glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, mOpenGLIndirectBuffer);
 						}
 					}
-					else
+
+					// Draw indirect
+					if (1 == numberOfDraws)
 					{
-						// TODO(co) Emulation (see specification for examples)
+						glDrawElementsIndirect(mOpenGLPrimitiveTopology, indexBuffer->getOpenGLType(), reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)));
+					}
+					else if (numberOfDraws > 1)
+					{
+						if (mExtensions->isGL_ARB_multi_draw_indirect())
+						{
+							glMultiDrawElementsIndirect(mOpenGLPrimitiveTopology, indexBuffer->getOpenGLType(), reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed
+						}
+						else
+						{
+							// TODO(co) Emulation (see specification for examples)
+						}
 					}
 				}
 			}
@@ -1963,9 +1968,24 @@ namespace OpenGLRenderer
 				return ::detail::mapBuffer(*mExtensions, GL_TEXTURE_BUFFER_ARB, GL_TEXTURE_BINDING_BUFFER_ARB, static_cast<TextureBuffer&>(resource).getOpenGLTextureBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// TODO(co) Implement me
-				// return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-				return false;
+			{
+				const IndirectBuffer& indirectBuffer = static_cast<IndirectBuffer&>(resource);
+				uint8_t* emulationData = indirectBuffer.getWritableEmulationData();
+				if (nullptr != emulationData)
+				{
+					mappedSubresource.data		 = emulationData;
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+
+					// Done
+					return true;
+				}
+				else
+				{
+					return ::detail::mapBuffer(*mExtensions, GL_DRAW_INDIRECT_BUFFER, GL_DRAW_INDIRECT_BUFFER_BINDING, indirectBuffer.getOpenGLIndirectBuffer(), mapType, mappedSubresource);
+				}
+				break;	// Impossible to reach, but still add it
+			}
 
 			case Renderer::ResourceType::TEXTURE_1D:
 			{
@@ -2072,21 +2092,30 @@ namespace OpenGLRenderer
 		switch (resource.getResourceType())
 		{
 			case Renderer::ResourceType::INDEX_BUFFER:
-				return ::detail::unmapBuffer(*mExtensions, GL_ELEMENT_ARRAY_BUFFER_ARB, GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
+				::detail::unmapBuffer(*mExtensions, GL_ELEMENT_ARRAY_BUFFER_ARB, GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer());
+				break;
 
 			case Renderer::ResourceType::VERTEX_BUFFER:
-				return ::detail::unmapBuffer(*mExtensions, GL_ARRAY_BUFFER_ARB, GL_ARRAY_BUFFER_BINDING_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
+				::detail::unmapBuffer(*mExtensions, GL_ARRAY_BUFFER_ARB, GL_ARRAY_BUFFER_BINDING_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer());
+				break;
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
-				return ::detail::unmapBuffer(*mExtensions, GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, static_cast<UniformBuffer&>(resource).getOpenGLUniformBuffer());
+				::detail::unmapBuffer(*mExtensions, GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, static_cast<UniformBuffer&>(resource).getOpenGLUniformBuffer());
+				break;
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-				return ::detail::unmapBuffer(*mExtensions, GL_TEXTURE_BUFFER_ARB, GL_TEXTURE_BINDING_BUFFER_ARB, static_cast<TextureBuffer&>(resource).getOpenGLTextureBuffer());
+				::detail::unmapBuffer(*mExtensions, GL_TEXTURE_BUFFER_ARB, GL_TEXTURE_BINDING_BUFFER_ARB, static_cast<TextureBuffer&>(resource).getOpenGLTextureBuffer());
+				break;
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// TODO(co) Implement me
-				// mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
+			{
+				const IndirectBuffer& indirectBuffer = static_cast<IndirectBuffer&>(resource);
+				if (nullptr == indirectBuffer.getEmulationData())
+				{
+					::detail::unmapBuffer(*mExtensions, GL_DRAW_INDIRECT_BUFFER, GL_DRAW_INDIRECT_BUFFER_BINDING, indirectBuffer.getOpenGLIndirectBuffer());
+				}
 				break;
+			}
 
 			case Renderer::ResourceType::TEXTURE_1D:
 			{
@@ -2389,11 +2418,11 @@ namespace OpenGLRenderer
 		if (mExtensions->isGL_ARB_draw_indirect())
 		{
 			// TODO(co) How to get the indirect buffer maximum size? Didn't find any information about this.
-			mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;
+			mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 		}
 		else
 		{
-			mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+			mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 		}
 
 		// Maximum number of multisamples (always at least 1, usually 8)
