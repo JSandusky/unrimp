@@ -255,15 +255,13 @@ namespace OpenGLES3Renderer
 			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Incomplete read buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER\")")
 			//		break;
 
-			// Not supported by OpenGL ES 3
-			//	case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Incomplete multisample framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE\")")
-			//		break;
+				case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Incomplete multisample framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE\")")
+					break;
 
-			// Not supported by OpenGL ES 3
-			//	case GL_FRAMEBUFFER_UNDEFINED:
-			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Undefined framebuffer (\"GL_FRAMEBUFFER_UNDEFINED\")")
-			//		break;
+				case GL_FRAMEBUFFER_UNDEFINED:
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Undefined framebuffer (\"GL_FRAMEBUFFER_UNDEFINED\")")
+					break;
 
 				case GL_FRAMEBUFFER_UNSUPPORTED:
 					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: The combination of internal formats of the attached images violates an implementation-dependent set of restrictions (\"GL_FRAMEBUFFER_UNSUPPORTED\")")

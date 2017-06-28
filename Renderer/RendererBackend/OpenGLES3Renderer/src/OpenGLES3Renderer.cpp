@@ -1846,8 +1846,16 @@ namespace OpenGLES3Renderer
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 		mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
-		// Maximum number of multisamples (always at least 1, usually 8)
-		mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy OpenGL ES 3 multisample support
+		// Maximum number of multisamples (always at least 4 according to https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glGet.xhtml )
+		glGetIntegerv(GL_MAX_SAMPLES, &openGLValue);
+		if (openGLValue > 8)
+		{
+			// Limit to known maximum we can test
+			openGLValue = 8;
+		}
+		mCapabilities.maximumNumberOfMultisamples = static_cast<uint8_t>(openGLValue);
+		// TODO(co) Implement multisample support
+		mCapabilities.maximumNumberOfMultisamples = 1;
 
 		// Maximum anisotropy (always at least 1, usually 16)
 		// -> "GL_EXT_texture_filter_anisotropic"-extension
