@@ -256,6 +256,7 @@ namespace RendererRuntime
 	{
 		// TODO(co) Add optional top mipmap removal support (see "RendererRuntime::TextureResourceManager::NumberOfTopMipmapsToRemove")
 		// TODO(co) Add support for 3D textures (if supported by the KTX format)
+		// TODO(co) Add support for array textures (if supported by the KTX format)
 
 		// KTX header
 		::detail::KtxHeader ktxHeader;
@@ -337,6 +338,11 @@ namespace RendererRuntime
 			delete [] mImageData;
 			mImageData = new uint8_t[mNumberOfImageDataBytes];
 		}
+
+		// Data layout: The renderer interface expects: CRN and KTX files are organized in mip-major order, like this:
+		//   Mip0: Face0, Face1, Face2, Face3, Face4, Face5
+		//   Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+		//   etc.
 
 		// Load in the image data
 		uint8_t* currentImageData = mImageData;

@@ -116,11 +116,8 @@ namespace Renderer
 		*  @return
 		*    The created 1D texture instance, null pointer on error. Release the returned instance if you no longer need it.
 		*
-		*  @remarks
-		*    The texture data has to be in CRN-texture layout, which means organized in mip-major order, like this:
-		*    - Mip0: Face0, Face1, Face2, Face3, Face4, Face5
-		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
-		*    (DDS-texture layout is using face-major order)
+		*  @note
+		*    - The following texture data layout is expected: Mip0, Mip1, Mip2, Mip3 ...
 		*/
 		virtual ITexture1D* createTexture1D(uint32_t width, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
 
@@ -148,14 +145,8 @@ namespace Renderer
 		*  @return
 		*    The created 2D texture instance, null pointer on error. Release the returned instance if you no longer need it.
 		*
-		*  @remarks
-		*    The texture data has to be in CRN-texture layout, which means organized in mip-major order, like this:
-		*    - Mip0: Face0, Face1, Face2, Face3, Face4, Face5
-		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
-		*    (DDS-texture layout is using face-major order)
-		*
 		*  @note
-		*    - Only supported if "Renderer::Capabilities::maximumNumberOf2DTextureArraySlices" is not 0
+		*    - The following texture data layout is expected: Mip0, Mip1, Mip2, Mip3 ...
 		*/
 		virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, uint8_t numberOfMultisamples = 1, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
 
@@ -184,9 +175,12 @@ namespace Renderer
 		*  @remarks
 		*    The texture array data consists of a sequence of texture slices. Each the texture slice data of a single texture slice has to
 		*    be in CRN-texture layout, which means organized in mip-major order, like this:
-		*    - Mip0: Face0, Face1, Face2, Face3, Face4, Face5
-		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+		*    - Mip0: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+		*    - Mip1: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
 		*    (DDS-texture layout is using face-major order)
+		*
+		*  @note
+		*    - Only supported if "Renderer::Capabilities::maximumNumberOf2DTextureArraySlices" is not 0
 		*/
 		virtual ITexture2DArray* createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
 
@@ -214,8 +208,8 @@ namespace Renderer
 		*
 		*  @remarks
 		*    The texture data has to be in CRN-texture layout, which means organized in mip-major order, like this:
-		*    - Mip0: Face0, Face1, Face2, Face3, Face4, Face5
-		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+		*    - Mip0: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+		*    - Mip1: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
 		*    (DDS-texture layout is using face-major order)
 		*/
 		virtual ITexture3D* createTexture3D(uint32_t width, uint32_t height, uint32_t depth, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;

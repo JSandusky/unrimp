@@ -60,6 +60,12 @@ namespace OpenGLES3Renderer
 		glGenTextures(1, &mOpenGLES3Texture);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, mOpenGLES3Texture);
 
+		// TODO(co) Add support for user provided mipmaps
+		// Data layout: The renderer interface provides: CRN and KTX files are organized in mip-major order, like this:
+		//   Mip0: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+		//   Mip1: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+		//   etc.
+
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
 		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, Mapping::getOpenGLES3InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLES3Format(textureFormat), Mapping::getOpenGLES3Type(textureFormat), data);
 

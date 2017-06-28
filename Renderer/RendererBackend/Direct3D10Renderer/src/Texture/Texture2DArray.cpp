@@ -128,26 +128,36 @@ namespace Direct3D10Renderer
 				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 				if (dataContainsMipmaps)
 				{
+					// Data layout
+					// - Direct3D 10 wants: DDS files are organized in slice-major order, like this:
+					//     Slice0: Mip0, Mip1, Mip2, etc.
+					//     Slice1: Mip0, Mip1, Mip2, etc.
+					//     etc.
+					// - The renderer interface provides: CRN and KTX files are organized in mip-major order, like this:
+					//     Mip0: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+					//     Mip1: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+					//     etc.
+
 					// Upload all mipmaps
-					uint32_t d3d10SubresourceDataIndex = 0;
-					for (uint32_t arraySlice = 0; arraySlice < numberOfSlices; ++arraySlice)
+					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 					{
-						uint32_t currentWidth = width;
-						uint32_t currentHeight = height;
-						for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+						const uint32_t numberOfBytesPerRow = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+						const uint32_t numberOfBytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+						for (uint32_t arraySlice = 0; arraySlice < numberOfSlices; ++arraySlice)
 						{
-							// Upload the current mipmap
-							D3D10_SUBRESOURCE_DATA& currentD3d10SubresourceData = d3d10SubresourceData[d3d10SubresourceDataIndex];
+							// Upload the current slice
+							D3D10_SUBRESOURCE_DATA& currentD3d10SubresourceData = d3d10SubresourceData[arraySlice * numberOfMipmaps + mipmap];
 							currentD3d10SubresourceData.pSysMem			 = data;
-							currentD3d10SubresourceData.SysMemPitch		 = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, currentWidth);
+							currentD3d10SubresourceData.SysMemPitch		 = numberOfBytesPerRow;
 							currentD3d10SubresourceData.SysMemSlicePitch = 0;	// Only relevant for 3D textures
 
-							// Move on to the next mipmap
-							++d3d10SubresourceDataIndex;
-							data = static_cast<const uint8_t*>(data) + Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, currentWidth, currentHeight);
-							currentWidth = std::max(currentWidth >> 1, 1u);		// /= 2
-							currentHeight = std::max(currentHeight >> 1, 1u);	// /= 2
+							// Move on to the next slice
+							data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
 						}
+
+						// Move on to the next mipmap
+						width = std::max(width >> 1, 1u);	// /= 2
+						height = std::max(height >> 1, 1u);	// /= 2
 					}
 				}
 				else

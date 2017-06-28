@@ -62,6 +62,12 @@ namespace OpenGLRenderer
 			glGenTextures(1, &mOpenGLTexture);
 		}
 
+		// TODO(co) Add support for user provided mipmaps
+		// Data layout: The renderer interface provides: CRN and KTX files are organized in mip-major order, like this:
+		//   Mip0: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+		//   Mip1: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+		//   etc.
+
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
 		if (isArbDsa)
 		{
