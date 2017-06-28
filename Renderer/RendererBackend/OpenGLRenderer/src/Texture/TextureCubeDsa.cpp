@@ -64,8 +64,8 @@ namespace OpenGLRenderer
 		// TODO(co) "GL_ARB_direct_state_access" AMD graphics card driver bug ahead
 		// -> AMD graphics card: 13.02.2017 using Radeon software 17.1.1 on MS Windows: Looks like "GL_ARB_direct_state_access" is broken when trying to use "glCompressedTextureSubImage3D()" for upload
 		// -> Describes the same problem: https://community.amd.com/thread/194748 - "Upload data to GL_TEXTURE_CUBE_MAP with glTextureSubImage3D (DSA) broken ?"
-		// const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
-		const bool isArbDsa = false;
+		const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
+		//const bool isArbDsa = false;
 		if (isArbDsa)
 		{
 			glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &mOpenGLTexture);
@@ -97,21 +97,23 @@ namespace OpenGLRenderer
 				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 				{
 					const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
-					for (uint32_t face = 0; face < 6; ++face)
+					if (isArbDsa)
 					{
-						// Upload the current face
-						if (isArbDsa)
+						// With ARB DSA cube maps are a special form of a cube map array so we can upload all 6 faces at once per mipmap
+						// See https://www.khronos.org/opengl/wiki/Direct_State_Access (Last paragraph in "Changes from EXT")
+						// We know that "data" must be valid when we're in here due to the "Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS"-flag
+						glCompressedTextureSubImage3D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 6, format, numberOfBytesPerSlice*6, data);
+
+						// Move on to the next mipmap
+						data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice*6;
+					}
+					else
+					{
+						for (uint32_t face = 0; face < 6; ++face)
 						{
-							// We know that "data" must be valid when we're in here due to the "Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS"-flag
-							glCompressedTextureSubImage3D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLint>(face), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 1, format, numberOfBytesPerSlice, data);
-						}
-						else
-						{
+							// Upload the current face
 							glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, static_cast<GLint>(mipmap), format, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
 						}
-
-						// Move on to the next face
-						data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
 					}
 
 					// Move on to the next mipmap
@@ -128,7 +130,7 @@ namespace OpenGLRenderer
 					glTextureStorage2D(mOpenGLTexture, 1, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 					if (nullptr != data)
 					{
-						glCompressedTextureSubImage3D(mOpenGLTexture, 0, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 6, Mapping::getOpenGLFormat(textureFormat), static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
+						glCompressedTextureSubImage3D(mOpenGLTexture, 0, 0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 6, Mapping::getOpenGLFormat(textureFormat), static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height))*6, data);
 					}
 				}
 				else
