@@ -168,8 +168,8 @@ namespace OpenGLRenderer
 			// TODO(co) "GL_ARB_direct_state_access" AMD graphics card driver bug ahead
 			// -> AMD graphics card: 13.02.2017 using Radeon software 17.1.1 on MS Windows: Looks like "GL_ARB_direct_state_access" is broken when trying to use "glCompressedTextureSubImage3D()" for upload
 			// -> Describes the same problem: https://community.amd.com/thread/194748 - "Upload data to GL_TEXTURE_CUBE_MAP with glTextureSubImage3D (DSA) broken ?"
-			//if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
-			if (mExtensions->isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
+			//if (mExtensions->isGL_EXT_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new TextureCubeDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
