@@ -35,7 +35,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationControlShader::TessellationControlShader(NullRenderer &nullRenderer) :
+	TessellationControlShader::TessellationControlShader(NullRenderer& nullRenderer) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here
@@ -50,7 +50,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *TessellationControlShader::getShaderLanguageName() const
+	const char* TessellationControlShader::getShaderLanguageName() const
 	{
 		return ShaderLanguage::NAME;
 	}

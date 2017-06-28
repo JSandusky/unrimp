@@ -70,7 +70,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		FragmentShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode);
+		FragmentShaderGlsl(OpenGLES3Renderer& openGLES3Renderer, const char* sourceCode);
 
 		/**
 		*  @brief
@@ -92,7 +92,7 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]

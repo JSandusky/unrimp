@@ -37,7 +37,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState &depthStencilState) :
+	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState& depthStencilState) :
 		mDepthStencilState(depthStencilState),
 		mOpenGLES3DepthFunc(Mapping::getOpenGLES3ComparisonFunc(depthStencilState.depthFunc))
 	{

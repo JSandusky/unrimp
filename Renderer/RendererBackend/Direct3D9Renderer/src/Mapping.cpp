@@ -284,7 +284,7 @@ namespace Direct3D9Renderer
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::getDirect3D9Semantic(const char *semanticName)
+	uint32_t Mapping::getDirect3D9Semantic(const char* semanticName)
 	{
 		BYTE direct3D9Semantic = D3DDECLUSAGE_POSITION;
 		if (0 == stricmp("POSITION", semanticName))

@@ -40,7 +40,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D11Renderer& direct3D11Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
 		IVertexArray(direct3D11Renderer),
 		mD3D11DeviceContext(direct3D11Renderer.getD3D11DeviceContext()),
 		mIndexBuffer(indexBuffer),
@@ -73,9 +73,9 @@ namespace Direct3D11Renderer
 			// Loop through all vertex buffers
 			ID3D11Buffer** currentD3D11Buffer = mD3D11Buffers;
 			UINT* currentStride = mStrides;
-			VertexBuffer **currentVertexBuffer = mVertexBuffers;
-			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + mNumberOfSlots;
-			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D11Buffer, ++currentStride, ++currentVertexBuffer)
+			VertexBuffer** currentVertexBuffer = mVertexBuffers;
+			const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + mNumberOfSlots;
+			for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D11Buffer, ++currentStride, ++currentVertexBuffer)
 			{
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 				*currentStride = vertexBuffer->strideInBytes;
@@ -106,8 +106,8 @@ namespace Direct3D11Renderer
 		if (nullptr != mVertexBuffers)
 		{
 			// Release references
-			VertexBuffer **vertexBuffersEnd = mVertexBuffers + mNumberOfSlots;
-			for (VertexBuffer **vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
+			VertexBuffer** vertexBuffersEnd = mVertexBuffers + mNumberOfSlots;
+			for (VertexBuffer** vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
 			{
 				(*vertexBuffer)->releaseReference();
 			}

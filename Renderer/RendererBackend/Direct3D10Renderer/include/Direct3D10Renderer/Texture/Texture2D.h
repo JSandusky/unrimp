@@ -85,7 +85,7 @@ namespace Direct3D10Renderer
 		*  @param[in] numberOfMultisamples
 		*    The number of multisamples per pixel (valid values: 1, 2, 4, 6, 8)
 		*/
-		Texture2D(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, uint8_t numberOfMultisamples);
+		Texture2D(Direct3D10Renderer& direct3D10Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage, uint8_t numberOfMultisamples);
 
 		/**
 		*  @brief
@@ -134,7 +134,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The Direct3D texture 2D resource instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D10Texture2D *getD3D10Texture2D() const;
+		inline ID3D10Texture2D* getD3D10Texture2D() const;
 
 		/**
 		*  @brief
@@ -147,14 +147,14 @@ namespace Direct3D10Renderer
 		*    - It's not recommended to manipulate the returned Direct3D 10 resource
 		*      view by e.g. assigning another Direct3D 10 resource to it
 		*/
-		inline ID3D10ShaderResourceView *getD3D10ShaderResourceView() const;
+		inline ID3D10ShaderResourceView* getD3D10ShaderResourceView() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 		virtual void* getInternalResourceHandle() const override;
 
 
@@ -170,11 +170,11 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::TextureFormat::Enum  mTextureFormat;
-		uint8_t						   mNumberOfMultisamples;
-		bool						   mGenerateMipmaps;
-		ID3D10Texture2D				  *mD3D10Texture2D;					///< Direct3D 10 texture 2D resource, can be a null pointer
-		ID3D10ShaderResourceView	  *mD3D10ShaderResourceViewTexture;	///< Direct3D 10 shader resource view, can be a null pointer
+		Renderer::TextureFormat::Enum mTextureFormat;
+		uint8_t						  mNumberOfMultisamples;
+		bool						  mGenerateMipmaps;
+		ID3D10Texture2D*			  mD3D10Texture2D;					///< Direct3D 10 texture 2D resource, can be a null pointer
+		ID3D10ShaderResourceView*	  mD3D10ShaderResourceViewTexture;	///< Direct3D 10 shader resource view, can be a null pointer
 
 
 	};

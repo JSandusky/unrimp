@@ -37,7 +37,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndirectBufferDsa::IndirectBufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
+	IndirectBufferDsa::IndirectBufferDsa(OpenGLRenderer& openGLRenderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
 		IndirectBuffer(openGLRenderer)
 	{
 		if (openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
@@ -69,7 +69,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]
 	//[-------------------------------------------------------]
-	void IndirectBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	void IndirectBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
 		assert(nullptr != data);

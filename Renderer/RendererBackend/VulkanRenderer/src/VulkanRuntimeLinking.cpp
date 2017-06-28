@@ -181,7 +181,7 @@ namespace VulkanRenderer
 			#define IMPORT_FUNC(funcName)																																			\
 				if (result)																																							\
 				{																																									\
-					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mVulkanSharedLibrary), #funcName);																			\
+					void* symbol = ::GetProcAddress(static_cast<HMODULE>(mVulkanSharedLibrary), #funcName);																			\
 					if (nullptr != symbol)																																			\
 					{																																								\
 						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
@@ -199,7 +199,7 @@ namespace VulkanRenderer
 			#define IMPORT_FUNC(funcName)																																			\
 				if (result)																																							\
 				{																																									\
-					void *symbol = ::dlsym(mVulkanSharedLibrary, #funcName);																										\
+					void* symbol = ::dlsym(mVulkanSharedLibrary, #funcName);																										\
 					if (nullptr != symbol)																																			\
 					{																																								\
 						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\

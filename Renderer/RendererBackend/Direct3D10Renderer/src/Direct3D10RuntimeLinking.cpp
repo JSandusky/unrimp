@@ -114,7 +114,7 @@ namespace Direct3D10Renderer
 		#define IMPORT_FUNC(funcName)																																					\
 			if (result)																																									\
 			{																																											\
-				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D10SharedLibrary), #funcName);																					\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D10SharedLibrary), #funcName);																					\
 				if (nullptr != symbol)																																					\
 				{																																										\
 					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
@@ -148,7 +148,7 @@ namespace Direct3D10Renderer
 		#define IMPORT_FUNC(funcName)																																					\
 			if (result)																																									\
 			{																																											\
-				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX10SharedLibrary), #funcName);																					\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX10SharedLibrary), #funcName);																					\
 				if (nullptr != symbol)																																					\
 				{																																										\
 					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\

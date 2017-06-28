@@ -49,7 +49,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureManager methods      ]
 	//[-------------------------------------------------------]
-	Renderer::ITexture1D *TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	Renderer::ITexture1D* TextureManager::createTexture1D(uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0)
@@ -62,7 +62,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	Renderer::ITexture2D *TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, uint8_t, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D* TextureManager::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage, uint8_t, const Renderer::OptimizedTextureClearValue*)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
@@ -75,13 +75,13 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	Renderer::ITexture2DArray *TextureManager::createTexture2DArray(uint32_t, uint32_t, uint32_t, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
+	Renderer::ITexture2DArray* TextureManager::createTexture2DArray(uint32_t, uint32_t, uint32_t, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
 	{
 		// Direct3D 9 has no 2D texture arrays
 		return nullptr;
 	}
 
-	Renderer::ITexture3D *TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	Renderer::ITexture3D* TextureManager::createTexture3D(uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && depth > 0)
@@ -94,7 +94,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	Renderer::ITextureCube *TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
+	Renderer::ITextureCube* TextureManager::createTextureCube(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)

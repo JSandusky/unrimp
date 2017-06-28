@@ -61,7 +61,7 @@
 #else
 	#define VULKANRENDERER_API_EXPORT
 #endif
-VULKANRENDERER_API_EXPORT Renderer::IRenderer *createVulkanRendererInstance(handle nativeWindowHandle, bool useExternalContext)
+VULKANRENDERER_API_EXPORT Renderer::IRenderer* createVulkanRendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
 	return new VulkanRenderer::VulkanRenderer(nativeWindowHandle, useExternalContext);
 }
@@ -567,7 +567,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
+	void VulkanRenderer::iaSetVertexArray(Renderer::IVertexArray* vertexArray)
 	{
 		// New vertex array?
 		if (mVertexArray != vertexArray)
@@ -616,7 +616,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
+	void VulkanRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
@@ -625,7 +625,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	void VulkanRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void VulkanRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
@@ -638,7 +638,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
+	void VulkanRenderer::omSetRenderTarget(Renderer::IRenderTarget* renderTarget)
 	{
 		// New render target?
 		if (mRenderTarget != renderTarget)
@@ -746,7 +746,7 @@ namespace VulkanRenderer
 		if (nullptr != mVertexArray)
 		{
 			// Get the used index buffer
-			IndexBuffer *indexBuffer = mVertexArray->getIndexBuffer();
+			IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
 			if (nullptr != indexBuffer)
 			{
 				// TODO(co) Implement me
@@ -760,7 +760,7 @@ namespace VulkanRenderer
 		if (nullptr != mVertexArray)
 		{
 			// Get the used index buffer
-			IndexBuffer *indexBuffer = mVertexArray->getIndexBuffer();
+			IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
 			if (nullptr != indexBuffer)
 			{
 				// TODO(co) Implement me
@@ -772,12 +772,12 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::setDebugMarker(const char *)
+	void VulkanRenderer::setDebugMarker(const char*)
 	{
 		// TODO(co) Implement me
 	}
 
-	void VulkanRenderer::beginDebugEvent(const char *)
+	void VulkanRenderer::beginDebugEvent(const char*)
 	{
 		// TODO(co) Implement me
 	}
@@ -791,7 +791,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
-	const char *VulkanRenderer::getName() const
+	const char* VulkanRenderer::getName() const
 	{
 		return "Vulkan";
 	}
@@ -810,7 +810,7 @@ namespace VulkanRenderer
 		return false;
 	}
 
-	Renderer::ISwapChain *VulkanRenderer::getMainSwapChain() const
+	Renderer::ISwapChain* VulkanRenderer::getMainSwapChain() const
 	{
 		return mMainSwapChain;
 	}
@@ -825,12 +825,12 @@ namespace VulkanRenderer
 		return 1;
 	}
 
-	const char *VulkanRenderer::getShaderLanguageName(uint32_t) const
+	const char* VulkanRenderer::getShaderLanguageName(uint32_t) const
 	{
 		return ShaderLanguageGlsl::NAME;
 	}
 
-	Renderer::IShaderLanguage *VulkanRenderer::getShaderLanguage(const char *shaderLanguageName)
+	Renderer::IShaderLanguage* VulkanRenderer::getShaderLanguage(const char* shaderLanguageName)
 	{
 		// Optimization: Check for shader language name pointer match, first
 		if (nullptr != shaderLanguageName && (shaderLanguageName == ShaderLanguageGlsl::NAME || !stricmp(shaderLanguageName, ShaderLanguageGlsl::NAME)))
@@ -854,38 +854,38 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *VulkanRenderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::ISwapChain* VulkanRenderer::createSwapChain(handle nativeWindowHandle, bool)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *VulkanRenderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment)
+	Renderer::IFramebuffer* VulkanRenderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
 	{
 		return new Framebuffer(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
-	Renderer::IBufferManager *VulkanRenderer::createBufferManager()
+	Renderer::IBufferManager* VulkanRenderer::createBufferManager()
 	{
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITextureManager *VulkanRenderer::createTextureManager()
+	Renderer::ITextureManager* VulkanRenderer::createTextureManager()
 	{
 		return new TextureManager(*this);
 	}
 
-	Renderer::IRootSignature *VulkanRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	Renderer::IRootSignature* VulkanRenderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
 		return new RootSignature(*this, rootSignature);
 	}
 
-	Renderer::IPipelineState *VulkanRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
+	Renderer::IPipelineState* VulkanRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::ISamplerState *VulkanRenderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	Renderer::ISamplerState* VulkanRenderer::createSamplerState(const Renderer::SamplerState& samplerState)
 	{
 		return new SamplerState(*this, samplerState);
 	}
@@ -982,7 +982,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	void VulkanRenderer::setProgram(Renderer::IProgram *program)
+	void VulkanRenderer::setProgram(Renderer::IProgram* program)
 	{
 		// TODO(co) Avoid changing already set program
 

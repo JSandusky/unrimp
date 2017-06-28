@@ -76,7 +76,7 @@ namespace Direct3D9Renderer
 		*  @param[in] shaderBytecode
 		*    Shader bytecode
 		*/
-		VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const Renderer::ShaderBytecode& shaderBytecode);
+		VertexShaderHlsl(Direct3D9Renderer& direct3D9Renderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -87,7 +87,7 @@ namespace Direct3D9Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
+		VertexShaderHlsl(Direct3D9Renderer& direct3D9Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief
@@ -102,7 +102,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 vertex shader, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IDirect3DVertexShader9 *getDirect3DVertexShader9() const;
+		inline IDirect3DVertexShader9* getDirect3DVertexShader9() const;
 
 		/**
 		*  @brief
@@ -111,21 +111,21 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 constant table shader, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3DXConstantTable *getD3DXConstantTable() const;
+		inline ID3DXConstantTable* getD3DXConstantTable() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]
@@ -140,8 +140,8 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDirect3DVertexShader9 *mDirect3DVertexShader9;	///< Direct3D 9 vertex shader, can be a null pointer
-		ID3DXConstantTable	   *mD3DXConstantTable;		///< Constant table, can be a null pointer
+		IDirect3DVertexShader9* mDirect3DVertexShader9;	///< Direct3D 9 vertex shader, can be a null pointer
+		ID3DXConstantTable*	    mD3DXConstantTable;		///< Constant table, can be a null pointer
 
 
 	};

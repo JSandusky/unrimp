@@ -56,7 +56,6 @@
     <None Include="include\RendererRuntime\Core\Time\Stopwatch.inl" />
     <None Include="include\RendererRuntime\Core\Time\TimeManager.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
-    <None Include="include\RendererRuntime\RenderQueue\IndirectBufferManager.inl" />
     <None Include="include\RendererRuntime\RenderQueue\Renderable.inl" />
     <None Include="include\RendererRuntime\RenderQueue\RenderableManager.inl" />
     <None Include="include\RendererRuntime\RenderQueue\RenderQueue.inl" />
@@ -98,6 +97,7 @@
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\IndirectBufferManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialBufferSlot.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassBufferManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.inl" />
@@ -223,7 +223,6 @@
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\PrecompiledHeader.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
-    <ClInclude Include="include\RendererRuntime\RenderQueue\IndirectBufferManager.h" />
     <ClInclude Include="include\RendererRuntime\RenderQueue\Renderable.h" />
     <ClInclude Include="include\RendererRuntime\RenderQueue\RenderableManager.h" />
     <ClInclude Include="include\RendererRuntime\RenderQueue\RenderQueue.h" />
@@ -269,6 +268,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\IndirectBufferManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceBufferManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\LightBufferManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialBufferManager.h" />
@@ -572,7 +572,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\RenderQueue\IndirectBufferManager.cpp" />
     <ClCompile Include="src\RenderQueue\Renderable.cpp" />
     <ClCompile Include="src\RenderQueue\RenderableManager.cpp" />
     <ClCompile Include="src\RenderQueue\RenderQueue.cpp" />
@@ -604,6 +603,7 @@
     <ClCompile Include="src\Resource\Detail\IResource.cpp" />
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp" />
     <ClCompile Include="src\Resource\IResourceListener.cpp" />
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\IndirectBufferManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\InstanceBufferManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\LightBufferManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\MaterialBufferManager.cpp" />

@@ -34,7 +34,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstGpgpu::FirstGpgpu(const char *rendererName) :
+FirstGpgpu::FirstGpgpu(const char* rendererName) :
 	mRendererInstance(nullptr)
 {
 	// Copy the given renderer name
@@ -226,9 +226,9 @@ void FirstGpgpu::onInitialization()
 		Renderer::IProgramPtr programContentProcessing;
 		{
 			// Get the shader source code (outsourced to keep an overview)
-			const char *vertexShaderSourceCode = nullptr;
-			const char *fragmentShaderSourceCode_ContentGeneration = nullptr;
-			const char *fragmentShaderSourceCode_ContentProcessing = nullptr;
+			const char* vertexShaderSourceCode = nullptr;
+			const char* fragmentShaderSourceCode_ContentGeneration = nullptr;
+			const char* fragmentShaderSourceCode_ContentProcessing = nullptr;
 			#include "FirstGpgpu_GLSL_410.h"
 			#include "FirstGpgpu_GLSL_ES3.h"
 			#include "FirstGpgpu_HLSL_D3D9.h"
@@ -310,7 +310,7 @@ void FirstGpgpu::fillCommandBufferContentGeneration()
 		// Get the render target with and height
 		uint32_t width  = 1;
 		uint32_t height = 1;
-		Renderer::IRenderTarget *renderTarget = mFramebuffer[0];
+		Renderer::IRenderTarget* renderTarget = mFramebuffer[0];
 		if (nullptr != renderTarget)
 		{
 			renderTarget->getWidthAndHeight(width, height);
@@ -400,7 +400,7 @@ void FirstGpgpu::onDoJob()
 	if (mRenderer->map(*mTexture2D[1], 0, Renderer::MapType::READ, 0, mappedSubresource))
 	{
 		// Get the processed content pointer
-//		const uint8_t *data = static_cast<uint8_t*>(mappedSubresource.data);
+//		const uint8_t* data = static_cast<uint8_t*>(mappedSubresource.data);
 
 		// TODO(co) Write it out as image?
 

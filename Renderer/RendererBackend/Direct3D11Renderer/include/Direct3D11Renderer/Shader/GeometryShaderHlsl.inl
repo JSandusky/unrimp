@@ -28,7 +28,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D11GeometryShader *GeometryShaderHlsl::getD3D11GeometryShader() const
+	inline ID3D11GeometryShader* GeometryShaderHlsl::getD3D11GeometryShader() const
 	{
 		return mD3D11GeometryShader;
 	}

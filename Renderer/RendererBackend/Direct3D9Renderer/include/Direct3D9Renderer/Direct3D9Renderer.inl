@@ -28,17 +28,17 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IDirect3D9 *Direct3D9Renderer::getDirect3D9() const
+	inline IDirect3D9* Direct3D9Renderer::getDirect3D9() const
 	{
 		return mDirect3D9;
 	}
 
-	inline IDirect3DDevice9 *Direct3D9Renderer::getDirect3DDevice9() const
+	inline IDirect3DDevice9* Direct3D9Renderer::getDirect3DDevice9() const
 	{
 		return mDirect3DDevice9;
 	}
 
-	inline Renderer::IRenderTarget *Direct3D9Renderer::omGetRenderTarget() const
+	inline Renderer::IRenderTarget* Direct3D9Renderer::omGetRenderTarget() const
 	{
 		return mRenderTarget;
 	}
@@ -47,7 +47,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
-	inline const char *Direct3D9Renderer::getName() const
+	inline const char* Direct3D9Renderer::getName() const
 	{
 		return "Direct3D9";
 	}

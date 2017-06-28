@@ -80,7 +80,7 @@ namespace Direct3D10Renderer
 		*  @param[in] pipelineState
 		*    Pipeline state to use
 		*/
-		PipelineState(Direct3D10Renderer &direct3D10Renderer, const Renderer::PipelineState &pipelineState);
+		PipelineState(Direct3D10Renderer& direct3D10Renderer, const Renderer::PipelineState& pipelineState);
 
 		/**
 		*  @brief
@@ -95,7 +95,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    Direct3D 10 input layout instance, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D10InputLayout *getD3D10InputLayout() const;
+		inline ID3D10InputLayout* getD3D10InputLayout() const;
 
 		/**
 		*  @brief
@@ -108,7 +108,7 @@ namespace Direct3D10Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
@@ -123,9 +123,9 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10Device	   *mD3D10Device;		///< The Direct3D 10 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
+		ID3D10Device*	    mD3D10Device;		///< The Direct3D 10 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
 		Renderer::IProgram* mProgram;
-		ID3D10InputLayout  *mD3D10InputLayout;	///< Direct3D 10 input layout, can be a null pointer
+		ID3D10InputLayout*  mD3D10InputLayout;	///< Direct3D 10 input layout, can be a null pointer
 		RasterizerState*    mRasterizerState;
 		DepthStencilState*  mDepthStencilState;
 		BlendState*			mBlendState;

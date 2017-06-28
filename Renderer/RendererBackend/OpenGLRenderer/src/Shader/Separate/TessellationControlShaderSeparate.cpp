@@ -36,14 +36,14 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode) :
+	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer& openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromBytecode(GL_TESS_CONTROL_SHADER, shaderBytecode))
 	{
 		// Nothing here
 	}
 
-	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer& openGLRenderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromSourceCode(GL_TESS_CONTROL_SHADER, sourceCode))
 	{
@@ -65,7 +65,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *TessellationControlShaderSeparate::getShaderLanguageName() const
+	const char* TessellationControlShaderSeparate::getShaderLanguageName() const
 	{
 		return ShaderLanguageSeparate::NAME;
 	}

@@ -37,7 +37,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer& direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IFragmentShader(direct3D12Renderer),
 		mD3DBlobFragmentShader(nullptr)
 	{
@@ -46,7 +46,7 @@ namespace Direct3D12Renderer
 		memcpy(mD3DBlobFragmentShader->GetBufferPointer(), shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes());
 	}
 
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer& direct3D12Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IFragmentShader(direct3D12Renderer),
 		mD3DBlobFragmentShader(nullptr)
 	{
@@ -75,7 +75,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *FragmentShaderHlsl::getShaderLanguageName() const
+	const char* FragmentShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
 	}

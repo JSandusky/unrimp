@@ -39,7 +39,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(OpenGLES3Renderer &openGLES3Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(OpenGLES3Renderer& openGLES3Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
 		IVertexArray(openGLES3Renderer),
 		mOpenGLES3VertexArray(0),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
@@ -67,9 +67,9 @@ namespace OpenGLES3Renderer
 		glBindVertexArray(mOpenGLES3VertexArray);
 
 		{ // Add a reference to the used vertex buffers
-			VertexBuffer **currentVertexBuffers = mVertexBuffers;
-			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + mNumberOfVertexBuffers;
-			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentVertexBuffers)
+			VertexBuffer** currentVertexBuffers = mVertexBuffers;
+			const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + mNumberOfVertexBuffers;
+			for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentVertexBuffers)
 			{
 				// Add a reference to the used vertex buffer
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
@@ -82,8 +82,8 @@ namespace OpenGLES3Renderer
 			// Loop through all attributes
 			// -> We're using "glBindAttribLocation()" when linking the program so we have known attribute locations (the vertex array can't know about the program)
 			GLuint attributeLocation = 0;
-			const Renderer::VertexAttribute *attributeEnd = vertexAttributes.attributes + vertexAttributes.numberOfAttributes;
-			for (const Renderer::VertexAttribute *attribute = vertexAttributes.attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
+			const Renderer::VertexAttribute* attributeEnd = vertexAttributes.attributes + vertexAttributes.numberOfAttributes;
+			for (const Renderer::VertexAttribute* attribute = vertexAttributes.attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
 			{
 				// Set the OpenGL ES 3 vertex attribute pointer
 				const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
@@ -153,8 +153,8 @@ namespace OpenGLES3Renderer
 		if (nullptr != mVertexBuffers)
 		{
 			// Release references
-			VertexBuffer **vertexBuffersEnd = mVertexBuffers + mNumberOfVertexBuffers;
-			for (VertexBuffer **vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
+			VertexBuffer** vertexBuffersEnd = mVertexBuffers + mNumberOfVertexBuffers;
+			for (VertexBuffer** vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
 			{
 				(*vertexBuffer)->releaseReference();
 			}

@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, bool useExternalContext) :
+	SwapChain::SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, bool useExternalContext) :
 		ISwapChain(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		#ifdef WIN32
@@ -62,7 +62,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	SwapChain::SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, IContext& context) :
+	SwapChain::SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, IContext& context) :
 		ISwapChain(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		mContext(&context),
@@ -84,7 +84,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// Return stored width and height when both valid
 		if (nullptr != mRenderWindow)
@@ -129,8 +129,8 @@ namespace OpenGLRenderer
 		#elif defined LINUX
 			if (NULL_HANDLE != mNativeWindowHandle)
 			{
-				OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-				Display *display = static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay();
+				OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+				Display* display = static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay();
 
 				// Get the width and height...
 				::Window rootWindow = 0;
@@ -184,7 +184,7 @@ namespace OpenGLRenderer
 		#elif defined LINUX
 			if (NULL_HANDLE != mNativeWindowHandle)
 			{
-				OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+				OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 				glXSwapBuffers(static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay(), mNativeWindowHandle);
 			}
 		#else

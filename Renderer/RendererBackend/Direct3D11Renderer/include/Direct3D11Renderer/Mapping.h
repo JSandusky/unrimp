@@ -85,7 +85,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    Direct3D 11 usage (type "D3D11_USAGE" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getDirect3D11UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t &cpuAccessFlags);
+		static uint32_t getDirect3D11UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t& cpuAccessFlags);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]

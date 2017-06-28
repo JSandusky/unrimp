@@ -75,7 +75,7 @@ namespace Direct3D10Renderer
 		*  @param[in] blendState
 		*    Blend state to use
 		*/
-		BlendState(Direct3D10Renderer &direct3D10Renderer, const Renderer::BlendState &blendState);
+		BlendState(Direct3D10Renderer& direct3D10Renderer, const Renderer::BlendState& blendState);
 
 		/**
 		*  @brief
@@ -90,21 +90,21 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The Direct3D 10 blend state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D10BlendState *getD3D10BlendState() const;
+		inline ID3D10BlendState* getD3D10BlendState() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Direct3D10Renderer::IState methods     ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10BlendState *mD3D10BlendState;	///< Direct3D 10 blend state, can be a null pointer
+		ID3D10BlendState* mD3D10BlendState;	///< Direct3D 10 blend state, can be a null pointer
 
 
 	};

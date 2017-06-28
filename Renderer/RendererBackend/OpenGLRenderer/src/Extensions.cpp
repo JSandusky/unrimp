@@ -43,7 +43,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Extensions::Extensions(IContext &context) :
+	Extensions::Extensions(IContext& context) :
 		mContext(&context),
 		mInitialized(false)
 	{
@@ -108,7 +108,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	bool Extensions::isSupported(const char *extension) const
+	bool Extensions::isSupported(const char* extension) const
 	{
 		// Check whether or not the given extension string pointer is valid
 		if (nullptr != extension)
@@ -125,7 +125,7 @@ namespace OpenGLRenderer
 		return false;
 	}
 
-	bool Extensions::checkExtension(const char *extension) const
+	bool Extensions::checkExtension(const char* extension) const
 	{
 		// Check whether or not the given extension string pointer is valid
 		if (nullptr != extension)
@@ -142,11 +142,11 @@ namespace OpenGLRenderer
 				// "glGetString()" & "glXQueryExtensionsString()" & "glXGetClientString()"
 				const int numberOfLoops = 3;
 			#endif
-			const char *extensions = nullptr;
+			const char* extensions = nullptr;
 			for (int loopIndex = 0; loopIndex < numberOfLoops; ++loopIndex)
 			{
 				// Extension names should not have spaces
-				const char *where = strchr(extension, ' ');
+				const char* where = strchr(extension, ' ');
 				if (nullptr != where || '\0' == *extension)
 				{
 					return false; // Extension not found
@@ -168,7 +168,7 @@ namespace OpenGLRenderer
 						// On Mac OS X, only "glGetString(GL_EXTENSIONS)" is required
 					#elif LINUX
 						// Get the X server display connection
-						Display *display = static_cast<ContextLinux&>(*mContext).getDisplay();
+						Display* display = static_cast<ContextLinux&>(*mContext).getDisplay();
 						if (nullptr != display)
 						{
 							if (2 == loopIndex)
@@ -207,11 +207,11 @@ namespace OpenGLRenderer
 					// It takes a bit of care to be fool-proof about parsing the
 					// OpenGL extensions string. Don't be fooled by substrings,
 					// etc:
-					const char *start = extensions;
+					const char* start = extensions;
 					where = strstr(start, extension);
 					while (nullptr != where)
 					{
-						const char *terminator = where + strlen(extension);
+						const char* terminator = where + strlen(extension);
 						if ((where == start || ' ' == *(where - 1)) && (' ' == *terminator || '\0' == *terminator))
 						{
 							// Extension found
@@ -281,7 +281,7 @@ namespace OpenGLRenderer
 			#define IMPORT_FUNC(funcName)																													\
 				if (result)																																	\
 				{																																			\
-					void *symbol = wglGetProcAddress(#funcName);																							\
+					void* symbol = wglGetProcAddress(#funcName);																							\
 					if (nullptr != symbol)																													\
 					{																																		\
 						*(reinterpret_cast<void**>(&(funcName))) = symbol;																					\
@@ -302,7 +302,7 @@ namespace OpenGLRenderer
 			#define IMPORT_FUNC(funcName)																													\
 				if (result)																																	\
 				{																																			\
-					void *symbol = m_pOpenGLSharedLibrary ? dlsym(mOpenGLSharedLibrary, #funcName) : nullptr;												\
+					void* symbol = m_pOpenGLSharedLibrary ? dlsym(mOpenGLSharedLibrary, #funcName) : nullptr;												\
 					if (nullptr != symbol)																													\
 					{																																		\
 						*(reinterpret_cast<void**>(&(funcName))) = symbol;																					\
@@ -342,7 +342,6 @@ namespace OpenGLRenderer
 		//[-------------------------------------------------------]
 		//[ EXT                                                   ]
 		//[-------------------------------------------------------]
-
 		// GL_EXT_texture_lod_bias
 		mGL_EXT_texture_lod_bias = isCoreProfile ? true : isSupported("GL_EXT_texture_lod_bias");	// Is core feature since OpenGL 1.4
 

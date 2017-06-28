@@ -181,7 +181,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    The available extensions
 		*/
-		virtual const IExtensions &getExtensions() const = 0;
+		virtual const IExtensions& getExtensions() const = 0;
 
 
 	//[-------------------------------------------------------]

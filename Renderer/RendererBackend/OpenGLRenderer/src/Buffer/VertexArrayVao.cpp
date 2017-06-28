@@ -48,8 +48,8 @@ namespace OpenGLRenderer
 		if (nullptr != mVertexBuffers)
 		{
 			// Release references
-			VertexBuffer **vertexBuffersEnd = mVertexBuffers + mNumberOfVertexBuffers;
-			for (VertexBuffer **vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
+			VertexBuffer** vertexBuffersEnd = mVertexBuffers + mNumberOfVertexBuffers;
+			for (VertexBuffer** vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
 			{
 				(*vertexBuffer)->releaseReference();
 			}
@@ -63,7 +63,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	VertexArrayVao::VertexArrayVao(OpenGLRenderer &openGLRenderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArrayVao::VertexArrayVao(OpenGLRenderer& openGLRenderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
 		VertexArray(openGLRenderer, indexBuffer, InternalResourceType::VAO),
 		mOpenGLVertexArray(0),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
@@ -75,9 +75,9 @@ namespace OpenGLRenderer
 			mVertexBuffers = new VertexBuffer*[numberOfVertexBuffers];
 
 			// Loop through all vertex buffers
-			VertexBuffer **currentVertexBuffers = mVertexBuffers;
-			const Renderer::VertexArrayVertexBuffer *vertexBuffersEnd = vertexBuffers + numberOfVertexBuffers;
-			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer, ++currentVertexBuffers)
+			VertexBuffer** currentVertexBuffers = mVertexBuffers;
+			const Renderer::VertexArrayVertexBuffer* vertexBuffersEnd = vertexBuffers + numberOfVertexBuffers;
+			for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer, ++currentVertexBuffers)
 			{
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 				*currentVertexBuffers = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);

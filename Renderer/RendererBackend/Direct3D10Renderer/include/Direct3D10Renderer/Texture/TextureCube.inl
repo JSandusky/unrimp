@@ -38,12 +38,12 @@ namespace Direct3D10Renderer
 		return mGenerateMipmaps;
 	}
 
-	inline ID3D10Texture2D *TextureCube::getD3D10TextureCube() const
+	inline ID3D10Texture2D* TextureCube::getD3D10TextureCube() const
 	{
 		return mD3D10TextureCube;
 	}
 
-	inline ID3D10ShaderResourceView *TextureCube::getD3D10ShaderResourceView() const
+	inline ID3D10ShaderResourceView* TextureCube::getD3D10ShaderResourceView() const
 	{
 		return mD3D10ShaderResourceViewTexture;
 	}

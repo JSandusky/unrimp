@@ -37,7 +37,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderGlsl::VertexShaderGlsl(OpenGLES3Renderer &openGLES3Renderer, const char *sourceCode) :
+	VertexShaderGlsl::VertexShaderGlsl(OpenGLES3Renderer& openGLES3Renderer, const char* sourceCode) :
 		IVertexShader(openGLES3Renderer),
 		mOpenGLES3Shader(ShaderLanguageGlsl::loadShaderFromSourcecode(GL_VERTEX_SHADER, sourceCode))
 	{
@@ -55,7 +55,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *VertexShaderGlsl::getShaderLanguageName() const
+	const char* VertexShaderGlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageGlsl::NAME;
 	}

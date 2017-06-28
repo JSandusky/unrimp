@@ -80,7 +80,7 @@ namespace Direct3D11Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		TextureBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		TextureBuffer(Direct3D11Renderer& direct3D11Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -95,7 +95,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The Direct3D texture buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11Buffer *getD3D11Buffer() const;
+		inline ID3D11Buffer* getD3D11Buffer() const;
 
 		/**
 		*  @brief
@@ -104,21 +104,21 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The Direct3D shader resource view instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11ShaderResourceView *getD3D11ShaderResourceView() const;
+		inline ID3D11ShaderResourceView* getD3D11ShaderResourceView() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 
 	//[-------------------------------------------------------]
@@ -133,8 +133,8 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11Buffer			 *mD3D11Buffer;						///< Direct3D texture buffer instance, can be a null pointer
-		ID3D11ShaderResourceView *mD3D11ShaderResourceViewTexture;	///< Direct3D 11 shader resource view, can be a null pointer
+		ID3D11Buffer*			  mD3D11Buffer;						///< Direct3D texture buffer instance, can be a null pointer
+		ID3D11ShaderResourceView* mD3D11ShaderResourceViewTexture;	///< Direct3D 11 shader resource view, can be a null pointer
 
 
 	};

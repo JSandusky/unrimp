@@ -519,7 +519,17 @@ namespace RendererRuntime
 	//			const size_t compressedSize = ((ddsHeader.width + 3) >> 2) * ((ddsHeader.height + 3) >> 2) * 8;
 				// m_nCompressedSize = ((ddsHeader.width + 3) / 4) * ((ddsHeader.height + 3) / 4) * 8;
 
-				// TODO(co)
+				// Data layout
+				// - DDS files are organized in face-major order, like this:
+				//     Face0: Mip0, Mip1, Mip2, etc.
+				//     Face1: Mip0, Mip1, Mip2, etc.
+				//     etc.
+				// - The renderer interface expects: CRN and KTX files are organized in mip-major order, like this:
+				//     Mip0: Face0, Face1, Face2, Face3, Face4, Face5
+				//     Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+				//     etc.
+
+				// TODO(co) Data layout handling
 				// A simple one: Just read in the whole compressed data
 				file.read(mImageData, mNumberOfUsedImageDataBytes);
 

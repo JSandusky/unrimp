@@ -28,17 +28,17 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const Extensions &OpenGLRenderer::getExtensions() const
+	inline const Extensions& OpenGLRenderer::getExtensions() const
 	{
 		return *mExtensions;
 	}
 
-	inline Extensions &OpenGLRenderer::getExtensions()
+	inline Extensions& OpenGLRenderer::getExtensions()
 	{
 		return *mExtensions;
 	}
 
-	inline const IContext &OpenGLRenderer::getContext() const
+	inline const IContext& OpenGLRenderer::getContext() const
 	{
 		return *mContext;
 	}

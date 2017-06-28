@@ -28,7 +28,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D11InputLayout *PipelineState::getD3D11InputLayout() const
+	inline ID3D11InputLayout* PipelineState::getD3D11InputLayout() const
 	{
 		return mD3D11InputLayout;
 	}

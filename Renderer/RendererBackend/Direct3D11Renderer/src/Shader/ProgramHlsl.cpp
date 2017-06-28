@@ -40,7 +40,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramHlsl::ProgramHlsl(Direct3D11Renderer &direct3D11Renderer, VertexShaderHlsl *vertexShaderHlsl, TessellationControlShaderHlsl *tessellationControlShaderHlsl, TessellationEvaluationShaderHlsl *tessellationEvaluationShaderHlsl, GeometryShaderHlsl *geometryShaderHlsl, FragmentShaderHlsl *fragmentShaderHlsl) :
+	ProgramHlsl::ProgramHlsl(Direct3D11Renderer& direct3D11Renderer, VertexShaderHlsl* vertexShaderHlsl, TessellationControlShaderHlsl* tessellationControlShaderHlsl, TessellationEvaluationShaderHlsl* tessellationEvaluationShaderHlsl, GeometryShaderHlsl* geometryShaderHlsl, FragmentShaderHlsl* fragmentShaderHlsl) :
 		IProgram(direct3D11Renderer),
 		mVertexShaderHlsl(vertexShaderHlsl),
 		mTessellationControlShaderHlsl(tessellationControlShaderHlsl),
@@ -100,7 +100,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void ProgramHlsl::setDebugName(const char *)
+	void ProgramHlsl::setDebugName(const char*)
 	{
 		// In here we could assign the given debug name to all shaders assigned to the program,
 		// but this might end up within a naming chaos due to overwriting possible already set
@@ -111,7 +111,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	handle ProgramHlsl::getUniformHandle(const char *)
+	handle ProgramHlsl::getUniformHandle(const char*)
 	{
 		// Not supported by Direct3D 11
 		return NULL_HANDLE;
@@ -122,17 +122,17 @@ namespace Direct3D11Renderer
 		// Not supported by Direct3D 11
 	}
 
-	void ProgramHlsl::setUniform2fv(handle, const float *)
+	void ProgramHlsl::setUniform2fv(handle, const float*)
 	{
 		// Not supported by Direct3D 11
 	}
 
-	void ProgramHlsl::setUniform3fv(handle, const float *)
+	void ProgramHlsl::setUniform3fv(handle, const float*)
 	{
 		// Not supported by Direct3D 11
 	}
 
-	void ProgramHlsl::setUniform4fv(handle, const float *)
+	void ProgramHlsl::setUniform4fv(handle, const float*)
 	{
 		// Not supported by Direct3D 11
 	}

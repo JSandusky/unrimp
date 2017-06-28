@@ -106,7 +106,7 @@ namespace OpenGLRenderer
 		*  @param[in] width
 		*    The width of the texture
 		*/
-		Texture1D(OpenGLRenderer &openGLRenderer, uint32_t width);
+		Texture1D(OpenGLRenderer& openGLRenderer, uint32_t width);
 
 
 	//[-------------------------------------------------------]

@@ -70,7 +70,7 @@ namespace NullRenderer
 		*  @param[in] width
 		*    The width of the texture
 		*/
-		Texture1D(NullRenderer &nullRenderer, uint32_t width);
+		Texture1D(NullRenderer& nullRenderer, uint32_t width);
 
 		/**
 		*  @brief

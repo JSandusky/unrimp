@@ -52,7 +52,7 @@ namespace
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					char *informationLog = new char[static_cast<uint32_t>(informationLength)];
+					char* informationLog = new char[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
 					OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
@@ -188,7 +188,7 @@ namespace OpenGLRenderer
 		// Nothing here
 	}
 
-	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer& openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IVertexShader(static_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(::detail::loadShaderProgramFromSourcecode(vertexAttributes, GL_VERTEX_SHADER_ARB, sourceCode)),
 		mDrawIdUniformLocation(openGLRenderer.getExtensions().isGL_ARB_base_instance() ? -1 : glGetUniformLocationARB(mOpenGLShaderProgram, "drawIdUniform"))
@@ -211,7 +211,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *VertexShaderSeparate::getShaderLanguageName() const
+	const char* VertexShaderSeparate::getShaderLanguageName() const
 	{
 		return ShaderLanguageSeparate::NAME;
 	}

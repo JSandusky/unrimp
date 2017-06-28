@@ -88,7 +88,7 @@ namespace OpenGLRenderer
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
 		*/
-		explicit UniformBuffer(OpenGLRenderer &openGLRenderer);
+		explicit UniformBuffer(OpenGLRenderer& openGLRenderer);
 
 
 	//[-------------------------------------------------------]

@@ -79,7 +79,7 @@ namespace OpenGLRenderer
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
 		*/
-		explicit SamplerState(OpenGLRenderer &openGLRenderer);
+		explicit SamplerState(OpenGLRenderer& openGLRenderer);
 
 
 	//[-------------------------------------------------------]

@@ -38,7 +38,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCube::TextureCube(Direct3D9Renderer &direct3D9Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage) :
+	TextureCube::TextureCube(Direct3D9Renderer& direct3D9Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void*, uint32_t, Renderer::TextureUsage) :
 		ITextureCube(direct3D9Renderer, width, height),
 		mDirect3DTexture9(nullptr)
 	{
@@ -94,7 +94,7 @@ namespace Direct3D9Renderer
 					// Upload the current mipmap
 
 					// Get the surface
-					IDirect3DSurface9 *direct3DSurface9 = nullptr;
+					IDirect3DSurface9* direct3DSurface9 = nullptr;
 					mDirect3DTexture9->GetSurfaceLevel(mipmap, &direct3DSurface9);
 					if (nullptr != direct3DSurface9)
 					{
@@ -117,7 +117,7 @@ namespace Direct3D9Renderer
 				// The user only provided us with the base texture, no mipmaps
 
 				// Get the surface
-				IDirect3DSurface9 *direct3DSurface9 = nullptr;
+				IDirect3DSurface9* direct3DSurface9 = nullptr;
 				mDirect3DTexture9->GetSurfaceLevel(0, &direct3DSurface9);
 				if (nullptr != direct3DSurface9)
 				{
@@ -153,7 +153,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void TextureCube::setDebugName(const char *name)
+	void TextureCube::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D9RENDERER_NO_DEBUG
 			// Valid Direct3D 9 texture?

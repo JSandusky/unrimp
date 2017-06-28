@@ -52,49 +52,49 @@
 	// Null
 	#ifndef RENDERER_NO_NULL
 		// "createNullRendererInstance()" signature
-		extern Renderer::IRenderer *createNullRendererInstance(Renderer::handle, bool);
+		extern Renderer::IRenderer* createNullRendererInstance(Renderer::handle, bool);
 	#endif
 
 	// OpenGL
 	#ifndef RENDERER_NO_OPENGL
 		// "createOpenGLRendererInstance()" signature
-		extern Renderer::IRenderer *createOpenGLRendererInstance(Renderer::handle, bool);
+		extern Renderer::IRenderer* createOpenGLRendererInstance(Renderer::handle, bool);
 	#endif
 
 	// OpenGLES3
 	#ifndef RENDERER_NO_OPENGLES3
 		// "createOpenGLES3RendererInstance()" signature
-		extern Renderer::IRenderer *createOpenGLES3RendererInstance(Renderer::handle, bool);
+		extern Renderer::IRenderer* createOpenGLES3RendererInstance(Renderer::handle, bool);
 	#endif
 
 	// Vulkan
 	#ifndef RENDERER_NO_VULKAN
 		// "createVulkanRendererInstance()" signature
-		extern Renderer::IRenderer *createVulkanRendererInstance(Renderer::handle, bool);
+		extern Renderer::IRenderer* createVulkanRendererInstance(Renderer::handle, bool);
 	#endif
 
 	// Direct3D 9
 	#ifndef RENDERER_NO_DIRECT3D9
 		// "createDirect3D9RendererInstance()" signature
-		extern Renderer::IRenderer *createDirect3D9RendererInstance(Renderer::handle, bool);
+		extern Renderer::IRenderer* createDirect3D9RendererInstance(Renderer::handle, bool);
 	#endif
 
 	// Direct3D 10
 	#ifndef RENDERER_NO_DIRECT3D10
 		// "createDirect3D10RendererInstance()" signature
-		extern Renderer::IRenderer *createDirect3D10RendererInstance(Renderer::handle, bool);
+		extern Renderer::IRenderer* createDirect3D10RendererInstance(Renderer::handle, bool);
 	#endif
 
 	// Direct3D 11
 	#ifndef RENDERER_NO_DIRECT3D11
 		// "createDirect3D11RendererInstance()" signature
-		extern Renderer::IRenderer *createDirect3D11RendererInstance(Renderer::handle, bool);
+		extern Renderer::IRenderer* createDirect3D11RendererInstance(Renderer::handle, bool);
 	#endif
 
 	// Direct3D 12
 	#ifndef RENDERER_NO_DIRECT3D12
 		// "createDirect3D12RendererInstance()" signature
-		extern Renderer::IRenderer *createDirect3D12RendererInstance(Renderer::handle, bool);
+		extern Renderer::IRenderer* createDirect3D12RendererInstance(Renderer::handle, bool);
 	#endif
 #endif
 

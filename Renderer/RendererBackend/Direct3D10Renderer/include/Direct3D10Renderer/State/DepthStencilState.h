@@ -75,7 +75,7 @@ namespace Direct3D10Renderer
 		*  @param[in] depthStencilState
 		*    Depth stencil state to use
 		*/
-		DepthStencilState(Direct3D10Renderer &direct3D10Renderer, const Renderer::DepthStencilState &depthStencilState);
+		DepthStencilState(Direct3D10Renderer& direct3D10Renderer, const Renderer::DepthStencilState& depthStencilState);
 
 		/**
 		*  @brief
@@ -90,21 +90,21 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The Direct3D 10 depth stencil state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D10DepthStencilState *getD3D10DepthStencilState() const;
+		inline ID3D10DepthStencilState* getD3D10DepthStencilState() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Direct3D10Renderer::IState methods     ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10DepthStencilState *mD3D10DepthStencilState;	///< Direct3D 10 depth stencil state, can be a null pointer
+		ID3D10DepthStencilState* mD3D10DepthStencilState;	///< Direct3D 10 depth stencil state, can be a null pointer
 
 
 	};

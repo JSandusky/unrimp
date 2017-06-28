@@ -80,7 +80,7 @@ namespace Direct3D9Renderer
 		*  @param[in] pipelineState
 		*    Pipeline state to use
 		*/
-		PipelineState(Direct3D9Renderer &direct3D9Renderer, const Renderer::PipelineState &pipelineState);
+		PipelineState(Direct3D9Renderer& direct3D9Renderer, const Renderer::PipelineState& pipelineState);
 
 		/**
 		*  @brief
@@ -95,7 +95,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 vertex declaration instance, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IDirect3DVertexDeclaration9 *getDirect3DVertexDeclaration9() const;
+		inline IDirect3DVertexDeclaration9* getDirect3DVertexDeclaration9() const;
 
 		/**
 		*  @brief
@@ -108,7 +108,7 @@ namespace Direct3D9Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
@@ -123,12 +123,12 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDirect3DDevice9*			  mDirect3DDevice9;				///< The Direct3D 9 device instance (we keep a reference to it), null pointer on horrible error (so we don't check)
-		Renderer::IProgram*			  mProgram;
-		IDirect3DVertexDeclaration9	 *mDirect3DVertexDeclaration9;	///< Direct3D 9 vertex declaration instance, can be a null pointer
-		RasterizerState*			  mRasterizerState;
-		DepthStencilState*			  mDepthStencilState;
-		BlendState*					  mBlendState;
+		IDirect3DDevice9*			 mDirect3DDevice9;				///< The Direct3D 9 device instance (we keep a reference to it), null pointer on horrible error (so we don't check)
+		Renderer::IProgram*			 mProgram;
+		IDirect3DVertexDeclaration9* mDirect3DVertexDeclaration9;	///< Direct3D 9 vertex declaration instance, can be a null pointer
+		RasterizerState*			 mRasterizerState;
+		DepthStencilState*			 mDepthStencilState;
+		BlendState*					 mBlendState;
 
 
 	};

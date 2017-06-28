@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	IndirectBuffer::IndirectBuffer(OpenGLRenderer &openGLRenderer) :
+	IndirectBuffer::IndirectBuffer(OpenGLRenderer& openGLRenderer) :
 		IIndirectBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLIndirectBuffer(0)
 	{

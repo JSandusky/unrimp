@@ -54,7 +54,7 @@ namespace RendererRuntime
 		#define IMPORT_FUNC(funcName)																																				\
 			if (result)																																								\
 			{																																										\
-				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mOpenVRSharedLibrary), #funcName);																				\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mOpenVRSharedLibrary), #funcName);																				\
 				if (nullptr != symbol)																																				\
 				{																																									\
 					*(reinterpret_cast<void**>(&(funcName))) = symbol;																												\
@@ -72,7 +72,7 @@ namespace RendererRuntime
 		#define IMPORT_FUNC(funcName)																																				\
 			if (result)																																								\
 			{																																										\
-				void *symbol = ::dlsym(mOpenVRSharedLibrary, #funcName);																											\
+				void* symbol = ::dlsym(mOpenVRSharedLibrary, #funcName);																											\
 				if (nullptr != symbol)																																				\
 				{																																									\
 					*(reinterpret_cast<void**>(&(funcName))) = symbol;																												\

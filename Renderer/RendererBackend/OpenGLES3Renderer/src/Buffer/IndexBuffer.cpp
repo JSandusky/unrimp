@@ -37,7 +37,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
+	IndexBuffer::IndexBuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data, Renderer::BufferUsage bufferUsage) :
 		IIndexBuffer(openGLES3Renderer),
 		mOpenGLES3ElementArrayBuffer(0),
 		mOpenGLES3Type(GL_UNSIGNED_SHORT),

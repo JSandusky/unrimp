@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(OpenGLRenderer &openGLRenderer) :
+	VertexBuffer::VertexBuffer(OpenGLRenderer& openGLRenderer) :
 		IVertexBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLArrayBuffer(0)
 	{

@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
+	UniformBuffer::UniformBuffer(Direct3D10Renderer& direct3D10Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
 		Renderer::IUniformBuffer(direct3D10Renderer),
 		mD3D10Buffer(nullptr)
 	{
@@ -100,7 +100,7 @@ namespace Direct3D10Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	#if !defined(DIRECT3D10RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
-		void UniformBuffer::setDebugName(const char *name)
+		void UniformBuffer::setDebugName(const char* name)
 		{
 			// Valid Direct3D 10 uniform buffer?
 			if (nullptr != mD3D10Buffer)
@@ -123,7 +123,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Check resource pointers
 		assert(nullptr != data);
@@ -133,7 +133,7 @@ namespace Direct3D10Renderer
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&static_cast<Direct3D10Renderer&>(getRenderer()))
 
 			// Update Direct3D 10 subresource data
-			void *direct3D10Data = nullptr;
+			void* direct3D10Data = nullptr;
 			const HRESULT hResult = mD3D10Buffer->Map(D3D10_MAP_WRITE_DISCARD, 0, &direct3D10Data);
 			if (S_OK == hResult)
 			{

@@ -39,7 +39,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Program::Program(NullRenderer &nullRenderer, VertexShader *vertexShader, TessellationControlShader *tessellationControlShader, TessellationEvaluationShader *tessellationEvaluationShader, GeometryShader *geometryShader, FragmentShader *fragmentShader) :
+	Program::Program(NullRenderer& nullRenderer, VertexShader *vertexShader, TessellationControlShader *tessellationControlShader, TessellationEvaluationShader *tessellationEvaluationShader, GeometryShader *geometryShader, FragmentShader *fragmentShader) :
 		IProgram(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// We don't keep a reference to the shaders in here

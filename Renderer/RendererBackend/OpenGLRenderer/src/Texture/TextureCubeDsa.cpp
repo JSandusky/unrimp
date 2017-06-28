@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCubeDsa::TextureCubeDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	TextureCubeDsa::TextureCubeDsa(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		TextureCube(openGLRenderer, width, height)
 	{
 		// Sanity checks
@@ -87,31 +87,36 @@ namespace OpenGLRenderer
 					glTextureStorage2D(mOpenGLTexture, static_cast<GLsizei>(numberOfMipmaps), Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 				}
 
+				// Data layout: The renderer interface provides: CRN and KTX files are organized in mip-major order, like this:
+				//   Mip0: Face0, Face1, Face2, Face3, Face4, Face5
+				//   Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+				//   etc.
+
 				// Upload all mipmaps of all faces
 				const uint32_t format = Mapping::getOpenGLFormat(textureFormat);
-				for (uint32_t face = 0; face < 6; ++face)
+				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 				{
-					uint32_t currentWidth = width;
-					uint32_t currentHeight = height;
-					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+					const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
+					for (uint32_t face = 0; face < 6; ++face)
 					{
-						// Upload the current mipmap
-						const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, currentWidth, currentHeight));
+						// Upload the current face
 						if (isArbDsa)
 						{
 							// We know that "data" must be valid when we're in here due to the "Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS"-flag
-							glCompressedTextureSubImage3D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLint>(face), static_cast<GLsizei>(currentWidth), static_cast<GLsizei>(currentHeight), 1, format, numberOfBytesPerSlice, data);
+							glCompressedTextureSubImage3D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLint>(face), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 1, format, numberOfBytesPerSlice, data);
 						}
 						else
 						{
-							glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, static_cast<GLint>(mipmap), format, static_cast<GLsizei>(currentWidth), static_cast<GLsizei>(currentHeight), 0, numberOfBytesPerSlice, data);
+							glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, static_cast<GLint>(mipmap), format, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
 						}
 
-						// Move on to the next mipmap
+						// Move on to the next face
 						data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
-						currentWidth = std::max(currentWidth >> 1, 1u);		// /= 2
-						currentHeight = std::max(currentHeight >> 1, 1u);	// /= 2
 					}
+
+					// Move on to the next mipmap
+					width = std::max(width >> 1, 1u);	// /= 2
+					height = std::max(height >> 1, 1u);	// /= 2
 				}
 			}
 			else
@@ -145,6 +150,11 @@ namespace OpenGLRenderer
 			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 			if (dataContainsMipmaps)
 			{
+				// Data layout: The renderer interface provides: CRN and KTX files are organized in mip-major order, like this:
+				//   Mip0: Face0, Face1, Face2, Face3, Face4, Face5
+				//   Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+				//   etc.
+
 				// Allocate storage for all levels
 				if (isArbDsa)
 				{
@@ -155,29 +165,29 @@ namespace OpenGLRenderer
 				const GLint internalFormat = static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat));
 				const uint32_t format = Mapping::getOpenGLFormat(textureFormat);
 				const uint32_t type = Mapping::getOpenGLType(textureFormat);
-				for (uint32_t face = 0; face < 6; ++face)
+				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 				{
-					uint32_t currentWidth = width;
-					uint32_t currentHeight = height;
-					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+					const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
+					for (uint32_t face = 0; face < 6; ++face)
 					{
-						// Upload the current mipmap
-						const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, currentWidth, currentHeight));
+						// Upload the current face
 						if (isArbDsa)
 						{
 							// We know that "data" must be valid when we're in here due to the "Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS"-flag
-							glTextureSubImage3D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLint>(face), static_cast<GLsizei>(currentWidth), static_cast<GLsizei>(currentHeight), 1, format, type, data);
+							glTextureSubImage3D(mOpenGLTexture, static_cast<GLint>(mipmap), 0, 0, static_cast<GLint>(face), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 1, format, type, data);
 						}
 						else
 						{
-							glTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(currentWidth), static_cast<GLsizei>(currentHeight), 0, format, type, data);
+							glTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, format, type, data);
 						}
 
-						// Move on to the next mipmap
+						// Move on to the next face
 						data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
-						currentWidth = std::max(currentWidth >> 1, 1u);		// /= 2
-						currentHeight = std::max(currentHeight >> 1, 1u);	// /= 2
 					}
+
+					// Move on to the next mipmap
+					width = std::max(width >> 1, 1u);	// /= 2
+					height = std::max(height >> 1, 1u);	// /= 2
 				}
 			}
 			else

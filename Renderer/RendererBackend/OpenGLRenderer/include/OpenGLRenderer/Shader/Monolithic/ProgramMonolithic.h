@@ -95,7 +95,7 @@ namespace OpenGLRenderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderMonolithic *vertexShaderMonolithic, TessellationControlShaderMonolithic *tessellationControlShaderMonolithic, TessellationEvaluationShaderMonolithic *tessellationEvaluationShaderMonolithic, GeometryShaderMonolithic *geometryShaderMonolithic, FragmentShaderMonolithic *fragmentShaderMonolithic);
+		ProgramMonolithic(OpenGLRenderer& openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderMonolithic* vertexShaderMonolithic, TessellationControlShaderMonolithic* tessellationControlShaderMonolithic, TessellationEvaluationShaderMonolithic* tessellationEvaluationShaderMonolithic, GeometryShaderMonolithic* geometryShaderMonolithic, FragmentShaderMonolithic* fragmentShaderMonolithic);
 
 		/**
 		*  @brief
@@ -126,14 +126,14 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	public:
-		virtual handle getUniformHandle(const char *uniformName) override;
+		virtual handle getUniformHandle(const char* uniformName) override;
 		virtual void setUniform1i(handle uniformHandle, int value) override;
 		virtual void setUniform1f(handle uniformHandle, float value) override;
-		virtual void setUniform2fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform4fv(handle uniformHandle, const float *value) override;
-		virtual void setUniformMatrix3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniformMatrix4fv(handle uniformHandle, const float *value) override;
+		virtual void setUniform2fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform4fv(handle uniformHandle, const float* value) override;
+		virtual void setUniformMatrix3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniformMatrix4fv(handle uniformHandle, const float* value) override;
 
 
 	//[-------------------------------------------------------]

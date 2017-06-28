@@ -142,28 +142,28 @@ namespace Direct3D12Renderer
 		*  @return
 		*    Render target currently bound to the output-merger state, a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline Renderer::IRenderTarget *omGetRenderTarget() const;
+		inline Renderer::IRenderTarget* omGetRenderTarget() const;
 
 		//[-------------------------------------------------------]
 		//[ States                                                ]
 		//[-------------------------------------------------------]
-		void setGraphicsRootSignature(Renderer::IRootSignature *rootSignature);
+		void setGraphicsRootSignature(Renderer::IRootSignature* rootSignature);
 		void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource);
-		void setPipelineState(Renderer::IPipelineState *pipelineState);
+		void setPipelineState(Renderer::IPipelineState* pipelineState);
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
-		void iaSetVertexArray(Renderer::IVertexArray *vertexArray);
+		void iaSetVertexArray(Renderer::IVertexArray* vertexArray);
 		void iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]
-		void rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports);
-		void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles);
+		void rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports);
+		void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles);
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
-		void omSetRenderTarget(Renderer::IRenderTarget *renderTarget);
+		void omSetRenderTarget(Renderer::IRenderTarget* renderTarget);
 		//[-------------------------------------------------------]
 		//[ Operations                                            ]
 		//[-------------------------------------------------------]
@@ -178,8 +178,8 @@ namespace Direct3D12Renderer
 		//[-------------------------------------------------------]
 		//[ Debug                                                 ]
 		//[-------------------------------------------------------]
-		void setDebugMarker(const char *name);
-		void beginDebugEvent(const char *name);
+		void setDebugMarker(const char* name);
+		void beginDebugEvent(const char* name);
 		void endDebugEvent();
 
 
@@ -187,31 +187,31 @@ namespace Direct3D12Renderer
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual const char *getName() const override;
+		inline virtual const char* getName() const override;
 		inline virtual bool isInitialized() const override;
 		virtual bool isDebugEnabled() override;
-		virtual Renderer::ISwapChain *getMainSwapChain() const override;
+		virtual Renderer::ISwapChain* getMainSwapChain() const override;
 		//[-------------------------------------------------------]
 		//[ Shader language                                       ]
 		//[-------------------------------------------------------]
 		virtual uint32_t getNumberOfShaderLanguages() const override;
-		virtual const char *getShaderLanguageName(uint32_t index) const override;
-		virtual Renderer::IShaderLanguage *getShaderLanguage(const char *shaderLanguageName = nullptr) override;
+		virtual const char* getShaderLanguageName(uint32_t index) const override;
+		virtual Renderer::IShaderLanguage* getShaderLanguage(const char* shaderLanguageName = nullptr) override;
 		//[-------------------------------------------------------]
 		//[ Resource creation                                     ]
 		//[-------------------------------------------------------]
-		virtual Renderer::ISwapChain *createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) override;
-		virtual Renderer::IFramebuffer *createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment = nullptr) override;
-		virtual Renderer::IBufferManager *createBufferManager() override;
-		virtual Renderer::ITextureManager *createTextureManager() override;
-		virtual Renderer::IRootSignature *createRootSignature(const Renderer::RootSignature &rootSignature) override;
-		virtual Renderer::IPipelineState *createPipelineState(const Renderer::PipelineState &pipelineState) override;
-		virtual Renderer::ISamplerState *createSamplerState(const Renderer::SamplerState &samplerState) override;
+		virtual Renderer::ISwapChain* createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) override;
+		virtual Renderer::IFramebuffer* createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) override;
+		virtual Renderer::IBufferManager* createBufferManager() override;
+		virtual Renderer::ITextureManager* createTextureManager() override;
+		virtual Renderer::IRootSignature* createRootSignature(const Renderer::RootSignature& rootSignature) override;
+		virtual Renderer::IPipelineState* createPipelineState(const Renderer::PipelineState& pipelineState) override;
+		virtual Renderer::ISamplerState* createSamplerState(const Renderer::SamplerState& samplerState) override;
 		//[-------------------------------------------------------]
 		//[ Resource handling                                     ]
 		//[-------------------------------------------------------]
-		virtual bool map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource) override;
-		virtual void unmap(Renderer::IResource &resource, uint32_t subresource) override;
+		virtual bool map(Renderer::IResource& resource, uint32_t subresource, Renderer::MapType mapType, uint32_t mapFlags, Renderer::MappedSubresource& mappedSubresource) override;
+		virtual void unmap(Renderer::IResource& resource, uint32_t subresource) override;
 		//[-------------------------------------------------------]
 		//[ Operations                                            ]
 		//[-------------------------------------------------------]
@@ -263,7 +263,7 @@ namespace Direct3D12Renderer
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
 		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "Direct3D12Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
-		Renderer::IRenderTarget *mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
+		Renderer::IRenderTarget* mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
 
 
 	};

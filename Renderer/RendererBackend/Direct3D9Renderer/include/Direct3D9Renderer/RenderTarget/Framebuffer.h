@@ -79,7 +79,7 @@ namespace Direct3D9Renderer
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment);
+		Framebuffer(Direct3D9Renderer& direct3D9Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment);
 
 		/**
 		*  @brief
@@ -103,7 +103,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    The Direct3D 9 render target surfaces, can be a null pointer, do not release the returned instances unless you added an own reference to it
 		*/
-		inline IDirect3DSurface9 **getDirect3DSurface9Colors() const;
+		inline IDirect3DSurface9** getDirect3DSurface9Colors() const;
 
 		/**
 		*  @brief
@@ -112,21 +112,21 @@ namespace Direct3D9Renderer
 		*  @return
 		*    The Direct3D 9 depth stencil surface, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IDirect3DSurface9 *getDirect3DSurface9DepthStencil() const;
+		inline IDirect3DSurface9* getDirect3DSurface9DepthStencil() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -143,13 +143,13 @@ namespace Direct3D9Renderer
 	private:
 		// Generic part
 		uint32_t			 mNumberOfColorTextures;	///< Number of color render target textures
-		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
-		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
+		Renderer::ITexture** mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
+		Renderer::ITexture*  mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
 		// Direct3D 9 part
-		IDirect3DSurface9 **mDirect3D9ColorSurfaces;		///< The Direct3D 9 color render target surfaces (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
-		IDirect3DSurface9  *mDirect3D9DepthStencilSurface;	///< The Direct3D 9 depth stencil render target surface (we keep a reference to it), can be a null pointer
+		IDirect3DSurface9** mDirect3D9ColorSurfaces;		///< The Direct3D 9 color render target surfaces (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
+		IDirect3DSurface9*  mDirect3D9DepthStencilSurface;	///< The Direct3D 9 depth stencil render target surface (we keep a reference to it), can be a null pointer
 
 
 	};

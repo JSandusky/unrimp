@@ -39,7 +39,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	DepthStencilState::DepthStencilState(Direct3D11Renderer &direct3D11Renderer, const Renderer::DepthStencilState &depthStencilState) :
+	DepthStencilState::DepthStencilState(Direct3D11Renderer& direct3D11Renderer, const Renderer::DepthStencilState& depthStencilState) :
 		mD3D11DepthStencilState(nullptr)
 	{
 		// Create the Direct3D 11 depth stencil state
@@ -65,7 +65,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Direct3D11Renderer::IState methods     ]
 	//[-------------------------------------------------------]
-	void DepthStencilState::setDebugName(const char *name)
+	void DepthStencilState::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			// Valid Direct3D 11 depth stencil state?

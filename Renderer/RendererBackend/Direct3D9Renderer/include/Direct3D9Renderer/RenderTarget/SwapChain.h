@@ -72,7 +72,7 @@ namespace Direct3D9Renderer
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(Direct3D9Renderer &direct3D9Renderer, handle nativeWindowHandle);
+		SwapChain(Direct3D9Renderer& direct3D9Renderer, handle nativeWindowHandle);
 
 		/**
 		*  @brief
@@ -87,7 +87,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    The Direct3D 9 swap chain instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IDirect3DSwapChain9 *getDirect3DSwapChain9() const;
+		inline IDirect3DSwapChain9* getDirect3DSwapChain9() const;
 
 		/**
 		*  @brief
@@ -99,7 +99,7 @@ namespace Direct3D9Renderer
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		inline IDirect3DSurface9 *getDirect3DSurface9RenderTarget() const;
+		inline IDirect3DSurface9* getDirect3DSurface9RenderTarget() const;
 
 		/**
 		*  @brief
@@ -111,21 +111,21 @@ namespace Direct3D9Renderer
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		inline IDirect3DSurface9 *getDirect3DSurface9DepthStencil() const;
+		inline IDirect3DSurface9* getDirect3DSurface9DepthStencil() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -168,16 +168,16 @@ namespace Direct3D9Renderer
 		*  @note
 		*    - "mDXGISwapChain" must be valid when calling this method
 		*/
-		void getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const;
+		void getSafeWidthAndHeight(uint32_t& width, uint32_t& height) const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDirect3DSwapChain9	*mDirect3DSwapChain9;			///< The Direct3D 9 swap chain instance, null pointer on error
-		IDirect3DSurface9	*mDirect3DSurface9RenderTarget;	///< The Direct3D 9 render target surface instance, null pointer on error
-		IDirect3DSurface9	*mDirect3DSurface9DepthStencil;	///< The Direct3D 9 depth stencil surface instance, null pointer on error
+		IDirect3DSwapChain9* mDirect3DSwapChain9;			///< The Direct3D 9 swap chain instance, null pointer on error
+		IDirect3DSurface9*	 mDirect3DSurface9RenderTarget;	///< The Direct3D 9 render target surface instance, null pointer on error
+		IDirect3DSurface9*	 mDirect3DSurface9DepthStencil;	///< The Direct3D 9 depth stencil surface instance, null pointer on error
 
 
 	};

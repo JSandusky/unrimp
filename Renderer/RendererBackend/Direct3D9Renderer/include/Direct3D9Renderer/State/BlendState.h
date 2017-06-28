@@ -71,7 +71,7 @@ namespace Direct3D9Renderer
 		*  @param[in] blendState
 		*    Blend state to use
 		*/
-		BlendState(const Renderer::BlendState &blendState);
+		BlendState(const Renderer::BlendState& blendState);
 
 		/**
 		*  @brief
@@ -86,7 +86,7 @@ namespace Direct3D9Renderer
 		*  @param[in] direct3DDevice9
 		*    Direct3D 9 device instance to use
 		*/
-		void setDirect3D9BlendStates(IDirect3DDevice9 &direct3DDevice9) const;
+		void setDirect3D9BlendStates(IDirect3DDevice9& direct3DDevice9) const;
 
 
 	//[-------------------------------------------------------]

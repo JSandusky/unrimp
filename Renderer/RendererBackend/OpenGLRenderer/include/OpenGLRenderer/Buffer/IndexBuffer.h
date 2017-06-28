@@ -109,7 +109,7 @@ namespace OpenGLRenderer
 		*  @param[in] indexBufferFormat
 		*    Index buffer data format
 		*/
-		IndexBuffer(OpenGLRenderer &openGLRenderer, Renderer::IndexBufferFormat::Enum indexBufferFormat);
+		IndexBuffer(OpenGLRenderer& openGLRenderer, Renderer::IndexBufferFormat::Enum indexBufferFormat);
 
 
 	//[-------------------------------------------------------]

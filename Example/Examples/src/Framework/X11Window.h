@@ -51,7 +51,7 @@ public:
 	X11Window();
 	virtual ~X11Window();
 	virtual bool HandleEvent(XEvent& event);
-	void setTitle(const char *title);
+	void setTitle(const char* title);
 	void show();
 	void getWindowSize(int& width, int& height) const;
 	void refresh();

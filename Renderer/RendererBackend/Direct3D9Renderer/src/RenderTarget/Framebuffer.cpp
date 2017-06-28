@@ -37,7 +37,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
+	Framebuffer::Framebuffer(Direct3D9Renderer& direct3D9Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
 		IFramebuffer(direct3D9Renderer),
 		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
 		mColorTextures(nullptr),	// Set below
@@ -58,9 +58,9 @@ namespace Direct3D9Renderer
 			mDirect3D9ColorSurfaces = new IDirect3DSurface9*[mNumberOfColorTextures];
 
 			// Loop through all color textures
-			IDirect3DSurface9 **direct3D9ColorSurface = mDirect3D9ColorSurfaces;
-			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++direct3D9ColorSurface)
+			IDirect3DSurface9** direct3D9ColorSurface = mDirect3D9ColorSurfaces;
+			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++direct3D9ColorSurface)
 			{
 				// Valid entry?
 				if (nullptr != colorFramebufferAttachments->texture)
@@ -78,7 +78,7 @@ namespace Direct3D9Renderer
 							assert(0 == colorFramebufferAttachments->layerIndex);
 
 							// Update the framebuffer width and height if required
-							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+							Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
 							if (mWidth > texture2D->getWidth())
 							{
 								mWidth = texture2D->getWidth();
@@ -144,7 +144,7 @@ namespace Direct3D9Renderer
 					assert(0 == depthStencilFramebufferAttachment->layerIndex);
 
 					// Update the framebuffer width and height if required
-					Texture2D *texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
+					Texture2D* texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
 					if (mWidth > texture2D->getWidth())
 					{
 						mWidth = texture2D->getWidth();
@@ -205,8 +205,8 @@ namespace Direct3D9Renderer
 		if (nullptr != mDirect3D9ColorSurfaces)
 		{
 			// Release references
-			IDirect3DSurface9 **direct3D9ColorSurfacesEnd = mDirect3D9ColorSurfaces + mNumberOfColorTextures;
-			for (IDirect3DSurface9 **direct3D9ColorSurface = mDirect3D9ColorSurfaces; direct3D9ColorSurface < direct3D9ColorSurfacesEnd; ++direct3D9ColorSurface)
+			IDirect3DSurface9** direct3D9ColorSurfacesEnd = mDirect3D9ColorSurfaces + mNumberOfColorTextures;
+			for (IDirect3DSurface9** direct3D9ColorSurface = mDirect3D9ColorSurfaces; direct3D9ColorSurface < direct3D9ColorSurfacesEnd; ++direct3D9ColorSurface)
 			{
 				// Valid entry?
 				if (nullptr != *direct3D9ColorSurface)
@@ -221,8 +221,8 @@ namespace Direct3D9Renderer
 		if (nullptr != mColorTextures)
 		{
 			// Release references
-			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 			{
 				// Valid entry?
 				if (nullptr != *colorTexture)
@@ -252,7 +252,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Framebuffer::setDebugName(const char *)
+	void Framebuffer::setDebugName(const char*)
 	{
 		// In here we could assign the given debug name to all surfaces assigned to the
 		// framebuffer, but this might end up within a naming chaos due to overwriting
@@ -263,7 +263,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void Framebuffer::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void Framebuffer::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// No fancy implementation in here, just copy over the internal information
 		width  = mWidth;

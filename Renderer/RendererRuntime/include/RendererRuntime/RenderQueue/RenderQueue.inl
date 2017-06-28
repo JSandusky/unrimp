@@ -33,6 +33,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline uint32_t RenderQueue::getNumberOfDrawCalls() const
+	{
+		return mNumberOfNullDrawCalls + mNumberOfDrawIndexedInstancedCalls + mNumberOfDrawInstancedCalls;
+	}
+
 	inline uint8_t RenderQueue::getMinimumRenderQueueIndex() const
 	{
 		return mMinimumRenderQueueIndex;

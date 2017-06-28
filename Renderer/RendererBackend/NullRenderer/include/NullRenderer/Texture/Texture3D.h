@@ -74,7 +74,7 @@ namespace NullRenderer
 		*  @param[in] depth
 		*    The depth of the texture
 		*/
-		Texture3D(NullRenderer &nullRenderer, uint32_t width, uint32_t height, uint32_t depth);
+		Texture3D(NullRenderer& nullRenderer, uint32_t width, uint32_t height, uint32_t depth);
 
 		/**
 		*  @brief

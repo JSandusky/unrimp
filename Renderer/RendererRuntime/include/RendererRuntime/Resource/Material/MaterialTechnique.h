@@ -158,8 +158,11 @@ namespace RendererRuntime
 		*    Renderer runtime to use
 		*  @param[out] commandBuffer
 		*    Command buffer to fill
+		*
+		*  @return
+		*    "true" on assigned material pool change, else "false"
 		*/
-		void fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer);
+		bool fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]

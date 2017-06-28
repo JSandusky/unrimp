@@ -58,7 +58,7 @@ public:
 	*  @param[in] pointer
 	*    Pointer to the referenced object, can be a null pointer
 	*/
-	explicit RefCountPtr(AType *pointer);
+	explicit RefCountPtr(AType* pointer);
 
 	/**
 	*  @brief
@@ -73,15 +73,15 @@ public:
 	*  @return
 	*    Pointer to the reference counter's object, can be a null pointer
 	*/
-	virtual const AType *getPointer() const override;
-	virtual AType *getPointer() override;
+	virtual const AType* getPointer() const override;
+	virtual AType* getPointer() override;
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	AType *mPointer; ///< Pointer to the referenced object, can be a null pointer
+	AType* mPointer; ///< Pointer to the referenced object, can be a null pointer
 
 
 };

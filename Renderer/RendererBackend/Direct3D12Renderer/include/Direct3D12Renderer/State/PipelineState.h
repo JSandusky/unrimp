@@ -77,7 +77,7 @@ namespace Direct3D12Renderer
 		*  @param[in] pipelineState
 		*    Pipeline state to use
 		*/
-		PipelineState(Direct3D12Renderer &direct3D12Renderer, const Renderer::PipelineState &pipelineState);
+		PipelineState(Direct3D12Renderer& direct3D12Renderer, const Renderer::PipelineState& pipelineState);
 
 		/**
 		*  @brief
@@ -99,7 +99,7 @@ namespace Direct3D12Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]

@@ -28,7 +28,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Display *ContextLinux::getDisplay() const
+	inline Display* ContextLinux::getDisplay() const
 	{
 		return mDisplay;
 	}

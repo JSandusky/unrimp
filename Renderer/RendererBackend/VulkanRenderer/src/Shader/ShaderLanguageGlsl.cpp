@@ -43,7 +43,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const char *ShaderLanguageGlsl::NAME = "GLSL";
+	const char* ShaderLanguageGlsl::NAME = "GLSL";
 
 
 	//[-------------------------------------------------------]
@@ -59,7 +59,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ShaderLanguageGlsl::ShaderLanguageGlsl(VulkanRenderer &vulkanRenderer) :
+	ShaderLanguageGlsl::ShaderLanguageGlsl(VulkanRenderer& vulkanRenderer) :
 		IShaderLanguage(vulkanRenderer)
 	{
 		// Nothing here
@@ -74,64 +74,64 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShaderLanguage methods      ]
 	//[-------------------------------------------------------]
-	const char *ShaderLanguageGlsl::getShaderLanguageName() const
+	const char* ShaderLanguageGlsl::getShaderLanguageName() const
 	{
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode& shaderBytecode)
+	Renderer::IVertexShader* ShaderLanguageGlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		return new VertexShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), shaderBytecode);
 	}
 
-	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::IVertexShader* ShaderLanguageGlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		return new VertexShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
+	Renderer::ITessellationControlShader* ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		return new TessellationControlShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), shaderBytecode);
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::ITessellationControlShader* ShaderLanguageGlsl::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		return new TessellationControlShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
+	Renderer::ITessellationEvaluationShader* ShaderLanguageGlsl::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		return new TessellationEvaluationShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), shaderBytecode);
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::ITessellationEvaluationShader* ShaderLanguageGlsl::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		return new TessellationEvaluationShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices)
+	Renderer::IGeometryShader* ShaderLanguageGlsl::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices)
 	{
 		return new GeometryShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), shaderBytecode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::IGeometryShader* ShaderLanguageGlsl::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		return new GeometryShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), shaderSourceCode.sourceCode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices, shaderBytecode);
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
+	Renderer::IFragmentShader* ShaderLanguageGlsl::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		return new FragmentShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), shaderBytecode);
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::IFragmentShader* ShaderLanguageGlsl::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		return new FragmentShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
-	Renderer::IProgram *ShaderLanguageGlsl::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
+	Renderer::IProgram* ShaderLanguageGlsl::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader* vertexShader, Renderer::ITessellationControlShader* tessellationControlShader, Renderer::ITessellationEvaluationShader* tessellationEvaluationShader, Renderer::IGeometryShader* geometryShader, Renderer::IFragmentShader* fragmentShader)
 	{
-		VulkanRenderer &vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+		VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
 
 		// A shader can be a null pointer, but if it's not the shader and program language must match!
 		// -> Optimization: Comparing the shader language name by directly comparing the pointer address of

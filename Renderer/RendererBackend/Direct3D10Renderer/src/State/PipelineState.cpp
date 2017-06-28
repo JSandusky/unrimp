@@ -43,7 +43,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(Direct3D10Renderer &direct3D10Renderer, const Renderer::PipelineState& pipelineState) :
+	PipelineState::PipelineState(Direct3D10Renderer& direct3D10Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(direct3D10Renderer),
 		mD3D10Device(direct3D10Renderer.getD3D10Device()),
 		mProgram(pipelineState.program),
@@ -67,9 +67,9 @@ namespace Direct3D10Renderer
 
 			// Create Direct3D 10 input element descriptions
 			// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
-			D3D10_INPUT_ELEMENT_DESC *d3d10InputElementDescs   = numberOfAttributes ? new D3D10_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D10_INPUT_ELEMENT_DESC[1];
-			D3D10_INPUT_ELEMENT_DESC *d3d10InputElementDesc    = d3d10InputElementDescs;
-			D3D10_INPUT_ELEMENT_DESC *d3d10InputElementDescEnd = d3d10InputElementDescs + numberOfAttributes;
+			D3D10_INPUT_ELEMENT_DESC* d3d10InputElementDescs   = numberOfAttributes ? new D3D10_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D10_INPUT_ELEMENT_DESC[1];
+			D3D10_INPUT_ELEMENT_DESC* d3d10InputElementDesc    = d3d10InputElementDescs;
+			D3D10_INPUT_ELEMENT_DESC* d3d10InputElementDescEnd = d3d10InputElementDescs + numberOfAttributes;
 			for (; d3d10InputElementDesc < d3d10InputElementDescEnd; ++d3d10InputElementDesc, ++attributes)
 			{
 				// Fill the "D3D10_INPUT_ELEMENT_DESC"-content
@@ -156,7 +156,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void PipelineState::setDebugName(const char *name)
+	void PipelineState::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			// Valid Direct3D 10 input layout?

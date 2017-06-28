@@ -79,7 +79,7 @@ namespace Direct3D9Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		IndexBuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		IndexBuffer(Direct3D9Renderer& direct3D9Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -94,14 +94,14 @@ namespace Direct3D9Renderer
 		*  @return
 		*    The Direct3D index buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IDirect3DIndexBuffer9 *getDirect3DIndexBuffer9() const;
+		inline IDirect3DIndexBuffer9* getDirect3DIndexBuffer9() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
@@ -116,7 +116,7 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDirect3DIndexBuffer9 *mDirect3DIndexBuffer9;	///< Direct3D index buffer instance, can be a null pointer
+		IDirect3DIndexBuffer9* mDirect3DIndexBuffer9;	///< Direct3D index buffer instance, can be a null pointer
 
 
 	};

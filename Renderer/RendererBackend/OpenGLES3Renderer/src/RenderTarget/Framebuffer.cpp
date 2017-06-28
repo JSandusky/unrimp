@@ -40,7 +40,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
+	Framebuffer::Framebuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
 		IFramebuffer(openGLES3Renderer),
 		mOpenGLES3Framebuffer(0),
 		mDepthRenderbuffer(0),
@@ -73,9 +73,9 @@ namespace OpenGLES3Renderer
 
 			// Loop through all framebuffer color attachments
 			// -> "GL_COLOR_ATTACHMENT0" and "GL_COLOR_ATTACHMENT0_NV" have the same value
-			Renderer::ITexture **colorTexture = mColorTextures;
-			const Renderer::FramebufferAttachment *colorFramebufferAttachment	 = colorFramebufferAttachments;
-			const Renderer::FramebufferAttachment *colorFramebufferAttachmentEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
+			Renderer::ITexture** colorTexture = mColorTextures;
+			const Renderer::FramebufferAttachment* colorFramebufferAttachment	 = colorFramebufferAttachments;
+			const Renderer::FramebufferAttachment* colorFramebufferAttachmentEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
 			for (GLenum openGLES3Attachment = GL_COLOR_ATTACHMENT0; colorFramebufferAttachment < colorFramebufferAttachmentEnd; ++colorFramebufferAttachment, ++openGLES3Attachment, ++colorTexture)
 			{
 				// Valid entry?
@@ -106,7 +106,7 @@ namespace OpenGLES3Renderer
 							assert(0 == colorFramebufferAttachment->layerIndex);
 
 							// Set the OpenGL ES 3 framebuffer color attachment
-							Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+							Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
 							glFramebufferTexture2D(GL_FRAMEBUFFER, openGLES3Attachment, GL_TEXTURE_2D, texture2D->getOpenGLES3Texture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex));
 
 							// If this is the primary render target, get the framebuffer width and height
@@ -127,7 +127,7 @@ namespace OpenGLES3Renderer
 						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 						{
 							// Set the OpenGL ES 3 framebuffer color attachment
-							Texture2DArray *texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+							Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
 							glFramebufferTextureLayer(GL_FRAMEBUFFER, openGLES3Attachment, texture2DArray->getOpenGLES3Texture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex), static_cast<GLint>(colorFramebufferAttachment->layerIndex));
 
 							// If this is the primary render target, get the framebuffer width and height
@@ -316,8 +316,8 @@ namespace OpenGLES3Renderer
 		if (nullptr != mColorTextures)
 		{
 			// Release references
-			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 			{
 				// Valid entry?
 				if (nullptr != *colorTexture)
@@ -344,13 +344,13 @@ namespace OpenGLES3Renderer
 		assert(mGenerateMipmaps);
 
 		// TODO(co) Complete, currently only 2D textures are supported
-		Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-		for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+		Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+		for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 		{
 			// Valid entry?
 			if (nullptr != *colorTexture && (*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
 			{
-				Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+				Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
 				if (texture2D->getGenerateMipmaps())
 				{
 					#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
@@ -378,7 +378,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void Framebuffer::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void Framebuffer::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// No fancy implementation in here, just copy over the internal information
 		width  = mWidth;

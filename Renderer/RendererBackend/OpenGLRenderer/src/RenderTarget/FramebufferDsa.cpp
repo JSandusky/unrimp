@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FramebufferDsa::FramebufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment) :
+	FramebufferDsa::FramebufferDsa(OpenGLRenderer& openGLRenderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
 		Framebuffer(openGLRenderer, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment)
 	{
 		// Texture reference handling is done within the base class "Framebuffer"
@@ -56,8 +56,8 @@ namespace OpenGLRenderer
 		}
 
 		// Loop through all framebuffer color attachments
-		const Renderer::FramebufferAttachment *colorFramebufferAttachment    = colorFramebufferAttachments;
-		const Renderer::FramebufferAttachment *colorFramebufferAttachmentEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
+		const Renderer::FramebufferAttachment* colorFramebufferAttachment    = colorFramebufferAttachments;
+		const Renderer::FramebufferAttachment* colorFramebufferAttachmentEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
 		for (GLenum openGLAttachment = GL_COLOR_ATTACHMENT0; colorFramebufferAttachment < colorFramebufferAttachmentEnd; ++colorFramebufferAttachment, ++openGLAttachment)
 		{
 			Renderer::ITexture* texture = colorFramebufferAttachment->texture;
@@ -291,13 +291,13 @@ namespace OpenGLRenderer
 
 		// TODO(co) Complete, currently only 2D textures are supported
 		const bool isArbDsa = static_cast<const OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access();
-		Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-		for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
+		Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
+		for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 		{
 			// Valid entry?
 			if (nullptr != *colorTexture && (*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
 			{
-				Texture2D *texture2D = static_cast<Texture2D*>(*colorTexture);
+				Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
 				if (texture2D->getGenerateMipmaps())
 				{
 					if (isArbDsa)

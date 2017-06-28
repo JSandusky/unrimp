@@ -853,9 +853,6 @@
     <None Include="include\OpenGLRenderer\State\IState.inl">
       <Filter>Source Files\State</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\State\PipelineState.inl">
-      <Filter>Source Files\State</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\State\RasterizerState.inl">
       <Filter>Source Files\State</Filter>
     </None>

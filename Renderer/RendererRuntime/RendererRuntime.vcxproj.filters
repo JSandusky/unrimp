@@ -489,9 +489,6 @@
     <None Include="include\RendererRuntime\RenderQueue\RenderQueue.inl">
       <Filter>Source Files\RenderQueue</Filter>
     </None>
-    <None Include="include\RendererRuntime\RenderQueue\IndirectBufferManager.inl">
-      <Filter>Source Files\RenderQueue</Filter>
-    </None>
     <None Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureManager.inl">
       <Filter>Source Files\Core\Renderer</Filter>
     </None>
@@ -614,6 +611,9 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.inl">
       <Filter>Source Files\Resource\Mesh</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\IndirectBufferManager.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1014,9 +1014,6 @@
     <ClInclude Include="include\RendererRuntime\RenderQueue\Renderable.h">
       <Filter>Source Files\RenderQueue</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\RenderQueue\IndirectBufferManager.h">
-      <Filter>Source Files\RenderQueue</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Core\SwizzleVectorElementRemove.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
@@ -1220,6 +1217,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\ArHosekSkyModelData_RGB.h">
       <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\IndirectBufferManager.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1454,9 +1454,6 @@
     <ClCompile Include="src\RenderQueue\RenderableManager.cpp">
       <Filter>Source Files\RenderQueue</Filter>
     </ClCompile>
-    <ClCompile Include="src\RenderQueue\IndirectBufferManager.cpp">
-      <Filter>Source Files\RenderQueue</Filter>
-    </ClCompile>
     <ClCompile Include="src\RenderQueue\Renderable.cpp">
       <Filter>Source Files\RenderQueue</Filter>
     </ClCompile>
@@ -1597,6 +1594,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\Sky\HosekWilkieSky.cpp">
       <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\IndirectBufferManager.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

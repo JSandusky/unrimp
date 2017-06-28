@@ -153,7 +153,7 @@ void IcosahedronTessellation::onInitialization()
 				9, 10,  5,	// 18
 				10,  6, 1	// 19
 			};
-			Renderer::IIndexBuffer *indexBuffer = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
+			Renderer::IIndexBuffer* indexBuffer = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -205,11 +205,11 @@ void IcosahedronTessellation::onInitialization()
 			Renderer::IProgramPtr program;
 			{
 				// Get the shader source code (outsourced to keep an overview)
-				const char *vertexShaderSourceCode = nullptr;
-				const char *tessellationControlShaderSourceCode = nullptr;
-				const char *tessellationEvaluationShaderSourceCode = nullptr;
-				const char *geometryShaderSourceCode = nullptr;
-				const char *fragmentShaderSourceCode = nullptr;
+				const char* vertexShaderSourceCode = nullptr;
+				const char* tessellationControlShaderSourceCode = nullptr;
+				const char* tessellationEvaluationShaderSourceCode = nullptr;
+				const char* geometryShaderSourceCode = nullptr;
+				const char* fragmentShaderSourceCode = nullptr;
 				#include "IcosahedronTessellation_GLSL_410.h"
 				#include "IcosahedronTessellation_HLSL_D3D11_D3D12.h"
 				#include "IcosahedronTessellation_Null.h"

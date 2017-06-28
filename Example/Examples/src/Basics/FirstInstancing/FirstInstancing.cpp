@@ -142,7 +142,7 @@ void FirstInstancing::onInitialization()
 					{
 						0, 1, 2
 					};
-					Renderer::IIndexBuffer *indexBufferInstancedArrays = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
+					Renderer::IIndexBuffer* indexBufferInstancedArrays = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
 
 					// Create vertex array object (VAO)
 					// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -168,8 +168,8 @@ void FirstInstancing::onInitialization()
 				Renderer::IProgramPtr program;
 				{
 					// Get the shader source code (outsourced to keep an overview)
-					const char *vertexShaderSourceCode = nullptr;
-					const char *fragmentShaderSourceCode = nullptr;
+					const char* vertexShaderSourceCode = nullptr;
+					const char* fragmentShaderSourceCode = nullptr;
 					#include "FirstInstancing_InstancedArrays_GLSL_410.h"
 					#include "FirstInstancing_InstancedArrays_GLSL_ES3.h"
 					#include "FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11_D3D12.h"
@@ -242,8 +242,8 @@ void FirstInstancing::onInitialization()
 				Renderer::IProgramPtr program;
 				{
 					// Get the shader source code (outsourced to keep an overview)
-					const char *vertexShaderSourceCode = nullptr;
-					const char *fragmentShaderSourceCode = nullptr;
+					const char* vertexShaderSourceCode = nullptr;
+					const char* fragmentShaderSourceCode = nullptr;
 					#include "FirstInstancing_DrawInstanced_GLSL_410.h"
 					#include "FirstInstancing_DrawInstanced_GLSL_ES3.h"
 					#include "FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11_D3D12.h"

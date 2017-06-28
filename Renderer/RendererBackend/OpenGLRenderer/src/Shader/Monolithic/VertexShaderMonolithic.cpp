@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderMonolithic::VertexShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
+	VertexShaderMonolithic::VertexShaderMonolithic(OpenGLRenderer& openGLRenderer, const char* sourceCode) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(ShaderLanguageMonolithic::loadShaderFromSourcecode(GL_VERTEX_SHADER_ARB, sourceCode))
 	{
@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *VertexShaderMonolithic::getShaderLanguageName() const
+	const char* VertexShaderMonolithic::getShaderLanguageName() const
 	{
 		return ShaderLanguageMonolithic::NAME;
 	}

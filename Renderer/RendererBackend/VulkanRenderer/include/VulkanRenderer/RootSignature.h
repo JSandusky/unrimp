@@ -72,7 +72,7 @@ namespace VulkanRenderer
 		*  @param[in] rootSignature
 		*    Root signature to use
 		*/
-		RootSignature(VulkanRenderer &vulkanRenderer, const Renderer::RootSignature &rootSignature);
+		RootSignature(VulkanRenderer& vulkanRenderer, const Renderer::RootSignature& rootSignature);
 
 		/**
 		*  @brief

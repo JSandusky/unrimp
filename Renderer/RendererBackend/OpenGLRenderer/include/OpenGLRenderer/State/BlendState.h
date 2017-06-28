@@ -70,7 +70,7 @@ namespace OpenGLRenderer
 		*  @param[in] blendState
 		*    Blend state to use
 		*/
-		explicit BlendState(const Renderer::BlendState &blendState);
+		explicit BlendState(const Renderer::BlendState& blendState);
 
 		/**
 		*  @brief
@@ -85,7 +85,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The blend state
 		*/
-		inline const Renderer::BlendState &getBlendState() const;
+		inline const Renderer::BlendState& getBlendState() const;
 
 		/**
 		*  @brief

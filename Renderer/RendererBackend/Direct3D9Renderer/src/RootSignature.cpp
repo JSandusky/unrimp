@@ -87,7 +87,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RootSignature::RootSignature(Direct3D9Renderer &direct3D9Renderer, const Renderer::RootSignature &rootSignature) :
+	RootSignature::RootSignature(Direct3D9Renderer& direct3D9Renderer, const Renderer::RootSignature& rootSignature) :
 		IRootSignature(direct3D9Renderer),
 		mRootSignature(rootSignature),
 		mSamplerStates(nullptr)

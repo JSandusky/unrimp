@@ -37,7 +37,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture3D::Texture3D(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	Texture3D::Texture3D(OpenGLES3Renderer& openGLES3Renderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		ITexture3D(openGLES3Renderer, width, height, depth),
 		mTextureFormat(textureFormat),
 		mOpenGLES3Texture(0),
@@ -77,6 +77,11 @@ namespace OpenGLES3Renderer
 			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 			if (dataContainsMipmaps)
 			{
+				// Data layout: The renderer interface provides: CRN and KTX files are organized in mip-major order, like this:
+				//   Mip0: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+				//   Mip1: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+				//   etc.
+
 				// Upload all mipmaps
 				const uint32_t internalFormat = Mapping::getOpenGLES3InternalFormat(textureFormat);
 				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
@@ -105,6 +110,11 @@ namespace OpenGLES3Renderer
 			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 			if (dataContainsMipmaps)
 			{
+				// Data layout: The renderer interface provides: CRN and KTX files are organized in mip-major order, like this:
+				//   Mip0: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+				//   Mip1: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+				//   etc.
+
 				// Upload all mipmaps
 				const uint32_t internalFormat = Mapping::getOpenGLES3InternalFormat(textureFormat);
 				const uint32_t format = Mapping::getOpenGLES3Format(textureFormat);

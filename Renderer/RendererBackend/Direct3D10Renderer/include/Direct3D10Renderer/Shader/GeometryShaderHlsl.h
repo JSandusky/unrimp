@@ -75,7 +75,7 @@ namespace Direct3D10Renderer
 		*  @param[in] shaderBytecode
 		*    Shader bytecode
 		*/
-		GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const Renderer::ShaderBytecode& shaderBytecode);
+		GeometryShaderHlsl(Direct3D10Renderer& direct3D10Renderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -86,7 +86,7 @@ namespace Direct3D10Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
+		GeometryShaderHlsl(Direct3D10Renderer& direct3D10Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief
@@ -101,21 +101,21 @@ namespace Direct3D10Renderer
 		*  @return
 		*    Direct3D 10 geometry shader, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D10GeometryShader *getD3D10GeometryShader() const;
+		inline ID3D10GeometryShader* getD3D10GeometryShader() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]
@@ -130,7 +130,7 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10GeometryShader *mD3D10GeometryShader;	///< Direct3D 10 geometry shader, can be a null pointer
+		ID3D10GeometryShader* mD3D10GeometryShader;	///< Direct3D 10 geometry shader, can be a null pointer
 
 
 	};

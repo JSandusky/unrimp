@@ -72,7 +72,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] rootSignature
 		*    Root signature to use
 		*/
-		RootSignature(OpenGLES3Renderer &openGLES3Renderer, const Renderer::RootSignature &rootSignature);
+		RootSignature(OpenGLES3Renderer& openGLES3Renderer, const Renderer::RootSignature& rootSignature);
 
 		/**
 		*  @brief

@@ -28,17 +28,17 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D11Device *Direct3D11Renderer::getD3D11Device() const
+	inline ID3D11Device* Direct3D11Renderer::getD3D11Device() const
 	{
 		return mD3D11Device;
 	}
 
-	inline ID3D11DeviceContext *Direct3D11Renderer::getD3D11DeviceContext() const
+	inline ID3D11DeviceContext* Direct3D11Renderer::getD3D11DeviceContext() const
 	{
 		return mD3D11DeviceContext;
 	}
 
-	inline Renderer::IRenderTarget *Direct3D11Renderer::omGetRenderTarget() const
+	inline Renderer::IRenderTarget* Direct3D11Renderer::omGetRenderTarget() const
 	{
 		return mRenderTarget;
 	}
@@ -47,7 +47,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
-	inline const char *Direct3D11Renderer::getName() const
+	inline const char* Direct3D11Renderer::getName() const
 	{
 		return "Direct3D11";
 	}

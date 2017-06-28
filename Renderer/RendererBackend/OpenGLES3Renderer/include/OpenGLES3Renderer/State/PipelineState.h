@@ -78,7 +78,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] pipelineState
 		*    Pipeline state to use
 		*/
-		PipelineState(OpenGLES3Renderer &openGLES3Renderer, const Renderer::PipelineState &pipelineState);
+		PipelineState(OpenGLES3Renderer& openGLES3Renderer, const Renderer::PipelineState& pipelineState);
 
 		/**
 		*  @brief
@@ -125,9 +125,3 @@ namespace OpenGLES3Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLES3Renderer
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "OpenGLES3Renderer/State/PipelineState.inl"

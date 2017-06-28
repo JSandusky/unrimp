@@ -153,11 +153,11 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 		static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * 4;
 
 		// Allocate memory for the 2D texture
-		uint8_t *data = new uint8_t[NUMBER_OF_BYTES * mNumberOfTextures];
+		uint8_t* data = new uint8_t[NUMBER_OF_BYTES * mNumberOfTextures];
 
 		{ // Fill the texture content
 			// TODO(co) Be a little bit more creative while filling the texture data
-			uint8_t *dataCurrent = data;
+			uint8_t* dataCurrent = data;
 			const float colors[][MAXIMUM_NUMBER_OF_TEXTURES] =
 			{
 				{ 1.0f, 0.0f, 0.0f},
@@ -248,8 +248,8 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 	if (nullptr != shaderLanguage)
 	{
 		// Get the shader source code (outsourced to keep an overview)
-		const char *vertexShaderSourceCode = nullptr;
-		const char *fragmentShaderSourceCode = nullptr;
+		const char* vertexShaderSourceCode = nullptr;
+		const char* fragmentShaderSourceCode = nullptr;
 		#include "CubeRendererInstancedArrays_GLSL_130.h"
 		#include "CubeRendererInstancedArrays_GLSL_140.h"
 		#include "CubeRendererInstancedArrays_GLSL_ES3.h"

@@ -28,17 +28,17 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IDirect3DSwapChain9 *SwapChain::getDirect3DSwapChain9() const
+	inline IDirect3DSwapChain9* SwapChain::getDirect3DSwapChain9() const
 	{
 		return mDirect3DSwapChain9;
 	}
 
-	inline IDirect3DSurface9 *SwapChain::getDirect3DSurface9RenderTarget() const
+	inline IDirect3DSurface9* SwapChain::getDirect3DSurface9RenderTarget() const
 	{
 		return mDirect3DSurface9RenderTarget;
 	}
 
-	inline IDirect3DSurface9 *SwapChain::getDirect3DSurface9DepthStencil() const
+	inline IDirect3DSurface9* SwapChain::getDirect3DSurface9DepthStencil() const
 	{
 		return mDirect3DSurface9DepthStencil;
 	}

@@ -47,14 +47,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(OpenGLRenderer &openGLRenderer, Renderer::IndexBufferFormat::Enum indexBufferFormat) :
+	IndexBuffer::IndexBuffer(OpenGLRenderer& openGLRenderer, Renderer::IndexBufferFormat::Enum indexBufferFormat) :
 		IIndexBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLElementArrayBuffer(0),
-		mOpenGLType(GL_UNSIGNED_SHORT),
+		mOpenGLType(Mapping::getOpenGLType(indexBufferFormat)),
 		mIndexSizeInBytes(Renderer::IndexBufferFormat::getNumberOfBytesPerElement(indexBufferFormat))
 	{
-		// Set the OpenGL index buffer data type
-		mOpenGLType = Mapping::getOpenGLType(indexBufferFormat);
+		// Nothing here
 	}
 
 

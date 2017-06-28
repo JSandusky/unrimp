@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndirectBufferBind::IndirectBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
+	IndirectBufferBind::IndirectBufferBind(OpenGLRenderer& openGLRenderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
 		IndirectBuffer(openGLRenderer)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
@@ -68,7 +68,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]
 	//[-------------------------------------------------------]
-	void IndirectBufferBind::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	void IndirectBufferBind::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
 		assert(nullptr != data);

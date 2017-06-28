@@ -88,7 +88,7 @@ namespace OpenGLRenderer
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
 		*/
-		explicit VertexBuffer(OpenGLRenderer &openGLRenderer);
+		explicit VertexBuffer(OpenGLRenderer& openGLRenderer);
 
 
 	//[-------------------------------------------------------]

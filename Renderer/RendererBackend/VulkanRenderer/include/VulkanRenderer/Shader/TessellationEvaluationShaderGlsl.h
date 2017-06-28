@@ -74,7 +74,7 @@ namespace VulkanRenderer
 		*  @param[in] shaderBytecode
 		*    Shader bytecode
 		*/
-		TessellationEvaluationShaderGlsl(VulkanRenderer &vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode);
+		TessellationEvaluationShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -85,7 +85,7 @@ namespace VulkanRenderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		TessellationEvaluationShaderGlsl(VulkanRenderer &vulkanRenderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
+		TessellationEvaluationShaderGlsl(VulkanRenderer& vulkanRenderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief
@@ -98,7 +98,7 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]

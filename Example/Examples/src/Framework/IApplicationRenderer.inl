@@ -21,12 +21,12 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-inline Renderer::IRenderer *IApplicationRenderer::getRenderer() const
+inline Renderer::IRenderer* IApplicationRenderer::getRenderer() const
 {
 	return mRenderer;
 }
 
-inline Renderer::IRenderTarget *IApplicationRenderer::getMainRenderTarget() const
+inline Renderer::IRenderTarget* IApplicationRenderer::getMainRenderTarget() const
 {
 	return (nullptr != mRenderer) ? mRenderer->getMainSwapChain() : nullptr;
 }

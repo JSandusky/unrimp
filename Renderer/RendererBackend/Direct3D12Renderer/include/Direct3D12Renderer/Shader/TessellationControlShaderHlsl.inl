@@ -28,7 +28,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3DBlob *TessellationControlShaderHlsl::getD3DBlobHullShader() const
+	inline ID3DBlob* TessellationControlShaderHlsl::getD3DBlobHullShader() const
 	{
 		return mD3DBlobHullShader;
 	}

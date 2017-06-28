@@ -41,7 +41,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(Direct3D9Renderer &direct3D9Renderer, const Renderer::PipelineState& pipelineState) :
+	PipelineState::PipelineState(Direct3D9Renderer& direct3D9Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(direct3D9Renderer),
 		mDirect3DDevice9(direct3D9Renderer.getDirect3DDevice9()),
 		mProgram(pipelineState.program),
@@ -61,9 +61,9 @@ namespace Direct3D9Renderer
 			const Renderer::VertexAttribute* attributes = pipelineState.vertexAttributes.attributes;
 
 			// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
-			D3DVERTEXELEMENT9 *d3dVertexElements   = new D3DVERTEXELEMENT9[numberOfAttributes + 1];	// +1 for D3DDECL_END()
-			D3DVERTEXELEMENT9 *d3dVertexElement    = d3dVertexElements;
-			D3DVERTEXELEMENT9 *d3dVertexElementEnd = d3dVertexElements + numberOfAttributes;
+			D3DVERTEXELEMENT9* d3dVertexElements   = new D3DVERTEXELEMENT9[numberOfAttributes + 1];	// +1 for D3DDECL_END()
+			D3DVERTEXELEMENT9* d3dVertexElement    = d3dVertexElements;
+			D3DVERTEXELEMENT9* d3dVertexElementEnd = d3dVertexElements + numberOfAttributes;
 			for (; d3dVertexElement < d3dVertexElementEnd; ++d3dVertexElement, ++attributes)
 			{
 				// Fill the "D3DVERTEXELEMENT9"-content
@@ -132,7 +132,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void PipelineState::setDebugName(const char *)
+	void PipelineState::setDebugName(const char*)
 	{
 		// "IDirect3DVertexDeclaration9" is not derived from "IDirect3DResource9", meaning we can't use the "IDirect3DResource9::SetPrivateData()"-method
 	}

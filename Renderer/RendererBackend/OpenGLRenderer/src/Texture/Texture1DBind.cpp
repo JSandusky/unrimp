@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture1DBind::Texture1DBind(OpenGLRenderer &openGLRenderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	Texture1DBind::Texture1DBind(OpenGLRenderer& openGLRenderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		Texture1D(openGLRenderer, width)
 	{
 		// Sanity checks

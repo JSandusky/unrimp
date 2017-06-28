@@ -130,11 +130,11 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 		static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * 4;
 
 		// Allocate memory for the 2D texture array
-		uint8_t *data = new uint8_t[NUMBER_OF_BYTES * mNumberOfTextures];
+		uint8_t* data = new uint8_t[NUMBER_OF_BYTES * mNumberOfTextures];
 
 		{ // Fill the texture content
 			// TODO(co) Be a little bit more creative while filling the texture data
-			uint8_t *dataCurrent = data;
+			uint8_t* dataCurrent = data;
 			const float colors[][MAXIMUM_NUMBER_OF_TEXTURES] =
 			{
 				{ 1.0f, 0.0f, 0.0f},
@@ -261,7 +261,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 			21, 20, 22,		// 10
 			23, 22, 20		// 11
 		};
-		Renderer::IIndexBuffer *indexBuffer = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
+		Renderer::IIndexBuffer* indexBuffer = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
 
 		// Create vertex array object (VAO)
 		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -306,8 +306,8 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 	if (nullptr != shaderLanguage)
 	{
 		// Get the shader source code (outsourced to keep an overview)
-		const char *vertexShaderSourceCode = nullptr;
-		const char *fragmentShaderSourceCode = nullptr;
+		const char* vertexShaderSourceCode = nullptr;
+		const char* fragmentShaderSourceCode = nullptr;
 		#include "CubeRendererDrawInstanced_GLSL_410.h"
 		#include "CubeRendererDrawInstanced_HLSL_D3D10_D3D11_D3D12.h"
 		#include "CubeRendererDrawInstanced_GLSL_ES3.h"

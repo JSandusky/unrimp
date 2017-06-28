@@ -28,17 +28,17 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IDXGISwapChain *SwapChain::getDxgiSwapChain() const
+	inline IDXGISwapChain* SwapChain::getDxgiSwapChain() const
 	{
 		return mDxgiSwapChain;
 	}
 
-	inline ID3D11RenderTargetView *SwapChain::getD3D11RenderTargetView() const
+	inline ID3D11RenderTargetView* SwapChain::getD3D11RenderTargetView() const
 	{
 		return mD3D11RenderTargetView;
 	}
 
-	inline ID3D11DepthStencilView *SwapChain::getD3D11DepthStencilView() const
+	inline ID3D11DepthStencilView* SwapChain::getD3D11DepthStencilView() const
 	{
 		return mD3D11DepthStencilView;
 	}

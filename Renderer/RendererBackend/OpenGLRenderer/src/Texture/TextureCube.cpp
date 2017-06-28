@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	TextureCube::TextureCube(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height) :
+	TextureCube::TextureCube(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height) :
 		ITextureCube(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height),
 		mOpenGLTexture(0),
 		mGenerateMipmaps(false)

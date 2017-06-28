@@ -53,7 +53,7 @@ namespace Direct3D12Renderer
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::getDirect3D12UsageAndCPUAccessFlags(Renderer::BufferUsage, uint32_t &)
+	uint32_t Mapping::getDirect3D12UsageAndCPUAccessFlags(Renderer::BufferUsage, uint32_t& )
 	{
 		// TODO(co) Direct3D 12
 		/*

@@ -28,7 +28,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IDirect3DTexture9 *Texture1D::getDirect3DTexture9() const
+	inline IDirect3DTexture9* Texture1D::getDirect3DTexture9() const
 	{
 		return mDirect3DTexture9;
 	}

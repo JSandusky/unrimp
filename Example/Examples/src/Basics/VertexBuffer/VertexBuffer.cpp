@@ -196,8 +196,8 @@ void VertexBuffer::onInitialization()
 		if (nullptr != shaderLanguage)
 		{
 			// Get the shader source code (outsourced to keep an overview)
-			const char *vertexShaderSourceCode = nullptr;
-			const char *fragmentShaderSourceCode = nullptr;
+			const char* vertexShaderSourceCode = nullptr;
+			const char* fragmentShaderSourceCode = nullptr;
 			#include "VertexBuffer_GLSL_410.h"
 			#include "VertexBuffer_GLSL_ES3.h"
 			#include "VertexBuffer_HLSL_D3D9_D3D10_D3D11_D3D12.h"

@@ -1920,7 +1920,7 @@ MIDL_INTERFACE("765a30f3-f624-4c6f-a828-ace948622445")
 ID3D12PipelineState : public ID3D12Pageable
 {
 	public:
-		virtual HRESULT STDMETHODCALLTYPE GetCachedBlob(_COM_Outptr_ ID3DBlob **ppBlob) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetCachedBlob(_COM_Outptr_ ID3DBlob* *ppBlob) = 0;
 };
 
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"

@@ -86,7 +86,7 @@ namespace OpenGLES3Renderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramGlsl(OpenGLES3Renderer &openGLES3Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
+		ProgramGlsl(OpenGLES3Renderer& openGLES3Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl* vertexShaderGlsl, FragmentShaderGlsl* fragmentShaderGlsl);
 
 		/**
 		*  @brief
@@ -117,14 +117,14 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	public:
-		virtual handle getUniformHandle(const char *uniformName) override;
+		virtual handle getUniformHandle(const char* uniformName) override;
 		virtual void setUniform1i(handle uniformHandle, int value) override;
 		virtual void setUniform1f(handle uniformHandle, float value) override;
-		virtual void setUniform2fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform4fv(handle uniformHandle, const float *value) override;
-		virtual void setUniformMatrix3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniformMatrix4fv(handle uniformHandle, const float *value) override;
+		virtual void setUniform2fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform4fv(handle uniformHandle, const float* value) override;
+		virtual void setUniformMatrix3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniformMatrix4fv(handle uniformHandle, const float* value) override;
 
 
 	//[-------------------------------------------------------]

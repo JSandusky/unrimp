@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-inline void IApplication::getWindowSize(int &width, int &height) const
+inline void IApplication::getWindowSize(int& width, int& height) const
 {
 	return mApplicationImpl->getWindowSize(width, height);
 }

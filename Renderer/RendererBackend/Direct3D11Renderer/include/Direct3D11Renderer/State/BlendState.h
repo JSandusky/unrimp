@@ -75,7 +75,7 @@ namespace Direct3D11Renderer
 		*  @param[in] blendState
 		*    Blend state to use
 		*/
-		BlendState(Direct3D11Renderer &direct3D11Renderer, const Renderer::BlendState &blendState);
+		BlendState(Direct3D11Renderer& direct3D11Renderer, const Renderer::BlendState& blendState);
 
 		/**
 		*  @brief
@@ -90,21 +90,21 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The Direct3D 11 blend state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11BlendState *getD3D11BlendState() const;
+		inline ID3D11BlendState* getD3D11BlendState() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Direct3D11Renderer::IState methods     ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11BlendState *mD3D11BlendState;	///< Direct3D 11 blend state, can be a null pointer
+		ID3D11BlendState* mD3D11BlendState;	///< Direct3D 11 blend state, can be a null pointer
 
 
 	};

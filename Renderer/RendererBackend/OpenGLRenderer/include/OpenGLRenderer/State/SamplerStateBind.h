@@ -61,7 +61,7 @@ namespace OpenGLRenderer
 		*  @param[in] samplerState
 		*    Sampler state to use
 		*/
-		SamplerStateBind(OpenGLRenderer &openGLRenderer, const Renderer::SamplerState &samplerState);
+		SamplerStateBind(OpenGLRenderer& openGLRenderer, const Renderer::SamplerState& samplerState);
 
 		/**
 		*  @brief

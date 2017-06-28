@@ -205,7 +205,7 @@ namespace OpenGLES3Renderer
 		// Nothing here
 	}
 
-	IContext::IContext(const IContext &) :
+	IContext::IContext(const IContext&) :
 		mNativeWindowHandle(NULL_HANDLE),
 		#if (defined(LINUX) && !defined(ANDROID))
 			mX11Display(nullptr),
@@ -289,7 +289,7 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	IContext &IContext::operator =(const IContext &)
+	IContext& IContext::operator =(const IContext&)
 	{
 		// No implementation because the copy operator is never used
 		return *this;

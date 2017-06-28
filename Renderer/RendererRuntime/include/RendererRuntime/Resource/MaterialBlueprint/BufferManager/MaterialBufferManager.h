@@ -124,8 +124,11 @@ namespace RendererRuntime
 		*    Slot to bind
 		*  @param[out] commandBuffer
 		*    Command buffer to fill
+		*
+		*  @return
+		*    "true" on assigned material pool change, else "false"
 		*/
-		void fillCommandBuffer(MaterialBufferSlot& materialBufferSlot, Renderer::CommandBuffer& commandBuffer);
+		bool fillCommandBuffer(MaterialBufferSlot& materialBufferSlot, Renderer::CommandBuffer& commandBuffer);
 
 
 	//[-------------------------------------------------------]

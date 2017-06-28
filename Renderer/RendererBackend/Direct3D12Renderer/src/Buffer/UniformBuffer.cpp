@@ -38,7 +38,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage) :
+	UniformBuffer::UniformBuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage) :
 		Renderer::IUniformBuffer(direct3D12Renderer),
 		mD3D12Resource(nullptr),
 		mD3D12DescriptorHeap(nullptr),
@@ -132,7 +132,7 @@ namespace Direct3D12Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	#if !defined(DIRECT3D12RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
-		void UniformBuffer::setDebugName(const char *name)
+		void UniformBuffer::setDebugName(const char* name)
 		{
 			RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "UBO", 6);	// 6 = "UBO: " including terminating zero!
 
@@ -163,7 +163,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Check resource pointers
 		if (nullptr != mMappedData && nullptr != data)

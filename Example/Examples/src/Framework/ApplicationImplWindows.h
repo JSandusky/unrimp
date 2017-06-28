@@ -61,7 +61,7 @@ public:
 	*  @param[in] windowTitle
 	*    ASCII window title, can be a null pointer
 	*/
-	ApplicationImplWindows(IApplication &application, const char *windowTitle);
+	ApplicationImplWindows(IApplication& application, const char* windowTitle);
 
 	/**
 	*  @brief
@@ -101,7 +101,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	IApplication *mApplication;			///< The owner application instance, always valid
+	IApplication* mApplication;			///< The owner application instance, always valid
 	char		  mWindowTitle[64];		///< ASCII window title
 	HWND		  mNativeWindowHandle;	///< OS window handle, can be a null handler
 

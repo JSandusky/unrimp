@@ -28,7 +28,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const Renderer::RasterizerState &RasterizerState::getRasterizerState() const
+	inline const Renderer::RasterizerState& RasterizerState::getRasterizerState() const
 	{
 		return mRasterizerState;
 	}

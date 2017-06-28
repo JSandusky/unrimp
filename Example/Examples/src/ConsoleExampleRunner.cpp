@@ -54,7 +54,7 @@ int ConsoleExampleRunner::run(const CmdLineArgs& args)
 	return runExample(m_rendererName, m_exampleName);
 }
 
-bool ConsoleExampleRunner::parseArgs(const CmdLineArgs &args) {
+bool ConsoleExampleRunner::parseArgs(const CmdLineArgs& args) {
 	unsigned int length = args.GetCount();
 	for(unsigned int i = 0; i < length; ++i) {
 		std::string arg = args.GetArg(i); 

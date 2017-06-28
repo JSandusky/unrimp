@@ -76,7 +76,7 @@ namespace Direct3D12Renderer
 		*  @param[in] shaderBytecode
 		*    Shader bytecode
 		*/
-		VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode);
+		VertexShaderHlsl(Direct3D12Renderer& direct3D12Renderer, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
@@ -87,7 +87,7 @@ namespace Direct3D12Renderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
+		VertexShaderHlsl(Direct3D12Renderer& direct3D12Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode = nullptr);
 
 		/**
 		*  @brief
@@ -102,14 +102,14 @@ namespace Direct3D12Renderer
 		*  @return
 		*    Direct3D 12 vertex shader blob, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3DBlob *getD3DBlobVertexShader() const;
+		inline ID3DBlob* getD3DBlobVertexShader() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]
@@ -124,7 +124,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3DBlob *mD3DBlobVertexShader;	///< Direct3D 12 vertex shader blob, can be a null pointer
+		ID3DBlob* mD3DBlobVertexShader;	///< Direct3D 12 vertex shader blob, can be a null pointer
 
 
 	};

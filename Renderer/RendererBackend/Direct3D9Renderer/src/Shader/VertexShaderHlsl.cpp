@@ -38,7 +38,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderHlsl::VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
+	VertexShaderHlsl::VertexShaderHlsl(Direct3D9Renderer& direct3D9Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IVertexShader(direct3D9Renderer),
 		mDirect3DVertexShader9(nullptr),
 		mD3DXConstantTable(nullptr)
@@ -48,13 +48,13 @@ namespace Direct3D9Renderer
 		D3DXGetShaderConstantTable(reinterpret_cast<const DWORD*>(shaderBytecode.getBytecode()), &mD3DXConstantTable);
 	}
 
-	VertexShaderHlsl::VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+	VertexShaderHlsl::VertexShaderHlsl(Direct3D9Renderer& direct3D9Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IVertexShader(direct3D9Renderer),
 		mDirect3DVertexShader9(nullptr),
 		mD3DXConstantTable(nullptr)
 	{
 		// Create the Direct3D 9 buffer object for the vertex shader
-		ID3DXBuffer *d3dXBuffer = static_cast<ShaderLanguageHlsl*>(direct3D9Renderer.getShaderLanguage())->loadShaderFromSourcecode("vs_3_0", sourceCode, nullptr, &mD3DXConstantTable);
+		ID3DXBuffer* d3dXBuffer = static_cast<ShaderLanguageHlsl*>(direct3D9Renderer.getShaderLanguage())->loadShaderFromSourcecode("vs_3_0", sourceCode, nullptr, &mD3DXConstantTable);
 		if (nullptr != d3dXBuffer)
 		{
 			// Create the Direct3D 9 vertex shader
@@ -90,7 +90,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void VertexShaderHlsl::setDebugName(const char *)
+	void VertexShaderHlsl::setDebugName(const char*)
 	{
 		// "IDirect3DVertexShader9" and "ID3DXConstantTable" are not derived from "IDirect3DResource9", meaning we can't use the "IDirect3DResource9::SetPrivateData()"-method
 	}
@@ -99,7 +99,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *VertexShaderHlsl::getShaderLanguageName() const
+	const char* VertexShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
 	}

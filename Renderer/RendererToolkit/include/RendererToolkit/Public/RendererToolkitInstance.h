@@ -66,7 +66,7 @@ namespace RendererToolkit
 	// This is needed to do here because the methods in the library are also defined in global namespace
 
 	// "createRendererToolkitInstance()" signature
-	extern RendererToolkit::IRendererToolkit *createRendererToolkitInstance(RendererRuntime::IFileManager& fileManager);
+	extern RendererToolkit::IRendererToolkit* createRendererToolkitInstance(RendererRuntime::IFileManager& fileManager);
 #endif
 
 

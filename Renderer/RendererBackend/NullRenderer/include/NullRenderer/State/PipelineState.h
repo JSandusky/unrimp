@@ -75,7 +75,7 @@ namespace NullRenderer
 		*  @param[in] pipelineState
 		*    Pipeline state to use
 		*/
-		PipelineState(NullRenderer &nullRenderer, const Renderer::PipelineState &pipelineState);
+		PipelineState(NullRenderer& nullRenderer, const Renderer::PipelineState& pipelineState);
 
 		/**
 		*  @brief

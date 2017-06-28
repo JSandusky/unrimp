@@ -125,7 +125,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramSeparate::ProgramSeparate(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate) :
+	ProgramSeparate::ProgramSeparate(OpenGLRenderer& openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate* vertexShaderSeparate, TessellationControlShaderSeparate* tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate* tessellationEvaluationShaderSeparate, GeometryShaderSeparate* geometryShaderSeparate, FragmentShaderSeparate* fragmentShaderSeparate) :
 		IProgram(openGLRenderer),
 		mOpenGLProgramPipeline(0),
 		mVertexShaderSeparate(vertexShaderSeparate),
@@ -276,7 +276,7 @@ namespace OpenGLRenderer
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					char *informationLog = new char[static_cast<uint32_t>(informationLength)];
+					char* informationLog = new char[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
 					glGetProgramPipelineInfoLog(mOpenGLProgramPipeline, informationLength, nullptr, informationLog);
@@ -331,7 +331,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	handle ProgramSeparate::getUniformHandle(const char *uniformName)
+	handle ProgramSeparate::getUniformHandle(const char* uniformName)
 	{
 		GLint uniformLocation = -1;
 		#define GET_UNIFORM_LOCATION(ShaderSeparate) if (uniformLocation < 0 && nullptr != ShaderSeparate) uniformLocation = glGetUniformLocationARB(ShaderSeparate->getOpenGLShaderProgram(), uniformName);
@@ -388,7 +388,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramSeparate::setUniform2fv(handle uniformHandle, const float *value)
+	void ProgramSeparate::setUniform2fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program pipeline
@@ -410,7 +410,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramSeparate::setUniform3fv(handle uniformHandle, const float *value)
+	void ProgramSeparate::setUniform3fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program pipeline
@@ -432,7 +432,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramSeparate::setUniform4fv(handle uniformHandle, const float *value)
+	void ProgramSeparate::setUniform4fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program pipeline
@@ -454,7 +454,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramSeparate::setUniformMatrix3fv(handle uniformHandle, const float *value)
+	void ProgramSeparate::setUniformMatrix3fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program pipeline
@@ -476,7 +476,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramSeparate::setUniformMatrix4fv(handle uniformHandle, const float *value)
+	void ProgramSeparate::setUniformMatrix4fv(handle uniformHandle, const float* value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program pipeline

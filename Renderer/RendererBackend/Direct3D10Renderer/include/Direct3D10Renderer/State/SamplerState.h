@@ -75,7 +75,7 @@ namespace Direct3D10Renderer
 		*  @param[in] samplerState
 		*    Sampler state to use
 		*/
-		SamplerState(Direct3D10Renderer &direct3D10Renderer, const Renderer::SamplerState &samplerState);
+		SamplerState(Direct3D10Renderer& direct3D10Renderer, const Renderer::SamplerState& samplerState);
 
 		/**
 		*  @brief
@@ -90,14 +90,14 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The Direct3D 10 sampler state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D10SamplerState *getD3D10SamplerState() const;
+		inline ID3D10SamplerState* getD3D10SamplerState() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
@@ -112,7 +112,7 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10SamplerState *mD3D10SamplerState;	///< Direct3D 10 sampler state, can be a null pointer
+		ID3D10SamplerState* mD3D10SamplerState;	///< Direct3D 10 sampler state, can be a null pointer
 
 
 	};

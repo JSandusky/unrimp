@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture3DDsa::Texture3DDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	Texture3DDsa::Texture3DDsa(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		Texture3D(openGLRenderer, width, height, depth, textureFormat)
 	{
 		// Sanity checks
@@ -77,6 +77,11 @@ namespace OpenGLRenderer
 			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 			if (dataContainsMipmaps)
 			{
+				// Data layout: The renderer interface provides: CRN and KTX files are organized in mip-major order, like this:
+				//   Mip0: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+				//   Mip1: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+				//   etc.
+
 				// Allocate storage for all levels
 				if (isArbDsa)
 				{
@@ -131,6 +136,11 @@ namespace OpenGLRenderer
 			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 			if (dataContainsMipmaps)
 			{
+				// Data layout: The renderer interface provides: CRN and KTX files are organized in mip-major order, like this:
+				//   Mip0: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+				//   Mip1: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+				//   etc.
+
 				// Allocate storage for all levels
 				if (isArbDsa)
 				{

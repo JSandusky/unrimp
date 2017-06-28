@@ -74,7 +74,7 @@ namespace OpenGLRenderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramSeparateDsa(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate);
+		ProgramSeparateDsa(OpenGLRenderer& openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate* vertexShaderSeparate, TessellationControlShaderSeparate* tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate* tessellationEvaluationShaderSeparate, GeometryShaderSeparate* geometryShaderSeparate, FragmentShaderSeparate* fragmentShaderSeparate);
 
 		/**
 		*  @brief
@@ -88,11 +88,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	public:
 		virtual void setUniform1f(handle uniformHandle, float value) override;
-		virtual void setUniform2fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform4fv(handle uniformHandle, const float *value) override;
-		virtual void setUniformMatrix3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniformMatrix4fv(handle uniformHandle, const float *value) override;
+		virtual void setUniform2fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform4fv(handle uniformHandle, const float* value) override;
+		virtual void setUniformMatrix3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniformMatrix4fv(handle uniformHandle, const float* value) override;
 
 
 	//[-------------------------------------------------------]

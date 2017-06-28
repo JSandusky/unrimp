@@ -79,14 +79,6 @@ namespace RendererRuntime
 		// TODO(co) Error handling
 
 		// Decompress/transcode CRN to DDS
-		// - DDS files are organized in face-major order, like this:
-		//     Face0: Mip0, Mip1, Mip2, etc.
-		//     Face1: Mip0, Mip1, Mip2, etc.
-		//     etc.
-		// - While CRN files are organized in mip-major order, like this:
-		//     Mip0: Face0, Face1, Face2, Face3, Face4, Face5
-		//     Mip1: Face0, Face1, Face2, Face3, Face4, Face5
-		//     etc.
 		crnd::crn_texture_info crnTextureInfo;
 		if (!crnd::crnd_get_texture_info(mFileData, mNumberOfFileDataBytes, &crnTextureInfo))
 		{
@@ -195,21 +187,14 @@ namespace RendererRuntime
 			}
 		}
 
+		// Data layout: The renderer interface expects: CRN and KTX files are organized in mip-major order, like this:
+		//   Mip0: Face0, Face1, Face2, Face3, Face4, Face5
+		//   Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+		//   etc.
+
 		{ // Now transcode all face and mipmap levels into memory, one mip level at a time
 			void* decompressedImages[cCRNMaxFaces];
-			if (1 == crnTextureInfo.m_faces)
-			{
-				decompressedImages[0] = mImageData;
-			}
-			else
-			{
-				const crn_uint32 totalFaceSize = mNumberOfUsedImageDataBytes / crnTextureInfo.m_faces;
-				uint8_t* currentImageData = mImageData;
-				for (crn_uint32 faceIndex = 0; faceIndex < crnTextureInfo.m_faces; ++faceIndex, currentImageData += totalFaceSize)
-				{
-					decompressedImages[faceIndex] = currentImageData;
-				}
-			}
+			uint8_t* currentImageData = mImageData;
 			for (crn_uint32 levelIndex = static_cast<crn_uint32>(startLevelIndex); levelIndex < crnTextureInfo.m_levels; ++levelIndex)
 			{
 				// Compute the face's width, height, number of DXT blocks per row/col, etc.
@@ -220,6 +205,13 @@ namespace RendererRuntime
 				const crn_uint32 rowPitch = blocksX * numberOfBytesPerDxtBlock;
 				const crn_uint32 totalFaceSize = rowPitch * blocksY;
 
+				// Update the face pointer array needed by "crnd_unpack_level()"
+				for (crn_uint32 faceIndex = 0; faceIndex < crnTextureInfo.m_faces; ++faceIndex)
+				{
+					decompressedImages[faceIndex] = currentImageData;
+					currentImageData += totalFaceSize;
+				}
+
 				// Now transcode the level to raw DXTn
 				if (!crnd::crnd_unpack_level(crndUnpackContext, decompressedImages, totalFaceSize, rowPitch, levelIndex))
 				{
@@ -229,12 +221,6 @@ namespace RendererRuntime
 					// return error("Failed transcoding texture!");
 					assert(false);
 					return;
-				}
-
-				// Update the face pointer array needed by "crnd_unpack_level()"
-				for (crn_uint32 faceIndex = 0; faceIndex < crnTextureInfo.m_faces; ++faceIndex)
-				{
-					decompressedImages[faceIndex] = static_cast<uint8_t*>(decompressedImages[faceIndex]) + totalFaceSize;
 				}
 			}
 		}

@@ -72,7 +72,7 @@ namespace OpenGLRenderer
 		*  @param[in] rootSignature
 		*    Root signature to use
 		*/
-		RootSignature(OpenGLRenderer &openGLRenderer, const Renderer::RootSignature &rootSignature);
+		RootSignature(OpenGLRenderer& openGLRenderer, const Renderer::RootSignature& rootSignature);
 
 		/**
 		*  @brief

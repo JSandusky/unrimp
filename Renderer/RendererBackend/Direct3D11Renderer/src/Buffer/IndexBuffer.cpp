@@ -38,7 +38,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
+	IndexBuffer::IndexBuffer(Direct3D11Renderer& direct3D11Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data, Renderer::BufferUsage bufferUsage) :
 		IIndexBuffer(direct3D11Renderer),
 		mD3D11Buffer(nullptr),
 		mDXGIFormat(DXGI_FORMAT_UNKNOWN)
@@ -101,7 +101,7 @@ namespace Direct3D11Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	#if !defined(DIRECT3D11RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
-		void IndexBuffer::setDebugName(const char *name)
+		void IndexBuffer::setDebugName(const char* name)
 		{
 			// Valid Direct3D 11 index buffer?
 			if (nullptr != mD3D11Buffer)

@@ -97,7 +97,7 @@ namespace OpenGLRenderer
 		*  @param[in] context
 		*    Owner context
 		*/
-		explicit Extensions(IContext &context);
+		explicit Extensions(IContext& context);
 
 		/**
 		*  @brief
@@ -175,7 +175,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    "true" if the extensions is supported, else "false"
 		*/
-		bool isSupported(const char *extension) const;
+		bool isSupported(const char* extension) const;
 
 		/**
 		*  @brief
@@ -187,7 +187,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    "true" if the extensions is supported, else "false"
 		*/
-		bool checkExtension(const char *extension) const;
+		bool checkExtension(const char* extension) const;
 
 		/**
 		*  @brief
@@ -227,7 +227,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IContext *mContext;		///< Owner context, always valid!
+		IContext* mContext;		///< Owner context, always valid!
 		bool	  mInitialized;	///< Are the extensions initialized?
 
 		// Supported extensions

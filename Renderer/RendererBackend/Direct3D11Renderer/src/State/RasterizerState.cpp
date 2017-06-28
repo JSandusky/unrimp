@@ -39,7 +39,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RasterizerState::RasterizerState(Direct3D11Renderer &direct3D11Renderer, const Renderer::RasterizerState &rasterizerState) :
+	RasterizerState::RasterizerState(Direct3D11Renderer& direct3D11Renderer, const Renderer::RasterizerState& rasterizerState) :
 		mD3D11RasterizerState(nullptr)
 	{
 		// Create the Direct3D 11 rasterizer state
@@ -76,7 +76,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Direct3D11Renderer::IState methods     ]
 	//[-------------------------------------------------------]
-	void RasterizerState::setDebugName(const char *name)
+	void RasterizerState::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			// Valid Direct3D 11 rasterizer state?

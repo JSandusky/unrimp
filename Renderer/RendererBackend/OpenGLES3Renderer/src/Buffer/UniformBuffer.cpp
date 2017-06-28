@@ -35,7 +35,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
+	UniformBuffer::UniformBuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
 		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES3Renderer)),
 		mOpenGLES3UniformBuffer(0),
 		mBufferSize(numberOfBytes)
@@ -73,7 +73,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
 		assert(nullptr != data);

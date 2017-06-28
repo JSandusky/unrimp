@@ -129,7 +129,7 @@ namespace VulkanRenderer
 		*  @return
 		*    "true" if the extensions is supported, else "false"
 		*/
-		bool isSupported(const char *extension) const;
+		bool isSupported(const char* extension) const;
 
 		/**
 		*  @brief
@@ -141,7 +141,7 @@ namespace VulkanRenderer
 		*  @return
 		*    "true" if the extensions is supported, else "false"
 		*/
-		bool checkExtension(const char *extension) const;
+		bool checkExtension(const char* extension) const;
 
 		/**
 		*  @brief

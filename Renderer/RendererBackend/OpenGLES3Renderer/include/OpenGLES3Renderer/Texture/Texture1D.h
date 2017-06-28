@@ -77,7 +77,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*/
-		Texture1D(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags);
+		Texture1D(OpenGLES3Renderer& openGLES3Renderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags);
 
 		/**
 		*  @brief

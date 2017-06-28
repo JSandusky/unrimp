@@ -28,7 +28,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D11SamplerState *SamplerState::getD3D11SamplerState() const
+	inline ID3D11SamplerState* SamplerState::getD3D11SamplerState() const
 	{
 		return mD3D11SamplerState;
 	}

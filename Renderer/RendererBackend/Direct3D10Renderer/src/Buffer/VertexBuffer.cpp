@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
+	VertexBuffer::VertexBuffer(Direct3D10Renderer& direct3D10Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
 		IVertexBuffer(direct3D10Renderer),
 		mD3D10Buffer(nullptr)
 	{
@@ -87,7 +87,7 @@ namespace Direct3D10Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	#if !defined(DIRECT3D10RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
-		void VertexBuffer::setDebugName(const char *name)
+		void VertexBuffer::setDebugName(const char* name)
 		{
 			// Valid Direct3D 10 vertex buffer?
 			if (nullptr != mD3D10Buffer)

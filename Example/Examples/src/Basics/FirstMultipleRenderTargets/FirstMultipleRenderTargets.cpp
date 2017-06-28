@@ -156,9 +156,9 @@ void FirstMultipleRenderTargets::onInitialization()
 				Renderer::IProgramPtr program;
 				{
 					// Get the shader source code (outsourced to keep an overview)
-					const char *vertexShaderSourceCode = nullptr;
-					const char *fragmentShaderSourceCode_MultipleRenderTargets = nullptr;
-					const char *fragmentShaderSourceCode = nullptr;
+					const char* vertexShaderSourceCode = nullptr;
+					const char* fragmentShaderSourceCode_MultipleRenderTargets = nullptr;
+					const char* fragmentShaderSourceCode = nullptr;
 					#include "FirstMultipleRenderTargets_GLSL_410.h"
 					#include "FirstMultipleRenderTargets_GLSL_ES3.h"
 					#include "FirstMultipleRenderTargets_HLSL_D3D9.h"
@@ -300,7 +300,7 @@ void FirstMultipleRenderTargets::fillCommandBuffer()
 			// Get the render target with and height
 			uint32_t width  = 1;
 			uint32_t height = 1;
-			Renderer::IRenderTarget *renderTarget = getMainRenderTarget();
+			Renderer::IRenderTarget* renderTarget = getMainRenderTarget();
 			if (nullptr != renderTarget)
 			{
 				renderTarget->getWidthAndHeight(width, height);

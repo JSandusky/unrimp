@@ -28,7 +28,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3DBlob *VertexShaderHlsl::getD3DBlobVertexShader() const
+	inline ID3DBlob* VertexShaderHlsl::getD3DBlobVertexShader() const
 	{
 		return mD3DBlobVertexShader;
 	}

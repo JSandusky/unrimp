@@ -73,7 +73,7 @@ namespace Direct3D10Renderer
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(Direct3D10Renderer &direct3D10Renderer, handle nativeWindowHandle);
+		SwapChain(Direct3D10Renderer& direct3D10Renderer, handle nativeWindowHandle);
 
 		/**
 		*  @brief
@@ -88,7 +88,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The DXGI swap chain instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IDXGISwapChain *getDXGISwapChain() const;
+		inline IDXGISwapChain* getDXGISwapChain() const;
 
 		/**
 		*  @brief
@@ -100,7 +100,7 @@ namespace Direct3D10Renderer
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		inline ID3D10RenderTargetView *getD3D10RenderTargetView() const;
+		inline ID3D10RenderTargetView* getD3D10RenderTargetView() const;
 
 		/**
 		*  @brief
@@ -112,21 +112,21 @@ namespace Direct3D10Renderer
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		inline ID3D10DepthStencilView *getD3D10DepthStencilView() const;
+		inline ID3D10DepthStencilView* getD3D10DepthStencilView() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -170,7 +170,7 @@ namespace Direct3D10Renderer
 		*  @note
 		*    - "mDXGISwapChain" must be valid when calling this method
 		*/
-		void getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const;
+		void getSafeWidthAndHeight(uint32_t& width, uint32_t& height) const;
 
 		/**
 		*  @brief
@@ -183,9 +183,9 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDXGISwapChain		   *mDxgiSwapChain;			///< The DXGI swap chain instance, null pointer on error
-		ID3D10RenderTargetView *mD3D10RenderTargetView;	///< The Direct3D 10 render target view instance, null pointer on error
-		ID3D10DepthStencilView *mD3D10DepthStencilView;	///< The Direct3D 10 depth stencil view instance, null pointer on error
+		IDXGISwapChain*		    mDxgiSwapChain;			///< The DXGI swap chain instance, null pointer on error
+		ID3D10RenderTargetView* mD3D10RenderTargetView;	///< The Direct3D 10 render target view instance, null pointer on error
+		ID3D10DepthStencilView* mD3D10DepthStencilView;	///< The Direct3D 10 depth stencil view instance, null pointer on error
 
 
 	};

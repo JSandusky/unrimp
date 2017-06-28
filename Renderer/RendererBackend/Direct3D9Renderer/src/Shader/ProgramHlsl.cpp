@@ -38,7 +38,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramHlsl::ProgramHlsl(Direct3D9Renderer &direct3D9Renderer, VertexShaderHlsl *vertexShaderHlsl, FragmentShaderHlsl *fragmentShaderHlsl) :
+	ProgramHlsl::ProgramHlsl(Direct3D9Renderer& direct3D9Renderer, VertexShaderHlsl* vertexShaderHlsl, FragmentShaderHlsl* fragmentShaderHlsl) :
 		IProgram(direct3D9Renderer),
 		mDirect3D9Renderer(&direct3D9Renderer),
 		mVertexShaderHlsl(vertexShaderHlsl),
@@ -52,7 +52,7 @@ namespace Direct3D9Renderer
 			mVertexShaderHlsl->addReference();
 
 			// Valid Direct3D 9 vertex shader?
-			IDirect3DVertexShader9 *direct3DVertexShader9 = mVertexShaderHlsl->getDirect3DVertexShader9();
+			IDirect3DVertexShader9* direct3DVertexShader9 = mVertexShaderHlsl->getDirect3DVertexShader9();
 			if (nullptr != direct3DVertexShader9)
 			{
 				// Get the Direct3D 9 device
@@ -123,7 +123,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void ProgramHlsl::setDebugName(const char *)
+	void ProgramHlsl::setDebugName(const char*)
 	{
 		// In here we could assign the given debug name to all shaders assigned to the program,
 		// but this might end up within a naming chaos due to overwriting possible already set
@@ -134,7 +134,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	handle ProgramHlsl::getUniformHandle(const char *uniformName)
+	handle ProgramHlsl::getUniformHandle(const char* uniformName)
 	{
 		// Get the uniform handle
 		if (nullptr != mVertexShaderHlsl && nullptr != mVertexShaderHlsl->getD3DXConstantTable())
@@ -169,7 +169,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void ProgramHlsl::setUniform2fv(handle uniformHandle, const float *value)
+	void ProgramHlsl::setUniform2fv(handle uniformHandle, const float* value)
 	{
 		// Set the uniform
 		if (nullptr != mDirect3DDevice9)
@@ -178,7 +178,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void ProgramHlsl::setUniform3fv(handle uniformHandle, const float *value)
+	void ProgramHlsl::setUniform3fv(handle uniformHandle, const float* value)
 	{
 		// Set the uniform
 		if (nullptr != mDirect3DDevice9)
@@ -187,7 +187,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void ProgramHlsl::setUniform4fv(handle uniformHandle, const float *value)
+	void ProgramHlsl::setUniform4fv(handle uniformHandle, const float* value)
 	{
 		// Set the uniform
 		if (nullptr != mDirect3DDevice9)
@@ -196,7 +196,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void ProgramHlsl::setUniformMatrix3fv(handle uniformHandle, const float *value)
+	void ProgramHlsl::setUniformMatrix3fv(handle uniformHandle, const float* value)
 	{
 		// Set the uniform
 		if (nullptr != mDirect3DDevice9)
@@ -205,7 +205,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void ProgramHlsl::setUniformMatrix4fv(handle uniformHandle, const float *value)
+	void ProgramHlsl::setUniformMatrix4fv(handle uniformHandle, const float* value)
 	{
 		// Set the uniform
 		if (nullptr != mDirect3DDevice9)

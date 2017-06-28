@@ -38,7 +38,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage) :
+	IndexBuffer::IndexBuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data, Renderer::BufferUsage) :
 		IIndexBuffer(direct3D12Renderer),
 		mD3D12Resource(nullptr)
 	{
@@ -127,7 +127,7 @@ namespace Direct3D12Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	#if !defined(DIRECT3D12RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
-		void IndexBuffer::setDebugName(const char *name)
+		void IndexBuffer::setDebugName(const char* name)
 		{
 			// Valid Direct3D 12 index buffer?
 			if (nullptr != mD3D12Resource)

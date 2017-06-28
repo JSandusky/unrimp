@@ -41,7 +41,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramSeparateDsa::ProgramSeparateDsa(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate) :
+	ProgramSeparateDsa::ProgramSeparateDsa(OpenGLRenderer& openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate* vertexShaderSeparate, TessellationControlShaderSeparate* tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate* tessellationEvaluationShaderSeparate, GeometryShaderSeparate* geometryShaderSeparate, FragmentShaderSeparate* fragmentShaderSeparate) :
 		ProgramSeparate(openGLRenderer, rootSignature, vertexShaderSeparate, tessellationControlShaderSeparate, tessellationEvaluationShaderSeparate, geometryShaderSeparate, fragmentShaderSeparate)
 	{
 		// Nothing here
@@ -68,7 +68,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void ProgramSeparateDsa::setUniform2fv(handle uniformHandle, const float *value)
+	void ProgramSeparateDsa::setUniform2fv(handle uniformHandle, const float* value)
 	{
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
 		{
@@ -80,7 +80,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void ProgramSeparateDsa::setUniform3fv(handle uniformHandle, const float *value)
+	void ProgramSeparateDsa::setUniform3fv(handle uniformHandle, const float* value)
 	{
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
 		{
@@ -92,7 +92,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void ProgramSeparateDsa::setUniform4fv(handle uniformHandle, const float *value)
+	void ProgramSeparateDsa::setUniform4fv(handle uniformHandle, const float* value)
 	{
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
 		{
@@ -104,7 +104,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void ProgramSeparateDsa::setUniformMatrix3fv(handle uniformHandle, const float *value)
+	void ProgramSeparateDsa::setUniformMatrix3fv(handle uniformHandle, const float* value)
 	{
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
 		{
@@ -116,7 +116,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void ProgramSeparateDsa::setUniformMatrix4fv(handle uniformHandle, const float *value)
+	void ProgramSeparateDsa::setUniformMatrix4fv(handle uniformHandle, const float* value)
 	{
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
 		{

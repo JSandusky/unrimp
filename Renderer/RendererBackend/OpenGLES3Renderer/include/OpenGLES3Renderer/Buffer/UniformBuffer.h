@@ -75,7 +75,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		UniformBuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage);
+		UniformBuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage);
 
 		/**
 		*  @brief
@@ -99,15 +99,7 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected data                                        ]
-	//[-------------------------------------------------------]
-	protected:
-		uint32_t mOpenGLES3UniformBuffer;	///< OpenGL ES 3 uniform buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		uint32_t mBufferSize;				///< Holds the size of the buffer
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 
 	//[-------------------------------------------------------]
@@ -116,6 +108,14 @@ namespace OpenGLES3Renderer
 	private:
 		explicit UniformBuffer(const UniformBuffer& source) = delete;
 		UniformBuffer& operator =(const UniformBuffer& source) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		uint32_t mOpenGLES3UniformBuffer;	///< OpenGL ES 3 uniform buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mBufferSize;				///< Holds the size of the buffer
 
 
 	};

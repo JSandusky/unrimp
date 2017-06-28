@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArrayDsa::Texture2DArrayDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	Texture2DArrayDsa::Texture2DArrayDsa(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		Texture2DArray(openGLRenderer, width, height, numberOfSlices)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
@@ -61,6 +61,12 @@ namespace OpenGLRenderer
 		{
 			glGenTextures(1, &mOpenGLTexture);
 		}
+
+		// TODO(co) Add support for user provided mipmaps
+		// Data layout: The renderer interface provides: CRN and KTX files are organized in mip-major order, like this:
+		//   Mip0: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+		//   Mip1: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+		//   etc.
 
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
 		if (isArbDsa)

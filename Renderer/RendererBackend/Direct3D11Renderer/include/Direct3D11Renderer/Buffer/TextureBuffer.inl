@@ -28,12 +28,12 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D11Buffer *TextureBuffer::getD3D11Buffer() const
+	inline ID3D11Buffer* TextureBuffer::getD3D11Buffer() const
 	{
 		return mD3D11Buffer;
 	}
 
-	inline ID3D11ShaderResourceView *TextureBuffer::getD3D11ShaderResourceView() const
+	inline ID3D11ShaderResourceView* TextureBuffer::getD3D11ShaderResourceView() const
 	{
 		return mD3D11ShaderResourceViewTexture;
 	}

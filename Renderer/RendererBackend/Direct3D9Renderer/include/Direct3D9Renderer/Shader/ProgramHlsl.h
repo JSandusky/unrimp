@@ -79,7 +79,7 @@ namespace Direct3D9Renderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramHlsl(Direct3D9Renderer &rendererDirect3D9, VertexShaderHlsl *vertexShaderHlsl, FragmentShaderHlsl *fragmentShaderHlsl);
+		ProgramHlsl(Direct3D9Renderer& rendererDirect3D9, VertexShaderHlsl* vertexShaderHlsl, FragmentShaderHlsl* fragmentShaderHlsl);
 
 		/**
 		*  @brief
@@ -94,7 +94,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    The HLSL vertex shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline VertexShaderHlsl *getVertexShaderHlsl() const;
+		inline VertexShaderHlsl* getVertexShaderHlsl() const;
 
 		/**
 		*  @brief
@@ -103,27 +103,27 @@ namespace Direct3D9Renderer
 		*  @return
 		*    The HLSL fragment shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline FragmentShaderHlsl *getFragmentShaderHlsl() const;
+		inline FragmentShaderHlsl* getFragmentShaderHlsl() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	public:
-		virtual handle getUniformHandle(const char *uniformName) override;
+		virtual handle getUniformHandle(const char* uniformName) override;
 		virtual void setUniform1f(handle uniformHandle, float value) override;
-		virtual void setUniform2fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform4fv(handle uniformHandle, const float *value) override;
-		virtual void setUniformMatrix3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniformMatrix4fv(handle uniformHandle, const float *value) override;
+		virtual void setUniform2fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform4fv(handle uniformHandle, const float* value) override;
+		virtual void setUniformMatrix3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniformMatrix4fv(handle uniformHandle, const float* value) override;
 
 
 	//[-------------------------------------------------------]
@@ -138,13 +138,13 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D9Renderer  *mDirect3D9Renderer;		///< Owner Direct3D 9 renderer instance, always valid
-		VertexShaderHlsl   *mVertexShaderHlsl;		///< Vertex shader the program is using (we keep a reference to it), can be a null pointer
-		FragmentShaderHlsl *mFragmentShaderHlsl;	///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
-		IDirect3DDevice9   *mDirect3DDevice9;		///< The Direct3D 9 device instance (we keep a reference to it), can be a null pointer
-		ID3DXConstantTable *mD3DXConstantTable;		/**< The Direct3D 9 constant table instance (we keep a reference to it), null pointer on horrible error (so we don't check).
+		Direct3D9Renderer*  mDirect3D9Renderer;		///< Owner Direct3D 9 renderer instance, always valid
+		VertexShaderHlsl*   mVertexShaderHlsl;		///< Vertex shader the program is using (we keep a reference to it), can be a null pointer
+		FragmentShaderHlsl* mFragmentShaderHlsl;	///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
+		IDirect3DDevice9*   mDirect3DDevice9;		///< The Direct3D 9 device instance (we keep a reference to it), can be a null pointer
+		ID3DXConstantTable* mD3DXConstantTable;		/**< The Direct3D 9 constant table instance (we keep a reference to it), null pointer on horrible error (so we don't check).
 														 I noticed that as soon as working with "D3DXHANDLE", we no longer need to make a difference between vertex/pixel shaders.
-														 I was unable to find this behaviour within the documentation, but it simplifies the implementation so I exploid it in here. */
+														 I was unable to find this behaviour within the documentation, but it simplifies the implementation so I exploit it in here. */
 
 
 	};

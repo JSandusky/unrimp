@@ -175,7 +175,7 @@ namespace
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					char *informationLog = new char[static_cast<uint32_t>(informationLength)];
+					char* informationLog = new char[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
 					OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
@@ -207,7 +207,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const char *ShaderLanguageSeparate::NAME = "GLSL";
+	const char* ShaderLanguageSeparate::NAME = "GLSL";
 
 
 	//[-------------------------------------------------------]
@@ -287,7 +287,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	uint32_t ShaderLanguageSeparate::loadShaderProgramFromSourceCode(uint32_t shaderType, const char *sourceCode)
+	uint32_t ShaderLanguageSeparate::loadShaderProgramFromSourceCode(uint32_t shaderType, const char* sourceCode)
 	{
 		// Create the shader program
 		const GLuint openGLProgram = glCreateShaderProgramv(shaderType, 1, &sourceCode);
@@ -390,7 +390,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ShaderLanguageSeparate::ShaderLanguageSeparate(OpenGLRenderer &openGLRenderer) :
+	ShaderLanguageSeparate::ShaderLanguageSeparate(OpenGLRenderer& openGLRenderer) :
 		IShaderLanguage(openGLRenderer)
 	{
 		// Nothing here
@@ -412,12 +412,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShaderLanguage methods      ]
 	//[-------------------------------------------------------]
-	const char *ShaderLanguageSeparate::getShaderLanguageName() const
+	const char* ShaderLanguageSeparate::getShaderLanguageName() const
 	{
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageSeparate::createVertexShaderFromBytecode(const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderBytecode& shaderBytecode)
+	Renderer::IVertexShader* ShaderLanguageSeparate::createVertexShaderFromBytecode(const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
@@ -433,7 +433,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IVertexShader *ShaderLanguageSeparate::createVertexShaderFromSourceCode(const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::IVertexShader* ShaderLanguageSeparate::createVertexShaderFromSourceCode(const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
@@ -449,10 +449,10 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageSeparate::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
+	Renderer::ITessellationControlShader* ShaderLanguageSeparate::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's tessellation support
-		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_tessellation_shader() && extensions.isGL_ARB_gl_spirv())
 		{
@@ -465,10 +465,10 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageSeparate::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::ITessellationControlShader* ShaderLanguageSeparate::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// Check whether or not there's tessellation support
-		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_tessellation_shader())
 		{
@@ -481,10 +481,10 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageSeparate::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
+	Renderer::ITessellationEvaluationShader* ShaderLanguageSeparate::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's tessellation support
-		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_tessellation_shader() && extensions.isGL_ARB_gl_spirv())
 		{
@@ -497,10 +497,10 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageSeparate::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::ITessellationEvaluationShader* ShaderLanguageSeparate::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// Check whether or not there's tessellation support
-		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_tessellation_shader())
 		{
@@ -513,10 +513,10 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageSeparate::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices)
+	Renderer::IGeometryShader* ShaderLanguageSeparate::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices)
 	{
 		// Check whether or not there's geometry shader support
-		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_geometry_shader4() && extensions.isGL_ARB_gl_spirv())
 		{
@@ -533,10 +533,10 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageSeparate::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::IGeometryShader* ShaderLanguageSeparate::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// Check whether or not there's geometry shader support
-		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_geometry_shader4())
 		{
@@ -553,10 +553,10 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageSeparate::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
+	Renderer::IFragmentShader* ShaderLanguageSeparate::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Check whether or not there's fragment shader support
-		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_fragment_shader() && extensions.isGL_ARB_gl_spirv())
 		{
@@ -569,10 +569,10 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageSeparate::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
+	Renderer::IFragmentShader* ShaderLanguageSeparate::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// Check whether or not there's fragment shader support
-		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_fragment_shader())
 		{
@@ -585,9 +585,9 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IProgram *ShaderLanguageSeparate::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes&, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
+	Renderer::IProgram* ShaderLanguageSeparate::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes&, Renderer::IVertexShader* vertexShader, Renderer::ITessellationControlShader* tessellationControlShader, Renderer::ITessellationEvaluationShader* tessellationEvaluationShader, Renderer::IGeometryShader* geometryShader, Renderer::IFragmentShader* fragmentShader)
 	{
-		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 
 		// A shader can be a null pointer, but if it's not the shader and program language must match!
 		// -> Optimization: Comparing the shader language name by directly comparing the pointer address of

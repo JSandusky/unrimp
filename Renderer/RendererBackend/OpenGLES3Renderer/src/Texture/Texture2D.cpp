@@ -37,7 +37,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(OpenGLES3Renderer &openGLES3Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	Texture2D::Texture2D(OpenGLES3Renderer& openGLES3Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		ITexture2D(openGLES3Renderer, width, height),
 		mOpenGLES3Texture(0),
 		mGenerateMipmaps(false)

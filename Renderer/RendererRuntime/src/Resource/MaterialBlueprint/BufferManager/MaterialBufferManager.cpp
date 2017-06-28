@@ -156,7 +156,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialBufferManager::fillCommandBuffer(MaterialBufferSlot& materialBufferSlot, Renderer::CommandBuffer& commandBuffer)
+	bool MaterialBufferManager::fillCommandBuffer(MaterialBufferSlot& materialBufferSlot, Renderer::CommandBuffer& commandBuffer)
 	{
 		if (mLastBoundPool != materialBufferSlot.mAssignedMaterialPool)
 		{
@@ -165,7 +165,13 @@ namespace RendererRuntime
 			const MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
 			assert(nullptr != materialUniformBuffer);
 			Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, materialUniformBuffer->rootParameterIndex, mLastBoundPool->uniformBuffer);
+
+			// Assigned material pool change
+			return true;
 		}
+
+		// No assigned material pool change
+		return false;
 	}
 
 

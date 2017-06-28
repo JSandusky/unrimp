@@ -63,7 +63,7 @@
 #else
 	#define OPENGLES3RENDERER_API_EXPORT
 #endif
-OPENGLES3RENDERER_API_EXPORT Renderer::IRenderer *createOpenGLES3RendererInstance(handle nativeWindowHandle, bool useExternalContext)
+OPENGLES3RENDERER_API_EXPORT Renderer::IRenderer* createOpenGLES3RendererInstance(handle nativeWindowHandle, bool useExternalContext)
 {
 	return new OpenGLES3Renderer::OpenGLES3Renderer(nativeWindowHandle, useExternalContext);
 }
@@ -739,7 +739,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLES3Renderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
+	void OpenGLES3Renderer::iaSetVertexArray(Renderer::IVertexArray* vertexArray)
 	{
 		// New vertex array?
 		if (mVertexArray != vertexArray)
@@ -790,7 +790,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLES3Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
+	void OpenGLES3Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
@@ -819,7 +819,7 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	void OpenGLES3Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void OpenGLES3Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
@@ -852,7 +852,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
-	void OpenGLES3Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
+	void OpenGLES3Renderer::omSetRenderTarget(Renderer::IRenderTarget* renderTarget)
 	{
 		// New render target?
 		if (mRenderTarget != renderTarget)
@@ -902,7 +902,7 @@ namespace OpenGLES3Renderer
 					case Renderer::ResourceType::FRAMEBUFFER:
 					{
 						// Get the OpenGL ES 3 framebuffer instance
-						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+						Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 						// Bind the OpenGL ES 3 framebuffer
 						glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->getOpenGLES3Framebuffer());
@@ -1175,7 +1175,7 @@ namespace OpenGLES3Renderer
 		if (nullptr != mVertexArray && numberOfDraws > 0)
 		{
 			// Get the used index buffer
-			IndexBuffer *indexBuffer = mVertexArray->getIndexBuffer();
+			IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
 			if (nullptr != indexBuffer)
 			{
 				assert(nullptr != emulationData);
@@ -1260,7 +1260,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLES3Renderer::setDebugMarker(const char *)
+	void OpenGLES3Renderer::setDebugMarker(const char*)
 	{
 		// TODO(co) Implement me. See
 		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
@@ -1268,7 +1268,7 @@ namespace OpenGLES3Renderer
 		// - https://www.opengl.org/registry/specs/KHR/debug.txt
 	}
 
-	void OpenGLES3Renderer::beginDebugEvent(const char *)
+	void OpenGLES3Renderer::beginDebugEvent(const char*)
 	{
 		// TODO(co) Implement me. See
 		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
@@ -1288,7 +1288,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]
 	//[-------------------------------------------------------]
-	const char *OpenGLES3Renderer::getName() const
+	const char* OpenGLES3Renderer::getName() const
 	{
 		return "OpenGLES3";
 	}
@@ -1307,7 +1307,7 @@ namespace OpenGLES3Renderer
 		return false;
 	}
 
-	Renderer::ISwapChain *OpenGLES3Renderer::getMainSwapChain() const
+	Renderer::ISwapChain* OpenGLES3Renderer::getMainSwapChain() const
 	{
 		return mMainSwapChain;
 	}
@@ -1321,7 +1321,7 @@ namespace OpenGLES3Renderer
 		return 1;
 	}
 
-	const char *OpenGLES3Renderer::getShaderLanguageName(uint32_t index) const
+	const char* OpenGLES3Renderer::getShaderLanguageName(uint32_t index) const
 	{
 		// Evaluate the provided index
 		switch (index)
@@ -1334,7 +1334,7 @@ namespace OpenGLES3Renderer
 		return nullptr;
 	}
 
-	Renderer::IShaderLanguage *OpenGLES3Renderer::getShaderLanguage(const char *shaderLanguageName)
+	Renderer::IShaderLanguage* OpenGLES3Renderer::getShaderLanguage(const char* shaderLanguageName)
 	{
 		// In case "shaderLanguage" is a null pointer, use the default shader language
 		if (nullptr != shaderLanguageName)
@@ -1365,39 +1365,39 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain *OpenGLES3Renderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::ISwapChain* OpenGLES3Renderer::createSwapChain(handle nativeWindowHandle, bool)
 	{
 		// The provided native window handle must not be a null handle
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *OpenGLES3Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment)
+	Renderer::IFramebuffer* OpenGLES3Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
 	{
 		// Validation is done inside the framebuffer implementation
 		return new Framebuffer(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
-	Renderer::IBufferManager *OpenGLES3Renderer::createBufferManager()
+	Renderer::IBufferManager* OpenGLES3Renderer::createBufferManager()
 	{
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITextureManager *OpenGLES3Renderer::createTextureManager()
+	Renderer::ITextureManager* OpenGLES3Renderer::createTextureManager()
 	{
 		return new TextureManager(*this);
 	}
 
-	Renderer::IRootSignature *OpenGLES3Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
+	Renderer::IRootSignature* OpenGLES3Renderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
 		return new RootSignature(*this, rootSignature);
 	}
 
-	Renderer::IPipelineState *OpenGLES3Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
+	Renderer::IPipelineState* OpenGLES3Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::ISamplerState *OpenGLES3Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
+	Renderer::ISamplerState* OpenGLES3Renderer::createSamplerState(const Renderer::SamplerState& samplerState)
 	{
 		return new SamplerState(*this, samplerState);
 	}
@@ -1457,7 +1457,7 @@ namespace OpenGLES3Renderer
 				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
 				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
+				ID3D11Resource* d3d11Resource = nullptr;
 				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
 				if (nullptr != d3d11Resource)
 				{
@@ -1486,7 +1486,7 @@ namespace OpenGLES3Renderer
 				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
 				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
+				ID3D11Resource* d3d11Resource = nullptr;
 				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
 				if (nullptr != d3d11Resource)
 				{
@@ -1546,16 +1546,20 @@ namespace OpenGLES3Renderer
 		switch (resource.getResourceType())
 		{
 			case Renderer::ResourceType::INDEX_BUFFER:
-				return ::detail::unmapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING, static_cast<IndexBuffer&>(resource).getOpenGLES3ElementArrayBuffer());
+				::detail::unmapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING, static_cast<IndexBuffer&>(resource).getOpenGLES3ElementArrayBuffer());
+				break;
 
 			case Renderer::ResourceType::VERTEX_BUFFER:
-				return ::detail::unmapBuffer(GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING, static_cast<VertexBuffer&>(resource).getOpenGLES3ArrayBuffer());
+				::detail::unmapBuffer(GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING, static_cast<VertexBuffer&>(resource).getOpenGLES3ArrayBuffer());
+				break;
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
-				return ::detail::unmapBuffer(GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, static_cast<UniformBuffer&>(resource).getOpenGLES3UniformBuffer());
+				::detail::unmapBuffer(GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, static_cast<UniformBuffer&>(resource).getOpenGLES3UniformBuffer());
+				break;
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-				return ::detail::unmapBuffer(GL_TEXTURE_BUFFER_EXT, GL_TEXTURE_BINDING_BUFFER_EXT, static_cast<TextureBuffer&>(resource).getOpenGLES3TextureBuffer());
+				::detail::unmapBuffer(GL_TEXTURE_BUFFER_EXT, GL_TEXTURE_BINDING_BUFFER_EXT, static_cast<TextureBuffer&>(resource).getOpenGLES3TextureBuffer());
+				break;
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
 				// Nothing here, it's a software emulated indirect buffer
@@ -1572,7 +1576,7 @@ namespace OpenGLES3Renderer
 				// TODO(co) Implement me
 				/*
 				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
+				ID3D11Resource* d3d11Resource = nullptr;
 				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
 				if (nullptr != d3d11Resource)
 				{
@@ -1591,7 +1595,7 @@ namespace OpenGLES3Renderer
 				// TODO(co) Implement me
 				/*
 				// Get the Direct3D 11 resource instance
-				ID3D11Resource *d3d11Resource = nullptr;
+				ID3D11Resource* d3d11Resource = nullptr;
 				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
 				if (nullptr != d3d11Resource)
 				{
@@ -1694,7 +1698,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
-	void OpenGLES3Renderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char *message, const void *)
+	void OpenGLES3Renderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void*)
 	{
 		// Source to string
 		char debugSource[20 + 1]{0};	// +1 for terminating zero
@@ -1840,7 +1844,7 @@ namespace OpenGLES3Renderer
 		}
 
 		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-		mCapabilities.maximumIndirectBufferSize = sizeof(Renderer::DrawIndexedInstancedArguments) * 4096;	// TODO(co) What is an usually decent emulated indirect buffer size?
+		mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 		// Maximum number of multisamples (always at least 1, usually 8)
 		mCapabilities.maximumNumberOfMultisamples = 1;	// Don't want to support the legacy OpenGL ES 3 multisample support
@@ -1881,7 +1885,7 @@ namespace OpenGLES3Renderer
 		mCapabilities.fragmentShader = true;
 	}
 
-	void OpenGLES3Renderer::setProgram(Renderer::IProgram *program)
+	void OpenGLES3Renderer::setProgram(Renderer::IProgram* program)
 	{
 		if (nullptr != program)
 		{

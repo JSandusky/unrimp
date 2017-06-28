@@ -28,7 +28,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D10SamplerState *SamplerState::getD3D10SamplerState() const
+	inline ID3D10SamplerState* SamplerState::getD3D10SamplerState() const
 	{
 		return mD3D10SamplerState;
 	}

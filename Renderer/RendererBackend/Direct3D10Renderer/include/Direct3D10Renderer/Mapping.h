@@ -85,7 +85,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    Direct3D 10 usage (type "D3D10_USAGE" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getDirect3D10UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t &cpuAccessFlags);
+		static uint32_t getDirect3D10UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t& cpuAccessFlags);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]

@@ -28,7 +28,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3DBlob *GeometryShaderHlsl::getD3DBlobGeometryShader() const
+	inline ID3DBlob* GeometryShaderHlsl::getD3DBlobGeometryShader() const
 	{
 		return mD3DBlobGeometryShader;
 	}

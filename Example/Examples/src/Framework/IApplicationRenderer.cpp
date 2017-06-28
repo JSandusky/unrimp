@@ -31,7 +31,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-IApplicationRenderer::IApplicationRenderer(const char *rendererName, ExampleBase* example) :
+IApplicationRenderer::IApplicationRenderer(const char* rendererName, ExampleBase* example) :
 	IApplication(rendererName),
 	mRendererInstance(nullptr),
 	mRenderer(nullptr),
@@ -95,7 +95,7 @@ void IApplicationRenderer::onResize()
 	if (nullptr != mRenderer)
 	{
 		// Get the main swap chain
-		Renderer::ISwapChain *swapChain = mRenderer->getMainSwapChain();
+		Renderer::ISwapChain* swapChain = mRenderer->getMainSwapChain();
 		if (nullptr != swapChain)
 		{
 			// Inform the swap chain that the size of the native window was changed
@@ -112,7 +112,7 @@ void IApplicationRenderer::onToggleFullscreenState()
 	if (nullptr != mRenderer)
 	{
 		// Get the main swap chain
-		Renderer::ISwapChain *swapChain = mRenderer->getMainSwapChain();
+		Renderer::ISwapChain* swapChain = mRenderer->getMainSwapChain();
 		if (nullptr != swapChain)
 		{
 			// Toggle the fullscreen state
@@ -229,7 +229,7 @@ void IApplicationRenderer::onDrawRequest()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
+IApplicationRenderer::IApplicationRenderer(const char* rendererName) :
 	IApplicationRenderer(rendererName, nullptr)
 {
 	// Nothing here
@@ -264,14 +264,14 @@ void IApplicationRenderer::deinitializeExample()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-Renderer::IRenderer *IApplicationRenderer::createRendererInstance(const char *rendererName)
+Renderer::IRenderer* IApplicationRenderer::createRendererInstance(const char* rendererName)
 {
 	// Is the given pointer valid?
 	if (nullptr != rendererName)
 	{
 		mRendererInstance = new Renderer::RendererInstance(rendererName, getNativeWindowHandle());
 	}
-	Renderer::IRenderer *renderer = (nullptr != mRendererInstance) ? mRendererInstance->getRenderer() : nullptr;
+	Renderer::IRenderer* renderer = (nullptr != mRendererInstance) ? mRendererInstance->getRenderer() : nullptr;
 
 	// Is the renderer instance is properly initialized?
 	if (nullptr != renderer && !renderer->isInitialized())

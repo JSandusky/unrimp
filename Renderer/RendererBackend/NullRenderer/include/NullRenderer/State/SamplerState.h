@@ -68,7 +68,7 @@ namespace NullRenderer
 		*  @param[in] nullRenderer
 		*    Owner null renderer instance
 		*/
-		explicit SamplerState(NullRenderer &nullRenderer);
+		explicit SamplerState(NullRenderer& nullRenderer);
 
 		/**
 		*  @brief

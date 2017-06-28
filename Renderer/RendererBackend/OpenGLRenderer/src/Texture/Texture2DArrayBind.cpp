@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArrayBind::Texture2DArrayBind(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
+	Texture2DArrayBind::Texture2DArrayBind(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		Texture2DArray(openGLRenderer, width, height, numberOfSlices)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
@@ -60,6 +60,12 @@ namespace OpenGLRenderer
 
 		// Make this OpenGL texture instance to the currently used one
 		glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, mOpenGLTexture);
+
+		// TODO(co) Add support for user provided mipmaps
+		// Data layout: The renderer interface provides: CRN and KTX files are organized in mip-major order, like this:
+		//   Mip0: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+		//   Mip1: Slice0, Slice1, Slice2, Slice3, Slice4, Slice5
+		//   etc.
 
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
 		glTexImage3DEXT(GL_TEXTURE_2D_ARRAY_EXT, 0, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
@@ -87,7 +93,7 @@ namespace OpenGLRenderer
 
 	Texture2DArrayBind::~Texture2DArrayBind()
 	{
-		// Nothign to do in here
+		// Nothing to do in here
 	}
 
 

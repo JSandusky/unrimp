@@ -103,7 +103,7 @@ namespace OpenGLRenderer
 		*  @param[in] numberOfSlices
 		*    The number of slices
 		*/
-		Texture2DArray(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices);
+		Texture2DArray(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices);
 
 
 	//[-------------------------------------------------------]

@@ -37,7 +37,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerState::SamplerState(Direct3D10Renderer &direct3D10Renderer, const Renderer::SamplerState &samplerState) :
+	SamplerState::SamplerState(Direct3D10Renderer& direct3D10Renderer, const Renderer::SamplerState& samplerState) :
 		ISamplerState(direct3D10Renderer),
 		mD3D10SamplerState(nullptr)
 	{
@@ -68,7 +68,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void SamplerState::setDebugName(const char *name)
+	void SamplerState::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			// Valid Direct3D 10 sampler state?

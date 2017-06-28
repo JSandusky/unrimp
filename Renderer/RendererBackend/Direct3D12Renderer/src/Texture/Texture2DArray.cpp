@@ -146,7 +146,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Texture2DArray::setDebugName(const char *)
+	void Texture2DArray::setDebugName(const char*)
 	{
 		// TODO(co) Direct3D 12 update
 		/*

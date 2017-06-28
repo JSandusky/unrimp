@@ -72,7 +72,7 @@ namespace Direct3D9Renderer
 		*  @param[in] rootSignature
 		*    Root signature to use
 		*/
-		RootSignature(Direct3D9Renderer &direct3D9Renderer, const Renderer::RootSignature &rootSignature);
+		RootSignature(Direct3D9Renderer& direct3D9Renderer, const Renderer::RootSignature& rootSignature);
 
 		/**
 		*  @brief

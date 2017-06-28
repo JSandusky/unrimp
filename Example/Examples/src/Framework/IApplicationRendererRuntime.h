@@ -74,7 +74,7 @@ public:
 	*  @param[in] exampleBase
 	*    Pointer to an example which should be used
 	*/
-	explicit IApplicationRendererRuntime(const char *rendererName, ExampleBase* exampleBase);
+	explicit IApplicationRendererRuntime(const char* rendererName, ExampleBase* exampleBase);
 
 	/**
 	*  @brief
@@ -94,7 +94,7 @@ public:
 	*  @return
 	*    The renderer runtime instance, can be a null pointer
 	*/
-	virtual RendererRuntime::IRendererRuntime *getRendererRuntime() const override;
+	virtual RendererRuntime::IRendererRuntime* getRendererRuntime() const override;
 
 	/**
 	*  @brief
@@ -112,7 +112,7 @@ public:
 	*    the renderer toolkit shared library is not there, this method will return a null pointer. This is a developer-feature
 	*    and as such, it's not available in static builds which are meant for the end-user who e.g. just want to "play the game".
 	*/
-	virtual RendererToolkit::IRendererToolkit *getRendererToolkit() override;
+	virtual RendererToolkit::IRendererToolkit* getRendererToolkit() override;
 
 
 //[-------------------------------------------------------]
@@ -136,7 +136,7 @@ protected:
 	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
 	*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 	*/
-	explicit IApplicationRendererRuntime(const char *rendererName);
+	explicit IApplicationRendererRuntime(const char* rendererName);
 
 
 //[-------------------------------------------------------]

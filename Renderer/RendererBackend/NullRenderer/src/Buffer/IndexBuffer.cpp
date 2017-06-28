@@ -34,7 +34,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(NullRenderer &nullRenderer) :
+	IndexBuffer::IndexBuffer(NullRenderer& nullRenderer) :
 		IIndexBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here

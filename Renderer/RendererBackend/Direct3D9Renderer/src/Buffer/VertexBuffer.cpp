@@ -38,7 +38,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
+	VertexBuffer::VertexBuffer(Direct3D9Renderer& direct3D9Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
 		IVertexBuffer(direct3D9Renderer),
 		mDirect3DVertexBuffer9(nullptr)
 	{
@@ -48,7 +48,7 @@ namespace Direct3D9Renderer
 		// Copy the data, if required
 		if (nullptr != data)
 		{
-			void *vertices = nullptr;
+			void* vertices = nullptr;
 			if (SUCCEEDED(mDirect3DVertexBuffer9->Lock(0, numberOfBytes, static_cast<void**>(&vertices), 0)))
 			{
 				memcpy(vertices, data, numberOfBytes);
@@ -75,7 +75,7 @@ namespace Direct3D9Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	#if !defined(DIRECT3D9RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
-		void VertexBuffer::setDebugName(const char *name)
+		void VertexBuffer::setDebugName(const char* name)
 		{
 			// Valid Direct3D 9 vertex buffer?
 			if (nullptr != mDirect3DVertexBuffer9)

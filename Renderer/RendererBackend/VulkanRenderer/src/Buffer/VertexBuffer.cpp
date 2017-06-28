@@ -35,7 +35,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(VulkanRenderer &vulkanRenderer, uint32_t, const void*, Renderer::BufferUsage) :
+	VertexBuffer::VertexBuffer(VulkanRenderer& vulkanRenderer, uint32_t, const void*, Renderer::BufferUsage) :
 		IVertexBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
 		// TODO(co) Implement me

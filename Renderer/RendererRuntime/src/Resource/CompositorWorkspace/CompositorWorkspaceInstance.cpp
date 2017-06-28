@@ -35,6 +35,7 @@
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorInstancePassShadowMap.h"
 #include "RendererRuntime/Resource/CompositorNode/Pass/ShadowMap/CompositorResourcePassShadowMap.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/IndirectBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
@@ -43,7 +44,6 @@
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h"
-#include "RendererRuntime/RenderQueue/IndirectBufferManager.h"
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
 #include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
 #include "RendererRuntime/Vr/IVrManager.h"
@@ -64,7 +64,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorWorkspaceInstance::CompositorWorkspaceInstance(IRendererRuntime& rendererRuntime, AssetId compositorWorkspaceAssetId) :
 		mRendererRuntime(rendererRuntime),
-		mIndirectBufferManager(*(new IndirectBufferManager(rendererRuntime))),
 		mNumberOfMultisamples(1),
 		mCurrentlyUsedNumberOfMultisamples(1),
 		mResolutionScale(1.0f),
@@ -82,7 +81,6 @@ namespace RendererRuntime
 	{
 		// Cleanup
 		destroySequentialCompositorNodeInstances();
-		delete &mIndirectBufferManager;
 	}
 
 	void CompositorWorkspaceInstance::setNumberOfMultisamples(uint8_t numberOfMultisamples)
@@ -237,6 +235,7 @@ namespace RendererRuntime
 				{ // Submit command buffer to the renderer backend
 					// The command buffer is about to be submitted, inform everyone who cares about this
 					materialBlueprintResourceManager.getInstanceBufferManager().onPreCommandBufferExecution();
+					materialBlueprintResourceManager.getIndirectBufferManager().onPreCommandBufferExecution();
 
 					// Submit command buffer to the renderer backend
 					mCommandBuffer.submitAndClear(renderer);
@@ -257,7 +256,6 @@ namespace RendererRuntime
 							}
 						}
 					}
-					mIndirectBufferManager.onPostCommandBufferExecution();
 				}
 
 				// End scene rendering

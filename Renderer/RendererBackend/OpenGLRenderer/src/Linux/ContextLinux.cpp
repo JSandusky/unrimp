@@ -93,7 +93,7 @@ namespace OpenGLRenderer
 
 	// TODO(co) Cleanup
 	static bool ctxErrorOccurred = false;
-	static int ctxErrorHandler(Display *, XErrorEvent *)
+	static int ctxErrorHandler(Display*, XErrorEvent*)
 	{
 		ctxErrorOccurred = true;
 		return 0;
@@ -244,7 +244,7 @@ namespace OpenGLRenderer
 		#define GLX_CONTEXT_MINOR_VERSION_ARB	0x2092
 
 		// Get the available GLX extensions as string
-		const char *extensions = glXQueryExtensionsString(mDisplay, XDefaultScreen(mDisplay));
+		const char* extensions = glXQueryExtensionsString(mDisplay, XDefaultScreen(mDisplay));
 
 		// Check whether or not "GLX_ARB_create_context" is a substring of the GLX extension string meaning that this OpenGL extension is supported
 		if (nullptr != strstr(extensions, "GLX_ARB_create_context"))
@@ -290,7 +290,7 @@ namespace OpenGLRenderer
 					GLX_STENCIL_SIZE,	8,
 					None
 				};
-				GLXFBConfig *fbc = glXChooseFBConfig(mDisplay, DefaultScreen(mDisplay), visualAttributes, &numberOfElements);
+				GLXFBConfig* fbc = glXChooseFBConfig(mDisplay, DefaultScreen(mDisplay), visualAttributes, &numberOfElements);
 				std::cout << "Renderer: Got " << numberOfElements << " of FBCOnfig\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 				GLXContext glxContext = glXCreateContextAttribsARB(mDisplay, *fbc, 0, true, ATTRIBUTES);
 

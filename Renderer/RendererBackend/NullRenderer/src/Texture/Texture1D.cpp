@@ -34,7 +34,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture1D::Texture1D(NullRenderer &nullRenderer, uint32_t width) :
+	Texture1D::Texture1D(NullRenderer& nullRenderer, uint32_t width) :
 		ITexture1D(reinterpret_cast<Renderer::IRenderer&>(nullRenderer), width)
 	{
 		// Nothing here

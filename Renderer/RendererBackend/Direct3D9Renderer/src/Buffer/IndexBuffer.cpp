@@ -38,7 +38,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
+	IndexBuffer::IndexBuffer(Direct3D9Renderer& direct3D9Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data, Renderer::BufferUsage bufferUsage) :
 		IIndexBuffer(direct3D9Renderer),
 		mDirect3DIndexBuffer9(nullptr)
 	{
@@ -55,7 +55,7 @@ namespace Direct3D9Renderer
 			// Copy the data, if required
 			if (nullptr != data)
 			{
-				void *indices = nullptr;
+				void* indices = nullptr;
 				if (SUCCEEDED(mDirect3DIndexBuffer9->Lock(0, numberOfBytes, static_cast<void**>(&indices), 0)))
 				{
 					memcpy(indices, data, numberOfBytes);
@@ -83,7 +83,7 @@ namespace Direct3D9Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	#if !defined(DIRECT3D9RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
-		void IndexBuffer::setDebugName(const char *name)
+		void IndexBuffer::setDebugName(const char* name)
 		{
 			// Valid Direct3D 9 index buffer?
 			if (nullptr != mDirect3DIndexBuffer9)

@@ -50,7 +50,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(OpenGLRenderer &openGLRenderer, IndexBuffer *indexBuffer, InternalResourceType::Enum internalResourceType) :
+	VertexArray::VertexArray(OpenGLRenderer& openGLRenderer, IndexBuffer* indexBuffer, InternalResourceType::Enum internalResourceType) :
 		IVertexArray(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mIndexBuffer(indexBuffer),
 		mInternalResourceType(internalResourceType)

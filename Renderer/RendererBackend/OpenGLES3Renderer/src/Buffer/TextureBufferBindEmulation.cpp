@@ -36,7 +36,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBufferBindEmulation::TextureBufferBindEmulation(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum, const void *data, Renderer::BufferUsage bufferUsage) :
+	TextureBufferBindEmulation::TextureBufferBindEmulation(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum, const void* data, Renderer::BufferUsage bufferUsage) :
 		TextureBuffer(openGLES3Renderer, numberOfBytes)
 	{
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
@@ -67,7 +67,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	void TextureBufferBindEmulation::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	void TextureBufferBindEmulation::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
 		assert(nullptr != data);

@@ -68,7 +68,7 @@ namespace NullRenderer
 		*  @param[in] nullRenderer
 		*    Owner null renderer instance
 		*/
-		explicit IndexBuffer(NullRenderer &nullRenderer);
+		explicit IndexBuffer(NullRenderer& nullRenderer);
 
 		/**
 		*  @brief

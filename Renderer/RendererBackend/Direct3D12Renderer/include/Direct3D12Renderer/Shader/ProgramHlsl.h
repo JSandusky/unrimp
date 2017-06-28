@@ -86,7 +86,7 @@ namespace Direct3D12Renderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramHlsl(Direct3D12Renderer &direct3D12Renderer, VertexShaderHlsl *vertexShaderHlsl, TessellationControlShaderHlsl *tessellationControlShaderHlsl, TessellationEvaluationShaderHlsl *tessellationEvaluationShaderHlsl, GeometryShaderHlsl *geometryShaderHlsl, FragmentShaderHlsl *fragmentShaderHlsl);
+		ProgramHlsl(Direct3D12Renderer& direct3D12Renderer, VertexShaderHlsl* vertexShaderHlsl, TessellationControlShaderHlsl* tessellationControlShaderHlsl, TessellationEvaluationShaderHlsl* tessellationEvaluationShaderHlsl, GeometryShaderHlsl* geometryShaderHlsl, FragmentShaderHlsl* fragmentShaderHlsl);
 
 		/**
 		*  @brief
@@ -101,7 +101,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The HLSL vertex shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline VertexShaderHlsl *getVertexShaderHlsl() const;
+		inline VertexShaderHlsl* getVertexShaderHlsl() const;
 
 		/**
 		*  @brief
@@ -110,7 +110,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The HLSL tessellation control shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline TessellationControlShaderHlsl *getTessellationControlShaderHlsl() const;
+		inline TessellationControlShaderHlsl* getTessellationControlShaderHlsl() const;
 
 		/**
 		*  @brief
@@ -119,7 +119,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The HLSL tessellation evaluation shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline TessellationEvaluationShaderHlsl *getTessellationEvaluationShaderHlsl() const;
+		inline TessellationEvaluationShaderHlsl* getTessellationEvaluationShaderHlsl() const;
 
 		/**
 		*  @brief
@@ -128,7 +128,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The HLSL geometry shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline GeometryShaderHlsl *getGeometryShaderHlsl() const;
+		inline GeometryShaderHlsl* getGeometryShaderHlsl() const;
 
 		/**
 		*  @brief
@@ -137,25 +137,25 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The HLSL fragment shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline FragmentShaderHlsl *getFragmentShaderHlsl() const;
+		inline FragmentShaderHlsl* getFragmentShaderHlsl() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	public:
-		virtual handle getUniformHandle(const char *uniformName) override;
+		virtual handle getUniformHandle(const char* uniformName) override;
 		virtual void setUniform1f(handle uniformHandle, float value) override;
-		virtual void setUniform2fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform3fv(handle uniformHandle, const float *value) override;
-		virtual void setUniform4fv(handle uniformHandle, const float *value) override;
+		virtual void setUniform2fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform3fv(handle uniformHandle, const float* value) override;
+		virtual void setUniform4fv(handle uniformHandle, const float* value) override;
 
 
 	//[-------------------------------------------------------]
@@ -172,7 +172,7 @@ namespace Direct3D12Renderer
 	private:
 		VertexShaderHlsl				 *mVertexShaderHlsl;					///< Vertex shader the program is using (we keep a reference to it), can be a null pointer
 		TessellationControlShaderHlsl	 *mTessellationControlShaderHlsl;		///< Tessellation control shader the program is using (we keep a reference to it), can be a null pointer
-		TessellationEvaluationShaderHlsl *mTessellationEvaluationShaderHlsl;	///< Tessellation evaluation shader the program is using (we keep a reference to it), can be a null pointer
+		TessellationEvaluationShaderHlsl* mTessellationEvaluationShaderHlsl;	///< Tessellation evaluation shader the program is using (we keep a reference to it), can be a null pointer
 		GeometryShaderHlsl				 *mGeometryShaderHlsl;					///< Geometry shader the program is using (we keep a reference to it), can be a null pointer
 		FragmentShaderHlsl				 *mFragmentShaderHlsl;					///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
 

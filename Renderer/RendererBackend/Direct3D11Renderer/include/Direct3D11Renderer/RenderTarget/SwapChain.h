@@ -73,7 +73,7 @@ namespace Direct3D11Renderer
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(Direct3D11Renderer &direct3D11Renderer, handle nativeWindowHandle);
+		SwapChain(Direct3D11Renderer& direct3D11Renderer, handle nativeWindowHandle);
 
 		/**
 		*  @brief
@@ -88,7 +88,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The DXGI swap chain instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IDXGISwapChain *getDxgiSwapChain() const;
+		inline IDXGISwapChain* getDxgiSwapChain() const;
 
 		/**
 		*  @brief
@@ -100,7 +100,7 @@ namespace Direct3D11Renderer
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		inline ID3D11RenderTargetView *getD3D11RenderTargetView() const;
+		inline ID3D11RenderTargetView* getD3D11RenderTargetView() const;
 
 		/**
 		*  @brief
@@ -112,21 +112,21 @@ namespace Direct3D11Renderer
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		inline ID3D11DepthStencilView *getD3D11DepthStencilView() const;
+		inline ID3D11DepthStencilView* getD3D11DepthStencilView() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -170,7 +170,7 @@ namespace Direct3D11Renderer
 		*  @note
 		*    - "mDxgiSwapChain" must be valid when calling this method
 		*/
-		void getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const;
+		void getSafeWidthAndHeight(uint32_t& width, uint32_t& height) const;
 
 		/**
 		*  @brief
@@ -183,9 +183,9 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDXGISwapChain		   *mDxgiSwapChain;			///< The DXGI swap chain instance, null pointer on error
-		ID3D11RenderTargetView *mD3D11RenderTargetView;	///< The Direct3D 11 render target view instance, null pointer on error
-		ID3D11DepthStencilView *mD3D11DepthStencilView;	///< The Direct3D 11 depth stencil view instance, null pointer on error
+		IDXGISwapChain*			mDxgiSwapChain;			///< The DXGI swap chain instance, null pointer on error
+		ID3D11RenderTargetView* mD3D11RenderTargetView;	///< The Direct3D 11 render target view instance, null pointer on error
+		ID3D11DepthStencilView* mD3D11DepthStencilView;	///< The Direct3D 11 depth stencil view instance, null pointer on error
 
 
 	};

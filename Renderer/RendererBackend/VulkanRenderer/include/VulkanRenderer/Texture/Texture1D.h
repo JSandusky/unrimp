@@ -77,7 +77,7 @@ namespace VulkanRenderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*/
-		Texture1D(VulkanRenderer &vulkanRenderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags);
+		Texture1D(VulkanRenderer& vulkanRenderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags);
 
 		/**
 		*  @brief

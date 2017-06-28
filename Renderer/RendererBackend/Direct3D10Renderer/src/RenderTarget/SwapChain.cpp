@@ -37,22 +37,22 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Direct3D10Renderer &direct3D10Renderer, handle nativeWindowHandle) :
+	SwapChain::SwapChain(Direct3D10Renderer& direct3D10Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D10Renderer),
 		mDxgiSwapChain(nullptr),
 		mD3D10RenderTargetView(nullptr),
 		mD3D10DepthStencilView(nullptr)
 	{
 		// Get the Direct3D 10 device instance
-		ID3D10Device *d3d10Device = direct3D10Renderer.getD3D10Device();
+		ID3D10Device* d3d10Device = direct3D10Renderer.getD3D10Device();
 
 		// Get the native window handle
 		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);
 
 		// Get a DXGI factory instance
-		IDXGIDevice *dxgiDevice = nullptr;
-		IDXGIAdapter *dxgiAdapter = nullptr;
-		IDXGIFactory *dxgiFactory = nullptr;
+		IDXGIDevice* dxgiDevice = nullptr;
+		IDXGIAdapter* dxgiAdapter = nullptr;
+		IDXGIFactory* dxgiFactory = nullptr;
 		d3d10Device->QueryInterface(IID_PPV_ARGS(&dxgiDevice));
 		dxgiDevice->GetAdapter(&dxgiAdapter);
 		dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
@@ -150,7 +150,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void SwapChain::setDebugName(const char *name)
+	void SwapChain::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			// Assign a debug name to the DXGI swap chain
@@ -186,7 +186,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain)
@@ -270,7 +270,7 @@ namespace Direct3D10Renderer
 			Direct3D10Renderer& direct3D10Renderer = static_cast<Direct3D10Renderer&>(getRenderer());
 
 			// Get the currently set render target
-			Renderer::IRenderTarget *renderTargetBackup = direct3D10Renderer.omGetRenderTarget();
+			Renderer::IRenderTarget* renderTargetBackup = direct3D10Renderer.omGetRenderTarget();
 
 			// In case this swap chain is the current render target, we have to unset it before continuing
 			if (this == renderTargetBackup)
@@ -349,7 +349,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void SwapChain::getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getSafeWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// Get the Direct3D 10 swap chain description
 		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
@@ -381,12 +381,12 @@ namespace Direct3D10Renderer
 	void SwapChain::createDirect3D10Views()
 	{
 		// Create a render target view
-		ID3D10Texture2D *d3d10Texture2DBackBuffer = nullptr;
+		ID3D10Texture2D* d3d10Texture2DBackBuffer = nullptr;
 		HRESULT hResult = mDxgiSwapChain->GetBuffer(0, __uuidof(ID3D10Texture2D), reinterpret_cast<LPVOID*>(&d3d10Texture2DBackBuffer));
 		if (SUCCEEDED(hResult))
 		{
 			// Get the Direct3D 10 device instance
-			ID3D10Device *d3d10Device = static_cast<Direct3D10Renderer&>(getRenderer()).getD3D10Device();
+			ID3D10Device* d3d10Device = static_cast<Direct3D10Renderer&>(getRenderer()).getD3D10Device();
 
 			// Create a render target view
 			hResult = d3d10Device->CreateRenderTargetView(d3d10Texture2DBackBuffer, nullptr, &mD3D10RenderTargetView);
@@ -399,7 +399,7 @@ namespace Direct3D10Renderer
 				getSafeWidthAndHeight(width, height);
 
 				// Create depth stencil texture
-				ID3D10Texture2D *d3d10Texture2DDepthStencil = nullptr;
+				ID3D10Texture2D* d3d10Texture2DDepthStencil = nullptr;
 				D3D10_TEXTURE2D_DESC d3d10Texture2DDesc = {};
 				d3d10Texture2DDesc.Width			  = width;
 				d3d10Texture2DDesc.Height			  = height;

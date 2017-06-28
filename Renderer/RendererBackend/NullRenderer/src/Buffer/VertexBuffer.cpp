@@ -34,7 +34,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(NullRenderer &nullRenderer) :
+	VertexBuffer::VertexBuffer(NullRenderer& nullRenderer) :
 		IVertexBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here

@@ -80,7 +80,7 @@ public:
 	*  @param[in] source
 	*    Source to copy from
 	*/
-	inline explicit Color4(const Color4 &source);
+	inline explicit Color4(const Color4& source);
 
 	/**
 	*  @brief

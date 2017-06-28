@@ -36,9 +36,6 @@
     <None Include="include\OpenGLES3Renderer\RenderTarget\Framebuffer.inl">
       <Filter>Source Files\RenderTarget</Filter>
     </None>
-    <None Include="include\OpenGLES3Renderer\State\PipelineState.inl">
-      <Filter>Source Files\State</Filter>
-    </None>
     <None Include="include\OpenGLES3Renderer\State\RasterizerState.inl">
       <Filter>Source Files\State</Filter>
     </None>

@@ -67,6 +67,13 @@ namespace RendererRuntime
 		return *mInstanceBufferManager;
 	}
 
+	inline IndirectBufferManager& MaterialBlueprintResourceManager::getIndirectBufferManager() const
+	{
+		// We know this pointer must always be valid
+		assert(nullptr != mIndirectBufferManager);
+		return *mIndirectBufferManager;
+	}
+
 	inline LightBufferManager& MaterialBlueprintResourceManager::getLightBufferManager() const
 	{
 		// We know this pointer must always be valid

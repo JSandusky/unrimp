@@ -28,7 +28,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3DBlob *FragmentShaderHlsl::getD3DBlobFragmentShader() const
+	inline ID3DBlob* FragmentShaderHlsl::getD3DBlobFragmentShader() const
 	{
 		return mD3DBlobFragmentShader;
 	}

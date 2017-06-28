@@ -35,7 +35,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShader::VertexShader(NullRenderer &nullRenderer) :
+	VertexShader::VertexShader(NullRenderer& nullRenderer) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here
@@ -50,7 +50,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *VertexShader::getShaderLanguageName() const
+	const char* VertexShader::getShaderLanguageName() const
 	{
 		return ShaderLanguage::NAME;
 	}

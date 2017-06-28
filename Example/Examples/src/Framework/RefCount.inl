@@ -35,13 +35,13 @@ RefCount<AType>::~RefCount()
 }
 
 template <class AType>
-const AType *RefCount<AType>::getPointer() const
+const AType* RefCount<AType>::getPointer() const
 {
 	return reinterpret_cast<const AType*>(this);
 }
 
 template <class AType>
-AType *RefCount<AType>::getPointer()
+AType* RefCount<AType>::getPointer()
 {
 	return reinterpret_cast<AType*>(this);
 }

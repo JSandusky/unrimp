@@ -75,7 +75,7 @@ namespace Direct3D11Renderer
 		*  @param[in] rasterizerState
 		*    Rasterizer state to use
 		*/
-		RasterizerState(Direct3D11Renderer &direct3D11Renderer, const Renderer::RasterizerState &rasterizerState);
+		RasterizerState(Direct3D11Renderer& direct3D11Renderer, const Renderer::RasterizerState& rasterizerState);
 
 		/**
 		*  @brief
@@ -90,21 +90,21 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The Direct3D 11 rasterizer state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11RasterizerState *getD3D11RasterizerState() const;
+		inline ID3D11RasterizerState* getD3D11RasterizerState() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Direct3D11Renderer::IState methods     ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11RasterizerState *mD3D11RasterizerState;	///< Direct3D 11 rasterizer state, can be a null pointer
+		ID3D11RasterizerState* mD3D11RasterizerState;	///< Direct3D 11 rasterizer state, can be a null pointer
 
 
 	};

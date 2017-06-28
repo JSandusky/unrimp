@@ -252,7 +252,7 @@ namespace OpenGLES3Renderer
 				// Try finding the eglGetProcAddress to determine if this library contains EGL/GLES support.
 				// This check is needed because only the closed source drivers have the EGL/GLES support in "libGL.so".
 				// The open source drivers (mesa) have separate libraries for this and they can be present on the system even the closed source drivers are used.
-				void *symbol = ::dlsym(mEGLSharedLibrary, "eglGetProcAddress");
+				void* symbol = ::dlsym(mEGLSharedLibrary, "eglGetProcAddress");
 				if (nullptr != symbol)
 				{
 					mGLESSharedLibrary = ::dlopen("libGL.so", RTLD_LAZY);
@@ -297,7 +297,7 @@ namespace OpenGLES3Renderer
 			#define IMPORT_FUNC(funcName)																																			\
 				if (result)																																							\
 				{																																									\
-					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mEGLSharedLibrary), #funcName);																			\
+					void* symbol = ::GetProcAddress(static_cast<HMODULE>(mEGLSharedLibrary), #funcName);																			\
 					if (nullptr == symbol)																																			\
 					{																																								\
 						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a					\
@@ -324,7 +324,7 @@ namespace OpenGLES3Renderer
 			#define IMPORT_FUNC(funcName)																																			\
 				if (result)																																							\
 				{																																									\
-					void *symbol = ::dlsym(mEGLSharedLibrary, #funcName);																											\
+					void* symbol = ::dlsym(mEGLSharedLibrary, #funcName);																											\
 					if (nullptr == symbol)																																			\
 					{																																								\
 						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a					\
@@ -340,7 +340,7 @@ namespace OpenGLES3Renderer
 					}																																								\
 					else																																							\
 					{																																								\
-						link_map *linkMap = nullptr;																																\
+						link_map* linkMap = nullptr;																																\
 						const char* libraryName = "unknown";																														\
 						if (dlinfo(mEGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																									\
 						{																																							\
@@ -355,7 +355,7 @@ namespace OpenGLES3Renderer
 			#define IMPORT_FUNC(funcName)																																			\
 				if (result)																																							\
 				{																																									\
-					void *symbol = ::dlsym(mEGLSharedLibrary, #funcName);																											\
+					void* symbol = ::dlsym(mEGLSharedLibrary, #funcName);																											\
 					if (nullptr == symbol)																																			\
 					{																																								\
 						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a					\
@@ -430,7 +430,7 @@ namespace OpenGLES3Renderer
 			#define IMPORT_FUNC(funcName)																														\
 				if (result)																																		\
 				{																																				\
-					void *symbol = ::dlsym(mGLESSharedLibrary, #funcName);																						\
+					void* symbol = ::dlsym(mGLESSharedLibrary, #funcName);																						\
 					if (nullptr != symbol)																														\
 					{																																			\
 						*(reinterpret_cast<void**>(&(funcName))) = symbol;																						\
@@ -447,7 +447,7 @@ namespace OpenGLES3Renderer
 				{																																				\
 					/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a	\
 					   native OpenGL ES 3 capable graphics driver (tested with "AMD Catalyst 11.8"), only this way will work */									\
-					void *symbol = eglGetProcAddress(#funcName);																								\
+					void* symbol = eglGetProcAddress(#funcName);																								\
 					if (nullptr != symbol)																														\
 					{																																			\
 						*(reinterpret_cast<void**>(&(funcName))) = symbol;																						\

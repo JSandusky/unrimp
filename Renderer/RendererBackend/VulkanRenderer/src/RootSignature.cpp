@@ -87,7 +87,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RootSignature::RootSignature(VulkanRenderer &vulkanRenderer, const Renderer::RootSignature &rootSignature) :
+	RootSignature::RootSignature(VulkanRenderer& vulkanRenderer, const Renderer::RootSignature& rootSignature) :
 		IRootSignature(vulkanRenderer),
 		mRootSignature(rootSignature),
 		mSamplerStates(nullptr)

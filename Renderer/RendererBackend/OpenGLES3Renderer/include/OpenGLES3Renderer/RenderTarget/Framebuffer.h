@@ -78,7 +78,7 @@ namespace OpenGLES3Renderer
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(OpenGLES3Renderer &openGLES3Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment *colorFramebufferAttachments, const Renderer::FramebufferAttachment *depthStencilFramebufferAttachment);
+		Framebuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment);
 
 		/**
 		*  @brief
@@ -131,7 +131,7 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -149,8 +149,8 @@ namespace OpenGLES3Renderer
 		uint32_t			 mOpenGLES3Framebuffer;		///< OpenGL ES 3 framebuffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t			 mDepthRenderbuffer;		///< OpenGL ES render buffer for the depth component, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t			 mNumberOfColorTextures;	///< Number of color render target textures
-		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
-		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
+		Renderer::ITexture** mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
+		Renderer::ITexture*  mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
 		bool				 mGenerateMipmaps;			///< "true" if mipmaps should be generated automatically, else "false"

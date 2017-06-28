@@ -41,7 +41,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(NullRenderer &nullRenderer, handle nativeWindowHandle) :
+	SwapChain::SwapChain(NullRenderer& nullRenderer, handle nativeWindowHandle) :
 		ISwapChain(nullRenderer),
 		mNativeWindowHandle(nativeWindowHandle)
 	{
@@ -57,7 +57,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		#ifdef WIN32
 			// Is there a valid native OS window?
@@ -97,7 +97,7 @@ namespace NullRenderer
 			if (mNativeWindowHandle)
 			{
 				// TODO(sw) Reuse X11 display from "Frontend"
-				Display *display = XOpenDisplay(0);
+				Display* display = XOpenDisplay(0);
 
 				// Get the width and height...
 				::Window rootWindow = 0;

@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D10Renderer& direct3D10Renderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		IFragmentShader(direct3D10Renderer),
 		mD3D10PixelShader(nullptr)
 	{
@@ -48,12 +48,12 @@ namespace Direct3D10Renderer
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 10 automatically sets a decent default name
 	}
 
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D10Renderer& direct3D10Renderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IFragmentShader(direct3D10Renderer),
 		mD3D10PixelShader(nullptr)
 	{
 		// Create the Direct3D 10 binary large object for the pixel shader
-		ID3DBlob *d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D10Renderer.getShaderLanguage())->loadShaderFromSourcecode("ps_4_0", sourceCode, nullptr);
+		ID3DBlob* d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D10Renderer.getShaderLanguage())->loadShaderFromSourcecode("ps_4_0", sourceCode, nullptr);
 		if (nullptr != d3dBlob)
 		{
 			// Create the Direct3D 10 pixel shader
@@ -85,7 +85,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void FragmentShaderHlsl::setDebugName(const char *name)
+	void FragmentShaderHlsl::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			// Valid Direct3D 10 pixel shader?
@@ -103,7 +103,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *FragmentShaderHlsl::getShaderLanguageName() const
+	const char* FragmentShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
 	}

@@ -34,7 +34,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndirectBuffer::IndirectBuffer(NullRenderer &nullRenderer) :
+	IndirectBuffer::IndirectBuffer(NullRenderer& nullRenderer) :
 		IIndirectBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here
@@ -54,7 +54,7 @@ namespace NullRenderer
 		return nullptr;
 	}
 
-	void IndirectBuffer::copyDataFrom(uint32_t, const void *)
+	void IndirectBuffer::copyDataFrom(uint32_t, const void*)
 	{
 		// Nothing here
 	}

@@ -38,7 +38,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(OpenGLES3Renderer &openGLES3Renderer, handle nativeWindowHandle) :
+	SwapChain::SwapChain(OpenGLES3Renderer& openGLES3Renderer, handle nativeWindowHandle) :
 		ISwapChain(openGLES3Renderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		mRenderWindow(nullptr)
@@ -55,7 +55,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// TODO(co) Use "eglQuerySurface()"
 	//	EGLint renderTargetWidth  = 1;
@@ -107,7 +107,7 @@ namespace OpenGLES3Renderer
 				IContext &context = static_cast<OpenGLES3Renderer&>(getRenderer()).getContext();
 
 				// TODO(sw) Resue X11 display from "Frontend" -> for now reuse it from the context
-				Display *display = context.getX11Display();
+				Display* display = context.getX11Display();
 
 				// Get the width and height...
 				::Window rootWindow = 0;
@@ -160,7 +160,7 @@ namespace OpenGLES3Renderer
 		else
 		{
 			// TODO(co) Correct implementation
-			IContext &context = static_cast<OpenGLES3Renderer&>(getRenderer()).getContext();
+			IContext& context = static_cast<OpenGLES3Renderer&>(getRenderer()).getContext();
 			// Swap buffers
 			eglSwapBuffers(context.getEGLDisplay(), context.getEGLDummySurface());
 		}

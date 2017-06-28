@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
-int programEntryPoint(CmdLineArgs &args);
+int programEntryPoint(CmdLineArgs& args);
 
 
 //[-------------------------------------------------------]
@@ -51,9 +51,9 @@ int programEntryPoint(CmdLineArgs &args);
 
 	#ifdef _CONSOLE
 		#ifdef UNICODE
-			int wmain(int argc, wchar_t **argv)
+			int wmain(int argc, wchar_t** argv)
 		#else
-			int main(int argc, char **argv)
+			int main(int argc, char** argv)
 		#endif
 			{
 				int result;
@@ -110,7 +110,7 @@ int programEntryPoint(CmdLineArgs &args);
 // Linux implementation
 #elif LINUX
 	#include "Framework/PlatformTypes.h"
-	int main(int argc, char **argv)
+	int main(int argc, char** argv)
 	{
 		CmdLineArgs arguments(argc, argv);
 

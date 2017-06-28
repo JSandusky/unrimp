@@ -34,7 +34,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerState::SamplerState(NullRenderer &nullRenderer) :
+	SamplerState::SamplerState(NullRenderer& nullRenderer) :
 		ISamplerState(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here

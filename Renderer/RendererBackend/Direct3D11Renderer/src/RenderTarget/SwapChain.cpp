@@ -37,23 +37,23 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Direct3D11Renderer &direct3D11Renderer, handle nativeWindowHandle) :
+	SwapChain::SwapChain(Direct3D11Renderer& direct3D11Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D11Renderer),
 		mDxgiSwapChain(nullptr),
 		mD3D11RenderTargetView(nullptr),
 		mD3D11DepthStencilView(nullptr)
 	{
 		// Get the Direct3D 11 device instance
-		ID3D11Device *d3d11Device = direct3D11Renderer.getD3D11Device();
+		ID3D11Device* d3d11Device = direct3D11Renderer.getD3D11Device();
 
 		// Get the native window handle
 		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);
 
 		// Get a DXGI factory instance
-		IDXGIFactory1 *dxgiFactory1 = nullptr;
+		IDXGIFactory1* dxgiFactory1 = nullptr;
 		{
-			IDXGIDevice *dxgiDevice = nullptr;
-			IDXGIAdapter *dxgiAdapter = nullptr;
+			IDXGIDevice* dxgiDevice = nullptr;
+			IDXGIAdapter* dxgiAdapter = nullptr;
 			d3d11Device->QueryInterface(IID_PPV_ARGS(&dxgiDevice));
 			dxgiDevice->GetAdapter(&dxgiAdapter);
 			dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory1));
@@ -152,7 +152,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void SwapChain::setDebugName(const char *name)
+	void SwapChain::setDebugName(const char* name)
 	{
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
 			// Assign a debug name to the DXGI swap chain
@@ -188,7 +188,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain)
@@ -272,7 +272,7 @@ namespace Direct3D11Renderer
 			Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
 
 			// Get the currently set render target
-			Renderer::IRenderTarget *renderTargetBackup = direct3D11Renderer.omGetRenderTarget();
+			Renderer::IRenderTarget* renderTargetBackup = direct3D11Renderer.omGetRenderTarget();
 
 			// In case this swap chain is the current render target, we have to unset it before continuing
 			if (this == renderTargetBackup)
@@ -329,7 +329,7 @@ namespace Direct3D11Renderer
 		}
 
 		// Done
-		return (fullscreen != FALSE);
+		return (FALSE != fullscreen);
 	}
 
 	void SwapChain::setFullscreenState(bool fullscreen)
@@ -350,7 +350,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void SwapChain::getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getSafeWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// Get the Direct3D 11 swap chain description
 		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
@@ -382,12 +382,12 @@ namespace Direct3D11Renderer
 	void SwapChain::createDirect3D11Views()
 	{
 		// Create a render target view
-		ID3D11Texture2D *d3d11Texture2DBackBuffer = nullptr;
+		ID3D11Texture2D* d3d11Texture2DBackBuffer = nullptr;
 		HRESULT hResult = mDxgiSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<LPVOID*>(&d3d11Texture2DBackBuffer));
 		if (SUCCEEDED(hResult))
 		{
 			// Get the Direct3D 11 device instance
-			ID3D11Device *d3d11Device = static_cast<Direct3D11Renderer&>(getRenderer()).getD3D11Device();
+			ID3D11Device* d3d11Device = static_cast<Direct3D11Renderer&>(getRenderer()).getD3D11Device();
 
 			// Create a render target view
 			hResult = d3d11Device->CreateRenderTargetView(d3d11Texture2DBackBuffer, nullptr, &mD3D11RenderTargetView);
@@ -400,7 +400,7 @@ namespace Direct3D11Renderer
 				getSafeWidthAndHeight(width, height);
 
 				// Create depth stencil texture
-				ID3D11Texture2D *d3d11Texture2DDepthStencil = nullptr;
+				ID3D11Texture2D* d3d11Texture2DDepthStencil = nullptr;
 				D3D11_TEXTURE2D_DESC d3d11Texture2DDesc = {};
 				d3d11Texture2DDesc.Width			  = width;
 				d3d11Texture2DDesc.Height			  = height;

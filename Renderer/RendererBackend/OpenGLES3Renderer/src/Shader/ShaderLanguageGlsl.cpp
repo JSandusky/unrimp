@@ -39,13 +39,13 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const char *ShaderLanguageGlsl::NAME = "GLSLES";
+	const char* ShaderLanguageGlsl::NAME = "GLSLES";
 
 
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t ShaderLanguageGlsl::loadShaderFromSourcecode(uint32_t shaderType, const char *shaderSource)
+	uint32_t ShaderLanguageGlsl::loadShaderFromSourcecode(uint32_t shaderType, const char* shaderSource)
 	{
 		// Create the shader object
 		const GLuint openGLES3Shader = glCreateShader(shaderType);
@@ -74,7 +74,7 @@ namespace OpenGLES3Renderer
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					GLchar *informationLog = new GLchar[static_cast<uint32_t>(informationLength)];
+					GLchar* informationLog = new GLchar[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
 					glGetShaderInfoLog(openGLES3Shader, informationLength, nullptr, informationLog);
@@ -100,7 +100,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ShaderLanguageGlsl::ShaderLanguageGlsl(OpenGLES3Renderer &openGLES3Renderer) :
+	ShaderLanguageGlsl::ShaderLanguageGlsl(OpenGLES3Renderer& openGLES3Renderer) :
 		IShaderLanguage(openGLES3Renderer)
 	{
 		// Nothing here
@@ -115,79 +115,79 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShaderLanguage methods      ]
 	//[-------------------------------------------------------]
-	const char *ShaderLanguageGlsl::getShaderLanguageName() const
+	const char* ShaderLanguageGlsl::getShaderLanguageName() const
 	{
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode&)
+	Renderer::IVertexShader* ShaderLanguageGlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode&)
 	{
 		// Error!
 		assert(false && "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
 		return nullptr;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode*)
+	Renderer::IVertexShader* ShaderLanguageGlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode*)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		// -> Monolithic shaders have no shader bytecode, only a monolithic program bytecode
 		return new VertexShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), shaderSourceCode.sourceCode);
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
+	Renderer::ITessellationControlShader* ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error!
 		assert(false && "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
 		return nullptr;
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
+	Renderer::ITessellationControlShader* ShaderLanguageGlsl::createTessellationControlShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// Error! OpenGL ES 3 has no tessellation control shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode&)
+	Renderer::ITessellationEvaluationShader* ShaderLanguageGlsl::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error!
 		assert(false && "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
 		return nullptr;
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
+	Renderer::ITessellationEvaluationShader* ShaderLanguageGlsl::createTessellationEvaluationShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::ShaderBytecode*)
 	{
 		// Error! OpenGL ES 3 has no tessellation evaluation shader support.
 		return nullptr;
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t)
+	Renderer::IGeometryShader* ShaderLanguageGlsl::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t)
 	{
 		// Error!
 		assert(false && "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
 		return nullptr;
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, Renderer::ShaderBytecode*)
+	Renderer::IGeometryShader* ShaderLanguageGlsl::createGeometryShaderFromSourceCode(const Renderer::ShaderSourceCode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, Renderer::ShaderBytecode*)
 	{
 		// Error! OpenGL ES 3 has no geometry shader support.
 		return nullptr;
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode&)
+	Renderer::IFragmentShader* ShaderLanguageGlsl::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error!
 		assert(false && "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
 		return nullptr;
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode*)
+	Renderer::IFragmentShader* ShaderLanguageGlsl::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode*)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
 		// -> Monolithic shaders have no shader bytecode, only a monolithic program bytecode
 		return new FragmentShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), shaderSourceCode.sourceCode);
 	}
 
-	Renderer::IProgram *ShaderLanguageGlsl::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
+	Renderer::IProgram* ShaderLanguageGlsl::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader* vertexShader, Renderer::ITessellationControlShader* tessellationControlShader, Renderer::ITessellationEvaluationShader* tessellationEvaluationShader, Renderer::IGeometryShader* geometryShader, Renderer::IFragmentShader* fragmentShader)
 	{
 		// A shader can be a null pointer, but if it's not the shader and program language must match!
 		// -> Optimization: Comparing the shader language name by directly comparing the pointer address of

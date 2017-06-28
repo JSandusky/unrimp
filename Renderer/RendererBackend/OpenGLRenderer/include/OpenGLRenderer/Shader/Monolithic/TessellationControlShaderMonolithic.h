@@ -70,7 +70,7 @@ namespace OpenGLRenderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		TessellationControlShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode);
+		TessellationControlShaderMonolithic(OpenGLRenderer& openGLRenderer, const char* sourceCode);
 
 		/**
 		*  @brief
@@ -92,7 +92,7 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	public:
-		virtual const char *getShaderLanguageName() const override;
+		virtual const char* getShaderLanguageName() const override;
 
 
 	//[-------------------------------------------------------]

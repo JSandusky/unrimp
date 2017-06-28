@@ -131,10 +131,10 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void *mDxgiSharedLibrary;			///< DXGI shared library, can be a null pointer
-		void *mD3D12SharedLibrary;			///< D3D12 shared library, can be a null pointer
-		void *mD3DX11SharedLibrary;			///< D3DX11 shared library, can be a null pointer
-		void *mD3DCompilerSharedLibrary;	///< D3DCompiler shared library, can be a null pointer
+		void* mDxgiSharedLibrary;			///< DXGI shared library, can be a null pointer
+		void* mD3D12SharedLibrary;			///< D3D12 shared library, can be a null pointer
+		void* mD3DX11SharedLibrary;			///< D3DX11 shared library, can be a null pointer
+		void* mD3DCompilerSharedLibrary;	///< D3DCompiler shared library, can be a null pointer
 		bool  mEntryPointsRegistered;		///< Entry points successfully registered?
 		bool  mInitialized;					///< Already initialized?
 
@@ -176,7 +176,7 @@ namespace Direct3D12Renderer
 	#else
 		#define FNDEF_D3DX11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
-	FNDEF_D3DX11(HRESULT,	D3DX11CompileFromMemory,	(LPCSTR, SIZE_T, LPCSTR, CONST D3D10_SHADER_MACRO *, LPD3D10INCLUDE, LPCSTR, LPCSTR, UINT, UINT, ID3DX12ThreadPump *, ID3D10Blob **, ID3D10Blob **, HRESULT *));
+	FNDEF_D3DX11(HRESULT,	D3DX11CompileFromMemory,	(LPCSTR, SIZE_T, LPCSTR, CONST D3D10_SHADER_MACRO*, LPD3D10INCLUDE, LPCSTR, LPCSTR, UINT, UINT, ID3DX12ThreadPump*, ID3D10Blob**, ID3D10Blob**, HRESULT*));
 	// FNDEF_D3DX11(HRESULT,	D3DX11FilterTexture,		(ID3D12DeviceContext *, ID3D12Resource *, UINT, UINT));	// TODO(co) Direct3D 12 update
 
 

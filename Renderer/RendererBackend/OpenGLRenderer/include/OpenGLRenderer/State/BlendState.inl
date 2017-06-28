@@ -33,7 +33,7 @@ namespace OpenGLRenderer
 		// Nothing here
 	}
 
-	inline const Renderer::BlendState &BlendState::getBlendState() const
+	inline const Renderer::BlendState& BlendState::getBlendState() const
 	{
 		return mBlendState;
 	}

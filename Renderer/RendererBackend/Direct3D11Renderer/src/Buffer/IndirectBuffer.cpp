@@ -130,7 +130,7 @@ namespace Direct3D11Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	#if !defined(DIRECT3D11RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
-		void IndirectBuffer::setDebugName(const char *name)
+		void IndirectBuffer::setDebugName(const char* name)
 		{
 			RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "IndirectBufferObject", 23);	// 23 = "IndirectBufferObject: " including terminating zero
 
@@ -163,7 +163,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]
 	//[-------------------------------------------------------]
-	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		assert(numberOfBytes <= mNumberOfBytes);
 		assert(nullptr != data);
@@ -178,7 +178,7 @@ namespace Direct3D11Renderer
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)
 
 			// Get the Direct3D 11 device context
-			ID3D11DeviceContext *d3d11DeviceContext = direct3D11Renderer.getD3D11DeviceContext();
+			ID3D11DeviceContext* d3d11DeviceContext = direct3D11Renderer.getD3D11DeviceContext();
 
 			// Update Direct3D 11 subresource data
 			// -> Don't use (might fail): d3d11DeviceContext->UpdateSubresource(mD3D11Buffer, 0, nullptr, data, 0, 0);

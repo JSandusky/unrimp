@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-ApplicationImplWindows::ApplicationImplWindows(IApplication &application, const char *windowTitle) :
+ApplicationImplWindows::ApplicationImplWindows(IApplication& application, const char* windowTitle) :
 	IApplicationImpl(application),
 	mApplication(&application),
 	mNativeWindowHandle(NULL_HANDLE)
@@ -126,7 +126,7 @@ bool ApplicationImplWindows::processMessages()
 	return quit;
 }
 
-void ApplicationImplWindows::getWindowSize(int &width, int &height) const
+void ApplicationImplWindows::getWindowSize(int& width, int& height) const
 {
 	// Is there a valid OS window?
 	if (NULL_HANDLE != mNativeWindowHandle)
@@ -166,7 +166,7 @@ void ApplicationImplWindows::redraw()
 LRESULT CALLBACK ApplicationImplWindows::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	// Get pointer to application implementation
-	ApplicationImplWindows *applicationImplWindows = nullptr;
+	ApplicationImplWindows* applicationImplWindows = nullptr;
 	if (WM_CREATE == message)
 	{
 		applicationImplWindows = static_cast<ApplicationImplWindows*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);

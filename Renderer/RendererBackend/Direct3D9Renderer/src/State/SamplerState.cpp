@@ -37,7 +37,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerState::SamplerState(Direct3D9Renderer &direct3D9Renderer, const Renderer::SamplerState &samplerState) :
+	SamplerState::SamplerState(Direct3D9Renderer& direct3D9Renderer, const Renderer::SamplerState& samplerState) :
 		ISamplerState(direct3D9Renderer),
 		mDirect3D9MagFilterMode(Mapping::getDirect3D9MagFilterMode(samplerState.filter)),
 		mDirect3D9MinFilterMode(Mapping::getDirect3D9MinFilterMode(samplerState.filter)),
@@ -82,7 +82,7 @@ namespace Direct3D9Renderer
 		// Nothing here
 	}
 
-	void SamplerState::setDirect3D9SamplerStates(uint32_t sampler, IDirect3DDevice9 &direct3DDevice9) const
+	void SamplerState::setDirect3D9SamplerStates(uint32_t sampler, IDirect3DDevice9& direct3DDevice9) const
 	{
 		// "IDirect3DDevice9::SetSamplerState()"-documentation: "D3DSAMPLERSTATETYPE Enumerated Type" at MSDN http://msdn.microsoft.com/en-us/library/windows/desktop/bb172602%28v=vs.85%29.aspx
 
@@ -123,7 +123,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void SamplerState::setDebugName(const char *)
+	void SamplerState::setDebugName(const char*)
 	{
 		// There's no Direct3D 9 resource we could assign a debug name to
 	}

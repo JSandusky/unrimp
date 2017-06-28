@@ -73,7 +73,7 @@ namespace OpenGLES3Renderer
 		#define IMPORT_FUNC(funcName)																														\
 			if (result)																																		\
 			{																																				\
-				void *symbol = eglGetProcAddress(#funcName);																								\
+				void* symbol = eglGetProcAddress(#funcName);																								\
 				if (nullptr != symbol)																														\
 				{																																			\
 					*(reinterpret_cast<void**>(&(funcName))) = symbol;																						\
@@ -86,7 +86,7 @@ namespace OpenGLES3Renderer
 			}
 
 		// Get the extensions string
-		const char *extensions = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
+		const char* extensions = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
 
 		//[-------------------------------------------------------]
 		//[ EXT                                                   ]
