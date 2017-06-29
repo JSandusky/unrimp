@@ -97,7 +97,9 @@ namespace OpenGLES3Renderer
 		mGL_EXT_texture_compression_latc = (nullptr != strstr(extensions, "GL_EXT_texture_compression_latc"));
 
 		// TODO(sw) Core in opengles 3.2
-		mGL_EXT_texture_buffer = (nullptr != strstr(extensions, "GL_EXT_texture_buffer"));
+		//mGL_EXT_texture_buffer = (nullptr != strstr(extensions, "GL_EXT_texture_buffer"));
+		// TODO(sw) Disabled for now. With mesa 17.1.3 the OpenGLES driver supports version 3.1 + texture buffer. But currently the shader of the Example project supports only the emulation path
+		mGL_EXT_texture_buffer = false;
 		if (mGL_EXT_texture_buffer)
 		{
 			// Load the entry points
